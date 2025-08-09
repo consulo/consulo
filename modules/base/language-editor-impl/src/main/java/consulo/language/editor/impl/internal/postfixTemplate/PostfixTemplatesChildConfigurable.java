@@ -23,15 +23,15 @@ import consulo.language.editor.internal.postfixTemplate.PostfixTemplateMetaData;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.postfixTemplate.PostfixTemplatesSettings;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CheckBoxList;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -63,9 +63,10 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return "editing.postfixCompletion." + myPostfixTemplateProvider.getLanguage().getID();
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return myPostfixTemplateProvider.getLanguage().getDisplayName().get();
+  public LocalizeValue getDisplayName() {
+    return myPostfixTemplateProvider.getLanguage().getDisplayName();
   }
 
   @RequiredUIAccess

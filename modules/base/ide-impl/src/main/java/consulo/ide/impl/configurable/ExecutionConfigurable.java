@@ -19,8 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurableAdapter;
 import consulo.configurable.StandardConfigurableIds;
-import org.jetbrains.annotations.Nls;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -35,9 +34,9 @@ public class ExecutionConfigurable extends ConfigurableAdapter implements Applic
     return StandardConfigurableIds.EXECUTION_GROUP;
   }
 
-  @Nls
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Execution";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Execution");
   }
 }

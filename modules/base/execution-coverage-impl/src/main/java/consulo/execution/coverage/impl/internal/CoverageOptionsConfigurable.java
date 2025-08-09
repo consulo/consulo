@@ -84,7 +84,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
             for (Configurable child : myChildren) {
                 Component uiComponent = child.createUIComponent(myUiDisposable);
                 assert uiComponent != null;
-                myWholePanel.add(LabeledLayout.create(LocalizeValue.of(child.getDisplayName()), uiComponent));
+                myWholePanel.add(LabeledLayout.create(child.getDisplayName(), uiComponent));
             }
         }
 
@@ -118,8 +118,8 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return ExecutionCoverageLocalize.configurableCoverageoptionsconfigurableDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return ExecutionCoverageLocalize.configurableCoverageoptionsconfigurableDisplayName();
     }
 
     @Nonnull

@@ -23,6 +23,8 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -146,9 +148,9 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     private static String createTitleString(Configurable configurable) {
-        String displayName = configurable.getDisplayName();
-        LOG.assertTrue(displayName != null, configurable.getClass().getName());
-        return displayName.replaceAll("\n", " ");
+        LocalizeValue displayName = configurable.getDisplayName();
+        LOG.assertTrue(displayName != LocalizeValue.empty(), configurable.getClass().getName());
+        return displayName.get().replaceAll("\n", " ");
     }
 
     @Nullable
@@ -234,11 +236,8 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     public static String createDimensionKey(@Nonnull Configurable configurable) {
-        String displayName = configurable.getDisplayName();
-        if (displayName == null) {
-            displayName = configurable.getClass().getName();
-        }
-        return '#' + StringUtil.replaceChar(StringUtil.replaceChar(displayName, '\n', '_'), ' ', '_');
+        LocalizeKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
+        return "#" + localizeKey.getLocalizeId() + "@" + localizeKey.getKey();
     }
 
     protected class ApplyAction extends AbstractAction {

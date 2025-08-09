@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.configurable.ConfigurationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
@@ -76,8 +77,8 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
   }
 
   @Override
-  public String getDisplayName() {
-    return mySdk.getName();
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.ofNullable(mySdk.getName());
   }
 
   @Override

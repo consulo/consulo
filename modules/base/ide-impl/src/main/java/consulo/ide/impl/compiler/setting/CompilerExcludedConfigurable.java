@@ -16,18 +16,19 @@
 package consulo.ide.impl.compiler.setting;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -72,10 +73,10 @@ public class CompilerExcludedConfigurable implements ProjectConfigurable {
     myConfigurable.disposeUIResources();
   }
 
-  @Nls
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return CompilerBundle.message("actions.exclude.from.compile.text");
+  public LocalizeValue getDisplayName() {
+    return CompilerLocalize.actionsExcludeFromCompileText();
   }
 
   @Nonnull

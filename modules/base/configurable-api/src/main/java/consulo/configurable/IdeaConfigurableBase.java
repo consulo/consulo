@@ -17,9 +17,9 @@ package consulo.configurable;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 
@@ -27,12 +27,12 @@ import javax.swing.*;
 @DeprecationInfo("Use SimpleConfigurable")
 public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> implements SearchableConfigurable {
     private final String id;
-    private final String displayName;
+    private final LocalizeValue displayName;
     private final String helpTopic;
 
     private UI ui;
 
-    protected IdeaConfigurableBase(@Nonnull String id, @Nonnull String displayName, @Nullable String helpTopic) {
+    protected IdeaConfigurableBase(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nullable String helpTopic) {
         this.id = id;
         this.displayName = displayName;
         this.helpTopic = helpTopic;
@@ -44,9 +44,9 @@ public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> 
         return id;
     }
 
-    @Nls
+    @Nonnull
     @Override
-    public final String getDisplayName() {
+    public final LocalizeValue getDisplayName() {
         return displayName;
     }
 

@@ -30,10 +30,9 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
-import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,8 +98,8 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Postfix Completion";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Postfix Completion");
   }
 
   protected Configurable[] buildConfigurables() {
@@ -109,7 +108,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
     for (PostfixTemplateProvider postfixTemplateProvider : providers) {
       list.add(new PostfixTemplatesChildConfigurable(postfixTemplateProvider));
     }
-    Collections.sort(list, (o1, o2) -> StringUtil.compare(o1.getDisplayName(), o2.getDisplayName(), true));
+    Collections.sort(list, (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName()));
     return list.toArray(new Configurable[list.size()]);
   }
 

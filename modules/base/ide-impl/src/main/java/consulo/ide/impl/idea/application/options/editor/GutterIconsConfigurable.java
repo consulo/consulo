@@ -30,6 +30,7 @@ import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.gutter.LineMarkerProvider;
 import consulo.language.editor.gutter.LineMarkerProviderDescriptor;
 import consulo.language.editor.gutter.LineMarkerSettings;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -57,7 +58,6 @@ import java.util.function.Function;
  */
 @ExtensionImpl
 public class GutterIconsConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
-  public static final String DISPLAY_NAME = "Gutter Icons";
   public static final String ID = "editor.gutterIcons";
 
   private CheckBoxList<GutterIconDescriptor> myList;
@@ -67,8 +67,8 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @Nls
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return DISPLAY_NAME;
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Gutter Icons");
   }
 
   @Nullable

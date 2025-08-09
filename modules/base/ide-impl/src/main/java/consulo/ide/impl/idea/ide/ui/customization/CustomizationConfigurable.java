@@ -17,12 +17,13 @@ package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.ide.IdeBundle;
 import consulo.disposer.Disposer;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -42,9 +43,10 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
     return myPanel.getPanel();
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return IdeBundle.message("title.customizations");
+  public LocalizeValue getDisplayName() {
+    return IdeLocalize.titleCustomizations();
   }
 
   @RequiredUIAccess

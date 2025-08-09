@@ -16,6 +16,7 @@
 package consulo.configurable;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.reflect.ReflectionUtil;
 
 import jakarta.annotation.Nonnull;
@@ -28,18 +29,18 @@ public final class IdeaSimpleConfigurable<UI extends IdeaConfigurableUi<S>, S> e
   private final Class<UI> uiClass;
   private final Supplier<S> settingsGetter;
 
-  private IdeaSimpleConfigurable(@Nonnull String id, @Nonnull String displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
+  private IdeaSimpleConfigurable(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
     super(id, displayName, helpTopic);
 
     this.uiClass = uiClass;
     this.settingsGetter = settingsGetter;
   }
 
-  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull String displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
+  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
     return new IdeaSimpleConfigurable<UI, S>(id, displayName, helpTopic, uiClass, settingsGetter);
   }
 
-  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull String displayName, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
+  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
     return create(id, displayName, id, uiClass, settingsGetter);
   }
 

@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.options.binding.BindControl;
 import consulo.ide.impl.idea.openapi.options.binding.BindableConfigurable;
 import consulo.ide.impl.idea.openapi.options.binding.ControlBinder;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
@@ -64,6 +65,7 @@ public class ChangelistConflictConfigurable extends BindableConfigurable impleme
     super(new ControlBinder(manager.getConflictTracker().getOptions()));
     
     myEnableCheckBox.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         UIUtil.setEnabled(myOptionsPanel, myEnableCheckBox.isSelected(), true);
       }
@@ -71,6 +73,7 @@ public class ChangelistConflictConfigurable extends BindableConfigurable impleme
     myConflictTracker = manager.getConflictTracker();
 
     myClearButton.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         myIgnoredFiles.setModel(new DefaultListModel());
         myIgnoredFilesCleared = true;
@@ -81,6 +84,7 @@ public class ChangelistConflictConfigurable extends BindableConfigurable impleme
     myIgnoredFiles.getEmptyText().setText(VcsLocalize.noIgnoredFiles());
   }
 
+  @Override
   public JComponent createComponent() {
     getBinder().bindAnnotations(this);
     return myPanel;
@@ -111,16 +115,18 @@ public class ChangelistConflictConfigurable extends BindableConfigurable impleme
     return super.isModified() || myIgnoredFiles.getModel().getSize() != myConflictTracker.getIgnoredConflicts().size();
   }
 
-  @Nls
-  public String getDisplayName() {
-    return "Changelist Conflicts";
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Changelist Conflicts");
   }
 
+  @Override
   @Nonnull
   public String getId() {
     return "project.propVCSSupport.ChangelistConflict";
   }
 
+  @Override
   public Runnable enableSearch(String option) {
     return null;
   }

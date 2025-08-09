@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.ide.ui.search;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nullable;
@@ -36,6 +37,7 @@ public class DefaultSearchableConfigurable implements Configurable {
     myDelegate = delegate;
   }
 
+  @Override
   @NonNls
   public String getId() {
     return myDelegate.getId();
@@ -51,33 +53,39 @@ public class DefaultSearchableConfigurable implements Configurable {
     }
   }
 
-  public String getDisplayName() {
+  @Override
+  public LocalizeValue getDisplayName() {
     return myDelegate.getDisplayName();
   }
 
+  @Override
   @Nullable
-  @NonNls
   public String getHelpTopic() {
     return myDelegate.getHelpTopic();
   }
 
+  @Override
   public JComponent createComponent() {
     myComponent = myDelegate.createComponent();
     return myComponent;
   }
 
+  @Override
   public boolean isModified() {
     return myDelegate.isModified();
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     myDelegate.apply();
   }
 
+  @Override
   public void reset() {
     myDelegate.reset();
   }
 
+  @Override
   public void disposeUIResources() {
     myComponent = null;
     myDelegate.disposeUIResources();

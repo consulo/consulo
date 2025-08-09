@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
@@ -36,6 +37,7 @@ import java.net.URL;
  * @author VISTALL
  * @since 30/10/2021
  */
+@ExtensionImpl
 public class SandConfigurable implements Configurable, ProjectConfigurable {
     @RequiredUIAccess
     @Nullable
@@ -84,7 +86,7 @@ public class SandConfigurable implements Configurable, ProjectConfigurable {
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Sand Editor";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Sand Editor");
     }
 }

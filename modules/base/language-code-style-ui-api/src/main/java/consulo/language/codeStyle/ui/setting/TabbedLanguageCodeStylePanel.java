@@ -16,7 +16,7 @@
 package consulo.language.codeStyle.ui.setting;
 
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.Configurable;
@@ -41,9 +41,9 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -169,7 +169,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     myTabs.add(tab);
     tab.setShouldUpdatePreview(true);
     addPanelToWatch(tab.getPanel());
-    myTabbedPane.addTab(tab.getTabTitle(), tab.getPanel());
+    myTabbedPane.addTab(tab.getTabTitle().get(), tab.getPanel());
     if (myActiveTab == null) {
       myActiveTab = tab;
     }
@@ -463,7 +463,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     }
 
     @Override
-    protected String getTabTitle() {
+    protected LocalizeValue getTabTitle() {
       return myConfigurable.getDisplayName();
     }
 
@@ -614,9 +614,10 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
       return TabbedLanguageCodeStylePanel.this.getDefaultLanguage();
     }
 
+    @Nonnull
     @Override
-    protected String getTabTitle() {
-      return ApplicationBundle.message("title.tabs.and.indents");
+    protected LocalizeValue getTabTitle() {
+      return ApplicationLocalize.titleTabsAndIndents();
     }
 
     @Override

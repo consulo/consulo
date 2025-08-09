@@ -4,6 +4,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.execution.ExecutionBundle;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.AddEditDeleteListPanel;
@@ -193,7 +194,7 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Console";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Console");
     }
 }

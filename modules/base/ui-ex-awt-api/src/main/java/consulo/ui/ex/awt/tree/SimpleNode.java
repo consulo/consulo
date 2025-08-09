@@ -17,6 +17,7 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
@@ -123,7 +124,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
   public final void setNodeText(String text, String tooltip, boolean hasError) {
     clearColoredText();
     SimpleTextAttributes attributes = hasError ? getErrorAttributes() : getPlainAttributes();
-    getTemplatePresentation().addText(new ColoredFragment(text, tooltip, attributes));
+    getTemplatePresentation().addText(new ColoredFragment(LocalizeValue.ofNullable(text), LocalizeValue.ofNullable(tooltip), attributes));
   }
 
   /**
@@ -140,7 +141,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
    * or update presentation dynamically by defining {@link #update(PresentationData)}
    */
   public final void addPlainText(String aText) {
-    getTemplatePresentation().addText(new ColoredFragment(aText, getPlainAttributes()));
+    getTemplatePresentation().addText(new ColoredFragment(LocalizeValue.ofNullable(aText), getPlainAttributes()));
   }
 
   /**
@@ -148,7 +149,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
    * or update presentation dynamically by defining {@link #update(PresentationData)}
    */
   public final void addErrorText(String aText, String errorTooltipText) {
-    getTemplatePresentation().addText(new ColoredFragment(aText, errorTooltipText, getErrorAttributes()));
+    getTemplatePresentation().addText(new ColoredFragment(LocalizeValue.ofNullable(aText), LocalizeValue.ofNullable(errorTooltipText), getErrorAttributes()));
   }
 
   /**
@@ -172,7 +173,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
    * or update presentation dynamically by defining {@link #update(PresentationData)}
    */
   public final void addColoredFragment(String aText, String toolTip, SimpleTextAttributes aAttributes) {
-    getTemplatePresentation().addText(new ColoredFragment(aText, toolTip, aAttributes));
+    getTemplatePresentation().addText(new ColoredFragment(LocalizeValue.ofNullable(aText), LocalizeValue.ofNullable(toolTip), aAttributes));
   }
 
   /**

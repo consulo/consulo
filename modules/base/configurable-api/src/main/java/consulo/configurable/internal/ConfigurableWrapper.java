@@ -17,13 +17,13 @@ package consulo.configurable.internal;
 
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -83,9 +83,9 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return myConfigurable;
   }
 
-  @Nls
+  @Nonnull
   @Override
-  public String getDisplayName() {
+  public LocalizeValue getDisplayName() {
     return myConfigurable.getDisplayName();
   }
 

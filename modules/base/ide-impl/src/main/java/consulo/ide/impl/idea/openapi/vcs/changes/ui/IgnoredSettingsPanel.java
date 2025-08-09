@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -149,13 +150,8 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  public void disposeUIResources() {
-  }
-
-  @Override
-  @Nls
-  public String getDisplayName() {
-    return "Ignored Files";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Ignored Files");
   }
 
   @Override

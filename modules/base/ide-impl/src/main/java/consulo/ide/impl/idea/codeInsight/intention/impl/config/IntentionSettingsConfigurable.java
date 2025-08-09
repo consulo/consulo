@@ -18,15 +18,16 @@ package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
-import consulo.configurable.StandardConfigurableIds;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 @ExtensionImpl
@@ -54,9 +55,10 @@ public class IntentionSettingsConfigurable implements ApplicationConfigurable, S
     return myPanel != null && myPanel.isModified();
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return CodeInsightBundle.message("intention.settings");
+  public LocalizeValue getDisplayName() {
+    return CodeInsightLocalize.intentionSettings();
   }
 
   @Nullable

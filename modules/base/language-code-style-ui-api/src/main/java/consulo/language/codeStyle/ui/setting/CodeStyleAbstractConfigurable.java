@@ -43,9 +43,10 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
     myDisplayName = displayName;
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return myDisplayName.get();
+  public LocalizeValue getDisplayName() {
+    return myDisplayName;
   }
 
   @RequiredUIAccess

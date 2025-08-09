@@ -16,13 +16,14 @@
 package consulo.diff.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.diff.DiffColors;
 import consulo.diff.util.TextDiffTypeFactory;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
@@ -37,8 +38,8 @@ import java.util.List;
 public class DiffColorAndFontDescriptorsProvider implements ColorAndFontDescriptorsProvider {
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return ApplicationBundle.message("title.diff");
+  public LocalizeValue getDisplayName() {
+    return ApplicationLocalize.titleDiff();
   }
 
   @Override

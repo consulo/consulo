@@ -17,11 +17,13 @@ package consulo.ide.impl.compiler.resourceCompiler;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompilerBundle;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.Comparing;
 import consulo.project.Project;
 import consulo.ui.ex.Gray;
@@ -57,10 +59,10 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
     myModel = new CollectionListModel<String>(myResourceCompilerConfiguration.getResourceFilePatterns());
   }
 
-  @Nls
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return CompilerBundle.message("resource.compiler.description");
+  public LocalizeValue getDisplayName() {
+    return CompilerLocalize.resourceCompilerDescription();
   }
 
   @Nonnull

@@ -329,7 +329,7 @@ public class ColorAndFontDescriptionPanel implements OptionsPanelImpl.ColorDescr
       String tooltipText;
       String labelText;
       if (settingsPage != null) {
-        String pageName = settingsPage.getDisplayName();
+        String pageName = settingsPage.getDisplayName().get();
         tooltipText = "'" + attrLabel + "' from<br>'" + pageName + "' section";
         labelText = style + "'" + attrLabel + "'<br>of <a href=\"" + attrName + "\">" + pageName;
       }

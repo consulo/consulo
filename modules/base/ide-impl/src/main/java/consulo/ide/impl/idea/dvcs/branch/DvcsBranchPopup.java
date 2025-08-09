@@ -120,7 +120,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
                 @RequiredUIAccess
                 public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
                     if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getDisplayName());
+                        ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getDisplayName().get());
                         if (myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
                             notification.expire();
                         }

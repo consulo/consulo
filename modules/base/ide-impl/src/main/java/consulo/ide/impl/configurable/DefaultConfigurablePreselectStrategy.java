@@ -45,7 +45,7 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
 
   @Nullable
   private static Configurable findLastSavedConfigurable(Configurable[] configurables, PropertiesComponent propertiesComponent) {
-    final String id = propertiesComponent.getValue(LAST_SELECTED_CONFIGURABLE);
+    String id = propertiesComponent.getValue(LAST_SELECTED_CONFIGURABLE);
     if (id == null) return null;
 
     return findConfigurableInGroups(id, configurables);
@@ -76,19 +76,19 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
 
 
   @Nullable
-  public static Configurable getPreselectedByDisplayName(final Configurable[] configurables,
-                                                         final String preselectedConfigurableDisplayName,
-                                                         final Project project) {
+  public static Configurable getPreselectedByDisplayName(Configurable[] configurables,
+                                                         String preselectedConfigurableDisplayName,
+                                                         Project project) {
     Configurable result = findPreselectedByDisplayName(preselectedConfigurableDisplayName, configurables);
 
     return result == null ? findLastSavedConfigurable(configurables, ProjectPropertiesComponent.getInstance(project)) : result;
   }
 
   @Nullable
-  private static Configurable findPreselectedByDisplayName(final String preselectedConfigurableDisplayName, Configurable[] configurables) {
-    final List<Configurable> all = SearchUtil.expand(configurables);
+  private static Configurable findPreselectedByDisplayName(String preselectedConfigurableDisplayName, Configurable[] configurables) {
+    List<Configurable> all = SearchUtil.expand(configurables);
     for (Configurable each : all) {
-      if (preselectedConfigurableDisplayName.equals(each.getDisplayName())) return each;
+      if (preselectedConfigurableDisplayName.equals(each.getDisplayName().get())) return each;
     }
     return null;
   }

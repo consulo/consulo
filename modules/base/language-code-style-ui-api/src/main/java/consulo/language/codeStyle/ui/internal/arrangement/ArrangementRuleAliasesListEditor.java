@@ -19,11 +19,11 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.NamedItemsListEditor;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 import java.util.List;
 import java.util.Set;
@@ -97,9 +97,9 @@ public class ArrangementRuleAliasesListEditor extends NamedItemsListEditor<StdAr
     return !myUsedTokenIds.contains(item.getId());
   }
 
-  @Nls
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Custom Composite Tokens";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Custom Composite Tokens");
   }
 }

@@ -27,6 +27,7 @@ import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.codeStyle.CodeStyle;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
@@ -247,10 +248,10 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
         String optionToCheck = option.trim().toLowerCase();
         for (Configurable each : contentHits) {
-            if (each.getDisplayName() == null) {
+            if (each.getDisplayName() == LocalizeValue.of()) {
                 continue;
             }
-            String displayName = each.getDisplayName().toLowerCase();
+            String displayName = each.getDisplayName().toLowerCase().get();
             List<String> allWords = StringUtil.getWordsIn(displayName);
             if (displayName.contains(optionToCheck)) {
                 hits.getNameFullHits().add(each);

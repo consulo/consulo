@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.CommonBundle;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurationException;
@@ -26,12 +25,14 @@ import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
-import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.bundle.SettingsSdksModel;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ProjectBundle;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -41,7 +42,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -84,9 +84,9 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         }
 
         private void updateName() {
-            final TreePath path = myTree.getSelectionPath();
+            TreePath path = myTree.getSelectionPath();
             if (path != null) {
-                final MasterDetailsConfigurable configurable = ((MyNode) path.getLastPathComponent()).getConfigurable();
+                MasterDetailsConfigurable configurable = ((MyNode) path.getLastPathComponent()).getConfigurable();
                 if (configurable != null && configurable instanceof SdkConfigurable) {
                     configurable.updateName();
                 }
@@ -96,19 +96,20 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
     private class CopySdkAction extends AnAction {
         private CopySdkAction() {
-            super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), PlatformIconGroup.actionsCopy());
+            super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
         }
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(final AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
 
-            final Object o = getSelectedObject();
+            Object o = getSelectedObject();
             if (o instanceof SdkImpl) {
-                final SdkImpl selected = (SdkImpl) o;
+                SdkImpl selected = (SdkImpl) o;
                 String defaultNewName = SdkUtil.createUniqueSdkName(selected.getName(), sdksModel.getSdks());
-                final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator() {
+                String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator() {
+                    @RequiredUIAccess
                     @Override
                     public boolean checkInput(String inputString) {
                         return super.checkInput(inputString) && sdksModel.findSdk(inputString) == null;
@@ -122,13 +123,13 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
                 sdk.setName(newName);
                 sdk.setPredefined(false);
 
-                sdksModel.doAdd(sdk, sdk1 -> addSdkNode(sdk1));
+                sdksModel.doAdd(sdk, SdkListConfigurable.this::addSdkNode);
             }
         }
 
         @RequiredUIAccess
         @Override
-        public void update(final AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (myTree.getSelectionPaths() == null || myTree.getSelectionPaths().length != 1) {
                 e.getPresentation().setEnabled(false);
             }
@@ -164,15 +165,14 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     }
 
     @Override
-    protected boolean wasObjectStored(final Object editableObject) {
+    protected boolean wasObjectStored(Object editableObject) {
         return false;
     }
 
     @Nonnull
     @Override
-    @Nls
-    public String getDisplayName() {
-        return ProjectBundle.message("global.bundles.display.name");
+    public LocalizeValue getDisplayName() {
+        return ProjectLocalize.globalBundlesDisplayName();
     }
 
     @Override
@@ -198,7 +198,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         myListenerDisposable = Disposable.newDisposable();
         sdksModel.addListener(myListener, myListenerDisposable);
 
-        final Map<SdkType, List<Sdk>> map = new HashMap<>();
+        Map<SdkType, List<Sdk>> map = new HashMap<>();
 
         for (Sdk sdk : sdksModel.getModifiedSdksMap().values()) {
             SdkType sdkType = (SdkType) sdk.getSdkType();
@@ -215,21 +215,22 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         }
 
         for (Map.Entry<SdkType, List<Sdk>> entry : map.entrySet()) {
-            final SdkType key = entry.getKey();
-            final List<Sdk> value = entry.getValue();
+            SdkType key = entry.getKey();
+            List<Sdk> value = entry.getValue();
 
-            final MyNode groupNode = createSdkGroupNode(key);
+            MyNode groupNode = createSdkGroupNode(key);
             groupNode.setAllowsChildren(true);
             addNode(groupNode, myRoot);
 
             for (Sdk sdk : value) {
-                final SdkConfigurable configurable = new SdkConfigurable((SdkImpl) sdk, sdksModel, TREE_UPDATER);
+                SdkConfigurable configurable = new SdkConfigurable((SdkImpl) sdk, sdksModel, TREE_UPDATER);
 
                 addNode(new MyNode(configurable), groupNode);
             }
         }
     }
 
+    @RequiredUIAccess
     @Override
     protected void initSelection() {
         super.initSelection();
@@ -238,21 +239,21 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
     @Nonnull
     private static MyNode createSdkGroupNode(SdkType key) {
-        return new MyNode(new TextConfigurable<>(key, key.getPresentableName(), "", "", key.getGroupIcon()), true);
+        return new MyNode(new TextConfigurable<>(key, LocalizeValue.ofNullable(key.getPresentableName()), "", "", key.getGroupIcon()), true);
     }
 
     @Nonnull
     @Override
     protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
         SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
-        final List<ProjectStructureElement> result = new ArrayList<>();
+        List<ProjectStructureElement> result = new ArrayList<>();
         for (Sdk sdk : sdksModel.getModifiedSdksMap().values()) {
             result.add(new SdkProjectStructureElement(sdk));
         }
         return result;
     }
 
-    public boolean addSdkNode(final Sdk sdk) {
+    public boolean addSdkNode(Sdk sdk) {
         if (myUiDisposed) {
             return false;
         }
@@ -263,12 +264,12 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
         MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl) sdk, sdksModel, TREE_UPDATER));
 
-        final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
+        MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
         if (groupNode != null) {
             addNode(newSdkNode, groupNode);
         }
         else {
-            final MyNode sdkGroupNode = createSdkGroupNode((SdkType) sdk.getSdkType());
+            MyNode sdkGroupNode = createSdkGroupNode((SdkType) sdk.getSdkType());
 
             sdkGroupNode.add(newSdkNode);
 
@@ -294,7 +295,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     @Override
     protected void onItemDeleted(Object item) {
         for (int i = 0; i < myRoot.getChildCount(); i++) {
-            final TreeNode childAt = myRoot.getChildAt(i);
+            TreeNode childAt = myRoot.getChildAt(i);
             if (childAt instanceof MyNode) {
                 if (childAt.getChildCount() == 0) {
                     ((DefaultTreeModel) myTree.getModel()).removeNodeFromParent((MutableTreeNode) childAt);
@@ -336,11 +337,11 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
         boolean modifiedSdks = false;
         for (int i = 0; i < myRoot.getChildCount(); i++) {
-            final TreeNode groupNode = myRoot.getChildAt(i);
+            TreeNode groupNode = myRoot.getChildAt(i);
 
             for (int k = 0; k < groupNode.getChildCount(); k++) {
-                final MyNode sdkNode = (MyNode) groupNode.getChildAt(k);
-                final MasterDetailsConfigurable configurable = sdkNode.getConfigurable();
+                MyNode sdkNode = (MyNode) groupNode.getChildAt(k);
+                MasterDetailsConfigurable configurable = sdkNode.getConfigurable();
                 if (configurable.isModified()) {
                     configurable.apply();
                     modifiedSdks = true;
@@ -369,13 +370,13 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
     @Override
     public AbstractAddGroup createAddAction() {
-        return new AbstractAddGroup(ProjectBundle.message("add.action.name")) {
+        return new AbstractAddGroup(ProjectLocalize.addActionName()) {
             @Nonnull
             @Override
-            public AnAction[] getChildren(@Nullable final AnActionEvent e) {
+            public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
 
-                DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);
+                DefaultActionGroup group = new DefaultActionGroup(ProjectLocalize.addActionName(), true);
                 sdksModel.createAddActions(group, myTree, sdk -> addSdkNode(sdk), ADD_SDK_FILTER);
                 return group.getChildren(null);
             }
@@ -383,7 +384,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     }
 
     @Override
-    protected void removeSdk(final Sdk jdk) {
+    protected void removeSdk(Sdk jdk) {
         SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
         sdksModel.removeSdk(jdk);
         // todo myContext.getDaemonAnalyzer().removeElement(new SdkProjectStructureElement(jdk));
@@ -392,6 +393,6 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     @Override
     @Nullable
     protected String getEmptySelectionString() {
-        return ProjectBundle.message("global.bundles.empty.text");
+        return ProjectLocalize.globalBundlesEmptyText().get();
     }
 }

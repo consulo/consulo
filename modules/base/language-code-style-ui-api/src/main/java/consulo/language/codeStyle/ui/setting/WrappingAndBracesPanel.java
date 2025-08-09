@@ -16,11 +16,13 @@
 package consulo.language.codeStyle.ui.setting;
 
 import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleConstraints;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.setting.*;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.CommaSeparatedIntegersField;
 import consulo.ui.ex.awt.UIUtil;
@@ -120,9 +122,10 @@ public class WrappingAndBracesPanel extends OptionTableWithPreviewPanel {
     return myFieldNameToGroup.get(fieldName);
   }
 
+  @Nonnull
   @Override
-  protected String getTabTitle() {
-    return ApplicationBundle.message("wrapping.and.braces");
+  protected LocalizeValue getTabTitle() {
+    return ApplicationLocalize.wrappingAndBraces();
   }
 
   protected static class SettingsGroup {

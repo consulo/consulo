@@ -27,6 +27,7 @@ import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModelListener;
 import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 
@@ -77,7 +78,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
 
     model.addListener(new CodeStyleSchemesModelListener(){
       @Override
-      public void currentSchemeChanged(final Object source) {
+      public void currentSchemeChanged(Object source) {
         if (source != mySchemesPanel) {
           mySchemesPanel.onSelectedSchemeChanged();
         }
@@ -100,7 +101,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
       }
 
       @Override
-      public void schemeChanged(final CodeStyleScheme scheme) {
+      public void schemeChanged(CodeStyleScheme scheme) {
         ensurePanel(scheme).reset();
       }
     });
@@ -151,12 +152,12 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
   }
 
   public NewCodeStyleSettingsPanel[] getPanels() {
-    final Collection<NewCodeStyleSettingsPanel> panels = mySettingsPanels.values();
+    Collection<NewCodeStyleSettingsPanel> panels = mySettingsPanels.values();
     return panels.toArray(new NewCodeStyleSettingsPanel[panels.size()]);
   }
 
   public boolean isModified() {
-    final NewCodeStyleSettingsPanel[] panels = getPanels();
+    NewCodeStyleSettingsPanel[] panels = getPanels();
     for (NewCodeStyleSettingsPanel panel : panels) {
       //if (!panel.isMultiLanguage()) mySchemesPanel.setPredefinedEnabled(false);
       if (panel.isModified()) return true;
@@ -189,7 +190,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
   }
 
   public void apply() {
-    final NewCodeStyleSettingsPanel[] panels = getPanels();
+    NewCodeStyleSettingsPanel[] panels = getPanels();
     for (NewCodeStyleSettingsPanel panel : panels) {
       if (panel.isModified()) panel.apply();
     }
@@ -241,8 +242,8 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     return mySettingsPanels.get(name);
   }
 
-  public String getDisplayName() {
-    return myModel.getSelectedScheme().getName();
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.of(myModel.getSelectedScheme().getName());
   }
 
   public void disposeUIResources() {
@@ -254,7 +255,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     }
   }
 
-  public boolean isModified(final CodeStyleScheme scheme) {
+  public boolean isModified(CodeStyleScheme scheme) {
     if (!mySettingsPanels.containsKey(scheme.getName())) {
       return false;
     }
@@ -263,8 +264,8 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
   }
 
   public Set<String> processListOptions() {
-    final CodeStyleScheme defaultScheme = CodeStyleSchemes.getInstance().getDefaultScheme();
-    final NewCodeStyleSettingsPanel panel = ensurePanel(defaultScheme);
+    CodeStyleScheme defaultScheme = CodeStyleSchemes.getInstance().getDefaultScheme();
+    NewCodeStyleSettingsPanel panel = ensurePanel(defaultScheme);
     return panel.processListOptions();
   }
 

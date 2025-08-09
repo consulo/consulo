@@ -18,15 +18,15 @@ package consulo.ide.impl.idea.ui.tabs;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.language.editor.FileColorManager;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 
 /**
@@ -48,10 +48,10 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
+  @Nonnull
   @Override
-  @Nls
-  public String getDisplayName() {
-    return "File Colors";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("File Colors");
   }
 
   @RequiredUIAccess

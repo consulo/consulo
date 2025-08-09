@@ -21,6 +21,7 @@ import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.configurable.*;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -66,8 +67,8 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return IdeLocalize.eapConfigurableName().get();
+    public LocalizeValue getDisplayName() {
+        return IdeLocalize.eapConfigurableName();
     }
 
     @Nullable

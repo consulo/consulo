@@ -18,6 +18,7 @@ package consulo.colorScheme.setting;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -56,5 +57,5 @@ public interface ColorAndFontDescriptors {
      * @return the title of the custom page.
      */
     @Nonnull
-    String getDisplayName();
+    LocalizeValue getDisplayName();
 }

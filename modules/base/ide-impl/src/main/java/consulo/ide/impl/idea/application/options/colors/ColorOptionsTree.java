@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.util.lang.StringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.tree.*;
 import java.util.*;
 
@@ -28,14 +29,14 @@ import java.util.*;
  * @author Rustam Vishnyakov
  */
 public class ColorOptionsTree extends Tree {
-  private final String myCategoryName;
+  private final LocalizeValue myCategoryName;
   private final DefaultTreeModel myTreeModel;
 
   public final static String NAME_SEPARATOR = "//";
 
   private static final Comparator<EditorSchemeAttributeDescriptor> ATTR_COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.toString(), o2.toString());
 
-  public ColorOptionsTree(@Nonnull String categoryName) {
+  public ColorOptionsTree(@Nonnull LocalizeValue categoryName) {
     super(createTreeModel());
     myTreeModel = (DefaultTreeModel)getModel();
     setRootVisible(false);
@@ -46,7 +47,7 @@ public class ColorOptionsTree extends Tree {
 
   private boolean isMyDescriptor(EditorSchemeAttributeDescriptor descriptor) {
     String groupAsString = descriptor.getGroup().getValue();
-    return myCategoryName.equals(groupAsString);
+    return myCategoryName.get().equals(groupAsString);
   }
 
   public void fillOptions(@Nonnull ColorAndFontOptions options) {
@@ -94,7 +95,7 @@ public class ColorOptionsTree extends Tree {
     return null;
   }
 
-  public void selectOptionByType(@Nonnull final String attributeType) {
+  public void selectOptionByType(@Nonnull String attributeType) {
     selectPath(findOption(myTreeModel.getRoot(), data -> {
       if (data instanceof EditorSchemeAttributeDescriptor) {
         return attributeType.equals(((EditorSchemeAttributeDescriptor)data).getType());
@@ -103,7 +104,7 @@ public class ColorOptionsTree extends Tree {
     }));
   }
 
-  public void selectOptionByName(@Nonnull final String optionName) {
+  public void selectOptionByName(@Nonnull String optionName) {
     selectPath(findOption(myTreeModel.getRoot(), data -> !optionName.isEmpty() && StringUtil.containsIgnoreCase(data.toString(), optionName)));
   }
 

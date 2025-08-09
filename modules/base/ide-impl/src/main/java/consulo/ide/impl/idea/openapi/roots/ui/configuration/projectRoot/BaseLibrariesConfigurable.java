@@ -58,7 +58,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     @Nonnull
     protected String myLevel;
 
-    protected BaseLibrariesConfigurable(final @Nonnull Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
+    protected BaseLibrariesConfigurable(@Nonnull Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
         super(masterDetailsStateService);
         myProject = project;
     }
@@ -88,7 +88,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     }
 
     @Override
-    protected boolean wasObjectStored(final Object editableObject) {
+    protected boolean wasObjectStored(Object editableObject) {
         return false;
     }
 
@@ -96,7 +96,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     @Override
     public boolean isModified() {
         boolean isModified = false;
-        for (final LibraryTable.ModifiableModel provider : getLibrariesConfigurator().getModels()) {
+        for (LibraryTable.ModifiableModel provider : getLibrariesConfigurator().getModels()) {
             isModified |= provider.isChanged();
         }
         return isModified || super.isModified();
@@ -106,7 +106,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     public void checkCanApply() throws ConfigurationException {
         super.checkCanApply();
         for (LibraryConfigurable configurable : getLibraryConfigurables()) {
-            if (configurable.getDisplayName().isEmpty()) {
+            if (configurable.getDisplayName().get().isEmpty()) {
                 ((LibraryProjectStructureElement) configurable.getProjectStructureElement()).navigate(myProject);
                 throw new ConfigurationException("Library name is not specified");
             }
@@ -128,7 +128,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     @Nonnull
     @Override
     protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
-        final List<ProjectStructureElement> result = new ArrayList<>();
+        List<ProjectStructureElement> result = new ArrayList<>();
         for (LibraryConfigurable libraryConfigurable : getLibraryConfigurables()) {
             result.add(new LibraryProjectStructureElement(libraryConfigurable.getEditableObject()));
         }
@@ -139,9 +139,9 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         //todo[nik] improve
         List<LibraryConfigurable> libraryConfigurables = new ArrayList<>();
         for (int i = 0; i < myRoot.getChildCount(); i++) {
-            final TreeNode node = myRoot.getChildAt(i);
+            TreeNode node = myRoot.getChildAt(i);
             if (node instanceof MyNode) {
-                final Configurable configurable = ((MyNode) node).getConfigurable();
+                Configurable configurable = ((MyNode) node).getConfigurable();
                 if (configurable instanceof LibraryConfigurable) {
                     libraryConfigurables.add((LibraryConfigurable) configurable);
                 }
@@ -150,15 +150,15 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         return libraryConfigurables;
     }
 
-    private void createLibrariesNode(final LibraryTableModifiableModelProvider modelProvider) {
-        final Library[] libraries = modelProvider.getModifiableModel().getLibraries();
+    private void createLibrariesNode(LibraryTableModifiableModelProvider modelProvider) {
+        Library[] libraries = modelProvider.getModifiableModel().getLibraries();
         for (Library library : libraries) {
             myRoot.add(new MyNode(new LibraryConfigurable(myProject, modelProvider, library, getLibrariesConfigurator(), TREE_UPDATER)));
         }
         TreeUtil.sort(myRoot, (o1, o2) -> {
             MyNode node1 = (MyNode) o1;
             MyNode node2 = (MyNode) o2;
-            return node1.getDisplayName().compareToIgnoreCase(node2.getDisplayName());
+            return node1.getDisplayName().compareIgnoreCase(node2.getDisplayName());
         });
         ((DefaultTreeModel) myTree.getModel()).reload(myRoot);
     }
@@ -179,17 +179,17 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     public void createLibraryNode(Library library) {
         LibrariesConfigurator librariesConfigurator = getLibrariesConfigurator();
 
-        final LibraryTable table = library.getTable();
+        LibraryTable table = library.getTable();
         if (table != null) {
-            final String level = table.getTableLevel();
-            final LibraryConfigurable configurable = new LibraryConfigurable(
+            String level = table.getTableLevel();
+            LibraryConfigurable configurable = new LibraryConfigurable(
                 myProject,
                 librariesConfigurator.createModifiableModelProvider(level),
                 library,
                 librariesConfigurator,
                 TREE_UPDATER
             );
-            final MyNode node = new MyNode(configurable);
+            MyNode node = new MyNode(configurable);
             addNode(node, myRoot);
             //final ProjectStructureDaemonAnalyzer daemonAnalyzer = myContext.getDaemonAnalyzer();
             //daemonAnalyzer.queueUpdate(new LibraryProjectStructureElement(library));
@@ -200,7 +200,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     @Override
     @Nonnull
     protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
-        final ArrayList<AnAction> actions = new ArrayList<>();
+        ArrayList<AnAction> actions = new ArrayList<>();
         actions.add(new CopyLibraryAction());
         if (fromPopup) {
             // actions.add(new ChangeLibraryLevelAction(myProject, myTree, this, targetGroup));
@@ -214,7 +214,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
         return new AbstractAddGroup(getAddText()) {
             @Nonnull
             @Override
-            public AnAction[] getChildren(@Nullable final AnActionEvent e) {
+            public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 return CreateNewLibraryAction.createActionOrGroup(getAddText(), BaseLibrariesConfigurable.this, myProject);
             }
         };
@@ -230,6 +230,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
 
     public abstract LibraryTableModifiableModelProvider getModelProvider();
 
+    @RequiredUIAccess
     @Override
     protected void updateSelection(@Nullable MasterDetailsConfigurable configurable) {
         boolean selectionChanged = !Comparing.equal(myCurrentConfigurable, configurable);
@@ -259,17 +260,17 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     public void removeLibrary(@Nonnull LibraryProjectStructureElement element) {
         getModelProvider().getModifiableModel().removeLibrary(element.getLibrary());
         // todo myContext.getDaemonAnalyzer().removeElement(element);
-        final MyNode node = findNodeByObject(myRoot, element.getLibrary());
+        MyNode node = findNodeByObject(myRoot, element.getLibrary());
         if (node != null) {
             removePaths(TreeUtil.getPathFromRoot(node));
         }
     }
 
     @Override
-    protected boolean removeLibrary(final Library library) {
-        final LibraryTable table = library.getTable();
+    protected boolean removeLibrary(Library library) {
+        LibraryTable table = library.getTable();
         if (table != null) {
-            final LibraryProjectStructureElement libraryElement = new LibraryProjectStructureElement(library);
+            LibraryProjectStructureElement libraryElement = new LibraryProjectStructureElement(library);
             /*
             final Collection<ProjectStructureElementUsage> usages = new ArrayList<>(myContext.getDaemonAnalyzer().getUsages(libraryElement));
             if (usages.size() > 0) {
@@ -337,11 +338,11 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(final AnActionEvent e) {
-            final Object o = getSelectedObject();
+        public void actionPerformed(AnActionEvent e) {
+            Object o = getSelectedObject();
             if (o instanceof LibraryEx) {
-                final LibraryEx selected = (LibraryEx) o;
-                final String newName = Messages.showInputDialog(
+                LibraryEx selected = (LibraryEx) o;
+                String newName = Messages.showInputDialog(
                     "Enter library name:",
                     "Copy Library",
                     null,
@@ -353,18 +354,18 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
                 }
 
                 BaseLibrariesConfigurable configurable = BaseLibrariesConfigurable.this;
-                final LibraryEx library = (LibraryEx) getLibrariesConfigurator().getLibrary(selected.getName(), myLevel);
+                LibraryEx library = (LibraryEx) getLibrariesConfigurator().getLibrary(selected.getName(), myLevel);
                 LOG.assertTrue(library != null);
 
-                final LibrariesModifiableModel libsModel = (LibrariesModifiableModel) configurable.getModelProvider().getModifiableModel();
-                final Library lib = libsModel.createLibrary(newName, library.getKind());
-                final LibraryEx.ModifiableModelEx model = libsModel.getLibraryEditor(lib).getModel();
+                LibrariesModifiableModel libsModel = (LibrariesModifiableModel) configurable.getModelProvider().getModifiableModel();
+                Library lib = libsModel.createLibrary(newName, library.getKind());
+                LibraryEx.ModifiableModelEx model = libsModel.getLibraryEditor(lib).getModel();
                 LibraryEditingUtil.copyLibrary(library, Collections.<String, String>emptyMap(), model);
             }
         }
 
         @Override
-        public void update(final AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (myTree.getSelectionPaths() == null || myTree.getSelectionPaths().length != 1) {
                 e.getPresentation().setEnabled(false);
             }

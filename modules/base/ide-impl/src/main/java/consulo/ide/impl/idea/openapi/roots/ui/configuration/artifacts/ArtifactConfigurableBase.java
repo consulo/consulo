@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.project.ProjectBundle;
+import consulo.compiler.artifact.Artifact;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.compiler.artifact.Artifact;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -56,13 +57,13 @@ public abstract class ArtifactConfigurableBase extends ProjectStructureElementCo
 
   @Override
   public String getBannerSlogan() {
-    return ProjectBundle.message("banner.slogan.artifact.0", getDisplayName());
+    return ProjectLocalize.bannerSloganArtifact0(getArtifact().getName()).get();
   }
 
+  @Nonnull
   @Override
-  @Nls
-  public String getDisplayName() {
-    return getArtifact().getName();
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.of(getArtifact().getName());
   }
 
   @Override

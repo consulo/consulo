@@ -404,8 +404,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "System";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("System");
     }
 
     @Nullable

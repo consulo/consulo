@@ -20,6 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.configurable.*;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.file.FileTypeManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.*;
 import consulo.language.Language;
 import consulo.ui.ex.action.ActionToolbarPosition;
@@ -88,10 +89,10 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
 
       ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myFileTypesList).setToolbarPosition(ActionToolbarPosition.TOP).setAddAction(button -> myController.addFileType())
               .setRemoveAction(button -> myController.removeFileType()).setEditAction(button -> myController.editFileType()).setEditActionUpdater(e -> {
-                final FileType fileType = getSelectedFileType();
+                FileType fileType = getSelectedFileType();
                 return canBeModified(fileType);
               }).setRemoveActionUpdater(e -> {
-                final FileType fileType = getSelectedFileType();
+                FileType fileType = getSelectedFileType();
                 return canBeModified(fileType);
               }).disableUpDownActions().setPanelBorder(JBUI.Borders.empty());
 
@@ -119,14 +120,14 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       }
 
       private void initConvertors() {
-        final PairConvertor<Object, String, Boolean> simpleConvertor = (element, s) -> {
+        PairConvertor<Object, String, Boolean> simpleConvertor = (element, s) -> {
           String value = element.toString();
           if (element instanceof FileType) {
             value = ((FileType)element).getDescription().get();
           }
           return getComparator().matchingFragments(s, value) != null;
         };
-        final PairConvertor<Object, String, Boolean> byExtensionsConvertor = (element, s) -> {
+        PairConvertor<Object, String, Boolean> byExtensionsConvertor = (element, s) -> {
           if (element instanceof FileType && myCurrentType != null) {
             return myCurrentType.equals(element);
           }
@@ -154,7 +155,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     }
 
 
-    public void attachActions(final FileTypeConfigurable controller) {
+    public void attachActions(FileTypeConfigurable controller) {
       myController = controller;
       mySpeedSearch.myController = controller;
     }
@@ -219,7 +220,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       setBorder(IdeBorderFactory.createTitledBorder(FileTypesBundle.message("filetype.registered.patterns.group"), false));
     }
 
-    public void attachActions(final FileTypeConfigurable controller) {
+    public void attachActions(FileTypeConfigurable controller) {
       myController = controller;
     }
 
@@ -249,11 +250,11 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       ScrollingUtil.selectItem(myPatternsList, getListModel().getSize() - 1);
     }
 
-    public void select(final String pattern) {
+    public void select(String pattern) {
       for (int i = 0; i < myPatternsList.getItemsCount(); i++) {
-        final Object at = myPatternsList.getModel().getElementAt(i);
+        Object at = myPatternsList.getModel().getElementAt(i);
         if (at instanceof String) {
-          final FileNameMatcher matcher = FileTypeManager.parseFromString((String)at);
+          FileNameMatcher matcher = FileTypeManager.parseFromString((String)at);
           if (matcher.acceptsCharSequence(pattern)) {
             ScrollingUtil.selectItem(myPatternsList, i);
             return;
@@ -286,7 +287,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     private final T myFileType;
     private final SettingsEditor<T> myEditor;
 
-    public TypeEditor(Component parent, T fileType, final String title) {
+    public TypeEditor(Component parent, T fileType, String title) {
       super(parent, false);
       myFileType = fileType;
       myEditor = fileType.getEditor();
@@ -471,7 +472,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     if (type == null) return;
     List<String> extensions = new ArrayList<>();
 
-    final List<FileNameMatcher> assocs = myTempPatternsTable.getAssociations(type);
+    List<FileNameMatcher> assocs = myTempPatternsTable.getAssociations(type);
     for (FileNameMatcher assoc : assocs) {
       extensions.add(assoc.getPresentableString());
     }
@@ -489,30 +490,30 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
   }
 
   private void editPattern() {
-    final String item = myPatterns.getSelectedItem();
+    String item = myPatterns.getSelectedItem();
     if (item == null) return;
 
     editPattern(item);
   }
 
-  private void editPattern(@Nullable final String item) {
-    final FileType type = myRecognizedFileType.getSelectedFileType();
+  private void editPattern(@Nullable String item) {
+    FileType type = myRecognizedFileType.getSelectedFileType();
     if (type == null) return;
 
-    final String title = item == null ? FileTypesBundle.message("filetype.edit.add.pattern.title") : FileTypesBundle.message("filetype.edit.edit.pattern.title");
+    String title = item == null ? FileTypesBundle.message("filetype.edit.add.pattern.title") : FileTypesBundle.message("filetype.edit.edit.pattern.title");
 
-    final Language oldLanguage = item == null ? null : myTempTemplateDataLanguages.findAssociatedFileType(item);
-    final FileTypePatternDialog dialog = new FileTypePatternDialog(item, type, oldLanguage);
-    final DialogBuilder builder = new DialogBuilder(myPatterns);
+    Language oldLanguage = item == null ? null : myTempTemplateDataLanguages.findAssociatedFileType(item);
+    FileTypePatternDialog dialog = new FileTypePatternDialog(item, type, oldLanguage);
+    DialogBuilder builder = new DialogBuilder(myPatterns);
     builder.setPreferredFocusComponent(dialog.getPatternField());
     builder.setCenterPanel(dialog.getMainPanel());
     builder.setTitle(title);
     builder.showModal(true);
     if (builder.getDialogWrapper().isOK()) {
-      final String pattern = dialog.getPatternField().getText();
+      String pattern = dialog.getPatternField().getText();
       if (StringUtil.isEmpty(pattern)) return;
 
-      final FileNameMatcher matcher = FileTypeManager.parseFromString(pattern);
+      FileNameMatcher matcher = FileTypeManager.parseFromString(pattern);
       FileType registeredFileType = findExistingFileType(matcher);
       if (registeredFileType != null && registeredFileType != type) {
         if (registeredFileType.isReadOnly()) {
@@ -537,7 +538,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       }
 
       if (item != null) {
-        final FileNameMatcher oldMatcher = FileTypeManager.parseFromString(item);
+        FileNameMatcher oldMatcher = FileTypeManager.parseFromString(item);
         myTempPatternsTable.removeAssociation(oldMatcher, type);
         if (oldLanguage != null) {
           myTempTemplateDataLanguages.removeAssociation(oldMatcher, oldLanguage);
@@ -550,7 +551,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       }
 
       updateExtensionList();
-      final int index = myPatterns.getListModel().indexOf(matcher.getPresentableString());
+      int index = myPatterns.getListModel().indexOf(matcher.getPresentableString());
       if (index >= 0) {
         ScrollingUtil.selectItem(myPatterns.myPatternsList, index);
       }
@@ -588,9 +589,10 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return FileTypesBundle.message("filetype.settings.title");
+  public LocalizeValue getDisplayName() {
+    return FileTypeLocalize.filetypeSettingsTitle();
   }
 
   @RequiredUIAccess

@@ -322,8 +322,8 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
 
     @Override
     @Nonnull
-    public String getDisplayName() {
-        return ConfigurableLocalize.optionsGeneralDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return ConfigurableLocalize.optionsGeneralDisplayName();
     }
 
     @Override

@@ -24,6 +24,7 @@ import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 
@@ -73,8 +74,8 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   }
 
   @Override
-  public String getDisplayName() {
-    return myScope.getName();
+  public LocalizeValue getDisplayName() {
+    return myScope.getPresentableName();
   }
 
   public NamedScopesHolder getHolder() {

@@ -243,8 +243,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return ProjectLocalize.displayNameArtifacts().get();
+    public LocalizeValue getDisplayName() {
+        return ProjectLocalize.displayNameArtifacts();
     }
 
     @Override

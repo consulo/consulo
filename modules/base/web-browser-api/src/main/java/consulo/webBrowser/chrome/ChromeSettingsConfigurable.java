@@ -155,8 +155,9 @@ public class ChromeSettingsConfigurable implements Configurable {
         myLayout = null;
     }
 
+    @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Chrome Settings";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Chrome Settings");
     }
 }

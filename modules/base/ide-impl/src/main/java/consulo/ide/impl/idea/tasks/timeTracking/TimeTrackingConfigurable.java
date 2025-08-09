@@ -2,6 +2,7 @@ package consulo.ide.impl.idea.tasks.timeTracking;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import jakarta.inject.Inject;
@@ -76,14 +77,14 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
 
   @Nullable
   @Override
-  public Runnable enableSearch(final String option) {
+  public Runnable enableSearch(String option) {
     return null;
   }
 
   @Nls
   @Override
-  public String getDisplayName() {
-    return "Time Tracking";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Time Tracking");
   }
 
   @Nullable

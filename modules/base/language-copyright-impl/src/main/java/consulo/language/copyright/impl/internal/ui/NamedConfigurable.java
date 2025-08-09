@@ -87,8 +87,10 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
     public abstract void setDisplayName(String name);
 
+    @Override
     public abstract T getEditableObject();
 
+    @Override
     public abstract String getBannerSlogan();
 
     @RequiredUIAccess
@@ -124,8 +126,9 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
         myOptionsPanel.removeAll();
     }
 
+    @Override
     public void updateName() {
-        myNameField.setText(getDisplayName());
+        myNameField.setText(getDisplayName().get());
     }
 
     @RequiredUIAccess

@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -39,16 +40,16 @@ public class NewColorAndFontPanel extends JPanel {
   private final OptionsPanel myOptionsPanel;
   private final PreviewPanel myPreviewPanel;
   private final AbstractAction myCopyAction;
-  private final String myCategory;
+  private final LocalizeValue myCategory;
   private final Collection<String> myOptionList;
 
   public NewColorAndFontPanel(
     final SchemesPanel schemesPanel,
     final OptionsPanel optionsPanel,
     final PreviewPanel previewPanel,
-    final String category,
-    final Collection<String> optionList,
-    final ColorSettingsPage page
+    LocalizeValue category,
+    Collection<String> optionList,
+    ColorSettingsPage page
   ) {
     super(new BorderLayout(0, 10));
     mySchemesPanel = schemesPanel;
@@ -96,7 +97,7 @@ public class NewColorAndFontPanel extends JPanel {
 
     previewPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
       @Override
-      public void selectionInPreviewChanged(final String typeToSelect) {
+      public void selectionInPreviewChanged(String typeToSelect) {
         optionsPanel.selectOption(typeToSelect);
       }
     });
@@ -111,7 +112,7 @@ public class NewColorAndFontPanel extends JPanel {
       }
 
       @Override
-      public void selectedOptionChanged(final Object selected) {
+      public void selectedOptionChanged(Object selected) {
         if (Application.get().isDispatchThread()) {
           myPreviewPanel.blinkSelectedHighlightType(selected);
         }
@@ -119,7 +120,7 @@ public class NewColorAndFontPanel extends JPanel {
     });
     mySchemesPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
       @Override
-      public void schemeChanged(final Object source) {
+      public void schemeChanged(Object source) {
         myOptionsPanel.updateOptionsList();
         myPreviewPanel.updateView();
         if (optionsPanel instanceof ConsoleFontOptions) {
@@ -132,16 +133,18 @@ public class NewColorAndFontPanel extends JPanel {
   }
 
   @RequiredUIAccess
-  public static NewColorAndFontPanel create(final PreviewPanel previewPanel, String category, final ColorAndFontOptions options, Collection<String> optionList, ColorSettingsPage page) {
-    final SchemesPanel schemesPanel = new SchemesPanel(options);
+  public static NewColorAndFontPanel create(PreviewPanel previewPanel,
+                                            LocalizeValue category,
+                                            ColorAndFontOptions options,
+                                            Collection<String> optionList, ColorSettingsPage page) {
+    SchemesPanel schemesPanel = new SchemesPanel(options);
 
-    final OptionsPanel optionsPanel = new OptionsPanelImpl(options, schemesPanel, category);
-
+    OptionsPanel optionsPanel = new OptionsPanelImpl(options, schemesPanel, category);
 
     return new NewColorAndFontPanel(schemesPanel, optionsPanel, previewPanel, category, optionList, page);
   }
 
-  public Runnable showOption(final String option) {
+  public Runnable showOption(String option) {
     return myOptionsPanel.showOption(option);
   }
 
@@ -151,7 +154,7 @@ public class NewColorAndFontPanel extends JPanel {
       return myOptionsPanel.processListOptions();
     }
     else {
-      final HashSet<String> result = new HashSet<>();
+      HashSet<String> result = new HashSet<>();
       for (String s : myOptionList) {
         result.add(s);
       }
@@ -159,8 +162,7 @@ public class NewColorAndFontPanel extends JPanel {
     }
   }
 
-
-  public String getDisplayName() {
+  public LocalizeValue getDisplayName() {
     return myCategory;
   }
 
@@ -172,7 +174,7 @@ public class NewColorAndFontPanel extends JPanel {
     myPreviewPanel.disposeUIResources();
   }
 
-  public void addSchemesListener(final ColorAndFontSettingsListener schemeListener) {
+  public void addSchemesListener(ColorAndFontSettingsListener schemeListener) {
     mySchemesPanel.addListener(schemeListener);
   }
 
@@ -180,8 +182,8 @@ public class NewColorAndFontPanel extends JPanel {
     mySchemesPanel.resetSchemesCombo(source);
   }
 
-  public boolean contains(final EditorSchemeAttributeDescriptor descriptor) {
-    return descriptor.getGroup().getValue().equals(myCategory);
+  public boolean contains(EditorSchemeAttributeDescriptor descriptor) {
+    return descriptor.getGroup().getValue().equals(myCategory.get());
   }
 
   public JComponent getPanel() {
@@ -192,7 +194,7 @@ public class NewColorAndFontPanel extends JPanel {
     myPreviewPanel.updateView();
   }
 
-  public void addDescriptionListener(final ColorAndFontSettingsListener listener) {
+  public void addDescriptionListener(ColorAndFontSettingsListener listener) {
     myOptionsPanel.addListener(listener);
   }
 

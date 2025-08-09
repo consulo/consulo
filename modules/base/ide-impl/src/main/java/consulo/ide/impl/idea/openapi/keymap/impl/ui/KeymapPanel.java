@@ -33,6 +33,7 @@ import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.impl.*;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -57,7 +58,6 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -1032,10 +1032,10 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         }
     }
 
+    @Nonnull
     @Override
-    @Nls
-    public String getDisplayName() {
-        return KeyMapLocalize.keymapDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return KeyMapLocalize.keymapDisplayName();
     }
 
     @RequiredUIAccess

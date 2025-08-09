@@ -23,6 +23,7 @@ import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -60,8 +61,8 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Tabs";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Tabs");
   }
 
   @RequiredUIAccess

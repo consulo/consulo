@@ -163,7 +163,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
 
         if (vcses.length == 1) {
             AbstractVcs vcs = vcses[0];
-            displayName = LocalizeValue.of(vcs.getDisplayName());
+            displayName = vcs.getDisplayName();
             image = vcs.getIcon();
         }
         else {

@@ -26,6 +26,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.plugin.PluginsConfigurable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -71,8 +72,8 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return ExternalServiceLocalize.titlePlugins().get();
+    public LocalizeValue getDisplayName() {
+        return ExternalServiceLocalize.titlePlugins();
     }
 
     @Nullable

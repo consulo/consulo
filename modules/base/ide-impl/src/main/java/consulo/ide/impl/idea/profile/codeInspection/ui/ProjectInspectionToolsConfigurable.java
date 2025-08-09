@@ -22,6 +22,7 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfile
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
+import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
@@ -51,8 +52,8 @@ public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigura
   }
 
   @Override
-  public String getDisplayName() {
-    return "Code Inspections";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Code Inspections");
   }
 
   @Override

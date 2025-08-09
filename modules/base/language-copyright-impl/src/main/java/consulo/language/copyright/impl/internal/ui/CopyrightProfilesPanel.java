@@ -26,6 +26,7 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
 import consulo.language.copyright.impl.internal.ExternalOptionHelper;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -98,10 +99,10 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         return myManager.getCopyrights().contains(o);
     }
 
-    @Nls
+    @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Copyright Profiles";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Copyright Profiles");
     }
 
     protected void reloadAvailableProfiles() {

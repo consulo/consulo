@@ -18,12 +18,10 @@ package consulo.execution.debug.impl.internal.setting;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.execution.debug.impl.internal.setting.XDebuggerDataViewSettings;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -124,7 +122,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
             JComponent component = configurable.createComponent();
             if (component != null) {
               if (children[0] != configurable || !true) {
-                component.setBorder(IdeBorderFactory.createTitledBorder(configurable.getDisplayName(), false));
+                component.setBorder(IdeBorderFactory.createTitledBorder(configurable.getDisplayName().get(), false));
               }
               panel.add(component);
             }

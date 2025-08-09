@@ -40,6 +40,7 @@ import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
 import consulo.ide.setting.ProjectStructureSelector;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -67,7 +68,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -95,8 +95,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         }
 
         @Override
-        @Nls
-        public String getDisplayName() {
+        public LocalizeValue getDisplayName() {
             return myConfigurable.getDisplayName();
         }
 
@@ -972,7 +971,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         String[] result = new String[list.size()];
         int add = 0;
         for (int i = list.size() - 1; i >= 0; i--) {
-            result[add++] = list.get(i).getDisplayName().replace('\n', ' ');
+            result[add++] = list.get(i).getDisplayName().get().replace('\n', ' ');
         }
         return result;
     }

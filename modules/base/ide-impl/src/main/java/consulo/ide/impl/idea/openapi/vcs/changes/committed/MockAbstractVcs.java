@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.configurable.Configurable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.CommittedChangesProvider;
@@ -58,8 +59,8 @@ public class MockAbstractVcs extends AbstractVcs {
     return myDiffProvider;
   }
 
-  public String getDisplayName() {
-    return getName();
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.ofNullable(getId());
   }
 
   public Configurable getConfigurable() {

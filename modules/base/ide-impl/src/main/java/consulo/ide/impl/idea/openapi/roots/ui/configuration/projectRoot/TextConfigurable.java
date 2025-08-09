@@ -17,8 +17,10 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.configurable.ConfigurationException;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.PanelWithText;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,15 +30,15 @@ import javax.swing.*;
 public class TextConfigurable<T> extends NamedConfigurable<T> {
   private final T myObject;
   private final String myBannerSlogan;
-  private final String myDisplayName;
+  private final LocalizeValue myDisplayName;
   private final Image myClosedIcon;
   private final String myDescriptionText;
 
-  public TextConfigurable(final T object,
-                          final String displayName,
-                          final String bannerSlogan,
-                          final String descriptionText,
-                          final Image closedIcon) {
+  public TextConfigurable(T object,
+                          LocalizeValue displayName,
+                          String bannerSlogan,
+                          String descriptionText,
+                          Image closedIcon) {
     myDisplayName = displayName;
     myBannerSlogan = bannerSlogan;
     myDescriptionText = descriptionText;
@@ -45,7 +47,7 @@ public class TextConfigurable<T> extends NamedConfigurable<T> {
   }
 
   @Override
-  public void setDisplayName(final String name) {
+  public void setDisplayName(String name) {
     //do nothing
   }
 
@@ -79,13 +81,14 @@ public class TextConfigurable<T> extends NamedConfigurable<T> {
     return myBannerSlogan;
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
+  public LocalizeValue getDisplayName() {
     return myDisplayName;
   }
 
   @Override
-  public Image getIcon(final boolean open) {
+  public Image getIcon(boolean open) {
     return myClosedIcon;
   }
 

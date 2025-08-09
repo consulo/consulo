@@ -238,7 +238,11 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     public void addText(String text, SimpleTextAttributes attributes) {
-        myColoredText.add(new PresentableNodeDescriptor.ColoredFragment(text, attributes));
+        myColoredText.add(new PresentableNodeDescriptor.ColoredFragment(LocalizeValue.ofNullable(text), attributes));
+    }
+
+    public void addText(@Nonnull LocalizeValue text, SimpleTextAttributes attributes) {
+        myColoredText.add(new PresentableNodeDescriptor.ColoredFragment(text, LocalizeValue.of(), attributes));
     }
 
     public void clearText() {

@@ -26,6 +26,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleWithNameAlreadyExistsException;
@@ -69,7 +70,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     @Override
     public void setDisplayName(String name) {
         name = name.trim();
-        final ModifiableModuleModel modifiableModuleModel = myConfigurator.getModuleModel();
+        ModifiableModuleModel modifiableModuleModel = myConfigurator.getModuleModel();
         if (StringUtil.isEmpty(name)) {
             return; //empty string comes on double click on module node
         }
@@ -95,14 +96,14 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     }
 
     @Nonnull
-    private static JPanel createLayerConfigurationPanel(@Nonnull final ModuleEditor moduleEditor) {
+    private static JPanel createLayerConfigurationPanel(@Nonnull ModuleEditor moduleEditor) {
         BorderLayoutPanel panel = JBUI.Panels.simplePanel();
 
         ModifiableRootModel moduleRootModel = moduleEditor.getModifiableRootModelProxy();
 
-        final MutableCollectionComboBoxModel<String> model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
+        MutableCollectionComboBoxModel<String> model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
 
-        final ComboBox comboBox = new ComboBox(model);
+        ComboBox comboBox = new ComboBox(model);
         comboBox.setEnabled(model.getSize() > 1);
 
         moduleEditor.addChangeListener(moduleRootModel1 -> {
@@ -152,12 +153,12 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     }
 
     @Override
-    public String getDisplayName() {
-        return myModuleName;
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.ofNullable(myModuleName);
     }
 
     @Override
-    public Image getIcon(final boolean open) {
+    public Image getIcon(boolean open) {
         return AllIcons.Nodes.Module;
     }
 
@@ -168,7 +169,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     @Override
     @Nullable
     public String getHelpTopic() {
-        final ModuleEditor moduleEditor = getModuleEditor();
+        ModuleEditor moduleEditor = getModuleEditor();
         return moduleEditor != null ? moduleEditor.getHelpTopic() : null;
     }
 

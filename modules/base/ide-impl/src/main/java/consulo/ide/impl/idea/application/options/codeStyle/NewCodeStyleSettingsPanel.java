@@ -24,6 +24,7 @@ import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;
@@ -90,7 +91,8 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
     updatePreview();
   }
 
-  public String getDisplayName() {
+  @Nonnull
+  public LocalizeValue getDisplayName() {
     return myTab.getDisplayName();
   }
 

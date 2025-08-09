@@ -21,6 +21,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
@@ -33,8 +34,8 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.webBrowser.localize.WebBrowserLocalize;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -156,10 +157,10 @@ public class FirefoxSettingsConfigurable implements Configurable {
     public void disposeUIResources() {
     }
 
+    @Nonnull
     @Override
-    @Nls
-    public String getDisplayName() {
-        return WebBrowserLocalize.displayNameFirefoxSettings().get();
+    public LocalizeValue getDisplayName() {
+        return WebBrowserLocalize.displayNameFirefoxSettings();
     }
 
     // TODO rewrite it to new UI

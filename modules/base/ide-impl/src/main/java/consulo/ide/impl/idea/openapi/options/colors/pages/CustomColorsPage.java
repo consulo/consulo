@@ -25,6 +25,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.internal.custom.SyntaxTable;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
@@ -97,8 +98,8 @@ public class CustomColorsPage implements ColorSettingsPage {
 
   @Override
   @Nonnull
-  public String getDisplayName() {
-    return ConfigurableLocalize.optionsCustomDisplayName().get();
+  public LocalizeValue getDisplayName() {
+    return ConfigurableLocalize.optionsCustomDisplayName();
   }
 
   @Override

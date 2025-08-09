@@ -271,9 +271,10 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
             return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
         }
 
+        @Nonnull
         @Override
-        public String getDisplayName() {
-            return myNamer.getName(myItem);
+        public LocalizeValue getDisplayName() {
+            return LocalizeValue.ofNullable(myNamer.getName(myItem));
         }
 
         @Override

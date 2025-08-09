@@ -25,6 +25,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbarPosition;
 import consulo.ui.ex.awt.*;
@@ -224,8 +225,8 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Quick Lists";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Quick Lists");
   }
 
   @Nullable

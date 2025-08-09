@@ -5,6 +5,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.RemoteServerConfigurable;
 import consulo.remoteServer.configuration.RemoteServer;
@@ -16,7 +17,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -121,14 +121,15 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
 
     @RequiredUIAccess
     @Override
-    public JComponent createOptionsPanel(Disposable uiDisposable) {
+    public JComponent createOptionsPanel(@Nonnull Disposable uiDisposable) {
         mySettingsPanel.add(BorderLayout.CENTER, ConfigurableUIMigrationUtil.createComponent(myConfigurable, uiDisposable));
         return myMainPanel;
     }
 
+    @Nonnull
     @Override
-    public @Nls String getDisplayName() {
-        return myServerName;
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.ofNullable(myServerName);
     }
 
     @Override

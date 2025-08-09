@@ -259,8 +259,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Appearance";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Appearance");
     }
 
     @RequiredUIAccess

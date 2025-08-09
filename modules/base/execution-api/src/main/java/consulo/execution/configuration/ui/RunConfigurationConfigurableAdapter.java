@@ -16,15 +16,18 @@
 package consulo.execution.configuration.ui;
 
 import consulo.execution.configuration.RunConfiguration;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 public class  RunConfigurationConfigurableAdapter<T extends RunConfiguration> extends SettingsEditorConfigurable<T>{
   public RunConfigurationConfigurableAdapter(SettingsEditor<T> settingsEditor, T configuration) {
     super(settingsEditor, configuration);
  }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return getSettings().getName();
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.ofNullable(getSettings().getName());
   }
 
   public T getConfiguration() {

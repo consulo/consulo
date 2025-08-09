@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.project.impl;
 
-import consulo.ide.impl.idea.application.options.pathMacros.PathMacroListEditor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.project.ProjectBundle;
-import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
+import consulo.ide.impl.idea.application.options.pathMacros.PathMacroListEditor;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,19 +41,21 @@ public class UndefinedMacrosConfigurable implements Configurable{
     myUndefinedMacroNames = undefinedMacroNames;
   }
 
-  public String getDisplayName() {
-    return ProjectBundle.message("project.configure.path.variables.title");
+  @Override
+  public LocalizeValue getDisplayName() {
+    return ProjectLocalize.projectConfigurePathVariablesTitle();
   }
 
+  @Override
   public JComponent createComponent() {
-    final JPanel mainPanel = new JPanel(new BorderLayout());
+    JPanel mainPanel = new JPanel(new BorderLayout());
     // important: do not allow to remove or change macro name for already defined macros befor project is loaded
     myEditor = new PathMacroListEditor(myUndefinedMacroNames);
-    final JComponent editorPanel = myEditor.getPanel();
+    JComponent editorPanel = myEditor.getPanel();
 
     mainPanel.add(editorPanel, BorderLayout.CENTER);
 
-    final JLabel textLabel = new JLabel(myText);
+    JLabel textLabel = new JLabel(myText);
     textLabel.setUI(new MultiLineLabelUI());
     textLabel.setBorder(IdeBorderFactory.createEmptyBorder(6, 6, 6, 6));
     mainPanel.add(textLabel, BorderLayout.NORTH);
@@ -60,18 +63,22 @@ public class UndefinedMacrosConfigurable implements Configurable{
     return mainPanel;
   }
 
+  @Override
   public boolean isModified() {
     return myEditor.isModified();
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     myEditor.commit();
   }
 
+  @Override
   public void reset() {
     myEditor.reset();
   }
 
+  @Override
   public void disposeUIResources() {
     myEditor = null;
   }

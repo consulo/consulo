@@ -122,7 +122,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
   }
 
   public void updateName() {
-    myNameField.setText(getDisplayName());
+    myNameField.setText(getDisplayName().get());
   }
 
   @RequiredUIAccess

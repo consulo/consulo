@@ -178,7 +178,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
       throw new IllegalArgumentException("not initialized");
     }
 
-    myUIPanel.myNameField.setValue(getDisplayName());
+    myUIPanel.myNameField.setValue(getDisplayName().get());
   }
 
   @RequiredUIAccess

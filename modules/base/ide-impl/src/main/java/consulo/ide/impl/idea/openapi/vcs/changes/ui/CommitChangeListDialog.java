@@ -449,12 +449,12 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
                 if (options != null) {
                     JPanel vcsOptions = new JPanel(new BorderLayout());
                     vcsOptions.add(options.getComponent(), BorderLayout.CENTER);
-                    vcsOptions.setBorder(IdeBorderFactory.createTitledBorder(vcs.getDisplayName(), true));
+                    vcsOptions.setBorder(IdeBorderFactory.createTitledBorder(vcs.getDisplayName().get(), true));
                     vcsCommitOptions.add(vcsOptions);
                     myPerVcsOptionsPanels.put(vcs, vcsOptions);
                     myAdditionalComponents.add(options);
                     if (options instanceof CheckinChangeListSpecificComponent checkinChangeListSpecificComponent) {
-                        myCheckinChangeListSpecificComponents.put(vcs.getName(), checkinChangeListSpecificComponent);
+                        myCheckinChangeListSpecificComponents.put(vcs.getId(), checkinChangeListSpecificComponent);
                     }
                     hasVcsOptions = true;
                 }

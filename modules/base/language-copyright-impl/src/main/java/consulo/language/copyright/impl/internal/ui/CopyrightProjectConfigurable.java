@@ -18,6 +18,7 @@ package consulo.language.copyright.impl.internal.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.MasterDetailsStateService;
@@ -42,8 +43,8 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Copyright";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Copyright");
   }
 
   @Nullable

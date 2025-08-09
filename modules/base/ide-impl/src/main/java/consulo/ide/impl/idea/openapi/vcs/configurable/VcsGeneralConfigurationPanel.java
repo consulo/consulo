@@ -18,10 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
-import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
-import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
-import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
@@ -30,11 +28,13 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
+import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +71,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
   private JCheckBox myClearInitialCommitMessage;
   private ButtonGroup myEmptyChangelistRemovingGroup;
 
-  public VcsGeneralConfigurationPanel(final Project project) {
+  public VcsGeneralConfigurationPanel(Project project) {
 
     myProject = project;
 
@@ -93,7 +93,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
 
     for (VcsShowOptionsSettingImpl setting : options) {
       if (!setting.getApplicableVcses().isEmpty() || project.isDefault()) {
-        final JCheckBox checkBox = new JCheckBox(setting.getDisplayName());
+        JCheckBox checkBox = new JCheckBox(setting.getDisplayName());
         myPromptsPanel.add(checkBox);
         myPromptOptions.put(setting, checkBox);
       }
@@ -106,6 +106,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     );
   }
 
+  @Override
   public void apply() throws ConfigurationException {
 
     VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
@@ -133,7 +134,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
   
   @Nullable
   private Boolean getShowPatchValue() {
-    final int index = myOnPatchCreation.getSelectedIndex();
+    int index = myOnPatchCreation.getSelectedIndex();
     if (index == 0) {
       return null;
     } else {
@@ -180,6 +181,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     return ((ReadonlyStatusHandlerImpl)ReadonlyStatusHandler.getInstance(myProject));
   }
 
+  @Override
   public boolean isModified() {
 
     VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
@@ -215,6 +217,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     return false;
   }
 
+  @Override
   public void reset() {
     VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
     myForceNonEmptyComment.setSelected(settings.FORCE_NON_EMPTY_COMMENT);
@@ -248,9 +251,9 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     }
   }
 
-  private static void selectInGroup(final JRadioButton[] group, final VcsShowConfirmationOption confirmation) {
-    final VcsShowConfirmationOption.Value value = confirmation.getValue();
-    final int index;
+  private static void selectInGroup(JRadioButton[] group, VcsShowConfirmationOption confirmation) {
+    VcsShowConfirmationOption.Value value = confirmation.getValue();
+    int index;
     //noinspection EnumSwitchStatementWhichMissesCases
     switch(value) {
       case SHOW_CONFIRMATION: index = 0; break;
@@ -265,9 +268,9 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     return myPanel;
   }
 
-  public void updateAvailableOptions(final Collection<AbstractVcs> activeVcses) {
+  public void updateAvailableOptions(Collection<AbstractVcs> activeVcses) {
     for (VcsShowOptionsSettingImpl setting : myPromptOptions.keySet()) {
-      final JCheckBox checkBox = myPromptOptions.get(setting);
+      JCheckBox checkBox = myPromptOptions.get(setting);
       checkBox.setEnabled(setting.isApplicableTo(activeVcses) || myProject.isDefault());
       if (!myProject.isDefault()) {
         checkBox.setToolTipText(VcsLocalize.tooltipTextActionApplicableToVcses(composeText(setting.getApplicableVcses())).get());
@@ -275,14 +278,14 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     }
 
     if (!myProject.isDefault()) {
-      final ProjectLevelVcsManagerEx vcsManager = ProjectLevelVcsManagerEx.getInstanceEx(myProject);
-      final VcsShowConfirmationOptionImpl addConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.ADD);
+      ProjectLevelVcsManagerEx vcsManager = ProjectLevelVcsManagerEx.getInstanceEx(myProject);
+      VcsShowConfirmationOptionImpl addConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.ADD);
       UIUtil.setEnabled(myAddConfirmationPanel, addConfirmation.isApplicableTo(activeVcses), true);
       myAddConfirmationPanel.setToolTipText(
         VcsLocalize.tooltipTextActionApplicableToVcses(composeText(addConfirmation.getApplicableVcses())).get()
       );
 
-      final VcsShowConfirmationOptionImpl removeConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.REMOVE);
+      VcsShowConfirmationOptionImpl removeConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.REMOVE);
       UIUtil.setEnabled(myRemoveConfirmationPanel, removeConfirmation.isApplicableTo(activeVcses), true);
       myRemoveConfirmationPanel.setToolTipText(
         VcsLocalize.tooltipTextActionApplicableToVcses(composeText(removeConfirmation.getApplicableVcses())).get()
@@ -290,31 +293,36 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     }
   }
 
-  private static String composeText(final List<AbstractVcs> applicableVcses) {
-    final TreeSet<String> result = new TreeSet<>();
+  private static String composeText(List<AbstractVcs> applicableVcses) {
+    TreeSet<String> result = new TreeSet<>();
     for (AbstractVcs abstractVcs : applicableVcses) {
-      result.add(abstractVcs.getDisplayName());
+      result.add(abstractVcs.getDisplayName().get());
     }
     return StringUtil.join(result, ", ");
   }
 
-  @Nls
-  public String getDisplayName() {
-    return "Confirmation";
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Confirmation");
   }
 
+  @Override
   public JComponent createComponent() {
     return getPanel();
   }
 
+  @Override
   public void disposeUIResources() {
   }
 
+  @Override
   @Nonnull
   public String getId() {
     return "project.propVCSSupport.Confirmation";
   }
 
+  @Override
   public Runnable enableSearch(String option) {
     return null;
   }

@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.tree;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 
@@ -165,25 +166,27 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
   }
 
   public static class ColoredFragment {
-    private final String myText;
-    private final String myToolTip;
+    private final LocalizeValue myText;
+    private final LocalizeValue myToolTip;
     private final SimpleTextAttributes myAttributes;
 
-    public ColoredFragment(String aText, SimpleTextAttributes aAttributes) {
-      this(aText, null, aAttributes);
+    public ColoredFragment(@Nonnull LocalizeValue aText, SimpleTextAttributes aAttributes) {
+      this(aText, LocalizeValue.of(), aAttributes);
     }
 
-    public ColoredFragment(String aText, String toolTip, SimpleTextAttributes aAttributes) {
-      myText = aText == null ? "" : aText;
+    public ColoredFragment(@Nonnull LocalizeValue aText, @Nonnull LocalizeValue toolTip, SimpleTextAttributes aAttributes) {
+      myText = aText;
       myAttributes = aAttributes;
       myToolTip = toolTip;
     }
 
-    public String getToolTip() {
+    @Nonnull
+    public LocalizeValue getToolTip() {
       return myToolTip;
     }
 
-    public String getText() {
+    @Nonnull
+    public LocalizeValue getText() {
       return myText;
     }
 
@@ -214,6 +217,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     }
   }
 
+  @Override
   public String getName() {
     if (!getPresentation().getColoredText().isEmpty()) {
       StringBuilder result = new StringBuilder("");
@@ -224,5 +228,4 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     }
     return myName;
   }
-
 }

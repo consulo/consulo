@@ -127,7 +127,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "External Diff Tools";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("External Diff Tools");
   }
 }

@@ -15,38 +15,39 @@
  */
 package consulo.ide.impl.roots.ui.configuration;
 
-import consulo.application.Application;
-import consulo.ide.setting.module.ModuleConfigurationState;
-import consulo.module.Module;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.*;
-import consulo.ui.ex.awt.Splitter;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.Comparing;
-import consulo.ui.ex.awt.tree.CheckboxTreeNoPolicy;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
-import consulo.ui.ex.awt.OnePixelSplitter;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ClasspathEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.CompilerOutputsEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntriesEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleElementsEditor;
+import consulo.ide.impl.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
+import consulo.ide.impl.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
+import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.language.psi.PsiPackageManager;
+import consulo.language.psi.PsiPackageSupportProvider;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.module.content.layer.ModifiableModuleRootLayer;
+import consulo.module.content.layer.extension.ModuleExtensionBase;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
-import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.extension.swing.SwingMutableModuleExtension;
-import consulo.language.psi.PsiPackageManager;
-import consulo.language.psi.PsiPackageSupportProvider;
-import consulo.module.content.layer.ModifiableModuleRootLayer;
-import consulo.ide.impl.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
-import consulo.ide.impl.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.awt.OnePixelSplitter;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.tree.CheckboxTreeNoPolicy;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
-import org.jetbrains.annotations.Nls;
-
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -269,9 +270,9 @@ public class ExtensionEditor extends ModuleElementsEditor {
     public void saveData() {
     }
 
-    @Nls
+    @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Extensions";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Extensions");
     }
 }

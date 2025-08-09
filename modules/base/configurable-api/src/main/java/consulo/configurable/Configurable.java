@@ -15,6 +15,7 @@
  */
 package consulo.configurable;
 
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayFactory;
 
 import jakarta.annotation.Nonnull;
@@ -54,9 +55,8 @@ public interface Configurable extends UnnamedConfigurable {
    *
    * @return the visible name of the component.
    */
-  default String getDisplayName() {
-    return null;
-  }
+  @Nonnull
+  LocalizeValue getDisplayName();
 
   /**
    * Returns alternative id for help (not id of configurable)

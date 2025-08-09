@@ -26,6 +26,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.roots.ToolbarPanel;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.editor.LangDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.layer.ContentEntry;
@@ -103,8 +104,8 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     }
 
     @Override
-    public String getDisplayName() {
-        return ProjectLocalize.modulePathsTitle().get();
+    public LocalizeValue getDisplayName() {
+        return ProjectLocalize.modulePathsTitle();
     }
 
     @RequiredUIAccess

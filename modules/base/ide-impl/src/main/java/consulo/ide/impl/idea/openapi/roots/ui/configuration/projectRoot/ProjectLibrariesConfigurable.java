@@ -25,6 +25,7 @@ import consulo.content.library.LibraryTablePresentation;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.awt.MasterDetailsStateService;
@@ -32,7 +33,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,10 +60,10 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
         return "ProjectLibrariesConfigurable.UI";
     }
 
+    @Nonnull
     @Override
-    @Nls
-    public String getDisplayName() {
-        return "Libraries";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Libraries");
     }
 
     @Nullable

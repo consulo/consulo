@@ -18,6 +18,7 @@ package consulo.desktop.awt.settings;
 import consulo.annotation.component.ServiceImpl;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.Settings;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.content.bundle.SdkTable;
 import consulo.disposer.Disposer;
@@ -28,8 +29,8 @@ import consulo.ide.impl.configurable.DefaultConfigurablePreselectStrategy;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.ide.setting.ProjectStructureSelector;
-import consulo.configurable.Settings;
 import consulo.ide.setting.bundle.SettingsSdksModel;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.DefaultProjectFactory;
@@ -230,13 +231,13 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         String dimensionServiceKey,
         @Nonnull Configurable configurable
     ) {
-        return editConfigurable(null, project, configurable, title, dimensionServiceKey, null);
+        return editConfigurable(null, project, configurable, LocalizeValue.ofNullable(title), dimensionServiceKey, null);
     }
 
     @Override
     @RequiredUIAccess
     public AsyncResult<Void> editConfigurable(String title, Project project, Configurable configurable, Runnable advancedInitialization) {
-        return editConfigurable(null, project, configurable, title, createDimensionKey(configurable), advancedInitialization);
+        return editConfigurable(null, project, configurable, LocalizeValue.ofNullable(title), createDimensionKey(configurable), advancedInitialization);
     }
 
     @RequiredUIAccess
@@ -260,7 +261,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         @Nullable Component parent,
         @Nullable Project project,
         Configurable configurable,
-        String title,
+        LocalizeValue title,
         String dimensionKey,
         @Nullable final Runnable advancedInitialization
     ) {

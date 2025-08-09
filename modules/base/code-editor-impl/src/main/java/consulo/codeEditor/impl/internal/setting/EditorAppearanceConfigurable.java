@@ -134,8 +134,8 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Appearance";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Appearance");
     }
 
     @Nonnull

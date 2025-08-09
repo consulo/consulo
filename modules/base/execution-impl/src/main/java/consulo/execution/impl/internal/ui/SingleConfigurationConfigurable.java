@@ -30,6 +30,7 @@ import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -70,7 +71,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     super(new ConfigurationSettingsEditorWrapper(settings), settings);
     myExecutor = executor;
 
-    final Config configuration = getConfiguration();
+    Config configuration = getConfiguration();
     myDisplayName = getSettings().getName();
     myHelpTopic = "reference.dialogs.rundebug." + configuration.getType().getId();
 
@@ -106,7 +107,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
   public void apply() throws ConfigurationException {
     RunnerAndConfigurationSettings settings = getSettings();
     RunConfiguration runConfiguration = settings.getConfiguration();
-    final RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
+    RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
     runManager.shareConfiguration(settings, myStoreProjectConfiguration);
     settings.setName(getNameText());
     settings.setSingleton(mySingleton);
@@ -182,10 +183,10 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     return myLastValidationResult;
   }
 
-  private static void checkConfiguration(final ProgramRunner runner, final RunnerAndConfigurationSettings snapshot)
+  private static void checkConfiguration(ProgramRunner runner, RunnerAndConfigurationSettings snapshot)
     throws RuntimeConfigurationException {
-    final RunnerSettings runnerSettings = snapshot.getRunnerSettings(runner);
-    final ConfigurationPerRunnerSettings configurationSettings = snapshot.getConfigurationSettings(runner);
+    RunnerSettings runnerSettings = snapshot.getRunnerSettings(runner);
+    ConfigurationPerRunnerSettings configurationSettings = snapshot.getConfigurationSettings(runner);
     try {
       runner.checkConfiguration(runnerSettings, configurationSettings);
     }
@@ -219,7 +220,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     myComponent.myCbStoreProjectConfiguration.addChangeListener(changeListener);
   }
 
-  public final void setNameText(final String name) {
+  public final void setNameText(String name) {
     myChangingNameFromCode = true;
     try {
       try {
@@ -245,8 +246,8 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
   }
 
   @Override
-  public String getDisplayName() {
-    return myDisplayName;
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.ofNullable(myDisplayName);
   }
 
   @Override
@@ -259,7 +260,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
   }
 
   public RunnerAndConfigurationSettings getSnapshot() throws ConfigurationException {
-    final SettingsEditor<RunnerAndConfigurationSettings> editor = getEditor();
+    SettingsEditor<RunnerAndConfigurationSettings> editor = getEditor();
     return editor == null ? null : editor.getSnapshot();
   }
 
@@ -325,8 +326,8 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     }
 
     private void doReset(RunnerAndConfigurationSettings settings) {
-      final RunConfiguration runConfiguration = settings.getConfiguration();
-      final RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
+      RunConfiguration runConfiguration = settings.getConfiguration();
+      RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
       myStoreProjectConfiguration = runManager.isConfigurationShared(settings);
       myCbStoreProjectConfiguration.setEnabled(!(runConfiguration instanceof UnknownRunConfiguration));
       myCbStoreProjectConfiguration.setSelected(myStoreProjectConfiguration);
@@ -356,13 +357,13 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     }
 
     private void updateWarning() {
-      final ValidationResult configurationException = getValidationResult();
+      ValidationResult configurationException = getValidationResult();
 
       if (configurationException != null) {
         mySeparator.setVisible(true);
         myWarningLabel.setVisible(true);
         myWarningLabel.setText(generateWarningLabelText(configurationException));
-        final Runnable quickFix = configurationException.getQuickFix();
+        Runnable quickFix = configurationException.getQuickFix();
         if (quickFix == null) {
           myFixButton.setVisible(false);
         }
@@ -381,7 +382,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     }
 
     @Nonnull
-    private String generateWarningLabelText(final ValidationResult configurationException) {
+    private String generateWarningLabelText(ValidationResult configurationException) {
       return "<html><body><b>" + configurationException.getTitle() + ": </b>" + configurationException.getMessage() + "</body></html>";
     }
   }

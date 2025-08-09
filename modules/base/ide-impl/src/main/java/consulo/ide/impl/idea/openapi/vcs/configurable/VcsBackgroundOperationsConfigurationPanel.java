@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
@@ -149,10 +150,10 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
     return myPanel;
   }
 
+  @Nonnull
   @Override
-  @Nls
-  public String getDisplayName() {
-    return "Background";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Background");
   }
 
   @Override

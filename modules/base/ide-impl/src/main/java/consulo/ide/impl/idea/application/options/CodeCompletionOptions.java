@@ -17,12 +17,12 @@
 package consulo.ide.impl.idea.application.options;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.*;
-import consulo.ui.ex.action.ActionManager;
-import consulo.application.ApplicationBundle;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.ActionManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -54,9 +54,10 @@ public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPane
     component.reset();
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return ApplicationBundle.message("title.code.completion");
+  public LocalizeValue getDisplayName() {
+    return ApplicationLocalize.titleCodeCompletion();
   }
 
   @Nullable

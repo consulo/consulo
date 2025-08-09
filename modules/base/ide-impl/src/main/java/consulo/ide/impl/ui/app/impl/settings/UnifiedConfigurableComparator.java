@@ -19,6 +19,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.configurable.internal.ConfigurableWeight;
+import consulo.localize.LocalizeValue;
 import consulo.ui.TreeNode;
 
 import java.util.Comparator;
@@ -40,7 +41,7 @@ public class UnifiedConfigurableComparator implements Comparator<TreeNode<Config
       return (int)(weight2 - weight1);
     }
 
-    return getConfigurableDisplayName(o1.getValue()).compareToIgnoreCase(getConfigurableDisplayName(o2.getValue()));
+    return getConfigurableDisplayName(o1.getValue()).compareIgnoreCase(getConfigurableDisplayName(o2.getValue()));
   }
 
   private static int getWeight(TreeNode<Configurable> node) {
@@ -57,8 +58,7 @@ public class UnifiedConfigurableComparator implements Comparator<TreeNode<Config
     return 0;
   }
 
-  public static String getConfigurableDisplayName(final Configurable c) {
-    final String name = c.getDisplayName();
-    return name != null ? name : "{ Unnamed Page:" + c.getClass().getSimpleName() + " }";
+  public static LocalizeValue getConfigurableDisplayName(Configurable c) {
+    return c.getDisplayName();
   }
 }

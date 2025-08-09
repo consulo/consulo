@@ -22,14 +22,15 @@ import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.internal.ConfigurableExtensionPointUtil;
 import consulo.configurable.internal.ConfigurableWrapper;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -37,43 +38,46 @@ import java.util.List;
  * @since 2019-01-06
  */
 public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
-  public static Configurable SKIP_SELECTION_CONFIGURATION = new Configurable() {
-    @RequiredUIAccess
-    @Override
-    public boolean isModified() {
-      return false;
+    public static Configurable SKIP_SELECTION_CONFIGURATION = new Configurable() {
+        @RequiredUIAccess
+        @Override
+        public boolean isModified() {
+            return false;
+        }
+
+        @Nonnull
+        @Override
+        public LocalizeValue getDisplayName() {
+            return LocalizeValue.of();
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void apply() throws ConfigurationException {
+
+        }
+    };
+
+    public static String createDimensionKey(@Nonnull Configurable configurable) {
+        LocalizeKey localizeKey = configurable.getDisplayName().getKey().orElseThrow();
+        return "#" + localizeKey.getLocalizeId() + "@" + localizeKey.getKey();
     }
 
-    @RequiredUIAccess
-    @Override
-    public void apply() throws ConfigurationException {
+    @Nonnull
+    public static Configurable[] buildConfigurables(@Nullable Project project) {
+        if (project == null) {
+            project = ProjectManager.getInstance().getDefaultProject();
+        }
 
+        final Project tempProject = project;
+
+        List<ApplicationConfigurable> applicationConfigurables = tempProject.getApplication().getExtensionPoint(ApplicationConfigurable.class).getExtensionList();
+        List<ProjectConfigurable> projectConfigurables = tempProject.getExtensionPoint(ProjectConfigurable.class).getExtensionList();
+
+
+        List<Configurable> mergedConfigurables = ContainerUtil.concat(applicationConfigurables, projectConfigurables);
+        List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(mergedConfigurables, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
+
+        return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
     }
-  };
-
-  public static String createDimensionKey(@Nonnull Configurable configurable) {
-    String displayName = configurable.getDisplayName();
-    if (displayName == null) {
-      displayName = configurable.getClass().getName();
-    }
-    return '#' + StringUtil.replaceChar(StringUtil.replaceChar(displayName, '\n', '_'), ' ', '_');
-  }
-
-  @Nonnull
-  public static Configurable[] buildConfigurables(@Nullable Project project) {
-    if (project == null) {
-      project = ProjectManager.getInstance().getDefaultProject();
-    }
-
-    final Project tempProject = project;
-
-    List<ApplicationConfigurable> applicationConfigurables = tempProject.getApplication().getExtensionPoint(ApplicationConfigurable.class).getExtensionList();
-    List<ProjectConfigurable> projectConfigurables = tempProject.getExtensionPoint(ProjectConfigurable.class).getExtensionList();
-
-
-    List<Configurable> mergedConfigurables = ContainerUtil.concat(applicationConfigurables, projectConfigurables);
-    List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(mergedConfigurables, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
-
-    return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
-  }
 }

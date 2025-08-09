@@ -26,27 +26,21 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class StandardVcsGroup extends DefaultActionGroup implements DumbAware {
-  public abstract AbstractVcs getVcs(Project project);
+    @Nullable
+    public abstract AbstractVcs getVcs(Project project);
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
 
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      final String vcsName = getVcsName(project);
-      presentation.setVisible(vcsName != null && ProjectLevelVcsManager.getInstance(project).checkVcsIsActive(vcsName));
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            AbstractVcs<?> vcs = getVcs(project);
+            presentation.setVisible(vcs != null && ProjectLevelVcsManager.getInstance(project).checkVcsIsActive(vcs));
+        }
+        else {
+            presentation.setVisible(false);
+        }
+        presentation.setEnabled(presentation.isVisible());
     }
-    else {
-      presentation.setVisible(false);
-    }
-    presentation.setEnabled(presentation.isVisible());
-  }
-
-  @Nullable
-  public String getVcsName(Project project) {
-    final AbstractVcs vcs = getVcs(project);
-    // if the parent group was customized and then the plugin was disabled, we could have an action group with no VCS
-    return vcs != null ? vcs.getDisplayName() : null;
-  }
 }

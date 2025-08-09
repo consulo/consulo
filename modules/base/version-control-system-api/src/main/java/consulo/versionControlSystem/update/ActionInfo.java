@@ -16,13 +16,16 @@
 package consulo.versionControlSystem.update;
 
 import consulo.configurable.UnnamedConfigurable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.UpdateOrStatusOptionsDialog;
+import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 
@@ -49,9 +52,10 @@ public interface ActionInfo {
                                                            LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
                                                            final String scopeName) {
       return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
+        @Nonnull
         @Override
-        protected String getRealTitle() {
-          return VcsBundle.message("action.display.name.update.scope", scopeName);
+        protected LocalizeValue getRealTitle() {
+          return VcsLocalize.actionDisplayNameUpdateScope(scopeName);
         }
 
         @Override
@@ -111,8 +115,8 @@ public interface ActionInfo {
                                                            LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap, final String scopeName) {
       return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
         @Override
-        protected String getRealTitle() {
-          return VcsBundle.message("action.display.name.check.scope.status", scopeName);
+        protected LocalizeValue getRealTitle() {
+          return VcsLocalize.actionDisplayNameCheckScopeStatus(scopeName);
         }
 
         @Override
@@ -177,9 +181,10 @@ public interface ActionInfo {
                                                            LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
                                                            final String scopeName) {
       return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
+        @Nonnull
         @Override
-        protected String getRealTitle() {
-          return VcsBundle.message("action.display.name.integrate.scope", scopeName);
+        protected LocalizeValue getRealTitle() {
+          return VcsLocalize.actionDisplayNameIntegrateScope(scopeName);
         }
 
         @Override

@@ -170,7 +170,7 @@ public abstract class ProjectLevelVcsManager {
    * @param vcsName the name of the VCS to check.
    * @return true if the VCS is used by any of the modules, false otherwise
    */
-  public abstract boolean checkVcsIsActive(@NonNls String vcsName);
+  public abstract boolean checkVcsIsActive(@Nonnull String vcsId);
 
   /**
    * Returns the list of VCSes supported by plugins.

@@ -203,9 +203,8 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     }
 
     @Override
-    @Nls
-    public String getDisplayName() {
-        return myCopyrightProfile.getName();
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.ofNullable(myCopyrightProfile.getName());
     }
 
     @Override

@@ -36,6 +36,7 @@ import consulo.ide.impl.idea.codeInspection.export.ExportToHTMLDialog;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.HintHint;
@@ -135,11 +136,11 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
 
                     @Nonnull
                     @Override
-                    public String getPanelDisplayName() {
+                    public LocalizeValue getPanelDisplayName() {
                         return ExecutionCoverageLocalize.configurableNameEditorColorsPage(
                             getDisplayName(),
                             colorsPage.getDisplayName()
-                        ).get();
+                        );
                     }
                 };
                 return Collections.singletonList(panelFactory);

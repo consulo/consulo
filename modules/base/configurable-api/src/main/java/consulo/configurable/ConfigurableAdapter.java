@@ -16,12 +16,12 @@
 package consulo.configurable;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -29,39 +29,39 @@ import javax.swing.*;
  * @since 06.01.2016
  */
 public class ConfigurableAdapter implements Configurable {
-  @Nls
-  @Override
-  public String getDisplayName() {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.empty();
+    }
 
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public JComponent createComponent(@Nonnull Disposable parentDisposable) {
-    return null;
-  }
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+        return null;
+    }
 
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public Component createUIComponent(@Nonnull Disposable parentDisposable) {
-    return null;
-  }
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public Component createUIComponent(@Nonnull Disposable parentDisposable) {
+        return null;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    return false;
-  }
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        return false;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-  }
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-  }
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+    }
 }

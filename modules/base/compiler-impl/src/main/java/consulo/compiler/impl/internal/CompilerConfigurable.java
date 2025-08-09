@@ -22,6 +22,7 @@ import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.SimpleConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -102,8 +103,8 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return CompilerLocalize.compilerConfigurableDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return CompilerLocalize.compilerConfigurableDisplayName();
     }
 
     @Nonnull

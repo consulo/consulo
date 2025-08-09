@@ -19,6 +19,8 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.ide.util.scopeChooser.PackageSetChooserCombo;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -65,8 +67,8 @@ public class DependencyConfigurable implements Configurable {
   }
 
   @Override
-  public String getDisplayName() {
-    return AnalysisScopeBundle.message("dependency.configurable.display.name");
+  public LocalizeValue getDisplayName() {
+    return AnalysisScopeLocalize.dependencyConfigurableDisplayName();
   }
 
   @Override

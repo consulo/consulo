@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.library.Library;
@@ -101,7 +102,7 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
   }
 
   @Override
-  public void setDisplayName(final String name) {
+  public void setDisplayName(String name) {
     if (!myUpdatingName) {
       getLibraryEditor().setName(name);
       // todo myLibrariesConfigurator.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
@@ -131,18 +132,18 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
 
   @Override
   public String getBannerSlogan() {
-    final LibraryTable libraryTable = myLibrary.getTable();
+    LibraryTable libraryTable = myLibrary.getTable();
     String libraryType = libraryTable == null ? ProjectBundle.message("module.library.display.name", 1) : libraryTable.getPresentation().getDisplayName(false);
     return ProjectBundle.message("project.roots.library.banner.text", getDisplayName(), libraryType);
   }
 
   @Override
-  public String getDisplayName() {
+  public LocalizeValue getDisplayName() {
     if (((LibrariesModifiableModel)myModel.getModifiableModel()).hasLibraryEditor(myLibrary)) {
-      return getLibraryEditor().getName();
+      return LocalizeValue.of(getLibraryEditor().getName());
     }
 
-    return myLibrary.getName();
+    return LocalizeValue.of(myLibrary.getName());
   }
 
   public void onSelected() {

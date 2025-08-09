@@ -45,6 +45,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -154,9 +155,10 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         myAdjustBox.setEnabled(show);
     }
 
+    @Nonnull
     @Override
-    public String getDisplayName() {
-        return IdeLocalize.titleEditFileTemplate().get();
+    public LocalizeValue getDisplayName() {
+        return IdeLocalize.titleEditFileTemplate();
     }
 
     @RequiredUIAccess

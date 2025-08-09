@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.*;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.codeEditor.internal.InternalEditorFactory;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
@@ -39,6 +38,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.util.ProjectUIUtil;
@@ -600,8 +600,9 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return myDefaultLanguage;
     }
 
-    protected String getTabTitle() {
-        return "Other";
+    @Nonnull
+    protected LocalizeValue getTabTitle() {
+        return LocalizeValue.localizeTODO("Other");
     }
 
     protected CodeStyleSettings getCurrentSettings() {

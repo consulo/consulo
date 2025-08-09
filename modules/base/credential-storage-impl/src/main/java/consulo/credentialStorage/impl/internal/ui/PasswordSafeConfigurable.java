@@ -18,7 +18,7 @@ public class PasswordSafeConfigurable extends IdeaConfigurableBase<PasswordSafeC
     @Inject
     public PasswordSafeConfigurable(PasswordSafeSettings settings) {
         super("application.passwordSafe",
-            CredentialStorageLocalize.passwordSafeConfigurable().get(),
+            CredentialStorageLocalize.passwordSafeConfigurable(),
             "reference.ide.settings.password.safe"
         );
         this.settings = settings;

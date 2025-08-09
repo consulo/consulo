@@ -17,21 +17,21 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.project.Project;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsConfigurableProvider;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.conflicts.ChangelistConflictConfigurable;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.IgnoredSettingsPanel;
-import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
-
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsConfigurableProvider;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,8 +98,8 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return VcsBundle.message("version.control.main.configurable.name");
+  public LocalizeValue getDisplayName() {
+    return VcsLocalize.versionControlMainConfigurableName();
   }
 
   @Override
@@ -164,8 +164,8 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     return new SearchableConfigurable(){
 
       @Override
-      @Nls
-      public String getDisplayName() {
+      @Nonnull
+      public LocalizeValue getDisplayName() {
         return vcs.getDisplayName();
       }
 
@@ -225,7 +225,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
       @Override
       @Nonnull
       public String getId() {
-        return "vcs." + getDisplayName();
+        return "vcs." + vcs.getId();
       }
 
       @Override

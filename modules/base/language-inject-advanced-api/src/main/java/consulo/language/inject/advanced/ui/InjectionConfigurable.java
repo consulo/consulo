@@ -17,6 +17,7 @@ package consulo.language.inject.advanced.ui;
 
 import consulo.configurable.ConfigurationException;
 import consulo.language.inject.advanced.Injection;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -34,13 +35,16 @@ public abstract class InjectionConfigurable<T extends Injection, P extends Injec
     myTreeUpdater = treeUpdater;
   }
 
+  @Override
   public void setDisplayName(String name) {
   }
 
+  @Override
   public T getEditableObject() {
     return myInjection;
   }
 
+  @Override
   public JComponent createOptionsPanel() {
     myPanel = createOptionsPanelImpl();
     myPanel.addUpdater(myTreeUpdater);
@@ -53,24 +57,30 @@ public abstract class InjectionConfigurable<T extends Injection, P extends Injec
     return myPanel;
   }
 
+  @Override
   public boolean isModified() {
     return myPanel.isModified();
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     myPanel.apply();
   }
 
+  @Override
   public void reset() {
     myPanel.reset();
   }
 
+  @Override
   public void disposeUIResources() {
     myPanel = null;
   }
 
-  public String getDisplayName() {
-    final P p = getPanel();
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    P p = getPanel();
     return p != null ? p.getInjection().getDisplayName() : myInjection.getDisplayName();
   }
 }

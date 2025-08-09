@@ -27,6 +27,7 @@ import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.internal.ColorPageWeights;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -334,8 +335,8 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return ConfigurableLocalize.optionsLanguageDefaultsDisplayName().get();
+  public LocalizeValue getDisplayName() {
+    return ConfigurableLocalize.optionsLanguageDefaultsDisplayName();
   }
 
   @Override

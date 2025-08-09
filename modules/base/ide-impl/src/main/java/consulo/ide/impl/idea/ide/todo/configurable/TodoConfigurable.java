@@ -23,6 +23,7 @@ import consulo.ide.IdeBundle;
 import consulo.language.editor.todo.TodoConfiguration;
 import consulo.language.editor.todo.TodoFilter;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.language.editor.todo.TodoAttributesUtil;
@@ -388,8 +389,8 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
   }
 
   @Override
-  public String getDisplayName() {
-    return IdeBundle.message("title.todo");
+  public LocalizeValue getDisplayName() {
+    return IdeLocalize.titleTodo();
   }
 
   @Override

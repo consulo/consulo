@@ -91,7 +91,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         Map<String, String> map = new HashMap<>();
         for (Configurable configurable : BaseShowSettingsUtil.buildConfigurables(getProject())) {
             if (configurable instanceof SearchableConfigurable) {
-                map.put(configurable.getId(), configurable.getDisplayName());
+                map.put(configurable.getId(), configurable.getDisplayName().get());
             }
         }
         return map;

@@ -68,14 +68,14 @@ public class SearchUtil {
     processConfigurables(configurables, options);
   }
 
-  private static void processConfigurables(final Configurable[] configurables,
-                                           final HashMap<SearchableConfigurable, TreeSet<OptionDescription>> options) {
+  private static void processConfigurables(Configurable[] configurables,
+                                           HashMap<SearchableConfigurable, TreeSet<OptionDescription>> options) {
     for (Configurable configurable : configurables) {
       if (configurable instanceof SearchableConfigurable) {
         TreeSet<OptionDescription> configurableOptions = new TreeSet<OptionDescription>();
 
         if (configurable instanceof Configurable.Composite) {
-          final Configurable[] children = ((Configurable.Composite)configurable).getConfigurables();
+          Configurable[] children = ((Configurable.Composite)configurable).getConfigurables();
           processConfigurables(children, options);
         }
 
@@ -87,7 +87,7 @@ public class SearchUtil {
         options.put((SearchableConfigurable)configurable, configurableOptions);
 
         if (configurable instanceof MasterDetails) {
-          final MasterDetails md = (MasterDetails)configurable;
+          MasterDetails md = (MasterDetails)configurable;
           md.initUi();
           _processComponent(configurable, configurableOptions, md.getMaster());
           _processComponent(configurable, configurableOptions, md.getDetails().getComponent());
@@ -99,65 +99,65 @@ public class SearchUtil {
     }
   }
 
-  private static void _processComponent(final Configurable configurable, final TreeSet<OptionDescription> configurableOptions,
-                                        final JComponent component) {
+  private static void _processComponent(Configurable configurable, TreeSet<OptionDescription> configurableOptions,
+                                        JComponent component) {
 
     if (component == null) return;
 
-    processUILabel(configurable.getDisplayName(), configurableOptions, null);
+    processUILabel(configurable.getDisplayName().get(), configurableOptions, null);
     processComponent(component, configurableOptions, null);
   }
 
-  public static void processComponent(final JComponent component, final Set<OptionDescription> configurableOptions, @NonNls String path) {
+  public static void processComponent(JComponent component, Set<OptionDescription> configurableOptions, @NonNls String path) {
     if (component instanceof SkipSelfSearchComponent) return;
     if (Objects.equals(UIUtil.getClientProperty(component, SkipSelfSearchComponent.KEY), Boolean.TRUE)) return;
 
-    final Border border = component.getBorder();
+    Border border = component.getBorder();
     if (border instanceof TitledBorder) {
-      final TitledBorder titledBorder = (TitledBorder)border;
-      final String title = titledBorder.getTitle();
+      TitledBorder titledBorder = (TitledBorder)border;
+      String title = titledBorder.getTitle();
       if (title != null) {
         processUILabel(title, configurableOptions, path);
       }
     }
     if (component instanceof JLabel) {
-      final String label = ((JLabel)component).getText();
+      String label = ((JLabel)component).getText();
       if (label != null) {
         processUILabel(label, configurableOptions, path);
       }
     }
     else if (component instanceof JCheckBox) {
-      @NonNls final String checkBoxTitle = ((JCheckBox)component).getText();
+      @NonNls String checkBoxTitle = ((JCheckBox)component).getText();
       if (checkBoxTitle != null) {
         processUILabel(checkBoxTitle, configurableOptions, path);
       }
     }
     else if (component instanceof JRadioButton) {
-      @NonNls final String radioButtonTitle = ((JRadioButton)component).getText();
+      @NonNls String radioButtonTitle = ((JRadioButton)component).getText();
       if (radioButtonTitle != null) {
         processUILabel(radioButtonTitle, configurableOptions, path);
       }
     }
     else if (component instanceof JButton) {
-      @NonNls final String buttonTitle = ((JButton)component).getText();
+      @NonNls String buttonTitle = ((JButton)component).getText();
       if (buttonTitle != null) {
         processUILabel(buttonTitle, configurableOptions, path);
       }
     }
     if (component instanceof JTabbedPane) {
-      final JTabbedPane tabbedPane = (JTabbedPane)component;
-      final int tabCount = tabbedPane.getTabCount();
+      JTabbedPane tabbedPane = (JTabbedPane)component;
+      int tabCount = tabbedPane.getTabCount();
       for (int i = 0; i < tabCount; i++) {
-        final String title = path != null ? path + '.' + tabbedPane.getTitleAt(i) : tabbedPane.getTitleAt(i);
+        String title = path != null ? path + '.' + tabbedPane.getTitleAt(i) : tabbedPane.getTitleAt(i);
         processUILabel(title, configurableOptions, title);
-        final Component tabComponent = tabbedPane.getComponentAt(i);
+        Component tabComponent = tabbedPane.getComponentAt(i);
         if (tabComponent instanceof JComponent) {
           processComponent((JComponent)tabComponent, configurableOptions, title);
         }
       }
     }
     else {
-      final Component[] components = component.getComponents();
+      Component[] components = component.getComponents();
       if (components != null) {
         for (Component child : components) {
           if (child instanceof JComponent) {
@@ -168,9 +168,9 @@ public class SearchUtil {
     }
   }
 
-  private static void processUILabel(@NonNls final String title, final Set<OptionDescription> configurableOptions, String path) {
-    final Set<String> words = SearchableOptionsRegistrar.getInstance().getProcessedWordsWithoutStemming(title);
-    @NonNls final String regex = "[\\W&&[^\\p{Punct}\\p{Blank}]]";
+  private static void processUILabel(@NonNls String title, Set<OptionDescription> configurableOptions, String path) {
+    Set<String> words = SearchableOptionsRegistrar.getInstance().getProcessedWordsWithoutStemming(title);
+    @NonNls String regex = "[\\W&&[^\\p{Punct}\\p{Blank}]]";
     for (String option : words) {
       configurableOptions.add(new OptionDescription(option, HTML_PATTERN.matcher(title).replaceAll(" ").replaceAll(regex, " "), path));
     }
@@ -189,13 +189,13 @@ public class SearchUtil {
     };
   }
 
-  private static int getSelection(String tabIdx, final JTabbedPane tabbedPane) {
+  private static int getSelection(String tabIdx, JTabbedPane tabbedPane) {
     SearchableOptionsRegistrar searchableOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
     for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-      final Set<String> pathWords = searchableOptionsRegistrar.getProcessedWords(tabIdx);
-      final String title = tabbedPane.getTitleAt(i);
+      Set<String> pathWords = searchableOptionsRegistrar.getProcessedWords(tabIdx);
+      String title = tabbedPane.getTitleAt(i);
       if (!pathWords.isEmpty()) {
-        final Set<String> titleWords = searchableOptionsRegistrar.getProcessedWords(title);
+        Set<String> titleWords = searchableOptionsRegistrar.getProcessedWords(title);
         pathWords.removeAll(titleWords);
         if (pathWords.isEmpty()) return i;
       } else if (tabIdx.equalsIgnoreCase(title)) { //e.g. only stop words
@@ -205,19 +205,19 @@ public class SearchUtil {
     return -1;
   }
 
-  public static int getSelection(String tabIdx, final TabbedPaneWrapper tabbedPane) {
+  public static int getSelection(String tabIdx, TabbedPaneWrapper tabbedPane) {
     SearchableOptionsRegistrar searchableOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
     for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-      final Set<String> pathWords = searchableOptionsRegistrar.getProcessedWords(tabIdx);
-      final String title = tabbedPane.getTitleAt(i);
-      final Set<String> titleWords = searchableOptionsRegistrar.getProcessedWords(title);
+      Set<String> pathWords = searchableOptionsRegistrar.getProcessedWords(tabIdx);
+      String title = tabbedPane.getTitleAt(i);
+      Set<String> titleWords = searchableOptionsRegistrar.getProcessedWords(title);
       pathWords.removeAll(titleWords);
       if (pathWords.isEmpty()) return i;
     }
     return -1;
   }
 
-  private static boolean traverseComponentsTree(final SearchableConfigurable configurable,
+  private static boolean traverseComponentsTree(SearchableConfigurable configurable,
                                                 GlassPanel glassPanel,
                                                 JComponent rootComponent,
                                                 String option,
@@ -228,38 +228,38 @@ public class SearchUtil {
     if (option == null || option.trim().length() == 0) return false;
     boolean highlight = false;
     if (rootComponent instanceof JCheckBox) {
-      final JCheckBox checkBox = ((JCheckBox)rootComponent);
+      JCheckBox checkBox = ((JCheckBox)rootComponent);
       if (isComponentHighlighted(checkBox.getText(), option, force, configurable)) {
         highlight = true;
         glassPanel.addSpotlight(checkBox);
       }
     }
     else if (rootComponent instanceof JRadioButton) {
-      final JRadioButton radioButton = ((JRadioButton)rootComponent);
+      JRadioButton radioButton = ((JRadioButton)rootComponent);
       if (isComponentHighlighted(radioButton.getText(), option, force, configurable)) {
         highlight = true;
         glassPanel.addSpotlight(radioButton);
       }
     }
     else if (rootComponent instanceof JLabel) {
-      final JLabel label = ((JLabel)rootComponent);
+      JLabel label = ((JLabel)rootComponent);
       if (isComponentHighlighted(label.getText(), option, force, configurable)) {
         highlight = true;
         glassPanel.addSpotlight(label);
       }
     }
     else if (rootComponent instanceof JButton) {
-      final JButton button = ((JButton)rootComponent);
+      JButton button = ((JButton)rootComponent);
       if (isComponentHighlighted(button.getText(), option, force, configurable)) {
         highlight = true;
         glassPanel.addSpotlight(button);
       }
     }
     else if (rootComponent instanceof JTabbedPane) {
-      final JTabbedPane tabbedPane = (JTabbedPane)rootComponent;
-      final String path = SearchableOptionsRegistrar.getInstance().getInnerPath(configurable, option);
+      JTabbedPane tabbedPane = (JTabbedPane)rootComponent;
+      String path = SearchableOptionsRegistrar.getInstance().getInnerPath(configurable, option);
       if (path != null) {
-        final int index = getSelection(path, tabbedPane);
+        int index = getSelection(path, tabbedPane);
         if (index > -1 && index < tabbedPane.getTabCount()) {
           if (tabbedPane.getTabComponentAt(index) instanceof JComponent) {
             glassPanel.addSpotlight((JComponent)tabbedPane.getTabComponentAt(index));
@@ -269,15 +269,15 @@ public class SearchUtil {
     }
 
 
-    final Component[] components = rootComponent.getComponents();
+    Component[] components = rootComponent.getComponents();
     for (Component component : components) {
       if (component instanceof JComponent) {
-        final boolean innerHighlight = traverseComponentsTree(configurable, glassPanel, (JComponent)component, option, force);
+        boolean innerHighlight = traverseComponentsTree(configurable, glassPanel, (JComponent)component, option, force);
 
         if (!highlight && !innerHighlight) {
-          final Border border = rootComponent.getBorder();
+          Border border = rootComponent.getBorder();
           if (border instanceof TitledBorder) {
-            final String title = ((TitledBorder)border).getTitle();
+            String title = ((TitledBorder)border).getTitle();
             if (isComponentHighlighted(title, option, force, configurable)) {
               highlight = true;
               glassPanel.addSpotlight(rootComponent);
@@ -295,19 +295,19 @@ public class SearchUtil {
     return highlight;
   }
 
-  public static boolean isComponentHighlighted(String text, String option, final boolean force, final SearchableConfigurable configurable) {
+  public static boolean isComponentHighlighted(String text, String option, boolean force, SearchableConfigurable configurable) {
     if (text == null || option == null || option.length() == 0) return false;
-    final SearchableOptionsRegistrar searchableOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
-    final Set<String> words = searchableOptionsRegistrar.getProcessedWords(option);
-    final Set<String> options =
+    SearchableOptionsRegistrar searchableOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
+    Set<String> words = searchableOptionsRegistrar.getProcessedWords(option);
+    Set<String> options =
       configurable != null ? searchableOptionsRegistrar.replaceSynonyms(words, configurable) : words;
     if (options == null || options.isEmpty()) {
       return text.toLowerCase().indexOf(option.toLowerCase()) != -1;
     }
-    final Set<String> tokens = searchableOptionsRegistrar.getProcessedWords(text);
+    Set<String> tokens = searchableOptionsRegistrar.getProcessedWords(text);
     if (!force) {
       options.retainAll(tokens);
-      final boolean highlight = !options.isEmpty();
+      boolean highlight = !options.isEmpty();
       return highlight || text.toLowerCase().indexOf(option.toLowerCase()) != -1;
     }
     else {
@@ -333,9 +333,9 @@ public class SearchUtil {
       return textToMarkup;
     }
     int bodyStart = textToMarkup.indexOf("<body>");
-    final int bodyEnd = textToMarkup.indexOf("</body>");
-    final String head;
-    final String foot;
+    int bodyEnd = textToMarkup.indexOf("</body>");
+    String head;
+    String foot;
     if (bodyStart >= 0) {
       bodyStart += "<body>".length();
       head = textToMarkup.substring(0, bodyStart);
@@ -349,12 +349,12 @@ public class SearchUtil {
       foot = "";
       head = "";
     }
-    final Pattern insideHtmlTagPattern = Pattern.compile("[<[^<>]*>]*<[^<>]*");
-    final SearchableOptionsRegistrar registrar = SearchableOptionsRegistrar.getInstance();
-    final HashSet<String> quoted = new HashSet<String>();
+    Pattern insideHtmlTagPattern = Pattern.compile("[<[^<>]*>]*<[^<>]*");
+    SearchableOptionsRegistrar registrar = SearchableOptionsRegistrar.getInstance();
+    HashSet<String> quoted = new HashSet<String>();
     filter = processFilter(quoteStrictOccurrences(textToMarkup, filter), quoted);
-    final Set<String> options = registrar.getProcessedWords(filter);
-    final Set<String> words = registrar.getProcessedWords(textToMarkup);
+    Set<String> options = registrar.getProcessedWords(filter);
+    Set<String> words = registrar.getProcessedWords(textToMarkup);
     for (String option : options) {
       if (words.contains(option)) {
         textToMarkup = markup(textToMarkup, insideHtmlTagPattern, option);
@@ -366,9 +366,9 @@ public class SearchUtil {
     return head + textToMarkup + foot;
   }
 
-  private static String quoteStrictOccurrences(final String textToMarkup, final String filter) {
+  private static String quoteStrictOccurrences(String textToMarkup, String filter) {
     String cur = "";
-    final String s = textToMarkup.toLowerCase();
+    String s = textToMarkup.toLowerCase();
     for (String part : filter.split(" ")) {
       if (s.contains(part)) {
         cur += "\"" + part + "\" ";
@@ -380,10 +380,10 @@ public class SearchUtil {
     return cur;
   }
 
-  private static String markup(@NonNls String textToMarkup, final Pattern insideHtmlTagPattern, final String option) {
+  private static String markup(@NonNls String textToMarkup, Pattern insideHtmlTagPattern, String option) {
     String result = "";
-    final int styleIdx = textToMarkup.indexOf("<style");
-    final int styleEndIdx = textToMarkup.indexOf("</style>");
+    int styleIdx = textToMarkup.indexOf("<style");
+    int styleEndIdx = textToMarkup.indexOf("</style>");
     if (styleIdx < 0 || styleEndIdx < 0) {
       result = markupInText(textToMarkup, insideHtmlTagPattern, option);
     } else {
@@ -397,10 +397,10 @@ public class SearchUtil {
     int beg = 0;
     int idx;
     while ((idx = StringUtil.indexOfIgnoreCase(textToMarkup, option, beg)) != -1) {
-      final String prefix = textToMarkup.substring(beg, idx);
-      final String toMark = textToMarkup.substring(idx, idx + option.length());
+      String prefix = textToMarkup.substring(beg, idx);
+      String toMark = textToMarkup.substring(idx, idx + option.length());
       if (insideHtmlTagPattern.matcher(prefix).matches()) {
-        final int lastIdx = textToMarkup.indexOf(">", idx);
+        int lastIdx = textToMarkup.indexOf(">", idx);
         result += prefix + textToMarkup.substring(idx, lastIdx + 1);
         beg = lastIdx + 1;
       }
@@ -416,17 +416,17 @@ public class SearchUtil {
   public static void appendFragments(String filter,
                                      @NonNls String text,
                                      @SimpleTextAttributes.StyleAttributeConstant int style,
-                                     final Color foreground,
-                                     final Color background,
-                                     final SimpleColoredComponent textRenderer) {
+                                     Color foreground,
+                                     Color background,
+                                     SimpleColoredComponent textRenderer) {
     if (text == null) return;
     if (filter == null || filter.length() == 0) {
       textRenderer.append(text, new SimpleTextAttributes(background, foreground, JBColor.RED, style));
     }
     else { //markup
-      final HashSet<String> quoted = new HashSet<String>();
+      HashSet<String> quoted = new HashSet<String>();
       filter = processFilter(quoteStrictOccurrences(text, filter), quoted);
-      final TreeMap<Integer, String> indx = new TreeMap<Integer, String>();
+      TreeMap<Integer, String> indx = new TreeMap<Integer, String>();
       for (String stripped : quoted) {
         int beg = 0;
         int idx;
@@ -436,13 +436,13 @@ public class SearchUtil {
         }
       }
 
-      final List<String> selectedWords = new ArrayList<String>();
+      List<String> selectedWords = new ArrayList<String>();
       int pos = 0;
       for (Integer index : indx.keySet()) {
-        final String stripped = indx.get(index);
-        final int start = index.intValue();
+        String stripped = indx.get(index);
+        int start = index.intValue();
         if (pos > start) {
-          final String highlighted = selectedWords.get(selectedWords.size() - 1);
+          String highlighted = selectedWords.get(selectedWords.size() - 1);
           if (highlighted.length() < stripped.length()){
             selectedWords.remove(highlighted);
           } else {
@@ -458,7 +458,7 @@ public class SearchUtil {
       int idx = 0;
       for (String word : selectedWords) {
         text = text.substring(idx);
-        final String before = text.substring(0, text.indexOf(word));
+        String before = text.substring(0, text.indexOf(word));
         if (before.length() > 0) textRenderer.append(before, new SimpleTextAttributes(background, foreground, null, style));
         idx = text.indexOf(word) + word.length();
         textRenderer.append(text.substring(idx - word.length(), idx), new SimpleTextAttributes(background,
@@ -466,19 +466,19 @@ public class SearchUtil {
                                                                                                style |
                                                                                                SimpleTextAttributes.STYLE_SEARCH_MATCH));
       }
-      final String after = text.substring(idx, text.length());
+      String after = text.substring(idx, text.length());
       if (after.length() > 0) textRenderer.append(after, new SimpleTextAttributes(background, foreground, null, style));
     }
   }
 
-  private static void appendSelectedWords(final String text,
-                                          final List<String> selectedWords,
-                                          final int pos,
+  private static void appendSelectedWords(String text,
+                                          List<String> selectedWords,
+                                          int pos,
                                           int end,
-                                          final String filter) {
+                                          String filter) {
     if (pos < end) {
-      final Set<String> filters = SearchableOptionsRegistrar.getInstance().getProcessedWords(filter);
-      final String[] words = text.substring(pos, end).split("[\\W&&[^-]]+");
+      Set<String> filters = SearchableOptionsRegistrar.getInstance().getProcessedWords(filter);
+      String[] words = text.substring(pos, end).split("[\\W&&[^-]]+");
       for (String word : words) {
         if (filters.contains(PorterStemmerUtil.stem(word.toLowerCase()))) {
           selectedWords.add(word);
@@ -492,17 +492,17 @@ public class SearchUtil {
                                      final JBPopup[] activePopup,
                                      final Alarm showHintAlarm,
                                      final Consumer<String> selectConfigurable,
-                                     final Project project,
-                                     final int down) {
+                                     Project project,
+                                     int down) {
 
-    final String filter = searchField.getText();
+    String filter = searchField.getText();
     if (filter == null || filter.length() == 0) return null;
-    final Map<String, Set<String>> hints = SearchableOptionsRegistrar.getInstance().findPossibleExtension(filter, project);
-    final DefaultListModel model = new DefaultListModel();
+    Map<String, Set<String>> hints = SearchableOptionsRegistrar.getInstance().findPossibleExtension(filter, project);
+    DefaultListModel model = new DefaultListModel();
     final JList list = new JBList(model);
     for (String groupName : hints.keySet()) {
       model.addElement(groupName);
-      final Set<String> descriptions = hints.get(groupName);
+      Set<String> descriptions = hints.get(groupName);
       if (descriptions != null) {
         for (String hit : descriptions) {
           if (hit == null) continue;
@@ -512,7 +512,7 @@ public class SearchUtil {
     }
     list.setCellRenderer(new DefaultListCellRenderer() {
       public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        final Component rendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        Component rendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (value instanceof String) {
           setText("------ " + value + " ------");
         }
@@ -525,9 +525,9 @@ public class SearchUtil {
 
 
     if (model.size() > 0) {
-      final Runnable onChosen = new Runnable() {
+      Runnable onChosen = new Runnable() {
         public void run() {
-          final Object selectedValue = list.getSelectedValue();
+          Object selectedValue = list.getSelectedValue();
           if (selectedValue instanceof OptionDescription) {
             final OptionDescription description = ((OptionDescription)selectedValue);
             searchField.setText(description.getHit());
@@ -541,12 +541,12 @@ public class SearchUtil {
           }
         }
       };
-      final JBPopup popup = new PopupChooserBuilder<>(list)
+      JBPopup popup = new PopupChooserBuilder<>(list)
         .setItemChoosenCallback(onChosen)
         .setRequestFocus(down != 0)
         .createPopup();
       list.addKeyListener(new KeyAdapter() {
-        public void keyPressed(final KeyEvent e) {
+        public void keyPressed(KeyEvent e) {
           if (e.getKeyCode() != KeyEvent.VK_ENTER && e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN &&
               e.getKeyCode() != KeyEvent.VK_PAGE_UP && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN) {
             searchField.requestFocusInWindow();
@@ -576,18 +576,18 @@ public class SearchUtil {
     return null;
   }
 
-  public static void showHintPopup(final ConfigurableSearchTextField searchField,
-                                   final JBPopup[] activePopup,
-                                   final Alarm showHintAlarm,
-                                   final Consumer<String> selectConfigurable,
-                                   final Project project) {
+  public static void showHintPopup(ConfigurableSearchTextField searchField,
+                                   JBPopup[] activePopup,
+                                   Alarm showHintAlarm,
+                                   Consumer<String> selectConfigurable,
+                                   Project project) {
     for (JBPopup aPopup : activePopup) {
       if (aPopup != null) {
         aPopup.cancel();
       }
     }
 
-    final JBPopup popup = createPopup(searchField, activePopup, showHintAlarm, selectConfigurable, project, 0); //no selection
+    JBPopup popup = createPopup(searchField, activePopup, showHintAlarm, selectConfigurable, project, 0); //no selection
     if (popup != null) {
       popup.showUnderneathOf(searchField);
       searchField.requestFocusInWindow();
@@ -604,7 +604,7 @@ public class SearchUtil {
                                                 final Consumer<String> selectConfigurable,
                                                 final Project project) {
     final Consumer<Integer> shower = new Consumer<Integer>() {
-      public void accept(final Integer direction) {
+      public void accept(Integer direction) {
         if (activePopup[0] != null) {
           activePopup[0].cancel();
         }
@@ -613,7 +613,7 @@ public class SearchUtil {
           return;
         }
 
-        final JBPopup popup = createPopup(searchField, activePopup, showHintAlarm, selectConfigurable, project, direction.intValue());
+        JBPopup popup = createPopup(searchField, activePopup, showHintAlarm, selectConfigurable, project, direction.intValue());
         if (popup != null) {
           popup.showUnderneathOf(searchField);
         }
@@ -650,7 +650,7 @@ public class SearchUtil {
     });
   }
 
-  private static boolean cancelPopups(final JBPopup[] activePopup) {
+  private static boolean cancelPopups(JBPopup[] activePopup) {
     for (JBPopup popup : activePopup) {
       if (popup != null && popup.isVisible()) {
         popup.cancel();
@@ -662,11 +662,11 @@ public class SearchUtil {
 
   public static List<Set<String>> findKeys(String filter, Set<String> quoted) {
     filter = processFilter(filter.toLowerCase(), quoted);
-    final List<Set<String>> keySetList = new ArrayList<Set<String>>();
-    final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
-    final Set<String> words = optionsRegistrar.getProcessedWords(filter);
+    List<Set<String>> keySetList = new ArrayList<Set<String>>();
+    SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
+    Set<String> words = optionsRegistrar.getProcessedWords(filter);
     for (String word : words) {
-      final Set<OptionDescription> descriptions = ((SearchableOptionsRegistrarImpl)optionsRegistrar).getAcceptableDescriptions(word);
+      Set<OptionDescription> descriptions = ((SearchableOptionsRegistrarImpl)optionsRegistrar).getAcceptableDescriptions(word);
       Set<String> keySet = new HashSet<String>();
       if (descriptions != null) {
         for (OptionDescription description : descriptions) {
@@ -681,12 +681,12 @@ public class SearchUtil {
   public static String processFilter(String filter, Set<String> quoted) {
     String withoutQuoted = "";
     int beg = 0;
-    final Matcher matcher = QUOTED.matcher(filter);
+    Matcher matcher = QUOTED.matcher(filter);
     while (matcher.find()) {
-      final int start = matcher.start(1);
+      int start = matcher.start(1);
       withoutQuoted += " " + filter.substring(beg, start);
       beg = matcher.end(1);
-      final String trimmed = filter.substring(start, beg).trim();
+      String trimmed = filter.substring(start, beg).trim();
       if (trimmed.length() > 0) {
         quoted.add(trimmed);
       }
@@ -700,7 +700,7 @@ public class SearchUtil {
       super("ALL_CONFIGURABLES_PANEL_SEARCH_HISTORY");
     }
 
-    public void process(final KeyEvent e) {
+    public void process(KeyEvent e) {
       ((TextFieldWithProcessing)getTextEditor()).processKeyEvent(e);
     }
   }
@@ -709,7 +709,7 @@ public class SearchUtil {
     return expandGroup(configurables);
   }
 
-  public static List<Configurable> expandGroup(final Configurable[] configurables) {
+  public static List<Configurable> expandGroup(Configurable[] configurables) {
     List<Configurable> result = new ArrayList<Configurable>();
     ContainerUtil.addAll(result, configurables);
     for (Configurable each : configurables) {
@@ -723,7 +723,7 @@ public class SearchUtil {
 
   private static void addChildren(Configurable configurable, List<Configurable> list) {
     if (configurable instanceof Configurable.Composite) {
-      final Configurable[] kids = ((Configurable.Composite)configurable).getConfigurables();
+      Configurable[] kids = ((Configurable.Composite)configurable).getConfigurables();
       for (Configurable eachKid : kids) {
         list.add(eachKid);
         addChildren(eachKid, list);

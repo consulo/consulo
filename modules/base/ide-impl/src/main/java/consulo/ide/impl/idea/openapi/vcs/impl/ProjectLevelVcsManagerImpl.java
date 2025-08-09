@@ -334,12 +334,12 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @Override
   public boolean checkVcsIsActive(AbstractVcs vcs) {
-    return checkVcsIsActive(vcs.getName());
+    return checkVcsIsActive(vcs.getId());
   }
 
   @Override
-  public boolean checkVcsIsActive(String vcsName) {
-    return myMappings.haveActiveVcs(vcsName);
+  public boolean checkVcsIsActive(@Nonnull String vcsId) {
+    return myMappings.haveActiveVcs(vcsId);
   }
 
   @Nonnull

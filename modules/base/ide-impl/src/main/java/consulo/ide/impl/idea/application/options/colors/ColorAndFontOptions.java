@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.internal.BookmarkManagerInternal;
@@ -41,7 +40,6 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.language.editor.todo.TodoConfiguration;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -50,6 +48,7 @@ import consulo.language.editor.internal.ColorPageWeights;
 import consulo.language.editor.internal.ColorSettingsPages;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.ScopeAttributesUtil;
+import consulo.language.editor.todo.TodoConfiguration;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -70,7 +69,6 @@ import consulo.virtualFileSystem.status.FileStatusFactory;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -164,9 +162,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
   private HashMap<String, MyColorScheme> mySchemes;
   private MyColorScheme mySelectedScheme;
-
-  public static final String FILE_STATUS_GROUP = ApplicationBundle.message("title.file.status");
-  public static final String SCOPES_GROUP = ApplicationBundle.message("title.scope.based");
 
   private boolean mySomeSchemesDeleted = false;
   private Map<ColorAndFontPanelFactory, InnerSearchableConfigurable> mySubPanelFactories;
@@ -440,7 +435,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
         @Override
         @Nonnull
-        public String getPanelDisplayName() {
+        public LocalizeValue getPanelDisplayName() {
           return page.getDisplayName();
         }
       });
@@ -466,7 +461,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     @Nonnull
     public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
       FontEditorPreview previewPanel = new FontEditorPreview(options, true);
-      return new NewColorAndFontPanel(new SchemesPanel(options), new FontOptions(options), previewPanel, "Font", null, null) {
+      return new NewColorAndFontPanel(new SchemesPanel(options), new FontOptions(options), previewPanel, LocalizeValue.localizeTODO("Font"), null, null) {
         @Override
         public boolean containsFontOptions() {
           return true;
@@ -476,8 +471,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     @Override
     @Nonnull
-    public String getPanelDisplayName() {
-      return "Font";
+    public LocalizeValue getPanelDisplayName() {
+      return LocalizeValue.localizeTODO("Font");
     }
 
     @Override
@@ -496,7 +491,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
           return ConsoleViewUtil.updateConsoleColorScheme(selectedScheme);
         }
       };
-      return new NewColorAndFontPanel(new SchemesPanel(options), new ConsoleFontOptions(options), previewPanel, "Font", null, null) {
+      return new NewColorAndFontPanel(new SchemesPanel(options), new ConsoleFontOptions(options), previewPanel, LocalizeValue.localizeTODO("Font"), null, null) {
         @Override
         public boolean containsFontOptions() {
           return true;
@@ -506,8 +501,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     @Override
     @Nonnull
-    public String getPanelDisplayName() {
-      return "Console Font";
+    public LocalizeValue getPanelDisplayName() {
+      return LocalizeValue.localizeTODO("Console Font");
     }
 
     @Override
@@ -553,7 +548,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   private static void initDescriptions(@Nonnull ColorAndFontDescriptors provider, @Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
-    LocalizeValue group = LocalizeValue.of(provider.getDisplayName());
+    LocalizeValue group = provider.getDisplayName();
     
     for (AttributesDescriptor descriptor : provider.getAttributeDescriptors()) {
       addSchemedDescription(descriptions, descriptor.getDisplayName(), group, descriptor.getKey(), scheme, null, null);
@@ -650,9 +645,10 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return ApplicationBundle.message("title.colors.and.fonts");
+  public LocalizeValue getDisplayName() {
+    return ApplicationLocalize.titleColorsAndFonts();
   }
 
   private void revertChanges() {
@@ -1169,8 +1165,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     @Nonnull
     @Override
-    @Nls
-    public String getDisplayName() {
+    public LocalizeValue getDisplayName() {
       return myFactory.getPanelDisplayName();
     }
 

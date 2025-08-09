@@ -21,6 +21,8 @@ import consulo.configurable.*;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.disposer.Disposer;
 
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -47,9 +49,10 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return CodeInsightBundle.message("templates.settings.page.title");
+  public LocalizeValue getDisplayName() {
+    return CodeInsightLocalize.templatesSettingsPageTitle();
   }
 
   @Override

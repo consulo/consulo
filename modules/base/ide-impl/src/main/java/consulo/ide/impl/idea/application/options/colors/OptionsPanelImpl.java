@@ -16,19 +16,20 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.Settings;
+import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Wrapper;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ui.ex.awt.JBUI;
 import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
@@ -65,7 +66,7 @@ public class OptionsPanelImpl implements OptionsPanel {
 
   private final ColorAndFontOptions myOptions;
   private final SchemesPanel mySchemesProvider;
-  private final String myCategoryName;
+  private final LocalizeValue myCategoryName;
 
   private final PropertiesComponent myProperties;
 
@@ -73,11 +74,11 @@ public class OptionsPanelImpl implements OptionsPanel {
 
   private final JPanel myPanel;
 
-  public OptionsPanelImpl(ColorAndFontOptions options, SchemesPanel schemesProvider, String categoryName) {
+  public OptionsPanelImpl(ColorAndFontOptions options, SchemesPanel schemesProvider, LocalizeValue categoryName) {
     this(options, schemesProvider, categoryName, new ColorAndFontDescriptionPanel());
   }
 
-  public OptionsPanelImpl(ColorAndFontOptions options, SchemesPanel schemesProvider, String categoryName, ColorDescriptionPanel optionsPanel) {
+  public OptionsPanelImpl(ColorAndFontOptions options, SchemesPanel schemesProvider, LocalizeValue categoryName, ColorDescriptionPanel optionsPanel) {
     myPanel = new JPanel(new BorderLayout());
 
     myOptions = options;

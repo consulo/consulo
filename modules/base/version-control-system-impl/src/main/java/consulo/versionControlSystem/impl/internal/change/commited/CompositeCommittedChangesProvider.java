@@ -28,6 +28,7 @@ import consulo.versionControlSystem.change.commited.DecoratorManager;
 import consulo.versionControlSystem.change.commited.VcsCommittedListsZipper;
 import consulo.versionControlSystem.change.commited.VcsCommittedViewAuxiliary;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ui.awt.DateFilterComponent;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
@@ -234,8 +235,8 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
         myEditors.put(vcs, editor);
 
         JPanel wrapperPane = new JPanel(new BorderLayout());
-        wrapperPane.setBorder(IdeBorderFactory.createTitledBorder(vcs.getDisplayName(), true));
-        final JCheckBox checkBox = new JCheckBox(VcsBundle.message("composite.change.provider.include.vcs.checkbox", vcs.getDisplayName()), true);
+        wrapperPane.setBorder(IdeBorderFactory.createTitledBorder(vcs.getDisplayName().get(), true));
+        final JCheckBox checkBox = new JCheckBox(VcsLocalize.compositeChangeProviderIncludeVcsCheckbox(vcs.getDisplayName()).get(), true);
         checkBox.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(final ActionEvent e) {

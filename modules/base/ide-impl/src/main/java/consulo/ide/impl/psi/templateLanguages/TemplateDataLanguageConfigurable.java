@@ -23,7 +23,9 @@ import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.impl.internal.template.TemplateDataLanguagePatterns;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -34,7 +36,6 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 /**
  * @author peter
@@ -58,10 +59,10 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
+  @Nonnull
   @Override
-  @Nls
-  public String getDisplayName() {
-    return LangBundle.message("template.data.language.configurable");
+  public LocalizeValue getDisplayName() {
+    return LanguageLocalize.templateDataLanguageConfigurable();
   }
 
   @Override

@@ -14,6 +14,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.localize.LanguageLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
@@ -112,8 +113,8 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return IdeLocalize.fileEncodingsConfigurable().get();
+    public LocalizeValue getDisplayName() {
+        return IdeLocalize.fileEncodingsConfigurable();
     }
 
     @Override

@@ -17,14 +17,14 @@ package consulo.ide.impl.idea.notification.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.ide.impl.idea.notification.impl.ui.NotificationsConfigurablePanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.notification.impl.ui.NotificationsConfigurablePanel;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -48,9 +48,8 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
 
   @Nonnull
   @Override
-  @Nls
-  public String getDisplayName() {
-    return "Notifications";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Notifications");
   }
 
   @RequiredUIAccess
@@ -89,7 +88,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
   }
 
   @Override
-  public Runnable enableSearch(final String option) {
+  public Runnable enableSearch(String option) {
     return () -> myComponent.selectGroup(option);
   }
 }

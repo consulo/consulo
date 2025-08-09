@@ -30,7 +30,7 @@ public class TabbedModuleEditor extends ModuleEditor {
     myTabbedPane = new TabbedPaneWrapper(this);
 
     for (ModuleConfigurationEditor editor : myEditors) {
-      myTabbedPane.addTab(editor.getDisplayName(), ConfigurableUIMigrationUtil.createComponent(editor, parentUIDisposable));
+      myTabbedPane.addTab(editor.getDisplayName().get(), ConfigurableUIMigrationUtil.createComponent(editor, parentUIDisposable));
       editor.initialize();
       editor.reset();
     }

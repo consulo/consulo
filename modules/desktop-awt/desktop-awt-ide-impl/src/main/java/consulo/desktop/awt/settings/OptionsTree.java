@@ -25,6 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeBuilder;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.ui.app.impl.settings.UnifiedConfigurableComparator;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
@@ -141,17 +142,17 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
 
         myTree.addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(final ComponentEvent e) {
+            public void componentResized(ComponentEvent e) {
                 myBuilder.revalidateTree();
             }
 
             @Override
-            public void componentMoved(final ComponentEvent e) {
+            public void componentMoved(ComponentEvent e) {
                 myBuilder.revalidateTree();
             }
 
             @Override
-            public void componentShown(final ComponentEvent e) {
+            public void componentShown(ComponentEvent e) {
                 myBuilder.revalidateTree();
             }
         });
@@ -160,28 +161,28 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
 
         mySelection = new MergingUpdateQueue("OptionsTree", 150, false, myPanel, this, myPanel).setRestartTimerOnAdd(true);
         myTree.getSelectionModel().addTreeSelectionListener(e -> {
-            final TreePath path = e.getNewLeadSelectionPath();
+            TreePath path = e.getNewLeadSelectionPath();
             if (path == null) {
                 queueSelection(null);
             }
             else {
-                final Base base = extractNode(path.getLastPathComponent());
+                Base base = extractNode(path.getLastPathComponent());
                 queueSelection(base != null ? base.getConfigurable() : null);
             }
         });
         myTree.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(final KeyEvent e) {
+            public void keyTyped(KeyEvent e) {
                 _onTreeKeyEvent(e);
             }
 
             @Override
-            public void keyPressed(final KeyEvent e) {
+            public void keyPressed(KeyEvent e) {
                 _onTreeKeyEvent(e);
             }
 
             @Override
-            public void keyReleased(final KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
                 _onTreeKeyEvent(e);
             }
         });
@@ -193,9 +194,9 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     }
 
     protected void _onTreeKeyEvent(KeyEvent e) {
-        final KeyStroke stroke = KeyStroke.getKeyStrokeForEvent(e);
+        KeyStroke stroke = KeyStroke.getKeyStrokeForEvent(e);
 
-        final Object action = myTree.getInputMap().get(stroke);
+        Object action = myTree.getInputMap().get(stroke);
         if (action == null) {
             onTreeKeyEvent(e);
         }
@@ -226,7 +227,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         final AsyncResult<Void> callback = AsyncResult.undefined();
 
         myQueuedConfigurable = configurable;
-        final Update update = new Update(this) {
+        Update update = new Update(this) {
             @Override
             public void run() {
                 if (configurable != myQueuedConfigurable) {
@@ -243,7 +244,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
                             return;
                         }
 
-                        final ConfigurableNode configurableNode = myConfigurable2Node.get(configurable);
+                        ConfigurableNode configurableNode = myConfigurable2Node.get(configurable);
                         FilteringTreeStructure.FilteringNode editorUiNode = myBuilder.getVisibleNodeFor(configurableNode);
                         if (editorUiNode == null) {
                             return;
@@ -269,7 +270,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         return callback;
     }
 
-    private void fireSelected(Configurable configurable, final AsyncResult<Void> callback) {
+    private void fireSelected(Configurable configurable, AsyncResult<Void> callback) {
         myContext.fireSelected(configurable, this).doWhenProcessed(callback.createSetDoneRunnable());
     }
 
@@ -277,8 +278,8 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         return myTree;
     }
 
-    public List<Configurable> getPathToRoot(final Configurable configurable) {
-        final ArrayList<Configurable> path = new ArrayList<>();
+    public List<Configurable> getPathToRoot(Configurable configurable) {
+        ArrayList<Configurable> path = new ArrayList<>();
 
         ConfigurableNode eachNode = myConfigurable2Node.get(configurable);
         if (eachNode == null) {
@@ -287,7 +288,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
 
         while (true) {
             path.add(eachNode.getConfigurable());
-            final SimpleNode parent = eachNode.getParent();
+            SimpleNode parent = eachNode.getParent();
             if (parent instanceof ConfigurableNode) {
                 eachNode = (ConfigurableNode) parent;
             }
@@ -299,7 +300,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         return path;
     }
 
-    public SimpleNode findNodeFor(final Configurable toSelect) {
+    public SimpleNode findNodeFor(Configurable toSelect) {
         return myConfigurable2Node.get(toSelect);
     }
 
@@ -356,12 +357,8 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     }
 
     abstract static class Base extends CachingSimpleNode {
-        protected Base(final SimpleNode aParent) {
+        protected Base(SimpleNode aParent) {
             super(aParent);
-        }
-
-        String getText() {
-            return null;
         }
 
         boolean isModified() {
@@ -388,7 +385,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         }
 
         @Nonnull
-        private List<ConfigurableNode> map(final Configurable[] configurables) {
+        private List<ConfigurableNode> map(Configurable[] configurables) {
             List<ConfigurableNode> result = new ArrayList<>();
             for (Configurable eachKid : configurables) {
                 if (isInvisibleNode(eachKid)) {
@@ -403,14 +400,14 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         }
     }
 
-    private static boolean isInvisibleNode(final Configurable child) {
+    private static boolean isInvisibleNode(Configurable child) {
         return child instanceof SearchableConfigurable.Parent && !((SearchableConfigurable.Parent) child).isVisible();
     }
 
-    private List<ConfigurableNode> buildChildren(final Configurable configurable, SimpleNode parent) {
+    private List<ConfigurableNode> buildChildren(Configurable configurable, SimpleNode parent) {
         if (configurable instanceof Configurable.Composite) {
-            final Configurable[] kids = ((Configurable.Composite) configurable).getConfigurables();
-            final List<ConfigurableNode> result = new ArrayList<>(kids.length);
+            Configurable[] kids = ((Configurable.Composite) configurable).getConfigurables();
+            List<ConfigurableNode> result = new ArrayList<>(kids.length);
             for (Configurable child : kids) {
                 if (isInvisibleNode(child)) {
                     result.addAll(buildChildren(child, parent));
@@ -442,7 +439,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         protected void update(PresentationData presentation) {
             super.update(presentation);
 
-            String displayName = UnifiedConfigurableComparator.getConfigurableDisplayName(myConfigurable);
+            LocalizeValue displayName = UnifiedConfigurableComparator.getConfigurableDisplayName(myConfigurable);
             if (getParent() instanceof Root) {
                 presentation.addText(displayName, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
             }
@@ -473,11 +470,6 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         @Override
         public int getWeight() {
             return WeightBasedComparator.UNDEFINED_WEIGHT;
-        }
-
-        @Override
-        String getText() {
-            return UnifiedConfigurableComparator.getConfigurableDisplayName(myConfigurable).replace("\n", " ");
         }
 
         @Override
@@ -529,18 +521,18 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     }
 
     @Override
-    public AsyncResult<Void> onSelected(final Configurable configurable, final Configurable oldConfigurable) {
+    public AsyncResult<Void> onSelected(Configurable configurable, Configurable oldConfigurable) {
         return queueSelection(configurable);
     }
 
     @Override
-    public AsyncResult<Void> onModifiedAdded(final Configurable colleague) {
+    public AsyncResult<Void> onModifiedAdded(Configurable colleague) {
         myTree.repaint();
         return AsyncResult.resolved();
     }
 
     @Override
-    public AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
+    public AsyncResult<Void> onModifiedRemoved(Configurable configurable) {
         myTree.repaint();
         return AsyncResult.resolved();
     }
@@ -581,12 +573,12 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         }
 
         @Override
-        protected boolean isSelectable(final Object nodeObject) {
+        protected boolean isSelectable(Object nodeObject) {
             return nodeObject instanceof ConfigurableNode;
         }
 
         @Override
-        public boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
+        public boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
             return myContext.isHoldingFilter();
         }
 
@@ -597,7 +589,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
 
         @Override
         protected Promise<?> refilterNow(Object preferredSelection, boolean adjustSelection) {
-            final List<Object> toRestore = new ArrayList<>();
+            List<Object> toRestore = new ArrayList<>();
             if (myContext.isHoldingFilter() && !myWasHoldingFilter && myToExpandOnResetFilter == null) {
                 myToExpandOnResetFilter = myBuilder.getUi().getExpandedElements();
             }

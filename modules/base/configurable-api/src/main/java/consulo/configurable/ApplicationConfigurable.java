@@ -17,7 +17,7 @@ package consulo.configurable;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -26,9 +26,9 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ApplicationConfigurable extends Configurable {
-  @Nonnull
-  String getId();
+    @Nonnull
+    String getId();
 
-  @Nonnull
-  String getDisplayName();
+    @Nonnull
+    LocalizeValue getDisplayName();
 }

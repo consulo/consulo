@@ -19,6 +19,7 @@ import consulo.builtinWebServer.localize.BuiltInServerLocalize;
 import consulo.configurable.Configurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
@@ -32,9 +33,10 @@ import jakarta.annotation.Nonnull;
  * @since 2020-11-27
  */
 public class BuiltInServerConfigurable extends SimpleConfigurableByProperties implements Configurable {
+    @Nonnull
     @Override
-    public String getDisplayName() {
-        return BuiltInServerLocalize.settingBuiltinServerCategoryLabel().get();
+    public LocalizeValue getDisplayName() {
+        return BuiltInServerLocalize.settingBuiltinServerCategoryLabel();
     }
 
     @RequiredUIAccess

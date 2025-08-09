@@ -19,6 +19,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolderImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.JBColor;
@@ -47,15 +48,15 @@ public class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
   @Override
   public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     if (value instanceof MasterDetailsComponent.MyNode) {
-      final MasterDetailsComponent.MyNode node = (MasterDetailsComponent.MyNode)value;
+      MasterDetailsComponent.MyNode node = (MasterDetailsComponent.MyNode)value;
 
-      final MasterDetailsConfigurable namedConfigurable = node.getConfigurable();
+      MasterDetailsConfigurable namedConfigurable = node.getConfigurable();
       if (namedConfigurable == null) {
         return;
       }
 
-      final String displayName = node.getDisplayName();
-      final Image icon = namedConfigurable.getIcon();
+      LocalizeValue displayName = node.getDisplayName();
+      Image icon = namedConfigurable.getIcon();
       setIcon(icon);
       setToolTipText(null);
       setFont(UIUtil.getTreeFont());
@@ -65,17 +66,17 @@ public class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
         textAttributes = SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
       }
       else if (namedConfigurable instanceof ProjectStructureElementConfigurable) {
-        final ProjectStructureElement projectStructureElement = ((ProjectStructureElementConfigurable)namedConfigurable).getProjectStructureElement();
+        ProjectStructureElement projectStructureElement = ((ProjectStructureElementConfigurable)namedConfigurable).getProjectStructureElement();
         if (projectStructureElement != null) {
-          final ProjectStructureDaemonAnalyzer daemonAnalyzer = myProjectStructureDaemonAnalyzer;
-          final ProjectStructureProblemsHolderImpl problemsHolder = daemonAnalyzer == null ? null : daemonAnalyzer.getProblemsHolder(projectStructureElement);
+          ProjectStructureDaemonAnalyzer daemonAnalyzer = myProjectStructureDaemonAnalyzer;
+          ProjectStructureProblemsHolderImpl problemsHolder = daemonAnalyzer == null ? null : daemonAnalyzer.getProblemsHolder(projectStructureElement);
           if (problemsHolder != null && problemsHolder.containsProblems()) {
-            final boolean isUnused = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.UNUSED);
-            final boolean haveWarnings = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.WARNING);
-            final boolean haveErrors = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.ERROR);
+            boolean isUnused = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.UNUSED);
+            boolean haveWarnings = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.WARNING);
+            boolean haveErrors = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.ERROR);
             Color foreground = isUnused ? UIUtil.getInactiveTextColor() : null;
-            final int style = haveWarnings || haveErrors ? SimpleTextAttributes.STYLE_WAVED : -1;
-            final Color waveColor = haveErrors ? JBColor.RED : haveWarnings ? JBColor.GRAY : null;
+            int style = haveWarnings || haveErrors ? SimpleTextAttributes.STYLE_WAVED : -1;
+            Color waveColor = haveErrors ? JBColor.RED : haveWarnings ? JBColor.GRAY : null;
             textAttributes = textAttributes.derive(style, foreground, null, waveColor);
             setToolTipText(problemsHolder.composeTooltipMessage());
           }

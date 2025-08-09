@@ -18,6 +18,7 @@ package consulo.webBrowser.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebSearchOptions;
@@ -54,8 +55,8 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return WebBrowserLocalize.browsersSettings().get();
+  public LocalizeValue getDisplayName() {
+    return WebBrowserLocalize.browsersSettings();
   }
 
   @RequiredUIAccess

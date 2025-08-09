@@ -15,26 +15,22 @@
  */
 package consulo.language.codeStyle.ui.setting;
 
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.ConfigurationException;
-import consulo.ui.ex.awt.valueEditor.ValueValidationException;
-import consulo.util.lang.Trinity;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
-import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.codeStyle.setting.CodeStyleSettingPresentation;
-import consulo.ui.ex.awt.OptionGroup;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.IntegerField;
-import consulo.util.collection.MultiMap;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.valueEditor.ValueValidationException;
+import consulo.util.collection.MultiMap;
+import consulo.util.lang.Trinity;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -315,8 +311,9 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
     }
   }
 
+  @Nonnull
   @Override
-  protected String getTabTitle() {
-    return ApplicationBundle.message("title.blank.lines");
+  protected LocalizeValue getTabTitle() {
+    return ApplicationLocalize.titleBlankLines();
   }
 }

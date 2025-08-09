@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.tools;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,9 +36,10 @@ public class ToolConfigurable implements SearchableConfigurable, Configurable.No
     return StandardConfigurableIds.EXECUTION_GROUP;
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return ToolsBundle.message("tools.settings.title");
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(ToolsBundle.message("tools.settings.title"));
   }
 
   @Override

@@ -8,7 +8,6 @@ import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
@@ -96,10 +95,10 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     @Override
     @Nullable
     protected String getEmptySelectionString() {
-        final String typeNames = StringUtil.join(getDisplayedServerTypes(), serverType -> serverType.getPresentableName().get(), ", ");
+        String typeNames = StringUtil.join(getDisplayedServerTypes(), serverType -> serverType.getPresentableName().get(), ", ");
 
         if (typeNames.length() > 0) {
-            return CloudBundle.message("clouds.configure.empty.selection.string", typeNames);
+            return RemoteServerLocalize.cloudsConfigureEmptySelectionString(typeNames).get();
         }
         return null;
     }
@@ -114,8 +113,8 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return CloudBundle.message("configurable.display.name.clouds");
+    public LocalizeValue getDisplayName() {
+        return RemoteServerLocalize.configurableDisplayNameClouds();
     }
 
     @RequiredUIAccess
@@ -149,14 +148,14 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
 
     @Override
     @Nullable
-    public Runnable enableSearch(final String option) {
+    public Runnable enableSearch(String option) {
         return () -> Objects.requireNonNull(SpeedSearchSupply.getSupply(myTree, true)).findAndSelectElement(option);
     }
 
     @Override
     protected void initTree() {
         super.initTree();
-        TreeSpeedSearch.installOn(myTree, true, treePath -> ((MyNode) treePath.getLastPathComponent()).getDisplayName());
+        TreeSpeedSearch.installOn(myTree, true, treePath -> ((MyNode) treePath.getLastPathComponent()).getDisplayName().get());
     }
 
     @Override
@@ -184,7 +183,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
         Set<RemoteServer<?>> servers = new HashSet<>(getServers());
         for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
             RemoteServer<?> server = configurable.getEditableObject();
-            server.setName(configurable.getDisplayName());
+            server.setName(configurable.getDisplayName().get());
             if (!servers.contains(server)) {
                 myServersManager.addServer(server);
             }
@@ -277,7 +276,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     private final class AddRemoteServerAction extends DumbAwareAction {
         private final ServerType<?> myServerType;
 
-        private AddRemoteServerAction(ServerType<?> serverType, final Image icon) {
+        private AddRemoteServerAction(ServerType<?> serverType, Image icon) {
             super(serverType.getPresentableName(), LocalizeValue.of(), icon);
             myServerType = serverType;
         }

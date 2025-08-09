@@ -78,8 +78,8 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "External Services";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("External Services");
   }
 
   @Override

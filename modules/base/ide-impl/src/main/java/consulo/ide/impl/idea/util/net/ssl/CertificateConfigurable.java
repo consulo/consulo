@@ -6,6 +6,7 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileTypeDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.http.impl.internal.ssl.*;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.Tree;
 import org.jetbrains.annotations.Nls;
@@ -147,10 +148,11 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
+  @Nonnull
   @Nls
   @Override
-  public String getDisplayName() {
-    return "Server Certificates";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Server Certificates");
   }
 
   @Nullable

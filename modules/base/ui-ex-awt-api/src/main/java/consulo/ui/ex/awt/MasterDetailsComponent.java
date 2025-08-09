@@ -407,7 +407,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
             if (!(userObject instanceof MasterDetailsConfigurable)) {
                 break;
             }
-            String displayName = current.getDisplayName();
+            String displayName = current.getDisplayName().get();
             if (StringUtil.isEmptyOrSpaces(displayName)) {
                 break;
             }
@@ -572,7 +572,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     protected Comparator<MyNode> getNodeComparator() {
-        return (o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
+        return (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
     }
 
     public ActionCallback selectNodeInTree(DefaultMutableTreeNode nodeToSelect) {
@@ -643,7 +643,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         if (profileName == null) {
             return null; //do not suggest root node
         }
-        return findNodeByCondition(root, configurable -> Comparing.strEqual(profileName, configurable.getDisplayName()));
+        return findNodeByCondition(root, configurable -> Comparing.strEqual(profileName, configurable.getDisplayName().get()));
     }
 
     @Nullable
@@ -735,14 +735,14 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
             for (int i = 0; i < rootNode.getChildCount(); i++) {
                 MyNode node = (MyNode)rootNode.getChildAt(i);
                 MasterDetailsConfigurable scopeConfigurable = node.getConfigurable();
-                String name = scopeConfigurable.getDisplayName();
+                String name = scopeConfigurable.getDisplayName().get();
                 if (name.trim().length() == 0) {
                     selectNodeInTree(node);
                     throw new ConfigurationException(UILocalize.masterDetailErrEmptyName());
                 }
                 if (names.contains(name)) {
                     MasterDetailsConfigurable selectedConfigurable = getSelectedConfigurable();
-                    if (selectedConfigurable == null || !Comparing.strEqual(selectedConfigurable.getDisplayName(), name)) {
+                    if (selectedConfigurable == null || !Comparing.strEqual(selectedConfigurable.getDisplayName().get(), name)) {
                         selectNodeInTree(node);
                     }
                     throw new ConfigurationException(
@@ -872,7 +872,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         }
 
         @Nonnull
-        public String getDisplayName() {
+        public LocalizeValue getDisplayName() {
             Configurable configurable = ((Configurable)getUserObject());
             LOG.assertTrue(configurable != null, "Tree was already disposed");
             return configurable.getDisplayName();
@@ -926,9 +926,10 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
                     return null;
                 }
 
+                @Nonnull
                 @Override
-                public String getDisplayName() {
-                    return "";
+                public LocalizeValue getDisplayName() {
+                    return LocalizeValue.of();
                 }
 
                 @Nonnull

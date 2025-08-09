@@ -16,17 +16,17 @@
 package consulo.desktop.awt.internal.diff.setting;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.ide.impl.idea.application.options.colors.*;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl
 public class DiffColorAndFontPanelFactory implements ColorAndFontPanelFactory {
   @Override
   @Nonnull
   public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
-    final SchemesPanel schemesPanel = new SchemesPanel(options);
+    SchemesPanel schemesPanel = new SchemesPanel(options);
 
     CompositeColorDescriptionPanel descriptionPanel = new CompositeColorDescriptionPanel();
     descriptionPanel.addDescriptionPanel(new ColorAndFontDescriptionPanel(), it -> it instanceof ColorAndFontDescription);
@@ -37,7 +37,7 @@ public class DiffColorAndFontPanelFactory implements ColorAndFontPanelFactory {
 
     schemesPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
       @Override
-      public void schemeChanged(@Nonnull final Object source) {
+      public void schemeChanged(@Nonnull Object source) {
         previewPanel.setColorScheme(options.getSelectedScheme());
         optionsPanel.updateOptionsList();
       }
@@ -48,12 +48,11 @@ public class DiffColorAndFontPanelFactory implements ColorAndFontPanelFactory {
 
   @Override
   @Nonnull
-  public String getPanelDisplayName() {
+  public LocalizeValue getPanelDisplayName() {
     return getDiffGroup();
   }
 
-  @Nls
-  public static String getDiffGroup() {
-    return ApplicationBundle.message("title.diff");
+  public static LocalizeValue getDiffGroup() {
+    return ApplicationLocalize.titleDiff();
   }
 }

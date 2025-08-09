@@ -5,6 +5,7 @@ import consulo.application.util.ConcurrentFactoryMap;
 import consulo.configurable.*;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
@@ -200,9 +201,8 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
     }
 
     @Override
-    @Nls
-    public String getDisplayName() {
-        return "Servers";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Servers");
     }
 
     @Nonnull

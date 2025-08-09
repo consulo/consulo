@@ -119,12 +119,6 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             );
     }
 
-    @Override
-    @Nonnull
-    public String getId() {
-        return getDisplayName();
-    }
-
     @Nullable
     protected abstract <S> Object getParameter(@Nonnull Key<S> key);
 

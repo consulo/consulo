@@ -10,6 +10,7 @@ import consulo.disposer.Disposable;
 import consulo.language.Language;
 import consulo.language.editor.impl.internal.inlay.setting.InlayProviderSettingsModel;
 import consulo.language.editor.localize.LanguageEditorLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
@@ -74,8 +75,8 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return LanguageEditorLocalize.settingsInlayHintsPanelName().get();
+    public LocalizeValue getDisplayName() {
+        return LanguageEditorLocalize.settingsInlayHintsPanelName();
     }
 
     @Nonnull

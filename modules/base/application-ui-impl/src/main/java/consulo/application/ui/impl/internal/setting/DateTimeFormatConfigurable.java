@@ -67,8 +67,8 @@ public class DateTimeFormatConfigurable extends SimpleConfigurableByProperties i
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Date Formats";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Date Formats");
   }
 
   @RequiredUIAccess

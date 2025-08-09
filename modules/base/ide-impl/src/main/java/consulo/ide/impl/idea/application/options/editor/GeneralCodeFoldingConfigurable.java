@@ -23,6 +23,7 @@ import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.application.localize.ApplicationLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -50,8 +51,8 @@ public class GeneralCodeFoldingConfigurable extends SimpleConfigurableByProperti
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "General";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("General");
   }
 
   @RequiredUIAccess

@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro;
 
-import consulo.ide.IdeBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 
@@ -29,27 +31,38 @@ import javax.swing.*;
 public class ActionMacroConfigurable implements Configurable {
   private ActionMacroConfigurationPanel myPanel;
 
-  public String getDisplayName() {
-    return IdeBundle.message("title.edit.macros");
+  @Override
+  public LocalizeValue getDisplayName() {
+    return IdeLocalize.titleEditMacros();
   }
 
+  @RequiredUIAccess
+  @Override
   public JComponent createComponent() {
     myPanel = new ActionMacroConfigurationPanel();
     return myPanel.getPanel();
   }
 
+  @RequiredUIAccess
+  @Override
   public void apply() throws ConfigurationException {
     myPanel.apply();
   }
 
+  @RequiredUIAccess
+  @Override
   public void reset() {
     myPanel.reset();
   }
 
+  @RequiredUIAccess
+  @Override
   public boolean isModified() {
     return myPanel.isModified();
   }
 
+  @RequiredUIAccess
+  @Override
   public void disposeUIResources() {
     Disposer.dispose(myPanel);
     myPanel = null;

@@ -16,24 +16,26 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
+import consulo.application.localize.ApplicationLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusFactory;
 import jakarta.annotation.Nonnull;
 
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 
 class FileStatusColorsPageFactory implements ColorAndFontPanelFactory {
   @Override
   @Nonnull
   public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
-    return NewColorAndFontPanel.create(new PreviewPanel.Empty(), ColorAndFontOptions.FILE_STATUS_GROUP, options, collectFileTypes(), null);
+    return NewColorAndFontPanel.create(new PreviewPanel.Empty(), ApplicationLocalize.titleFileStatus(), options, collectFileTypes(), null);
   }
 
   @Override
   @Nonnull
-  public String getPanelDisplayName() {
-    return ColorAndFontOptions.FILE_STATUS_GROUP;
+  public LocalizeValue getPanelDisplayName() {
+    return ApplicationLocalize.titleFileStatus();
   }
 
   private static Collection<String> collectFileTypes() {

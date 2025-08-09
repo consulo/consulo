@@ -19,6 +19,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.disposer.Disposable;
 import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -69,5 +70,11 @@ public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties
         layout.add(singleClickForBreakpointBox);
         propertyBuilder.add(singleClickForBreakpointBox, settings::isSingleClickForDisablingBreakpoint, settings::setSingleClickForDisablingBreakpoint);
         return layout;
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.of();
     }
 }

@@ -4,21 +4,19 @@ import consulo.application.Application;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.TitledSeparator;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.TitledSeparator;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -35,9 +33,9 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   private Component myRootComponent;
 
   private final String id;
-  private final String displayName;
+  private final LocalizeValue displayName;
 
-  public MergedCompositeConfigurable(@Nonnull String id, @Nonnull String displayName, @Nonnull Configurable[] children) {
+  public MergedCompositeConfigurable(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Configurable[] children) {
     this.children = children;
     this.id = id;
     this.displayName = displayName;
@@ -49,9 +47,9 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return id;
   }
 
-  @Nls
+  @Nonnull
   @Override
-  public String getDisplayName() {
+  public LocalizeValue getDisplayName() {
     return displayName;
   }
 
@@ -78,12 +76,12 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
             continue;
           }
 
-          String displayName = configurable.getDisplayName();
-          if (StringUtil.isEmpty(displayName)) {
+          LocalizeValue displayName = configurable.getDisplayName();
+          if (displayName == LocalizeValue.of()) {
             verticalLayout.add(uiComponent);
           }
           else {
-            LabeledLayout labeledLayout = LabeledLayout.create(LocalizeValue.of(displayName));
+            LabeledLayout labeledLayout = LabeledLayout.create(displayName);
             labeledLayout.set(uiComponent);
             verticalLayout.add(labeledLayout);
           }
@@ -112,12 +110,12 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
         for (Configurable configurable : children) {
           JComponent component = ConfigurableUIMigrationUtil.createComponent(configurable, parentDisposable);
           assert component != null;
-          String displayName = configurable.getDisplayName();
-          if (StringUtil.isEmpty(displayName)) {
+          LocalizeValue displayName = configurable.getDisplayName();
+          if (displayName == LocalizeValue.of()) {
             component.setBorder(BOTTOM_INSETS);
           }
           else {
-            component.setBorder(IdeBorderFactory.createTitledBorder(displayName, false, firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS));
+            component.setBorder(IdeBorderFactory.createTitledBorder(displayName.get(), false, firstConfigurable == configurable ? FIRST_COMPONENT_INSETS : N_COMPONENT_INSETS));
           }
           panel.add(component);
         }

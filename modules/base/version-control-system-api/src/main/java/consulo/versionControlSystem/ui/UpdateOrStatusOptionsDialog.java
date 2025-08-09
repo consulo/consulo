@@ -19,13 +19,15 @@ import consulo.application.HelpManager;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.OptionsDialog;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -45,17 +47,17 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
         myProject = project;
         if (confs.size() == 1) {
             myMainPanel = new JPanel(new BorderLayout());
-            final UnnamedConfigurable configurable = confs.keySet().iterator().next();
+            UnnamedConfigurable configurable = confs.keySet().iterator().next();
             addComponent(confs.get(configurable), configurable, BorderLayout.CENTER);
             myMainPanel.add(Box.createVerticalStrut(10), BorderLayout.SOUTH);
         }
         else {
             myMainPanel = new JBTabbedPane();
-            final ArrayList<AbstractVcs> vcses = new ArrayList<>(confs.values());
+            ArrayList<AbstractVcs> vcses = new ArrayList<>(confs.values());
             Collections.sort(vcses, (o1, o2) -> o1.getDisplayName().compareTo(o2.getDisplayName()));
             Map<AbstractVcs, UnnamedConfigurable> vcsToConfigurable = revertMap(confs);
             for (AbstractVcs vcs : vcses) {
-                addComponent(vcs, vcsToConfigurable.get(vcs), vcs.getDisplayName());
+                addComponent(vcs, vcsToConfigurable.get(vcs), vcs.getDisplayName().get());
             }
         }
         init();
@@ -66,15 +68,16 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
         return "consulo.versionControlSystem.ui.UpdateOrStatusOptionsDialog" + getActionNameForDimensions();
     }
 
-    private static Map<AbstractVcs, UnnamedConfigurable> revertMap(final Map<UnnamedConfigurable, AbstractVcs> confs) {
-        final HashMap<AbstractVcs, UnnamedConfigurable> result = new HashMap<>();
+    private static Map<AbstractVcs, UnnamedConfigurable> revertMap(Map<UnnamedConfigurable, AbstractVcs> confs) {
+        HashMap<AbstractVcs, UnnamedConfigurable> result = new HashMap<>();
         for (UnnamedConfigurable configurable : confs.keySet()) {
             result.put(confs.get(configurable), configurable);
         }
         return result;
     }
 
-    protected abstract String getRealTitle();
+    @Nonnull
+    protected abstract LocalizeValue getRealTitle();
 
     protected abstract String getActionNameForDimensions();
 
@@ -86,13 +89,14 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
         for (UnnamedConfigurable configurable : myEnvToConfMap.values()) {
             try {
                 configurable.apply();
             }
             catch (ConfigurationException e) {
-                Messages.showErrorDialog(myProject, VcsBundle.message("messge.text.cannot.save.settings", e.getLocalizedMessage()), getRealTitle());
+                Messages.showErrorDialog(myProject, VcsLocalize.messgeTextCannotSaveSettings(e.getLocalizedMessage()).get(), getRealTitle().get());
                 return;
             }
         }
@@ -125,10 +129,10 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
     @Override
     protected void doHelpAction() {
         String helpTopic = null;
-        final Collection<UnnamedConfigurable> v = myEnvToConfMap.values();
-        final UnnamedConfigurable[] configurables = v.toArray(new UnnamedConfigurable[v.size()]);
+        Collection<UnnamedConfigurable> v = myEnvToConfMap.values();
+        UnnamedConfigurable[] configurables = v.toArray(new UnnamedConfigurable[v.size()]);
         if (myMainPanel instanceof JTabbedPane) {
-            final int tabIndex = ((JTabbedPane) myMainPanel).getSelectedIndex();
+            int tabIndex = ((JTabbedPane) myMainPanel).getSelectedIndex();
             if (tabIndex >= 0 && tabIndex < configurables.length) {
                 helpTopic = configurables[tabIndex].getHelpTopic();
             }

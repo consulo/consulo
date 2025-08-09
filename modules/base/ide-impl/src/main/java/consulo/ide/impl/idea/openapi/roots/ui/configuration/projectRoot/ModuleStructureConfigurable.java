@@ -88,7 +88,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         MasterDetailsConfigurable configurable1 = o1.getConfigurable();
         MasterDetailsConfigurable configurable2 = o2.getConfigurable();
         if (configurable1.getClass() == configurable2.getClass()) {
-            return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
+            return o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
         }
         Object editableObject1 = configurable1.getEditableObject();
         Object editableObject2 = configurable2.getEditableObject();
@@ -345,8 +345,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return ProjectLocalize.projectRootsDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return ProjectLocalize.projectRootsDisplayName();
     }
 
     public Project getProject() {
@@ -489,7 +489,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     private static TextConfigurable<ModuleGroup> createModuleGroupConfigurable(ModuleGroup moduleGroup) {
         return new TextConfigurable<>(
             moduleGroup,
-            moduleGroup.toString(),
+            LocalizeValue.ofNullable(moduleGroup.toString()),
             ProjectLocalize.moduleGroupBannerText(moduleGroup.toString()).get(),
             ProjectLocalize.projectRootsModuleGroupsText().get(),
             PlatformIconGroup.nodesModulegroup()

@@ -37,6 +37,7 @@ import consulo.language.copyright.util.EntityUtil;
 import consulo.language.copyright.util.FileTypeUtil;
 import consulo.language.file.LanguageFileType;
 import consulo.language.plain.PlainTextFileType;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
@@ -348,12 +349,13 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     WriteAction.run(() -> myDocument.setText(defaultCopyrightText));
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
+  public LocalizeValue getDisplayName() {
     if (myFileType instanceof LanguageFileType) {
-      return ((LanguageFileType)myFileType).getLanguage().getDisplayName().get();
+      return ((LanguageFileType)myFileType).getLanguage().getDisplayName();
     }
-    return myFileType.getDisplayName().get();
+    return myFileType.getDisplayName();
   }
 
   @RequiredUIAccess

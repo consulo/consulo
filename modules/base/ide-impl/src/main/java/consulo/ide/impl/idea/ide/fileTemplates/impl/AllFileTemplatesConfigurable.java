@@ -145,8 +145,8 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return IdeLocalize.titleFileTemplates().get();
+    public LocalizeValue getDisplayName() {
+        return IdeLocalize.titleFileTemplates();
     }
 
     @Override

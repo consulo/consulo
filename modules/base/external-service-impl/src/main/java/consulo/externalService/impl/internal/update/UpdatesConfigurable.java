@@ -50,8 +50,8 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return ExternalServiceLocalize.settingsUpdateDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return ExternalServiceLocalize.settingsUpdateDisplayName();
     }
 
     @Nullable

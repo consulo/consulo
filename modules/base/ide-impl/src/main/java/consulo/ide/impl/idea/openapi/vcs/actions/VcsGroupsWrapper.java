@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
@@ -33,96 +32,97 @@ import java.util.*;
 
 public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
 
-  private static final Logger LOG = Logger.getInstance(VcsGroupsWrapper.class);
+    private static final Logger LOG = Logger.getInstance(VcsGroupsWrapper.class);
 
-  private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
-  private AnAction[] myChildren;
+    private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
+    private AnAction[] myChildren;
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    VcsContext dataContext = VcsContextWrapper.createInstanceOn(e);
-    if (myChildren == null) {
-      DefaultActionGroup vcsGroupsGroup = (DefaultActionGroup)ActionManager.getInstance().getAction("VcsGroup");
-      ArrayList<AnAction> validChildren = new ArrayList<AnAction>();
-      AnAction[] children = vcsGroupsGroup.getChildren(new AnActionEvent(null, e.getDataContext(), e.getPlace(), myPresentationFactory.getPresentation(
-        vcsGroupsGroup),
-                                                                         ActionManager.getInstance(),
-                                                                         0));
-      for (AnAction child : children) {
-        if (!(child instanceof StandardVcsGroup)) {
-          LOG.error("Any version control group should extends consulo.versionControlSystem.action.StandardVcsGroup class. Groupd class: " +
-                    child.getClass().getName() + ", group ID: " + ActionManager.getInstance().getId(child));
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        VcsContext dataContext = VcsContextWrapper.createInstanceOn(e);
+        if (myChildren == null) {
+            DefaultActionGroup vcsGroupsGroup = (DefaultActionGroup) ActionManager.getInstance().getAction("VcsGroup");
+            ArrayList<AnAction> validChildren = new ArrayList<>();
+            AnAction[] children = vcsGroupsGroup.getChildren(new AnActionEvent(null, e.getDataContext(), e.getPlace(), myPresentationFactory.getPresentation(
+                vcsGroupsGroup),
+                ActionManager.getInstance(),
+                0));
+            for (AnAction child : children) {
+                if (!(child instanceof StandardVcsGroup)) {
+                    LOG.error("Any version control group should extends consulo.versionControlSystem.action.StandardVcsGroup class. Groupd class: " +
+                        child.getClass().getName() + ", group ID: " + ActionManager.getInstance().getId(child));
+                }
+                else {
+                    validChildren.add(child);
+                }
+            }
+
+            myChildren = validChildren.toArray(new AnAction[validChildren.size()]);
+
+        }
+
+        Project project = dataContext.getProject();
+        Presentation presentation = e.getPresentation();
+        if (project == null) {
+            presentation.setVisible(false);
+            return;
+        }
+
+        Collection<String> currentVcses = new HashSet<>();
+
+        VirtualFile[] selectedFiles = dataContext.getSelectedFiles();
+
+        ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);
+
+        Map<String, AnAction> vcsToActionMap = new HashMap<>();
+
+        for (AnAction aMyChildren : myChildren) {
+            StandardVcsGroup child = (StandardVcsGroup) aMyChildren;
+            AbstractVcs vcs = child.getVcs(project);
+            if (vcs != null) {
+                vcsToActionMap.put(vcs.getId(), child);
+            }
+        }
+
+        for (VirtualFile selectedFile : selectedFiles) {
+            AbstractVcs vcs = projectLevelVcsManager.getVcsFor(selectedFile);
+            if (vcs != null) {
+                currentVcses.add(vcs.getId());
+            }
+        }
+
+        if (currentVcses.size() == 1 && vcsToActionMap.containsKey(currentVcses.iterator().next())) {
+            updateFromAction(vcsToActionMap.get(currentVcses.iterator().next()), presentation);
         }
         else {
-          validChildren.add(child);
+            DefaultActionGroup composite = new DefaultActionGroup(VcsLocalize.groupNameVersionControl(), true);
+            for (AnAction aMyChildren : myChildren) {
+                StandardVcsGroup child = (StandardVcsGroup) aMyChildren;
+                AbstractVcs vcs = child.getVcs(project);
+                if (vcs != null && currentVcses.contains(vcs.getId())) {
+                    composite.add(child);
+                }
+            }
+            updateFromAction(composite, presentation);
+
+            if (currentVcses.size() == 0) {
+                e.getPresentation().setVisible(false);
+            }
         }
-      }
 
-      myChildren = validChildren.toArray(new AnAction[validChildren.size()]);
-
+        super.update(e);
     }
 
-    Project project = dataContext.getProject();
-    Presentation presentation = e.getPresentation();
-    if (project == null) {
-      presentation.setVisible(false);
-      return;
-    }
-
-    Collection<String> currentVcses = new HashSet<String>();
-
-    VirtualFile[] selectedFiles = dataContext.getSelectedFiles();
-
-    ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);
-
-    Map<String, AnAction> vcsToActionMap = new HashMap<String, AnAction>();
-
-    for (AnAction aMyChildren : myChildren) {
-      StandardVcsGroup child = (StandardVcsGroup)aMyChildren;
-      String vcsName = child.getVcsName(project);
-      vcsToActionMap.put(vcsName, child);
-    }
-
-    if (selectedFiles != null) {
-      for (VirtualFile selectedFile : selectedFiles) {
-        AbstractVcs vcs = projectLevelVcsManager.getVcsFor(selectedFile);
-        if (vcs != null) {
-          currentVcses.add(vcs.getName());
+    private void updateFromAction(AnAction action, Presentation presentation) {
+        Presentation wrappedActionPresentation = myPresentationFactory.getPresentation(action);
+        presentation.setDescriptionValue(wrappedActionPresentation.getDescriptionValue());
+        presentation.setTextValue(wrappedActionPresentation.getTextValue());
+        presentation.setVisible(wrappedActionPresentation.isVisible());
+        presentation.setEnabled(wrappedActionPresentation.isEnabled());
+        removeAll();
+        DefaultActionGroup wrappedGroup = (DefaultActionGroup) action;
+        for (AnAction aChildren : wrappedGroup.getChildren(null)) {
+            add(aChildren);
         }
-      }
     }
-
-
-    if (currentVcses.size() == 1 && vcsToActionMap.containsKey(currentVcses.iterator().next())) {
-      updateFromAction(vcsToActionMap.get(currentVcses.iterator().next()), presentation);
-    }
-    else {
-      DefaultActionGroup composite = new DefaultActionGroup(VcsLocalize.groupNameVersionControl(), true);
-      for (AnAction aMyChildren : myChildren) {
-        StandardVcsGroup child = (StandardVcsGroup)aMyChildren;
-        String vcsName = child.getVcsName(project);
-        if (currentVcses.contains(vcsName)) {
-          composite.add(child);
-        }
-      }
-      updateFromAction(composite, presentation);
-
-      if (currentVcses.size() == 0) e.getPresentation().setVisible(false);
-    }
-
-    super.update(e);
-  }
-
-  private void updateFromAction(AnAction action, Presentation presentation) {
-    Presentation wrappedActionPresentation = myPresentationFactory.getPresentation(action);
-    presentation.setDescriptionValue(wrappedActionPresentation.getDescriptionValue());
-    presentation.setTextValue(wrappedActionPresentation.getTextValue());
-    presentation.setVisible(wrappedActionPresentation.isVisible());
-    presentation.setEnabled(wrappedActionPresentation.isEnabled());
-    removeAll();
-    DefaultActionGroup wrappedGroup = (DefaultActionGroup)action;
-    for (AnAction aChildren : wrappedGroup.getChildren(null)) {
-      add(aChildren);
-    }
-  }
 }

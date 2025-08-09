@@ -398,7 +398,7 @@ public class DvcsUtil {
             LOG.debug("Vcs not found.");
             return null;
         }
-        String vcsName = vcs.getDisplayName();
+        String vcsName = vcs.getDisplayName().get();
         VirtualFile[] vcsRoots = vcsManager.getRootsUnderVcs(vcs);
         if (vcsRoots.length == 0) {
             LOG.debug("No " + vcsName + " roots in the project.");

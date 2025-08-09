@@ -264,8 +264,8 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Issue Navigation";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Issue Navigation");
     }
 
     @Override

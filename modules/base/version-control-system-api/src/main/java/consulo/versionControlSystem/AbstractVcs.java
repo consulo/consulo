@@ -115,7 +115,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     }
 
     @Nonnull
-    public abstract String getDisplayName();
+    public abstract LocalizeValue getDisplayName();
 
     /**
      * Returns the short or abbreviated name of this VCS, which name can be used in those places in the UI where the space is limited.
@@ -123,7 +123,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * By default returns the same as {@link #getDisplayName()}.
      */
     @Nonnull
-    public String getShortName() {
+    public LocalizeValue getShortName() {
         return getDisplayName();
     }
 
@@ -240,7 +240,8 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return null;
     }
 
-    public String getMenuItemText() {
+    @Nonnull
+    public LocalizeValue getMenuItemText() {
         return getDisplayName();
     }
 

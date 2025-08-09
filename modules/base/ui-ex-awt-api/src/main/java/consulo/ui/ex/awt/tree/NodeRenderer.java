@@ -59,7 +59,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
       ColorValue color = node instanceof NodeDescriptor ? ((NodeDescriptor<?>)node).getColor() : null;
       setIcon(fixIconIfNeeded(presentation.getIcon(), selected, hasFocus));
 
-      final List<PresentableNodeDescriptor.ColoredFragment> coloredText = presentation.getColoredText();
+      List<PresentableNodeDescriptor.ColoredFragment> coloredText = presentation.getColoredText();
       ColorValue forcedForeground = presentation.getForcedTextForeground();
       if (coloredText.isEmpty()) {
         String text = presentation.getPresentableText();
@@ -86,7 +86,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
             simpleTextAttributes = addColorToSimpleTextAttributes(each.getAttributes(), forcedForeground);
           }
           if (first) {
-            final TextAttributesKey textAttributesKey = presentation.getTextAttributesKey();
+            TextAttributesKey textAttributesKey = presentation.getTextAttributesKey();
             if (textAttributesKey != null) {
               TextAttributes forcedAttributes = getScheme().getAttributes(textAttributesKey);
               if (forcedAttributes != null) {
@@ -146,23 +146,23 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
 
   private static SimpleTextAttributes addColorToSimpleTextAttributes(SimpleTextAttributes simpleTextAttributes, ColorValue color) {
     if (color != null) {
-      final TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(simpleTextAttributes);
+      TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(simpleTextAttributes);
       textAttributes.setForegroundColor(color);
       simpleTextAttributes = TextAttributesUtil.fromTextAttributes(textAttributes);
     }
     return simpleTextAttributes;
   }
 
-  public static SimpleTextAttributes getSimpleTextAttributes(final @Nullable ItemPresentation presentation) {
+  public static SimpleTextAttributes getSimpleTextAttributes(@Nullable ItemPresentation presentation) {
     return getSimpleTextAttributes(presentation, getScheme());
   }
 
-  private static SimpleTextAttributes getSimpleTextAttributes(final @Nullable ItemPresentation presentation,
+  private static SimpleTextAttributes getSimpleTextAttributes(@Nullable ItemPresentation presentation,
                                                               @Nonnull EditorColorsScheme colorsScheme) {
     if (presentation instanceof ColoredItemPresentation) {
-      final TextAttributesKey textAttributesKey = ((ColoredItemPresentation)presentation).getTextAttributesKey();
+      TextAttributesKey textAttributesKey = ((ColoredItemPresentation)presentation).getTextAttributesKey();
       if (textAttributesKey == null) return SimpleTextAttributes.REGULAR_ATTRIBUTES;
-      final TextAttributes textAttributes = colorsScheme.getAttributes(textAttributesKey);
+      TextAttributes textAttributes = colorsScheme.getAttributes(textAttributesKey);
       return textAttributes == null ? SimpleTextAttributes.REGULAR_ATTRIBUTES : TextAttributesUtil.fromTextAttributes(textAttributes);
     }
     return SimpleTextAttributes.REGULAR_ATTRIBUTES;

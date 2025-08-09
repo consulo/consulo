@@ -190,7 +190,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         super.apply();
 
         for (CodeStyleScheme scheme : new ArrayList<>(myModel.getSchemes())) {
-          final boolean isDefaultModified = CodeStyleSchemesModelImpl.cannotBeModified(scheme) && isSchemeModified(scheme);
+          boolean isDefaultModified = CodeStyleSchemesModelImpl.cannotBeModified(scheme) && isSchemeModified(scheme);
           if (isDefaultModified) {
             CodeStyleScheme newscheme = myModel.createNewScheme(null, scheme);
             CodeStyleSettings settingsWillBeModified = scheme.getCodeStyleSettings();
@@ -222,14 +222,14 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   }
 
   @Nullable
-  public SearchableConfigurable findSubConfigurable(@Nonnull final String name) {
+  public SearchableConfigurable findSubConfigurable(@Nonnull String name) {
     return findSubConfigurable(this, name);
   }
 
-  private static SearchableConfigurable findSubConfigurable(SearchableConfigurable.Parent topConfigurable, @Nonnull final String name) {
+  private static SearchableConfigurable findSubConfigurable(SearchableConfigurable.Parent topConfigurable, @Nonnull String name) {
     for (Configurable configurable : topConfigurable.getConfigurables()) {
       if (configurable instanceof SearchableConfigurable) {
-        if (name.equals(configurable.getDisplayName())) return (SearchableConfigurable)configurable;
+        if (name.equals(configurable.getDisplayName().get())) return (SearchableConfigurable)configurable;
         if (configurable instanceof SearchableConfigurable.Parent) {
           SearchableConfigurable child = findSubConfigurable((Parent)configurable, name);
           if (child != null) return child;
@@ -239,7 +239,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     return null;
   }
 
-  private boolean isSchemeModified(final CodeStyleScheme scheme) {
+  private boolean isSchemeModified(CodeStyleScheme scheme) {
     for (CodeStyleConfigurableWrapper panel : myPanels) {
       if (panel.isPanelModified(scheme)) {
         return true;
@@ -277,7 +277,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   private CodeStyleConfigurableWrapper buildWrapper(CodeStyleSettingsProvider provider) {
     return new CodeStyleConfigurableWrapper(provider, new CodeStyleSettingsPanelFactory() {
       @Override
-      public NewCodeStyleSettingsPanel createPanel(final CodeStyleScheme scheme) {
+      public NewCodeStyleSettingsPanel createPanel(CodeStyleScheme scheme) {
         return new NewCodeStyleSettingsPanel(provider.createSettingsPage(scheme.getCodeStyleSettings(), ensureModel().getCloneSettings(scheme)));
       }
     });
@@ -292,8 +292,8 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Code Style";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Code Style");
   }
 
   @RequiredUIAccess
@@ -338,10 +338,11 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       myInitialResetInvoked = false;
     }
 
+    @Nonnull
     @Override
-    public String getDisplayName() {
+    public LocalizeValue getDisplayName() {
       LocalizeValue displayName = myProvider.getConfigurableDisplayName();
-      if (displayName != LocalizeValue.empty()) return displayName.get();
+      if (displayName != LocalizeValue.empty()) return displayName;
 
       return ensurePanel().getDisplayName();
     }

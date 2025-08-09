@@ -54,12 +54,6 @@ public class SandColorSettingsPage implements ColorSettingsPage {
     return " ";
   }
 
-  @Nullable
-  @Override
-  public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-    return Map.of();
-  }
-
   @Nonnull
   @Override
   public AttributesDescriptor[] getAttributeDescriptors() {
@@ -68,7 +62,7 @@ public class SandColorSettingsPage implements ColorSettingsPage {
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Sand";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.ofNullable("Sand");
   }
 }

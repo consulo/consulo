@@ -16,10 +16,10 @@
 package consulo.execution.debug.impl.internal.setting;
 
 import consulo.configurable.Configurable;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 class DataViewsConfigurable extends SubCompositeConfigurable implements Configurable.NoScroll {
   @Nonnull
@@ -28,10 +28,10 @@ class DataViewsConfigurable extends SubCompositeConfigurable implements Configur
     return "debugger.dataViews";
   }
 
-  @Nls
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return XDebuggerBundle.message("debugger.dataViews.display.name");
+  public LocalizeValue getDisplayName() {
+    return XDebuggerLocalize.debuggerDataviewsDisplayName();
   }
 
   @Override

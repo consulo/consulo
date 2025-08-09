@@ -6,6 +6,7 @@ import consulo.ide.impl.idea.openapi.options.binding.BindControl;
 import consulo.ide.impl.idea.openapi.options.binding.BindableConfigurable;
 import consulo.ide.impl.idea.openapi.options.binding.ControlBinder;
 import consulo.application.util.NotNullLazyValue;
+import consulo.localize.LocalizeValue;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.project.Project;
@@ -108,9 +109,8 @@ public class TaskConfigurable extends BindableConfigurable implements Configurab
 
   @Nonnull
   @Override
-  @Nls
-  public String getDisplayName() {
-    return "Tasks";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Tasks");
   }
 
   @RequiredUIAccess

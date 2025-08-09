@@ -38,6 +38,7 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolReg
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -454,9 +455,10 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     );
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Inspections";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Inspections");
   }
 
   @Override

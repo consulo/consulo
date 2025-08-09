@@ -22,12 +22,12 @@ import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightFileConfigManager;
 import consulo.language.copyright.ui.TemplateCommentPanel;
 import consulo.language.file.FileTypeManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -39,88 +39,88 @@ import java.util.List;
  * @since 2008-12-04
  */
 public class CopyrightFormattingConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll {
-  private final Project myProject;
-  private TemplateCommentPanel myPanel;
+    private final Project myProject;
+    private TemplateCommentPanel myPanel;
 
-  CopyrightFormattingConfigurable(Project project) {
-    myProject = project;
-  }
-
-  @Override
-  @Nonnull
-  public String getId() {
-    return "template.copyright.formatting";
-  }
-
-  @Override
-  @Nls
-  public String getDisplayName() {
-    return "Formatting";
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent createComponent() {
-    getOrCreateMainPanel();
-    return myPanel.createComponent();
-  }
-
-  private TemplateCommentPanel getOrCreateMainPanel() {
-    if (myPanel == null) {
-      myPanel = new TemplateCommentPanel(CopyrightFileConfigManager.LANG_TEMPLATE, null, null, myProject);
+    CopyrightFormattingConfigurable(Project project) {
+        myProject = project;
     }
-    return myPanel;
-  }
 
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    return myPanel.isModified();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    myPanel.apply();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    myPanel.reset();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    if (myPanel != null) {
-      myPanel.disposeUIResources();
+    @Override
+    @Nonnull
+    public String getId() {
+        return "template.copyright.formatting";
     }
-    for (Configurable configurable : getConfigurables()) {
-      configurable.disposeUIResources();
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.ofNullable("Formatting");
     }
-    myPanel = null;
-  }
 
-  @Override
-  public boolean hasOwnContent() {
-    return true;
-  }
-
-  @Override
-  protected Configurable[] buildConfigurables() {
-    getOrCreateMainPanel();
-    FileType[] registeredFileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
-    List<Configurable> list = new ArrayList<>();
-    for (FileType fileType : registeredFileTypes) {
-      UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(fileType);
-      if (updateCopyrightsProvider == null) {
-        continue;
-      }
-      list.add(updateCopyrightsProvider.createConfigurable(myProject, myPanel, fileType));
+    @RequiredUIAccess
+    @Override
+    public JComponent createComponent() {
+        getOrCreateMainPanel();
+        return myPanel.createComponent();
     }
-    Collections.sort(list, (o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName()));
 
-    return ContainerUtil.toArray(list, Configurable.ARRAY_FACTORY);
-  }
+    private TemplateCommentPanel getOrCreateMainPanel() {
+        if (myPanel == null) {
+            myPanel = new TemplateCommentPanel(CopyrightFileConfigManager.LANG_TEMPLATE, null, null, myProject);
+        }
+        return myPanel;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        return myPanel.isModified();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+        myPanel.apply();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        myPanel.reset();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        if (myPanel != null) {
+            myPanel.disposeUIResources();
+        }
+        for (Configurable configurable : getConfigurables()) {
+            configurable.disposeUIResources();
+        }
+        myPanel = null;
+    }
+
+    @Override
+    public boolean hasOwnContent() {
+        return true;
+    }
+
+    @Override
+    protected Configurable[] buildConfigurables() {
+        getOrCreateMainPanel();
+        FileType[] registeredFileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
+        List<Configurable> list = new ArrayList<>();
+        for (FileType fileType : registeredFileTypes) {
+            UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(fileType);
+            if (updateCopyrightsProvider == null) {
+                continue;
+            }
+            list.add(updateCopyrightsProvider.createConfigurable(myProject, myPanel, fileType));
+        }
+        Collections.sort(list, (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName()));
+
+        return ContainerUtil.toArray(list, Configurable.ARRAY_FACTORY);
+    }
 }

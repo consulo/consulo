@@ -19,18 +19,19 @@ package consulo.ide.impl.idea.application.options.colors;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * Generalises {@link ColorSettingsPage} in a way that allows to provide custom {@link PreviewPanel preview panel}.
- * 
+ *
  * @author yole
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ColorAndFontPanelFactory {
-  @Nonnull
-  NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options);
-  
-  @Nonnull
-  String getPanelDisplayName();
+    @Nonnull
+    NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options);
+
+    @Nonnull
+    LocalizeValue getPanelDisplayName();
 }

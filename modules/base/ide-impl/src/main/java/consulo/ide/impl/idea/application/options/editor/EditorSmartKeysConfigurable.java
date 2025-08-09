@@ -145,9 +145,8 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
   @Nonnull
   @Override
-  @Nls
-  public String getDisplayName() {
-    return "Smart Keys";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Smart Keys");
   }
 
   @Nonnull

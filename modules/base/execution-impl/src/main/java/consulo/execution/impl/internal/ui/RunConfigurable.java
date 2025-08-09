@@ -151,9 +151,10 @@ public class RunConfigurable extends BaseConfigurable {
         myRunManager = (RunManagerImpl) RunManager.getInstance(myProject);
     }
 
+    @Nonnull
     @Override
-    public String getDisplayName() {
-        return ExecutionLocalize.runConfigurableDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return ExecutionLocalize.runConfigurableDisplayName();
     }
 
     private void initTree() {

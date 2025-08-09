@@ -88,8 +88,8 @@ public class DiffSettingsConfigurable extends SimpleConfigurableByProperties imp
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Diff & Merge";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Diff & Merge");
   }
 
   @Nullable

@@ -75,7 +75,7 @@ class StartUseVcsDialog extends DialogWrapper {
         vcses.add(ObjectUtil.NULL);
 
         List<AbstractVcs> sortedVcs = new ArrayList<>(AllVcses.getInstance(myProject).getSupportedVcses());
-        sortedVcs.sort((o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.getDisplayName(), o2.getDisplayName()));
+        sortedVcs.sort((o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName()));
 
         vcses.addAll(sortedVcs);
 

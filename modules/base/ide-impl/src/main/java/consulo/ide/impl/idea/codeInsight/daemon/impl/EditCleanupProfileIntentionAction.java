@@ -58,7 +58,7 @@ public class EditCleanupProfileIntentionAction implements IntentionAction {
         return super.acceptTool(entry) && entry.isCleanupTool();
       }
     };
-    ShowSettingsUtil.getInstance().editConfigurable(CodeCleanupAction.CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME, project, configurable);
+    ShowSettingsUtil.getInstance().editConfigurable(CodeCleanupAction.CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME.get(), project, configurable);
   }
 
   @Override

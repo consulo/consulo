@@ -26,6 +26,7 @@ import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -67,7 +68,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   private Pattern myCompiledValuePattern;
   private boolean mySingleFile;
 
-  public BaseInjection(@Nonnull final String id) {
+  public BaseInjection(@Nonnull String id) {
     mySupportId = id;
   }
 
@@ -102,8 +103,8 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
 
   @Override
   @Nonnull
-  public String getDisplayName() {
-    return myDisplayName;
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.ofNullable(myDisplayName);
   }
 
   public void setDisplayName(String displayName) {
@@ -136,17 +137,17 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
 
   @Override
   @Nonnull
-  public List<TextRange> getInjectedArea(final PsiElement element) {
-    final TextRange textRange = ElementManipulators.getValueTextRange(element);
+  public List<TextRange> getInjectedArea(PsiElement element) {
+    TextRange textRange = ElementManipulators.getValueTextRange(element);
     if (myCompiledValuePattern == null) {
       return Collections.singletonList(textRange);
     }
     else {
-      final LiteralTextEscaper<? extends PsiLanguageInjectionHost> textEscaper =
+      LiteralTextEscaper<? extends PsiLanguageInjectionHost> textEscaper =
         ((PsiLanguageInjectionHost)element).createLiteralTextEscaper();
-      final StringBuilder sb = new StringBuilder();
+      StringBuilder sb = new StringBuilder();
       textEscaper.decode(textRange, sb);
-      final List<TextRange> ranges = getMatchingRanges(myCompiledValuePattern.matcher(StringPattern.newBombedCharSequence(sb)), sb.length());
+      List<TextRange> ranges = getMatchingRanges(myCompiledValuePattern.matcher(StringPattern.newBombedCharSequence(sb)), sb.length());
       return !ranges.isEmpty() ? ContainerUtil.map(ranges, s -> new TextRange(textEscaper.getOffsetInHost(s.getStartOffset(), textRange), textEscaper.getOffsetInHost(s.getEndOffset(), textRange))) : Collections.<TextRange>emptyList();
     }
   }
@@ -159,7 +160,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
   @Override
-  public boolean acceptsPsiElement(final PsiElement element) {
+  public boolean acceptsPsiElement(PsiElement element) {
     ProgressManager.checkCanceled();
     for (InjectionPlace place : myPlaces) {
       if (place.isEnabled() && place.getElementPattern() != null && place.getElementPattern().accepts(element)) {
@@ -169,7 +170,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     return false;
   }
 
-  public boolean intersectsWith(final BaseInjection template) {
+  public boolean intersectsWith(BaseInjection template) {
     if (!Comparing.equal(getInjectedLanguageId(), template.getInjectedLanguageId())) return false;
     for (InjectionPlace other : template.getInjectionPlaces()) {
       if (ArrayUtil.contains(other, myPlaces)) return true;
@@ -177,7 +178,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     return false;
   }
 
-  public boolean sameLanguageParameters(final BaseInjection that) {
+  public boolean sameLanguageParameters(BaseInjection that) {
     if (!myInjectedLanguageId.equals(that.myInjectedLanguageId)) return false;
     if (!myPrefix.equals(that.myPrefix)) return false;
     if (!mySuffix.equals(that.mySuffix)) return false;
@@ -196,7 +197,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     if (this == o) return true;
     if (o == null || !(o instanceof BaseInjection)) return false;
 
-    final BaseInjection that = (BaseInjection)o;
+    BaseInjection that = (BaseInjection)o;
 
     if (!Comparing.equal(getDisplayName(), that.getDisplayName())) return false;
     if (!sameLanguageParameters(that)) return false;
@@ -227,7 +228,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     myPrefix = other.getPrefix();
     mySuffix = other.getSuffix();
 
-    myDisplayName = other.getDisplayName();
+    myDisplayName = other.getDisplayName().get();
 
     setValuePattern(other.getValuePattern());
     mySingleFile = other.mySingleFile;
@@ -238,7 +239,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
 
   @Override
   public void loadState(Element element) {
-    final PatternCompiler<PsiElement> helper = getCompiler();
+    PatternCompiler<PsiElement> helper = getCompiler();
     myDisplayName = StringUtil.notNullize(element.getChildText("display-name"));
     myInjectedLanguageId = StringUtil.notNullize(element.getAttributeValue("language"));
     myPrefix = StringUtil.notNullize(element.getChildText("prefix"));
@@ -246,13 +247,13 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     setValuePattern(element.getChildText("value-pattern"));
     mySingleFile = element.getChild("single-file") != null;
     readExternalImpl(element);
-    final List<Element> placeElements = element.getChildren("place");
+    List<Element> placeElements = element.getChildren("place");
     myPlaces = InjectionPlace.ARRAY_FACTORY.create(placeElements.size());
     for (int i = 0, placeElementsSize = placeElements.size(); i < placeElementsSize; i++) {
       Element placeElement = placeElements.get(i);
-      final boolean enabled = !Boolean.parseBoolean(placeElement.getAttributeValue("disabled"));
-      final String text = placeElement.getText();
-      myPlaces[i] = new InjectionPlace(helper.createElementPattern(text, getDisplayName()), enabled);
+      boolean enabled = !Boolean.parseBoolean(placeElement.getAttributeValue("disabled"));
+      String text = placeElement.getText();
+      myPlaces[i] = new InjectionPlace(helper.createElementPattern(text, getDisplayName().get()), enabled);
     }
     if (myPlaces.length == 0) {
       generatePlaces();
@@ -271,10 +272,10 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
 
   @Override
   public final Element getState() {
-    final Element e = new Element("injection");
+    Element e = new Element("injection");
     e.setAttribute("language", myInjectedLanguageId);
     e.setAttribute("injector-id", mySupportId);
-    e.addContent(new Element("display-name").setText(getDisplayName()));
+    e.addContent(new Element("display-name").setText(getDisplayName().get()));
     if (StringUtil.isNotEmpty(myPrefix)) {
       e.addContent(new Element("prefix").setText(myPrefix));
     }
@@ -289,12 +290,12 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     }
     Arrays.sort(myPlaces, new Comparator<InjectionPlace>() {
       @Override
-      public int compare(final InjectionPlace o1, final InjectionPlace o2) {
+      public int compare(InjectionPlace o1, InjectionPlace o2) {
         return Comparing.compare(o1.getText(), o2.getText());
       }
     });
     for (InjectionPlace place : myPlaces) {
-      final Element child = new Element("place").setContent(new CDATA(place.getText()));
+      Element child = new Element("place").setContent(new CDATA(place.getText()));
       if (!place.isEnabled()) child.setAttribute("disabled", "true");
       e.addContent(child);
     }
@@ -330,7 +331,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     return mySingleFile;
   }
 
-  public void setSingleFile(final boolean singleFile) {
+  public void setSingleFile(boolean singleFile) {
     mySingleFile = singleFile;
   }
 
@@ -347,11 +348,11 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
   }
 
 
-  private static List<TextRange> getMatchingRanges(Matcher matcher, final int length) {
-    final List<TextRange> list = new SmartList<TextRange>();
+  private static List<TextRange> getMatchingRanges(Matcher matcher, int length) {
+    List<TextRange> list = new SmartList<TextRange>();
     int start = 0;
     while (start < length && matcher.find(start)) {
-      final int groupCount = matcher.groupCount();
+      int groupCount = matcher.groupCount();
       if (groupCount == 0) {
         start = matcher.end();
       }
@@ -368,7 +369,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     return list;
   }
 
-  public void mergeOriginalPlacesFrom(final BaseInjection injection, final boolean enabled) {
+  public void mergeOriginalPlacesFrom(BaseInjection injection, boolean enabled) {
     for (InjectionPlace place : injection.getInjectionPlaces()) {
       if (!ArrayUtil.contains(place, myPlaces)) {
         myPlaces = ArrayUtil.append(myPlaces, enabled || !place.isEnabled() ? place : place.enabled(false), InjectionPlace.ARRAY_FACTORY);
@@ -376,9 +377,9 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     }
   }
 
-  public void setPlaceEnabled(@Nullable final String text, final boolean enabled) {
+  public void setPlaceEnabled(@Nullable String text, boolean enabled) {
     for (int i = 0; i < myPlaces.length; i++) {
-      final InjectionPlace cur = myPlaces[i];
+      InjectionPlace cur = myPlaces[i];
       if (text == null || Comparing.equal(text, cur.getText())) {
         if (cur.isEnabled() != enabled) {
           myPlaces[i] = cur.enabled(enabled);

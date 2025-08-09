@@ -28,6 +28,7 @@ import consulo.externalSystem.setting.ExternalSystemSettingsListener;
 import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
@@ -37,7 +38,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,10 +87,10 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
     myExternalSystemId = externalSystemId;
   }
 
-  @Nls
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return myExternalSystemId.getReadableName().get();
+  public LocalizeValue getDisplayName() {
+    return myExternalSystemId.getDisplayName();
   }
 
   @RequiredUIAccess

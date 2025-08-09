@@ -34,7 +34,6 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
 import consulo.project.internal.ProjectEx;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Component;
@@ -138,7 +137,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
     myFreeze = true;
     try {
 
-      final String compilerOutput = getModulesConfigurator().getCompilerOutputUrl();
+      String compilerOutput = getModulesConfigurator().getCompilerOutputUrl();
       if (compilerOutput != null) {
         myCompilerPathController.setValue(FileUtil.toSystemDependentName(VfsUtil.urlToPath(compilerOutput)));
       }
@@ -157,7 +156,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    final CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
+    CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
 
     if (myProjectName != null && StringUtil.isEmptyOrSpaces(myProjectName.getValue())) {
       throw new ConfigurationException("Please, specify project name!");
@@ -190,7 +189,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
 
 
   @Override
-  public void setDisplayName(final String name) {
+  public void setDisplayName(String name) {
     //do nothing
   }
 
@@ -200,15 +199,15 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
   }
 
   @Override
-  public String getDisplayName() {
-    return ProjectBundle.message("project.roots.project.display.name");
+  public LocalizeValue getDisplayName() {
+    return ProjectLocalize.projectRootsProjectDisplayName();
   }
 
   @RequiredUIAccess
   @Override
   @SuppressWarnings({"SimplifiableIfStatement"})
   public boolean isModified() {
-    final String compilerOutput = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
+    String compilerOutput = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
     if (!Comparing.strEqual(
       FileUtil.toSystemIndependentName(VfsUtil.urlToPath(compilerOutput)),
       FileUtil.toSystemIndependentName(myCompilerPathController.getValue())

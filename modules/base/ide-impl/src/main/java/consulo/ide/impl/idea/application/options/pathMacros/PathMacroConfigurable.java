@@ -16,16 +16,17 @@
 package consulo.ide.impl.idea.application.options.pathMacros;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.*;
-import consulo.project.impl.internal.ProjectStorageUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.internal.ProjectEx;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -36,6 +37,7 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
   public static final String ID = "preferences.pathVariables";
   private PathMacroListEditor myEditor;
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     myEditor = new PathMacroListEditor();
@@ -53,19 +55,22 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myEditor.reset();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myEditor = null;
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return ApplicationBundle.message("title.path.variables");
+  public LocalizeValue getDisplayName() {
+    return ApplicationLocalize.titlePathVariables();
   }
 
   @Nullable
@@ -74,6 +79,7 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myEditor != null && myEditor.isModified();

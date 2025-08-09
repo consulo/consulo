@@ -20,6 +20,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
@@ -186,8 +187,8 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      */
     @Nls
     @Override
-    public String getDisplayName() {
-        return "Classpath Details";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Classpath Details");
     }
 
     /**
@@ -549,10 +550,9 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
-        @Nls
         @Override
-        public String getDisplayName() {
-            return myExplanation.url();
+        public LocalizeValue getDisplayName() {
+            return LocalizeValue.ofNullable(myExplanation.url());
         }
     }
 
@@ -608,10 +608,9 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         /**
          * {@inheritDoc}
          */
-        @Nls
         @Override
-        public String getDisplayName() {
-            return myExplanation.entry().getPresentableName();
+        public LocalizeValue getDisplayName() {
+            return LocalizeValue.ofNullable(myExplanation.entry().getPresentableName());
         }
     }
 

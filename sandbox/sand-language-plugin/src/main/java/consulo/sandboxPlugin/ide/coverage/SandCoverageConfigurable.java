@@ -16,34 +16,33 @@
 package consulo.sandboxPlugin.ide.coverage;
 
 import consulo.configurable.Configurable;
+import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Nls;
 
 /**
  * @author VISTALL
  * @since 2020-09-20
  */
-public class SandCoverageConfigurable extends SimpleConfigurableByProperties implements Configurable  {
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
-    VerticalLayout layout = VerticalLayout.create();
-    layout.add(CheckBox.create(LocalizeValue.localizeTODO("Some sand option")));
-    return layout;
-  }
+public class SandCoverageConfigurable extends SimpleConfigurableByProperties implements Configurable {
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+        VerticalLayout layout = VerticalLayout.create();
+        layout.add(CheckBox.create(LocalizeValue.localizeTODO("Some sand option")));
+        return layout;
+    }
 
-  @Nls
-  @Override
-  public String getDisplayName() {
-    return "Sand options";
-  }
+    @Nls
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Sand options");
+    }
 }

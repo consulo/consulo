@@ -478,9 +478,10 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return "General";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("General");
   }
 
   public static void restartDaemons() {

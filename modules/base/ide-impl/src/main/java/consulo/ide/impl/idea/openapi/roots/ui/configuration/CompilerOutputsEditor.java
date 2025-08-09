@@ -234,8 +234,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     }
 
     @Override
-    public String getDisplayName() {
-        return ProjectLocalize.projectRootsPathTabTitle().get();
+    public LocalizeValue getDisplayName() {
+        return ProjectLocalize.projectRootsPathTabTitle();
     }
 
     @Override

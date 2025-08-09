@@ -55,15 +55,15 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection> {
     public BaseInjectionPanel(BaseInjection injection, Project project) {
         super(injection, project);
         myHelper = injection.getCompiler();
-        final FileType groovy = FileTypeManager.getInstance().getFileTypeByExtension("groovy");
+        FileType groovy = FileTypeManager.getInstance().getFileTypeByExtension("groovy");
         final FileType realFileType = groovy == UnknownFileType.INSTANCE ? PlainTextFileType.INSTANCE : groovy;
-        final PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("injection." + realFileType.getDefaultExtension(), realFileType, "", 0, true);
+        PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("injection." + realFileType.getDefaultExtension(), realFileType, "", 0, true);
         final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
         psiFile.putUserData(BaseInjection.INJECTION_KEY, injection);
         myTextArea = new EditorTextField(document, project, realFileType) {
             @Override
             protected EditorEx createEditor() {
-                final EditorEx ex = super.createEditor();
+                EditorEx ex = super.createEditor();
                 ex.setVerticalScrollbarVisible(true);
                 ex.setHorizontalScrollbarVisible(true);
                 return ex;
@@ -78,16 +78,16 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection> {
 
     @Override
     protected void apply(BaseInjection other) {
-        final String displayName = myNameTextField.getText();
+        String displayName = myNameTextField.getText();
         if (StringUtil.isEmpty(displayName)) {
             throw new IllegalArgumentException("Display name should not be empty");
         }
         other.setDisplayName(displayName);
         boolean enabled = true;
-        final StringBuilder sb = new StringBuilder();
-        final ArrayList<InjectionPlace> places = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        ArrayList<InjectionPlace> places = new ArrayList<>();
         for (String s : myTextArea.getText().split("\\s*\n\\s*")) {
-            final boolean nextEnabled;
+            boolean nextEnabled;
             if (s.startsWith("+")) {
                 nextEnabled = true;
                 s = s.substring(1).trim();
@@ -101,7 +101,7 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection> {
                 continue;
             }
             if (sb.length() > 0) {
-                final String text = sb.toString();
+                String text = sb.toString();
                 places.add(new InjectionPlace(myHelper.compileElementPattern(text), enabled));
                 sb.setLength(0);
             }
@@ -109,7 +109,7 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection> {
             enabled = nextEnabled;
         }
         if (sb.length() > 0) {
-            final String text = sb.toString();
+            String text = sb.toString();
             places.add(new InjectionPlace(myHelper.compileElementPattern(text), enabled));
         }
         for (InjectionPlace place : places) {
@@ -128,12 +128,12 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection> {
 
     @Override
     protected void resetImpl() {
-        final StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (InjectionPlace place : getOrigInjection().getInjectionPlaces()) {
             sb.append(place.isEnabled() ? "+ " : "- ").append(place.getText()).append("\n");
         }
         myTextArea.setText(sb.toString());
-        myNameTextField.setText(getOrigInjection().getDisplayName());
+        myNameTextField.setText(getOrigInjection().getDisplayName().get());
     }
 
     @Override

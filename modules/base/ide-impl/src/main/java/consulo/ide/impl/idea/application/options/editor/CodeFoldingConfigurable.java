@@ -17,30 +17,29 @@
 package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.configurable.ApplicationConfigurable;
-import consulo.configurable.StandardConfigurableIds;
-import consulo.language.editor.folding.CodeFoldingManager;
-import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.configurable.EditorGeneralConfigurable;
-import consulo.configurable.SimpleConfigurableByProperties;
-import consulo.application.localize.ApplicationLocalize;
+import consulo.language.editor.folding.CodeFoldingManager;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import org.jetbrains.annotations.Nls;
-
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,10 +60,10 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
+  @Nonnull
   @Override
-  @Nls
-  public String getDisplayName() {
-    return ApplicationBundle.message("group.code.folding");
+  public LocalizeValue getDisplayName() {
+    return ApplicationLocalize.groupCodeFolding();
   }
 
   @Override

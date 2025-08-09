@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle.ui.setting.arrangement;
 
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.Language;
@@ -28,12 +28,13 @@ import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 import consulo.language.codeStyle.arrangement.std.*;
 import consulo.language.codeStyle.ui.internal.arrangement.*;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.GridBag;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -68,7 +69,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     assert rearranger instanceof ArrangementStandardSettingsAware;
     mySettingsAware = (ArrangementStandardSettingsAware)rearranger;
 
-    final ArrangementColorsProvider colorsProvider;
+    ArrangementColorsProvider colorsProvider;
     if (rearranger instanceof ArrangementColorsAware) {
       colorsProvider = new ArrangementColorsProviderImpl((ArrangementColorsAware)rearranger);
     }
@@ -95,14 +96,14 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
       myForceArrangementPanel = null;
     }
 
-    final List<CompositeArrangementSettingsToken> groupingTokens = settingsManager.getSupportedGroupingTokens();
+    List<CompositeArrangementSettingsToken> groupingTokens = settingsManager.getSupportedGroupingTokens();
     myGroupingRulesPanel.setVisible(groupingTokens != null && !groupingTokens.isEmpty());
 
     registerShortcut(ArrangementConstants.MATCHING_RULE_ADD, CommonShortcuts.getNew(), myMatchingRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_RULE_REMOVE, CommonShortcuts.getDelete(), myMatchingRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_RULE_MOVE_UP, CommonShortcuts.MOVE_UP, myMatchingRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_RULE_MOVE_DOWN, CommonShortcuts.MOVE_DOWN, myMatchingRulesPanel);
-    final CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+    CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
     registerShortcut(ArrangementConstants.MATCHING_RULE_EDIT, edit, myMatchingRulesPanel);
 
     registerShortcut(ArrangementConstants.GROUPING_RULE_MOVE_UP, CommonShortcuts.MOVE_UP, myGroupingRulesPanel);
@@ -110,7 +111,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
   }
 
   private void registerShortcut(@Nonnull String actionId, @Nonnull ShortcutSet shortcut, @Nonnull JComponent component) {
-    final AnAction action = ActionManager.getInstance().getAction(actionId);
+    AnAction action = ActionManager.getInstance().getAction(actionId);
     if (action != null) {
       action.registerCustomShortcutSet(shortcut, component, this);
     }
@@ -149,13 +150,13 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
 
   @Override
   public boolean isModified(CodeStyleSettings settings) {
-    final StdArrangementSettings s = createSettings();
+    StdArrangementSettings s = createSettings();
     return !Comparing.equal(getSettings(settings), s)
            || myForceArrangementPanel != null && settings.getCommonSettings(myLanguage).FORCE_REARRANGE_MODE != myForceArrangementPanel.getRearrangeMode();
   }
 
   private StdArrangementSettings createSettings() {
-    final List<ArrangementGroupingRule> groupingRules = myGroupingRulesPanel.getRules();
+    List<ArrangementGroupingRule> groupingRules = myGroupingRulesPanel.getRules();
     return new StdArrangementSettings(groupingRules, myMatchingRulesPanel.getSections());
   }
 
@@ -178,15 +179,16 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
 
   @Nonnull
   private static List<ArrangementSectionRule> copy(@Nonnull List<ArrangementSectionRule> rules) {
-    List<ArrangementSectionRule> result = new ArrayList<ArrangementSectionRule>();
+    List<ArrangementSectionRule> result = new ArrayList<>();
     for (ArrangementSectionRule rule : rules) {
       result.add(rule.clone());
     }
     return result;
   }
 
+  @Nonnull
   @Override
-  protected String getTabTitle() {
-    return ApplicationBundle.message("arrangement.title.settings.tab");
+  protected LocalizeValue getTabTitle() {
+    return ApplicationLocalize.arrangementTitleSettingsTab();
   }
 }

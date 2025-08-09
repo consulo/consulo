@@ -18,10 +18,12 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
@@ -44,8 +46,8 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   }
 
   @Override
-  public String getDisplayName() {
-    return ProjectBundle.message("modules.classpath.title");
+  public LocalizeValue getDisplayName() {
+    return ProjectLocalize.modulesClasspathTitle();
   }
 
   @Override

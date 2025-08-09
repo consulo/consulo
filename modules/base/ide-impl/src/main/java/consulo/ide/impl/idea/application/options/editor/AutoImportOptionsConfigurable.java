@@ -17,14 +17,14 @@
 package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurableAdapter;
 import consulo.configurable.StandardConfigurableIds;
-import org.jetbrains.annotations.Nls;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
 
 /**
  * @author Dmitry Avdeev
@@ -46,7 +46,7 @@ public class AutoImportOptionsConfigurable extends ConfigurableAdapter implement
   @Nonnull
   @Nls
   @Override
-  public String getDisplayName() {
-    return ApplicationBundle.message("auto.import");
+  public LocalizeValue getDisplayName() {
+    return ApplicationLocalize.autoImport();
   }
 }
