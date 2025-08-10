@@ -59,7 +59,7 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigurable.LayoutImpl> implements ApplicationConfigurable {
-    private record InitialStyleState(Style style, String iconLibraryId) {
+    private record InitialStyleState(Style style) {
     }
 
     public static class LayoutImpl implements Supplier<Layout> {
@@ -282,8 +282,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             && component.myInitialStyle != null
             && component.myInitialStyle.style() != styleManager.getCurrentStyle()) {
             styleManager.setCurrentStyle(component.myInitialStyle.style());
-            
-            IconLibraryManager.get().setActiveLibrary(component.myInitialStyle.iconLibraryId());
         }
     }
 
@@ -327,7 +325,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         isModified |= component.myHideNavigationPopupsCheckBox.getValue() != settings.HIDE_NAVIGATION_ON_FOCUS_LOSS;
         isModified |= component.myAltDNDCheckBox.getValue() != settings.DND_WITH_PRESSED_ALT_ONLY;
         isModified |= component.mySmoothScrollingBox.getValue() != settings.SMOOTH_SCROLLING;
-        isModified |= !Comparing.equal(component.myStyleComboBox.getValue(), StyleManager.get().getCurrentStyle());
+        isModified |= !Comparing.equal(component.myStyleComboBox.getValue(), StyleManager.get().getCurrentStyle()) || component.myStyledChaged;
         isModified |= !Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryOrNull());
 
         return isModified;
@@ -336,20 +334,16 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     @RequiredUIAccess
     @Override
     protected void reset(@Nonnull LayoutImpl component) {
-        component.myApplied = true;
-
         UISettings settings = UISettings.getInstance();
         UIFontManager uiFontManager = UIFontManager.getInstance();
 
         StyleManager styleManager = StyleManager.get();
         if (component.myInitialStyle == null) {
-            component.myInitialStyle = new InitialStyleState(styleManager.getCurrentStyle(), IconLibraryManager.get().getActiveLibraryId());
+            component.myInitialStyle = new InitialStyleState(styleManager.getCurrentStyle());
         } else {
             Style currentStyle = styleManager.getCurrentStyle();
             if (currentStyle != component.myInitialStyle.style()) {
                 styleManager.setCurrentStyle(component.myInitialStyle.style());
-                
-                IconLibraryManager.get().setActiveLibrary(component.myInitialStyle.iconLibraryId());
             }
         }
 
@@ -392,6 +386,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     @RequiredUIAccess
     @Override
     protected void apply(@Nonnull LayoutImpl component) throws ConfigurationException {
+        component.myApplied = true;
+
         UISettings settings = UISettings.getInstance();
         UIFontManager uiFontManager = UIFontManager.getInstance();
 
@@ -472,13 +468,13 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
         UIAccess uiAccess = UIAccess.current();
 
-        final boolean finalUpdate = update;
-        final boolean finalShouldUpdateUI = shouldUpdateUI;
+        boolean finalUpdate = update;
+        boolean finalShouldUpdateUI = shouldUpdateUI;
 
         uiAccess.give(() -> {
             boolean refreshUI = finalShouldUpdateUI;
             if (!Comparing.equal(component.myStyleComboBox.getValue(), styleManager.getCurrentStyle())) {
-                final Style newStyle = component.myStyleComboBox.getValue();
+                Style newStyle = component.myStyleComboBox.getValue();
                 assert newStyle != null;
                 styleManager.setCurrentStyle(newStyle);
                 refreshUI = true;

@@ -41,12 +41,22 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @ExtensionImpl
 public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSettingsConfigurable.MyComponent>
     implements SearchableConfigurable, ApplicationConfigurable {
+
+    private record LocaleInfo(@Nonnull Locale locale, boolean isDefault) {
+        public Locale setValue() {
+            if (isDefault()) {
+                return null;
+            }
+            return locale();
+        }
+    }
 
     protected static class MyComponent implements Supplier<Component> {
         private CheckBox myChkReopenLastProject;
@@ -76,6 +86,12 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         private ComboBox<FileOperateDialogProvider> myFileSaveDialogBox;
 
         private VerticalLayout myRootLayout;
+
+        private boolean myApplied;
+        private LocaleInfo myInitialLocale;
+        private boolean myLocaleChanged;
+
+        private AtomicInteger myEventBlocker = new AtomicInteger();
 
         @RequiredUIAccess
         public MyComponent(@Nonnull Application application) {
@@ -147,6 +163,13 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
                 }
 
                 return LocalizeValue.of(locale.getDisplayName());
+            });
+            localeBox.addValueListener(event -> {
+                myLocaleChanged = true;
+
+                if (myEventBlocker.get() == 0) {
+                    LocalizeManager.get().setLocale(event.getValue());
+                }
             });
 
             localizeLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Locale"), myLocaleBox = localeBox));
@@ -240,7 +263,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         isModified |= isModified(dialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
         isModified |= isModified(dialogSettings.getFileSaveDialogId(), component.myFileSaveDialogBox);
 
-        isModified |= isLocaleChanged(component.myLocaleBox.getValueOrError());
+        isModified |= isLocaleChanged(component.myLocaleBox.getValueOrError()) || component.myLocaleChanged;
 
         int inactiveTimeout = -1;
         try {
@@ -278,6 +301,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     @RequiredUIAccess
     @Override
     protected void apply(@Nonnull MyComponent component) throws ConfigurationException {
+        component.myApplied = true;
+
         GeneralSettings generalSettings = myGeneralSettings.get();
         RecentProjectsManager recentProjectsManager = RecentProjectsManager.getInstance();
 
@@ -325,7 +350,26 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     @RequiredUIAccess
     @Override
+    protected void disposeUIResources(@Nonnull MyComponent component) {
+        super.disposeUIResources(component);
+
+        LocalizeManager localizeManager = LocalizeManager.get();
+
+        if (!component.myApplied
+            && component.myLocaleChanged
+            && component.myInitialLocale != null
+            && !Objects.equals(component.myInitialLocale.locale(), localizeManager.getLocale())) {
+            localizeManager.setLocale(component.myInitialLocale.setValue());
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
     protected void reset(@Nonnull MyComponent component) {
+        LocalizeManager localizeManager = LocalizeManager.get();
+
+        component.myInitialLocale = new LocaleInfo(localizeManager.getLocale(), localizeManager.isDefaultLocale());
+
         RecentProjectsManager recentProjectsManager = RecentProjectsManager.getInstance();
         GeneralSettings settings = GeneralSettings.getInstance();
         component.myChkSupportScreenReaders.setValue(settings.isSupportScreenReaders());
@@ -367,8 +411,14 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         reset(component.myFileChooseDialogBox, dialogSettings::getFileChooseDialogId);
         reset(component.myFileSaveDialogBox, dialogSettings::getFileSaveDialogId);
 
-        LocalizeManager localizeManager = LocalizeManager.get();
-        component.myLocaleBox.setValue(localizeManager.isDefaultLocale() ? Locale.ROOT : localizeManager.getLocale());
+        try {
+            component.myEventBlocker.incrementAndGet();
+
+            component.myLocaleBox.setValue(localizeManager.isDefaultLocale() ? Locale.ROOT : localizeManager.getLocale());
+        }
+        finally {
+            component.myEventBlocker.decrementAndGet();
+        }
     }
 
     @RequiredUIAccess
