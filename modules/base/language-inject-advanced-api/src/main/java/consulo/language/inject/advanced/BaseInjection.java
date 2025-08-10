@@ -19,14 +19,13 @@ import consulo.application.progress.ProgressManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
-import consulo.language.pattern.StringPattern;
 import consulo.language.inject.advanced.pattern.PatternCompiler;
 import consulo.language.inject.advanced.pattern.PatternCompilerFactory;
+import consulo.language.pattern.StringPattern;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -103,8 +102,8 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
 
   @Override
   @Nonnull
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.ofNullable(myDisplayName);
+  public String getDisplayName() {
+    return myDisplayName;
   }
 
   public void setDisplayName(String displayName) {
@@ -228,7 +227,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     myPrefix = other.getPrefix();
     mySuffix = other.getSuffix();
 
-    myDisplayName = other.getDisplayName().get();
+    myDisplayName = other.getDisplayName();
 
     setValuePattern(other.getValuePattern());
     mySingleFile = other.mySingleFile;
@@ -253,7 +252,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
       Element placeElement = placeElements.get(i);
       boolean enabled = !Boolean.parseBoolean(placeElement.getAttributeValue("disabled"));
       String text = placeElement.getText();
-      myPlaces[i] = new InjectionPlace(helper.createElementPattern(text, getDisplayName().get()), enabled);
+      myPlaces[i] = new InjectionPlace(helper.createElementPattern(text, getDisplayName()), enabled);
     }
     if (myPlaces.length == 0) {
       generatePlaces();
@@ -275,7 +274,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     Element e = new Element("injection");
     e.setAttribute("language", myInjectedLanguageId);
     e.setAttribute("injector-id", mySupportId);
-    e.addContent(new Element("display-name").setText(getDisplayName().get()));
+    e.addContent(new Element("display-name").setText(getDisplayName()));
     if (StringUtil.isNotEmpty(myPrefix)) {
       e.addContent(new Element("prefix").setText(myPrefix));
     }

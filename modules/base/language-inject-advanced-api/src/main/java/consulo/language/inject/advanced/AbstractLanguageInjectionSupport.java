@@ -49,7 +49,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
     }
 
     @Override
-    public boolean useDefaultInjector(final PsiLanguageInjectionHost host) {
+    public boolean useDefaultInjector(PsiLanguageInjectionHost host) {
         return false;
     }
 
@@ -60,42 +60,42 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
     }
 
     @Override
-    public boolean addInjectionInPlace(final Language language, final PsiLanguageInjectionHost psiElement) {
+    public boolean addInjectionInPlace(Language language, PsiLanguageInjectionHost psiElement) {
         return false;
     }
 
     @Override
-    public boolean removeInjectionInPlace(final PsiLanguageInjectionHost psiElement) {
+    public boolean removeInjectionInPlace(PsiLanguageInjectionHost psiElement) {
         return false;
     }
 
     @Override
-    public boolean editInjectionInPlace(final PsiLanguageInjectionHost psiElement) {
+    public boolean editInjectionInPlace(PsiLanguageInjectionHost psiElement) {
         return false;
     }
 
     @Override
-    public BaseInjection createInjection(final Element element) {
+    public BaseInjection createInjection(Element element) {
         return new BaseInjection(getId());
     }
 
     @Override
-    public void setupPresentation(final BaseInjection injection, final SimpleColoredText presentation, final boolean isSelected) {
+    public void setupPresentation(BaseInjection injection, SimpleColoredText presentation, boolean isSelected) {
         presentation.append(injection.getDisplayName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
 
     @Override
-    public Configurable[] createSettings(final Project project, final Configuration configuration) {
+    public Configurable[] createSettings(Project project, Configuration configuration) {
         return new Configurable[0];
     }
 
     @Override
-    public AnAction[] createAddActions(final Project project, final Consumer<BaseInjection> consumer) {
+    public AnAction[] createAddActions(Project project, Consumer<BaseInjection> consumer) {
         return new AnAction[]{createDefaultAddAction(project, consumer, this)};
     }
 
     @Override
-    public AnAction createEditAction(final Project project, final Supplier<BaseInjection> producer) {
+    public AnAction createEditAction(Project project, Supplier<BaseInjection> producer) {
         return createDefaultEditAction(project, producer);
     }
 
@@ -103,8 +103,8 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
         return new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                final BaseInjection originalInjection = producer.get();
-                final BaseInjection newInjection = showDefaultInjectionUI(project, originalInjection.copy());
+                BaseInjection originalInjection = producer.get();
+                BaseInjection newInjection = showDefaultInjectionUI(project, originalInjection.copy());
                 if (newInjection != null) {
                     originalInjection.copyFrom(newInjection);
                 }
@@ -121,9 +121,9 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
         return new AnAction("Generic " + StringUtil.capitalize(support.getId()), null, icon) {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                final BaseInjection injection = new BaseInjection(support.getId());
+                BaseInjection injection = new BaseInjection(support.getId());
                 injection.setDisplayName("New " + StringUtil.capitalize(support.getId()) + " Injection");
-                final BaseInjection newInjection = showDefaultInjectionUI(project, injection);
+                BaseInjection newInjection = showDefaultInjectionUI(project, injection);
                 if (newInjection != null) {
                     consumer.accept(injection);
                 }
@@ -153,8 +153,8 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
                     builder.getDialogWrapper().close(DialogWrapper.OK_EXIT_CODE);
                 }
                 catch (Exception e) {
-                    final Throwable cause = e.getCause();
-                    final String message = e.getMessage() + (cause != null ? "\n  " + cause.getMessage() : "");
+                    Throwable cause = e.getCause();
+                    String message = e.getMessage() + (cause != null ? "\n  " + cause.getMessage() : "");
                     Messages.showErrorDialog(project, message, "Unable to Save");
                 }
             }

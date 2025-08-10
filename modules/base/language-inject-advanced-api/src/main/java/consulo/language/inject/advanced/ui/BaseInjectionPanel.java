@@ -133,7 +133,7 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection> {
             sb.append(place.isEnabled() ? "+ " : "- ").append(place.getText()).append("\n");
         }
         myTextArea.setText(sb.toString());
-        myNameTextField.setText(getOrigInjection().getDisplayName().get());
+        myNameTextField.setText(getOrigInjection().getDisplayName());
     }
 
     @Override

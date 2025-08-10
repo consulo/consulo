@@ -81,6 +81,6 @@ public abstract class InjectionConfigurable<T extends Injection, P extends Injec
   @Override
   public LocalizeValue getDisplayName() {
     P p = getPanel();
-    return p != null ? p.getInjection().getDisplayName() : myInjection.getDisplayName();
+    return LocalizeValue.ofNullable(p != null ? p.getInjection().getDisplayName() : myInjection.getDisplayName());
   }
 }

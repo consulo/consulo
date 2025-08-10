@@ -18,7 +18,6 @@ package consulo.language.inject.advanced;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
-import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,7 +57,7 @@ public interface Injection {
    * the plain name.
    */
   @Nonnull
-  LocalizeValue getDisplayName();
+  String getDisplayName();
 
-  boolean acceptsPsiElement(final PsiElement element);
+  boolean acceptsPsiElement(PsiElement element);
 }
