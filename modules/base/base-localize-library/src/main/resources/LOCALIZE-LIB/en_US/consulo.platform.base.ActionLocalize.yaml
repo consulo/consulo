@@ -122,6 +122,8 @@ action.ChangeLaf.description:
     text: Change current UI Theme
 action.ChangeLaf.text:
     text: Switch UI Theme
+action.ChangeLocalization.text:
+    text: Switch Localization
 action.ChangeSignature.description:
     text: Change signature of the selected method or class and correct all references
 action.ChangeSignature.text:

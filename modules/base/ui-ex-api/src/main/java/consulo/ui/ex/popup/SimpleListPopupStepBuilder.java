@@ -41,6 +41,8 @@ public class SimpleListPopupStepBuilder<T> {
 
     private Consumer<? super T> myAction = t -> {};
 
+    private T myDefaultValue;
+
     public SimpleListPopupStepBuilder(List<? extends T> items) {
         myItems = items;
     }
@@ -60,7 +62,12 @@ public class SimpleListPopupStepBuilder<T> {
        return this;
     }
 
+    public SimpleListPopupStepBuilder<T> withDefaultValue(@Nonnull T value) {
+        myDefaultValue = value;
+        return this;
+    }
+
     public ListPopupStep<T> build() {
-        return new SimpleListPopupStep<>(myTitle, myItems, myTextBuilder, myAction);
+        return new SimpleListPopupStep<>(myTitle, myItems, myTextBuilder, myAction, myDefaultValue);
     }
 }

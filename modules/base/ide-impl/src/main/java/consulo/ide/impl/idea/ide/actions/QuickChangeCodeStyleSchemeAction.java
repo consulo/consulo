@@ -87,10 +87,4 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     protected boolean isEnabled() {
         return CodeStyleSchemes.getInstance().getSchemes().length > 1;
     }
-
-    @Override
-    public void update(@Nonnull AnActionEvent e) {
-        super.update(e);
-        e.getPresentation().setEnabled(e.hasData(Project.KEY));
-    }
 }

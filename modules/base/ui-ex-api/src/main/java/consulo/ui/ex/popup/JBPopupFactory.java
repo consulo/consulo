@@ -5,6 +5,7 @@ package consulo.ui.ex.popup;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -412,7 +413,17 @@ public abstract class JBPopupFactory {
      * @return the popup instance.
      */
     @Nonnull
+    @Deprecated
     public abstract ListPopup createListPopup(@Nonnull ListPopupStep step);
+
+    /**
+     * Creates a custom list popup with the specified step.
+     *
+     * @param step the custom step for the list popup.
+     * @return the popup instance.
+     */
+    @Nonnull
+    public abstract ListPopup createListPopup(@Nullable ComponentManager project, @Nonnull ListPopupStep step);
 
     /**
      * Creates a custom list popup with the specified step.

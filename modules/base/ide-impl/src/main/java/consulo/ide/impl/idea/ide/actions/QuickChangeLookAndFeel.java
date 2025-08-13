@@ -15,42 +15,41 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.ui.action.QuickSwitchSchemeAction;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.ui.action.NewQuickSwitchSchemeAction;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 
-import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * @author max
  */
-public class QuickChangeLookAndFeel extends QuickSwitchSchemeAction {
+@ActionImpl(id = "ChangeLaf")
+public class QuickChangeLookAndFeel extends NewQuickSwitchSchemeAction<Style> {
+    public QuickChangeLookAndFeel() {
+        super(ActionLocalize.actionChangelafText());
+    }
+
     @Override
-    protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
-        StyleManager styleManager = StyleManager.get();
-        List<Style> styles = styleManager.getStyles();
-        Style currentStyle = styleManager.getCurrentStyle();
-        for (Style newStyle : styles) {
-            group.add(new DumbAwareAction(
-                LocalizeValue.of(newStyle.getName()),
-                LocalizeValue.of(),
-                newStyle == currentStyle ? ourCurrentAction : ourNotCurrentAction
-            ) {
-                @RequiredUIAccess
-                @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
-                    StyleManager.get().setCurrentStyle(newStyle);
-                }
-            });
+    public void fill(@Nonnull BiConsumer<LocalizeValue, Style> itemsAcceptor) {
+        for (Style style : StyleManager.get().getStyles()) {
+            itemsAcceptor.accept(LocalizeValue.of(style.getName()), style);
         }
+    }
+
+    @Nonnull
+    @Override
+    public Style getCurrentValue() {
+        return StyleManager.get().getCurrentStyle();
+    }
+
+    @Override
+    public void changeSchemeTo(@Nonnull Style value) {
+        StyleManager.get().setCurrentStyle(value);
     }
 
     @Override

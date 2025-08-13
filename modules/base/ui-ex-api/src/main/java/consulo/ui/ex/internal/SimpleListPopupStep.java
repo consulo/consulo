@@ -31,14 +31,28 @@ import java.util.function.Function;
 public class SimpleListPopupStep<T> extends BaseListPopupStep<T> {
     private final Function<T, String> myTextBuilder;
     private final Consumer<? super T> myFinishAction;
+    private final int myDefaultIndex;
 
     public SimpleListPopupStep(LocalizeValue title,
                                List<? extends T> items,
                                Function<T, String> textBuilder,
-                               Consumer<? super T> finishAction) {
+                               Consumer<? super T> finishAction,
+                               T defautValue) {
         super(title.get(), items);
         myTextBuilder = textBuilder;
         myFinishAction = finishAction;
+
+        if (defautValue != null) {
+            myDefaultIndex = items.indexOf(defautValue);
+        }
+        else {
+            myDefaultIndex = -1;
+        }
+    }
+
+    @Override
+    public int getDefaultOptionIndex() {
+        return myDefaultIndex;
     }
 
     @Override

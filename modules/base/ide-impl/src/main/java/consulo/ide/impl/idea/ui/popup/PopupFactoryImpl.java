@@ -7,6 +7,7 @@ import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.VisualPosition;
+import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
@@ -520,6 +521,12 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
     @Override
     public ListPopup createListPopup(@Nonnull ListPopupStep step) {
         return new ListPopupImpl(step);
+    }
+
+    @Nonnull
+    @Override
+    public ListPopup createListPopup(@Nonnull ComponentManager project, @Nonnull ListPopupStep step) {
+        return new ListPopupImpl((Project) project, step);
     }
 
     @Nonnull

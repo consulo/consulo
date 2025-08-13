@@ -565,7 +565,8 @@
         <group id="ChangeScheme">
             <action id="ChangeColorScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeColorSchemeAction"/>
             <action id="ChangeKeymap" class="consulo.ide.impl.idea.ide.actions.QuickChangeKeymapAction"/>
-            <action id="ChangeLaf" class="consulo.ide.impl.idea.ide.actions.QuickChangeLookAndFeel"/>
+            <reference id="ChangeLaf"/>
+            <reference id="ChangeLocalization"/>
         </group>
 
         <action id="MaintenanceAction" class="consulo.ide.impl.idea.ide.actions.MaintenanceAction"/>
@@ -1881,8 +1882,7 @@
             <reference id="ShowSettings"/>
             <reference id="WelcomeScreen.Plugins"/>
             <separator/>
-            <reference id="ChangeLaf"/>
-            <reference id="ChangeKeymap"/>
+            <reference id="ChangeScheme"/>
         </group>
 
         <action id="ChangesView.ApplyPatch" class="consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchAction">
