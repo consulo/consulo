@@ -39,6 +39,14 @@ public class SimpleXmlReader {
     protected DocumentBuilder initialValue() {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       try {
+        // Disable external entity processing to prevent XXE attacks
+        dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        dbFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        dbFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        dbFactory.setXIncludeAware(false);
+        dbFactory.setExpandEntityReferences(false);
+
         return dbFactory.newDocumentBuilder();
       }
       catch (ParserConfigurationException e) {
