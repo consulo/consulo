@@ -25,6 +25,7 @@ import consulo.application.util.UserHomeFileUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.language.editor.ui.awt.EditorComboBox;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.util.ProjectUtil;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -86,13 +87,15 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     @Nullable
     private final String myDefaultRepoUrl;
 
-    public CloneDvcsDialog(@Nonnull Project project, @Nonnull String displayName, @Nonnull String vcsDirectoryName) {
+    public CloneDvcsDialog(@Nonnull Project project,
+                           @Nonnull LocalizeValue displayName,
+                           @Nonnull String vcsDirectoryName) {
         this(project, displayName, vcsDirectoryName, null);
     }
 
     public CloneDvcsDialog(
         @Nonnull Project project,
-        @Nonnull String displayName,
+        @Nonnull LocalizeValue displayName,
         @Nonnull String vcsDirectoryName,
         @Nullable String defaultUrl
     ) {
@@ -104,7 +107,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         init();
         initListeners();
         setTitle(DvcsBundle.message("clone.title"));
-        myRepositoryUrlLabel.setText(DvcsBundle.message("clone.repository.url", displayName));
+        myRepositoryUrlLabel.setText(DvcsBundle.message("clone.repository.url", displayName.get()));
         myRepositoryUrlLabel.setDisplayedMnemonic('R');
         setOKButtonText(DvcsBundle.message("clone.button"));
 
