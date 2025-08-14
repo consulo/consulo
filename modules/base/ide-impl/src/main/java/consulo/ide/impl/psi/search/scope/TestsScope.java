@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.psi.search.scope;
 
-import consulo.application.AllIcons;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,18 +28,22 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author Konstantin Bulenkov
  */
 public class TestsScope extends NamedScope {
-  public static final String NAME = IdeBundle.message("predefined.scope.tests.name");
-  public TestsScope() {
-    super(NAME, AllIcons.Modules.TestRoot, new AbstractPackageSet("test:*..*") {
-      @Override
-      public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
-        return file != null && TestSourcesFilter.isTestSources(file, project);
-      }
-    });
-  }
+    public static final String ID = "Tests";
 
-  @Override
-  public String getDefaultColorName() {
-    return "Green";
-  }
+    @Deprecated
+    public static final String NAME = ID;
+
+    public TestsScope() {
+        super(ID, IdeLocalize.predefinedScopeTestsName(), PlatformIconGroup.modulesTestroot(), new AbstractPackageSet("test:*..*") {
+            @Override
+            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+                return file != null && TestSourcesFilter.isTestSources(file, project);
+            }
+        });
+    }
+
+    @Override
+    public String getDefaultColorName() {
+        return "Green";
+    }
 }

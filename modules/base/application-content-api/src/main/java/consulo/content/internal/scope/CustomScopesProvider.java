@@ -40,7 +40,7 @@ public interface CustomScopesProvider {
   default NamedScope getCustomScope(String name) {
     SimpleReference<NamedScope> ref = SimpleReference.create();
     acceptScopes(namedScope -> {
-      if (Objects.equals(namedScope.getName(), name)) {
+      if (Objects.equals(namedScope.getScopeId(), name)) {
         ref.setIfNull(namedScope);
       }
     });

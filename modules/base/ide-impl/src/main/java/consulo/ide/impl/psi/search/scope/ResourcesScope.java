@@ -19,29 +19,29 @@ import consulo.application.AllIcons;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
-import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18:03/17.06.13
  */
 public class ResourcesScope extends NamedScope {
-  public static final String NAME = IdeBundle.message("predefined.scope.resources.name");
+    public static final String ID = "Resources";
 
-  public ResourcesScope() {
-    super(NAME, AllIcons.Modules.ResourcesRoot, new AbstractPackageSet("rsc:*..*") {
-      @Override
-      public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
-        final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-        return file != null && index.isInResource(file);
-      }
-    });
-  }
+    @Deprecated
+    public static final String NAME = ID;
+
+    public ResourcesScope() {
+        super(ID, IdeLocalize.predefinedScopeResourcesName(), AllIcons.Modules.ResourcesRoot, new AbstractPackageSet("rsc:*..*") {
+            @Override
+            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+                ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+                return file != null && index.isInResource(file);
+            }
+        });
+    }
 }

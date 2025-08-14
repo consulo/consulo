@@ -15,33 +15,32 @@
  */
 package consulo.ide.impl.psi.search.scope;
 
-import consulo.application.AllIcons;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 23:40/19.09.13
  */
 public class TestResourcesScope extends NamedScope {
-  public static final String NAME = IdeBundle.message("predefined.scope.test.resources.name");
+    public static final String ID = "Test Resources";
+    @Deprecated
+    public static final String NAME = ID;
 
-  public TestResourcesScope() {
-    super(NAME, AllIcons.Modules.TestResourcesRoot, new AbstractPackageSet("test-rsc:*..*") {
-      @Override
-      public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
-        final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-        return file != null && index.isInTestResource(file);
-      }
-    });
-  }
+    public TestResourcesScope() {
+        super(ID, IdeLocalize.predefinedScopeTestResourcesName(), PlatformIconGroup.modulesTestresourcesroot(), new AbstractPackageSet("test-rsc:*..*") {
+            @Override
+            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+                ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+                return file != null && index.isInTestResource(file);
+            }
+        });
+    }
 }

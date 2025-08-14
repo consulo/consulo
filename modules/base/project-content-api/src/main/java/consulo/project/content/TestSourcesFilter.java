@@ -23,7 +23,6 @@ import jakarta.annotation.Nonnull;
  *
  * @author zolotov
  * @see FileIndex#isInTestSourceContent(VirtualFile)
- * @see JpsModuleSourceRootType#isForTests()
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TestSourcesFilter {

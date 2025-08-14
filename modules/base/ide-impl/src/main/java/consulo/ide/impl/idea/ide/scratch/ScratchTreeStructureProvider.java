@@ -12,7 +12,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
@@ -28,6 +27,7 @@ import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.tree.*;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.TreeHelper;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
@@ -194,7 +194,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
 
   private static final class MyProjectNode extends ProjectViewNode<String> {
     MyProjectNode(Project project, ViewSettings settings) {
-      super(project, ScratchesNamedScope.scratchesAndConsoles(), settings);
+      super(project, ScratchesNamedScope.ID, settings);
     }
 
     @Override

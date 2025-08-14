@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.psi.search.scope;
 
-import consulo.application.AllIcons;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -30,15 +30,17 @@ import consulo.virtualFileSystem.VirtualFile;
  * @since 18:19/17.06.13
  */
 public class SourcesScope extends NamedScope {
-  public static final String NAME = IdeBundle.message("predefined.scope.sources.name");
+    public static final String ID = "Sources";
+    @Deprecated
+    public static final String NAME = ID;
 
-  public SourcesScope() {
-    super(NAME, AllIcons.Modules.SourceRoot, new AbstractPackageSet("src:*..*") {
-      @Override
-      public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
-        final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-        return file != null && index.isInSource(file);
-      }
-    });
-  }
+    public SourcesScope() {
+        super(ID, IdeLocalize.predefinedScopeSourcesName(), PlatformIconGroup.modulesSourceroot(), new AbstractPackageSet("src:*..*") {
+            @Override
+            public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+                ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+                return file != null && index.isInSource(file);
+            }
+        });
+    }
 }

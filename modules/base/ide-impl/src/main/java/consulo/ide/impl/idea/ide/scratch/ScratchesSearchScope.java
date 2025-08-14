@@ -29,7 +29,7 @@ public class ScratchesSearchScope extends GlobalSearchScope {
   @Nonnull
   @Override
   public String getDisplayName() {
-    return ScratchesNamedScope.scratchesAndConsoles();
+    return ScratchesNamedScope.ID;
   }
 
   @Override

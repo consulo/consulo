@@ -41,7 +41,7 @@ public abstract class SingleCustomScopeProvider implements CustomScopesProvider 
   @Nullable
   @Override
   public NamedScope getCustomScope(String name) {
-    if (Objects.equals(myScope.getName(), name)) {
+    if (Objects.equals(myScope.getScopeId(), name)) {
       return myScope;
     }
     return null;

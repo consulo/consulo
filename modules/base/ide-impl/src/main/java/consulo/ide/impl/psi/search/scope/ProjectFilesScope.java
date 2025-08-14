@@ -15,29 +15,36 @@
  */
 package consulo.ide.impl.psi.search.scope;
 
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
+import consulo.localize.LocalizeValue;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ProjectFilesScope extends NamedScope {
-  public static final String NAME = "Project Files";
+    public static final String ID = "Project Files";
 
-  public ProjectFilesScope() {
-    super(NAME, new AbstractPackageSet("ProjectFiles") {
-      @Override
-      public boolean contains(VirtualFile file, @Nonnull Project project, @jakarta.annotation.Nullable NamedScopesHolder holder) {
-        if (file == null) return false;
-        final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-        return holder.getProject().isInitialized() && !fileIndex.isExcluded(file) && fileIndex.getContentRootForFile(file) != null;
-      }
-    });
-  }
+    @Deprecated
+    public static final String NAME = ID;
+
+    public ProjectFilesScope() {
+        super(ID, LocalizeValue.localizeTODO("Project Files"), new AbstractPackageSet("ProjectFiles") {
+            @Override
+            public boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
+                if (file == null) {
+                    return false;
+                }
+                ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+                return project.isInitialized() && !fileIndex.isExcluded(file) && fileIndex.getContentRootForFile(file) != null;
+            }
+        });
+    }
 }

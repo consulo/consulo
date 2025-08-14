@@ -21,15 +21,11 @@ import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.ide.impl.idea.notification.impl.ui.StickyButton;
 import consulo.ide.impl.idea.notification.impl.ui.StickyButtonUI;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.FileColorManager;
 import consulo.language.editor.scope.NamedScopeManager;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.ColorChooser;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
@@ -48,65 +44,71 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 public class FileColorConfigurationEditDialog extends DialogWrapper {
-  private FileColorConfiguration myConfiguration;
-  private JComboBox myScopeComboBox;
-  private final FileColorManager myManager;
-  private HashMap<String, AbstractButton> myColorToButtonMap;
-  private static final String CUSTOM_COLOR_NAME = "Custom";
-  private final Map<String, NamedScope> myScopeNames = new HashMap<>();
+    private FileColorConfiguration myConfiguration;
+    private JComboBox<NamedScope> myScopeComboBox;
+    private final FileColorManager myManager;
+    private HashMap<String, AbstractButton> myColorToButtonMap;
+    private static final String CUSTOM_COLOR_NAME = "Custom";
+    private final Map<String, NamedScope> myScopeById = new HashMap<>();
 
-  public FileColorConfigurationEditDialog(@Nonnull final FileColorManager manager, @Nullable final FileColorConfiguration configuration) {
-    super(true);
+    public FileColorConfigurationEditDialog(@Nonnull FileColorManager manager, @Nullable FileColorConfiguration configuration) {
+        super(true);
 
-    setTitle(configuration == null ? "Add color label" : "Edit color label");
-    setResizable(false);
+        setTitle(configuration == null ? "Add color label" : "Edit color label");
+        setResizable(false);
 
-    myManager = manager;
-    myConfiguration = configuration;
+        myManager = manager;
+        myConfiguration = configuration;
 
-    init();
-    updateCustomButton();
-    if (myConfiguration != null && !StringUtil.isEmpty(myConfiguration.getScopeName())) {
-      myScopeComboBox.setSelectedItem(myConfiguration.getScopeName());
-    }
-    updateOKButton();
-  }
-
-  public JComboBox getScopeComboBox() {
-    return myScopeComboBox;
-  }
-
-  @Override
-  protected JComponent createNorthPanel() {
-    final JPanel result = new JPanel();
-    result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
-
-    final List<NamedScope> scopeList = new ArrayList<>();
-    final Project project = myManager.getProject();
-    final NamedScopesHolder[] scopeHolders = NamedScopeManager.getAllNamedScopeHolders(project);
-    for (final NamedScopesHolder scopeHolder : scopeHolders) {
-      final NamedScope[] scopes = scopeHolder.getScopes();
-      Collections.addAll(scopeList, scopes);
-    }
-    CustomScopesProviderEx.filterNoSettingsScopes(project, scopeList);
-    for (final NamedScope scope : scopeList) {
-      myScopeNames.put(scope.getName(), scope);
+        init();
+        updateCustomButton();
+        if (myConfiguration != null && !StringUtil.isEmpty(myConfiguration.getScopeName())) {
+            myScopeComboBox.setSelectedItem(myConfiguration.getScopeName());
+        }
+        updateOKButton();
     }
 
-    myScopeComboBox = new JComboBox(ArrayUtil.toStringArray(myScopeNames.keySet()));
-    myScopeComboBox.addActionListener(e -> {
-      updateCustomButton();
-      updateOKButton();
-    });
+    public JComboBox getScopeComboBox() {
+        return myScopeComboBox;
+    }
 
-    final JPanel pathPanel = new JPanel();
-    pathPanel.setLayout(new BorderLayout());
+    @Override
+    protected JComponent createNorthPanel() {
+        JPanel result = new JPanel();
+        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
 
-    final JLabel pathLabel = new JLabel("Scope:");
-    pathLabel.setDisplayedMnemonic('S');
-    pathLabel.setLabelFor(myScopeComboBox);
-    pathPanel.add(pathLabel, BorderLayout.WEST);
-    pathPanel.add(myScopeComboBox, BorderLayout.CENTER);
+        List<NamedScope> scopeList = new ArrayList<>();
+        Project project = myManager.getProject();
+        NamedScopesHolder[] scopeHolders = NamedScopeManager.getAllNamedScopeHolders(project);
+        for (NamedScopesHolder scopeHolder : scopeHolders) {
+            NamedScope[] scopes = scopeHolder.getScopes();
+            Collections.addAll(scopeList, scopes);
+        }
+        CustomScopesProviderEx.filterNoSettingsScopes(project, scopeList);
+        for (NamedScope scope : scopeList) {
+            myScopeById.put(scope.getScopeId(), scope);
+        }
+
+        myScopeComboBox = new ComboBox<>(new CollectionComboBoxModel<>(new ArrayList<>(myScopeById.values())));
+        myScopeComboBox.setRenderer(new ColoredListCellRenderer<>() {
+            @Override
+            protected void customizeCellRenderer(@Nonnull JList<? extends NamedScope> list, NamedScope value, int index, boolean selected, boolean hasFocus) {
+                append(value.getPresentableName());
+            }
+        });
+        myScopeComboBox.addActionListener(e -> {
+            updateCustomButton();
+            updateOKButton();
+        });
+
+        JPanel pathPanel = new JPanel();
+        pathPanel.setLayout(new BorderLayout());
+
+        JLabel pathLabel = new JLabel("Scope:");
+        pathLabel.setDisplayedMnemonic('S');
+        pathLabel.setLabelFor(myScopeComboBox);
+        pathPanel.add(pathLabel, BorderLayout.WEST);
+        pathPanel.add(myScopeComboBox, BorderLayout.CENTER);
 
     /*
     final JButton newScope = new JButton("Add scope...");
@@ -118,223 +120,226 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
     pathPanel.add(newScope, BorderLayout.EAST);
     */
 
-    result.add(pathPanel);
+        result.add(pathPanel);
 
-    final JPanel colorPanel = new JPanel();
-    colorPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-    colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));
-    final JLabel colorLabel = new JLabel("Color:");
-    colorPanel.add(colorLabel);
-    colorPanel.add(createColorButtonsPanel(myConfiguration));
-    colorPanel.add(Box.createHorizontalGlue());
-    result.add(colorPanel);
+        JPanel colorPanel = new JPanel();
+        colorPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));
+        JLabel colorLabel = new JLabel("Color:");
+        colorPanel.add(colorLabel);
+        colorPanel.add(createColorButtonsPanel(myConfiguration));
+        colorPanel.add(Box.createHorizontalGlue());
+        result.add(colorPanel);
 
-    return result;
-  }
-
-  private void updateCustomButton() {
-    final Object item = myScopeComboBox.getSelectedItem();
-    if (item instanceof String) {
-      Color color = myConfiguration == null ? null : ColorUtil.fromHex(myConfiguration.getColorName(), null);
-      final CustomColorButton button = (CustomColorButton)myColorToButtonMap.get(CUSTOM_COLOR_NAME);
-
-      if (color != null) {
-        button.setColor(color);
-        button.setSelected(true);
-        button.repaint();
-      }
-    }
-  }
-
-  @Override
-  protected void doOKAction() {
-    close(OK_EXIT_CODE);
-
-    if (myConfiguration != null) {
-      myConfiguration.setScopeName((String)myScopeComboBox.getSelectedItem());
-      myConfiguration.setColorName(getColorName());
-    }
-    else {
-      myConfiguration = new FileColorConfiguration((String)myScopeComboBox.getSelectedItem(), getColorName());
-    }
-  }
-
-  public FileColorConfiguration getConfiguration() {
-    return myConfiguration;
-  }
-
-  private JComponent createColorButtonsPanel(final FileColorConfiguration configuration) {
-    final JPanel result = new JPanel(new BorderLayout());
-    result.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-    final JPanel inner = new JPanel();
-    inner.setLayout(new BoxLayout(inner, BoxLayout.X_AXIS));
-    inner.setBorder(
-      BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-        BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    );
-    if (!StyleManager.get().getCurrentStyle().isDark()) {
-      inner.setBackground(Color.WHITE);
-    }
-    result.add(inner, BorderLayout.CENTER);
-
-    final ButtonGroup group = new ButtonGroup();
-
-    myColorToButtonMap = new HashMap<>();
-
-    final Collection<String> names = myManager.getColorNames();
-    for (final String name : names) {
-      final ColorButton colorButton = new ColorButton(name, myManager.getColor(name));
-      group.add(colorButton);
-      inner.add(colorButton);
-      myColorToButtonMap.put(name, colorButton);
-      inner.add(Box.createHorizontalStrut(5));
-    }
-    final CustomColorButton customButton = new CustomColorButton();
-    group.add(customButton);
-    inner.add(customButton);
-    myColorToButtonMap.put(customButton.getText(), customButton);
-    inner.add(Box.createHorizontalStrut(5));
-
-
-    if (configuration != null) {
-      final AbstractButton button = myColorToButtonMap.get(configuration.getColorName());
-      if (button != null) {
-        button.setSelected(true);
-      }
+        return result;
     }
 
-    return result;
-  }
+    private void updateCustomButton() {
+        Object item = myScopeComboBox.getSelectedItem();
+        if (item instanceof NamedScope namedScope) {
+            Color color = myConfiguration == null ? null : ColorUtil.fromHex(myConfiguration.getColorName(), null);
+            CustomColorButton button = (CustomColorButton) myColorToButtonMap.get(CUSTOM_COLOR_NAME);
 
-  @Nullable
-  private String getColorName() {
-    for (String name : myColorToButtonMap.keySet()) {
-      final AbstractButton button = myColorToButtonMap.get(name);
-      if (button.isSelected()) {
-        return button instanceof CustomColorButton ? ColorUtil.toHex(((CustomColorButton)button).getColor()) : name;
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myScopeComboBox;
-  }
-
-  private void updateOKButton() {
-    getOKAction().setEnabled(isOKActionEnabled());
-  }
-
-  @Override
-  public boolean isOKActionEnabled() {
-    final String scopeName = (String)myScopeComboBox.getSelectedItem();
-    return scopeName != null && scopeName.length() > 0 && getColorName() != null;
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    return null;
-  }
-
-  private class ColorButton extends StickyButton {
-    protected Color myColor;
-
-    protected ColorButton(final String text, final Color color) {
-      super(FileColorManagerImpl.getAlias(text));
-      setUI(new ColorButtonUI());
-      myColor = color;
-      addActionListener(e -> doPerformAction(e));
-      setBackground(new JBColor(Color.WHITE, UIUtil.getControlColor()));
-      setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-    }
-
-    protected void doPerformAction(ActionEvent e) {
-      updateOKButton();
-    }
-
-    Color getColor() {
-      return myColor;
-    }
-
-    public void setColor(Color color) {
-      myColor = color;
+            if (color != null) {
+                button.setColor(color);
+                button.setSelected(true);
+                button.repaint();
+            }
+        }
     }
 
     @Override
-    public Color getForeground() {
-      if (getModel().isSelected()) {
-        return JBColor.foreground();
-      }
-      else if (getModel().isRollover()) {
-        return JBColor.GRAY;
-      }
-      else {
-        return getColor();
-      }
+    protected void doOKAction() {
+        close(OK_EXIT_CODE);
+
+        NamedScope scope = (NamedScope) myScopeComboBox.getSelectedItem();
+        if (myConfiguration != null) {
+            myConfiguration.setScopeName(scope.getScopeId());
+            myConfiguration.setColorName(getColorName());
+        }
+        else {
+            myConfiguration = new FileColorConfiguration(scope.getScopeId(), getColorName());
+        }
     }
 
-    @Override
-    protected ButtonUI createUI() {
-      return new ColorButtonUI();
-    }
-  }
-
-  private class CustomColorButton extends ColorButton {
-    private CustomColorButton() {
-      super(CUSTOM_COLOR_NAME, Color.WHITE);
-      myColor = null;
+    public FileColorConfiguration getConfiguration() {
+        return myConfiguration;
     }
 
-    @Override
-    protected void doPerformAction(ActionEvent e) {
-      ColorChooser.chooseColor(FileColorConfigurationEditDialog.this.getRootPane(), "Choose Color", myColor, color -> {
-        if (color != null) {
-          myColor = color;
+    private JComponent createColorButtonsPanel(FileColorConfiguration configuration) {
+        JPanel result = new JPanel(new BorderLayout());
+        result.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        JPanel inner = new JPanel();
+        inner.setLayout(new BoxLayout(inner, BoxLayout.X_AXIS));
+        inner.setBorder(
+            BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(JBColor.border(), 1),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5))
+        );
+
+        if (!StyleManager.get().getCurrentStyle().isDark()) {
+            inner.setBackground(Color.WHITE);
         }
 
-        setSelected(myColor != null);
-        getOKAction().setEnabled(myColor != null);
-      });
+        result.add(inner, BorderLayout.CENTER);
+
+        ButtonGroup group = new ButtonGroup();
+
+        myColorToButtonMap = new HashMap<>();
+
+        Collection<String> names = myManager.getColorNames();
+        for (String name : names) {
+            ColorButton colorButton = new ColorButton(name, myManager.getColor(name));
+            group.add(colorButton);
+            inner.add(colorButton);
+            myColorToButtonMap.put(name, colorButton);
+            inner.add(Box.createHorizontalStrut(5));
+        }
+        CustomColorButton customButton = new CustomColorButton();
+        group.add(customButton);
+        inner.add(customButton);
+        myColorToButtonMap.put(customButton.getText(), customButton);
+        inner.add(Box.createHorizontalStrut(5));
+
+
+        if (configuration != null) {
+            AbstractButton button = myColorToButtonMap.get(configuration.getColorName());
+            if (button != null) {
+                button.setSelected(true);
+            }
+        }
+
+        return result;
+    }
+
+    @Nullable
+    private String getColorName() {
+        for (String name : myColorToButtonMap.keySet()) {
+            AbstractButton button = myColorToButtonMap.get(name);
+            if (button.isSelected()) {
+                return button instanceof CustomColorButton ? ColorUtil.toHex(((CustomColorButton) button).getColor()) : name;
+            }
+        }
+        return null;
     }
 
     @Override
-    public Color getForeground() {
-      return getModel().isSelected() ? Color.BLACK : JBColor.GRAY;
+    public JComponent getPreferredFocusedComponent() {
+        return myScopeComboBox;
+    }
+
+    private void updateOKButton() {
+        getOKAction().setEnabled(isOKActionEnabled());
     }
 
     @Override
-    Color getColor() {
-      return myColor == null ? Color.WHITE : myColor;
-    }
-  }
-
-  private class ColorButtonUI extends StickyButtonUI<ColorButton> {
-
-    @Override
-    protected Color getBackgroundColor(final ColorButton button) {
-      return button.getColor();
+    public boolean isOKActionEnabled() {
+        NamedScope scopeName = (NamedScope) myScopeComboBox.getSelectedItem();
+        return scopeName != null && getColorName() != null;
     }
 
     @Override
-    protected Color getFocusColor(ColorButton button) {
-      return button.getColor().darker();
+    protected JComponent createCenterPanel() {
+        return null;
     }
 
-    @Override
-    protected Color getSelectionColor(ColorButton button) {
-      return button.getColor();
+    private class ColorButton extends StickyButton {
+        protected Color myColor;
+
+        protected ColorButton(String text, Color color) {
+            super(FileColorManagerImpl.getAlias(text));
+            setUI(new ColorButtonUI());
+            myColor = color;
+            addActionListener(e -> doPerformAction(e));
+            setBackground(new JBColor(Color.WHITE, UIUtil.getControlColor()));
+            setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        }
+
+        protected void doPerformAction(ActionEvent e) {
+            updateOKButton();
+        }
+
+        Color getColor() {
+            return myColor;
+        }
+
+        public void setColor(Color color) {
+            myColor = color;
+        }
+
+        @Override
+        public Color getForeground() {
+            if (getModel().isSelected()) {
+                return JBColor.foreground();
+            }
+            else if (getModel().isRollover()) {
+                return JBColor.GRAY;
+            }
+            else {
+                return getColor();
+            }
+        }
+
+        @Override
+        protected ButtonUI createUI() {
+            return new ColorButtonUI();
+        }
     }
 
-    @Override
-    protected Color getRolloverColor(ColorButton button) {
-      return button.getColor();
+    private class CustomColorButton extends ColorButton {
+        private CustomColorButton() {
+            super(CUSTOM_COLOR_NAME, Color.WHITE);
+            myColor = null;
+        }
+
+        @Override
+        protected void doPerformAction(ActionEvent e) {
+            ColorChooser.chooseColor(FileColorConfigurationEditDialog.this.getRootPane(), "Choose Color", myColor, color -> {
+                if (color != null) {
+                    myColor = color;
+                }
+
+                setSelected(myColor != null);
+                getOKAction().setEnabled(myColor != null);
+            });
+        }
+
+        @Override
+        public Color getForeground() {
+            return getModel().isSelected() ? Color.BLACK : JBColor.GRAY;
+        }
+
+        @Override
+        Color getColor() {
+            return myColor == null ? Color.WHITE : myColor;
+        }
     }
 
-    @Override
-    protected int getArcSize() {
-      return 20;
+    private class ColorButtonUI extends StickyButtonUI<ColorButton> {
+
+        @Override
+        protected Color getBackgroundColor(ColorButton button) {
+            return button.getColor();
+        }
+
+        @Override
+        protected Color getFocusColor(ColorButton button) {
+            return button.getColor().darker();
+        }
+
+        @Override
+        protected Color getSelectionColor(ColorButton button) {
+            return button.getColor();
+        }
+
+        @Override
+        protected Color getRolloverColor(ColorButton button) {
+            return button.getColor();
+        }
+
+        @Override
+        protected int getArcSize() {
+            return 20;
+        }
     }
-  }
 }

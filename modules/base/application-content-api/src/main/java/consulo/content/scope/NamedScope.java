@@ -70,6 +70,7 @@ public class NamedScope {
      * {@link #getPresentableName()} to display in UI
      */
     @Nonnull
+    @Deprecated
     public String getName() {
         return myScopeId;
     }

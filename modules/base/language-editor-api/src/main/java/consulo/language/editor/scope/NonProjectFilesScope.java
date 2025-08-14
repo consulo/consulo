@@ -19,6 +19,7 @@ import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.language.editor.scratch.ScratchUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.util.collection.ArrayUtil;
@@ -31,39 +32,47 @@ import jakarta.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public class NonProjectFilesScope extends NamedScope {
-  public static final String NAME = "Non-Project Files";
+    public static final String ID = "Non-Project Files";
+    @Deprecated
+    public static final String NAME = ID;
 
-  public NonProjectFilesScope() {
-    super(NAME, new AbstractPackageSet("NonProject") {
-      @Override
-      public boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
-        // do not include fake-files e.g. fragment-editors, database consoles, etc.
-        if (file.getFileSystem() instanceof NonPhysicalFileSystem) return false;
-        if (!file.isInLocalFileSystem()) return true;
-        if (ScratchUtil.isScratch(file)) return false;
-        return !ProjectScopes.getProjectScope(project).contains(file);
-      }
-    });
-  }
-
-  @Override
-  public String getDefaultColorName() {
-    return "Yellow";
-  }
-
-  @Nonnull
-  public static NamedScope[] removeFromList(@Nonnull NamedScope[] scopes) {
-    int nonProjectIdx = -1;
-    for (int i = 0, length = scopes.length; i < length; i++) {
-      NamedScope scope = scopes[i];
-      if (scope instanceof NonProjectFilesScope) {
-        nonProjectIdx = i;
-        break;
-      }
+    public NonProjectFilesScope() {
+        super(ID, LocalizeValue.localizeTODO("Non-Project Files"), new AbstractPackageSet("NonProject") {
+            @Override
+            public boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
+                // do not include fake-files e.g. fragment-editors, database consoles, etc.
+                if (file.getFileSystem() instanceof NonPhysicalFileSystem) {
+                    return false;
+                }
+                if (!file.isInLocalFileSystem()) {
+                    return true;
+                }
+                if (ScratchUtil.isScratch(file)) {
+                    return false;
+                }
+                return !ProjectScopes.getProjectScope(project).contains(file);
+            }
+        });
     }
-    if (nonProjectIdx > -1) {
-      scopes = ArrayUtil.remove(scopes, nonProjectIdx);
+
+    @Override
+    public String getDefaultColorName() {
+        return "Yellow";
     }
-    return scopes;
-  }
+
+    @Nonnull
+    public static NamedScope[] removeFromList(@Nonnull NamedScope[] scopes) {
+        int nonProjectIdx = -1;
+        for (int i = 0, length = scopes.length; i < length; i++) {
+            NamedScope scope = scopes[i];
+            if (scope instanceof NonProjectFilesScope) {
+                nonProjectIdx = i;
+                break;
+            }
+        }
+        if (nonProjectIdx > -1) {
+            scopes = ArrayUtil.remove(scopes, nonProjectIdx);
+        }
+        return scopes;
+    }
 }

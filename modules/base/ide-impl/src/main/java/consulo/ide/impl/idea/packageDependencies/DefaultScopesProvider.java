@@ -51,7 +51,7 @@ public class DefaultScopesProvider implements CustomScopesProvider {
   @Override
   public NamedScope getCustomScope(String name) {
     for (NamedScope scope : myScopes) {
-      if (Objects.equals(scope.getName(), name)) {
+      if (Objects.equals(scope.getScopeId(), name)) {
         return scope;
       }
     }
