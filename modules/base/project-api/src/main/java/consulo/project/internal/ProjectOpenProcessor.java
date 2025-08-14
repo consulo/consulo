@@ -17,37 +17,26 @@ package consulo.project.internal;
 
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
-import java.util.function.Consumer;
 
 /**
  * @author max
  */
 public abstract class ProjectOpenProcessor {
-  @Nonnull
-  //@Language("HTML")
-  public String getFileSample() {
-    return "";
-  }
+    @Nullable
+    public abstract Image getIcon(@Nonnull VirtualFile file);
 
-  public void collectFileSamples(@Nonnull Consumer<String> fileSamples) {
-    fileSamples.accept(getFileSample());
-  }
+    public abstract boolean canOpenProject(@Nonnull File file);
 
-  @Nullable
-  public abstract Image getIcon(@Nonnull VirtualFile file);
-
-  public abstract boolean canOpenProject(@Nonnull File file);
-
-  @Nonnull
-  public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile,
-                                                          @Nonnull UIAccess uiAccess,
-                                                          @Nonnull ProjectOpenContext context);
+    @Nonnull
+    public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile,
+                                                            @Nonnull UIAccess uiAccess,
+                                                            @Nonnull ProjectOpenContext context);
 }

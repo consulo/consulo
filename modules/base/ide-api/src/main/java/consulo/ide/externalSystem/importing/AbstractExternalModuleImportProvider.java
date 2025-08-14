@@ -123,6 +123,12 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
         return myControl;
     }
 
+    @Nonnull
+    @Override
+    public LocalizeValue getName() {
+        return myExternalSystemId.getDisplayName();
+    }
+
     @Override
     @RequiredReadAction
     public void process(

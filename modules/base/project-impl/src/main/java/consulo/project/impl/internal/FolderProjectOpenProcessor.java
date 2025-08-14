@@ -46,12 +46,6 @@ import java.io.IOException;
 public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
     public static final FolderProjectOpenProcessor INSTANCE = new FolderProjectOpenProcessor();
 
-    @Nonnull
-    @Override
-    public String getFileSample() {
-        return "Folder";
-    }
-
     @Nullable
     @Override
     public Image getIcon(@Nonnull VirtualFile file) {

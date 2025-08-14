@@ -49,8 +49,8 @@ import java.util.function.Consumer;
 public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
   @Nonnull
   @Override
-  public String getName() {
-    return "sand2";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("sand2");
   }
 
   @Nonnull

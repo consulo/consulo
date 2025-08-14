@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.moduleImport;
 
-import consulo.project.ProjectOpenContext;
-import consulo.project.impl.internal.ProjectImplUtil;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.moduleImport.ModuleImportContext;
 import consulo.ide.moduleImport.ModuleImportProcessor;
 import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ide.moduleImport.ModuleImportProviders;
 import consulo.ide.newModule.NewOrImportModuleUtil;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.DefaultProjectOpenProcessor;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
@@ -42,7 +42,6 @@ import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -53,19 +52,6 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
 
   public ImportProjectOpenProcessor() {
     myProviders = ModuleImportProviders.getExtensions(false);
-  }
-
-  @Nonnull
-  @Override
-  public String getFileSample() {
-    throw new IllegalArgumentException("should never called");
-  }
-
-  @Override
-  public void collectFileSamples(@Nonnull Consumer<String> fileSamples) {
-    for (ModuleImportProvider provider : myProviders) {
-      fileSamples.accept(provider.getFileSample());
-    }
   }
 
   @Nullable

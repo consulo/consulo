@@ -15,6 +15,7 @@
  */
 package consulo.ide.moduleImport;
 
+import consulo.application.Application;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class ModuleImportProviders {
     @Nonnull
     public static List<ModuleImportProvider> getExtensions(boolean forImportAction) {
         List<ModuleImportProvider> list = new ArrayList<>();
-        ModuleImportProvider.EP_NAME.forEachExtensionSafe(provider -> {
+        Application.get().getExtensionPoint(ModuleImportProvider.class).forEachExtensionSafe(provider -> {
             if (forImportAction) {
                 if (!provider.isOnlyForNewImport()) {
                     list.add(provider);

@@ -19,7 +19,6 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.ComboBox;
@@ -33,7 +32,6 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -98,8 +96,6 @@ public class ModuleImportProcessor {
     };
     descriptor.setHideIgnored(false);
     descriptor.setTitle("Select File or Directory to Import");
-    String description = getFileChooserDescription(isModuleImport);
-    descriptor.setDescription(description);
     return descriptor;
   }
 
@@ -178,12 +174,5 @@ public class ModuleImportProcessor {
 
     showAsync.doWhenDone(() -> result.setDone(Pair.create(dialog.getContext(), moduleImportProvider)));
     showAsync.doWhenRejected(() -> result.setRejected(Pair.create(dialog.getContext(), moduleImportProvider)));
-  }
-
-  private static String getFileChooserDescription(boolean isImport) {
-    List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(isImport);
-    return IdeLocalize.importProjectChooserHeader(
-      StringUtil.join(providers, ModuleImportProvider::getFileSample, ", <br>")
-    ).get();
   }
 }

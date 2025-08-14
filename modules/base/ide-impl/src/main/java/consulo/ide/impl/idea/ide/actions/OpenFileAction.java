@@ -35,8 +35,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.impl.internal.ProjectImplUtil;
-import consulo.project.internal.ProjectOpenProcessor;
-import consulo.project.internal.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -44,16 +42,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @ActionImpl(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
@@ -113,16 +107,6 @@ public class OpenFileAction extends AnAction implements DumbAware {
             }
             doOpenFile(project, files);
         });
-    }
-
-    @Nonnull
-    private static LocalizeValue getFileChooserDescription() {
-        List<ProjectOpenProcessor> providers = ProjectOpenProcessors.getInstance().getProcessors();
-        List<String> fileSamples = new ArrayList<>();
-        for (ProjectOpenProcessor processor : providers) {
-            processor.collectFileSamples(fileSamples::add);
-        }
-        return IdeLocalize.importProjectChooserHeader(StringUtil.join(fileSamples, ", <br>"));
     }
 
     @RequiredUIAccess

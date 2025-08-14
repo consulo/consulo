@@ -20,14 +20,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.newModule.ui.UnifiedProjectOrModuleNameStep;
+import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import org.intellij.lang.annotations.Language;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,8 +39,6 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ModuleImportProvider<C extends ModuleImportContext> {
-    ExtensionPointName<ModuleImportProvider> EP_NAME = ExtensionPointName.create(ModuleImportProvider.class);
-
     @SuppressWarnings("unchecked")
     @Nonnull
     default C createContext(@Nullable Project project) {
@@ -56,7 +53,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
     }
 
     @Nonnull
-    abstract String getName();
+    abstract LocalizeValue getName();
 
     @Nonnull
     abstract Image getIcon();
@@ -81,11 +78,5 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
 
     default void buildSteps(@Nonnull Consumer<WizardStep<C>> consumer, @Nonnull C context) {
         consumer.accept(new UnifiedProjectOrModuleNameStep<>(context));
-    }
-
-    @Nonnull
-    @Language("HTML")
-    default String getFileSample() {
-        return getName();
     }
 }

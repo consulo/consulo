@@ -18,6 +18,7 @@ package consulo.sandboxPlugin.lang.moduleImport;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.WriteAction;
+import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -41,8 +42,8 @@ import java.util.function.Consumer;
 public class SandModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
   @Nonnull
   @Override
-  public String getName() {
-    return "sand";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("sand");
   }
 
   @Nonnull
