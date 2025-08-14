@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs;
+package consulo.versionControlSystem.distributed.ui;
 
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.FilePath;
@@ -171,7 +171,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
 
   @Nonnull
   private List<FilePath> getSelectedFilePaths() {
-    return ContainerUtil.map(myCheckinPanel.getFiles(), (Function<File, FilePath>)file -> new FilePathImpl(file, file.isDirectory()));
+    return ContainerUtil.map(myCheckinPanel.getFiles(), (Function<File, FilePath>) file -> new FilePathImpl(file, file.isDirectory()));
   }
 
   @Nonnull

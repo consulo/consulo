@@ -274,7 +274,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.dvcs;
   exports consulo.ide.impl.idea.dvcs.actions;
   exports consulo.ide.impl.idea.dvcs.branch;
-  exports consulo.ide.impl.idea.dvcs.cherrypick;
   exports consulo.ide.impl.idea.dvcs.push;
   exports consulo.ide.impl.idea.dvcs.push.ui;
   exports consulo.ide.impl.idea.dvcs.ui;

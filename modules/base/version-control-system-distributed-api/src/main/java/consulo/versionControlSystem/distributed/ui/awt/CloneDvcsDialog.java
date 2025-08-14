@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.ui;
+package consulo.versionControlSystem.distributed.ui.awt;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.event.FrameStateListener;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.ui.awt.EditorComboBox;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.util.ProjectUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
@@ -39,6 +41,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -56,10 +59,10 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
     static {
         // TODO make real URL pattern
-        final String ch = "[\\p{ASCII}&&[\\p{Graph}]&&[^@:/]]";
-        final String host = ch + "+(?:\\." + ch + "+)*";
-        final String path = "/?" + ch + "+(?:/" + ch + "+)*/?";
-        final String all = "(?:" + ch + "+@)?" + host + ":" + path;
+        String ch = "[\\p{ASCII}&&[\\p{Graph}]&&[^@:/]]";
+        String host = ch + "+(?:\\." + ch + "+)*";
+        String path = "/?" + ch + "+(?:/" + ch + "+)*/?";
+        String all = "(?:" + ch + "+@)?" + host + ":" + path;
         SSH_URL_PATTERN = Pattern.compile(all);
     }
 
@@ -97,6 +100,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         myDefaultRepoUrl = defaultUrl;
         myProject = project;
         myVcsDirectoryName = vcsDirectoryName;
+        $$$setupUI$$$();
         init();
         initListeners();
         setTitle(DvcsBundle.message("clone.title"));
@@ -169,7 +173,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             }
         );
 
-        final DocumentListener updateOkButtonListener = new DocumentAdapter() {
+        DocumentListener updateOkButtonListener = new DocumentAdapter() {
             @Override
             protected void textChanged(DocumentEvent e) {
                 updateButtons();
@@ -313,7 +317,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
     private void createUIComponents() {
         myRepositoryURL = new EditorComboBox("");
-        final DvcsRememberedInputs rememberedInputs = getRememberedInputs();
+        DvcsRememberedInputs rememberedInputs = getRememberedInputs();
         List<String> urls = new ArrayList<>(rememberedInputs.getVisitedUrls());
         if (myDefaultRepoUrl != null) {
             urls.add(0, myDefaultRepoUrl);
@@ -323,7 +327,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
             @Override
             public void documentChanged(consulo.document.event.DocumentEvent e) {
                 // enable test button only if something is entered in repository URL
-                final String url = getCurrentUrlText();
+                String url = getCurrentUrlText();
                 myTestButton.setEnabled(url.length() != 0);
                 if (myDefaultDirectoryName.equals(myDirectoryName.getText()) || myDirectoryName.getText().length() == 0) {
                     // modify field if it was unmodified or blank
@@ -335,12 +339,12 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         });
     }
 
-    public void prependToHistory(@Nonnull final String item) {
+    public void prependToHistory(@Nonnull String item) {
         myRepositoryURL.prependItem(item);
     }
 
     public void rememberSettings() {
-        final DvcsRememberedInputs rememberedInputs = getRememberedInputs();
+        DvcsRememberedInputs rememberedInputs = getRememberedInputs();
         rememberedInputs.addUrl(getSourceRepositoryURL());
         rememberedInputs.setCloneParentDir(getParentDirectory());
     }
@@ -352,7 +356,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
      * @return a default repository name
      */
     @Nonnull
-    private static String defaultDirectoryName(@Nonnull final String url, @Nonnull final String vcsDirName) {
+    private static String defaultDirectoryName(@Nonnull String url, @Nonnull String vcsDirName) {
         String nonSystemName;
         if (url.endsWith("/" + vcsDirName) || url.endsWith(File.separator + vcsDirName)) {
             nonSystemName = url.substring(0, url.length() - vcsDirName.length() - 1);
@@ -381,6 +385,110 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
     @Override
     protected JComponent createCenterPanel() {
+        return myRootPanel;
+    }
+
+    /**
+     * Method generated by Consulo GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     *
+     * @noinspection ALL
+     */
+    private void $$$setupUI$$$() {
+        createUIComponents();
+        myRootPanel = new JPanel();
+        myRootPanel.setLayout(new GridLayoutManager(4, 4, new Insets(0, 0, 0, 0), -1, -1));
+        myRepositoryUrlLabel = new JLabel();
+        myRepositoryUrlLabel.setText("Repository URL");
+        myRepositoryUrlLabel.setDisplayedMnemonic('R');
+        myRepositoryUrlLabel.setDisplayedMnemonicIndex(0);
+        myRootPanel.add(myRepositoryUrlLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        myRootPanel.add(spacer1, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        myRootPanel.add(spacer2, new GridConstraints(3, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        myRootPanel.add(myRepositoryURL, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label1 = new JLabel();
+        this.$$$loadLabelText$$$(label1, DvcsBundle.message("clone.parent.dir"));
+        myRootPanel.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myParentDirectory = new TextFieldWithBrowseButton();
+        myRootPanel.add(myParentDirectory, new GridConstraints(1, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        this.$$$loadLabelText$$$(label2, DvcsBundle.message("clone.dir.name"));
+        myRootPanel.add(label2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myTestButton = new JButton();
+        this.$$$loadButtonText$$$(myTestButton, DvcsBundle.message("clone.test"));
+        myRootPanel.add(myTestButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        myDirectoryName = new JTextField();
+        myRootPanel.add(myDirectoryName, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final Spacer spacer3 = new Spacer();
+        myRootPanel.add(spacer3, new GridConstraints(2, 2, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        label2.setLabelFor(myDirectoryName);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private void $$$loadLabelText$$$(JLabel component, String text) {
+        StringBuffer result = new StringBuffer();
+        boolean haveMnemonic = false;
+        char mnemonic = '\0';
+        int mnemonicIndex = -1;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '&') {
+                i++;
+                if (i == text.length()) {
+                    break;
+                }
+                if (!haveMnemonic && text.charAt(i) != '&') {
+                    haveMnemonic = true;
+                    mnemonic = text.charAt(i);
+                    mnemonicIndex = result.length();
+                }
+            }
+            result.append(text.charAt(i));
+        }
+        component.setText(result.toString());
+        if (haveMnemonic) {
+            component.setDisplayedMnemonic(mnemonic);
+            component.setDisplayedMnemonicIndex(mnemonicIndex);
+        }
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private void $$$loadButtonText$$$(AbstractButton component, String text) {
+        StringBuffer result = new StringBuffer();
+        boolean haveMnemonic = false;
+        char mnemonic = '\0';
+        int mnemonicIndex = -1;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '&') {
+                i++;
+                if (i == text.length()) {
+                    break;
+                }
+                if (!haveMnemonic && text.charAt(i) != '&') {
+                    haveMnemonic = true;
+                    mnemonic = text.charAt(i);
+                    mnemonicIndex = result.length();
+                }
+            }
+            result.append(text.charAt(i));
+        }
+        component.setText(result.toString());
+        if (haveMnemonic) {
+            component.setMnemonic(mnemonic);
+            component.setDisplayedMnemonicIndex(mnemonicIndex);
+        }
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    public JComponent $$$getRootComponent$$$() {
         return myRootPanel;
     }
 

@@ -31,6 +31,7 @@ import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.distributed.DvcsBundle;
+import consulo.versionControlSystem.distributed.action.BranchActionGroup;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -230,10 +231,10 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
 
     @Nonnull
     private static ActionGroup createBranchSpeedSearchActionGroup(@Nonnull ActionGroup actions) {
-        LightActionGroup group = new LightActionGroup();
+        ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
         group.add(actions);
         group.addAll(createSpeedSearchActions(actions, true));
-        return group;
+        return group.build();
     }
 
     @Override
@@ -556,7 +557,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
 
     public static void wrapWithMoreActionIfNeeded(
         @Nonnull Project project,
-        @Nonnull LightActionGroup parentGroup,
+        @Nonnull ActionGroup.Builder parentGroup,
         @Nonnull List<? extends ActionGroup> actionList,
         int maxIndex,
         @Nullable String settingName
@@ -566,7 +567,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
 
     public static void wrapWithMoreActionIfNeeded(
         @Nonnull Project project,
-        @Nonnull LightActionGroup parentGroup,
+        @Nonnull ActionGroup.Builder parentGroup,
         @Nonnull List<? extends ActionGroup> actionList,
         int maxIndex,
         @Nullable String settingName,

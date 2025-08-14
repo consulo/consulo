@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.dvcs.actions;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -27,7 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -42,10 +41,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Compares selected file/folder with itself in another branch.
@@ -68,12 +67,11 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         }
         List<String> branchNames = getBranchNamesExceptCurrent(repository);
 
-        JBList<String> list = new JBList<>(branchNames);
-        new PopupChooserBuilder<>(list)
+        JBPopupFactory.getInstance().createPopupChooserBuilder(branchNames)
             .setTitle("Select branch to compare")
-            .setItemChoosenCallback(new OnBranchChooseRunnable(project, file, presentableRevisionName, list))
+            .setItemChosenCallback(new OnBranchChooseRunnable(project, file, presentableRevisionName))
             .setAutoselectOnMouseMove(true)
-            .setFilteringEnabled(Object::toString)
+            .setNamerForFiltering(Object::toString)
             .createPopup()
             .showCenteredInCurrentWindow(project);
     }
@@ -113,27 +111,20 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         @Nonnull String branchToCompare
     ) throws VcsException;
 
-    private class OnBranchChooseRunnable implements Runnable {
+    private class OnBranchChooseRunnable implements Consumer<String> {
         private final Project myProject;
         private final VirtualFile myFile;
         private final String myHead;
-        private final JList myList;
 
-        private OnBranchChooseRunnable(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull String head, @Nonnull JList list) {
+        private OnBranchChooseRunnable(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull String head) {
             myProject = project;
             myFile = file;
             myHead = head;
-            myList = list;
         }
 
         @Override
-        public void run() {
-            Object selectedValue = myList.getSelectedValue();
-            if (selectedValue == null) {
-                LOG.error("Selected value is unexpectedly null");
-                return;
-            }
-            showDiffWithBranchUnderModalProgress(myProject, myFile, myHead, selectedValue.toString());
+        public void accept(String s) {
+            showDiffWithBranchUnderModalProgress(myProject, myFile, myHead, s);
         }
     }
 

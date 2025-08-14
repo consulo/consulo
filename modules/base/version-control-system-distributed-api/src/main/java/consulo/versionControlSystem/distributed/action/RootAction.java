@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.ui;
+package consulo.versionControlSystem.distributed.action;
 
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.Repository;
@@ -22,6 +22,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * The element of the branch popup which allows to show branches of the selected repository.
@@ -44,7 +45,7 @@ public class RootAction<T extends Repository> extends ActionGroup {
    * @param actionsGroup
    * @param branchText
    */
-  public RootAction(@Nonnull T repository, @jakarta.annotation.Nullable T currentRepository, @Nonnull ActionGroup actionsGroup, @Nonnull String branchText) {
+  public RootAction(@Nonnull T repository, @Nullable T currentRepository, @Nonnull ActionGroup actionsGroup, @Nonnull String branchText) {
     super("", true);
     myRepository = repository;
     myGroup = actionsGroup;
@@ -67,7 +68,7 @@ public class RootAction<T extends Repository> extends ActionGroup {
 
   @Nonnull
   @Override
-  public AnAction[] getChildren(@jakarta.annotation.Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return myGroup.getChildren(e);
   }
 }

@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs;
+package consulo.versionControlSystem.distributed.ui;
 
-import consulo.versionControlSystem.distributed.DvcsUtil;
-import consulo.versionControlSystem.distributed.repository.Repository;
-import consulo.versionControlSystem.distributed.repository.RepositoryManager;
-import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.application.progress.ProgressManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.ui.ex.awt.NonFocusableCheckBox;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsException;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.NonFocusableCheckBox;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.distributed.DvcsBundle;
+import consulo.versionControlSystem.distributed.DvcsUtil;
+import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.logging.Logger;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,8 +39,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**

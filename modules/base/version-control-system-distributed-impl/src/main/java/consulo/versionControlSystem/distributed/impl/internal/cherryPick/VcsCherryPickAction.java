@@ -13,35 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.cherrypick;
+package consulo.versionControlSystem.distributed.impl.internal.cherryPick;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.document.FileDocumentManager;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.distributed.VcsCherryPicker;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLog;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
 
+@ActionImpl(id = "Vcs.CherryPick")
 public class VcsCherryPickAction extends DumbAwareAction {
-  private static final String NAME = "Cherry-Pick";
-  private static final String SEVERAL_VCS_DESCRIPTION = "Selected commits are tracked by different vcses";
+    private static final String SEVERAL_VCS_DESCRIPTION = "Selected commits are tracked by different vcses";
 
   public VcsCherryPickAction() {
-    super(NAME, null, PlatformIconGroup.dvcsCherrypick());
+    super("Cherry-Pick", null, PlatformIconGroup.dvcsCherrypick());
   }
 
   @Override
@@ -60,7 +61,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
     super.update(e);
     e.getPresentation().setVisible(true);
 
-    final VcsLog log = e.getData(VcsLog.KEY);
+    VcsLog log = e.getData(VcsLog.KEY);
     Project project = e.getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabledAndVisible(false);
@@ -80,7 +81,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
       return;
     }
 
-    final Map<VirtualFile, List<Hash>> groupedByRoot = groupByRoot(commits);
+    Map<VirtualFile, List<Hash>> groupedByRoot = groupByRoot(commits);
     VcsCherryPicker activeCherryPicker = getActiveCherryPicker(cherryPickers, groupedByRoot.keySet());
     String description = activeCherryPicker != null ? activeCherryPicker.getInfo(log, groupedByRoot) : SEVERAL_VCS_DESCRIPTION;
     e.getPresentation().setEnabled(description == null);
@@ -112,20 +113,20 @@ public class VcsCherryPickAction extends DumbAwareAction {
   }
 
   @Nonnull
-  private static String concatActionNamesForAllAvailable(@Nonnull final List<VcsCherryPicker> pickers) {
+  private static String concatActionNamesForAllAvailable(@Nonnull List<VcsCherryPicker> pickers) {
     return StringUtil.join(pickers, VcsCherryPicker::getActionTitle, "/");
   }
 
   @Nonnull
-  private static List<VcsCherryPicker> getActiveCherryPickersForProject(@Nullable final Project project) {
+  private static List<VcsCherryPicker> getActiveCherryPickersForProject(@Nullable Project project) {
     if (project != null) {
-      final ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);
+      ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);
       AbstractVcs[] vcss = projectLevelVcsManager.getAllActiveVcss();
       return ContainerUtil.mapNotNull(
         vcss,
         vcs -> vcs != null ? VcsCherryPickManager.getInstance(project).getCherryPickerFor(vcs.getKeyInstanceMethod()) : null
       );
     }
-    return ContainerUtil.emptyList();
+    return List.of();
   }
 }

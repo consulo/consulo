@@ -7,10 +7,12 @@ module consulo.version.control.system.distributed.api {
   requires transitive consulo.version.control.system.log.api;
   requires transitive consulo.file.editor.api;
   requires transitive consulo.module.content.api;
+  requires consulo.language.editor.ui.api;
 
   // TODO remove in future
   requires java.desktop;
   requires consulo.ui.ex.awt.api;
+  requires forms.rt;
   
   exports consulo.versionControlSystem.distributed;
   exports consulo.versionControlSystem.distributed.action;
@@ -18,6 +20,7 @@ module consulo.version.control.system.distributed.api {
   exports consulo.versionControlSystem.distributed.repository;
   exports consulo.versionControlSystem.distributed.branch;
   exports consulo.versionControlSystem.distributed.ui;
+  exports consulo.versionControlSystem.distributed.ui.awt;
 
   opens consulo.versionControlSystem.distributed.branch to consulo.util.xml.serializer;
 }

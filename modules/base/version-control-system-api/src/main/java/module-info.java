@@ -40,7 +40,12 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.root;
   exports consulo.versionControlSystem.util;
   exports consulo.versionControlSystem.versionBrowser.ui.awt;
-  exports consulo.versionControlSystem.internal to consulo.ide.impl, consulo.version.control.system.impl, consulo.local.history.impl;
+
+  exports consulo.versionControlSystem.internal to
+      consulo.ide.impl,
+      consulo.version.control.system.impl,
+      consulo.version.control.system.distributed.impl,
+      consulo.local.history.impl;
 
   requires com.google.common;
   requires it.unimi.dsi.fastutil;

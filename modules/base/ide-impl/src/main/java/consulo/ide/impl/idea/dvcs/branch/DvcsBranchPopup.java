@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.dvcs.branch;
 
 import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;
-import consulo.ide.impl.idea.dvcs.ui.LightActionGroup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
@@ -132,21 +131,21 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
 
     @Nonnull
     private ActionGroup createActions() {
-        LightActionGroup popupGroup = new LightActionGroup();
+        ActionGroup.Builder popupGroupBuilder = ActionGroup.newImmutableBuilder();
         AbstractRepositoryManager<Repo> repositoryManager = myRepositoryManager;
         if (repositoryManager.moreThanOneRoot()) {
             if (userWantsSyncControl()) {
-                fillWithCommonRepositoryActions(popupGroup, repositoryManager);
+                fillWithCommonRepositoryActions(popupGroupBuilder, repositoryManager);
             }
             else {
-                fillPopupWithCurrentRepositoryActions(popupGroup, createRepositoriesActions());
+                fillPopupWithCurrentRepositoryActions(popupGroupBuilder, createRepositoriesActions());
             }
         }
         else {
-            fillPopupWithCurrentRepositoryActions(popupGroup, null);
+            fillPopupWithCurrentRepositoryActions(popupGroupBuilder, null);
         }
-        popupGroup.addSeparator();
-        return popupGroup;
+        popupGroupBuilder.addSeparator();
+        return popupGroupBuilder.build();
     }
 
     private boolean userWantsSyncControl() {
@@ -154,7 +153,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     }
 
     protected abstract void fillWithCommonRepositoryActions(
-        @Nonnull LightActionGroup popupGroup,
+        @Nonnull ActionGroup.Builder popupGroup,
         @Nonnull AbstractRepositoryManager<Repo> repositoryManager
     );
 
@@ -170,13 +169,14 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     }
 
     @Nonnull
-    protected abstract LightActionGroup createRepositoriesActions();
+    protected abstract ActionGroup.Builder createRepositoriesActions();
 
     protected boolean highlightCurrentRepo() {
         return !userWantsSyncControl() || myMultiRootBranchConfig.diverged();
     }
 
-    protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull LightActionGroup popupGroup, @Nullable LightActionGroup actions);
+    protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull ActionGroup.Builder popupGroup,
+                                                                  @Nullable ActionGroup.Builder actions);
 
     public static class MyMoreIndex {
         public static final int MAX_REPO_NUM = 8;
