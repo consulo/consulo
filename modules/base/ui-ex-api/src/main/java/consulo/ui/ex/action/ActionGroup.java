@@ -65,6 +65,11 @@ public abstract class ActionGroup extends AnAction {
             return add(AnSeparator.create());
         }
 
+        @Nonnull
+        public Builder addSeparator(@Nonnull LocalizeValue separatorText) {
+            return add(AnSeparator.create(separatorText));
+        }
+
         public int size() {
             return myActions.size();
         }
