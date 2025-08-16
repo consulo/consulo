@@ -20,6 +20,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.ex.action.PublicFieldBasedOptionDescription;
 
 /**
  * @author Konstantin Bulenkov

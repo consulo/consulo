@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.OptionsTopHitProvider;
+import consulo.ui.ex.action.PublicFieldBasedOptionDescription;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
