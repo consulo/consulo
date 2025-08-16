@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.vcs.vfs;
+package consulo.versionControlSystem.virtualFileSystem;
 
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Maps;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ContentRevision;

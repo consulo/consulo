@@ -3311,4 +3311,13 @@ public final class StringUtil {
 
         return true;
     }
+
+    /**
+     * Say smallPart = "op" and bigPart="open". Method returns true for "Ope" and false for "ops"
+     */
+    @Contract(pure = true)
+    public static boolean isBetween(@Nonnull String string, @Nonnull String smallPart, @Nonnull String bigPart) {
+        final String s = string.toLowerCase();
+        return s.startsWith(smallPart.toLowerCase()) && bigPart.toLowerCase().startsWith(s);
+    }
 }

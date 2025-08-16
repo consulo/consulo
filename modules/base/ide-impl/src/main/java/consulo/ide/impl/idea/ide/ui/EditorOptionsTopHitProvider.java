@@ -19,10 +19,11 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.ComponentManager;
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
+import consulo.ui.ex.action.BooleanOptionDescription;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.ui.ex.action.OptionsTopHitProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

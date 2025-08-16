@@ -16,17 +16,17 @@
 package consulo.ide.impl.idea.dvcs.push;
 
 import consulo.codeEditor.Editor;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.versionControlSystem.distributed.DvcsUtil;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.dvcs.push.ui.VcsPushDialog;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.ServiceManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

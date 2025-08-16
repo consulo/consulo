@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.ui;
+package consulo.ui.ex.action;
 
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.component.ComponentManager;
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.ui.ex.action.SearchTopHitProvider;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -45,14 +42,14 @@ public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
   public final void consumeTopHits(String pattern, Consumer<Object> collector, ComponentManager project) {
     if (!pattern.startsWith("#")) return;
     pattern = pattern.substring(1);
-    final List<String> parts = StringUtil.split(pattern, " ");
+    List<String> parts = StringUtil.split(pattern, " ");
 
     if (parts.size() == 0) return;
 
     String id = parts.get(0);
     if (getId().startsWith(id)) {
       pattern = pattern.substring(id.length()).trim().toLowerCase();
-      final MinusculeMatcher matcher = NameUtil.buildMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE);
+      MinusculeMatcher matcher = NameUtil.buildMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE);
       for (BooleanOptionDescription option : getOptions(project)) {
         if (matcher.matches(option.getOption())) {
           collector.accept(option);
@@ -63,7 +60,7 @@ public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
 
   public abstract String getId();
 
-  public boolean isEnabled(@Nullable Project project) {
+  public boolean isEnabled(@Nullable ComponentManager project) {
     return true;
   }
 

@@ -30,6 +30,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
@@ -48,15 +49,12 @@ import java.util.List;
  * @since 2011-03-16
  */
 public class ShowAllAffectedGenericAction extends AnAction {
-
-    private static final String ACTION_ID = "VcsHistory.ShowAllAffected";
-
     @Inject
     private ShowAllAffectedGenericAction() {
     }
 
     public static ShowAllAffectedGenericAction getInstance() {
-        return (ShowAllAffectedGenericAction) ActionManager.getInstance().getAction(ACTION_ID);
+        return (ShowAllAffectedGenericAction) ActionManager.getInstance().getAction(VcsActions.ACTION_SHOW_ALL_AFFECTED);
     }
 
     @Nullable
@@ -70,9 +68,9 @@ public class ShowAllAffectedGenericAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VcsKey vcsKey = e.getRequiredData(VcsDataKeys.VCS);
-        final VcsFileRevision revision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
+        VcsFileRevision revision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
         VirtualFile revisionVirtualFile = e.getData(VcsDataKeys.VCS_VIRTUAL_FILE);
-        final Boolean isNonLocal = e.getData(VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION);
+        Boolean isNonLocal = e.getData(VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION);
         if (revision != null && revisionVirtualFile != null) {
             showSubmittedFiles(
                 project,
@@ -85,12 +83,12 @@ public class ShowAllAffectedGenericAction extends AnAction {
         }
     }
 
-    public static void showSubmittedFiles(final Project project, final VcsRevisionNumber revision, final VirtualFile virtualFile, final VcsKey vcsKey) {
+    public static void showSubmittedFiles(Project project, VcsRevisionNumber revision, VirtualFile virtualFile, VcsKey vcsKey) {
         showSubmittedFiles(project, revision, virtualFile, vcsKey, null, false);
     }
 
     public static void showSubmittedFiles(final Project project, final VcsRevisionNumber revision, final VirtualFile virtualFile,
-                                          final VcsKey vcsKey, final RepositoryLocation location, final boolean isNonLocal) {
+                                          VcsKey vcsKey, final RepositoryLocation location, final boolean isNonLocal) {
         final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).findVcsByName(vcsKey.getName());
         if (vcs == null) {
             return;
@@ -108,19 +106,19 @@ public class ShowAllAffectedGenericAction extends AnAction {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 try {
-                    final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+                    CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
                     if (!isNonLocal) {
-                        final Pair<CommittedChangeList, FilePath> pair = provider.getOneList(virtualFile, revision);
+                        Pair<CommittedChangeList, FilePath> pair = provider.getOneList(virtualFile, revision);
                         if (pair != null) {
                             list[0] = pair.getFirst();
                         }
                     }
                     else {
                         if (location != null) {
-                            final ChangeBrowserSettings settings = provider.createDefaultSettings();
+                            ChangeBrowserSettings settings = provider.createDefaultSettings();
                             settings.USE_CHANGE_BEFORE_FILTER = true;
                             settings.CHANGE_BEFORE = revision.asString();
-                            final List<CommittedChangeList> changes = provider.getCommittedChanges(settings, location, 1);
+                            List<CommittedChangeList> changes = provider.getCommittedChanges(settings, location, 1);
                             if (changes != null && changes.size() == 1) {
                                 list[0] = changes.get(0);
                             }
@@ -151,7 +149,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
             @RequiredUIAccess
             @Override
             public void onSuccess() {
-                final AbstractVcsHelper instance = AbstractVcsHelper.getInstance(project);
+                AbstractVcsHelper instance = AbstractVcsHelper.getInstance(project);
                 if (exc[0] != null) {
                     instance.showError(exc[0], failedText(virtualFile, revision));
                 }
@@ -166,14 +164,14 @@ public class ShowAllAffectedGenericAction extends AnAction {
         ProgressManager.getInstance().run(task);
     }
 
-    public static CommittedChangeList getRemoteList(final AbstractVcs vcs, final VcsRevisionNumber revision, final VirtualFile nonLocal)
+    public static CommittedChangeList getRemoteList(AbstractVcs vcs, VcsRevisionNumber revision, VirtualFile nonLocal)
         throws VcsException {
-        final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
-        final RepositoryLocation local = provider.getForNonLocal(nonLocal);
+        CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+        RepositoryLocation local = provider.getForNonLocal(nonLocal);
         if (local != null) {
-            final String number = revision.asString();
-            final ChangeBrowserSettings settings = provider.createDefaultSettings();
-            final List<CommittedChangeList> changes = provider.getCommittedChanges(settings, local, provider.getUnlimitedCountValue());
+            String number = revision.asString();
+            ChangeBrowserSettings settings = provider.createDefaultSettings();
+            List<CommittedChangeList> changes = provider.getCommittedChanges(settings, local, provider.getUnlimitedCountValue());
             if (changes != null) {
                 for (CommittedChangeList change : changes) {
                     if (number.equals(String.valueOf(change.getNumber()))) {
@@ -191,25 +189,25 @@ public class ShowAllAffectedGenericAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        final VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
+        Project project = e.getData(Project.KEY);
+        VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
         if (project == null || vcsKey == null) {
             e.getPresentation().setEnabled(false);
             return;
         }
-        final Boolean isNonLocal = e.getData(VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION);
-        final VirtualFile revisionVirtualFile = e.getData(VcsDataKeys.VCS_VIRTUAL_FILE);
+        Boolean isNonLocal = e.getData(VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION);
+        VirtualFile revisionVirtualFile = e.getData(VcsDataKeys.VCS_VIRTUAL_FILE);
         boolean enabled = e.hasData(VcsDataKeys.VCS_FILE_REVISION) && revisionVirtualFile != null;
         enabled = enabled && (!Boolean.TRUE.equals(isNonLocal) || canPresentNonLocal(project, vcsKey, revisionVirtualFile));
         e.getPresentation().setEnabled(enabled);
     }
 
-    private static boolean canPresentNonLocal(Project project, VcsKey key, final VirtualFile file) {
-        final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).findVcsByName(key.getName());
+    private static boolean canPresentNonLocal(Project project, VcsKey key, VirtualFile file) {
+        AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).findVcsByName(key.getName());
         if (vcs == null) {
             return false;
         }
-        final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+        CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
         return provider != null && provider.getForNonLocal(file) != null;
     }
 }

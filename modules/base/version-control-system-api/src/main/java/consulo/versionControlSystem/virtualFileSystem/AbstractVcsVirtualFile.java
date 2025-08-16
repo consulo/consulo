@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.vfs;
+package consulo.versionControlSystem.virtualFileSystem;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public abstract class AbstractVcsVirtualFile extends VirtualFile {
 
@@ -44,20 +48,24 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
       myParent = null;
   }
 
+  @Override
   @Nonnull
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
 
+  @Override
   public String getPath() {
     return myPath;
   }
 
+  @Override
   @Nonnull
   public String getName() {
     return myName;
   }
 
+  @Override
   public String getPresentableName() {
     if (myRevision == null)
       return myName;
@@ -65,43 +73,53 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
       return myName + " (" + myRevision + ")";
   }
 
+  @Override
   public boolean isWritable() {
     return false;
   }
 
+  @Override
   public boolean isValid() {
     return true;
   }
 
+  @Override
   public VirtualFile getParent() {
     return myParent;
 
   }
 
+  @Override
   public VirtualFile[] getChildren() {
     return null;
   }
 
+  @Override
   public InputStream getInputStream() throws IOException {
-    return VfsUtilCore.byteStreamSkippingBOM(contentsToByteArray(), this);
+    return VirtualFileUtil.byteStreamSkippingBOM(contentsToByteArray(), this);
   }
 
+  @Override
   @Nonnull
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
-    throw new RuntimeException(VcsFileSystem.COULD_NOT_IMPLEMENT_MESSAGE);
+    throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
   }
 
+  @Override
   @Nonnull
   public abstract byte[] contentsToByteArray() throws IOException;
 
+  @Override
   public long getModificationStamp() {
     return myModificationStamp;
   }
 
+  @Override
   public long getTimeStamp() {
     return myModificationStamp;
   }
 
+  @Override
   public long getLength() {
     try {
       return contentsToByteArray().length;
@@ -110,6 +128,7 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
     }
   }
 
+  @Override
   public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
     if (postRunnable != null)
       postRunnable.run();
@@ -123,6 +142,7 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
     myProcessingBeforeContentsChange = true;
     try {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           ((VcsFileSystem)getFileSystem()).fireBeforeContentsChange(this, AbstractVcsVirtualFile.this);
         }

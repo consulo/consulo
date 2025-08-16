@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.vfs;
+package consulo.versionControlSystem.virtualFileSystem;
 
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import jakarta.annotation.Nonnull;
@@ -29,16 +29,19 @@ public class VcsVirtualFolder extends AbstractVcsVirtualFile {
     myChild = child;
   }
 
+  @Override
   public VirtualFile[] getChildren() {
     return new VirtualFile[]{myChild};
   }
 
+  @Override
   public boolean isDirectory() {
     return true;
   }
 
+  @Override
   @Nonnull
   public byte[] contentsToByteArray() throws IOException {
-    throw new RuntimeException(VcsBundle.message("exception.text.internal.error.method.should.not.be.called"));
+    throw new RuntimeException(VcsLocalize.exceptionTextInternalErrorMethodShouldNotBeCalled().get());
   }
 }

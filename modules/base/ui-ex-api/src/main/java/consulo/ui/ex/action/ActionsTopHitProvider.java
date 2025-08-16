@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.ui.ex.action;
 
 import consulo.component.ComponentManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.SearchTopHitProvider;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -26,17 +25,17 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  */
 public abstract class ActionsTopHitProvider implements SearchTopHitProvider {
-  @Override
-  public void consumeTopHits(String pattern, Consumer<Object> collector, ComponentManager project) {
-    final ActionManager actionManager = ActionManager.getInstance();
-    for (String[] strings : getActionsMatrix()) {
-      if (StringUtil.isBetween(pattern, strings[0], strings[1])) {
-        for (int i = 2; i < strings.length; i++) {
-          collector.accept(actionManager.getAction(strings[i]));
+    @Override
+    public void consumeTopHits(@Nonnull String pattern, @Nonnull Consumer<Object> collector, ComponentManager project) {
+         ActionManager actionManager = ActionManager.getInstance();
+        for (String[] strings : getActionsMatrix()) {
+            if (StringUtil.isBetween(pattern, strings[0], strings[1])) {
+                for (int i = 2; i < strings.length; i++) {
+                    collector.accept(actionManager.getAction(strings[i]));
+                }
+            }
         }
-      }
     }
-  }
 
-  protected abstract String[][] getActionsMatrix();
+    protected abstract String[][] getActionsMatrix();
 }

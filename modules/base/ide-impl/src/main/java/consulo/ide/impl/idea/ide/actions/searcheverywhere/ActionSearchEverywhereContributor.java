@@ -7,7 +7,7 @@ import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.ide.actions.GotoActionAction;
 import consulo.ide.impl.idea.ide.actions.SetShortcutAction;
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
+import consulo.ui.ex.action.BooleanOptionDescription;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;

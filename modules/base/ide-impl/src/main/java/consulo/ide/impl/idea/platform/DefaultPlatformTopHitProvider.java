@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.platform;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.ActionsTopHitProvider;
+import consulo.ui.ex.action.ActionsTopHitProvider;
 
 /**
  * @author Konstantin Bulenkov

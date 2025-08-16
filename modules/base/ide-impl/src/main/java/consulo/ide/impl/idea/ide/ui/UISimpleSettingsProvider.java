@@ -17,9 +17,10 @@ package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
-import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
+import consulo.ui.ex.action.OptionDescription;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.OptionsTopHitProvider;
 import consulo.ui.ex.action.SearchTopHitProvider;
 
 import java.util.function.Consumer;

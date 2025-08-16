@@ -498,7 +498,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.statistics;
   exports consulo.ide.impl.idea.openapi.vcs.ui;
   exports consulo.ide.impl.idea.openapi.vcs.update;
-  exports consulo.ide.impl.idea.openapi.vcs.vfs;
   exports consulo.ide.impl.idea.openapi.vfs;
   exports consulo.ide.impl.idea.openapi.vfs.encoding;
   exports consulo.ide.impl.idea.openapi.vfs.ex.dummy;

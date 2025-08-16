@@ -40,6 +40,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.root;
   exports consulo.versionControlSystem.util;
   exports consulo.versionControlSystem.versionBrowser.ui.awt;
+  exports consulo.versionControlSystem.virtualFileSystem;
 
   exports consulo.versionControlSystem.internal to
       consulo.ide.impl,

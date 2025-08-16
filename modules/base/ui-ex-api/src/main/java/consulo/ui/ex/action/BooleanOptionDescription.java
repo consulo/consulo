@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.ui.search;
+package consulo.ui.ex.action;
 
 /**
  * @author Konstantin Bulenkov

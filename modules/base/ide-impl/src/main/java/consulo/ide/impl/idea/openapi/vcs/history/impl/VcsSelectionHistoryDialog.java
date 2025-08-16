@@ -31,7 +31,7 @@ import consulo.diff.request.SimpleDiffRequest;
 import consulo.diff.util.IntPair;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.vcs.VcsActions;
+import consulo.versionControlSystem.action.VcsActions;
 import consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;

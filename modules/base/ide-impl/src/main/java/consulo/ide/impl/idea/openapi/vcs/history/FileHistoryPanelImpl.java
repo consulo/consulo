@@ -42,9 +42,9 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesA
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.ReplaceFileConfirmationDialog;
-import consulo.ide.impl.idea.openapi.vcs.vfs.VcsFileSystem;
-import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFile;
-import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFolder;
+import consulo.versionControlSystem.virtualFileSystem.VcsFileSystem;
+import consulo.versionControlSystem.virtualFileSystem.VcsVirtualFile;
+import consulo.versionControlSystem.virtualFileSystem.VcsVirtualFolder;
 import consulo.ide.impl.idea.ui.dualView.CellWrapper;
 import consulo.ide.impl.idea.ui.dualView.DualView;
 import consulo.ide.impl.idea.ui.dualView.DualViewColumnInfo;

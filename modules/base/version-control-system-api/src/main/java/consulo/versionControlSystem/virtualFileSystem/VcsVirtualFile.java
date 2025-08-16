@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.vfs;
+package consulo.versionControlSystem.virtualFileSystem;
 
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
+import consulo.logging.Logger;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.io.CharsetToolkit;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -53,7 +53,7 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
 
   public VcsVirtualFile(@Nonnull String path,
                         @Nonnull byte[] content,
-                        @jakarta.annotation.Nullable String revision,
+                        @Nullable String revision,
                         @Nonnull VirtualFileSystem fileSystem) {
     this(path, null, fileSystem);
     myContent = content;
@@ -83,7 +83,7 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
       fireBeforeContentsChange();
 
       myModificationStamp++;
-      final VcsRevisionNumber revisionNumber = myFileRevision.getRevisionNumber();
+      VcsRevisionNumber revisionNumber = myFileRevision.getRevisionNumber();
       if (revisionNumber instanceof ShortVcsRevisionNumber) {
         setRevision(((ShortVcsRevisionNumber) revisionNumber).toShortString());
       }

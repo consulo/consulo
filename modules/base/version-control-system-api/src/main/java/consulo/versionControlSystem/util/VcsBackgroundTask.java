@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.ui;
+package consulo.versionControlSystem.util;
 
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.VcsException;
@@ -34,19 +34,20 @@ import java.util.List;
  */
 public abstract class VcsBackgroundTask<T> extends Task.ConditionalModal {
   private final Collection<T> myItems;
-  private final List<VcsException> myExceptions = new ArrayList<VcsException>();
+  private final List<VcsException> myExceptions = new ArrayList<>();
 
-  public VcsBackgroundTask(final Project project, @Nonnull final String title, @Nonnull final PerformInBackgroundOption backgroundOption,
-                           final Collection<T> itemsToProcess, final boolean canBeCanceled) {
+  public VcsBackgroundTask(Project project, @Nonnull String title, @Nonnull PerformInBackgroundOption backgroundOption,
+                           Collection<T> itemsToProcess, boolean canBeCanceled) {
     super(project, title, canBeCanceled, backgroundOption);
     myItems = itemsToProcess;
   }
 
-  public VcsBackgroundTask(final Project project, @Nonnull final String title, @Nonnull final PerformInBackgroundOption backgroundOption,
-                           final Collection<T> itemsToProcess) {
+  public VcsBackgroundTask(Project project, @Nonnull String title, @Nonnull PerformInBackgroundOption backgroundOption,
+                           Collection<T> itemsToProcess) {
     this(project, title, backgroundOption, itemsToProcess, false);
   }
 
+  @Override
   public void run(@Nonnull ProgressIndicator indicator) {
     for(T item: myItems) {
       try {
@@ -65,6 +66,7 @@ public abstract class VcsBackgroundTask<T> extends Task.ConditionalModal {
     return myExceptions.isEmpty();
   }
 
+  @Override
   @RequiredUIAccess
   public void onSuccess() {
     if (!myExceptions.isEmpty()) {

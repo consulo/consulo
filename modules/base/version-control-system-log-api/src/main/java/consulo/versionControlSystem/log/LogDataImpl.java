@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs.log.impl;
+package consulo.versionControlSystem.log;
 
-import consulo.versionControlSystem.log.VcsCommitMetadata;
-import consulo.versionControlSystem.log.VcsLogProvider;
-import consulo.versionControlSystem.log.VcsRef;
-import consulo.versionControlSystem.log.VcsUser;
+import consulo.annotation.UsedInPlugin;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+@UsedInPlugin
 public class LogDataImpl implements VcsLogProvider.DetailedLogData, VcsLogProvider.LogData {
 
   private static final LogDataImpl EMPTY = new LogDataImpl(Collections.<VcsRef>emptySet(),

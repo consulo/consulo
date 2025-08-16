@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -26,6 +24,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
+import consulo.versionControlSystem.distributed.push.PushSettings;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -37,9 +36,8 @@ import java.util.Set;
 
 @Singleton
 @State(name = "Push.Settings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class PushSettings implements PersistentStateComponent<PushSettings.State> {
+public class PushSettingsImpl implements PushSettings, PersistentStateComponent<PushSettingsImpl.State> {
     private State myState = new State();
 
     public static class State {
@@ -62,23 +60,26 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
         myState = state;
     }
 
+    @Override
     @Nonnull
     public Set<String> getExcludedRepoRoots() {
         return myState.EXCLUDED_ROOTS;
     }
 
+    @Override
     public void saveExcludedRepoRoots(@Nonnull Set<String> roots) {
         myState.EXCLUDED_ROOTS = roots;
     }
 
-
-    public boolean containsForcePushTarget(@Nonnull final String remote, @Nonnull final String branch) {
+    @Override
+    public boolean containsForcePushTarget(@Nonnull String remote, @Nonnull String branch) {
         return ContainerUtil.exists(
             myState.FORCE_PUSH_TARGETS,
             info -> info.targetRemoteName.equals(remote) && info.targetBranchName.equals(branch)
         );
     }
 
+    @Override
     public void addForcePushTarget(@Nonnull String targetRemote, @Nonnull String targetBranch) {
         List<ForcePushTargetInfo> targets = myState.FORCE_PUSH_TARGETS;
         if (!containsForcePushTarget(targetRemote, targetBranch)) {

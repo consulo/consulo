@@ -30,6 +30,7 @@ import consulo.language.codeStyle.CodeStyle;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.action.OptionDescription;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.interner.Interner;
 import consulo.util.io.ResourceUtil;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.ui;
 
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
+import consulo.ui.ex.action.BooleanOptionDescription;
 
 import java.lang.reflect.Field;
 
