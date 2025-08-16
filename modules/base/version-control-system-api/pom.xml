@@ -39,6 +39,7 @@
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate-localize</goal>
+                            <goal>generate-icon</goal>
                         </goals>
                     </execution>
                 </executions>

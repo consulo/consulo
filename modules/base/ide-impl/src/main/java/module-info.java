@@ -271,7 +271,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.dupLocator.treeHash;
   exports consulo.ide.impl.idea.dupLocator.treeView;
   exports consulo.ide.impl.idea.dupLocator.util;
-  exports consulo.ide.impl.idea.dvcs;
   exports consulo.ide.impl.idea.dvcs.actions;
   exports consulo.ide.impl.idea.dvcs.branch;
   exports consulo.ide.impl.idea.dvcs.push;

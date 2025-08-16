@@ -32,6 +32,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.action.BranchActionGroup;
+import consulo.versionControlSystem.distributed.icon.DistributedVersionControlIconGroup;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -395,9 +396,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
 
         private static Image chooseUpdateIndicatorIcon(@Nonnull BranchActionGroup branchActionGroup) {
             if (branchActionGroup.hasIncomingCommits()) {
-                return branchActionGroup.hasOutgoingCommits() ? PlatformIconGroup.dvcsIncomingoutgoing() : PlatformIconGroup.dvcsIncoming();
+                return branchActionGroup.hasOutgoingCommits() ? DistributedVersionControlIconGroup.incomingoutgoing() : DistributedVersionControlIconGroup.incoming();
             }
-            return branchActionGroup.hasOutgoingCommits() ? PlatformIconGroup.dvcsOutgoing() : null;
+            return branchActionGroup.hasOutgoingCommits() ? DistributedVersionControlIconGroup.outgoing() : null;
         }
 
         private void updateInfoComponent(@Nonnull ErrorLabel infoLabel, @Nullable String infoText, boolean isSelected) {

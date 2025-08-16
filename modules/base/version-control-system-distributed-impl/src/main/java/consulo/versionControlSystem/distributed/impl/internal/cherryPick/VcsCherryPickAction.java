@@ -17,7 +17,6 @@ package consulo.versionControlSystem.distributed.impl.internal.cherryPick;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -27,6 +26,7 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.distributed.VcsCherryPicker;
+import consulo.versionControlSystem.distributed.icon.DistributedVersionControlIconGroup;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLog;
@@ -42,7 +42,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
     private static final String SEVERAL_VCS_DESCRIPTION = "Selected commits are tracked by different vcses";
 
   public VcsCherryPickAction() {
-    super("Cherry-Pick", null, PlatformIconGroup.dvcsCherrypick());
+    super("Cherry-Pick", null, DistributedVersionControlIconGroup.cherrypick());
   }
 
   @Override

@@ -29,6 +29,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.base;
   exports consulo.versionControlSystem.history;
   exports consulo.versionControlSystem.ui;
+  exports consulo.versionControlSystem.icon;
   exports consulo.versionControlSystem.action;
   exports consulo.versionControlSystem.diff;
   exports consulo.versionControlSystem.rollback;
