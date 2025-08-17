@@ -2,7 +2,6 @@
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
-import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBFont;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -25,7 +24,7 @@ public class CodeStyleStatusBarPanel extends JPanel {
     setAlignmentY(Component.CENTER_ALIGNMENT);
     myLabel = new TextPanel() {
     };
-    myLabel.setFont(Platform.current().os().isMac() ? JBUI.Fonts.label(11) : JBFont.label());
+    myLabel.setFont(JBFont.label());
     add(myLabel);
     myIconLabel = new JLabel("");
     myIconLabel.setBorder(JBUI.Borders.empty(2, 2, 2, 0));
