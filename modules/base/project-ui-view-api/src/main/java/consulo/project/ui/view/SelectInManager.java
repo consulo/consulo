@@ -49,13 +49,6 @@ public class SelectInManager {
         }
     }
 
-    public static final String PROJECT = ProjectUIViewBundle.message("select.in.project");
-    public static final String PACKAGES = ProjectUIViewBundle.message("select.in.packages");
-    public static final String ASPECTS = ProjectUIViewBundle.message("select.in.aspects");
-    public static final String COMMANDER = ProjectUIViewBundle.message("select.in.commander");
-    public static final String NAV_BAR = ProjectUIViewBundle.message("select.in.nav.bar");
-    public static final String SCOPE = ProjectUIViewBundle.message("select.in.scope");
-
     public static SelectInManager getInstance(Project project) {
         return project.getInstance(SelectInManager.class);
     }
