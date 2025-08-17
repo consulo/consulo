@@ -61,7 +61,7 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
    * @param profile    the configuration being run.
    * @return true if the runner can handle it, false otherwise.
    */
-  boolean canRun(@Nonnull final String executorId, @Nonnull final RunProfile profile);
+  boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile);
 
   /**
    * Creates a block of per-configuration settings used by this program runner.
@@ -73,8 +73,6 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
   Settings createConfigurationData(ConfigurationInfoProvider settingsProvider);
 
   void checkConfiguration(RunnerSettings settings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException;
-
-  void onProcessStarted(RunnerSettings settings, ExecutionResult executionResult);
 
   @Nullable
   SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration);

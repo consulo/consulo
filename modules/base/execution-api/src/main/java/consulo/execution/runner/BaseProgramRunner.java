@@ -16,7 +16,6 @@
 
 package consulo.execution.runner;
 
-import consulo.execution.ExecutionResult;
 import consulo.execution.RunManager;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
@@ -24,7 +23,6 @@ import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,10 +35,6 @@ abstract class BaseProgramRunner<Settings extends RunnerSettings> implements Pro
 
   @Override
   public void checkConfiguration(RunnerSettings settings, ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException {
-  }
-
-  @Override
-  public void onProcessStarted(RunnerSettings settings, ExecutionResult executionResult) {
   }
 
   @Override
