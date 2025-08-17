@@ -697,6 +697,5 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
-  exports consulo.ide.impl.idea.diff.actions.impl to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.idea.diff.requests to consulo.desktop.awt.ide.impl;
 }
