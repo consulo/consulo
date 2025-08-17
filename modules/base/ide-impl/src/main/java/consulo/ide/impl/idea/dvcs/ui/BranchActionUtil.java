@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.dvcs.ui;
 
 import consulo.util.collection.ContainerUtil;
-import consulo.versionControlSystem.distributed.action.BranchActionGroup;
+import consulo.versionControlSystem.distributed.branch.BranchActionGroup;
 import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;

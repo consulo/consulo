@@ -12,22 +12,30 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 @ExtensionImpl
 public class DiffEditorTabColorProvider implements EditorTabColorProvider, DumbAware {
+    private final Provider<FileColorManager> myFileColorManager;
 
-  @Nullable
-  @Override
-  public ColorValue getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    if (file instanceof DiffVirtualFile) {
-      FileColorManager fileColorManager = FileColorManager.getInstance(project);
-      if (file.getName().equals("Shelf")) {
-        return TargetAWT.from(fileColorManager.getColor("Violet"));
-      }
-
-      return TargetAWT.from(fileColorManager.getColor("Green"));
+    @Inject
+    public DiffEditorTabColorProvider(Provider<FileColorManager> fileColorManager) {
+        myFileColorManager = fileColorManager;
     }
 
-    return null;
-  }
+    @Nullable
+    @Override
+    public ColorValue getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+        if (file instanceof DiffVirtualFile) {
+            FileColorManager fileColorManager = myFileColorManager.get();
+            if (file.getName().equals("Shelf")) {
+                return TargetAWT.from(fileColorManager.getColor("Violet"));
+            }
+
+            return TargetAWT.from(fileColorManager.getColor("Green"));
+        }
+
+        return null;
+    }
 }

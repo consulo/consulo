@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -89,8 +88,9 @@ public class RunAnythingUtil {
     }
 
     @Nonnull
+    @Deprecated
     public static Project fetchProject(@Nonnull DataContext dataContext) {
-        return ObjectUtil.assertNotNull(dataContext.getData(Project.KEY));
+        return dataContext.getRequiredData(Project.KEY);
     }
 
     public static boolean executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {

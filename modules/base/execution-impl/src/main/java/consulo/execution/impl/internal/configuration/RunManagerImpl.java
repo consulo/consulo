@@ -1290,6 +1290,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         getEventPublisher().runConfigurationSelected(new RunManagerListenerEvent(this, getSelectedConfiguration(), null));
     }
 
+    @Override
     public void fireBeforeRunTasksUpdated() {
         getEventPublisher().beforeRunTasksChanged(new RunManagerListenerEvent(this, getSelectedConfiguration(), null));
     }

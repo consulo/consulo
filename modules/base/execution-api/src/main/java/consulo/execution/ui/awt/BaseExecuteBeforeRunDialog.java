@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.impl;
+package consulo.execution.ui.awt;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.RunManager;
@@ -22,7 +23,6 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
@@ -48,11 +48,12 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
 
+@UsedInPlugin
 public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extends DialogWrapper {
   private final Project myProject;
   private DefaultMutableTreeNode myRoot;
 
-  public BaseExecuteBeforeRunDialog(final Project project) {
+  public BaseExecuteBeforeRunDialog(Project project) {
     super(project, true);
     myProject = project;
   }
@@ -121,7 +122,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
   private static void expacndChecked(Tree tree) {
     TreeNode root = (TreeNode)tree.getModel().getRoot();
     Enumeration factories = root.children();
-    ArrayList<TreeNode[]> toExpand = new ArrayList<TreeNode[]>();
+    ArrayList<TreeNode[]> toExpand = new ArrayList<>();
     while (factories.hasMoreElements()) {
       DefaultMutableTreeNode factoryNode = (DefaultMutableTreeNode)factories.nextElement();
       Enumeration configurations = factoryNode.children();
@@ -148,16 +149,16 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
   private DefaultMutableTreeNode buildNodes() {
     DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Descriptor());
     RunManager runManager = RunManager.getInstance(myProject);
-    final List<ConfigurationType> configTypes = runManager.getConfigurationFactories();
+    List<ConfigurationType> configTypes = runManager.getConfigurationFactories();
 
-    for (final ConfigurationType type : configTypes) {
-      final Icon icon = TargetAWT.to(type.getIcon());
+    for (ConfigurationType type : configTypes) {
+      Icon icon = TargetAWT.to(type.getIcon());
       DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(new ConfigurationTypeDescriptor(type, icon, isConfigurationAssigned(type)));
       root.add(typeNode);
-      final Set<String> addedNames = new HashSet<>();
+      Set<String> addedNames = new HashSet<>();
       RunConfiguration[] configurations = runManager.getConfigurations(type);
-      for (final RunConfiguration configuration : configurations) {
-        final String configurationName = configuration.getName();
+      for (RunConfiguration configuration : configurations) {
+        String configurationName = configuration.getName();
         if (addedNames.contains(configurationName)) {
           // add only the first configuration if more than one has the same name
           continue;
@@ -172,16 +173,16 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
 
 
   private boolean isConfigurationAssigned(ConfigurationType type) {
-    final RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
+    RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
     for (ConfigurationFactory factory : type.getConfigurationFactories()) {
-      final RunnerAndConfigurationSettings settings = ((RunManagerImpl)runManager).getConfigurationTemplate(factory);
+      RunnerAndConfigurationSettings settings = runManager.getConfigurationTemplate(factory);
       if (isConfigurationAssigned(settings.getConfiguration())) return true;
     }
     return false;
   }
 
   private boolean isConfigurationAssigned(RunConfiguration configuration) {
-    final java.util.List<T> tasks = RunManagerEx.getInstanceEx(myProject).getBeforeRunTasks(configuration, getTaskID());
+    java.util.List<T> tasks = RunManagerEx.getInstanceEx(myProject).getBeforeRunTasks(configuration, getTaskID());
     for (T task : tasks) {
       if (isRunning(task))
         return true;
@@ -191,11 +192,11 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
 
   @Override
   protected void doOKAction() {
-    final RunManagerImpl runManager = (RunManagerImpl)RunManagerEx.getInstanceEx(myProject);
+    RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
     for (Enumeration nodes = myRoot.depthFirstEnumeration(); nodes.hasMoreElements(); ) {
-      final DefaultMutableTreeNode node = (DefaultMutableTreeNode)nodes.nextElement();
-      final Descriptor descriptor = (Descriptor)node.getUserObject();
-      final boolean isChecked = descriptor.isChecked();
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)nodes.nextElement();
+      Descriptor descriptor = (Descriptor)node.getUserObject();
+      boolean isChecked = descriptor.isChecked();
 
       if (descriptor instanceof ConfigurationTypeDescriptor typeDesc) {
         for (ConfigurationFactory factory : typeDesc.getConfigurationType().getConfigurationFactories()) {
@@ -208,7 +209,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
       }
     }
 
-    RunManagerImpl.getInstanceImpl(myProject).fireBeforeRunTasksUpdated();
+    RunManagerEx.getInstanceEx(myProject).fireBeforeRunTasksUpdated();
     close(OK_EXIT_CODE);
   }
 
@@ -218,7 +219,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
 
   protected abstract boolean isRunning(T task);
 
-  private void update(RunConfiguration config, boolean enabled, RunManagerImpl runManager) {
+  private void update(RunConfiguration config, boolean enabled, RunManagerEx runManager) {
     List<BeforeRunTask> tasks = runManager.getBeforeRunTasks(config);
     BeforeRunTaskProvider<T> provider = BeforeRunTaskProvider.getProvider(myProject, getTaskID());
     if (provider == null)
@@ -323,7 +324,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
 
       myCheckbox.setBackground(UIUtil.getTreeTextBackground());
       setBackground(selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground());
-      final Color foreground = selected ? UIUtil.getTreeSelectionForeground() : UIUtil.getTreeTextForeground();
+      Color foreground = selected ? UIUtil.getTreeSelectionForeground() : UIUtil.getTreeTextForeground();
       setForeground(foreground);
       myCheckbox.setForeground(foreground);
       myLabel.setForeground(foreground);

@@ -6,7 +6,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingRunConfigurationProvider;
-import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
+import consulo.ide.runAnything.RunAnythingCompletionGroup;
 import consulo.ide.runAnything.RunAnythingContext;
 import consulo.ide.runAnything.RunAnythingGroup;
 import consulo.ide.localize.IdeLocalize;

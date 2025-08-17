@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.distributed.action;
+package consulo.versionControlSystem.distributed.branch;
 
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.Repository;

@@ -1,18 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.actions.runAnything.groups;
+package consulo.ide.runAnything;
 
 import consulo.application.Application;
 import consulo.application.util.matcher.Matcher;
 import consulo.dataContext.DataContext;
-import consulo.ide.runAnything.RunAnythingProvider;
-import consulo.ide.runAnything.RunAnythingItem;
-import consulo.ide.runAnything.RunAnythingGroup;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 
 public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> extends RunAnythingGroupBase {

@@ -27,7 +27,7 @@ import jakarta.annotation.Nullable;
 /**
  * @author spleaner
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface EditorTabColorProvider {
     ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create(EditorTabColorProvider.class);
 

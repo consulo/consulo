@@ -27,10 +27,8 @@ import java.util.Map;
 /**
  * Allows an action to retrieve information about the context in which it was invoked.
  *
- * @see AnActionEvent#getDataContext()
- * @see consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys
  * @see Key
- * @see consulo.ide.impl.idea.ide.DataManager
+ * @see DataManager
  * @see DataProvider
  */
 public interface DataContext {
@@ -54,12 +52,14 @@ public interface DataContext {
      * Returns not null value corresponding to the specified data key.
      *
      * @param key the data key for which the value is requested.
-     * @return not null value, or throws {@link AssertionError}.
+     * @return not null value, or throws {@link IllegalArgumentException}.
      */
     @Nonnull
     default <T> T getRequiredData(@Nonnull Key<T> key) {
         T data = getData(key);
-        assert data != null;
+        if (data == null) {
+            throw new IllegalArgumentException("There no data for key: " + key);
+        }
         return data;
     }
 

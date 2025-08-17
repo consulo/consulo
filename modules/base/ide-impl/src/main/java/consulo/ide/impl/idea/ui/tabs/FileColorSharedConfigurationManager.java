@@ -23,12 +23,10 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
-import consulo.language.editor.FileColorManager;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -38,20 +36,30 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class FileColorSharedConfigurationManager implements PersistentStateComponent<Element> {
-  private final Project myProject;
+    public static final ThreadLocal<FileColorManagerImpl> IMPL = new ThreadLocal<>();
 
-  @Inject
-  public FileColorSharedConfigurationManager(@Nonnull final Project project) {
-    myProject = project;
-  }
+    private final Project myProject;
 
-  @Override
-  public Element getState() {
-    return ((FileColorManagerImpl)FileColorManager.getInstance(myProject)).getState(true);
-  }
+    @Inject
+    public FileColorSharedConfigurationManager(@Nonnull Project project) {
+        myProject = project;
+    }
 
-  @Override
-  public void loadState(Element state) {
-    ((FileColorManagerImpl)FileColorManager.getInstance(myProject)).loadState(state, true);
-  }
+    private FileColorManagerImpl impl() {
+        FileColorManagerImpl manager = IMPL.get();
+        if (manager != null) {
+            return manager;
+        }
+        return (FileColorManagerImpl) FileColorManagerImpl.getInstance(myProject);
+    }
+
+    @Override
+    public Element getState() {
+        return impl().getState(true);
+    }
+
+    @Override
+    public void loadState(Element state) {
+        impl().loadState(state, true);
+    }
 }

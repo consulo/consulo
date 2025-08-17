@@ -3,9 +3,9 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.Application;
 import consulo.ide.runAnything.RunAnythingProvider;
-import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
+import consulo.ide.runAnything.RunAnythingCompletionGroup;
 import consulo.ide.runAnything.RunAnythingGroup;
-import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup;
+import consulo.ide.runAnything.RunAnythingHelpGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.CollectionListModel;

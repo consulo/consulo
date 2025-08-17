@@ -205,7 +205,7 @@ public final class FileColorsModel implements Cloneable {
       return null;
     }
 
-    final FileColorConfiguration configuration = findConfiguration(file);
+    FileColorConfiguration configuration = findConfiguration(file);
     if (configuration != null && configuration.isValid(project)) {
       return configuration.getColorName();
     }
@@ -228,7 +228,7 @@ public final class FileColorsModel implements Cloneable {
   }
 
   @Nullable
-  private FileColorConfiguration findConfiguration(@Nonnull final VirtualFile colored) {
+  private FileColorConfiguration findConfiguration(@Nonnull VirtualFile colored) {
     for (FileColorConfiguration configuration : getConfigurations()) {
       NamedScope scope = NamedScopesHolder.getScope(myProject, configuration.getScopeName());
       if (scope != null) {

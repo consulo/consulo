@@ -88,4 +88,6 @@ public abstract class RunManagerEx extends RunManager {
 
   @Nonnull
   public abstract Map<String, List<RunnerAndConfigurationSettings>> getStructure(@Nonnull ConfigurationType type);
+
+  public abstract void fireBeforeRunTasksUpdated();
 }

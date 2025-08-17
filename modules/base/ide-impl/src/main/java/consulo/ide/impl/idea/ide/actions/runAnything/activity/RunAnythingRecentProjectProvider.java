@@ -6,7 +6,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.runAnything.RunAnythingContext;
-import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
+import consulo.ide.runAnything.RunAnythingCompletionGroup;
 import consulo.ide.runAnything.RunAnythingGroup;
 import consulo.ide.runAnything.RunAnythingItem;
 import consulo.ide.runAnything.RunAnythingItemBase;
