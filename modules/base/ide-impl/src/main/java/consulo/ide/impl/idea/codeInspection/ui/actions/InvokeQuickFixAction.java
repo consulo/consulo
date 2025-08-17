@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.ui.actions;
 
+import consulo.application.ReadAction;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
@@ -41,7 +42,7 @@ import java.util.List;
 public class InvokeQuickFixAction extends AnAction {
     private final InspectionResultsView myView;
 
-    public InvokeQuickFixAction(final InspectionResultsView view) {
+    public InvokeQuickFixAction(InspectionResultsView view) {
         super(
             InspectionLocalize.inspectionActionApplyQuickfix(),
             InspectionLocalize.inspectionActionApplyQuickfixDescription(),
@@ -62,10 +63,10 @@ public class InvokeQuickFixAction extends AnAction {
         }
 
         //noinspection ConstantConditions
-        @Nonnull InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
-        final InspectionRVContentProvider provider = myView.getProvider();
+        InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
+        InspectionRVContentProvider provider = myView.getProvider();
         if (provider.isContentLoaded()) {
-            final QuickFixAction[] quickFixes = provider.getQuickFixes(toolWrapper, myView.getTree());
+            QuickFixAction[] quickFixes = ReadAction.compute(() -> provider.getQuickFixes(toolWrapper, myView.getTree()));
             if (quickFixes == null || quickFixes.length == 0) {
                 e.getPresentation().setEnabled(false);
                 return;
@@ -95,14 +96,14 @@ public class InvokeQuickFixAction extends AnAction {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
         assert toolWrapper != null;
-        final QuickFixAction[] quickFixes = myView.getProvider().getQuickFixes(toolWrapper, myView.getTree());
+        QuickFixAction[] quickFixes = myView.getProvider().getQuickFixes(toolWrapper, myView.getTree());
         if (quickFixes == null || quickFixes.length == 0) {
             Messages.showInfoMessage(myView, "There are no applicable quickfixes", "Nothing found to fix");
             return;
         }
         ActionGroup fixes = getFixes(quickFixes);
         DataContext dataContext = e.getDataContext();
-        final ListPopup popup = JBPopupFactory.getInstance()
+        ListPopup popup = JBPopupFactory.getInstance()
             .createActionGroupPopup(
                 InspectionLocalize.inspectionTreePopupTitle().get(),
                 fixes,
