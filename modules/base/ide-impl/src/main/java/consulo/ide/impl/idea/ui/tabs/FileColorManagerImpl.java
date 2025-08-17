@@ -209,11 +209,15 @@ public class FileColorManagerImpl implements FileColorManager, PersistentStateCo
     }
 
     @Nullable
-    public static String getColorName(Color color) {
-        for (String name : ourDefaultColors.keySet()) {
-            if (color.equals(ourDefaultColors.get(name))) {
-                return name;
+    public static String getColorId(Color color) {
+        for (Map.Entry<String, Color> entry : ourDefaultColors.entrySet()) {
+            String id = entry.getKey();
+            Color value = entry.getValue();
+
+            if (Objects.equals(color, value)) {
+                return id;
             }
+
         }
         return null;
     }

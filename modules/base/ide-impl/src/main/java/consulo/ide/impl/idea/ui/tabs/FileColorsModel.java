@@ -84,7 +84,7 @@ public final class FileColorsModel implements Cloneable {
 
                 if (!colorName.isEmpty()) {
                     Color color = ColorUtil.fromHex(colorName, null);
-                    String name = color == null ? null : FileColorManagerImpl.getColorName(color);
+                    String name = color == null ? null : FileColorManagerImpl.getColorId(color);
                     myApplicationLevelConfigurations.add(new FileColorConfiguration(scopeName, name == null ? colorName : name));
                 }
             }
