@@ -29,7 +29,7 @@ import consulo.diff.internal.DiffContentFactoryEx;
 import consulo.diff.internal.DiffRequestFactoryEx;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.diff.impl.internal.action.GoToChangePopupBuilder;
 import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import consulo.localHistory.ByteContent;

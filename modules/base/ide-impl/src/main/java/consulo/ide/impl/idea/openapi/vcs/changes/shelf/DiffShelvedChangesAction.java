@@ -25,7 +25,7 @@ import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.request.DiffRequest;
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.diff.impl.internal.action.GoToChangePopupBuilder;
 import consulo.ide.impl.idea.diff.requests.UnknownFileTypeDiffRequest;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;

@@ -31,7 +31,7 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.diff.impl.internal.action.GoToChangePopupBuilder;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.localize.LocalizeValue;

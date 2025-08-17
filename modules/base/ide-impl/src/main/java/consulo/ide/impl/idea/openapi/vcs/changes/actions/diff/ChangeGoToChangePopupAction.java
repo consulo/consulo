@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions.diff;
 
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.diff.impl.internal.action.GoToChangePopupBuilder;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
