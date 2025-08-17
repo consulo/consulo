@@ -1,8 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.platform.Platform;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.JBFont;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -42,7 +44,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
 
     @Override
     public Font getFont() {
-        return Platform.current().os().isMac() ? JBUI.Fonts.label(11) : JBFont.label();
+        return JBFont.label();
     }
 
     public void recomputeSize() {

@@ -5,13 +5,10 @@ import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
-import consulo.platform.Platform;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.ClickListener;
-import consulo.ui.ex.awt.JBFont;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.StringUtil;
@@ -90,11 +87,6 @@ public interface StatusBarWidgetWrapper {
                     return true;
                 }
             }.installOn(this, true);
-        }
-
-        @Override
-        public Font getFont() {
-            return Platform.current().os().isMac() ? JBUI.Fonts.label(11) : JBFont.label();
         }
 
         @RequiredUIAccess
