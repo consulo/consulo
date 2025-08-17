@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ui.tabs;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.FileColorManager;
 import consulo.localize.LocalizeValue;
@@ -34,66 +35,69 @@ import javax.swing.*;
  */
 @ExtensionImpl
 public class FileColorsConfigurable implements SearchableConfigurable, Configurable.NoScroll, ProjectConfigurable {
-  private final Project myProject;
-  private FileColorsConfigurablePanel myPanel;
+    private final Project myProject;
+    private FileColorsConfigurablePanel myPanel;
 
-  @Inject
-  public FileColorsConfigurable(@Nonnull final Project project) {
-    myProject = project;
-  }
-
-  @Nullable
-  @Override
-  public String getParentId() {
-    return StandardConfigurableIds.EDITOR_GROUP;
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("File Colors");
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent createComponent() {
-    if (myPanel == null) {
-      myPanel = new FileColorsConfigurablePanel((FileColorManagerImpl) FileColorManager.getInstance(myProject));
+    @Inject
+    public FileColorsConfigurable(@Nonnull Project project) {
+        myProject = project;
     }
 
-    return myPanel;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    return myPanel != null && myPanel.isModified();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    if (myPanel != null) myPanel.apply();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    if (myPanel != null) myPanel.reset();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    if (myPanel !=  null) {
-      Disposer.dispose(myPanel);
-      myPanel = null;
+    @Nullable
+    @Override
+    public String getParentId() {
+        return StandardConfigurableIds.EDITOR_GROUP;
     }
-  }
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return "fileColors";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("File Colors");
+    }
+
+    @RequiredUIAccess
+    @Override
+    public JComponent createComponent(Disposable uiDisposable) {
+        if (myPanel == null) {
+            FileColorsConfigurablePanel panel = new FileColorsConfigurablePanel(myProject, (FileColorManagerImpl) FileColorManager.getInstance(myProject));
+            myPanel = panel;
+            Disposer.register(uiDisposable, panel);
+        }
+
+        return myPanel;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        return myPanel != null && myPanel.isModified();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+        if (myPanel != null) {
+            myPanel.apply();
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        if (myPanel != null) {
+            myPanel.reset();
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        myPanel = null;
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return "fileColors";
+    }
 }

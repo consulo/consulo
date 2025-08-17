@@ -24,6 +24,7 @@ import consulo.ide.impl.idea.notification.impl.ui.StickyButtonUI;
 import consulo.language.editor.FileColorManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -44,6 +45,8 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 public class FileColorConfigurationEditDialog extends DialogWrapper {
+    @Nonnull
+    private final Project myProject;
     private FileColorConfiguration myConfiguration;
     private JComboBox<NamedScope> myScopeComboBox;
     private final FileColorManager myManager;
@@ -51,8 +54,11 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
     private static final String CUSTOM_COLOR_NAME = "Custom";
     private final Map<String, NamedScope> myScopeById = new HashMap<>();
 
-    public FileColorConfigurationEditDialog(@Nonnull FileColorManager manager, @Nullable FileColorConfiguration configuration) {
+    public FileColorConfigurationEditDialog(@Nonnull Project project,
+                                            @Nonnull FileColorManager manager,
+                                            @Nullable FileColorConfiguration configuration) {
         super(true);
+        myProject = project;
 
         setTitle(configuration == null ? "Add color label" : "Edit color label");
         setResizable(false);
@@ -78,13 +84,12 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
         result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
 
         List<NamedScope> scopeList = new ArrayList<>();
-        Project project = myManager.getProject();
-        NamedScopesHolder[] scopeHolders = NamedScopeManager.getAllNamedScopeHolders(project);
+        NamedScopesHolder[] scopeHolders = NamedScopeManager.getAllNamedScopeHolders(myProject);
         for (NamedScopesHolder scopeHolder : scopeHolders) {
             NamedScope[] scopes = scopeHolder.getScopes();
             Collections.addAll(scopeList, scopes);
         }
-        CustomScopesProviderEx.filterNoSettingsScopes(project, scopeList);
+        CustomScopesProviderEx.filterNoSettingsScopes(myProject, scopeList);
         for (NamedScope scope : scopeList) {
             myScopeById.put(scope.getScopeId(), scope);
         }
@@ -223,6 +228,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
         return null;
     }
 
+    @RequiredUIAccess
     @Override
     public JComponent getPreferredFocusedComponent() {
         return myScopeComboBox;
@@ -250,7 +256,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
             super(FileColorManagerImpl.getAlias(text));
             setUI(new ColorButtonUI());
             myColor = color;
-            addActionListener(e -> doPerformAction(e));
+            addActionListener(this::doPerformAction);
             setBackground(new JBColor(Color.WHITE, UIUtil.getControlColor()));
             setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         }

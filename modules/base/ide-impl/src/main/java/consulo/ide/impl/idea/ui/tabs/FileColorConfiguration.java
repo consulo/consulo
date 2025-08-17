@@ -16,123 +16,132 @@
 
 package consulo.ide.impl.idea.ui.tabs;
 
-import consulo.project.Project;
 import consulo.language.editor.scope.NamedScopeManager;
+import consulo.project.Project;
 import consulo.ui.ex.awt.util.ColorUtil;
-import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 /**
  * @author spleaner
  * @author Konstantin Bulenkov
  */
 class FileColorConfiguration implements Cloneable {
-  private static final String COLOR = "color";
-  private static final String SCOPE_NAME = "scope";
+    private static final String COLOR = "color";
+    private static final String SCOPE_NAME = "scope";
 
-  private String myScopeName;
-  private String myColorName;
+    private String myScopeName;
+    private String myColorName;
 
-  public FileColorConfiguration() {
-  }
-
-  public FileColorConfiguration(final String scopeName, final String colorName) {
-    myScopeName = scopeName;
-    myColorName = colorName;
-  }
-
-  public String getScopeName() {
-    return myScopeName;
-  }
-
-  public void setScopeName(String scopeName) {
-    myScopeName = scopeName;
-  }
-
-  public String getColorName() {
-    return myColorName;
-  }
-
-  public String getColorPresentableName() {
-    return ColorUtil.fromHex(myColorName, null) == null ? myColorName : "Custom";
-  }
-
-  public void setColorName(final String colorName) {
-    myColorName = colorName;
-  }
-
-  public boolean isValid(Project project) {
-    if (myScopeName == null || myScopeName.length() == 0) {
-      return false;
+    public FileColorConfiguration() {
     }
 
-    if (myColorName == null) {
-      return false;
+    public FileColorConfiguration(String scopeName, String colorName) {
+        myScopeName = scopeName;
+        myColorName = colorName;
     }
 
-    if (project != null) {
-      return NamedScopeManager.getScope(project, myScopeName) != null;
-    } else {
-      return true;
-    }
-  }
-
-  public void save(@Nonnull final Element e) {
-    if (!isValid(null)) {
-      return;
+    public String getScopeName() {
+        return myScopeName;
     }
 
-    final Element tab = new Element(FileColorsModel.FILE_COLOR);
-
-    tab.setAttribute(SCOPE_NAME, getScopeName());
-    tab.setAttribute(COLOR, myColorName);
-
-    e.addContent(tab);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    FileColorConfiguration that = (FileColorConfiguration)o;
-
-    if (!myColorName.equals(that.myColorName)) return false;
-    if (!myScopeName.equals(that.myScopeName)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = myScopeName.hashCode();
-    result = 31 * result + myColorName.hashCode();
-    return result;
-  }
-
-  @Override
-  public FileColorConfiguration clone() throws CloneNotSupportedException {
-    final FileColorConfiguration result = new FileColorConfiguration();
-
-    result.myColorName = myColorName;
-    result.myScopeName = myScopeName;
-
-    return result;
-  }
-
-  @Nullable
-  public static FileColorConfiguration load(@Nonnull final Element e) {
-    final String path = e.getAttributeValue(SCOPE_NAME);
-    if (path == null) {
-      return null;
+    public void setScopeName(String scopeName) {
+        myScopeName = scopeName;
     }
 
-    final String colorName = e.getAttributeValue(COLOR);
-    if (colorName == null) {
-      return null;
+    public String getColorName() {
+        return myColorName;
     }
 
-    return new FileColorConfiguration(path, colorName);
-  }
+    public String getColorPresentableName() {
+        return ColorUtil.fromHex(myColorName, null) == null ? myColorName : "Custom";
+    }
+
+    public void setColorName(String colorName) {
+        myColorName = colorName;
+    }
+
+    public boolean isValid(Project project) {
+        if (myScopeName == null || myScopeName.length() == 0) {
+            return false;
+        }
+
+        if (myColorName == null) {
+            return false;
+        }
+
+        if (project != null) {
+            return NamedScopeManager.getScope(project, myScopeName) != null;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public void save(@Nonnull Element e) {
+        if (!isValid(null)) {
+            return;
+        }
+
+        Element tab = new Element(FileColorsModel.FILE_COLOR);
+
+        tab.setAttribute(SCOPE_NAME, getScopeName());
+        tab.setAttribute(COLOR, myColorName);
+
+        e.addContent(tab);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        FileColorConfiguration that = (FileColorConfiguration) o;
+
+        if (!myColorName.equals(that.myColorName)) {
+            return false;
+        }
+        if (!myScopeName.equals(that.myScopeName)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = myScopeName.hashCode();
+        result = 31 * result + myColorName.hashCode();
+        return result;
+    }
+
+    @Override
+    public FileColorConfiguration clone() throws CloneNotSupportedException {
+        FileColorConfiguration result = new FileColorConfiguration();
+
+        result.myColorName = myColorName;
+        result.myScopeName = myScopeName;
+
+        return result;
+    }
+
+    @Nullable
+    public static FileColorConfiguration load(@Nonnull Element e) {
+        String path = e.getAttributeValue(SCOPE_NAME);
+        if (path == null) {
+            return null;
+        }
+
+        String colorName = e.getAttributeValue(COLOR);
+        if (colorName == null) {
+            return null;
+        }
+
+        return new FileColorConfiguration(path, colorName);
+    }
 }

@@ -43,94 +43,94 @@ import java.awt.*;
  * @since 2012-05-06
  */
 public class BookmarkItem extends ItemWrapper {
-  private final Bookmark myBookmark;
+    private final Bookmark myBookmark;
 
-  public BookmarkItem(Bookmark bookmark) {
-    myBookmark = bookmark;
-  }
-
-  public Bookmark getBookmark() {
-    return myBookmark;
-  }
-
-  @Override
-  @RequiredReadAction
-  public void setupRenderer(ColoredTextContainer renderer, Project project, boolean selected) {
-    setupRenderer(renderer, project, myBookmark, selected);
-  }
-
-  @RequiredReadAction
-  public static void setupRenderer(ColoredTextContainer renderer, Project project, Bookmark bookmark, boolean selected) {
-    VirtualFile file = bookmark.getFile();
-    if (!file.isValid()) {
-      return;
+    public BookmarkItem(Bookmark bookmark) {
+        myBookmark = bookmark;
     }
 
-    PsiManager psiManager = PsiManager.getInstance(project);
-
-    PsiElement fileOrDir = file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
-    if (fileOrDir != null) {
-      renderer.setIcon(IconDescriptorUpdaters.getIcon(fileOrDir, 0));
+    public Bookmark getBookmark() {
+        return myBookmark;
     }
 
-    String description = bookmark.getDescription();
-    if (description != null) {
-      renderer.append(description + " ", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+    @Override
+    @RequiredReadAction
+    public void setupRenderer(ColoredTextContainer renderer, Project project, boolean selected) {
+        setupRenderer(renderer, project, myBookmark, selected);
     }
 
-    FileStatus fileStatus = FileStatusManager.getInstance(project).getStatus(file);
-    TextAttributes attributes = new TextAttributes(fileStatus.getColor(), null, null, EffectType.LINE_UNDERSCORE, Font.PLAIN);
-    renderer.append(file.getName(), TextAttributesUtil.fromTextAttributes(attributes));
-    if (bookmark.getLine() >= 0) {
-      renderer.append(":", SimpleTextAttributes.GRAYED_ATTRIBUTES);
-      renderer.append(String.valueOf(bookmark.getLine() + 1), SimpleTextAttributes.GRAYED_ATTRIBUTES);
-    }
-
-    if (!selected) {
-      FileColorManager colorManager = FileColorManager.getInstance(project);
-      if (fileOrDir instanceof PsiFile) {
-        Color color = colorManager.getRendererBackground((PsiFile)fileOrDir);
-        if (color != null) {
-          renderer.setBackground(color);
+    @RequiredReadAction
+    public static void setupRenderer(ColoredTextContainer renderer, Project project, Bookmark bookmark, boolean selected) {
+        VirtualFile file = bookmark.getFile();
+        if (!file.isValid()) {
+            return;
         }
-      }
+
+        PsiManager psiManager = PsiManager.getInstance(project);
+
+        PsiElement fileOrDir = file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
+        if (fileOrDir != null) {
+            renderer.setIcon(IconDescriptorUpdaters.getIcon(fileOrDir, 0));
+        }
+
+        String description = bookmark.getDescription();
+        if (description != null) {
+            renderer.append(description + " ", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+        }
+
+        FileStatus fileStatus = FileStatusManager.getInstance(project).getStatus(file);
+        TextAttributes attributes = new TextAttributes(fileStatus.getColor(), null, null, EffectType.LINE_UNDERSCORE, Font.PLAIN);
+        renderer.append(file.getName(), TextAttributesUtil.fromTextAttributes(attributes));
+        if (bookmark.getLine() >= 0) {
+            renderer.append(":", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+            renderer.append(String.valueOf(bookmark.getLine() + 1), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+        }
+
+        if (!selected) {
+            FileColorManager colorManager = FileColorManager.getInstance(project);
+            if (fileOrDir instanceof PsiFile) {
+                Color color = colorManager.getRendererBackground(file);
+                if (color != null) {
+                    renderer.setBackground(color);
+                }
+            }
+        }
     }
-  }
 
-  @Override
-  public void updateAccessoryView(JComponent component) {
-    JLabel label = (JLabel)component;
-    char mnemonic = myBookmark.getMnemonic();
-    if (mnemonic != 0) {
-      label.setText(Character.toString(mnemonic) + '.');
+    @Override
+    public void updateAccessoryView(JComponent component) {
+        JLabel label = (JLabel) component;
+        char mnemonic = myBookmark.getMnemonic();
+        if (mnemonic != 0) {
+            label.setText(Character.toString(mnemonic) + '.');
+        }
+        else {
+            label.setText("");
+        }
     }
-    else {
-      label.setText("");
+
+    @Override
+    public String speedSearchText() {
+        return myBookmark.getFile().getName() + " " + myBookmark.getDescription();
     }
-  }
 
-  @Override
-  public String speedSearchText() {
-    return myBookmark.getFile().getName() + " " + myBookmark.getDescription();
-  }
+    @Override
+    public String footerText() {
+        return myBookmark.getFile().getPresentableUrl();
+    }
 
-  @Override
-  public String footerText() {
-    return myBookmark.getFile().getPresentableUrl();
-  }
+    @Override
+    protected void doUpdateDetailView(DetailView panel, boolean editorOnly) {
+        panel.navigateInPreviewEditor(DetailView.PreviewEditorState.create(myBookmark.getFile(), myBookmark.getLine()));
+    }
 
-  @Override
-  protected void doUpdateDetailView(DetailView panel, boolean editorOnly) {
-    panel.navigateInPreviewEditor(DetailView.PreviewEditorState.create(myBookmark.getFile(), myBookmark.getLine()));
-  }
+    @Override
+    public boolean allowedToRemove() {
+        return true;
+    }
 
-  @Override
-  public boolean allowedToRemove() {
-    return true;
-  }
-
-  @Override
-  public void removed(Project project) {
-    BookmarkManager.getInstance(project).removeBookmark(getBookmark());
-  }
+    @Override
+    public void removed(Project project) {
+        BookmarkManager.getInstance(project).removeBookmark(getBookmark());
+    }
 }

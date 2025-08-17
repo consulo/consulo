@@ -22,6 +22,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.language.editor.FileColorManager;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -50,7 +51,7 @@ public class FileColorSharedConfigurationManager implements PersistentStateCompo
         if (manager != null) {
             return manager;
         }
-        return (FileColorManagerImpl) FileColorManagerImpl.getInstance(myProject);
+        return (FileColorManagerImpl) FileColorManager.getInstance(myProject);
     }
 
     @Override

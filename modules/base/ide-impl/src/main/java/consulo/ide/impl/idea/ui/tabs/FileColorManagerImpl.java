@@ -23,8 +23,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.language.editor.FileColorManager;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.ui.ex.JBColor;
@@ -49,7 +47,7 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 @State(name = "FileColors", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class FileColorManagerImpl extends FileColorManager implements PersistentStateComponent<Element> {
+public class FileColorManagerImpl implements FileColorManager, PersistentStateComponent<Element> {
     @Nonnull
     private final ApplicationFileColorManager myApplicationFileColorManager;
     private final Project myProject;
@@ -157,12 +155,6 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     @Nullable
     @Override
     public Color getRendererBackground(VirtualFile file) {
-        return getRendererBackground(PsiManager.getInstance(myProject).findFile(file));
-    }
-
-    @Nullable
-    @Override
-    public Color getRendererBackground(PsiFile file) {
         if (file == null) {
             return null;
         }
@@ -179,28 +171,15 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
 
     @Override
     @Nullable
-    public Color getFileColor(@Nonnull PsiFile file) {
-        initProjectLevelConfigurations();
-
-        String colorName = myModel.getColor(file);
-        return colorName == null ? null : getColor(colorName);
-    }
-
-    @Override
-    @Nullable
     public Color getFileColor(@Nonnull VirtualFile file) {
         initProjectLevelConfigurations();
+
         if (!file.isValid()) {
             return null;
         }
-        PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
-        if (psiFile != null) {
-            return getFileColor(psiFile);
-        }
-        else {
-            String colorName = myModel.getColor(file, getProject());
-            return colorName == null ? null : getColor(colorName);
-        }
+
+        String colorName = myModel.getColor(file, myProject);
+        return colorName == null ? null : getColor(colorName);
     }
 
     @Override
@@ -208,7 +187,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     public Color getScopeColor(@Nonnull String scopeName) {
         initProjectLevelConfigurations();
 
-        String colorName = myModel.getScopeColor(scopeName, getProject());
+        String colorName = myModel.getScopeColor(scopeName, myProject);
         return colorName == null ? null : getColor(colorName);
     }
 
@@ -219,15 +198,6 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
 
     FileColorsModel getModel() {
         return myModel;
-    }
-
-    boolean isShared(FileColorConfiguration configuration) {
-        return myModel.isProjectLevel(configuration);
-    }
-
-    @Override
-    public Project getProject() {
-        return myProject;
     }
 
     public List<FileColorConfiguration> getLocalConfigurations() {
@@ -243,16 +213,6 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
         for (String name : ourDefaultColors.keySet()) {
             if (color.equals(ourDefaultColors.get(name))) {
                 return name;
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private static FileColorConfiguration findConfigurationByName(String name, List<FileColorConfiguration> configurations) {
-        for (FileColorConfiguration configuration : configurations) {
-            if (name.equals(configuration.getScopeName())) {
-                return configuration;
             }
         }
         return null;

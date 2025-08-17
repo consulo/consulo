@@ -16,14 +16,15 @@
 package consulo.ide.impl.idea.ui.tabs;
 
 import consulo.application.ui.UISettings;
+import consulo.configurable.Settings;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.configurable.Settings;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -34,8 +35,6 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,11 +50,11 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     private final FileColorSettingsTable myLocalTable;
     private final FileColorSettingsTable mySharedTable;
 
-    public FileColorsConfigurablePanel(@Nonnull final FileColorManagerImpl manager) {
+    public FileColorsConfigurablePanel(@Nonnull Project project, @Nonnull FileColorManagerImpl manager) {
         setLayout(new BorderLayout());
         myManager = manager;
 
-        final JPanel topPanel = new JPanel();
+        JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
         myEnabledCheckBox = new JCheckBox("Enable File Colors");
@@ -74,17 +73,17 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
 
         add(topPanel, BorderLayout.NORTH);
 
-        final JPanel mainPanel = new JPanel(new GridLayout(2, 1));
+        JPanel mainPanel = new JPanel(new GridLayout(2, 1));
         mainPanel.setPreferredSize(new Dimension(300, 500));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 
         final List<FileColorConfiguration> localConfigurations = manager.getLocalConfigurations();
-        myLocalTable = new FileColorSettingsTable(manager, localConfigurations) {
+        myLocalTable = new FileColorSettingsTable(project, manager, localConfigurations) {
             @Override
             protected void apply(@Nonnull List<FileColorConfiguration> configurations) {
-                final List<FileColorConfiguration> copied = new ArrayList<FileColorConfiguration>();
+                List<FileColorConfiguration> copied = new ArrayList<>();
                 try {
-                    for (final FileColorConfiguration configuration : configurations) {
+                    for (FileColorConfiguration configuration : configurations) {
                         copied.add(configuration.clone());
                     }
                 }
@@ -112,16 +111,16 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
                 }
             })
             .createPanel();
-        final JPanel localPanel = new JPanel(new BorderLayout());
+        JPanel localPanel = new JPanel(new BorderLayout());
         localPanel.setBorder(IdeBorderFactory.createTitledBorder("Local colors", false));
         localPanel.add(panel, BorderLayout.CENTER);
         mainPanel.add(localPanel);
 
-        mySharedTable = new FileColorSettingsTable(manager, manager.getSharedConfigurations()) {
+        mySharedTable = new FileColorSettingsTable(project, manager, manager.getSharedConfigurations()) {
             @Override
             protected void apply(@Nonnull List<FileColorConfiguration> configurations) {
-                final List<FileColorConfiguration> copied = new ArrayList<FileColorConfiguration>();
-                for (final FileColorConfiguration configuration : configurations) {
+                List<FileColorConfiguration> copied = new ArrayList<>();
+                for (FileColorConfiguration configuration : configurations) {
                     try {
                         copied.add(configuration.clone());
                     }
@@ -133,9 +132,9 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
             }
         };
 
-        final JPanel sharedPanel = new JPanel(new BorderLayout());
+        JPanel sharedPanel = new JPanel(new BorderLayout());
         sharedPanel.setBorder(IdeBorderFactory.createTitledBorder("Shared colors", false));
-        final JPanel shared = ToolbarDecorator.createDecorator(mySharedTable)
+        JPanel shared = ToolbarDecorator.createDecorator(mySharedTable)
             .addExtraAction(new AnAction(
                 LocalizeValue.localizeTODO("Unshare"),
                 LocalizeValue.empty(),
@@ -158,21 +157,18 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
         mainPanel.add(sharedPanel);
         add(mainPanel, BorderLayout.CENTER);
 
-        final JPanel infoPanel = new JPanel(new BorderLayout());
+        JPanel infoPanel = new JPanel(new BorderLayout());
         infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         infoPanel.add(new JBLabel("Scopes are processed from top to bottom with Local colors first.",
             MessageType.INFO.getDefaultIcon(), SwingConstants.LEFT
         ));
-        final JButton editScopes = new JButton("Manage Scopes...");
-        editScopes.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                DataContext dataContext = DataManager.getInstance().getDataContext(infoPanel);
+        JButton editScopes = new JButton("Manage Scopes...");
+        editScopes.addActionListener(e -> {
+            DataContext dataContext = DataManager.getInstance().getDataContext(infoPanel);
 
-                Settings settings = dataContext.getData(Settings.KEY);
-                if (settings != null) {
-                    settings.select(ScopeChooserConfigurable.class);
-                }
+            Settings settings = dataContext.getData(Settings.KEY);
+            if (settings != null) {
+                settings.select(ScopeChooserConfigurable.class);
             }
         });
         infoPanel.add(editScopes, BorderLayout.EAST);
@@ -183,9 +179,9 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     }
 
     private void unshare() {
-        final int rowCount = mySharedTable.getSelectedRowCount();
+        int rowCount = mySharedTable.getSelectedRowCount();
         if (rowCount > 0) {
-            final int[] rows = mySharedTable.getSelectedRows();
+            int[] rows = mySharedTable.getSelectedRows();
             for (int i = rows.length - 1; i >= 0; i--) {
                 FileColorConfiguration removed = mySharedTable.removeConfiguration(rows[i]);
                 if (removed != null) {
@@ -196,9 +192,9 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     }
 
     private void share() {
-        final int rowCount = myLocalTable.getSelectedRowCount();
+        int rowCount = myLocalTable.getSelectedRowCount();
         if (rowCount > 0) {
-            final int[] rows = myLocalTable.getSelectedRows();
+            int[] rows = myLocalTable.getSelectedRows();
             for (int i = rows.length - 1; i >= 0; i--) {
                 FileColorConfiguration removed = myLocalTable.removeConfiguration(rows[i]);
                 if (removed != null) {

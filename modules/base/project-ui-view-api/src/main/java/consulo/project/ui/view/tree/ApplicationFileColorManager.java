@@ -29,33 +29,33 @@ import java.util.function.BooleanSupplier;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationFileColorManager {
-  boolean isEnabled();
+    boolean isEnabled();
 
-  void setEnabled(boolean enabled);
+    void setEnabled(boolean enabled);
 
-  boolean isEnabledForTabs();
+    boolean isEnabledForTabs();
 
-  void setEnabledForTabs(boolean enabled);
+    void setEnabledForTabs(boolean enabled);
 
-  boolean isEnabledForProjectView();
+    boolean isEnabledForProjectView();
 
-  void setEnabledForProjectView(boolean enabled);
+    void setEnabledForProjectView(boolean enabled);
 
-  default boolean isFileColorsEnabledFor(BooleanSupplier opaqueGet,
-                                         BooleanConsumer opaqueSet) {
-    boolean enabled = isEnabled() && isEnabledForProjectView();
-    boolean opaque = opaqueGet.getAsBoolean();
-    if (enabled && opaque) {
-      opaqueSet.accept(false);
+    default boolean isFileColorsEnabledFor(BooleanSupplier opaqueGet,
+                                           BooleanConsumer opaqueSet) {
+        boolean enabled = isEnabled() && isEnabledForProjectView();
+        boolean opaque = opaqueGet.getAsBoolean();
+        if (enabled && opaque) {
+            opaqueSet.accept(false);
+        }
+        else if (!enabled && !opaque) {
+            opaqueSet.accept(true);
+        }
+        return enabled;
     }
-    else if (!enabled && !opaque) {
-      opaqueSet.accept(true);
-    }
-    return enabled;
-  }
 
-  @Nonnull
-  static ApplicationFileColorManager getInstance() {
-    return Application.get().getInstance(ApplicationFileColorManager.class);
-  }
+    @Nonnull
+    static ApplicationFileColorManager getInstance() {
+        return Application.get().getInstance(ApplicationFileColorManager.class);
+    }
 }

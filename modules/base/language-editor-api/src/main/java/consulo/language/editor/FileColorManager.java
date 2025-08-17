@@ -16,10 +16,8 @@
 
 package consulo.language.editor;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -34,48 +32,39 @@ import java.util.Collection;
  * @author spleaner
  */
 @ServiceAPI(ComponentScope.PROJECT)
-public abstract class FileColorManager {
-    public static FileColorManager getInstance(@Nonnull Project project) {
+public interface FileColorManager {
+    static FileColorManager getInstance(@Nonnull Project project) {
         return project.getInstance(FileColorManager.class);
     }
 
-    public abstract boolean isEnabled();
+    boolean isEnabled();
 
-    public abstract void setEnabled(boolean enabled);
+    void setEnabled(boolean enabled);
 
-    public abstract boolean isEnabledForTabs();
+    boolean isEnabledForTabs();
 
-    public abstract boolean isEnabledForProjectView();
-
-    public abstract Project getProject();
+    boolean isEnabledForProjectView();
 
     @Nullable
-    public abstract Color getColor(@Nonnull String name);
+    Color getColor(@Nonnull String name);
 
-    public abstract Collection<String> getColorNames();
-
-    @Nullable
-    public abstract Color getFileColor(@Nonnull PsiFile file);
+    Collection<String> getColorNames();
 
     @Deprecated
-    public abstract Color getFileColor(@Nonnull VirtualFile file);
+    Color getFileColor(@Nonnull VirtualFile file);
 
     @Nullable
-    public ColorValue getFileColorValue(@Nonnull VirtualFile file) {
+    default ColorValue getFileColorValue(@Nonnull VirtualFile file) {
         return TargetAWT.from(getFileColor(file));
     }
 
     @Nullable
-    public abstract Color getScopeColor(@Nonnull String scopeName);
+    Color getScopeColor(@Nonnull String scopeName);
 
-    public abstract boolean isShared(@Nonnull String scopeName);
+    boolean isShared(@Nonnull String scopeName);
 
-    public abstract boolean isColored(@Nonnull String scopeName, boolean shared);
-
-    @Nullable
-    @RequiredReadAction
-    public abstract Color getRendererBackground(VirtualFile file);
+    boolean isColored(@Nonnull String scopeName, boolean shared);
 
     @Nullable
-    public abstract Color getRendererBackground(PsiFile file);
+    Color getRendererBackground(VirtualFile file);
 }
