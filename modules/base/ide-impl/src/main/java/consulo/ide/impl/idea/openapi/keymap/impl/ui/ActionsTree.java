@@ -21,21 +21,19 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -51,6 +49,57 @@ import java.util.Arrays;
 import java.util.Enumeration;
 
 public class ActionsTree {
+    private class MyRenderer extends CellRendererPanel implements TreeCellRenderer {
+        final KeymapsRenderer myNodeRender = new KeymapsRenderer();
+        final JPanel myShortcutPanel = new NonOpaquePanel(new HorizontalLayout(6));
+
+        MyRenderer() {
+            setLayout(new BorderLayout());
+            add(BorderLayout.CENTER, myNodeRender);
+            add(BorderLayout.EAST, myShortcutPanel);
+            myShortcutPanel.setBorder(JBUI.Borders.emptyRight(8));
+        }
+
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+            setFont(tree.getFont());
+
+            myNodeRender.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+            myNodeRender.setFont(tree.getFont());
+
+            Object data = TreeUtil.getUserObject(value);
+            Shortcut[] shortcuts;
+            if (data instanceof String actionId) {
+                shortcuts = myKeymap.getShortcuts(actionId);
+            }
+            else if (data instanceof QuickList quickList) {
+                shortcuts = myKeymap.getShortcuts(quickList.getActionId());
+            }
+            else {
+                shortcuts = null;
+            }
+
+            myShortcutPanel.removeAll();
+            if (shortcuts != null && shortcuts.length > 0) {
+                for (Shortcut shortcut : shortcuts) {
+                    String shortcutText = KeymapUtil.getShortcutText(shortcut);
+
+                    BorderLayoutPanel holder = new BorderLayoutPanel();
+                    holder.withBorder(new RoundedLineBorder(JBColor.border(), 8));
+                    holder.withBackground(JBColor.border());
+
+                    JLabel label = new JLabel(shortcutText);
+                    label.setOpaque(false);
+                    holder.addToCenter(label);
+
+                    myShortcutPanel.add(holder);
+                }
+            }
+
+            return this;
+        }
+    }
+
     private static final Image CLOSE_ICON = PlatformIconGroup.nodesFolder();
 
     private final JTree myTree;
@@ -69,34 +118,11 @@ public class ActionsTree {
         myRoot = new DefaultMutableTreeNode(ROOT);
 
         myModel = new DefaultTreeModel(myRoot);
-        myTree = new Tree(new AsyncTreeModel(myModel, disposable)) {
-            @Override
-            public void paint(Graphics g) {
-                super.paint(g);
-                Rectangle visibleRect = getVisibleRect();
-                Rectangle clip = g.getClipBounds();
-                for (int row = 0; row < getRowCount(); row++) {
-                    Rectangle rowBounds = getRowBounds(row);
-                    rowBounds.x = 0;
-                    rowBounds.width = Integer.MAX_VALUE;
-
-                    if (rowBounds.intersects(clip)) {
-                        Object node = getPathForRow(row).getLastPathComponent();
-
-                        if (node instanceof DefaultMutableTreeNode defaultMutableTreeNode) {
-                            Object data = defaultMutableTreeNode.getUserObject();
-                            Rectangle fullRowRect = new Rectangle(visibleRect.x, rowBounds.y, visibleRect.width, rowBounds.height);
-                            paintRowData(this, data, fullRowRect, (Graphics2D) g);
-                        }
-                    }
-                }
-
-            }
-        };
+        myTree = new Tree(new AsyncTreeModel(myModel, disposable));
         myTree.setRootVisible(false);
         myTree.setShowsRootHandles(true);
 
-        myTree.setCellRenderer(new KeymapsRenderer());
+        myTree.setCellRenderer(new MyRenderer());
 
         myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
@@ -438,48 +464,6 @@ public class ActionsTree {
                 SearchUtil.appendFragments(myFilter, text, Font.PLAIN, foreground,
                     selected ? UIUtil.getTreeSelectionBackground(true) : UIUtil.getTreeTextBackground(), this);
             }
-        }
-    }
-
-    private void paintRowData(Tree tree, Object data, Rectangle bounds, Graphics2D g) {
-        Shortcut[] shortcuts;
-        if (data instanceof String actionId) {
-            shortcuts = myKeymap.getShortcuts(actionId);
-        }
-        else if (data instanceof QuickList quickList) {
-            shortcuts = myKeymap.getShortcuts(quickList.getActionId());
-        }
-        else {
-            shortcuts = null;
-        }
-
-        if (shortcuts != null && shortcuts.length > 0) {
-            int totalWidth = 0;
-            FontMetrics metrics = tree.getFontMetrics(tree.getFont());
-            for (Shortcut shortcut : shortcuts) {
-                totalWidth += metrics.stringWidth(KeymapUtil.getShortcutText(shortcut));
-                totalWidth += 10;
-            }
-            totalWidth -= 5;
-
-            int x = bounds.x + bounds.width - totalWidth;
-            int fontHeight = (int) metrics.getMaxCharBounds(g).getHeight();
-
-            Color c1 = new Color(234, 200, 162);
-            Color c2 = new Color(208, 200, 66);
-
-            g.translate(0, bounds.y - 1);
-
-            for (Shortcut shortcut : shortcuts) {
-                int width = metrics.stringWidth(KeymapUtil.getShortcutText(shortcut));
-                UIUtil.drawSearchMatch(g, x, x + width, bounds.height, c1, c2);
-                g.setColor(Gray._50);
-                g.drawString(KeymapUtil.getShortcutText(shortcut), x, fontHeight);
-
-                x += width;
-                x += 10;
-            }
-            g.translate(0, -bounds.y + 1);
         }
     }
 }
