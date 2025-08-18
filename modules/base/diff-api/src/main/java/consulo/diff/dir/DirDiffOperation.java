@@ -23,21 +23,23 @@ import consulo.ui.style.ComponentColors;
 
 import jakarta.annotation.Nullable;
 
+import java.util.function.Supplier;
+
 /**
  * @author Konstantin Bulenkov
  */
 public enum DirDiffOperation {
-    COPY_TO(PlatformIconGroup.vcsArrow_right(), FileStatus.ADDED.getColor()),
-    COPY_FROM(PlatformIconGroup.vcsArrow_left(), FileStatus.ADDED.getColor()),
-    MERGE(PlatformIconGroup.vcsNot_equal(), FileStatus.MODIFIED.getColor()),
-    EQUAL(PlatformIconGroup.vcsEqual(), ComponentColors.TEXT),
-    NONE(Image.empty(Image.DEFAULT_ICON_SIZE), ComponentColors.TEXT),
-    DELETE(PlatformIconGroup.generalRemove(), FileStatus.DELETED.getColor());
+    COPY_TO(PlatformIconGroup.vcsArrow_right(), FileStatus.ADDED::getColor),
+    COPY_FROM(PlatformIconGroup.vcsArrow_left(), FileStatus.ADDED::getColor),
+    MERGE(PlatformIconGroup.vcsNot_equal(), FileStatus.MODIFIED::getColor),
+    EQUAL(PlatformIconGroup.vcsEqual(), () -> ComponentColors.TEXT_FOREGROUND),
+    NONE(Image.empty(Image.DEFAULT_ICON_SIZE), () -> ComponentColors.TEXT_FOREGROUND),
+    DELETE(PlatformIconGroup.generalRemove(), FileStatus.DELETED::getColor);
 
     private final Image myIcon;
-    private final ColorValue myTextColor;
+    private final Supplier<ColorValue> myTextColor;
 
-    DirDiffOperation(Image icon, ColorValue textColor) {
+    DirDiffOperation(Image icon, Supplier<ColorValue> textColor) {
         myIcon = icon;
         myTextColor = textColor;
     }
@@ -48,6 +50,6 @@ public enum DirDiffOperation {
 
     @Nullable
     public ColorValue getTextColor() {
-        return myTextColor;
+        return myTextColor.get();
     }
 }
