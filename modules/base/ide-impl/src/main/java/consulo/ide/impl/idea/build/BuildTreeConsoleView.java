@@ -201,7 +201,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
             DefaultActionGroup sourceActionGroup = new DefaultActionGroup();
             EditSourceAction edit = new EditSourceAction();
-            ActionImplUtil.copyFrom(edit, "EditSource");
+            ActionImplUtil.copyFrom(edit, IdeActions.ACTION_EDIT_SOURCE);
             sourceActionGroup.add(edit);
             DefaultActionGroup filteringActionsGroup = BuildTreeFilters.createFilteringActionsGroup(this);
             DefaultActionGroup navigationActionGroup = new DefaultActionGroup();

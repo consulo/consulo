@@ -173,7 +173,7 @@ action.ChangesView.CreatePatchFromChanges.description:
 action.ChangesView.CreatePatchFromChanges.text:
     text: Create Patch…
 action.ChangesView.DeleteUnversioned.description:
-    text: ''
+    text: Delete
 action.ChangesView.DeleteUnversioned.text:
     text: Delete
 action.ChangesView.Diff.description:
@@ -1896,6 +1896,8 @@ action.ShelvedChanges.Rename.text:
     text: Rename…
 action.ShelvedChanges.Restore.text:
     text: Restore Applied Shelved Change
+action.ShelvedChanges.ShowHideDeleted.description:
+    text: Show/Hide already unshelved
 action.ShelvedChanges.ShowHideDeleted.text:
     text: Show/Hide Applied Shelved Changes
 action.ShelvedChanges.Unshelve.description:
@@ -2208,6 +2210,8 @@ action.Vcs.IntegrateProject.text:
     text: Inte_grate Project
 action.Vcs.ProjectStatus.text:
     text: C_heck Project Status
+action.Vcs.Push.text:
+    text: Push…
 action.Vcs.QuickListPopupAction.description:
     text: Context aware popup with list of commonly used VCS actions
 action.Vcs.QuickListPopupAction.text:
@@ -2450,6 +2454,10 @@ group.BuildMenu.text:
     text: _Build
 group.ChangeLineSeparators.text:
     text: Line Separators
+group.ChangesViewPopupMenu.text:
+    text: Changes View
+group.ChangesViewToolbar.text:
+    text: Changes View
 group.CloseEditorsGroup.text:
     text: Editor Close Actions
 group.CodeCompletionGroup.text:
@@ -2466,6 +2474,8 @@ group.CommanderViewPopupMenu.text:
     text: Commander View Popup Menu
 group.CommentGroup.text:
     text: Comment Actions
+group.CommittedChangesToolbar.text:
+    text: Committed Changes Toolbar
 group.CompareActions.text:
     text: Compare
 group.ConvertIndentsGroup.text:
@@ -2564,6 +2574,8 @@ group.HelpMenu.text:
     text: _Help
 group.HierarchyGroup.text:
     text: Hierarchy Actions
+group.IncomingChangesToolbar.text:
+    text: Incoming Changes
 group.IntroduceActionsGroup.text:
     text: E_xtract
 group.LocalHistory.text:
@@ -2674,6 +2686,10 @@ group.ServiceView.GroupBy.text:
     text: Group By
 group.ServiceView.OpenInNewTabGroup.text:
     text: Open in New Tab
+group.Shelve.KeymapGroup.text:
+    text: Shelve
+group.ShelvedChangesPopupMenu.text:
+    text: Shelved Changes
 group.ShowAnnotateOperationsPopupGroup.text:
     text: Annotated Line
 group.ShowRecentFindUsagesGroup.description:
@@ -2738,12 +2754,18 @@ group.TouchBarDefault_shift.text:
     text: Default with Shift Key
 group.UIToggleActions.text:
     text: UI Toggle Actions
+group.Unversioned.Files.Dialog.text:
+    text: Unversioned Files Dialog
 group.Vcs.Browse.text:
     text: Browse VCS Repository
 group.Vcs.Checkout.text:
     text: Check_out from Version Control
+group.Vcs.History.text:
+    text: VCS History
 group.Vcs.Import.text:
     text: Import into Version Control
+group.Vcs.MessageActionGroup.text:
+    text: VCS Message Actions
 group.VcsFileGroupPopup.text:
     text: Version Control Group
 group.VcsGlobalGroup.text:
@@ -2752,6 +2774,8 @@ group.VcsGroup.text:
     text: Version Control
 group.VcsGroups.text:
     text: VC_S
+group.VcsNavBarToobarActions.text:
+    text: VCS Navigation
 group.VcsToobarActions.text:
     text: VCS Actions
 group.VersionControlsGroup.text:

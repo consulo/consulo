@@ -104,13 +104,7 @@ public class ContentEntryTreeEditor {
     protected void updateMarkActions() {
         myEditingActionsGroup.removeAll();
 
-        myEditingActionsGroup.add(new ToolbarLabelAction() {
-            @RequiredUIAccess
-            @Override
-            public void update(@Nonnull AnActionEvent e) {
-                super.update(e);
-                e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Mark as:"));
-            }
+        myEditingActionsGroup.add(new ToolbarLabelAction(LocalizeValue.localizeTODO("Mark as:")) {
         });
         Set<ContentFolderTypeProvider> folders = ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel());
         ContentFolderTypeProvider[] supportedFolders = folders.toArray(new ContentFolderTypeProvider[folders.size()]);

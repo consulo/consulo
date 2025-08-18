@@ -38,6 +38,14 @@ public abstract class AbstractVcsAction extends DumbAwareAction {
     protected AbstractVcsAction() {
     }
 
+    protected AbstractVcsAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
+    protected AbstractVcsAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
     protected AbstractVcsAction(
         @Nonnull LocalizeValue text,
         @Nonnull LocalizeValue description,

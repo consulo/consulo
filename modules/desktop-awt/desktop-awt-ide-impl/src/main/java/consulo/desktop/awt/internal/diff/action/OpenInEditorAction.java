@@ -27,6 +27,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -39,7 +40,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   @Nullable private final Runnable myAfterRunnable;
 
   public OpenInEditorAction(@Nullable Runnable afterRunnable) {
-    ActionUtil.copyFrom(this, "EditSource");
+    ActionUtil.copyFrom(this, IdeActions.ACTION_EDIT_SOURCE);
     myAfterRunnable = afterRunnable;
   }
 

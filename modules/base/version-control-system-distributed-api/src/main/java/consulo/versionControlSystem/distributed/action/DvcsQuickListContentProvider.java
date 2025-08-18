@@ -17,6 +17,7 @@ package consulo.versionControlSystem.distributed.action;
 
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.action.VcsQuickListContentProvider;
 import consulo.ui.ex.action.ActionManager;
@@ -45,7 +46,7 @@ public abstract class DvcsQuickListContentProvider implements VcsQuickListConten
     actions.add(new AnSeparator(activeVcs.getDisplayName()));
     add("CheckinProject", manager, actions);
     add("CheckinFiles", manager, actions);
-    add("ChangesView.Revert", manager, actions);
+    add(IdeActions.CHANGES_VIEW_ROLLBACK, manager, actions);
 
     addSeparator(actions);
     add("Vcs.ShowTabbedFileHistory", manager, actions);
