@@ -20,13 +20,13 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.component.extension.ExtensionPoint;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -36,6 +36,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
@@ -82,6 +83,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean selected) {
         Editor editor = e.getData(Editor.KEY);
         if (editor != null) {
@@ -145,7 +147,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
             }
         }
 
-        Disposable disposable = () -> fileAnnotation.dispose();
+        Disposable disposable = fileAnnotation::dispose;
 
         if (fileAnnotation.getFile() != null && fileAnnotation.getFile().isInLocalFileSystem()) {
             VcsAnnotationLocalChangesListener changesListener =
@@ -171,7 +173,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
             }
         });
 
-        EditorGutterComponentEx editorGutter = (EditorGutterComponentEx)editor.getGutter();
+        EditorGutterComponentEx editorGutter = (EditorGutterComponentEx) editor.getGutter();
         List<AnnotationFieldGutter> gutters = new ArrayList<>();
         AnnotationSourceSwitcher switcher = fileAnnotation.getAnnotationSourceSwitcher();
 
@@ -235,13 +237,12 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     }
 
     private static void addActionsFromExtensions(@Nonnull AnnotationPresentation presentation, @Nonnull FileAnnotation fileAnnotation) {
-        List<AnnotationGutterActionProvider> extensions = AnnotationGutterActionProvider.EP_NAME.getExtensionList();
-        if (extensions.size() > 0) {
+        ExtensionPoint<AnnotationGutterActionProvider> extensionPoint =
+            Application.get().getExtensionPoint(AnnotationGutterActionProvider.class);
+        if (extensionPoint.hasAnyExtensions()) {
             presentation.addAction(new AnSeparator());
         }
-        for (AnnotationGutterActionProvider provider : extensions) {
-            presentation.addAction(provider.createAction(fileAnnotation));
-        }
+        extensionPoint.forEach(provider -> presentation.addAction(provider.createAction(fileAnnotation)));
     }
 
     @Nullable
@@ -313,7 +314,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     }
 
     @Nullable
-    private static AnnotateToggleActionProvider getProvider(AnActionEvent e) {
+    private static AnnotateToggleActionProvider getProvider(@Nonnull AnActionEvent e) {
         for (AnnotateToggleActionProvider provider : Application.get().getExtensionList(AnnotateToggleActionProvider.class)) {
             if (provider.isEnabled(e)) {
                 return provider;
@@ -334,8 +335,8 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
 
             setText(VcsLocalize.annotationWrongLineNumberNotificationText(vcs.getDisplayName()).get());
 
-            createActionLabel("Display anyway", () -> showAnnotations());
-            createActionLabel("Hide", () -> hideNotification())
+            createActionLabel("Display anyway", this::showAnnotations);
+            createActionLabel("Hide", this::hideNotification)
                 .setToolTipText("Hide this notification");
         }
 

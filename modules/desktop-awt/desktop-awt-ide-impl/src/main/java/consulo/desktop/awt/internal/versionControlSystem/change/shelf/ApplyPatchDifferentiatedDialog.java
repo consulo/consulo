@@ -649,7 +649,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         private final NewBaseSelector myNewBaseSelector;
 
         private MapDirectory() {
-            super("Map base directory", "Map base directory", AllIcons.Vcs.MapBase);
+            super("Map base directory", "Map base directory", PlatformIconGroup.vcsMapbase());
             myNewBaseSelector = new NewBaseSelector();
         }
 
@@ -1057,7 +1057,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
 
     private class ZeroStrip extends AnAction {
         private ZeroStrip() {
-            super("Remove Directories", "Remove Directories", AllIcons.Vcs.StripNull);
+            super("Remove Directories", "Remove Directories", PlatformIconGroup.vcsStripnull());
         }
 
         @Override

@@ -15,7 +15,6 @@
  */
 package consulo.diff.dir;
 
-import consulo.application.AllIcons;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.color.ColorValue;
@@ -28,33 +27,27 @@ import jakarta.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public enum DirDiffOperation {
-  COPY_TO, COPY_FROM, MERGE, EQUAL, NONE, DELETE;
+    COPY_TO(PlatformIconGroup.vcsArrow_right(), FileStatus.ADDED.getColor()),
+    COPY_FROM(PlatformIconGroup.vcsArrow_left(), FileStatus.ADDED.getColor()),
+    MERGE(PlatformIconGroup.vcsNot_equal(), FileStatus.MODIFIED.getColor()),
+    EQUAL(PlatformIconGroup.vcsEqual(), ComponentColors.TEXT),
+    NONE(Image.empty(Image.DEFAULT_ICON_SIZE), ComponentColors.TEXT),
+    DELETE(PlatformIconGroup.generalRemove(), FileStatus.DELETED.getColor());
 
-  public Image getIcon() {
-    switch (this) {
-      case COPY_TO:   return AllIcons.Vcs.Arrow_right;
-      case COPY_FROM: return AllIcons.Vcs.Arrow_left;
-      case MERGE:     return AllIcons.Vcs.Not_equal;
-      case EQUAL:     return AllIcons.Vcs.Equal;
-      case DELETE:    return PlatformIconGroup.generalRemove();
-      case NONE:
-    }
-    return Image.empty(Image.DEFAULT_ICON_SIZE);
-  }
+    private final Image myIcon;
+    private final ColorValue myTextColor;
 
-  @Nullable
-  public ColorValue getTextColor() {
-    switch (this) {
-      case COPY_TO:
-      case COPY_FROM:
-        return FileStatus.ADDED.getColor();
-      case MERGE:
-        return FileStatus.MODIFIED.getColor();
-      case DELETE:
-        return FileStatus.DELETED.getColor();
-      case EQUAL:
-      case NONE:
+    DirDiffOperation(Image icon, ColorValue textColor) {
+        myIcon = icon;
+        myTextColor = textColor;
     }
-    return ComponentColors.TEXT;
-  }
+
+    public Image getIcon() {
+        return myIcon;
+    }
+
+    @Nullable
+    public ColorValue getTextColor() {
+        return myTextColor;
+    }
 }

@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.diff.binary;
 
 import consulo.application.AccessRule;
-import consulo.application.AllIcons;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.ThrowableComputable;
@@ -36,6 +35,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.fileEditor.FileEditor;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
@@ -204,7 +204,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
         public MyAcceptSideAction(@Nonnull Side baseSide) {
             myBaseSide = baseSide;
             getTemplatePresentation().setText("Copy Content to " + baseSide.select("Right", "Left"));
-            getTemplatePresentation().setIcon(baseSide.select(AllIcons.Vcs.Arrow_right, AllIcons.Vcs.Arrow_left));
+            getTemplatePresentation().setIcon(baseSide.select(PlatformIconGroup.vcsArrow_right(), PlatformIconGroup.vcsArrow_left()));
             setShortcutSet(ActionManager.getInstance()
                 .getAction(baseSide.select("Diff.ApplyLeftSide", "Diff.ApplyRightSide"))
                 .getShortcutSet());
