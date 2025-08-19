@@ -25,6 +25,16 @@ import java.util.concurrent.ConcurrentMap;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CachedValuesManager {
+    public interface ValueTemplate<T, E extends UserDataHolder> {
+        @Nonnull
+        Key<ParameterizedCachedValue<T, E>> getKey();
+
+        @Nonnull
+        ParameterizedCachedValueProvider<T, E> getProvider();
+
+        boolean isTrackValue();
+    }
+
     public static CachedValuesManager getManager(@Nonnull ComponentManager project) {
         return project.getInstance(CachedValuesManager.class);
     }
@@ -84,6 +94,16 @@ public abstract class CachedValuesManager {
             }
         }
         return value.getValue(parameter);
+    }
+
+    public <T, P extends UserDataHolder> T getCachedValue(@Nonnull P dataHolder, @Nonnull ValueTemplate<T, P> valueTemplate) {
+        return getParameterizedCachedValue(
+            dataHolder,
+            valueTemplate.getKey(),
+            valueTemplate.getProvider(),
+            valueTemplate.isTrackValue(),
+            dataHolder
+        );
     }
 
     protected abstract void trackKeyHolder(@Nonnull UserDataHolder dataHolder, @Nonnull Key<?> key);
