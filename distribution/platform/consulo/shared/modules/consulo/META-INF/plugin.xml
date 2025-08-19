@@ -610,6 +610,8 @@
 
         <group id="AlienCommitChangesDialog.AdditionalActions"/>
 
+        <group id="VcsHistoryActionsGroup"/>
+
         <group id="RepositoryChangesBrowserToolbar">
         </group>
 
