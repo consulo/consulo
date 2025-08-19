@@ -15,7 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -26,28 +29,37 @@ import jakarta.annotation.Nonnull;
 /**
  * @author yole
  */
+@ActionImpl(id = "IncomingChanges.Refresh")
 public class RefreshIncomingChangesAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    doRefresh(project);
-  }
+    public RefreshIncomingChangesAction() {
+        super(
+            ActionLocalize.actionIncomingchangesRefreshText(),
+            ActionLocalize.actionIncomingchangesRefreshDescription(),
+            PlatformIconGroup.actionsRefresh()
+        );
+    }
 
-  public static void doRefresh(final Project project) {
-    final CommittedChangesCache cache = CommittedChangesCache.getInstance(project);
-    cache.hasCachesForAnyRoot(notEmpty -> {
-      if ((!notEmpty) && (!CacheSettingsDialog.showSettingsDialog(project))) {
-        return;
-      }
-      cache.refreshAllCachesAsync(true, false);
-      cache.refreshIncomingChangesAsync();
-    });
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        doRefresh(project);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    e.getPresentation().setEnabled(project != null && !CommittedChangesCache.getInstance(project).isRefreshingIncomingChanges());
-  }
+    public static void doRefresh(Project project) {
+        CommittedChangesCache cache = CommittedChangesCache.getInstance(project);
+        cache.hasCachesForAnyRoot(notEmpty -> {
+            if (!notEmpty && !CacheSettingsDialog.showSettingsDialog(project)) {
+                return;
+            }
+            cache.refreshAllCachesAsync(true, false);
+            cache.refreshIncomingChangesAsync();
+        });
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        e.getPresentation().setEnabled(project != null && !CommittedChangesCache.getInstance(project).isRefreshingIncomingChanges());
+    }
 }

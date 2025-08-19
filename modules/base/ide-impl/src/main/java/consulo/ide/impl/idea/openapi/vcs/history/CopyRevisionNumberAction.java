@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,6 +33,7 @@ import java.awt.datatransfer.StringSelection;
 /**
  * The action that copies a revision number text to clipboard
  */
+@ActionImpl(id = "Vcs.CopyRevisionNumberAction")
 public class CopyRevisionNumberAction extends DumbAwareAction {
     public CopyRevisionNumberAction() {
         super(VcsLocalize.historyCopyRevisionNumber(), VcsLocalize.historyCopyRevisionNumber(), PlatformIconGroup.actionsCopy());

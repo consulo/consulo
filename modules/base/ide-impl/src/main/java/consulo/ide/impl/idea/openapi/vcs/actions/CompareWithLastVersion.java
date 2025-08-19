@@ -15,19 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
 
+@ActionImpl(id = "Compare.LastVersion")
 public class CompareWithLastVersion extends AbstractShowDiffAction {
+    public CompareWithLastVersion() {
+        super(ActionLocalize.actionCompareLastversionText());
+    }
+
     @Override
     protected VcsBackgroundableActions getKey() {
         return VcsBackgroundableActions.COMPARE_WITH;
     }
 
     @Override
-    protected DiffActionExecutor getExecutor(final DiffProvider diffProvider, final VirtualFile selectedFile, final Project project) {
+    protected DiffActionExecutor getExecutor(DiffProvider diffProvider, VirtualFile selectedFile, Project project) {
         return new DiffActionExecutor.DeletionAwareExecutor(diffProvider, selectedFile, project, getKey());
     }
 }

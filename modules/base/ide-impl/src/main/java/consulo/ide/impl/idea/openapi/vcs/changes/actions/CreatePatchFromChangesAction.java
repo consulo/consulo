@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitSessionContextAware;
@@ -42,6 +43,7 @@ import java.util.List;
 /**
  * @author yole
  */
+@ActionImpl(id = "ChangesView.CreatePatchFromChanges")
 public class CreatePatchFromChangesAction extends AnAction implements DumbAware {
     public CreatePatchFromChangesAction() {
         super(
@@ -55,7 +57,7 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        final Change[] changes = e.getData(VcsDataKeys.CHANGES);
+        Change[] changes = e.getData(VcsDataKeys.CHANGES);
         if (changes == null || changes.length == 0) {
             return;
         }
@@ -81,9 +83,10 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
         createPatch(project, commitMessage, changeCollection);
     }
 
+    @RequiredUIAccess
     public static void createPatch(Project project, String commitMessage, List<Change> changeCollection) {
         project = project == null ? ProjectManager.getInstance().getDefaultProject() : project;
-        final CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(project);
+        CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(project);
         CommitSession commitSession = executor.createCommitSession();
         if (commitSession instanceof CommitSessionContextAware commitSessionContextAware) {
             commitSessionContextAware.setContext(new CommitContext());
@@ -98,34 +101,39 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
         commitSession.execute(changeCollection, commitMessage);
     }
 
-    private static void preloadContent(final Project project, final List<Change> changes) {
+    private static void preloadContent(Project project, final List<Change> changes) {
         // to avoid multiple progress dialogs, preload content under one progress
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-            @Override
-            public void run() {
-                for (Change change : changes) {
-                    checkLoadContent(change.getBeforeRevision());
-                    checkLoadContent(change.getAfterRevision());
+        ProgressManager.getInstance().runProcessWithProgressSynchronously(
+            new Runnable() {
+                @Override
+                public void run() {
+                    for (Change change : changes) {
+                        checkLoadContent(change.getBeforeRevision());
+                        checkLoadContent(change.getAfterRevision());
+                    }
                 }
-            }
 
-            private void checkLoadContent(final ContentRevision revision) {
-                ProgressManager.checkCanceled();
-                if (revision != null && !(revision instanceof BinaryContentRevision)) {
-                    try {
-                        revision.getContent();
-                    }
-                    catch (VcsException e1) {
-                        // ignore at the moment
+                private void checkLoadContent(ContentRevision revision) {
+                    ProgressManager.checkCanceled();
+                    if (revision != null && !(revision instanceof BinaryContentRevision)) {
+                        try {
+                            revision.getContent();
+                        }
+                        catch (VcsException e1) {
+                            // ignore at the moment
+                        }
                     }
                 }
-            }
-        }, VcsLocalize.createPatchLoadingContentProgress(), true, project);
+            },
+            VcsLocalize.createPatchLoadingContentProgress(),
+            true,
+            project
+        );
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final Boolean haveSelectedChanges = e.getData(VcsDataKeys.HAVE_SELECTED_CHANGES);
+        Boolean haveSelectedChanges = e.getData(VcsDataKeys.HAVE_SELECTED_CHANGES);
         Change[] changes;
         ChangeList[] data1 = e.getData(VcsDataKeys.CHANGE_LISTS);
         ShelvedChangeList[] data2 = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
@@ -135,7 +143,9 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
         sum += data2 == null ? 0 : data2.length;
         sum += data3 == null ? 0 : data3.length;
 
-        e.getPresentation().setEnabled(Boolean.TRUE.equals(haveSelectedChanges) && (sum == 1)
-            && ((changes = e.getData(VcsDataKeys.CHANGES)) != null && changes.length > 0));
+        e.getPresentation().setEnabled(
+            Boolean.TRUE.equals(haveSelectedChanges) && sum == 1
+                && (changes = e.getData(VcsDataKeys.CHANGES)) != null && changes.length > 0
+        );
     }
 }

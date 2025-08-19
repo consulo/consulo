@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -26,11 +27,11 @@ import consulo.versionControlSystem.CommitMessageI;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.Refreshable;
 import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,73 +43,78 @@ import java.util.List;
  * @author lesya
  * @since 5.1
  */
+@ActionImpl(id = "Vcs.ShowMessageHistory")
 public class ShowMessageHistoryAction extends AnAction implements DumbAware {
-  public ShowMessageHistoryAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-
-    Project project = e.getData(Project.KEY);
-    Object panel = e.getData(CheckinProjectPanel.PANEL_KEY);
-    if (!(panel instanceof CommitMessageI)) {
-      panel = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
+    public ShowMessageHistoryAction() {
+        super(
+            ActionLocalize.actionVcsShowmessagehistoryText(),
+            ActionLocalize.actionVcsShowmessagehistoryDescription(),
+            VersionControlSystemIconGroup.history()
+        );
+        setEnabledInModalContext(true);
     }
 
-    if (project == null || panel == null) {
-      e.getPresentation().setEnabledAndVisible(false);
-    }
-    else {
-      e.getPresentation().setVisible(true);
-      final ArrayList<String> recentMessages = VcsConfiguration.getInstance(project).getRecentMessages();
-      e.getPresentation().setEnabled(!recentMessages.isEmpty());
-    }
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    Refreshable panel = e.getData(CheckinProjectPanel.PANEL_KEY);
-    CommitMessageI commitMessageI = panel instanceof CommitMessageI cmtMsgI ? cmtMsgI : e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
-
-    if (commitMessageI != null) {
-      final VcsConfiguration configuration = VcsConfiguration.getInstance(project);
-
-      if (!configuration.getRecentMessages().isEmpty()) {
-
-        final ContentChooser<String> contentChooser =
-          new ContentChooser<>(project, VcsLocalize.dialogTitleChooseCommitMessageFromHistory().get(), false) {
-            @Override
-            protected void removeContentAt(final String content) {
-              configuration.removeMessage(content);
-            }
-
-            @Override
-            protected String getStringRepresentationFor(final String content) {
-              return content;
-            }
-
-            @Override
-            protected List<String> getContents() {
-              final List<String> recentMessages = configuration.getRecentMessages();
-              Collections.reverse(recentMessages);
-              return recentMessages;
-            }
-          };
-
-        contentChooser.show();
-
-        if (contentChooser.isOK()) {
-          final int selectedIndex = contentChooser.getSelectedIndex();
-
-          if (selectedIndex >= 0) {
-            commitMessageI.setCommitMessage(contentChooser.getAllContents().get(selectedIndex));
-          }
+        Project project = e.getData(Project.KEY);
+        Object panel = e.getData(CheckinProjectPanel.PANEL_KEY);
+        if (!(panel instanceof CommitMessageI)) {
+            panel = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
         }
-      }
+
+        if (project == null || panel == null) {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
+        else {
+            e.getPresentation().setVisible(true);
+            List<String> recentMessages = VcsConfiguration.getInstance(project).getRecentMessages();
+            e.getPresentation().setEnabled(!recentMessages.isEmpty());
+        }
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        Refreshable panel = e.getData(CheckinProjectPanel.PANEL_KEY);
+        CommitMessageI commitMessageI = panel instanceof CommitMessageI cmtMsgI ? cmtMsgI : e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
+
+        if (commitMessageI != null) {
+            final VcsConfiguration configuration = VcsConfiguration.getInstance(project);
+
+            if (!configuration.getRecentMessages().isEmpty()) {
+                ContentChooser<String> contentChooser =
+                    new ContentChooser<>(project, VcsLocalize.dialogTitleChooseCommitMessageFromHistory().get(), false) {
+                        @Override
+                        protected void removeContentAt(String content) {
+                            configuration.removeMessage(content);
+                        }
+
+                        @Override
+                        protected String getStringRepresentationFor(String content) {
+                            return content;
+                        }
+
+                        @Override
+                        protected List<String> getContents() {
+                            List<String> recentMessages = configuration.getRecentMessages();
+                            Collections.reverse(recentMessages);
+                            return recentMessages;
+                        }
+                    };
+
+                contentChooser.show();
+
+                if (contentChooser.isOK()) {
+                    int selectedIndex = contentChooser.getSelectedIndex();
+
+                    if (selectedIndex >= 0) {
+                        commitMessageI.setCommitMessage(contentChooser.getAllContents().get(selectedIndex));
+                    }
+                }
+            }
+        }
+    }
 }

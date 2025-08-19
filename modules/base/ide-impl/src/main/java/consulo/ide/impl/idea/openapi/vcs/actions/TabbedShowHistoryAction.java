@@ -15,8 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -28,6 +31,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
+import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -39,8 +43,16 @@ import java.io.File;
 import static consulo.util.lang.ObjectUtil.assertNotNull;
 import static consulo.versionControlSystem.util.VcsUtil.getIfSingle;
 
-
+@ActionImpl(id = "Vcs.ShowTabbedFileHistory")
 public class TabbedShowHistoryAction extends AbstractVcsAction {
+    public TabbedShowHistoryAction() {
+        super(
+            ActionLocalize.actionVcsShowtabbedfilehistoryText(),
+            ActionLocalize.actionVcsShowtabbedfilehistoryDescription(),
+            VersionControlSystemIconGroup.history()
+        );
+    }
+
     @Override
     protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
         Project project = context.getProject();
@@ -113,6 +125,7 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
     }
 
     @Override
+    @RequiredUIAccess
     protected void actionPerformed(@Nonnull VcsContext context) {
         Project project = context.getProject();
         Pair<FilePath, VirtualFile> pair = getPathAndParentFile(context);

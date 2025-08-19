@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -26,19 +28,31 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole
  */
 public abstract class AbstractCommitChangesAction extends AbstractCommonCheckinAction {
-    protected FilePath[] getRoots(VcsContext context) {
+    protected AbstractCommitChangesAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
+    @Nonnull
+    @Override
+    protected FilePath[] getRoots(@Nonnull VcsContext context) {
         return getAllContentRoots(context);
     }
 
     @Override
-    protected boolean approximatelyHasRoots(VcsContext dataContext) {
-        final Project project = dataContext.getProject();
-        final ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
+    protected boolean approximatelyHasRoots(@Nonnull VcsContext dataContext) {
+        Project project = dataContext.getProject();
+        ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
         return manager.hasAnyMappings();
     }
 
@@ -47,11 +61,11 @@ public abstract class AbstractCommitChangesAction extends AbstractCommonCheckinA
     }
 
     @Override
-    protected void update(final VcsContext vcsContext, final Presentation presentation) {
+    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
         super.update(vcsContext, presentation);
         if (presentation.isVisible() && presentation.isEnabled()) {
-            final ChangeList[] selectedChangeLists = vcsContext.getSelectedChangeLists();
-            final Change[] selectedChanges = vcsContext.getSelectedChanges();
+            ChangeList[] selectedChangeLists = vcsContext.getSelectedChangeLists();
+            Change[] selectedChanges = vcsContext.getSelectedChanges();
             if (vcsContext.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
                 if (selectedChangeLists != null && selectedChangeLists.length > 0) {
                     presentation.setEnabled(selectedChangeLists.length == 1);
@@ -61,7 +75,7 @@ public abstract class AbstractCommitChangesAction extends AbstractCommonCheckinA
                 }
             }
             if (presentation.isEnabled() && selectedChanges != null) {
-                final ChangeListManager changeListManager = ChangeListManager.getInstance(vcsContext.getProject());
+                ChangeListManager changeListManager = ChangeListManager.getInstance(vcsContext.getProject());
                 for (Change c : selectedChanges) {
                     if (c.getFileStatus() == FileStatus.HIJACKED && changeListManager.getChangeList(c) == null) {
                         presentation.setEnabled(false);

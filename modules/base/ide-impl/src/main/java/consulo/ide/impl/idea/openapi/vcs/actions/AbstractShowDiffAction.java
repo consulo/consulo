@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -32,6 +35,18 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class AbstractShowDiffAction extends AbstractVcsAction {
+    protected AbstractShowDiffAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
+    protected AbstractShowDiffAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
     @Override
     protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
         updateDiffAction(presentation, vcsContext, getKey());
@@ -43,7 +58,7 @@ public abstract class AbstractShowDiffAction extends AbstractVcsAction {
     }
 
     @Override
-    protected boolean forceSyncUpdate(AnActionEvent e) {
+    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
         return true;
     }
 
@@ -111,7 +126,8 @@ public abstract class AbstractShowDiffAction extends AbstractVcsAction {
     }
 
     @Override
-    protected void actionPerformed(VcsContext vcsContext) {
+    @RequiredUIAccess
+    protected void actionPerformed(@Nonnull VcsContext vcsContext) {
         Project project = vcsContext.getProject();
         if (project == null) {
             return;

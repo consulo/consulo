@@ -15,25 +15,52 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.List;
 
-
+@ActionImpl(id = "CheckinProject")
 public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
-    protected FilePath[] getRoots(final VcsContext context) {
+    @Inject
+    public CommonCheckinProjectAction() {
+        this(
+            ActionLocalize.actionCheckinprojectText(),
+            LocalizeValue.empty(),
+            VersionControlSystemIconGroup.commit()
+        );
+    }
+
+    protected CommonCheckinProjectAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
+    @Nonnull
+    @Override
+    protected FilePath[] getRoots(@Nonnull VcsContext context) {
         Project project = context.getProject();
-        ArrayList<FilePath> virtualFiles = new ArrayList<>();
-        final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+        List<FilePath> virtualFiles = new ArrayList<>();
+        ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         for (AbstractVcs vcs : vcsManager.getAllActiveVcss()) {
             if (vcs.getCheckinEnvironment() != null) {
                 VirtualFile[] roots = vcsManager.getRootsUnderVcs(vcs);
@@ -46,20 +73,20 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
     }
 
     @Override
-    protected boolean approximatelyHasRoots(VcsContext dataContext) {
+    protected boolean approximatelyHasRoots(@Nonnull VcsContext dataContext) {
         Project project = dataContext.getProject();
-        final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+        ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         return vcsManager.hasAnyMappings();
     }
 
     @Override
-    protected void update(VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
         Project project = vcsContext.getProject();
         if (project == null) {
             presentation.setEnabledAndVisible(false);
             return;
         }
-        final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
+        ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
         if (!plVcsManager.hasActiveVcss()) {
             presentation.setEnabledAndVisible(false);
             return;
@@ -72,12 +99,13 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
         presentation.setVisible(true);
     }
 
-    protected String getActionName(VcsContext dataContext) {
+    @Override
+    protected String getActionName(@Nonnull VcsContext dataContext) {
         return VcsLocalize.actionNameCommitProject().get();
     }
 
     @Override
-    protected String getMnemonicsFreeActionName(VcsContext context) {
+    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
         return VcsLocalize.vcsCommandNameCheckinNoMnemonics().get();
     }
 

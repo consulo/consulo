@@ -31,50 +31,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DvcsQuickListContentProvider implements VcsQuickListContentProvider {
+    @Nullable
+    @Override
+    public List<AnAction> getVcsActions(
+        @Nullable Project project,
+        @Nullable AbstractVcs activeVcs,
+        @Nullable DataContext dataContext
+    ) {
+        if (activeVcs == null || !getVcsName().equals(activeVcs.getId())) {
+            return null;
+        }
 
-  @Nullable
-  public List<AnAction> getVcsActions(@Nullable Project project, @Nullable AbstractVcs activeVcs,
-                                      @Nullable DataContext dataContext) {
+        ActionManager manager = ActionManager.getInstance();
+        List<AnAction> actions = new ArrayList<>();
 
-    if (activeVcs == null || !getVcsName().equals(activeVcs.getId())) {
-      return null;
+        actions.add(new AnSeparator(activeVcs.getDisplayName()));
+        add("CheckinProject", manager, actions);
+        add("CheckinFiles", manager, actions);
+        add(IdeActions.CHANGES_VIEW_REVERT, manager, actions);
+
+        addSeparator(actions);
+        add("Vcs.ShowTabbedFileHistory", manager, actions);
+        add("Annotate", manager, actions);
+        add("Compare.SameVersion", manager, actions);
+
+        addSeparator(actions);
+        addVcsSpecificActions(manager, actions);
+        return actions;
     }
 
-    final ActionManager manager = ActionManager.getInstance();
-    final List<AnAction> actions = new ArrayList<>();
+    @Nonnull
+    protected abstract String getVcsName();
 
-    actions.add(new AnSeparator(activeVcs.getDisplayName()));
-    add("CheckinProject", manager, actions);
-    add("CheckinFiles", manager, actions);
-    add(IdeActions.CHANGES_VIEW_ROLLBACK, manager, actions);
+    protected abstract void addVcsSpecificActions(@Nonnull ActionManager manager, @Nonnull List<AnAction> actions);
 
-    addSeparator(actions);
-    add("Vcs.ShowTabbedFileHistory", manager, actions);
-    add("Annotate", manager, actions);
-    add("Compare.SameVersion", manager, actions);
+    @Override
+    public boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @Nullable DataContext dataContext) {
+        return getVcsName().equals(activeVcs.getId());
+    }
 
-    addSeparator(actions);
-    addVcsSpecificActions(manager, actions);
-    return actions;
-  }
+    protected static void addSeparator(@Nonnull List<AnAction> actions) {
+        actions.add(new AnSeparator());
+    }
 
-  @Nonnull
-  protected abstract String getVcsName();
-
-  protected abstract void addVcsSpecificActions(@Nonnull ActionManager manager, @Nonnull List<AnAction> actions);
-
-  @Override
-  public boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @Nullable DataContext dataContext) {
-    return getVcsName().equals(activeVcs.getId());
-  }
-
-  protected static void addSeparator(@Nonnull final List<AnAction> actions) {
-    actions.add(new AnSeparator());
-  }
-
-  protected static void add(String actionName, ActionManager manager, List<AnAction> actions) {
-    final AnAction action = manager.getAction(actionName);
-    assert action != null : "Can not find action " + actionName;
-    actions.add(action);
-  }
+    protected static void add(String actionName, ActionManager manager, List<AnAction> actions) {
+        AnAction action = manager.getAction(actionName);
+        assert action != null : "Can not find action " + actionName;
+        actions.add(action);
+    }
 }

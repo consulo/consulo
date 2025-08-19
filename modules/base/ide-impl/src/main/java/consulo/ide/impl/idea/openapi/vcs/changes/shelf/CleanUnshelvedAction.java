@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -22,12 +25,21 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ShelvedChanges.CleanMarkedToDelete")
 public class CleanUnshelvedAction extends DumbAwareAction {
+    public CleanUnshelvedAction() {
+        super(
+            LocalizeValue.localizeTODO("Clean Already Unshelved..."),
+            LocalizeValue.localizeTODO("Delete unshelved changelists"),
+            PlatformIconGroup.actionsGc()
+        );
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        final Project project = e.getData(Project.KEY);
-        final Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
+        Presentation presentation = e.getPresentation();
         if (project == null) {
             presentation.setEnabledAndVisible(false);
             return;
@@ -39,7 +51,7 @@ public class CleanUnshelvedAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         CleanUnshelvedFilterDialog dialog = new CleanUnshelvedFilterDialog(project);
         dialog.show();
         if (dialog.isOK()) {

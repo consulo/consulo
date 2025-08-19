@@ -608,170 +608,10 @@
 
         <action id="SaveDocument" class="consulo.ide.impl.idea.ide.actions.SaveDocumentAction"/>
 
-        <action id="Vcs.ShowTabbedFileHistory" class="consulo.ide.impl.idea.openapi.vcs.actions.TabbedShowHistoryAction"
-                icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
-
-        <action id="CheckinProject" class="consulo.ide.impl.idea.openapi.vcs.actions.CommonCheckinProjectAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.commit">
-            <keyboard-shortcut first-keystroke="control K" keymap="$default"/>
-        </action>
-        <action id="CheckinFiles" class="consulo.ide.impl.idea.openapi.vcs.actions.CommonCheckinFilesAction"/>
-        <action id="UpdateFiles" class="consulo.ide.impl.idea.openapi.vcs.update.CommonUpdateFileOrDirectoryAction"/>
-        <action id="CheckStatusForFiles" class="consulo.ide.impl.idea.openapi.vcs.update.CommonStatusFileOrDirectoryAction"/>
-        <action id="IntegrateFiles" class="consulo.ide.impl.idea.openapi.vcs.update.CommonIntegrateFileOrDirectoryAction"/>
-        <action id="Annotate" class="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction"/>
-        <action id="Show.Current.Revision" class="consulo.ide.impl.idea.openapi.vcs.actions.ShowBaseRevisionAction"
-                text="Show Current Revision"/>
-        <action id="Compare.SameVersion" class="consulo.ide.impl.idea.openapi.vcs.actions.CompareWithTheSameVersionAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
-        <action id="Compare.LastVersion" class="consulo.ide.impl.idea.openapi.vcs.actions.CompareWithLastVersion"/>
-        <action id="Compare.Selected" class="consulo.ide.impl.idea.openapi.vcs.actions.CompareWithSelectedRevisionAction" popup="true"/>
-        <action id="Compare.Specified" class="consulo.ide.impl.idea.openapi.vcs.actions.SelectAndCompareWithSelectedRevisionAction"
-                text="Com_pare with Specified Revision..." popup="true"/>
-        <action id="Vcs.ShowHistoryForBlock" class="consulo.ide.impl.idea.openapi.vcs.actions.SelectedBlockHistoryAction"/>
-
-        <group class="consulo.ide.impl.idea.openapi.vcs.actions.VcsActionGroup" id="VcsGroup"/>
-
-        <group class="consulo.ide.impl.idea.openapi.vcs.actions.VcsGroupsWrapper" id="VcsFileGroupPopup" popup="true"/>
-
-        <group id="VersionControlsGroup">
-            <reference ref="VcsFileGroupPopup"/>
-        </group>
-
-        <action id="Vcs.UpdateProject" class="consulo.ide.impl.idea.openapi.vcs.update.CommonUpdateProjectAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.checkout">
-            <keyboard-shortcut first-keystroke="control T" keymap="$default"/>
-        </action>
-
-        <action id="Vcs.IntegrateProject" class="consulo.ide.impl.idea.openapi.vcs.update.CommonIntegrateProjectAction"/>
-
-        <action id="Vcs.RefreshStatuses" class="consulo.ide.impl.idea.openapi.vcs.actions.RefreshStatuses"/>
-        <action id="ChangesView.Refresh" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RefreshAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-        <action id="ChangesView.CreatePatch" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchAction"
-                icon="consulo.platform.base.PlatformIconGroup@filetypes.patch"/>
-        <action id="ChangesView.Revert" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.rollback" text="_Revert..." description="Revert selected changes"/>
-        <action id="ChangesView.Shelve" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesAction"
-                icon="consulo.platform.base.PlatformIconGroup@vcs.shelvesilent"/>
-
-        <group id="ChangesViewToolbar">
-            <reference ref="ChangesView.Refresh"/>
-            <action id="ChangesView.Commit" class="consulo.ide.impl.idea.openapi.vcs.actions.CommonCheckinProjectAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.commit"/>
-            <action id="ChangesView.Rollback" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.rollback"/>
-            <action id="ChangesView.NewChangeList" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.AddChangeListAction"
-                    icon="consulo.platform.base.PlatformIconGroup@general.add"/>
-            <action id="ChangesView.RemoveChangeList" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RemoveChangeListAction"
-                    icon="consulo.platform.base.PlatformIconGroup@general.remove"/>
-            <action id="ChangesView.SetDefault" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.SetDefaultChangeListAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.selectall"/>
-            <action id="ChangesView.Move" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.movetoanotherchangelist"/>
-            <action id="ChangesView.Diff" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
-        </group>
-
         <group id="AlienCommitChangesDialog.AdditionalActions"/>
-
-        <group id="ChangesViewPopupMenu">
-            <reference ref="ChangesView.Commit"/>
-            <reference ref="ChangesView.Rollback"/>
-            <reference ref="ChangesView.Move"/>
-            <reference ref="ChangesView.Diff"/>
-            <reference ref="EditSource"/>
-            <separator/>
-            <action id="ChangesView.DeleteUnversioned"
-                    class="consulo.ide.impl.idea.openapi.vcs.changes.actions.DeleteUnversionedFilesAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
-            <action id="ChangesView.AddUnversioned" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionAction">
-                <keyboard-shortcut first-keystroke="control alt A" keymap="$default"/>
-            </action>
-            <action id="ChangesView.Ignore" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoreUnversionedAction"/>
-            <action id="ChangesView.RemoveDeleted" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForRemovalAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
-            <action id="ChangesView.Edit" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.EditAction"/>
-            <separator/>
-            <reference ref="ChangesView.NewChangeList"/>
-            <reference ref="ChangesView.RemoveChangeList"/>
-            <reference ref="ChangesView.SetDefault"/>
-            <action id="ChangesView.Rename" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RenameChangeListAction"/>
-            <reference ref="ChangesView.CreatePatch"/>
-            <reference ref="ChangesView.Shelve"/>
-            <separator/>
-            <reference ref="ChangesView.Refresh"/>
-            <separator/>
-            <reference ref="VersionControlsGroup"/>
-        </group>
-
-        <!-- There are alternative action presentations for the UnversionedViewDialog. Icon is the difference.  -->
-        <group id="Unversioned.Files.Dialog">
-            <action id="ChangesView.AddUnversioned.From.Dialog"
-                    class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionAction"
-                    icon="consulo.platform.base.PlatformIconGroup@general.add" use-shortcut-of="ChangesView.AddUnversioned"/>
-            <reference ref="ChangesView.Move"/>
-            <action id="ChangesView.DeleteUnversioned.From.Dialog"
-                    class="consulo.ide.impl.idea.openapi.vcs.changes.actions.DeleteUnversionedFilesAction"/>
-            <reference ref="ChangesView.Ignore"/>
-        </group>
-
-        <group id="ShelvedChangesPopupMenu">
-            <reference id="ShelveChanges.UnshelveWithDialog"/>
-            <action id="ShelvedChanges.Restore" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.RestoreShelvedChange"/>
-            <action id="ShelvedChanges.Diff" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.DiffShelvedChangesAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.diff" use-shortcut-of="Diff.ShowDiff"/>
-            <action id="ChangesView.CreatePatchFromChanges"
-                    class="consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction"
-                    icon="consulo.platform.base.PlatformIconGroup@filetypes.patch"/>
-            <action id="ShelvedChanges.ImportPatches" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.ImportIntoShelfAction"/>
-            <separator/>
-            <action id="ShelvedChanges.Rename" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.RenameShelvedChangeListAction"
-                    use-shortcut-of="RenameElement"/>
-            <reference ref="$Delete"/>
-            <separator/>
-            <action id="ShelvedChanges.ShowHideDeleted" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShowHideRecycledAction"
-                    description="Show/Hide Already Unshelved"/>
-            <action id="ShelvedChanges.CleanMarkedToDelete" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.CleanUnshelvedAction"
-                    description="Delete unshelved changelists" text="Clean Already Unshelved..."
-                    icon="consulo.platform.base.PlatformIconGroup@actions.gc"/>
-        </group>
-
-        <group id="VcsHistoryActionsGroup"/>
-
-        <group id="CommittedChangesToolbar">
-            <action id="CommittedChanges.Refresh" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshCommittedAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-            <action id="CommittedChanges.Filter" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.FilterCommittedAction"
-                    icon="consulo.platform.base.PlatformIconGroup@general.filter"/>
-            <action id="CommittedChanges.Details" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.ChangeListDetailsAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.showchangesonly"/>
-            <reference ref="ChangesView.CreatePatchFromChanges"/>
-            <action id="CommittedChanges.Revert" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RevertChangeListAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.rollback"/>
-            <action id="CommittedChanges.Clear" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.ClearCommittedAction"
-                    icon="consulo.platform.base.PlatformIconGroup@vcs.remove"/>
-        </group>
 
         <group id="RepositoryChangesBrowserToolbar">
         </group>
-
-        <group id="IncomingChangesToolbar">
-            <action id="IncomingChanges.Refresh" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-            <reference ref="CommittedChanges.Details"/>
-            <!--
-            <action id="IncomingChanges.Get" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.GetCommittedChangelistAction"
-                    icon="/actions/get.png"/>
-            -->
-            <reference ref="Vcs.UpdateProject"/>
-        </group>
-
-        <group id="Vcs.History">
-            <action id="VcsHistory.ShowAllAffected" class="consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction"/>
-        </group>
-
-        <action id="ChangesView.Browse" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.BrowseChangesAction"/>
 
         <action id="Diff.PrevChange" class="consulo.ui.ex.action.EmptyAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.back" use-shortcut-of="PreviousTab"/>
@@ -779,74 +619,6 @@
                 icon="consulo.platform.base.PlatformIconGroup@actions.forward" use-shortcut-of="NextTab"/>
         <action id="Diff.SelectedChange" class="consulo.ui.ex.action.EmptyAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.listfiles" use-shortcut-of="GotoChangedFile"/>
-
-        <group id="Vcs.CheckinProjectPopup">
-            <separator/>
-        </group>
-
-        <group id="Vcs.CheckinProjectToolbar">
-        </group>
-
-        <group id="UpdateActionGroup">
-            <reference ref="EditSource"/>
-            <reference ref="$Delete"/>
-            <action id="Diff.UpdatedFiles" class="consulo.ide.impl.idea.openapi.vcs.update.ShowUpdatedDiffAction"
-                    use-shortcut-of="CompareDirs" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
-        </group>
-
-        <action class="consulo.ide.impl.idea.openapi.vcs.actions.VcsToolbarLabelAction" id="VcsToolbarLabelAction" text="VCS Label"/>
-        <group id="VcsNavBarToobarActions">
-            <reference ref="VcsToolbarLabelAction"/>
-            <reference ref="Vcs.UpdateProject"/>
-            <reference ref="CheckinProject"/>
-            <reference ref="Vcs.ShowTabbedFileHistory"/>
-            <reference ref="ChangesView.Revert"/>
-            <separator/>
-            <add-to-group group-id="NavBarVcsGroup" anchor="first"/>
-        </group>
-
-        <group id="Vcs.MessageActionGroup">
-            <action id="Vcs.ShowMessageHistory"
-                    class="consulo.ide.impl.idea.openapi.vcs.actions.ShowMessageHistoryAction"
-                    icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
-        </group>
-
-        <group id="VcsToobarActions">
-            <reference ref="VcsToolbarLabelAction"/>
-            <reference ref="Vcs.UpdateProject"/>
-            <reference ref="CheckinProject"/>
-            <reference ref="Compare.SameVersion"/>
-            <reference ref="Vcs.ShowTabbedFileHistory"/>
-            <reference ref="ChangesView.Revert"/>
-            <separator/>
-            <add-to-group group-id="MainToolBarSettings" relative-to-action="ShowSettings" anchor="before"/>
-        </group>
-
-        <action id="Vcs.ShowDiffWithLocal" class="consulo.ide.impl.idea.openapi.vcs.history.ShowDiffWithLocalAction"
-                text="Compare with Local" description="Compare version from selected revision with current version"
-                icon="consulo.platform.base.PlatformIconGroup@actions.diffwithcurrent"/>
-
-        <action id="Vcs.RollbackChangedLines" class="consulo.ide.impl.idea.openapi.vcs.ex.RollbackLineStatusAction"
-                icon="consulo.platform.base.PlatformIconGroup@general.reset">
-        </action>
-
-        <group id="Shelve.KeymapGroup" text="Shelve">
-            <reference ref="ChangesView.Shelve"/>
-            <reference ref="ShelveChanges.UnshelveWithDialog"/>
-            <reference ref="ShelvedChanges.Restore"/>
-            <reference ref="ShelvedChanges.ImportPatches"/>
-            <separator/>
-            <reference ref="ShelvedChanges.Rename"/>
-            <separator/>
-            <reference ref="ShelvedChanges.Diff"/>
-            <reference ref="ChangesView.CreatePatchFromChanges"/>
-            <separator/>
-            <reference ref="ShelvedChanges.ShowHideDeleted"/>
-            <reference ref="ShelvedChanges.CleanMarkedToDelete"/>
-            <separator/>
-
-            <add-to-group group-id="Vcs.KeymapGroup" anchor="first"/>
-        </group>
 
         <group id="DebuggerActions">
         </group>
@@ -1816,8 +1588,8 @@
 
         <group id="Vcs.Show.Toolwindow.Tab">
             <add-to-group group-id="VcsGeneral.KeymapGroup"/>
-            <action id="Vcs.Show.Local.Changes" class="consulo.ide.impl.idea.vcs.VcsShowLocalChangesAction" text="Show Local Changes"/>
-            <action id="Vcs.Show.Shelf" class="consulo.ide.impl.idea.vcs.VcsShowShelfAction" text="Show Shelf"/>
+            <action id="Vcs.Show.Local.Changes" class="consulo.ide.impl.idea.vcs.VcsShowLocalChangesAction"/>
+            <action id="Vcs.Show.Shelf" class="consulo.ide.impl.idea.vcs.VcsShowShelfAction"/>
         </group>
 
         <group id="TodoMainGroup" text="TODO">
@@ -1941,17 +1713,7 @@
             <add-to-group group-id="EditorContextBarMenu" anchor="last"/>
         </group>
 
-        <action id="Vcs.Push" class="consulo.ide.impl.idea.dvcs.push.VcsPushAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.commit" text="Push...">
-            <keyboard-shortcut first-keystroke="control shift K" keymap="$default"/>
-        </action>
-
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsLogCreatePatchAction" id="Vcs.Log.CreatePatch"
-                use-shortcut-of="ChangesView.CreatePatch"/>
-
-        <action id="Vcs.CopyRevisionNumberAction" class="consulo.ide.impl.idea.openapi.vcs.history.CopyRevisionNumberAction"
-                text="Copy Revision Number" description="Copy short revision numbers of selected commits to the clipboard"
-                icon="consulo.platform.base.PlatformIconGroup@actions.copy"/>
+        <action id="Vcs.Push" class="consulo.ide.impl.idea.dvcs.push.VcsPushAction"/>
 
         <group id="Vcs.Log.ContextMenu">
             <reference id="Vcs.CopyRevisionNumberAction"/>
@@ -2043,7 +1805,7 @@
                 icon="consulo.platform.base.PlatformIconGroup@general.gearplain" text="Text Filter Settings"
                 description="Text Filter Settings"/>
         <action class="consulo.ide.impl.idea.vcs.log.ui.actions.IntelliSortChooserToggleAction" id="Vcs.Log.IntelliSortChooser"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsShowLogAction" id="Vcs.Show.Log" text="Show VCS Log">
+        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsShowLogAction" id="Vcs.Show.Log">
             <add-to-group group-id="Vcs.Show.Toolwindow.Tab"/>
         </action>
         <action class="consulo.ide.impl.idea.vcs.log.ui.actions.CompactReferencesViewAction" id="Vcs.Log.CompactReferencesView"/>

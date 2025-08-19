@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.vcs.actions.AbstractVcsAction;
-import consulo.versionControlSystem.action.VcsContext;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.versionControlSystem.VcsToolWindow;
+import consulo.versionControlSystem.action.VcsContext;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,26 +30,28 @@ import jakarta.annotation.Nonnull;
  * @since 2006-08-18
  */
 public class ShowChangesViewAction extends AbstractVcsAction {
-  @Override
-  @RequiredUIAccess
-  protected void actionPerformed(VcsContext e) {
-    if (e.getProject() == null) return;
-    final ToolWindowManager manager = ToolWindowManager.getInstance(e.getProject());
-    if (manager != null) {
-      final ToolWindow window = manager.getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
-      if (window != null) {
-        window.show(null);
-      }
+    @Override
+    @RequiredUIAccess
+    protected void actionPerformed(@Nonnull VcsContext e) {
+        if (e.getProject() == null) {
+            return;
+        }
+        ToolWindowManager manager = ToolWindowManager.getInstance(e.getProject());
+        if (manager != null) {
+            ToolWindow window = manager.getToolWindow(VcsToolWindow.ID);
+            if (window != null) {
+                window.show(null);
+            }
+        }
     }
-  }
 
-  @Override
-  protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
-    presentation.setVisible(getActiveVcses(vcsContext).size() > 0);
-  }
+    @Override
+    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+        presentation.setVisible(getActiveVcses(vcsContext).size() > 0);
+    }
 
-  @Override
-  protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
-    return true;
-  }
+    @Override
+    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
+        return true;
+    }
 }

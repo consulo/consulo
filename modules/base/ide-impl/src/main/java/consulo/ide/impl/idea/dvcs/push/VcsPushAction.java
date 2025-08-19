@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.dvcs.push;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.dvcs.push.ui.VcsPushDialog;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,6 +27,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
+import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -34,7 +36,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
+@ActionImpl(id = "Vcs.Push")
 public class VcsPushAction extends DumbAwareAction {
+    public VcsPushAction() {
+        super(ActionLocalize.actionVcsPushText(), LocalizeValue.empty(), VersionControlSystemIconGroup.checkin());
+    }
+
     @Nonnull
     private static Collection<Repository> collectRepositories(
         @Nonnull VcsRepositoryManager vcsRepositoryManager,
@@ -57,9 +64,9 @@ public class VcsPushAction extends DumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        VcsRepositoryManager manager = ServiceManager.getService(project, VcsRepositoryManager.class);
+        VcsRepositoryManager manager = project.getInstance(VcsRepositoryManager.class);
         Collection<Repository> repositories = e.hasData(Editor.KEY)
-            ? ContainerUtil.<Repository>emptyList()
+            ? Collections.emptyList()
             : collectRepositories(manager, e.getData(VirtualFile.KEY_OF_ARRAY));
         VirtualFile selectedFile = DvcsUtil.getSelectedFile(project);
         new VcsPushDialog(
@@ -71,11 +78,9 @@ public class VcsPushAction extends DumbAwareAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        super.update(e);
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabledAndVisible(
-            project != null
-                && !ServiceManager.getService(project, VcsRepositoryManager.class).getRepositories().isEmpty()
+            project != null && !project.getInstance(VcsRepositoryManager.class).getRepositories().isEmpty()
         );
     }
 }

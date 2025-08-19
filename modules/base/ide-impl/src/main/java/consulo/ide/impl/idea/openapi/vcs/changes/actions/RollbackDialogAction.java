@@ -37,7 +37,7 @@ import java.util.Arrays;
  */
 public class RollbackDialogAction extends AnAction implements DumbAware {
   public RollbackDialogAction() {
-    ActionImplUtil.copyFrom(this, IdeActions.CHANGES_VIEW_ROLLBACK);
+    ActionImplUtil.copyFrom(this, IdeActions.CHANGES_VIEW_REVERT);
   }
 
   @Override

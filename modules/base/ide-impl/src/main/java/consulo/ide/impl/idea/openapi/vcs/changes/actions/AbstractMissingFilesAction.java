@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
@@ -29,6 +31,8 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +42,17 @@ import java.util.List;
  * @since 2006-11-02
  */
 public abstract class AbstractMissingFilesAction extends AnAction implements DumbAware {
+    protected AbstractMissingFilesAction() {
+    }
+
+    protected AbstractMissingFilesAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
     @Override
     public void update(AnActionEvent e) {
         List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
@@ -48,13 +63,13 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
-        final List<FilePath> files = e.getRequiredData(ChangesListView.MISSING_FILES_DATA_KEY);
-        final ProgressManager progressManager = ProgressManager.getInstance();
-        final Runnable action = () -> {
-            final List<VcsException> allExceptions = new ArrayList<>();
+        Project project = e.getRequiredData(Project.KEY);
+        List<FilePath> files = e.getRequiredData(ChangesListView.MISSING_FILES_DATA_KEY);
+        ProgressManager progressManager = ProgressManager.getInstance();
+        Runnable action = () -> {
+            List<VcsException> allExceptions = new ArrayList<>();
             ChangesUtil.processFilePathsByVcs(project, files, (vcs, items) -> {
-                final List<VcsException> exceptions = processFiles(vcs, files);
+                List<VcsException> exceptions = processFiles(vcs, files);
                 if (exceptions != null) {
                     allExceptions.addAll(exceptions);
                 }
@@ -80,5 +95,5 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
 
     protected abstract String getName();
 
-    protected abstract List<VcsException> processFiles(final AbstractVcs vcs, final List<FilePath> files);
+    protected abstract List<VcsException> processFiles(AbstractVcs vcs, List<FilePath> files);
 }

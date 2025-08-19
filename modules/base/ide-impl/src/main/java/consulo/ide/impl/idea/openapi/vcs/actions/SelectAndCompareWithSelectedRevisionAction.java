@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
@@ -26,39 +29,45 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author lesya
  */
-public class SelectAndCompareWithSelectedRevisionAction extends AbstractVcsAction{
-  protected void actionPerformed(VcsContext vcsContext) {
-
-    final VirtualFile file = vcsContext.getSelectedFiles()[0];
-    final Project project = vcsContext.getProject();
-    final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
-    if (vcs == null) {
-      return;
-    }
-    RevisionSelector selector = vcs.getRevisionSelector();
-    final DiffProvider diffProvider = vcs.getDiffProvider();
-
-    if (selector != null) {
-      final VcsRevisionNumber vcsRevisionNumber = selector.selectNumber(file);
-
-      if (vcsRevisionNumber != null) {
-        DiffActionExecutor.showDiff(diffProvider, vcsRevisionNumber, file, project, VcsBackgroundableActions.COMPARE_WITH);
-      }
+@ActionImpl(id = "Compare.Specified")
+public class SelectAndCompareWithSelectedRevisionAction extends AbstractVcsAction {
+    public SelectAndCompareWithSelectedRevisionAction() {
+        super(LocalizeValue.localizeTODO("Com_pare with Specified Revision..."));
     }
 
-  }
+    @Override
+    @RequiredUIAccess
+    protected void actionPerformed(@Nonnull VcsContext vcsContext) {
+        VirtualFile file = vcsContext.getSelectedFiles()[0];
+        Project project = vcsContext.getProject();
+        AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
+        if (vcs == null) {
+            return;
+        }
+        RevisionSelector selector = vcs.getRevisionSelector();
+        DiffProvider diffProvider = vcs.getDiffProvider();
 
-  
+        if (selector != null) {
+            VcsRevisionNumber vcsRevisionNumber = selector.selectNumber(file);
 
-  protected void update(VcsContext vcsContext, Presentation presentation) {
-    AbstractShowDiffAction.updateDiffAction(presentation, vcsContext, VcsBackgroundableActions.COMPARE_WITH);
-  }
+            if (vcsRevisionNumber != null) {
+                DiffActionExecutor.showDiff(diffProvider, vcsRevisionNumber, file, project, VcsBackgroundableActions.COMPARE_WITH);
+            }
+        }
+    }
 
-  protected boolean forceSyncUpdate(final AnActionEvent e) {
-    return true;
-  }
+    @Override
+    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+        AbstractShowDiffAction.updateDiffAction(presentation, vcsContext, VcsBackgroundableActions.COMPARE_WITH);
+    }
+
+    @Override
+    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
+        return true;
+    }
 }

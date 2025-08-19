@@ -15,14 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
-import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.EditFileProvider;
+import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -35,45 +40,53 @@ import java.util.List;
  * @author yole
  * @since 2006-12-15
  */
+@ActionImpl(id = "ChangesView.Edit")
 public class EditAction extends AnAction {
+    public EditAction() {
+        super(ActionLocalize.actionChangesviewEditText(), ActionLocalize.actionChangesviewEditDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         List<VirtualFile> files = e.getRequiredData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
         editFilesAndShowErrors(project, files);
     }
 
     public static void editFilesAndShowErrors(Project project, List<VirtualFile> files) {
-        final List<VcsException> exceptions = new ArrayList<>();
+        List<VcsException> exceptions = new ArrayList<>();
         editFiles(project, files, exceptions);
         if (!exceptions.isEmpty()) {
             AbstractVcsHelper.getInstance(project).showErrors(exceptions, VcsLocalize.editErrors());
         }
     }
 
-    public static void editFiles(final Project project, final List<VirtualFile> files, final List<VcsException> exceptions) {
-        ChangesUtil.processVirtualFilesByVcs(project, files, (vcs, items) -> {
-            final EditFileProvider provider = vcs.getEditFileProvider();
-            if (provider != null) {
-                try {
-                    provider.editFiles(VfsUtil.toVirtualFileArray(items));
-                }
-                catch (VcsException e1) {
-                    exceptions.add(e1);
-                }
-                for (VirtualFile file : items) {
-                    VcsDirtyScopeManager.getInstance(project).fileDirty(file);
-                    FileStatusManager.getInstance(project).fileStatusChanged(file);
+    public static void editFiles(Project project, List<VirtualFile> files, List<VcsException> exceptions) {
+        ChangesUtil.processVirtualFilesByVcs(
+            project,
+            files,
+            (vcs, items) -> {
+                EditFileProvider provider = vcs.getEditFileProvider();
+                if (provider != null) {
+                    try {
+                        provider.editFiles(VfsUtil.toVirtualFileArray(items));
+                    }
+                    catch (VcsException e1) {
+                        exceptions.add(e1);
+                    }
+                    for (VirtualFile file : items) {
+                        VcsDirtyScopeManager.getInstance(project).fileDirty(file);
+                        FileStatusManager.getInstance(project).fileStatusChanged(file);
+                    }
                 }
             }
-        });
+        );
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
         List<VirtualFile> files = e.getData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
-        boolean enabled = files != null && !files.isEmpty();
-        e.getPresentation().setEnabledAndVisible(enabled);
+        e.getPresentation().setEnabledAndVisible(files != null && !files.isEmpty());
     }
 }

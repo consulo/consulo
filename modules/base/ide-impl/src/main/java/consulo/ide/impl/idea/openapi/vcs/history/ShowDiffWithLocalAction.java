@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,36 +33,55 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.ShowDiffWithLocal")
 public class ShowDiffWithLocalAction extends DumbAwareAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) return;
-
-    VcsRevisionNumber currentRevisionNumber = e.getRequiredData(VcsDataKeys.HISTORY_SESSION).getCurrentRevisionNumber();
-    VcsFileRevision selectedRevision = e.getRequiredData(VcsDataKeys.VCS_FILE_REVISIONS)[0];
-    FilePath filePath = e.getRequiredData(VcsDataKeys.FILE_PATH);
-
-    if (currentRevisionNumber != null && selectedRevision != null) {
-      DiffFromHistoryHandler diffHandler =
-              ObjectUtil.notNull(e.getRequiredData(VcsDataKeys.HISTORY_PROVIDER).getHistoryDiffHandler(), new StandardDiffFromHistoryHandler());
-      diffHandler.showDiffForTwo(project, filePath, selectedRevision, new CurrentRevision(filePath.getVirtualFile(), currentRevisionNumber));
+    public ShowDiffWithLocalAction() {
+        super(
+            LocalizeValue.localizeTODO("Compare with Local"),
+            LocalizeValue.localizeTODO("Compare version from selected revision with current version"),
+            PlatformIconGroup.actionsDiffwithcurrent()
+        );
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    VcsFileRevision[] selectedRevisions = e.getData(VcsDataKeys.VCS_FILE_REVISIONS);
-    VirtualFile virtualFile = e.getData(VirtualFile.KEY);
-    VcsHistorySession historySession = e.getData(VcsDataKeys.HISTORY_SESSION);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
+            return;
+        }
 
-    e.getPresentation().setVisible(true);
-    e.getPresentation().setEnabled(
-      selectedRevisions != null && selectedRevisions.length == 1 && virtualFile != null
-        && historySession != null && historySession.getCurrentRevisionNumber() != null
-        && historySession.isContentAvailable(selectedRevisions[0])
-        && e.hasData(VcsDataKeys.FILE_PATH) && e.hasData(VcsDataKeys.HISTORY_PROVIDER) && e.hasData(Project.KEY)
-    );
-  }
+        VcsRevisionNumber currentRevisionNumber = e.getRequiredData(VcsDataKeys.HISTORY_SESSION).getCurrentRevisionNumber();
+        VcsFileRevision selectedRevision = e.getRequiredData(VcsDataKeys.VCS_FILE_REVISIONS)[0];
+        FilePath filePath = e.getRequiredData(VcsDataKeys.FILE_PATH);
+
+        if (currentRevisionNumber != null && selectedRevision != null) {
+            DiffFromHistoryHandler diffHandler =
+                ObjectUtil.notNull(
+                    e.getRequiredData(VcsDataKeys.HISTORY_PROVIDER).getHistoryDiffHandler(),
+                    new StandardDiffFromHistoryHandler()
+                );
+            diffHandler.showDiffForTwo(
+                project,
+                filePath,
+                selectedRevision,
+                new CurrentRevision(filePath.getVirtualFile(), currentRevisionNumber)
+            );
+        }
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        VcsFileRevision[] selectedRevisions = e.getData(VcsDataKeys.VCS_FILE_REVISIONS);
+        VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+        VcsHistorySession historySession = e.getData(VcsDataKeys.HISTORY_SESSION);
+
+        e.getPresentation().setVisible(true);
+        e.getPresentation().setEnabled(
+            selectedRevisions != null && selectedRevisions.length == 1 && virtualFile != null
+                && historySession != null && historySession.getCurrentRevisionNumber() != null
+                && historySession.isContentAvailable(selectedRevisions[0])
+                && e.hasData(VcsDataKeys.FILE_PATH) && e.hasData(VcsDataKeys.HISTORY_PROVIDER) && e.hasData(Project.KEY)
+        );
+    }
 }

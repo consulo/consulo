@@ -105,7 +105,6 @@ import java.util.function.Consumer;
  */
 public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton implements EditorColorsListener, CopyProvider {
     private static final Logger LOG = Logger.getInstance(FileHistoryPanelImpl.class);
-    private static final String VCS_HISTORY_ACTIONS_GROUP = "VcsHistoryActionsGroup";
 
     @Nonnull
     private final Project myProject;
@@ -501,10 +500,6 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
         result.add(ActionManager.getInstance().getAction("Vcs.ShowDiffWithLocal"));
 
-        final AnAction diffGroup = ActionManager.getInstance().getAction(VCS_HISTORY_ACTIONS_GROUP);
-        if (diffGroup != null) {
-            result.add(diffGroup);
-        }
         result.add(new MyCreatePatch());
         result.add(new MyGetVersionAction());
         result.add(new MyAnnotateAction());

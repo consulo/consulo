@@ -15,26 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions.diff;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
-import consulo.versionControlSystem.impl.internal.change.FakeRevision;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.util.collection.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
+import consulo.versionControlSystem.impl.internal.change.FakeRevision;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,8 +45,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+@ActionImpl(id = "ChangesView.Diff")
 public class ShowDiffAction extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(ShowDiffAction.class);
+
+    public ShowDiffAction() {
+        super(
+            ActionLocalize.actionChangesviewDiffText(),
+            ActionLocalize.actionChangesviewDiffDescription(),
+            PlatformIconGroup.actionsDiff()
+        );
+    }
 
     @Override
     @RequiredUIAccess
@@ -112,7 +122,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
             if (convertedChanges.length == 1) {
                 selectedChane = convertedChanges[0];
                 ChangeList changeList =
-                    ((ChangeListManagerImpl)ChangeListManager.getInstance(project)).getIdentityChangeList(selectedChane);
+                    ((ChangeListManagerImpl) ChangeListManager.getInstance(project)).getIdentityChangeList(selectedChane);
                 if (changeList != null) {
                     result = changesInList != null ? changesInList : new ArrayList<>(changeList.getChanges());
                 }
@@ -122,7 +132,8 @@ public class ShowDiffAction extends AnAction implements DumbAware {
             }
 
             //ContainerUtil.sort(result, ChangesComparator.getInstance(false));
-            int index = selectedChane == null ? 0 : Math.max(0, ContainerUtil.indexOfIdentity(result, selectedChane));
+            int index = selectedChane == null ? 0
+                : Math.max(0, consulo.ide.impl.idea.util.containers.ContainerUtil.indexOfIdentity(result, selectedChane));
 
             showDiffForChange(project, result, index);
         };

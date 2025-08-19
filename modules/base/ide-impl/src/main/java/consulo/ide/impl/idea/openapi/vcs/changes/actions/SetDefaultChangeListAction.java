@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.application.AllIcons;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -33,33 +34,34 @@ import jakarta.annotation.Nonnull;
  * @author yole
  * @since 2006-11-02
  */
+@ActionImpl(id = "ChangesView.SetDefault")
 public class SetDefaultChangeListAction extends AnAction implements DumbAware {
-  public SetDefaultChangeListAction() {
-    super(
-      VcsLocalize.changesActionSetdefaultchangelistText(),
-      VcsLocalize.changesActionSetdefaultchangelistDescription(),
-      AllIcons.Actions.Selectall
-    );
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    final boolean visible =
-      lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList localChangeList && !localChangeList.isDefault();
-    if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
-      e.getPresentation().setVisible(visible);
+    public SetDefaultChangeListAction() {
+        super(
+            VcsLocalize.changesActionSetdefaultchangelistText(),
+            VcsLocalize.changesActionSetdefaultchangelistDescription(),
+            PlatformIconGroup.actionsSelectall()
+        );
     }
-    else {
-      e.getPresentation().setEnabled(visible);
-    }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    ChangeList[] lists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
-    ChangeListManager.getInstance(project).setDefaultChangeList((LocalChangeList)lists[0]);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
+        boolean visible =
+            lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList localChangeList && !localChangeList.isDefault();
+        if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
+            e.getPresentation().setVisible(visible);
+        }
+        else {
+            e.getPresentation().setEnabled(visible);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        ChangeList[] lists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
+        ChangeListManager.getInstance(project).setDefaultChangeList((LocalChangeList) lists[0]);
+    }
 }

@@ -17,118 +17,130 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.versionControlSystem.change.patch.PatchHunk;
-import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.patch.PatchHunk;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ApplyPatchForBaseRevisionTexts {
-  private final CharSequence myLocal;
-  private CharSequence myBase;
-  private String myPatched;
-  private List<String> myWarnings;
-  private boolean myBaseRevisionLoaded;
+    private final CharSequence myLocal;
+    private CharSequence myBase;
+    private String myPatched;
+    private List<String> myWarnings;
+    private boolean myBaseRevisionLoaded;
 
-  @Nonnull
-  public static ApplyPatchForBaseRevisionTexts create(final Project project, final VirtualFile file, final FilePath pathBeforeRename,
-                                                       final TextFilePatch patch, final Getter<CharSequence> baseContents) {
-    assert ! patch.isNewFile();
-    final String beforeVersionId = patch.getBeforeVersionId();
-    DefaultPatchBaseVersionProvider provider = null;
-    if (beforeVersionId != null) {
-      provider = new DefaultPatchBaseVersionProvider(project, file, beforeVersionId);
-    }
-    if (provider != null && provider.canProvideContent()) {
-      return new ApplyPatchForBaseRevisionTexts(provider, pathBeforeRename, patch, file, baseContents);
-    } else {
-      return new ApplyPatchForBaseRevisionTexts(null, pathBeforeRename, patch, file, baseContents);
-    }
-  }
-
-  private ApplyPatchForBaseRevisionTexts(
-    final DefaultPatchBaseVersionProvider provider,
-    final FilePath pathBeforeRename,
-    final TextFilePatch patch,
-    final VirtualFile file,
-    Getter<CharSequence> baseContents
-  ) {
-    myWarnings = new ArrayList<>();
-    final FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
-    Document document = fileDocumentManager.getDocument(file);
-    if (document != null) {
-      fileDocumentManager.saveDocument(document);
-    }
-    myLocal = LoadTextUtil.loadText(file);
-
-    final List<PatchHunk> hunks = patch.getHunks();
-
-    if (provider != null) {
-      try {
-        provider.getBaseVersionContent(pathBeforeRename, text -> {
-          final GenericPatchApplier applier = new GenericPatchApplier(text, hunks);
-          if (! applier.execute()) {
-            return true;
-          }
-          myBase = text;
-          setPatched(applier.getAfter());
-          return false;
-        }, myWarnings);
-      }
-      catch (VcsException e) {
-        myWarnings.add(e.getMessage());
-      }
-      myBaseRevisionLoaded = myPatched != null;
-      if (myBaseRevisionLoaded) return;
+    @Nonnull
+    public static ApplyPatchForBaseRevisionTexts create(
+        Project project,
+        VirtualFile file,
+        FilePath pathBeforeRename,
+        TextFilePatch patch,
+        Supplier<CharSequence> baseContents
+    ) {
+        assert !patch.isNewFile();
+        String beforeVersionId = patch.getBeforeVersionId();
+        DefaultPatchBaseVersionProvider provider = null;
+        if (beforeVersionId != null) {
+            provider = new DefaultPatchBaseVersionProvider(project, file, beforeVersionId);
+        }
+        if (provider != null && provider.canProvideContent()) {
+            return new ApplyPatchForBaseRevisionTexts(provider, pathBeforeRename, patch, file, baseContents);
+        }
+        else {
+            return new ApplyPatchForBaseRevisionTexts(null, pathBeforeRename, patch, file, baseContents);
+        }
     }
 
-    CharSequence contents = baseContents.get();
-    if (contents != null) {
-      contents = StringUtil.convertLineSeparators(contents.toString());
-      myBase = contents;
-      myBaseRevisionLoaded = true;
-      final GenericPatchApplier applier = new GenericPatchApplier(contents, hunks);
-      if (! applier.execute()) {
-        applier.trySolveSomehow();
-      }
-      setPatched(applier.getAfter());
-      return;
+    private ApplyPatchForBaseRevisionTexts(
+        DefaultPatchBaseVersionProvider provider,
+        FilePath pathBeforeRename,
+        TextFilePatch patch,
+        VirtualFile file,
+        Supplier<CharSequence> baseContents
+    ) {
+        myWarnings = new ArrayList<>();
+        FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
+        Document document = fileDocumentManager.getDocument(file);
+        if (document != null) {
+            fileDocumentManager.saveDocument(document);
+        }
+        myLocal = LoadTextUtil.loadText(file);
+
+        List<PatchHunk> hunks = patch.getHunks();
+
+        if (provider != null) {
+            try {
+                provider.getBaseVersionContent(
+                    pathBeforeRename,
+                    text -> {
+                        GenericPatchApplier applier = new GenericPatchApplier(text, hunks);
+                        if (!applier.execute()) {
+                            return true;
+                        }
+                        myBase = text;
+                        setPatched(applier.getAfter());
+                        return false;
+                    },
+                    myWarnings
+                );
+            }
+            catch (VcsException e) {
+                myWarnings.add(e.getMessage());
+            }
+            myBaseRevisionLoaded = myPatched != null;
+            if (myBaseRevisionLoaded) {
+                return;
+            }
+        }
+
+        CharSequence contents = baseContents.get();
+        if (contents != null) {
+            contents = StringUtil.convertLineSeparators(contents.toString());
+            myBase = contents;
+            myBaseRevisionLoaded = true;
+            GenericPatchApplier applier = new GenericPatchApplier(contents, hunks);
+            if (!applier.execute()) {
+                applier.trySolveSomehow();
+            }
+            setPatched(applier.getAfter());
+            return;
+        }
+
+        GenericPatchApplier applier = new GenericPatchApplier(myLocal, hunks);
+        if (!applier.execute()) {
+            applier.trySolveSomehow();
+        }
+        setPatched(applier.getAfter());
     }
 
-    final GenericPatchApplier applier = new GenericPatchApplier(myLocal, hunks);
-    if (! applier.execute()) {
-      applier.trySolveSomehow();
+    public CharSequence getLocal() {
+        return myLocal;
     }
-    setPatched(applier.getAfter());
-  }
 
-  public CharSequence getLocal() {
-    return myLocal;
-  }
+    public CharSequence getBase() {
+        return myBase;
+    }
 
-  public CharSequence getBase() {
-    return myBase;
-  }
-  
-  private void setPatched(final String text) {
-    myPatched = StringUtil.convertLineSeparators(text);
-  }
+    private void setPatched( String text) {
+        myPatched = StringUtil.convertLineSeparators(text);
+    }
 
-  public String getPatched() {
-    return myPatched;
-  }
+    public String getPatched() {
+        return myPatched;
+    }
 
-  public static String getCannotLoadBaseMessage(final String filePatch) {
-    return VcsLocalize.patchLoadBaseRevisionError(filePatch,"").get();
-  }
+    public static String getCannotLoadBaseMessage( String filePatch) {
+        return VcsLocalize.patchLoadBaseRevisionError(filePatch, "").get();
+    }
 }

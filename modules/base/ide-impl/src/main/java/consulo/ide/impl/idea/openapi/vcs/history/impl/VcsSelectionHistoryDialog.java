@@ -208,7 +208,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         DefaultActionGroup popupActions = new DefaultActionGroup();
         popupActions.add(new MyDiffAction());
         popupActions.add(new MyDiffLocalAction());
-        popupActions.add(ShowAllAffectedGenericAction.getInstance());
+        popupActions.add(ActionManager.getInstance().getAction(VcsActions.ACTION_SHOW_ALL_AFFECTED));
         popupActions.add(ActionManager.getInstance().getAction(VcsActions.ACTION_COPY_REVISION_NUMBER));
         PopupHandler.installPopupHandler(myList, popupActions, ActionPlaces.UPDATE_POPUP, ActionManager.getInstance());
 

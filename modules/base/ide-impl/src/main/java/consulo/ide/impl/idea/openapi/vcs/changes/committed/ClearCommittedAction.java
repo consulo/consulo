@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -30,9 +31,14 @@ import jakarta.annotation.Nonnull;
  * @author Irina.Chernushina
  * @since 2012-04-23
  */
+@ActionImpl(id = "CommittedChanges.Clear")
 public class ClearCommittedAction extends AnAction implements DumbAware {
     public ClearCommittedAction() {
-        super("Clear", "Clears cached revisions", PlatformIconGroup.generalRemove());
+        super(
+            ActionLocalize.actionCommittedchangesClearText(),
+            ActionLocalize.actionCommittedchangesClearDescription(),
+            PlatformIconGroup.generalRemove()
+        );
     }
 
     @Override

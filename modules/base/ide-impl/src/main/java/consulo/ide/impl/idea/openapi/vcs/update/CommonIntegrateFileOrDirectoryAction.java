@@ -15,13 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 
+@ActionImpl(id = "IntegrateFiles")
 public class CommonIntegrateFileOrDirectoryAction extends AbstractCommonUpdateAction {
     public CommonIntegrateFileOrDirectoryAction() {
         super(ActionInfo.INTEGRATE, ScopeInfo.FILES, true);
+        getTemplatePresentation().setTextValue(ActionLocalize.actionIntegratefilesText());
+        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionIntegratefilesDescription());
     }
 
+    @Override
     protected boolean filterRootsBeforeAction() {
         return true;
     }

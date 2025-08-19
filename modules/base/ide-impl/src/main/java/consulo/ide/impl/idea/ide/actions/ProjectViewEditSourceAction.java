@@ -17,19 +17,19 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigatableWithText;
-
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Objects;
 
 // from kotlin
-@ActionImpl(id = "ProjectViewEditSource", shortcutFrom = @ActionRef(id = "EditSource"))
+@ActionImpl(id = "ProjectViewEditSource", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE))
 public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
     public ProjectViewEditSourceAction() {
         super(true);

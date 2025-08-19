@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitChangeListDialog;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
@@ -38,7 +41,16 @@ import java.util.stream.Stream;
 public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     private static final Logger LOG = Logger.getInstance(AbstractCommonCheckinAction.class);
 
+    protected AbstractCommonCheckinAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull VcsContext context) {
         LOG.debug("actionPerformed. ");
         Project project = ObjectUtil.notNull(context.getProject());
@@ -60,6 +72,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         }
     }
 
+    @RequiredUIAccess
     protected void performCheckIn(@Nonnull VcsContext context, @Nonnull Project project, @Nonnull FilePath[] roots) {
         LOG.debug("invoking commit dialog after update");
         LocalChangeList initialSelection = getInitiallySelectedChangeList(context, project);
@@ -74,8 +87,9 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     }
 
     @Nonnull
+    @RequiredUIAccess
     protected FilePath[] prepareRootsForCommit(@Nonnull FilePath[] roots, @Nonnull Project project) {
-        ApplicationManager.getApplication().saveAll();
+        Application.get().saveAll();
 
         return DescindingFilesFilter.filterDescindingFiles(roots, project);
     }

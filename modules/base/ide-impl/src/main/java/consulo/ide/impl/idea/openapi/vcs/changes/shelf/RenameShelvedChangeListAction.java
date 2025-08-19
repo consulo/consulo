@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,56 +33,61 @@ import java.util.List;
 /**
  * @author yole
  */
+@ActionImpl(id = "ShelvedChanges.Rename", shortcutFrom = @ActionRef(id = "RenameElement"))
 public class RenameShelvedChangeListAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
-    final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
-    assert (changes != null) || (recycledChanges != null);
-    final ShelvedChangeList changeList = (changes != null && changes.length == 1) ? changes [0] : recycledChanges[0];
-    String newName = Messages.showInputDialog(
-      project,
-      VcsLocalize.shelveChangesRenamePrompt().get(),
-      VcsLocalize.shelveChangesRenameTitle().get(),
-      UIUtil.getQuestionIcon(),
-      changeList.DESCRIPTION,
-      new InputValidator() {
-        @Override
-        @RequiredUIAccess
-        public boolean checkInput(final String inputString) {
-          if (inputString.length() == 0) {
-            return false;
-          }
-          final List<ShelvedChangeList> list = ShelveChangesManager.getInstance(project).getShelvedChangeLists();
-          for (ShelvedChangeList oldList : list) {
-            if (oldList != changeList && oldList.DESCRIPTION.equals(inputString)) {
-              return false;
-            }
-          }
-          return true;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public boolean canClose(final String inputString) {
-          return checkInput(inputString);
-        }
-      }
-    );
-    if (newName != null && !newName.equals(changeList.DESCRIPTION)) {
-      ShelveChangesManager.getInstance(project).renameChangeList(changeList, newName);
+    public RenameShelvedChangeListAction() {
+        super(ActionLocalize.actionShelvedchangesRenameText(), ActionLocalize.actionShelvedchangesRenameDescription());
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
-    final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
-    e.getPresentation().setEnabled(
-      project != null && ((changes != null && changes.length == 1) || (recycledChanges != null && recycledChanges.length == 1))
-    );
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+        ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+        assert changes != null || recycledChanges != null;
+        final ShelvedChangeList changeList = (changes != null && changes.length == 1) ? changes[0] : recycledChanges[0];
+        String newName = Messages.showInputDialog(
+            project,
+            VcsLocalize.shelveChangesRenamePrompt().get(),
+            VcsLocalize.shelveChangesRenameTitle().get(),
+            UIUtil.getQuestionIcon(),
+            changeList.DESCRIPTION,
+            new InputValidator() {
+                @Override
+                @RequiredUIAccess
+                public boolean checkInput(String inputString) {
+                    if (inputString.length() == 0) {
+                        return false;
+                    }
+                    List<ShelvedChangeList> list = ShelveChangesManager.getInstance(project).getShelvedChangeLists();
+                    for (ShelvedChangeList oldList : list) {
+                        if (oldList != changeList && oldList.DESCRIPTION.equals(inputString)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
+                @Override
+                @RequiredUIAccess
+                public boolean canClose(String inputString) {
+                    return checkInput(inputString);
+                }
+            }
+        );
+        if (newName != null && !newName.equals(changeList.DESCRIPTION)) {
+            ShelveChangesManager.getInstance(project).renameChangeList(changeList, newName);
+        }
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+        ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+        e.getPresentation().setEnabled(
+            project != null && (changes != null && changes.length == 1 || recycledChanges != null && recycledChanges.length == 1)
+        );
+    }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -22,26 +24,30 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ShelvedChanges.ShowHideDeleted")
 public class ShowHideRecycledAction extends AnAction {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final Presentation presentation = e.getPresentation();
-    if (project == null) {
-      presentation.setEnabledAndVisible(false);
-      return;
+    public ShowHideRecycledAction() {
+        super(ActionLocalize.actionShelvedchangesShowhidedeletedText(), ActionLocalize.actionShelvedchangesShowhidedeletedDescription());
     }
-    presentation.setEnabledAndVisible(true);
-    final boolean show = ShelveChangesManager.getInstance(project).isShowRecycled();
-    presentation.setText(show ? "Hide Already Unshelved" : "Show Already Unshelved");
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    final ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
-    final boolean show = manager.isShowRecycled();
-    manager.setShowRecycled(! show);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        Presentation presentation = e.getPresentation();
+        if (project == null) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+        presentation.setEnabledAndVisible(true);
+        boolean show = ShelveChangesManager.getInstance(project).isShowRecycled();
+        presentation.setText(show ? "Hide Already Unshelved" : "Show Already Unshelved");
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
+        manager.setShowRecycled(!manager.isShowRecycled());
+    }
 }

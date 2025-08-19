@@ -106,7 +106,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         addAction("ChangesView.AddUnversioned", group);
         addAction("CheckinProject", group);
         addAction("CheckinFiles", group);
-        addAction(IdeActions.CHANGES_VIEW_ROLLBACK, group);
+        addAction(IdeActions.CHANGES_VIEW_REVERT, group);
 
         // history and compare
         addSeparator(group);

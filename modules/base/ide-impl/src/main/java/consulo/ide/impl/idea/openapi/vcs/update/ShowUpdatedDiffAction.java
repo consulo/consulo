@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
@@ -30,6 +32,8 @@ import consulo.diff.internal.DiffRequestFactoryEx;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.diff.impl.internal.action.GoToChangePopupBuilder;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import consulo.localHistory.ByteContent;
@@ -53,22 +57,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@ActionImpl(id = "Diff.UpdatedFiles", shortcutFrom = @ActionRef(id = "CompareDirs"))
 public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
+    public ShowUpdatedDiffAction() {
+        super(
+            ActionLocalize.actionDiffUpdatedfilesText(),
+            ActionLocalize.actionDiffUpdatedfilesDescription(),
+            PlatformIconGroup.actionsDiff()
+        );
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final DataContext dc = e.getDataContext();
+        DataContext dc = e.getDataContext();
 
-        final Presentation presentation = e.getPresentation();
+        Presentation presentation = e.getPresentation();
 
         //presentation.setVisible(isVisible(dc));
         presentation.setEnabled(isVisible(dc) && isEnabled(dc));
     }
 
-    private boolean isVisible(final DataContext dc) {
+    private boolean isVisible(DataContext dc) {
         return dc.hasData(Project.KEY) && dc.hasData(VcsDataKeys.LABEL_BEFORE) && dc.hasData(VcsDataKeys.LABEL_AFTER);
     }
 
-    private boolean isEnabled(final DataContext dc) {
+    private boolean isEnabled(DataContext dc) {
         return dc.hasData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
     }
 

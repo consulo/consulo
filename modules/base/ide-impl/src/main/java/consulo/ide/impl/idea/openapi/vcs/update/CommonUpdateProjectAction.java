@@ -15,13 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.versionControlSystem.update.ActionInfo;
 
+@ActionImpl(id = "Vcs.UpdateProject")
 public class CommonUpdateProjectAction extends AbstractCommonUpdateAction {
     public CommonUpdateProjectAction() {
         super(ActionInfo.UPDATE, ScopeInfo.PROJECT, true);
+        getTemplatePresentation().setTextValue(ActionLocalize.actionVcsUpdateprojectText());
+        getTemplatePresentation().setIcon(VersionControlSystemIconGroup.checkout());
     }
 
+    @Override
     protected boolean filterRootsBeforeAction() {
         return false;
     }

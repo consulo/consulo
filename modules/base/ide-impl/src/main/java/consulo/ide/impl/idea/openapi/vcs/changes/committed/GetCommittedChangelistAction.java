@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
@@ -37,23 +39,26 @@ import java.util.*;
 /**
  * @author yole
  */
+@ActionImpl(id = "IncomingChanges.Get")
 public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
     public GetCommittedChangelistAction() {
         super(ActionInfo.UPDATE, CHANGELIST, false);
+        getTemplatePresentation().setTextValue(ActionLocalize.actionIncomingchangesGetText());
+        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionIncomingchangesGetDescription());
     }
 
     @Override
     @RequiredUIAccess
     protected void actionPerformed(@Nonnull VcsContext context) {
         Collection<FilePath> filePaths = getFilePaths(context);
-        final List<ChangeList> selectedChangeLists = new ArrayList<>();
-        final ChangeList[] selectionFromContext = context.getSelectedChangeLists();
+        List<ChangeList> selectedChangeLists = new ArrayList<>();
+        ChangeList[] selectionFromContext = context.getSelectedChangeLists();
         if (selectionFromContext != null) {
             Collections.addAll(selectedChangeLists, selectionFromContext);
         }
-        final List<CommittedChangeList> incomingChanges =
+        List<CommittedChangeList> incomingChanges =
             CommittedChangesCache.getInstance(context.getProject()).getCachedIncomingChanges();
-        final List<CommittedChangeList> intersectingChanges = new ArrayList<>();
+        List<CommittedChangeList> intersectingChanges = new ArrayList<>();
         if (incomingChanges != null) {
             for (CommittedChangeList changeList : incomingChanges) {
                 if (!selectedChangeLists.contains(changeList)) {
@@ -86,9 +91,9 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
     }
 
     @Override
-    protected void update(@Nonnull final VcsContext vcsContext, @Nonnull final Presentation presentation) {
+    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
         super.update(vcsContext, presentation);
-        final ChangeList[] changeLists = vcsContext.getSelectedChangeLists();
+        ChangeList[] changeLists = vcsContext.getSelectedChangeLists();
         presentation.setEnabled(presentation.isEnabled() &&
             CommittedChangesCache.getInstance(vcsContext.getProject()).getCachedIncomingChanges() != null &&
             changeLists != null && changeLists.length > 0);
@@ -96,13 +101,13 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
 
     private static final ScopeInfo CHANGELIST = new ScopeInfo() {
         @Override
-        public FilePath[] getRoots(final VcsContext context, final ActionInfo actionInfo) {
-            final Collection<FilePath> filePaths = getFilePaths(context);
+        public FilePath[] getRoots(VcsContext context, ActionInfo actionInfo) {
+            Collection<FilePath> filePaths = getFilePaths(context);
             return filePaths.toArray(new FilePath[filePaths.size()]);
         }
 
         @Override
-        public String getScopeName(final VcsContext dataContext, final ActionInfo actionInfo) {
+        public String getScopeName(VcsContext dataContext, ActionInfo actionInfo) {
             return "Changelist";
         }
 
@@ -112,9 +117,9 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
         }
     };
 
-    private static Collection<FilePath> getFilePaths(final VcsContext context) {
-        final Set<FilePath> files = new HashSet<>();
-        final ChangeList[] selectedChangeLists = context.getSelectedChangeLists();
+    private static Collection<FilePath> getFilePaths(VcsContext context) {
+        Set<FilePath> files = new HashSet<>();
+        ChangeList[] selectedChangeLists = context.getSelectedChangeLists();
         if (selectedChangeLists != null) {
             for (ChangeList changelist : selectedChangeLists) {
                 for (Change change : changelist.getChanges()) {

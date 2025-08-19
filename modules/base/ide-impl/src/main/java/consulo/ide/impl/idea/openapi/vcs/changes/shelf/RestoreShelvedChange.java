@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -22,24 +23,25 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ShelvedChanges.Restore")
 public class RestoreShelvedChange extends AnAction {
-  public RestoreShelvedChange() {
-    super(VcsLocalize.vcsShelfActionRestoreText(), VcsLocalize.vcsShelfActionRestoreDescription());
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
-    e.getPresentation().setEnabled(e.hasData(Project.KEY) && recycledChanges != null && recycledChanges.length == 1);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    ShelvedChangeList[] recycledChanges = e.getRequiredData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
-    if (recycledChanges.length == 1) {
-      ShelveChangesManager.getInstance(project).restoreList(recycledChanges[0]);
+    public RestoreShelvedChange() {
+        super(VcsLocalize.vcsShelfActionRestoreText(), VcsLocalize.vcsShelfActionRestoreDescription());
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+        e.getPresentation().setEnabled(e.hasData(Project.KEY) && recycledChanges != null && recycledChanges.length == 1);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        ShelvedChangeList[] recycledChanges = e.getRequiredData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+        if (recycledChanges.length == 1) {
+            ShelveChangesManager.getInstance(project).restoreList(recycledChanges[0]);
+        }
+    }
 }

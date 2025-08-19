@@ -15,13 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.VcsDataKeys;
 
 /**
  * @author yole
  */
+@ActionImpl(id = "CommittedChanges.Revert")
 public class RevertChangeListAction extends RevertCommittedStuffAbstractAction {
-  public RevertChangeListAction() {
-    super(e -> e.getData(VcsDataKeys.CHANGES), e -> e.getData(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN));
-  }
+    public RevertChangeListAction() {
+        super(e -> e.getData(VcsDataKeys.CHANGES), e -> e.getData(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN));
+        getTemplatePresentation().setTextValue(ActionLocalize.actionCommittedchangesRevertText());
+        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionCommittedchangesRevertDescription());
+        getTemplatePresentation().setIcon(PlatformIconGroup.actionsRollback());
+    }
 }

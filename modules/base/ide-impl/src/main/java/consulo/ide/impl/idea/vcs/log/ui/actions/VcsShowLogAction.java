@@ -17,13 +17,18 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.ide.impl.idea.vcs.VcsShowToolWindowTabAction;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 public class VcsShowLogAction extends VcsShowToolWindowTabAction {
-  @Nonnull
-  @Override
-  protected String getTabName() {
-    return VcsLogContentProvider.TAB_NAME;
-  }
+    public VcsShowLogAction() {
+        super(LocalizeValue.localizeTODO("Show VCS Log"));
+    }
+
+    @Nonnull
+    @Override
+    protected String getTabName() {
+        return VcsLogContentProvider.TAB_NAME;
+    }
 }
 

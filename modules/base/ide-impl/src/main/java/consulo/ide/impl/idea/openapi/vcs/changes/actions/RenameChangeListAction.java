@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistDialog;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -32,28 +34,33 @@ import jakarta.annotation.Nonnull;
  * @author yole
  * @since 2006-11-02
  */
+@ActionImpl(id = "ChangesView.Rename")
 public class RenameChangeListAction extends AnAction implements DumbAware {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    final boolean visible =
-      lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList localChangeList && !localChangeList.isReadOnly();
-    if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
-      e.getPresentation().setVisible(visible);
+    public RenameChangeListAction() {
+        super(ActionLocalize.actionChangesviewRenameText(), ActionLocalize.actionChangesviewRenameDescription());
     }
-    else {
-      e.getPresentation().setEnabled(visible);
-    }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    ChangeList[] lists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
-    LocalChangeList list = ChangeListManager.getInstance(project).findChangeList(lists[0].getName());
-    if (list != null) {
-      new EditChangelistDialog(project, list).show();
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
+        boolean visible =
+            lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList localChangeList && !localChangeList.isReadOnly();
+        if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
+            e.getPresentation().setVisible(visible);
+        }
+        else {
+            e.getPresentation().setEnabled(visible);
+        }
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        ChangeList[] lists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
+        LocalChangeList list = ChangeListManager.getInstance(project).findChangeList(lists[0].getName());
+        if (list != null) {
+            new EditChangelistDialog(project, list).show();
+        }
+    }
 }

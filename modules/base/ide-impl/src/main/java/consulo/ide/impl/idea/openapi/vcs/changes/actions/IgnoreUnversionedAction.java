@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
@@ -38,6 +39,7 @@ import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesLi
  * @author yole
  * @since 2006-12-20
  */
+@ActionImpl(id = "ChangesView.Ignore")
 public class IgnoreUnversionedAction extends AnAction {
     public IgnoreUnversionedAction() {
         super(

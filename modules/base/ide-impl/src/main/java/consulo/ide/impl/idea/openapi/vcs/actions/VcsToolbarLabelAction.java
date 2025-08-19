@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-//import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ToolbarLabelAction;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.localize.LocalizeValue;
@@ -14,7 +14,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-//@ActionImpl(id = "VcsToolbarLabelAction")
+@ActionImpl(id = "VcsToolbarLabelAction")
 public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomComponentAction {
     public VcsToolbarLabelAction() {
         super(LocalizeValue.localizeTODO("VCS Label"));

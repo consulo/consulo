@@ -15,35 +15,47 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.language.editor.ui.awt.HintUtil;
+import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.application.util.DateFormatUtil;
 import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.ui.ex.awt.BrowserHyperlinkListener;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.CachingCommittedChangesProvider;
+import consulo.versionControlSystem.ChangeListColumn;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import consulo.versionControlSystem.change.commited.ReceivedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ui.ex.awt.BrowserHyperlinkListener;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 
 /**
  * @author yole
  */
+@ActionImpl(id = "CommittedChanges.Details")
 public class ChangeListDetailsAction extends AnAction implements DumbAware {
+    public ChangeListDetailsAction() {
+        super(
+            ActionLocalize.actionCommittedchangesDetailsText(),
+            ActionLocalize.actionCommittedchangesDetailsDescription()
+        );
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -64,10 +76,10 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
         );
     }
 
-    public static void showDetailsPopup(final Project project, final CommittedChangeList changeList) {
+    public static void showDetailsPopup(Project project, CommittedChangeList changeList) {
         StringBuilder detailsBuilder = new StringBuilder("<html><head>");
         detailsBuilder.append(UIUtil.getCssFontDeclaration(UIUtil.getLabelFont())).append("</head><body>");
-        final AbstractVcs vcs = changeList.getVcs();
+        AbstractVcs vcs = changeList.getVcs();
         CachingCommittedChangesProvider provider = null;
         if (vcs != null) {
             provider = vcs.getCachingCommittedChangesProvider();
@@ -75,7 +87,7 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
                 detailsBuilder.append(provider.getChangelistTitle()).append(" #").append(changeList.getNumber()).append("<br>");
             }
         }
-        @NonNls String committer = "<b>" + changeList.getCommitterName() + "</b>";
+        String committer = "<b>" + changeList.getCommitterName() + "</b>";
         detailsBuilder.append(VcsLocalize.changelistDetailsCommittedFormat(
             committer,
             DateFormatUtil.formatPrettyDateTime(changeList.getCommitDate())
@@ -83,7 +95,7 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
         detailsBuilder.append("<br>");
 
         if (provider != null) {
-            final CommittedChangeList originalChangeList;
+            CommittedChangeList originalChangeList;
             if (changeList instanceof ReceivedChangeList receivedChangeList) {
                 originalChangeList = receivedChangeList.getBaseList();
             }
@@ -110,14 +122,13 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
         editorPane.select(0, 0);
         editorPane.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(editorPane);
-        final JBPopup hint =
-            JBPopupFactory.getInstance().createComponentPopupBuilder(scrollPane, editorPane)
-                .setDimensionServiceKey(project, "changelist.details.popup", false)
-                .setResizable(true)
-                .setMovable(true)
-                .setRequestFocus(true)
-                .setTitle(VcsLocalize.changelistDetailsTitle())
-                .createPopup();
+        JBPopup hint = JBPopupFactory.getInstance().createComponentPopupBuilder(scrollPane, editorPane)
+            .setDimensionServiceKey(project, "changelist.details.popup", false)
+            .setResizable(true)
+            .setMovable(true)
+            .setRequestFocus(true)
+            .setTitle(VcsLocalize.changelistDetailsTitle())
+            .createPopup();
         hint.showInBestPositionFor(DataManager.getInstance().getDataContext());
     }
 }
