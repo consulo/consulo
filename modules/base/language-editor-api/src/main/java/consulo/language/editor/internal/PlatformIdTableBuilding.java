@@ -42,7 +42,6 @@ import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -57,7 +56,6 @@ import java.util.Map;
  * @author dmitrylomov
  */
 public class PlatformIdTableBuilding {
-  public static final Key<EditorHighlighter> EDITOR_HIGHLIGHTER = Key.create("Editor");
   private static final TokenSet ABSTRACT_FILE_COMMENT_TOKENS = TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
 
   private PlatformIdTableBuilding() {
@@ -185,7 +183,7 @@ public class PlatformIdTableBuilding {
         OccurrenceConsumer occurrenceConsumer = new OccurrenceConsumer(null, true);
         EditorHighlighter highlighter;
 
-        EditorHighlighter editorHighlighter = inputData.getUserData(EDITOR_HIGHLIGHTER);
+        EditorHighlighter editorHighlighter = inputData.getUserData(EditorHighlighter.KEY);
         if (editorHighlighter != null && checkCanUseCachedEditorHighlighter(chars, editorHighlighter)) {
           highlighter = editorHighlighter;
         }

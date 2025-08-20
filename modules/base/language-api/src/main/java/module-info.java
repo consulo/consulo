@@ -68,7 +68,8 @@ module consulo.language.api {
         consulo.language.impl;
     exports consulo.language.internal.psi.stub to
         consulo.ide.impl,
-        consulo.language.impl;
+        consulo.language.impl,
+        consulo.language.index.impl;
     exports consulo.language.internal to
         consulo.find.api,
         consulo.ide.impl,
@@ -76,6 +77,7 @@ module consulo.language.api {
         consulo.language.editor.refactoring.api,
         consulo.language.editor.ui.api,
         consulo.language.impl,
+        consulo.language.index.impl,
         consulo.usage.api;
     exports consulo.language.psi.stub.internal to
         consulo.ide.impl,

@@ -17,7 +17,7 @@ package consulo.application.content.impl.internal.bundle;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.component.impl.util.NamedPointerManagerImpl;
+import consulo.component.util.pointer.NamedPointerManagerImpl;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkPointerManager;
 import consulo.content.bundle.SdkTable;

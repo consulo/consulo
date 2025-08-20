@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
+import consulo.project.internal.DumbInternalUtil;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.UIUtil;
@@ -194,15 +194,7 @@ public class ActionImplUtil {
      * @see DumbService
      */
     public static boolean isDumbMode(@Nullable Project project) {
-        if (project != null) {
-            return DumbService.getInstance(project).isDumb();
-        }
-        for (Project proj : ProjectManager.getInstance().getOpenProjects()) {
-            if (DumbService.getInstance(proj).isDumb()) {
-                return true;
-            }
-        }
-        return false;
+        return DumbInternalUtil.isDumbMode(project);
 
     }
 

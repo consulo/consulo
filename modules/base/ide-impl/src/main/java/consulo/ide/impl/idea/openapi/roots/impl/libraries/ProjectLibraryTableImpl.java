@@ -17,25 +17,25 @@
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.content.impl.internal.library.LibraryImpl;
+import consulo.application.content.impl.internal.library.LibraryOwner;
+import consulo.application.content.impl.internal.library.LibraryTableBase;
 import consulo.component.persist.State;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.application.content.impl.internal.library.LibraryImpl;
-import consulo.application.content.impl.internal.library.LibraryOwner;
-import consulo.application.content.impl.internal.library.LibraryTableBase;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
-import consulo.module.impl.internal.ProjectRootManagerImpl;
+import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.content.library.ProjectLibraryTable;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

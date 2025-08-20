@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.fileTypes.UserBinaryFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.UserFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
+import consulo.language.internal.FileTypeManagerEx;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.HashSetQueue;
 import consulo.language.Language;
@@ -547,6 +547,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
     }
 
+    @Override
     public void freezeFileTypeTemporarilyIn(@Nonnull VirtualFile file, @Nonnull Runnable runnable) {
         FileType fileType = file.getFileType();
         Pair<VirtualFile, FileType> old = FILE_TYPE_FIXED_TEMPORARILY.get();

@@ -79,7 +79,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
 
     result.add(ScratchesSearchScope.getScratchesScope(project));
 
-    final GlobalSearchScope openFilesScope = GlobalSearchScopes.openFilesScope(project);
+    GlobalSearchScope openFilesScope = GlobalSearchScopes.openFilesScope(project);
     if (openFilesScope != GlobalSearchScope.EMPTY_SCOPE) {
       result.add(openFilesScope);
     }
@@ -87,7 +87,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
       result.add(new LocalSearchScope(PsiElement.EMPTY_ARRAY, IdeBundle.message("scope.open.files")));
     }
 
-    final Editor selectedTextEditor =
+    Editor selectedTextEditor =
       ApplicationManager.getApplication().isDispatchThread() ? FileEditorManager.getInstance(project).getSelectedTextEditor() : null;
     PsiFile psiFile =
       selectedTextEditor == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(selectedTextEditor.getDocument());

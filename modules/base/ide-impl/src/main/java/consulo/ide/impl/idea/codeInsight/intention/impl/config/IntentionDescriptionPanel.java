@@ -23,7 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
+import consulo.language.internal.FileTypeManagerEx;
 import consulo.configurable.Settings;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;

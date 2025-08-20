@@ -19,7 +19,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.StartupProgress;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.ComponentManager;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
@@ -84,6 +85,11 @@ public abstract class UnifiedApplication extends BaseApplication {
     @Override
     public void exit() {
 
+    }
+
+    @Override
+    public ComponentManager getApplication() {
+        return this;
     }
 
     @Override

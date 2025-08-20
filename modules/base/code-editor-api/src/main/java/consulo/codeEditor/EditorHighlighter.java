@@ -16,20 +16,20 @@
 
 package consulo.codeEditor;
 
-import consulo.codeEditor.HighlighterClient;
-import consulo.document.event.DocumentListener;
 import consulo.colorScheme.EditorColorsScheme;
-
+import consulo.document.event.DocumentListener;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 public interface EditorHighlighter extends DocumentListener {
-  @Nonnull
-  HighlighterIterator createIterator(int startOffset);
+    Key<EditorHighlighter> KEY = Key.of(EditorHighlighter.class);
 
-  void setText(@Nonnull CharSequence text);
+    @Nonnull
+    HighlighterIterator createIterator(int startOffset);
 
-  void setEditor(@Nonnull HighlighterClient editor);
+    void setText(@Nonnull CharSequence text);
 
-  void setColorScheme(@Nonnull EditorColorsScheme scheme);
+    void setEditor(@Nonnull HighlighterClient editor);
+
+    void setColorScheme(@Nonnull EditorColorsScheme scheme);
 }

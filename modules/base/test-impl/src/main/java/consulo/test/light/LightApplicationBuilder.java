@@ -16,7 +16,7 @@
 package consulo.test.light;
 
 import consulo.application.Application;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.disposer.Disposable;

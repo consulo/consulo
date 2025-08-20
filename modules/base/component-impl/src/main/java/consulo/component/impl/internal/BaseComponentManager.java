@@ -23,9 +23,10 @@ import consulo.component.ComponentManager;
 import consulo.component.ComponentManagerDisposedException;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.impl.internal.extension.NewExtensionAreaImpl;
 import consulo.component.impl.internal.messagebus.MessageBusFactory;
 import consulo.component.impl.internal.messagebus.MessageBusImpl;
+import consulo.component.internal.ComponentBinding;
+import consulo.component.internal.NewExtensionAreaImpl;
 import consulo.component.internal.inject.*;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.util.PluginExceptionUtil;
@@ -44,7 +45,10 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -109,7 +113,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
         myMessageBus.setLazyListeners(mapByTopic);
 
-        myExtensionArea = new NewExtensionAreaImpl(this, myComponentBinding, getComponentScope(), this::checkCanceled);
+        myExtensionArea = new NewExtensionAreaImpl(this, myComponentBinding, getComponentScope(), this::checkCanceled, this::getApplication);
 
         myExtensionArea.registerFromInjectingBinding(getComponentScope());
 
@@ -125,6 +129,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
         myInjectingContainer = builder.build();
     }
+
+    public abstract ComponentManager getApplication();
 
     @Nullable
     @Override
@@ -393,7 +399,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         myDisposeState = ThreeState.UNSURE;
 
         if (myMessageBus != null) {
-            Disposer.dispose(myMessageBus);
+            Disposer.dispose((Disposable) myMessageBus);
             myMessageBus = null;
         }
 

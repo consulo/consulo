@@ -20,7 +20,7 @@ import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.internal.StartupProgress;
 import consulo.application.internal.ApplicationEx;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.internal.WebApplicationImpl;

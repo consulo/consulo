@@ -17,9 +17,10 @@
 package consulo.module.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
+import consulo.application.Application;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.internal.IComponentStore;
 import consulo.module.Module;
@@ -30,7 +31,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,100 +38,106 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
-  @Nonnull
-  private String myName;
+    @Nonnull
+    private String myName;
 
-  @Nullable
-  private final VirtualFilePointer myDirVirtualFilePointer;
+    @Nullable
+    private final VirtualFilePointer myDirVirtualFilePointer;
 
-  public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project, @Nonnull ComponentBinding componentBinding) {
-    super(project, "Module " + name, ComponentScope.MODULE, componentBinding);
-    myName = name;
-    myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
-  }
+    public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project, @Nonnull ComponentBinding componentBinding) {
+        super(project, "Module " + name, ComponentScope.MODULE, componentBinding);
+        myName = name;
+        myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
+    }
 
-  @Override
-  public void executeNonCancelableSection(@Nonnull Runnable runnable) {
-    PlatformComponentManagerImpl application = (BaseApplication)getApplication();
-    application.executeNonCancelableSection(runnable);
-  }
+    @Override
+    public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+        PlatformComponentManagerImpl application = (BaseApplication) getApplication();
+        application.executeNonCancelableSection(runnable);
+    }
 
-  @Nullable
-  @Override
-  public IComponentStore getStateStore() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public IComponentStore getStateStore() {
+        return null;
+    }
 
-  @Override
-  public int getProfiles() {
-    return myParent.getProfiles();
-  }
+    @Nonnull
+    @Override
+    public Application getApplication() {
+        return getProject().getApplication();
+    }
 
-  @Override
-  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
-    super.bootstrapInjectingContainer(builder);
+    @Override
+    public int getProfiles() {
+        return myParent.getProfiles();
+    }
 
-    builder.bind(Module.class).to(this);
-  }
+    @Override
+    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+        super.bootstrapInjectingContainer(builder);
 
-  @Override
-  public void rename(String newName) {
-    myName = newName;
-  }
+        builder.bind(Module.class).to(this);
+    }
 
-  @Nullable
-  @Override
-  public VirtualFile getModuleDir() {
-    return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getFile();
-  }
+    @Override
+    public void rename(String newName) {
+        myName = newName;
+    }
 
-  @Nullable
-  @Override
-  public String getModuleDirPath() {
-    return myDirVirtualFilePointer == null ? null : VirtualFileManager.extractPath(myDirVirtualFilePointer.getUrl());
-  }
+    @Nullable
+    @Override
+    public VirtualFile getModuleDir() {
+        return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getFile();
+    }
 
-  @Nullable
-  @Override
-  public String getModuleDirUrl() {
-    return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getUrl();
-  }
+    @Nullable
+    @Override
+    public String getModuleDirPath() {
+        return myDirVirtualFilePointer == null ? null : VirtualFileManager.extractPath(myDirVirtualFilePointer.getUrl());
+    }
 
-  @Override
-  @Nonnull
-  public Project getProject() {
-    return (Project)myParent;
-  }
+    @Nullable
+    @Override
+    public String getModuleDirUrl() {
+        return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getUrl();
+    }
 
-  @Override
-  @Nonnull
-  public String getName() {
-    return myName;
-  }
+    @Override
+    @Nonnull
+    public Project getProject() {
+        return (Project) myParent;
+    }
 
-  @Nullable
-  @Override
-  public <T extends ModuleExtension<T>> T getExtension(@Nonnull String key) {
-    ModuleRootManagerImpl manager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(this);
-    return manager.getExtension(key);
-  }
+    @Override
+    @Nonnull
+    public String getName() {
+        return myName;
+    }
 
-  @Nullable
-  @Override
-  public <T extends ModuleExtension<T>> T getExtension(@Nonnull Class<T> clazz) {
-    ModuleRootManagerImpl manager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(this);
-    return manager.getExtension(clazz);
-  }
+    @Nullable
+    @Override
+    public <T extends ModuleExtension<T>> T getExtension(@Nonnull String key) {
+        ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
+        return manager.getExtension(key);
+    }
 
-  @Override
-  public void moduleAdded() {
-    ModuleRootManagerImpl manager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(this);
+    @Nullable
+    @Override
+    public <T extends ModuleExtension<T>> T getExtension(@Nonnull Class<T> clazz) {
+        ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
+        return manager.getExtension(clazz);
+    }
 
-    manager.moduleAdded();
-  }
+    @Override
+    public void moduleAdded() {
+        ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
 
-  @Override
-  public String toString() {
-    return "Module: '" + myName + "'";
-  }
+        manager.moduleAdded();
+    }
+
+    @Override
+    public String toString() {
+        return "Module: '" + myName + "'";
+    }
 }

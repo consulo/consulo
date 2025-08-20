@@ -18,7 +18,7 @@ package consulo.compiler.artifact.impl.internal;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactModel;
 import consulo.compiler.artifact.ArtifactPointer;
-import consulo.component.impl.util.NamedPointerImpl;
+import consulo.component.util.pointer.NamedPointerImpl;
 import jakarta.annotation.Nonnull;
 
 /**

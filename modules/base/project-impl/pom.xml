@@ -62,5 +62,12 @@
             <artifactId>consulo-component-store-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!--TODO remove-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-ui-ex-awt-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

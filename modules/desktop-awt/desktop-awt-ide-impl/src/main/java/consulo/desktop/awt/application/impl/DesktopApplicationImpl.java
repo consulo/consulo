@@ -34,7 +34,7 @@ import consulo.application.util.concurrent.ThreadDumper;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.component.ComponentManager;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.desktop.application.util.Restarter;
 import consulo.desktop.awt.progress.PotemkinProgress;
@@ -156,6 +156,11 @@ public class DesktopApplicationImpl extends BaseApplication {
         UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
 
         NoSwingUnderWriteAction.watchForEvents(this);
+    }
+
+    @Override
+    public ComponentManager getApplication() {
+        return this;
     }
 
     @Override

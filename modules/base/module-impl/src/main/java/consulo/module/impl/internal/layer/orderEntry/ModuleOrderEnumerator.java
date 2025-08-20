@@ -20,9 +20,9 @@ import consulo.module.Module;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.impl.internal.layer.OrderEnumeratorBase;
-import consulo.module.impl.internal.layer.orderEntry.OrderRootsCache;
+import consulo.module.content.internal.OrderEnumeratorBase;
 
+import consulo.module.content.internal.OrderRootsCache;
 import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 

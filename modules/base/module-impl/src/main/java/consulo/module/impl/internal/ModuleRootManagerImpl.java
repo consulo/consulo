@@ -33,8 +33,9 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.ModuleFileIndex;
-import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.internal.ModuleRootManagerInternal;
+import consulo.module.content.internal.OrderRootsCache;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.internal.RootConfigurationAccessor;
 import consulo.module.content.layer.*;
@@ -43,22 +44,21 @@ import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.impl.internal.layer.RootModelImpl;
 import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEnumerator;
-import consulo.module.impl.internal.layer.orderEntry.OrderRootsCache;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
 @Singleton
 @ServiceImpl
-public class ModuleRootManagerImpl extends ModuleRootManager implements Disposable {
+public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposable {
   private static final Logger LOG = Logger.getInstance(ModuleRootManagerImpl.class);
 
   private final Module myModule;
@@ -99,8 +99,8 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
     myIsDisposed = true;
 
     if (Disposer.isDebugMode()) {
-      final Set<Map.Entry<RootModelImpl, Throwable>> entries = myModelCreations.entrySet();
-      for (final Map.Entry<RootModelImpl, Throwable> entry : new ArrayList<>(entries)) {
+      Set<Map.Entry<RootModelImpl, Throwable>> entries = myModelCreations.entrySet();
+      for (Map.Entry<RootModelImpl, Throwable> entry : new ArrayList<>(entries)) {
         System.err.println("***********************************************************************************************");
         System.err.println("***                        R O O T   M O D E L   N O T   D I S P O S E D                    ***");
         System.err.println("***********************************************************************************************");
@@ -123,7 +123,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   @RequiredReadAction
   public ModifiableRootModel getModifiableModel(final RootConfigurationAccessor accessor) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor) {
+    RootModelImpl model = new RootModelImpl(myRootModel, this, accessor) {
       @Override
       public void dispose() {
         super.dispose();
@@ -138,7 +138,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
     return model;
   }
 
-  public void makeRootsChange(@Nonnull Runnable runnable) {
+  public void makeRootsChange(@RequiredReadAction @Nonnull Runnable runnable) {
     ProjectRootManagerEx projectRootManagerEx = (ProjectRootManagerEx)ProjectRootManager.getInstance(myModule.getProject());
     // IMPORTANT: should be the first listener!
     projectRootManagerEx.makeRootsChange(runnable, false, isModuleAdded);
@@ -169,8 +169,8 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     LOG.assertTrue(rootModel.myModuleRootManager == this);
 
-    final Project project = myModule.getProject();
-    final ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
+    Project project = myModule.getProject();
+    ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
     ModifiableModelCommitter.getInstance(getProject()).multiCommit(new ModifiableRootModel[]{rootModel}, moduleModel);
   }
 
@@ -336,7 +336,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
 
   @Override
   @Nonnull
-  public VirtualFile[] getSourceRoots(final boolean includingTests) {
+  public VirtualFile[] getSourceRoots(boolean includingTests) {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getSourceRoots(includingTests);
   }
@@ -371,6 +371,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
     isModuleAdded = true;
   }
 
+  @Override
   public void dropCaches() {
     myOrderRootsCache.clearCache();
   }
@@ -387,7 +388,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   @RequiredReadAction
   protected void loadState(Element element, @Nullable ProgressIndicator indicator, boolean throwEvent) {
     try {
-      final RootModelImpl newModel = new RootModelImpl(element, indicator, this, throwEvent);
+      RootModelImpl newModel = new RootModelImpl(element, indicator, this, throwEvent);
 
       if (throwEvent) {
         makeRootsChange(() -> newModel.doCommitAndDispose());

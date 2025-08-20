@@ -112,6 +112,7 @@
     <module>modules/base/compiler-impl</module>
     <module>modules/base/language-editor-api</module>
     <module>modules/base/language-impl</module>
+    <module>modules/base/language-index-impl</module>
     <module>modules/base/document-impl</module>
     <module>modules/base/undo-redo-api</module>
     <module>modules/base/file-editor-api</module>

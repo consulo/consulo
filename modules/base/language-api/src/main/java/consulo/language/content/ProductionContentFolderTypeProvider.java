@@ -19,10 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.content.ProductionLikeContentFolderTypeProvider;
 import consulo.content.base.BuiltInGeneratedIconOwner;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -38,10 +38,9 @@ import java.util.function.Supplier;
  * @since 22:37/31.10.13
  */
 @ExtensionImpl(order = "first", id = "production")
-public class ProductionContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider implements BuiltInGeneratedIconOwner {
+public class ProductionContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider implements BuiltInGeneratedIconOwner, ProductionLikeContentFolderTypeProvider {
     private static final ColorValue SOURCES_COLOR = new LightDarkColorValue(new RGBColor(10, 80, 161), StandardColors.BLUE);
-    private static final Supplier<ProductionContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
-    );
+    private static final Supplier<ProductionContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
     @Nonnull
     public static ProductionContentFolderTypeProvider getInstance() {

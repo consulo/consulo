@@ -1082,4 +1082,16 @@ public final class VirtualFileUtil {
         }
         return file;
     }
+
+    @Nullable
+    public static VirtualFile findContainingDirectory(@Nonnull VirtualFile file, @Nonnull CharSequence name) {
+        VirtualFile parent = file.isDirectory() ? file : file.getParent();
+        while (parent != null) {
+            if (Comparing.equal(parent.getNameSequence(), name, Platform.current().fs().isCaseSensitive())) {
+                return parent;
+            }
+            parent = parent.getParent();
+        }
+        return null;
+    }
 }

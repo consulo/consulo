@@ -39,6 +39,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
+import consulo.module.internal.DebugStackTrace;
 import consulo.module.internal.ModuleManagerInternal;
 import consulo.module.localize.ModuleLocalize;
 import consulo.module.macro.ModulePathMacroManager;

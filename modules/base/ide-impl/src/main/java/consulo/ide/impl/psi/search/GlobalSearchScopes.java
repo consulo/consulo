@@ -33,7 +33,7 @@ public class GlobalSearchScopes extends GlobalSearchScopesCore {
 
   @Nonnull
   public static GlobalSearchScope openFilesScope(@Nonnull Project project) {
-    final VirtualFile[] files = FileEditorManager.getInstance(project).getOpenFiles();
+    VirtualFile[] files = FileEditorManager.getInstance(project).getOpenFiles();
     return GlobalSearchScope.filesScope(project, Arrays.asList(files), "Open Files");
   }
 }

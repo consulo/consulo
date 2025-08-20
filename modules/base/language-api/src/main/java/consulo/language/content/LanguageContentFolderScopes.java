@@ -67,7 +67,7 @@ public class LanguageContentFolderScopes {
   }
 
   @Nonnull
-  public static Predicate<ContentFolderTypeProvider> all(final boolean withExclude) {
+  public static Predicate<ContentFolderTypeProvider> all(boolean withExclude) {
     return withExclude ? it -> true : it -> !ExcludedContentFolderTypeProvider.getInstance().equals(it);
   }
 }

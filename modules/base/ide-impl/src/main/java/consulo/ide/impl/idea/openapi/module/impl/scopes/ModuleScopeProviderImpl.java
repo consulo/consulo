@@ -17,22 +17,21 @@ package consulo.ide.impl.idea.openapi.module.impl.scopes;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.module.Module;
+import consulo.module.content.internal.ModuleScopeProviderInternal;
 import consulo.module.content.scope.ModuleAwareSearchScope;
-import consulo.module.content.scope.ModuleScopeProvider;
 import consulo.module.content.scope.ModuleWithDependenciesScope;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dmitrylomov
  */
 @Singleton
 @ServiceImpl
-public class ModuleScopeProviderImpl implements ModuleScopeProvider {
+public class ModuleScopeProviderImpl implements ModuleScopeProviderInternal {
   private final Module myModule;
   private final ConcurrentIntObjectMap<ModuleWithDependenciesScope> myScopeCache = IntMaps.newConcurrentIntObjectHashMap();
   private ModuleWithDependentsTestScope myModuleTestsWithDependentsScope;
@@ -119,6 +118,7 @@ public class ModuleScopeProviderImpl implements ModuleScopeProvider {
             ModuleWithDependenciesScopeImpl.MODULES | ModuleWithDependenciesScopeImpl.LIBRARIES | (includeTests ? ModuleWithDependenciesScopeImpl.TESTS : 0));
   }
 
+  @Override
   public void clearCache() {
     myScopeCache.clear();
     myModuleTestsWithDependentsScope = null;

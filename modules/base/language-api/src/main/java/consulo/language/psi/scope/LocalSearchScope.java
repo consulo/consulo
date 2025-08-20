@@ -60,12 +60,12 @@ public class LocalSearchScope extends BaseSearchScope {
     this(scope, displayName, false);
   }
 
-  public LocalSearchScope(@Nonnull PsiElement[] scope, @Nullable final String displayName, final boolean ignoreInjectedPsi) {
+  public LocalSearchScope(@Nonnull PsiElement[] scope, @Nullable String displayName, boolean ignoreInjectedPsi) {
     myIgnoreInjectedPsi = ignoreInjectedPsi;
     myDisplayName = displayName;
     Set<PsiElement> localScope = new LinkedHashSet<PsiElement>(scope.length);
 
-    for (final PsiElement element : scope) {
+    for (PsiElement element : scope) {
       LOG.assertTrue(element != null, "null element");
       LOG.assertTrue(element.getContainingFile() != null, element.getClass().getName());
       if (element instanceof PsiFile) {
@@ -96,17 +96,16 @@ public class LocalSearchScope extends BaseSearchScope {
     if (this == o) return true;
     if (!(o instanceof LocalSearchScope)) return false;
 
-    final LocalSearchScope localSearchScope = (LocalSearchScope)o;
+    LocalSearchScope localSearchScope = (LocalSearchScope)o;
 
     if (localSearchScope.myIgnoreInjectedPsi != myIgnoreInjectedPsi) return false;
     if (localSearchScope.myScope.length != myScope.length) return false;
-    for (final PsiElement scopeElement : myScope) {
-      final PsiElement[] thatScope = localSearchScope.myScope;
-      for (final PsiElement thatScopeElement : thatScope) {
+    for (PsiElement scopeElement : myScope) {
+      PsiElement[] thatScope = localSearchScope.myScope;
+      for (PsiElement thatScopeElement : thatScope) {
         if (!Comparing.equal(scopeElement, thatScopeElement)) return false;
       }
     }
-
 
     return true;
   }
@@ -114,7 +113,7 @@ public class LocalSearchScope extends BaseSearchScope {
   public int hashCode() {
     int result = 0;
     result += myIgnoreInjectedPsi? 1 : 0;
-    for (final PsiElement element : myScope) {
+    for (PsiElement element : myScope) {
       result += element.hashCode();
     }
     return result;
@@ -128,11 +127,11 @@ public class LocalSearchScope extends BaseSearchScope {
 
   private static LocalSearchScope intersection(LocalSearchScope scope1, LocalSearchScope scope2) {
     List<PsiElement> result = new ArrayList<PsiElement>();
-    final PsiElement[] elements1 = scope1.myScope;
-    final PsiElement[] elements2 = scope2.myScope;
-    for (final PsiElement element1 : elements1) {
-      for (final PsiElement element2 : elements2) {
-        final PsiElement element = intersectScopeElements(element1, element2);
+    PsiElement[] elements1 = scope1.myScope;
+    PsiElement[] elements2 = scope2.myScope;
+    for (PsiElement element1 : elements1) {
+      for (PsiElement element2 : elements2) {
+        PsiElement element = intersectScopeElements(element1, element2);
         if (element != null) {
           result.add(element);
         }
@@ -162,7 +161,7 @@ public class LocalSearchScope extends BaseSearchScope {
   public String toString() {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < myScope.length; i++) {
-      final PsiElement element = myScope[i];
+      PsiElement element = myScope[i];
       if (i > 0) {
         result.append(",");
       }
@@ -186,10 +185,10 @@ public class LocalSearchScope extends BaseSearchScope {
     boolean[] united = new boolean[elements2.length];
     List<PsiElement> result = new ArrayList<PsiElement>();
     loop1:
-    for (final PsiElement element1 : elements1) {
+    for (PsiElement element1 : elements1) {
       for (int j = 0; j < elements2.length; j++) {
-        final PsiElement element2 = elements2[j];
-        final PsiElement unionElement = scopeElementsUnion(element1, element2);
+        PsiElement element2 = elements2[j];
+        PsiElement unionElement = scopeElementsUnion(element1, element2);
         if (unionElement != null && unionElement.getContainingFile() != null) {
           result.add(unionElement);
           united[j] = true;
@@ -199,7 +198,7 @@ public class LocalSearchScope extends BaseSearchScope {
       result.add(element1);
     }
     for (int i = 0; i < united.length; i++) {
-      final boolean b = united[i];
+      boolean b = united[i];
       if (!b) {
         result.add(elements2[i]);
       }

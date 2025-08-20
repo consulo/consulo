@@ -22,7 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
 import consulo.component.impl.internal.BaseComponentManager;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StateComponentInfo;
 import consulo.logging.Logger;

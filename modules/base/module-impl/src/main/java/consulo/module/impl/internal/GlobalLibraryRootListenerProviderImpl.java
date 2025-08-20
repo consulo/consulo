@@ -18,13 +18,13 @@ package consulo.module.impl.internal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.content.internal.GlobalLibraryRootListenerProvider;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

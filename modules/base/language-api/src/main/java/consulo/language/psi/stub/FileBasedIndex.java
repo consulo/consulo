@@ -258,6 +258,8 @@ public abstract class FileBasedIndex {
         throw new IncorrectOperationException();
     }
 
+    public abstract boolean isIndexingCandidate(@Nonnull VirtualFile file, @Nonnull ID<?, ?> indexId);
+
     @Nullable
     public abstract IdFilter createProjectIndexableFiles(@Nullable Project project);
 

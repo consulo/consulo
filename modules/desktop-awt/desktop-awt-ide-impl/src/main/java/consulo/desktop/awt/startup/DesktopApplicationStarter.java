@@ -32,7 +32,7 @@ import consulo.builtinWebServer.json.JsonBaseRequestHandler;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.builtinWebServer.json.JsonPostRequestHandler;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.desktop.application.jna.windows.WindowsAutoRestartManager;
 import consulo.desktop.awt.application.impl.AWTExceptionHandler;

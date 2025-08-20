@@ -42,10 +42,16 @@ module consulo.component.api {
         consulo.component.impl,
         consulo.ide.impl,
         consulo.application.api,
+        consulo.application.impl,
+        consulo.module.impl,
+        consulo.project.impl,
         consulo.datacontext.api,
         consulo.virtual.file.system.api,
         consulo.external.service.impl,
-        consulo.component.store.api;
+        consulo.component.store.api,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.swt.ide.impl,
+        consulo.test.impl;
 
     exports consulo.component.internal.inject to consulo.component.impl,
         consulo.application.impl,

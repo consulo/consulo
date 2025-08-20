@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.module.Module;
+import consulo.module.content.internal.ModuleRootManagerInternal;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 
@@ -30,7 +31,7 @@ import jakarta.annotation.Nonnull;
  * @author dsl
  */
 @ServiceAPI(ComponentScope.MODULE)
-public abstract class ModuleRootManager implements ModuleRootModel {
+public sealed interface ModuleRootManager extends ModuleRootModel permits ModuleRootManagerInternal {
   /**
    * Returns the module root manager instance for the specified module.
    *

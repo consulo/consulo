@@ -22,14 +22,13 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.logging.Logger;
+import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
-import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

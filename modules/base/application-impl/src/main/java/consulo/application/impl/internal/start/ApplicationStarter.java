@@ -25,7 +25,7 @@ import consulo.application.internal.plugin.PluginsLoader;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.ApplicationStarterCore;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.container.boot.ContainerPathManager;

@@ -25,6 +25,7 @@ module consulo.module.content.api {
         consulo.module.impl,
         consulo.language.api,
         consulo.language.impl,
+        consulo.language.index.impl,
         consulo.compiler.impl,
         consulo.compiler.artifact.impl,
         consulo.external.system.impl,

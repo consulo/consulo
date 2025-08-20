@@ -298,7 +298,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.find.findUsages;
   exports consulo.ide.impl.idea.find.impl;
   exports consulo.ide.impl.idea.find.impl.livePreview;
-  exports consulo.ide.impl.idea.find.ngrams;
   exports consulo.ide.impl.idea.find.replaceInProject;
   exports consulo.ide.impl.idea.framework.detection;
   exports consulo.ide.impl.idea.ide;
@@ -318,7 +317,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.actions.searcheverywhere;
   exports consulo.ide.impl.idea.ide.actions.tree;
   exports consulo.ide.impl.idea.ide.bookmarks.actions;
-  exports consulo.ide.impl.idea.ide.caches;
   exports consulo.ide.impl.idea.ide.dnd;
   exports consulo.ide.impl.idea.ide.errorTreeView;
   exports consulo.ide.impl.idea.ide.errorTreeView.actions;
@@ -361,7 +359,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.wizard;
   exports consulo.ide.impl.idea.idea;
   exports consulo.ide.impl.idea.indentation;
-  exports consulo.ide.impl.idea.index;
   exports consulo.ide.impl.idea.internal;
   exports consulo.ide.impl.idea.internal.anomalies;
   exports consulo.ide.impl.idea.internal.encodings;
@@ -434,8 +431,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.project.impl;
   exports consulo.ide.impl.idea.openapi.projectRoots.impl;
   exports consulo.ide.impl.idea.openapi.projectRoots.ui;
-  exports consulo.ide.impl.idea.openapi.roots;
-  exports consulo.ide.impl.idea.openapi.roots.impl;
   exports consulo.ide.impl.idea.openapi.roots.impl.libraries;
   exports consulo.ide.impl.idea.openapi.roots.libraries;
   exports consulo.ide.impl.idea.openapi.roots.libraries.ui;
@@ -580,10 +575,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.gist;
   exports consulo.ide.impl.idea.util.graph.impl;
   exports consulo.ide.impl.idea.util.indexing;
-  exports consulo.ide.impl.idea.util.indexing.hash;
-  exports consulo.ide.impl.idea.util.indexing.impl;
-  exports consulo.ide.impl.idea.util.indexing.impl.forward;
-  exports consulo.ide.impl.idea.util.indexing.provided;
   exports consulo.ide.impl.idea.util.io;
   exports consulo.ide.impl.idea.util.net;
   exports consulo.ide.impl.idea.util.net.ssl;
@@ -651,7 +642,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.impl.cache.impl.todo;
   exports consulo.ide.impl.psi.impl.file.impl;
   exports consulo.ide.impl.psi.impl.search;
-  exports consulo.ide.impl.psi.impl.source;
   exports consulo.ide.impl.psi.impl.source.codeStyle;
   exports consulo.ide.impl.psi.impl.source.resolve.reference;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
@@ -661,8 +651,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.search.scope.packageSet;
   exports consulo.ide.impl.psi.search.scope.packageSet.lexer;
   exports consulo.ide.impl.psi.statistics.impl;
-  exports consulo.ide.impl.psi.stubs;
-  exports consulo.ide.impl.psi.stubs.provided;
   exports consulo.ide.impl.psi.templateLanguages;
   exports consulo.ide.impl.roots.impl.property;
   exports consulo.ide.impl.roots.orderEntry;

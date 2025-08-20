@@ -17,8 +17,8 @@ package consulo.ide.impl.psi.impl.file.impl;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
 import consulo.module.content.PushedFilePropertiesUpdater;
+import consulo.module.content.internal.PushedFilePropertiesUpdaterInternal;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
@@ -46,11 +46,12 @@ public class GlobalPsiVFSBulkFileListener implements BulkFileListener {
         // let PushedFilePropertiesUpdater process all pending vfs events and update file properties before we issue PSI events
         for (Project project : projects) {
             PushedFilePropertiesUpdater updater = PushedFilePropertiesUpdater.getInstance(project);
-            // false in upsource
-            if (updater instanceof PushedFilePropertiesUpdaterImpl) {
-                ((PushedFilePropertiesUpdaterImpl) updater).processAfterVfsChanges(events);
+
+            if (updater instanceof PushedFilePropertiesUpdaterInternal internal) {
+                internal.processAfterVfsChanges(events);
             }
         }
+
         for (Project project : projects) {
             project.getInstance(PsiVFSListener.class).after(events);
         }

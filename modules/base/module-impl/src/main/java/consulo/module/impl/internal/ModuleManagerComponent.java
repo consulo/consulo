@@ -20,7 +20,7 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;

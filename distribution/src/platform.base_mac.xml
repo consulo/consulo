@@ -88,6 +88,7 @@
                 <include>consulo:consulo-language-copyright-impl</include>
                 <include>consulo:consulo-undo-redo-api</include>
                 <include>consulo:consulo-language-impl</include>
+                <include>consulo:consulo-language-index-impl</include>
                 <include>consulo:consulo-document-impl</include>
                 <include>consulo:consulo-file-editor-api</include>
                 <include>consulo:consulo-file-editor-impl</include>

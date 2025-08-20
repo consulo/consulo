@@ -20,13 +20,14 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.module.Module;
 
+import consulo.module.content.internal.ModuleScopeProviderInternal;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author dmitrylomov
  */
 @ServiceAPI(ComponentScope.MODULE)
-public interface ModuleScopeProvider {
+public sealed interface ModuleScopeProvider permits ModuleScopeProviderInternal {
   @Nonnull
   static ModuleScopeProvider getInstance(@Nonnull Module module) {
     return module.getInstance(ModuleScopeProvider.class);

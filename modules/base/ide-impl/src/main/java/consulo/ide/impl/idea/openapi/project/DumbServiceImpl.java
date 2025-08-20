@@ -8,10 +8,11 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.WriteAction;
-import consulo.application.internal.AbstractProgressIndicatorExBase;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.internal.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressWindow;
+import consulo.application.internal.AbstractProgressIndicatorExBase;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.*;
 import consulo.application.util.concurrent.ThreadDumper;
@@ -24,7 +25,6 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
-import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ide.impl.idea.util.exception.FrequentErrorLogger;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.impl.util.NoAccessDuringPsiEvents;
@@ -36,9 +36,9 @@ import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.module.ModuleManager;
 import consulo.module.internal.ModuleManagerInternal;
 import consulo.project.DumbModeTask;
-import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.project.internal.DumbServiceInternal;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -73,7 +73,7 @@ import java.util.concurrent.locks.LockSupport;
 
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
-public class DumbServiceImpl extends DumbService implements Disposable, ModificationTracker {
+public class DumbServiceImpl extends DumbServiceInternal implements Disposable, ModificationTracker {
     private static final Logger LOG = Logger.getInstance(DumbServiceImpl.class);
     private static final FrequentErrorLogger ourErrorLogger = FrequentErrorLogger.newInstance(LOG);
     private final AtomicReference<State> myState = new AtomicReference<>(State.SMART);

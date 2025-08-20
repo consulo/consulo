@@ -28,7 +28,7 @@ import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.FileTemplatesScheme;
 import consulo.fileTemplate.impl.internal.*;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
+import consulo.language.internal.FileTypeManagerEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.file.FileTypeManager;

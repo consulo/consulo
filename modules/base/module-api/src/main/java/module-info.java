@@ -18,5 +18,9 @@ module consulo.module.api {
     exports consulo.module.extension.condition;
     exports consulo.module.localize;
 
-    exports consulo.module.internal to consulo.module.impl, consulo.ide.impl;
+    exports consulo.module.internal to
+        consulo.module.impl,
+        consulo.module.content.impl,
+        consulo.language.index.impl,
+        consulo.ide.impl;
 }

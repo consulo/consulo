@@ -85,7 +85,7 @@ public interface CodeEditorInternalHelper {
         return !Objects.equals(leftTokenType, rightTokenType);
     }
 
-    default void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull final EditorHighlighter highlighter) {
+    default void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull EditorHighlighter highlighter) {
     }
 
     default void updateNotifications(Project project, VirtualFile file) {
@@ -99,11 +99,11 @@ public interface CodeEditorInternalHelper {
         return calcColumnNumber(editor, text, start, offset, EditorUtil.getTabSize(editor));
     }
 
-    default int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, final int start, final int offset, final int tabSize) {
+    default int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, int start, int offset, int tabSize) {
         return 0;
     }
 
-    default int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
+    default int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
         return line;
     }
 

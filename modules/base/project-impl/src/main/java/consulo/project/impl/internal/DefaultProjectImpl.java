@@ -16,7 +16,7 @@
 package consulo.project.impl.internal;
 
 import consulo.application.Application;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.project.ProjectManager;
 import org.jdom.Element;
 

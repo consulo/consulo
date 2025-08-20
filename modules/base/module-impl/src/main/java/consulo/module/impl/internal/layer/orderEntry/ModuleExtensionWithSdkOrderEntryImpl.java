@@ -18,15 +18,14 @@ package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.content.RootProvider;
 import consulo.content.bundle.Sdk;
+import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

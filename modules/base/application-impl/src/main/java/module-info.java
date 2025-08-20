@@ -35,6 +35,7 @@ module consulo.application.impl {
         consulo.project.impl,
         consulo.sand.language.plugin,
         consulo.language.impl,
+        consulo.language.index.impl,
         consulo.language.editor.api,
         consulo.language.editor.impl;
 
@@ -53,6 +54,7 @@ module consulo.application.impl {
 
     exports consulo.application.impl.internal.performance to
         consulo.ide.impl,
+        consulo.language.index.impl,
         consulo.project.impl,
         consulo.proxy,
         consulo.desktop.awt.ide.impl,
@@ -62,6 +64,7 @@ module consulo.application.impl {
 
     exports consulo.application.impl.internal.start to consulo.desktop.awt.ide.impl,
         consulo.ide.impl,
+        consulo.language.index.impl,
         consulo.logging.logback.impl,
         consulo.desktop.ide.impl,
         consulo.desktop.swt.ide.impl,

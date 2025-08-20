@@ -20,7 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.internal.BaseComponentManager;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.project.Project;

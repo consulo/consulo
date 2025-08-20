@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.content.ProductionLikeContentFolderTypeProvider;
 import consulo.content.ResourceLikeContentFolderTypeProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.localize.ProjectLocalize;
@@ -34,10 +35,9 @@ import java.util.function.Supplier;
  * @since 22:37/31.10.13
  */
 @ExtensionImpl(id = "production-resource", order = "after production")
-public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider implements ResourceLikeContentFolderTypeProvider {
+public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider implements ProductionLikeContentFolderTypeProvider, ResourceLikeContentFolderTypeProvider {
     private static final Supplier<ProductionResourceContentFolderTypeProvider> INSTANCE =
-        ExtensionInstance.from(ContentFolderTypeProvider.class
-        );
+        ExtensionInstance.from(ContentFolderTypeProvider.class);
 
     @Nonnull
     public static ProductionResourceContentFolderTypeProvider getInstance() {

@@ -18,22 +18,19 @@ package consulo.ide.impl.idea.vcs.log.data.index;
 import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.util.indexing.*;
-import consulo.index.io.*;
-import consulo.index.io.MapIndexStorage;
-import consulo.ide.impl.idea.util.indexing.impl.MapReduceIndex;
-import consulo.ide.impl.idea.util.indexing.impl.forward.ForwardIndex;
-import consulo.ide.impl.idea.util.indexing.impl.forward.ForwardIndexAccessor;
-import consulo.index.io.data.DataExternalizer;
-import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
+import consulo.index.io.*;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.forward.ForwardIndex;
+import consulo.index.io.forward.ForwardIndexAccessor;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.Pair;
-
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -123,7 +120,7 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
   }
 
   public void update(int commitId, @Nonnull VcsFullCommitDetails details) throws IOException {
-    myMapReduceIndex.update(commitId, details).compute();
+    myMapReduceIndex.update(commitId, details).get();
   }
 
   public void flush() throws StorageException {

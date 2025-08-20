@@ -17,8 +17,8 @@ package consulo.module.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.impl.util.NamedPointerImpl;
-import consulo.component.impl.util.NamedPointerManagerImpl;
+import consulo.component.util.pointer.NamedPointerImpl;
+import consulo.component.util.pointer.NamedPointerManagerImpl;
 import consulo.disposer.Disposer;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

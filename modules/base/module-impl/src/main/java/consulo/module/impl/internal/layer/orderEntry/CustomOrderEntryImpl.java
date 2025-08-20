@@ -16,12 +16,12 @@
 package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.content.RootProvider;
+import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.module.content.layer.orderEntry.*;
-import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Objects;
 
 /**

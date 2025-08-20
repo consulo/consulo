@@ -37,54 +37,53 @@ import java.lang.ref.WeakReference;
  * @author yole
  */
 public class EditorHighlighterCache {
-  private static final Key<WeakReference<EditorHighlighter>> ourSomeEditorSyntaxHighlighter = Key.create("some editor highlighter");
+    private static final Key<WeakReference<EditorHighlighter>> ourSomeEditorSyntaxHighlighter = Key.create("some editor highlighter");
 
-  private EditorHighlighterCache() {
-  }
-
-  public static void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull final EditorHighlighter highlighter) {
-    document.putUserData(ourSomeEditorSyntaxHighlighter, new WeakReference<EditorHighlighter>(highlighter));
-  }
-
-  @Nullable
-  public static EditorHighlighter getEditorHighlighterForCachesBuilding(Document document) {
-    if (document == null) {
-      return null;
-    }
-    final WeakReference<EditorHighlighter> editorHighlighterWeakReference = document.getUserData(ourSomeEditorSyntaxHighlighter);
-    final EditorHighlighter someEditorHighlighter = SoftReference.dereference(editorHighlighterWeakReference);
-
-    if (someEditorHighlighter instanceof LexerEditorHighlighter &&
-        ((LexerEditorHighlighter)someEditorHighlighter).isValid()
-            ) {
-      return someEditorHighlighter;
-    }
-    document.putUserData(ourSomeEditorSyntaxHighlighter, null);
-    return null;
-  }
-
-  @Nullable
-  public static Lexer getLexerBasedOnLexerHighlighter(CharSequence text, VirtualFile virtualFile, Project project) {
-    EditorHighlighter highlighter = null;
-
-    PsiFile psiFile = virtualFile != null ? PsiManager.getInstance(project).findFile(virtualFile) : null;
-    final Document document = psiFile != null ? PsiDocumentManager.getInstance(project).getDocument(psiFile) : null;
-    final EditorHighlighter cachedEditorHighlighter;
-    boolean alreadyInitializedHighlighter = false;
-
-    if (document != null &&
-        (cachedEditorHighlighter = getEditorHighlighterForCachesBuilding(document)) != null &&
-        PlatformIdTableBuilding.checkCanUseCachedEditorHighlighter(text, cachedEditorHighlighter)) {
-      highlighter = cachedEditorHighlighter;
-      alreadyInitializedHighlighter = true;
-    }
-    else if (virtualFile != null) {
-      highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, virtualFile);
+    private EditorHighlighterCache() {
     }
 
-    if (highlighter != null) {
-      return new LexerEditorHighlighterLexer(highlighter, alreadyInitializedHighlighter);
+    public static void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull EditorHighlighter highlighter) {
+        document.putUserData(ourSomeEditorSyntaxHighlighter, new WeakReference<EditorHighlighter>(highlighter));
     }
-    return null;
-  }
+
+    @Nullable
+    public static EditorHighlighter getEditorHighlighterForCachesBuilding(Document document) {
+        if (document == null) {
+            return null;
+        }
+        WeakReference<EditorHighlighter> editorHighlighterWeakReference = document.getUserData(ourSomeEditorSyntaxHighlighter);
+        EditorHighlighter someEditorHighlighter = SoftReference.dereference(editorHighlighterWeakReference);
+
+        if (someEditorHighlighter instanceof LexerEditorHighlighter &&
+            ((LexerEditorHighlighter) someEditorHighlighter).isValid()) {
+            return someEditorHighlighter;
+        }
+        document.putUserData(ourSomeEditorSyntaxHighlighter, null);
+        return null;
+    }
+
+    @Nullable
+    public static Lexer getLexerBasedOnLexerHighlighter(CharSequence text, VirtualFile virtualFile, Project project) {
+        EditorHighlighter highlighter = null;
+
+        PsiFile psiFile = virtualFile != null ? PsiManager.getInstance(project).findFile(virtualFile) : null;
+        Document document = psiFile != null ? PsiDocumentManager.getInstance(project).getDocument(psiFile) : null;
+        EditorHighlighter cachedEditorHighlighter;
+        boolean alreadyInitializedHighlighter = false;
+
+        if (document != null &&
+            (cachedEditorHighlighter = getEditorHighlighterForCachesBuilding(document)) != null &&
+            PlatformIdTableBuilding.checkCanUseCachedEditorHighlighter(text, cachedEditorHighlighter)) {
+            highlighter = cachedEditorHighlighter;
+            alreadyInitializedHighlighter = true;
+        }
+        else if (virtualFile != null) {
+            highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, virtualFile);
+        }
+
+        if (highlighter != null) {
+            return new LexerEditorHighlighterLexer(highlighter, alreadyInitializedHighlighter);
+        }
+        return null;
+    }
 }

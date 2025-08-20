@@ -12,7 +12,7 @@ import consulo.application.util.Semaphore;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
-import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.util.PluginExceptionUtil;
