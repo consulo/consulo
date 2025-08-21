@@ -8,7 +8,7 @@ import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.language.TaskPsiElement;
-import consulo.task.internal.GotoTaskActionInternal;
+import consulo.task.internal.CreateNewTaskAction;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
@@ -58,10 +58,10 @@ public class TaskCellRenderer extends DefaultListCellRenderer implements Matcher
             c.append((String) value);
             panel.add(c, BorderLayout.CENTER);
         }
-        else if (GotoTaskActionInternal.CREATE_NEW_TASK_ACTION == value) {
+        else if (value instanceof CreateNewTaskAction taskAction) {
             SimpleColoredComponent c = new SimpleColoredComponent();
             c.setIcon(PlatformIconGroup.generalAdd());
-            c.append(GotoTaskActionInternal.CREATE_NEW_TASK_ACTION.getActionText());
+            c.append(taskAction.getActionText());
             panel.add(c, BorderLayout.CENTER);
         }
         return panel;

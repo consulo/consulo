@@ -516,7 +516,6 @@ open module consulo.ide.impl {
 
   exports consulo.ide.impl.idea.reporting;
   exports consulo.ide.impl.idea.ssh;
-  exports consulo.ide.impl.idea.tasks.actions;
   exports consulo.ide.impl.idea.tasks.context;
   exports consulo.ide.impl.idea.testIntegration;
   exports consulo.ide.impl.idea.tools;

@@ -9,8 +9,8 @@ import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
 import consulo.task.event.TaskListenerAdapter;
 import consulo.task.icon.TaskIconGroup;
+import consulo.task.impl.internal.action.GotoTaskAction;
 import consulo.task.impl.internal.action.SwitchTaskAction;
-import consulo.task.internal.GotoTaskActionInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -109,7 +109,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
     private JComponent createToolbar() {
         DefaultActionGroup group = new DefaultActionGroup();
-        AnAction gotoTaskAction = ActionManager.getInstance().getAction(GotoTaskActionInternal.ID);
+        AnAction gotoTaskAction = ActionManager.getInstance().getAction(GotoTaskAction.ID);
         group.add(gotoTaskAction);
         group.add(
             new AnAction("Remove Task", "Remove Task", PlatformIconGroup.generalRemove()) {

@@ -23,7 +23,6 @@ import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
-import consulo.task.internal.GotoTaskActionInternal;
 import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -206,11 +205,11 @@ public class SwitchTaskAction extends BaseTaskAction {
     ) {
         List<TaskListItem> group = new ArrayList<>();
 
-        AnAction action = ActionManager.getInstance().getAction(GotoTaskActionInternal.ID);
+        AnAction action = ActionManager.getInstance().getAction(GotoTaskAction.ID);
         group.add(new TaskListItem(action.getTemplatePresentation().getText(), action.getTemplatePresentation().getIcon()) {
             @Override
             void select() {
-                ActionManager.getInstance().tryToExecute(action, ActionAWTUtil.getInputEvent(GotoTaskActionInternal.ID),
+                ActionManager.getInstance().tryToExecute(action, ActionAWTUtil.getInputEvent(GotoTaskAction.ID),
                     contextComponent, ActionPlaces.UNKNOWN, false
                 );
             }

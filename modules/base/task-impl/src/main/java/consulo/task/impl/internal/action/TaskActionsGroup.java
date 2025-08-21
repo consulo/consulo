@@ -18,7 +18,6 @@ package consulo.task.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.task.internal.GotoTaskActionInternal;
 import consulo.task.localize.TaskLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -31,7 +30,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
     id = "task.actions",
     children = {
         @ActionRef(type = SwitchTaskAction.class),
-        @ActionRef(id = GotoTaskActionInternal.ID),
+        @ActionRef(type = GotoTaskAction.class),
         @ActionRef(type = CloseTaskAction.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = CreateChangelistAction.class),

@@ -29,9 +29,12 @@ import java.util.Map;
  * @since 15/12/2021
  */
 public class SandTaskRepository extends BaseRepository {
-  private Map<String, Task> myTasks = new LinkedHashMap<>();
+  private Map<String, SandTask> myTasks = new LinkedHashMap<>();
 
   public SandTaskRepository() {
+      myTasks.put("SAND-1", new SandTask("SAND-1", "Test sand", false));
+      myTasks.put("SAND-2", new SandTask("SAND-2", "Closed", true));
+      myTasks.put("SAND-100", new SandTask("SAND-100", "Hello", false));
   }
 
 
