@@ -31,7 +31,7 @@ import consulo.ui.ex.action.IdeActions;
     id = "UpdateActionGroup",
     children = {
         @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE),
-        @ActionRef(id = "$Delete"),
+        @ActionRef(id = IdeActions.ACTION_DELETE),
         @ActionRef(type = ShowUpdatedDiffAction.class)
     }
 )

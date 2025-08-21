@@ -17,13 +17,14 @@ package consulo.usage.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
+import consulo.ui.ex.action.IdeActions;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 
 /**
  * @author max
  */
-@ActionImpl(id = "UsageView.Exclude", shortcutFrom = @ActionRef(id = "$Delete"))
+@ActionImpl(id = "UsageView.Exclude", shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
 public class ExcludeUsageAction extends IncludeExcludeActionBase {
     @Override
     protected void process(Usage[] usages, UsageView usageView) {

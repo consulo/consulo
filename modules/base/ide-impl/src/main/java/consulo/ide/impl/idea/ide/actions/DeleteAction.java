@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -26,10 +25,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.image.Image;
@@ -42,7 +38,7 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.KeyEvent;
 
-@ActionImpl(id = "$Delete")
+@ActionImpl(id = IdeActions.ACTION_DELETE)
 public class DeleteAction extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(DeleteAction.class);
 

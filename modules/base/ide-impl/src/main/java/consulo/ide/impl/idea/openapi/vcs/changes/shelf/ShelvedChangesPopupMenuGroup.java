@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesA
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
@@ -37,7 +38,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = ImportIntoShelfAction.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = RenameShelvedChangeListAction.class),
-        @ActionRef(id = "$Delete"),
+        @ActionRef(id = IdeActions.ACTION_DELETE),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = ShowHideRecycledAction.class),
         @ActionRef(type = CleanUnshelvedAction.class)

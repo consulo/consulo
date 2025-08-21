@@ -20,8 +20,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.project.Project;
@@ -42,6 +44,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.Set;
@@ -59,12 +62,21 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
     private static final Set<String> ALLOWED_PLACES =
         Set.of(ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, ActionPlaces.CHANGES_VIEW_POPUP);
 
+    @Inject
     public ScheduleForAdditionAction() {
-        super(
+        this(
             ActionLocalize.actionChangesviewAddunversionedText(),
             ActionLocalize.actionChangesviewAddunversionedDescription(),
             PlatformIconGroup.generalAdd()
         );
+    }
+
+    public ScheduleForAdditionAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
     }
 
     @Override

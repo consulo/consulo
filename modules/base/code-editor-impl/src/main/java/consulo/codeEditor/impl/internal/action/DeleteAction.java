@@ -30,11 +30,12 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 
-@ActionImpl(id = "EditorDelete", shortcutFrom = @ActionRef(id = "$Delete"))
+@ActionImpl(id = "EditorDelete", shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
 public class DeleteAction extends EditorAction {
     public DeleteAction() {
         super(new Handler());
