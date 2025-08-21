@@ -16,26 +16,20 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.ActionRef;
-import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author UNV
- * @since 2025-08-17
+ * @since 2025-08-21
  */
-@ActionImpl(
-    id = "Unversioned.Files.Dialog",
-    children = {
-        @ActionRef(type = AddUnversionedAction.class),
-        @ActionRef(type = MoveChangesToAnotherListAction.class),
-        @ActionRef(type = DeleteUnversionedFilesAction.class),
-        @ActionRef(type = IgnoreUnversionedAction.class)
-    }
-)
-public class UnversionedFilesDialogGroup extends DefaultActionGroup implements DumbAware {
-    public UnversionedFilesDialogGroup() {
-        super(ActionLocalize.groupUnversionedFilesDialogText(), false);
+@ActionImpl(id = "ChangesView.AddUnversioned")
+public class AddUnversionedAction extends ScheduleForAdditionAction {
+    public AddUnversionedAction() {
+        super(
+            ActionLocalize.actionChangesviewAddunversionedText(),
+            ActionLocalize.actionChangesviewAddunversionedDescription(),
+            PlatformIconGroup.generalAdd()
+        );
     }
 }

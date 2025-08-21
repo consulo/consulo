@@ -15,22 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.image.Image;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.image.Image;
 import consulo.util.collection.Streams;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -38,13 +34,13 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.versionControlSystem.internal.ChangesBrowserApi;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.Set;
@@ -57,21 +53,11 @@ import java.util.stream.Stream;
  * @author yole
  * @since 2006-11-02
  */
-@ActionImpl(id = "ChangesView.AddUnversioned")
-public class ScheduleForAdditionAction extends AnAction implements DumbAware {
+public abstract class ScheduleForAdditionAction extends AnAction implements DumbAware {
     private static final Set<String> ALLOWED_PLACES =
         Set.of(ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, ActionPlaces.CHANGES_VIEW_POPUP);
 
-    @Inject
-    public ScheduleForAdditionAction() {
-        this(
-            ActionLocalize.actionChangesviewAddunversionedText(),
-            ActionLocalize.actionChangesviewAddunversionedDescription(),
-            PlatformIconGroup.generalAdd()
-        );
-    }
-
-    public ScheduleForAdditionAction(
+    protected ScheduleForAdditionAction(
         @Nonnull LocalizeValue text,
         @Nonnull LocalizeValue description,
         @Nullable Image icon

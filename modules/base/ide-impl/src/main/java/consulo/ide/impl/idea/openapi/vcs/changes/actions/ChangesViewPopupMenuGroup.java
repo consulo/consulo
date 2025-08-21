@@ -40,7 +40,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = EditSourceAction.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = DeleteUnversionedFilesAction.class),
-        @ActionRef(type = ScheduleForAdditionAction.class),
+        @ActionRef(type = AddUnversionedAction.class),
         @ActionRef(type = IgnoreUnversionedAction.class),
         @ActionRef(type = ScheduleForRemovalAction.class),
         @ActionRef(type = EditAction.class),
