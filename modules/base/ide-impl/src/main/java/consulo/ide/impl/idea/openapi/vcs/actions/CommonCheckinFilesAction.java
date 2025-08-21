@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.util.collection.Streams;
 import consulo.util.lang.ObjectUtil;
@@ -43,7 +46,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@ActionImpl(id = "CheckinFiles")
 public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
+    public CommonCheckinFilesAction() {
+        super(ActionLocalize.actionCheckinfilesText(), LocalizeValue.empty(), null);
+    }
+
     @Override
     protected String getActionName(@Nonnull VcsContext dataContext) {
         String actionName = Optional.ofNullable(dataContext.getProject())

@@ -15,13 +15,20 @@
  */
 package consulo.ide.impl.idea.vcs;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Show.Local.Changes")
 public class VcsShowLocalChangesAction extends VcsShowToolWindowTabAction {
-  @Nonnull
-  @Override
-  protected String getTabName() {
-    return ChangesViewContentManager.LOCAL_CHANGES;
-  }
+    public VcsShowLocalChangesAction() {
+        super(LocalizeValue.localizeTODO("Show Local Changes"));
+    }
+
+    @Nonnull
+    @Override
+    protected String getTabName() {
+        return ChangesViewContentManager.LOCAL_CHANGES;
+    }
 }

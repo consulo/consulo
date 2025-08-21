@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.application.AllIcons;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeListChooser;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
@@ -50,183 +51,190 @@ import java.util.*;
 /**
  * @author max
  */
+@ActionImpl(id = "ChangesView.Move")
 public class MoveChangesToAnotherListAction extends AnAction implements DumbAware {
-  public MoveChangesToAnotherListAction() {
-    super(
-      ActionLocalize.actionChangesviewMoveText(),
-      ActionLocalize.actionChangesviewMoveDescription(),
-      AllIcons.Actions.MoveToAnotherChangelist
-    );
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    boolean isEnabled = isEnabled(e);
-
-    if (ActionPlaces.isPopupPlace(e.getPlace())) {
-      e.getPresentation().setEnabledAndVisible(isEnabled);
-    }
-    else {
-      e.getPresentation().setEnabled(isEnabled);
-    }
-  }
-
-  protected boolean isEnabled(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null || !ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) {
-      return false;
+    public MoveChangesToAnotherListAction() {
+        super(
+            ActionLocalize.actionChangesviewMoveText(),
+            ActionLocalize.actionChangesviewMoveDescription(),
+            PlatformIconGroup.actionsMovetoanotherchangelist()
+        );
     }
 
-    return !VcsUtil.isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY))
-      || !ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES))
-      || !ArrayUtil.isEmpty(e.getData(VirtualFile.KEY_OF_ARRAY));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        boolean isEnabled = isEnabled(e);
 
-  @Nonnull
-  private static List<Change> getChangesForSelectedFiles(
-    @Nonnull Project project,
-    @Nonnull VirtualFile[] selectedFiles,
-    @Nonnull List<VirtualFile> unversionedFiles,
-    @Nonnull List<VirtualFile> changedFiles
-  ) {
-    List<Change> changes = new ArrayList<>();
-    ChangeListManager changeListManager = ChangeListManager.getInstance(project);
-
-    for (VirtualFile vFile : selectedFiles) {
-      Change change = changeListManager.getChange(vFile);
-      if (change == null) {
-        FileStatus status = changeListManager.getStatus(vFile);
-        if (FileStatus.UNKNOWN.equals(status)) {
-          unversionedFiles.add(vFile);
-          changedFiles.add(vFile);
-        }
-        else if (FileStatus.NOT_CHANGED.equals(status) && vFile.isDirectory()) {
-          addAllChangesUnderPath(changeListManager, VcsUtil.getFilePath(vFile), changes, changedFiles);
-        }
-      }
-      else {
-        FilePath afterPath = ChangesUtil.getAfterPath(change);
-        if (afterPath != null && afterPath.isDirectory()) {
-          addAllChangesUnderPath(changeListManager, afterPath, changes, changedFiles);
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            e.getPresentation().setEnabledAndVisible(isEnabled);
         }
         else {
-          changes.add(change);
-          changedFiles.add(vFile);
+            e.getPresentation().setEnabled(isEnabled);
         }
-      }
-    }
-    return changes;
-  }
-
-  private static void addAllChangesUnderPath(
-    @Nonnull ChangeListManager changeListManager,
-    @Nonnull FilePath file,
-    @Nonnull List<Change> changes,
-    @Nonnull List<VirtualFile> changedFiles
-  ) {
-    for (Change change : changeListManager.getChangesIn(file)) {
-      changes.add(change);
-
-      FilePath path = ChangesUtil.getAfterPath(change);
-      if (path != null && path.getVirtualFile() != null) {
-        changedFiles.add(path.getVirtualFile());
-      }
-    }
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    List<Change> changesList = new ArrayList<>();
-
-    Change[] changes = e.getData(VcsDataKeys.CHANGES);
-    if (changes != null) {
-      ContainerUtil.addAll(changesList, changes);
     }
 
-    List<VirtualFile> unversionedFiles = new ArrayList<>();
-    final List<VirtualFile> changedFiles = new ArrayList<>();
-    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-    if (files != null) {
-      changesList.addAll(getChangesForSelectedFiles(project, files, unversionedFiles, changedFiles));
+    protected boolean isEnabled(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null || !ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) {
+            return false;
+        }
+
+        return !VcsUtil.isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY))
+            || !ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES))
+            || !ArrayUtil.isEmpty(e.getData(VirtualFile.KEY_OF_ARRAY));
     }
 
-    if (changesList.isEmpty() && unversionedFiles.isEmpty()) {
-      VcsBalloonProblemNotifier.showOverChangesView(project, "Nothing is selected that can be moved", NotificationType.INFORMATION);
-      return;
+    @Nonnull
+    private static List<Change> getChangesForSelectedFiles(
+        @Nonnull Project project,
+        @Nonnull VirtualFile[] selectedFiles,
+        @Nonnull List<VirtualFile> unversionedFiles,
+        @Nonnull List<VirtualFile> changedFiles
+    ) {
+        List<Change> changes = new ArrayList<>();
+        ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+
+        for (VirtualFile vFile : selectedFiles) {
+            Change change = changeListManager.getChange(vFile);
+            if (change == null) {
+                FileStatus status = changeListManager.getStatus(vFile);
+                if (FileStatus.UNKNOWN.equals(status)) {
+                    unversionedFiles.add(vFile);
+                    changedFiles.add(vFile);
+                }
+                else if (FileStatus.NOT_CHANGED.equals(status) && vFile.isDirectory()) {
+                    addAllChangesUnderPath(changeListManager, VcsUtil.getFilePath(vFile), changes, changedFiles);
+                }
+            }
+            else {
+                FilePath afterPath = ChangesUtil.getAfterPath(change);
+                if (afterPath != null && afterPath.isDirectory()) {
+                    addAllChangesUnderPath(changeListManager, afterPath, changes, changedFiles);
+                }
+                else {
+                    changes.add(change);
+                    changedFiles.add(vFile);
+                }
+            }
+        }
+        return changes;
     }
 
-    if (!askAndMove(project, changesList, unversionedFiles)) return;
-    if (!changedFiles.isEmpty()) {
-      selectAndShowFile(project, changedFiles.get(0));
+    private static void addAllChangesUnderPath(
+        @Nonnull ChangeListManager changeListManager,
+        @Nonnull FilePath file,
+        @Nonnull List<Change> changes,
+        @Nonnull List<VirtualFile> changedFiles
+    ) {
+        for (Change change : changeListManager.getChangesIn(file)) {
+            changes.add(change);
+
+            FilePath path = ChangesUtil.getAfterPath(change);
+            if (path != null && path.getVirtualFile() != null) {
+                changedFiles.add(path.getVirtualFile());
+            }
+        }
     }
-  }
 
-  @RequiredUIAccess
-  private static void selectAndShowFile(@Nonnull final Project project, @Nonnull final VirtualFile file) {
-    ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        List<Change> changesList = new ArrayList<>();
 
-    if (!window.isVisible()) {
-      window.activate(() -> ChangesViewManager.getInstance(project).selectFile(file));
+        Change[] changes = e.getData(VcsDataKeys.CHANGES);
+        if (changes != null) {
+            ContainerUtil.addAll(changesList, changes);
+        }
+
+        List<VirtualFile> unversionedFiles = new ArrayList<>();
+        List<VirtualFile> changedFiles = new ArrayList<>();
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (files != null) {
+            changesList.addAll(getChangesForSelectedFiles(project, files, unversionedFiles, changedFiles));
+        }
+
+        if (changesList.isEmpty() && unversionedFiles.isEmpty()) {
+            VcsBalloonProblemNotifier.showOverChangesView(project, "Nothing is selected that can be moved", NotificationType.INFORMATION);
+            return;
+        }
+
+        if (!askAndMove(project, changesList, unversionedFiles)) {
+            return;
+        }
+        if (!changedFiles.isEmpty()) {
+            selectAndShowFile(project, changedFiles.get(0));
+        }
     }
-  }
 
-  @RequiredUIAccess
-  public static boolean askAndMove(
-    @Nonnull Project project,
-    @Nonnull Collection<Change> changes,
-    @Nonnull List<VirtualFile> unversionedFiles
-  ) {
-    if (changes.isEmpty() && unversionedFiles.isEmpty()) return false;
+    @RequiredUIAccess
+    private static void selectAndShowFile(@Nonnull Project project, @Nonnull VirtualFile file) {
+        ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
 
-    LocalChangeList targetList = askTargetList(project, changes);
-
-    if (targetList != null) {
-      ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
-
-      listManager.moveChangesTo(targetList, ArrayUtil.toObjectArray(changes, Change.class));
-      if (!unversionedFiles.isEmpty()) {
-        listManager.addUnversionedFiles(targetList, unversionedFiles);
-      }
-      return true;
+        if (!window.isVisible()) {
+            window.activate(() -> ChangesViewManager.getInstance(project).selectFile(file));
+        }
     }
-    return false;
-  }
 
-  @Nullable
-  @RequiredUIAccess
-  private static LocalChangeList askTargetList(@Nonnull Project project, @Nonnull Collection<Change> changes) {
-    ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
-    List<LocalChangeList> preferredLists = getPreferredLists(listManager.getChangeListsCopy(), changes);
-    List<LocalChangeList> listsForChooser =
-      preferredLists.isEmpty() ? Collections.singletonList(listManager.getDefaultChangeList()) : preferredLists;
-    ChangeListChooser chooser = new ChangeListChooser(
-      project,
-      listsForChooser,
-      guessPreferredList(preferredLists),
-      ActionLocalize.actionChangesviewMoveText().get(),
-      null
-    );
-    chooser.show();
+    @RequiredUIAccess
+    public static boolean askAndMove(
+        @Nonnull Project project,
+        @Nonnull Collection<Change> changes,
+        @Nonnull List<VirtualFile> unversionedFiles
+    ) {
+        if (changes.isEmpty() && unversionedFiles.isEmpty()) {
+            return false;
+        }
 
-    return chooser.getSelectedList();
-  }
+        LocalChangeList targetList = askTargetList(project, changes);
 
-  @Nullable
-  private static ChangeList guessPreferredList(@Nonnull List<LocalChangeList> lists) {
-    LocalChangeList activeChangeList = ContainerUtil.find(lists, LocalChangeList::isDefault);
-    if (activeChangeList != null) return activeChangeList;
+        if (targetList != null) {
+            ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
 
-    LocalChangeList emptyList = ContainerUtil.find(lists, list -> list.getChanges().isEmpty());
+            listManager.moveChangesTo(targetList, ArrayUtil.toObjectArray(changes, Change.class));
+            if (!unversionedFiles.isEmpty()) {
+                listManager.addUnversionedFiles(targetList, unversionedFiles);
+            }
+            return true;
+        }
+        return false;
+    }
 
-    return ObjectUtil.chooseNotNull(emptyList, ContainerUtil.getFirstItem(lists));
-  }
+    @Nullable
+    @RequiredUIAccess
+    private static LocalChangeList askTargetList(@Nonnull Project project, @Nonnull Collection<Change> changes) {
+        ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
+        List<LocalChangeList> preferredLists = getPreferredLists(listManager.getChangeListsCopy(), changes);
+        List<LocalChangeList> listsForChooser =
+            preferredLists.isEmpty() ? Collections.singletonList(listManager.getDefaultChangeList()) : preferredLists;
+        ChangeListChooser chooser = new ChangeListChooser(
+            project,
+            listsForChooser,
+            guessPreferredList(preferredLists),
+            ActionLocalize.actionChangesviewMoveText().get(),
+            null
+        );
+        chooser.show();
 
-  @Nonnull
-  private static List<LocalChangeList> getPreferredLists(@Nonnull List<LocalChangeList> lists, @Nonnull Collection<Change> changes) {
-    final Set<Change> changesSet = ContainerUtil.newHashSet(changes);
+        return chooser.getSelectedList();
+    }
 
-    return ContainerUtil.findAll(lists, list -> !ContainerUtil.intersects(changesSet, list.getChanges()));
-  }
+    @Nullable
+    private static ChangeList guessPreferredList(@Nonnull List<LocalChangeList> lists) {
+        LocalChangeList activeChangeList = ContainerUtil.find(lists, LocalChangeList::isDefault);
+        if (activeChangeList != null) {
+            return activeChangeList;
+        }
+
+        LocalChangeList emptyList = ContainerUtil.find(lists, list -> list.getChanges().isEmpty());
+
+        return ObjectUtil.chooseNotNull(emptyList, ContainerUtil.getFirstItem(lists));
+    }
+
+    @Nonnull
+    private static List<LocalChangeList> getPreferredLists(@Nonnull List<LocalChangeList> lists, @Nonnull Collection<Change> changes) {
+        Set<Change> changesSet = new HashSet<>(changes);
+
+        return ContainerUtil.findAll(lists, list -> !ContainerUtil.intersects(changesSet, list.getChanges()));
+    }
 }

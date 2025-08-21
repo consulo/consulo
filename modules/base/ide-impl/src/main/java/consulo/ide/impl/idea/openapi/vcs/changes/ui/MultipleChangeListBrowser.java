@@ -354,8 +354,6 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
         EditSourceForDialogAction editSourceAction = new EditSourceForDialogAction(this);
         editSourceAction.registerCustomShortcutSet(CommonShortcuts.getEditSource(), this);
         toolBarGroup.add(editSourceAction);
-
-        toolBarGroup.add(ActionManager.getInstance().getAction("Vcs.CheckinProjectToolbar"));
     }
 
     @Override

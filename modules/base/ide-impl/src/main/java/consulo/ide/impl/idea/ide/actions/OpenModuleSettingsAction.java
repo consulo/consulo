@@ -25,16 +25,18 @@ import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-@ActionImpl(id = "OpenModuleSettings", shortcutFrom = @ActionRef(id = "EditSource"))
+@ActionImpl(id = "OpenModuleSettings", shortcutFrom = @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE))
 public class OpenModuleSettingsAction extends BaseNavigateToSourceAction {
     public OpenModuleSettingsAction() {
-        super(ProjectUIViewLocalize.actionOpenModuleSettingsText(),
+        super(
+            ProjectUIViewLocalize.actionOpenModuleSettingsText(),
             ProjectUIViewLocalize.actionOpenModuleSettingsText(),
             PlatformIconGroup.generalProjectstructure(),
             true

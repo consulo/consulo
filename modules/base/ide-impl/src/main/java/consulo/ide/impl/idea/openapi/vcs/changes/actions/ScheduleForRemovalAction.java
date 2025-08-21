@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
@@ -27,20 +30,36 @@ import java.util.List;
  * @author yole
  * @since 2006-11-02
  */
+@ActionImpl(id = "ChangesView.RemoveDeleted")
 public class ScheduleForRemovalAction extends AbstractMissingFilesAction {
-  protected List<VcsException> processFiles(final AbstractVcs vcs, final List<FilePath> files) {
-    CheckinEnvironment environment = vcs.getCheckinEnvironment();
-    if (environment == null) return Collections.emptyList();
-    final List<VcsException> result = environment.scheduleMissingFileForDeletion(files);
-    if (result == null) return Collections.emptyList();
-    return result;
-  }
+    public ScheduleForRemovalAction() {
+        super(
+            ActionLocalize.actionChangesviewRemovedeletedText(),
+            ActionLocalize.actionChangesviewRemovedeletedDescription(),
+            PlatformIconGroup.actionsCancel()
+        );
+    }
 
-  protected String getName() {
-    return null;
-  }
+    @Override
+    protected List<VcsException> processFiles(AbstractVcs vcs, List<FilePath> files) {
+        CheckinEnvironment environment = vcs.getCheckinEnvironment();
+        if (environment == null) {
+            return Collections.emptyList();
+        }
+        List<VcsException> result = environment.scheduleMissingFileForDeletion(files);
+        if (result == null) {
+            return Collections.emptyList();
+        }
+        return result;
+    }
 
-  protected boolean synchronously() {
-    return true;
-  }
+    @Override
+    protected String getName() {
+        return null;
+    }
+
+    @Override
+    protected boolean synchronously() {
+        return true;
+    }
 }

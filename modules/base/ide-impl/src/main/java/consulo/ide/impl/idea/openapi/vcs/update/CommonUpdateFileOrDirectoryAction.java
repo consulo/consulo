@@ -15,13 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 
+@ActionImpl(id = "UpdateFiles")
 public class CommonUpdateFileOrDirectoryAction extends AbstractCommonUpdateAction {
     public CommonUpdateFileOrDirectoryAction() {
         super(ActionInfo.UPDATE, ScopeInfo.FILES, true);
+        getTemplatePresentation().setTextValue(ActionLocalize.actionUpdatefilesText());
     }
 
+    @Override
     protected boolean filterRootsBeforeAction() {
         return true;
     }

@@ -15,13 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 
+@ActionImpl(id = "Vcs.IntegrateProject")
 public class CommonIntegrateProjectAction extends AbstractCommonUpdateAction {
     public CommonIntegrateProjectAction() {
         super(ActionInfo.INTEGRATE, ScopeInfo.PROJECT, true);
+        getTemplatePresentation().setTextValue(ActionLocalize.actionVcsIncludeactionText());
+        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionVcsIncludeactionDescription());
     }
 
+    @Override
     protected boolean filterRootsBeforeAction() {
         return false;
     }

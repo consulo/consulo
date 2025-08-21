@@ -15,14 +15,21 @@
  */
 package consulo.ide.impl.idea.vcs;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Show.Shelf")
 public class VcsShowShelfAction extends VcsShowToolWindowTabAction {
-  @Nonnull
-  @Override
-  protected String getTabName() {
-    return ChangesViewContentManager.SHELF;
-  }
+    public VcsShowShelfAction() {
+        super(LocalizeValue.localizeTODO("Show Shelf"));
+    }
+
+    @Nonnull
+    @Override
+    protected String getTabName() {
+        return ChangesViewContentManager.SHELF;
+    }
 }
 

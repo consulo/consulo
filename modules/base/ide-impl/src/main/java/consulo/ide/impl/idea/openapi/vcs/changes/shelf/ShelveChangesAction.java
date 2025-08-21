@@ -13,31 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.AbstractCommitChangesAction;
+import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author yole
  */
+@ActionImpl(id = "ChangesView.Shelve")
 public class ShelveChangesAction extends AbstractCommitChangesAction {
-  protected String getActionName(VcsContext dataContext) {
-    return VcsBundle.message("shelve.changes.action");
-  }
+    public ShelveChangesAction() {
+        super(
+            ActionLocalize.actionChangesviewShelveText(),
+            ActionLocalize.actionChangesviewShelveDescription(),
+            VersionControlSystemIconGroup.shelvesilent()
+        );
+    }
 
-  @Override
-  protected String getMnemonicsFreeActionName(VcsContext context) {
-    return getActionName(context);
-  }
+    @Override
+    protected String getActionName(@Nonnull VcsContext dataContext) {
+        return VcsLocalize.shelveChangesAction().get();
+    }
 
-  @Override @Nullable
-  protected CommitExecutor getExecutor(Project project) {
-    return new ShelveChangesCommitExecutor(project);
-  }
+    @Override
+    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+        return getActionName(context);
+    }
+
+    @Nullable
+    @Override
+    protected CommitExecutor getExecutor(@Nonnull Project project) {
+        return new ShelveChangesCommitExecutor(project);
+    }
 }

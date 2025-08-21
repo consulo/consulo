@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.action.VcsActions;
@@ -39,7 +40,6 @@ import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -48,19 +48,15 @@ import java.util.List;
  * @author irengrig
  * @since 2011-03-16
  */
+@ActionImpl(id = VcsActions.ACTION_SHOW_ALL_AFFECTED)
 public class ShowAllAffectedGenericAction extends AnAction {
     @Inject
-    private ShowAllAffectedGenericAction() {
-    }
-
-    public static ShowAllAffectedGenericAction getInstance() {
-        return (ShowAllAffectedGenericAction) ActionManager.getInstance().getAction(VcsActions.ACTION_SHOW_ALL_AFFECTED);
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsDiff();
+    public ShowAllAffectedGenericAction() {
+        super(
+            ActionLocalize.actionVcshistoryShowallaffectedText(),
+            ActionLocalize.actionVcshistoryShowallaffectedText(),
+            PlatformIconGroup.actionsDiff()
+        );
     }
 
     @Override
@@ -87,8 +83,10 @@ public class ShowAllAffectedGenericAction extends AnAction {
         showSubmittedFiles(project, revision, virtualFile, vcsKey, null, false);
     }
 
-    public static void showSubmittedFiles(final Project project, final VcsRevisionNumber revision, final VirtualFile virtualFile,
-                                          VcsKey vcsKey, final RepositoryLocation location, final boolean isNonLocal) {
+    public static void showSubmittedFiles(
+        final Project project, final VcsRevisionNumber revision, final VirtualFile virtualFile,
+        VcsKey vcsKey, final RepositoryLocation location, final boolean isNonLocal
+    ) {
         final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).findVcsByName(vcsKey.getName());
         if (vcs == null) {
             return;
@@ -125,19 +123,20 @@ public class ShowAllAffectedGenericAction extends AnAction {
                         }
                         else {
                             list[0] = getRemoteList(vcs, revision, virtualFile);
-              /*final RepositoryLocation local = provider.getForNonLocal(virtualFile);
-              if (local != null) {
-                final String number = revision.asString();
-                final ChangeBrowserSettings settings = provider.createDefaultSettings();
-                final List<CommittedChangeList> changes = provider.getCommittedChanges(settings, local, provider.getUnlimitedCountValue());
-                if (changes != null) {
-                  for (CommittedChangeList change : changes) {
-                    if (number.equals(String.valueOf(change.getNumber()))) {
-                      list[0] = change;
-                    }
-                  }
-                }
-              } */
+                            /*final RepositoryLocation local = provider.getForNonLocal(virtualFile);
+                            if (local != null) {
+                                final String number = revision.asString();
+                                final ChangeBrowserSettings settings = provider.createDefaultSettings();
+                                final List<CommittedChangeList> changes =
+                                    provider.getCommittedChanges(settings, local, provider.getUnlimitedCountValue());
+                                if (changes != null) {
+                                    for (CommittedChangeList change : changes) {
+                                        if (number.equals(String.valueOf(change.getNumber()))) {
+                                            list[0] = change;
+                                        }
+                                    }
+                                }
+                            }*/
                         }
                     }
                 }
@@ -146,8 +145,8 @@ public class ShowAllAffectedGenericAction extends AnAction {
                 }
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void onSuccess() {
                 AbstractVcsHelper instance = AbstractVcsHelper.getInstance(project);
                 if (exc[0] != null) {

@@ -15,22 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
  */
+@ActionImpl(id = VcsActionGroup.ID)
 public class VcsActionGroup extends DefaultActionGroup implements DumbAware {
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
-    Project project = event.getData(Project.KEY);
-    event.getPresentation().setEnabledAndVisible(project != null && project.isOpen());
-  }
+    public static final String ID = "VcsGroup";
+
+    public VcsActionGroup() {
+        super(ActionLocalize.groupVcsgroupText(), false);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+        Project project = event.getData(Project.KEY);
+        event.getPresentation().setEnabledAndVisible(project != null && project.isOpen());
+    }
 }

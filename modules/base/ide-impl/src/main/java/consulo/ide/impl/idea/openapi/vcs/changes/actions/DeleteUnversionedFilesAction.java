@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.AnAction;
@@ -26,9 +28,14 @@ import jakarta.annotation.Nonnull;
  * @author yole
  * @since 2006-11-02
  */
+@ActionImpl(id = "ChangesView.DeleteUnversioned")
 public class DeleteUnversionedFilesAction extends AnAction {
     public DeleteUnversionedFilesAction() {
-        super("Delete", "Delete", PlatformIconGroup.generalRemove());
+        super(
+            ActionLocalize.actionChangesviewDeleteunversionedText(),
+            ActionLocalize.actionChangesviewDeleteunversionedDescription(),
+            PlatformIconGroup.generalRemove()
+        );
     }
 
     @Override

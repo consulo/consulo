@@ -15,99 +15,143 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryProviderBackgroundableProxy;
 import consulo.ide.impl.idea.openapi.vcs.history.impl.VcsSelectionHistoryDialog;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.history.VcsSelectionUtil;
 import consulo.project.Project;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.history.VcsSelection;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.ShowHistoryForBlock")
 public class SelectedBlockHistoryAction extends AbstractVcsAction {
-
-  protected boolean isEnabled(VcsContext context) {
-    Project project = context.getProject();
-    if (project == null) return false;
-
-    VcsSelection selection = VcsSelectionUtil.getSelection(context);
-    if (selection == null) return false;
-
-    VirtualFile file = FileDocumentManager.getInstance().getFile(selection.getDocument());
-    if (file == null) return false;
-
-    final ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(project);
-    final BackgroundableActionEnabledHandler handler = vcsManager.getBackgroundableActionHandler(VcsBackgroundableActions.HISTORY_FOR_SELECTION);
-    if (handler.isInProgress(VcsBackgroundableActions.keyFrom(file))) return false;
-
-    AbstractVcs activeVcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
-    if (activeVcs == null) return false;
-
-    VcsHistoryProvider provider = activeVcs.getVcsBlockHistoryProvider();
-    if (provider == null) return false;
-
-    if (!AbstractVcs.fileInVcsByFileStatus(project, VcsUtil.getFilePath(file))) return false;
-    return true;
-  }
-
-  @Override
-  public void actionPerformed(@Nonnull final VcsContext context) {
-    try {
-      final Project project = context.getProject();
-      assert project != null;
-
-      final VcsSelection selection = VcsSelectionUtil.getSelection(context);
-      assert selection != null;
-
-      final VirtualFile file = FileDocumentManager.getInstance().getFile(selection.getDocument());
-      assert file != null;
-
-      final AbstractVcs activeVcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
-      assert activeVcs != null;
-
-      final VcsHistoryProvider provider = activeVcs.getVcsBlockHistoryProvider();
-      assert provider != null;
-
-      final int selectionStart = selection.getSelectionStartLineNumber();
-      final int selectionEnd = selection.getSelectionEndLineNumber();
-
-      new VcsHistoryProviderBackgroundableProxy(activeVcs, provider, activeVcs.getDiffProvider()).
-              createSessionFor(activeVcs.getKeyInstanceMethod(), VcsUtil.getFilePath(file), session -> {
-                if (session == null) return;
-                final VcsSelectionHistoryDialog vcsHistoryDialog =
-                        new VcsSelectionHistoryDialog(project, file, selection.getDocument(), provider, session, activeVcs, Math.min(selectionStart, selectionEnd),
-                                                      Math.max(selectionStart, selectionEnd), selection.getDialogTitle());
-
-                vcsHistoryDialog.show();
-              }, VcsBackgroundableActions.HISTORY_FOR_SELECTION, false, null);
+    public SelectedBlockHistoryAction() {
+        super(ActionLocalize.actionVcsShowhistoryforblockText(), ActionLocalize.actionVcsShowhistoryforblockDescription());
     }
-    catch (Exception exception) {
-      reportError(exception);
-    }
-  }
 
-  @Override
-  protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
-    presentation.setEnabled(isEnabled(context));
-    VcsSelection selection = VcsSelectionUtil.getSelection(context);
-    if (selection != null) {
-      presentation.setText(selection.getActionName());
-    }
-  }
+    protected boolean isEnabled(VcsContext context) {
+        Project project = context.getProject();
+        if (project == null) {
+            return false;
+        }
 
-  protected static void reportError(Exception exception) {
-    Messages.showMessageDialog(exception.getLocalizedMessage(), VcsBundle.message("message.title.could.not.load.file.history"), Messages.getErrorIcon());
-  }
+        VcsSelection selection = VcsSelectionUtil.getSelection(context);
+        if (selection == null) {
+            return false;
+        }
+
+        VirtualFile file = FileDocumentManager.getInstance().getFile(selection.getDocument());
+        if (file == null) {
+            return false;
+        }
+
+        ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
+        BackgroundableActionEnabledHandler handler =
+            vcsManager.getBackgroundableActionHandler(VcsBackgroundableActions.HISTORY_FOR_SELECTION);
+        if (handler.isInProgress(VcsBackgroundableActions.keyFrom(file))) {
+            return false;
+        }
+
+        AbstractVcs activeVcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
+        if (activeVcs == null) {
+            return false;
+        }
+
+        VcsHistoryProvider provider = activeVcs.getVcsBlockHistoryProvider();
+        //noinspection SimplifiableIfStatement
+        if (provider == null) {
+            return false;
+        }
+
+        return AbstractVcs.fileInVcsByFileStatus(project, VcsUtil.getFilePath(file));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull VcsContext context) {
+        try {
+            Project project = context.getProject();
+            assert project != null;
+
+            VcsSelection selection = VcsSelectionUtil.getSelection(context);
+            assert selection != null;
+
+            VirtualFile file = FileDocumentManager.getInstance().getFile(selection.getDocument());
+            assert file != null;
+
+            AbstractVcs activeVcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
+            assert activeVcs != null;
+
+            VcsHistoryProvider provider = activeVcs.getVcsBlockHistoryProvider();
+            assert provider != null;
+
+            int selectionStart = selection.getSelectionStartLineNumber();
+            int selectionEnd = selection.getSelectionEndLineNumber();
+
+            new VcsHistoryProviderBackgroundableProxy(activeVcs, provider, activeVcs.getDiffProvider())
+                .createSessionFor(
+                    activeVcs.getKeyInstanceMethod(),
+                    VcsUtil.getFilePath(file),
+                    session -> {
+                        if (session == null) {
+                            return;
+                        }
+                        VcsSelectionHistoryDialog vcsHistoryDialog = new VcsSelectionHistoryDialog(
+                            project,
+                            file,
+                            selection.getDocument(),
+                            provider,
+                            session,
+                            activeVcs,
+                            Math.min(selectionStart, selectionEnd),
+                            Math.max(selectionStart, selectionEnd),
+                            selection.getDialogTitle()
+                        );
+
+                        vcsHistoryDialog.show();
+                    },
+                    VcsBackgroundableActions.HISTORY_FOR_SELECTION,
+                    false,
+                    null
+                );
+        }
+        catch (Exception exception) {
+            reportError(exception);
+        }
+    }
+
+    @Override
+    protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
+        presentation.setEnabled(isEnabled(context));
+        VcsSelection selection = VcsSelectionUtil.getSelection(context);
+        if (selection != null) {
+            presentation.setText(selection.getActionName());
+        }
+    }
+
+    @RequiredUIAccess
+    protected static void reportError(Exception exception) {
+        Messages.showMessageDialog(
+            exception.getLocalizedMessage(),
+            VcsLocalize.messageTitleCouldNotLoadFileHistory().get(),
+            UIUtil.getErrorIcon()
+        );
+    }
 }

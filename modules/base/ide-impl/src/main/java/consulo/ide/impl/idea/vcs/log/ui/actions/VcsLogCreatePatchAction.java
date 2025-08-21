@@ -15,16 +15,19 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Log.CreatePatch", shortcutFrom = @ActionRef(id = "ChangesView.CreatePatch"))
 public class VcsLogCreatePatchAction extends CreatePatchFromChangesAction {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Change[] changes = e.getData(VcsDataKeys.CHANGES);
-    e.getPresentation().setEnabled(changes != null && changes.length > 0);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Change[] changes = e.getData(VcsDataKeys.CHANGES);
+        e.getPresentation().setEnabled(changes != null && changes.length > 0);
+    }
 }

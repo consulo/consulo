@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,15 +36,16 @@ import jakarta.annotation.Nonnull;
 /**
  * @author yole
  */
+@ActionImpl(id = "ChangesView.Browse")
 public class BrowseChangesAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         VirtualFile vFile = e.getRequiredData(VirtualFile.KEY);
         AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);
         assert vcs != null;
-        final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+        CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
         assert provider != null;
         ChangeBrowserSettings settings = provider.createDefaultSettings();
         CommittedChangesFilterDialog dlg = new CommittedChangesFilterDialog(project, provider.createFilterUI(true), settings);

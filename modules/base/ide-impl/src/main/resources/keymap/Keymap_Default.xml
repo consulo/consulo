@@ -634,17 +634,29 @@
   <action id="EditorPasteFromX11">
     <mouse-shortcut keystroke="button2"/>
   </action>
-  <action id="Vcs.RollbackChangedLines">
-    <keyboard-shortcut first-keystroke="control alt Z"/>
+  <action id="CheckinProject">
+    <keyboard-shortcut first-keystroke="control K"/>
+  </action>
+  <action id="ChangesView.AddUnversioned">
+    <keyboard-shortcut first-keystroke="control alt A"/>
+  </action>
+  <action id="ChangesView.Move">
+    <keyboard-shortcut first-keystroke="alt shift M"/>
   </action>
   <action id="ChangesView.Revert">
+    <keyboard-shortcut first-keystroke="control alt Z"/>
+  </action>
+  <action id="Vcs.RollbackChangedLines">
     <keyboard-shortcut first-keystroke="control alt Z"/>
   </action>
   <action id="Vcs.MoveChangedLinesToChangelist">
     <keyboard-shortcut first-keystroke="alt shift M"/>
   </action>
-  <action id="ChangesView.Move">
-    <keyboard-shortcut first-keystroke="alt shift M"/>
+  <action id="Vcs.Push">
+    <keyboard-shortcut first-keystroke="control shift K"/>
+  </action>
+  <action id="Vcs.UpdateProject">
+    <keyboard-shortcut first-keystroke="control T"/>
   </action>
 
   <action id="GotoNextError">

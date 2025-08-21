@@ -15,31 +15,43 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.versionControlSystem.VcsBundle;
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.CommitExecutor;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
-import consulo.project.Project;
-
+import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author yole
  */
+@ActionImpl(id = "ChangesView.CreatePatch")
 public class CreatePatchAction extends AbstractCommitChangesAction {
-    @Override
-    protected String getActionName(VcsContext dataContext) {
-        return VcsBundle.message("create.patch.commit.action.title");
+    public CreatePatchAction() {
+        super(
+            ActionLocalize.actionChangesviewCreatepatchText(),
+            ActionLocalize.actionChangesviewCreatepatchDescription(),
+            PlatformIconGroup.filetypesPatch()
+        );
     }
 
     @Override
-    protected String getMnemonicsFreeActionName(VcsContext context) {
+    protected String getActionName(@Nonnull VcsContext dataContext) {
+        return VcsLocalize.createPatchCommitActionTitle().get();
+    }
+
+    @Override
+    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
         return getActionName(context);
     }
 
-    @Override
     @Nullable
-    protected CommitExecutor getExecutor(Project project) {
+    @Override
+    protected CommitExecutor getExecutor(@Nonnull Project project) {
         return new CreatePatchCommitExecutor(project);
     }
 }

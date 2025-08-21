@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.versionControlSystem.AbstractVcs;
@@ -30,27 +32,37 @@ import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
+@ActionImpl(id = "VcsFileGroupPopup")
 public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
-
     private static final Logger LOG = Logger.getInstance(VcsGroupsWrapper.class);
 
     private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
     private AnAction[] myChildren;
 
+    public VcsGroupsWrapper() {
+        super(ActionLocalize.groupVcsfilegrouppopupText(), true);
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         VcsContext dataContext = VcsContextWrapper.createInstanceOn(e);
         if (myChildren == null) {
-            DefaultActionGroup vcsGroupsGroup = (DefaultActionGroup) ActionManager.getInstance().getAction("VcsGroup");
-            ArrayList<AnAction> validChildren = new ArrayList<>();
-            AnAction[] children = vcsGroupsGroup.getChildren(new AnActionEvent(null, e.getDataContext(), e.getPlace(), myPresentationFactory.getPresentation(
-                vcsGroupsGroup),
+            DefaultActionGroup vcsGroupsGroup = (DefaultActionGroup) ActionManager.getInstance().getAction(VcsActionGroup.ID);
+            List<AnAction> validChildren = new ArrayList<>();
+            AnAction[] children = vcsGroupsGroup.getChildren(new AnActionEvent(
+                null,
+                e.getDataContext(),
+                e.getPlace(),
+                myPresentationFactory.getPresentation(vcsGroupsGroup),
                 ActionManager.getInstance(),
-                0));
+                0
+            ));
             for (AnAction child : children) {
                 if (!(child instanceof StandardVcsGroup)) {
-                    LOG.error("Any version control group should extends consulo.versionControlSystem.action.StandardVcsGroup class. Groupd class: " +
-                        child.getClass().getName() + ", group ID: " + ActionManager.getInstance().getId(child));
+                    LOG.error(
+                        "Any version control group should extends consulo.versionControlSystem.action.StandardVcsGroup class. " +
+                            "Groupd class: " + child.getClass().getName() + ", group ID: " + ActionManager.getInstance().getId(child)
+                    );
                 }
                 else {
                     validChildren.add(child);
@@ -58,7 +70,6 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
             }
 
             myChildren = validChildren.toArray(new AnAction[validChildren.size()]);
-
         }
 
         Project project = dataContext.getProject();

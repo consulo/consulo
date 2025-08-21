@@ -15,7 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -34,7 +37,16 @@ import jakarta.annotation.Nonnull;
  * @author yole
  * @since 2006-11-02
  */
+@ActionImpl(id = "ChangesView.NewChangeList")
 public class AddChangeListAction extends AnAction implements DumbAware {
+    public AddChangeListAction() {
+        super(
+            ActionLocalize.actionChangesviewNewchangelistText(),
+            ActionLocalize.actionChangesviewNewchangelistDescription(),
+            PlatformIconGroup.generalAdd()
+        );
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -47,7 +59,7 @@ public class AddChangeListAction extends AnAction implements DumbAware {
                 name = getUniqueName(project);
             }
 
-            final LocalChangeList list = ChangeListManager.getInstance(project).addChangeList(name, dlg.getDescription());
+            LocalChangeList list = ChangeListManager.getInstance(project).addChangeList(name, dlg.getDescription());
             if (dlg.isNewChangelistActive()) {
                 ChangeListManager.getInstance(project).setDefaultChangeList(list);
             }
@@ -56,7 +68,7 @@ public class AddChangeListAction extends AnAction implements DumbAware {
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
-    private static String getUniqueName(final Project project) {
+    private static String getUniqueName(Project project) {
         int unnamedcount = 0;
         for (ChangeList list : ChangeListManagerImpl.getInstanceImpl(project).getChangeListsCopy()) {
             if (list.getName().startsWith("Unnamed")) {

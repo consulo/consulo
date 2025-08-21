@@ -12,10 +12,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,7 +31,16 @@ import jakarta.annotation.Nullable;
 import java.util.BitSet;
 import java.util.List;
 
+@ActionImpl(id = "Vcs.RollbackChangedLines")
 public class RollbackLineStatusAction extends DumbAwareAction {
+    public RollbackLineStatusAction() {
+        super(
+            ActionLocalize.actionVcsRollbackchangedlinesText(),
+            ActionLocalize.actionVcsRollbackchangedlinesDescription(),
+            PlatformIconGroup.generalReset()
+        );
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
@@ -94,17 +106,17 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    private static void doRollback(@Nonnull final LineStatusTracker tracker, @Nonnull final Range range) {
+    private static void doRollback(@Nonnull LineStatusTracker tracker, @Nonnull Range range) {
         execute(tracker, () -> tracker.rollbackChanges(range));
     }
 
     @RequiredUIAccess
-    private static void doRollback(@Nonnull final LineStatusTracker tracker, @Nonnull final BitSet lines) {
+    private static void doRollback(@Nonnull LineStatusTracker tracker, @Nonnull BitSet lines) {
         execute(tracker, () -> tracker.rollbackChanges(lines));
     }
 
     @RequiredUIAccess
-    private static void execute(@Nonnull final LineStatusTracker tracker, @RequiredUIAccess @Nonnull final Runnable task) {
+    private static void execute(@Nonnull LineStatusTracker tracker, @RequiredUIAccess @Nonnull Runnable task) {
         CommandProcessor.getInstance().newCommand()
             .project(tracker.getProject())
             .document(tracker.getDocument())

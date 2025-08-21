@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
@@ -63,6 +64,7 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  * @author lesya
  */
+@ActionImpl(id = "Annotate")
 public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     @Override
     @RequiredUIAccess

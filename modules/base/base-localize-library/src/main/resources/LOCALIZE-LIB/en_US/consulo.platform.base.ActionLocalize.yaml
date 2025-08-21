@@ -212,9 +212,9 @@ action.ChangesView.Rename.description:
     text: Edit name and description of selected changelist
 action.ChangesView.Rename.text:
     text: Edit Changelist…
-action.ChangesView.Rollback.description:
+action.ChangesView.Revert.description:
     text: Rollback selected changes
-action.ChangesView.Rollback.text:
+action.ChangesView.Revert.text:
     text: Rollback
 action.ChangesView.SetDefault.description:
     text: Set changelist to which new changes are placed by default
@@ -316,6 +316,10 @@ action.CommentByLineComment.description:
     text: Comment/uncomment current line or selected block with line comments
 action.CommentByLineComment.text:
     text: Comment with _Line Comment
+action.CommittedChanges.Clear.description:
+    text: Clears cached revisions
+action.CommittedChanges.Clear.text:
+    text: Clear
 action.CommittedChanges.Details.description:
     text: View complete information about the selected changelist
 action.CommittedChanges.Details.text:
@@ -2756,6 +2760,8 @@ group.UIToggleActions.text:
     text: UI Toggle Actions
 group.Unversioned.Files.Dialog.text:
     text: Unversioned Files Dialog
+group.UpdateActionGroup.text:
+    text: Update Actions
 group.Vcs.Browse.text:
     text: Browse VCS Repository
 group.Vcs.Checkout.text:
@@ -2766,6 +2772,8 @@ group.Vcs.Import.text:
     text: Import into Version Control
 group.Vcs.MessageActionGroup.text:
     text: VCS Message Actions
+group.Vcs.Show.Toolwindow.Tab.text:
+    text: VCS Show Toolwindow Tab
 group.VcsFileGroupPopup.text:
     text: Version Control Group
 group.VcsGlobalGroup.text:

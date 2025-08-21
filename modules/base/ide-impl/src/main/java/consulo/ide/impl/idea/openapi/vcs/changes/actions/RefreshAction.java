@@ -15,8 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -32,11 +35,20 @@ import jakarta.annotation.Nonnull;
  * @author yole
  * @since 2006-11-02
  */
+@ActionImpl(id = "ChangesView.Refresh")
 public class RefreshAction extends AnAction implements DumbAware {
+    public RefreshAction() {
+        super(
+            ActionLocalize.actionChangesviewRefreshText(),
+            ActionLocalize.actionChangesviewRefreshDescription(),
+            PlatformIconGroup.actionsRefresh()
+        );
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
