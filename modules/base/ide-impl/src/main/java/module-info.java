@@ -639,7 +639,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.search.scope.packageSet.lexer;
   exports consulo.ide.impl.psi.statistics.impl;
   exports consulo.ide.impl.psi.templateLanguages;
-  exports consulo.ide.impl.roots.impl.property;
   exports consulo.ide.impl.roots.orderEntry;
   exports consulo.ide.impl.roots.ui.configuration;
   exports consulo.ide.impl.roots.ui.configuration.classpath;

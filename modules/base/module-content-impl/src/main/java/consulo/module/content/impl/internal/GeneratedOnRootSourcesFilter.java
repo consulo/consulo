@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.roots.impl.property;
+package consulo.module.content.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
@@ -29,8 +29,6 @@ import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
- * TODO module-content-impl module source
- *
  * @author VISTALL
  * @since 22:15/25.11.13
  */

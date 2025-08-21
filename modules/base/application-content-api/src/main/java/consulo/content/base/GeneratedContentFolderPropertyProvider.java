@@ -47,7 +47,6 @@ public class GeneratedContentFolderPropertyProvider extends ContentFolderPropert
         return true;
     }
 
-
     @Nullable
     @Override
     public Image getIcon(@Nonnull Boolean value, @Nonnull ContentFolderTypeProvider typeProvider) {

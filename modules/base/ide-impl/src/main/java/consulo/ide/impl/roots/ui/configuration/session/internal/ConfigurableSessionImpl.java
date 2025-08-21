@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.roots.ui.configuration.session.internal;
 
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.component.ComponentManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.configurable.ConfigurableSession;
 import consulo.configurable.internal.ConfigurableSessionHolder;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.EventListener;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
