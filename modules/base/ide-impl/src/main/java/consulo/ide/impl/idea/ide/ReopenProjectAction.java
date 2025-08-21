@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.project.Project;

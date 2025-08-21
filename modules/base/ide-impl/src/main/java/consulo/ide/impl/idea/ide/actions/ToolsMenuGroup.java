@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.codeInsight.template.actions.SaveAsTemplateAction;
 import consulo.ide.impl.idea.internal.psiView.PsiViewerAction;
 import consulo.ide.impl.idea.internal.psiView.PsiViewerForContextAction;
 import consulo.ide.impl.idea.tools.ExternalToolsGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.task.internal.TaskActions;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 
@@ -33,7 +33,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(
     id = "ToolsMenu",
     children = {
-        @ActionRef(type = TasksAndContextsGroup.class),
+        @ActionRef(id = TaskActions.TASKS_AND_CONTEXTS),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = ToolsBasicGroup.class),
         @ActionRef(type = PsiViewerAction.class),

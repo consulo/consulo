@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui;
 import consulo.annotation.component.ServiceImpl;
 import consulo.desktop.awt.ui.keymap.IdeMouseEventDispatcher;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.popup.IdePopupEventDispatcher;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.Point2D;

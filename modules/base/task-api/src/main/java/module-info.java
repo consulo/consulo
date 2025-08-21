@@ -28,7 +28,7 @@ module consulo.task.api {
   exports consulo.task.util.gson;
   exports consulo.task.icon;
   exports consulo.task.localize;
-  exports consulo.task.internal to consulo.ide.impl;
+  exports consulo.task.internal to consulo.task.impl, consulo.ide.impl;
 
   opens consulo.task to consulo.util.xml.serializer;
 }

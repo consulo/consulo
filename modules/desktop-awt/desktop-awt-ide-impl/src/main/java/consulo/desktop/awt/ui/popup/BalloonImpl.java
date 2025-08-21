@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

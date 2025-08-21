@@ -17,6 +17,7 @@ package consulo.ide.impl.ui;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import jakarta.inject.Singleton;
 
 /**

@@ -27,7 +27,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackRunner;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.project.Project;

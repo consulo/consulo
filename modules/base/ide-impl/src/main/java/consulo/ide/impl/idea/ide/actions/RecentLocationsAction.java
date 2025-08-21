@@ -17,7 +17,7 @@ import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.util.collection.ContainerUtil;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;

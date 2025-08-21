@@ -39,4 +39,6 @@ public interface AWTListPopup extends ListPopup {
     void onChildSelectedFor(Object value);
 
     JList getList();
+
+    JComponent getComponent();
 }

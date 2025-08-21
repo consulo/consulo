@@ -15,7 +15,7 @@ import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ShowParameterInfoHandler;
 import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CompletionType;

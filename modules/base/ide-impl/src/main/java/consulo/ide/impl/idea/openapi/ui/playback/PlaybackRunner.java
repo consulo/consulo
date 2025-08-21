@@ -22,7 +22,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.*;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.text.StringTokenizer;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;

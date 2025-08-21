@@ -9,7 +9,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;

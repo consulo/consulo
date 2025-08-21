@@ -5,6 +5,7 @@
 module consulo.execution.impl {
     requires consulo.execution.api;
     requires consulo.configuration.editor.api;
+    requires static consulo.task.api;
 
     requires com.google.common;
 

@@ -24,7 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.*;

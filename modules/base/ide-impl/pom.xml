@@ -105,11 +105,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-task-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-module-impl</artifactId>
             <version>${project.version}</version>
         </dependency>

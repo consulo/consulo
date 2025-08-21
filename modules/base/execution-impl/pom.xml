@@ -40,6 +40,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-task-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-configuration-editor-api</artifactId>
             <version>${project.version}</version>
         </dependency>

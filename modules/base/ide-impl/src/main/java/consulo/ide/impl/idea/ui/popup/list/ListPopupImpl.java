@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.ide.impl.idea.ui.popup.NextStepHandler;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.statistician.StatisticsInfo;

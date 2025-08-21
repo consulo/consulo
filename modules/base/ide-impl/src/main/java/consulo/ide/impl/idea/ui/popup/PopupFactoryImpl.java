@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

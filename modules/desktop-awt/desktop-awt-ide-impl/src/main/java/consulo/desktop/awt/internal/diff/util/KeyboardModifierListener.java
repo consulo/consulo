@@ -17,7 +17,7 @@ package consulo.desktop.awt.internal.diff.util;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

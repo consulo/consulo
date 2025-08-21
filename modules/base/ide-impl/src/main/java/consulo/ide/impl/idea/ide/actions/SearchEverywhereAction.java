@@ -21,7 +21,7 @@ import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

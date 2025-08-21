@@ -36,7 +36,7 @@ import consulo.ui.ex.*;
 import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;

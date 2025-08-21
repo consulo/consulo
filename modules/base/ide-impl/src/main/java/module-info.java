@@ -111,7 +111,6 @@ open module consulo.ide.impl {
   requires consulo.build.ui.impl;
   requires consulo.remote.server.impl;
   requires consulo.compiler.artifact.impl;
-  requires consulo.task.impl;
   requires consulo.language.code.style.impl;
 
   // TODO [VISTALL] remove this dependency
@@ -418,7 +417,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.module.impl;
   exports consulo.ide.impl.idea.openapi.module.impl.scopes;
   exports consulo.ide.impl.idea.openapi.options;
-  exports consulo.ide.impl.idea.openapi.options.binding;
   exports consulo.ide.impl.idea.openapi.options.colors.pages;
   exports consulo.ide.impl.idea.openapi.options.ex;
   exports consulo.ide.impl.idea.openapi.paths;
@@ -519,13 +517,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.reporting;
   exports consulo.ide.impl.idea.ssh;
   exports consulo.ide.impl.idea.tasks.actions;
-  exports consulo.ide.impl.idea.tasks.actions.context;
-  exports consulo.ide.impl.idea.tasks.actions.vcs;
-  exports consulo.ide.impl.idea.tasks.config;
   exports consulo.ide.impl.idea.tasks.context;
-  exports consulo.ide.impl.idea.tasks.doc;
-  exports consulo.ide.impl.idea.tasks.impl;
-  exports consulo.ide.impl.idea.tasks.timeTracking;
   exports consulo.ide.impl.idea.testIntegration;
   exports consulo.ide.impl.idea.tools;
   exports consulo.ide.impl.idea.ui;

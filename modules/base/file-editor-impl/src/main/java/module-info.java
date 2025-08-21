@@ -6,6 +6,8 @@ module consulo.file.editor.impl {
   requires consulo.file.editor.api;
   requires consulo.project.ui.view.api;
 
+  requires static consulo.task.api;
+
   exports consulo.fileEditor.impl.internal to consulo.desktop.awt.ide.impl, consulo.ide.impl;
 
   opens consulo.fileEditor.impl.internal to consulo.util.xml.serializer;

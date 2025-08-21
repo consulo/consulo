@@ -31,7 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

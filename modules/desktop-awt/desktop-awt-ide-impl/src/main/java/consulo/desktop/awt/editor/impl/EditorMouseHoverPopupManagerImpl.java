@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;

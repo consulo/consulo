@@ -9,7 +9,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.project.ui.internal.ToolWindowManagerEx;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;

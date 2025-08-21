@@ -6,7 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;

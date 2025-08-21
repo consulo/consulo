@@ -23,7 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.impl.TransparentLayeredPane;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.Painter;

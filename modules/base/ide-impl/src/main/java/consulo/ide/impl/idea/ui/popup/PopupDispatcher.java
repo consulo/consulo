@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ui.popup;
 
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.popup.IdePopupEventDispatcher;
 import consulo.ui.ex.popup.JBPopup;
 import jakarta.annotation.Nonnull;

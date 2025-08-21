@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

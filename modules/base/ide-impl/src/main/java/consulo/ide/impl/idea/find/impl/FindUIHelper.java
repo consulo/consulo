@@ -23,7 +23,7 @@ import consulo.find.FindModel;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;

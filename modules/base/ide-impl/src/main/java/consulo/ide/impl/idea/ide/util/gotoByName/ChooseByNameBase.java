@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.statistician.StatisticsInfo;
 import consulo.language.statistician.StatisticsManager;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
