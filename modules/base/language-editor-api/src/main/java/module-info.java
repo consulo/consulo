@@ -75,14 +75,19 @@ module consulo.language.editor.api {
         consulo.version.control.system.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
-        consulo.execution.debug.impl;
+        consulo.execution.debug.impl,
+        consulo.build.ui.api;
+
     exports consulo.language.editor.internal.inspection to
         consulo.ide.impl,
         consulo.language.editor.impl;
+
     exports consulo.language.editor.internal.intention to
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
+        consulo.execution.impl,
         consulo.language.editor.impl;
+    
     exports consulo.language.editor.internal.postfixTemplate to
         consulo.ide.impl,
         consulo.language.editor.impl;

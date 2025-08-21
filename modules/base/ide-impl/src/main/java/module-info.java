@@ -164,8 +164,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.application;
   exports consulo.ide.impl.base;
   exports consulo.ide.impl.bundle;
-  exports consulo.ide.impl.codeInsight;
-  exports consulo.ide.impl.codeInsight.daemon.impl;
   exports consulo.ide.impl.command;
   exports consulo.ide.impl.compiler;
   exports consulo.ide.impl.compiler.resourceCompiler;
@@ -194,7 +192,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.application.options.editor;
   exports consulo.ide.impl.idea.application.options.pathMacros;
   exports consulo.ide.impl.idea.build;
-  exports consulo.ide.impl.idea.build.issue.quickfix;
   exports consulo.ide.impl.idea.build.output;
   exports consulo.ide.impl.idea.buildfiles;
   exports consulo.ide.impl.idea.codeEditor.printing;
@@ -283,7 +280,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.execution.filters.impl;
   exports consulo.ide.impl.idea.execution.impl;
   exports consulo.ide.impl.idea.execution.impl.statistics;
-  exports consulo.ide.impl.idea.execution.lineMarker;
   exports consulo.ide.impl.idea.execution.process;
   exports consulo.ide.impl.idea.execution.rmi;
   exports consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;

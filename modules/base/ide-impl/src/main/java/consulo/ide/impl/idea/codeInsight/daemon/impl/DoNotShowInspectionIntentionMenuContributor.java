@@ -23,6 +23,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionMenuContributor;
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;

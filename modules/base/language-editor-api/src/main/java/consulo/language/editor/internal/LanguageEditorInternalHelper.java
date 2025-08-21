@@ -20,13 +20,13 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.Annotator;
 import consulo.language.editor.gutter.LineMarkerInfo;
-import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -107,5 +107,14 @@ public interface LanguageEditorInternalHelper {
                                          // if null global scheme will be used
                                          @Nullable EditorColorsScheme colorsScheme,
                                          int group) {
+    }
+
+    @RequiredUIAccess
+    default void highlightRanges(Project project,
+                                 Editor editor,
+                                 TextAttributesKey attributesKey,
+                                 boolean clearHighlights,
+                                 List<TextRange> textRanges) {
+
     }
 }

@@ -24,9 +24,7 @@ import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.DefaultProgramRunner;
 import consulo.execution.runner.ProgramRunner;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.process.BaseProcessHandler;
 import consulo.process.ExecutionException;
@@ -34,8 +32,10 @@ import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.util.rmi.RemoteDeadHand;
 import consulo.util.rmi.RemoteServer;
@@ -49,7 +49,6 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * @author Gregory.Shrago
@@ -83,7 +82,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     ArrayList<ProcessHandler> allHandlers = new ArrayList<>();
     synchronized (myProcMap) {
       for (Info o : myProcMap.values()) {
-        ContainerUtil.addIfNotNull(o.handler, allHandlers);
+        ContainerUtil.addIfNotNull(allHandlers, o.handler);
       }
     }
     for (ProcessHandler handler : allHandlers) {

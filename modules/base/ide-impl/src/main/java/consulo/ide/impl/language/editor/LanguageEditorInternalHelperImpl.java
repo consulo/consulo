@@ -18,12 +18,15 @@ package consulo.ide.impl.language.editor;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
+import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
@@ -33,6 +36,7 @@ import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationSession;
 import consulo.language.editor.annotation.Annotator;
 import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
 import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
@@ -154,5 +158,12 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
         UpdateHighlightersUtilImpl.assertMarkupConsistent(markup, project);
 
         UpdateHighlightersUtilImpl.setHighlightersInRange(project, document, range, colorsScheme, new ArrayList<>(highlights), (MarkupModelEx) markup, group);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void highlightRanges(Project project, Editor editor, TextAttributesKey attributesKey, boolean clearHighlights, List<TextRange> textRanges) {
+        HighlightManager manager = HighlightManager.getInstance(project);
+        HighlightUsagesHandler.highlightRanges(manager, editor, EditorColors.SEARCH_RESULT_ATTRIBUTES, false, textRanges);
     }
 }

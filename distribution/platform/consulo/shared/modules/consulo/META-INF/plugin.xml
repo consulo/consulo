@@ -88,7 +88,6 @@
         <!--id="EnterBetweenBracesHandler"/>-->
         <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterJavadocTagHandler"/>-->
 
-        <!--<codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.execution.lineMarker.RunLineMarkerProvider"/>-->
         <!--<codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.ui.ColorLineMarkerProvider"/>-->
 
         <!--<applicationConfigurable id="editor.preferences.folding.general"-->

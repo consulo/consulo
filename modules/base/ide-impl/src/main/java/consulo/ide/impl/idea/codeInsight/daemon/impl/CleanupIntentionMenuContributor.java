@@ -5,6 +5,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionManager;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionMenuContributor;
 import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
