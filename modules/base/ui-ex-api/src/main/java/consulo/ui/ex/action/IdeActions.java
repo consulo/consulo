@@ -530,6 +530,7 @@ public interface IdeActions {
     String CHANGES_VIEW_REVERT = "ChangesView.Revert";
 
     String CONSOLE_CLEAR_ALL = "ConsoleView.ClearAll";
+    String DELETE_UNVERSIONED_FILES = "ChangesView.DeleteUnversioned";
     String MOVE_TO_ANOTHER_CHANGE_LIST = "ChangesView.Move";
 
     String ACTION_RECENT_FILES = "RecentFiles";

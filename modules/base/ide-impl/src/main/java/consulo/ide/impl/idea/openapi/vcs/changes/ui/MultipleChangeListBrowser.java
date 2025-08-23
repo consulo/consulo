@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.application.AllIcons;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
@@ -23,7 +22,8 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackDialogAction;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
+import consulo.util.collection.ContainerUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Label;
@@ -52,7 +52,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 import java.util.*;
 
@@ -115,19 +114,22 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     private void setupRebuildListForActions() {
         ActionManager actionManager = ActionManager.getInstance();
         final AnAction moveAction = actionManager.getAction(IdeActions.MOVE_TO_ANOTHER_CHANGE_LIST);
-        final AnAction deleteAction = actionManager.getAction("ChangesView.DeleteUnversioned.From.Dialog");
+        final AnAction deleteAction = actionManager.getAction(IdeActions.DELETE_UNVERSIONED_FILES);
 
-        actionManager.addAnActionListener(new AnActionListener.Adapter() {
-            @Override
-            public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-                if (moveAction.equals(action) || myMoveActionWithCustomShortcut != null && myMoveActionWithCustomShortcut.equals(action)) {
-                    rebuildList();
+        actionManager.addAnActionListener(
+            new AnActionListener() {
+                @Override
+                public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+                    if (moveAction.equals(action) || myMoveActionWithCustomShortcut != null && myMoveActionWithCustomShortcut.equals(action)) {
+                        rebuildList();
+                    }
+                    else if (deleteAction.equals(action)) {
+                        UnversionedViewDialog.refreshChanges(myProject, MultipleChangeListBrowser.this);
+                    }
                 }
-                else if (deleteAction.equals(action)) {
-                    UnversionedViewDialog.refreshChanges(myProject, MultipleChangeListBrowser.this);
-                }
-            }
-        }, this);
+            },
+            this
+        );
     }
 
     private boolean isShowUnversioned() {
@@ -293,7 +295,10 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
         //noinspection unchecked
         Enumeration<TreeNode> nodes = myViewer.getRoot().breadthFirstEnumeration();
 
-        return ContainerUtil.findInstance(ContainerUtil.iterate(nodes), ChangesBrowserUnversionedFilesNode.class);
+        return ContainerUtil.findInstance(
+            consulo.ide.impl.idea.util.containers.ContainerUtil.iterate(nodes),
+            ChangesBrowserUnversionedFilesNode.class
+        );
     }
 
     @Nonnull
@@ -328,7 +333,11 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     protected void buildToolBar(@Nonnull DefaultActionGroup toolBarGroup) {
         super.buildToolBar(toolBarGroup);
 
-        toolBarGroup.add(new AnAction("Refresh Changes", null, AllIcons.Actions.Refresh) {
+        toolBarGroup.add(new AnAction(
+            LocalizeValue.localizeTODO("Refresh Changes"),
+            LocalizeValue.empty(),
+            PlatformIconGroup.actionsRefresh()
+        ) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -383,7 +392,10 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
     @Nullable
     private static ChangeList findDefaultList(@Nonnull List<? extends ChangeList> lists) {
-        return ContainerUtil.find(lists, list -> list instanceof LocalChangeList localChangeList && localChangeList.isDefault());
+        return ContainerUtil.find(
+            lists,
+            list -> list instanceof LocalChangeList localChangeList && localChangeList.isDefault()
+        );
     }
 
     private class ChangeListChooser extends JPanel {
@@ -414,13 +426,11 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
                 }
             });
 
-            myChooser.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    if (e.getStateChange() == ItemEvent.SELECTED) {
-                        final LocalChangeList changeList = (LocalChangeList) myChooser.getSelectedItem();
-                        setSelectedList(changeList);
-                        myChooser.setToolTipText(changeList == null ? "" : (changeList.getName()));
-                    }
+            myChooser.addItemListener(e -> {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    LocalChangeList changeList = (LocalChangeList) myChooser.getSelectedItem();
+                    setSelectedList(changeList);
+                    myChooser.setToolTipText(changeList == null ? "" : (changeList.getName()));
                 }
             });
 
@@ -449,6 +459,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     }
 
     private class MyChangeListListener implements ChangeListListener {
+        @Override
         public void changeListAdded(ChangeList list) {
             updateListsInChooser();
         }
@@ -457,7 +468,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     private class ShowHideUnversionedFilesAction extends ToggleAction {
 
         private ShowHideUnversionedFilesAction() {
-            super("Show Unversioned Files", null, PlatformIconGroup.actionsCancel());
+            super(LocalizeValue.localizeTODO("Show Unversioned Files"), LocalizeValue.empty(), PlatformIconGroup.actionsCancel());
         }
 
         @Override
@@ -473,6 +484,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT = state;
             rebuildList();
