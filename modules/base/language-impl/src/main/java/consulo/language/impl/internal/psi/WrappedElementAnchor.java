@@ -17,7 +17,7 @@ package consulo.language.impl.internal.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
-import consulo.language.impl.psi.PsiAnchor;
+import consulo.language.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerAnchorProvider;
@@ -27,7 +27,7 @@ import jakarta.annotation.Nullable;
 /**
  * @author yole
  */
-public class WrappedElementAnchor extends PsiAnchor {
+public class WrappedElementAnchor implements PsiAnchor {
   private final SmartPointerAnchorProvider myAnchorProvider;
   private final PsiAnchor myBaseAnchor;
 

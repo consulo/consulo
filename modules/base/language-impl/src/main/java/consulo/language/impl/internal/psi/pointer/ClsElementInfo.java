@@ -16,19 +16,18 @@
 package consulo.language.impl.internal.psi.pointer;
 
 import consulo.document.util.Segment;
-import consulo.language.impl.psi.PsiAnchor;
+import consulo.language.impl.internal.psi.PsiAnchorFactoryImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 class ClsElementInfo extends SmartPointerElementInfo {
   @Nonnull
-  private final PsiAnchor.StubIndexReference myStubIndexReference;
+  private final PsiAnchorFactoryImpl.StubIndexReference myStubIndexReference;
 
-  ClsElementInfo(@Nonnull PsiAnchor.StubIndexReference stubReference) {
+  ClsElementInfo(@Nonnull PsiAnchorFactoryImpl.StubIndexReference stubReference) {
     myStubIndexReference = stubReference;
   }
 

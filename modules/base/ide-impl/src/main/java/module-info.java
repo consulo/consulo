@@ -260,13 +260,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.designer.propertyTable.editors;
   exports consulo.ide.impl.idea.designer.propertyTable.renderers;
   exports consulo.ide.impl.idea.diagnostic;
-  exports consulo.ide.impl.idea.dupLocator;
-  exports consulo.ide.impl.idea.dupLocator.equivalence;
-  exports consulo.ide.impl.idea.dupLocator.index;
-  exports consulo.ide.impl.idea.dupLocator.iterators;
-  exports consulo.ide.impl.idea.dupLocator.treeHash;
-  exports consulo.ide.impl.idea.dupLocator.treeView;
-  exports consulo.ide.impl.idea.dupLocator.util;
   exports consulo.ide.impl.idea.dvcs.actions;
   exports consulo.ide.impl.idea.dvcs.branch;
   exports consulo.ide.impl.idea.dvcs.push;

@@ -20,14 +20,13 @@ import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
-import consulo.language.impl.psi.PsiAnchor;
+import consulo.language.impl.internal.psi.PsiAnchorFactoryImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.stub.PsiFileWithStubSupport;
 import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.PsiFileWithStubSupport;
 import consulo.language.util.LanguageUtil;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -66,7 +65,7 @@ class AnchorElementInfo extends SelfElementInfo {
       if (!(file instanceof PsiFileWithStubSupport)) return null;
       short index = (short)(typeAndId >> 32);
       IStubElementType stubElementType = (IStubElementType)IElementType.find(index);
-      return PsiAnchor.restoreFromStubIndex((PsiFileWithStubSupport)file, stubId, stubElementType, false);
+      return PsiAnchorFactoryImpl.restoreFromStubIndex((PsiFileWithStubSupport)file, stubId, stubElementType, false);
     }
 
     return super.restoreElement(manager);

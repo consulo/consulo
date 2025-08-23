@@ -112,6 +112,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-duplicate-analysis-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-repository-ui-api</artifactId>
             <version>${project.version}</version>
         </dependency>

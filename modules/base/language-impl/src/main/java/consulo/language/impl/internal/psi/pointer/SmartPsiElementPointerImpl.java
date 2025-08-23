@@ -24,10 +24,10 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
-import consulo.language.impl.psi.PsiAnchor;
-import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.internal.psi.PsiAnchorFactoryImpl;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
+import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.stub.IStubFileElementType;
@@ -37,9 +37,9 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -168,7 +168,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
         if (element instanceof PsiFile) {
           return new FileElementInfo((PsiFile)element);
         }
-        PsiAnchor.StubIndexReference stubReference = PsiAnchor.createStubReference(element, containingFile);
+        PsiAnchorFactoryImpl.StubIndexReference stubReference = PsiAnchorFactoryImpl.createStubReference(element, containingFile);
         if (stubReference != null) {
           return new ClsElementInfo(stubReference);
         }
@@ -220,7 +220,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
       IStubFileElementType stubType = ((PsiFileImpl)containingFile).getElementTypeForStubBuilder();
       if (stubType != null && stubType.shouldBuildStubFor(containingFile.getViewProvider().getVirtualFile())) {
         StubBasedPsiElement stubPsi = (StubBasedPsiElement)element;
-        int stubId = PsiAnchor.calcStubIndex(stubPsi);
+        int stubId = PsiAnchorFactoryImpl.calcStubIndex(stubPsi);
         if (stubId != -1) {
           return new AnchorElementInfo(element, (PsiFileImpl)containingFile, stubId, stubPsi.getElementType());
         }

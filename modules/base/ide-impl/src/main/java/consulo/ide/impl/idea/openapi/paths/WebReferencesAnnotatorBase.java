@@ -15,19 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.paths;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.intention.IntentionAction;
+import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;
 import consulo.language.editor.annotation.ExternalAnnotator;
-import consulo.document.util.TextRange;
-import consulo.language.impl.psi.PsiAnchor;
-import consulo.language.psi.path.PsiDynaReference;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.impl.psi.path.WebReference;
+import consulo.language.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
-import consulo.language.impl.psi.path.WebReference;
+import consulo.language.psi.path.PsiDynaReference;
 import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -35,8 +37,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Arrays;

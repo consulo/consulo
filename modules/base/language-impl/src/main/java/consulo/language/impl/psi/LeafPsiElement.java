@@ -16,6 +16,8 @@
 
 package consulo.language.impl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.psi.PsiNavigationSupport;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
@@ -43,24 +45,27 @@ import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;
 
-public class LeafPsiElement extends LeafElement implements PsiElement, NavigationItem {
+public class LeafPsiElement extends LeafElement implements consulo.language.psi.LeafPsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance(LeafPsiElement.class);
 
   public LeafPsiElement(@Nonnull IElementType type, CharSequence text) {
     super(type, text);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getFirstChild() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getLastChild() {
     return null;
@@ -75,11 +80,13 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
     return SharedImplUtil.getParent(this);
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getNextSibling() {
     return SharedImplUtil.getNextSibling(this);
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getPrevSibling() {
     return SharedImplUtil.getPrevSibling(this);
@@ -87,7 +94,7 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
 
   @Override
   public PsiFile getContainingFile() {
-    final PsiFile file = SharedImplUtil.getContainingFile(this);
+    PsiFile file = SharedImplUtil.getContainingFile(this);
     if (file == null || !file.isValid()) invalid();
     return file;
   }
@@ -96,7 +103,7 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
   private void invalid() {
     ProgressIndicatorProvider.checkCanceled();
 
-    final StringBuilder builder = new StringBuilder();
+    StringBuilder builder = new StringBuilder();
     TreeElement element = this;
     while (element != null) {
       if (element != this) builder.append(" / ");
@@ -107,11 +114,13 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
     throw new PsiInvalidElementAccessException(this, builder.toString());
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement findElementAt(int offset) {
     return this;
   }
 
+  @RequiredReadAction
   @Override
   public PsiReference findReferenceAt(int offset) {
     return SharedPsiElementImplUtil.findReferenceAt(this, offset);
@@ -149,11 +158,13 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
@@ -164,21 +175,25 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public void delete() throws IncorrectOperationException {
     LOG.assertTrue(getTreeParent() != null);
@@ -192,11 +207,13 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
     CheckUtil.checkWritable(this);
   }
 
+  @RequiredWriteAction
   @Override
   public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     return SharedImplUtil.doReplace(this, this, newElement);
@@ -257,17 +274,19 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
     if (project != null) {
       return project;
     }
-    final PsiManager manager = getManager();
+    PsiManager manager = getManager();
     if (manager == null) invalid();
     return manager.getProject();
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Language getLanguage() {
     return getElementType().getLanguage();
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public LanguageVersion getLanguageVersion() {
@@ -296,7 +315,7 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
 
   @Override
   public void navigate(boolean requestFocus) {
-    final Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
+    Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
     if (descriptor != null) {
       descriptor.navigate(requestFocus);
     }
@@ -313,7 +332,7 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
   }
 
   @Override
-  public boolean isEquivalentTo(final PsiElement another) {
+  public boolean isEquivalentTo(PsiElement another) {
     return this == another;
   }
 }

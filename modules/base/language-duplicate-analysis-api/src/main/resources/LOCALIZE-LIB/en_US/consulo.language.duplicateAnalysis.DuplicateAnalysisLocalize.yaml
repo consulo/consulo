@@ -1,0 +1,86 @@
+duplicate.anonymize.uncommon.description:
+    text: <html>(The higher the value is the slower it works.<br> Values greater than 0 cause looking for more abstract code structure)</html>
+duplicate.anonymize.uncommon.outside.scope.checkbox:
+    text: Visible from &outside of the scope only
+duplicate.dialog.title:
+    text: Code Duplication Analysis Settings
+duplicate.location.invalid:
+    text: Invalid
+duplicate.location.multiple.lines:
+    text: lines {0} to {1} in {2}
+duplicate.location.single.line:
+    text: line {0} in {1}
+duplicates.export.html.page.title:
+    text: '{0} Locate Duplicates result'
+duplicates.indexing.progress:
+    text: Building search index
+duplicates.multiple.files.group.node:
+    text: '{0} duplicates, Cost: {1} in {2} files'
+duplicates.partially.valid.group.node:
+    text: '{0} duplicates'
+duplicates.searching.progress:
+    text: 'Searching for duplicates:'
+duplicates.send.to.left.action:
+    text: Send to Left
+duplicates.send.to.left.action.description:
+    text: Show selected item as left diff version
+duplicates.send.to.right.action:
+    text: Send to Right
+duplicates.send.to.right.action.description:
+    text: Show selected item as right diff version
+duplicates.single.file.group.node:
+    text: '{0} duplicates, Cost: {1} in {2}'
+duplicates.unknown.file.node.title:
+    text: unknown
+duplication.anonymize.fields.checkbox:
+    text: Anonymize &Fields
+duplication.anonymize.functions.checkbox:
+    text: Anonymize &Functions
+duplication.anonymize.literals.checkbox:
+    text: Anonymize &Literals
+duplication.anonymize.local.variables.checkbox:
+    text: Anonymize Local &Variables
+duplication.anonymize.methods.checkbox:
+    text: Anonymize &Methods
+duplication.anonymize.types.checkbox:
+    text: Anonymize &Types
+duplication.anonymize.uncommon.label:
+    text: Anonymize uncommon subexpressions simpler than
+duplication.anonymize.variables.checkbox:
+    text: Anonymize &Variables
+duplication.minimum.cost.label:
+    text: Do not show duplicates simpler than
+duplication.none.found.message:
+    text: No code duplicates found.
+duplication.none.found.title:
+    text: Find Duplicates
+duplication.progress:
+    text: Code duplication analysis
+duplication.scope.name.prefix:
+    text: Analysis
+duplication.title:
+    text: Code Duplication Analysis
+duplication.unavailable.without.indices:
+    text: Analyze duplicates is not available until indexes are ready
+eliminate.duplicates.action.text:
+    text: Eliminate duplicates
+headless.duplocator.application.starting.up:
+    text: Starting up {0} (build {1}) …
+headless.duplocator.command.line.usage:
+    text: "Usage:\nduplocate <project_path:path> <include_test_sources:bool> <output_path:path>\n\t[<lower_bound:int:10> [<discard_cost:int:0> <visibility:bool:true>\n\t<distinguish_variables:bool:false> <distinguish_fields:bool:false>\n\t<distinguish_methods:bool:true> <distinguish_types:bool:true>\n\t<distinguish_literals:bool:true>]]\n\nParameters above given in format: <name:type:default>"
+headless.duplocator.error.not.a.number:
+    text: 'Not a number: {0}'
+headless.duplocator.error.unable.open.project:
+    text: Unable to open project
+headless.duplocator.opening.project.message:
+    text: Opening project…
+label.locate.duplicates.action.deprecated:
+    text: The "Locate Duplicates" action is deprecated.
+link.label.duplicated.code.fragment:
+    text: Duplicated code fragment
+link.label.use.duplicate.coded.fragment.inspection:
+    text: Use the "{0}" inspection.
+offline.duplicates.no.modules.message:
+    text: This project contains no modules. Duplicates cannot proceed
+tooltip.tree.text:
+    text: Click arrow to show selected item as left/right diff version

@@ -78,6 +78,7 @@ module consulo.ide.api {
   requires transitive consulo.configuration.editor.api;
   requires transitive consulo.language.inject.advanced.api;
   requires transitive consulo.search.everywhere.api;
+  requires transitive consulo.language.duplicate.analysis.api;
 
   exports consulo.ide;
   exports consulo.ide.action;
