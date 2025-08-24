@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.dvcs.push;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.dvcs.push.ui.VcsPushDialog;
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,7 +38,7 @@ import java.util.HashSet;
 @ActionImpl(id = "Vcs.Push")
 public class VcsPushAction extends DumbAwareAction {
     public VcsPushAction() {
-        super(ActionLocalize.actionVcsPushText(), LocalizeValue.empty(), VersionControlSystemIconGroup.checkin());
+        super(ActionLocalize.actionVcsPushText(), ActionLocalize.actionVcsPushText(), VersionControlSystemIconGroup.checkin());
     }
 
     @Nonnull

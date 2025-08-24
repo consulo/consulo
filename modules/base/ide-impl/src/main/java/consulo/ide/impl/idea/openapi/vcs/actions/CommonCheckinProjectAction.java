@@ -42,7 +42,7 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
     public CommonCheckinProjectAction() {
         this(
             ActionLocalize.actionCheckinprojectText(),
-            LocalizeValue.empty(),
+            ActionLocalize.actionCheckinprojectText(),
             VersionControlSystemIconGroup.commit()
         );
     }
