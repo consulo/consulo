@@ -14,6 +14,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -21,7 +22,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.collection.*;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -388,7 +388,7 @@ public class ActionUpdater {
         List<AnAction> result = new ArrayList<>();
         for (AnAction child : visible) {
             if (child instanceof AnSeparator separator) {
-                if (!StringUtil.isEmpty(separator.getText()) || (!result.isEmpty()
+                if (separator.getTextValue() != LocalizeValue.empty() || (!result.isEmpty()
                     && !(result.get(result.size() - 1) instanceof AnSeparator))) {
                     result.add(child);
                 }

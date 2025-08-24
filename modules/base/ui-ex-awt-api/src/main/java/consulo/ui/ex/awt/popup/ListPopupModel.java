@@ -108,6 +108,10 @@ public class ListPopupModel extends AbstractListModel {
         return myStep.isSeparator(value);
     }
 
+    public String getTextFor(Object value) {
+        return myStep.getTextFor(value);
+    }
+
     @Deprecated
     public boolean isSeparatorAboveOf(Object aValue) {
         return getSeparatorAbove(aValue) != null;

@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -26,6 +27,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -59,6 +61,24 @@ public class ActionGroupExpander {
 
         while (!actions.isEmpty() && actions.getLast() instanceof AnSeparator) {
             actions.removeLast();
+        }
+
+        // remove separators if
+        // item
+        // separator="" <-- remove this separator
+        // separator="some"
+        // item
+        ListIterator<AnAction> listed = actions.listIterator();
+        while (listed.hasNext()) {
+            AnAction action = listed.next();
+
+            if (action instanceof AnSeparator separ
+                && separ.getTextValue() == LocalizeValue.empty()
+                && listed.nextIndex() < actions.size()
+                && actions.get(listed.nextIndex()) instanceof AnSeparator separNext
+                && separNext.getTextValue() != LocalizeValue.empty()) {
+                listed.remove();
+            }
         }
         
         return actions;

@@ -88,7 +88,7 @@ abstract class WeighingActionGroup extends ActionGroup {
         ActionGroup other = new ExcludingActionGroup(getDelegate(), heaviest);
         other.setPopup(true);
         other.getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Other..."));
-        return List.of(chosen.build(), new AnSeparator(), other);
+        return List.of(chosen.build(), AnSeparator.getInstance(), other);
     }
 
     protected boolean shouldBeChosenAnyway(AnAction action) {

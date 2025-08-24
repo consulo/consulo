@@ -218,7 +218,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
 
     DefaultActionGroup mainGroup = new DefaultActionGroup();
     mainGroup.add(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_TEXT_FILTER_SETTINGS_ACTION));
-    mainGroup.add(new AnSeparator());
+    mainGroup.add(AnSeparator.create());
     mainGroup.add(myFilterUi.createActionGroup());
     mainGroup.addSeparator();
     if (BekUtil.isBekEnabled()) {

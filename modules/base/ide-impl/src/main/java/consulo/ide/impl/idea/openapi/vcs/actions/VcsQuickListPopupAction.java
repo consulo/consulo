@@ -2,6 +2,7 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
@@ -102,7 +103,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         }
 
         // basic operations
-        addSeparator(group, vcs != null ? vcs.getDisplayName().get() : null);
+        addSeparator(group, vcs != null ? vcs.getDisplayName(): LocalizeValue.empty());
         addAction("ChangesView.AddUnversioned", group);
         addAction("CheckinProject", group);
         addAction("CheckinFiles", group);
@@ -147,7 +148,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void addLocalHistoryActions(DefaultActionGroup group) {
-        addSeparator(group, VcsLocalize.vcsQuicklistPupupSectionLocalHistory().get());
+        addSeparator(group, VcsLocalize.vcsQuicklistPupupSectionLocalHistory());
 
         addAction("LocalHistory.ShowHistory", group);
         addAction("LocalHistory.PutLabel", group);
@@ -200,12 +201,11 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void addSeparator(DefaultActionGroup toGroup) {
-        addSeparator(toGroup, null);
+        toGroup.add(AnSeparator.create());
     }
 
-    private void addSeparator(DefaultActionGroup toGroup, @Nullable String title) {
-        AnSeparator separator = title == null ? new AnSeparator() : new AnSeparator(title);
-        toGroup.add(separator);
+    private void addSeparator(DefaultActionGroup toGroup, @Nonnull LocalizeValue text) {
+        toGroup.add(AnSeparator.create(text));
     }
 
     @Override

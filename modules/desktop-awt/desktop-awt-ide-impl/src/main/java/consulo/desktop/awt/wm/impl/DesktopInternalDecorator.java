@@ -492,7 +492,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
         String separatorText = group.getTemplatePresentation().getText();
         if (children.length > 0 && !StringUtil.isEmpty(separatorText)) {
-            main.addAction(new AnSeparator(separatorText), Constraints.FIRST);
+            main.addAction(AnSeparator.create(separatorText), Constraints.FIRST);
         }
     }
 

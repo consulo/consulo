@@ -267,7 +267,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
         // add per repository branches into the model as Speed Search elements and show them only if regular items were not found by mask;
         List<AnAction> speedSearchActions = new ArrayList<>();
         if (!isFirstLevel) {
-            speedSearchActions.add(new AnSeparator(parentActionGroup.getTemplatePresentation().getText()));
+            speedSearchActions.add(AnSeparator.create(parentActionGroup.getTemplatePresentation().getTextValue()));
         }
         for (AnAction child : parentActionGroup.getChildren(null)) {
             if (child instanceof ActionGroup) {

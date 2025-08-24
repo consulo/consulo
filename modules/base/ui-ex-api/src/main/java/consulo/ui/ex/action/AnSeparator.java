@@ -20,7 +20,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,6 +27,7 @@ import jakarta.annotation.Nullable;
  * Represents a separator.
  */
 public final class AnSeparator extends AnAction implements DumbAware {
+    @SuppressWarnings("deprecation")
     private static final AnSeparator ourInstance = new AnSeparator();
 
     @Nonnull
@@ -44,10 +44,11 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue)")
     public static AnSeparator create(@Nullable String text) {
-        return StringUtil.isEmptyOrSpaces(text) ? ourInstance : new AnSeparator(text);
+        return create(StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
     }
 
     @Nonnull
+    @SuppressWarnings("deprecation")
     public static AnSeparator create(@Nonnull LocalizeValue textValue) {
         return textValue == LocalizeValue.empty() ? ourInstance : new AnSeparator(textValue);
     }
@@ -55,14 +56,20 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @Nonnull
     private final LocalizeValue myTextValue;
 
+    @Deprecated
+    @DeprecationInfo("Use #create()")
     public AnSeparator() {
         this(LocalizeValue.empty());
     }
 
+    @Deprecated
+    @DeprecationInfo("Use #create()")
     public AnSeparator(@Nullable String text) {
         myTextValue = StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use #create()")
     public AnSeparator(@Nonnull LocalizeValue textValue) {
         myTextValue = textValue;
     }
@@ -83,5 +90,10 @@ public final class AnSeparator extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toString() {
+        return myTextValue.toString();
     }
 }

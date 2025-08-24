@@ -45,7 +45,7 @@ public abstract class DvcsQuickListContentProvider implements VcsQuickListConten
         ActionManager manager = ActionManager.getInstance();
         List<AnAction> actions = new ArrayList<>();
 
-        actions.add(new AnSeparator(activeVcs.getDisplayName()));
+        actions.add(AnSeparator.create(activeVcs.getDisplayName()));
         add("CheckinProject", manager, actions);
         add("CheckinFiles", manager, actions);
         add(IdeActions.CHANGES_VIEW_REVERT, manager, actions);
@@ -71,7 +71,7 @@ public abstract class DvcsQuickListContentProvider implements VcsQuickListConten
     }
 
     protected static void addSeparator(@Nonnull List<AnAction> actions) {
-        actions.add(new AnSeparator());
+        actions.add(AnSeparator.create());
     }
 
     protected static void add(String actionName, ActionManager manager, List<AnAction> actions) {

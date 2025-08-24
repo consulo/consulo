@@ -242,7 +242,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
         ExtensionPoint<AnnotationGutterActionProvider> extensionPoint =
             Application.get().getExtensionPoint(AnnotationGutterActionProvider.class);
         if (extensionPoint.hasAnyExtensions()) {
-            presentation.addAction(new AnSeparator());
+            presentation.addAction(AnSeparator.create());
         }
         extensionPoint.forEach(provider -> presentation.addAction(provider.createAction(fileAnnotation)));
     }

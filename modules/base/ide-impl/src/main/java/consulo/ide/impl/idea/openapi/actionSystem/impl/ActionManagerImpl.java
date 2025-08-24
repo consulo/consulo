@@ -992,7 +992,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             return;
         }
         String text = element.getAttributeValue(TEXT_ATTR_NAME);
-        AnSeparator separator = text != null ? new AnSeparator(text) : AnSeparator.getInstance();
+        AnSeparator separator = AnSeparator.create(text);
         if (parentGroup != null) {
             parentGroup.add(separator, this);
         }

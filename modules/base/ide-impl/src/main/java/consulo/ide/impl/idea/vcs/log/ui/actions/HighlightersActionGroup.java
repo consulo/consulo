@@ -42,7 +42,7 @@ public class HighlightersActionGroup extends ActionGroup {
 
         if (e != null) {
             if (e.hasData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES)) {
-                actions.add(new AnSeparator("Highlight"));
+                actions.add(AnSeparator.create("Highlight"));
                 for (VcsLogHighlighterFactory factory : Extensions.getExtensions(
                     VcsLogUiImpl.LOG_HIGHLIGHTER_FACTORY_EP,
                     e.getData(Project.KEY)

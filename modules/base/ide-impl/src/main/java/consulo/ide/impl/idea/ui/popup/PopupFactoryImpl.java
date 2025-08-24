@@ -835,7 +835,10 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
 
         @Override
         public String toString() {
-            return myTextValue.getValue();
+            if (myIsSeparator) {
+                return "separator = " + myTextValue.get();
+            }
+            return myTextValue.get();
         }
     }
 }

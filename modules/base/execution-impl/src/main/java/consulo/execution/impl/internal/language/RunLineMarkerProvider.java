@@ -71,7 +71,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
       for (AnAction action : info.actions) {
         builder.add(new LineMarkerActionWrapper(element, action));
       }
-      builder.add(new AnSeparator());
+      builder.add(AnSeparator.create());
     }
     if (icon == null) return null;
 

@@ -863,9 +863,9 @@ public class UsageViewImpl implements UsageViewEx {
         group.getTemplatePresentation().setDescriptionValue(UsageLocalize.actionGroupByTitle());
         AnAction[] groupingActions = createGroupingActions();
         if (groupingActions.length > 0) {
-            group.add(new AnSeparator(UsageLocalize.actionGroupByTitle()));
+            group.add(AnSeparator.create(UsageLocalize.actionGroupByTitle()));
             group.addAll(groupingActions);
-            group.add(new AnSeparator());
+            group.add(AnSeparator.create());
         }
 
         addFilteringActions(group::add, false);

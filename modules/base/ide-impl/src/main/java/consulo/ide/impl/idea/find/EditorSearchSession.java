@@ -194,8 +194,8 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
     @Nonnull
     protected AnAction[] createPrimarySearchActions() {
-        return new AnAction[]{new StatusTextAction(), new PrevOccurrenceAction(), new NextOccurrenceAction(), new FindAllAction(), new AnSeparator(), new AddOccurrenceAction(),
-            new RemoveOccurrenceAction(), new SelectAllAction(), new AnSeparator()};
+        return new AnAction[]{new StatusTextAction(), new PrevOccurrenceAction(), new NextOccurrenceAction(), new FindAllAction(), AnSeparator.create(), new AddOccurrenceAction(),
+            new RemoveOccurrenceAction(), new SelectAllAction(), AnSeparator.create()};
     }
 
     @Nonnull

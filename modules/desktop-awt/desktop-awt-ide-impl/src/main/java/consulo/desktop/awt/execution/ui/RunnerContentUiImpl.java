@@ -1354,11 +1354,11 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
         if (myMinimizeActionEnabled) {
             if (specialActions.isEmpty()) {
-                myViewActions.add(new AnSeparator());
+                myViewActions.add(AnSeparator.create());
                 AnAction separateWatches = actionManager.getAction("XDebugger.SeparateWatches");
                 if (separateWatches != null) {
                     myViewActions.add(separateWatches);
-                    myViewActions.add(new AnSeparator());
+                    myViewActions.add(AnSeparator.create());
                 }
                 myViewActions.add(actionManager.getAction("Runner.ToggleTabLabels"));
                 myViewActions.add(actionManager.getAction("Runner.RestoreLayout"));

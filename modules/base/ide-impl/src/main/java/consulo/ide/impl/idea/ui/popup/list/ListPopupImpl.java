@@ -601,16 +601,21 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
          * Hack for remove extra height produced by separators
          */
         private Dimension removeSeparatorsHeight(Dimension size) {
-            int separators = 0;
+            int height = size.height;
+
             ListPopupModel model = getListModel();
             for (int i = 0; i < model.getSize(); i++) {
                 Object o = model.get(i);
                 if (model.isSeparator(o)) {
-                    separators++;
+                    String textFor = model.getTextFor(o);
+                    if (!StringUtil.isEmpty(textFor)) {
+                        height -= JBUI.scale(12);
+                    } else {
+                        height -= JBUI.scale(20);
+                    }
                 }
             }
-
-            size.height -= separators * JBUI.scale(21);
+            size.height = height;
             return size;
         }
 

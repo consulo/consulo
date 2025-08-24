@@ -235,7 +235,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
                             for (String group : groups) {
                                 res[i++] = new MoveToGroupAction(group);
                             }
-                            res[i++] = new AnSeparator();
+                            res[i++] = AnSeparator.create();
                             res[i] = new MoveToGroupAction();
                             return res;
                         }
