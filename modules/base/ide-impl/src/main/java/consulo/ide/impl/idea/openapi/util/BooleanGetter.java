@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.util;
 import java.util.function.BooleanSupplier;
 
 @FunctionalInterface
+@Deprecated
 public interface BooleanGetter extends BooleanSupplier {
   BooleanGetter TRUE = () -> true;
 

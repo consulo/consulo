@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.tools;
 
-import consulo.execution.ui.console.RegexpFilter;
-import consulo.ide.impl.idea.execution.process.ColoredProcessHandlerImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionManager;
 import consulo.execution.ExecutionResult;
@@ -27,6 +25,7 @@ import consulo.execution.executor.Executor;
 import consulo.execution.process.ProcessTerminatedListener;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.ui.console.RegexpFilter;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.logging.Logger;
@@ -35,15 +34,14 @@ import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroManager;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.process.internal.OSProcessHandler;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -51,99 +49,101 @@ import jakarta.annotation.Nonnull;
  * @since 2005-03-30
  */
 public class ToolRunProfile implements ModuleRunProfile {
-  private static final Logger LOG = Logger.getInstance(ToolRunProfile.class);
-  private final Tool myTool;
-  private final DataContext myContext;
-  private final GeneralCommandLine myCommandLine;
+    private static final Logger LOG = Logger.getInstance(ToolRunProfile.class);
+    private final Tool myTool;
+    private final DataContext myContext;
+    private final GeneralCommandLine myCommandLine;
 
-  public ToolRunProfile(final Tool tool, final DataContext context) {
-    myTool = tool;
-    myContext = context;
-    myCommandLine = myTool.createCommandLine(context);
-    //if (context instanceof DataManagerImpl.MyDataContext) {
-    //  // hack: macro.expand() can cause UI events such as showing dialogs ('Prompt' macro) which may 'invalidate' the datacontext
-    //  // since we know exactly that context is valid, we need to update its event count
-    //  ((DataManagerImpl.MyDataContext)context).setEventCount(IdeEventQueue.getInstance().getEventCount());
-    //}
-  }
-
-  @Override
-  public String getName() {
-    return expandMacrosInName(myTool, myContext);
-  }
-
-  public static String expandMacrosInName(Tool tool, DataContext context) {
-    String name = tool.getName();
-    try {
-      return MacroManager.getInstance().expandMacrosInString(name, true, context);
-    }
-    catch (Macro.ExecutionCancelledException e) {
-      LOG.info(e);
-      return name;
-    }
-  }
-
-  @Override
-  public Image getIcon() {
-    return null;
-  }
-
-  @Override
-  @Nonnull
-  public Module[] getModules() {
-    return Module.EMPTY_ARRAY;
-  }
-
-  @Override
-  public RunProfileState getState(@Nonnull final Executor executor, @Nonnull final ExecutionEnvironment env) {
-    final Project project = env.getProject();
-    if (myCommandLine == null) {
-      // can return null if creation of cmd line has been cancelled
-      return null;
+    public ToolRunProfile(Tool tool, DataContext context) {
+        myTool = tool;
+        myContext = context;
+        myCommandLine = myTool.createCommandLine(context);
+        //if (context instanceof DataManagerImpl.MyDataContext) {
+        //  // hack: macro.expand() can cause UI events such as showing dialogs ('Prompt' macro) which may 'invalidate' the datacontext
+        //  // since we know exactly that context is valid, we need to update its event count
+        //  ((DataManagerImpl.MyDataContext)context).setEventCount(IdeEventQueue.getInstance().getEventCount());
+        //}
     }
 
-    final CommandLineState commandLineState = new CommandLineState(env) {
-      GeneralCommandLine createCommandLine() {
-        return myCommandLine;
-      }
+    @Override
+    public String getName() {
+        return expandMacrosInName(myTool, myContext);
+    }
 
-      @Override
-      @Nonnull
-      protected OSProcessHandler startProcess() throws ExecutionException {
-        final GeneralCommandLine commandLine = createCommandLine();
-        final OSProcessHandler processHandler = new ColoredProcessHandlerImpl(commandLine.createProcess(), commandLine.getCommandLineString());
-        ProcessTerminatedListener.attach(processHandler);
-        return processHandler;
-      }
-
-      @Override
-      @Nonnull
-      public ExecutionResult execute(@Nonnull final Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
-        final ExecutionResult result = super.execute(executor, runner);
-        final ProcessHandler processHandler = result.getProcessHandler();
-        if (processHandler != null) {
-          processHandler.addProcessListener(new ToolProcessAdapter(project, myTool.synchronizeAfterExecution(), getName()));
-          processHandler.addProcessListener(new ProcessAdapter() {
-            @Override
-            public void onTextAvailable(ProcessEvent event, Key outputType) {
-              if ((outputType == ProcessOutputTypes.STDOUT && myTool.isShowConsoleOnStdOut())
-                  || (outputType == ProcessOutputTypes.STDERR && myTool.isShowConsoleOnStdErr())) {
-                ExecutionManager.getInstance(project).getContentManager().toFrontRunContent(executor, processHandler);
-              }
-            }
-          });
+    public static String expandMacrosInName(Tool tool, DataContext context) {
+        String name = tool.getName();
+        try {
+            return MacroManager.getInstance().expandMacrosInString(name, true, context);
         }
-        return result;
-      }
-    };
-    TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
-    final FilterInfo[] outputFilters = myTool.getOutputFilters();
-    for (FilterInfo outputFilter : outputFilters) {
-      builder.addFilter(new RegexpFilter(project, outputFilter.getRegExp()));
+        catch (Macro.ExecutionCancelledException e) {
+            LOG.info(e);
+            return name;
+        }
     }
 
-    commandLineState.setConsoleBuilder(builder);
-    return commandLineState;
-  }
+    @Override
+    public Image getIcon() {
+        return null;
+    }
+
+    @Override
+    @Nonnull
+    public Module[] getModules() {
+        return Module.EMPTY_ARRAY;
+    }
+
+    @Override
+    public RunProfileState getState(@Nonnull Executor executor, @Nonnull final ExecutionEnvironment env) {
+        final Project project = env.getProject();
+        if (myCommandLine == null) {
+            // can return null if creation of cmd line has been cancelled
+            return null;
+        }
+
+        CommandLineState commandLineState = new CommandLineState(env) {
+            GeneralCommandLine createCommandLine() {
+                return myCommandLine;
+            }
+
+            @Override
+            @Nonnull
+            protected ProcessHandler startProcess() throws ExecutionException {
+                GeneralCommandLine commandLine = createCommandLine();
+                ProcessHandler processHandler = ProcessHandlerBuilder.create(commandLine)
+                    .colored()
+                    .build();
+                ProcessTerminatedListener.attach(processHandler);
+                return processHandler;
+            }
+
+            @Override
+            @Nonnull
+            public ExecutionResult execute(@Nonnull final Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+                ExecutionResult result = super.execute(executor, runner);
+                final ProcessHandler processHandler = result.getProcessHandler();
+                if (processHandler != null) {
+                    processHandler.addProcessListener(new ToolProcessAdapter(project, myTool.synchronizeAfterExecution(), getName()));
+                    processHandler.addProcessListener(new ProcessAdapter() {
+                        @Override
+                        public void onTextAvailable(ProcessEvent event, Key outputType) {
+                            if ((outputType == ProcessOutputTypes.STDOUT && myTool.isShowConsoleOnStdOut())
+                                || (outputType == ProcessOutputTypes.STDERR && myTool.isShowConsoleOnStdErr())) {
+                                ExecutionManager.getInstance(project).getContentManager().toFrontRunContent(executor, processHandler);
+                            }
+                        }
+                    });
+                }
+                return result;
+            }
+        };
+        TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
+        FilterInfo[] outputFilters = myTool.getOutputFilters();
+        for (FilterInfo outputFilter : outputFilters) {
+            builder.addFilter(new RegexpFilter(project, outputFilter.getRegExp()));
+        }
+
+        commandLineState.setConsoleBuilder(builder);
+        return commandLineState;
+    }
 
 }

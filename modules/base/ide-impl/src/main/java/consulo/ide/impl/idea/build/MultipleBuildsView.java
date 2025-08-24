@@ -8,7 +8,7 @@ import consulo.build.ui.event.*;
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.process.AnsiEscapeDecoder;
+import consulo.process.internal.AnsiEscapeDecoder;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.IdeBundle;
 import consulo.logging.Logger;

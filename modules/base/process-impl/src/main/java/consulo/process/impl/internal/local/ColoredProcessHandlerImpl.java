@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.process;
+package consulo.process.impl.internal.local;
 
-import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.internal.AnsiEscapeDecoder;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;

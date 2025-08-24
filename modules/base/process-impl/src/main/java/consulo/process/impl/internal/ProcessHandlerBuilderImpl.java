@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.process.impl;
+package consulo.process.impl.internal;
 
-import consulo.ide.impl.idea.execution.configurations.PtyCommandLine;
-import consulo.ide.impl.idea.execution.process.*;
-import consulo.ide.impl.idea.execution.process.KillableColoredProcessHandlerImpl;
-import consulo.ide.impl.idea.execution.process.KillableProcessHandlerImpl;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.impl.internal.local.*;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.internal.SudoBuilder;
 import consulo.process.io.BaseOutputReader;
-
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;

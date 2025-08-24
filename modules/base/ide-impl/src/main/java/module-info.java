@@ -270,7 +270,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.execution.filters.impl;
   exports consulo.ide.impl.idea.execution.impl;
   exports consulo.ide.impl.idea.execution.impl.statistics;
-  exports consulo.ide.impl.idea.execution.process;
   exports consulo.ide.impl.idea.execution.rmi;
   exports consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
   exports consulo.ide.impl.idea.execution.ui;
@@ -443,7 +442,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.ui.popup.util;
   exports consulo.ide.impl.idea.openapi.util;
   exports consulo.ide.impl.idea.openapi.util.io;
-  exports consulo.ide.impl.idea.openapi.util.process;
   exports consulo.ide.impl.idea.openapi.util.text;
   exports consulo.ide.impl.idea.openapi.vcs;
   exports consulo.ide.impl.idea.openapi.vcs.actions;

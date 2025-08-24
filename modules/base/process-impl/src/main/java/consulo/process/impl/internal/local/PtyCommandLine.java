@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.configurations;
+package consulo.process.impl.internal.local;
 
 import com.pty4j.PtyProcess;
 import consulo.application.ApplicationProperties;

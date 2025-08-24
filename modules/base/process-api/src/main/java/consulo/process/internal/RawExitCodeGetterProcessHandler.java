@@ -20,5 +20,5 @@ package consulo.process.internal;
  * @since 11/06/2023
  */
 public interface RawExitCodeGetterProcessHandler {
-  int getRawExitCode();
+    int getRawExitCode();
 }

@@ -5,7 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.execution.ui.console.TextConsoleBuilder;
-import consulo.ide.impl.idea.execution.process.KillableProcessHandlerImpl;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -18,7 +18,7 @@ public abstract class RunAnythingCommandHandler {
     public abstract boolean isMatched(@Nonnull String commandLine);
 
     /**
-     * See {@link KillableProcessHandlerImpl#shouldKillProcessSoftly()} for details.
+     * See {@link ProcessHandlerBuilder#shouldKillProcessSoftly(boolean)} for details.
      */
     public boolean shouldKillProcessSoftly() {
         return true;

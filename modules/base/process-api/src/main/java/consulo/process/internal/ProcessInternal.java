@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.util;
+package consulo.process.internal;
+
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
+import consulo.util.dataholder.Key;
 
 /**
- * @author Irina.Chernushina
- * @since 2011-09-30
+ * @author VISTALL
+ * @since 2025-08-24
  */
-public class StaticGetter<T> implements Getter<T> {
-  private final T myT;
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface ProcessInternal {
+    static ProcessInternal getInstance() {
+        return Application.get().getInstance(ProcessInternal.class);
+    }
 
-  public StaticGetter(T t) {
-    myT = t;
-  }
-
-  @Override
-  public T get() {
-    return myT;
-  }
+    Key getColorOutputKey(String attribute);
 }

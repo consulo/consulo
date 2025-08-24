@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.process.impl;
+package consulo.process.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.process.ProcessHandlerBuilder;
 import consulo.process.ProcessHandlerBuilderFactory;
 import consulo.process.cmd.GeneralCommandLine;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -30,9 +29,9 @@ import jakarta.annotation.Nonnull;
 @ServiceImpl
 @Singleton
 public class ProcessHandlerBuilderFactoryImpl implements ProcessHandlerBuilderFactory {
-  @Nonnull
-  @Override
-  public ProcessHandlerBuilder newBuilder(@Nonnull GeneralCommandLine cmd) {
-    return new ProcessHandlerBuilderImpl(cmd);
-  }
+    @Nonnull
+    @Override
+    public ProcessHandlerBuilder newBuilder(@Nonnull GeneralCommandLine cmd) {
+        return new ProcessHandlerBuilderImpl(cmd);
+    }
 }

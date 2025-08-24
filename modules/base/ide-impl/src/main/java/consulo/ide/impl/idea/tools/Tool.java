@@ -19,19 +19,19 @@ package consulo.ide.impl.idea.tools;
 import consulo.component.persist.scheme.SchemeElement;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
-import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.ide.impl.idea.execution.util.ExecutionErrorDialog;
 import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroManager;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessListener;
-import consulo.process.internal.OSProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Comparing;
@@ -299,7 +299,7 @@ public class Tool implements SchemeElement {
         if (commandLine == null) {
           return false;
         }
-        OSProcessHandler handler = new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString());
+        ProcessHandler handler = ProcessHandlerBuilder.create(commandLine).build();
         handler.addProcessListener(new ToolProcessAdapter(project, synchronizeAfterExecution(), getName()));
         if (processListener != null) {
           handler.addProcessListener(processListener);

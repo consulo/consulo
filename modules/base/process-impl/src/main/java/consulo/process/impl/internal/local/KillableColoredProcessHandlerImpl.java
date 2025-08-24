@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.process;
+package consulo.process.impl.internal.local;
 
 import consulo.process.ExecutionException;
 import consulo.process.KillableProcessHandler;

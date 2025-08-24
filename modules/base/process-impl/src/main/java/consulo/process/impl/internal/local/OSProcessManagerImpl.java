@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.process.impl;
+package consulo.process.impl.internal.local;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.execution.process.RunnerWinProcess;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.process.internal.OSProcessManager;

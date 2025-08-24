@@ -70,6 +70,7 @@
                 <include>consulo:consulo-language-duplicate-analysis-api</include>
                 <include>consulo:consulo-code-editor-api</include>
                 <include>consulo:consulo-process-api</include>
+                <include>consulo:consulo-process-impl</include>
                 <include>consulo:consulo-execution-api</include>
                 <include>consulo:consulo-execution-impl</include>
                 <include>consulo:consulo-execution-debug-api</include>
