@@ -343,8 +343,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.util.scopeChooser;
   exports consulo.ide.impl.idea.ide.util.treeView.smartTree;
   exports consulo.ide.impl.idea.ide.wizard;
-  exports consulo.ide.impl.idea.idea;
-  exports consulo.ide.impl.idea.indentation;
   exports consulo.ide.impl.idea.internal;
   exports consulo.ide.impl.idea.internal.anomalies;
   exports consulo.ide.impl.idea.internal.encodings;

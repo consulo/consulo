@@ -27,6 +27,7 @@ module consulo.language.api {
     exports consulo.language.file.inject;
     exports consulo.language.file.light;
     exports consulo.language.icon;
+    exports consulo.language.indentation;
     exports consulo.language.inject;
     exports consulo.language.lexer;
     exports consulo.language.localize;
