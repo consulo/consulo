@@ -82,10 +82,6 @@ public final class Presentation implements Cloneable {
    */
   public static final String PROP_DISABLED_MNEMONIC = "disabledMnemonic";
 
-  public static final double DEFAULT_WEIGHT = 0;
-  public static final double HIGHER_WEIGHT = 42;
-  public static final double EVEN_HIGHER_WEIGHT = 239;
-
   private SmartFMap<String, Object> myUserMap = SmartFMap.emptyMap();
 
   @Nullable
@@ -97,7 +93,6 @@ public final class Presentation implements Cloneable {
   private boolean myVisible = true;
   private boolean myEnabled = true;
   private boolean myDisabledMnemonic;
-  private double myWeight = DEFAULT_WEIGHT;
 
   private Image myIcon;
   private Image myDisabledIcon;
@@ -257,7 +252,7 @@ public final class Presentation implements Cloneable {
     return myHoveredIcon;
   }
 
-  public void setHoveredIcon(@Nullable final Image hoveredIcon) {
+  public void setHoveredIcon(@Nullable Image hoveredIcon) {
     Image old = myHoveredIcon;
     myHoveredIcon = hoveredIcon;
     fireObjectPropertyChange(PROP_HOVERED_ICON, old, myHoveredIcon);
@@ -268,7 +263,7 @@ public final class Presentation implements Cloneable {
     return mySelectedIcon;
   }
 
-  public void setSelectedIcon(@Nullable final Image selectedIcon) {
+  public void setSelectedIcon(@Nullable Image selectedIcon) {
     Image old = mySelectedIcon;
     mySelectedIcon = selectedIcon;
     fireObjectPropertyChange(PROP_SELECTED_ICON, old, mySelectedIcon);
@@ -384,19 +379,6 @@ public final class Presentation implements Cloneable {
     if (Comparing.equal(oldValue, value)) return;
     myUserMap = value == null ? myUserMap.minus(key) : myUserMap.plus(key, value);
     fireObjectPropertyChange(key, oldValue, value);
-  }
-
-  public double getWeight() {
-    return myWeight;
-  }
-
-  /**
-   * Some action groups (like 'New...') may filter out actions with non-highest priority.
-   *
-   * @param weight please use {@link #HIGHER_WEIGHT} or {@link #EVEN_HIGHER_WEIGHT}
-   */
-  public void setWeight(double weight) {
-    myWeight = weight;
   }
 
   public boolean isEnabledAndVisible() {

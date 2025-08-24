@@ -19,16 +19,24 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author peter
  */
-abstract class WeighingActionGroup extends ActionGroup {
+public abstract class WeighingActionGroup extends ActionGroup {
+    public static final Key<Double> WEIGHT_KEY = Key.create("WeighingActionGroup.WEIGHT");
+
+    public static final double DEFAULT_WEIGHT = 0;
+    public static final double HIGHER_WEIGHT = 42;
+    public static final double EVEN_HIGHER_WEIGHT = 239;
+
     private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
 
     @Override
@@ -49,15 +57,18 @@ abstract class WeighingActionGroup extends ActionGroup {
     @RequiredUIAccess
     public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleActions) {
         LinkedHashSet<AnAction> heaviest = null;
-        double maxWeight = Presentation.DEFAULT_WEIGHT;
+        double maxWeight = DEFAULT_WEIGHT;
+
         for (AnAction action : visibleActions) {
             Presentation presentation = myPresentationFactory.getPresentation(action);
             if (presentation.isEnabled() && presentation.isVisible()) {
-                if (presentation.getWeight() > maxWeight) {
-                    maxWeight = presentation.getWeight();
+                double weight = Objects.requireNonNullElse(presentation.getClientProperty(WEIGHT_KEY), DEFAULT_WEIGHT);
+                if (weight > maxWeight) {
+                    maxWeight = weight;
                     heaviest = new LinkedHashSet<>();
                 }
-                if (presentation.getWeight() == maxWeight && heaviest != null) {
+
+                if (weight == maxWeight && heaviest != null) {
                     heaviest.add(action);
                 }
             }
