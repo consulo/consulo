@@ -74,7 +74,7 @@
         <!--order="last"/>-->
         <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.FilePathCompletionContributor"-->
         <!--id="filePath" order="before javaClassName"/>-->
-        <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor"-->
+        <!--<completion.contributor language="any" implementationClass="consulo.language.editor.impl.internal.template.LiveTemplateCompletionContributor"-->
         <!--id="liveTemplates" order="first"/>-->
 
         <!--<completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.openapi.vcs.CommitCompletionContributor" id="commitCompletion"-->

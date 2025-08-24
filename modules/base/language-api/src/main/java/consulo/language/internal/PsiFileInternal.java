@@ -24,5 +24,5 @@ import jakarta.annotation.Nonnull;
  * @since 25.05.2024
  */
 public interface PsiFileInternal extends PsiFileEx {
-  void setOriginalFile(@Nonnull final PsiFile originalFile);
+  void setOriginalFile(@Nonnull PsiFile originalFile);
 }

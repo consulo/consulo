@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.postfix.completion;
+package consulo.language.editor.impl.internal.postfixTemplate;
 
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
-import consulo.language.editor.template.CustomLiveTemplateLookupElement;
-import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
-import consulo.util.lang.StringUtil;
+import consulo.language.editor.template.CustomLiveTemplateLookupElement;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 public class PostfixTemplateLookupElement extends CustomLiveTemplateLookupElement {

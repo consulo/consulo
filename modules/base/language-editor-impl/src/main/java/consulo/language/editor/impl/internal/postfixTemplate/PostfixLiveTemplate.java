@@ -1,5 +1,5 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.template.postfix.templates;
+package consulo.language.editor.impl.internal.postfixTemplate;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
@@ -10,9 +10,8 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.codeInsight.completion.OffsetTranslatorImpl;
-import consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateLookupElement;
 import consulo.language.Language;
+import consulo.language.editor.impl.internal.completion.OffsetTranslatorImpl;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
@@ -21,21 +20,18 @@ import consulo.language.editor.postfixTemplate.PostfixTemplatesUtils;
 import consulo.language.editor.template.CustomLiveTemplateBase;
 import consulo.language.editor.template.CustomLiveTemplateLookupElement;
 import consulo.language.editor.template.CustomTemplateCallback;
-import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.psi.*;
-import consulo.language.template.TemplateLanguageUtil;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.AttachmentFactoryUtil;
-import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.util.UndoUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -325,7 +321,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         StringBuilder fileContentWithoutKey = new StringBuilder();
         fileContentWithoutKey.append(fileContent.subSequence(0, newOffset));
         fileContentWithoutKey.append(fileContent.subSequence(currentOffset, fileContent.length()));
-        PsiFile copyFile = copyFile(file, fileContentWithoutKey);
+        PsiFile copyFile = PostfixTemplatesUtils.copyFile(file, fileContentWithoutKey);
         Document copyDocument = copyFile.getViewProvider().getDocument();
         if (copyDocument == null) {
             return Predicates.alwaysFalse();
@@ -363,27 +359,6 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     private static boolean isDumbEnough(@Nonnull PostfixTemplate template, @Nonnull PsiElement context) {
         DumbService dumbService = DumbService.getInstance(context.getProject());
         return !dumbService.isDumb() || DumbService.isDumbAware(template);
-    }
-
-    @Nonnull
-    @RequiredReadAction
-    public static PsiFile copyFile(@Nonnull PsiFile file, @Nonnull StringBuilder fileContentWithoutKey) {
-        PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(file.getProject());
-        FileType fileType = file.getFileType();
-        Language language = LanguageUtil.getLanguageForPsi(file.getProject(), file.getVirtualFile(), fileType);
-        PsiFile copy = language != null
-            ? psiFileFactory.createFileFromText(file.getName(), language, fileContentWithoutKey, false, true)
-            : psiFileFactory.createFileFromText(file.getName(), fileType, fileContentWithoutKey);
-
-        if (copy instanceof PsiFileImpl copyFile) {
-            copyFile.setOriginalFile(TemplateLanguageUtil.getBaseFile(file));
-        }
-
-        VirtualFile vFile = copy.getVirtualFile();
-        if (vFile != null) {
-            UndoUtil.disableUndoFor(vFile);
-        }
-        return copy;
     }
 
     @RequiredReadAction

@@ -240,8 +240,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInsight.template.impl;
   exports consulo.ide.impl.idea.codeInsight.template.impl.actions;
   exports consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
-  exports consulo.ide.impl.idea.codeInsight.template.postfix.completion;
-  exports consulo.ide.impl.idea.codeInsight.template.postfix.templates;
   exports consulo.ide.impl.idea.codeInsight.unwrap;
   exports consulo.ide.impl.idea.codeInspection;
   exports consulo.ide.impl.idea.codeInspection.actions;

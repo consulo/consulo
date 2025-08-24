@@ -1,18 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.template.postfix.completion;
+package consulo.language.editor.impl.internal.postfixTemplate;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.template.CustomLiveTemplate;
-import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionType;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

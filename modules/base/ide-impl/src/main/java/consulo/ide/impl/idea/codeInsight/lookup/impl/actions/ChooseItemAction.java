@@ -9,7 +9,7 @@ import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor;
+import consulo.language.editor.impl.internal.template.LiveTemplateCompletionContributor;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyAwareEditorAction;
 import consulo.ide.impl.idea.util.SlowOperations;

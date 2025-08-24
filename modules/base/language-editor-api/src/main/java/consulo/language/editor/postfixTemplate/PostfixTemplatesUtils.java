@@ -15,57 +15,81 @@
  */
 package consulo.language.editor.postfixTemplate;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.surroundWith.Surrounder;
+import consulo.language.internal.PsiFileInternal;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.template.TemplateLanguageUtil;
+import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
-
+import consulo.undoRedo.util.UndoUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Set;
 
 public abstract class PostfixTemplatesUtils {
-  private PostfixTemplatesUtils() {
-  }
-
-  @Nullable
-  public static TextRange surround(@Nonnull Surrounder surrounder,
-                                   @Nonnull Editor editor,
-                                   @Nonnull PsiElement expr) {
-    Project project = expr.getProject();
-    PsiElement[] elements = {expr};
-    if (surrounder.isApplicable(elements)) {
-      return surrounder.surroundElements(project, editor, elements);
+    private PostfixTemplatesUtils() {
     }
-    else {
-      showErrorHint(project, editor);
+
+    @Nonnull
+    @RequiredReadAction
+    public static PsiFile copyFile(@Nonnull PsiFile file, @Nonnull StringBuilder fileContentWithoutKey) {
+        PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(file.getProject());
+        FileType fileType = file.getFileType();
+        Language language = LanguageUtil.getLanguageForPsi(file.getProject(), file.getVirtualFile(), fileType);
+        PsiFile copy = language != null
+            ? psiFileFactory.createFileFromText(file.getName(), language, fileContentWithoutKey, false, true)
+            : psiFileFactory.createFileFromText(file.getName(), fileType, fileContentWithoutKey);
+
+        if (copy instanceof PsiFileInternal copyFile) {
+            copyFile.setOriginalFile(TemplateLanguageUtil.getBaseFile(file));
+        }
+
+        VirtualFile vFile = copy.getVirtualFile();
+        if (vFile != null) {
+            UndoUtil.disableUndoFor(vFile);
+        }
+        return copy;
     }
-    return null;
-  }
 
-  public static void showErrorHint(@Nonnull Project project, @Nonnull Editor editor) {
-    HintManager.getInstance().showErrorHint(editor, "Can't expand postfix template");
-  }
+    @Nullable
+    public static TextRange surround(@Nonnull Surrounder surrounder,
+                                     @Nonnull Editor editor,
+                                     @Nonnull PsiElement expr) {
+        Project project = expr.getProject();
+        PsiElement[] elements = {expr};
+        if (surrounder.isApplicable(elements)) {
+            return surrounder.surroundElements(project, editor, elements);
+        }
+        else {
+            showErrorHint(project, editor);
+        }
+        return null;
+    }
 
-  /**
-   * Returns all templates registered in the provider, including the edited templates and builtin templates in their current state
-   */
-  @Nonnull
-  public static Set<PostfixTemplate> getAvailableTemplates(@Nonnull PostfixTemplateProvider provider) {
-    //Set<PostfixTemplate> result = new HashSet<>(provider.getTemplates());
-    //for (PostfixTemplate template : PostfixTemplateStorage.getInstance().getTemplates(provider)) {
-    //  if (template instanceof PostfixChangedBuiltinTemplate) {
-    //    result.remove(((PostfixChangedBuiltinTemplate)template).getBuiltinTemplate());
-    //  }
-    //  result.add(template);
-    //}
-    return provider.getTemplates();
-  }
+    public static void showErrorHint(@Nonnull Project project, @Nonnull Editor editor) {
+        HintManager.getInstance().showErrorHint(editor, "Can't expand postfix template");
+    }
 
-  @Nonnull
-  public static String getLangForProvider(@Nonnull PostfixTemplateProvider provider) {
-    return provider.getLanguage().getID();
-  }
+    /**
+     * Returns all templates registered in the provider, including the edited templates and builtin templates in their current state
+     */
+    @Nonnull
+    public static Set<PostfixTemplate> getAvailableTemplates(@Nonnull PostfixTemplateProvider provider) {
+        return provider.getTemplates();
+    }
+
+    @Nonnull
+    public static String getLangForProvider(@Nonnull PostfixTemplateProvider provider) {
+        return provider.getLanguage().getID();
+    }
 }
