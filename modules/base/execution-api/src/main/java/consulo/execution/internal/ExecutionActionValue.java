@@ -66,7 +66,7 @@ public class ExecutionActionValue implements LocalizeValueWithMnemonic {
     }
 
     @Override
-    public long getModificationCount() {
+    public byte getModificationCount() {
         return myOriginal.getModificationCount();
     }
 

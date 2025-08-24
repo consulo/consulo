@@ -44,7 +44,7 @@ public class SingleLocalizeValue implements LocalizeValue {
     }
 
     @Override
-    public long getModificationCount() {
+    public byte getModificationCount() {
         return 0;
     }
 

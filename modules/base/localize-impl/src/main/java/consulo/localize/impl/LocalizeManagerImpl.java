@@ -64,7 +64,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
     private final EventDispatcher<LocalizeManagerListener> myEventDispatcher = EventDispatcher.create(LocalizeManagerListener.class);
 
-    private final AtomicLong myModificationCount = new AtomicLong();
+    private volatile byte myModificationCount;
 
     private ClearableLazyValue<Locale> myAutoDetectedLocale = ClearableLazyValue.atomicNotNull(() -> {
         Locale locale = Locale.getDefault();
@@ -98,7 +98,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
                 LOG.error("Fail to initialize", e);
             }
 
-            myModificationCount.incrementAndGet();
+            myModificationCount ++;
         }
     }
 
@@ -271,7 +271,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
         myCurrentLocale = locale;
 
-        myModificationCount.incrementAndGet();
+        myModificationCount ++;
 
         if (fireEvents) {
             myEventDispatcher.getMulticaster().localeChanged(oldLocale, locale);
@@ -305,8 +305,8 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     }
 
     @Override
-    public long getModificationCount() {
-        return myModificationCount.get();
+    public byte getModificationCount() {
+        return myModificationCount;
     }
 
     @Nonnull

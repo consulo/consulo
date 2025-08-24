@@ -77,7 +77,7 @@ public abstract class LocalizeManager {
 
     public abstract void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable);
 
-    public abstract long getModificationCount();
+    public abstract byte getModificationCount();
 
     @Nonnull
     public abstract String formatText(String unformattedText, Locale locale, Object... args);

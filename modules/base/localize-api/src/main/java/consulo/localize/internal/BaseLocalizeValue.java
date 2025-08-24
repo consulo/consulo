@@ -35,7 +35,7 @@ abstract class BaseLocalizeValue implements LocalizeValue {
 
     private String myText;
 
-    private long myModificationCount = -1;
+    private byte myModificationCount = -1;
 
     BaseLocalizeValue(Object... args) {
         myArgs = args;
@@ -51,7 +51,7 @@ abstract class BaseLocalizeValue implements LocalizeValue {
     }
 
     @Override
-    public long getModificationCount() {
+    public byte getModificationCount() {
         return myModificationCount;
     }
 
