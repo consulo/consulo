@@ -22,10 +22,12 @@ import jakarta.annotation.Nullable;
 /**
  * @author konstantin.aleev
  */
-@ActionImpl(id = "RunDashboard.Debug", parents = @ActionParentRef(value = @ActionRef(
-    type = RunDashboardContentToolbarGroup.class),
-    anchor = ActionRefAnchor.AFTER,
-    relatedToAction = @ActionRef(type = RunAction.class)
+@ActionImpl(
+    id = "RunDashboard.Debug",
+    parents = @ActionParentRef(
+        value = @ActionRef(type = RunDashboardContentToolbarGroup.class),
+        anchor = ActionRefAnchor.AFTER,
+        relatedToAction = @ActionRef(type = RunAction.class)
     )
 )
 public final class DebugAction extends ExecutorAction {

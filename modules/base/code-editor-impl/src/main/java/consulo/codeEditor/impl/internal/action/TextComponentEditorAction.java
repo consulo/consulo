@@ -40,6 +40,14 @@ public abstract class TextComponentEditorAction extends EditorAction {
         super(text, defaultHandler);
     }
 
+    protected TextComponentEditorAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        EditorActionHandler defaultHandler
+    ) {
+        super(text, description, defaultHandler);
+    }
+
     @Override
     @Nullable
     protected Editor getEditor(@Nonnull DataContext dataContext) {

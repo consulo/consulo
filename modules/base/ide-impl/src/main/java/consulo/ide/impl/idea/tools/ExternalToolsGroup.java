@@ -17,13 +17,14 @@ package consulo.ide.impl.idea.tools;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 
 import java.util.List;
 
 /**
  * @author traff
  */
-@ActionImpl(id = "ExternalToolsGroup")
+@ActionImpl(id = IdeActions.GROUP_EXTERNAL_TOOLS)
 public class ExternalToolsGroup extends BaseExternalToolsGroup<Tool> {
     public ExternalToolsGroup() {
         super(ActionLocalize.groupExternaltoolsgroupText());

@@ -22,12 +22,13 @@ import consulo.language.editor.completion.CompletionType;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
-@ActionImpl(id = "SmartTypeCompletion")
+@ActionImpl(id = IdeActions.ACTION_SMART_TYPE_COMPLETION)
 public class SmartCodeCompletionAction extends BaseCodeCompletionAction {
     public SmartCodeCompletionAction() {
         super(ActionLocalize.actionSmarttypecompletionText(), ActionLocalize.actionSmarttypecompletionDescription());

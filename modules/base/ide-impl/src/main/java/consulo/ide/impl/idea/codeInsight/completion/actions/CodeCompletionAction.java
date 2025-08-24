@@ -22,12 +22,13 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
-@ActionImpl(id = "CodeCompletion")
+@ActionImpl(id = IdeActions.ACTION_CODE_COMPLETION)
 public class CodeCompletionAction extends BaseCodeCompletionAction {
     public CodeCompletionAction() {
         super(ActionLocalize.actionCodecompletionText(), ActionLocalize.actionCodecompletionDescription());

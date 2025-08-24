@@ -23,10 +23,11 @@ import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
-@ActionImpl(id = "HippieBackwardCompletion")
+@ActionImpl(id = IdeActions.ACTION_HIPPIE_BACKWARD_COMPLETION)
 public class HippieBackwardCompletionAction extends BaseCodeInsightAction implements DumbAware {
     public HippieBackwardCompletionAction() {
         super(ActionLocalize.actionHippiebackwardcompletionText(), ActionLocalize.actionHippiebackwardcompletionText());

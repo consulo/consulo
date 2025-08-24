@@ -25,22 +25,22 @@ import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author VISTALL
- * @since 21.06.2025
+ * @since 2025-06-21
  */
 @ActionImpl(
-        id = "TouchBarEditorSearch",
-        parents = {
-                @ActionParentRef(value = @ActionRef(id = "TouchBar"), anchor = ActionRefAnchor.FIRST)
-        },
-        children = {
-                @ActionRef(type = TouchBarToggleMatchCase.class),
-                @ActionRef(type = TouchBarToggleWholeWordsOnlyAction.class),
-                @ActionRef(type = TouchBarToggleRegexAction.class),
-                @ActionRef(type = AnSeparator.class),
-                @ActionRef(type = TouchBarPrevOccurrenceAction.class),
-                @ActionRef(type = TouchBarNextOccurrenceAction.class),
-                @ActionRef(type = TouchBarEditorSearchCtrlActionGroup.class)
-        }
+    id = "TouchBarEditorSearch",
+    children = {
+        @ActionRef(type = TouchBarToggleMatchCase.class),
+        @ActionRef(type = TouchBarToggleWholeWordsOnlyAction.class),
+        @ActionRef(type = TouchBarToggleRegexAction.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = TouchBarPrevOccurrenceAction.class),
+        @ActionRef(type = TouchBarNextOccurrenceAction.class),
+        @ActionRef(type = TouchBarEditorSearchCtrlActionGroup.class)
+    },
+    parents = {
+        @ActionParentRef(value = @ActionRef(id = "TouchBar"), anchor = ActionRefAnchor.FIRST)
+    }
 )
 public class TouchBarEditorSearchActionGroup extends DefaultActionGroup implements DumbAware {
 }

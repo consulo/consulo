@@ -15,23 +15,29 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
+@ActionImpl(id = IdeActions.ACTION_CONTEXT_HELP)
 public class ContextHelpAction extends AnAction implements DumbAware {
     private final String myHelpID;
 
+    @Inject
     public ContextHelpAction() {
         this(null);
     }
 
     public ContextHelpAction(@Nullable String helpID) {
+        super(ActionLocalize.actionContexthelpText(), ActionLocalize.actionContexthelpDescription());
         myHelpID = helpID;
     }
 
@@ -39,7 +45,7 @@ public class ContextHelpAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        final String helpId = getHelpId(dataContext);
+        String helpId = getHelpId(dataContext);
         if (helpId != null) {
             HelpManager.getInstance().invokeHelp(helpId);
         }

@@ -24,7 +24,6 @@ import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;
 import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.DefaultCustomComponentAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -37,6 +36,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.update.Activatable;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -426,6 +426,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         mySearchResults.setMatchesLimit(value);
     }
 
+    @RequiredUIAccess
     private void replaceCurrent() {
         if (mySearchResults.getCursor() != null) {
             try {
@@ -435,7 +436,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
                 Messages.showErrorDialog(
                     myComponent.getComponent(),
                     e.getMessage(),
-                    FindBundle.message("find.replace.invalid.replacement.string.title")
+                    FindLocalize.findReplaceInvalidReplacementStringTitle().get()
                 );
             }
         }
@@ -576,6 +577,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     }
 
     @Nonnull
+    @RequiredUIAccess
     public CompletableFuture<?> prepareAsync() {
         return myComponent.prepareAsync();
     }
@@ -642,6 +644,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         }
 
         @Override
+        @RequiredUIAccess
         protected void onClick() {
             replaceCurrent();
         }
@@ -658,6 +661,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         }
 
         @Override
+        @RequiredUIAccess
         protected void onClick() {
             myLivePreviewController.performReplaceAll();
         }
@@ -674,8 +678,8 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
             button.setEnabled(cursor != null);
             button.setText(
                 cursor != null && mySearchResults.isExcluded(cursor)
-                    ? FindBundle.message("button.include")
-                    : FindBundle.message("button.exclude")
+                    ? FindLocalize.buttonInclude().get()
+                    : FindLocalize.buttonExclude().get()
             );
         }
 

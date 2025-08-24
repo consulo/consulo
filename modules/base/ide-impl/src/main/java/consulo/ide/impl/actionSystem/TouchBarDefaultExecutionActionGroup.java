@@ -24,16 +24,16 @@ import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author VISTALL
- * @since 21.06.2025.
+ * @since 2025-06-21
  */
 @ActionImpl(
-        id = "TouchBarDefaultExecution",
-        children = {
-                @ActionRef(id = "RunConfiguration"),
-                @ActionRef(id = "RunnerActionsTouchbar"),
-                @ActionRef(id = "Stop")
-        },
-        parents = @ActionParentRef(value = @ActionRef(id = "TouchBarDefault"), anchor = ActionRefAnchor.FIRST)
+    id = "TouchBarDefaultExecution",
+    children = {
+        @ActionRef(id = "RunConfiguration"),
+        @ActionRef(id = "RunnerActionsTouchbar"),
+        @ActionRef(id = "Stop")
+    },
+    parents = @ActionParentRef(value = @ActionRef(id = "TouchBarDefault"), anchor = ActionRefAnchor.FIRST)
 )
 public class TouchBarDefaultExecutionActionGroup extends DefaultActionGroup implements DumbAware {
 }

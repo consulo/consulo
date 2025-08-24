@@ -22,13 +22,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PasteProvider;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "$Paste")
+@ActionImpl(id = IdeActions.ACTION_PASTE)
 public class PasteAction extends AnAction implements DumbAware {
     public PasteAction() {
         super(ActionLocalize.action$pasteText(), ActionLocalize.action$pasteDescription(), PlatformIconGroup.actionsMenu_paste());

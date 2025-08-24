@@ -24,16 +24,19 @@ import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author VISTALL
- * @since 17.05.2024
+ * @since 2024-05-17
  */
-@ActionImpl(id = ServiceViewActionProvider.SERVICE_VIEW_ITEM_POPUP, children = {
-  @ActionRef(type = ItemPopupActionGroup.class),
-  @ActionRef(type = AnSeparator.class),
-  @ActionRef(id = IdeActions.ACTION_DELETE),
-  @ActionRef(type = AnSeparator.class),
-  @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE),
-  @ActionRef(type = JumpToServicesAction.class)
-})
+@ActionImpl(
+    id = ServiceViewActionProvider.SERVICE_VIEW_ITEM_POPUP,
+    children = {
+        @ActionRef(type = ItemPopupActionGroup.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(id = IdeActions.ACTION_DELETE),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE),
+        @ActionRef(type = JumpToServicesAction.class)
+    }
+)
 public class ServiceViewItemPopupGroup extends DefaultActionGroup {
   /*
         <group id="ServiceViewItemPopup">

@@ -18,21 +18,20 @@ package consulo.ide.impl.actionSystem;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
-import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author VISTALL
- * @since 21.06.2025.
+ * @since 2025-06-21
  */
 @ActionImpl(
-        id = "TouchBarDebug",
-        children = {
-                @ActionRef(id = "Rerun"),
-                @ActionRef(id = "Stop")
-        },
-        parents = @ActionParentRef(value = @ActionRef(id = "TouchBar"), anchor = ActionRefAnchor.LAST)
+    id = "TouchBarDebug",
+    children = {
+        @ActionRef(id = "Rerun"),
+        @ActionRef(id = "Stop")
+    },
+    parents = @ActionParentRef(value = @ActionRef(id = "TouchBar"))
 )
 public class TouchBarDebugActionGroup extends DefaultActionGroup implements DumbAware {
 }

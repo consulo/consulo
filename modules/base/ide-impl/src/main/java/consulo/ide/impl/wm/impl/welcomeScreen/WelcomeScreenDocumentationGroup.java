@@ -27,15 +27,18 @@ import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author VISTALL
- * @since 26-Jun-22
+ * @since 2022-06-26
  */
-@ActionImpl(id = IdeActions.GROUP_WELCOME_SCREEN_DOC, children = {
+@ActionImpl(
+    id = IdeActions.GROUP_WELCOME_SCREEN_DOC,
+    children = {
         @ActionRef(type = HelpTopicsAction.class),
         @ActionRef(type = ShowTipsAction.class),
         @ActionRef(type = RefCardAction.class),
         @ActionRef(type = OpenYoutubeAction.class),
         @ActionRef(type = JoinDiscordChannelAction.class),
         @ActionRef(type = DevelopPluginsAction.class)
-})
+    }
+)
 public class WelcomeScreenDocumentationGroup extends DefaultActionGroup {
 }

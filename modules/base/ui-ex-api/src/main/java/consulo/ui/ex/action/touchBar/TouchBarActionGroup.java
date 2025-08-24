@@ -25,7 +25,8 @@ import consulo.ui.ex.action.IdeActions;
  * @author VISTALL
  * @since 2025-06-07
  */
-@ActionImpl(id = IdeActions.GROUP_TOUCHBAR,
+@ActionImpl(
+    id = IdeActions.GROUP_TOUCHBAR,
     children =  @ActionRef(type = TouchBarDefaultActionGroup.class),
     parents = @ActionParentRef(@ActionRef(id = "Other.KeymapGroup"))
 )

@@ -25,15 +25,19 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @author VISTALL
  * @since 2024-12-04
  */
-@ActionImpl(id = "RemoteServersViewToolbar", children = {
-    @ActionRef(type = RemoteServerConnectAction.class),
-    @ActionRef(type = RemoteServerDisconnectAction.class),
-    @ActionRef(type = RemoteServerConfigAction.class),
-    @ActionRef(type = ChooseDeploymentAction.class),
-    @ActionRef(type = ChooseDeploymentWithDebugAction.class),
-    @ActionRef(type = DeployAction.class),
-    @ActionRef(type = UndeployAction.class),
-    @ActionRef(type = DeploymentConfigAction.class)
-}, parents = @ActionParentRef(@ActionRef(id = "Other.KeymapGroup")))
+@ActionImpl(
+    id = "RemoteServersViewToolbar",
+    children = {
+        @ActionRef(type = RemoteServerConnectAction.class),
+        @ActionRef(type = RemoteServerDisconnectAction.class),
+        @ActionRef(type = RemoteServerConfigAction.class),
+        @ActionRef(type = ChooseDeploymentAction.class),
+        @ActionRef(type = ChooseDeploymentWithDebugAction.class),
+        @ActionRef(type = DeployAction.class),
+        @ActionRef(type = UndeployAction.class),
+        @ActionRef(type = DeploymentConfigAction.class)
+    },
+    parents = @ActionParentRef(@ActionRef(id = "Other.KeymapGroup"))
+)
 public class RemoteServersViewToolbarGroup extends DefaultActionGroup implements DumbAware {
 }

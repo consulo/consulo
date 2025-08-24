@@ -24,11 +24,11 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @since 2025-06-22
  */
 @ActionImpl(
-        id = "TouchBarEditorSearch_ctrl",
-        children = {
-                @ActionRef(type = TouchBarPrevOccurrenceAction.class),
-                @ActionRef(type = TouchBarNextOccurrenceAction.class)
-        }
+    id = "TouchBarEditorSearch_ctrl",
+    children = {
+        @ActionRef(type = TouchBarPrevOccurrenceAction.class),
+        @ActionRef(type = TouchBarNextOccurrenceAction.class)
+    }
 )
 public class TouchBarEditorSearchCtrlActionGroup extends DefaultActionGroup {
 }
