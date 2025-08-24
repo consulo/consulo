@@ -25,6 +25,8 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorAction;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
 
 import java.awt.datatransfer.Transferable;
@@ -34,14 +36,8 @@ import java.util.function.Supplier;
  * @author max
  * @since 2002-05-13
  */
-@ActionImpl(id = "EditorPaste", shortcutFrom = @ActionRef(id = "$Paste"))
+@ActionImpl(id = IdeActions.ACTION_EDITOR_PASTE, shortcutFrom = @ActionRef(id = IdeActions.ACTION_PASTE))
 public class PasteAction extends EditorAction {
-    public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
-
-    public PasteAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends BasePasteHandler {
         @Override
         @RequiredWriteAction
@@ -55,5 +51,11 @@ public class PasteAction extends EditorAction {
             }
             editor.putUserData(EditorEx.LAST_PASTED_REGION, range);
         }
+    }
+
+    public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
+
+    public PasteAction() {
+        super(ActionLocalize.actionEditorpasteText(), new Handler());
     }
 }

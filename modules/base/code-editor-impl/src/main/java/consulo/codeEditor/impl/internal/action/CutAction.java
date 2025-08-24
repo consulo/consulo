@@ -25,18 +25,16 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nullable;
 
 /**
  * @author max
  * @since 2002-05-13
  */
-@ActionImpl(id = "EditorCut", shortcutFrom = @ActionRef(id = "$Cut"))
+@ActionImpl(id = IdeActions.ACTION_EDITOR_CUT, shortcutFrom = @ActionRef(id = IdeActions.ACTION_CUT))
 public class CutAction extends EditorAction {
-    public CutAction() {
-        super(new Handler());
-    }
-
     public static class Handler extends EditorWriteActionHandler {
         @Override
         @RequiredWriteAction
@@ -50,5 +48,9 @@ public class CutAction extends EditorAction {
             editor.getSelectionModel().copySelectionToClipboard();
             EditorModificationUtil.deleteSelectedTextForAllCarets(editor);
         }
+    }
+
+    public CutAction() {
+        super(ActionLocalize.action$cutText(), ActionLocalize.action$cutDescription(), new Handler());
     }
 }

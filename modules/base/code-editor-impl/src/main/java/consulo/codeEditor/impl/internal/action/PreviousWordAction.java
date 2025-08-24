@@ -19,20 +19,17 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
-import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  * @since 2002-05-14
  */
-@ActionImpl(id = "EditorPreviousWord")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_PREVIOUS_WORD)
 public class PreviousWordAction extends TextComponentEditorAction {
-    public PreviousWordAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         public Handler() {
             super(true);
@@ -42,5 +39,9 @@ public class PreviousWordAction extends TextComponentEditorAction {
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretToPreviousWord(editor, false, editor.getSettings().isCamelWords());
         }
+    }
+
+    public PreviousWordAction() {
+        super(ActionLocalize.actionEditorpreviouswordText(), new Handler());
     }
 }

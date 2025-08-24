@@ -38,37 +38,40 @@ import java.awt.*;
 /**
  * @author spLeaner
  */
-@ActionImpl(id = "MinimizeCurrentWindow", parents = @ActionParentRef(value = @ActionRef(id = "WindowMenu"), anchor = ActionRefAnchor.FIRST))
+@ActionImpl(
+    id = "MinimizeCurrentWindow",
+    parents = @ActionParentRef(value = @ActionRef(id = "WindowMenu"), anchor = ActionRefAnchor.FIRST)
+)
 public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
-    if (focusOwner != null) {
-      Window window = focusOwner instanceof JFrame frame ? frame : SwingUtilities.getWindowAncestor(focusOwner);
-      if (window instanceof JFrame frame && frame.getState() != Frame.ICONIFIED) {
-        frame.setState(Frame.ICONIFIED);
-      }
-    }
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Presentation p = e.getPresentation();
-    p.setVisible(Platform.current().os().isMac());
-
-    if (Platform.current().os().isMac()) {
-      Project project = e.getData(Project.KEY);
-      if (project != null) {
-        JFrame frame = (JFrame)TargetAWT.to(WindowManager.getInstance().getWindow(project));
-        if (frame != null) {
-          JRootPane pane = frame.getRootPane();
-          p.setEnabled(pane != null && pane.getClientProperty(MacMainFrameDecorator.FULL_SCREEN) == null);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
+        if (focusOwner != null) {
+            Window window = focusOwner instanceof JFrame frame ? frame : SwingUtilities.getWindowAncestor(focusOwner);
+            if (window instanceof JFrame frame && frame.getState() != Frame.ICONIFIED) {
+                frame.setState(Frame.ICONIFIED);
+            }
         }
-      }
     }
-    else {
-      p.setEnabled(false);
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation p = e.getPresentation();
+        p.setVisible(Platform.current().os().isMac());
+
+        if (Platform.current().os().isMac()) {
+            Project project = e.getData(Project.KEY);
+            if (project != null) {
+                JFrame frame = (JFrame) TargetAWT.to(WindowManager.getInstance().getWindow(project));
+                if (frame != null) {
+                    JRootPane pane = frame.getRootPane();
+                    p.setEnabled(pane != null && pane.getClientProperty(MacMainFrameDecorator.FULL_SCREEN) == null);
+                }
+            }
+        }
+        else {
+            p.setEnabled(false);
+        }
     }
-  }
 }

@@ -17,6 +17,7 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -32,12 +33,8 @@ import consulo.annotation.access.RequiredWriteAction;
 /**
  * @author max
  */
-@ActionImpl(id = "EditorStartNewLine")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_START_NEW_LINE)
 public class StartNewLineAction extends EditorAction {
-    public StartNewLineAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -65,5 +62,9 @@ public class StartNewLineAction extends EditorAction {
         private static EditorActionHandler getEnterHandler() {
             return EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
         }
+    }
+
+    public StartNewLineAction() {
+        super(ActionLocalize.actionEditorstartnewlineText(), new Handler());
     }
 }

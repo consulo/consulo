@@ -30,22 +30,14 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 
-@ActionImpl(id = "EditorDelete", shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
+@ActionImpl(id = IdeActions.ACTION_EDITOR_DELETE, shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
 public class DeleteAction extends EditorAction {
-    public DeleteAction() {
-        super(new Handler());
-    }
-
-    @Override
-    public int getExecuteWeight() {
-        return Integer.MIN_VALUE;
-    }
-
     public static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -64,6 +56,15 @@ public class DeleteAction extends EditorAction {
                 deleteCharAtCaret(editor);
             }
         }
+    }
+
+    public DeleteAction() {
+        super(ActionLocalize.actionEditordeleteText(), new Handler());
+    }
+
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
     }
 
     private static int getCaretLineLength(Editor editor) {

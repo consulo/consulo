@@ -17,14 +17,16 @@ package consulo.codeEditor.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author max
  * @since 2002-05-13
  */
-@ActionImpl(id = "EditorLeft")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_MOVE_CARET_LEFT)
 public class MoveCaretLeftAction extends EditorAction {
     public MoveCaretLeftAction() {
-        super(new MoveCaretLeftOrRightHandler(MoveCaretLeftOrRightHandler.Direction.LEFT));
+        super(ActionLocalize.actionEditorleftText(), new MoveCaretLeftOrRightHandler(MoveCaretLeftOrRightHandler.Direction.LEFT));
     }
 }

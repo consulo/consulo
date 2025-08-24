@@ -27,6 +27,8 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
@@ -35,24 +37,15 @@ import jakarta.annotation.Nonnull;
  * @author max
  * @since 2002-05-13
  */
-@ActionImpl(id = "EditorBackSpace")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_BACKSPACE)
 public class BackspaceAction extends EditorAction {
-    public BackspaceAction() {
-        super(new Handler());
-    }
-
-    @Override
-    public int getExecuteWeight() {
-        return Integer.MIN_VALUE;
-    }
-    
     private static class Handler extends EditorWriteActionHandler {
         private Handler() {
             super(true);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             MacUIUtil.hideCursor();
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
@@ -63,6 +56,15 @@ public class BackspaceAction extends EditorAction {
             }
             doBackSpaceAtCaret(editor);
         }
+    }
+
+    public BackspaceAction() {
+        super(ActionLocalize.actionEditorbackspaceText(), new Handler());
+    }
+
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
     }
 
     private static void doBackSpaceAtCaret(@Nonnull Editor editor) {

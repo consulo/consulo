@@ -20,6 +20,7 @@ import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,7 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 2010-08-19
  */
-@ActionImpl(id = "EditorToggleUseSoftWraps")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_USE_SOFT_WRAPS)
 public class ToggleUseSoftWrapsMenuAction extends AbstractToggleUseSoftWrapsAction {
     public ToggleUseSoftWrapsMenuAction() {
         super(

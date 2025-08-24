@@ -643,7 +643,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         registerAction(SearchEverywhereActions.NAVIGATE_TO_PREV_GROUP, e -> fetchGroups(false));
         registerSelectItemAction();
 
-        AnAction escape = ActionManager.getInstance().getAction("EditorEscape");
+        AnAction escape = ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_ESCAPE);
         DumbAwareAction.create(__ -> closePopup())
             .registerCustomShortcutSet(escape == null ? CommonShortcuts.ESCAPE : escape.getShortcutSet(), this);
 

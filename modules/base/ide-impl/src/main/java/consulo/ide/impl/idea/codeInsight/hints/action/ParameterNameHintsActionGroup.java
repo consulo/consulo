@@ -23,9 +23,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @author VISTALL
  * @since 2025-06-08
  */
-@ActionImpl(id = ParameterNameHintsActionGroup.ID, children = {
-    @ActionRef(type = ToggleInlineHintsAction.class)
-})
+@ActionImpl(id = ParameterNameHintsActionGroup.ID, children = {@ActionRef(type = ToggleInlineHintsAction.class)})
 public class ParameterNameHintsActionGroup extends DefaultActionGroup {
     public static final String ID = "ParameterNameHints";
 }

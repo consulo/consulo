@@ -162,7 +162,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             //mySearchField.setForeground(UIUtil.getLabelForeground());
             mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
             Application.get().invokeLater(() -> {
-                JComponent parent = (JComponent)TargetAWT.to(mySearchField).getParent();
+                JComponent parent = (JComponent) TargetAWT.to(mySearchField).getParent();
                 parent.revalidate();
                 parent.repaint();
             });
@@ -816,7 +816,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     public void installScrollingActions() {
         RunAnythingScrollingUtil.installActions(
             myResultsList,
-            (JTextField)TargetAWT.to(getField()),
+            (JTextField) TargetAWT.to(getField()),
             () -> {
                 myIsItemSelected = true;
                 mySearchField.setValue(myLastInputText);
@@ -884,15 +884,16 @@ public class RunAnythingPopupUI extends BigPopupUI {
         });
 
         DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(true, myResultsList))
-            .registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), (JComponent)TargetAWT.to(mySearchField), this);
+            .registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), (JComponent) TargetAWT.to(mySearchField), this);
         DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(false, myResultsList))
-            .registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), (JComponent)TargetAWT.to(mySearchField), this);
+            .registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), (JComponent) TargetAWT.to(mySearchField), this);
 
-        AnAction escape = ActionManager.getInstance().getAction("EditorEscape");
+        AnAction escape = ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_ESCAPE);
         DumbAwareAction.create(__ -> {
-            triggerUsed();
-            searchFinishedHandler.run();
-        }).registerCustomShortcutSet(escape == null ? CommonShortcuts.ESCAPE : escape.getShortcutSet(), this);
+                triggerUsed();
+                searchFinishedHandler.run();
+            })
+            .registerCustomShortcutSet(escape == null ? CommonShortcuts.ESCAPE : escape.getShortcutSet(), this);
 
         DumbAwareAction.create(e -> Application.get().invokeLater(this::executeCommand)).registerCustomShortcutSet(
             CustomShortcutSet.fromString(
@@ -902,7 +903,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 "alt shift ENTER",
                 "meta ENTER"
             ),
-            (JComponent)TargetAWT.to(mySearchField),
+            (JComponent) TargetAWT.to(mySearchField),
             this
         );
 
@@ -918,7 +919,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
                 return;
             }
 
-            ((RunAnythingCacheImpl) RunAnythingCache.getInstance(getProject())).getState().getCommands().remove(((RunAnythingItem)selectedValue).getCommand());
+            ((RunAnythingCacheImpl) RunAnythingCache.getInstance(getProject())).getState()
+                .getCommands()
+                .remove(((RunAnythingItem) selectedValue).getCommand());
 
             model.remove(index);
             model.shiftIndexes(index, -1);
@@ -931,7 +934,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
                     myCalcThread.updatePopup();
                 }
             });
-        }).registerCustomShortcutSet(CustomShortcutSet.fromString("shift BACK_SPACE"), (JComponent)TargetAWT.to(mySearchField), this);
+        }).registerCustomShortcutSet(CustomShortcutSet.fromString("shift BACK_SPACE"), (JComponent) TargetAWT.to(mySearchField), this);
 
         myProject.getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
             @Override

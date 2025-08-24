@@ -17,6 +17,7 @@ package consulo.usage.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
@@ -26,6 +27,10 @@ import consulo.usage.UsageView;
  */
 @ActionImpl(id = "UsageView.Exclude", shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
 public class ExcludeUsageAction extends IncludeExcludeActionBase {
+    public ExcludeUsageAction() {
+        super(ActionLocalize.actionUsageviewExcludeText(), ActionLocalize.actionUsageviewExcludeDescription());
+    }
+
     @Override
     protected void process(Usage[] usages, UsageView usageView) {
         usageView.excludeUsages(usages);

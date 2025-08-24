@@ -26,8 +26,9 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 
-@ActionImpl(id = "EditorJoinLines")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_JOIN_LINES)
 public class JoinLinesAction extends TextComponentEditorAction {
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {

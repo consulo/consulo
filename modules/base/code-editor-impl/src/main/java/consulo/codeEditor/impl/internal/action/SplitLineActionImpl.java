@@ -26,6 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.CharArrayUtil;
@@ -34,14 +35,8 @@ import jakarta.annotation.Nonnull;
 /**
  * @author max
  */
-@ActionImpl(id = "EditorSplitLine")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_SPLIT)
 public class SplitLineActionImpl extends EditorAction {
-
-    public SplitLineActionImpl() {
-        super(new Handler());
-        setEnabledInModalContext(false);
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -49,8 +44,8 @@ public class SplitLineActionImpl extends EditorAction {
 
         @Override
         public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-            return getEnterHandler().isEnabled(editor, caret, dataContext) &&
-                !((EditorEx) editor).isEmbeddedIntoDialogWrapper();
+            return getEnterHandler().isEnabled(editor, caret, dataContext)
+                && !((EditorEx) editor).isEmbeddedIntoDialogWrapper();
         }
 
         @Override
@@ -94,5 +89,10 @@ public class SplitLineActionImpl extends EditorAction {
         private static EditorActionHandler getEnterHandler() {
             return EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
         }
+    }
+
+    public SplitLineActionImpl() {
+        super(ActionLocalize.actionEditorsplitlineText(), new Handler());
+        setEnabledInModalContext(false);
     }
 }

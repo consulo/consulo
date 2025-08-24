@@ -21,17 +21,15 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author max
  * @since 2002-05-13
  */
-@ActionImpl(id = "EditorRightWithSelection")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_MOVE_CARET_RIGHT_WITH_SELECTION)
 public class MoveCaretRightWithSelectionAction extends EditorAction {
-    public MoveCaretRightWithSelectionAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         public Handler() {
             super(true);
@@ -42,5 +40,9 @@ public class MoveCaretRightWithSelectionAction extends EditorAction {
             editor.getCaretModel()
                 .moveCaretRelatively(1, 0, true, editor.isColumnMode(), caret == editor.getCaretModel().getPrimaryCaret());
         }
+    }
+
+    public MoveCaretRightWithSelectionAction() {
+        super(ActionLocalize.actionEditorrightwithselectionText(), new Handler());
     }
 }
