@@ -22,11 +22,14 @@ import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author VISTALL
- * @since 17.05.2024
+ * @since 2024-05-17
  */
-@ActionImpl(id = ActionPlaces.RUN_DASHBOARD_POPUP, children = {
-  @ActionRef(type = EditConfigurationAction.class),
-  @ActionRef(type = CopyConfigurationAction.class)
-})
+@ActionImpl(
+    id = ActionPlaces.RUN_DASHBOARD_POPUP,
+    children = {
+        @ActionRef(type = EditConfigurationAction.class),
+        @ActionRef(type = CopyConfigurationAction.class)
+    }
+)
 public class RunDashboardPopupGroup extends DefaultActionGroup {
 }

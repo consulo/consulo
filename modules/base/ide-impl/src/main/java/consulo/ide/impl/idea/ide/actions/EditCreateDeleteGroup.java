@@ -25,10 +25,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @author UNV
  * @since 2025-07-27
  */
-@ActionImpl(
-    id = "EditCreateDeleteGroup",
-    children = @ActionRef(type = DeleteAction.class)
-)
+@ActionImpl(id = "EditCreateDeleteGroup", children = @ActionRef(type = DeleteAction.class))
 public class EditCreateDeleteGroup extends DefaultActionGroup implements DumbAware {
     public EditCreateDeleteGroup() {
         super(LocalizeValue.empty(), false);

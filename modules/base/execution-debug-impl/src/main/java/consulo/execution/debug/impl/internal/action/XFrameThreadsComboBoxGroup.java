@@ -23,9 +23,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @author VISTALL
  * @since 2025-01-02
  */
-@ActionImpl(id = XFrameThreadsComboBoxGroup.ID, children = {
-    @ActionRef(type = ShowLibraryFramesAction.class)
-})
+@ActionImpl(id = XFrameThreadsComboBoxGroup.ID, children = @ActionRef(type = ShowLibraryFramesAction.class))
 public class XFrameThreadsComboBoxGroup extends DefaultActionGroup {
     public static final String ID = "Debugger.ThreadsTailGroup";
 }

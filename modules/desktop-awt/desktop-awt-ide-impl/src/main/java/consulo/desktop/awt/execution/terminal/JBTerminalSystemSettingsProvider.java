@@ -33,6 +33,7 @@ import consulo.disposer.Disposable;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.JBUI;
@@ -89,22 +90,22 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
 
     @Override
     public KeyStroke[] getCopyKeyStrokes() {
-        return getKeyStrokesByActionId("$Copy");
+        return getKeyStrokesByActionId(IdeActions.ACTION_COPY);
     }
 
     @Override
     public KeyStroke[] getPasteKeyStrokes() {
-        return getKeyStrokesByActionId("$Paste");
+        return getKeyStrokesByActionId(IdeActions.ACTION_PASTE);
     }
 
     @Override
     public KeyStroke[] getNextTabKeyStrokes() {
-        return getKeyStrokesByActionId("NextTab");
+        return getKeyStrokesByActionId(IdeActions.ACTION_NEXT_TAB);
     }
 
     @Override
     public KeyStroke[] getPreviousTabKeyStrokes() {
-        return getKeyStrokesByActionId("PreviousTab");
+        return getKeyStrokesByActionId(IdeActions.ACTION_PREVIOUS_TAB);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
     }
 
     private KeyStroke[] getKeyStrokesByActionId(String actionId) {
-        List<KeyStroke> keyStrokes = new ArrayList<KeyStroke>();
+        List<KeyStroke> keyStrokes = new ArrayList<>();
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
         for (Shortcut sc : shortcuts) {
             if (sc instanceof KeyboardShortcut) {
@@ -207,7 +208,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
 
     @Override
     public int getBufferMaxLinesCount() {
-        final int linesCount = 1000;
+        int linesCount = 1000;
         if (linesCount > 0) {
             return linesCount;
         }
@@ -241,8 +242,7 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
     }
 
     @Nonnull
-    private static MyColorSchemeDelegate createBoundColorSchemeDelegate(@Nullable final EditorColorsScheme
-                                                                            customGlobalScheme) {
+    private static MyColorSchemeDelegate createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
         return new MyColorSchemeDelegate(customGlobalScheme);
     }
 
@@ -253,16 +253,15 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
 
     private static class MyColorSchemeDelegate implements EditorColorsScheme {
         private final ModifiableFontPreferences myFontPreferences = new FontPreferencesImpl();
-        private final HashMap<TextAttributesKey, TextAttributes> myOwnAttributes = new HashMap<TextAttributesKey,
-            TextAttributes>();
-        private final HashMap<EditorColorKey, ColorValue> myOwnColors = new HashMap<EditorColorKey, ColorValue>();
+        private final Map<TextAttributesKey, TextAttributes> myOwnAttributes = new HashMap<>();
+        private final Map<EditorColorKey, ColorValue> myOwnColors = new HashMap<>();
         private Map<EditorFontType, Font> myFontsMap = null;
         private String myFaceName = null;
         private EditorColorsScheme myGlobalScheme;
 
         private int myConsoleFontSize = -1;
 
-        private MyColorSchemeDelegate(@Nullable final EditorColorsScheme globalScheme) {
+        private MyColorSchemeDelegate(@Nullable EditorColorsScheme globalScheme) {
             updateGlobalScheme(globalScheme);
             initFonts();
         }
@@ -418,8 +417,8 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
             getGlobal().setLineSpacing(lineSpacing);
         }
 
-        @Override
         @Nullable
+        @Override
         public MyColorSchemeDelegate clone() {
             return null;
         }

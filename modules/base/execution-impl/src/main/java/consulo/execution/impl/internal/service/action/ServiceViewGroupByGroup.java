@@ -25,22 +25,25 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 13.05.2024
+ * @since 2024-05-13
  */
-@ActionImpl(id = "ServiceView.GroupBy", children = {
-  @ActionRef(type = GroupByContributorAction.class),
-  @ActionRef(type = GroupByServiceGroupsAction.class),
-  @ActionRef(type = AnSeparator.class)
-})
+@ActionImpl(
+    id = "ServiceView.GroupBy",
+    children = {
+        @ActionRef(type = GroupByContributorAction.class),
+        @ActionRef(type = GroupByServiceGroupsAction.class),
+        @ActionRef(type = AnSeparator.class)
+    }
+)
 public class ServiceViewGroupByGroup extends NonEmptyActionGroup {
-  @Override
-  public boolean isPopup() {
-    return true;
-  }
+    @Override
+    public boolean isPopup() {
+        return true;
+    }
 
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsGroupby();
-  }
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.actionsGroupby();
+    }
 }

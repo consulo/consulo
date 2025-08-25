@@ -26,12 +26,13 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author max
  * @since 2002-06-18
  */
-@ActionImpl(id = "Replace")
+@ActionImpl(id = IdeActions.ACTION_REPLACE)
 public class ReplaceAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override

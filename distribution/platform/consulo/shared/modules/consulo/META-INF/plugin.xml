@@ -232,7 +232,6 @@
             <action id="PrevParameter" class="consulo.ide.impl.idea.codeInsight.hint.actions.PrevParameterAction"/>
         </group>
 
-        <action id="ContextHelp" class="consulo.ui.ex.action.ContextHelpAction"/>
         <action id="RunGc" class="consulo.ide.impl.idea.ide.actions.RunGcAction"/>
         <action id="ShowPopupMenu" class="consulo.ide.impl.idea.ide.actions.ShowPopupMenuAction"/>
         <action id="ShowColorPicker" class="consulo.ide.impl.idea.ui.ShowColorPickerAction" text="Show Color Picker"/>

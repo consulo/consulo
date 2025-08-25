@@ -712,6 +712,10 @@ action.EditorLineStart.text:
     text: Move Caret to Line Start
 action.EditorLineStartWithSelection.text:
     text: Move Caret to Line Start with Selection
+action.EditorLookupDown.text:
+    text: Lookup _Down
+action.EditorLookupUp.text:
+    text: Lookup _Up
 action.EditorMatchBrace.text:
     text: Move Caret to Matched Brace
 action.EditorMoveDownAndScroll.text:

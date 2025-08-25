@@ -23,13 +23,10 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CutProvider;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "$Cut")
+@ActionImpl(id = IdeActions.ACTION_CUT)
 public class CutAction extends AnAction implements DumbAware {
     public CutAction() {
         super(

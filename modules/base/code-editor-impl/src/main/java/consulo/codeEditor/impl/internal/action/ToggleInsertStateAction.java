@@ -21,23 +21,25 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  * @since 2002-05-14
  */
-@ActionImpl(id = "EditorToggleInsertState")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_TOGGLE_OVERWRITE_MODE)
 public class ToggleInsertStateAction extends EditorAction {
-    public ToggleInsertStateAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorEx editorex = (EditorEx) editor;
             editorex.setInsertMode(!editorex.isInsertMode());
         }
+    }
+
+    public ToggleInsertStateAction() {
+        super(ActionLocalize.actionEditortoggleinsertstateText(), new Handler());
     }
 }

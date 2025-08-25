@@ -17,12 +17,13 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.completion.lookup.Lookup;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author VISTALL
  * @since 2025-07-26
  */
-@ActionImpl(id = "EditorChooseLookupItem")
+@ActionImpl(id = IdeActions.ACTION_CHOOSE_LOOKUP_ITEM)
 public class FocusedOnlyChooseItemAction extends ChooseItemAction {
     public FocusedOnlyChooseItemAction() {
         super(new Handler(true, Lookup.NORMAL_SELECT_CHAR));

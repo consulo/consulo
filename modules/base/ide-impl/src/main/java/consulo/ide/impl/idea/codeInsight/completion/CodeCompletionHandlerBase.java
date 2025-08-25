@@ -43,6 +43,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
@@ -83,7 +84,7 @@ public class CodeCompletionHandlerBase {
         boolean autopopup,
         boolean synchronous
     ) {
-        AnAction codeCompletionAction = ActionManager.getInstance().getAction("CodeCompletion");
+        AnAction codeCompletionAction = ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION);
         //if (codeCompletionAction instanceof OverridingAction) {
         //  codeCompletionAction = ((ActionManagerImpl)ActionManager.getInstance()).getBaseAction((OverridingAction)codeCompletionAction);
         //}

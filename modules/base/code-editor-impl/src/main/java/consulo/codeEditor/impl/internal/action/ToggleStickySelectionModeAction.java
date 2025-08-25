@@ -21,6 +21,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.EditorEx;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -31,12 +33,8 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 2011-04-20
  */
-@ActionImpl(id = "EditorToggleStickySelection")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_TOGGLE_STICKY_SELECTION)
 public class ToggleStickySelectionModeAction extends EditorAction {
-    public ToggleStickySelectionModeAction() {
-        super(new Handler());
-    }
-
     static class Handler extends EditorActionHandler {
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
@@ -44,5 +42,9 @@ public class ToggleStickySelectionModeAction extends EditorAction {
                 ex.setStickySelection(!ex.isStickySelection());
             }
         }
+    }
+
+    public ToggleStickySelectionModeAction() {
+        super(ActionLocalize.actionEditortogglestickyselectionText(), new Handler());
     }
 }

@@ -23,11 +23,14 @@ import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author VISTALL
- * @since 13.05.2024
+ * @since 2024-05-13
  */
-@ActionImpl(id = ServiceViewActionProvider.SERVICE_VIEW_ITEM_TOOLBAR, children = {
-  @ActionRef(type = ItemToolbarActionGroup.class),
-  @ActionRef(type = AnSeparator.class),
-})
+@ActionImpl(
+    id = ServiceViewActionProvider.SERVICE_VIEW_ITEM_TOOLBAR,
+    children = {
+        @ActionRef(type = ItemToolbarActionGroup.class),
+        @ActionRef(type = AnSeparator.class),
+    }
+)
 public class ServiceViewItemToolbarGroup extends DefaultActionGroup {
 }

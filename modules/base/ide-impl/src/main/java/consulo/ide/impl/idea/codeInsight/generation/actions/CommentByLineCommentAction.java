@@ -30,11 +30,12 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "CommentByLineComment")
+@ActionImpl(id = IdeActions.ACTION_COMMENT_LINE)
 public class CommentByLineCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
     public CommentByLineCommentAction() {
         super(ActionLocalize.actionCommentbylinecommentText(), ActionLocalize.actionCommentbylinecommentDescription());

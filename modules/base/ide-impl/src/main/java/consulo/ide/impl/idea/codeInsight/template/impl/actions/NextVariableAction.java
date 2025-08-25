@@ -24,7 +24,9 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -33,13 +35,8 @@ import jakarta.annotation.Nullable;
  * @author max
  * @since 2002-05-16
  */
-@ActionImpl(id = "NextTemplateVariable")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_NEXT_TEMPLATE_VARIABLE)
 public class NextVariableAction extends EditorAction {
-    public NextVariableAction() {
-        super(new Handler());
-        setInjectedContext(true);
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
@@ -55,5 +52,10 @@ public class NextVariableAction extends EditorAction {
             TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
             return templateState != null && !templateState.isFinished() && templateState.isToProcessTab();
         }
+    }
+
+    public NextVariableAction() {
+        super(ActionLocalize.actionNexttemplatevariableText(), new Handler());
+        setInjectedContext(true);
     }
 }

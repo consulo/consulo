@@ -31,7 +31,7 @@ import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
- * @since 15/07/2021
+ * @since 2021-07-15
  */
 @ActionImpl(id = "ShowUnifiedSettingsDialogAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
@@ -44,8 +44,8 @@ public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
         myDefaultProjectFactory = defaultProjectFactory;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         UnifiedShowSettingsUtil unifiedShowSettingsUtil = new UnifiedShowSettingsUtil(myDefaultProjectFactory);
 

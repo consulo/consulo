@@ -23,18 +23,19 @@ import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
-@ActionImpl(id = "HippieCompletion")
+@ActionImpl(id = IdeActions.ACTION_HIPPIE_COMPLETION)
 public class HippieCompletionAction extends BaseCodeInsightAction implements DumbAware {
     public HippieCompletionAction() {
         super(ActionLocalize.actionHippiecompletionText(), ActionLocalize.actionHippiecompletionDescription(), false);
         setEnabledInModalContext(true);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformedImpl(@Nonnull Project project, Editor editor) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("editing.completion.hippie");
         super.actionPerformedImpl(project, editor);

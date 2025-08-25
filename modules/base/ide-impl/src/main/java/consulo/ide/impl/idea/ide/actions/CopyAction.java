@@ -22,13 +22,10 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "$Copy")
+@ActionImpl(id = IdeActions.ACTION_COPY)
 public class CopyAction extends AnAction implements DumbAware {
     public CopyAction() {
         super(

@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.find.editorHeaderActions.ToggleMatchCase;
 
 /**
  * @author VISTALL
- * @since 21.06.2025.
+ * @since 2025-06-21
  */
 @ActionImpl(id = "EditorSearchSession.ToggleMatchCase")
 public class TouchBarToggleMatchCase extends ToggleMatchCase {

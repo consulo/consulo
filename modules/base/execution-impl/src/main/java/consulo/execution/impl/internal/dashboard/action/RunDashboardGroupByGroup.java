@@ -25,13 +25,17 @@ import consulo.ui.ex.action.NonEmptyActionGroup;
  * @author VISTALL
  * @since 18.05.2024
  */
-@ActionImpl(id = "RunDashboard.GroupBy", children = {
-  @ActionRef(type = GroupByConfigurationTypeAction.class),
-  @ActionRef(type = GroupByConfigurationStatusAction.class)
-}, parents = @ActionParentRef(@ActionRef(type = ServiceViewGroupByGroup.class)))
+@ActionImpl(
+    id = "RunDashboard.GroupBy",
+    children = {
+        @ActionRef(type = GroupByConfigurationTypeAction.class),
+        @ActionRef(type = GroupByConfigurationStatusAction.class)
+    },
+    parents = @ActionParentRef(@ActionRef(type = ServiceViewGroupByGroup.class))
+)
 public class RunDashboardGroupByGroup extends NonEmptyActionGroup {
-  @Override
-  public boolean isPopup() {
-    return true;
-  }
+    @Override
+    public boolean isPopup() {
+        return true;
+    }
 }
