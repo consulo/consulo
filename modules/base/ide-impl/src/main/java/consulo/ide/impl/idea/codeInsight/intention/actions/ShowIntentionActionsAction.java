@@ -13,31 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.intention.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
  */
+@ActionImpl(id = IdeActions.ACTION_SHOW_INTENTION_ACTIONS)
 public class ShowIntentionActionsAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore {
-  public ShowIntentionActionsAction() {
-    setEnabledInModalContext(true);
-  }
+    public ShowIntentionActionsAction() {
+        super(ActionLocalize.actionShowintentionactionsText(), LocalizeValue.empty(), PlatformIconGroup.actionsIntentionbulb());
+        setEnabledInModalContext(true);
+    }
 
-  @Override
-  protected boolean isValidForLookup() {
-    return true;
-  }
+    @Override
+    protected boolean isValidForLookup() {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new ShowIntentionActionsHandler();
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new ShowIntentionActionsHandler();
+    }
 }

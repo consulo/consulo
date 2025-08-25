@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
@@ -30,7 +32,12 @@ import jakarta.annotation.Nonnull;
  * @author Anna Kozlova
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "ActivateNavBar")
 public class ActivateNavigationBarAction extends AnAction implements DumbAware {
+    public ActivateNavigationBarAction() {
+        super(ActionLocalize.actionActivatenavbarText(), ActionLocalize.actionActivatenavbarDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -48,7 +55,6 @@ public class ActivateNavigationBarAction extends AnAction implements DumbAware {
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         UISettings settings = UISettings.getInstance();
-        boolean enabled = project != null && settings.SHOW_NAVIGATION_BAR && !settings.PRESENTATION_MODE;
-        e.getPresentation().setEnabled(enabled);
+        e.getPresentation().setEnabled(project != null && settings.SHOW_NAVIGATION_BAR && !settings.PRESENTATION_MODE);
     }
 }

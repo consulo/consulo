@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions.tree;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,7 +27,8 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 abstract class BaseTreeNodeAction extends AnAction implements DumbAware {
-    public BaseTreeNodeAction() {
+    protected BaseTreeNodeAction(@Nonnull LocalizeValue text) {
+        super(text);
         setEnabledInModalContext(true);
     }
 

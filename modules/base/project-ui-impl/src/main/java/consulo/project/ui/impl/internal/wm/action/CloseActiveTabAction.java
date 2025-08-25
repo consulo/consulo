@@ -21,6 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -29,7 +30,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
-@ActionImpl(id = "CloseActiveTab")
+@ActionImpl(id = IdeActions.ACTION_CLOSE_ACTIVE_TAB)
 public class CloseActiveTabAction extends AnAction implements DumbAware {
     public CloseActiveTabAction() {
         super(ActionLocalize.actionCloseactivetabText(), ActionLocalize.actionCloseactivetabDescription());

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
@@ -9,6 +10,8 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -30,6 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 
+@ActionImpl(id = IdeActions.ACTION_RUN_ANYTHING)
 public class RunAnythingAction extends AnAction implements DumbAware {
     public static final String RUN_ANYTHING_ACTION_ID = "RunAnything";
     public static final Key<Executor> EXECUTOR_KEY = Key.create("EXECUTOR_KEY");
@@ -41,6 +45,11 @@ public class RunAnythingAction extends AnAction implements DumbAware {
 
     @Inject
     public RunAnythingAction(@Nonnull Application application, @Nonnull IdeEventQueueProxy ideEventQueueProxy) {
+        super(
+            ActionLocalize.actionRunanythingText(),
+            ActionLocalize.actionRunanythingDescription(),
+            PlatformIconGroup.actionsRun_anything()
+        );
         this.myApplication = application;
         ideEventQueueProxy.addPostprocessor(
             event -> {
@@ -59,8 +68,8 @@ public class RunAnythingAction extends AnAction implements DumbAware {
         );
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         if (Registry.is("ide.suppress.double.click.handler")
             && e.getInputEvent() instanceof KeyEvent keyEvent

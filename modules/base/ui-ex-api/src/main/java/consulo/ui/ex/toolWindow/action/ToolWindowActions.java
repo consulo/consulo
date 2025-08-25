@@ -20,12 +20,12 @@ import consulo.ui.ex.action.AnAction;
 
 /**
  * @author VISTALL
- * @since 24-Mar-22
+ * @since 2022-03-24
  */
 public class ToolWindowActions {
-  public static final String ACTION_NAME = "PinToolwindowTab";
+    public static final String ACTION_NAME = "PinToolwindowTab";
 
-  public static AnAction getPinAction() {
-    return ActionManager.getInstance().getAction(ACTION_NAME);
-  }
+    public static AnAction getPinAction() {
+        return ActionManager.getInstance().getAction(ACTION_NAME);
+    }
 }

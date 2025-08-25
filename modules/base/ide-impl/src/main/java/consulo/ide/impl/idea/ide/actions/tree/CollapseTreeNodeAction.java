@@ -15,11 +15,18 @@
  */
 package consulo.ide.impl.idea.ide.actions.tree;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ui.TreeExpandCollapse;
+import consulo.platform.base.localize.ActionLocalize;
 
 import javax.swing.*;
 
+@ActionImpl(id = "CollapseTreeNode")
 public class CollapseTreeNodeAction extends BaseTreeNodeAction {
+    public CollapseTreeNodeAction() {
+        super(ActionLocalize.actionCollapsetreenodeText());
+    }
+
     @Override
     protected void performOn(JTree tree) {
         TreeExpandCollapse.collapse(tree);

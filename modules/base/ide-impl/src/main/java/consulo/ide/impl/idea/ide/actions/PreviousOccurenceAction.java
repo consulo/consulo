@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -21,8 +20,9 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.action.IdeActions;
 
-@ActionImpl(id = "PreviousOccurence")
+@ActionImpl(id = IdeActions.ACTION_PREVIOUS_OCCURENCE)
 public class PreviousOccurenceAction extends OccurenceNavigatorActionBase {
     public PreviousOccurenceAction() {
         super(

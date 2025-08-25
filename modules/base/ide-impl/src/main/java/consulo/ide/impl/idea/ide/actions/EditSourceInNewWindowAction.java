@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -27,12 +29,17 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "EditSourceInNewWindow")
 public class EditSourceInNewWindowAction extends DumbAwareAction {
+    public EditSourceInNewWindowAction() {
+        super(ActionLocalize.actionEditsourceinnewwindowText(), ActionLocalize.actionEditsourceinnewwindowDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         FileEditorManager manager = FileEditorManager.getInstance(e.getRequiredData(Project.KEY));
-        ((FileEditorManagerImpl)manager).openFileInNewWindow(getVirtualFiles(e)[0]);
+        ((FileEditorManagerImpl) manager).openFileInNewWindow(getVirtualFiles(e)[0]);
     }
 
     protected VirtualFile[] getVirtualFiles(AnActionEvent e) {

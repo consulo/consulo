@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -42,6 +43,13 @@ import java.util.Optional;
 
 public class CopyPathProvider extends DumbAwareAction {
     public static final Key<String> QUALIFIED_NAME = Key.of("QUALIFIED_NAME");
+
+    public CopyPathProvider() {
+    }
+
+    public CopyPathProvider(@Nonnull LocalizeValue text) {
+        super(text);
+    }
 
     @Override
     @RequiredUIAccess

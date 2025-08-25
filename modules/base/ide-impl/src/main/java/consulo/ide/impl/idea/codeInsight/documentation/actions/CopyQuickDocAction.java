@@ -15,12 +15,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.documentation.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.internal.DocumentationManagerHelper;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import jakarta.annotation.Nonnull;
 
@@ -30,8 +36,10 @@ import java.awt.datatransfer.StringSelection;
  * @author Denis Zhdanov
  * @since 2011-03-29
  */
+@ActionImpl(id = "QuickDocCopy", shortcutFrom = @ActionRef(id = IdeActions.ACTION_COPY))
 public class CopyQuickDocAction extends AnAction implements DumbAware, HintManagerImpl.ActionToIgnore {
     public CopyQuickDocAction() {
+        super(ActionLocalize.actionQuickdoccopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
         setEnabledInModalContext(true);
     }
 

@@ -26,27 +26,33 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  */
 public class ColorChooser {
-  public static void chooseColor(Component parent,
-                                 String caption,
-                                 @Nullable Color preselectedColor,
-                                 boolean enableOpacity,
-                                 boolean opacityInPercent,
-                                 @Nonnull Consumer<Color> colorConsumer) {
-    ColorChooserService.getInstance().showDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent, colorConsumer);
-  }
+    public static void chooseColor(
+        Component parent,
+        String caption,
+        @Nullable Color preselectedColor,
+        boolean enableOpacity,
+        boolean opacityInPercent,
+        @Nonnull Consumer<Color> colorConsumer
+    ) {
+        ColorChooserService.getInstance().showDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent, colorConsumer);
+    }
 
-  public static void chooseColor(Component parent,
-                                 String caption,
-                                 @Nullable Color preselectedColor,
-                                 boolean enableOpacity,
-                                 @Nonnull Consumer<Color> colorConsumer) {
-    chooseColor(parent, caption, preselectedColor, enableOpacity, false, colorConsumer);
-  }
+    public static void chooseColor(
+        Component parent,
+        String caption,
+        @Nullable Color preselectedColor,
+        boolean enableOpacity,
+        @Nonnull Consumer<Color> colorConsumer
+    ) {
+        chooseColor(parent, caption, preselectedColor, enableOpacity, false, colorConsumer);
+    }
 
-  public static void chooseColor(Component parent,
-                                 String caption,
-                                 @Nullable Color preselectedColor,
-                                 @Nonnull Consumer<Color> colorConsumer) {
-    chooseColor(parent, caption, preselectedColor, false, colorConsumer);
-  }
+    public static void chooseColor(
+        Component parent,
+        String caption,
+        @Nullable Color preselectedColor,
+        @Nonnull Consumer<Color> colorConsumer
+    ) {
+        chooseColor(parent, caption, preselectedColor, false, colorConsumer);
+    }
 }

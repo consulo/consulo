@@ -15,18 +15,24 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ExporterToTextFile;
+import consulo.ui.ex.action.*;
 import consulo.ide.impl.idea.ide.util.ExportToFileUtil;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = IdeActions.ACTION_EXPORT_TO_TEXT_FILE)
 public class ExportToTextFileAction extends AnAction {
+    public ExportToTextFileAction() {
+        super(ActionLocalize.actionExporttotextfileText(), LocalizeValue.empty(), PlatformIconGroup.actionsExport());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -44,7 +50,7 @@ public class ExportToTextFileAction extends AnAction {
 
     @RequiredUIAccess
     public static void export(Project project, ExporterToTextFile exporter) {
-        final ExportToFileUtil.ExportDialogBase dlg = new ExportToFileUtil.ExportDialogBase(project, exporter);
+        ExportToFileUtil.ExportDialogBase dlg = new ExportToFileUtil.ExportDialogBase(project, exporter);
 
         dlg.show();
         if (!dlg.isOK()) {

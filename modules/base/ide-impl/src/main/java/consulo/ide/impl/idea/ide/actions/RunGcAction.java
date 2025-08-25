@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
@@ -23,8 +26,14 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "RunGc")
 public class RunGcAction extends AnAction implements DumbAware {
+    public RunGcAction() {
+        super(ActionLocalize.actionRungcText());
+    }
+
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         /*
         DataContext dataContext = e.getDataContext();

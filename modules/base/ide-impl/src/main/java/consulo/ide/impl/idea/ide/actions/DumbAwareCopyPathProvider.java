@@ -16,7 +16,15 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 // from kotlin
 public class DumbAwareCopyPathProvider extends CopyPathProvider implements DumbAware {
+    protected DumbAwareCopyPathProvider() {
+    }
+
+    protected DumbAwareCopyPathProvider(@Nonnull LocalizeValue text) {
+        super(text);
+    }
 }

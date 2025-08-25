@@ -15,21 +15,25 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.text.JTextComponent;
-import java.awt.*;
 
 /**
  * @author Anna.Kozlova
  */
+@ActionImpl(id = IdeActions.ACTION_CLEAR_TEXT)
 public class ClearTextAction extends AnAction implements DumbAware {
     public ClearTextAction() {
+        super(ActionLocalize.actionTextcomponentClearactionText(), ActionLocalize.actionTextcomponentClearactionDescription());
         setEnabledInModalContext(true);
     }
 

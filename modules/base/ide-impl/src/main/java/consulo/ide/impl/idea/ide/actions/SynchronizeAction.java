@@ -24,10 +24,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "Synchronize")
+@ActionImpl(id = IdeActions.ACTION_SYNCHRONIZE)
 public class SynchronizeAction extends AnAction implements DumbAware {
     public SynchronizeAction() {
         super(ActionLocalize.actionSynchronizeText(), ActionLocalize.actionSynchronizeDescription(), PlatformIconGroup.actionsRefresh());
