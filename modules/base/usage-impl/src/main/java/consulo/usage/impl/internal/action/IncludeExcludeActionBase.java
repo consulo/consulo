@@ -15,6 +15,7 @@
  */
 package consulo.usage.impl.internal.action;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,23 +27,29 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public abstract class IncludeExcludeActionBase extends AnAction {
-  protected abstract void process(Usage[] usages, UsageView usageView);
+    protected IncludeExcludeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-  private static Usage[] getUsages(AnActionEvent context) {
-    UsageView usageView = context.getData(UsageView.USAGE_VIEW_KEY);
-    if (usageView == null) return Usage.EMPTY_ARRAY;
-    Usage[] usages = context.getData(UsageView.USAGES_KEY);
-    return usages == null ? Usage.EMPTY_ARRAY : usages;
-  }
+    protected abstract void process(Usage[] usages, UsageView usageView);
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(getUsages(e).length > 0);
-  }
+    private static Usage[] getUsages(AnActionEvent context) {
+        UsageView usageView = context.getData(UsageView.USAGE_VIEW_KEY);
+        if (usageView == null) {
+            return Usage.EMPTY_ARRAY;
+        }
+        Usage[] usages = context.getData(UsageView.USAGES_KEY);
+        return usages == null ? Usage.EMPTY_ARRAY : usages;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    process(getUsages(e), e.getData(UsageView.USAGE_VIEW_KEY));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(getUsages(e).length > 0);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        process(getUsages(e), e.getData(UsageView.USAGE_VIEW_KEY));
+    }
 }

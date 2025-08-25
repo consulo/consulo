@@ -20,18 +20,16 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  * @since 2002-05-14
  */
-@ActionImpl(id = "EditorLineStartWithSelection")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_MOVE_LINE_START_WITH_SELECTION)
 public class LineStartWithSelectionAction extends TextComponentEditorAction {
-    public LineStartWithSelectionAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         public Handler() {
             super(true);
@@ -41,5 +39,9 @@ public class LineStartWithSelectionAction extends TextComponentEditorAction {
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretToLineStart(editor, true);
         }
+    }
+
+    public LineStartWithSelectionAction() {
+        super(ActionLocalize.actionEditorlinestartwithselectionText(), new Handler());
     }
 }

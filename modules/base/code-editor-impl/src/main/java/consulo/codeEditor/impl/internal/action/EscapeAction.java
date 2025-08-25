@@ -22,24 +22,16 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.*;
 
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author max
  */
-@ActionImpl(id = "EditorEscape")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_ESCAPE)
 public class EscapeAction extends EditorAction {
-    public EscapeAction() {
-        super(new Handler());
-        setInjectedContext(true);
-    }
-
-    @Override
-    public int getExecuteWeight() {
-        return Integer.MIN_VALUE;
-    }
- 
     private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
@@ -69,5 +61,15 @@ public class EscapeAction extends EditorAction {
             CaretModel caretModel = editor.getCaretModel();
             return selectionModel.hasSelection() || caretModel.getCaretCount() > 1;
         }
+    }
+
+    public EscapeAction() {
+        super(ActionLocalize.actionEditorescapeText(), new Handler());
+        setInjectedContext(true);
+    }
+
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
     }
 }

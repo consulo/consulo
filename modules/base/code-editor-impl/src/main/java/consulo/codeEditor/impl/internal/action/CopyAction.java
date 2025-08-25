@@ -23,20 +23,16 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nullable;
 
 /**
  * @author max
  * @since 2002-05-13
  */
-@ActionImpl(id = "EditorCopy", shortcutFrom = @ActionRef(id = "$Copy"))
+@ActionImpl(id = IdeActions.ACTION_EDITOR_COPY, shortcutFrom = @ActionRef(id = IdeActions.ACTION_COPY))
 public class CopyAction extends TextComponentEditorAction {
-    public static final String SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY = "editor.skip.copy.and.cut.for.empty.selection";
-
-    public CopyAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
@@ -51,5 +47,11 @@ public class CopyAction extends TextComponentEditorAction {
             }
             editor.getSelectionModel().copySelectionToClipboard();
         }
+    }
+
+    public static final String SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY = "editor.skip.copy.and.cut.for.empty.selection";
+
+    public CopyAction() {
+        super(ActionLocalize.actionEditorcopyText(), new Handler());
     }
 }

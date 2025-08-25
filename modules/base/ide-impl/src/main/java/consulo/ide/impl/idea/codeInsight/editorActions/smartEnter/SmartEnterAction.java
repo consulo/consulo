@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author max
  */
-@ActionImpl(id = "EditorCompleteStatement")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_COMPLETE_STATEMENT)
 public class SmartEnterAction extends EditorAction {
     public SmartEnterAction() {
         super(ActionLocalize.actionEditorcompletestatementText(), new Handler());
@@ -60,8 +60,8 @@ public class SmartEnterAction extends EditorAction {
             return getEnterHandler().isEnabled(editor, caret, dataContext);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project == null || editor.isOneLineMode()) {

@@ -24,9 +24,13 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @author VISTALL
  * @since 2023-11-13
  */
-@ActionImpl(id = "UI.Internal.Focus", children = {
-  @ActionRef(type = FocusDebuggerAction.class),
-  @ActionRef(type = FocusTracesAction.class),
-}, parents = @ActionParentRef(@ActionRef(id = "Internal.UI")))
+@ActionImpl(
+    id = "UI.Internal.Focus",
+    children = {
+        @ActionRef(type = FocusDebuggerAction.class),
+        @ActionRef(type = FocusTracesAction.class),
+    },
+    parents = @ActionParentRef(@ActionRef(id = "Internal.UI"))
+)
 public class InternalFocusActionGroup extends DefaultActionGroup {
 }

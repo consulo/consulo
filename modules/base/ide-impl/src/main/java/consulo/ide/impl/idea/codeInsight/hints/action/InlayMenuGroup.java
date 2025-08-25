@@ -23,9 +23,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @author VISTALL
  * @since 2025-05-30
  */
-@ActionImpl(id = "InlayMenu", children = {
-    @ActionRef(type = DisableDeclarativeInlayAction.class)
-})
+@ActionImpl(id = "InlayMenu", children = {@ActionRef(type = DisableDeclarativeInlayAction.class)})
 public class InlayMenuGroup extends DefaultActionGroup {
     public InlayMenuGroup() {
         setPopup(true);

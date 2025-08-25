@@ -16,6 +16,7 @@
 package consulo.usage.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 
@@ -24,8 +25,12 @@ import consulo.usage.UsageView;
  */
 @ActionImpl(id = "UsageView.Include")
 public class IncludeUsageAction extends IncludeExcludeActionBase {
-  @Override
-  protected void process(Usage[] usages, UsageView usageView) {
-    usageView.includeUsages(usages);
-  }
+    public IncludeUsageAction() {
+        super(ActionLocalize.actionUsageviewIncludeText(), ActionLocalize.actionUsageviewIncludeDescription());
+    }
+
+    @Override
+    protected void process(Usage[] usages, UsageView usageView) {
+        usageView.includeUsages(usages);
+    }
 }

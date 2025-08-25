@@ -323,7 +323,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 prev.height = panelSize.height;
             }
             Window w = myDialog.getPeer().getWindow();
-            final AnAction escape = ActionManager.getInstance().getAction("EditorEscape");
+            final AnAction escape = ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_ESCAPE);
             JRootPane root = ((RootPaneContainer) w).getRootPane();
 
             IdeGlassPaneImpl glass = (IdeGlassPaneImpl) myDialog.getRootPane().getGlassPane();

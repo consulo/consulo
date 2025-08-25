@@ -16,31 +16,35 @@
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.webBrowser.BrowserUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 /**
  * @author yole
  */
 @ActionImpl(id = "WelcomeScreen.DevelopPlugins")
 public class DevelopPluginsAction extends AnAction implements DumbAware {
-    @RequiredUIAccess
-    @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
-        BrowserUtil.browse("https://consulo.dev");
+    @Inject
+    public DevelopPluginsAction(@Nonnull Application application) {
+        super(
+            ActionLocalize.actionWelcomescreenDeveloppluginsText(),
+            ActionLocalize.actionWelcomescreenDeveloppluginsDescription(application.getName()),
+            PlatformIconGroup.nodesPlugin()
+        );
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.nodesPlugin();
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        BrowserUtil.browse("https://consulo.dev");
     }
 }

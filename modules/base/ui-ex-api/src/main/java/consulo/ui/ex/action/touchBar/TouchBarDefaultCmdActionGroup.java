@@ -25,10 +25,13 @@ import consulo.ui.ex.action.IdeActions;
  * @author VISTALL
  * @since 2025-06-07
  */
-@ActionImpl(id = "TouchBarDefault_cmd", children = {
-    @ActionRef(id = IdeActions.ACTION_GOTO_BACK),
-    @ActionRef(id = IdeActions.ACTION_GOTO_FORWARD),
-    @ActionRef(type = AnSeparator.class) // TODO type.large text
-})
+@ActionImpl(
+    id = "TouchBarDefault_cmd",
+    children = {
+        @ActionRef(id = IdeActions.ACTION_GOTO_BACK),
+        @ActionRef(id = IdeActions.ACTION_GOTO_FORWARD),
+        @ActionRef(type = AnSeparator.class) // TODO type.large text
+    }
+)
 public class TouchBarDefaultCmdActionGroup extends DefaultActionGroup {
 }

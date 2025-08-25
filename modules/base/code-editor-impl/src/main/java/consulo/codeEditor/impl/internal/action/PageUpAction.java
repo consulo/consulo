@@ -21,13 +21,15 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  * @since 2002-05-13
  */
-@ActionImpl(id = "EditorPageUp")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_MOVE_CARET_PAGE_UP)
 public class PageUpAction extends EditorAction {
     public static class Handler extends EditorActionHandler {
         public Handler() {
@@ -46,7 +48,6 @@ public class PageUpAction extends EditorAction {
     }
 
     public PageUpAction() {
-        super(new Handler());
-
+        super(ActionLocalize.actionEditorpageupText(), new Handler());
     }
 }

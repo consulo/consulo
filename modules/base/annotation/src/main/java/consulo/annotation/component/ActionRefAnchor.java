@@ -17,11 +17,11 @@ package consulo.annotation.component;
 
 /**
  * @author VISTALL
- * @since 26-Jun-22
+ * @since 2022-06-26
  */
 public enum ActionRefAnchor {
-  BEFORE,
-  AFTER,
-  FIRST,
-  LAST
+    BEFORE,
+    AFTER,
+    FIRST,
+    LAST
 }

@@ -28,6 +28,7 @@ import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
 
@@ -38,7 +39,7 @@ import java.util.List;
  * @author max
  * @since 2002-05-14
  */
-@ActionImpl(id = "EditorSelectWord")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET)
 public class SelectWordAtCaretAction extends TextComponentEditorAction implements DumbAware {
     public SelectWordAtCaretAction() {
         super(ActionLocalize.actionEditorselectwordText(), new DefaultHandler());

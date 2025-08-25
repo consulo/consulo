@@ -23,6 +23,8 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 
@@ -30,14 +32,9 @@ import consulo.undoRedo.CommandProcessor;
  * @author max
  * @since 2002-05-14
  */
-@ActionImpl(id = "EditorDeleteToWordEnd")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_DELETE_TO_WORD_END)
 public class DeleteToWordEndAction extends TextComponentEditorAction {
-    public DeleteToWordEndAction() {
-        super(new Handler(false));
-    }
-
     static class Handler extends EditorWriteActionHandler {
-
         private final boolean myNegateCamelMode;
 
         Handler(boolean negateCamelMode) {
@@ -63,6 +60,10 @@ public class DeleteToWordEndAction extends TextComponentEditorAction {
             }
             deleteToWordEnd(editor, camelMode);
         }
+    }
+
+    public DeleteToWordEndAction() {
+        super(ActionLocalize.actionEditordeletetowordendText(), new Handler(false));
     }
 
     private static void deleteToWordEnd(Editor editor, boolean camelMode) {

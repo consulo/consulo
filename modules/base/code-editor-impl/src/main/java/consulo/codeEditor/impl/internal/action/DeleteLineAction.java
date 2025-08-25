@@ -26,18 +26,16 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 
 import java.util.Collections;
 import java.util.List;
 
-@ActionImpl(id = "EditorDeleteLine")
+@ActionImpl(id = IdeActions.ACTION_EDITOR_DELETE_LINE)
 public class DeleteLineAction extends TextComponentEditorAction {
-    public DeleteLineAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         @Override
         @RequiredWriteAction
@@ -78,6 +76,10 @@ public class DeleteLineAction extends TextComponentEditorAction {
                 }
             });
         }
+    }
+
+    public DeleteLineAction() {
+        super(ActionLocalize.actionEditordeletelineText(), new Handler());
     }
 
     private static TextRange getRangeToDelete(Editor editor, Caret caret) {

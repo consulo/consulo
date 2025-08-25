@@ -20,6 +20,7 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
@@ -28,7 +29,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(
     id = "EditSmartGroup",
     children = {
-        @ActionRef(id = "EditorCompleteStatement"),
+        @ActionRef(id = IdeActions.ACTION_EDITOR_COMPLETE_STATEMENT),
         @ActionRef(type = JoinLinesAction.class),
         @ActionRef(id = "FillParagraph"),
         @ActionRef(type = DuplicateAction.class),

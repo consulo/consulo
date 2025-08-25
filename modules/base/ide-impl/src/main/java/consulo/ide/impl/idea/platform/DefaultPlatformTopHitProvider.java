@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.platform;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.ActionsTopHitProvider;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author Konstantin Bulenkov
@@ -33,13 +34,13 @@ public class DefaultPlatformTopHitProvider extends ActionsTopHitProvider {
           {"line", "line numbers ", "EditorToggleShowLineNumbers"},
           {"show li", "show line numbers ", "EditorToggleShowLineNumbers"},
           {"ann", "annotate ", "Annotate"},
-          {"wrap", "wraps ", "EditorToggleUseSoftWraps"},
-          {"soft w", "soft wraps ", "EditorToggleUseSoftWraps"},
-          {"use sof", "use soft wraps ", "EditorToggleUseSoftWraps"},
-          {"use wr", "use wraps ", "EditorToggleUseSoftWraps"},
+          {"wrap", "wraps ", IdeActions.ACTION_EDITOR_USE_SOFT_WRAPS},
+          {"soft w", "soft wraps ", IdeActions.ACTION_EDITOR_USE_SOFT_WRAPS},
+          {"use sof", "use soft wraps ", IdeActions.ACTION_EDITOR_USE_SOFT_WRAPS},
+          {"use wr", "use wraps ", IdeActions.ACTION_EDITOR_USE_SOFT_WRAPS},
           {"ref", "refactor ", "Refactorings.QuickListPopupAction"},
-          {"mov", "move ", "Move"},
-          {"ren", "rename  ", "RenameElement"},
+          {"mov", "move ", IdeActions.ACTION_MOVE},
+          {"ren", "rename  ", IdeActions.ACTION_RENAME},
   };
 
   @Override
