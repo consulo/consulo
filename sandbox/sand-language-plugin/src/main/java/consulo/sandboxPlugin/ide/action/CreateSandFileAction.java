@@ -21,8 +21,10 @@ import consulo.annotation.component.ActionRef;
 import consulo.ide.action.CreateFileFromTemplateAction;
 import consulo.ide.action.CreateFileFromTemplateDialog;
 import consulo.language.psi.PsiDirectory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandFileType;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,11 +38,12 @@ public class CreateSandFileAction extends CreateFileFromTemplateAction {
 
     @Override
     protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-        builder.addKind("Sand File", SandFileType.INSTANCE.getIcon(), "Sand File");
+        builder.addKind(LocalizeValue.localizeTODO("Sand File"), SandFileType.INSTANCE.getIcon(), "Sand File");
     }
 
     @Override
-    protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-        return "Sand File";
+    @Nonnull
+    protected LocalizeValue getActionName(PsiDirectory directory, String newName, String templateName) {
+        return LocalizeValue.localizeTODO("Sand File");
     }
 }

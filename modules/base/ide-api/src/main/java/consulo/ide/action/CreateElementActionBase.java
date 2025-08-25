@@ -28,14 +28,11 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.function.Consumer;
 
 /**
  * The base class for actions which create new file elements.
- *
- * @since 5.1
  */
 public abstract class CreateElementActionBase extends CreateInDirectoryActionBase {
     protected CreateElementActionBase() {
@@ -70,23 +67,23 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
     @RequiredUIAccess
     protected abstract PsiElement[] create(String newName, PsiDirectory directory) throws Exception;
 
-    protected abstract String getErrorTitle();
+    protected abstract LocalizeValue getErrorTitle();
 
-    protected abstract String getCommandName();
+    protected abstract LocalizeValue getCommandName();
 
-    protected abstract String getActionName(PsiDirectory directory, String newName);
+    protected abstract LocalizeValue getActionName(PsiDirectory directory, String newName);
 
     @Override
     @RequiredUIAccess
     public final void actionPerformed(@Nonnull AnActionEvent e) {
-        final IdeView view = e.getData(IdeView.KEY);
+        IdeView view = e.getData(IdeView.KEY);
         if (view == null) {
             return;
         }
 
-        final Project project = e.getRequiredData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
 
-        final PsiDirectory dir = view.getOrChooseDirectory();
+        PsiDirectory dir = view.getOrChooseDirectory();
         if (dir == null) {
             return;
         }
@@ -102,7 +99,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
         if (message == null) {
             return null;
         }
-        @NonNls final String ioExceptionPrefix = "java.io.IOException:";
+        String ioExceptionPrefix = "java.io.IOException:";
         message = StringUtil.trimStart(message, ioExceptionPrefix);
         return message;
     }
@@ -111,7 +108,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
         private final PsiDirectory myDirectory;
         private PsiElement[] myCreatedElements = PsiElement.EMPTY_ARRAY;
 
-        public MyInputValidator(final Project project, final PsiDirectory directory) {
+        public MyInputValidator(Project project, PsiDirectory directory) {
             super(project, getErrorTitle());
             myDirectory = directory;
         }
@@ -122,7 +119,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
 
         @RequiredUIAccess
         @Override
-        public boolean checkInput(final String inputString) {
+        public boolean checkInput(String inputString) {
             return true;
         }
 
@@ -133,13 +130,13 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
         }
 
         @Override
-        public String getActionName(String newName) {
+        public LocalizeValue getActionName(String newName) {
             return CreateElementActionBase.this.getActionName(myDirectory, newName);
         }
 
         @RequiredUIAccess
         @Override
-        public boolean canClose(final String inputString) {
+        public boolean canClose(String inputString) {
             myCreatedElements = tryCreate(inputString);
             return myCreatedElements.length > 0;
         }

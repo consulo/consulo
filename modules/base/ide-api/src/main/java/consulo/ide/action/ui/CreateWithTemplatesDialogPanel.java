@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.action.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBCurrentTheme;
@@ -12,12 +13,12 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
-public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPanel<Trinity<String, Image, String>> {
+public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPanel<Trinity<LocalizeValue, Image, String>> {
 
-    public CreateWithTemplatesDialogPanel(@Nonnull List<Trinity<String, Image, String>> templates, @Nullable String selectedItem) {
+    public CreateWithTemplatesDialogPanel(@Nonnull List<Trinity<LocalizeValue, Image, String>> templates, @Nullable String selectedItem) {
         super(templates, LIST_RENDERER);
         myTemplatesList.addListSelectionListener(e -> {
-            Trinity<String, Image, String> selectedValue = myTemplatesList.getSelectedValue();
+            Trinity<LocalizeValue, Image, String> selectedValue = myTemplatesList.getSelectedValue();
             if (selectedValue != null) {
                 setTextFieldIcon(selectedValue.second);
             }
@@ -50,7 +51,7 @@ public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPan
             return;
         }
 
-        ListModel<Trinity<String, Image, String>> model = myTemplatesList.getModel();
+        ListModel<Trinity<LocalizeValue, Image, String>> model = myTemplatesList.getModel();
         for (int i = 0; i < model.getSize(); i++) {
             String templateID = model.getElementAt(i).getThird();
             if (selectedItem.equals(templateID)) {
@@ -60,9 +61,9 @@ public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPan
         }
     }
 
-    private static final ListCellRenderer<Trinity<String, Image, String>> LIST_RENDERER = new ColoredListCellRenderer<>() {
+    private static final ListCellRenderer<Trinity<LocalizeValue, Image, String>> LIST_RENDERER = new ColoredListCellRenderer<>() {
         @Override
-        protected void customizeCellRenderer(@Nonnull JList<? extends Trinity<String, Image, String>> list, Trinity<String, Image, String> value, int index, boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(@Nonnull JList<? extends Trinity<LocalizeValue, Image, String>> list, Trinity<LocalizeValue, Image, String> value, int index, boolean selected, boolean hasFocus) {
             setBorder(JBCurrentTheme.listCellBorderFull());
             if (value != null) {
                 append(value.first);

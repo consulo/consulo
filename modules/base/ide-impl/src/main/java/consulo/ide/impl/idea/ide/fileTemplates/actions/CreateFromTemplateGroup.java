@@ -26,6 +26,7 @@ import consulo.ide.impl.idea.ide.actions.EditFileTemplatesAction;
 import consulo.ide.impl.idea.ide.fileTemplates.ui.SelectTemplateDialog;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDirectory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -100,11 +101,11 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
 
         if (!result.isEmpty()) {
             if (!showAll) {
-                result.add(new CreateFromTemplatesAction(IdeLocalize.actionFromFileTemplate().get()));
+                result.add(new CreateFromTemplatesAction(IdeLocalize.actionFromFileTemplate()));
             }
 
             result.add(AnSeparator.getInstance());
-            result.add(new EditFileTemplatesAction(IdeLocalize.actionEditFileTemplates().get()));
+            result.add(new EditFileTemplatesAction(IdeLocalize.actionEditFileTemplates()));
         }
 
         return result.toArray(new AnAction[result.size()]);
@@ -121,12 +122,12 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     }
 
     private static class CreateFromTemplatesAction extends CreateFromTemplateActionBase {
-        public CreateFromTemplatesAction(String title) {
-            super(title, null, null);
+        public CreateFromTemplatesAction(@Nonnull LocalizeValue actionText) {
+            super(actionText, actionText, null);
         }
 
         @Override
-        protected FileTemplate getTemplate(final Project project, final PsiDirectory dir) {
+        protected FileTemplate getTemplate(Project project, PsiDirectory dir) {
             SelectTemplateDialog dialog = new SelectTemplateDialog(project, dir);
             dialog.show();
             return dialog.getSelectedTemplate();

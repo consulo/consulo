@@ -20,12 +20,9 @@ import consulo.ide.IdeView;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,6 +35,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
     protected CreateInDirectoryActionBase() {
     }
 
+    @Deprecated
     protected CreateInDirectoryActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
         super(text, description, icon);
     }

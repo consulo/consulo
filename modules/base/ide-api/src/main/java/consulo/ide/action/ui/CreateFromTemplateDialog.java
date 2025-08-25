@@ -59,8 +59,8 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         @Nonnull Project project,
         @Nonnull PsiDirectory directory,
         @Nonnull FileTemplate template,
-        @Nullable final AttributesDefaults attributesDefaults,
-        @Nullable final Properties defaultProperties
+        @Nullable AttributesDefaults attributesDefaults,
+        @Nullable Properties defaultProperties
     ) {
         this(directory, template, attributesDefaults, defaultProperties == null ? null : FileTemplateUtil.convert2Map(defaultProperties));
     }
@@ -69,8 +69,8 @@ public class CreateFromTemplateDialog extends DialogWrapper {
     public CreateFromTemplateDialog(
         @Nonnull PsiDirectory directory,
         @Nonnull FileTemplate template,
-        @Nullable final AttributesDefaults attributesDefaults,
-        @Nullable final Map<String, Object> defaultProperties
+        @Nullable AttributesDefaults attributesDefaults,
+        @Nullable Map<String, Object> defaultProperties
     ) {
         super(directory.getProject(), true);
         myDirectory = directory;
@@ -149,7 +149,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
             String newName = fileName;
             PsiDirectory directory = myDirectory;
             if (fileName != null) {
-                final String finalFileName = fileName;
+                String finalFileName = fileName;
                 CreateFileAction.MkDirs mkDirs = WriteAction.compute(() -> new CreateFileAction.MkDirs(finalFileName, myDirectory));
                 newName = mkDirs.newName;
                 directory = mkDirs.directory;
@@ -167,7 +167,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
     }
 
     @RequiredUIAccess
-    private void showErrorDialog(final Exception e) {
+    private void showErrorDialog(Exception e) {
         LOG.info(e);
         Messages.showMessageDialog(myProject, filterMessage(e.getMessage()), getErrorMessage().get(), UIUtil.getErrorIcon());
     }

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.action.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import jakarta.annotation.Nonnull;
@@ -13,7 +14,7 @@ public class NewItemPopupUtil {
     private NewItemPopupUtil() {
     }
 
-    public static JBPopup createNewItemPopup(@Nonnull String title,
+    public static JBPopup createNewItemPopup(@Nonnull LocalizeValue title,
                                              @Nonnull JComponent content,
                                              @Nullable JComponent preferableFocusComponent) {
         return JBPopupFactory.getInstance().createComponentPopupBuilder(content, preferableFocusComponent)

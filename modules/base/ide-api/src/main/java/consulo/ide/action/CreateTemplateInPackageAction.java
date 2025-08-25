@@ -42,6 +42,7 @@ import jakarta.annotation.Nullable;
 public abstract class CreateTemplateInPackageAction<T extends PsiElement> extends CreateFromTemplateAction<T> {
     private final boolean myInSourceOnly;
 
+    @Deprecated
     protected CreateTemplateInPackageAction(String text, String description, Image icon, boolean inSourceOnly) {
         super(text, description, icon);
         myInSourceOnly = inSourceOnly;

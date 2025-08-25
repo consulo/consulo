@@ -19,8 +19,10 @@ package consulo.ide.action;
 import consulo.disposer.Disposer;
 import consulo.ide.action.ui.CreateWithTemplatesDialogPanel;
 import consulo.ide.action.ui.NewItemPopupUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.LangBundle;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.HasValidator;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,9 +33,9 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ import java.util.function.Consumer;
  */
 public class CreateFileFromTemplateDialog  {
   @Nonnull
-  public static Builder createDialog(@Nonnull final Project project) {
+  public static Builder createDialog(@Nonnull Project project) {
     return new NonBlockingPopupBuilderImpl(project);
   }
 
@@ -53,8 +55,8 @@ public class CreateFileFromTemplateDialog  {
     @Nonnull
     private final Project myProject;
 
-    private String myTitle = "Title";
-    private final List<Trinity<String, Image, String>> myTemplatesList = new ArrayList<>();
+    private LocalizeValue myTitle = IdeLocalize.titleNewFile();
+    private final List<Trinity<LocalizeValue, Image, String>> myTemplatesList = new ArrayList<>();
     private InputValidator myInputValidator;
     private HasValidator.Validator<String> myValidator;
 
@@ -63,13 +65,13 @@ public class CreateFileFromTemplateDialog  {
     }
 
     @Override
-    public Builder setTitle(String title) {
+    public Builder setTitle(@Nonnull LocalizeValue title) {
       myTitle = title;
       return this;
     }
 
     @Override
-    public Builder addKind(@Nonnull String kind, @Nullable Image icon, @Nonnull String templateName) {
+    public Builder addKind(@Nonnull LocalizeValue kind, @Nullable Image icon, @Nonnull String templateName) {
       myTemplatesList.add(Trinity.create(kind, icon, templateName));
       return this;
     }
@@ -88,7 +90,10 @@ public class CreateFileFromTemplateDialog  {
 
     @RequiredUIAccess
     @Override
-    public <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> fileCreator, Consumer<T> elementConsumer) {
+    public <T extends PsiElement> void show(@Nonnull LocalizeValue errorTitle,
+                                            @Nullable String selectedItem,
+                                            @Nonnull FileCreator<T> fileCreator,
+                                            @Nonnull Consumer<T> elementConsumer) {
       CreateWithTemplatesDialogPanel contentPanel = new CreateWithTemplatesDialogPanel(myTemplatesList, selectedItem);
       ElementCreator elementCreator = new ElementCreator(myProject, errorTitle) {
 
@@ -99,7 +104,7 @@ public class CreateFileFromTemplateDialog  {
         }
 
         @Override
-        protected String getActionName(String newName) {
+        protected LocalizeValue getActionName(String newName) {
           return fileCreator.getActionName(newName, contentPanel.getSelectedTemplate());
         }
       };
@@ -140,16 +145,16 @@ public class CreateFileFromTemplateDialog  {
   }
 
   public interface Builder {
-    Builder setTitle(String title);
+    Builder setTitle(@Nonnull LocalizeValue title);
 
     Builder setValidator(InputValidator validator);
 
     Builder setValidator(@Nonnull HasValidator.Validator<String> validator);
 
-    Builder addKind(@Nonnull String kind, @Nullable Image icon, @Nonnull String templateName);
+    Builder addKind(@Nonnull LocalizeValue kind, @Nullable Image icon, @Nonnull String templateName);
 
     @RequiredUIAccess
-    <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> creator, @RequiredUIAccess @Nonnull Consumer<T> consumer);
+    <T extends PsiElement> void show(@Nonnull LocalizeValue errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> creator, @RequiredUIAccess @Nonnull Consumer<T> consumer);
 
     @Nullable
     default Map<String, String> getCustomProperties() {
@@ -162,6 +167,6 @@ public class CreateFileFromTemplateDialog  {
     T createFile(@Nonnull String name, @Nonnull String templateName);
 
     @Nonnull
-    String getActionName(@Nonnull String name, @Nonnull String templateName);
+    LocalizeValue getActionName(@Nonnull String name, @Nonnull String templateName);
   }
 }

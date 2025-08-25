@@ -33,7 +33,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -46,19 +46,20 @@ public abstract class ElementCreator {
     private static final Logger LOG = Logger.getInstance(ElementCreator.class);
 
     private final Project myProject;
-    private final String myErrorTitle;
+    private final LocalizeValue myErrorTitle;
 
-    protected ElementCreator(Project project, String errorTitle) {
+    protected ElementCreator(Project project, @Nonnull LocalizeValue errorTitle) {
         myProject = project;
         myErrorTitle = errorTitle;
     }
 
     protected abstract PsiElement[] create(String newName) throws Exception;
 
-    protected abstract String getActionName(String newName);
+    @Nonnull
+    protected abstract LocalizeValue getActionName(String newName);
 
     @RequiredUIAccess
-    public PsiElement[] tryCreate(@Nonnull final String inputString) {
+    public PsiElement[] tryCreate(@Nonnull String inputString) {
         if (inputString.isEmpty()) {
             Messages.showMessageDialog(
                 myProject,
@@ -69,9 +70,9 @@ public abstract class ElementCreator {
             return PsiElement.EMPTY_ARRAY;
         }
 
-        Ref<List<SmartPsiElementPointer>> createdElements = Ref.create();
+        SimpleReference<List<SmartPsiElementPointer>> createdElements = SimpleReference.create();
         Exception exception = executeCommand(
-            LocalizeValue.ofNullable(getActionName(inputString)),
+            getActionName(inputString),
             () -> {
                 PsiElement[] psiElements = create(inputString);
                 SmartPointerManager manager = SmartPointerManager.getInstance(myProject);
@@ -115,6 +116,6 @@ public abstract class ElementCreator {
         if (errorMessage == null || errorMessage.length() == 0) {
             errorMessage = t.toString();
         }
-        Messages.showMessageDialog(myProject, errorMessage, myErrorTitle, UIUtil.getErrorIcon());
+        Messages.showMessageDialog(myProject, errorMessage, myErrorTitle.get(), UIUtil.getErrorIcon());
     }
 }

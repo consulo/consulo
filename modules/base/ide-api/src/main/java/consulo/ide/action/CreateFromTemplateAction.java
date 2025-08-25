@@ -15,7 +15,7 @@
  */
 package consulo.ide.action;
 
-import consulo.application.CommonBundle;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
@@ -29,16 +29,15 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -50,6 +49,7 @@ import java.util.Map;
 public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnAction {
     protected static final Logger LOG = Logger.getInstance(CreateFromTemplateAction.class);
 
+    @Deprecated
     public CreateFromTemplateAction(String text, String description, Image icon) {
         super(text, description, icon);
     }
@@ -69,22 +69,22 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     @Override
     @RequiredUIAccess
     public final void actionPerformed(@Nonnull AnActionEvent e) {
-        final IdeView view = e.getData(IdeView.KEY);
+        IdeView view = e.getData(IdeView.KEY);
         if (view == null) {
             return;
         }
 
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
 
         final PsiDirectory dir = view.getOrChooseDirectory();
         if (dir == null || project == null) {
             return;
         }
 
-        final CreateFileFromTemplateDialog.Builder builder = CreateFileFromTemplateDialog.createDialog(project);
+        CreateFileFromTemplateDialog.Builder builder = CreateFileFromTemplateDialog.createDialog(project);
         buildDialog(project, dir, builder);
 
-        final Ref<String> selectedTemplateName = Ref.create(null);
+        final SimpleReference<String> selectedTemplateName = SimpleReference.create(null);
         builder.show(getErrorTitle(), getDefaultTemplateName(dir), new CreateFileFromTemplateDialog.FileCreator<T>() {
                 @Override
                 public T createFile(@Nonnull String name, @Nonnull String templateName) {
@@ -94,7 +94,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
 
                 @Override
                 @Nonnull
-                public String getActionName(@Nonnull String name, @Nonnull String templateName) {
+                public LocalizeValue getActionName(@Nonnull String name, @Nonnull String templateName) {
                     return CreateFromTemplateAction.this.getActionName(dir, name, templateName);
                 }
             },
@@ -140,8 +140,8 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     }
 
     protected boolean isAvailable(DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
-        final IdeView view = dataContext.getData(IdeView.KEY);
+        Project project = dataContext.getData(Project.KEY);
+        IdeView view = dataContext.getData(IdeView.KEY);
         if (project == null || view == null) {
             return false;
         }
@@ -152,7 +152,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
                 return false;
             }
 
-            final Class moduleExtensionClass = getModuleExtensionClass();
+            Class moduleExtensionClass = getModuleExtensionClass();
             if (moduleExtensionClass != null && ModuleUtilCore.getExtension(module, moduleExtensionClass) == null) {
                 return false;
             }
@@ -162,21 +162,24 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
         return false;
     }
 
-    protected abstract String getActionName(PsiDirectory directory, String newName, String templateName);
+    @Nonnull
+    protected abstract LocalizeValue getActionName(PsiDirectory directory, String newName, String templateName);
 
-    protected String getErrorTitle() {
-        return CommonBundle.getErrorTitle();
+    @Nonnull
+    protected LocalizeValue getErrorTitle() {
+        return CommonLocalize.titleError();
     }
 
     //todo append $END variable to templates?
+    @RequiredReadAction
     public static void moveCaretAfterNameIdentifier(PsiNameIdentifierOwner createdElement) {
-        final Project project = createdElement.getProject();
-        final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+        Project project = createdElement.getProject();
+        Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
         if (editor != null) {
-            final VirtualFile virtualFile = createdElement.getContainingFile().getVirtualFile();
+            VirtualFile virtualFile = createdElement.getContainingFile().getVirtualFile();
             if (virtualFile != null) {
                 if (FileDocumentManager.getInstance().getDocument(virtualFile) == editor.getDocument()) {
-                    final PsiElement nameIdentifier = createdElement.getNameIdentifier();
+                    PsiElement nameIdentifier = createdElement.getNameIdentifier();
                     if (nameIdentifier != null) {
                         editor.getCaretModel().moveToOffset(nameIdentifier.getTextRange().getEndOffset());
                     }

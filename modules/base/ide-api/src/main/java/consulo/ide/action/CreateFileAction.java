@@ -100,7 +100,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
         TextBox nameField = contentPanel.getTextField();
         JBPopup popup =
-            NewItemPopupUtil.createNewItemPopup(IdeLocalize.titleNewFile().get(), contentPanel, (JComponent) TargetAWT.to(nameField));
+            NewItemPopupUtil.createNewItemPopup(IdeLocalize.titleNewFile(), contentPanel, (JComponent) TargetAWT.to(nameField));
         contentPanel.addValidator(value -> {
             if (!validator.checkInput(value)) {
                 String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
@@ -178,18 +178,18 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     }
 
     @Override
-    protected String getActionName(PsiDirectory directory, String newName) {
-        return IdeLocalize.progressCreatingFile(directory.getVirtualFile().getPresentableUrl(), File.separator, newName).get();
+    protected LocalizeValue getActionName(PsiDirectory directory, String newName) {
+        return IdeLocalize.progressCreatingFile(directory.getVirtualFile().getPresentableUrl(), File.separator, newName);
     }
 
     @Override
-    protected String getErrorTitle() {
-        return IdeLocalize.titleCannotCreateFile().get();
+    protected LocalizeValue getErrorTitle() {
+        return IdeLocalize.titleCannotCreateFile();
     }
 
     @Override
-    protected String getCommandName() {
-        return IdeLocalize.commandCreateFile().get();
+    protected LocalizeValue getCommandName() {
+        return IdeLocalize.commandCreateFile();
     }
 
     protected String getFileName(String newName) {

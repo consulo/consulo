@@ -26,6 +26,7 @@ import consulo.language.editor.template.EditorFileTemplateUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -40,7 +41,7 @@ import java.util.Collections;
 import java.util.Map;
 
 public abstract class CreateFromTemplateActionBase extends AnAction {
-    public CreateFromTemplateActionBase(final String title, final String description, final Image icon) {
+    public CreateFromTemplateActionBase(@Nonnull LocalizeValue title, @Nonnull LocalizeValue description, Image icon) {
         super(title, description, icon);
     }
 

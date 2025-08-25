@@ -85,7 +85,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
         createLightWeightPopup(
             validator,
-            title.get(),
+            title,
             defaultValue,
             element -> {
                 if (element != null) {
@@ -99,7 +99,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     @RequiredUIAccess
     private JBPopup createLightWeightPopup(
         CreateDirectoryOrPackageHandler validator,
-        String title,
+        LocalizeValue title,
         String defaultValue,
         Consumer<PsiElement> consumer
     ) {

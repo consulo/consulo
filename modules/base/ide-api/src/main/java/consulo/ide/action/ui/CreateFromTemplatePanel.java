@@ -50,7 +50,7 @@ public class CreateFromTemplatePanel {
   private final boolean myMustEnterName;
   private final AttributesDefaults myAttributesDefaults;
 
-  public CreateFromTemplatePanel(final String[] unsetAttributes, final boolean mustEnterName, @Nullable final AttributesDefaults attributesDefaults) {
+  public CreateFromTemplatePanel(String[] unsetAttributes, boolean mustEnterName, @Nullable AttributesDefaults attributesDefaults) {
     myMustEnterName = mustEnterName;
     myUnsetAttributes = unsetAttributes;
     myAttributesDefaults = attributesDefaults;
@@ -116,26 +116,26 @@ public class CreateFromTemplatePanel {
   }
 
   private void updateShown() {
-    final Insets insets = new Insets(2, 4, 4, 2);
+    Insets insets = new Insets(2, 4, 4, 2);
     if (myMustEnterName || Arrays.asList(myUnsetAttributes).contains(FileTemplate.ATTRIBUTE_NAME)) {
-      final JLabel filenameLabel = new JLabel(IdeBundle.message("label.file.name"));
+      JLabel filenameLabel = new JLabel(IdeBundle.message("label.file.name"));
       myAttrPanel.add(filenameLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
       myFilenameField = new JTextField(20);
 
       // if default settings specified
       if (myAttributesDefaults != null) {
-        final String fileName = myAttributesDefaults.getDefaultFileName();
+        String fileName = myAttributesDefaults.getDefaultFileName();
         // if default file name specified
         if (fileName != null) {
           // set predefined file name value
           myFilenameField.setText(fileName);
-          final TextRange selectionRange;
+          TextRange selectionRange;
           // select range from default attributes or select file name without extension
           if (myAttributesDefaults.getDefaultFileNameSelection() != null) {
             selectionRange = myAttributesDefaults.getDefaultFileNameSelection();
           }
           else {
-            final int dot = fileName.indexOf('.');
+            int dot = fileName.indexOf('.');
             if (dot > 0) {
               selectionRange = new TextRange(0, dot);
             }
@@ -157,12 +157,12 @@ public class CreateFromTemplatePanel {
       if (attribute.equals(FileTemplate.ATTRIBUTE_NAME)) { // already asked above
         continue;
       }
-      final JLabel label = new JLabel(attribute.replace('_', ' ') + ":");
-      final JTextField field = new JTextField();
+      JLabel label = new JLabel(attribute.replace('_', ' ') + ":");
+      JTextField field = new JTextField();
       field.setColumns(30);
       if (myAttributesDefaults != null) {
-        final String defaultValue = myAttributesDefaults.getDefaultValueFor(attribute);
-        final TextRange selectionRange = myAttributesDefaults.getRangeFor(attribute);
+        String defaultValue = myAttributesDefaults.getDefaultValueFor(attribute);
+        TextRange selectionRange = myAttributesDefaults.getRangeFor(attribute);
         if (defaultValue != null) {
           field.setText(defaultValue);
           // set default selection
@@ -212,7 +212,7 @@ public class CreateFromTemplatePanel {
     return result;
   }
 
-  private static void setPredefinedSelectionFor(final JTextField field, final TextRange selectionRange) {
+  private static void setPredefinedSelectionFor(JTextField field, TextRange selectionRange) {
     field.select(selectionRange.getStartOffset(), selectionRange.getEndOffset());
     field.putClientProperty(DialogWrapperPeer.HAVE_INITIAL_SELECTION, true);
   }

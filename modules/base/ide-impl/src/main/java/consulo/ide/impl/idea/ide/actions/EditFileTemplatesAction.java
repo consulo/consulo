@@ -17,14 +17,15 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.ide.fileTemplates.ui.ConfigureTemplatesDialog;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 public class EditFileTemplatesAction extends AnAction {
-    public EditFileTemplatesAction(String text) {
-        super(text);
+    public EditFileTemplatesAction(LocalizeValue actionText) {
+        super(actionText, actionText);
     }
 
     @Override

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.fileTemplates.actions;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateUtil;
 import consulo.ide.action.CreateFromTemplateActionBase;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
@@ -28,12 +29,12 @@ public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
     private final FileTemplate myTemplate;
 
     public CreateFromTemplateAction(FileTemplate template) {
-        super(template.getName(), null, FileTemplateUtil.getIcon(template));
+        super(LocalizeValue.ofNullable(template.getName()), LocalizeValue.empty(), FileTemplateUtil.getIcon(template));
         myTemplate = template;
     }
 
     @Override
-    protected FileTemplate getTemplate(final Project project, final PsiDirectory dir) {
+    protected FileTemplate getTemplate(Project project, PsiDirectory dir) {
         return myTemplate;
     }
 

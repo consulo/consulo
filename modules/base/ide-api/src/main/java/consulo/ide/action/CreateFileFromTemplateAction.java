@@ -89,9 +89,9 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
         Project project = dir.getProject();
         try {
             element = FileTemplateUtil.createFromTemplate(template, name, Collections.emptyMap(), dir);
-            final PsiFile psiFile = element.getContainingFile();
+            PsiFile psiFile = element.getContainingFile();
 
-            final VirtualFile virtualFile = psiFile.getVirtualFile();
+            VirtualFile virtualFile = psiFile.getVirtualFile();
             if (virtualFile != null) {
                 if (openFile) {
                     if (template.isLiveTemplateEnabled()) {
@@ -147,7 +147,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
 
     @Override
     protected PsiFile createFile(String name, String templateName, PsiDirectory dir) {
-        final FileTemplate template = FileTemplateManager.getInstance(dir.getProject()).getInternalTemplate(templateName);
+        FileTemplate template = FileTemplateManager.getInstance(dir.getProject()).getInternalTemplate(templateName);
         return createFileFromTemplate(name, template, dir);
     }
 }
