@@ -1870,6 +1870,8 @@ action.Scratch.ChangeLanguage.description:
     text: Change File Language
 action.Scratch.ChangeLanguage.text:
     text: Change File Language
+action.ScrollTreeToCenter.text:
+    text: Scroll Tree To Center
 action.SearchEverywhere.text:
     text: Search Everywhere
 action.SelectAllOccurrences.text:

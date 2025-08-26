@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.module.Module;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
@@ -27,23 +29,31 @@ import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nullable;
 
 // from kotlin
+@ActionImpl(id = "CopyContentRootPath")
 public class CopyContentRootPathProvider extends DumbAwareCopyPathProvider {
+    public CopyContentRootPathProvider() {
+        super(ActionLocalize.actionCopycontentrootpathText());
+    }
+
     @Nullable
     @Override
     public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
-        return ObjectUtil.doIfNotNull(virtualFile, file -> {
-            Module moduleForFile = ProjectFileIndex.getInstance(project).getModuleForFile(file, false);
-            if (moduleForFile != null) {
-                VirtualFile[] contentRoots = ModuleRootManager.getInstance(moduleForFile).getContentRoots();
+        return ObjectUtil.doIfNotNull(
+            virtualFile,
+            file -> {
+                Module moduleForFile = ProjectFileIndex.getInstance(project).getModuleForFile(file, false);
+                if (moduleForFile != null) {
+                    VirtualFile[] contentRoots = ModuleRootManager.getInstance(moduleForFile).getContentRoots();
 
-                for (VirtualFile contentRoot : contentRoots) {
-                    String relativePath = VfsUtilCore.getRelativePath(file, contentRoot);
-                    if (relativePath != null) {
-                        return relativePath;
+                    for (VirtualFile contentRoot : contentRoots) {
+                        String relativePath = VfsUtilCore.getRelativePath(file, contentRoot);
+                        if (relativePath != null) {
+                            return relativePath;
+                        }
                     }
                 }
+                return null;
             }
-            return null;
-        });
+        );
     }
 }

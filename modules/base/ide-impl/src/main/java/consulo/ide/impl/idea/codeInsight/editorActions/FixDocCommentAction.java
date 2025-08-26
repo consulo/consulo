@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
@@ -22,6 +23,7 @@ import consulo.language.editor.FileModificationService;
 import consulo.language.editor.documentation.*;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.*;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
@@ -40,14 +42,8 @@ import jakarta.annotation.Nullable;
  * @author Denis Zhdanov
  * @since 2012-09-20
  */
+@ActionImpl(id = FixDocCommentAction.ID)
 public class FixDocCommentAction extends EditorAction {
-    @Nonnull
-    public static final String ACTION_ID = "FixDocComment";
-
-    public FixDocCommentAction() {
-        super(new MyHandler());
-    }
-
     private static final class MyHandler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
@@ -64,6 +60,12 @@ public class FixDocCommentAction extends EditorAction {
 
             process(psiFile, editor, project, editor.getCaretModel().getOffset());
         }
+    }
+
+    public static final String ID = "FixDocComment";
+
+    public FixDocCommentAction() {
+        super(ActionLocalize.actionFixdoccommentText(), ActionLocalize.actionFixdoccommentDescription(), new MyHandler());
     }
 
     @RequiredUIAccess

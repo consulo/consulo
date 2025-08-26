@@ -34,40 +34,40 @@ import jakarta.annotation.Nonnull;
 import java.util.Collections;
 
 public class ShowGraphHistoryAction extends DumbAwareAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    VirtualFile file = e.getRequiredData(VirtualFile.KEY);
-    VcsLogManager logManager = VcsProjectLog.getInstance(project).getLogManager();
-    assert logManager != null;
-    VcsLogStructureFilterImpl fileFilter = new VcsLogStructureFilterImpl(Collections.singleton(VcsUtil.getFilePath(file)));
-    VcsLogContentProvider.openLogTab(logManager, project, file.getName(), fileFilter);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    if (!Registry.is("vcs.log.graph.history")) {
-      presentation.setEnabledAndVisible(false);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        VirtualFile file = e.getRequiredData(VirtualFile.KEY);
+        VcsLogManager logManager = VcsProjectLog.getInstance(project).getLogManager();
+        assert logManager != null;
+        VcsLogStructureFilterImpl fileFilter = new VcsLogStructureFilterImpl(Collections.singleton(VcsUtil.getFilePath(file)));
+        VcsLogContentProvider.openLogTab(logManager, project, file.getName(), fileFilter);
     }
-    else {
-      VirtualFile file = e.getData(VirtualFile.KEY);
-      Project project = e.getData(Project.KEY);
-      if (file == null || project == null) {
-        presentation.setEnabledAndVisible(false);
-      }
-      else {
-        VirtualFile root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
-        VcsLogDataImpl dataManager = VcsProjectLog.getInstance(project).getDataManager();
-        if (root == null || dataManager == null) {
-          presentation.setEnabledAndVisible(false);
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        if (!Registry.is("vcs.log.graph.history")) {
+            presentation.setEnabledAndVisible(false);
         }
         else {
-          presentation.setVisible(dataManager.getRoots().contains(root));
-          presentation.setEnabled(dataManager.getIndex().isIndexed(root));
+            VirtualFile file = e.getData(VirtualFile.KEY);
+            Project project = e.getData(Project.KEY);
+            if (file == null || project == null) {
+                presentation.setEnabledAndVisible(false);
+            }
+            else {
+                VirtualFile root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
+                VcsLogDataImpl dataManager = VcsProjectLog.getInstance(project).getDataManager();
+                if (root == null || dataManager == null) {
+                    presentation.setEnabledAndVisible(false);
+                }
+                else {
+                    presentation.setVisible(dataManager.getRoots().contains(root));
+                    presentation.setEnabled(dataManager.getIndex().isIndexed(root));
+                }
+            }
         }
-      }
     }
-  }
 }

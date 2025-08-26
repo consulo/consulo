@@ -15,37 +15,44 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.application.localize.ApplicationLocalize;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
-import consulo.application.ApplicationBundle;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.collection.primitive.ints.IntList;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
  * @author Denis Zhdanov
- * @since 9/28/12 1:20 PM
+ * @since 2012-09-28
  */
+@ActionImpl(id = ArrangementConstants.MATCHING_RULE_MOVE_DOWN)
 public class MoveArrangementMatchingRuleDownAction extends AbstractMoveArrangementRuleAction {
+    public MoveArrangementMatchingRuleDownAction() {
+        super(
+            ApplicationLocalize.arrangementActionRuleMoveDownText(),
+            ApplicationLocalize.arrangementActionRuleMoveDownDescription(),
+            PlatformIconGroup.actionsMovedown()
+        );
+    }
 
-  public MoveArrangementMatchingRuleDownAction() {
-    getTemplatePresentation().setText(ApplicationBundle.message("arrangement.action.rule.move.down.text"));
-    getTemplatePresentation().setDescription(ApplicationBundle.message("arrangement.action.rule.move.down.description"));
-  }
-
-  @Override
-  protected void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings) {
-    IntList rows = control.getSelectedModelRows();
-    int bottom = control.getModel().getSize();
-    for (int i = 0; i < rows.size(); i++) {
-      int row = rows.get(i);
-      if (row == bottom - 1) {
-        mappings.add(new int[] { row, row });
-        bottom--;
-      }
-      else {
-        mappings.add(new int[]{ row, row + 1 });
-      }
-    } 
-  }
+    @Override
+    protected void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings) {
+        IntList rows = control.getSelectedModelRows();
+        int bottom = control.getModel().getSize();
+        for (int i = 0; i < rows.size(); i++) {
+            int row = rows.get(i);
+            if (row == bottom - 1) {
+                mappings.add(new int[]{row, row});
+                bottom--;
+            }
+            else {
+                mappings.add(new int[]{row, row + 1});
+            }
+        }
+    }
 }

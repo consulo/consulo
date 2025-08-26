@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -30,11 +32,13 @@ import jakarta.inject.Provider;
  * @author Eugene Zhuravlev
  * @since 2004-02-08
  */
+@ActionImpl(id = "ModuleSettings")
 public class ShowModulePropertiesAction extends AnAction {
     private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
 
     @Inject
     public ShowModulePropertiesAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
+        super(ActionLocalize.actionModulesettingsText(), ActionLocalize.actionModulesettingsDescription());
         myShowSettingsUtilProvider = showSettingsUtilProvider;
     }
 

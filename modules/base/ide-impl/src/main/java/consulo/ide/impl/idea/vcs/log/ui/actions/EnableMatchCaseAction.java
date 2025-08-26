@@ -15,18 +15,19 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.VcsLogProperties;
-import consulo.versionControlSystem.log.VcsLogProvider;
-import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.log.VcsLogProperties;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
@@ -51,8 +52,7 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
                 e.getPresentation().setText(MATCH_CASE);
             }
             else {
-                Collection<VcsLogProvider> providers =
-                    ContainerUtil.newLinkedHashSet(ui.getDataPack().getLogProviders().values());
+                Collection<VcsLogProvider> providers = new LinkedHashSet<>(ui.getDataPack().getLogProviders().values());
                 List<VcsLogProvider> supported =
                     ContainerUtil.filter(providers, p -> VcsLogProperties.get(p, VcsLogProperties.CASE_INSENSITIVE_REGEX));
                 e.getPresentation().setVisible(true);

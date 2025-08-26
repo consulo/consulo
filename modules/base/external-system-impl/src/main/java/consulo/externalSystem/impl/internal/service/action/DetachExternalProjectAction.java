@@ -15,6 +15,8 @@
  */
 package consulo.externalSystem.impl.internal.service.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
@@ -30,6 +32,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -40,6 +43,7 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 2013-06-13
  */
+@ActionImpl(id = "ExternalSystem.DetachProject", shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
 public class DetachExternalProjectAction extends AnAction implements DumbAware {
     public DetachExternalProjectAction() {
         super(

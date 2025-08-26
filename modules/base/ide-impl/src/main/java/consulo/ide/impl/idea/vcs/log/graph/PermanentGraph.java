@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph;
 
-import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,47 +33,48 @@ import java.util.function.Predicate;
  * @see VisibleGraph
  */
 public interface PermanentGraph<Id> {
-
-  @Nonnull
-  VisibleGraph<Id> createVisibleGraph(@Nonnull SortType sortType,
-                                      @jakarta.annotation.Nullable Set<Id> headsOfVisibleBranches,
-                                      @jakarta.annotation.Nullable Set<Id> matchedCommits);
-
-  @Nonnull
-  List<GraphCommit<Id>> getAllCommits();
-
-  @Nonnull
-  List<Id> getChildren(@Nonnull Id commit);
-
-  @Nonnull
-  Set<Id> getContainingBranches(@Nonnull Id commit);
-
-  @Nonnull
-  Predicate<Id> getContainedInBranchCondition(@Nonnull Collection<Id> currentBranchHead);
-
-  enum SortType {
-    Normal("Off", "Sort commits topologically and by date"),
-    Bek("Standard", "In case of merge show incoming commits first (directly below merge commit)"),
-    LinearBek("Linear", "In case of merge show incoming commits on top of main branch commits as if they were rebased");
+    @Nonnull
+    VisibleGraph<Id> createVisibleGraph(
+        @Nonnull SortType sortType,
+        @Nullable Set<Id> headsOfVisibleBranches,
+        @Nullable Set<Id> matchedCommits
+    );
 
     @Nonnull
-    private final String myPresentation;
-    @Nonnull
-    private final String myDescription;
+    List<GraphCommit<Id>> getAllCommits();
 
-    SortType(@Nonnull String presentation, @Nonnull String description) {
-      myPresentation = presentation;
-      myDescription = description;
+    @Nonnull
+    List<Id> getChildren(@Nonnull Id commit);
+
+    @Nonnull
+    Set<Id> getContainingBranches(@Nonnull Id commit);
+
+    @Nonnull
+    Predicate<Id> getContainedInBranchCondition(@Nonnull Collection<Id> currentBranchHead);
+
+    enum SortType {
+        Normal("Off", "Sort commits topologically and by date"),
+        Bek("Standard", "In case of merge show incoming commits first (directly below merge commit)"),
+        LinearBek("Linear", "In case of merge show incoming commits on top of main branch commits as if they were rebased");
+
+        @Nonnull
+        private final String myPresentation;
+        @Nonnull
+        private final String myDescription;
+
+        SortType(@Nonnull String presentation, @Nonnull String description) {
+            myPresentation = presentation;
+            myDescription = description;
+        }
+
+        @Nonnull
+        public String getName() {
+            return myPresentation;
+        }
+
+        @Nonnull
+        public String getDescription() {
+            return myDescription;
+        }
     }
-
-    @Nonnull
-    public String getName() {
-      return myPresentation;
-    }
-
-    @Nonnull
-    public String getDescription() {
-      return myDescription;
-    }
-  }
 }

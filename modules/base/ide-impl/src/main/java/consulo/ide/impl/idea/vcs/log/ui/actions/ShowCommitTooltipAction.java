@@ -26,24 +26,25 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
 
 public class ShowCommitTooltipAction extends DumbAwareAction {
-  public ShowCommitTooltipAction() {
-    super("Show Commit Tooltip", "Show tooltip for currently selected commit in the Log", null);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(
-        e.hasData(Project.KEY) && e.getData(VcsLogUi.KEY) instanceof VcsLogUiImpl vcsLogUi && vcsLogUi.getTable().getSelectedRowCount() == 1
-    );
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    VcsLogGraphTable table = ((VcsLogUiImpl)e.getRequiredData(VcsLogUi.KEY)).getTable();
-    int row = table.getSelectedRow();
-    if (ScrollingUtil.isVisible(table, row)) {
-      table.showTooltip(row);
+    public ShowCommitTooltipAction() {
+        super("Show Commit Tooltip", "Show tooltip for currently selected commit in the Log", null);
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(
+            e.hasData(Project.KEY) && e.getData(VcsLogUi.KEY) instanceof VcsLogUiImpl vcsLogUi
+                && vcsLogUi.getTable().getSelectedRowCount() == 1
+        );
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        VcsLogGraphTable table = ((VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY)).getTable();
+        int row = table.getSelectedRow();
+        if (ScrollingUtil.isVisible(table, row)) {
+            table.showTooltip(row);
+        }
+    }
 }

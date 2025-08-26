@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;
@@ -23,7 +25,12 @@ import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nullable;
 
 // from kotlin
+@ActionImpl(id = "CopyFileName")
 public class CopyFileNameProvider extends DumbAwareCopyPathProvider {
+    public CopyFileNameProvider() {
+        super(ActionLocalize.actionCopyfilenameText());
+    }
+
     @Nullable
     @Override
     public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {
