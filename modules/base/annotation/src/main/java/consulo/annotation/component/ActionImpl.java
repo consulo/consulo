@@ -22,18 +22,18 @@ import java.lang.annotation.Target;
 
 /**
  * @author VISTALL
- * @since 24-Jun-22
+ * @since 2022-06-24
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ActionImpl {
-  String id();
+    String id();
 
-  ActionParentRef[] parents() default {};
+    ActionParentRef[] parents() default {};
 
-  ActionRef[] children() default {};
+    ActionRef[] children() default {};
 
-  ActionRef[] shortcutFrom() default {};
+    ActionRef[] shortcutFrom() default {};
 
-  int profiles() default ComponentProfiles.DEFAULT;
+    int profiles() default ComponentProfiles.DEFAULT;
 }

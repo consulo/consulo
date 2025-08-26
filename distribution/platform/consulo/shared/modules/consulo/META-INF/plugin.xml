@@ -626,17 +626,6 @@
 
         <!-- File -->
 
-        <action id="ReloadFromDisk" class="consulo.ide.impl.idea.ide.actions.ReloadFromDiskAction">
-            <!--
-            <add-to-group group-id="FileMenu" anchor="after" relative-to-action="Synchronize"/>
-            -->
-        </action>
-
-        <action id="CopyFileName" class="consulo.ide.impl.idea.ide.actions.CopyFileNameProvider"/>
-        <action id="CopyPathWithLineNumber" class="consulo.ide.impl.idea.ide.actions.CopyFileWithLineNumberPathProvider"/>
-        <action id="CopyContentRootPath" class="consulo.ide.impl.idea.ide.actions.CopyContentRootPathProvider"/>
-        <action id="CopySourceRootPath" class="consulo.ide.impl.idea.ide.actions.CopySourceRootPathProvider"/>
-
         <group id="CopyReferencePopupGroup" class="consulo.ide.impl.idea.ide.actions.CopyReferencePopup" popup="true">
             <group id="CopyFileReference">
                 <reference ref="CopyAbsolutePath"/>
@@ -682,8 +671,6 @@
             <add-to-group group-id="ViewMenu" relative-to-action="QuickActions" anchor="after"/>
         </group>
 
-        <action id="FixDocComment" class="consulo.ide.impl.idea.codeInsight.editorActions.FixDocCommentAction"/>
-
         <action id="ViewNavigationBar" class="consulo.ide.impl.idea.ide.actions.ViewNavigationBarAction">
             <add-to-group group-id="UIToggleActions" relative-to-action="ViewStatusBar" anchor="after"/>
         </action>
@@ -691,8 +678,6 @@
         <action id="ViewImportPopups" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowImportPopupsAction">
             <add-to-group group-id="EditorToggleActions"/>
         </action>
-
-        <action id="ProjectViewChangeView" class="consulo.ide.impl.idea.ide.projectView.actions.ChangeProjectViewAction"/>
 
         <!-- Run -->
         <group id="RunMenu" popup="true">
@@ -727,9 +712,6 @@
         <group id="NewGroup1">
             <add-to-group group-id="NewGroup" anchor="first"/>
         </group>
-
-        <reference ref="WeighingNewGroup"/>
-
 
         <group id="ToolbarFindGroup">
             <separator/>
@@ -1190,7 +1172,6 @@
                 </group>
             </group>
 
-
             <group id="Runner.View.Toolbar">
                 <reference ref="Runner.CloseView"/>
             </group>
@@ -1253,26 +1234,6 @@
             <add-to-group group-id="MaintenanceGroup" anchor="last"/>
         </action>
 
-        <action id="Arrangement.Rule.Add"
-                class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.AddArrangementRuleAction"/>
-        <action id="Arrangement.Rule.Remove"
-                class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.RemoveArrangementRuleAction"/>
-        <action id="Arrangement.Rule.Edit"
-                class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.EditArrangementRuleAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.edit"/>
-        <action id="Arrangement.Rule.Match.Condition.Move.Up"
-                class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.MoveArrangementMatchingRuleUpAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.moveup"/>
-        <action id="Arrangement.Rule.Match.Condition.Move.Down"
-                class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.MoveArrangementMatchingRuleDownAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.movedown"/>
-        <action id="Arrangement.Rule.Group.Condition.Move.Up"
-                class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.MoveArrangementGroupingRuleUpAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.moveup"/>
-        <action id="Arrangement.Rule.Group.Condition.Move.Down"
-                class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.MoveArrangementGroupingRuleDownAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.movedown"/>
-
         <group id="Arrangement.Rule.Match.Control.Context.Menu">
             <reference ref="Arrangement.Rule.Add"/>
             <reference ref="Arrangement.Rule.Remove"/>
@@ -1310,7 +1271,6 @@
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="after" relative-to-action="$SearchWeb"/>
         </action>
 
-
         <!-- Toolbar -->
 
         <group id="ToolbarMakeGroup">
@@ -1332,9 +1292,6 @@
             <reference ref="RunAPT"/>
             <add-to-group group-id="EditorTabPopupMenuEx" anchor="before" relative-to-action="RunContextPopupGroup"/>
         </group>
-
-        <action id="ModuleSettings" class="consulo.ide.impl.idea.ide.actions.ShowModulePropertiesAction"/>
-        <group id="MoveModuleToGroup" class="consulo.ide.impl.idea.ide.projectView.impl.MoveModuleToGroupTopLevel" popup="true"/>
 
         <reference ref="AnalyzeMenu">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="ReplaceInPath"/>
@@ -1669,21 +1626,6 @@
             <reference id="Vcs.CherryPick"/>
             <add-to-group group-id="Vcs.Log.Toolbar"/>
         </group>
-
-        <action id="ExternalSystem.RefreshAllProjects"
-                class="consulo.externalSystem.impl.internal.service.action.RefreshAllExternalProjectsAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-        <action id="ExternalSystem.RefreshProject"
-                class="consulo.externalSystem.impl.internal.service.action.RefreshExternalProjectAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-        <action id="ExternalSystem.AttachProject"
-                class="consulo.externalSystem.impl.internal.service.action.AttachExternalProjectAction"/>
-        <action id="ExternalSystem.DetachProject"
-                class="consulo.externalSystem.impl.internal.service.action.DetachExternalProjectAction"
-                use-shortcut-of="$Delete"/>
-        <action id="ExternalSystem.OpenConfig"
-                class="consulo.externalSystem.impl.internal.service.action.OpenExternalConfigAction"
-                use-shortcut-of="EditSource"/>
 
         <!--Tool window actions-->
         <group id="ExternalSystem.ToolWindow.Toolbar">

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -28,25 +28,26 @@ import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import jakarta.annotation.Nonnull;
 
 public class OpenAnotherLogTabAction extends DumbAwareAction {
-  public OpenAnotherLogTabAction() {
-    super("Open Another Log Tab", "Open Another Log Tab", AllIcons.General.Add);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null || !Registry.is("vcs.log.open.another.log.visible", false)) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
+    public OpenAnotherLogTabAction() {
+        super("Open Another Log Tab", "Open Another Log Tab", PlatformIconGroup.generalAdd());
     }
-    VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
-    VcsLogManager logManager = e.getData(VcsLogInternalDataKeys.LOG_MANAGER);
-    e.getPresentation().setEnabledAndVisible(logManager != null && projectLog.getLogManager() == logManager); // only for main log (it is a question, how and where we want to open tabs for external logs)
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    VcsLogContentProvider.openAnotherLogTab(e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER), e.getRequiredData(Project.KEY));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null || !Registry.is("vcs.log.open.another.log.visible", false)) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
+        VcsLogManager logManager = e.getData(VcsLogInternalDataKeys.LOG_MANAGER);
+        // only for main log (it is a question, how and where we want to open tabs for external logs)
+        e.getPresentation().setEnabledAndVisible(logManager != null && projectLog.getLogManager() == logManager);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        VcsLogContentProvider.openAnotherLogTab(e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER), e.getRequiredData(Project.KEY));
+    }
 }

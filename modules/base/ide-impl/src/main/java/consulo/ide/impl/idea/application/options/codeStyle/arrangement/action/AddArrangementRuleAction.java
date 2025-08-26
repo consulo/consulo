@@ -15,30 +15,36 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.application.localize.ApplicationLocalize;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesModel;
 import consulo.language.codeStyle.ui.internal.arrangement.EmptyArrangementRuleComponent;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.ApplicationBundle;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.util.IconUtil;
 import consulo.util.collection.primitive.ints.IntList;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
  * @since 2012-08-24
  */
+@ActionImpl(id = ArrangementConstants.MATCHING_RULE_ADD)
 public class AddArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware {
     public AddArrangementRuleAction() {
-        getTemplatePresentation().setText(ApplicationBundle.message("arrangement.action.rule.add.text"));
-        getTemplatePresentation().setDescription(ApplicationBundle.message("arrangement.action.rule.add.description"));
-        getTemplatePresentation().setIcon(IconUtil.getAddIcon());
+        super(
+            ApplicationLocalize.arrangementActionRuleAddText(),
+            ApplicationLocalize.arrangementActionRuleAddDescription(),
+            PlatformIconGroup.generalAdd()
+        );
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         ArrangementMatchingRulesControl control = getRulesControl(e);
         if (control == null) {
             return;

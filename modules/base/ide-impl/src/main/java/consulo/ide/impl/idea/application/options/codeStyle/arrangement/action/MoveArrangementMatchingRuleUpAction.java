@@ -15,39 +15,46 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.application.localize.ApplicationLocalize;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
-import consulo.application.ApplicationBundle;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
  * @author Denis Zhdanov
- * @since 9/28/12 12:16 PM
+ * @since 2012-09-28
  */
+@ActionImpl(id = ArrangementConstants.MATCHING_RULE_MOVE_UP)
 public class MoveArrangementMatchingRuleUpAction extends AbstractMoveArrangementRuleAction {
+    public MoveArrangementMatchingRuleUpAction() {
+        super(
+            ApplicationLocalize.arrangementActionRuleMoveUpText(),
+            ApplicationLocalize.arrangementActionRuleMoveUpDescription(),
+            PlatformIconGroup.actionsMoveup()
+        );
+    }
 
-  public MoveArrangementMatchingRuleUpAction() {
-    getTemplatePresentation().setText(ApplicationBundle.message("arrangement.action.rule.move.up.text"));
-    getTemplatePresentation().setDescription(ApplicationBundle.message("arrangement.action.rule.move.up.description"));
-  }
-
-  @Override
-  protected void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings) {
-    IntList rows = control.getSelectedModelRows();
-    IntLists.reverse(rows);
-    int top = -1;
-    for (int i = 0; i < rows.size(); i++) {
-      int row = rows.get(i);
-      if (row == top + 1) {
-        mappings.add(new int[] { row, row });
-        top++;
-      }
-      else {
-        mappings.add(new int[]{ row, row - 1 });
-      }
-    } 
-  }
+    @Override
+    protected void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings) {
+        IntList rows = control.getSelectedModelRows();
+        IntLists.reverse(rows);
+        int top = -1;
+        for (int i = 0; i < rows.size(); i++) {
+            int row = rows.get(i);
+            if (row == top + 1) {
+                mappings.add(new int[]{row, row});
+                top++;
+            }
+            else {
+                mappings.add(new int[]{row, row - 1});
+            }
+        }
+    }
 }

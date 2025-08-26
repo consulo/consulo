@@ -15,6 +15,7 @@
  */
 package consulo.externalSystem.impl.internal.service.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.internal.ExternalSystemInternalAWTHelper;
@@ -35,6 +36,7 @@ import jakarta.inject.Inject;
  * @author Denis Zhdanov
  * @since 2013-06-14
  */
+@ActionImpl(id = "ExternalSystem.AttachProject")
 public class AttachExternalProjectAction extends AnAction implements DumbAware {
     private final ExternalSystemInternalAWTHelper myAwtHelper;
 
@@ -62,8 +64,8 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         ProjectSystemId externalSystemId = e.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId == null) {

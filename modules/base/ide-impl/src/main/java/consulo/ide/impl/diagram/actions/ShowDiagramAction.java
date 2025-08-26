@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.diagram.actions;
 
+import consulo.application.Application;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.psi.PsiElement;
@@ -38,15 +39,8 @@ public class ShowDiagramAction extends AnAction {
         boolean state = EarlyAccessProgramManager.is(DiagramSupportEapDescriptor.class);
         if (state) {
             PsiElement psiElement = e.getData(PsiElement.KEY);
-            state = false;
-            if (psiElement != null) {
-                for (GraphProvider graphProvider : GraphProvider.EP_NAME.getExtensionList()) {
-                    if (graphProvider.isSupported(psiElement)) {
-                        state = true;
-                        break;
-                    }
-                }
-            }
+            state = psiElement != null && Application.get().getExtensionPoint(GraphProvider.class)
+                    .anyMatchSafe(graphProvider -> graphProvider.isSupported(psiElement));
         }
         e.getPresentation().setEnabledAndVisible(state);
     }

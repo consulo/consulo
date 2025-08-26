@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.localize.ApplicationLocalize;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,6 +31,7 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 2012-10-29
  */
+@ActionImpl(id = ArrangementConstants.MATCHING_RULE_EDIT)
 public class EditArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware, Toggleable {
     public EditArrangementRuleAction() {
         super(ApplicationLocalize.arrangementActionRuleEditText(), ApplicationLocalize.arrangementActionRuleEditDescription(), PlatformIconGroup.actionsEdit());
@@ -51,7 +54,7 @@ public class EditArrangementRuleAction extends AbstractArrangementRuleAction imp
         if (rows.size() != 1) {
             return;
         }
-        final int row = rows.get(0);
+        int row = rows.get(0);
         control.showEditor(row);
         scrollRowToVisible(control, row);
     }

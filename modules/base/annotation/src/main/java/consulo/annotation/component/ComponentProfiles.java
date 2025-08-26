@@ -17,7 +17,7 @@ package consulo.annotation.component;
 
 /**
  * @author VISTALL
- * @since 13-Jun-22
+ * @since 2022-06-13
  */
 public final class ComponentProfiles {
   public static final int DEFAULT = 0;

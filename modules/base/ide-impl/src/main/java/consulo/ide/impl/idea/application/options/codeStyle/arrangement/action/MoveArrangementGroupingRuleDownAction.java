@@ -15,8 +15,11 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.localize.ApplicationLocalize;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementGroupingRulesControl;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,45 +32,46 @@ import javax.swing.table.DefaultTableModel;
  * @author Denis Zhdanov
  * @since 2012-11-14
  */
+@ActionImpl(id = ArrangementConstants.GROUPING_RULE_MOVE_DOWN)
 public class MoveArrangementGroupingRuleDownAction extends AnAction implements DumbAware {
-
-  public MoveArrangementGroupingRuleDownAction() {
-    super(
-        ApplicationLocalize.arrangementActionRuleMoveDownText(),
-        ApplicationLocalize.arrangementActionRuleMoveDownDescription()
-    );
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ArrangementGroupingRulesControl control = e.getData(ArrangementGroupingRulesControl.KEY);
-    if (control == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+    public MoveArrangementGroupingRuleDownAction() {
+        super(
+            ApplicationLocalize.arrangementActionRuleMoveDownText(),
+            ApplicationLocalize.arrangementActionRuleMoveDownDescription(),
+            PlatformIconGroup.actionsMovedown()
+        );
     }
 
-    int[] rows = control.getSelectedRows();
-    e.getPresentation().setEnabled(rows.length == 1 && rows[0] != control.getRowCount() - 1);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ArrangementGroupingRulesControl control = e.getData(ArrangementGroupingRulesControl.KEY);
+        if (control == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ArrangementGroupingRulesControl control = e.getRequiredData(ArrangementGroupingRulesControl.KEY);
-    int[] rows = control.getSelectedRows();
-    int row = rows[0];
-    if (rows.length != 1 || rows[0] == control.getRowCount() - 1) {
-      return;
+        int[] rows = control.getSelectedRows();
+        e.getPresentation().setEnabled(rows.length == 1 && rows[0] != control.getRowCount() - 1);
     }
 
-    if (control.isEditing()) {
-      control.getCellEditor().stopCellEditing();
-    }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ArrangementGroupingRulesControl control = e.getRequiredData(ArrangementGroupingRulesControl.KEY);
+        int[] rows = control.getSelectedRows();
+        int row = rows[0];
+        if (rows.length != 1 || rows[0] == control.getRowCount() - 1) {
+            return;
+        }
 
-    DefaultTableModel model = control.getModel();
-    Object value = model.getValueAt(row, 0);
-    model.removeRow(row);
-    model.insertRow(row + 1, new Object[] { value });
-    control.getSelectionModel().setSelectionInterval(row + 1, row + 1);
-  }
+        if (control.isEditing()) {
+            control.getCellEditor().stopCellEditing();
+        }
+
+        DefaultTableModel model = control.getModel();
+        Object value = model.getValueAt(row, 0);
+        model.removeRow(row);
+        model.insertRow(row + 1, new Object[]{value});
+        control.getSelectionModel().setSelectionInterval(row + 1, row + 1);
+    }
 }
