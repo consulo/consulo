@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -38,7 +37,7 @@ import javax.swing.*;
 @ActionImpl(id = "ShowColorPicker")
 public class ShowColorPickerAction extends AnAction {
     public ShowColorPickerAction() {
-        super(ActionLocalize.actionShowcolorpickerText(), LocalizeValue.empty(), PlatformIconGroup.idePipette());
+        super(ActionLocalize.actionShowcolorpickerText(), ActionLocalize.actionShowcolorpickerText(), PlatformIconGroup.idePipette());
     }
 
     @Override
