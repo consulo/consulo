@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
@@ -22,6 +23,7 @@ import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.impl.internal.wm.action.ToolWindowsGroup;
 import consulo.ui.ex.internal.QuickSearchComponent;
@@ -94,6 +96,7 @@ import static javax.swing.KeyStroke.getKeyStroke;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = IdeActions.ACTION_SWITCHER)
 public class Switcher extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(Switcher.class);
     private static final Key<SwitcherPanel> SWITCHER_KEY = Key.create("SWITCHER_KEY");
@@ -103,6 +106,10 @@ public class Switcher extends AnAction implements DumbAware {
     private static final int MINIMUM_WIDTH = JBUIScale.scale(500);
 
     private static final Color ON_MOUSE_OVER_BG_COLOR = new JBColor(new Color(231, 242, 249), new Color(77, 80, 84));
+
+    public Switcher() {
+        super(ActionLocalize.actionSwitcherText());
+    }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
@@ -404,7 +411,7 @@ public class Switcher extends AnAction implements DumbAware {
                     boolean selected,
                     boolean hasFocus
                 ) {
-                    JComponent renderer = (JComponent)super.getListCellRendererComponent(list, value, index, selected, selected);
+                    JComponent renderer = (JComponent) super.getListCellRendererComponent(list, value, index, selected, selected);
                     if (selected) {
                         return renderer;
                     }
@@ -694,7 +701,7 @@ public class Switcher extends AnAction implements DumbAware {
                 return true;
             }
             if (event.getID() == KEY_PRESSED) {
-                ToolWindow tw = twShortcuts.get(String.valueOf((char)event.getKeyCode()));
+                ToolWindow tw = twShortcuts.get(String.valueOf((char) event.getKeyCode()));
                 if (tw != null) {
                     event.consume();
                     myPopup.closeOk(null);
@@ -772,9 +779,9 @@ public class Switcher extends AnAction implements DumbAware {
             boolean pinned
         ) {
             int selectionIndex = -1;
-            FileEditorManagerImpl editorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(project);
-            ArrayList<FileInfo> filesData = new ArrayList<>();
-            ArrayList<FileInfo> editors = new ArrayList<>();
+            FileEditorManagerImpl editorManager = (FileEditorManagerImpl) FileEditorManager.getInstance(project);
+            List<FileInfo> filesData = new ArrayList<>();
+            List<FileInfo> editors = new ArrayList<>();
             if (!pinned) {
                 for (Pair<VirtualFile, FileEditorWindow> pair : editorManager.getSelectionHistory()) {
                     editors.add(new FileInfo(pair.first, pair.second, project));
@@ -952,7 +959,7 @@ public class Switcher extends AnAction implements DumbAware {
         @Override
         public void keyReleased(@Nonnull KeyEvent e) {
             boolean ctrl = e.getKeyCode() == myBaseModifier;
-            if ((ctrl && isAutoHide())) {
+            if (ctrl && isAutoHide()) {
                 navigate(e);
             }
         }
@@ -994,7 +1001,7 @@ public class Switcher extends AnAction implements DumbAware {
                 Object value = selectedList.getModel().getElementAt(selectedIndex);
                 if (value instanceof FileInfo info) {
                     VirtualFile virtualFile = info.first;
-                    FileEditorManagerImpl editorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(project);
+                    FileEditorManagerImpl editorManager = (FileEditorManagerImpl) FileEditorManager.getInstance(project);
                     JList jList = getSelectedList();
                     FileEditorWindow wnd = findAppropriateWindow(info);
                     if (wnd == null) {
@@ -1006,13 +1013,16 @@ public class Switcher extends AnAction implements DumbAware {
 
                     IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(project);
                     myAlarm.cancelAllRequests();
-                    myAlarm.addRequest(() -> {
-                        JComponent focusTarget = selectedList;
-                        if (selectedList.getModel().getSize() == 0) {
-                            focusTarget = selectedList == files ? toolWindows : files;
-                        }
-                        focusManager.requestFocus(focusTarget, true);
-                    }, 300);
+                    myAlarm.addRequest(
+                        () -> {
+                            JComponent focusTarget = selectedList;
+                            if (selectedList.getModel().getSize() == 0) {
+                                focusTarget = selectedList == files ? toolWindows : files;
+                            }
+                            focusManager.requestFocus(focusTarget, true);
+                        },
+                        300
+                    );
                     if (jList.getModel().getSize() == 1) {
                         removeElementAt(jList, selectedIndex);
                         this.remove(jList);
@@ -1159,7 +1169,6 @@ public class Switcher extends AnAction implements DumbAware {
             }
             else if (values.get(0) == RECENT_LOCATIONS) {
                 RecentLocationsAction.showPopup(project, myShowOnlyEditedFilesCheckBox.isSelected());
-
             }
             else if (values.get(0) instanceof ToolWindow toolWindow) {
                 ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(
@@ -1170,7 +1179,7 @@ public class Switcher extends AnAction implements DumbAware {
             else {
                 ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(
                     () -> {
-                        FileEditorManagerImpl manager = (FileEditorManagerImpl)FileEditorManager.getInstance(project);
+                        FileEditorManagerImpl manager = (FileEditorManagerImpl) FileEditorManager.getInstance(project);
                         for (Object value : values) {
                             if (value instanceof FileInfo info) {
                                 VirtualFile file = info.first;
@@ -1290,7 +1299,6 @@ public class Switcher extends AnAction implements DumbAware {
         }
 
         private static class SwitcherSpeedSearch extends SpeedSearchBase<SwitcherPanel> {
-
             SwitcherSpeedSearch(@Nonnull SwitcherPanel switcher) {
                 super(switcher);
                 setComparator(new SpeedSearchComparator(false, true));
@@ -1383,8 +1391,8 @@ public class Switcher extends AnAction implements DumbAware {
                     myComponent.myPopup.cancel();
                     return;
                 }
-                ((NameFilteringListModel)myComponent.files.getModel()).refilter();
-                ((NameFilteringListModel)myComponent.toolWindows.getModel()).refilter();
+                ((NameFilteringListModel) myComponent.files.getModel()).refilter();
+                ((NameFilteringListModel) myComponent.toolWindows.getModel()).refilter();
                 if (myComponent.files.getModel().getSize() + myComponent.toolWindows.getModel().getSize() == 0) {
                     myComponent.toolWindows.getEmptyText().setText(LocalizeValue.empty());
                     myComponent.files.getEmptyText().setText("Press 'Enter' to search in Project");

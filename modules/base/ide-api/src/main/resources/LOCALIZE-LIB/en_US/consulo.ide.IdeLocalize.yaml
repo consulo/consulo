@@ -758,6 +758,8 @@ dialog.title.choose.color:
     text: Choose Color
 dialog.title.clear.read.only.file.status:
     text: Clear Read-Only Status
+dialog.title.color.picker:
+    text: Color Picker
 dialog.title.convert.module:
     text: Convert Module
 dialog.title.convert.project:

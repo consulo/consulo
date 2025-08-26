@@ -15,9 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.IdeActions;
+import jakarta.annotation.Nonnull;
 
 /**
  * The only purpose of this action is to serve as placeholder for assigning keyboard shortcuts.
@@ -25,13 +30,20 @@ import consulo.application.dumb.DumbAware;
  *
  * @author max
  */
+@ActionImpl(id = IdeActions.ACTION_NEXT_EDITOR_TAB)
 public class SelectNextEditorTabAction extends AnAction implements DumbAware {
-  public void actionPerformed(final AnActionEvent e) {
-  }
+    public SelectNextEditorTabAction() {
+        super(ActionLocalize.actionNexteditortabText());
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    // allow plugins to use the same keyboard shortcut
-    e.getPresentation().setEnabled(false);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        // allow plugins to use the same keyboard shortcut
+        e.getPresentation().setEnabled(false);
+    }
 }

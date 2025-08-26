@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.bookmark.icon.BookmarkIconGroup;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.localize.IdeLocalize;
@@ -25,6 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 
@@ -34,6 +35,7 @@ import java.util.List;
  * @author anna
  * @since 2005-02-24
  */
+@ActionImpl(id = IdeActions.ADD_NEW_FAVORITES_LIST)
 public class AddNewFavoritesListAction extends AnAction {
     public AddNewFavoritesListAction() {
         super(

@@ -15,11 +15,14 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 
@@ -28,31 +31,34 @@ import javax.swing.*;
  * It also serves as a base action for 'refresh' actions (to make dependencies more clear) and
  * provides a convenience method to register its shortcut on a component
  */
+@ActionImpl(id = IdeActions.ACTION_REFRESH)
 public class RefreshAction extends AnAction implements DumbAware {
-  public RefreshAction() {
-  }
+    @Inject
+    public RefreshAction() {
+        super(ActionLocalize.actionRefreshText());
+    }
 
-  public RefreshAction(String text) {
-    super(text);
-  }
+    protected RefreshAction(String text) {
+        super(text);
+    }
 
-  public RefreshAction(LocalizeValue text, LocalizeValue description, Image icon) {
-    super(text, description, icon);
-  }
+    protected RefreshAction(LocalizeValue text, LocalizeValue description, Image icon) {
+        super(text, description, icon);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    // empty
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        // empty
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(false);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(false);
+    }
 
-  public void registerShortcutOn(JComponent component) {
-    final ShortcutSet shortcutSet = ActionManager.getInstance().getAction(IdeActions.ACTION_REFRESH).getShortcutSet();
-    registerCustomShortcutSet(shortcutSet, component);
-  }
+    public void registerShortcutOn(JComponent component) {
+        ShortcutSet shortcutSet = ActionManager.getInstance().getAction(IdeActions.ACTION_REFRESH).getShortcutSet();
+        registerCustomShortcutSet(shortcutSet, component);
+    }
 }

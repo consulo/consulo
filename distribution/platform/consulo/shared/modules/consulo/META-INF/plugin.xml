@@ -232,25 +232,6 @@
             <action id="PrevParameter" class="consulo.ide.impl.idea.codeInsight.hint.actions.PrevParameterAction"/>
         </group>
 
-        <action id="RunGc" class="consulo.ide.impl.idea.ide.actions.RunGcAction"/>
-        <action id="ShowPopupMenu" class="consulo.ide.impl.idea.ide.actions.ShowPopupMenuAction"/>
-        <action id="ShowColorPicker" class="consulo.ide.impl.idea.ui.ShowColorPickerAction" text="Show Color Picker"/>
-
-        <action id="NextEditorTab" class="consulo.ide.impl.idea.openapi.fileEditor.impl.SelectNextEditorTabAction"/>
-        <action id="PreviousEditorTab" class="consulo.ide.impl.idea.openapi.fileEditor.impl.SelectPreviousEditorTabAction"/>
-
-        <action id="TextComponent.ClearAction" class="consulo.ide.impl.idea.ui.ClearTextAction"/>
-        <action id="Switcher" class="consulo.ide.impl.idea.ide.actions.Switcher" text="Switcher"/>
-        <action id="QuickDocCopy" class="consulo.ide.impl.idea.codeInsight.documentation.actions.CopyQuickDocAction"
-                use-shortcut-of="$Copy"/>
-        <action id="EditSourceInNewWindow" class="consulo.ide.impl.idea.ide.actions.EditSourceInNewWindowAction"/>
-        <action id="SearchEverywhere" class="consulo.ide.impl.idea.ide.actions.SearchEverywhereAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.find"/>
-        <action id="RunAnything" icon="consulo.platform.base.PlatformIconGroup@actions.run_anything"
-                class="consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction" text="Run anything"
-                description="Allows to execute any command"/>
-        <action id="SettingsEntryPoint" class="consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction"/>
-
         <group id="EditorActions">
             <reference id="EditorPageUp"/>
             <reference id="EditorPageDown"/>
@@ -416,17 +397,6 @@
             <add-to-group group-id="Vcs.KeymapGroup"/>
         </group>
 
-        <action id="ExportToTextFile" class="consulo.ide.impl.idea.ide.actions.ExportToTextFileAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
-        <action id="ExpandTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.ExpandTreeNodeAction"/>
-        <action id="CollapseTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.CollapseTreeNodeAction"/>
-        <action id="FullyExpandTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.FullyExpandTreeNodeAction"/>
-        <action id="Refresh" class="consulo.ui.ex.action.RefreshAction"/>
-        <action id="ScrollTreeToCenter" class="consulo.ide.impl.idea.ide.actions.ScrollTreeToCenterAction"
-                use-shortcut-of="EditorScrollToCenter"/>
-        <action id="PinToolwindowTab" class="consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction"/>
-        <action id="CloseEditor" class="consulo.ide.impl.idea.ide.actions.CloseEditorAction"/>
-
         <reference ref="MainMenu">
             <!--<reference ref="FileMenu"/>-->
 
@@ -590,8 +560,6 @@
                     icon="consulo.platform.base.PlatformIconGroup@actions.togglesoftwrap"/>
             <separator/>
         </group>
-        <action id="Rerun" class="consulo.execution.impl.internal.action.FakeRerunAction" text="Rerun"/>
-
         <action id="IncrementWindowWidth" class="consulo.ide.impl.idea.ide.actions.WindowAction$IncrementWidth"
                 use-shortcut-of="ResizeToolWindowRight"/>
         <action id="DecrementWindowWidth" class="consulo.ide.impl.idea.ide.actions.WindowAction$DecrementWidth"
@@ -600,11 +568,6 @@
                 use-shortcut-of="ResizeToolWindowDown"/>
         <action id="DecrementWindowHeight" class="consulo.ide.impl.idea.ide.actions.WindowAction$DecrementHeight"
                 use-shortcut-of="ResizeToolWindowUp"/>
-
-        <action id="ExportTestResults" class="consulo.execution.test.export.ExportTestResultsAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
-
-        <action id="SaveDocument" class="consulo.ide.impl.idea.ide.actions.SaveDocumentAction"/>
 
         <group id="AlienCommitChangesDialog.AdditionalActions"/>
 
@@ -623,18 +586,6 @@
         <group id="DebuggerActions">
         </group>
 
-        <action id="IncrementalSearch" class="consulo.ide.impl.idea.codeInsight.navigation.actions.IncrementalSearchAction"/>
-        <action id="AddToFavoritesPopup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesPopupAction"/>
-        <reference ref="AddToFavorites"/>
-        <group id="AddAllToFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddAllToFavoritesActionGroup"
-               popup="true"/>
-        <action id="AddNewFavoritesList" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddNewFavoritesListAction"/>
-        <group id="SendToFavoritesGroup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.SendToFavoritesGroup" popup="true"/>
-
-        <reference ref="RunConfiguration"/>
-        <reference ref="ChooseRunConfiguration"/>
-        <reference ref="ChooseDebugConfiguration"/>
-
         <group id="RunContextGroup" popup="false">
             <!-- A dynamic group filled with executor actions -->
             <group id="RunContextGroupInner"/>
@@ -652,24 +603,11 @@
             <add-to-group group-id="EditorActions" anchor="last"/>
         </group>
 
-        <action id="ClassNameCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.ClassNameCompletionAction"/>
-
-        <action id="ShowIntentionActions" class="consulo.ide.impl.idea.codeInsight.intention.actions.ShowIntentionActionsAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.intentionbulb"/>
-
         <group id="ShowIntentionsGroup" compact="true">
             <reference ref="ShowIntentionActions"/>
             <separator/>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </group>
-
-        <action id="TogglePopupHints" class="consulo.ide.impl.idea.codeInsight.daemon.impl.TogglePopupHintsAction"/>
-        <action id="FindModal" class="consulo.ide.impl.idea.openapi.editor.actions.FindAction"
-                icon="consulo.platform.base.PlatformIconGroup@actions.menu_find"/>
-
-        <action id="CodeInspection.OnEditor" class="consulo.ide.impl.idea.codeInspection.actions.CodeInspectionOnEditorAction"/>
-
-        <action id="ActivateNavBar" class="consulo.ide.impl.idea.ide.navigationToolbar.ActivateNavigationBarAction" popup="true"/>
 
         <group id="CodeInsightEditorActions">
             <reference ref="LookupActions"/>
@@ -694,7 +632,6 @@
             -->
         </action>
 
-        <action id="CopyAbsolutePath" class="consulo.ide.impl.idea.ide.actions.CopyAbsolutePathProvider" use-shortcut-of="CopyPaths"/>
         <action id="CopyFileName" class="consulo.ide.impl.idea.ide.actions.CopyFileNameProvider"/>
         <action id="CopyPathWithLineNumber" class="consulo.ide.impl.idea.ide.actions.CopyFileWithLineNumberPathProvider"/>
         <action id="CopyContentRootPath" class="consulo.ide.impl.idea.ide.actions.CopyContentRootPathProvider"/>

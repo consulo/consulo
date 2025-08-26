@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
@@ -22,28 +23,35 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.find.FindUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "FindModal")
 public class FindAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
         @RequiredUIAccess
         public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getRequiredData(Project.KEY);
             FindUtil.find(project, editor);
         }
 
         @Override
         public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
-            return project != null;
+            return DataManager.getInstance().getDataContext(editor.getComponent()).hasData(Project.KEY);
         }
     }
 
     public FindAction() {
-        super(new Handler());
+        super(
+            ActionLocalize.actionFindmodalText(),
+            ActionLocalize.actionFindmodalDescription(),
+            PlatformIconGroup.actionsFind(),
+            new Handler()
+        );
     }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.execution.test.export;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
@@ -30,6 +31,8 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.NotificationType;
@@ -44,7 +47,7 @@ import consulo.util.io.PathUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -67,14 +70,23 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.function.Supplier;
 
+@ActionImpl(id = ExportTestResultsAction.ID)
 public class ExportTestResultsAction extends DumbAwareAction {
-    private static final String ID = "ExportTestResults";
+    public static final String ID = "ExportTestResults";
 
     private static final Logger LOG = Logger.getInstance(ExportTestResultsAction.class);
 
     private TestFrameworkRunningModel myModel;
     private String myToolWindowId;
     private RunConfiguration myRunConfiguration;
+
+    public ExportTestResultsAction() {
+        super(
+            ActionLocalize.actionExporttestresultsText(),
+            ActionLocalize.actionExporttestresultsDescription(),
+            PlatformIconGroup.actionsExport()
+        );
+    }
 
     public static ExportTestResultsAction create(String toolWindowId, RunConfiguration runtimeConfiguration) {
         ExportTestResultsAction action = new ExportTestResultsAction();
@@ -103,17 +115,17 @@ public class ExportTestResultsAction extends DumbAwareAction {
         final Project project = e.getRequiredData(Project.KEY);
         final ExportTestResultsConfiguration config = ExportTestResultsConfiguration.getInstance(project);
 
-        final LocalizeValue name = ExecutionLocalize.exportTestResultsFilename(PathUtil.suggestFileName(myRunConfiguration.getName()));
+        LocalizeValue name = ExecutionLocalize.exportTestResultsFilename(PathUtil.suggestFileName(myRunConfiguration.getName()));
         String filename = name + "." + config.getExportFormat().getDefaultExtension();
         boolean showDialog = true;
         while (showDialog) {
-            final ExportTestResultsDialog d = new ExportTestResultsDialog(project, config, filename);
+            ExportTestResultsDialog d = new ExportTestResultsDialog(project, config, filename);
             if (!d.showAndGet()) {
                 return;
             }
             filename = d.getFileName();
-            showDialog = getOutputFile(config, project, filename).exists() &&
-                Messages.showOkCancelDialog(
+            showDialog = getOutputFile(config, project, filename).exists()
+                && Messages.showOkCancelDialog(
                     project,
                     ExecutionLocalize.exportTestResultsFileExistsMessage(filename).get(),
                     ExecutionLocalize.exportTestResultsFileExistsTitle().get(),
@@ -124,7 +136,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
         final String filename_ = filename;
         ProgressManager.getInstance().run(new Task.Backgroundable(
             project,
-            ExecutionLocalize.exportTestResultsTaskName().get(),
+            ExecutionLocalize.exportTestResultsTaskName(),
             false,
             new PerformInBackgroundOption() {
                 @Override
@@ -138,6 +150,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
             }
         ) {
             @Override
+            @RequiredUIAccess
             public void run(@Nonnull ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
 
@@ -171,8 +184,8 @@ public class ExportTestResultsAction extends DumbAwareAction {
                     return;
                 }
 
-                final Ref<VirtualFile> result = new Ref<>();
-                final Ref<String> error = new Ref<>();
+                final SimpleReference<VirtualFile> result = new SimpleReference<>();
+                final SimpleReference<String> error = new SimpleReference<>();
                 final Application application = project.getApplication();
                 application.invokeAndWait(
                     new Runnable() {
@@ -182,7 +195,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
                                 @Override
                                 public VirtualFile get() {
                                     outputFile.getParentFile().mkdirs();
-                                    final VirtualFile parent =
+                                    VirtualFile parent =
                                         LocalFileSystem.getInstance().refreshAndFindFileByIoFile(outputFile.getParentFile());
                                     if (parent == null || !parent.isValid()) {
                                         error.set(ExecutionLocalize.failedToCreateOutputFile(outputFile.getPath()).get());
@@ -206,7 +219,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
                             }));
                         }
                     },
-                    Application.get().getDefaultModalityState()
+                    application.getDefaultModalityState()
                 );
 
                 if (!result.isNull()) {
@@ -244,12 +257,12 @@ public class ExportTestResultsAction extends DumbAwareAction {
 
     @Nonnull
     private static File getOutputFile(
-        final @Nonnull ExportTestResultsConfiguration config,
-        final @Nonnull Project project,
-        final @Nonnull String filename
+        @Nonnull ExportTestResultsConfiguration config,
+        @Nonnull Project project,
+        @Nonnull String filename
     ) {
-        final File outputFolder;
-        final String outputFolderPath = config.getOutputFolder();
+        File outputFolder;
+        String outputFolderPath = config.getOutputFolder();
         if (!StringUtil.isEmptyOrSpaces(outputFolderPath)) {
             if (FileUtil.isAbsolute(outputFolderPath)) {
                 outputFolder = new File(outputFolderPath);
@@ -265,7 +278,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
         return new File(outputFolder, filename);
     }
 
-    private static void openEditorOrBrowser(final VirtualFile result, final Project project, final boolean editor) {
+    private static void openEditorOrBrowser(VirtualFile result, Project project, boolean editor) {
         project.getApplication().invokeLater(() -> {
             if (editor) {
                 FileEditorManager.getInstance(project).openFile(result, true);
@@ -325,10 +338,10 @@ public class ExportTestResultsAction extends DumbAwareAction {
     }
 
     private void showBalloon(
-        final Project project,
-        final NotificationType type,
-        final String text,
-        @Nullable final HyperlinkListener listener
+        Project project,
+        NotificationType type,
+        String text,
+        @Nullable HyperlinkListener listener
     ) {
         project.getApplication().invokeLater(() -> {
             if (project.isDisposed()) {
