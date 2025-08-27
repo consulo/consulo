@@ -34,21 +34,6 @@ import consulo.ui.ex.action.IdeActions;
  */
 @ActionImpl(id = IdeActions.ACTION_REPLACE)
 public class ReplaceAction extends EditorAction {
-    private static class Handler extends EditorActionHandler {
-        @Override
-        @RequiredUIAccess
-        public void execute(Editor editor, DataContext dataContext) {
-            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
-            FindUtil.replace(project, editor);
-        }
-
-        @Override
-        public boolean isEnabled(Editor editor, DataContext dataContext) {
-            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
-            return project != null;
-        }
-    }
-
     public ReplaceAction() {
         super(
             ActionLocalize.actionReplaceText(),

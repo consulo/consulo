@@ -29,52 +29,52 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
 
 public class IntelliSortChooserToggleAction extends ToggleAction implements DumbAware {
-  @Nonnull
-  private static final String DEFAULT_TEXT = "IntelliSort";
-  @Nonnull
-  private static final String DEFAULT_DESCRIPTION = "Turn IntelliSort On/Off";
+    @Nonnull
+    private static final String DEFAULT_TEXT = "IntelliSort";
+    @Nonnull
+    private static final String DEFAULT_DESCRIPTION = "Turn IntelliSort On/Off";
 
-  public IntelliSortChooserToggleAction() {
-    super(DEFAULT_TEXT, DEFAULT_DESCRIPTION, VcsLogIcons.IntelliSort);
-  }
-
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-    return properties != null &&
-           properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE) &&
-           !properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).equals(PermanentGraph.SortType.Normal);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-    VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-    if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
-      PermanentGraph.SortType bekSortType = state ? PermanentGraph.SortType.Bek : PermanentGraph.SortType.Normal;
-      properties.set(MainVcsLogUiProperties.BEK_SORT_TYPE, bekSortType);
+    public IntelliSortChooserToggleAction() {
+        super(DEFAULT_TEXT, DEFAULT_DESCRIPTION, VcsLogIcons.IntelliSort);
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-
-    VcsLogUi logUI = e.getData(VcsLogUi.KEY);
-    VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-    e.getPresentation().setVisible(BekUtil.isBekEnabled());
-    e.getPresentation().setEnabled(BekUtil.isBekEnabled() && logUI != null);
-
-    if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
-      boolean off = properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.Normal;
-      String description = "Turn IntelliSort " + (off ? "on" : "off") + ": " +
-        (off ? PermanentGraph.SortType.Bek : PermanentGraph.SortType.Normal).getDescription().toLowerCase() + ".";
-      e.getPresentation().setDescription(description);
-      e.getPresentation().setText(description);
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
+        return properties != null
+            && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)
+            && !properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).equals(PermanentGraph.SortType.Normal);
     }
-    else {
-      e.getPresentation().setText(DEFAULT_TEXT);
-      e.getPresentation().setDescription(DEFAULT_DESCRIPTION);
+
+    @Override
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
+        if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
+            PermanentGraph.SortType bekSortType = state ? PermanentGraph.SortType.Bek : PermanentGraph.SortType.Normal;
+            properties.set(MainVcsLogUiProperties.BEK_SORT_TYPE, bekSortType);
+        }
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+
+        VcsLogUi logUI = e.getData(VcsLogUi.KEY);
+        VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
+        e.getPresentation().setVisible(BekUtil.isBekEnabled());
+        e.getPresentation().setEnabled(BekUtil.isBekEnabled() && logUI != null);
+
+        if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
+            boolean off = properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.Normal;
+            String description = "Turn IntelliSort " + (off ? "on" : "off") + ": " +
+                (off ? PermanentGraph.SortType.Bek : PermanentGraph.SortType.Normal).getDescription().toLowerCase() + ".";
+            e.getPresentation().setDescription(description);
+            e.getPresentation().setText(description);
+        }
+        else {
+            e.getPresentation().setText(DEFAULT_TEXT);
+            e.getPresentation().setDescription(DEFAULT_DESCRIPTION);
+        }
+    }
 }

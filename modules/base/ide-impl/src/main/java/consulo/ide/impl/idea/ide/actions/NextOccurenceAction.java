@@ -21,8 +21,9 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.action.IdeActions;
 
-@ActionImpl(id = "NextOccurence")
+@ActionImpl(id = IdeActions.ACTION_NEXT_OCCURENCE)
 public class NextOccurenceAction extends OccurenceNavigatorActionBase {
     public NextOccurenceAction() {
         super(

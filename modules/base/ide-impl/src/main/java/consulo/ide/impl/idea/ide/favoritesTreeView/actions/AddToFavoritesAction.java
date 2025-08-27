@@ -69,7 +69,7 @@ public class AddToFavoritesAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
 
         Collection<AbstractTreeNode> nodesToAdd = getNodesToAdd(dataContext, true);
@@ -108,13 +108,12 @@ public class AddToFavoritesAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(canCreateNodes(e));
     }
 
     @RequiredReadAction
-    public static boolean canCreateNodes(AnActionEvent e) {
+    public static boolean canCreateNodes(@Nonnull AnActionEvent e) {
         if (!e.hasData(Project.KEY)) {
             return false;
         }

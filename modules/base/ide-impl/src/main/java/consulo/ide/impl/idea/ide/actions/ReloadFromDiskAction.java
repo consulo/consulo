@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
@@ -22,6 +23,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -31,7 +33,19 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(
+    id = "ReloadFromDisk"/*,
+    parents = @ActionParentRef(
+        value = @ActionRef(id = IdeActions.GROUP_FILE),
+        anchor = ActionRefAnchor.AFTER,
+        relatedToAction = @ActionRef(id = IdeActions.ACTION_SYNCHRONIZE)
+    )*/
+)
 public class ReloadFromDiskAction extends AnAction implements DumbAware {
+    public ReloadFromDiskAction() {
+        super(ActionLocalize.actionReloadfromdiskText(), ActionLocalize.actionReloadfromdiskDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

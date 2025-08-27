@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -27,7 +30,12 @@ import javax.swing.*;
 /**
  * @author yole
  */
+@ActionImpl(id = "ScrollTreeToCenter", shortcutFrom = @ActionRef(id = "EditorScrollToCenter"))
 public class ScrollTreeToCenterAction extends AnAction {
+    public ScrollTreeToCenterAction() {
+        super(ActionLocalize.actionScrolltreetocenterText());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

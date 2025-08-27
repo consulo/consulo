@@ -15,8 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -33,14 +37,18 @@ import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.internal.CustomTooltipBuilder;
 import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.awt.event.KeyEvent;
 
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "SearchEverywhere")
 public class SearchEverywhereAction extends AnAction implements DumbAware {
+    @Inject
     public SearchEverywhereAction(ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
+        super(ActionLocalize.actionSearcheverywhereText(), LocalizeValue.empty(), PlatformIconGroup.actionsFind());
         setEnabledInModalContext(false);
 
         modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
@@ -48,13 +56,16 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().putClientProperty(CustomTooltipBuilder.KEY, (tooltip, presentation) -> {
-            String shortcutText = getShortcut();
+        e.getPresentation().putClientProperty(
+            CustomTooltipBuilder.KEY,
+            (tooltip, presentation) -> {
+                String shortcutText = getShortcut();
 
-            tooltip.setTitle(presentation.getText())
-                .setShortcut(shortcutText)
-                .setDescription("Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings");
-        });
+                tooltip.setTitle(presentation.getText())
+                    .setShortcut(shortcutText)
+                    .setDescription("Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings");
+            }
+        );
     }
 
     private static String getShortcut() {
@@ -69,8 +80,8 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
         return shortcutText;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {

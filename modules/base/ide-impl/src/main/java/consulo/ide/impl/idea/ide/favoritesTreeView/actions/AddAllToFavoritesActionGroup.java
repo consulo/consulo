@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,7 +33,13 @@ import java.util.List;
  * @author anna
  * @since 2005-03-03
  */
+@ActionImpl(id = "AddAllToFavorites")
 public class AddAllToFavoritesActionGroup extends ActionGroup {
+    public AddAllToFavoritesActionGroup() {
+        super(ActionLocalize.groupAddalltofavoritesText());
+        setPopup(true);
+    }
+
     @Override
     @Nonnull
     public AnAction[] getChildren(@Nullable AnActionEvent e) {

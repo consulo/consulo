@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
 import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,37 +33,42 @@ import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "TogglePopupHints")
 public class TogglePopupHintsAction extends AnAction {
-  private static final Logger LOG = Logger.getInstance(TogglePopupHintsAction.class);
+    private static final Logger LOG = Logger.getInstance(TogglePopupHintsAction.class);
 
-  @RequiredReadAction
-  private static PsiFile getTargetFile(@Nonnull DataContext dataContext) {
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null) {
-      return null;
+    public TogglePopupHintsAction() {
+        super(ActionLocalize.actionTogglepopuphintsText());
     }
-    VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
-    if (files.length == 0) {
-      return null;
+
+    @RequiredReadAction
+    private static PsiFile getTargetFile(@Nonnull DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return null;
+        }
+        VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
+        if (files.length == 0) {
+            return null;
+        }
+        PsiFile psiFile = PsiManager.getInstance(project).findFile(files[0]);
+        LOG.assertTrue(psiFile != null);
+        return psiFile;
     }
-    PsiFile psiFile = PsiManager.getInstance(project).findFile(files[0]);
-    LOG.assertTrue(psiFile != null);
-    return psiFile;
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    PsiFile psiFile = ReadAction.compute(() -> getTargetFile(e.getDataContext()));
-    e.getPresentation().setEnabled(psiFile != null);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        PsiFile psiFile = ReadAction.compute(() -> getTargetFile(e.getDataContext()));
+        e.getPresentation().setEnabled(psiFile != null);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    PsiFile psiFile = getTargetFile(e.getDataContext());
-    LOG.assertTrue(psiFile != null);
-    Project project = e.getRequiredData(Project.KEY);
-    DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
-    codeAnalyzer.setImportHintsEnabled(psiFile, !codeAnalyzer.isImportHintsEnabled(psiFile));
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        PsiFile psiFile = getTargetFile(e.getDataContext());
+        LOG.assertTrue(psiFile != null);
+        Project project = e.getRequiredData(Project.KEY);
+        DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
+        codeAnalyzer.setImportHintsEnabled(psiFile, !codeAnalyzer.isImportHintsEnabled(psiFile));
+    }
 }

@@ -24,6 +24,7 @@ import consulo.language.editor.refactoring.rename.RenameElementAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
@@ -48,7 +49,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = PushDownAction.class)
     },
     parents = @ActionParentRef(
-        value = @ActionRef(id = "MainMenu"),
+        value = @ActionRef(id = IdeActions.GROUP_MAIN_MENU),
         anchor = ActionRefAnchor.AFTER,
         relatedToAction = @ActionRef(id = "CodeMenu")
     )

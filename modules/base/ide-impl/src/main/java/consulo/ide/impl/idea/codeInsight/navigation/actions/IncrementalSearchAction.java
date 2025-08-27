@@ -13,36 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "IncrementalSearch")
 public class IncrementalSearchAction extends AnAction implements DumbAware {
-  public IncrementalSearchAction() {
-    setEnabledInModalContext(true);
-  }
+    public IncrementalSearchAction() {
+        super(ActionLocalize.actionIncrementalsearchText(), ActionLocalize.actionIncrementalsearchDescription());
+        setEnabledInModalContext(true);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    Editor editor = e.getRequiredData(Editor.KEY);
-    new IncrementalSearchHandler().invoke(project, editor);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        Editor editor = e.getRequiredData(Editor.KEY);
+        new IncrementalSearchHandler().invoke(project, editor);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e){
-    e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.hasData(Editor.KEY));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.hasData(Editor.KEY));
+    }
 }

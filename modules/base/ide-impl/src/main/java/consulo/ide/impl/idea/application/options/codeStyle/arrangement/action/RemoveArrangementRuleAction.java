@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.localize.ApplicationLocalize;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesModel;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -29,43 +31,43 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 2012-08-26
  */
+@ActionImpl(id = ArrangementConstants.MATCHING_RULE_REMOVE)
 public class RemoveArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware {
-
-  public RemoveArrangementRuleAction() {
-    super(
-      ApplicationLocalize.arrangementActionRuleRemoveText(),
-      ApplicationLocalize.arrangementActionRuleRemoveDescription(),
-      PlatformIconGroup.generalRemove()
-    );
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ArrangementMatchingRulesControl control = getRulesControl(e);
-    e.getPresentation().setEnabled(control != null && !control.getSelectedModelRows().isEmpty() && control.getEditingRow() == -1);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ArrangementMatchingRulesControl control = getRulesControl(e);
-    if (control == null) {
-      return;
+    public RemoveArrangementRuleAction() {
+        super(
+            ApplicationLocalize.arrangementActionRuleRemoveText(),
+            ApplicationLocalize.arrangementActionRuleRemoveDescription(),
+            PlatformIconGroup.generalRemove()
+        );
     }
 
-    control.hideEditor();
-
-    final IntList rowsToRemove = control.getSelectedModelRows();
-    if (rowsToRemove.isEmpty()) {
-      return;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ArrangementMatchingRulesControl control = getRulesControl(e);
+        e.getPresentation().setEnabled(control != null && !control.getSelectedModelRows().isEmpty() && control.getEditingRow() == -1);
     }
 
-    final ArrangementMatchingRulesModel model = control.getModel();
-    control.runOperationIgnoreSelectionChange(() -> {
-      for (int i = 0; i < rowsToRemove.size(); i++) {
-        int row = rowsToRemove.get(i);
-        model.removeRow(row);
-      }
-    });
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ArrangementMatchingRulesControl control = getRulesControl(e);
+        if (control == null) {
+            return;
+        }
+
+        control.hideEditor();
+
+        IntList rowsToRemove = control.getSelectedModelRows();
+        if (rowsToRemove.isEmpty()) {
+            return;
+        }
+
+        ArrangementMatchingRulesModel model = control.getModel();
+        control.runOperationIgnoreSelectionChange(() -> {
+            for (int i = 0; i < rowsToRemove.size(); i++) {
+                int row = rowsToRemove.get(i);
+                model.removeRow(row);
+            }
+        });
+    }
 }

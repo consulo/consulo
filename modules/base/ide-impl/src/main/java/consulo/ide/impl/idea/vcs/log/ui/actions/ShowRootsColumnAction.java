@@ -22,20 +22,21 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
 
 public class ShowRootsColumnAction extends BooleanPropertyToggleAction {
+    public ShowRootsColumnAction() {
+        super("Show Root Names");
+    }
 
-  public ShowRootsColumnAction() {
-    super("Show Root Names");
-  }
+    @Override
+    protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
+        return MainVcsLogUiProperties.SHOW_ROOT_NAMES;
+    }
 
-  @Override
-  protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
-    return MainVcsLogUiProperties.SHOW_ROOT_NAMES;
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    VcsLogUi ui = e.getData(VcsLogUi.KEY);
-    if (ui == null || !ui.isMultipleRoots()) e.getPresentation().setEnabledAndVisible(false);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        VcsLogUi ui = e.getData(VcsLogUi.KEY);
+        if (ui == null || !ui.isMultipleRoots()) {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
+    }
 }

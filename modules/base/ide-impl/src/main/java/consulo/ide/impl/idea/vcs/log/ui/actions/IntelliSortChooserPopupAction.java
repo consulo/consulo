@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.util.collection.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
@@ -34,83 +34,84 @@ import java.awt.*;
 import java.util.function.Function;
 
 public class IntelliSortChooserPopupAction extends DumbAwareAction {
-  public IntelliSortChooserPopupAction() {
-    super("IntelliSort", "Change IntelliSort Type", VcsLogIcons.IntelliSort);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    VcsLogUi logUI = e.getRequiredData(VcsLogUi.KEY);
-    VcsLogUiProperties properties = e.getRequiredData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-
-    ActionGroup settingsGroup = new DefaultActionGroup(ContainerUtil.map(
-      PermanentGraph.SortType.values(),
-      (Function<PermanentGraph.SortType, AnAction>)sortType -> new SelectIntelliSortTypeAction(logUI, properties, sortType)
-    ));
-
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-      null,
-      settingsGroup,
-      e.getDataContext(),
-      JBPopupFactory.ActionSelectionAid.MNEMONICS,
-      true,
-      ToolWindowContentUI.POPUP_PLACE
-    );
-    Component component = e.getInputEvent().getComponent();
-    if (component instanceof ActionButtonComponent) {
-      popup.showUnderneathOf(component);
+    public IntelliSortChooserPopupAction() {
+        super("IntelliSort", "Change IntelliSort Type", PlatformIconGroup.vcslogIntellisort());
     }
-    else {
-      popup.showInCenterOf(component);
-    }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-    e.getPresentation().setEnabled(properties != null);
-    if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
-      String description = "IntelliSort: " + properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).getName();
-      e.getPresentation().setDescription(description);
-      e.getPresentation().setText(description);
-    }
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        VcsLogUi logUI = e.getRequiredData(VcsLogUi.KEY);
+        VcsLogUiProperties properties = e.getRequiredData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
 
-  private static class SelectIntelliSortTypeAction extends ToggleAction implements DumbAware {
-    private final PermanentGraph.SortType mySortType;
-    private final VcsLogUi myUI;
-    private final VcsLogUiProperties myProperties;
+        ActionGroup settingsGroup = new DefaultActionGroup(ContainerUtil.map(
+            PermanentGraph.SortType.values(),
+            (Function<PermanentGraph.SortType, AnAction>) sortType -> new SelectIntelliSortTypeAction(logUI, properties, sortType)
+        ));
 
-    public SelectIntelliSortTypeAction(
-      @Nonnull VcsLogUi ui,
-      @Nonnull VcsLogUiProperties properties,
-      @Nonnull PermanentGraph.SortType sortType
-    ) {
-      super(sortType.getName(), sortType.getDescription() + ".", null);
-      myUI = ui;
-      myProperties = properties;
-      mySortType = sortType;
+        ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+            null,
+            settingsGroup,
+            e.getDataContext(),
+            JBPopupFactory.ActionSelectionAid.MNEMONICS,
+            true,
+            ToolWindowContentUI.POPUP_PLACE
+        );
+        Component component = e.getInputEvent().getComponent();
+        if (component instanceof ActionButtonComponent) {
+            popup.showUnderneathOf(component);
+        }
+        else {
+            popup.showInCenterOf(component);
+        }
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      super.update(e);
-      e.getPresentation().setEnabled(myUI.areGraphActionsEnabled() && myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE));
+        super.update(e);
+        VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
+        e.getPresentation().setEnabled(properties != null);
+        if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
+            String description = "IntelliSort: " + properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).getName();
+            e.getPresentation().setDescription(description);
+            e.getPresentation().setText(description);
+        }
     }
 
-    @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
-      return myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)
-        && myProperties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).equals(mySortType);
-    }
+    private static class SelectIntelliSortTypeAction extends ToggleAction implements DumbAware {
+        private final PermanentGraph.SortType mySortType;
+        private final VcsLogUi myUI;
+        private final VcsLogUiProperties myProperties;
 
-    @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-      if (state && myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
-        myProperties.set(MainVcsLogUiProperties.BEK_SORT_TYPE, mySortType);
-      }
+        public SelectIntelliSortTypeAction(
+            @Nonnull VcsLogUi ui,
+            @Nonnull VcsLogUiProperties properties,
+            @Nonnull PermanentGraph.SortType sortType
+        ) {
+            super(sortType.getName(), sortType.getDescription() + ".", null);
+            myUI = ui;
+            myProperties = properties;
+            mySortType = sortType;
+        }
+
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            super.update(e);
+            e.getPresentation().setEnabled(myUI.areGraphActionsEnabled() && myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE));
+        }
+
+        @Override
+        public boolean isSelected(@Nonnull AnActionEvent e) {
+            return myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)
+                && myProperties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).equals(mySortType);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            if (state && myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
+                myProperties.set(MainVcsLogUiProperties.BEK_SORT_TYPE, mySortType);
+            }
+        }
     }
-  }
 }

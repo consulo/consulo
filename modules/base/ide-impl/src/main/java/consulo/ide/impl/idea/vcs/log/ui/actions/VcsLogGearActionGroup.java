@@ -15,49 +15,62 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 
 public class VcsLogGearActionGroup extends DumbAwareAction {
-  @Nonnull
-  private final String myActionGroup;
+    @Nonnull
+    private final String myActionGroup;
 
-  public VcsLogGearActionGroup(@Nonnull String group) {
-    myActionGroup = group;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    DefaultActionGroup group = new DefaultActionGroup(ActionManager.getInstance().getAction(myActionGroup));
-
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-      null,
-      group,
-      e.getDataContext(),
-      JBPopupFactory.ActionSelectionAid.MNEMONICS,
-      true,
-      ToolWindowContentUI.POPUP_PLACE
-    );
-    Component component = e.getInputEvent().getComponent();
-    if (component instanceof ActionButtonComponent) {
-      popup.showUnderneathOf(component);
+    public VcsLogGearActionGroup(@Nonnull String group) {
+        myActionGroup = group;
     }
-    else {
-      popup.showInCenterOf(component);
-    }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(VcsLogUi.KEY));
-  }
+    public VcsLogGearActionGroup(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon,
+        @Nonnull String actionGroup
+    ) {
+        super(text, description, icon);
+        myActionGroup = actionGroup;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        DefaultActionGroup group = new DefaultActionGroup(ActionManager.getInstance().getAction(myActionGroup));
+
+        ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+            null,
+            group,
+            e.getDataContext(),
+            JBPopupFactory.ActionSelectionAid.MNEMONICS,
+            true,
+            ToolWindowContentUI.POPUP_PLACE
+        );
+        Component component = e.getInputEvent().getComponent();
+        if (component instanceof ActionButtonComponent) {
+            popup.showUnderneathOf(component);
+        }
+        else {
+            popup.showInCenterOf(component);
+        }
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(VcsLogUi.KEY));
+    }
 }

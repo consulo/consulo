@@ -15,15 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.QualifiedNameProviderUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nullable;
 
 // from kotlin
+@ActionImpl(id = "CopyPathWithLineNumber")
 public class CopyFileWithLineNumberPathProvider extends DumbAwareCopyPathProvider {
+    public CopyFileWithLineNumberPathProvider() {
+        super(ActionLocalize.actionCopypathwithlinenumberText());
+    }
+
     @Nullable
     @Override
     public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -22,10 +24,14 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ProjectViewChangeView")
 public final class ChangeProjectViewAction extends AnAction {
+    public ChangeProjectViewAction() {
+        super(ActionLocalize.actionProjectviewchangeviewText(), ActionLocalize.actionProjectviewchangeviewText());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

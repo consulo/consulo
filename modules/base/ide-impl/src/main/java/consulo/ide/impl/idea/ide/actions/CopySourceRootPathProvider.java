@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -25,7 +27,12 @@ import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nullable;
 
 // from kotlin
+@ActionImpl(id = "CopySourceRootPath")
 public class CopySourceRootPathProvider extends DumbAwareCopyPathProvider {
+    public CopySourceRootPathProvider() {
+        super(ActionLocalize.actionCopysourcerootpathText());
+    }
+
     @Nullable
     @Override
     public String getPathToElement(Project project, @Nullable VirtualFile virtualFile, @Nullable Editor editor) {

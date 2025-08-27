@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author peter
  */
-@ActionImpl(id = "WeighingNewGroup")
+@ActionImpl(id = IdeActions.GROUP_WEIGHING_NEW)
 public class WeighingNewActionGroup extends WeighingActionGroup {
     private ActionGroup myDelegate;
 

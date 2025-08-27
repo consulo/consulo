@@ -720,6 +720,8 @@ action.EditorMatchBrace.text:
     text: Move Caret to Matched Brace
 action.EditorMoveDownAndScroll.text:
     text: Move Down and Scroll
+action.ScrollTreeToCenter.text:
+    text: Scroll Tree To Center
 action.EditorMoveDownAndScrollWithSelection.text:
     text: Move Down and Scroll with Selection
 action.EditorMoveToPageBottom.text:
@@ -1628,6 +1630,8 @@ action.QuickChangeScheme.description:
     text: Change current code style scheme, color\&fonts scheme, keymap or Look\&Feel
 action.QuickChangeScheme.text:
     text: _Quick Switch Scheme…
+action.QuickDocCopy.text:
+    text: Quick Doc Copy
 action.QuickEvaluateExpression.description:
     text: Evaluate selected expression
 action.QuickEvaluateExpression.text:
@@ -1744,6 +1748,10 @@ action.ReverteOverrideFileTypeAction.text:
     text: Revert File Type Override
 action.ReverteOverrideFileTypeAction.verbose.description:
     text: Undo "Override File Type" action and restore the old file type for file ''{0}''{1,choice,0#|1# (and {1} more files)}
+action.RunAnything.description:
+    text: Allows to execute any command
+action.RunAnything.text:
+    text: Run Anything
 action.RunConfiguration.description:
     text: Select Run/Debug Configuration
 action.RunConfiguration.text:
@@ -1862,6 +1870,8 @@ action.Scratch.ChangeLanguage.description:
     text: Change File Language
 action.Scratch.ChangeLanguage.text:
     text: Change File Language
+action.ScrollTreeToCenter.text:
+    text: Scroll Tree To Center
 action.SearchEverywhere.text:
     text: Search Everywhere
 action.SelectAllOccurrences.text:
@@ -1916,6 +1926,8 @@ action.ShowBackwardPackageDeps.description:
     text: Browse code chosen analysis item used in
 action.ShowBackwardPackageDeps.text:
     text: _Backward Dependencies…
+action.ShowColorPicker.text:
+    text: Show Color Picker
 action.ShowContent.description:
     text: Show a popup with the list of toolwindow tabs
 action.ShowContent.text:
@@ -2036,6 +2048,8 @@ action.SurroundWithLiveTemplate.description:
     text: Surrounds the selection with one of the template
 action.SurroundWithLiveTemplate.text:
     text: Surround with Live Tem_plate…
+action.Switcher.text:
+    text: Switcher
 action.Synchronize.description:
     text: Detect all externally changed files and reload them from disk
 action.Synchronize.text:
