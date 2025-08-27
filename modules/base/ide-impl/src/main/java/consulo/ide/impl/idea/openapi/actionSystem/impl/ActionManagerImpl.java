@@ -6,6 +6,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.ActivityTracker;
+import consulo.application.internal.LastActionTracker;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Semaphore;
@@ -25,14 +26,12 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.application.internal.LastActionTracker;
 import consulo.ide.impl.actionSystem.impl.UnifiedActionPopupMenuImpl;
 import consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
 import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
-import consulo.ide.impl.idea.openapi.actionSystem.OverridingAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.util.ReflectionUtil;
@@ -43,6 +42,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -140,7 +140,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     private String myPrevPerformedActionId;
     private long myLastTimeEditorWasTypedIn;
     private boolean myTransparentOnlyUpdate;
-    private final Map<OverridingAction, AnAction> myBaseActions = new HashMap<>();
     private int myAnonymousGroupIdCounter;
 
     private final Application myApplication;
@@ -167,6 +166,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         myInitializeLocker = new Semaphore(1);
     }
 
+    @Override
     public void initialize(Runnable runnable) {
         if (myInitialized.compareAndSet(false, true)) {
             synchronized (myLock) {
@@ -177,6 +177,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
+    @Override
     public void loadActions() {
         List<InjectingBindingActionStubBase> bindings = new ArrayList<>();
         List<Map.Entry<String, ActionRef>> shortcutRegisters = new ArrayList<>();
@@ -1222,6 +1223,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return ArrayUtil.toStringArray(myPlugin2Id.get(pluginName));
     }
 
+    @Override
     public void addActionPopup(@Nonnull Object menu) {
         myPopups.add(menu);
         if (menu instanceof ActionPopupMenu actionPopupMenu) {
@@ -1231,6 +1233,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
+    @Override
     public void removeActionPopup(@Nonnull Object menu) {
         boolean removed = myPopups.remove(menu);
         if (removed && menu instanceof ActionPopupMenu actionPopupMenu) {
@@ -1276,11 +1279,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     private AnAction replaceAction(@Nonnull String actionId, @Nonnull AnAction newAction, @Nullable PluginId pluginId) {
-        AnAction oldAction = newAction instanceof OverridingAction ? getAction(actionId) : getActionOrStub(actionId);
+        AnAction oldAction = getActionOrStub(actionId);
         if (oldAction != null) {
-            if (newAction instanceof OverridingAction newOverridingAction) {
-                myBaseActions.put(newOverridingAction, oldAction);
-            }
             boolean isGroup = oldAction instanceof ActionGroup;
             if (isGroup != newAction instanceof ActionGroup) {
                 throw new IllegalStateException("cannot replace a group with an action and vice versa: " + actionId);
@@ -1296,13 +1296,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
         registerAction(actionId, newAction, pluginId);
         return oldAction;
-    }
-
-    /**
-     * Returns the action overridden by the specified overriding action (with overrides="true" in plugin.xml).
-     */
-    public AnAction getBaseAction(OverridingAction overridingAction) {
-        return myBaseActions.get(overridingAction);
     }
 
     @Override
@@ -1351,7 +1344,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Override
     public KeyboardShortcut getKeyboardShortcut(@Nonnull String actionId) {
-        AnAction action = ActionManager.getInstance().getAction(actionId);
+        AnAction action = getAction(actionId);
         if (action == null) {
             return null;
         }
@@ -1388,6 +1381,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return myPrevPerformedActionId;
     }
 
+    @Override
     public Set<String> getActionIds() {
         synchronized (myLock) {
             return new HashSet<>(myId2Action.keySet());
@@ -1397,6 +1391,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     /**
      * lock required !
      */
+    @Override
     public void preloadActions(@Nonnull ProgressIndicator indicator) {
         List<String> ids = new ArrayList<>(myId2Action.keySet());
         
@@ -1413,9 +1408,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @Nonnull
     @Override
     public ActionCallback tryToExecute(@Nonnull AnAction action, @Nonnull InputEvent inputEvent, @Nullable Component contextComponent, @Nullable String place, boolean now) {
-
-        Application app = ApplicationManager.getApplication();
-        assert app.isDispatchThread();
+        UIAccess.assertIsUIThread();
 
         ActionCallback result = new ActionCallback();
         Runnable doRunnable = () -> tryToExecuteNow(action, inputEvent, contextComponent, place, result);

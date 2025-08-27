@@ -350,15 +350,15 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
     if (!myNewVisibleActions.equals(myVisibleActions)) {
       // should rebuild UI
-      final boolean changeBarVisibility = myNewVisibleActions.isEmpty() || myVisibleActions.isEmpty();
+      boolean changeBarVisibility = myNewVisibleActions.isEmpty() || myVisibleActions.isEmpty();
 
-      final List<AnAction> temp = myVisibleActions;
+      List<AnAction> temp = myVisibleActions;
       myVisibleActions = myNewVisibleActions;
       myNewVisibleActions = temp;
 
       removeAll();
-      final boolean enableMnemonics = !UISettings.getInstance().DISABLE_MNEMONICS;
-      for (final AnAction action : myVisibleActions) {
+      boolean enableMnemonics = !UISettings.getInstance().DISABLE_MNEMONICS;
+      for (AnAction action : myVisibleActions) {
         add(new ActionMenu(null, ActionPlaces.MAIN_MENU, (ActionGroup)action, myPresentationFactory, enableMnemonics, myEnableIcons));
       }
 
@@ -371,7 +371,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
       if (changeBarVisibility) {
         invalidate();
-        final JFrame frame = (JFrame)SwingUtilities.getAncestorOfClass(JFrame.class, this);
+        JFrame frame = (JFrame)SwingUtilities.getAncestorOfClass(JFrame.class, this);
         if (frame != null) {
           frame.validate();
         }
@@ -396,16 +396,16 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   }
 
   @RequiredUIAccess
-  private void expandActionGroup(final DataContext context, final List<AnAction> newVisibleActions, ActionManager actionManager) {
-    final ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
+  private void expandActionGroup(DataContext context, List<AnAction> newVisibleActions, ActionManager actionManager) {
+    ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
     if (mainActionGroup == null) return;
-    final AnAction[] children = mainActionGroup.getChildren(null);
-    for (final AnAction action : children) {
+    AnAction[] children = mainActionGroup.getChildren(null, myActionManager);
+    for (AnAction action : children) {
       if (!(action instanceof ActionGroup)) {
         continue;
       }
-      final Presentation presentation = myPresentationFactory.getPresentation(action);
-      final AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
+      Presentation presentation = myPresentationFactory.getPresentation(action);
+      AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
       e.setInjectedContext(action.isInInjectedContext());
       action.update(e);
       if (presentation.isVisible()) { // add only visible items
@@ -421,7 +421,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   }
 
   private void updateMnemonicsVisibility() {
-    final boolean enabled = !UISettings.getInstance().DISABLE_MNEMONICS;
+    boolean enabled = !UISettings.getInstance().DISABLE_MNEMONICS;
     for (int i = 0; i < getMenuCount(); i++) {
       ((ActionMenu)getMenu(i)).setMnemonicEnabled(enabled);
     }
@@ -452,18 +452,18 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
         return;
       }
 
-      final Window myWindow = SwingUtilities.windowForComponent(IdeMenuBar.this);
+      Window myWindow = SwingUtilities.windowForComponent(IdeMenuBar.this);
       if (myWindow != null && !myWindow.isActive()) return;
 
       // do not update when a popup menu is shown (if popup menu contains action which is also in the menu bar, it should not be enabled/disabled)
-      final MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
-      final MenuElement[] selectedPath = menuSelectionManager.getSelectedPath();
+      MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
+      MenuElement[] selectedPath = menuSelectionManager.getSelectedPath();
       if (selectedPath.length > 0) {
         return;
       }
 
       // don't update toolbar if there is currently active modal dialog
-      final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+      Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
       if (window instanceof Dialog dialog) {
         if (dialog.isModal()) {
           return;

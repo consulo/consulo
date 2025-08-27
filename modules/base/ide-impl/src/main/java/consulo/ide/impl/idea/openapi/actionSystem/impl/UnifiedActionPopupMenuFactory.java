@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.actionSystem.impl.UnifiedActionPopupMenuImpl;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionManagerEx;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -31,11 +32,11 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @Singleton
 public class UnifiedActionPopupMenuFactory implements ActionPopupMenuFactory {
-    private final ActionManagerImpl myActionManager;
+    private final ActionManagerEx myActionManager;
 
     @Inject
     public UnifiedActionPopupMenuFactory(ActionManager actionManager) {
-        myActionManager = (ActionManagerImpl) actionManager;
+        myActionManager = (ActionManagerEx) actionManager;
     }
 
     @Override

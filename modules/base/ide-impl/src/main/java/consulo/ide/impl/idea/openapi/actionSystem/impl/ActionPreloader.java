@@ -22,6 +22,7 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.internal.ExecutorRegistryEx;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.touchBar.TouchBarController;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.TouchBarControllerInternal;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -47,7 +48,7 @@ public class ActionPreloader extends PreloadingActivity {
 
     @Override
     public void preload(@Nonnull ProgressIndicator indicator) {
-        ActionManagerImpl actionManager = (ActionManagerImpl) myActionManager;
+        ActionManagerEx actionManager = (ActionManagerEx) myActionManager;
 
         actionManager.initialize(() -> {
             actionManager.loadActions();

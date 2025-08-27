@@ -22,7 +22,6 @@ import consulo.application.ui.UISettings;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.project.ui.wm.IdeFrame;
@@ -34,6 +33,7 @@ import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -51,7 +51,7 @@ import java.util.function.Supplier;
 public final class DesktopActionPopupMenuImpl implements ApplicationActivationListener, ActionPopupMenu {
 
   private final MyMenu myMenu;
-  private final ActionManagerImpl myManager;
+  private final ActionManagerEx myManager;
   private MessageBusConnection myConnection;
 
   private final Application myApp;
@@ -62,7 +62,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
 
   public DesktopActionPopupMenuImpl(String place,
                                     @Nonnull ActionGroup group,
-                                    ActionManagerImpl actionManager,
+                                    ActionManagerEx actionManager,
                                     @Nullable PresentationFactory factory) {
     myManager = actionManager;
     myMenu = new MyMenu(place, group, factory);

@@ -16,9 +16,9 @@
 package consulo.desktop.awt.action;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionManagerEx;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -31,11 +31,11 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class DesktopAWTActionPopupMenuFactory implements ActionPopupMenuFactory {
-    private final ActionManagerImpl myActionManager;
+    private final ActionManagerEx myActionManager;
 
     @Inject
     public DesktopAWTActionPopupMenuFactory(ActionManager actionManager) {
-        myActionManager = (ActionManagerImpl) actionManager;
+        myActionManager = (ActionManagerEx) actionManager;
     }
 
     @Override

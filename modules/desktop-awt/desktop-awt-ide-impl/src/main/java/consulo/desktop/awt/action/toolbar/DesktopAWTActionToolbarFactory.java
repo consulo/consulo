@@ -54,13 +54,13 @@ public class DesktopAWTActionToolbarFactory implements ActionToolbarFactory {
     @Override
     public ActionToolbar createActionToolbar(String place, ActionGroup group, @Nonnull ActionToolbar.Style style) {
         if (style == ActionToolbar.Style.INPLACE) {
-            return new SimpleActionToolbarImpl(place, group, style);
+            return new SimpleActionToolbarImpl(place, group, myActionManager, myDataManager, myApplication, myKeymapManager, style);
         }
 
         if (style == ActionToolbar.Style.BUTTON)  {
             return new ActionButtonToolbarImpl(place, group, myApplication, myKeymapManager, myActionManager, myDataManager);
         }
 
-        return new AdvancedActionToolbarImpl(place, group, style, myActionManager);
+        return new AdvancedActionToolbarImpl(place, group, style, myActionManager, myDataManager, myApplication, myKeymapManager);
     }
 }

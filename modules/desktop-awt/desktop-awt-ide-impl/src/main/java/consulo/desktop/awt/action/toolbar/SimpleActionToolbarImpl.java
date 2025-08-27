@@ -53,12 +53,16 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
     public SimpleActionToolbarImpl(@Nonnull String place,
                                    @Nonnull ActionGroup actionGroup,
+                                   @Nonnull ActionManager actionManager,
+                                   @Nonnull DataManager dataManager,
+                                   @Nonnull Application application,
+                                   @Nonnull KeymapManager keymapManager,
                                    @Nonnull Style style) {
         super(null);
         myStyle = style;
         myAlphaContext.getAnimator().setVisibleImmediately(true);
-        myDataManager = DataManager.getInstance();
-        myEngine = new ActionToolbarEngine(place, actionGroup, this, Application.get(), KeymapManager.getInstance(), ActionManager.getInstance(), this) {
+        myDataManager = dataManager;
+        myEngine = new ActionToolbarEngine(place, actionGroup, this, application, keymapManager, actionManager, this) {
             @Override
             protected DataContext getDataContext() {
                 return SimpleActionToolbarImpl.this.getDataContext();

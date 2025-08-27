@@ -17,13 +17,13 @@ package consulo.ide.impl.actionSystem.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ui.Component;
 import consulo.ui.PopupMenu;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.ex.action.PresentationFactory;
+import consulo.ui.ex.internal.ActionManagerEx;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -39,7 +39,7 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
     private final String myPlace;
     @Nonnull
     private final ActionGroup myGroup;
-    private final ActionManagerImpl myManager;
+    private final ActionManagerEx myManager;
     @Nullable
     private final PresentationFactory myPresentationFactory;
 
@@ -48,7 +48,7 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
 
     public UnifiedActionPopupMenuImpl(String place,
                                       @Nonnull ActionGroup group,
-                                      ActionManagerImpl actionManager,
+                                      ActionManagerEx actionManager,
                                       @Nullable PresentationFactory factory) {
         myPlace = place;
         myGroup = group;

@@ -30,8 +30,15 @@ public abstract class ActionGroup extends AnAction {
     public abstract static class Builder {
         protected final List<AnAction> myActions = new ArrayList<>();
         protected boolean myPopup;
+        protected LocalizeValue myText = LocalizeValue.empty();
 
         protected Builder() {
+        }
+
+        @Nonnull
+        public Builder text(@Nonnull LocalizeValue text) {
+            myText = text;
+            return this;
         }
 
         @Nonnull
@@ -86,9 +93,13 @@ public abstract class ActionGroup extends AnAction {
         private final AnAction[] myChildren;
         private final boolean myPopup;
 
-        private ImmutableActionGroup(AnAction[] chilren, boolean popup) {
+        private ImmutableActionGroup(AnAction[] chilren, boolean popup, LocalizeValue actionText) {
             myChildren = chilren;
             myPopup = popup;
+
+            if (actionText != LocalizeValue.empty()) {
+                getTemplatePresentation().setTextValue(actionText);
+            }
         }
 
         @Override
@@ -110,7 +121,7 @@ public abstract class ActionGroup extends AnAction {
         @Nonnull
         @Override
         public ActionGroup build() {
-            return new ImmutableActionGroup(ContainerUtil.toArray(myActions, ARRAY_FACTORY), myPopup);
+            return new ImmutableActionGroup(ContainerUtil.toArray(myActions, ARRAY_FACTORY), myPopup, myText);
         }
     }
 

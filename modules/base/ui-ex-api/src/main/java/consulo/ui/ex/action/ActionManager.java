@@ -37,7 +37,7 @@ import java.util.Objects;
  *
  * @see AnAction
  */
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION)
 public abstract class ActionManager {
 
   /**
@@ -162,17 +162,17 @@ public abstract class ActionManager {
                                               @Nullable String place, boolean now);
 
   /**
-   * @deprecated Use {@link AnActionListener#TOPIC}
+   * @deprecated Use {@link AnActionListener#getClass()}
    */
   public abstract void addAnActionListener(AnActionListener listener);
 
   /**
-   * @deprecated Use {@link AnActionListener#TOPIC}
+   * @deprecated Use {@link AnActionListener#getClass}
    */
   public abstract void removeAnActionListener(AnActionListener listener);
 
   /**
-   * @deprecated Use {@link AnActionListener#TOPIC}
+   * @deprecated Use {@link AnActionListener#getClass}
    */
   public void addAnActionListener(AnActionListener listener, Disposable parentDisposable) {
     Application.get().getMessageBus().connect(parentDisposable).subscribe(AnActionListener.class, listener);

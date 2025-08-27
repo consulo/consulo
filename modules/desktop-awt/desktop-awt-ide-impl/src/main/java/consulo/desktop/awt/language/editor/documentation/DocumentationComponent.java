@@ -27,8 +27,6 @@ import consulo.ide.impl.idea.ide.actions.BaseNavigateToSourceAction;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.editor.documentation.DocumentationMarkup;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -71,6 +69,8 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.ImageKey;
@@ -337,7 +337,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         myExternalDocAction.registerCustomShortcutSet(CustomShortcutSet.fromString("UP"), this);
         myExternalDocAction.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), myEditorPane);
         edit.registerCustomShortcutSet(CommonShortcuts.getEditSource(), this);
-        ActionPopupMenu contextMenu = ((ActionManagerImpl) ActionManager.getInstance()).createActionPopupMenu(ActionPlaces.JAVADOC_TOOLBAR, actions, new MenuItemPresentationFactory(true));
+        ActionPopupMenu contextMenu = ((ActionManagerEx) ActionManager.getInstance()).createActionPopupMenu(ActionPlaces.JAVADOC_TOOLBAR, actions, new MenuItemPresentationFactory(true));
         PopupHandler popupHandler = new PopupHandler() {
             @Override
             public void invokePopup(Component comp, int x, int y) {
@@ -364,7 +364,10 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         myToolBar = new AdvancedActionToolbarImpl(ActionPlaces.JAVADOC_TOOLBAR,
             toolbarActions,
             ActionToolbar.Style.HORIZONTAL,
-            ActionManager.getInstance()) {
+            ActionManager.getInstance(),
+            DataManager.getInstance(),
+            Application.get(),
+            KeymapManager.getInstance()) {
             Point initialClick;
 
             @Override

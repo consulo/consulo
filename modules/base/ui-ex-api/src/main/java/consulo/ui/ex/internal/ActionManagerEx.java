@@ -16,6 +16,7 @@
 package consulo.ui.ex.internal;
 
 
+import consulo.application.progress.ProgressIndicator;
 import consulo.container.plugin.PluginId;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -26,6 +27,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.Comparator;
+import java.util.Set;
 
 public abstract class ActionManagerEx extends ActionManager {
     public static ActionManagerEx getInstanceEx() {
@@ -110,4 +112,24 @@ public abstract class ActionManagerEx extends ActionManager {
         @Nonnull ActionGroup group,
         @Nullable PresentationFactory presentationFactory
     );
+
+    public void addActionPopup(@Nonnull Object menu) {
+    }
+
+    public void removeActionPopup(@Nonnull Object menu) {
+    }
+
+    @Nonnull
+    public Set<String> getActionIds() {
+        return Set.of();
+    }
+
+    public void initialize(Runnable runnable) {
+    }
+
+    public void loadActions() {
+    }
+
+    public void preloadActions(@Nonnull ProgressIndicator indicator) {
+    }
 }

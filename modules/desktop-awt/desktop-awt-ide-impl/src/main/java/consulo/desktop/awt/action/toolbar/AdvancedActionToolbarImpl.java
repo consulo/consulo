@@ -18,6 +18,7 @@ package consulo.desktop.awt.action.toolbar;
 import consulo.application.Application;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -34,6 +35,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -66,6 +68,13 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
      */
     private final List<Rectangle> myComponentBounds = new ArrayList<>();
 
+    @Nonnull
+    private final DataManager myDataManager;
+    @Nonnull
+    private final Application myApplication;
+    @Nonnull
+    private final KeymapManager myKeymapManager;
+
     private Size2D myMinimumButtonSize = Size2D.ZERO;
 
     /**
@@ -87,9 +96,15 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         @Nonnull String place,
         @Nonnull ActionGroup actionGroup,
         @Nonnull Style style,
-        @Nonnull ActionManager actionManager
-    ) {
-        super(place, actionGroup, style);
+        @Nonnull ActionManager actionManager,
+        @Nonnull DataManager dataManager,
+        @Nonnull Application application,
+        @Nonnull KeymapManager keymapManager
+        ) {
+        super(place, actionGroup, actionManager, dataManager, application, keymapManager, style);
+        myDataManager = dataManager;
+        myApplication = application;
+        myKeymapManager = keymapManager;
         myActionManager = (ActionManagerEx) actionManager;
     }
 
@@ -176,7 +191,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             group = outside;
         }
 
-        PopupToolbar popupToolbar = new PopupToolbar(myEngine.getPlace(), group, this, myActionManager) {
+        PopupToolbar popupToolbar = new PopupToolbar(myEngine.getPlace(), group, this, myActionManager, myDataManager, myApplication, myKeymapManager) {
             @Override
             @RequiredUIAccess
             protected void onOtherActionPerformed() {
@@ -298,9 +313,12 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             @Nonnull String place,
             @Nonnull ActionGroup actionGroup,
             @Nonnull JComponent parent,
-            @Nonnull ActionManager actionManager
+            @Nonnull ActionManager actionManager,
+            @Nonnull DataManager dataManager,
+            @Nonnull Application application,
+            @Nonnull KeymapManager keymapManager
         ) {
-            super(place, actionGroup, Style.HORIZONTAL, actionManager);
+            super(place, actionGroup, Style.HORIZONTAL, actionManager, dataManager, application, keymapManager);
             Application.get().getMessageBus().connect(this).subscribe(AnActionListener.class, this);
             myParent = parent;
             setBorder(myParent.getBorder());

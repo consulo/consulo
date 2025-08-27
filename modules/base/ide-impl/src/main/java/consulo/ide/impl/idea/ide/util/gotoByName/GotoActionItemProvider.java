@@ -11,20 +11,15 @@ import consulo.application.util.registry.Registry;
 import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
-import consulo.ui.ex.action.OptionsTopHitProvider;
 import consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider;
-import consulo.ui.ex.action.OptionDescription;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrarImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.QuickActionProvider;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.lang.StringUtil;
@@ -181,7 +176,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
     }
 
     private boolean processActions(String pattern, Predicate<? super MatchedValue> consumer, DataContext dataContext) {
-        Set<String> ids = ((ActionManagerImpl)myActionManager).getActionIds();
+        Set<String> ids = ((ActionManagerEx)myActionManager).getActionIds();
         JBIterable<AnAction> actions = JBIterable.from(ids).filterMap(myActionManager::getAction);
         Matcher matcher = buildMatcher(pattern);
 

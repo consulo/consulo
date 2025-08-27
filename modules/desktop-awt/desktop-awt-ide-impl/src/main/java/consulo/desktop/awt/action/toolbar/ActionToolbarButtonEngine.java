@@ -19,7 +19,6 @@ import consulo.dataContext.DataContext;
 import consulo.desktop.awt.action.DesktopActionPopupMenuImpl;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -195,8 +194,8 @@ public class ActionToolbarButtonEngine {
         }
 
         if (myButton.isEnabled()) {
-            final ActionManagerEx manager = ActionManagerEx.getInstanceEx();
-            final DataContext dataContext = event.getDataContext();
+            ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+            DataContext dataContext = event.getDataContext();
             manager.fireBeforeActionPerformed(myIdeAction, dataContext, event);
             Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
             if (component != null && !component.isShowing()) {
@@ -235,9 +234,9 @@ public class ActionToolbarButtonEngine {
         performAction(new MouseEvent(myButton, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));
     }
 
-    public void actionPerformed(final AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         if (myIdeAction instanceof ActionGroup && !(myIdeAction instanceof CustomComponentAction) && ((ActionGroup) myIdeAction).isPopup() && !((ActionGroup) myIdeAction).canBePerformed(event.getDataContext())) {
-            final ActionManagerImpl am = (ActionManagerImpl) ActionManager.getInstance();
+            ActionManagerEx am = (ActionManagerEx) ActionManager.getInstance();
             DesktopActionPopupMenuImpl popupMenu = (DesktopActionPopupMenuImpl) am.createActionPopupMenu(event.getPlace(), (ActionGroup) myIdeAction, new MenuItemPresentationFactory() {
                 @Override
                 protected void processPresentation(Presentation presentation) {

@@ -38,12 +38,16 @@ public final class SettingsEntryPointAction extends DumbAwareActionGroup impleme
 
     private final Application myApplication;
     private final Provider<UpdateSettings> myUpdateSettingsProvider;
+    private final ActionManager myActionManager;
 
     @Inject
-    public SettingsEntryPointAction(Application application, Provider<UpdateSettings> updateSettingsProvider) {
+    public SettingsEntryPointAction(Application application,
+                                    Provider<UpdateSettings> updateSettingsProvider,
+                                    ActionManager actionManager) {
         super(IdeLocalize.settingsEntryPointTooltip(), IdeLocalize.settingsEntryPointTooltip(), PlatformIconGroup.generalGearplain());
         myApplication = application;
         myUpdateSettingsProvider = updateSettingsProvider;
+        myActionManager = actionManager;
         setPopup(true);
     }
 
@@ -55,7 +59,7 @@ public final class SettingsEntryPointAction extends DumbAwareActionGroup impleme
         myApplication.getExtensionPoint(SettingsEntryPointActionProvider.class)
             .forEachExtensionSafe(provider -> groups.add(provider.getUpdateActionOrGroup()));
 
-        ActionGroup templateGroup = (ActionGroup) ActionManager.getInstance().getAction("SettingsEntryPointGroup");
+        ActionGroup templateGroup = (ActionGroup) myActionManager.getAction("SettingsEntryPointGroup");
         if (templateGroup != null) {
             groups.add(templateGroup);
         }

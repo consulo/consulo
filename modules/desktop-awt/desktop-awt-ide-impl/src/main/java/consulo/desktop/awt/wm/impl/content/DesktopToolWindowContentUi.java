@@ -20,15 +20,13 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.CloseAction;
-import consulo.project.ui.impl.internal.wm.action.ShowContentAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
-import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;
 import consulo.ide.impl.idea.ui.popup.PopupState;
+import consulo.project.ui.impl.internal.wm.action.ShowContentAction;
+import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;
 import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,6 +43,7 @@ import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -235,7 +234,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
-    public void setManager(@Nonnull final ContentManager manager) {
+    public void setManager(@Nonnull ContentManager manager) {
         if (myManager != null) {
             getCurrentLayout().reset();
         }
@@ -247,7 +246,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         myManager.addContentManagerListener(new ContentManagerListener() {
             @Override
             @RequiredUIAccess
-            public void contentAdded(final ContentManagerEvent event) {
+            public void contentAdded(ContentManagerEvent event) {
                 getCurrentLayout().contentAdded(event);
                 event.getContent().addPropertyChangeListener(DesktopToolWindowContentUi.this);
                 rebuild();
@@ -255,7 +254,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
             @Override
             @RequiredUIAccess
-            public void contentRemoved(final ContentManagerEvent event) {
+            public void contentRemoved(ContentManagerEvent event) {
                 event.getContent().removePropertyChangeListener(DesktopToolWindowContentUi.this);
                 getCurrentLayout().contentRemoved(event);
                 ensureSelectedContentVisible();
@@ -264,12 +263,12 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
             @Override
             @RequiredUIAccess
-            public void contentRemoveQuery(final ContentManagerEvent event) {
+            public void contentRemoveQuery(ContentManagerEvent event) {
             }
 
             @Override
             @RequiredUIAccess
-            public void selectionChanged(final ContentManagerEvent event) {
+            public void selectionChanged(ContentManagerEvent event) {
                 ensureSelectedContentVisible();
 
                 update();
@@ -289,14 +288,14 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     private void ensureSelectedContentVisible() {
-        final Content selected = myManager.getSelectedContent();
+        Content selected = myManager.getSelectedContent();
         if (selected == null) {
             myContent.removeAll();
             return;
         }
 
         if (myContent.getComponentCount() == 1) {
-            final Component visible = myContent.getComponent(0);
+            Component visible = myContent.getComponent(0);
             if (visible == selected.getComponent()) {
                 return;
             }
@@ -323,13 +322,13 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
-    protected void paintComponent(final Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         getCurrentLayout().paintComponent(g);
     }
 
     @Override
-    protected void paintChildren(final Graphics g) {
+    protected void paintChildren(Graphics g) {
         super.paintChildren(g);
         getCurrentLayout().paintChildren(g);
     }
@@ -341,7 +340,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {
         update();
     }
 
@@ -505,15 +504,15 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
                 if (info == null) {
                     return;
                 }
-                final Point newPoint = info.getLocation();
+                Point newPoint = info.getLocation();
                 Point p = myLastPoint.get();
 
-                final Window awtWindow = SwingUtilities.windowForComponent(c);
+                Window awtWindow = SwingUtilities.windowForComponent(c);
                 consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
 
                 IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
                 if (ideFrame == null) {
-                    final Point windowLocation = awtWindow.getLocationOnScreen();
+                    Point windowLocation = awtWindow.getLocationOnScreen();
                     windowLocation.translate(newPoint.x - p.x, newPoint.y - p.y);
                     awtWindow.setLocation(windowLocation);
                 }
@@ -542,8 +541,8 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
         c.addMouseListener(new PopupHandler() {
             @Override
-            public void invokePopup(final Component comp, final int x, final int y) {
-                final Content content = c instanceof BaseLabel ? ((BaseLabel) c).getContent() : null;
+            public void invokePopup(Component comp, int x, int y) {
+                Content content = c instanceof BaseLabel ? ((BaseLabel) c).getContent() : null;
                 ui.showContextMenu(comp, x, y, ui.myWindow.getPopupGroup(), content);
             }
         });
@@ -551,7 +550,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         c.putClientProperty(ui, Boolean.TRUE);
     }
 
-    private void initActionGroup(DefaultActionGroup group, final Content content) {
+    private void initActionGroup(DefaultActionGroup group, Content content) {
         if (content == null) {
             return;
         }
@@ -574,7 +573,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         }
 
         if (Boolean.TRUE == content.getUserData(Content.TABBED_CONTENT_KEY)) {
-            final String groupName = content.getUserData(Content.TAB_GROUP_NAME_KEY);
+            String groupName = content.getUserData(Content.TAB_GROUP_NAME_KEY);
             if (groupName != null) {
                 group.addAction(createMergeTabsAction(myManager, groupName));
             }
@@ -596,7 +595,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
             group.addAll(toolWindowGroup);
         }
 
-        final ActionPopupMenu popupMenu = ((ActionManagerImpl) ActionManager.getInstance()).createActionPopupMenu(
+        ActionPopupMenu popupMenu = ((ActionManagerEx) ActionManager.getInstance()).createActionPopupMenu(
             POPUP_PLACE,
             group,
             new MenuItemPresentationFactory(true)
@@ -619,13 +618,13 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
-                final Content selectedContent = manager.getSelectedContent();
-                final List<Pair<String, JComponent>> tabs = new ArrayList<>();
+                Content selectedContent = manager.getSelectedContent();
+                List<Pair<String, JComponent>> tabs = new ArrayList<>();
                 int selectedTab = -1;
                 for (Content content : manager.getContents()) {
                     if (tabPrefix.equals(content.getUserData(Content.TAB_GROUP_NAME_KEY))) {
-                        final String label = content.getTabName().substring(tabPrefix.length() + 2);
-                        final JComponent component = content.getComponent();
+                        String label = content.getTabName().substring(tabPrefix.length() + 2);
+                        JComponent component = content.getComponent();
                         if (content == selectedContent) {
                             selectedTab = tabs.size();
                         }
@@ -637,18 +636,18 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
                 }
                 PropertiesComponent.getInstance().unsetValue(TabbedContent.SPLIT_PROPERTY_PREFIX + tabPrefix);
                 for (int i = 0; i < tabs.size(); i++) {
-                    final Pair<String, JComponent> tab = tabs.get(i);
+                    Pair<String, JComponent> tab = tabs.get(i);
                     ContentUtilEx.addTabbedContent(manager, tab.second, tabPrefix, tab.first, i == selectedTab);
                 }
             }
         };
     }
 
-    private void processHide(final MouseEvent e) {
+    private void processHide(MouseEvent e) {
         IdeEventQueue.getInstance().blockNextEvents(e);
-        final Component c = e.getComponent();
+        Component c = e.getComponent();
         if (c instanceof BaseLabel) {
-            final BaseLabel tab = (BaseLabel) c;
+            BaseLabel tab = (BaseLabel) c;
             if (tab.getContent() != null) {
                 if (myManager.canCloseContents() && tab.getContent().isCloseable()) {
                     myManager.removeContent(tab.getContent(), true, true, true);
@@ -668,7 +667,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         }
     }
 
-    private void hideWindow(final MouseEvent e) {
+    private void hideWindow(MouseEvent e) {
         if (e.isControlDown()) {
             myWindow.fireHiddenSide();
         }

@@ -18,20 +18,20 @@ package consulo.ide.impl.idea.designer;
 import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;
-import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -344,7 +344,7 @@ public class LightToolWindow extends JPanel {
     }
 
     private void showGearPopup(Component component, int x, int y) {
-        ActionPopupMenu popupMenu = ((ActionManagerImpl) ActionManager.getInstance()).createActionPopupMenu(ToolWindowContentUI.POPUP_PLACE, createGearPopupGroup(), new MenuItemPresentationFactory(true));
+        ActionPopupMenu popupMenu = ((ActionManagerEx) ActionManager.getInstance()).createActionPopupMenu(ToolWindowContentUI.POPUP_PLACE, createGearPopupGroup(), new MenuItemPresentationFactory(true));
         popupMenu.getComponent().show(component, x, y);
     }
 

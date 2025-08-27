@@ -17,17 +17,17 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
-import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
@@ -56,7 +56,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         public void actionPerformed(@Nonnull AnActionEvent e) {
             final InputEvent inputEvent = e.getInputEvent();
             final ActionPopupMenu popupMenu =
-                ((ActionManagerImpl) ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE,
+                ((ActionManagerEx) ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE,
                     myGearProducer.produce(),
                     new MenuItemPresentationFactory(true));
 
