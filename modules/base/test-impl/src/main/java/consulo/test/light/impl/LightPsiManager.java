@@ -17,6 +17,7 @@ package consulo.test.light.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.PsiModificationTracker;
@@ -34,9 +35,10 @@ import jakarta.inject.Singleton;
 @Singleton
 public class LightPsiManager extends PsiManagerImpl {
   @Inject
-  public LightPsiManager(@Nonnull Project project,
+  public LightPsiManager(@Nonnull Application application,
+                         @Nonnull Project project,
                          @Nonnull Provider<FileIndexFacade> fileIndexFacadeProvider,
                          @Nonnull PsiModificationTracker modificationTracker) {
-    super(project, fileIndexFacadeProvider, modificationTracker);
+    super(application, project, fileIndexFacadeProvider, modificationTracker);
   }
 }
