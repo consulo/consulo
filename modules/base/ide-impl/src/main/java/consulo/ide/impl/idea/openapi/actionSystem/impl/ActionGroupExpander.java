@@ -95,22 +95,4 @@ public class ActionGroupExpander {
         return new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, false, false, Application.get().getLastUIAccess())
             .expandActionGroupAsync(group, group instanceof CompactActionGroup);
     }
-
-    public static List<AnAction> expandActionGroupWithTimeout(UIAccess uiAccess,
-                                                              boolean isInModalContext,
-                                                              @Nonnull ActionGroup group,
-                                                              BasePresentationFactory presentationFactory,
-                                                              @Nonnull DataContext context,
-                                                              String place,
-                                                              int timeoutMs) {
-        return new ActionUpdater(ActionManager.getInstance(),
-            presentationFactory,
-            context,
-            place,
-            false,
-            false,
-            uiAccess
-        ).expandActionGroupWithTimeout
-            (group, group instanceof CompactActionGroup, timeoutMs);
-    }
 }

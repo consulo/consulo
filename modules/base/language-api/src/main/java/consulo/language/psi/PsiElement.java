@@ -445,6 +445,7 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return true if the element is valid, false otherwise.
      */
+    @RequiredReadAction
     boolean isValid();
 
     /**

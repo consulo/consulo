@@ -104,7 +104,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
     myModuleRef = ClearableLazyValue.nullable(() -> LanguageModuleUtilInternal.findModuleForPsiElement(this));
   }
 
-  public void setContentElementType(final IElementType contentElementType) {
+  public void setContentElementType(IElementType contentElementType) {
     LOG.assertTrue(contentElementType instanceof ILazyParseableElementType, contentElementType);
     myContentElementType = contentElementType;
   }
@@ -113,7 +113,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
     return myContentElementType;
   }
 
-  protected void init(@Nonnull final IElementType elementType, final IElementType contentElementType) {
+  protected void init(@Nonnull IElementType elementType, IElementType contentElementType) {
     myElementType = elementType;
     setContentElementType(contentElementType);
   }
@@ -152,10 +152,11 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
   }
 
   @Override
-  public boolean processChildren(@Nonnull final PsiElementProcessor<PsiFileSystemItem> processor) {
+  public boolean processChildren(@Nonnull PsiElementProcessor<PsiFileSystemItem> processor) {
     return true;
   }
 
+  @RequiredReadAction
   @Override
   public boolean isValid() {
     if (myManager.getProject().isDisposed()) {
@@ -218,9 +219,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
       PsiUtilCore.ensureValid(this); // for invalidation trace diagnostics
     }
 
-    final FileViewProvider viewProvider = getViewProvider();
+    FileViewProvider viewProvider = getViewProvider();
     if (viewProvider.isPhysical()) {
-      final VirtualFile vFile = viewProvider.getVirtualFile();
+      VirtualFile vFile = viewProvider.getVirtualFile();
       AstLoadingFilter.assertTreeLoadingAllowed(vFile);
       if (myManager.isAssertOnFileLoading(vFile)) {
         LOG.error("Access to tree elements not allowed. path='" + vFile.getPresentableUrl() + "'");
@@ -276,14 +277,14 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
 
   @Nonnull
   protected FileElement createFileElement(CharSequence docText) {
-    final FileElement treeElement;
-    final TreeElement contentLeaf = createContentLeafElement(docText);
+    FileElement treeElement;
+    TreeElement contentLeaf = createContentLeafElement(docText);
 
     if (contentLeaf instanceof FileElement) {
       treeElement = (FileElement)contentLeaf;
     }
     else {
-      final CompositeElement xxx = ASTFactory.composite(myElementType);
+      CompositeElement xxx = ASTFactory.composite(myElementType);
       assert xxx instanceof FileElement : "BUMM";
       treeElement = (FileElement)xxx;
       treeElement.rawAddChildrenWithoutNotifications(contentLeaf);
@@ -301,7 +302,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
   @RequiredReadAction
   @Override
   public String getText() {
-    final ASTNode tree = derefTreeElement();
+    ASTNode tree = derefTreeElement();
     if (!isValid()) {
       ProgressManager.checkCanceled();
 
@@ -320,7 +321,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
   @RequiredReadAction
   @Override
   public int getTextLength() {
-    final ASTNode tree = derefTreeElement();
+    ASTNode tree = derefTreeElement();
     if (tree != null) return tree.getTextLength();
 
     PsiUtilCore.ensureValid(this);
@@ -375,7 +376,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
   protected PsiFileImpl clone() {
     FileViewProvider viewProvider = getViewProvider();
     FileViewProvider providerCopy = viewProvider.clone();
-    final Language language = getLanguage();
+    Language language = getLanguage();
     if (providerCopy == null) {
       throw new AssertionError("Unable to clone the view provider: " + viewProvider + "; " + language);
     }
@@ -384,7 +385,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
 
     if (getTreeElement() != null) {
       // not set by provider in clone
-      final FileElement treeClone = (FileElement)calcTreeElement().clone();
+      FileElement treeClone = (FileElement)calcTreeElement().clone();
       clone.setTreeElementPointer(treeClone); // should not use setTreeElement here because cloned file still have VirtualFile (SCR17963)
       treeClone.setPsi(clone);
     }
@@ -438,7 +439,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
   @Nullable
   public PsiDirectory getContainingDirectory() {
     VirtualFile file = getViewProvider().getVirtualFile();
-    final VirtualFile parentFile = file.getParent();
+    VirtualFile parentFile = file.getParent();
     if (parentFile == null) return null;
     if (!parentFile.isValid()) {
       LOG.error("Invalid parent: " + parentFile + " of file " + file + ", file.valid=" + file.isValid());
@@ -473,7 +474,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
     return myOriginalFile == null ? this : myOriginalFile;
   }
 
-  public void setOriginalFile(@Nonnull final PsiFile originalFile) {
+  public void setOriginalFile(@Nonnull PsiFile originalFile) {
     myOriginalFile = originalFile.getOriginalFile();
 
     FileViewProvider original = myOriginalFile.getViewProvider();
@@ -483,10 +484,10 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
   @Override
   @Nonnull
   public PsiFile[] getPsiRoots() {
-    final FileViewProvider viewProvider = getViewProvider();
-    final Set<Language> languages = viewProvider.getLanguages();
+    FileViewProvider viewProvider = getViewProvider();
+    Set<Language> languages = viewProvider.getLanguages();
 
-    final PsiFile[] roots = new PsiFile[languages.size()];
+    PsiFile[] roots = new PsiFile[languages.size()];
     int i = 0;
     for (Language language : languages) {
       PsiFile psi = viewProvider.getPsi(language);
@@ -650,25 +651,25 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
 
     if (getTreeElement() != null) return null;
 
-    final StubTree derefd = derefStub();
+    StubTree derefd = derefStub();
     if (derefd != null) return derefd;
 
     if (Boolean.TRUE.equals(getUserData(BUILDING_STUB)) || myLoadingAst || getElementTypeForStubBuilder() == null) {
       return null;
     }
 
-    final VirtualFile vFile = getVirtualFile();
+    VirtualFile vFile = getVirtualFile();
     if (!(vFile instanceof VirtualFileWithId) || !vFile.isValid()) return null;
 
     ObjectStubTree tree = StubTreeLoader.getInstance().readOrBuild(getProject(), vFile, this);
     if (!(tree instanceof StubTree)) return null;
-    final FileViewProvider viewProvider = getViewProvider();
-    final List<Pair<IStubFileElementType, PsiFile>> roots = StubTreeBuilder.getStubbedRoots(viewProvider);
+    FileViewProvider viewProvider = getViewProvider();
+    List<Pair<IStubFileElementType, PsiFile>> roots = StubTreeBuilder.getStubbedRoots(viewProvider);
 
     synchronized (myPsiLock) {
       if (getTreeElement() != null) return null;
 
-      final StubTree derefdOnLock = derefStub();
+      StubTree derefdOnLock = derefStub();
       if (derefdOnLock != null) return derefdOnLock;
 
       PsiFileStubImpl baseRoot = (PsiFileStubImpl)((StubTree)tree).getRoot();
@@ -676,9 +677,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
         LOG.error("Stub roots must be set when stub tree was read or built with StubTreeLoader");
         return null;
       }
-      final PsiFileStub[] stubRoots = baseRoot.getStubRoots();
+      PsiFileStub[] stubRoots = baseRoot.getStubRoots();
       if (stubRoots.length != roots.size()) {
-        final Function<PsiFileStub, String> stubToString = stub -> "{" + stub.getClass().getSimpleName() + " " + stub.getType().getLanguage() + "}";
+        Function<PsiFileStub, String> stubToString = stub -> "{" + stub.getClass().getSimpleName() + " " + stub.getType().getLanguage() + "}";
         LOG.error("readOrBuilt roots = " + StringUtil.join(stubRoots, stubToString, ", ") + "; " + StubTreeLoader.getFileViewProviderMismatchDiagnostics(viewProvider));
         rebuildStub();
         return null;
@@ -925,7 +926,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
 
       @Override
       public String getLocationString() {
-        final PsiDirectory psiDirectory = getParent();
+        PsiDirectory psiDirectory = getParent();
         if (psiDirectory != null) {
           return psiDirectory.getVirtualFile().getPresentableUrl();
         }
@@ -979,7 +980,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
   }
 
   @Override
-  public boolean isEquivalentTo(final PsiElement another) {
+  public boolean isEquivalentTo(PsiElement another) {
     return this == another;
   }
 
@@ -1049,9 +1050,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileI
         myManager.dropPsiCaches();
       }
 
-      final VirtualFile vFile = getVirtualFile();
+      VirtualFile vFile = getVirtualFile();
       if (vFile != null && vFile.isValid()) {
-        final Document doc = FileDocumentManager.getInstance().getCachedDocument(vFile);
+        Document doc = FileDocumentManager.getInstance().getCachedDocument(vFile);
         if (doc != null) {
           FileDocumentManager.getInstance().saveDocument(doc);
         }

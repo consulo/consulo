@@ -53,6 +53,7 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
 
     @Inject
     public PsiManagerImpl(
+        @Nonnull Application application,
         @Nonnull Project project,
         @Nonnull Provider<FileIndexFacade> fileIndexFacadeProvider,
         @Nonnull PsiModificationTracker modificationTracker
@@ -61,7 +62,7 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
         myFileIndex = fileIndexFacadeProvider;
         myModificationTracker = modificationTracker;
 
-        myFileManager = new FileManagerImpl(this, fileIndexFacadeProvider);
+        myFileManager = new FileManagerImpl(application, this, fileIndexFacadeProvider);
     }
 
     @Override

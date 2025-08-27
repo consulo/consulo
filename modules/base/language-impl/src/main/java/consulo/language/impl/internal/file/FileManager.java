@@ -20,85 +20,87 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
 import consulo.language.file.FileViewProvider;
-import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.List;
 
 public interface FileManager extends Disposable {
-  @Nullable
-  @RequiredReadAction
-  PsiFile findFile(@Nonnull VirtualFile vFile);
+    @Nullable
+    @RequiredReadAction
+    PsiFile findFile(@Nonnull VirtualFile vFile);
 
-  @Nullable
-  @RequiredReadAction
-  PsiDirectory findDirectory(@Nonnull VirtualFile vFile);
+    @Nullable
+    @RequiredReadAction
+    PsiDirectory findDirectory(@Nonnull VirtualFile vFile);
 
-  @RequiredWriteAction
-  default void reloadFromDisk(@Nonnull PsiFile file) {
-    reloadFromDisk(file, false);
-  }
+    @RequiredWriteAction
+    default void reloadFromDisk(@Nonnull PsiFile file) {
+        reloadFromDisk(file, false);
+    }
 
-  default void reloadFromDisk(@Nonnull PsiFile file, boolean ignoreDocument) {
-  }
+    default void reloadFromDisk(@Nonnull PsiFile file, boolean ignoreDocument) {
+    }
 
-  @Nullable
-  @RequiredReadAction
-  PsiFile getCachedPsiFile(@Nonnull VirtualFile vFile);
+    @Nullable
+    @RequiredReadAction
+    PsiFile getCachedPsiFile(@Nonnull VirtualFile vFile);
 
-  @TestOnly
-  void cleanupForNextTest();
+    @TestOnly
+    void cleanupForNextTest();
 
-  @RequiredReadAction
-  FileViewProvider findViewProvider(@Nonnull VirtualFile file);
+    @RequiredReadAction
+    FileViewProvider findViewProvider(@Nonnull VirtualFile file);
 
-  @RequiredReadAction
-  FileViewProvider findCachedViewProvider(@Nonnull VirtualFile file);
+    @RequiredReadAction
+    FileViewProvider findCachedViewProvider(@Nonnull VirtualFile file);
 
-  @RequiredReadAction
-  void setViewProvider(@Nonnull VirtualFile virtualFile, FileViewProvider fileViewProvider);
+    @RequiredReadAction
+    void setViewProvider(@Nonnull VirtualFile virtualFile, FileViewProvider fileViewProvider);
 
-  @Nonnull
-  List<PsiFile> getAllCachedFiles();
+    @Nonnull
+    List<PsiFile> getAllCachedFiles();
 
-  @Nonnull
-  FileViewProvider createFileViewProvider(@Nonnull VirtualFile file, boolean physical);
+    @Nonnull
+    FileViewProvider createFileViewProvider(@Nonnull VirtualFile file, boolean physical);
 
-  default void processFileTypesChanged() {
-  }
+    default void processFileTypesChanged() {
+    }
 
-  default void markInitialized() {
-  }
+    default void markInitialized() {
+    }
 
-  default PsiDirectory getCachedDirectory(@Nonnull VirtualFile vFile) {
-    return null;
-  }
+    default PsiDirectory getCachedDirectory(@Nonnull VirtualFile vFile) {
+        return null;
+    }
 
-  default void removeInvalidFilesAndDirs(boolean useFind) {
-  }
+    default void removeInvalidFilesAndDirs(boolean useFind) {
+    }
 
-  default PsiFile getCachedPsiFileInner(@Nonnull VirtualFile file) {
-    return null;
-  }
+    @RequiredReadAction
+    default PsiFile getCachedPsiFileInner(@Nonnull VirtualFile file) {
+        return null;
+    }
 
-  default void forceReload(@Nonnull VirtualFile vFile) {
-  }
+    @RequiredWriteAction
+    default void forceReload(@Nonnull VirtualFile vFile) {
+    }
 
-  default void removeFilesAndDirsRecursively(@Nonnull VirtualFile vFile) {
-  }
+    default void removeFilesAndDirsRecursively(@Nonnull VirtualFile vFile) {
+    }
 
-  default boolean isInitialized() {
-    return true;
-  }
+    default boolean isInitialized() {
+        return true;
+    }
 
-  default void dispatchPendingEvents() {
-  }
+    default void dispatchPendingEvents() {
+    }
 
-  default void firePropertyChangedForUnloadedPsi(@Nonnull PsiTreeChangeEventImpl event, @Nonnull VirtualFile vFile) {
-  }
+    @RequiredWriteAction
+    default void firePropertyChangedForUnloadedPsi() {
+    }
 }

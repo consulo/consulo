@@ -15,6 +15,7 @@
  */
 package consulo.execution.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.language.psi.PsiElement;
@@ -42,58 +43,63 @@ public abstract class Location<E extends PsiElement> {
   public abstract <T extends PsiElement> Iterator<Location<T>> getAncestors(Class<T> ancestorClass, boolean strict);
 
   @Nullable
+  @RequiredReadAction
   public VirtualFile getVirtualFile() {
-    final E psiElement = getPsiElement();
+    E psiElement = getPsiElement();
     if (!psiElement.isValid()) return null;
-    final PsiFile psiFile = psiElement.getContainingFile();
+    PsiFile psiFile = psiElement.getContainingFile();
     if (psiFile == null) return null;
-    final VirtualFile virtualFile = psiFile.getVirtualFile();
+    VirtualFile virtualFile = psiFile.getVirtualFile();
     if (virtualFile == null || !virtualFile.isValid()) return null;
     return virtualFile;
   }
 
   @Nullable
+  @RequiredReadAction
   public OpenFileDescriptor getOpenFileDescriptor() {
     VirtualFile virtualFile = getVirtualFile();
     if (virtualFile == null) {
       return null;
     }
-    return OpenFileDescriptorFactory.getInstance(getProject()).builder(virtualFile).offset(getPsiElement().getTextOffset()).build();
+    return OpenFileDescriptorFactory.getInstance(getProject()).newBuilder(virtualFile).offset(getPsiElement().getTextOffset()).build();
   }
 
   @Nullable
-  public <Ancestor extends PsiElement> Location<Ancestor> getParent(final Class<Ancestor> parentClass) {
-    final Iterator<Location<PsiElement>> ancestors = getAncestors(PsiElement.class, true);
+  @SuppressWarnings("unchecked")
+  public <Ancestor extends PsiElement> Location<Ancestor> getParent(Class<Ancestor> parentClass) {
+    Iterator<Location<PsiElement>> ancestors = getAncestors(PsiElement.class, true);
     if (!ancestors.hasNext()) return null;
-    final Location<? extends PsiElement> parent = ancestors.next();
+    Location<? extends PsiElement> parent = ancestors.next();
     if (parentClass.isInstance(parent.getPsiElement())) return (Location<Ancestor>)parent;
     return null;
   }
 
-  @jakarta.annotation.Nullable
-  public <T extends PsiElement> Location<T> getAncestorOrSelf(final Class<T> ancestorClass) {
-    final Iterator<Location<T>> ancestors = getAncestors(ancestorClass, false);
+  @Nullable
+  public <T extends PsiElement> Location<T> getAncestorOrSelf(Class<T> ancestorClass) {
+    Iterator<Location<T>> ancestors = getAncestors(ancestorClass, false);
     if (!ancestors.hasNext()) return null;
     return ancestors.next();
   }
 
   @Nullable
-  public <Ancestor extends PsiElement> Ancestor getParentElement(final Class<Ancestor> parentClass) {
+  public <Ancestor extends PsiElement> Ancestor getParentElement(Class<Ancestor> parentClass) {
     return safeGetPsiElement(getParent(parentClass));
   }
 
   @Nullable
-  public static <T extends PsiElement> T safeGetPsiElement(final Location<T> location) {
+  public static <T extends PsiElement> T safeGetPsiElement(Location<T> location) {
     return location != null ? location.getPsiElement() : null;
   }
 
   @Nullable
-  public static <T> T safeCast(final Object obj, final Class<T> expectedClass) {
+  @SuppressWarnings("unchecked")
+  public static <T> T safeCast(Object obj, Class<T> expectedClass) {
     if (expectedClass.isInstance(obj)) return (T)obj;
     return null;
   }
 
   @Nonnull
+  @RequiredReadAction
   public PsiLocation<E> toPsiLocation() {
     return new PsiLocation<>(getProject(), getPsiElement());
   }
