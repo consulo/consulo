@@ -15,12 +15,10 @@
  */
 package consulo.ui.ex.popup.event;
 
-import consulo.ui.ex.popup.event.JBPopupListener;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-
 /**
  * @author yole
  */
+@Deprecated
 public abstract class JBPopupAdapter implements JBPopupListener {
   public void beforeShown(LightweightWindowEvent event) {
   }

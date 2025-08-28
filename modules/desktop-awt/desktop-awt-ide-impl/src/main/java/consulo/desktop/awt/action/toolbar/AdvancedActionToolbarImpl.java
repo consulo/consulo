@@ -27,19 +27,17 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
@@ -184,11 +182,11 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         else {
             List<? extends AnAction> visibleActions = myEngine.getVisibleActions();
 
-            DefaultActionGroup outside = new DefaultActionGroup();
+            ActionGroup.Builder outside = ActionGroup.newImmutableBuilder();
             for (int i = myFirstOutsideIndex; i < visibleActions.size(); i++) {
-                outside.add(visibleActions.get(i), myActionManager);
+                outside.add(visibleActions.get(i));
             }
-            group = outside;
+            group = outside.build();
         }
 
         PopupToolbar popupToolbar = new PopupToolbar(myEngine.getPlace(), group, this, myActionManager, myDataManager, myApplication, myKeymapManager) {
@@ -205,8 +203,14 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             }
         };
         popupToolbar.setLayoutPolicy(NOWRAP_LAYOUT_POLICY);
-        popupToolbar.updateActionsAsync();
+        popupToolbar.updateActionsAsync().whenComplete((actions, throwable) -> {
+            if (actions != null) {
+                showMoreToolbarPopup(popupToolbar, orientation);
+            }
+        });
+    }
 
+    private void showMoreToolbarPopup(PopupToolbar popupToolbar, int orientation) {
         Point location;
         if (orientation == SwingConstants.HORIZONTAL) {
             location = getLocationOnScreen();
@@ -230,12 +234,9 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
                 }
                 return toClose;
             })
-            .setCancelOnMouseOutCallback(event -> myAutoPopupRec != null && myActionManager.isActionPopupStackEmpty() && !new RelativeRectangle(
-                this,
-                myAutoPopupRec
-            ).contains(new RelativePoint(event)));
+            .setCancelOnMouseOutCallback(event -> myActionManager.isActionPopupStackEmpty() && (myPopup == null || !myPopup.isVisible()));
 
-        builder.addListener(new JBPopupAdapter() {
+        builder.addListener(new JBPopupListener() {
             @Override
             @RequiredUIAccess
             public void onClosed(@Nonnull LightweightWindowEvent event) {
