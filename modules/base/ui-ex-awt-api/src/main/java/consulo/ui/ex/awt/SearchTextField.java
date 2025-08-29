@@ -15,21 +15,21 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.platform.Platform;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.EmptyAction;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
@@ -65,7 +65,7 @@ public class SearchTextField extends JPanel {
 
         myTextField = new TextFieldWithProcessing() {
             @Override
-            public void processKeyEvent(final KeyEvent e) {
+            public void processKeyEvent(KeyEvent e) {
                 if (preprocessEventForTextField(e)) {
                     return;
                 }
@@ -92,7 +92,7 @@ public class SearchTextField extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    if (isSearchControlUISupported() && myNativeSearchPopup != null) {
+                    if (myNativeSearchPopup != null) {
                         myNativeSearchPopup.show(myTextField, 5, myTextField.getHeight());
                     }
                     else if (myPopup == null || !myPopup.isVisible()) {
@@ -125,6 +125,15 @@ public class SearchTextField extends JPanel {
         }
     }
 
+    public void setPlaceholder(@Nonnull LocalizeValue localizeValue) {
+        if (localizeValue == LocalizeValue.empty()) {
+            myTextField.putClientProperty("JTextField.placeholderText", null);
+        } else {
+            // TODO [VISTALL] we need better control of localization change
+            myTextField.putClientProperty("JTextField.placeholderText", localizeValue.get());
+        }
+    }
+
     protected boolean toClearTextOnEscape() {
         return ApplicationManager.getApplication() != null;
     }
@@ -141,22 +150,17 @@ public class SearchTextField extends JPanel {
     private void updateMenu() {
         if (myNativeSearchPopup != null) {
             myNativeSearchPopup.removeAll();
-            final int itemsCount = myModel.getSize();
+            int itemsCount = myModel.getSize();
             if (itemsCount == 0) {
                 myNativeSearchPopup.add(myNoItems);
             }
             else {
                 for (int i = 0; i < itemsCount; i++) {
-                    final String item = myModel.getElementAt(i);
+                    String item = myModel.getElementAt(i);
                     addMenuItem(item);
                 }
             }
         }
-    }
-
-    @Deprecated
-    protected boolean isSearchControlUISupported() {
-        return true;
     }
 
     public void addDocumentListener(DocumentListener listener) {
@@ -167,7 +171,7 @@ public class SearchTextField extends JPanel {
         getTextEditor().getDocument().removeDocumentListener(listener);
     }
 
-    public void addKeyboardListener(final KeyListener listener) {
+    public void addKeyboardListener(KeyListener listener) {
         getTextEditor().addKeyListener(listener);
     }
 
@@ -183,8 +187,8 @@ public class SearchTextField extends JPanel {
     }
 
     public List<String> getHistory() {
-        final int itemsCount = myModel.getSize();
-        final List<String> history = new ArrayList<>(itemsCount);
+        int itemsCount = myModel.getSize();
+        List<String> history = new ArrayList<>(itemsCount);
         for (int i = 0; i < itemsCount; i++) {
             history.add(myModel.getElementAt(i));
         }
@@ -209,21 +213,18 @@ public class SearchTextField extends JPanel {
         if ((myNativeSearchPopup != null && myNativeSearchPopup.isVisible()) || (myPopup != null && myPopup.isVisible())) {
             return;
         }
-        final String item = getText();
+        String item = getText();
         myModel.addElement(item);
     }
 
-    private void addMenuItem(final String item) {
+    private void addMenuItem(String item) {
         if (myNativeSearchPopup != null) {
             myNativeSearchPopup.remove(myNoItems);
-            final JMenuItem menuItem = new JBMenuItem(item);
+            JMenuItem menuItem = new JBMenuItem(item);
             myNativeSearchPopup.add(menuItem);
-            menuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    myTextField.setText(item);
-                    addCurrentTextToHistory();
-                }
+            menuItem.addActionListener(e -> {
+                myTextField.setText(item);
+                addCurrentTextToHistory();
             });
         }
     }
@@ -262,12 +263,12 @@ public class SearchTextField extends JPanel {
         }
 
         public void addElement(String item) {
-            final String newItem = item.trim();
+            String newItem = item.trim();
             if (newItem.isEmpty()) {
                 return;
             }
 
-            final int length = myFullList.size();
+            int length = myFullList.size();
             int index = -1;
             for (int i = 0; i < length; i++) {
                 if (StringUtil.equalsIgnoreCase(myFullList.get(i), newItem)) {
@@ -355,7 +356,7 @@ public class SearchTextField extends JPanel {
         }
     }
 
-    public void setSelectedItem(final String s) {
+    public void setSelectedItem(String s) {
         getTextEditor().setText(s);
     }
 

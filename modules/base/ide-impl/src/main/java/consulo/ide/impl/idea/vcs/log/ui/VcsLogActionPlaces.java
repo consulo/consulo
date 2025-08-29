@@ -22,7 +22,6 @@ public class VcsLogActionPlaces {
     public static final String TEXT_FILTER_SETTINGS_ACTION_GROUP = "Vcs.Log.TextFilterSettings";
     public static final String VCS_LOG_INTELLI_SORT_ACTION = "Vcs.Log.IntelliSortChooser";
     public static final String VCS_LOG_QUICK_SETTINGS_ACTION = "Vcs.Log.QuickSettings";
-    public static final String VCS_LOG_TEXT_FILTER_SETTINGS_ACTION = "Vcs.Log.QuickTextFilterSettings";
     public static final String VCS_LOG_FOCUS_TEXT_FILTER = "Vcs.Log.FocusTextFilter";
     public static final String VCS_LOG_SHOW_DETAILS_ACTION = "Vcs.Log.ShowDetailsAction";
 }

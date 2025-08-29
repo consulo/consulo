@@ -44,7 +44,7 @@ public abstract class BooleanPropertyToggleAction extends ToggleAction implement
     }
 
     protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text) {
-        super(text);
+        super(text, text);
     }
 
     protected abstract VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty();

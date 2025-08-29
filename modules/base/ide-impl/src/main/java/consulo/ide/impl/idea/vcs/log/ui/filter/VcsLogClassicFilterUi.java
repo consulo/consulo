@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
-import consulo.application.Application;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
@@ -27,6 +26,7 @@ import consulo.ide.impl.idea.vcs.log.impl.VcsLogHashFilterImpl;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -486,6 +486,8 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
             myTextFilterModel = model;
             setText(myTextFilterModel.getText());
             getTextEditor().addActionListener(e -> applyFilter());
+            setPlaceholder(LocalizeValue.localizeTODO("Text or Hash"));
+
             addDocumentListener(new DocumentAdapter() {
                 @Override
                 protected void textChanged(DocumentEvent e) {
@@ -497,6 +499,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
                     }
                 }
             });
+            
             String shortcutText = KeymapUtil.getFirstKeyboardShortcutText(VcsLogActionPlaces.VCS_LOG_FOCUS_TEXT_FILTER);
             if (!shortcutText.isEmpty()) {
                 getTextEditor().setToolTipText("Use " + shortcutText + " to switch between text filter and commits list");

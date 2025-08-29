@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -36,6 +37,10 @@ import java.util.List;
 public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
     public EnableMatchCaseAction() {
         super(VersionControlSystemLogLocalize.actionMatchCaseText());
+
+        getTemplatePresentation().setIcon(PlatformIconGroup.actionsMatchcase());
+        getTemplatePresentation().setHoveredIcon(PlatformIconGroup.actionsMatchcasehovered());
+        getTemplatePresentation().setSelectedIcon(PlatformIconGroup.actionsMatchcaseselected());
     }
 
     @Override

@@ -18,12 +18,17 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
 @ActionImpl(id = "Vcs.Log.EnableFilterByRegexAction")
 public class EnableFilterByRegexAction extends BooleanPropertyToggleAction {
     public EnableFilterByRegexAction() {
         super(VersionControlSystemLogLocalize.actionEnableFilterByRegexText());
+
+        getTemplatePresentation().setIcon(PlatformIconGroup.actionsRegex());
+        getTemplatePresentation().setHoveredIcon(PlatformIconGroup.actionsRegexhovered());
+        getTemplatePresentation().setSelectedIcon(PlatformIconGroup.actionsRegexselected());
     }
 
     @Override

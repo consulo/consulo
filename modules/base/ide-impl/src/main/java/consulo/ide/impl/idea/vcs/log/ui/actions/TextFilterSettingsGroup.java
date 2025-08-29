@@ -29,8 +29,8 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
 @ActionImpl(
     id = VcsLogActionPlaces.TEXT_FILTER_SETTINGS_ACTION_GROUP,
     children = {
-        @ActionRef(type = EnableFilterByRegexAction.class),
-        @ActionRef(type = EnableMatchCaseAction.class)
+        @ActionRef(type = EnableMatchCaseAction.class),
+        @ActionRef(type = EnableFilterByRegexAction.class)
     }
 )
 public class TextFilterSettingsGroup extends DefaultActionGroup implements DumbAware {

@@ -34,7 +34,6 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = GoToHashOrRefAction.class),
         @ActionRef(type = FocusTextFilterAction.class),
-        @ActionRef(type = VcsLogTextFilterSettingsActions.class),
         @ActionRef(type = EnableFilterByRegexAction.class),
         @ActionRef(type = EnableMatchCaseAction.class),
         @ActionRef(type = AnSeparator.class),
