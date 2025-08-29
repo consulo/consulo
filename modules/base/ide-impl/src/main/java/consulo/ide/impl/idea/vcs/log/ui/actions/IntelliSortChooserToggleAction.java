@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.util.BekUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -69,11 +70,15 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
         e.getPresentation().setEnabled(BekUtil.isBekEnabled() && logUI != null);
 
         if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
-            boolean off = properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.Normal;
-            String description = "Turn IntelliSort " + (off ? "on" : "off") + ": " +
-                (off ? PermanentGraph.SortType.Bek : PermanentGraph.SortType.Normal).getDescription().toLowerCase() + ".";
-            e.getPresentation().setDescription(description);
-            e.getPresentation().setText(description);
+            PermanentGraph.SortType sortType = properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE);
+            int sortTypeFlag = switch (sortType) {
+                case Normal -> 1;
+                default -> 0;
+            };
+            LocalizeValue description =
+                VersionControlSystemLogLocalize.actionIntelliSortChooserParametrized(sortTypeFlag, sortType.getDescription());
+            e.getPresentation().setTextValue(description);
+            e.getPresentation().setDescriptionValue(description);
         }
         else {
             e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionIntelliSortChooserText());

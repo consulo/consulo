@@ -112,16 +112,11 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
         @Nullable Set<CommitId> visibleHeads,
         @Nullable Set<CommitId> matchingCommits
     ) {
-        CascadeController baseController;
-        if (sortType == SortType.Normal) {
-            baseController = new BaseController(this);
-        }
-        else if (sortType == SortType.LinearBek) {
-            baseController = new LinearBekController(new BekBaseController(this, myBekIntMap.get()), this);
-        }
-        else {
-            baseController = new BekBaseController(this, myBekIntMap.get());
-        }
+        CascadeController baseController = switch (sortType) {
+            case Normal -> new BaseController(this);
+            case Bek -> new BekBaseController(this, myBekIntMap.get());
+            case LinearBek -> new LinearBekController(new BekBaseController(this, myBekIntMap.get()), this);
+        };
 
         LinearGraphController controller;
         if (matchingCommits != null) {

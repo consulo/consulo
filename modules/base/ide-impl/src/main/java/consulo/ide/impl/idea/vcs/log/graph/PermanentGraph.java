@@ -16,9 +16,11 @@
 package consulo.ide.impl.idea.vcs.log.graph;
 
 import consulo.application.Application;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -66,27 +68,27 @@ public interface PermanentGraph<Id> {
     Predicate<Id> getContainedInBranchCondition(@Nonnull Collection<Id> currentBranchHead);
 
     enum SortType {
-        Normal("Off", "Sort commits topologically and by date"),
-        Bek("Standard", "In case of merge show incoming commits first (directly below merge commit)"),
-        LinearBek("Linear", "In case of merge show incoming commits on top of main branch commits as if they were rebased");
+        Normal(VersionControlSystemLogLocalize.graphSortOffName(), VersionControlSystemLogLocalize.graphSortOffDescription()),
+        Bek(VersionControlSystemLogLocalize.graphSortStandardName(), VersionControlSystemLogLocalize.graphSortStandardDescription()),
+        LinearBek(VersionControlSystemLogLocalize.graphSortLinearName(), VersionControlSystemLogLocalize.graphSortLinearDescription());
 
         @Nonnull
-        private final String myPresentation;
+        private final LocalizeValue myName;
         @Nonnull
-        private final String myDescription;
+        private final LocalizeValue myDescription;
 
-        SortType(@Nonnull String presentation, @Nonnull String description) {
-            myPresentation = presentation;
+        SortType(@Nonnull LocalizeValue name, @Nonnull LocalizeValue description) {
+            myName = name;
             myDescription = description;
         }
 
         @Nonnull
-        public String getName() {
-            return myPresentation;
+        public LocalizeValue getName() {
+            return myName;
         }
 
         @Nonnull
-        public String getDescription() {
+        public LocalizeValue getDescription() {
             return myDescription;
         }
     }
