@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.collection.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
@@ -28,6 +29,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -35,7 +37,7 @@ import java.util.function.Function;
 
 public class IntelliSortChooserPopupAction extends DumbAwareAction {
     public IntelliSortChooserPopupAction() {
-        super("IntelliSort", "Change IntelliSort Type", PlatformIconGroup.vcslogIntellisort());
+        super(VersionControlSystemLogLocalize.actionIntelliSortChooserPopupText(), VersionControlSystemLogLocalize.actionIntelliSortChooserPopupDescription(), PlatformIconGroup.vcslogIntellisort());
     }
 
     @Override
@@ -72,9 +74,11 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
         VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
         e.getPresentation().setEnabled(properties != null);
         if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
-            String description = "IntelliSort: " + properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).getName();
-            e.getPresentation().setDescription(description);
-            e.getPresentation().setText(description);
+            LocalizeValue description = VersionControlSystemLogLocalize.actionIntelliSortChooserPopupParametrized(
+                properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).getName()
+            );
+            e.getPresentation().setTextValue(description);
+            e.getPresentation().setDescriptionValue(description);
         }
     }
 
@@ -88,7 +92,7 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
             @Nonnull VcsLogUiProperties properties,
             @Nonnull PermanentGraph.SortType sortType
         ) {
-            super(sortType.getName(), sortType.getDescription() + ".", null);
+            super(sortType.getName(), sortType.getDescription());
             myUI = ui;
             myProperties = properties;
             mySortType = sortType;

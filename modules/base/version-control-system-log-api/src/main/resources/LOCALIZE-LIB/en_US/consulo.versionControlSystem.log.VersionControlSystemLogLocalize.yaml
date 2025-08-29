@@ -30,6 +30,14 @@ action.go.to.ref.text:
     text: Go To Hash/Branch/Tag
 action.intelli.sort.chooser.description:
     text: Turn IntelliSort on/off
+action.intelli.sort.chooser.parametrized:
+    text: 'Turn IntelliSort {0,choice, 0#off|1#on}: {1}.'
+action.intelli.sort.chooser.popup.description:
+    text: Change IntelliSort Type
+action.intelli.sort.chooser.popup.parametrized:
+    text: 'IntelliSort: {0}'
+action.intelli.sort.chooser.popup.text:
+    text: IntelliSort
 action.intelli.sort.chooser.text:
     text: IntelliSort
 action.match.case.only.supported:
@@ -68,6 +76,20 @@ action.show.tag.names.description:
     text: Show tag names in the table
 action.show.tag.names.text:
     text: Show Tag Names
+graph.sort.linear.description:
+    text: In case of merge show incoming commits on top of main branch commits as if they were rebased
+graph.sort.linear.name:
+    text: Linear
+graph.sort.off.description:
+    text: Sort commits topologically and by commit date
+graph.sort.off.name:
+    text: By Commit Date
+graph.sort.standard.description:
+    text: In case of merge, show incoming commits first, directly below merge commit
+graph.sort.standard.name:
+    text: Topologically
+group.context.menu.text:
+    text: VCS Log Context Menu
 group.highlight.separator:
     text: Highlight
 group.highlight.text:
@@ -90,7 +112,13 @@ group.text.filter.settings.description:
     text: Text filter settings
 group.text.filter.settings.text:
     text: Text Filter Settings
-group.context.menu.text:
-    text: VCS Log Context Menu
 group.toolbar.text:
     text: VCS Log Toolbar
+process.collapsing.linear.branches:
+    text: Collapsing linear branches…
+process.collapsing.merges:
+    text: Collapsing merges…
+process.expanding.linear.branches:
+    text: Expanding linear branches…
+process.expanding.merges:
+    text: Expanding merges…

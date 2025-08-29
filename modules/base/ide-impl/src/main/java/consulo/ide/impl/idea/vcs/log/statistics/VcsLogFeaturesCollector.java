@@ -34,55 +34,56 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties.*;
-import static consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl.LOG_HIGHLIGHTER_FACTORY_EP;
 
 @ExtensionImpl
 public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector {
-  @Nonnull
-  @Override
-  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
-    VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
-    if (projectLog != null) {
-      VcsLogUiImpl ui = projectLog.getMainLogUi();
-      if (ui != null) {
-        MainVcsLogUiProperties properties = ui.getProperties();
+    @Nonnull
+    @Override
+    public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
+        VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
+        if (projectLog != null) {
+            VcsLogUiImpl ui = projectLog.getMainLogUi();
+            if (ui != null) {
+                MainVcsLogUiProperties properties = ui.getProperties();
 
-        Set<UsageDescriptor> usages = new HashSet<>();
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.details", properties.get(SHOW_DETAILS)));
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.long.edges", properties.get(SHOW_LONG_EDGES)));
+                Set<UsageDescriptor> usages = new HashSet<>();
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.details", properties.get(SHOW_DETAILS)));
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.long.edges", properties.get(SHOW_LONG_EDGES)));
 
-        PermanentGraph.SortType sortType = properties.get(BEK_SORT_TYPE);
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.sort.linear.bek", sortType.equals(PermanentGraph.SortType.LinearBek)));
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.sort.bek", sortType.equals(PermanentGraph.SortType.Bek)));
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.sort.normal", sortType.equals(PermanentGraph.SortType.Normal)));
+                PermanentGraph.SortType sortType = properties.get(BEK_SORT_TYPE);
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.sort.linear.bek", sortType.equals(PermanentGraph.SortType.LinearBek)));
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.sort.bek", sortType.equals(PermanentGraph.SortType.Bek)));
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.sort.normal", sortType.equals(PermanentGraph.SortType.Normal)));
 
-        if (ui.isMultipleRoots()) {
-          usages.add(StatisticsUtilKt.getBooleanUsage("ui.roots", properties.get(SHOW_ROOT_NAMES)));
+                if (ui.isMultipleRoots()) {
+                    usages.add(StatisticsUtilKt.getBooleanUsage("ui.roots", properties.get(SHOW_ROOT_NAMES)));
+                }
+
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.labels.compact", properties.get(COMPACT_REFERENCES_VIEW)));
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.labels.showTagNames", properties.get(SHOW_TAG_NAMES)));
+
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.textFilter.regex", properties.get(TEXT_FILTER_REGEX)));
+                usages.add(StatisticsUtilKt.getBooleanUsage("ui.textFilter.matchCase", properties.get(TEXT_FILTER_MATCH_CASE)));
+
+                project.getExtensionPoint(VcsLogHighlighterFactory.class).forEach(factory -> {
+                    if (factory.showMenuItem()) {
+                        VcsLogHighlighterProperty property = VcsLogHighlighterProperty.get(factory.getId());
+                        usages.add(StatisticsUtilKt.getBooleanUsage(
+                            "ui.highlighter." + ConvertUsagesUtil.ensureProperKey(factory.getId()),
+                            properties.exists(property) && properties.get(property)
+                        ));
+                    }
+                });
+
+                return usages;
+            }
         }
-
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.labels.compact", properties.get(COMPACT_REFERENCES_VIEW)));
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.labels.showTagNames", properties.get(SHOW_TAG_NAMES)));
-
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.textFilter.regex", properties.get(TEXT_FILTER_REGEX)));
-        usages.add(StatisticsUtilKt.getBooleanUsage("ui.textFilter.matchCase", properties.get(TEXT_FILTER_MATCH_CASE)));
-
-        for (VcsLogHighlighterFactory factory : LOG_HIGHLIGHTER_FACTORY_EP.getExtensionList(project)) {
-          if (factory.showMenuItem()) {
-            VcsLogHighlighterProperty property = VcsLogHighlighterProperty.get(factory.getId());
-            usages.add(StatisticsUtilKt.getBooleanUsage("ui.highlighter." + ConvertUsagesUtil.ensureProperKey(factory.getId()),
-                                                        properties.exists(property) && properties.get(property)));
-          }
-        }
-
-        return usages;
-      }
+        return Collections.emptySet();
     }
-    return Collections.emptySet();
-  }
 
-  @Nonnull
-  @Override
-  public String getGroupId() {
-    return "consulo.platform.base:vcs.log.ui.settings";
-  }
+    @Nonnull
+    @Override
+    public String getGroupId() {
+        return "consulo.platform.base:vcs.log.ui.settings";
+    }
 }
