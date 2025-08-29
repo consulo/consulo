@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs.log.ui.actions;
+package consulo.versionControlSystem.distributed.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
-import consulo.ide.impl.idea.vcs.VcsShowToolWindowTabAction;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
+import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "Vcs.Show.Log", parents = @ActionParentRef(@ActionRef(id = "Vcs.Show.Toolwindow.Tab")))
-public class VcsShowLogAction extends VcsShowToolWindowTabAction {
-    public VcsShowLogAction() {
-        super(VersionControlSystemLogLocalize.actionShowLogText());
-    }
-
-    @Nonnull
-    @Override
-    protected String getTabName() {
-        return VcsLogContentProvider.TAB_NAME;
+/**
+ * @author UNV
+ * @since 2025-08-28
+ */
+@ActionImpl(
+    id = "Dvcs.Log.Toolbar",
+    children = @ActionRef(id = VcsActions.ACTION_CHERRY_PICK),
+    parents = @ActionParentRef(@ActionRef(id = "Vcs.Log.Toolbar"))
+)
+public class LogToolbarGroup extends DefaultActionGroup implements DumbAware {
+    public LogToolbarGroup() {
+        super(VersionControlSystemLogLocalize.groupToolbarText(), false);
     }
 }
-

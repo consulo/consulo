@@ -15,27 +15,31 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogFilterer;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.RefreshAction;
 import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Log.Refresh", shortcutFrom = @ActionRef(id = IdeActions.ACTION_REFRESH))
 public class RefreshLogAction extends RefreshAction {
     private static final Logger LOG = Logger.getInstance(RefreshLogAction.class);
 
     public RefreshLogAction() {
         super(
-            LocalizeValue.localizeTODO("Refresh"),
-            LocalizeValue.localizeTODO("Check for new commits and refresh Log if necessary"),
+            VersionControlSystemLogLocalize.actionRefreshLogText(),
+            VersionControlSystemLogLocalize.actionRefreshLogDescription(),
             PlatformIconGroup.actionsRefresh()
         );
     }

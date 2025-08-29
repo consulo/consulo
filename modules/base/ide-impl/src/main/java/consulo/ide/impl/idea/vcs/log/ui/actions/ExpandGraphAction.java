@@ -15,28 +15,25 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-import consulo.ui.image.Image;
-import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
 
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Log.ExpandAll")
 public class ExpandGraphAction extends CollapseOrExpandGraphAction {
-    @Nonnull
-    private static final String EXPAND = "Expand";
-
     public ExpandGraphAction() {
-        super(EXPAND);
+        super(
+            VersionControlSystemLogLocalize.actionCollapseLinearBranchesText(),
+            VersionControlSystemLogLocalize.actionCollapseLinearBranchesDescription(),
+            VersionControlSystemLogLocalize.actionCollapseMergesText(),
+            VersionControlSystemLogLocalize.actionCollapseMergesDescription()
+        );
     }
 
     @Override
     protected void executeAction(@Nonnull VcsLogUiImpl vcsLogUi) {
         vcsLogUi.expandAll();
-    }
-
-    @Nonnull
-    @Override
-    protected String getPrefix() {
-        return EXPAND + " ";
     }
 }

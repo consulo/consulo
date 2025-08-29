@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -28,13 +29,26 @@ import consulo.versionControlSystem.log.util.VcsLogUtil;
 import jakarta.annotation.Nonnull;
 
 abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
-    private static final String LINEAR_BRANCHES = "Linear Branches";
-    private static final String LINEAR_BRANCHES_DESCRIPTION = "linear branches";
-    private static final String MERGES = "Merges";
-    private static final String MERGES_DESCRIPTION = "merges";
+    @Nonnull
+    private final LocalizeValue myLinearBranchesText;
+    @Nonnull
+    private final LocalizeValue myLinearBranchesDescription;
+    @Nonnull
+    private final LocalizeValue myMergesText;
+    @Nonnull
+    private final LocalizeValue myMergesDescription;
 
-    public CollapseOrExpandGraphAction(@Nonnull String action) {
-        super(action + " " + LINEAR_BRANCHES, action + " " + LINEAR_BRANCHES_DESCRIPTION, null);
+    protected CollapseOrExpandGraphAction(
+        @Nonnull LocalizeValue linearBranchesText,
+        @Nonnull LocalizeValue linearBranchesDescription,
+        @Nonnull LocalizeValue mergesText,
+        @Nonnull LocalizeValue mergesDescription
+    ) {
+        super(linearBranchesText, linearBranchesDescription);
+        myLinearBranchesText = linearBranchesText;
+        myLinearBranchesDescription = linearBranchesDescription;
+        myMergesText = mergesText;
+        myMergesDescription = mergesDescription;
     }
 
     @Override
@@ -52,30 +66,18 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
         VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
 
         if (ui != null && ui.areGraphActionsEnabled() && properties != null && !properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
-            e.getPresentation().setEnabled(true);
-            if (!ui.getFilterUi().getFilters().getDetailsFilters().isEmpty()) {
-                e.getPresentation().setEnabled(false);
-            }
+            e.getPresentation().setEnabled(ui.getFilterUi().getFilters().getDetailsFilters().isEmpty());
 
-            if (properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.LinearBek) {
-                e.getPresentation().setText(getPrefix() + MERGES);
-                e.getPresentation().setDescription(getPrefix() + MERGES_DESCRIPTION);
-            }
-            else {
-                e.getPresentation().setText(getPrefix() + LINEAR_BRANCHES);
-                e.getPresentation().setDescription(getPrefix() + LINEAR_BRANCHES_DESCRIPTION);
-            }
+            boolean isMerges = properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.LinearBek;
+            e.getPresentation().setTextValue(isMerges ? myMergesText : myLinearBranchesText);
+            e.getPresentation().setDescriptionValue(isMerges ? myMergesDescription : myLinearBranchesDescription);
         }
         else {
             e.getPresentation().setEnabled(false);
+            e.getPresentation().setTextValue(myLinearBranchesText);
+            e.getPresentation().setDescriptionValue(myLinearBranchesDescription);
         }
-
-        e.getPresentation().setText(getPrefix() + LINEAR_BRANCHES);
-        e.getPresentation().setDescription(getPrefix() + LINEAR_BRANCHES_DESCRIPTION);
     }
 
     protected abstract void executeAction(@Nonnull VcsLogUiImpl vcsLogUi);
-
-    @Nonnull
-    protected abstract String getPrefix();
 }

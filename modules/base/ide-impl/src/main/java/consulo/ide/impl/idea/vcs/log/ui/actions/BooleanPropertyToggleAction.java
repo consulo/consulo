@@ -35,10 +35,6 @@ public abstract class BooleanPropertyToggleAction extends ToggleAction implement
         super(text);
     }
 
-    public BooleanPropertyToggleAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-        super(text, description, icon);
-    }
-
     protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
         super(text, description);
     }

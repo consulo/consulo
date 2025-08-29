@@ -15,11 +15,19 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
+@ActionImpl(id = VcsLogActionPlaces.VCS_LOG_QUICK_SETTINGS_ACTION)
 public class VcsLogQuickSettingsActions extends VcsLogGearActionGroup {
-
-  public VcsLogQuickSettingsActions() {
-    super(VcsLogActionPlaces.SETTINGS_ACTION_GROUP);
-  }
+    public VcsLogQuickSettingsActions() {
+        super(
+            VersionControlSystemLogLocalize.groupQuickSettingsText(),
+            VersionControlSystemLogLocalize.groupQuickSettingsDescription(),
+            PlatformIconGroup.generalGearplain(),
+            VcsLogActionPlaces.SETTINGS_ACTION_GROUP
+        );
+    }
 }

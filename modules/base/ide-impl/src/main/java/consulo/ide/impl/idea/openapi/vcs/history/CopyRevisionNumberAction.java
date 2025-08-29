@@ -22,6 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
@@ -33,7 +34,7 @@ import java.awt.datatransfer.StringSelection;
 /**
  * The action that copies a revision number text to clipboard
  */
-@ActionImpl(id = "Vcs.CopyRevisionNumberAction")
+@ActionImpl(id = VcsActions.ACTION_COPY_REVISION_NUMBER)
 public class CopyRevisionNumberAction extends DumbAwareAction {
     public CopyRevisionNumberAction() {
         super(VcsLocalize.historyCopyRevisionNumber(), VcsLocalize.historyCopyRevisionNumber(), PlatformIconGroup.actionsCopy());

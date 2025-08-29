@@ -1,0 +1,96 @@
+action.collapse.linear.branches.description:
+    text: Collapse linear branches
+action.collapse.linear.branches.text:
+    text: Collapse Linear Branches
+action.collapse.merges.description:
+    text: Collapse merges
+action.collapse.merges.text:
+    text: Collapse Merges
+action.compact.references.view.description:
+    text: Show only first reference for a commit in the table
+action.compact.references.view.text:
+    text: Compact References View
+action.enable.filter.by.regex.text:
+    text: Regex
+action.expand.linear.branches.description:
+    text: Expand linear branches
+action.expand.linear.branches.text:
+    text: Expand Linear Branches
+action.expand.merges.description:
+    text: Expand merges
+action.expand.merges.text:
+    text: Expand Merges
+action.focus.text.filter.description:
+    text: Focus text filter or move focus back to the commits list
+action.focus.text.filter.text:
+    text: Focus Text Filter
+action.go.to.ref.description:
+    text: Specify hash or name of a branch or a tag to navigate to the commit it points
+action.go.to.ref.text:
+    text: Go To Hash/Branch/Tag
+action.intelli.sort.chooser.description:
+    text: Turn IntelliSort on/off
+action.intelli.sort.chooser.text:
+    text: IntelliSort
+action.match.case.only.supported:
+    text: Match Case ({0} Only)
+action.match.case.text:
+    text: Match Case
+action.open.another.tab.description:
+    text: Open another log tab
+action.open.another.tab.text:
+    text: Open Another Log Tab
+action.refresh.log.description:
+    text: Check for new commits and refresh Log if necessary
+action.refresh.log.text:
+    text: Refresh
+action.show.commit.tooltip.description:
+    text: Show tooltip for currently selected commit in the Log
+action.show.commit.tooltip.text:
+    text: Show Commit Tooltip
+action.show.details.description:
+    text: Display details panel
+action.show.details.text:
+    text: Show Details
+action.show.graph.history.description:
+    text: Show history as graph
+action.show.graph.history.text:
+    text: Show History as Graph
+action.show.log.text:
+    text: Show VCS Log
+action.show.long.edges.description:
+    text: Show long branch edges even if commits are invisible in the current view
+action.show.long.edges.text:
+    text: Show Long Edges
+action.show.roots.column.text:
+    text: Show Root Names
+action.show.tag.names.description:
+    text: Show tag names in the table
+action.show.tag.names.text:
+    text: Show Tag Names
+group.highlight.separator:
+    text: Highlight
+group.highlight.text:
+    text: Highlight Actions
+group.keymap.text:
+    text: Log
+group.quick.settings.description:
+    text: Quick settings
+group.quick.settings.text:
+    text: Quick Settings
+group.quick.text.filter.settings.description:
+    text: Text filter settings
+group.quick.text.filter.settings.text:
+    text: Text Filter Settings
+group.settings.description:
+    text: Settings
+group.settings.text:
+    text: Settings
+group.text.filter.settings.description:
+    text: Text filter settings
+group.text.filter.settings.text:
+    text: Text Filter Settings
+group.context.menu.text:
+    text: VCS Log Context Menu
+group.toolbar.text:
+    text: VCS Log Toolbar

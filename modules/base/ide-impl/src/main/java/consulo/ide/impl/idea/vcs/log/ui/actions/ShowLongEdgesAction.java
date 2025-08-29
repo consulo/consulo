@@ -15,26 +15,31 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Log.ShowLongEdges")
 public class ShowLongEdgesAction extends BooleanPropertyToggleAction {
-  public ShowLongEdgesAction() {
-    super("Show Long Edges", "Show long branch edges even if commits are invisible in the current view.", null);
-  }
+    public ShowLongEdgesAction() {
+        super(VersionControlSystemLogLocalize.actionShowLongEdgesText(), VersionControlSystemLogLocalize.actionShowLongEdgesDescription());
+    }
 
-  @Override
-  protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
-    return MainVcsLogUiProperties.SHOW_LONG_EDGES;
-  }
+    @Override
+    protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
+        return MainVcsLogUiProperties.SHOW_LONG_EDGES;
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    VcsLogUi ui = e.getData(VcsLogUi.KEY);
-    if (ui != null && !ui.areGraphActionsEnabled()) e.getPresentation().setEnabled(false);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        VcsLogUi ui = e.getData(VcsLogUi.KEY);
+        if (ui != null && !ui.areGraphActionsEnabled()) {
+            e.getPresentation().setEnabled(false);
+        }
+    }
 }

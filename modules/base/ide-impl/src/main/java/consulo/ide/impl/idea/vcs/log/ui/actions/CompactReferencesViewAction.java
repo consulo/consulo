@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
+@ActionImpl(id = "Vcs.Log.CompactReferencesView")
 public class CompactReferencesViewAction extends BooleanPropertyToggleAction {
     public CompactReferencesViewAction() {
-        super("Compact References View", "Show Only First Reference for a Commit in the Table", null);
+        super(VersionControlSystemLogLocalize.actionCompactReferencesViewText(), VersionControlSystemLogLocalize.actionCompactReferencesViewDescription());
     }
 
     @Override

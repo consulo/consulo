@@ -134,7 +134,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     getSelectionModel().addListSelectionListener(new MyListSelectionListener());
     getColumnModel().setColumnSelectionAllowed(false);
 
-    PopupHandler.installPopupHandler(this, VcsLogActionPlaces.POPUP_ACTION_GROUP, VcsLogActionPlaces.VCS_LOG_TABLE_PLACE);
+    PopupHandler.installPopupHandler(this, VcsLogActionPlaces.POPUP_ACTION_GROUP, VcsLogActionPlaces.POPUP_ACTION_GROUP);
     ScrollingUtil.installActions(this, false);
     new IndexSpeedSearch(myLogData.getProject(), myLogData.getIndex(), this) {
       @Override

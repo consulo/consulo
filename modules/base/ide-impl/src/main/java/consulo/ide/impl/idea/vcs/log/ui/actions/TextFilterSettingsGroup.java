@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,29 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
-@ActionImpl(id = VcsLogActionPlaces.VCS_LOG_TEXT_FILTER_SETTINGS_ACTION)
-public class VcsLogTextFilterSettingsActions extends VcsLogGearActionGroup {
-    public VcsLogTextFilterSettingsActions() {
+/**
+ * @author UNV
+ * @since 2025-08-28
+ */
+@ActionImpl(
+    id = VcsLogActionPlaces.TEXT_FILTER_SETTINGS_ACTION_GROUP,
+    children = {
+        @ActionRef(type = EnableFilterByRegexAction.class),
+        @ActionRef(type = EnableMatchCaseAction.class)
+    }
+)
+public class TextFilterSettingsGroup extends DefaultActionGroup implements DumbAware {
+    public TextFilterSettingsGroup() {
         super(
-            VersionControlSystemLogLocalize.groupQuickTextFilterSettingsText(),
-            VersionControlSystemLogLocalize.groupQuickTextFilterSettingsDescription(),
-            PlatformIconGroup.generalGearplain(),
-            VcsLogActionPlaces.TEXT_FILTER_SETTINGS_ACTION_GROUP
+            VersionControlSystemLogLocalize.groupTextFilterSettingsText(),
+            VersionControlSystemLogLocalize.groupTextFilterSettingsDescription(),
+            false
         );
     }
 }

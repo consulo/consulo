@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -25,11 +26,17 @@ import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
 import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Log.OpenAnotherTab")
 public class OpenAnotherLogTabAction extends DumbAwareAction {
     public OpenAnotherLogTabAction() {
-        super("Open Another Log Tab", "Open Another Log Tab", PlatformIconGroup.generalAdd());
+        super(
+            VersionControlSystemLogLocalize.actionOpenAnotherTabText(),
+            VersionControlSystemLogLocalize.actionOpenAnotherTabDescription(),
+            PlatformIconGroup.generalAdd()
+        );
     }
 
     @Override
@@ -39,7 +46,7 @@ public class OpenAnotherLogTabAction extends DumbAwareAction {
             e.getPresentation().setEnabledAndVisible(false);
             return;
         }
-        VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
+        VcsProjectLog projectLog = project.getInstance(VcsProjectLog.class);
         VcsLogManager logManager = e.getData(VcsLogInternalDataKeys.LOG_MANAGER);
         // only for main log (it is a question, how and where we want to open tabs for external logs)
         e.getPresentation().setEnabledAndVisible(logManager != null && projectLog.getLogManager() == logManager);

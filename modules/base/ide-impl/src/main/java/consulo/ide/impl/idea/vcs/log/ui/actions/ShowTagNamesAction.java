@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
+@ActionImpl(id = "Vcs.Log.ShowTagNames")
 public class ShowTagNamesAction extends BooleanPropertyToggleAction {
     public ShowTagNamesAction() {
-        super("Show Tag Names", "Show Tag Names in the Table", null);
+        super(VersionControlSystemLogLocalize.actionShowTagNamesText(), VersionControlSystemLogLocalize.actionShowTagNamesDescription());
     }
 
     @Override
