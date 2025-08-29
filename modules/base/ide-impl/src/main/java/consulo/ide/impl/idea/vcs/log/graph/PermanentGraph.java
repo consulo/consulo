@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph;
 
+import consulo.application.Application;
+import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
 import jakarta.annotation.Nonnull;
@@ -27,12 +29,23 @@ import java.util.function.Predicate;
 
 /**
  * PermanentGraph is created once per repository, and forever until the log is refreshed. <br/>
- * An instance can be achieved by {@link PermanentGraphBuilder}. <br/>
+ * An instance can be achieved by {@link PermanentGraph#newInstance(List, GraphColorManager, Set)}. <br/>
  * This graph contains all commits in the log and may occupy a lot.
  *
  * @see VisibleGraph
  */
 public interface PermanentGraph<Id> {
+    @Nonnull
+    static <CommitId> PermanentGraph<CommitId> newInstance(
+        @Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
+        @Nonnull GraphColorManager<CommitId> graphColorManager,
+        @Nonnull Set<CommitId> branchesCommitId
+    ) {
+        Application application = Application.get();
+        PermanentGraphFactory factory = application.getInstance(PermanentGraphFactory.class);
+        return factory.newInstance(graphCommits, graphColorManager, branchesCommitId);
+    }
+
     @Nonnull
     VisibleGraph<Id> createVisibleGraph(
         @Nonnull SortType sortType,

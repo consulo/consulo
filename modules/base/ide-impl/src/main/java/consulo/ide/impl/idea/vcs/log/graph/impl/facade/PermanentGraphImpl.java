@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
@@ -27,7 +26,9 @@ import consulo.ide.impl.idea.vcs.log.graph.collapsing.BranchFilterController;
 import consulo.ide.impl.idea.vcs.log.graph.collapsing.CollapsedController;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekIntMap;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekSorter;
-import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.*;
+import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.GraphLayoutImpl;
+import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.PermanentCommitsInfoImpl;
+import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.PermanentLinearGraphImpl;
 import consulo.ide.impl.idea.vcs.log.graph.linearBek.LinearBekController;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.util.collection.ContainerUtil;
@@ -43,33 +44,30 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, PermanentGraphInfo<CommitId> {
+    private static class IntContainedInBranchCondition<CommitId> implements Predicate<CommitId> {
+        private final IntSet myBranchNodes;
 
-    @Nonnull
-    public static <CommitId> PermanentGraphImpl<CommitId> newInstance(
-        @Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
-        @Nonnull GraphColorManager<CommitId> graphColorManager,
-        @Nonnull Set<CommitId> branchesCommitId
-    ) {
-        PermanentLinearGraphBuilder<CommitId> permanentLinearGraphBuilder = PermanentLinearGraphBuilder.newInstance(graphCommits);
-        NotLoadedCommitsIdsGenerator<CommitId> idsGenerator = new NotLoadedCommitsIdsGenerator<>();
-        PermanentLinearGraphImpl linearGraph = permanentLinearGraphBuilder.build(idsGenerator);
+        public IntContainedInBranchCondition(IntSet branchNodes) {
+            myBranchNodes = branchNodes;
+        }
 
-        PermanentCommitsInfoImpl<CommitId> commitIdPermanentCommitsInfo =
-            PermanentCommitsInfoImpl.newInstance(graphCommits, idsGenerator.getNotLoadedCommits());
+        @Override
+        public boolean test(CommitId commitId) {
+            return myBranchNodes.contains((Integer) commitId);
+        }
+    }
 
-        GraphLayoutImpl permanentGraphLayout = GraphLayoutBuilder.build(linearGraph, (nodeIndex1, nodeIndex2) -> {
-            CommitId commitId1 = commitIdPermanentCommitsInfo.getCommitId(nodeIndex1);
-            CommitId commitId2 = commitIdPermanentCommitsInfo.getCommitId(nodeIndex2);
-            return graphColorManager.compareHeads(commitId2, commitId1);
-        });
+    private static class ContainedInBranchCondition<CommitId> implements Predicate<CommitId> {
+        private final Set<CommitId> myBranchNodes;
 
-        return new PermanentGraphImpl<>(
-            linearGraph,
-            permanentGraphLayout,
-            commitIdPermanentCommitsInfo,
-            graphColorManager,
-            branchesCommitId
-        );
+        public ContainedInBranchCondition(Set<CommitId> branchNodes) {
+            myBranchNodes = branchNodes;
+        }
+
+        @Override
+        public boolean test(CommitId commitId) {
+            return myBranchNodes.contains(commitId);
+        }
     }
 
     @Nonnull
@@ -216,49 +214,5 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
     @Nonnull
     public Set<Integer> getBranchNodeIds() {
         return myBranchNodeIds;
-    }
-
-    private static class NotLoadedCommitsIdsGenerator<CommitId> implements NotNullFunction<CommitId, Integer> {
-        @Nonnull
-        private final Map<Integer, CommitId> myNotLoadedCommits = new HashMap<>();
-
-        @Nonnull
-        @Override
-        public Integer apply(CommitId dom) {
-            int nodeId = -(myNotLoadedCommits.size() + 2);
-            myNotLoadedCommits.put(nodeId, dom);
-            return nodeId;
-        }
-
-        @Nonnull
-        public Map<Integer, CommitId> getNotLoadedCommits() {
-            return myNotLoadedCommits;
-        }
-    }
-
-    private static class IntContainedInBranchCondition<CommitId> implements Predicate<CommitId> {
-        private final IntSet myBranchNodes;
-
-        public IntContainedInBranchCondition(IntSet branchNodes) {
-            myBranchNodes = branchNodes;
-        }
-
-        @Override
-        public boolean test(CommitId commitId) {
-            return myBranchNodes.contains((Integer)commitId);
-        }
-    }
-
-    private static class ContainedInBranchCondition<CommitId> implements Predicate<CommitId> {
-        private final Set<CommitId> myBranchNodes;
-
-        public ContainedInBranchCondition(Set<CommitId> branchNodes) {
-            myBranchNodes = branchNodes;
-        }
-
-        @Override
-        public boolean test(CommitId commitId) {
-            return myBranchNodes.contains(commitId);
-        }
     }
 }

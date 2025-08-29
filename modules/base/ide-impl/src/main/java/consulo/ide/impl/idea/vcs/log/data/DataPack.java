@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.ide.impl.idea.vcs.log.graph.GraphColorManagerImpl;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import consulo.ide.impl.idea.vcs.log.graph.impl.facade.PermanentGraphImpl;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.util.StopWatch;
@@ -63,7 +62,7 @@ public class DataPack extends DataPackBase {
       Set<Integer> branches = getBranchCommitHashIndexes(refsModel.getBranches(), hashMap);
 
       StopWatch sw = StopWatch.start("building graph");
-      permanentGraph = PermanentGraphImpl.newInstance(commits, colorManager, branches);
+      permanentGraph = PermanentGraph.newInstance(commits, colorManager, branches);
       sw.report();
     }
 
