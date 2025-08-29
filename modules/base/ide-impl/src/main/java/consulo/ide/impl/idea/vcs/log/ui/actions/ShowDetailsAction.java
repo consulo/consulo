@@ -15,13 +15,21 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
+import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
+@ActionImpl(id = VcsLogActionPlaces.VCS_LOG_SHOW_DETAILS_ACTION)
 public class ShowDetailsAction extends BooleanPropertyToggleAction {
     public ShowDetailsAction() {
-        super("Show Details", "Display details panel", PlatformIconGroup.actionsPreview());
+        super(
+            VersionControlSystemLogLocalize.actionShowDetailsText(),
+            VersionControlSystemLogLocalize.actionShowDetailsDescription(),
+            PlatformIconGroup.actionsPreview()
+        );
     }
 
     @Override

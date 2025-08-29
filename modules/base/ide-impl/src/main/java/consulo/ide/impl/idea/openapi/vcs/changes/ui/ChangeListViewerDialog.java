@@ -25,6 +25,7 @@ import consulo.ui.ex.awt.Splitter;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RepositoryChangesBrowser;
@@ -151,7 +152,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       @Override
       protected void buildToolBar(DefaultActionGroup toolBarGroup) {
         super.buildToolBar(toolBarGroup);
-        toolBarGroup.add(ActionManager.getInstance().getAction("Vcs.CopyRevisionNumberAction"));
+        toolBarGroup.add(ActionManager.getInstance().getAction(VcsActions.ACTION_COPY_REVISION_NUMBER));
       }
 
       @Override

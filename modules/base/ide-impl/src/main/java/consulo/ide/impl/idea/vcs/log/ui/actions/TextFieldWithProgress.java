@@ -27,61 +27,63 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public abstract class TextFieldWithProgress extends JPanel {
-  @Nonnull
-  private final TextFieldWithCompletion myTextField;
-  @Nonnull
-  private final AsyncProcessIcon myProgressIcon;
+    @Nonnull
+    private final TextFieldWithCompletion myTextField;
+    @Nonnull
+    private final AsyncProcessIcon myProgressIcon;
 
-  public TextFieldWithProgress(@Nonnull Project project,
-                               @Nonnull TextCompletionProvider completionProvider) {
-    super(new BorderLayout());
-    setBorder(IdeBorderFactory.createEmptyBorder(3));
+    public TextFieldWithProgress(
+        @Nonnull Project project,
+        @Nonnull TextCompletionProvider completionProvider
+    ) {
+        super(new BorderLayout());
+        setBorder(IdeBorderFactory.createEmptyBorder(3));
 
-    myProgressIcon = new AsyncProcessIcon("Loading commits");
-    myTextField = new TextFieldWithCompletion(project, completionProvider, "", true, true, false) {
-      @Override
-      public void setBackground(Color bg) {
-        super.setBackground(bg);
-        myProgressIcon.setBackground(bg);
-      }
+        myProgressIcon = new AsyncProcessIcon("Loading commits");
+        myTextField = new TextFieldWithCompletion(project, completionProvider, "", true, true, false) {
+            @Override
+            public void setBackground(Color bg) {
+                super.setBackground(bg);
+                myProgressIcon.setBackground(bg);
+            }
 
-      @Override
-      protected boolean processKeyBinding(KeyStroke ks, final KeyEvent e, int condition, boolean pressed) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-          onOk();
-          return true;
-        }
-        return false;
-      }
-    };
-    myTextField.setBorder(IdeBorderFactory.createEmptyBorder());
+            @Override
+            protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    onOk();
+                    return true;
+                }
+                return false;
+            }
+        };
+        myTextField.setBorder(IdeBorderFactory.createEmptyBorder());
 
-    myProgressIcon.setOpaque(true);
-    myProgressIcon.setBackground(myTextField.getBackground());
+        myProgressIcon.setOpaque(true);
+        myProgressIcon.setBackground(myTextField.getBackground());
 
-    add(myTextField, BorderLayout.CENTER);
-    add(myProgressIcon, BorderLayout.EAST);
+        add(myTextField, BorderLayout.CENTER);
+        add(myProgressIcon, BorderLayout.EAST);
 
-    hideProgress();
-  }
+        hideProgress();
+    }
 
-  public JComponent getPreferableFocusComponent() {
-    return myTextField;
-  }
+    public JComponent getPreferableFocusComponent() {
+        return myTextField;
+    }
 
-  public void showProgress() {
-    myTextField.setEnabled(false);
-    myProgressIcon.setVisible(true);
-  }
+    public void showProgress() {
+        myTextField.setEnabled(false);
+        myProgressIcon.setVisible(true);
+    }
 
-  public void hideProgress() {
-    myTextField.setEnabled(true);
-    myProgressIcon.setVisible(false);
-  }
+    public void hideProgress() {
+        myTextField.setEnabled(true);
+        myProgressIcon.setVisible(false);
+    }
 
-  public String getText() {
-    return myTextField.getText();
-  }
+    public String getText() {
+        return myTextField.getText();
+    }
 
-  public abstract void onOk();
+    public abstract void onOk();
 }

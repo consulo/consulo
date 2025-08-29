@@ -56,7 +56,6 @@ import java.util.*;
 import java.util.function.Function;
 
 public class PushLog extends JPanel implements DataProvider {
-    private static final String CONTEXT_MENU = "Vcs.Push.ContextMenu";
     private static final String START_EDITING = "startEditing";
     private final ChangesBrowser myChangesBrowser;
     private final CheckboxTree myTree;
@@ -222,7 +221,7 @@ public class PushLog extends JPanel implements DataProvider {
         showCommitInfoAction.registerCustomShortcutSet(quickDocAction.getShortcutSet(), myTree);
 
         ToolTipManager.sharedInstance().registerComponent(myTree);
-        PopupHandler.installPopupHandler(myTree, VcsLogActionPlaces.POPUP_ACTION_GROUP, CONTEXT_MENU);
+        PopupHandler.installPopupHandler(myTree, VcsLogActionPlaces.POPUP_ACTION_GROUP, VcsLogActionPlaces.POPUP_ACTION_GROUP);
 
         myChangesBrowser = new ChangesBrowser(
             project,

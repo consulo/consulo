@@ -33,10 +33,6 @@ public class VcsLogGearActionGroup extends DumbAwareAction {
     @Nonnull
     private final String myActionGroup;
 
-    public VcsLogGearActionGroup(@Nonnull String group) {
-        myActionGroup = group;
-    }
-
     public VcsLogGearActionGroup(
         @Nonnull LocalizeValue text,
         @Nonnull LocalizeValue description,

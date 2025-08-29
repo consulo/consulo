@@ -548,6 +548,9 @@
     <keyboard-shortcut first-keystroke="control K" second-keystroke="O"/>
     <keyboard-shortcut first-keystroke="control K" second-keystroke="control O"/>
   </action>
+  <action id="Vcs.Log.FocusTextFilter">
+    <keyboard-shortcut first-keystroke="control L" remove="true"/>
+  </action>
 
   <!--MISSING VISUAL STUDIO SHORTCUTS-->
 

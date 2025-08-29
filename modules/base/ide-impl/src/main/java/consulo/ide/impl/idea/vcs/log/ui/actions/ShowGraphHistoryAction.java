@@ -15,25 +15,34 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
 import consulo.application.util.registry.Registry;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogStructureFilterImpl;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
 import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 
+//@ActionImpl(id = "Vcs.Show.Graph.History")
 public class ShowGraphHistoryAction extends DumbAwareAction {
+    public ShowGraphHistoryAction() {
+        super(
+            VersionControlSystemLogLocalize.actionShowGraphHistoryText(),
+            VersionControlSystemLogLocalize.actionShowGraphHistoryDescription()
+        );
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

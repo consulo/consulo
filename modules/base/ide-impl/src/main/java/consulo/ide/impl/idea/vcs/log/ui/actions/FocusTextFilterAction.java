@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
@@ -24,11 +26,13 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = VcsLogActionPlaces.VCS_LOG_FOCUS_TEXT_FILTER)
 public class FocusTextFilterAction extends DumbAwareAction {
     public FocusTextFilterAction() {
-        super("Focus Text Filter", "Focus text filter or move focus back to the commits list", null);
+        super(VersionControlSystemLogLocalize.actionFocusTextFilterText(), VersionControlSystemLogLocalize.actionFocusTextFilterDescription());
     }
 
     @Override

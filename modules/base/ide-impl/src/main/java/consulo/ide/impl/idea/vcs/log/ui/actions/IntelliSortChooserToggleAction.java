@@ -15,27 +15,30 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
+import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.util.BekUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = VcsLogActionPlaces.VCS_LOG_INTELLI_SORT_ACTION)
 public class IntelliSortChooserToggleAction extends ToggleAction implements DumbAware {
-    @Nonnull
-    private static final String DEFAULT_TEXT = "IntelliSort";
-    @Nonnull
-    private static final String DEFAULT_DESCRIPTION = "Turn IntelliSort On/Off";
-
     public IntelliSortChooserToggleAction() {
-        super(DEFAULT_TEXT, DEFAULT_DESCRIPTION, VcsLogIcons.IntelliSort);
+        super(
+            VersionControlSystemLogLocalize.actionIntelliSortChooserText(),
+            VersionControlSystemLogLocalize.actionIntelliSortChooserDescription(),
+            PlatformIconGroup.vcslogIntellisort()
+        );
     }
 
     @Override
@@ -73,8 +76,8 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
             e.getPresentation().setText(description);
         }
         else {
-            e.getPresentation().setText(DEFAULT_TEXT);
-            e.getPresentation().setDescription(DEFAULT_DESCRIPTION);
+            e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionIntelliSortChooserText());
+            e.getPresentation().setDescriptionValue(VersionControlSystemLogLocalize.actionIntelliSortChooserDescription());
         }
     }
 }

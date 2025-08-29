@@ -15,10 +15,17 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
+@ActionImpl(id = "Vcs.Log.EnableFilterByRegexAction")
 public class EnableFilterByRegexAction extends BooleanPropertyToggleAction {
+    public EnableFilterByRegexAction() {
+        super(VersionControlSystemLogLocalize.actionEnableFilterByRegexText());
+    }
+
     @Override
     protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
         return MainVcsLogUiProperties.TEXT_FILTER_REGEX;

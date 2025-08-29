@@ -1609,24 +1609,6 @@
 
         <action id="Vcs.Push" class="consulo.ide.impl.idea.dvcs.push.VcsPushAction"/>
 
-        <group id="Vcs.Log.ContextMenu">
-            <reference id="Vcs.CopyRevisionNumberAction"/>
-            <reference id="Vcs.Log.CreatePatch"/>
-        </group>
-
-        <group id="Dvcs.Log.ContextMenu">
-            <separator/>
-            <reference id="Vcs.CherryPick"/>
-            <add-to-group group-id="Vcs.Log.ContextMenu"/>
-        </group>
-
-        <group id="Vcs.Log.Toolbar"/>
-
-        <group id="Dvcs.Log.Toolbar">
-            <reference id="Vcs.CherryPick"/>
-            <add-to-group group-id="Vcs.Log.Toolbar"/>
-        </group>
-
         <!--Tool window actions-->
         <group id="ExternalSystem.ToolWindow.Toolbar">
             <reference id="ExternalSystem.RefreshAllProjects"/>
@@ -1674,95 +1656,7 @@
             <add-to-group group-id="ChangesViewPopupMenu" relative-to-action="ChangesView.SetDefault" anchor="after"/>
         </action>
 
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.GoToHashOrRefAction" id="Vcs.Log.GoToRef"
-                icon="consulo.platform.base.PlatformIconGroup@actions.search"
-                use-shortcut-of="Find"
-                text="Go To Hash/Branch/Tag" description="Specify hash or name of a branch or a tag to navigate to the commit it points"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsLogQuickSettingsActions" id="Vcs.Log.QuickSettings"
-                icon="consulo.platform.base.PlatformIconGroup@general.gearplain" text="Quick Settings" description="Quick Settings"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsLogTextFilterSettingsActions" id="Vcs.Log.QuickTextFilterSettings"
-                icon="consulo.platform.base.PlatformIconGroup@general.gearplain" text="Text Filter Settings"
-                description="Text Filter Settings"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.IntelliSortChooserToggleAction" id="Vcs.Log.IntelliSortChooser"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsShowLogAction" id="Vcs.Show.Log">
-            <add-to-group group-id="Vcs.Show.Toolwindow.Tab"/>
-        </action>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.CompactReferencesViewAction" id="Vcs.Log.CompactReferencesView"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowTagNamesAction" id="Vcs.Log.ShowTagNames"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.CollapseGraphAction" id="Vcs.Log.CollapseAll"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ExpandGraphAction" id="Vcs.Log.ExpandAll"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowLongEdgesAction" id="Vcs.Log.ShowLongEdges"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowDetailsAction" id="Vcs.Log.ShowDetailsAction"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowRootsColumnAction" id="Vcs.Log.ShowRootsColumnAction"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.FocusTextFilterAction" id="Vcs.Log.FocusTextFilter">
-            <keyboard-shortcut first-keystroke="control L" keymap="$default"/>
-            <keyboard-shortcut first-keystroke="control L" keymap="Visual Studio" remove="true"/>
-        </action>
-        <group class="consulo.ide.impl.idea.vcs.log.ui.actions.HighlightersActionGroup" id="Vcs.Log.HighlightersActionGroup"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.OpenAnotherLogTabAction" id="Vcs.Log.OpenAnotherTab"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.CloseLogTabAction" id="Vcs.Log.CloseLogTabAction"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.RefreshLogAction" id="Vcs.Log.Refresh" use-shortcut-of="Refresh"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowGraphHistoryAction" id="Vcs.Show.Graph.History"
-                text="Show History as Graph" description="Show History as Graph" internal="true"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowCommitTooltipAction" id="Vcs.Log.ShowTooltip"
-                text="Show Commit Tooltip" description="Show tooltip for currently selected commit in the Log"
-                use-shortcut-of="QuickJavaDoc"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.EnableFilterByRegexAction" id="Vcs.Log.EnableFilterByRegexAction"
-                text="Regex"/>
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.EnableMatchCaseAction" id="Vcs.Log.MatchCaseAction"
-                text="Match Case"/>
-
-        <group id="Vcs.Log.Settings">
-            <reference id="Vcs.Log.ShowRootsColumnAction"/>
-            <reference id="Vcs.Log.CompactReferencesView"/>
-            <reference id="Vcs.Log.ShowTagNames"/>
-            <reference id="Vcs.Log.ShowLongEdges"/>
-            <separator/>
-            <reference id="Vcs.Log.CollapseAll"/>
-            <reference id="Vcs.Log.ExpandAll"/>
-            <reference id="Vcs.Log.HighlightersActionGroup"/>
-            <separator/>
-            <reference id="ContextHelp"/>
-        </group>
-        <group id="Vcs.Log.TextFilterSettings">
-            <reference id="Vcs.Log.EnableFilterByRegexAction"/>
-            <reference id="Vcs.Log.MatchCaseAction"/>
-        </group>
-        <group id="Vcs.Log.Toolbar.Internal">
-            <reference id="Vcs.Log.Refresh"/>
-            <reference id="Vcs.Log.GoToRef"/>
-            <group id="Vcs.Log.Toolbar"/>
-            <separator/>
-            <reference ref="Vcs.Log.OpenAnotherTab"/>
-            <reference ref="Vcs.Log.CloseLogTabAction"/>
-        </group>
-
-        <group id="Log.KeymapGroup" text="Log">
-            <reference ref="Vcs.Log.CreatePatch"/>
-            <separator/>
-            <reference ref="Vcs.Log.GoToRef"/>
-            <reference ref="Vcs.Log.FocusTextFilter"/>
-            <reference ref="Vcs.Log.QuickTextFilterSettings"/>
-            <reference ref="Vcs.Log.EnableFilterByRegexAction"/>
-            <reference ref="Vcs.Log.MatchCaseAction"/>
-            <separator/>
-            <reference ref="Vcs.Log.IntelliSortChooser"/>
-            <reference ref="Vcs.Log.CollapseAll"/>
-            <reference ref="Vcs.Log.ExpandAll"/>
-            <reference ref="Vcs.Log.ShowLongEdges"/>
-            <separator/>
-            <reference ref="Vcs.Log.QuickSettings"/>
-            <reference ref="Vcs.Log.CompactReferencesView"/>
-            <reference ref="Vcs.Log.ShowTagNames"/>
-            <reference ref="Vcs.Log.ShowDetailsAction"/>
-            <reference ref="Vcs.Log.ShowRootsColumnAction"/>
-            <separator/>
-            <reference ref="Vcs.Log.Refresh"/>
-            <reference ref="Vcs.Log.OpenAnotherTab"/>
-            <reference ref="Vcs.Log.CloseLogTabAction"/>
-
-            <add-to-group group-id="Vcs.KeymapGroup"/>
-        </group>
+        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowGraphHistoryAction" id="Vcs.Show.Graph.History" internal="true"/>
 
         <group id="XDebugger.AttachGroup">
             <reference ref="XDebugger.AttachToProcess"/>

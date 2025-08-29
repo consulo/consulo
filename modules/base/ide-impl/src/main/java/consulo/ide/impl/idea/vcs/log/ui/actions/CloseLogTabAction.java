@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.project.Project;
@@ -30,6 +31,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "Vcs.Log.CloseLogTabAction")
 public class CloseLogTabAction extends CloseTabToolbarAction {
     @Override
     public void update(@Nonnull AnActionEvent e) {
@@ -39,11 +41,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
             return;
         }
         ContentManager contentManager = getContentManager(e.getRequiredData(Project.KEY));
-        if (contentManager == null || getTabbedContent(contentManager) == null) {
-            e.getPresentation().setEnabledAndVisible(false);
-            return;
-        }
-        e.getPresentation().setEnabledAndVisible(true);
+        e.getPresentation().setEnabledAndVisible(contentManager != null && getTabbedContent(contentManager) != null);
     }
 
     @Override
@@ -62,10 +60,8 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
     @Nullable
     private static Content getTabbedContent(@Nonnull ContentManager contentManager) {
         Content content = contentManager.getSelectedContent();
-        if (content != null) {
-            if (ContentUtilEx.isContentTab(content, VcsLogContentProvider.TAB_NAME)) {
-                return content;
-            }
+        if (content != null && ContentUtilEx.isContentTab(content, VcsLogContentProvider.TAB_NAME)) {
+            return content;
         }
         return null;
     }
@@ -73,9 +69,6 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
     @Nullable
     private static ContentManager getContentManager(@Nonnull Project project) {
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
-        if (toolWindow == null) {
-            return null;
-        }
-        return toolWindow.getContentManager();
+        return toolWindow == null ? null : toolWindow.getContentManager();
     }
 }

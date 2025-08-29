@@ -15,15 +15,18 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Log.ShowRootsColumnAction")
 public class ShowRootsColumnAction extends BooleanPropertyToggleAction {
     public ShowRootsColumnAction() {
-        super("Show Root Names");
+        super(VersionControlSystemLogLocalize.actionShowRootsColumnText());
     }
 
     @Override

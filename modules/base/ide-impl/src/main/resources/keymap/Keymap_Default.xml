@@ -646,14 +646,17 @@
   <action id="ChangesView.Revert">
     <keyboard-shortcut first-keystroke="control alt Z"/>
   </action>
-  <action id="Vcs.RollbackChangedLines">
-    <keyboard-shortcut first-keystroke="control alt Z"/>
+  <action id="Vcs.Log.FocusTextFilter">
+    <keyboard-shortcut first-keystroke="control L"/>
   </action>
   <action id="Vcs.MoveChangedLinesToChangelist">
     <keyboard-shortcut first-keystroke="alt shift M"/>
   </action>
   <action id="Vcs.Push">
     <keyboard-shortcut first-keystroke="control shift K"/>
+  </action>
+  <action id="Vcs.RollbackChangedLines">
+    <keyboard-shortcut first-keystroke="control alt Z"/>
   </action>
   <action id="Vcs.UpdateProject">
     <keyboard-shortcut first-keystroke="control T"/>

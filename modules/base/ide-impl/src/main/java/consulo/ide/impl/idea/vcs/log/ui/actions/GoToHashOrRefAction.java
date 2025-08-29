@@ -15,29 +15,43 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.ide.impl.idea.vcs.log.impl.VcsGoToRefComparator;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.log.VcsLog;
 import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
+@ActionImpl(id = "Vcs.Log.GoToRef", shortcutFrom = @ActionRef(id = IdeActions.ACTION_FIND))
 public class GoToHashOrRefAction extends DumbAwareAction {
+    public GoToHashOrRefAction() {
+        super(
+            VersionControlSystemLogLocalize.actionGoToRefText(),
+            VersionControlSystemLogLocalize.actionGoToRefDescription(),
+            PlatformIconGroup.actionsSearch()
+        );
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         VcsLogUtil.triggerUsage(e);
 
         Project project = e.getRequiredData(Project.KEY);
-        final VcsLog log = e.getRequiredData(VcsLog.KEY);
-        final VcsLogUiImpl logUi = (VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY);
+        VcsLog log = e.getRequiredData(VcsLog.KEY);
+        VcsLogUiImpl logUi = (VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY);
 
         Set<VirtualFile> visibleRoots = VcsLogUtil.getVisibleRoots(logUi);
         GoToHashOrRefPopup popup = new GoToHashOrRefPopup(

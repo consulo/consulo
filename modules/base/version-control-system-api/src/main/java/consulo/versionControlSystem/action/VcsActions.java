@@ -19,6 +19,8 @@ package consulo.versionControlSystem.action;
  * @author Konstantin Kolosovsky.
  */
 public interface VcsActions {
+    String ACTION_CHERRY_PICK = "Vcs.CherryPick";
+
     String ACTION_COPY_REVISION_NUMBER = "Vcs.CopyRevisionNumberAction";
 
     String ACTION_SHOW_ALL_AFFECTED = "VcsHistory.ShowAllAffected";

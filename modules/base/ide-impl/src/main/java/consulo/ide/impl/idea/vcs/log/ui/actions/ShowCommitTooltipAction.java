@@ -15,19 +15,24 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Vcs.Log.ShowTooltip", shortcutFrom = @ActionRef(id = IdeActions.ACTION_QUICK_JAVADOC))
 public class ShowCommitTooltipAction extends DumbAwareAction {
     public ShowCommitTooltipAction() {
-        super("Show Commit Tooltip", "Show tooltip for currently selected commit in the Log", null);
+        super(VersionControlSystemLogLocalize.actionShowCommitTooltipText(), VersionControlSystemLogLocalize.actionShowCommitTooltipDescription());
     }
 
     @Override

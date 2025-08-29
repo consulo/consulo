@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
@@ -24,15 +25,18 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.VcsLogProperties;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+@ActionImpl(id = "Vcs.Log.MatchCaseAction")
 public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
-    @Nonnull
-    private static final String MATCH_CASE = "Match Case";
+    public EnableMatchCaseAction() {
+        super(VersionControlSystemLogLocalize.actionMatchCaseText());
+    }
 
     @Override
     protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
@@ -49,7 +53,7 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
             boolean regexEnabled = properties.exists(MainVcsLogUiProperties.TEXT_FILTER_REGEX)
                 && properties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX);
             if (!regexEnabled) {
-                e.getPresentation().setText(MATCH_CASE);
+                e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionMatchCaseText());
             }
             else {
                 Collection<VcsLogProvider> providers = new LinkedHashSet<>(ui.getDataPack().getLogProviders().values());
@@ -58,14 +62,14 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
                 e.getPresentation().setVisible(true);
                 e.getPresentation().setEnabled(!supported.isEmpty());
                 if (providers.size() == supported.size() || supported.isEmpty()) {
-                    e.getPresentation().setText(MATCH_CASE);
+                    e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionMatchCaseText());
                 }
                 else {
                     String supportedText = StringUtil.join(
                         ContainerUtil.map(supported, p -> p.getSupportedVcs().getName().toLowerCase()),
                         ", "
                     );
-                    e.getPresentation().setText(MATCH_CASE + " (" + supportedText + " only)");
+                    e.getPresentation().setTextValue(VersionControlSystemLogLocalize.actionMatchCaseOnlySupported(supportedText));
                 }
             }
         }
