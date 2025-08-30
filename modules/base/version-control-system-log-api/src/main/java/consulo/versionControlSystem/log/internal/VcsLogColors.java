@@ -13,24 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.log;
+package consulo.versionControlSystem.log.internal;
 
-import consulo.disposer.Disposable;
-import consulo.versionControlSystem.log.internal.VcsLogColors;
-import jakarta.annotation.Nonnull;
-
-import java.awt.*;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 
 /**
  * @author VISTALL
- * @since 2025-08-30
+ * @since 2025-08-31
  */
-public interface VcsLogDeepComparator extends VcsLogHighlighter, Disposable {
-    Color COMMIT_FOREGROUND = VcsLogColors.MERGE_COMMIT_FOREGROUND;
-
-    void highlightInBackground(@Nonnull String branchToCompare, @Nonnull VcsLogDataProvider dataProvider);
-
-    void stopAndUnhighlight();
-
-    boolean hasHighlightingOrInProgress();
+public class VcsLogColors {
+    public static final JBColor MERGE_COMMIT_FOREGROUND = new JBColor(Gray._128, Gray._96);
 }

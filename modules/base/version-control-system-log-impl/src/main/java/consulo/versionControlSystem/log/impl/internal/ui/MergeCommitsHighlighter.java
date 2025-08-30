@@ -15,14 +15,11 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui;
 
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
+import consulo.versionControlSystem.log.internal.VcsLogColors;
 import consulo.versionControlSystem.log.*;
-
 import jakarta.annotation.Nonnull;
 
 public class MergeCommitsHighlighter implements VcsLogHighlighter {
-  public static final JBColor MERGE_COMMIT_FOREGROUND = new JBColor(Gray._128, Gray._96);
   @Nonnull
   private final VcsLogUi myLogUi;
 
@@ -34,7 +31,7 @@ public class MergeCommitsHighlighter implements VcsLogHighlighter {
   @Override
   public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
     if (isSelected || !myLogUi.isHighlighterEnabled(MergeCommitsHighlighterFactory.ID)) return VcsCommitStyle.DEFAULT;
-    if (details.getParents().size() >= 2) return VcsCommitStyleFactory.foreground(MERGE_COMMIT_FOREGROUND);
+    if (details.getParents().size() >= 2) return VcsCommitStyleFactory.foreground(VcsLogColors.MERGE_COMMIT_FOREGROUND);
     return VcsCommitStyle.DEFAULT;
   }
 
