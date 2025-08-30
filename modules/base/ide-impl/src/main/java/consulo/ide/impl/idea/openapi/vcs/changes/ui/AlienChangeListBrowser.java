@@ -32,9 +32,9 @@ public class AlienChangeListBrowser extends ChangesBrowser {
   private final List<Change> myChanges;
   private final AbstractVcs myVcs;
 
-  public AlienChangeListBrowser(final Project project, final List<? extends ChangeList> changeLists, final List<Change> changes,
-                                final ChangeList initialListSelection, final boolean capableOfExcludingChanges,
-                                final boolean highlightProblems, final AbstractVcs vcs) {
+  public AlienChangeListBrowser(Project project, List<? extends ChangeList> changeLists, List<Change> changes,
+                                ChangeList initialListSelection, boolean capableOfExcludingChanges,
+                                boolean highlightProblems, AbstractVcs vcs) {
     super(project, changeLists, changes, initialListSelection, capableOfExcludingChanges, highlightProblems, null, MyUseCase.LOCAL_CHANGES, null);
     myChanges = changes;
     myVcs = vcs;
@@ -47,7 +47,7 @@ public class AlienChangeListBrowser extends ChangesBrowser {
     myViewer.setChangesToDisplay(myChanges ==  null ? Collections.<Change>emptyList() : myChanges);
   }
 
-  protected void setInitialSelection(final List<? extends ChangeList> changeLists, @Nonnull final List<Change> changes, final ChangeList initialListSelection) {
+  protected void setInitialSelection(List<? extends ChangeList> changeLists, @Nonnull List<Change> changes, ChangeList initialListSelection) {
     if (! changeLists.isEmpty()) {
       mySelectedChangeList = changeLists.get(0);
     }

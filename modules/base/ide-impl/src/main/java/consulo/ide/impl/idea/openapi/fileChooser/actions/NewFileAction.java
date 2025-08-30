@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.platform.base.icon.PlatformIconGroup;

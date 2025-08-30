@@ -28,6 +28,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.impl.internal.change.ui.RemoteStatusChangeNodeDecorator;
+import consulo.versionControlSystem.internal.PlusMinus;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.internal.RemoteRevisionChangeListener;
 import consulo.versionControlSystem.root.VcsRoot;

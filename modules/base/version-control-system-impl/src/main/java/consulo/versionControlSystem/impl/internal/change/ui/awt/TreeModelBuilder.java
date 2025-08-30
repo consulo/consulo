@@ -315,7 +315,7 @@ public class TreeModelBuilder {
 
     for (VirtualFile file : keys) {
       final LogicalLock lock = logicallyLockedFiles.get(file);
-      final ChangesBrowserLogicallyLockedFile obj = new ChangesBrowserLogicallyLockedFile(myProject, file, lock);
+      final ChangesBrowserLogicallyLockedFileImpl obj = new ChangesBrowserLogicallyLockedFileImpl(myProject, file, lock);
       insertChangeNode(obj, subtreeRoot, ChangesBrowserNode.create(myProject, obj));
     }
     return this;
@@ -383,7 +383,7 @@ public class TreeModelBuilder {
     else if (o instanceof FilePath filePath) {
       return staticFrom(filePath);
     }
-    else if (o instanceof ChangesBrowserLogicallyLockedFile changesBrowserLogicallyLockedFile) {
+    else if (o instanceof ChangesBrowserLogicallyLockedFileImpl changesBrowserLogicallyLockedFile) {
       return staticFrom(changesBrowserLogicallyLockedFile.getUserObject());
     }
     else if (o instanceof LocallyDeletedChange locallyDeletedChange) {
@@ -405,27 +405,6 @@ public class TreeModelBuilder {
   @Nonnull
   private static StaticFilePath staticFrom(@Nonnull VirtualFile vf) {
     return new StaticFilePath(vf.isDirectory(), vf.getPath(), vf);
-  }
-
-  @Nonnull
-  public static FilePath getPathForObject(@Nonnull Object o) {
-    if (o instanceof Change change) {
-      return ChangesUtil.getFilePath(change);
-    }
-    else if (o instanceof VirtualFile virtualFile) {
-      return VcsUtil.getFilePath(virtualFile);
-    }
-    else if (o instanceof FilePath filePath) {
-      return filePath;
-    }
-    else if (o instanceof ChangesBrowserLogicallyLockedFile changesBrowserLogicallyLockedFile) {
-      return VcsUtil.getFilePath(changesBrowserLogicallyLockedFile.getUserObject());
-    }
-    else if (o instanceof LocallyDeletedChange locallyDeletedChange) {
-      return locallyDeletedChange.getPath();
-    }
-
-    throw new IllegalArgumentException("Unknown type - " + o.getClass());
   }
 
   @Nonnull

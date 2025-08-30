@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-import static consulo.ide.impl.idea.openapi.fileChooser.FileElement.isFileHidden;
+import static consulo.fileChooser.node.FileElement.isFileHidden;
 
 /**
  * @author Sergey.Malenkov

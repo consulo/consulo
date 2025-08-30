@@ -27,7 +27,7 @@ import consulo.versionControlSystem.ChangeListColumn;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
+import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ui.ex.awt.table.TableView;

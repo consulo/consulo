@@ -20,7 +20,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.util.FormBuilder;
 import consulo.util.io.FileUtil;

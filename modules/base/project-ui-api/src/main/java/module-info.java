@@ -32,6 +32,7 @@ module consulo.project.ui.api {
         consulo.ui.ex.awt.api,
         consulo.execution.test.sm.api,
         consulo.execution.coverage.impl,
+        consulo.version.control.system.log.impl,
         consulo.file.editor.api,
         consulo.file.editor.impl,
         consulo.execution.impl,

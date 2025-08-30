@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTree;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;

@@ -27,7 +27,7 @@ import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
 import jakarta.annotation.Nonnull;

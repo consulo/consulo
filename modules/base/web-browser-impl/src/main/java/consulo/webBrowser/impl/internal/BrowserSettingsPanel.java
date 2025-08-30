@@ -10,7 +10,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.IconTableCellRenderer;
 import consulo.ui.ex.awt.table.ListTableModel;

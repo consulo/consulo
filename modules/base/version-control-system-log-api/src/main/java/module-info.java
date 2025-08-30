@@ -19,5 +19,11 @@ module consulo.version.control.system.log.api {
     exports consulo.versionControlSystem.log.graph;
     exports consulo.versionControlSystem.log.graph.action;
     exports consulo.versionControlSystem.log.localize;
+    exports consulo.versionControlSystem.log.ui;
     exports consulo.versionControlSystem.log.util;
+
+    exports consulo.versionControlSystem.log.internal to
+        consulo.ide.impl,
+        consulo.version.control.system.log.impl,
+        consulo.desktop.awt.ide.impl;
 }

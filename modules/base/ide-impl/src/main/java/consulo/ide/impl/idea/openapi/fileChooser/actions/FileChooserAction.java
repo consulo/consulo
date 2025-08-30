@@ -20,7 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTree;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;

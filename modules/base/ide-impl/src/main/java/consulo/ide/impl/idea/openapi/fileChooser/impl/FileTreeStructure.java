@@ -17,8 +17,8 @@
 package consulo.ide.impl.idea.openapi.fileChooser.impl;
 
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
-import consulo.ide.impl.idea.openapi.fileChooser.ex.FileNodeDescriptor;
+import consulo.fileChooser.node.FileElement;
+import consulo.fileChooser.node.FileNodeDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.RootFileElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -58,7 +58,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public boolean isToBuildChildrenInBackground(@Nonnull final Object element) {
+    public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
         return true;
     }
 
@@ -66,7 +66,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
         return myShowHidden;
     }
 
-    public final void showHiddens(final boolean showHidden) {
+    public final void showHiddens(boolean showHidden) {
         myShowHidden = showHidden;
     }
 
@@ -115,7 +115,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
         Set<FileElement> childrenSet = new HashSet<>();
         for (VirtualFile child : children) {
             if (myChooserDescriptor.isFileVisible(child, myShowHidden)) {
-                final FileElement childElement = new FileElement(child, child.getName());
+                FileElement childElement = new FileElement(child, child.getName());
                 childElement.setParent(element);
                 childrenSet.add(childElement);
             }
@@ -128,15 +128,15 @@ public class FileTreeStructure extends AbstractTreeStructure {
     @Nullable
     public Object getParentElement(@Nonnull Object element) {
         if (element instanceof FileElement fileElement) {
-            final VirtualFile elementFile = getValidFile(fileElement);
+            VirtualFile elementFile = getValidFile(fileElement);
             if (elementFile != null && myRootElement.getFile() != null && myRootElement.getFile().equals(elementFile)) {
                 return null;
             }
 
-            final VirtualFile parentElementFile = getValidFile(fileElement.getParent());
+            VirtualFile parentElementFile = getValidFile(fileElement.getParent());
 
             if (elementFile != null && parentElementFile != null) {
-                final VirtualFile parentFile = elementFile.getParent();
+                VirtualFile parentFile = elementFile.getParent();
                 if (parentElementFile.equals(parentFile)) {
                     return fileElement.getParent();
                 }
@@ -171,7 +171,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
         if (element == null) {
             return null;
         }
-        final VirtualFile file = element.getFile();
+        VirtualFile file = element.getFile();
         return file != null && file.isValid() ? file : null;
     }
 
@@ -193,6 +193,6 @@ public class FileTreeStructure extends AbstractTreeStructure {
         String name = file == null ? null : myChooserDescriptor.getName(file);
         String comment = file == null ? null : myChooserDescriptor.getComment(file);
 
-        return new FileNodeDescriptor(myProject, (FileElement) element, parentDescriptor, icon, name, comment);
+        return new FileNodeDescriptor((FileElement) element, parentDescriptor, icon, name, comment);
     }
 }

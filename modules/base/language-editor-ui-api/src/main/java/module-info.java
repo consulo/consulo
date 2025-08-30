@@ -5,11 +5,12 @@
 module consulo.language.editor.ui.api {
     // TODO remove this dependency in future
     requires java.desktop;
+    requires transitive consulo.ui.ex.awt.api;
 
     requires transitive consulo.code.editor.api;
     requires transitive consulo.language.editor.api;
+    requires transitive consulo.language.spellchecker.editor.api;
     requires transitive consulo.usage.api;
-    requires transitive consulo.ui.ex.awt.api;
     requires consulo.find.api;
 
     exports consulo.language.editor.ui;

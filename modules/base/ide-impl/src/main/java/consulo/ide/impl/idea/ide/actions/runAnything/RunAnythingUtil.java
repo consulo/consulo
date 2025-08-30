@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.SeparatorComponent;
+import consulo.ui.ex.awt.SeparatorComponent;
 import consulo.ide.internal.RunAnythingCache;
 import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.logging.Logger;

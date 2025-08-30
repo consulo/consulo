@@ -1656,7 +1656,7 @@
             <add-to-group group-id="ChangesViewPopupMenu" relative-to-action="ChangesView.SetDefault" anchor="after"/>
         </action>
 
-        <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowGraphHistoryAction" id="Vcs.Show.Graph.History" internal="true"/>
+        <action class="consulo.versionControlSystem.log.impl.internal.ui.action.ShowGraphHistoryAction" id="Vcs.Show.Graph.History" internal="true"/>
 
         <group id="XDebugger.AttachGroup">
             <reference ref="XDebugger.AttachToProcess"/>

@@ -15,6 +15,8 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
+import consulo.versionControlSystem.internal.PlusMinus;
+
 /**
  * @author Irina.Chernushina
  * @since 2012-11-19

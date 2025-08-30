@@ -27,13 +27,13 @@ import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.internal.RepositoryChangesBrowserApi;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -43,7 +43,7 @@ import java.util.*;
 /**
  * @author yole
  */
-public class RepositoryChangesBrowser extends ChangesBrowser implements DataProvider {
+public class RepositoryChangesBrowser extends ChangesBrowser implements DataProvider, RepositoryChangesBrowserApi {
 
   private CommittedChangesBrowserUseCase myUseCase;
   private EditSourceAction myEditSourceAction;
@@ -104,6 +104,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
     }
   }
 
+  @Override
   public EditSourceAction getEditSourceAction() {
     return myEditSourceAction;
   }

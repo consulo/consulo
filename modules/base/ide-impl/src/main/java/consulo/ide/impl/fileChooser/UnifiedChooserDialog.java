@@ -20,7 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
+import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.ui.app.WindowWrapper;
 import consulo.project.Project;
 import consulo.ui.*;

@@ -32,7 +32,7 @@ import consulo.ui.ex.internal.QuickSearchComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
-import consulo.ide.impl.idea.ui.SeparatorComponent;
+import consulo.ui.ex.awt.SeparatorComponent;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;

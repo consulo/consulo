@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
 import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
-import consulo.ide.impl.idea.ui.popup.KeepingPopupOpenAction;
+import consulo.ui.ex.action.KeepingPopupOpenAction;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -34,6 +34,7 @@ import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.branch.BranchActionGroup;
 import consulo.versionControlSystem.distributed.branch.PopupElementWithAdditionalInfo;
 import consulo.versionControlSystem.distributed.icon.DistributedVersionControlIconGroup;
+import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -280,7 +281,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
                     speedSearchActions.addAll(createSpeedSearchActions(childGroup, false));
                 }
                 else if (childGroup instanceof BranchActionGroup) {
-                    speedSearchActions.add(createSpeedSearchActionGroupWrapper(childGroup));
+                    speedSearchActions.add(FlatSpeedSearchPopupFactory.createSpeedSearchActionGroupWrapper(childGroup));
                 }
             }
         }

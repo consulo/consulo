@@ -28,7 +28,7 @@ import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.Indenter;
 import consulo.util.io.FileUtil;

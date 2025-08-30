@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.ide.impl.idea.ui.dualView.DualView;
-import consulo.ide.impl.idea.ui.dualView.DualViewColumnInfo;
+import consulo.ui.ex.awt.dualView.DualView;
+import consulo.ui.ex.awt.dualView.DualViewColumnInfo;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.versionControlSystem.history.VcsFileRevision;

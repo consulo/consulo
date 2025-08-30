@@ -20,7 +20,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesFileNameDecorator;
-import consulo.versionControlSystem.impl.internal.change.ui.issueLink.IssueLinkRenderer;
+import consulo.versionControlSystem.ui.awt.IssueLinkRenderer;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

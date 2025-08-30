@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.versionControlSystem.RepositoryLocation;
 import consulo.versionControlSystem.VcsException;
-import consulo.ide.impl.idea.ui.dualView.DualTreeElement;
+import consulo.ui.ex.awt.dualView.DualTreeElement;
 import consulo.util.lang.TreeItem;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;

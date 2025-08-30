@@ -17,7 +17,7 @@ package consulo.ide.impl.vcs;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentI;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;

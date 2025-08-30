@@ -17,7 +17,7 @@ package consulo.ide.impl.fileChooser;
 
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
+import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileTreeStructure;
 import consulo.project.Project;
 import consulo.ui.Tree;

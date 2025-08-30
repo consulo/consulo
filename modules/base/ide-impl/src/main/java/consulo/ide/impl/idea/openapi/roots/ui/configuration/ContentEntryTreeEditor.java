@@ -24,7 +24,7 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ToolbarLabelAction;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.NewFolderAction;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.tree.FileNode;
@@ -44,7 +44,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SimpleColoredComponent;
@@ -148,12 +147,7 @@ public class ContentEntryTreeEditor {
             myDescriptor.setTitle(FileUtil.toSystemDependentName(path));
         }
 
-        final Runnable init = () -> {
-            myFileSystemTree.updateTree();
-            myFileSystemTree.select(file, null);
-        };
-
-        myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, null, init, null) {
+        myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, null, null) {
             @Override
             protected TreeCellRenderer createFileRender() {
                 return new FileRenderer() {

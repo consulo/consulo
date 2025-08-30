@@ -22,7 +22,7 @@ import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.ex.TextComponentAccessor;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.util.FormBuilder;

@@ -15,7 +15,6 @@ module consulo.ui.ex.api {
     requires transitive consulo.navigation.api;
     requires transitive consulo.color.scheme.api;
     requires transitive consulo.base.localize.library;
-    requires transitive consulo.file.chooser.api;
     requires transitive kava.beans;
 
     exports consulo.ui.ex;

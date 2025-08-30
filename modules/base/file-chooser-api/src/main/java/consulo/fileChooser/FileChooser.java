@@ -44,22 +44,22 @@ public final class FileChooser {
   @Nonnull
   @RequiredUIAccess
   public static AsyncResult<VirtualFile[]> chooseFiles(@Nonnull FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
-    final FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, parent);
+    FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, parent);
     return chooser.chooseAsync(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
   }
 
   @Nonnull
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(@Nonnull final FileChooserDescriptor descriptor, @Nullable final ComponentManager project, @Nullable final VirtualFile toSelect) {
+  public static AsyncResult<VirtualFile> chooseFile(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     return chooseFile(descriptor, null, project, toSelect);
   }
 
   @Nonnull
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(@Nonnull final FileChooserDescriptor descriptor,
-                                                    @Nullable final Component parent,
-                                                    @Nullable final ComponentManager project,
-                                                    @Nullable final VirtualFile toSelect) {
+  public static AsyncResult<VirtualFile> chooseFile(@Nonnull FileChooserDescriptor descriptor,
+                                                    @Nullable Component parent,
+                                                    @Nullable ComponentManager project,
+                                                    @Nullable VirtualFile toSelect) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
     AsyncResult<VirtualFile> result = AsyncResult.undefined();
     AsyncResult<VirtualFile[]> filesAsync = chooseFiles(descriptor, parent, project, toSelect);
@@ -80,8 +80,8 @@ public final class FileChooser {
   @Nonnull
   @RequiredUIAccess
   public static AsyncResult<VirtualFile[]> chooseFiles(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
-    final FileChooserFactory factory = FileChooserFactory.getInstance();
-    final PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parent);
+    FileChooserFactory factory = FileChooserFactory.getInstance();
+    PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parent);
     return pathChooser.chooseAsync(toSelect);
   }
 
@@ -95,7 +95,7 @@ public final class FileChooser {
    */
   @Nonnull
   @RequiredUIAccess
-  public static AsyncResult<VirtualFile> chooseFile(@Nonnull final FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
+  public static AsyncResult<VirtualFile> chooseFile(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent, @Nullable VirtualFile toSelect) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
     AsyncResult<VirtualFile> result = AsyncResult.undefined();
 

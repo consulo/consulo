@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.vcs;
 import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.localize.LocalizeValue;
+import consulo.versionControlSystem.ui.VcsShowToolWindowTabAction;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Show.Shelf")

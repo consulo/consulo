@@ -22,11 +22,11 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecora
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChangesBrowser extends ChangesBrowserBase<Change> {
@@ -46,20 +46,23 @@ public class ChangesBrowser extends ChangesBrowserBase<Change> {
     rebuildList();
   }
 
+  @Override
   @Nonnull
-  protected DefaultTreeModel buildTreeModel(final List<Change> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten) {
+  protected DefaultTreeModel buildTreeModel(List<Change> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten) {
     TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
     return builder.buildModel(changes, changeNodeDecorator);
   }
 
+  @Override
   @Nonnull
-  protected List<Change> getSelectedObjects(@Nonnull final ChangesBrowserNode<Change> node) {
+  protected List<Change> getSelectedObjects(@Nonnull ChangesBrowserNode<Change> node) {
     return node.getAllChangesUnder();
   }
 
+  @Override
   @Nullable
-  protected Change getLeadSelectedObject(@Nonnull final ChangesBrowserNode node) {
-    final Object o = node.getUserObject();
+  protected Change getLeadSelectedObject(@Nonnull ChangesBrowserNode node) {
+    Object o = node.getUserObject();
     if (o instanceof Change) {
       return (Change)o;
     }
@@ -87,17 +90,12 @@ public class ChangesBrowser extends ChangesBrowserBase<Change> {
   @Nonnull
   @Override
   public List<Change> getCurrentIncludedChanges() {
-    return ContainerUtil.newArrayList(myViewer.getIncludedChanges());
+    return new ArrayList<>(myViewer.getIncludedChanges());
   }
 
   @Nonnull
   @Override
   public List<Change> getCurrentDisplayedObjects() {
     return getCurrentDisplayedChanges();
-  }
-
-  public enum MyUseCase {
-    LOCAL_CHANGES,
-    COMMITTED_CHANGES
   }
 }

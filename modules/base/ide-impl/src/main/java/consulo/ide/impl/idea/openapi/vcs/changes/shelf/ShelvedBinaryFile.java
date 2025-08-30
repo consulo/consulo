@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
+import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.project.Project;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;

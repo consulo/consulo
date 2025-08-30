@@ -26,10 +26,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.history.DiffFromHistoryHandler;
-import consulo.versionControlSystem.history.VcsFileRevision;
-import consulo.versionControlSystem.history.VcsHistorySession;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.history.*;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 

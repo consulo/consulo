@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentFactory;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
+import consulo.versionControlSystem.change.ChangesViewContentFactory;
+import consulo.versionControlSystem.change.ChangesViewContentProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;

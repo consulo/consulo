@@ -61,6 +61,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.versionControlSystem.internal.ChangesViewI;
 import consulo.versionControlSystem.internal.RemoteRevisionChangeListener;
 import consulo.versionControlSystem.localize.VcsLocalize;

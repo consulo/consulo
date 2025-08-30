@@ -22,6 +22,7 @@ import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
 import static consulo.util.collection.ContainerUtil.addIfNotNull;
@@ -217,5 +218,39 @@ public final class Lists {
                 };
             }
         };
+    }
+
+    @Nullable
+    @Contract(pure = true)
+    public static <T, U extends T> U findLastInstance(@Nonnull List<T> list, @Nonnull Class<U> clazz) {
+        int i = lastIndexOf(list, clazz::isInstance);
+        //noinspection unchecked
+        return i < 0 ? null : (U) list.get(i);
+    }
+
+    @Contract(pure = true)
+    public static <T> int lastIndexOf(@Nonnull List<T> list, @Nonnull Predicate<? super T> condition) {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            T t = list.get(i);
+            if (condition.test(t)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * The main difference from {@code subList} is that {@code getFirstItems} does not
+     * throw any exceptions, even if maxItems is greater than size of the list
+     *
+     * @param items    list
+     * @param maxItems size of the result will be equal or less than {@code maxItems}
+     * @param <T>      type of list
+     * @return new list with no more than {@code maxItems} first elements
+     */
+    @Nonnull
+    @Contract(pure = true)
+    public static <T> List<T> getFirstItems(@Nonnull List<T> items, int maxItems) {
+        return items.subList(0, Math.min(maxItems, items.size()));
     }
 }

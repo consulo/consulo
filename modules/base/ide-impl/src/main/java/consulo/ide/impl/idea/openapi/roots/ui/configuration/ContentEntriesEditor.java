@@ -20,7 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
-import consulo.ide.impl.idea.openapi.roots.ui.componentsList.components.ScrollablePanel;
+import consulo.ui.ex.awt.ScrollablePanel;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.layout.VerticalStackLayout;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.roots.ToolbarPanel;

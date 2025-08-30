@@ -39,7 +39,7 @@ import consulo.diff.util.ThreeSide;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
+import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;

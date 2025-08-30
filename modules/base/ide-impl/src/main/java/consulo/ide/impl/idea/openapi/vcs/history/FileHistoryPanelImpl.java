@@ -39,16 +39,16 @@ import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateRevisionActionBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
+import consulo.versionControlSystem.ui.awt.TableLinkMouseListener;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.ReplaceFileConfirmationDialog;
 import consulo.versionControlSystem.virtualFileSystem.VcsFileSystem;
 import consulo.versionControlSystem.virtualFileSystem.VcsVirtualFile;
 import consulo.versionControlSystem.virtualFileSystem.VcsVirtualFolder;
-import consulo.ide.impl.idea.ui.dualView.CellWrapper;
-import consulo.ide.impl.idea.ui.dualView.DualView;
-import consulo.ide.impl.idea.ui.dualView.DualViewColumnInfo;
-import consulo.ide.impl.idea.ui.dualView.TreeTableView;
+import consulo.ui.ex.awt.dualView.CellWrapper;
+import consulo.ui.ex.awt.dualView.DualView;
+import consulo.ui.ex.awt.dualView.DualViewColumnInfo;
+import consulo.ui.ex.awt.dualView.TreeTableView;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.localize.LocalizeValue;
@@ -80,7 +80,7 @@ import consulo.util.lang.TreeItem;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.history.*;
-import consulo.versionControlSystem.impl.internal.change.ui.issueLink.IssueLinkRenderer;
+import consulo.versionControlSystem.ui.awt.IssueLinkRenderer;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
@@ -300,7 +300,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     @Nonnull
     public static String getPresentableText(@Nonnull VcsFileRevision revision, boolean withMessage) {
-        // implementation reflected by consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable.getPresentableText()
+        // implementation reflected by consulo.versionControlSystem.log.impl.internal.ui.VcsLogGraphTable.getPresentableText()
         StringBuilder sb = new StringBuilder();
         sb.append(FileHistoryPanelImpl.RevisionColumnInfo.toString(revision, true)).append(" ");
         sb.append(revision.getAuthor());

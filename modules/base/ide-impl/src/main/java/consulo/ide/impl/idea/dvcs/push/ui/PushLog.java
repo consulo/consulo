@@ -17,12 +17,9 @@ package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditSourceForDialogAction;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
-import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -37,8 +34,11 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.internal.ChangesBrowserUtil;
 import consulo.versionControlSystem.log.Hash;
+import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -328,7 +328,7 @@ public class PushLog extends JPanel implements DataProvider {
 
     @Nonnull
     private static List<Change> collectAllChanges(@Nonnull List<CommitNode> commitNodes) {
-        return CommittedChangesTreeBrowser.zipChanges(collectChanges(commitNodes));
+        return ChangesBrowserUtil.zipChanges(collectChanges(commitNodes));
     }
 
     @Nonnull

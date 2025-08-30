@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
+import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree.Entry;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree.UpdateResult;

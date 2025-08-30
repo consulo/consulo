@@ -30,7 +30,7 @@ public interface ChangesViewI {
 
   void refreshChangesViewNodeAsync(VirtualFile file);
 
-  void updateProgressText(final String text, final boolean isError);
+  void updateProgressText(String text, boolean isError);
 
   void setBusy(boolean b);
 

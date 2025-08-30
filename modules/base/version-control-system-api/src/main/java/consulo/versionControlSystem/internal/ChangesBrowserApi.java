@@ -15,16 +15,42 @@
  */
 package consulo.versionControlSystem.internal;
 
+import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.change.Change;
+
+import javax.swing.*;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 21-Jul-24
  */
-public interface ChangesBrowserApi {
-  public static Key<ChangesBrowserApi> DATA_KEY = Key.create(ChangesBrowserApi.class);
+public interface ChangesBrowserApi<T> {
+    public enum MyUseCase {
+        LOCAL_CHANGES,
+        COMMITTED_CHANGES
+    }
 
-  void rebuildList();
+    Key<ChangesBrowserApi> DATA_KEY = Key.create(ChangesBrowserApi.class);
 
-  void setDataIsDirty(boolean dataIsDirty);
+    void rebuildList();
+
+    void setDataIsDirty(boolean dataIsDirty);
+
+    List<Change> getCurrentDisplayedChanges();
+
+    void setChangesToDisplay(List<T> changes);
+
+    JComponent getPreferredFocusedComponent();
+
+    ChangesBrowserTree getViewer();
+
+    JScrollPane getViewerScrollPane();
+
+    AnAction getDiffAction();
+
+    default JComponent getComponent() {
+        return (JComponent) this;
+    }
 }

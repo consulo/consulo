@@ -5,7 +5,7 @@ import consulo.ide.impl.idea.ide.todo.nodes.SummaryNode;
 import consulo.ide.impl.idea.ide.todo.nodes.TodoItemNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.NodeRenderer;
-import consulo.ide.impl.idea.ui.HighlightableCellRenderer;
+import consulo.ui.ex.awt.HighlightableCellRenderer;
 import consulo.ui.ex.awt.HighlightedRegion;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;

@@ -33,6 +33,7 @@ module consulo.ui.ex.awt.api {
     exports consulo.ui.ex.awt.hint;
     exports consulo.ui.ex.awt.html;
     exports consulo.ui.ex.awt.paint;
+    exports consulo.ui.ex.awt.dualView;
     exports consulo.ui.ex.awt.dnd;
     exports consulo.ui.ex.awt.scroll;
     exports consulo.ui.ex.awt.table;
@@ -51,6 +52,7 @@ module consulo.ui.ex.awt.api {
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.language.editor.refactoring.api,
+        consulo.version.control.system.log.impl,
         consulo.external.system.api,
         consulo.language.editor.ui.api,
         consulo.task.impl,

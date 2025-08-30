@@ -19,14 +19,15 @@ import consulo.util.lang.Pair;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsListener;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.internal.PlusMinus;
 
 import java.util.Collection;
 
 public interface ChangesOnServerTracker extends PlusMinus<Pair<String, AbstractVcs>>, VcsListener {
   // todo add vcs parameter???
-  void invalidate(final Collection<String> paths);
+  void invalidate(Collection<String> paths);
 
-  boolean isUpToDate(final Change change);
+  boolean isUpToDate(Change change);
 
   boolean updateStep();
 }

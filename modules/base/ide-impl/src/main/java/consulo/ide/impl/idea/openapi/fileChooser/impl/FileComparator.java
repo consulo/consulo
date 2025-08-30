@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.impl;
 
-import consulo.ide.impl.idea.openapi.fileChooser.ex.FileNodeDescriptor;
+import consulo.fileChooser.node.FileNodeDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.tree.NodeDescriptor;
 

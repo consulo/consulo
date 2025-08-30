@@ -16,48 +16,57 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.actions.SynchronizeAction;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.IdeActions;
+import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTreeFactory;
+import consulo.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTreeFactory;
+import consulo.ide.impl.idea.ide.actions.SynchronizeAction;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.tree.Tree;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
+import java.util.function.Function;
 
 @Singleton
 @ServiceImpl
-public class DesktopFileSystemTreeFactoryImpl extends FileSystemTreeFactory {
-  @Override
-  @Nonnull
-  public FileSystemTree createFileSystemTree(Project project, FileChooserDescriptor fileChooserDescriptor) {
-    return new FileSystemTreeImpl(project, fileChooserDescriptor);
-  }
+public class DesktopFileSystemTreeFactoryImpl implements FileSystemTreeFactory {
+    @Override
+    @Nonnull
+    public FileSystemTree createFileSystemTree(ComponentManager project, FileChooserDescriptor fileChooserDescriptor) {
+        return new FileSystemTreeImpl((Project) project, fileChooserDescriptor);
+    }
 
-  @Override
-  @Nonnull
-  public DefaultActionGroup createDefaultFileSystemActions(FileSystemTree fileSystemTree) {
-    DefaultActionGroup group = new DefaultActionGroup();
-    final ActionManager actionManager = ActionManager.getInstance();
-    group.add(actionManager.getAction("FileChooser.GotoHome"));
-    group.add(actionManager.getAction("FileChooser.GotoProject"));
-    group.addSeparator();
-    group.add(actionManager.getAction("FileChooser.NewFolder"));
-    group.add(actionManager.getAction("FileChooser.Delete"));
-    group.addSeparator();
-    SynchronizeAction action1 = new SynchronizeAction();
-    AnAction original = actionManager.getAction(IdeActions.ACTION_SYNCHRONIZE);
-    action1.copyFrom(original);
-    action1.registerCustomShortcutSet(original.getShortcutSet(), fileSystemTree.getTree());
-    group.add(action1);
-    group.addSeparator();
-    group.add(actionManager.getAction("FileChooser.ShowHiddens"));
+    @Nonnull
+    @Override
+    public FileSystemTree createFileSystemTree(@Nullable ComponentManager project, FileChooserDescriptor descriptor, Object tree, @Nullable TreeCellRenderer renderer, @Nullable Function<? super TreePath, String> speedSearchConverter) {
+        return new FileSystemTreeImpl((Project) project, descriptor, (Tree) tree, renderer, speedSearchConverter);
+    }
 
-    return group;
-  }
+    @Override
+    @Nonnull
+    public ActionGroup createDefaultFileSystemActions(FileSystemTree fileSystemTree) {
+        DefaultActionGroup group = new DefaultActionGroup();
+        ActionManager actionManager = ActionManager.getInstance();
+        group.add(actionManager.getAction("FileChooser.GotoHome"));
+        group.add(actionManager.getAction("FileChooser.GotoProject"));
+        group.addSeparator();
+        group.add(actionManager.getAction("FileChooser.NewFolder"));
+        group.add(actionManager.getAction("FileChooser.Delete"));
+        group.addSeparator();
+        SynchronizeAction action1 = new SynchronizeAction();
+        AnAction original = actionManager.getAction(IdeActions.ACTION_SYNCHRONIZE);
+        action1.copyFrom(original);
+        action1.registerCustomShortcutSet(original.getShortcutSet(), fileSystemTree.getTree());
+        group.add(action1);
+        group.addSeparator();
+        group.add(actionManager.getAction("FileChooser.ShowHiddens"));
+
+        return group;
+    }
 }

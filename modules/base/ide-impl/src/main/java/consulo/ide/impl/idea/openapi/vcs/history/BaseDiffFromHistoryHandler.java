@@ -20,6 +20,8 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
+import consulo.versionControlSystem.history.CurrentRevision;
+import consulo.versionControlSystem.history.VcsHistoryUtil;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.progress.ProgressIndicator;

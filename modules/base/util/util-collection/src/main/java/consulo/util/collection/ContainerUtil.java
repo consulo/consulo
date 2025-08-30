@@ -1729,4 +1729,15 @@ public class ContainerUtil {
             processor.accept(e);
         }
     }
+
+    /**
+     * @return read-only collection consisting of elements from the 'from' collection which are absent from the 'what' collection
+     */
+    @Nonnull
+    @Contract(pure = true)
+    public static <T> Collection<T> subtract(@Nonnull Collection<T> from, @Nonnull Collection<T> what) {
+        Set<T> set = new HashSet<>(from);
+        set.removeAll(what);
+        return set.isEmpty() ? List.of() : set;
+    }
 }

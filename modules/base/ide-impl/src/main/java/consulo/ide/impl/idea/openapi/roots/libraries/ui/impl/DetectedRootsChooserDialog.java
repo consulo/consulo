@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.ui.TitlePanel;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.ui.treeStructure.treetable.TreeColumnInfo;
+import consulo.ui.ex.awt.tree.table.TreeColumnInfo;
 import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -16,36 +16,37 @@
 package consulo.ui.ex.awt;
 
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 
 public class FontUtil {
-  @Nonnull
-  public static String rightArrow(@Nonnull Font font) {
-    return canDisplay(font, '\u2192', "->");
-  }
+    @Nonnull
+    public static String rightArrow(@Nonnull Font font) {
+        return canDisplay(font, '→', "->");
+    }
 
-  @Nonnull
-  public static String upArrow(@Nonnull Font font, @Nonnull String defaultValue) {
-    return canDisplay(font, '\u2191', defaultValue);
-  }
+    @Nonnull
+    public static String upArrow(@Nonnull Font font, @Nonnull String defaultValue) {
+        return canDisplay(font, '↑', defaultValue);
+    }
 
-  @Nonnull
-  public static String canDisplay(@Nonnull Font font, char value, @Nonnull String defaultValue) {
-    return font.canDisplay(value) ? String.valueOf(value) : defaultValue;
-  }
+    @Nonnull
+    public static String canDisplay(@Nonnull Font font, char value, @Nonnull String defaultValue) {
+        return font.canDisplay(value) ? String.valueOf(value) : defaultValue;
+    }
 
-  @Nonnull
-  public static Font minusOne(@Nonnull Font font) {
-    return font.deriveFont(font.getSize() - 1f);
-  }
+    @Nonnull
+    public static Font minusOne(@Nonnull Font font) {
+        return font.deriveFont(font.getSize() - 1f);
+    }
 
-  @Nonnull
-  public static String spaceAndThinSpace() {
-    return " " + thinSpace();
-  }
+    @Nonnull
+    public static String spaceAndThinSpace() {
+        return " " + thinSpace();
+    }
 
-  @Nonnull
-  public static String thinSpace() {
-    return canDisplay(UIUtil.getLabelFont(), '\u2009', " ");
-  }
+    @Nonnull
+    public static String thinSpace() {
+        return canDisplay(UIUtil.getLabelFont(), ' ', " ");
+    }
 }

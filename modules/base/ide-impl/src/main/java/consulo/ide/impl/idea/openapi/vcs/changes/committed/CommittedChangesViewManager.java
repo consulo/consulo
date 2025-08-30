@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
+import consulo.versionControlSystem.change.ChangesViewContentProvider;
 import consulo.versionControlSystem.change.commited.CommittedChangesListener;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;

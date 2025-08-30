@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescriptor;
-import consulo.ide.impl.idea.util.textCompletion.TextCompletionProvider;
-import consulo.ide.impl.idea.util.textCompletion.TextFieldWithCompletion;
-import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
+import consulo.language.editor.ui.awt.DefaultTextCompletionValueDescriptor;
+import consulo.language.editor.ui.awt.TextCompletionProvider;
+import consulo.language.editor.ui.awt.TextFieldWithCompletion;
+import consulo.language.editor.ui.awt.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 

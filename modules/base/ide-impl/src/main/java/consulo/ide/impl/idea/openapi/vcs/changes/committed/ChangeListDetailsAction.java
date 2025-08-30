@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.DateFormatUtil;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
+import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.platform.base.localize.ActionLocalize;

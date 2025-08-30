@@ -29,7 +29,7 @@ import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RepositoryChangesBrowser;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
+import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.change.commited.CommittedChangeListImpl;
 import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
@@ -83,22 +83,22 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     initDialog(project, changeList);
   }
 
-  public ChangeListViewerDialog(Component parent, Project project, Collection<Change> changes, final boolean inAir) {
+  public ChangeListViewerDialog(Component parent, Project project, Collection<Change> changes, boolean inAir) {
     super(parent, true);
     myInAir = inAir;
     initDialog(project, new CommittedChangeListImpl("", "", "", -1, new Date(0), changes));
   }
 
-  public ChangeListViewerDialog(Project project, Collection<Change> changes, final boolean inAir) {
+  public ChangeListViewerDialog(Project project, Collection<Change> changes, boolean inAir) {
     super(project, true);
     myInAir = inAir;
     initDialog(project, new CommittedChangeListImpl("", "", "", -1, new Date(0), changes));
   }
 
-  private void initDialog(final Project project, final CommittedChangeList changeList) {
+  private void initDialog(Project project, CommittedChangeList changeList) {
     myProject = project;
     myChangeList = changeList;
-    final Collection<Change> changes = myChangeList.getChanges();
+    Collection<Change> changes = myChangeList.getChanges();
     myChanges = changes.toArray(new Change[changes.size()]);
 
     setTitle(VcsBundle.message("dialog.title.changes.browser"));
@@ -108,11 +108,11 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     init();
   }
 
-  private void initCommitMessageArea(final Project project, final CommittedChangeList changeList) {
+  private void initCommitMessageArea(Project project, CommittedChangeList changeList) {
     myCommitMessageArea = new JEditorPane(UIUtil.HTML_MIME, "");
     myCommitMessageArea.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     myCommitMessageArea.setEditable(false);
-    @NonNls final String text = IssueLinkHtmlRenderer.formatTextIntoHtml(project, changeList.getComment().trim());
+    @NonNls String text = IssueLinkHtmlRenderer.formatTextIntoHtml(project, changeList.getComment().trim());
     myCommitMessageArea.setBackground(UIUtil.getComboBoxDisabledBackground());
     myCommitMessageArea.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
     commitMessageScroll = ScrollPaneFactory.createScrollPane(myCommitMessageArea);
@@ -125,7 +125,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return "VCS.ChangeListViewerDialog";
   }
 
-  public Object getData(@Nonnull @NonNls final Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (VcsDataKeys.CHANGES == dataId) {
       return myChanges;
     }
@@ -137,14 +137,14 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return null;
   }
 
-  public void setConvertor(final NotNullFunction<Change, Change> convertor) {
+  public void setConvertor(NotNullFunction<Change, Change> convertor) {
     myConvertor = convertor;
   }
 
   public JComponent createCenterPanel() {
-    final JPanel mainPanel = new JPanel();
+    JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout());
-    final Splitter splitter = new Splitter(true, 0.8f);
+    Splitter splitter = new Splitter(true, 0.8f);
     myChangesBrowser = new RepositoryChangesBrowser(myProject, Collections.singletonList(myChangeList),
                                                     new ArrayList<Change>(myChangeList.getChanges()),
                                                     myChangeList, myToSelect) {
@@ -156,7 +156,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
-      public Object getData(@Nonnull @NonNls Key dataId) {
+      public Object getData(@Nonnull Key dataId) {
         Object data = super.getData(dataId);
         if (data != null) {
           return data;
@@ -165,9 +165,9 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
-      protected void showDiffForChanges(final Change[] changesArray, final int indexInSelection) {
+      protected void showDiffForChanges(Change[] changesArray, int indexInSelection) {
         if (myInAir && (myConvertor != null)) {
-          final Change[] convertedChanges = new Change[changesArray.length];
+          Change[] convertedChanges = new Change[changesArray.length];
           for (int i = 0; i < changesArray.length; i++) {
             Change change = changesArray[i];
             convertedChanges[i] = myConvertor.apply(change);
@@ -191,7 +191,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     }
     mainPanel.add(splitter, BorderLayout.CENTER);
 
-    final String description = getDescription();
+    String description = getDescription();
     if (description != null) {
       JPanel descPanel = new JPanel();
       descPanel.add(new JLabel(XmlStringUtil.wrapInHtml(description)));

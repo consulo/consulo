@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
+import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;

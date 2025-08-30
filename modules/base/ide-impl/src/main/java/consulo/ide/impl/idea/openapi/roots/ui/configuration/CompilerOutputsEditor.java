@@ -33,7 +33,7 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.image.Image;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;

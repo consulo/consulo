@@ -8,10 +8,13 @@ module consulo.file.chooser.api {
 
   requires transitive consulo.application.api;
   requires transitive consulo.virtual.file.system.api;
+
+  requires consulo.ui.ex.api;
   
   requires consulo.base.icon.library;
 
   exports consulo.fileChooser;
   exports consulo.fileChooser.provider;
+  exports consulo.fileChooser.node;
   exports consulo.fileChooser.util;
 }

@@ -18,7 +18,6 @@ module consulo.version.control.system.impl {
   exports consulo.versionControlSystem.impl.internal.ui.awt to consulo.ide.impl, consulo.local.history.impl;
   exports consulo.versionControlSystem.impl.internal.change.ui.awt to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.local.history.impl;
   exports consulo.versionControlSystem.impl.internal.change.ui to consulo.ide.impl;
-  exports consulo.versionControlSystem.impl.internal.change.ui.issueLink to consulo.ide.impl;
   exports consulo.versionControlSystem.impl.internal.change.commited to consulo.ide.impl;
   exports consulo.versionControlSystem.impl.internal.update to consulo.ide.impl;
 

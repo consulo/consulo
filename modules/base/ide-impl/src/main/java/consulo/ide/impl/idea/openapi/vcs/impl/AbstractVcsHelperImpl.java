@@ -40,6 +40,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
 import consulo.ide.impl.idea.openapi.vcs.history.FileHistoryRefresher;
 import consulo.ide.impl.idea.openapi.vcs.history.FileHistoryRefresherI;
 import consulo.ide.impl.idea.openapi.vcs.merge.MultipleFileMergeDialog;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.versionControlSystem.virtualFileSystem.VcsFileSystem;
 import consulo.versionControlSystem.virtualFileSystem.VcsVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;

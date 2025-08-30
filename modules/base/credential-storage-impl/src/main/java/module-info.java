@@ -4,6 +4,7 @@
  */
 module consulo.credential.storage.impl {
     requires consulo.credential.storage.api;
+    requires consulo.file.chooser.api;
     requires consulo.process.api;
 
     requires consulo.util.jna;

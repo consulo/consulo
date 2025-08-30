@@ -64,6 +64,7 @@ module consulo.application.api {
         consulo.http.api,
         consulo.builtin.web.server.impl,
         consulo.version.control.system.distributed.api,
+        consulo.version.control.system.log.impl,
         consulo.compiler.impl,
         consulo.logging.logback.impl,
         consulo.virtual.file.system.impl,

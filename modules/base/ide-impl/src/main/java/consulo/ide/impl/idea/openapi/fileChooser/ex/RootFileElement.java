@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.fileChooser.ex;
 
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.execution.wsl.WSLUtil;
-import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
+import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -57,14 +57,14 @@ public class RootFileElement extends FileElement {
   private static List<VirtualFile> getFileSystemRoots() {
     LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
-    final List<VirtualFile> result = new ArrayList<>(
+    List<VirtualFile> result = new ArrayList<>(
       StreamSupport.stream(FileSystems.getDefault().getRootDirectories().spliterator(), false)
         .map(root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.toString())))
         .collect(Collectors.toList())
     );
 
     if (SystemInfo.isWin10OrNewer && Boolean.getBoolean("wsl.p9.show.roots.in.file.chooser")) {
-      final List<VirtualFile> wslRoots = ContainerUtil.mapNotNull(
+      List<VirtualFile> wslRoots = ContainerUtil.mapNotNull(
         WSLUtil.getExistingUNCRoots(),
         root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.getAbsolutePath()))
       );

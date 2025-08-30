@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
 import consulo.application.util.NullableLazyValue;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTree;
 import consulo.platform.Platform;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;

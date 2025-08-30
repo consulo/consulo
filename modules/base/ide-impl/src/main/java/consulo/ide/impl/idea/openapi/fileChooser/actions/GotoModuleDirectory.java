@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.openapi.fileChooser.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTree;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 

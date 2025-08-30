@@ -20,7 +20,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
-import consulo.ide.ServiceManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -28,8 +27,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
@@ -40,6 +39,9 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.VcsToolWindow;
+import consulo.versionControlSystem.change.ChangesViewContentFactory;
+import consulo.versionControlSystem.change.ChangesViewContentProvider;
+import consulo.versionControlSystem.internal.ChangesViewContentI;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -55,7 +57,7 @@ import java.util.*;
 @ServiceImpl
 public class ChangesViewContentManager implements ChangesViewContentI, Disposable {
     public static ChangesViewContentI getInstance(Project project) {
-        return ServiceManager.getService(project, ChangesViewContentI.class);
+        return ChangesViewContentI.getInstance(project);
     }
 
     @Deprecated
@@ -67,6 +69,8 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     private final List<Content> myAddedContents = new ArrayList<>();
     @Nonnull
     private final Project myProject;
+    @Nonnull
+    private final ContentFactory myContentFactory;
 
     private ToolWindow myToolWindow;
 
@@ -76,9 +80,10 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
 
     @RequiredUIAccess
     @Inject
-    public ChangesViewContentManager(@Nonnull Project project) {
+    public ChangesViewContentManager(@Nonnull Project project, @Nonnull ContentFactory contentFactory) {
         myProject = project;
-        project.getMessageBus().connect().subscribe(VcsMappingListener.class, () -> update());
+        myContentFactory = contentFactory;
+        project.getMessageBus().connect().subscribe(VcsMappingListener.class, this::update);
     }
 
     @Nonnull
@@ -99,11 +104,11 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     public void loadExtensionTabs() {
-        final List<Content> contentList = new LinkedList<>();
-        final List<ChangesViewContentFactory> contentEPs = myProject.getExtensionList(ChangesViewContentFactory.class);
+        List<Content> contentList = new LinkedList<>();
+        List<ChangesViewContentFactory> contentEPs = myProject.getExtensionList(ChangesViewContentFactory.class);
         for (ChangesViewContentFactory factory : contentEPs) {
             if (factory.isAvailable()) {
-                final Content content = ContentFactory.getInstance().createContent(new ContentStub(factory), factory.getTabName().getValue(), false);
+                Content content = myContentFactory.createContent(new ContentStub(factory), factory.getTabName().getValue(), false);
                 content.setCloseable(false);
                 content.putUserData(ourEpKey, factory);
                 contentList.add(content);
@@ -112,18 +117,18 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         myAddedContents.addAll(0, contentList);
     }
 
-    private void addExtensionTab(final ChangesViewContentFactory factory) {
-        final Content content = ContentFactory.getInstance().createContent(new ContentStub(factory), factory.getTabName().getValue(), false);
+    private void addExtensionTab(ChangesViewContentFactory factory) {
+        Content content = myContentFactory.createContent(new ContentStub(factory), factory.getTabName().getValue(), false);
         content.setCloseable(false);
         content.putUserData(ourEpKey, factory);
         addIntoCorrectPlace(content);
     }
 
     private void updateExtensionTabs() {
-        final List<ChangesViewContentFactory> contentFactoryList = myProject.getExtensionList(ChangesViewContentFactory.class);
+        List<ChangesViewContentFactory> contentFactoryList = myProject.getExtensionList(ChangesViewContentFactory.class);
         for (ChangesViewContentFactory factory : contentFactoryList) {
             Content epContent = findContent(factory);
-            final boolean predicateResult = factory.isAvailable();
+            boolean predicateResult = factory.isAvailable();
             if (predicateResult && epContent == null) {
                 addExtensionTab(factory);
             }
@@ -134,7 +139,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     @Nullable
-    private Content findContent(final ChangesViewContentFactory factory) {
+    private Content findContent(ChangesViewContentFactory factory) {
         if (myContentManager == null) {
             for (Content content : myAddedContents) {
                 if (content instanceof ContentStub && ((ContentStub) content).getChangesViewContentFactory() == factory) {
@@ -144,7 +149,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
             return null;
         }
 
-        final Content[] contents = myContentManager.getContents();
+        Content[] contents = myContentManager.getContents();
         for (Content content : contents) {
             if (content.getUserData(ourEpKey) == factory) {
                 return content;
@@ -201,25 +206,25 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     @Override
-    public void removeContent(final Content content) {
+    public void removeContent(Content content) {
         if (myContentManager != null && (!myContentManager.isDisposed())) { // for unit tests
             myContentManager.removeContent(content, true);
         }
     }
 
     @Override
-    public void setSelectedContent(final Content content) {
+    public void setSelectedContent(Content content) {
         myContentManager.setSelectedContent(content);
     }
 
     @Override
     @Nullable
-    public <T> T getActiveComponent(final Class<T> aClass) {
+    public <T> T getActiveComponent(Class<T> aClass) {
         if (myContentManager == null) {
             return null;
         }
 
-        final Content content = myContentManager.getSelectedContent();
+        Content content = myContentManager.getSelectedContent();
         if (content != null && aClass.isInstance(content.getComponent())) {
             //noinspection unchecked
             return (T) content.getComponent();
@@ -227,6 +232,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         return null;
     }
 
+    @Override
     public boolean isContentSelected(@Nonnull String contentName) {
         Content selectedContent = myContentManager.getSelectedContent();
         if (selectedContent == null) {
@@ -236,10 +242,6 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     }
 
     @Override
-    public void selectContent(@Nonnull String tabName) {
-        selectContent(tabName, false);
-    }
-
     public void selectContent(@Nonnull String tabName, boolean requestFocus) {
         for (Content content : myContentManager.getContents()) {
             if (content.getDisplayName().equals(tabName)) {
@@ -265,7 +267,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     private static class ContentStub extends JPanel {
         private final ChangesViewContentFactory myChangesViewContentFactory;
 
-        private ContentStub(final ChangesViewContentFactory contentFactory) {
+        private ContentStub(ChangesViewContentFactory contentFactory) {
             myChangesViewContentFactory = contentFactory;
         }
 
@@ -274,16 +276,17 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         }
     }
 
-    private class MyContentManagerListener extends ContentManagerAdapter {
+    private class MyContentManagerListener implements ContentManagerListener {
+        @RequiredUIAccess
         @Override
-        public void selectionChanged(final ContentManagerEvent event) {
+        public void selectionChanged(ContentManagerEvent event) {
             Content content = event.getContent();
             if (content.getComponent() instanceof ContentStub) {
                 ChangesViewContentFactory contentFactory = ((ContentStub) content.getComponent()).getChangesViewContentFactory();
-                final ChangesViewContentProvider provider = contentFactory.create();
-                final JComponent contentComponent = provider.initContent();
+                ChangesViewContentProvider provider = contentFactory.create();
+                JComponent contentComponent = provider.initContent();
                 content.setComponent(contentComponent);
-                content.setDisposer(() -> provider.disposeContent());
+                content.setDisposer(provider::disposeContent);
             }
         }
     }
@@ -294,11 +297,11 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
     public static final String SHELF = "Shelf";
     private static final String[] ourPresetOrder = {LOCAL_CHANGES, REPOSITORY, INCOMING, SHELF};
 
-    public static List<Content> doPresetOrdering(final List<Content> contents) {
-        final List<Content> result = new ArrayList<>(contents.size());
-        for (final String preset : ourPresetOrder) {
+    public static List<Content> doPresetOrdering(List<Content> contents) {
+        List<Content> result = new ArrayList<>(contents.size());
+        for (String preset : ourPresetOrder) {
             for (Iterator<Content> iterator = contents.iterator(); iterator.hasNext(); ) {
-                final Content current = iterator.next();
+                Content current = iterator.next();
                 if (preset.equals(current.getTabName())) {
                     iterator.remove();
                     result.add(current);
@@ -309,18 +312,18 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         return result;
     }
 
-    private void addIntoCorrectPlace(final Content content) {
+    private void addIntoCorrectPlace(Content content) {
         if (myContentManager == null) {
             myAddedContents.add(content);
             return;
         }
 
-        final String name = content.getTabName();
-        final Content[] contents = myContentManager.getContents();
+        String name = content.getTabName();
+        Content[] contents = myContentManager.getContents();
 
         int idxOfBeingInserted = -1;
         for (int i = 0; i < ourPresetOrder.length; i++) {
-            final String s = ourPresetOrder[i];
+            String s = ourPresetOrder[i];
             if (s.equals(name)) {
                 idxOfBeingInserted = i;
             }
@@ -330,7 +333,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
             return;
         }
 
-        final Set<String> existingNames = new HashSet<>();
+        Set<String> existingNames = new HashSet<>();
         for (Content existingContent : contents) {
             existingNames.add(existingContent.getTabName());
         }

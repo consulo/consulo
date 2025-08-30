@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ui;
 
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
@@ -23,6 +22,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.popup.ListPopupStep;
+import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -59,22 +59,9 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
     }
 
     protected boolean shouldBeShowing(@Nonnull AnAction action) {
-        return getSpeedSearch().isHoldingFilter() || !isSpeedsearchAction(action);
+        return getSpeedSearch().isHoldingFilter() || !FlatSpeedSearchPopupFactory.isSpeedsearchAction(action);
     }
 
-    @Nonnull
-    public static AnAction createSpeedSearchWrapper(@Nonnull AnAction child) {
-        return new MySpeedSearchAction(child);
-    }
-
-    @Nonnull
-    public static ActionGroup createSpeedSearchActionGroupWrapper(@Nonnull ActionGroup child) {
-        return new MySpeedSearchActionGroup(child);
-    }
-
-    protected static boolean isSpeedsearchAction(@Nonnull AnAction action) {
-        return action instanceof SpeedsearchAction;
-    }
 
     protected static <T> T getSpecificAction(Object value, @Nonnull Class<T> clazz) {
         if (value instanceof PopupFactoryImpl.ActionItem) {
@@ -90,19 +77,4 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
         return null;
     }
 
-    public interface SpeedsearchAction {
-    }
-
-    private static class MySpeedSearchAction extends EmptyAction.MyDelegatingAction implements SpeedsearchAction, DumbAware {
-
-        MySpeedSearchAction(@Nonnull AnAction action) {
-            super(action);
-        }
-    }
-
-    private static class MySpeedSearchActionGroup extends EmptyAction.MyDelegatingActionGroup implements SpeedsearchAction, DumbAware {
-        MySpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
-            super(actionGroup);
-        }
-    }
 }

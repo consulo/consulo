@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchException;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
+import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;

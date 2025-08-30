@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;

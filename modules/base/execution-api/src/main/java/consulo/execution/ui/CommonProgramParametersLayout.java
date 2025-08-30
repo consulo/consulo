@@ -34,7 +34,7 @@ import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.util.FormBuilder;

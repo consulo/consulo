@@ -31,8 +31,8 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.impl.fileChooser.FileChooserFactoryImpl;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
-import consulo.ide.impl.idea.openapi.fileChooser.ex.FileNodeDescriptor;
+import consulo.fileChooser.FileSystemTree;
+import consulo.fileChooser.node.FileNodeDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.PathField;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
@@ -455,7 +455,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     protected JTree createTree() {
         Tree internalTree = createInternalTree();
-        myFileSystemTree = new FileSystemTreeImpl(myProject, myChooserDescriptor, internalTree, null, null, null);
+        myFileSystemTree = new FileSystemTreeImpl(myProject, myChooserDescriptor, internalTree, null, null);
         internalTree.setRootVisible(myChooserDescriptor.isTreeRootVisible());
         internalTree.setShowsRootHandles(true);
         Disposer.register(myDisposable, myFileSystemTree);

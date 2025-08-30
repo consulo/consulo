@@ -5,7 +5,8 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.fileChooser.FileSystemTree;
+import consulo.fileChooser.node.FileNodeDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileTreeStructure;
 import consulo.ide.impl.idea.openapi.fileChooser.tree.*;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -21,6 +22,7 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.localize.UILocalize;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
@@ -39,6 +41,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -57,7 +60,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     private AbstractTreeModel myFileTreeModel;
 
     public FileSystemTreeImpl(@Nullable Project project, FileChooserDescriptor descriptor) {
-        this(project, descriptor, new Tree(), null, null, null);
+        this(project, descriptor, new Tree(), null, null);
         myTree.setRootVisible(descriptor.isTreeRootVisible());
         myTree.setShowsRootHandles(true);
     }
@@ -67,7 +70,6 @@ public class FileSystemTreeImpl implements FileSystemTree {
         FileChooserDescriptor descriptor,
         Tree tree,
         @Nullable TreeCellRenderer renderer,
-        @Nullable Runnable onInitialized,
         @Nullable Function<? super TreePath, String> speedSearchConverter
     ) {
         myProject = project;
@@ -185,6 +187,13 @@ public class FileSystemTreeImpl implements FileSystemTree {
     @Override
     public boolean areHiddensShown() {
         return myDescriptor.isShowHiddenFiles();
+    }
+
+    @Override
+    public void setNodeDescriptorComparator(Comparator<? super NodeDescriptor> nodeDescriptorComparator) {
+        if (myTreeBuilder != null) {
+            myTreeBuilder.setNodeDescriptorComparator(nodeDescriptorComparator);
+        }
     }
 
     @Override

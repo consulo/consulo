@@ -23,19 +23,20 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.ui.HtmlPanel;
+import consulo.ui.ex.awt.HtmlPanel;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.StringHtmlUtil;
 
+import consulo.versionControlSystem.history.VcsHistoryUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
-import static consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer.formatTextWithLinks;
-import static consulo.ide.impl.idea.openapi.vcs.ui.FontUtil.getHtmlWithFonts;
+import static consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer.formatTextWithLinks;
+import static consulo.versionControlSystem.ui.awt.VcsFontUtil.getHtmlWithFonts;
 
 class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
   @Nonnull

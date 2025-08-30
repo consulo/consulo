@@ -90,7 +90,7 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     if (userObject == LOCKED_FOLDERS_TAG) {
       return new ChangesBrowserLockedFoldersNode(project, userObject);
     }
-    if (userObject instanceof ChangesBrowserLogicallyLockedFile) {
+    if (userObject instanceof ChangesBrowserLogicallyLockedFileImpl) {
       return (ChangesBrowserNode)userObject;
     }
     return new ChangesBrowserNode(userObject);
@@ -231,11 +231,11 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     return (T)userObject;
   }
 
-  public boolean canAcceptDrop(final ChangeListDragBean dragBean) {
+  public boolean canAcceptDrop(ChangeListDragBean dragBean) {
     return false;
   }
 
-  public void acceptDrop(final ChangeListOwner dragOwner, final ChangeListDragBean dragBean) {
+  public void acceptDrop(ChangeListOwner dragOwner, ChangeListDragBean dragBean) {
   }
 
   /**
@@ -245,7 +245,7 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     return DEFAULT_SORT_WEIGHT;
   }
 
-  public int compareUserObjects(final Object o2) {
+  public int compareUserObjects(Object o2) {
     return 0;
   }
 

@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.todo;
 
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.nodes.TodoItemNode;
-import consulo.ide.impl.idea.ui.HighlightableCellRenderer;
+import consulo.ui.ex.awt.HighlightableCellRenderer;
 import consulo.ui.ex.awt.HighlightedRegion;
 
 import javax.swing.*;
