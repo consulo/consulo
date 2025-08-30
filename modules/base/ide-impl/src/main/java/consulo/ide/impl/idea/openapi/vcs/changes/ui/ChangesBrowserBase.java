@@ -43,7 +43,7 @@ import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
-import consulo.versionControlSystem.internal.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowserApi;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

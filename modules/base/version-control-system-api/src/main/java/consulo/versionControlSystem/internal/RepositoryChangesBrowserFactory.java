@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.RepositoryChangesBrowserApi;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 

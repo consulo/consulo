@@ -35,7 +35,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
-import consulo.versionControlSystem.internal.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowserApi;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;

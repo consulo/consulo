@@ -27,7 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.internal.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowserApi;
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;

@@ -36,7 +36,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.internal.ChangesBrowserUtil;
+import consulo.versionControlSystem.change.ChangesBrowserUtil;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
 import jakarta.annotation.Nonnull;

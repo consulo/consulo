@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.log.impl.internal.ui.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
@@ -24,7 +25,9 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
  * @author UNV
  * @since 2025-08-28
  */
-@ActionImpl(id = "Vcs.Log.Toolbar")
+@ActionImpl(id = "Vcs.Log.Toolbar", children = {
+    @ActionRef(type = DeepCompareAction.class)
+})
 public class ToolbarGroup extends DefaultActionGroup implements DumbAware {
     public ToolbarGroup() {
         super(VersionControlSystemLogLocalize.groupToolbarText(), false);

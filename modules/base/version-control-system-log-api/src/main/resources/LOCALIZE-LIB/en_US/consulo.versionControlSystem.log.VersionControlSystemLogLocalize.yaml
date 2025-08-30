@@ -40,6 +40,10 @@ action.intelli.sort.chooser.popup.text:
     text: IntelliSort
 action.intelli.sort.chooser.text:
     text: IntelliSort
+action.log.deep.compare.description:
+    text: Dims those commits which have equivalent changes in the current branch
+action.log.deep.compare.text:
+    text: Highlight Non-picked Commits
 action.match.case.only.supported:
     text: Match Case ({0} Only)
 action.match.case.text:

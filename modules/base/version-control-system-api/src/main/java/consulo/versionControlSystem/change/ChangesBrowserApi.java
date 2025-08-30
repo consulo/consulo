@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.internal;
+package consulo.versionControlSystem.change;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.internal.ChangesBrowserTree;
 
 import javax.swing.*;
 import java.util.List;

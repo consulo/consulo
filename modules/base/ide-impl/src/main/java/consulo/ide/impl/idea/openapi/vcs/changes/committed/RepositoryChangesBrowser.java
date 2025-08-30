@@ -33,7 +33,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.internal.RepositoryChangesBrowserApi;
+import consulo.versionControlSystem.change.RepositoryChangesBrowserApi;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

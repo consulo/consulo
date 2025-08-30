@@ -25,7 +25,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.commited.*;
-import consulo.versionControlSystem.internal.ChangesBrowserUtil;
+import consulo.versionControlSystem.change.ChangesBrowserUtil;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

@@ -35,7 +35,7 @@ import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
-import consulo.versionControlSystem.internal.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowserApi;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

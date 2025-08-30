@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
-import consulo.versionControlSystem.internal.RepositoryChangesBrowserApi;
+import consulo.versionControlSystem.change.RepositoryChangesBrowserApi;
 import consulo.versionControlSystem.internal.RepositoryChangesBrowserFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;

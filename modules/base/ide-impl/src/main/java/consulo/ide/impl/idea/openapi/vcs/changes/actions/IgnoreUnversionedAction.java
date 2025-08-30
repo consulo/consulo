@@ -26,7 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.Streams;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.IgnoreUnversionedDialog;
-import consulo.versionControlSystem.internal.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowserApi;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
