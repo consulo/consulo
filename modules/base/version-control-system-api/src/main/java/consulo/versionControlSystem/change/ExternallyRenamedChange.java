@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.change;
 
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nullable;
 

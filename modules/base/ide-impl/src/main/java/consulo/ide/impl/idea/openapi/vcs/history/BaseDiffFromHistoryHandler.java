@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
@@ -37,6 +38,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.List;
 
+@UsedInPlugin
 public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> implements DiffFromHistoryHandler {
 
   private static final Logger LOG = Logger.getInstance(BaseDiffFromHistoryHandler.class);
