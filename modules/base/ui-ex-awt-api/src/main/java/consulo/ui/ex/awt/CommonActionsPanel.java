@@ -15,10 +15,10 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
@@ -30,34 +30,31 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class CommonActionsPanel extends JPanel {
     public enum Buttons {
-        ADD,
-        REMOVE,
-        EDIT,
-        UP,
-        DOWN;
+        ADD(PlatformIconGroup.generalAdd(), Listener::doAdd),
+        REMOVE(PlatformIconGroup.actionsEdit(), Listener::doEdit),
+        EDIT(PlatformIconGroup.generalRemove(), Listener::doRemove),
+        UP(PlatformIconGroup.actionsMoveup(), Listener::doUp),
+        DOWN(PlatformIconGroup.actionsMovedown(), Listener::doDown);
 
         public static Buttons[] ALL = {ADD, REMOVE, EDIT, UP, DOWN};
 
+        private final Image myIcon;
+        private final Consumer<Listener> myActionPerformer;
+
+        Buttons(Image icon, Consumer<Listener> actionPerformer) {
+            myIcon = icon;
+            myActionPerformer = actionPerformer;
+        }
+
         public Image getIcon() {
-            switch (this) {
-                case ADD:
-                    return AllIcons.General.Add;
-                case EDIT:
-                    return AllIcons.Actions.Edit;
-                case REMOVE:
-                    return AllIcons.General.Remove;
-                case UP:
-                    return AllIcons.Actions.MoveUp;
-                case DOWN:
-                    return AllIcons.Actions.MoveDown;
-            }
-            return null;
+            return myIcon;
         }
 
         MyActionButton createButton(Listener listener, String name, Image icon) {
@@ -69,23 +66,7 @@ public class CommonActionsPanel extends JPanel {
         }
 
         public void performAction(Listener listener) {
-            switch (this) {
-                case ADD:
-                    listener.doAdd();
-                    break;
-                case EDIT:
-                    listener.doEdit();
-                    break;
-                case REMOVE:
-                    listener.doRemove();
-                    break;
-                case UP:
-                    listener.doUp();
-                    break;
-                case DOWN:
-                    listener.doDown();
-                    break;
-            }
+            myActionPerformer.accept(listener);
         }
     }
 
@@ -145,24 +126,13 @@ public class CommonActionsPanel extends JPanel {
         AnAction[] actions = new AnAction[buttons.length];
         for (int i = 0; i < buttons.length; i++) {
             Buttons button = buttons[i];
-            String name = null;
-            switch (button) {
-                case ADD:
-                    name = addName;
-                    break;
-                case EDIT:
-                    name = editName;
-                    break;
-                case REMOVE:
-                    name = removeName;
-                    break;
-                case UP:
-                    name = moveUpName;
-                    break;
-                case DOWN:
-                    name = moveDownName;
-                    break;
-            }
+            String name = switch (button) {
+                case ADD -> addName;
+                case EDIT -> editName;
+                case REMOVE -> removeName;
+                case UP -> moveUpName;
+                case DOWN -> moveDownName;
+            };
             MyActionButton b =
                 button.createButton(listener, name, button == Buttons.ADD && addIcon != null ? addIcon : button.getIcon());
             actions[i] = b;
@@ -175,8 +145,8 @@ public class CommonActionsPanel extends JPanel {
         }
         myActions = actions;
         for (AnAction action : actions) {
-            if (action instanceof AnActionButton) {
-                ((AnActionButton) action).setContextComponent(contextComponent);
+            if (action instanceof AnActionButton actionButton) {
+                actionButton.setContextComponent(contextComponent);
             }
         }
         if (buttonComparator != null) {
@@ -184,8 +154,8 @@ public class CommonActionsPanel extends JPanel {
         }
         ArrayList<AnAction> toolbarActions = new ArrayList<>(Arrays.asList(myActions));
         for (int i = 0; i < toolbarActions.size(); i++) {
-            if (toolbarActions.get(i) instanceof AnActionButton.CheckedAnActionButton) {
-                toolbarActions.set(i, ((AnActionButton.CheckedAnActionButton) toolbarActions.get(i)).getDelegate());
+            if (toolbarActions.get(i) instanceof AnActionButton.CheckedAnActionButton actionButton) {
+                toolbarActions.set(i, actionButton.getDelegate());
             }
         }
 
@@ -209,18 +179,18 @@ public class CommonActionsPanel extends JPanel {
     public void addNotify() {
         JRootPane pane = getRootPane();
         for (AnAction button : myActions) {
-            ShortcutSet shortcut = button instanceof AnActionButton ? ((AnActionButton) button).getShortcut() : null;
+            ShortcutSet shortcut = button instanceof AnActionButton actionButton ? actionButton.getShortcut() : null;
             if (shortcut != null) {
-                if (button instanceof MyActionButton
-                    && ((MyActionButton) button).isAddButton()
+                if (button instanceof MyActionButton actionButton
+                    && actionButton.isAddButton()
                     && UIUtil.isDialogRootPane(pane)) {
                     button.registerCustomShortcutSet(shortcut, pane);
                 }
                 else {
                     button.registerCustomShortcutSet(shortcut, ((AnActionButton) button).getContextComponent());
                 }
-                if (button instanceof MyActionButton && ((MyActionButton) button).isRemoveButton()) {
-                    registerDeleteHook((MyActionButton) button);
+                if (button instanceof MyActionButton actionButton && actionButton.isRemoveButton()) {
+                    registerDeleteHook(actionButton);
                 }
             }
         }
@@ -270,8 +240,8 @@ public class CommonActionsPanel extends JPanel {
             myListener = listener;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             myButton.performAction(myListener);
         }
@@ -282,7 +252,7 @@ public class CommonActionsPanel extends JPanel {
         }
 
         @Override
-        public void updateButton(AnActionEvent e) {
+        public void updateButton(@Nonnull AnActionEvent e) {
             super.updateButton(e);
             if (!e.getPresentation().isEnabled()) {
                 return;
@@ -290,10 +260,8 @@ public class CommonActionsPanel extends JPanel {
 
             JComponent c = getContextComponent();
             if (c instanceof JTable || c instanceof JList) {
-                ListSelectionModel model = c instanceof JTable ? ((JTable) c).getSelectionModel()
-                    : ((JList) c).getSelectionModel();
-                int size = c instanceof JTable ? ((JTable) c).getRowCount()
-                    : ((JList) c).getModel().getSize();
+                ListSelectionModel model = c instanceof JTable jTable ? jTable.getSelectionModel() : ((JList) c).getSelectionModel();
+                int size = c instanceof JTable jTable ? jTable.getRowCount() : ((JList) c).getModel().getSize();
                 int min = model.getMinSelectionIndex();
                 int max = model.getMaxSelectionIndex();
 
@@ -328,19 +296,13 @@ public class CommonActionsPanel extends JPanel {
     }
 
     public static ShortcutSet getCommonShortcut(Buttons button) {
-        switch (button) {
-            case ADD:
-                return CommonShortcuts.getNewForDialogs();
-            case EDIT:
-                return CustomShortcutSet.fromString("ENTER");
-            case REMOVE:
-                return CustomShortcutSet.fromString(Platform.current().os().isMac() ? "meta BACK_SPACE" : "alt DELETE");
-            case UP:
-                return CommonShortcuts.MOVE_UP;
-            case DOWN:
-                return CommonShortcuts.MOVE_DOWN;
-        }
-        return null;
+        return switch (button) {
+            case ADD -> CommonShortcuts.getNewForDialogs();
+            case EDIT -> CustomShortcutSet.fromString("ENTER");
+            case REMOVE -> CustomShortcutSet.fromString(Platform.current().os().isMac() ? "meta BACK_SPACE" : "alt DELETE");
+            case UP -> CommonShortcuts.MOVE_UP;
+            case DOWN -> CommonShortcuts.MOVE_DOWN;
+        };
     }
 
     public interface ListenerFactory {

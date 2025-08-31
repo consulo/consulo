@@ -15,108 +15,122 @@
  */
 package consulo.ide.impl.idea.webcore.packaging;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.repository.ui.PackageManagementService;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.*;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.util.List;
 
 public class ManageRepoDialog extends DialogWrapper {
-  private JPanel myMainPanel;
-  private final JBList<String> myList;
-  private boolean myEnabled;
-  private static final Logger LOG = Logger.getInstance(ManageRepoDialog.class);
+    private JPanel myMainPanel;
+    private final JBList<String> myList;
+    private boolean myEnabled;
+    private static final Logger LOG = Logger.getInstance(ManageRepoDialog.class);
 
-  public ManageRepoDialog(Project project, PackageManagementService controller) {
-    super(project, false);
-    init();
-    setTitle(IdeBundle.message("manage.repositories.dialog.title"));
-    myList = new JBList<>();
-    myList.setPaintBusy(true);
-    final DefaultListModel<String> repoModel = new DefaultListModel<>();
-    AsyncResult<List<String>> result = controller.fetchAllRepositories();
-    result.doWhenDone(repoUrls -> {
-      ApplicationManager.getApplication().invokeLater(() -> {
-        if (isDisposed()) return;
-        myList.setPaintBusy(false);
-        for (String repoUrl : repoUrls) {
-          repoModel.addElement(repoUrl);
-        }
-      }, IdeaModalityState.any());
-    });
-    result.doWhenRejectedWithThrowable(e -> {
-      ApplicationManager.getApplication().invokeLater(() -> {
-        if (isDisposed()) return;
-        myList.setPaintBusy(false);
-        LOG.warn(e);
-      });
-    });
-    myList.setModel(repoModel);
-    myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    public ManageRepoDialog(Project project, PackageManagementService controller) {
+        super(project, false);
+        init();
+        setTitle(IdeLocalize.manageRepositoriesDialogTitle());
+        myList = new JBList<>();
+        myList.setPaintBusy(true);
+        final DefaultListModel<String> repoModel = new DefaultListModel<>();
+        AsyncResult<List<String>> result = controller.fetchAllRepositories();
+        Application application = Application.get();
+        result.doWhenDone(repoUrls -> application.invokeLater(
+            () -> {
+                if (isDisposed()) {
+                    return;
+                }
+                myList.setPaintBusy(false);
+                for (String repoUrl : repoUrls) {
+                    repoModel.addElement(repoUrl);
+                }
+            },
+            IdeaModalityState.any()
+        ));
+        result.doWhenRejectedWithThrowable(e -> application.invokeLater(() -> {
+            if (isDisposed()) {
+                return;
+            }
+            myList.setPaintBusy(false);
+            LOG.warn(e);
+        }));
+        myList.setModel(repoModel);
+        myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    myList.addListSelectionListener(event -> {
-      String selected = myList.getSelectedValue();
-      myEnabled = controller.canModifyRepository(selected);
-    });
+        myList.addListSelectionListener(event -> {
+            String selected = myList.getSelectedValue();
+            myEnabled = controller.canModifyRepository(selected);
+        });
 
-    ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions();
-    decorator.setAddActionName(IdeBundle.message("action.add.repository"));
-    decorator.setRemoveActionName(IdeBundle.message("action.remove.repository.from.list"));
-    decorator.setEditActionName(IdeBundle.message("action.edit.repository.url"));
+        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions();
+        decorator.setAddActionName(IdeLocalize.actionAddRepository().get());
+        decorator.setRemoveActionName(IdeLocalize.actionRemoveRepositoryFromList().get());
+        decorator.setEditActionName(IdeLocalize.actionEditRepositoryUrl().get());
 
-    decorator.setAddAction(button -> {
-      String url = Messages.showInputDialog(IdeBundle.message("please.input.repository.url"), IdeBundle.message("repository.url.title"), null);
-      if (!StringUtil.isEmptyOrSpaces(url) && !repoModel.contains(url)) {
-        repoModel.addElement(url);
-        controller.addRepository(url);
-      }
-    });
-    decorator.setEditAction(button -> {
-      String oldValue = myList.getSelectedValue();
+        decorator.setAddAction(button -> {
+            String url =
+                Messages.showInputDialog(IdeLocalize.pleaseInputRepositoryUrl().get(), IdeLocalize.repositoryUrlTitle().get(), null);
+            if (!StringUtil.isEmptyOrSpaces(url) && !repoModel.contains(url)) {
+                repoModel.addElement(url);
+                controller.addRepository(url);
+            }
+        });
+        decorator.setEditAction(button -> {
+            String oldValue = myList.getSelectedValue();
 
-      String url = Messages.showInputDialog(IdeBundle.message("please.edit.repository.url"), IdeBundle.message("repository.url.title"), null, oldValue, new InputValidator() {
-        @Override
-        public boolean checkInput(String inputString) {
-          return !repoModel.contains(inputString);
-        }
+            String url = Messages.showInputDialog(
+                IdeLocalize.pleaseEditRepositoryUrl().get(),
+                IdeLocalize.repositoryUrlTitle().get(),
+                null,
+                oldValue,
+                new InputValidator() {
+                    @Override
+                    @RequiredUIAccess
+                    public boolean checkInput(String inputString) {
+                        return !repoModel.contains(inputString);
+                    }
 
-        @Override
-        public boolean canClose(String inputString) {
-          return true;
-        }
-      });
-      if (!StringUtil.isEmptyOrSpaces(url) && !oldValue.equals(url)) {
-        repoModel.addElement(url);
-        repoModel.removeElement(oldValue);
-        controller.removeRepository(oldValue);
-        controller.addRepository(url);
-      }
-    });
-    decorator.setRemoveAction(button -> {
-      String selected = myList.getSelectedValue();
-      controller.removeRepository(selected);
-      repoModel.removeElement(selected);
-      button.setEnabled(false);
-    });
-    decorator.setRemoveActionUpdater(e -> myEnabled);
-    decorator.setEditActionUpdater(e -> myEnabled);
+                    @Override
+                    @RequiredUIAccess
+                    public boolean canClose(String inputString) {
+                        return true;
+                    }
+                }
+            );
+            if (!StringUtil.isEmptyOrSpaces(url) && !oldValue.equals(url)) {
+                repoModel.addElement(url);
+                repoModel.removeElement(oldValue);
+                controller.removeRepository(oldValue);
+                controller.addRepository(url);
+            }
+        });
+        decorator.setRemoveAction(button -> {
+            String selected = myList.getSelectedValue();
+            controller.removeRepository(selected);
+            repoModel.removeElement(selected);
+            button.setEnabled(false);
+        });
+        decorator.setRemoveActionUpdater(e -> myEnabled);
+        decorator.setEditActionUpdater(e -> myEnabled);
 
-    JPanel panel = decorator.createPanel();
-    panel.setPreferredSize(JBUI.size(800, 600));
-    myMainPanel.add(panel);
+        JPanel panel = decorator.createPanel();
+        panel.setPreferredSize(JBUI.size(800, 600));
+        myMainPanel.add(panel);
 
-  }
+    }
 
-  @Override
-  protected JComponent createCenterPanel() {
-    return myMainPanel;
-  }
+    @Override
+    protected JComponent createCenterPanel() {
+        return myMainPanel;
+    }
 }

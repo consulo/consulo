@@ -50,8 +50,9 @@ public class EditFavoritesAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setText(CommonActionsPanel.Buttons.EDIT.getText());
-        e.getPresentation().setIcon(CommonActionsPanel.Buttons.EDIT.getIcon());
+        CommonActionsPanel.Buttons button = CommonActionsPanel.Buttons.EDIT;
+        e.getPresentation().setText(button.getText());
+        e.getPresentation().setIcon(button.getIcon());
         e.getPresentation().setEnabled(true);
         Project project = e.getData(Project.KEY);
         FavoritesViewTreeBuilder treeBuilder = e.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
@@ -64,8 +65,8 @@ public class EditFavoritesAction extends AnAction {
         FavoritesListProvider provider = favoritesManager.getListProvider(listName);
         Set<Object> selection = treeBuilder.getSelectedElements();
         if (provider != null) {
-            e.getPresentation().setEnabled(provider.willHandle(CommonActionsPanel.Buttons.EDIT, project, selection));
-            e.getPresentation().setText(provider.getCustomName(CommonActionsPanel.Buttons.EDIT));
+            e.getPresentation().setEnabled(provider.willHandle(button, project, selection));
+            e.getPresentation().setTextValue(provider.getCustomName(button));
         }
     }
 }

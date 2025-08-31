@@ -26,9 +26,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CommonShortcuts {
-
     private CommonShortcuts() {
     }
 
@@ -58,7 +58,7 @@ public class CommonShortcuts {
     public static final ShortcutSet MOVE_DOWN = CustomShortcutSet.fromString("alt DOWN");
 
     public static ShortcutSet getNewForDialogs() {
-        ArrayList<Shortcut> shortcuts = new ArrayList<Shortcut>();
+        List<Shortcut> shortcuts = new ArrayList<>();
         for (Shortcut shortcut : getNew().getShortcuts()) {
             if (isCtrlEnter(shortcut)) {
                 continue;
@@ -69,15 +69,16 @@ public class CommonShortcuts {
     }
 
     private static boolean isCtrlEnter(Shortcut shortcut) {
-        if (shortcut instanceof KeyboardShortcut) {
-            KeyStroke keyStroke = ((KeyboardShortcut) shortcut).getFirstKeyStroke();
+        if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
+            KeyStroke keyStroke = keyboardShortcut.getFirstKeyStroke();
             return keyStroke.getKeyCode() == KeyEvent.VK_ENTER && (keyStroke.getModifiers() & InputEvent.CTRL_MASK) != 0;
         }
         return false;
     }
 
     public static KeyStroke getInsertKeystroke() {
-        return Platform.current().os().isMac() ? KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK)
+        return Platform.current().os().isMac()
+            ? KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK)
             : KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0);
     }
 
@@ -172,7 +173,7 @@ public class CommonShortcuts {
     @Nonnull
     private static CustomShortcutSet shortcutsById(String actionId) {
         Application application = ApplicationManager.getApplication();
-        KeymapManager keymapManager = application == null ? null : application.getComponent(KeymapManager.class);
+        KeymapManager keymapManager = application == null ? null : application.getInstance(KeymapManager.class);
         if (keymapManager == null) {
             return new CustomShortcutSet(Shortcut.EMPTY_ARRAY);
         }

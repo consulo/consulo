@@ -15,6 +15,7 @@
  */
 package consulo.bookmark.ui.view;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
@@ -23,6 +24,7 @@ import consulo.ui.ex.awt.CommonActionsPanel;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,82 +35,87 @@ import java.util.Set;
  * @author Vassiliy.Kudryashov
  */
 public abstract class AbstractFavoritesListProvider<T> implements FavoritesListProvider {
-  public static final int BOOKMARKS_WEIGHT = 100;
-  public static final int BREAKPOINTS_WEIGHT = 200;
-  public static final int TASKS_WEIGHT = 300;
-  protected final Project myProject;
-  private final String myListName;
-  protected final List<AbstractTreeNode<T>> myChildren = new ArrayList<>();
-  protected final FavoritesListNode myNode;
+    public static final int BOOKMARKS_WEIGHT = 100;
+    public static final int BREAKPOINTS_WEIGHT = 200;
+    public static final int TASKS_WEIGHT = 300;
+    protected final Project myProject;
+    private final String myListName;
+    protected final List<AbstractTreeNode<T>> myChildren = new ArrayList<>();
+    protected final FavoritesListNode myNode;
 
-  protected AbstractFavoritesListProvider(@Nonnull Project project, String listName) {
-    this(project, listName, null);
-  }
+    protected AbstractFavoritesListProvider(@Nonnull Project project, String listName) {
+        this(project, listName, null);
+    }
 
-  protected AbstractFavoritesListProvider(@Nonnull Project project, final String listName, @Nullable String description) {
-    myProject = project;
-    myListName = listName;
-    myNode = new FavoritesListNode(project, listName, description) {
-      @RequiredReadAction
-      @Nonnull
-      @Override
-      public Collection<? extends AbstractTreeNode> getChildren() {
-        return myChildren;
-      }
+    protected AbstractFavoritesListProvider(@Nonnull Project project, final String listName, @Nullable String description) {
+        myProject = project;
+        myListName = listName;
+        myNode = new FavoritesListNode(project, listName, description) {
+            @Nonnull
+            @Override
+            @RequiredReadAction
+            public Collection<? extends AbstractTreeNode> getChildren() {
+                return myChildren;
+            }
 
-      @Override
-      public FavoritesListProvider getProvider() {
-        return AbstractFavoritesListProvider.this;
-      }
-    };
-  }
+            @Override
+            public FavoritesListProvider getProvider() {
+                return AbstractFavoritesListProvider.this;
+            }
+        };
+    }
 
-  @Override
-  public String getListName(Project project) {
-    return myListName;
-  }
+    @Override
+    public String getListName(Project project) {
+        return myListName;
+    }
 
-  @Override
-  @Nullable
-  public FavoritesListNode createFavoriteListNode(Project project) {
-    return myNode;
-  }
+    @Nullable
+    @Override
+    public FavoritesListNode createFavoriteListNode(Project project) {
+        return myNode;
+    }
 
-  @Override
-  public int compare(FavoritesTreeNodeDescriptor o1, FavoritesTreeNodeDescriptor o2) {
-    return o1.getIndex() - o2.getIndex();
-  }
+    @Override
+    public int compare(FavoritesTreeNodeDescriptor o1, FavoritesTreeNodeDescriptor o2) {
+        return o1.getIndex() - o2.getIndex();
+    }
 
-  @Nullable
-  @Override
-  public String getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
+        return LocalizeValue.empty();
+    }
 
-  @Override
-  public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
-    return false;
-  }
+    @Override
+    public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
+        return false;
+    }
 
-  @Override
-  public void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component) {
-  }
+    @Override
+    public void handle(
+        @Nonnull CommonActionsPanel.Buttons type,
+        Project project,
+        @Nonnull Set<Object> selectedObjects,
+        JComponent component
+    ) {
+    }
 
-  @Override
-  public int compareTo(FavoritesListProvider o) {
-    if (getWeight() > o.getWeight()) return 1;
-    if (getWeight() < o.getWeight()) return -1;
-    return 0;
-  }
+    @Override
+    public int compareTo(FavoritesListProvider o) {
+        return Integer.compare(getWeight(), o.getWeight());
+    }
 
-  @Override
-  public void customizeRenderer(ColoredTreeCellRenderer renderer,
-                                JTree tree,
-                                @Nonnull Object value,
-                                boolean selected,
-                                boolean expanded,
-                                boolean leaf,
-                                int row,
-                                boolean hasFocus) {
-  }
+    @Override
+    public void customizeRenderer(
+        ColoredTreeCellRenderer renderer,
+        JTree tree,
+        @Nonnull Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+    ) {
+    }
 }

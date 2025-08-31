@@ -602,6 +602,8 @@ action.DumpIntentionsDescriptions.text:
     text: Dump intentions descriptions
 action.DumpPsiMemoryCaches.text:
     text: Dump what is cached in PSI
+action.EditBreakpoint.text:
+    text: Edit Breakpoint
 action.EditFavorites.description:
     text: Edit
 action.EditFavorites.text:
@@ -720,8 +722,6 @@ action.EditorMatchBrace.text:
     text: Move Caret to Matched Brace
 action.EditorMoveDownAndScroll.text:
     text: Move Down and Scroll
-action.ScrollTreeToCenter.text:
-    text: Scroll Tree To Center
 action.EditorMoveDownAndScrollWithSelection.text:
     text: Move Down and Scroll with Selection
 action.EditorMoveToPageBottom.text:

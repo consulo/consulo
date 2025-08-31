@@ -18,6 +18,12 @@ aboutbox.maintenance.due:
     text: Entitled for free updates and upgrades until {0,date,MMMM dd, yyyy}
 aboutbox.vm:
     text: 'VM: {0} by {1}'
+action.AnActionButton.text.install:
+    text: Install
+action.AnActionButton.text.uninstall:
+    text: Uninstall
+action.AnActionButton.text.upgrade:
+    text: Upgrade
 action.Anonymous.text.add.abbreviation:
     text: Add Abbreviation
 action.Anonymous.text.add.keyboard.shortcut:

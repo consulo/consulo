@@ -32,58 +32,58 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "ToggleBookmarkWithMnemonic")
 public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
-  public ToggleBookmarkWithMnemonicAction() {
-    super(BookmarkLocalize.actionBookmarkToggleWithMnemonicText(), BookmarkLocalize.actionBookmarkToggleDescription());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    super.actionPerformed(e);
-
-    Project project = e.getRequiredData(Project.KEY);
-    BookmarkInContextInfo info = new BookmarkInContextInfo(e.getDataContext(), project).invoke();
-    final Bookmark bookmark = info.getBookmarkAtPlace();
-    final BookmarkManager bookmarks = BookmarkManager.getInstance(project);
-    if (bookmark != null) {
-      final JBPopup[] popup = new JBPopup[1];
-      MnemonicChooser mc = new MnemonicChooser() {
-        @Override
-        protected void onMnemonicChosen(char c) {
-          popup[0].cancel();
-          bookmarks.setMnemonic(bookmark, c);
-        }
-
-        @Override
-        protected void onCancelled() {
-          popup[0].cancel();
-          bookmarks.removeBookmark(bookmark);
-        }
-
-        @Override
-        protected boolean isOccupied(char c) {
-          return bookmarks.findBookmarkForMnemonic(c) != null;
-        }
-      };
-
-      ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(mc, mc);
-      popup[0] = builder
-        .setTitle(BookmarkLocalize.dialogBookmarkAddWithMnemonicTitle())
-        .setFocusable(true)
-        .setRequestFocus(true)
-        .setMovable(true)
-        .setCancelKeyEnabled(false)
-        .setResizable(false)
-        .createPopup();
-
-      popup[0].showInBestPositionFor(e.getDataContext());
+    public ToggleBookmarkWithMnemonicAction() {
+        super(BookmarkLocalize.actionBookmarkToggleWithMnemonicText(), BookmarkLocalize.actionBookmarkToggleDescription());
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        super.actionPerformed(e);
 
-    event.getPresentation().setTextValue(BookmarkLocalize.actionBookmarkToggleWithMnemonicText());
-  }
+        Project project = e.getRequiredData(Project.KEY);
+        BookmarkInContextInfo info = new BookmarkInContextInfo(e.getDataContext(), project).invoke();
+        final Bookmark bookmark = info.getBookmarkAtPlace();
+        final BookmarkManager bookmarks = BookmarkManager.getInstance(project);
+        if (bookmark != null) {
+            final JBPopup[] popup = new JBPopup[1];
+            MnemonicChooser mc = new MnemonicChooser() {
+                @Override
+                protected void onMnemonicChosen(char c) {
+                    popup[0].cancel();
+                    bookmarks.setMnemonic(bookmark, c);
+                }
+
+                @Override
+                protected void onCancelled() {
+                    popup[0].cancel();
+                    bookmarks.removeBookmark(bookmark);
+                }
+
+                @Override
+                protected boolean isOccupied(char c) {
+                    return bookmarks.findBookmarkForMnemonic(c) != null;
+                }
+            };
+
+            ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(mc, mc);
+            popup[0] = builder
+                .setTitle(BookmarkLocalize.dialogBookmarkAddWithMnemonicTitle())
+                .setFocusable(true)
+                .setRequestFocus(true)
+                .setMovable(true)
+                .setCancelKeyEnabled(false)
+                .setResizable(false)
+                .createPopup();
+
+            popup[0].showInBestPositionFor(e.getDataContext());
+        }
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+
+        event.getPresentation().setTextValue(BookmarkLocalize.actionBookmarkToggleWithMnemonicText());
+    }
 }

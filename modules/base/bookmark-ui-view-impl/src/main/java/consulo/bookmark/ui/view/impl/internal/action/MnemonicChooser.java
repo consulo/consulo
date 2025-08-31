@@ -33,63 +33,61 @@ import java.awt.event.KeyEvent;
  * @author max
  */
 public class MnemonicChooser extends JPanel {
-  public MnemonicChooser() {
-    super(new HorizontalLayout(20));
-    setBorder(JBUI.Borders.empty(10));
+    public MnemonicChooser() {
+        super(new HorizontalLayout(20));
+        setBorder(JBUI.Borders.empty(10));
 
-    JPanel numbers = new NonOpaquePanel(new GridLayout(2, 5, 8, 8));
-    for (char i = '1'; i <= '9'; i++) {
-      numbers.add(wrapLabel(i));
-    }
-    numbers.add(wrapLabel('0'));
-
-
-    JPanel letters = new NonOpaquePanel(new GridLayout(5, 6, 8, 8));
-    for (char c = 'A'; c <= 'Z'; c++) {
-      letters.add(wrapLabel(c));
-    }
-
-    // just ignore vertical expand
-    add(new BorderLayoutPanel().addToTop(numbers));
-    // just ignore vertical expand
-    add(new BorderLayoutPanel().addToTop(letters));
-
-    addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-          onCancelled();
+        JPanel numbers = new NonOpaquePanel(new GridLayout(2, 5, 8, 8));
+        for (char i = '1'; i <= '9'; i++) {
+            numbers.add(wrapLabel(i));
         }
-        else if (e.getModifiersEx() == 0) {
-          char typed = Character.toUpperCase(e.getKeyChar());
-          if (typed >= '0' && typed <= '9' || typed >= 'A' && typed <= 'Z') {
-            onMnemonicChosen(typed);
-          }
+        numbers.add(wrapLabel('0'));
+
+
+        JPanel letters = new NonOpaquePanel(new GridLayout(5, 6, 8, 8));
+        for (char c = 'A'; c <= 'Z'; c++) {
+            letters.add(wrapLabel(c));
         }
-      }
-    });
 
-    setFocusable(true);
-  }
+        // just ignore vertical expand
+        add(new BorderLayoutPanel().addToTop(numbers));
+        // just ignore vertical expand
+        add(new BorderLayoutPanel().addToTop(letters));
 
-  protected boolean isOccupied(char c) {
-    return false;
-  }
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    onCancelled();
+                }
+                else if (e.getModifiersEx() == 0) {
+                    char typed = Character.toUpperCase(e.getKeyChar());
+                    if ('0' <= typed && typed <= '9' || 'A' <= typed && typed <= 'Z') {
+                        onMnemonicChosen(typed);
+                    }
+                }
+            }
+        });
 
-  protected void onMnemonicChosen(char c) {
-
-  }
-
-  protected void onCancelled() {
-
-  }
-
-  private Component wrapLabel(char c) {
-    Button button = Button.create(LocalizeValue.of("&" + c));
-    button.addClickListener(e -> onMnemonicChosen(c));
-    if (isOccupied(c)) {
-        button.addStyle(ButtonStyle.PRIMARY);
+        setFocusable(true);
     }
-    return TargetAWT.to(button);
-  }
+
+    protected boolean isOccupied(char c) {
+        return false;
+    }
+
+    protected void onMnemonicChosen(char c) {
+    }
+
+    protected void onCancelled() {
+    }
+
+    private Component wrapLabel(char c) {
+        Button button = Button.create(LocalizeValue.of("&" + c));
+        button.addClickListener(e -> onMnemonicChosen(c));
+        if (isOccupied(c)) {
+            button.addStyle(ButtonStyle.PRIMARY);
+        }
+        return TargetAWT.to(button);
+    }
 }

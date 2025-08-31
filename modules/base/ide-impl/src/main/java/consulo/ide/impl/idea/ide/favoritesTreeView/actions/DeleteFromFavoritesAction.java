@@ -115,7 +115,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
             boolean willHandle = provider.willHandle(CommonActionsPanel.Buttons.REMOVE, project, selection);
             e.getPresentation().setEnabled(willHandle);
             if (willHandle) {
-                e.getPresentation().setText(provider.getCustomName(CommonActionsPanel.Buttons.REMOVE));
+                e.getPresentation().setTextValue(provider.getCustomName(CommonActionsPanel.Buttons.REMOVE));
             }
             return;
         }

@@ -17,6 +17,7 @@ package consulo.bookmark.ui.view;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.CommonActionsPanel;
@@ -35,8 +36,8 @@ import java.util.Set;
 public interface FavoritesListProvider extends Comparator<FavoritesTreeNodeDescriptor>, Comparable<FavoritesListProvider> {
     String getListName(Project project);
 
-    @Nullable
-    String getCustomName(@Nonnull CommonActionsPanel.Buttons type);
+    @Nonnull
+    LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type);
 
     boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects);
 
