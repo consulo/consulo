@@ -107,7 +107,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
       buildWeights(myMatchingTokens);
     }
 
-    final Set<ArrangementSettingsToken> aliasTokens = new HashSet<>();
+    Set<ArrangementSettingsToken> aliasTokens = new HashSet<>();
     aliasTokens.addAll(aliases);
 
     myRuleAliases = aliases;
@@ -179,7 +179,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
       return myMatchingTokens;
     }
 
-    final List<CompositeArrangementSettingsToken> allTokens = ContainerUtil.newArrayList(myMatchingTokens);
+    List<CompositeArrangementSettingsToken> allTokens = ContainerUtil.newArrayList(myMatchingTokens);
     allTokens.add(myRuleAliasToken);
     return allTokens;
   }
@@ -207,7 +207,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
     if (myRuleAliasMutex.isEmpty()) {
       return myMutexes;
     }
-    final List<Set<ArrangementSettingsToken>> allMutexes = ContainerUtil.newArrayList(myMutexes);
+    List<Set<ArrangementSettingsToken>> allMutexes = ContainerUtil.newArrayList(myMutexes);
     allMutexes.add(myRuleAliasMutex);
     return allMutexes;
   }
@@ -222,7 +222,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
 
   private int parseWidth(@Nonnull ArrangementSettingsToken token, @Nonnull SimpleColoredComponent renderer) {
     renderer.clear();
-    final String value = getPresentationValue(token);
+    String value = getPresentationValue(token);
     renderer.append(value, TextAttributesUtil.fromTextAttributes(myColorsProvider.getTextAttributes(token, true)));
     int result = renderer.getPreferredSize().width;
 

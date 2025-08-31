@@ -49,8 +49,8 @@ public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecute
   }
 
   public void sendText(String line) {
-    final Charset charset = myProcessHandler.getCharset();
-    final OutputStream outputStream = myProcessHandler.getProcessInput();
+    Charset charset = myProcessHandler.getCharset();
+    OutputStream outputStream = myProcessHandler.getProcessInput();
     assert outputStream != null : "output stream is null";
     try {
       byte[] bytes = charset != null ? line.getBytes(charset) : line.getBytes();
@@ -62,7 +62,7 @@ public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecute
   }
 
   public final boolean isProcessTerminated() {
-    final ProcessHandler handler = myProcessHandler;
+    ProcessHandler handler = myProcessHandler;
     return handler == null || handler.isProcessTerminated();
   }
 

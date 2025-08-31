@@ -47,7 +47,7 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
         );
     }
 
-    protected static JPanel createBigButtonPanel(LayoutManager layout, final JToggleButton anchorButton, @RequiredUIAccess Runnable action) {
+    protected static JPanel createBigButtonPanel(LayoutManager layout, JToggleButton anchorButton, @RequiredUIAccess Runnable action) {
         return createBigButtonPanel(layout, anchorButton, false, action);
     }
 

@@ -96,24 +96,24 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         String inlineCss = renderData.inlineCss();
         if (renderData.externalCsses().length > 0 && renderData.externalCsses()[0] != null) {
             try {
-                final URL url = renderData.externalCsses()[0];
-                final String cssText = StreamUtil.readText(url.openStream(), CharsetToolkit.UTF8);
+                URL url = renderData.externalCsses()[0];
+                String cssText = StreamUtil.readText(url.openStream(), CharsetToolkit.UTF8);
                 inlineCss += "\n" + cssText;
             }
             catch (IOException ignore) {
             }
         }
 
-        final String htmlToRender = html.replace("<head>", "<head>" + getCssLines(inlineCss));
+        String htmlToRender = html.replace("<head>", "<head>" + getCssLines(inlineCss));
 
         Application.get().executeOnPooledThread(() -> {
             try {
-                final DocumentBuilderImpl builder = new DocumentBuilderImpl(context.getUserAgentContext(), context);
+                DocumentBuilderImpl builder = new DocumentBuilderImpl(context.getUserAgentContext(), context);
                 try (
                     final Reader reader = new StringReader(htmlToRender)) {
-                    final InputSourceImpl is = new InputSourceImpl(reader, "file://a.html");
+                    InputSourceImpl is = new InputSourceImpl(reader, "file://a.html");
 
-                    final HTMLDocumentImpl document = (HTMLDocumentImpl) builder.parse(is);
+                    HTMLDocumentImpl document = (HTMLDocumentImpl) builder.parse(is);
 
                     document.finishModifications();
 
@@ -122,7 +122,7 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
                     future.complete(null);
                 }
             }
-            catch (final IOException | SAXException ioe) {
+            catch (IOException | SAXException ioe) {
                 future.completeExceptionally(ioe);
                 throw new IllegalStateException("Unexpected condition.", ioe);
             }
@@ -136,7 +136,7 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         MyHtmlPanel panel = toAWTComponent();
 
         SwingUtilities.invokeLater(() -> {
-            final NodeImpl root = panel.getRootNode();
+            NodeImpl root = panel.getRootNode();
             if (root == null) {
                 return;
             }
@@ -147,7 +147,7 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
                 public void visit(Node node) {
                     Node child = node.getFirstChild();
                     while (child != null) {
-                        final Range<Integer> range = nodeToSrcRange(child);
+                        Range<Integer> range = nodeToSrcRange(child);
                         if (range != null && child instanceof NodeImpl) {
                             int currentDist = Math.min(Math.abs(range.getFrom() - offset), Math.abs(range.getTo() - 1 - offset));
                             if (resultY.get() == null || resultY.get().getSecond() > currentDist) {
@@ -174,8 +174,8 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
             if (resultY.get() != null) {
                 panel.scrollTo(resultY.get().getFirst());
 
-                final RBlockViewport viewport = ((RBlock) panel.getBlockRenderable()).getRBlockViewport();
-                final Rectangle renderBounds = panel.getBlockRenderable().getBounds();
+                RBlockViewport viewport = ((RBlock) panel.getBlockRenderable()).getRBlockViewport();
+                Rectangle renderBounds = panel.getBlockRenderable().getBounds();
 
                 if (viewport.getY() + viewport.getHeight() - renderBounds.getHeight() > 0) {
                     panel.scrollBy(0, -FOCUS_ELEMENT_DY);
@@ -191,11 +191,11 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         if (!node.hasAttributes()) {
             return null;
         }
-        final Node attribute = node.getAttributes().getNamedItem("src");
+        Node attribute = node.getAttributes().getNamedItem("src");
         if (attribute == null) {
             return null;
         }
-        final List<String> startEnd = StringUtil.split(attribute.getNodeValue(), "..");
+        List<String> startEnd = StringUtil.split(attribute.getNodeValue(), "..");
         if (startEnd.size() != 2) {
             return null;
         }

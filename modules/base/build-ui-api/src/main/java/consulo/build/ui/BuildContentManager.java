@@ -31,7 +31,7 @@ public interface BuildContentManager {
   @Nonnull
   ToolWindow getOrCreateToolWindow();
 
-  void removeContent(final Content content);
+  void removeContent(Content content);
 
   Content addTabbedContent(@Nonnull JComponent contentComponent,
                            @Nonnull String groupPrefix,

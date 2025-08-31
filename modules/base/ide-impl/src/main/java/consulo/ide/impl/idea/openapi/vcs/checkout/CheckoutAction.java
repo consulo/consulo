@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 public class CheckoutAction extends DumbAwareAction {
     private final CheckoutProvider myProvider;
 
-    public CheckoutAction(final CheckoutProvider provider) {
+    public CheckoutAction(CheckoutProvider provider) {
         super(provider.getName());
         myProvider = provider;
     }

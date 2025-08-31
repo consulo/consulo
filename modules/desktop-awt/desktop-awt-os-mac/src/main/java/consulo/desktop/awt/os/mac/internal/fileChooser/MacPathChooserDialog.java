@@ -74,17 +74,17 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
     }
 
     @Nonnull
-    private static LocalizeValue getChooserTitle(final FileChooserDescriptor descriptor) {
-        final LocalizeValue title = descriptor.getTitleValue();
+    private static LocalizeValue getChooserTitle(FileChooserDescriptor descriptor) {
+        LocalizeValue title = descriptor.getTitleValue();
         return title != LocalizeValue.empty() ? title : UILocalize.fileChooserDefaultTitle();
     }
 
     @Nonnull
-    private List<VirtualFile> getChosenFiles(final Stream<File> streamOfFiles) {
-        final List<VirtualFile> virtualFiles = new ArrayList<>();
+    private List<VirtualFile> getChosenFiles(Stream<File> streamOfFiles) {
+        List<VirtualFile> virtualFiles = new ArrayList<>();
 
         streamOfFiles.forEach(file -> {
-            final VirtualFile virtualFile = fileToVirtualFile(file);
+            VirtualFile virtualFile = fileToVirtualFile(file);
             if (virtualFile != null && virtualFile.isValid()) {
                 virtualFiles.add(virtualFile);
             }
@@ -93,8 +93,8 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
     }
 
     private VirtualFile fileToVirtualFile(File file) {
-        final LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-        final String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
+        LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+        String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
         return localFileSystem.refreshAndFindFileByPath(vfsPath);
     }
 
@@ -123,9 +123,9 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
         myFileDialog.setMultipleMode(myFileChooserDescriptor.isChooseMultiple());
 
-        final CommandProcessorEx commandProcessor =
+        CommandProcessorEx commandProcessor =
             ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
-        final boolean appStarted = commandProcessor != null;
+        boolean appStarted = commandProcessor != null;
 
         if (appStarted) {
             commandProcessor.enterModal();
@@ -225,9 +225,9 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
         AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
         SwingUtilities.invokeLater(() -> {
-            final CommandProcessorEx commandProcessor =
+            CommandProcessorEx commandProcessor =
                 ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
-            final boolean appStarted = commandProcessor != null;
+            boolean appStarted = commandProcessor != null;
 
             if (appStarted) {
                 commandProcessor.enterModal();

@@ -219,7 +219,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         ContainerUtil.addAll(allScopes, myDependencyValidationManager.getScopes());
         ContainerUtil.addAll(allScopes, myNamedScopeManager.getScopes());
         for (int i = 0; i < allScopes.size(); i++) {
-            final NamedScope scope = allScopes.get(i);
+            NamedScope scope = allScopes.get(i);
             String name = scope.getName();
             if (name.equals(getSubId())) {
                 allScopes.set(i, allScopes.get(0));
@@ -243,11 +243,11 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     private boolean changeView(
-        final PackageSet packageSet,
-        final PsiElement element,
-        final PsiFileSystemItem psiFileSystemItem,
-        final String name,
-        final NamedScopesHolder holder,
+        PackageSet packageSet,
+        PsiElement element,
+        PsiFileSystemItem psiFileSystemItem,
+        String name,
+        NamedScopesHolder holder,
         boolean requestFocus
     ) {
         if (packageSet.contains(psiFileSystemItem.getVirtualFile(), myProject, holder)) {
@@ -278,7 +278,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Override
-    protected Object exhumeElementFromNode(final DefaultMutableTreeNode node) {
+    protected Object exhumeElementFromNode(DefaultMutableTreeNode node) {
         if (node instanceof PackageDependenciesNode) {
             return ((PackageDependenciesNode) node).getPsiElement();
         }
@@ -286,8 +286,8 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
 
     @Override
-    public Object getData(@Nonnull final Key<?> dataId) {
-        final Object data = super.getData(dataId);
+    public Object getData(@Nonnull Key<?> dataId) {
+        Object data = super.getData(dataId);
         if (data != null) {
             return data;
         }
@@ -297,7 +297,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     @Nonnull
     @Override
     public AsyncResult<Void> getReady(@Nonnull Object requestor) {
-        final AsyncResult<Void> callback = myViewPanel.getActionCallback();
+        AsyncResult<Void> callback = myViewPanel.getActionCallback();
         return myViewPanel == null ? AsyncResult.rejected() : callback != null ? callback : AsyncResult.resolved();
     }
 

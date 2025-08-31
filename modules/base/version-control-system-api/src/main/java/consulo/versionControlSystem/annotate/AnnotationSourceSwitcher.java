@@ -29,5 +29,5 @@ public interface AnnotationSourceSwitcher {
   @Nonnull
   AnnotationSource getDefaultSource();
 
-  void switchTo(final AnnotationSource source);
+  void switchTo(AnnotationSource source);
 }

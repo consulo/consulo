@@ -65,14 +65,14 @@ public class PsiFileSystemItemUtil {
 
   @Nonnull
   public static String getNotNullRelativePath(PsiFileSystemItem src, PsiFileSystemItem dst) throws IncorrectOperationException {
-    final String s = getRelativePath(src, dst);
+    String s = getRelativePath(src, dst);
     if (s == null) throw new IncorrectOperationException("Cannot find path between files; src = " + src.getVirtualFile().getPresentableUrl() + "; dst = " + dst.getVirtualFile().getPresentableUrl());
     return s;
   }
 
   @Nullable
   public static String getRelativePath(PsiFileSystemItem src, PsiFileSystemItem dst) {
-    final PsiFileSystemItem commonAncestor = getCommonAncestor(src, dst);
+    PsiFileSystemItem commonAncestor = getCommonAncestor(src, dst);
 
     if (commonAncestor != null) {
       StringBuilder buffer = new StringBuilder();

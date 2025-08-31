@@ -64,7 +64,7 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
   }
 
   @Override
-  public void navigate(@Nonnull final Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
+  public void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
     List<PsiFile> currentFiles = new ArrayList<>();
     Editor originalEditor;
     if (hyperlinkLocationPoint != null) {

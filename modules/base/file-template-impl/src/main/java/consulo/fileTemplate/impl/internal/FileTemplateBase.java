@@ -54,14 +54,14 @@ public abstract class FileTemplateBase implements FileTemplate {
     return getQualifiedName(getName(), getExtension());
   }
 
-  public static String getQualifiedName(final String name, final String extension) {
+  public static String getQualifiedName(String name, String extension) {
     return FTManager.encodeFileName(name, extension);
   }
 
   @Override
   @Nonnull
   public final String getText() {
-    final String text = myText;
+    String text = myText;
     return text != null? text : getDefaultText();
   }
 
@@ -71,7 +71,7 @@ public abstract class FileTemplateBase implements FileTemplate {
       myText = null;
     }
     else {
-      final String converted = StringUtil.convertLineSeparators(text);
+      String converted = StringUtil.convertLineSeparators(text);
       myText = converted.equals(getDefaultText())? null : converted;
     }
   }
@@ -116,7 +116,7 @@ public abstract class FileTemplateBase implements FileTemplate {
   }
 
   @Override
-  public boolean isTemplateOfType(@Nonnull final FileType fType) {
+  public boolean isTemplateOfType(@Nonnull FileType fType) {
     return fType.equals(FileTypeRegistry.getInstance().getFileTypeByExtension(getExtension()));
   }
 

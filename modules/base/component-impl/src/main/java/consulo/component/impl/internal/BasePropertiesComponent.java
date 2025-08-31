@@ -41,7 +41,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     @Override
     public Element getState() {
         Element parentNode = new Element("state");
-        for (final String key : myMap.keySet()) {
+        for (String key : myMap.keySet()) {
             String value = myMap.get(key);
             if (value != null) {
                 Element element = new Element(ELEMENT_PROPERTY);
@@ -54,7 +54,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     }
 
     @Override
-    public void loadState(final Element parentNode) {
+    public void loadState(Element parentNode) {
         myMap.clear();
         for (Element e : parentNode.getChildren(ELEMENT_PROPERTY)) {
             String name = e.getAttributeValue(ATTRIBUTE_NAME);
@@ -142,7 +142,7 @@ public class BasePropertiesComponent implements PropertiesComponent, PersistentS
     @Nullable
     @Override
     public String[] getValues(String name) {
-        final String value = getValue(name);
+        String value = getValue(name);
         return value != null ? value.split("\n") : null;
     }
 

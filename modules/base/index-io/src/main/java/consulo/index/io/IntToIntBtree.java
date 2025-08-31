@@ -429,7 +429,7 @@ public class IntToIntBtree {
 
     private static final int HASH_FREE = 0;
 
-    private int search(final int value) {
+    private int search(int value) {
       if (isIndexLeaf() && isHashedLeaf()) {
         return hashIndex(value);
       }
@@ -453,7 +453,7 @@ public class IntToIntBtree {
       int offset = indexToOffset(i);
       if (doSanityCheck) {
         short childrenCount = getChildrenCount();
-        final int metaPageLen;
+        int metaPageLen;
 
         if (isHashedLeaf()) {
           myAssert(i < btree.hashPageCapacity);
@@ -486,9 +486,9 @@ public class IntToIntBtree {
     }
 
     private void setKeyAt(int i, int value) {
-      final int offset = indexToOffset(i) + KEY_OFFSET;
+      int offset = indexToOffset(i) + KEY_OFFSET;
       if (doSanityCheck) {
-        final int metaPageLen;
+        int metaPageLen;
         if (isHashedLeaf()) {
           myAssert(i < btree.hashPageCapacity);
           metaPageLen = btree.metaDataLeafPageLength;
@@ -559,7 +559,7 @@ public class IntToIntBtree {
         }
       }
       else {
-        final int childrenCount = getChildrenCount();
+        int childrenCount = getChildrenCount();
         for (int i = 0; i < childrenCount; ++i) {
           if (!processor.process(keyAt(i), addressAt(i))) return false;
         }
@@ -584,10 +584,10 @@ public class IntToIntBtree {
       HashLeafData(BtreeIndexNodeView _nodeView, int recordCount) {
         nodeView = _nodeView;
 
-        final IntToIntBtree btree = _nodeView.btree;
+        IntToIntBtree btree = _nodeView.btree;
 
         int offset = nodeView.myAddressInBuffer + nodeView.indexToOffset(0);
-        final ByteBuffer buffer = nodeView.myBuffer;
+        ByteBuffer buffer = nodeView.myBuffer;
 
         keys = new int[recordCount];
         values = IntMaps.newIntIntHashMap(recordCount);
@@ -609,7 +609,7 @@ public class IntToIntBtree {
       }
 
       private void clean() {
-        final IntToIntBtree btree = nodeView.btree;
+        IntToIntBtree btree = nodeView.btree;
         for (int i = 0; i < btree.hashPageCapacity; ++i) {
           nodeView.setKeyAt(i, HASH_FREE);
         }
@@ -617,15 +617,15 @@ public class IntToIntBtree {
     }
 
     private int splitNode(int parentAddress) {
-      final boolean indexLeaf = isIndexLeaf();
+      boolean indexLeaf = isIndexLeaf();
 
       if (doSanityCheck) {
         myAssert(isFull());
         dump("before split:" + indexLeaf);
       }
 
-      final boolean hashedLeaf = isHashedLeaf();
-      final short recordCount = getChildrenCount();
+      boolean hashedLeaf = isHashedLeaf();
+      short recordCount = getChildrenCount();
       BtreeIndexNodeView parent = null;
       HashLeafData hashLeafData = null;
 
@@ -662,7 +662,7 @@ public class IntToIntBtree {
 
       if (indexLeaf && hashedLeaf) {
         if (hashLeafData == null) hashLeafData = new HashLeafData(this, recordCount);
-        final int[] keys = hashLeafData.keys;
+        int[] keys = hashLeafData.keys;
 
         boolean defaultSplit = true;
 
@@ -688,9 +688,9 @@ public class IntToIntBtree {
         if (defaultSplit) {
           hashLeafData.clean();
 
-          final IntIntMap map = hashLeafData.values;
+          IntIntMap map = hashLeafData.values;
 
-          final int avg = keys.length / 2;
+          int avg = keys.length / 2;
           medianKey = keys[avg];
           --btree.hashedPagesCount;
           setChildrenCount((short)0);  // this node becomes dirty
@@ -796,7 +796,7 @@ public class IntToIntBtree {
       return parentAddress;
     }
 
-    private boolean doOffloadToSiblingsWhenHashed(BtreeIndexNodeView parent, final HashLeafData hashLeafData) {
+    private boolean doOffloadToSiblingsWhenHashed(BtreeIndexNodeView parent, HashLeafData hashLeafData) {
       int indexInParent = parent.search(hashLeafData.keys[0]);
 
       if (indexInParent >= 0) {
@@ -811,12 +811,12 @@ public class IntToIntBtree {
             parent.dump("parent before");
           }
 
-          final int childrenCount = getChildrenCount();
-          final int[] keys = hashLeafData.keys;
-          final IntIntMap map = hashLeafData.values;
+          int childrenCount = getChildrenCount();
+          int[] keys = hashLeafData.keys;
+          IntIntMap map = hashLeafData.values;
 
           for (int i = 0; i < numberOfKeysToMove; ++i) {
-            final int key = keys[i];
+            int key = keys[i];
             sibling.insert(key, map.getInt(key));
           }
 
@@ -832,7 +832,7 @@ public class IntToIntBtree {
           hashLeafData.clean();
 
           for (int i = numberOfKeysToMove; i < childrenCount; ++i) {
-            final int key = keys[i];
+            int key = keys[i];
             insert(key, map.getInt(key));
           }
         }
@@ -865,13 +865,13 @@ public class IntToIntBtree {
           parent.dump("parent before");
         }
 
-        final int[] keys = hashLeafData.keys;
-        final IntIntMap map = hashLeafData.values;
+        int[] keys = hashLeafData.keys;
+        IntIntMap map = hashLeafData.values;
 
-        final int childrenCount = getChildrenCount();
-        final int lastChildIndex = childrenCount - numberOfKeysToMove;
+        int childrenCount = getChildrenCount();
+        int lastChildIndex = childrenCount - numberOfKeysToMove;
         for (int i = lastChildIndex; i < childrenCount; ++i) {
-          final int key = keys[i];
+          int key = keys[i];
           sibling.insert(key, map.getInt(key)); // sibling will be dirty
         }
 
@@ -886,7 +886,7 @@ public class IntToIntBtree {
         hashLeafData.clean();
 
         for (int i = 0; i < lastChildIndex; ++i) {
-          final int key = keys[i];
+          int key = keys[i];
           insert(key, map.getInt(key));
         }
       }
@@ -906,7 +906,7 @@ public class IntToIntBtree {
         BtreeIndexNodeView sibling = new BtreeIndexNodeView(btree);
         sibling.setAddress(-parent.addressAt(indexInParent));
 
-        final int toMove = (sibling.getMaxChildrenCount() - sibling.getChildrenCount()) / 2;
+        int toMove = (sibling.getMaxChildrenCount() - sibling.getChildrenCount()) / 2;
 
         if (toMove > 0) {
           if (doSanityCheck) {
@@ -1002,7 +1002,7 @@ public class IntToIntBtree {
     private int locate(int valueHC, boolean split) {
       int searched = 0;
       int parentAddress = 0;
-      final int maxHeight = btree.height + 1;
+      int maxHeight = btree.height + 1;
 
       while (true) {
         if (isFull()) {
@@ -1037,7 +1037,7 @@ public class IntToIntBtree {
       short recordCount = getChildrenCount();
       if (doSanityCheck) myAssert(recordCount < getMaxChildrenCount());
 
-      final boolean indexLeaf = isIndexLeaf();
+      boolean indexLeaf = isIndexLeaf();
 
       if (indexLeaf) {
         if (recordCount == 0 && btree.indexNodeIsHashTable) {
@@ -1064,7 +1064,7 @@ public class IntToIntBtree {
       int index = -medianKeyInParent - 1;
       setChildrenCount((short)(recordCount + 1)); // "this" node becomes dirty
 
-      final int itemsToMove = recordCount - index;
+      int itemsToMove = recordCount - index;
       btree.movedMembersCount += itemsToMove;
 
       if (indexLeaf) {
@@ -1114,7 +1114,7 @@ public class IntToIntBtree {
     private static final boolean useDoubleHash = true;
 
     private int hashIndex(int value) {
-      final int length = btree.hashPageCapacity;
+      int length = btree.hashPageCapacity;
       int hash = value & 0x7fffffff;
       int index = hash % length;
       int keyAtIndex = keyAt(index);
@@ -1125,7 +1125,7 @@ public class IntToIntBtree {
       if (useDoubleHash) {
         if (keyAtIndex != value && keyAtIndex != HASH_FREE) {
           // see Knuth, p. 529
-          final int probe = 1 + (hash % (length - 2));
+          int probe = 1 + (hash % (length - 2));
 
           do {
             index -= probe;
@@ -1181,7 +1181,7 @@ public class IntToIntBtree {
     }
 
     // Copy children addresses first to avoid node's ByteBuffer invalidation
-    final int[] childrenAddresses = new int[node.getChildrenCount() + 1];
+    int[] childrenAddresses = new int[node.getChildrenCount() + 1];
 
     for (int i = 0; i < childrenAddresses.length; ++i) {
       childrenAddresses[i] = -node.addressAt(i);

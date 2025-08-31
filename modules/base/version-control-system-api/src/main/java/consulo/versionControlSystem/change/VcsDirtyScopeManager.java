@@ -73,12 +73,12 @@ public abstract class VcsDirtyScopeManager {
     /**
      * Requests an asynchronous file status update for all files specified and under the specified directories
      */
-    public abstract void filePathsDirty(@Nullable final Collection<? extends FilePath> filesDirty,
-                                        @Nullable final Collection<? extends FilePath> dirsRecursivelyDirty);
+    public abstract void filePathsDirty(@Nullable Collection<? extends FilePath> filesDirty,
+                                        @Nullable Collection<? extends FilePath> dirsRecursivelyDirty);
 
     /**
      * Requests an asynchronous file status update for all files specified and under the specified directories
      */
-    public abstract void filesDirty(@Nullable final Collection<? extends VirtualFile> filesDirty,
-                                    @Nullable final Collection<? extends VirtualFile> dirsRecursivelyDirty);
+    public abstract void filesDirty(@Nullable Collection<? extends VirtualFile> filesDirty,
+                                    @Nullable Collection<? extends VirtualFile> dirsRecursivelyDirty);
 }

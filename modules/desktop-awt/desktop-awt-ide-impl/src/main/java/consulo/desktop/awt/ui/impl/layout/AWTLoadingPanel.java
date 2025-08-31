@@ -44,7 +44,7 @@ public class AWTLoadingPanel extends JPanel implements FromSwingComponentWrapper
     myDecorator = new LoadingDecorator(inner, parent, -1) {
       @Override
       protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
-        final NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
+        NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
         customizeStatusText(text);
         return panel;
       }

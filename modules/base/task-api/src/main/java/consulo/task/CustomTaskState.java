@@ -78,7 +78,7 @@ public class CustomTaskState
 			return false;
 		}
 
-		final CustomTaskState state = (CustomTaskState) o;
+		CustomTaskState state = (CustomTaskState) o;
 
 		return myId.equals(state.myId);
 	}
@@ -102,7 +102,7 @@ public class CustomTaskState
 	@Nonnull
 	public static CustomTaskState fromPredefined(@Nonnull TaskState state)
 	{
-		final CustomTaskState result = new CustomTaskState(state.name(), state.getPresentableName());
+		CustomTaskState result = new CustomTaskState(state.name(), state.getPresentableName());
 		result.setPredefined(true);
 		return result;
 	}

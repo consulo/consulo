@@ -20,12 +20,12 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
                               @Nonnull ProjectStructureProblemType problemType,
                               @Nonnull PlaceInProjectStructure place,
                               @Nullable ConfigurationErrorQuickFix fix) {
-    final List<ConfigurationErrorQuickFix> fixes = fix != null ? Collections.singletonList(fix) : Collections.<ConfigurationErrorQuickFix>emptyList();
+    List<ConfigurationErrorQuickFix> fixes = fix != null ? Collections.singletonList(fix) : Collections.<ConfigurationErrorQuickFix>emptyList();
     registerProblem(new ProjectStructureProblemDescription(message, description, place, problemType, fixes));
   }
 
   @Override
-  public void registerProblem(final @Nonnull ProjectStructureProblemDescription description) {
+  public void registerProblem(@Nonnull ProjectStructureProblemDescription description) {
     if (myProblemDescriptions == null) {
       myProblemDescriptions = new SmartList<ProjectStructureProblemDescription>();
     }
@@ -33,7 +33,7 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
   }
 
   public String composeTooltipMessage() {
-    final StringBuilder buf = StringBuilderSpinAllocator.alloc();
+    StringBuilder buf = StringBuilderSpinAllocator.alloc();
     try {
       buf.append("<html><body>");
       if (myProblemDescriptions != null) {
@@ -59,7 +59,7 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
     return myProblemDescriptions != null && !myProblemDescriptions.isEmpty();
   }
 
-  public boolean containsProblems(final ProjectStructureProblemType.Severity severity) {
+  public boolean containsProblems(ProjectStructureProblemType.Severity severity) {
     if (myProblemDescriptions != null) {
       for (ProjectStructureProblemDescription description : myProblemDescriptions) {
         if (description.getSeverity() == severity) {

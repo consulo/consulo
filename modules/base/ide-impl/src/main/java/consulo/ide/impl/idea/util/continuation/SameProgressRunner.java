@@ -35,10 +35,10 @@ public class SameProgressRunner extends GeneralRunner {
   private final Semaphore mySemaphore;
   private final static Logger LOG = Logger.getInstance(SameProgressRunner.class);
 
-  public SameProgressRunner(Project project, boolean cancellable, final String commonName) {
+  public SameProgressRunner(Project project, boolean cancellable, String commonName) {
     super(project, cancellable);
 
-    final Application application = ApplicationManager.getApplication();
+    Application application = ApplicationManager.getApplication();
     if (! application.isUnitTestMode()) {
       assert ! application.isDispatchThread();
     }

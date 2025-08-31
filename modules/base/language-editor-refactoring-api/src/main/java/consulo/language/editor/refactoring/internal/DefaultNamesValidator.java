@@ -23,8 +23,8 @@ import jakarta.annotation.Nonnull;
 
 public class DefaultNamesValidator implements NamesValidator {
   @Override
-  public boolean isIdentifier(final String name, final Project project) {
-    final int len = name.length();
+  public boolean isIdentifier(String name, Project project) {
+    int len = name.length();
     if (len == 0) return false;
 
     if (!Character.isJavaIdentifierStart(name.charAt(0))) return false;
@@ -37,7 +37,7 @@ public class DefaultNamesValidator implements NamesValidator {
   }
 
   @Override
-  public boolean isKeyword(final String name, final Project project) {
+  public boolean isKeyword(String name, Project project) {
     return false;
   }
 

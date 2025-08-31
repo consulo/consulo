@@ -64,7 +64,7 @@ public class CommonRefactoringUtil {
     }
 
     // order of usages across different files is irrelevant
-    public static void sortDepthFirstRightLeftOrder(final UsageInfo[] usages) {
+    public static void sortDepthFirstRightLeftOrder(UsageInfo[] usages) {
         Arrays.sort(usages, (usage1, usage2) -> {
             PsiElement element1 = usage1.getElement(), element2 = usage2.getElement();
             if (element1 == element2) {
@@ -117,7 +117,7 @@ public class CommonRefactoringUtil {
 
     @RequiredUIAccess
     public static boolean checkReadOnlyStatus(@Nonnull PsiElement element) {
-        final VirtualFile file = element.getContainingFile().getVirtualFile();
+        VirtualFile file = element.getContainingFile().getVirtualFile();
         return file != null && !ReadonlyStatusHandler.getInstance(element.getProject()).ensureFilesWritable(file).hasReadonlyFiles();
     }
 
@@ -246,8 +246,8 @@ public class CommonRefactoringUtil {
 
         for (PsiElement element : elements) {
             if (element instanceof PsiDirectory) {
-                final PsiDirectory dir = (PsiDirectory)element;
-                final VirtualFile vFile = dir.getVirtualFile();
+                PsiDirectory dir = (PsiDirectory)element;
+                VirtualFile vFile = dir.getVirtualFile();
                 if (vFile.getFileSystem().isReadOnly()) {
                     failed.add(vFile);
                 }
@@ -259,7 +259,7 @@ public class CommonRefactoringUtil {
                 }
             }
             else if (element instanceof PsiDirectoryContainer) {
-                final PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
+                PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
                 for (PsiDirectory directory : directories) {
                     VirtualFile virtualFile = directory.getVirtualFile();
                     if (recursively) {
@@ -286,7 +286,7 @@ public class CommonRefactoringUtil {
                     }
                 }
                 else {
-                    final VirtualFile vFile = file.getVirtualFile();
+                    VirtualFile vFile = file.getVirtualFile();
                     if (vFile != null) {
                         readonly.add(vFile);
                     }
@@ -306,7 +306,7 @@ public class CommonRefactoringUtil {
         VirtualFileUtil.visitChildrenRecursively(vFile, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {
-                final boolean ignored = fileTypeManager.isFileIgnored(file);
+                boolean ignored = fileTypeManager.isFileIgnored(file);
                 if (!file.isWritable() && !ignored) {
                     list.add(file);
                 }
@@ -320,7 +320,7 @@ public class CommonRefactoringUtil {
     }
 
     public static boolean isAncestor(@Nonnull PsiElement resolved, @Nonnull Collection<? extends PsiElement> scopes) {
-        for (final PsiElement scope : scopes) {
+        for (PsiElement scope : scopes) {
             if (PsiTreeUtil.isAncestor(scope, resolved, false)) {
                 return true;
             }
@@ -333,7 +333,7 @@ public class CommonRefactoringUtil {
         if (targetDirectory == null) {
             return false;
         }
-        final PsiFile existing = targetDirectory.findFile(name);
+        PsiFile existing = targetDirectory.findFile(name);
         if (existing != null && !existing.equals(file)) {
             int selection;
             if (choice == null || choice[0] == -1) {

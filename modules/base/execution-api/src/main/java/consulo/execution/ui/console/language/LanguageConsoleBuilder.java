@@ -58,7 +58,7 @@ public abstract class LanguageConsoleBuilder {
 
   protected String processInputStateKey;
 
-  public LanguageConsoleBuilder processHandler(@Nonnull final ProcessHandler processHandler) {
+  public LanguageConsoleBuilder processHandler(@Nonnull ProcessHandler processHandler) {
     executionEnabled = console -> !processHandler.isProcessTerminated();
     return this;
   }

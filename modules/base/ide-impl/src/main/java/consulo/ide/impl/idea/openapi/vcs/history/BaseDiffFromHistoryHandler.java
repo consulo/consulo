@@ -123,11 +123,11 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
   // rev2 == null -> compare rev1 with local
   // rev2 != null -> compare rev1 with rev2
   @Nonnull
-  protected abstract List<Change> getChangesBetweenRevisions(@Nonnull final FilePath path, @Nonnull final T rev1, @Nullable final T rev2)
+  protected abstract List<Change> getChangesBetweenRevisions(@Nonnull FilePath path, @Nonnull T rev1, @Nullable T rev2)
           throws VcsException;
 
   @Nonnull
-  protected abstract List<Change> getAffectedChanges(@Nonnull final FilePath path, @Nonnull final T rev) throws VcsException;
+  protected abstract List<Change> getAffectedChanges(@Nonnull FilePath path, @Nonnull T rev) throws VcsException;
 
   @Nonnull
   protected abstract String getPresentableName(@Nonnull T revision);
@@ -137,7 +137,7 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
 
     dialogBuilder.setTitle(title);
     dialogBuilder.setActionDescriptors(new DialogBuilder.ActionDescriptor[]{new DialogBuilder.CloseDialogAction()});
-    final ChangesBrowser changesBrowser =
+    ChangesBrowser changesBrowser =
             new ChangesBrowser(myProject, null, changes, null, false, true, null, ChangesBrowser.MyUseCase.COMMITTED_CHANGES, null);
     changesBrowser.setChangesToDisplay(changes);
     dialogBuilder.setCenterPanel(changesBrowser);
@@ -151,7 +151,7 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
   }
 
   @Nonnull
-  protected String getChangesBetweenRevisionsDialogTitle(@Nonnull final FilePath path, @Nonnull final T rev1, @Nullable final T rev2) {
+  protected String getChangesBetweenRevisionsDialogTitle(@Nonnull FilePath path, @Nonnull T rev1, @Nullable T rev2) {
     String rev1Title = getPresentableName(rev1);
 
     return rev2 != null
@@ -160,7 +160,7 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
   }
 
   @Nonnull
-  protected String getAffectedChangesDialogTitle(@Nonnull final FilePath path, @Nonnull final T rev) {
+  protected String getAffectedChangesDialogTitle(@Nonnull FilePath path, @Nonnull T rev) {
     return String.format("Initial commit %s in %s", getPresentableName(rev), path.getName());
   }
 

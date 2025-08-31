@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.Collection;
 
 public class DefaultPatchStrategy extends AutoMatchStrategy {
-  public DefaultPatchStrategy(final VirtualFile baseDir) {
+  public DefaultPatchStrategy(VirtualFile baseDir) {
     super(baseDir);
   }
 
@@ -29,7 +29,7 @@ public class DefaultPatchStrategy extends AutoMatchStrategy {
   public void acceptPatch(TextFilePatch patch, Collection<VirtualFile> foundByName) {
     TextFilePatchInProgress longest = null;
     for (VirtualFile file : foundByName) {
-      final TextFilePatchInProgress current = processMatch(patch, file);
+      TextFilePatchInProgress current = processMatch(patch, file);
       if ((current != null) && ((longest == null) || (longest.getCurrentStrip() > current.getCurrentStrip()))) {
         longest = current;
       }

@@ -24,7 +24,7 @@ import consulo.util.lang.ExceptionUtil;
 public class LogEventException extends RuntimeException {
   private final IdeaLoggingEvent myLogMessage;
 
-  public LogEventException(String userMessage, final String details, final Attachment... attachments) {
+  public LogEventException(String userMessage, String details, Attachment... attachments) {
     this(LogMessageEx.createEvent(userMessage, details + "\n\n" + ExceptionUtil.currentStackTrace(), attachments));
   }
 

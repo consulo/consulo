@@ -35,19 +35,19 @@ public class EditSourceUtil {
   }
 
   @Nullable
-  public static Navigatable getDescriptor(final PsiElement element) {
+  public static Navigatable getDescriptor(PsiElement element) {
     if (!canNavigate(element)) {
       return null;
     }
     if (element instanceof PomTargetPsiElement) {
       return ((PomTargetPsiElement)element).getTarget();
     }
-    final PsiElement navigationElement = element.getNavigationElement();
+    PsiElement navigationElement = element.getNavigationElement();
     if (navigationElement instanceof PomTargetPsiElement) {
       return ((PomTargetPsiElement)navigationElement).getTarget();
     }
-    final int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
-    final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(navigationElement);
+    int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
+    VirtualFile virtualFile = PsiUtilCore.getVirtualFile(navigationElement);
     if (virtualFile == null || !virtualFile.isValid()) {
       return null;
     }

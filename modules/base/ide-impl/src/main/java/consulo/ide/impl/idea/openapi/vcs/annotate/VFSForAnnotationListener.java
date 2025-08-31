@@ -27,7 +27,7 @@ public class VFSForAnnotationListener extends VirtualFileAdapter {
   private final VirtualFile myFile;
   private final FileAnnotation myFileAnnotation;
 
-  public VFSForAnnotationListener(final VirtualFile file, final FileAnnotation fileAnnotation) {
+  public VFSForAnnotationListener(VirtualFile file, FileAnnotation fileAnnotation) {
     myFileAnnotation = fileAnnotation;
     myFile = file;
   }

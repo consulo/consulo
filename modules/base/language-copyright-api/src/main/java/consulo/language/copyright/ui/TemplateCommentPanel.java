@@ -132,7 +132,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
 
     myUseDefaultSettingsRadioButton.setSelected(true);
 
-    final ActionListener listener = e -> updateOverride();
+    ActionListener listener = e -> updateOverride();
 
     myUseDefaultSettingsRadioButton.addActionListener(listener);
     myUseCustomFormattingOptionsRadioButton.addActionListener(listener);
@@ -166,7 +166,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
       updateBox();
     });
 
-    final DocumentAdapter documentAdapter = new DocumentAdapter() {
+    DocumentAdapter documentAdapter = new DocumentAdapter() {
       @Override
       protected void textChanged(DocumentEvent e) {
         fireChangeEvent();
@@ -222,7 +222,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   public CopyrightFileConfig getOptions() {
     // If this is a fully custom comment we should really ensure there are no blank lines in the comments outside
     // of a block comment. If there are any blank lines the replacement logic will fall apart.
-    final CopyrightFileConfig res = myFileType == null ? new CopyrightFileConfig() : UpdateCopyrightsProvider.forFileType(myFileType).createDefaultOptions();
+    CopyrightFileConfig res = myFileType == null ? new CopyrightFileConfig() : UpdateCopyrightsProvider.forFileType(myFileType).createDefaultOptions();
     res.setBlock(rbBlockComment.isSelected());
     res.setPrefixLines(!myAllowBlock || cbPrefixLines.isSelected());
     res.setSeparateAfter(cbSeparatorAfter.isSelected());
@@ -281,7 +281,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
         }
         break;
       case CopyrightFileConfig.USE_TEMPLATE:
-        final boolean isTemplate = parentPanel == null;
+        boolean isTemplate = parentPanel == null;
         enableFormattingOptions(isTemplate);
         showPreview(parentOpts != null ? parentOpts : getOptions());
         rbBefore.setEnabled(isTemplate);
@@ -329,7 +329,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   }
 
   private void showPreview(CopyrightFileConfig options) {
-    final String defaultCopyrightText;
+    String defaultCopyrightText;
 
     if (myNoCopyright.isSelected()) {
       defaultCopyrightText = "";
@@ -401,7 +401,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    final CopyrightFileConfigManager copyrightFileConfigManager = myManager.getCopyrightFileConfigManager();
+    CopyrightFileConfigManager copyrightFileConfigManager = myManager.getCopyrightFileConfigManager();
     if (myFileType == null) {
       copyrightFileConfigManager.setTemplateOptions(getOptions());
     }
@@ -413,7 +413,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   @RequiredUIAccess
   @Override
   public void reset() {
-    final CopyrightFileConfig options = myFileType == null ? myManager.getCopyrightFileConfigManager().getTemplateOptions() : myManager.getCopyrightFileConfigManager().getOptions(myFileType);
+    CopyrightFileConfig options = myFileType == null ? myManager.getCopyrightFileConfigManager().getTemplateOptions() : myManager.getCopyrightFileConfigManager().getOptions(myFileType);
     boolean isBlock = options.isBlock();
     if (isBlock) {
       rbBlockComment.setSelected(true);
@@ -430,7 +430,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     txtFiller.setText(options.getFiller() == CopyrightFileConfig.DEFAULT_FILLER ? "" : options.getFiller());
     cbBox.setSelected(options.isBox());
 
-    final int fileTypeOverride = options.getFileTypeOverride();
+    int fileTypeOverride = options.getFileTypeOverride();
     myUseDefaultSettingsRadioButton.setSelected(fileTypeOverride == CopyrightFileConfig.USE_TEMPLATE);
     myUseCustomFormattingOptionsRadioButton.setSelected(fileTypeOverride == CopyrightFileConfig.USE_TEXT);
     myNoCopyright.setSelected(fileTypeOverride == CopyrightFileConfig.NO_COPYRIGHT);

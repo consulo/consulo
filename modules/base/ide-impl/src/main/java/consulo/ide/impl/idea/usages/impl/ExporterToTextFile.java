@@ -36,7 +36,7 @@ public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFi
 
   private void appendNode(StringBuilder buf, DefaultMutableTreeNode node, String lineSeparator, String indent) {
     buf.append(indent);
-    final String childIndent;
+    String childIndent;
     if (node.getParent() != null) {
       childIndent = indent + "    ";
       appendNodeText(buf, node, lineSeparator);

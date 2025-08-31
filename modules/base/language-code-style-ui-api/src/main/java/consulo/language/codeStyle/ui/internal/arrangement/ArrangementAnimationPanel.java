@@ -72,7 +72,7 @@ public class ArrangementAnimationPanel extends JPanel {
     myContent.validate();
     //noinspection UndesirableClassUsage
     myImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
-    final Graphics2D graphics = myImage.createGraphics();
+    Graphics2D graphics = myImage.createGraphics();
     UISettingsUtil.setupAntialiasing(graphics);
     graphics.setClip(0, 0, size.width, size.height);
     graphics.setColor(UIUtil.getListBackground());

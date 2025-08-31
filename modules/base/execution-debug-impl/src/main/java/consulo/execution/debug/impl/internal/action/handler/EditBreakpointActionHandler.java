@@ -40,7 +40,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
     Editor editor = event.getData(Editor.KEY);
     if (editor == null) return;
 
-    final Pair<GutterIconRenderer,Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);
+    Pair<GutterIconRenderer,Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);
 
     Object breakpoint = pair.second;
     GutterIconRenderer breakpointGutterRenderer = pair.first;

@@ -94,7 +94,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Nonnull
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull final IElementType elementType, E[] array) {
+  public <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, E[] array) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(elementType, childrenStubs);
 
@@ -107,7 +107,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Nonnull
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull final TokenSet filter, E[] array) {
+  public <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, E[] array) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(filter, childrenStubs);
 
@@ -120,7 +120,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Nonnull
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull final IElementType elementType, @Nonnull final IntFunction<E[]> f) {
+  public <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, @Nonnull IntFunction<E[]> f) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(elementType, childrenStubs);
 
@@ -182,7 +182,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Nonnull
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull final TokenSet filter, @Nonnull final IntFunction<E[]> f) {
+  public <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, @Nonnull IntFunction<E[]> f) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(filter, childrenStubs);
 
@@ -196,7 +196,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Override
   @Nullable
-  public <E extends PsiElement> E getParentStubOfType(@Nonnull final Class<E> parentClass) {
+  public <E extends PsiElement> E getParentStubOfType(@Nonnull Class<E> parentClass) {
     StubElement<?> parent = myParent;
     while (parent != null) {
       PsiElement psi = parent.getPsi();

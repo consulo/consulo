@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class PluginAdvertiserActivity implements BackgroundStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         PluginAdvertiser advertiser = project.getInstance(PluginAdvertiser.class);
 
         advertiser.scheduleSuggestion();

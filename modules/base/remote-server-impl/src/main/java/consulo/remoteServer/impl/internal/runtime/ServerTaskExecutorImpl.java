@@ -31,7 +31,7 @@ public class ServerTaskExecutorImpl implements ServerTaskExecutor {
     }
 
     @Override
-    public void submit(@Nonnull final ThrowableRunnable<?> command, @Nonnull final RemoteOperationCallback callback) {
+    public void submit(@Nonnull ThrowableRunnable<?> command, @Nonnull RemoteOperationCallback callback) {
         execute(() -> {
             try {
                 command.run();

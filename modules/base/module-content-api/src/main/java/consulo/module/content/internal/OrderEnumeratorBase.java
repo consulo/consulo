@@ -199,7 +199,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
     return flags;
   }
 
-  protected void processEntries(final ModuleRootLayer rootModel,
+  protected void processEntries(ModuleRootLayer rootModel,
                                 Processor<OrderEntry> processor,
                                 Set<Module> processed, boolean firstLevel) {
     if (processed != null && !processed.add(rootModel.getModule())) return;
@@ -219,7 +219,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
 
       if (entry instanceof ExportableOrderEntry) {
         ExportableOrderEntry exportableEntry = (ExportableOrderEntry)entry;
-        final DependencyScope scope = exportableEntry.getScope();
+        DependencyScope scope = exportableEntry.getScope();
         boolean forTestCompile = scope.isForTestCompile() || scope == DependencyScope.RUNTIME && shouldAddRuntimeDependenciesToTestCompilationClasspath();
         if (myCompileOnly && !scope.isForProductionCompile() && !forTestCompile) continue;
         if (myRuntimeOnly && !scope.isForProductionRuntime() && !scope.isForTestRuntime()) continue;
@@ -239,7 +239,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
 
       if (myRecursively && entry instanceof ModuleOrderEntry) {
         ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)entry;
-        final Module module = moduleOrderEntry.getModule();
+        Module module = moduleOrderEntry.getModule();
         if (module != null && shouldProcessRecursively()) {
           processEntries(getRootModel(module), processor, processed, false);
           continue;
@@ -272,10 +272,10 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   @Override
-  public void forEachLibrary(@Nonnull final Processor<Library> processor) {
+  public void forEachLibrary(@Nonnull Processor<Library> processor) {
     forEach(orderEntry -> {
       if (orderEntry instanceof LibraryOrderEntry) {
-        final Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
+        Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
         if (library != null) {
           return processor.process(library);
         }
@@ -285,14 +285,14 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   @Override
-  public void forEachModule(@Nonnull final Processor<Module> processor) {
+  public void forEachModule(@Nonnull Processor<Module> processor) {
     forEach(orderEntry -> {
       if (myRecursively && orderEntry instanceof ModuleSourceOrderEntry) {
-        final Module module = ((ModuleSourceOrderEntry)orderEntry).getRootModel().getModule();
+        Module module = ((ModuleSourceOrderEntry)orderEntry).getRootModel().getModule();
         return processor.process(module);
       }
       else if (orderEntry instanceof ModuleOrderEntry && (!myRecursively || !shouldProcessRecursively())) {
-        final Module module = ((ModuleOrderEntry)orderEntry).getModule();
+        Module module = ((ModuleOrderEntry)orderEntry).getModule();
         if (module != null) {
           return processor.process(module);
         }
@@ -302,8 +302,8 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   @Override
-  public <R> R process(@Nonnull final RootPolicy<R> policy, final R initialValue) {
-    final OrderEntryProcessor<R> processor = new OrderEntryProcessor<>(policy, initialValue);
+  public <R> R process(@Nonnull RootPolicy<R> policy, R initialValue) {
+    OrderEntryProcessor<R> processor = new OrderEntryProcessor<>(policy, initialValue);
     forEach(processor);
     return processor.myValue;
   }

@@ -36,10 +36,10 @@ import javax.swing.*;
 public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootListener {
   private ClasspathPanelImpl myPanel;
 
-  public ClasspathEditor(final ModuleConfigurationState state) {
+  public ClasspathEditor(ModuleConfigurationState state) {
     super(state);
 
-    final Disposable disposable = Disposable.newDisposable();
+    Disposable disposable = Disposable.newDisposable();
 
     state.getProject().getMessageBus().connect(disposable).subscribe(ModuleRootListener.class, this);
     registerDisposable(disposable);
@@ -62,7 +62,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
     return myPanel = new ClasspathPanelImpl(getState());
   }
 
-  public void selectOrderEntry(@Nonnull final OrderEntry entry) {
+  public void selectOrderEntry(@Nonnull OrderEntry entry) {
     myPanel.selectOrderEntry(entry);
   }
 

@@ -69,7 +69,7 @@ public abstract class ReadTask {
      *
      * @param indicator the progress indicator of the background thread
      */
-    public Continuation runBackgroundProcess(@Nonnull final ProgressIndicator indicator) throws ProcessCanceledException {
+    public Continuation runBackgroundProcess(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
         return ApplicationManager.getApplication().runReadAction((Supplier<Continuation>) () -> performInReadAction(indicator));
     }
 

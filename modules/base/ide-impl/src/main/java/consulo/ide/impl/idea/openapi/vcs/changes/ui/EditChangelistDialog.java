@@ -72,13 +72,13 @@ public class EditChangelistDialog extends DialogWrapper {
     }
 
     if (!Comparing.equal(oldName, myPanel.getChangeListName(), true) || !Comparing.equal(oldComment, myPanel.getDescription(), true)) {
-      final ChangeListManager clManager = ChangeListManager.getInstance(myProject);
+      ChangeListManager clManager = ChangeListManager.getInstance(myProject);
 
-      final String newName = myPanel.getChangeListName();
+      String newName = myPanel.getChangeListName();
       if (! myList.getName().equals(newName)) {
         clManager.editName(myList.getName(), newName);
       }
-      final String newDescription = myPanel.getDescription();
+      String newDescription = myPanel.getDescription();
       if (! myList.getComment().equals(newDescription)) {
         clManager.editComment(myList.getName(), newDescription);
       }

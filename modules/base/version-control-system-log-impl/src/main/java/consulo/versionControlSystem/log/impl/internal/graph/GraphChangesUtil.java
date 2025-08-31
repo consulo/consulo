@@ -58,7 +58,7 @@ public class GraphChangesUtil {
     Collection<GraphEdge> addedEdges,
     LinearGraph delegateGraph
   ) {
-    final Set<GraphChanges.Edge<Integer>> edgeChanges = new HashSet<>();
+    Set<GraphChanges.Edge<Integer>> edgeChanges = new HashSet<>();
 
     for (GraphEdge edge : removedEdges) {
       edgeChanges.add(edgeChanged(edge, delegateGraph, true));

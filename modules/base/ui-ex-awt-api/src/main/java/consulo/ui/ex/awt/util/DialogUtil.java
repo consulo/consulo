@@ -49,11 +49,11 @@ public class DialogUtil {
 
   public static void setTextWithMnemonic(@Nonnull AbstractButton button, String text, char mn) {
     if (text != null) {
-      final StringBuilder realText = new StringBuilder();
+      StringBuilder realText = new StringBuilder();
       char mnemonic = '\0';
       int index = -1;
       for (int i = 0; i < text.length(); i++) {
-        final char ch = text.charAt(i);
+        char ch = text.charAt(i);
         if (ch != mn) {
           realText.append(ch);
         }
@@ -89,7 +89,7 @@ public class DialogUtil {
   public static void registerMnemonic(JLabel label, @Nullable JComponent target, char mn) {
     String text = label.getText();
     if (text != null) {
-      final StringBuilder realText = new StringBuilder(text.length());
+      StringBuilder realText = new StringBuilder(text.length());
       char mnemonic = '\0';
       int index = -1;
       for (int i = 0; i < text.length(); i++) {

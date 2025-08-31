@@ -35,7 +35,7 @@ public class HexNumberParser extends PrefixedTokenParser {
 
   public static HexNumberParser create(String prefix) {
     if (prefix == null) return null;
-    final String trimmedPrefix = prefix.trim();
+    String trimmedPrefix = prefix.trim();
     if (trimmedPrefix.length() > 0) {
       return new HexNumberParser(prefix);
     } else {

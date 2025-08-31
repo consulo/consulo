@@ -76,8 +76,8 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
   }
 
   @Override
-  public void commitAsynchronously(@Nonnull final Project project,
-                                   @Nonnull final Document document,
+  public void commitAsynchronously(@Nonnull Project project,
+                                   @Nonnull Document document,
                                    @NonNls @Nonnull Object reason,
                                    @Nonnull ModalityState modality) {
     assert !isDisposed : "already disposed";
@@ -130,10 +130,10 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
   // returns finish commit Runnable (to be invoked later in EDT) or null on failure
   @Nonnull
   private Runnable commitUnderProgress(@Nonnull CommitTask task, boolean synchronously) {
-    final Document document = task.getDocument();
-    final Project project = task.project;
-    final PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(project);
-    final List<BooleanRunnable> finishProcessors = new SmartList<>();
+    Document document = task.getDocument();
+    Project project = task.project;
+    PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(project);
+    List<BooleanRunnable> finishProcessors = new SmartList<>();
     List<BooleanRunnable> reparseInjectedProcessors = new SmartList<>();
 
     FileViewProvider viewProvider = documentManager.getCachedViewProvider(document);
@@ -156,8 +156,8 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
   }
 
   @Nonnull
-  private Runnable createFinishCommitRunnable(@Nonnull final CommitTask task,
-                                              final boolean synchronously,
+  private Runnable createFinishCommitRunnable(@Nonnull CommitTask task,
+                                              boolean synchronously,
                                               @Nonnull List<? extends BooleanRunnable> finishProcessors,
                                               @Nonnull List<? extends BooleanRunnable> reparseInjectedProcessors) {
     return () -> {
@@ -189,8 +189,8 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
   }
 
   @Nonnull
-  private BooleanRunnable handleCommitWithoutPsi(@Nonnull final PsiDocumentManagerBase documentManager,
-                                                 @Nonnull final CommitTask task) {
+  private BooleanRunnable handleCommitWithoutPsi(@Nonnull PsiDocumentManagerBase documentManager,
+                                                 @Nonnull CommitTask task) {
     return () -> {
       log(task.project, "Finishing without PSI", task);
       Document document = task.getDocument();
@@ -222,8 +222,8 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     final ModalityState myCreationModality;
     private final CharSequence myLastCommittedText;
 
-    CommitTask(@Nonnull final Project project,
-               @Nonnull final Document document,
+    CommitTask(@Nonnull Project project,
+               @Nonnull Document document,
                @Nonnull Object reason,
                @Nonnull ModalityState modality,
                @Nonnull CharSequence lastCommittedText) {
@@ -276,15 +276,15 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
 
   // returns runnable to execute under write action in AWT to finish the commit, updates "outChangedRange"
   @Nonnull
-  private static BooleanRunnable doCommit(@Nonnull final CommitTask task,
-                                          @Nonnull final PsiFile file,
-                                          @Nonnull final FileASTNode oldFileNode,
+  private static BooleanRunnable doCommit(@Nonnull CommitTask task,
+                                          @Nonnull PsiFile file,
+                                          @Nonnull FileASTNode oldFileNode,
                                           @Nonnull ProperTextRange changedPsiRange,
                                           @Nonnull List<? super BooleanRunnable> outReparseInjectedProcessors) {
     Document document = task.getDocument();
-    final CharSequence newDocumentText = document.getImmutableCharSequence();
+    CharSequence newDocumentText = document.getImmutableCharSequence();
 
-    final Boolean data = document.getUserData(BlockSupport.DO_NOT_REPARSE_INCREMENTALLY);
+    Boolean data = document.getUserData(BlockSupport.DO_NOT_REPARSE_INCREMENTALLY);
     if (data != null) {
       document.putUserData(BlockSupport.DO_NOT_REPARSE_INCREMENTALLY, null);
       file.putUserData(BlockSupport.DO_NOT_REPARSE_INCREMENTALLY, data);
@@ -344,9 +344,9 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
   }
 
   @RequiredReadAction
-  private static void assertAfterCommit(@Nonnull Document document, @Nonnull final PsiFile file, @Nonnull ASTNode oldFileNode) {
+  private static void assertAfterCommit(@Nonnull Document document, @Nonnull PsiFile file, @Nonnull ASTNode oldFileNode) {
     if (oldFileNode.getTextLength() != document.getTextLength()) {
-      final String documentText = document.getText();
+      String documentText = document.getText();
       String fileText = file.getText();
       boolean sameText = Comparing.equal(fileText, documentText);
       String errorMessage = "commitDocument() left PSI inconsistent: " + DebugUtil.diagnosePsiDocumentInconsistency(file, document) +
@@ -360,7 +360,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
       file.putUserData(BlockSupport.DO_NOT_REPARSE_INCREMENTALLY, Boolean.TRUE);
       try {
         BlockSupport blockSupport = BlockSupport.getInstance(file.getProject());
-        final DiffLog diffLog = blockSupport.reparseRange(file, file.getNode(), new TextRange(0, documentText.length()), documentText,
+        DiffLog diffLog = blockSupport.reparseRange(file, file.getNode(), new TextRange(0, documentText.length()), documentText,
                                                           new StandardProgressIndicatorBase(),
                                                           oldFileNode.getText());
         diffLog.doActualPsiChange(file);

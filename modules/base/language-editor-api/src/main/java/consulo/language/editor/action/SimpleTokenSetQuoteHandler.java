@@ -37,7 +37,7 @@ public abstract class SimpleTokenSetQuoteHandler implements QuoteHandler {
 
   @Override
   public boolean isClosingQuote(HighlighterIterator iterator, int offset) {
-    final IElementType tokenType = (IElementType)iterator.getTokenType();
+    IElementType tokenType = (IElementType)iterator.getTokenType();
 
     if (myLiteralTokenSet.contains(tokenType)){
       int start = iterator.getStart();

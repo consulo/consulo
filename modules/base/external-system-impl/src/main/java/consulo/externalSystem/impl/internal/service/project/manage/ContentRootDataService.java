@@ -59,8 +59,8 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   @Override
-  public void importData(@Nonnull final Collection<DataNode<ContentRootData>> toImport,
-                         @Nonnull final Project project,
+  public void importData(@Nonnull Collection<DataNode<ContentRootData>> toImport,
+                         @Nonnull Project project,
                          boolean synchronous) {
     if (toImport.isEmpty()) {
       return;
@@ -68,7 +68,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
 
     Map<DataNode<ModuleData>, List<DataNode<ContentRootData>>> byModule = ExternalSystemApiUtil.groupBy(toImport, ProjectKeys.MODULE);
     for (Map.Entry<DataNode<ModuleData>, List<DataNode<ContentRootData>>> entry : byModule.entrySet()) {
-      final Module module = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
+      Module module = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
       if (module == null) {
         LOG.warn(String.format("Can't import content roots. Reason: target module (%s) is not found at the ide. Content roots: %s",
                                entry.getKey(),
@@ -86,10 +86,10 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       @RequiredUIAccess
       @Override
       public void execute() {
-        final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-        final ModifiableRootModel model = moduleRootManager.getModifiableModel();
-        final ContentEntry[] contentEntries = model.getContentEntries();
-        final Map<String, ContentEntry> contentEntriesMap = new HashMap<>();
+        ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+        ModifiableRootModel model = moduleRootManager.getModifiableModel();
+        ContentEntry[] contentEntries = model.getContentEntries();
+        Map<String, ContentEntry> contentEntriesMap = new HashMap<>();
         for (ContentEntry contentEntry : contentEntries) {
           contentEntriesMap.put(contentEntry.getUrl(), contentEntry);
         }
@@ -107,10 +107,10 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
         }
 
         try {
-          for (final DataNode<ContentRootData> data : datas) {
-            final ContentRootData contentRoot = data.getData();
+          for (DataNode<ContentRootData> data : datas) {
+            ContentRootData contentRoot = data.getData();
 
-            final ContentEntry contentEntry = findOrCreateContentRoot(model, contentRoot.getRootPath());
+            ContentEntry contentEntry = findOrCreateContentRoot(model, contentRoot.getRootPath());
 
             for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
               if (contentFolder.isSynthetic()) {

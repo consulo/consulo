@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 public class GlobalSearchScopeUtil {
   @Nonnull
-  public static GlobalSearchScope toGlobalSearchScope(@Nonnull final SearchScope scope, @Nonnull Project project) {
+  public static GlobalSearchScope toGlobalSearchScope(@Nonnull SearchScope scope, @Nonnull Project project) {
     if (scope instanceof GlobalSearchScope) {
       return (GlobalSearchScope)scope;
     }
@@ -40,7 +40,7 @@ public class GlobalSearchScopeUtil {
   }
 
   @Nonnull
-  public static Set<VirtualFile> getLocalScopeFiles(@Nonnull final LocalSearchScope scope) {
+  public static Set<VirtualFile> getLocalScopeFiles(@Nonnull LocalSearchScope scope) {
     return ApplicationManager.getApplication().runReadAction((Supplier<Set<VirtualFile>>)() -> {
       Set<VirtualFile> files = new LinkedHashSet<>();
       for (PsiElement element : scope.getScope()) {

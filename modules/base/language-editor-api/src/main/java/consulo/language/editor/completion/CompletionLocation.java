@@ -29,7 +29,7 @@ public class CompletionLocation implements UserDataHolder {
   private final CompletionParameters myCompletionParameters;
   private final ProcessingContext myProcessingContext = new ProcessingContext();
 
-  public CompletionLocation(final CompletionParameters completionParameters) {
+  public CompletionLocation(CompletionParameters completionParameters) {
     myCompletionParameters = completionParameters;
   }
 

@@ -200,12 +200,12 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     }
 
     @Override
-    public void setLocalCaseSensitive(final boolean caseSensitiveSearch) {
+    public void setLocalCaseSensitive(boolean caseSensitiveSearch) {
         LOCAL_CASE_SENSITIVE_SEARCH = caseSensitiveSearch;
     }
 
     @Override
-    public void setLocalWholeWordsOnly(final boolean wholeWordsOnly) {
+    public void setLocalWholeWordsOnly(boolean wholeWordsOnly) {
         LOCAL_WHOLE_WORDS_ONLY = wholeWordsOnly;
     }
 
@@ -332,7 +332,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     }
 
     @Override
-    public void setCustomScope(final String SEARCH_SCOPE) {
+    public void setCustomScope(String SEARCH_SCOPE) {
         this.SEARCH_SCOPE = SEARCH_SCOPE;
     }
 

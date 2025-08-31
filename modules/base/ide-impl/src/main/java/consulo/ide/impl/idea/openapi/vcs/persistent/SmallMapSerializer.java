@@ -43,7 +43,7 @@ public class SmallMapSerializer<K,V> implements Forceable {
   private boolean myDirty;
   private Logger LOG = Logger.getInstance(SmallMapSerializer.class);
 
-  public SmallMapSerializer(final File file, final KeyDescriptor<K> keyDescriptor, final DataExternalizer<V> valueExternalizer) {
+  public SmallMapSerializer(File file, KeyDescriptor<K> keyDescriptor, DataExternalizer<V> valueExternalizer) {
     myFile = file;
     myKeyDescriptor = keyDescriptor;
     myValueExternalizer = valueExternalizer;
@@ -53,12 +53,12 @@ public class SmallMapSerializer<K,V> implements Forceable {
 
   private void init() {
     try {
-      final byte[] bytes = RawFileLoader.getInstance().loadFileBytes(myFile);
-      final DataInputStream dis = new DataInputStream(new UnsyncByteArrayInputStream(bytes));
-      final int size = dis.readInt();
+      byte[] bytes = RawFileLoader.getInstance().loadFileBytes(myFile);
+      DataInputStream dis = new DataInputStream(new UnsyncByteArrayInputStream(bytes));
+      int size = dis.readInt();
       for (int i = 0; i < size; i++) {
-        final KeyWrapper<K> keyWrapper = new KeyWrapper<K>(myKeyDescriptor, myKeyDescriptor.read(dis));
-        final V value = myValueExternalizer.read(dis);
+        KeyWrapper<K> keyWrapper = new KeyWrapper<K>(myKeyDescriptor, myKeyDescriptor.read(dis));
+        V value = myValueExternalizer.read(dis);
         myMap.put(keyWrapper, value);
       }
     } catch (FileNotFoundException ignore) {
@@ -67,12 +67,12 @@ public class SmallMapSerializer<K,V> implements Forceable {
     }
   }
 
-  public void put(final K key, final V value) {
+  public void put(K key, V value) {
     myMap.put(new KeyWrapper<K>(myKeyDescriptor, key), value);
     myDirty = true;
   }
 
-  public V get(final K key) {
+  public V get(K key) {
     return myMap.get(new KeyWrapper<K>(myKeyDescriptor, key));
   }
 
@@ -80,8 +80,8 @@ public class SmallMapSerializer<K,V> implements Forceable {
   public void force() {
     if (! myDirty) return;
     try{
-      final BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
-      final DataOutput out = new DataOutputStream(bos);
+      BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
+      DataOutput out = new DataOutputStream(bos);
       out.writeInt(myMap.size());
       for (Map.Entry<KeyWrapper<K>, V> entry : myMap.entrySet()) {
         myKeyDescriptor.save(out, entry.getKey().myKey);
@@ -104,7 +104,7 @@ public class SmallMapSerializer<K,V> implements Forceable {
     private final K myKey;
     private final KeyDescriptor<K> myDescriptor;
 
-    private KeyWrapper(@Nonnull final KeyDescriptor<K> descriptor, final K key) {
+    private KeyWrapper(@Nonnull KeyDescriptor<K> descriptor, K key) {
       myDescriptor = descriptor;
       myKey = key;
     }
@@ -114,7 +114,7 @@ public class SmallMapSerializer<K,V> implements Forceable {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      final KeyWrapper<K> that = (KeyWrapper) o;
+      KeyWrapper<K> that = (KeyWrapper) o;
 
       return myDescriptor.equals(this.myKey, that.myKey);
     }
@@ -126,7 +126,7 @@ public class SmallMapSerializer<K,V> implements Forceable {
   }
 
   public Collection<K> keySet() {
-    final ArrayList<K> result = new ArrayList<K>(myMap.size());
+    ArrayList<K> result = new ArrayList<K>(myMap.size());
     for (KeyWrapper<K> keyWrapper : myMap.keySet()) {
       result.add(keyWrapper.myKey);
     }

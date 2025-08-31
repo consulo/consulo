@@ -120,15 +120,15 @@ class UndoableGroup {
     }
   }
 
-  private void doUndoOrRedo(final boolean isUndo) {
-    final boolean wrapInBulkUpdate = myActions.size() > 50;
+  private void doUndoOrRedo(boolean isUndo) {
+    boolean wrapInBulkUpdate = myActions.size() > 50;
     // perform undo action by action, setting bulk update flag if possible
     // if multiple consecutive actions share a document, then set the bulk flag only once
-    final UnexpectedUndoException[] exception = {null};
+    UnexpectedUndoException[] exception = {null};
     ApplicationManager.getApplication().runWriteAction(() -> {
-      final Set<DocumentEx> bulkDocuments = new HashSet<>();
+      Set<DocumentEx> bulkDocuments = new HashSet<>();
       try {
-        for (final UndoableAction action : isUndo ? ContainerUtil.iterateBackward(myActions) : myActions) {
+        for (UndoableAction action : isUndo ? ContainerUtil.iterateBackward(myActions) : myActions) {
           if (wrapInBulkUpdate) {
             DocumentEx newDocument = getDocumentToSetBulkMode(action);
             if (newDocument == null) {
@@ -176,8 +176,8 @@ class UndoableGroup {
   }
 
   boolean isInsideStartFinishGroup(boolean isUndo, boolean isInsideStartFinishGroup) {
-    final List<FinishMarkAction> finishMarks = new ArrayList<>();
-    final List<StartMarkAction> startMarks = new ArrayList<>();
+    List<FinishMarkAction> finishMarks = new ArrayList<>();
+    List<StartMarkAction> startMarks = new ArrayList<>();
     for (UndoableAction action : myActions) {
       if (action instanceof StartMarkAction startMarkAction) {
         startMarks.add(startMarkAction);
@@ -185,8 +185,8 @@ class UndoableGroup {
         finishMarks.add(finishMarkAction);
       }
     }
-    final int startNmb = startMarks.size();
-    final int finishNmb = finishMarks.size();
+    int startNmb = startMarks.size();
+    int finishNmb = finishMarks.size();
     if (startNmb != finishNmb) {
       if (isUndo) {
         return finishNmb > startNmb;
@@ -198,7 +198,7 @@ class UndoableGroup {
     return isInsideStartFinishGroup;
   }
 
-  void composeStartFinishGroup(final UndoRedoStacksHolder holder) {
+  void composeStartFinishGroup(UndoRedoStacksHolder holder) {
     FinishMarkAction finishMark = getFinishMark();
     if (finishMark != null) {
       boolean global = false;
@@ -349,7 +349,7 @@ class UndoableGroup {
 
   public String toString() {
     StringBuilder result = new StringBuilder("UndoableGroup[");
-    final boolean multiline = myActions.size() > 1;
+    boolean multiline = myActions.size() > 1;
 
     if (multiline) result.append("\n");
 

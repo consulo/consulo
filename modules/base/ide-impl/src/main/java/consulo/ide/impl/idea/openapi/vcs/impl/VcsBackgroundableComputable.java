@@ -44,13 +44,13 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
   private VcsException myException;
   private T myResult;
 
-  private VcsBackgroundableComputable(final Project project, final String title,
-                                  final String errorTitle,
-                                  final ThrowableComputable<T, VcsException> backgroundable,
-                                  final Consumer<T> awtSuccessContinuation,
-                                  final Runnable awtErrorContinuation,
-                                  final BackgroundableActionEnabledHandler handler,
-                                  final Object actionParameter) {
+  private VcsBackgroundableComputable(Project project, String title,
+                                      String errorTitle,
+                                      ThrowableComputable<T, VcsException> backgroundable,
+                                      Consumer<T> awtSuccessContinuation,
+                                      Runnable awtErrorContinuation,
+                                      BackgroundableActionEnabledHandler handler,
+                                      Object actionParameter) {
     super(project, title, true, BackgroundFromStartOption.getInstance());
     myErrorTitle = errorTitle;
     myBackgroundable = backgroundable;
@@ -61,40 +61,40 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     myActionParameter = actionParameter;
   }
 
-  public static <T> void createAndRunSilent(final Project project, @jakarta.annotation.Nullable final VcsBackgroundableActions actionKey,
-                                 @Nullable final Object actionParameter, final String title,
-                                 final ThrowableComputable<T, VcsException> backgroundable,
-                                 @Nullable final Consumer<T> awtSuccessContinuation) {
+  public static <T> void createAndRunSilent(Project project, @jakarta.annotation.Nullable VcsBackgroundableActions actionKey,
+                                            @Nullable Object actionParameter, String title,
+                                            ThrowableComputable<T, VcsException> backgroundable,
+                                            @Nullable Consumer<T> awtSuccessContinuation) {
     createAndRun(project, actionKey, actionParameter, title, null, backgroundable, awtSuccessContinuation, null, true);
   }
 
-  public static <T> void createAndRun(final Project project, @Nullable final VcsBackgroundableActions actionKey,
-                                 @Nullable final Object actionParameter,
-                                 final String title,
-                                 final String errorTitle,
-                                 final ThrowableComputable<T, VcsException> backgroundable) {
+  public static <T> void createAndRun(Project project, @Nullable VcsBackgroundableActions actionKey,
+                                      @Nullable Object actionParameter,
+                                      String title,
+                                      String errorTitle,
+                                      ThrowableComputable<T, VcsException> backgroundable) {
     createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, null, null);
   }
 
-  public static <T> void createAndRun(final Project project, @jakarta.annotation.Nullable final VcsBackgroundableActions actionKey,
-                                 @Nullable final Object actionParameter,
-                                 final String title,
-                                 final String errorTitle,
-                                 final ThrowableComputable<T, VcsException> backgroundable,
-                                 @Nullable final Consumer<T> awtSuccessContinuation,
-                                 @Nullable final Runnable awtErrorContinuation) {
+  public static <T> void createAndRun(Project project, @jakarta.annotation.Nullable VcsBackgroundableActions actionKey,
+                                      @Nullable Object actionParameter,
+                                      String title,
+                                      String errorTitle,
+                                      ThrowableComputable<T, VcsException> backgroundable,
+                                      @Nullable Consumer<T> awtSuccessContinuation,
+                                      @Nullable Runnable awtErrorContinuation) {
     createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, awtSuccessContinuation, awtErrorContinuation, false);
   }
 
-  private static <T> void createAndRun(final Project project, @jakarta.annotation.Nullable final VcsBackgroundableActions actionKey,
-                                 @jakarta.annotation.Nullable final Object actionParameter,
-                                 final String title,
-                                 final String errorTitle,
-                                 final ThrowableComputable<T, VcsException> backgroundable,
-                                 @jakarta.annotation.Nullable final Consumer<T> awtSuccessContinuation,
-                                 @Nullable final Runnable awtErrorContinuation, final boolean silent) {
-    final ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
-    final BackgroundableActionEnabledHandler handler;
+  private static <T> void createAndRun(Project project, @jakarta.annotation.Nullable VcsBackgroundableActions actionKey,
+                                       @jakarta.annotation.Nullable Object actionParameter,
+                                       String title,
+                                       String errorTitle,
+                                       ThrowableComputable<T, VcsException> backgroundable,
+                                       @jakarta.annotation.Nullable Consumer<T> awtSuccessContinuation,
+                                       @Nullable Runnable awtErrorContinuation, boolean silent) {
+    ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
+    BackgroundableActionEnabledHandler handler;
     if (actionKey != null) {
       handler = vcsManager.getBackgroundableActionHandler(actionKey);
       // fo not start same action twice
@@ -103,7 +103,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
       handler = null;
     }
 
-    final VcsBackgroundableComputable<T> backgroundableComputable =
+    VcsBackgroundableComputable<T> backgroundableComputable =
       new VcsBackgroundableComputable<T>(project, title, errorTitle, backgroundable, awtSuccessContinuation, awtErrorContinuation,
                                   handler, actionParameter);
     backgroundableComputable.setSilent(silent);

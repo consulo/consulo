@@ -31,11 +31,11 @@ import java.lang.ref.ReferenceQueue;
 @SuppressWarnings("ClassNameSameAsAncestorName")
 @Deprecated
 public class SoftReference<T> extends consulo.util.lang.ref.SoftReference<T> implements Getter<T> {
-  public SoftReference(final T referent) {
+  public SoftReference(T referent) {
     super(referent);
   }
 
-  public SoftReference(final T referent, final ReferenceQueue<? super T> q) {
+  public SoftReference(T referent, ReferenceQueue<? super T> q) {
     super(referent, q);
   }
 

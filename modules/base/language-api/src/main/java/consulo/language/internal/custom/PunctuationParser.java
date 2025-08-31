@@ -22,7 +22,7 @@ package consulo.language.internal.custom;
 public class PunctuationParser extends TokenParser {
   @Override
   public boolean hasToken(int position) {
-    final char c = myBuffer.charAt(position);
+    char c = myBuffer.charAt(position);
     if (".,:;".indexOf(c) >= 0) {
       myTokenInfo.updateData(position, position+1, CustomHighlighterTokenType.PUNCTUATION);
       return true;

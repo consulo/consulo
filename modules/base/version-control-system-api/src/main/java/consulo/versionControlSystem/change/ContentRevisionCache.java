@@ -62,7 +62,7 @@ public final class ContentRevisionCache {
 
         if (charset != null) {
             int bomLength = CharsetToolkit.getBOMLength(bytes, charset);
-            final CharBuffer charBuffer = charset.decode(ByteBuffer.wrap(bytes, bomLength, bytes.length - bomLength));
+            CharBuffer charBuffer = charset.decode(ByteBuffer.wrap(bytes, bomLength, bytes.length - bomLength));
             return charBuffer.toString();
         }
 
@@ -113,7 +113,7 @@ public final class ContentRevisionCache {
         }
     }
 
-    public static void checkContentsSize(final String path, final long size) throws VcsException {
+    public static void checkContentsSize(String path, long size) throws VcsException {
         if (size > VcsUtil.getMaxVcsLoadedFileSize()) {
             throw new VcsException(VcsBundle.message("file.content.too.big.to.load.increase.property.suggestion", path,
                 StringUtil.formatFileSize(VcsUtil.getMaxVcsLoadedFileSize()),
@@ -153,7 +153,7 @@ public final class ContentRevisionCache {
         while (true) {
             VcsRevisionNumber currentRevision = loader.getCurrentRevision();
 
-            final byte[] cachedCurrent = cache.getBytes(path, currentRevision, vcsKey, UniqueType.REPOSITORY_CONTENT);
+            byte[] cachedCurrent = cache.getBytes(path, currentRevision, vcsKey, UniqueType.REPOSITORY_CONTENT);
             if (cachedCurrent != null) {
                 return Pair.create(currentRevision, cachedCurrent);
             }

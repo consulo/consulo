@@ -64,7 +64,7 @@ public class XDebuggerTreeState {
     return new XDebuggerTreeState(tree);
   }
 
-  private void addChildren(final XDebuggerTree tree, final NodeInfo nodeInfo, final XDebuggerTreeNode treeNode) {
+  private void addChildren(XDebuggerTree tree, NodeInfo nodeInfo, XDebuggerTreeNode treeNode) {
     if (tree.isExpanded(treeNode.getPath())) {
       List<? extends XDebuggerTreeNode> children = treeNode.getLoadedChildren();
       nodeInfo.myExpanded = true;
@@ -88,7 +88,7 @@ public class XDebuggerTreeState {
   }
 
   @Nullable
-  private static NodeInfo createNode(final XDebuggerTreeNode node, boolean selected) {
+  private static NodeInfo createNode(XDebuggerTreeNode node, boolean selected) {
     if (node instanceof RestorableStateNode) {
       RestorableStateNode valueNode = (RestorableStateNode)node;
       if (valueNode.isComputed()) {
@@ -105,7 +105,7 @@ public class XDebuggerTreeState {
     private final boolean mySelected;
     private MultiMap<String, NodeInfo> myChildren; // MultiMap to allow several nodes with the same name
 
-    public NodeInfo(final String name, final String value, boolean selected) {
+    public NodeInfo(String name, String value, boolean selected) {
       myName = name;
       myValue = value;
       mySelected = selected;

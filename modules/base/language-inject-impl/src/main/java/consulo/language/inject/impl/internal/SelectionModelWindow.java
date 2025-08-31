@@ -21,7 +21,7 @@ class SelectionModelWindow implements SelectionModel {
   private final DocumentWindow myDocument;
   private final EditorWindow myInjectedEditor;
 
-  SelectionModelWindow(final EditorEx delegate, final DocumentWindow document, EditorWindow injectedEditor) {
+  SelectionModelWindow(EditorEx delegate, DocumentWindow document, EditorWindow injectedEditor) {
     myDocument = document;
     myInjectedEditor = injectedEditor;
     myHostModel = delegate.getSelectionModel();
@@ -82,7 +82,7 @@ class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  public void setSelection(final int startOffset, final int endOffset) {
+  public void setSelection(int startOffset, int endOffset) {
     TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
     myHostModel.setSelection(hostRange.getStartOffset(), hostRange.getEndOffset());
   }
@@ -110,12 +110,12 @@ class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  public void addSelectionListener(@Nonnull final SelectionListener listener) {
+  public void addSelectionListener(@Nonnull SelectionListener listener) {
     myHostModel.addSelectionListener(listener);
   }
 
   @Override
-  public void removeSelectionListener(@Nonnull final SelectionListener listener) {
+  public void removeSelectionListener(@Nonnull SelectionListener listener) {
     myHostModel.removeSelectionListener(listener);
   }
 
@@ -125,7 +125,7 @@ class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  public void selectWordAtCaret(final boolean honorCamelWordsSettings) {
+  public void selectWordAtCaret(boolean honorCamelWordsSettings) {
     myHostModel.selectWordAtCaret(honorCamelWordsSettings);
   }
 
@@ -135,7 +135,7 @@ class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  public void setBlockSelection(@Nonnull final LogicalPosition blockStart, @Nonnull final LogicalPosition blockEnd) {
+  public void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
     myHostModel.setBlockSelection(myInjectedEditor.injectedToHost(blockStart), myInjectedEditor.injectedToHost(blockEnd));
   }
 

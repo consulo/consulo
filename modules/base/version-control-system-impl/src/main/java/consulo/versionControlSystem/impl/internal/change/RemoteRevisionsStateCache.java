@@ -43,7 +43,7 @@ public class RemoteRevisionsStateCache implements ChangesOnServerTracker {
   private final ProjectLevelVcsManager myVcsManager;
   private final VcsConfiguration myVcsConfiguration;
 
-  RemoteRevisionsStateCache(final Project project) {
+  RemoteRevisionsStateCache(Project project) {
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
     myChanged = new HashMap<String, Pair<Boolean, VcsRoot>>();
     myQueries = new MultiMap<VcsRoot, String>();
@@ -53,7 +53,7 @@ public class RemoteRevisionsStateCache implements ChangesOnServerTracker {
   }
 
   @Override
-  public void invalidate(final Collection<String> paths) {
+  public void invalidate(Collection<String> paths) {
     synchronized (myLock) {
       for (String path : paths) {
         myChanged.remove(path);
@@ -62,17 +62,17 @@ public class RemoteRevisionsStateCache implements ChangesOnServerTracker {
   }
 
   @Nullable
-  private VirtualFile getRootForPath(final String s) {
+  private VirtualFile getRootForPath(String s) {
     return myVcsManager.getVcsRootFor(new FilePathImpl(new File(s), false));
   }
   
   @Override
-  public boolean isUpToDate(final Change change) {
-    final List<File> files = ChangesUtil.getIoFilesFromChanges(Collections.singletonList(change));
+  public boolean isUpToDate(Change change) {
+    List<File> files = ChangesUtil.getIoFilesFromChanges(Collections.singletonList(change));
     synchronized (myLock) {
       for (File file : files) {
-        final String path = file.getAbsolutePath();
-        final Pair<Boolean, VcsRoot> data = myChanged.get(path);
+        String path = file.getAbsolutePath();
+        Pair<Boolean, VcsRoot> data = myChanged.get(path);
         if (data != null && Boolean.TRUE.equals(data.getFirst())) return false;
       }
     }
@@ -80,8 +80,8 @@ public class RemoteRevisionsStateCache implements ChangesOnServerTracker {
   }
 
   @Override
-  public void plus(final Pair<String, AbstractVcs> pair) {
-    final VirtualFile root = getRootForPath(pair.getFirst());
+  public void plus(Pair<String, AbstractVcs> pair) {
+    VirtualFile root = getRootForPath(pair.getFirst());
     if (root == null) return;
     synchronized (myLock) {
       myQueries.putValue(new VcsRoot(pair.getSecond(), root), pair.getFirst());
@@ -90,10 +90,10 @@ public class RemoteRevisionsStateCache implements ChangesOnServerTracker {
 
   @Override
   public void minus(Pair<String, AbstractVcs> pair) {
-    final VirtualFile root = getRootForPath(pair.getFirst());
+    VirtualFile root = getRootForPath(pair.getFirst());
     if (root == null) return;
     synchronized (myLock) {
-      final VcsRoot key = new VcsRoot(pair.getSecond(), root);
+      VcsRoot key = new VcsRoot(pair.getSecond(), root);
       if (myQueries.containsKey(key)) {
         myQueries.removeValue(key, pair.getFirst());
       }
@@ -112,30 +112,30 @@ public class RemoteRevisionsStateCache implements ChangesOnServerTracker {
 
   @Override
   public boolean updateStep() {
-    final MultiMap<VcsRoot, String> dirty = new MultiMap<VcsRoot, String>();
-    final long oldPoint = System.currentTimeMillis() - (myVcsConfiguration.CHANGED_ON_SERVER_INTERVAL > 0 ?
+    MultiMap<VcsRoot, String> dirty = new MultiMap<VcsRoot, String>();
+    long oldPoint = System.currentTimeMillis() - (myVcsConfiguration.CHANGED_ON_SERVER_INTERVAL > 0 ?
                                                         myVcsConfiguration.CHANGED_ON_SERVER_INTERVAL * 60000 : DISCRETE);
 
     synchronized (myLock) {
       for (VcsRoot root : myQueries.keySet()) {
-        final Collection<String> collection = myQueries.get(root);
+        Collection<String> collection = myQueries.get(root);
         for (String s : collection) {
           dirty.putValue(root, s);
         }
       }
       myQueries.clear();
 
-      final Set<VcsRoot> roots = new HashSet<VcsRoot>();
+      Set<VcsRoot> roots = new HashSet<VcsRoot>();
       for (Map.Entry<VcsRoot, Long> entry : myTs.entrySet()) {
         if (! dirty.get(entry.getKey()).isEmpty()) continue;
 
-        final Long ts = entry.getValue();
+        Long ts = entry.getValue();
         if ((ts == null) || (oldPoint > ts)) {
           roots.add(entry.getKey());
         }
       }
       for (Map.Entry<String, Pair<Boolean, VcsRoot>> entry : myChanged.entrySet()) {
-        final VcsRoot vcsRoot = entry.getValue().getSecond();
+        VcsRoot vcsRoot = entry.getValue().getSecond();
         if ((! dirty.get(vcsRoot).isEmpty()) || roots.contains(vcsRoot)) {
           dirty.putValue(vcsRoot, entry.getKey());
         }
@@ -144,22 +144,22 @@ public class RemoteRevisionsStateCache implements ChangesOnServerTracker {
 
     if (dirty.isEmpty()) return false;
 
-    final Map<String, Pair<Boolean, VcsRoot>> results = new HashMap<String, Pair<Boolean, VcsRoot>>();
+    Map<String, Pair<Boolean, VcsRoot>> results = new HashMap<String, Pair<Boolean, VcsRoot>>();
     for (VcsRoot vcsRoot : dirty.keySet()) {
       // todo - actually it means nothing since the only known VCS to use this scheme is Git and now it always allow
       // todo - background operations. when it changes, develop more flexible behavior here
       if (! vcsRoot.getVcs().isVcsBackgroundOperationsAllowed(vcsRoot.getPath())) continue;
-      final TreeDiffProvider provider = vcsRoot.getVcs().getTreeDiffProvider();
+      TreeDiffProvider provider = vcsRoot.getVcs().getTreeDiffProvider();
       if (provider == null) continue;
 
-      final Collection<String> paths = dirty.get(vcsRoot);
-      final Collection<String> remotelyChanged = provider.getRemotelyChanged(vcsRoot.getPath(), paths);
+      Collection<String> paths = dirty.get(vcsRoot);
+      Collection<String> remotelyChanged = provider.getRemotelyChanged(vcsRoot.getPath(), paths);
       for (String path : paths) {
         results.put(path, new Pair<Boolean, VcsRoot>(remotelyChanged.contains(path), vcsRoot));
       }
     }
 
-    final long curTime = System.currentTimeMillis();
+    long curTime = System.currentTimeMillis();
     synchronized (myLock) {
       myChanged.putAll(results);
       for (VcsRoot vcsRoot : dirty.keySet()) {

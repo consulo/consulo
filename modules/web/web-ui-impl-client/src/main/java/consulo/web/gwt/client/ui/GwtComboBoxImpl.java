@@ -50,7 +50,7 @@ public class GwtComboBoxImpl extends WidgetComboBox {
       @Override
       public Widget createWidget(Object value) {
         int index = value == null ? 0 : ((Integer)value + 1);
-        final ComboBoxState.Item item = myItemsWithNullItem.isEmpty() ? null : myItemsWithNullItem.get(index);
+        ComboBoxState.Item item = myItemsWithNullItem.isEmpty() ? null : myItemsWithNullItem.get(index);
         if (item == null) {
           return new Label(""); // empty item when no items
         }
@@ -68,7 +68,7 @@ public class GwtComboBoxImpl extends WidgetComboBox {
     myItemsWithNullItem.clear();
     myItemsWithNullItem.addAll(widgets);
 
-    final ComboBoxDataModel2 model = (ComboBoxDataModel2)getModel();
+    ComboBoxDataModel2 model = (ComboBoxDataModel2)getModel();
 
     Map<String, Object> map = new LinkedHashMap<>();
     for (int i = 0; i < (widgets.size() - 1); i++) {

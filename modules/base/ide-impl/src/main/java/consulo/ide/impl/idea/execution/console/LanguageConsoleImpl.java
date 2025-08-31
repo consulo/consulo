@@ -296,7 +296,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
   @Nonnull
   @RequiredUIAccess
-  protected String addToHistoryInner(@Nonnull final TextRange textRange, @Nonnull final EditorEx editor, boolean erase, final boolean preserveMarkup) {
+  protected String addToHistoryInner(@Nonnull TextRange textRange, @Nonnull EditorEx editor, boolean erase, boolean preserveMarkup) {
     UIAccess.assertIsUIThread();
 
     String result = addTextRangeToHistory(textRange, editor, preserveMarkup);
@@ -437,7 +437,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
   }
 
   @Override
-  public void setInputText(@Nonnull final String query) {
+  public void setInputText(@Nonnull String query) {
     myConsoleExecutionEditor.setInputText(query);
   }
 
@@ -536,25 +536,25 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
   private class MyLayout extends AbstractLayoutManager {
     @Override
-    public Dimension preferredLayoutSize(final Container parent) {
+    public Dimension preferredLayoutSize(Container parent) {
       return new Dimension(0, 0);
     }
 
     @Override
-    public void layoutContainer(@Nonnull final Container parent) {
-      final int componentCount = parent.getComponentCount();
+    public void layoutContainer(@Nonnull Container parent) {
+      int componentCount = parent.getComponentCount();
       if (componentCount == 0) {
         return;
       }
 
-      final EditorEx history = myHistoryViewer;
-      final EditorEx input = isConsoleEditorEnabled() ? myConsoleExecutionEditor.getEditor() : null;
+      EditorEx history = myHistoryViewer;
+      EditorEx input = isConsoleEditorEnabled() ? myConsoleExecutionEditor.getEditor() : null;
       if (input == null) {
         parent.getComponent(0).setBounds(parent.getBounds());
         return;
       }
 
-      final Dimension panelSize = parent.getSize();
+      Dimension panelSize = parent.getSize();
       if (myScrollBar.isVisible()) {
         Dimension size = myScrollBar.getPreferredSize();
         if (panelSize.height < size.height) return;
@@ -564,8 +564,8 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
       if (panelSize.getHeight() <= 0) {
         return;
       }
-      final Dimension historySize = history.getContentSize();
-      final Dimension inputSize = input.getContentSize();
+      Dimension historySize = history.getContentSize();
+      Dimension inputSize = input.getContentSize();
 
       // deal with width
       if (isHistoryViewerForceAdditionalColumnsUsage()) {
@@ -592,8 +592,8 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
       int minHistoryHeight = historySize.height > 0 ? getMinHistoryLineCount() * history.getLineHeight() : 0;
       int minInputHeight = input.isViewer() ? 0 : input.getLineHeight();
-      final int inputPreferredHeight = input.isViewer() ? 0 : Math.max(minInputHeight, inputSize.height);
-      final int historyPreferredHeight = Math.max(minHistoryHeight, historySize.height);
+      int inputPreferredHeight = input.isViewer() ? 0 : Math.max(minInputHeight, inputSize.height);
+      int historyPreferredHeight = Math.max(minHistoryHeight, historySize.height);
       if (panelSize.height < minInputHeight) {
         newInputHeight = panelSize.height;
       }

@@ -28,7 +28,7 @@ public interface ObjectStubSerializer<T extends Stub, P extends Stub> {
 
   void serialize(@Nonnull T stub, @Nonnull StubOutputStream dataStream) throws IOException;
   @Nonnull
-  T deserialize(@Nonnull StubInputStream dataStream, final P parentStub) throws IOException;
+  T deserialize(@Nonnull StubInputStream dataStream, P parentStub) throws IOException;
 
   void indexStub(@Nonnull T stub, @Nonnull IndexSink sink);
 }

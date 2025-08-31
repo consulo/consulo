@@ -28,9 +28,9 @@ import java.util.Map;
 public class PlainTextIndexer implements IdIndexer {
   @Override
   @Nonnull
-  public Map<IdIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
-    final IdDataConsumer consumer = new IdDataConsumer();
-    final CharSequence chars = inputData.getContentAsText();
+  public Map<IdIndexEntry, Integer> map(@Nonnull FileContent inputData) {
+    IdDataConsumer consumer = new IdDataConsumer();
+    CharSequence chars = inputData.getContentAsText();
     IdTableBuilding.scanWords((chars11, charsArray, start, end) -> {
       if (charsArray != null) {
         consumer.addOccurrence(charsArray, start, end, (int)UsageSearchContext.IN_PLAIN_TEXT);

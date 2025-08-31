@@ -150,7 +150,7 @@ public abstract class ConfigurationFromContext {
    */
   public static final Comparator<ConfigurationFromContext> NAME_COMPARATOR = new Comparator<ConfigurationFromContext>() {
     @Override
-    public int compare(final ConfigurationFromContext p1, final ConfigurationFromContext p2) {
+    public int compare(ConfigurationFromContext p1, ConfigurationFromContext p2) {
       return p1.getConfigurationType().getDisplayName().compareTo(p2.getConfigurationType().getDisplayName());
     }
   };

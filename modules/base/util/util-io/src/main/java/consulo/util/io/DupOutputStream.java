@@ -33,7 +33,7 @@ public class DupOutputStream extends OutputStream {
   }
 
   @Override
-  public void write(final int b) throws IOException {
+  public void write(int b) throws IOException {
     myStream1.write(b);
     myStream2.write(b);
   }
@@ -51,13 +51,13 @@ public class DupOutputStream extends OutputStream {
   }
 
   @Override
-  public void write(final byte[] b) throws IOException {
+  public void write(byte[] b) throws IOException {
     myStream1.write(b);
     myStream2.write(b);
   }
 
   @Override
-  public void write(final byte[] b, final int off, final int len) throws IOException {
+  public void write(byte[] b, int off, int len) throws IOException {
     myStream1.write(b, off, len);
     myStream2.write(b, off, len);
   }

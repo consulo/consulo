@@ -38,14 +38,14 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
   private final PairedBraceMatcher myMatcher;
   private final Language myLanguage;
 
-  public PairedBraceMatcherAdapter(final PairedBraceMatcher matcher, Language language) {
+  public PairedBraceMatcherAdapter(PairedBraceMatcher matcher, Language language) {
     myMatcher = matcher;
     myLanguage = language;
   }
 
   @Override
   public int getBraceTokenGroupId(IElementType tokenType) {
-    final BracePair[] pairs = myMatcher.getPairs();
+    BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (tokenType == pair.getLeftBraceType() || tokenType == pair.getRightBraceType()) return myLanguage.hashCode();
     }
@@ -54,8 +54,8 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
 
   @Nullable
   public BracePair findPair(boolean left, HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
-    final IElementType tokenType = (IElementType)iterator.getTokenType();
-    final BracePair[] pairs = myMatcher.getPairs();
+    IElementType tokenType = (IElementType)iterator.getTokenType();
+    BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (tokenType == (left ? pair.getLeftBraceType() : pair.getRightBraceType())) return pair;
     }
@@ -73,8 +73,8 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
   }
 
   @Override
-  public IElementType getOppositeBraceTokenType(@Nonnull final IElementType type) {
-    final BracePair[] pairs = myMatcher.getPairs();
+  public IElementType getOppositeBraceTokenType(@Nonnull IElementType type) {
+    BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (type == pair.getRightBraceType()) return pair.getLeftBraceType();
       if (type == pair.getLeftBraceType()) return pair.getRightBraceType();
@@ -85,7 +85,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
 
   @Override
   public boolean isPairBraces(IElementType tokenType, IElementType tokenType2) {
-    final BracePair[] pairs = myMatcher.getPairs();
+    BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (tokenType == pair.getLeftBraceType() && tokenType2 == pair.getRightBraceType() || tokenType == pair.getRightBraceType() && tokenType2 == pair.getLeftBraceType()) {
         return true;
@@ -96,8 +96,8 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
 
   @Override
   public boolean isStructuralBrace(HighlighterIterator iterator, CharSequence text, FileType fileType) {
-    final IElementType tokenType = (IElementType)iterator.getTokenType();
-    final BracePair[] pairs = myMatcher.getPairs();
+    IElementType tokenType = (IElementType)iterator.getTokenType();
+    BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (tokenType == pair.getRightBraceType() || tokenType == pair.getLeftBraceType()) return pair.isStructural();
     }
@@ -110,7 +110,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, Langua
   }
 
   @Override
-  public int getCodeConstructStart(final PsiFile file, int openingBraceOffset) {
+  public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
     return myMatcher.getCodeConstructStart(file, openingBraceOffset);
   }
 

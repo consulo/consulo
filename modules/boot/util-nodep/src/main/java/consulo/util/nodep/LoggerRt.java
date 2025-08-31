@@ -20,7 +20,7 @@ package consulo.util.nodep;
 @Deprecated
 public abstract class LoggerRt {
   private interface Factory {
-    LoggerRt getInstance(final String category);
+    LoggerRt getInstance(String category);
   }
 
   private static Factory ourFactory;
@@ -33,43 +33,43 @@ public abstract class LoggerRt {
   }
 
 
-  public static LoggerRt getInstance(final String category) {
+  public static LoggerRt getInstance(String category) {
     return getFactory().getInstance(category);
   }
 
-  public static LoggerRt getInstance(final Class<?> clazz) {
+  public static LoggerRt getInstance(Class<?> clazz) {
     return getInstance(clazz.getName());
   }
 
-  public void info(final String message) {
+  public void info(String message) {
     info(message, null);
   }
 
-  public void info(final Throwable t) {
+  public void info(Throwable t) {
     info(t.getMessage(), t);
   }
 
-  public void warn(final String message) {
+  public void warn(String message) {
     warn(message, null);
   }
 
-  public void warn(final Throwable t) {
+  public void warn(Throwable t) {
     warn(t.getMessage(), t);
   }
 
-  public void error(final String message) {
+  public void error(String message) {
     error(message, null);
   }
 
-  public void error(final Throwable t) {
+  public void error(Throwable t) {
     error(t.getMessage(), t);
   }
 
-  public abstract void info(final String message, final Throwable t);
+  public abstract void info(String message, Throwable t);
 
-  public abstract void warn(final String message, final Throwable t);
+  public abstract void warn(String message, Throwable t);
 
-  public abstract void error(final String message, final Throwable t);
+  public abstract void error(String message, Throwable t);
 
   private static class SystemFactory implements Factory {
     @Override

@@ -176,12 +176,12 @@ public class Alarm implements Disposable {
     _addRequest(request, delayMillis, ApplicationManager.getApplication().getModalityStateForComponent(myActivationComponent));
   }
 
-  public void addRequest(@Nonnull Runnable request, int delayMillis, @Nullable final ModalityState modalityState) {
+  public void addRequest(@Nonnull Runnable request, int delayMillis, @Nullable ModalityState modalityState) {
     LOG.assertTrue(myThreadToUse == ThreadToUse.SWING_THREAD);
     _addRequest(request, delayMillis, modalityState);
   }
 
-  public void addRequest(@Nonnull Runnable request, long delayMillis, @Nullable final ModalityState modalityState) {
+  public void addRequest(@Nonnull Runnable request, long delayMillis, @Nullable ModalityState modalityState) {
     LOG.assertTrue(myThreadToUse == ThreadToUse.SWING_THREAD);
     _addRequest(request, delayMillis, modalityState);
   }
@@ -189,7 +189,7 @@ public class Alarm implements Disposable {
   protected void _addRequest(@Nonnull Runnable request, long delayMillis, @Nullable ModalityState modalityState) {
     synchronized (LOCK) {
       checkDisposed();
-      final Request requestToSchedule = new Request(request, modalityState, delayMillis);
+      Request requestToSchedule = new Request(request, modalityState, delayMillis);
 
       if (myActivationComponent == null || myActivationComponent.isShowing()) {
         _add(requestToSchedule);
@@ -314,7 +314,7 @@ public class Alarm implements Disposable {
     private Future<?> myFuture; // guarded by LOCK
     private final long myDelayMillis;
 
-    private Request(@Nonnull final Runnable task, @Nullable ModalityState modalityState, long delayMillis) {
+    private Request(@Nonnull Runnable task, @Nullable ModalityState modalityState, long delayMillis) {
       synchronized (LOCK) {
         myTask = task;
 
@@ -329,7 +329,7 @@ public class Alarm implements Disposable {
         if (myDisposed) {
           return;
         }
-        final Runnable task;
+        Runnable task;
         synchronized (LOCK) {
           task = myTask;
           myTask = null;
@@ -399,7 +399,7 @@ public class Alarm implements Disposable {
   }
 
   @Nonnull
-  public Alarm setActivationComponent(@Nonnull final JComponent component) {
+  public Alarm setActivationComponent(@Nonnull JComponent component) {
     myActivationComponent = component;
     //noinspection ResultOfObjectAllocationIgnored
     new UiNotifyConnector(component, new Activatable() {

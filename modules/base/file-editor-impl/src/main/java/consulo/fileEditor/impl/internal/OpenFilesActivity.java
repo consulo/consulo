@@ -33,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class OpenFilesActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+    FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
     if (!(fileEditorManager instanceof FileEditorManagerImpl)) {
       return;
     }
@@ -43,7 +43,7 @@ public class OpenFilesActivity implements PostStartupActivity, DumbAware {
       indicator.setText("Reopening files...");
     }
 
-    final FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;
+    FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;
     manager.getMainSplitters().openFilesAsync(uiAccess);
   }
 }

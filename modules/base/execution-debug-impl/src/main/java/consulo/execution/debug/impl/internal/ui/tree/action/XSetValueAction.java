@@ -45,7 +45,7 @@ public class XSetValueAction extends XDebuggerTreeActionBase {
   }
 
   @Override
-  protected void perform(final XValueNodeImpl node, @Nonnull final String nodeName, final AnActionEvent e) {
+  protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
     SetValueInplaceEditor.show(node, nodeName);
   }
 }

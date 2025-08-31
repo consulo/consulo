@@ -77,7 +77,7 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
    * @param credentialsObject is a parametrization of a host
    * @return whether the given credentials corresponds the same host
    */
-  public boolean isSameHost(@Nonnull final Object credentialsObject) {
+  public boolean isSameHost(@Nonnull Object credentialsObject) {
     return false;
   }
 }

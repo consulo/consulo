@@ -20,7 +20,7 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
   private static volatile Set<String> ourLazyExternalIds = Collections.emptySet();
   private static final Logger LOG = Logger.getInstance(IStubElementType.class);
 
-  public IStubElementType(@Nonnull final String debugName, @Nullable final Language language) {
+  public IStubElementType(@Nonnull String debugName, @Nullable Language language) {
     super(debugName, language);
     if (!isLazilyRegistered()) {
       checkNotInstantiatedTooLate(this);
@@ -78,7 +78,7 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
   public abstract PsiT createPsi(@Nonnull StubT stub);
 
   @Nonnull
-  public abstract StubT createStub(@Nonnull PsiT psi, final StubElement parentStub);
+  public abstract StubT createStub(@Nonnull PsiT psi, StubElement parentStub);
 
   public boolean shouldCreateStub(ASTNode node) {
     return true;

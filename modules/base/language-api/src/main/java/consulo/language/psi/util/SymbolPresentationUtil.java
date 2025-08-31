@@ -37,7 +37,7 @@ public class SymbolPresentationUtil {
   @RequiredReadAction
   public static String getSymbolPresentableText(@Nonnull PsiElement element) {
     if (element instanceof NavigationItem) {
-      final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+      ItemPresentation presentation = ((NavigationItem)element).getPresentation();
       if (presentation != null){
         return presentation.getPresentableText();
       }
@@ -51,7 +51,7 @@ public class SymbolPresentationUtil {
   @RequiredReadAction
   public static String getSymbolContainerText(PsiElement element) {
     if (element instanceof NavigationItem) {
-      final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+      ItemPresentation presentation = ((NavigationItem)element).getPresentation();
       if (presentation != null){
         return presentation.getLocationString();
       } else {

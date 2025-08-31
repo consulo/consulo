@@ -150,7 +150,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     }
 
     if (myDirtyYPositions != null) {
-      final Graphics2D imageGraphics = myCachedTrack.createGraphics();
+      Graphics2D imageGraphics = myCachedTrack.createGraphics();
 
       myDirtyYPositions = myDirtyYPositions.intersection(docRange);
       if (myDirtyYPositions == null) myDirtyYPositions = docRange;
@@ -173,8 +173,8 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     myCachedTrack = null;
   }
 
-  private void repaint(@Nonnull final Graphics g, int gutterWidth, @Nonnull ProperTextRange yrange) {
-    final Rectangle clip = new Rectangle(0, yrange.getStartOffset(), gutterWidth, yrange.getLength() + myPanel.getMarkupModel().getMinMarkHeight());
+  private void repaint(@Nonnull Graphics g, int gutterWidth, @Nonnull ProperTextRange yrange) {
+    Rectangle clip = new Rectangle(0, yrange.getStartOffset(), gutterWidth, yrange.getLength() + myPanel.getMarkupModel().getMinMarkHeight());
 
     paintBackground(g, clip);
 
@@ -190,14 +190,14 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     g.setClip(oldClip);
   }
 
-  private void drawMarkup(@Nonnull final Graphics g, int startOffset, int endOffset, @Nonnull MarkupModelEx markup1, @Nonnull MarkupModelEx markup2) {
-    final Queue<PositionedStripe> thinEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
-    final Queue<PositionedStripe> wideEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
+  private void drawMarkup(@Nonnull Graphics g, int startOffset, int endOffset, @Nonnull MarkupModelEx markup1, @Nonnull MarkupModelEx markup2) {
+    Queue<PositionedStripe> thinEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
+    Queue<PositionedStripe> wideEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
     // sorted by layer
-    final List<PositionedStripe> thinStripes = new ArrayList<>(); // layer desc
-    final List<PositionedStripe> wideStripes = new ArrayList<>(); // layer desc
-    final int[] thinYStart = new int[1];  // in range 0..yStart all spots are drawn
-    final int[] wideYStart = new int[1];  // in range 0..yStart all spots are drawn
+    List<PositionedStripe> thinStripes = new ArrayList<>(); // layer desc
+    List<PositionedStripe> wideStripes = new ArrayList<>(); // layer desc
+    int[] thinYStart = new int[1];  // in range 0..yStart all spots are drawn
+    int[] wideYStart = new int[1];  // in range 0..yStart all spots are drawn
 
     MarkupIterator<RangeHighlighterEx> iterator1 = markup1.overlappingIterator(startOffset, endOffset);
     MarkupIterator<RangeHighlighterEx> iterator2 = markup2.overlappingIterator(startOffset, endOffset);
@@ -214,13 +214,13 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
         Queue<PositionedStripe> ends = isThin ? thinEnds : wideEnds;
 
         ProperTextRange range = myPanel.offsetsToYPositions(highlighter.getStartOffset(), highlighter.getEndOffset());
-        final int ys = range.getStartOffset();
+        int ys = range.getStartOffset();
         int ye = range.getEndOffset();
         if (ye - ys < myPanel.getMarkupModel().getMinMarkHeight()) ye = ys + myPanel.getMarkupModel().getMinMarkHeight();
 
         yStart[0] = drawStripesEndingBefore(ys, ends, stripes, g, yStart[0]);
 
-        final int layer = highlighter.getLayer();
+        int layer = highlighter.getLayer();
 
         PositionedStripe stripe = null;
         int i;

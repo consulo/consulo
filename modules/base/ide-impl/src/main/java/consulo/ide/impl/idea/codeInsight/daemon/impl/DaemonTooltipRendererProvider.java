@@ -29,18 +29,18 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
   private final Project myProject;
   private final Editor myEditor;
 
-  public DaemonTooltipRendererProvider(final Project project, Editor editor) {
+  public DaemonTooltipRendererProvider(Project project, Editor editor) {
     myProject = project;
     myEditor = editor;
   }
 
   @Override
-  public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<? extends RangeHighlighter> highlighters) {
+  public TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters) {
     LineTooltipRenderer bigRenderer = null;
     List<HighlightInfoImpl> infos = new SmartList<>();
     Collection<String> tooltips = new HashSet<>(); //do not show same tooltip twice
     for (RangeHighlighter marker : highlighters) {
-      final Object tooltipObject = marker.getErrorStripeTooltip();
+      Object tooltipObject = marker.getErrorStripeTooltip();
       if (tooltipObject == null) continue;
       if (tooltipObject instanceof HighlightInfoImpl) {
         HighlightInfoImpl info = (HighlightInfoImpl)tooltipObject;
@@ -49,7 +49,7 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
         }
       }
       else {
-        final String text = tooltipObject.toString();
+        String text = tooltipObject.toString();
         if (tooltips.add(text)) {
           if (bigRenderer == null) {
             bigRenderer = new DaemonTooltipRenderer(text, new Object[]{highlighters});
@@ -67,7 +67,7 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
         if (i != 0) return i;
         return o1.getToolTip().compareTo(o2.getToolTip());
       });
-      final HighlightInfoComposite composite = HighlightInfoComposite.create(infos);
+      HighlightInfoComposite composite = HighlightInfoComposite.create(infos);
       String toolTip = composite.getToolTip();
       DaemonTooltipRenderer myRenderer;
       if (Registry.is("ide.tooltip.show.with.actions")) {
@@ -87,13 +87,13 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
 
   @Nonnull
   @Override
-  public TooltipRenderer calcTooltipRenderer(@Nonnull final String text) {
+  public TooltipRenderer calcTooltipRenderer(@Nonnull String text) {
     return new DaemonTooltipRenderer(text, new Object[]{text});
   }
 
   @Nonnull
   @Override
-  public TooltipRenderer calcTooltipRenderer(@Nonnull final String text, final int width) {
+  public TooltipRenderer calcTooltipRenderer(@Nonnull String text, int width) {
     return new DaemonTooltipRenderer(text, width, new Object[]{text});
   }
 

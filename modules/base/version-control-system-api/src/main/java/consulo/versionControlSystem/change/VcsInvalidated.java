@@ -22,7 +22,7 @@ import consulo.versionControlSystem.FilePath;
 import java.util.List;
 
 public record VcsInvalidated(List<VcsModifiableDirtyScope> scopes, boolean isEverythingDirty, ActionCallback callback) {
-    public boolean isFileDirty(final FilePath fp) {
+    public boolean isFileDirty(FilePath fp) {
         return isEverythingDirty() || ContainerUtil.any(scopes(), dirtyScope -> dirtyScope.belongsTo(fp));
     }
 

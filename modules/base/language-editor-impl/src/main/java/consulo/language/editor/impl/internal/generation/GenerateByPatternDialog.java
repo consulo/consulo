@@ -117,9 +117,9 @@ public class GenerateByPatternDialog extends DialogWrapper {
   }
 
   @RequiredUIAccess
-  private void updateDetails(final PatternDescriptor descriptor) {
+  private void updateDetails(PatternDescriptor descriptor) {
     ApplicationManager.getApplication().runWriteAction(() -> {
-      final Template template = descriptor.getTemplate();
+      Template template = descriptor.getTemplate();
       if (template instanceof Template) {
         String text = template.getString();
         myEditor.getDocument().replaceString(0, myEditor.getDocument().getTextLength(), text);

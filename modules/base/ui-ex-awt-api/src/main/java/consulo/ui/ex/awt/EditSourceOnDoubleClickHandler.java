@@ -21,11 +21,11 @@ public final class EditSourceOnDoubleClickHandler {
   private EditSourceOnDoubleClickHandler() {
   }
 
-  public static void install(final JTree tree, @Nullable final Runnable whenPerformed) {
+  public static void install(JTree tree, @Nullable Runnable whenPerformed) {
     new TreeMouseListener(tree, whenPerformed).installOn(tree);
   }
 
-  public static void install(final JTree tree) {
+  public static void install(JTree tree) {
     install(tree, null);
   }
 
@@ -95,11 +95,11 @@ public final class EditSourceOnDoubleClickHandler {
     @Nullable
     private final Runnable myWhenPerformed;
 
-    public TreeMouseListener(final JTree tree) {
+    public TreeMouseListener(JTree tree) {
       this(tree, null);
     }
 
-    public TreeMouseListener(final JTree tree, @Nullable final Runnable whenPerformed) {
+    public TreeMouseListener(JTree tree, @Nullable Runnable whenPerformed) {
       myTree = tree;
       myWhenPerformed = whenPerformed;
     }
@@ -121,7 +121,7 @@ public final class EditSourceOnDoubleClickHandler {
       TreePath clickPath = myTree.getClosestPathForLocation(e.getX(), e.getY());
       if (clickPath == null) return false;
 
-      final DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
+      DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
       Project project = dataContext.getData(Project.KEY);
       if (project == null) return false;
 

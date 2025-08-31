@@ -28,14 +28,14 @@ public class IElementTypePattern extends ObjectPattern<IElementType, IElementTyp
     super(IElementType.class);
   }
 
-  public IElementTypePattern or(@Nonnull final IElementType... types){
+  public IElementTypePattern or(@Nonnull IElementType... types){
     return tokenSet(TokenSet.create(types));
   }
 
   public IElementTypePattern tokenSet(@Nonnull final TokenSet tokenSet){
     return with(new PatternCondition<IElementType>("tokenSet") {
       @Override
-      public boolean accepts(@Nonnull final IElementType type, final ProcessingContext context) {
+      public boolean accepts(@Nonnull IElementType type, ProcessingContext context) {
         return tokenSet.contains(type);
       }
     });

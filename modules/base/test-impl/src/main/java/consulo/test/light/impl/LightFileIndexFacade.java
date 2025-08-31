@@ -40,7 +40,7 @@ public class LightFileIndexFacade extends FileIndexFacade {
   private final List<VirtualFile> myLibraryRoots = new ArrayList<>();
 
   @Inject
-  public LightFileIndexFacade(final Project project) {
+  public LightFileIndexFacade(Project project) {
     super(project);
   }
 

@@ -48,10 +48,10 @@ import jakarta.annotation.Nullable;
  */
 public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     @Override
-    protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
-        final XDebuggerEditorsProvider editorsProvider = session.getDebugProcess().getEditorsProvider();
-        final XStackFrame stackFrame = session.getCurrentStackFrame();
-        final XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
+    protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+        XDebuggerEditorsProvider editorsProvider = session.getDebugProcess().getEditorsProvider();
+        XStackFrame stackFrame = session.getCurrentStackFrame();
+        XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
         if (evaluator == null) {
             return;
         }
@@ -75,7 +75,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
             text = getExpressionText(evaluator, dataContext.getData(Project.KEY), editor);
         }
 
-        final VirtualFile file = dataContext.getData(VirtualFile.KEY);
+        VirtualFile file = dataContext.getData(VirtualFile.KEY);
 
         if (text == null) {
             XValue value = XDebuggerTreeActionBase.getSelectedValue(dataContext);
@@ -144,7 +144,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     }
 
     @Override
-    protected boolean isEnabled(final @Nonnull XDebugSession session, final DataContext dataContext) {
+    protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
         return session.getDebugProcess().getEvaluator() != null;
     }
 

@@ -36,7 +36,7 @@ public class WorkItem {
   public WorkItem() {
   }
 
-  public WorkItem(final Date from) {
+  public WorkItem(Date from) {
     this.from = from;
   }
 }

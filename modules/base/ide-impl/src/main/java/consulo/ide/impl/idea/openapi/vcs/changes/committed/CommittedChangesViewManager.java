@@ -45,20 +45,20 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
   private final Project myProject;
   private final VcsListener myVcsListener = new MyVcsListener();
 
-  public CommittedChangesViewManager(final Project project, final ProjectLevelVcsManager vcsManager) {
+  public CommittedChangesViewManager(Project project, ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;
     myBus = project.getMessageBus();
   }
 
   private void updateChangesContent() {
-    final CommittedChangesProvider provider = CommittedChangesCache.getInstance(myProject).getProviderForProject();
+    CommittedChangesProvider provider = CommittedChangesCache.getInstance(myProject).getProviderForProject();
     if (provider == null) return;
 
     if (myComponent == null) {
       myComponent = new CommittedChangesPanel(myProject, provider, provider.createDefaultSettings(), null, null);
       myConnection.subscribe(VcsBranchMappingChangedNotification.class, new VcsBranchMappingChangedNotification() {
-        public void execute(final Project project, final VirtualFile vcsRoot) {
+        public void execute(Project project, VirtualFile vcsRoot) {
           sendUpdateCachedListsMessage(vcsRoot);
         }
       });
@@ -122,7 +122,7 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
       });
     }
 
-    public void refreshErrorStatusChanged(@Nullable final VcsException lastError) {
+    public void refreshErrorStatusChanged(@Nullable VcsException lastError) {
       if (lastError != null) {
         VcsBalloonProblemNotifier.showOverChangesView(myProject, lastError.getMessage(), NotificationType.ERROR);
       }

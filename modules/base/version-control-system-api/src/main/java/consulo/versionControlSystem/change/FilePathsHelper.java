@@ -10,28 +10,28 @@ public class FilePathsHelper {
   private FilePathsHelper() {
   }
 
-  public static String convertPath(final VirtualFile vf) {
+  public static String convertPath(VirtualFile vf) {
     return convertPath(vf.getPath());
   }
 
-  public static String convertPath(final FilePath fp) {
+  public static String convertPath(FilePath fp) {
     return convertPath(fp.getPath());
   }
   
-  public static String convertWithLastSeparator(final VirtualFile vf) {
+  public static String convertWithLastSeparator(VirtualFile vf) {
     return convertWithLastSeparatorImpl(vf.getPath(), vf.isDirectory());
   }
 
-  public static String convertWithLastSeparator(final FilePath fp) {
+  public static String convertWithLastSeparator(FilePath fp) {
     return convertWithLastSeparatorImpl(fp.getPath(), fp.isDirectory());
   }
 
-  private static String convertWithLastSeparatorImpl(final String initPath, final boolean isDir) {
-    final String path = isDir ? (initPath.endsWith("/") || initPath.endsWith("\\") ? initPath : initPath + "/") : initPath;
+  private static String convertWithLastSeparatorImpl(String initPath, boolean isDir) {
+    String path = isDir ? (initPath.endsWith("/") || initPath.endsWith("\\") ? initPath : initPath + "/") : initPath;
     return convertPath(path);
   }
 
-  public static String convertPath(final String parent, final String subpath) {
+  public static String convertPath(String parent, String subpath) {
     String convParent = FileUtil.toSystemIndependentName(parent);
     String convPath = FileUtil.toSystemIndependentName(subpath);
 
@@ -39,7 +39,7 @@ public class FilePathsHelper {
     return Platform.current().fs().isCaseSensitive() ? withSlash : withSlash.toUpperCase();
   }
 
-  public static String convertPath(final String s) {
+  public static String convertPath(String s) {
     String result = FileUtil.toSystemIndependentName(s);
     return Platform.current().fs().isCaseSensitive() ? result : result.toUpperCase();
   }

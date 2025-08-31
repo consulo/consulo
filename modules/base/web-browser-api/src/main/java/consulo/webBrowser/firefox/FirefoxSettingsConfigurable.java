@@ -106,7 +106,7 @@ public class FirefoxSettingsConfigurable implements Configurable {
 
     @Nullable
     private String getConfiguredProfileName() {
-        final String selected = (String) myProfileCombobox.getSelectedItem();
+        String selected = (String) myProfileCombobox.getSelectedItem();
         if (Comparing.equal(myDefaultProfile, selected)) {
             return null;
         }
@@ -133,14 +133,14 @@ public class FirefoxSettingsConfigurable implements Configurable {
     }
 
     private void updateProfilesList() {
-        final String profilesIniPath = myProfilesIniPathField.getText();
+        String profilesIniPath = myProfilesIniPathField.getText();
         if (myLastProfilesIniPath != null && myLastProfilesIniPath.equals(profilesIniPath)) {
             return;
         }
 
         myProfileCombobox.removeAllItems();
-        final List<FirefoxProfile> profiles = FirefoxUtil.computeProfiles(new File(profilesIniPath));
-        final FirefoxProfile defaultProfile = FirefoxUtil.getDefaultProfile(profiles);
+        List<FirefoxProfile> profiles = FirefoxUtil.computeProfiles(new File(profilesIniPath));
+        FirefoxProfile defaultProfile = FirefoxUtil.getDefaultProfile(profiles);
         myDefaultProfile = defaultProfile != null ? defaultProfile.getName() : null;
         for (FirefoxProfile profile : profiles) {
             //noinspection unchecked
@@ -167,28 +167,28 @@ public class FirefoxSettingsConfigurable implements Configurable {
     private void $$$setupUI$$$() {
         myMainPanel = new JPanel();
         myMainPanel.setLayout(new GridLayoutManager(2, 1, JBUI.emptyInsets(), -1, -1));
-        final Spacer spacer1 = new Spacer();
+        Spacer spacer1 = new Spacer();
         myMainPanel.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        final JPanel panel1 = new JPanel();
+        JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(3, 1, JBUI.emptyInsets(), -1, -1));
         myMainPanel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JPanel panel2 = new JPanel();
+        JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 2, JBUI.emptyInsets(), -1, -1));
         panel1.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
+        Spacer spacer2 = new Spacer();
         panel2.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final JLabel label1 = new JLabel();
+        JLabel label1 = new JLabel();
         this.$$$loadLabelText$$$(label1, WebBrowserLocalize.labelTextPathToProfilesIni().get());
         panel2.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         myProfilesIniPathField = new TextFieldWithBrowseButton();
         panel1.add(myProfilesIniPathField, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(350, -1), null, 2, false));
-        final JPanel panel3 = new JPanel();
+        JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(1, 3, JBUI.emptyInsets(), -1, -1));
         panel1.add(panel3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label2 = new JLabel();
+        JLabel label2 = new JLabel();
         this.$$$loadLabelText$$$(label2, WebBrowserLocalize.labelTextProfile().get());
         panel3.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer3 = new Spacer();
+        Spacer spacer3 = new Spacer();
         panel3.add(spacer3, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         myProfileCombobox = new JComboBox();
         panel3.add(myProfileCombobox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

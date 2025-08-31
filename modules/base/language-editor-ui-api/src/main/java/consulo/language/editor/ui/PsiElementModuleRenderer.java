@@ -40,7 +40,7 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer {
 
   @Override
   public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-    final Component listCellRendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+    Component listCellRendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     customizeCellRenderer(value, index, isSelected, cellHasFocus);
     return listCellRendererComponent;
   }
@@ -57,7 +57,7 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer {
       if (element.isValid()) {
         PsiFile psiFile = element.getContainingFile();
         Module module = ModuleUtilCore.findModuleForPsiElement(element);
-        final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
+        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
         boolean isInLibraries = false;
         if (psiFile != null) {
           VirtualFile vFile = psiFile.getVirtualFile();
@@ -114,7 +114,7 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer {
     }
   }
 
-  protected String getPresentableName(final OrderEntry order, final VirtualFile vFile) {
+  protected String getPresentableName(OrderEntry order, VirtualFile vFile) {
     return order.getPresentableName();
   }
 }

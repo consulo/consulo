@@ -32,19 +32,19 @@ public class DeferingPrinter implements Printer {
   public void print(final String text, final ConsoleViewContentType contentType) {
     myCompositePrintable.addLast(new Printable() {
       @Override
-      public void printOn(final Printer printer) {
+      public void printOn(Printer printer) {
         printer.print(text, contentType);
       }
     });
   }
 
   @Override
-  public void onNewAvailable(@Nonnull final Printable printable) {
+  public void onNewAvailable(@Nonnull Printable printable) {
     myCompositePrintable.addLast(printable);
   }
 
   @Override
-  public void printHyperlink(final String text, final HyperlinkInfo info) {
+  public void printHyperlink(String text, HyperlinkInfo info) {
     myCompositePrintable.addLast(new HyperLink(text, info));
   }
 
@@ -53,7 +53,7 @@ public class DeferingPrinter implements Printer {
     myCompositePrintable.addLast(new PrinterMark());
   }
 
-  public void printAndForget(final Printer printer) {
+  public void printAndForget(Printer printer) {
     myCompositePrintable.printOn(printer);
     myCompositePrintable.clear();
   }

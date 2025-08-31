@@ -56,7 +56,7 @@ public interface ModifiableModel extends Profile {
 
   boolean isChanged();
 
-  void setModified(final boolean toolsSettingsChanged);
+  void setModified(boolean toolsSettingsChanged);
 
   boolean isProperSetting(@Nonnull String toolId);
 

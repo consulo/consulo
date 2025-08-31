@@ -24,9 +24,9 @@ public final class CompletionParameters {
   private final CompletionProcess myProcess;
   private boolean isTestingMode = false;
 
-  public CompletionParameters(@Nonnull final PsiElement position, @Nonnull final PsiFile originalFile,
-                       @Nonnull CompletionType completionType, int offset, int invocationCount, @Nonnull Editor editor,
-                       @Nonnull CompletionProcess process) {
+  public CompletionParameters(@Nonnull PsiElement position, @Nonnull PsiFile originalFile,
+                              @Nonnull CompletionType completionType, int offset, int invocationCount, @Nonnull Editor editor,
+                              @Nonnull CompletionProcess process) {
     PsiUtilCore.ensureValid(position);
     assert position.getTextRange().containsOffset(offset) : position;
     myPosition = position;

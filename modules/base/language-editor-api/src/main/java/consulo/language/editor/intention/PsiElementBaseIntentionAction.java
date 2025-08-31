@@ -36,7 +36,7 @@ public abstract class PsiElementBaseIntentionAction extends BaseIntentionAction 
   @Override
   public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (editor == null || !checkFile(file)) return;
-    final PsiElement element = getElement(editor, file);
+    PsiElement element = getElement(editor, file);
     if (element != null) {
       invoke(project, editor, element);
     }
@@ -62,7 +62,7 @@ public abstract class PsiElementBaseIntentionAction extends BaseIntentionAction 
   @Override
   public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (!checkFile(file)) return false;
-    final PsiElement element = editor == null ? null : getElement(editor, file);
+    PsiElement element = editor == null ? null : getElement(editor, file);
     return element != null && isAvailable(project, editor, element);
   }
 

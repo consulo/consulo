@@ -41,7 +41,7 @@ abstract class Timed<T> implements Disposable {
   protected @Nullable T myT;
   private boolean myPolled;
 
-  protected Timed(@Nullable final Disposable parentDisposable) {
+  protected Timed(@Nullable Disposable parentDisposable) {
     if (parentDisposable != null) {
       Disposer.register(parentDisposable, this);
     }
@@ -49,7 +49,7 @@ abstract class Timed<T> implements Disposable {
 
   @Override
   public synchronized void dispose() {
-    final Object t = myT;
+    Object t = myT;
     myT = null;
     if (t instanceof Disposable) {
       Disposer.dispose((Disposable)t);
@@ -93,7 +93,7 @@ abstract class Timed<T> implements Disposable {
   }
 
   static void disposeTimed() {
-    final Timed[] references = ourReferences.keySet().toArray(new Timed[ourReferences.size()]);
+    Timed[] references = ourReferences.keySet().toArray(new Timed[ourReferences.size()]);
     for (Timed timed : references) {
       if (timed == null) continue;
       synchronized (timed) {

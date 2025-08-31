@@ -120,7 +120,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     if (fragments == null) return Integer.MIN_VALUE;
     if (fragments.isEmpty()) return 0;
 
-    final MatcherTextRange first = fragments.getHead();
+    MatcherTextRange first = fragments.getHead();
     boolean startMatch = first.getStartOffset() == 0;
     boolean valuedStartMatch = startMatch && valueStartCaseMatch;
 
@@ -301,7 +301,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
    * and invokes {@link #matchFragment} at those candidate positions
    */
   @Nullable
-  private FList<MatcherTextRange> matchSkippingWords(@Nonnull String name, final int patternIndex, int nameIndex, boolean allowSpecialChars, boolean isAsciiName) {
+  private FList<MatcherTextRange> matchSkippingWords(@Nonnull String name, int patternIndex, int nameIndex, boolean allowSpecialChars, boolean isAsciiName) {
     int maxFoundLength = 0;
     while (nameIndex >= 0) {
       int fragmentLength = seemsLikeFragmentStart(name, patternIndex, nameIndex) ? maxMatchingFragment(name, patternIndex, nameIndex) : 0;
@@ -499,7 +499,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
   }
 
   private int indexOfWordStart(@Nonnull String name, int patternIndex, int startFrom) {
-    final char p = myPattern[patternIndex];
+    char p = myPattern[patternIndex];
     if (startFrom >= name.length() || myHasHumps && isLowerCase[patternIndex] && !(patternIndex > 0 && isWordSeparator[patternIndex - 1])) {
       return -1;
     }

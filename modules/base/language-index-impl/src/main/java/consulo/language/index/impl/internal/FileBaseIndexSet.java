@@ -34,12 +34,12 @@ public class FileBaseIndexSet implements IndexableFileSet {
     }
 
     @Override
-    public boolean isInSet(@Nonnull final VirtualFile file) {
+    public boolean isInSet(@Nonnull VirtualFile file) {
         return myCollector.shouldCollect(file);
     }
 
     @Override
-    public void iterateIndexableFilesIn(@Nonnull final VirtualFile file, @Nonnull final ContentIterator iterator) {
+    public void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull final ContentIterator iterator) {
         VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {

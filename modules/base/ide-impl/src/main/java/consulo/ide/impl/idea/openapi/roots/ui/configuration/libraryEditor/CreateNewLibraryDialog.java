@@ -48,7 +48,7 @@ public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
     super(parent, new LibraryRootsComponent(project, libraryEditor));
     myLibrariesConfigurator = librariesConfigurator;
     myLibraryEditor = libraryEditor;
-    final DefaultComboBoxModel model = new DefaultComboBoxModel();
+    DefaultComboBoxModel model = new DefaultComboBoxModel();
     for (LibraryTable table : libraryTables) {
       model.addElement(table);
     }
@@ -68,16 +68,16 @@ public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
   @Nonnull
   @Override
   protected LibraryTable.ModifiableModel getTableModifiableModel() {
-    final LibraryTable selectedTable = (LibraryTable)myLibraryLevelCombobox.getSelectedItem();
+    LibraryTable selectedTable = (LibraryTable)myLibraryLevelCombobox.getSelectedItem();
     return myLibrariesConfigurator.getModifiableLibraryTable(selectedTable);
   }
 
   @Nonnull
   public Library createLibrary() {
-    final LibraryTableBase.ModifiableModelEx modifiableModel = (LibraryTableBase.ModifiableModelEx)getTableModifiableModel();
-    final LibraryType<?> type = myLibraryEditor.getType();
-    final Library library = modifiableModel.createLibrary(myLibraryEditor.getName(), type != null ? type.getKind() : null);
-    final LibraryEx.ModifiableModelEx model = (LibraryEx.ModifiableModelEx)library.getModifiableModel();
+    LibraryTableBase.ModifiableModelEx modifiableModel = (LibraryTableBase.ModifiableModelEx)getTableModifiableModel();
+    LibraryType<?> type = myLibraryEditor.getType();
+    Library library = modifiableModel.createLibrary(myLibraryEditor.getName(), type != null ? type.getKind() : null);
+    LibraryEx.ModifiableModelEx model = (LibraryEx.ModifiableModelEx)library.getModifiableModel();
     myLibraryEditor.applyTo(model);
     WriteAction.run(model::commit);
     return library;

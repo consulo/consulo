@@ -22,7 +22,7 @@ public abstract class AbstractTerminalRunner<T extends Process> implements consu
   public void openSessionInDirectory(@Nonnull TerminalWidget terminal) {
     // Create Server process
     try {
-      final T process = createProcess(getWorkingDirectory());
+      T process = createProcess(getWorkingDirectory());
 
       TerminalSession session = terminal.createTerminalSession(createTtyConnector(process));
 

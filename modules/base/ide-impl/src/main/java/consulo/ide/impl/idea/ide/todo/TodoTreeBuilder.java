@@ -229,20 +229,20 @@ public abstract class TodoTreeBuilder implements Disposable {
    * and which are located under specified {@code psiDirectory}.
    * @see FileTree#getFiles(VirtualFile)
    */
-  public Iterator<PsiFile> getFiles(PsiDirectory psiDirectory, final boolean skip) {
+  public Iterator<PsiFile> getFiles(PsiDirectory psiDirectory, boolean skip) {
     List<VirtualFile> files = myFileTree.getFiles(psiDirectory.getVirtualFile());
     List<PsiFile> psiFileList = new ArrayList<>(files.size());
     PsiManager psiManager = PsiManager.getInstance(myProject);
     for (VirtualFile file : files) {
-      final Module module = ModuleUtilCore.findModuleForPsiElement(psiDirectory);
+      Module module = ModuleUtilCore.findModuleForPsiElement(psiDirectory);
       if (module != null) {
-        final boolean isInContent = ModuleRootManager.getInstance(module).getFileIndex().isInContent(file);
+        boolean isInContent = ModuleRootManager.getInstance(module).getFileIndex().isInContent(file);
         if (!isInContent) continue;
       }
       if (file.isValid()) {
         PsiFile psiFile = psiManager.findFile(file);
         if (psiFile != null) {
-          final PsiDirectory directory = psiFile.getContainingDirectory();
+          PsiDirectory directory = psiFile.getContainingDirectory();
           if (directory == null || !skip || !TodoTreeHelper.skipDirectory(directory)) {
             psiFileList.add(psiFile);
           }
@@ -262,9 +262,9 @@ public abstract class TodoTreeBuilder implements Disposable {
     List<PsiFile> psiFileList = new ArrayList<>(files.size());
     PsiManager psiManager = PsiManager.getInstance(myProject);
     for (VirtualFile file : files) {
-      final Module module = ModuleUtilCore.findModuleForPsiElement(psiDirectory);
+      Module module = ModuleUtilCore.findModuleForPsiElement(psiDirectory);
       if (module != null) {
-        final boolean isInContent = ModuleRootManager.getInstance(module).getFileIndex().isInContent(file);
+        boolean isInContent = ModuleRootManager.getInstance(module).getFileIndex().isInContent(file);
         if (!isInContent) continue;
       }
       if (file.isValid()) {
@@ -286,8 +286,8 @@ public abstract class TodoTreeBuilder implements Disposable {
   public Iterator<PsiFile> getFiles(Module module) {
     if (module.isDisposed()) return Collections.emptyIterator();
     ArrayList<PsiFile> psiFileList = new ArrayList<>();
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-    final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+    VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
     for (VirtualFile virtualFile : contentRoots) {
       List<VirtualFile> files = myFileTree.getFiles(virtualFile);
       PsiManager psiManager = PsiManager.getInstance(myProject);
@@ -675,7 +675,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     @Override
     public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent e) {
       // local modification
-      final PsiFile file = e.getFile();
+      PsiFile file = e.getFile();
       if (file != null) {
         markFileAsDirty(file);
         updateTree();

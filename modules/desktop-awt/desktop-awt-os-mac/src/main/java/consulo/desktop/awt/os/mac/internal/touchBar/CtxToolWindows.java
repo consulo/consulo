@@ -79,7 +79,7 @@ final class CtxToolWindows {
             @Override
             public void toolWindowsRegistered(@Nonnull List<String> ids, @Nonnull ToolWindowManager toolWindowManager) {
                 for (String id : ids) {
-                    final @Nullable Pair<Map<Long, ActionGroup>, Customizer> actions = ActionsLoader.getToolWindowActionGroup(id);
+                    @Nullable Pair<Map<Long, ActionGroup>, Customizer> actions = ActionsLoader.getToolWindowActionGroup(id);
                     if (actions == null || actions.first.get(0L) == null) {
                         LOG.debug("null action group (or it doesn't contain main-layout) for tool window: %s", id);
                         continue;
@@ -111,7 +111,7 @@ final class CtxToolWindows {
                 if (tw == null)
                     return;
 
-                final @Nullable Pair<Map<Long, ActionGroup>, Customizer> actions = ActionsLoader.getToolWindowActionGroup(tw.getId());
+                @Nullable Pair<Map<Long, ActionGroup>, Customizer> actions = ActionsLoader.getToolWindowActionGroup(tw.getId());
                 if (actions == null || actions.first.get(0L) == null) {
                     LOG.debug("reloaded null action group (or it doesn't contain main-layout) for tool window: %s", tw.getId());
                     return;

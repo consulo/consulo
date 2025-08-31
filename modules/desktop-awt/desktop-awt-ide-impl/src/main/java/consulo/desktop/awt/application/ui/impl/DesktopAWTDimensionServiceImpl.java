@@ -49,7 +49,7 @@ public class DesktopAWTDimensionServiceImpl extends UnifiedDimensionServiceImpl 
     }
 
     consulo.ui.Window uiWindow = null;
-    final Component owner = IdeFocusManager.findInstance().getFocusOwner();
+    Component owner = IdeFocusManager.findInstance().getFocusOwner();
     if (owner != null) {
       uiWindow = TargetAWT.from(UIUtil.getParentOfType(JFrame.class, owner));
     }
@@ -65,7 +65,7 @@ public class DesktopAWTDimensionServiceImpl extends UnifiedDimensionServiceImpl 
     GraphicsDevice gd = null;
     if (uiWindow != null) {
       Window awtWindow = TargetAWT.to(uiWindow);
-      final Point topLeft = awtWindow.getLocation();
+      Point topLeft = awtWindow.getLocation();
       Point center = new Point(topLeft.x + awtWindow.getWidth() / 2, topLeft.y + awtWindow.getHeight() / 2);
       for (GraphicsDevice device : env.getScreenDevices()) {
         Rectangle bounds = device.getDefaultConfiguration().getBounds();

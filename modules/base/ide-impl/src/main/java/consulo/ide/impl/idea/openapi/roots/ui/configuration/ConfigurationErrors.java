@@ -37,28 +37,28 @@ public interface ConfigurationErrors {
   void removeError(@Nonnull ConfigurationError error);
 
   class Bus {
-    public static void addError(@Nonnull final ConfigurationError error, @Nonnull final Project project) {
+    public static void addError(@Nonnull ConfigurationError error, @Nonnull Project project) {
       _do(error, project, (configurationErrors, configurationError) -> {
         configurationErrors.addError(configurationError);
         return false;
       });
     }
 
-    public static void removeError(@Nonnull final ConfigurationError error, @Nonnull final Project project) {
+    public static void removeError(@Nonnull ConfigurationError error, @Nonnull Project project) {
       _do(error, project, (configurationErrors, configurationError) -> {
         configurationErrors.removeError(configurationError);
         return false;
       });
     }
 
-    public static void _do(@Nonnull final ConfigurationError error, @Nonnull final Project project, @Nonnull final PairProcessor<ConfigurationErrors, ConfigurationError> fun) {
+    public static void _do(@Nonnull ConfigurationError error, @Nonnull Project project, @Nonnull PairProcessor<ConfigurationErrors, ConfigurationError> fun) {
       if (!project.isInitialized()) {
         StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> fun.process(project.getMessageBus().syncPublisher(ConfigurationErrors.class), error));
 
         return;
       }
 
-      final MessageBus bus = project.getMessageBus();
+      MessageBus bus = project.getMessageBus();
       if (EventQueue.isDispatchThread()) {
         fun.process(bus.syncPublisher(ConfigurationErrors.class), error);
       }

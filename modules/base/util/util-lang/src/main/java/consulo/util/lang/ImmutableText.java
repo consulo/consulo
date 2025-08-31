@@ -245,7 +245,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     }
 
     @Override
-    public CharSequence subSequence(final int start, final int end) {
+    public CharSequence subSequence(int start, int end) {
         if (start == 0 && end == length()) {
             return this;
         }
@@ -260,7 +260,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
         if (!(obj instanceof ImmutableText)) {
             return false;
         }
-        final ImmutableText that = (ImmutableText) obj;
+        ImmutableText that = (ImmutableText) obj;
         int len = this.length();
         if (len != that.length()) {
             return false;
@@ -418,7 +418,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     private static Node concatNodes(@Nonnull Node node1, @Nonnull Node node2) {
         // All Text instances are maintained balanced:
         //   (head < tail * 2) & (tail < head * 2)
-        final int length = node1.length() + node2.length();
+        int length = node1.length() + node2.length();
         if (length <= BLOCK_SIZE) { // Merges to primitive.
             return createLeafNode(new MergingCharSequence(node1, node2));
         }
@@ -579,7 +579,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
 
         @Override
         void getChars(int start, int end, @Nonnull char[] dest, int destPos) {
-            final int cesure = head.length();
+            int cesure = head.length();
             if (end <= cesure) {
                 head.getChars(start, end, dest, destPos);
             }
@@ -594,7 +594,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
 
         @Override
         Node subNode(int start, int end) {
-            final int cesure = head.length();
+            int cesure = head.length();
             if (end <= cesure) {
                 return head.subNode(start, end);
             }

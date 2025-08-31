@@ -47,7 +47,7 @@ public class DuplicateLinesAction extends EditorAction {
                 int selEnd = editor.getSelectionModel().getSelectionEnd();
                 VisualPosition rangeStart = editor.offsetToVisualPosition(Math.min(selStart, selEnd));
                 VisualPosition rangeEnd = editor.offsetToVisualPosition(Math.max(selStart, selEnd));
-                final Pair<Integer, Integer> copiedRange =
+                Pair<Integer, Integer> copiedRange =
                     DuplicateAction.duplicateLinesRange(editor, editor.getDocument(), rangeStart, rangeEnd);
                 if (copiedRange != null) {
                     editor.getSelectionModel().setSelection(copiedRange.first, copiedRange.second);

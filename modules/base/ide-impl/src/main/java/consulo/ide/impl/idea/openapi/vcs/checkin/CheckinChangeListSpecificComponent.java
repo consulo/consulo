@@ -19,5 +19,5 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 
 public interface CheckinChangeListSpecificComponent extends RefreshableOnComponent {
-  void onChangeListSelected(final LocalChangeList list);
+  void onChangeListSelected(LocalChangeList list);
 }

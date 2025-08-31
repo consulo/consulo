@@ -73,15 +73,15 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
 
   @Nonnull
   public synchronized InspectionProfileWrapper getProfileWrapper() {
-    final InspectionProfile profile = getInspectionProfile();
-    final String profileName = profile.getName();
+    InspectionProfile profile = getInspectionProfile();
+    String profileName = profile.getName();
     if (!myName2Profile.containsKey(profileName)) {
       initProfileWrapper(profile);
     }
     return myName2Profile.get(profileName);
   }
 
-  public InspectionProfileWrapper getProfileWrapper(final String profileName) {
+  public InspectionProfileWrapper getProfileWrapper(String profileName) {
     return myName2Profile.get(profileName);
   }
 
@@ -94,7 +94,7 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
   @Override
   public void deleteProfile(@Nonnull String name) {
     super.deleteProfile(name);
-    final InspectionProfileWrapper profileWrapper = myName2Profile.remove(name);
+    InspectionProfileWrapper profileWrapper = myName2Profile.remove(name);
     if (profileWrapper != null) {
       profileWrapper.cleanup(myProject);
     }
@@ -102,7 +102,7 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
 
   @Override
   public void afterLoadState() {
-    final Set<Profile> profiles = new HashSet<>();
+    Set<Profile> profiles = new HashSet<>();
     profiles.add(getProjectProfileImpl());
     profiles.addAll(getProfiles());
     profiles.addAll(InspectionProfileManager.getInstance().getProfiles());
@@ -122,7 +122,7 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
 
   @Override
   public void initProfileWrapper(@Nonnull Profile profile) {
-    final InspectionProfileWrapper wrapper = new InspectionProfileWrapper((InspectionProfile)profile);
+    InspectionProfileWrapper wrapper = new InspectionProfileWrapper((InspectionProfile)profile);
     myName2Profile.put(profile.getName(), wrapper);
   }
 
@@ -169,7 +169,7 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
   }
 
   @Override
-  public Profile getProfile(@Nonnull final String name) {
+  public Profile getProfile(@Nonnull String name) {
     return getProfile(name, true);
   }
 

@@ -39,7 +39,7 @@ public class BekSorter {
 
   private static BekIntMap createBekIntMap(final List<Integer> result) {
 
-    final int[] reverseMap = new int[result.size()];
+    int[] reverseMap = new int[result.size()];
     for (int i = 0; i < result.size(); i++) {
       reverseMap[result.get(i)] = i;
     }

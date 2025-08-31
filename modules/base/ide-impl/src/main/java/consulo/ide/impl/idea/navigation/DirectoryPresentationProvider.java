@@ -42,22 +42,22 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
 
   @Nonnull
   @Override
-  public ItemPresentation getPresentation(final PsiDirectory directory) {
-    final VirtualFile vFile = directory.getVirtualFile();
-    final Project project = directory.getProject();
-    final String locationString = vFile.getPath();
+  public ItemPresentation getPresentation(PsiDirectory directory) {
+    VirtualFile vFile = directory.getVirtualFile();
+    Project project = directory.getProject();
+    String locationString = vFile.getPath();
 
     if (ProjectRootsUtil.isProjectHome(directory)) {
       return new PresentationData(project.getName(), locationString, Application.get().getIcon(), null);
     }
 
     if (ProjectRootsUtil.isModuleContentRoot(directory)) {
-      final Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vFile);
+      Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vFile);
       assert module != null : directory;
       return new PresentationData(module.getName(), locationString, PlatformIconGroup.nodesModule(), null);
     }
 
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     ContentFolderTypeProvider contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(vFile);
     if (contentFolderTypeForFile != null) {
       return new PresentationData(directory.getName(), locationString, contentFolderTypeForFile.getIcon(), null);

@@ -100,7 +100,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
     public void processAddToUi(boolean restoreProportions) {
         if (restoreProportions) {
-            for (final GridCellImpl cell : myPlaceInGrid2Cell.values()) {
+            for (GridCellImpl cell : myPlaceInGrid2Cell.values()) {
                 cell.restoreProportions();
             }
         }
@@ -124,7 +124,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
     }
 
 
-    void add(final Content content) {
+    void add(Content content) {
         GridCellImpl cell = getCellFor(content);
         cell.add(content);
         myContents.add(content);
@@ -132,20 +132,20 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
         Collections.sort(myContents, myContentComparator);
     }
 
-    void remove(final Content content) {
+    void remove(Content content) {
         getCellFor(content).remove(content);
         myContents.remove(content);
         myContent2Cell.remove(content);
     }
 
     public void setToolbarHorizontal(boolean horizontal) {
-        for (final GridCellImpl cell : myPlaceInGrid2Cell.values()) {
+        for (GridCellImpl cell : myPlaceInGrid2Cell.values()) {
             cell.setToolbarHorizontal(horizontal);
         }
     }
 
     @Override
-    public GridCellImpl getCellFor(final Content content) {
+    public GridCellImpl getCellFor(Content content) {
         // check if the content is already in some cell
         GridCellImpl current = myContent2Cell.get(content);
         if (current != null) {
@@ -154,18 +154,18 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
         // view may be shared between several contents with the same ID in different cells
         // (temporary contents like "Dump Stack" or "Console Result")
         View view = getStateFor(content);
-        final GridCellImpl cell = myPlaceInGrid2Cell.get(view.getPlaceInGrid());
+        GridCellImpl cell = myPlaceInGrid2Cell.get(view.getPlaceInGrid());
         assert cell != null : "Unknown place in grid: " + view.getPlaceInGrid().name();
         return cell;
     }
 
-    View getStateFor(final Content content) {
+    View getStateFor(Content content) {
         return myViewContext.getStateFor(content);
     }
 
     public boolean updateGridUI() {
         var isHidden = myViewContext.getLayoutSettings().isTabLabelsHidden();
-        for (final GridCellImpl cell : myPlaceInGrid2Cell.values()) {
+        for (GridCellImpl cell : myPlaceInGrid2Cell.values()) {
             if (isHidden) {
                 cell.setHideTabs(cell.getContentCount() == 1);
             }
@@ -174,7 +174,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
             }
         }
 
-        final Content onlyContent = myContents.get(0);
+        Content onlyContent = myContents.get(0);
 
         return onlyContent.getSearchComponent() != null;
     }
@@ -184,8 +184,8 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
     }
 
     public ActionCallback restoreLastUiState() {
-        final ActionCallback result = new ActionCallback(myPlaceInGrid2Cell.values().size());
-        for (final GridCellImpl cell : myPlaceInGrid2Cell.values()) {
+        ActionCallback result = new ActionCallback(myPlaceInGrid2Cell.values().size());
+        for (GridCellImpl cell : myPlaceInGrid2Cell.values()) {
             cell.restoreLastUiState().notifyWhenDone(result);
         }
 
@@ -193,7 +193,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
     }
 
     public void saveUiState() {
-        for (final GridCellImpl cell : myPlaceInGrid2Cell.values()) {
+        for (GridCellImpl cell : myPlaceInGrid2Cell.values()) {
             cell.saveUiState();
         }
     }
@@ -203,22 +203,22 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
         return getTab();
     }
 
-    public ActionCallback select(final Content content, final boolean requestFocus) {
+    public ActionCallback select(Content content, boolean requestFocus) {
         return getCellFor(content).select(content, requestFocus);
     }
 
-    public void processAlert(final Content content, final boolean activate) {
+    public void processAlert(Content content, boolean activate) {
         GridCellImpl cell = getCellFor(content);
         cell.processAlert(content, activate);
     }
 
     @Nullable
-    public GridCellImpl findCell(final Content content) {
+    public GridCellImpl findCell(Content content) {
         return myContent2Cell.get(content);
     }
 
     public void rebuildTabPopup() {
-        final List<Content> contents = getContents();
+        List<Content> contents = getContents();
         for (Content each : contents) {
             GridCellImpl cell = findCell(each);
             if (cell != null) {
@@ -276,22 +276,22 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
     }
 
-    void saveSplitterProportions(final PlaceInGrid placeInGrid) {
+    void saveSplitterProportions(PlaceInGrid placeInGrid) {
         if (getRootPane() == null) {
             return;
         }
-        final Rectangle bounds = getBounds();
+        Rectangle bounds = getBounds();
         if (bounds.width == 0 && bounds.height == 0) {
             return;
         }
 
-        final GridCellImpl cell = myPlaceInGrid2Cell.get(placeInGrid);
+        GridCellImpl cell = myPlaceInGrid2Cell.get(placeInGrid);
 
         if (!cell.isValidForCalculateProportions()) {
             return;
         }
 
-        final TabImpl tab = (TabImpl) getTab();
+        TabImpl tab = (TabImpl) getTab();
 
         if (tab != null) {
             switch (placeInGrid) {
@@ -322,7 +322,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
             return;
         }
 
-        final TabImpl tab = (TabImpl) getTab();
+        TabImpl tab = (TabImpl) getTab();
         if (tab != null) {
             switch (placeInGrid) {
                 case left:
@@ -342,39 +342,39 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
 
     float getLeftProportion() {
-        final float totalSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();
-        final float componentSize = myTopSplit.getFirstSize();
+        float totalSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();
+        float componentSize = myTopSplit.getFirstSize();
 
         return componentSize / (totalSize - 2.0f * myTopSplit.getDividerWidth());
     }
 
     void setLeftProportion(float proportion) {
-        final int totalSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();
+        int totalSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();
         myTopSplit.setFirstSize((int) (proportion * (float) (totalSize - 2 * myTopSplit.getDividerWidth())));
     }
 
     float getRightProportion() {
-        final float totalSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();
-        final float componentSize = myTopSplit.getLastSize();
+        float totalSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();
+        float componentSize = myTopSplit.getLastSize();
 
         return componentSize / (totalSize - 2.0f * myTopSplit.getDividerWidth());
     }
 
     float getBottomPropertion() {
-        final float totalSize = mySplitter.getOrientation() ? mySplitter.getHeight() : mySplitter.getWidth();
-        final float componentSize =
+        float totalSize = mySplitter.getOrientation() ? mySplitter.getHeight() : mySplitter.getWidth();
+        float componentSize =
             mySplitter.getOrientation() ? mySplitter.getFirstComponent().getHeight() : mySplitter.getFirstComponent().getWidth();
 
         return componentSize / (totalSize - mySplitter.getDividerWidth());
     }
 
     void setRightProportion(float proportion) {
-        final int componentSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();
+        int componentSize = myTopSplit.getOrientation() ? myTopSplit.getHeight() : myTopSplit.getWidth();
         myTopSplit.setLastSize((int) (proportion * (float) (componentSize - 2 * myTopSplit.getDividerWidth())));
     }
 
     public void setToolbarBefore(boolean before) {
-        for (final GridCellImpl cell : myPlaceInGrid2Cell.values()) {
+        for (GridCellImpl cell : myPlaceInGrid2Cell.values()) {
             cell.setToolbarBefore(before);
         }
     }
@@ -384,13 +384,13 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
         return myContents;
     }
 
-    public void minimize(final Content content, final CellTransform.Restore restore) {
+    public void minimize(Content content, CellTransform.Restore restore) {
         myViewContext.getCellTransform().minimize(content, restore::restoreInGrid);
     }
 
     @Override
     @Nullable
-    public Object getData(@Nonnull final Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
         if (ViewContext.CONTEXT_KEY == dataId) {
             return myViewContext;
         }

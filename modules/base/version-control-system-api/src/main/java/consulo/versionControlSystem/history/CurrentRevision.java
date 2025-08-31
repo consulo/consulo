@@ -70,7 +70,7 @@ public class CurrentRevision implements VcsFileRevision {
         return myFile.contentsToByteArray();
       }
     }
-    catch (final IOException e) {
+    catch (IOException e) {
       UIUtil.invokeLaterIfNeeded(() -> Messages.showMessageDialog(
         e.getLocalizedMessage(),
         VcsLocalize.messageTextCouldNotLoadFileContent().get(),

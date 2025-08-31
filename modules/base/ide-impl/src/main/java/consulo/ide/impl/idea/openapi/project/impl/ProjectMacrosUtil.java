@@ -39,20 +39,20 @@ public class ProjectMacrosUtil {
   private ProjectMacrosUtil() {
   }
 
-  public static boolean showMacrosConfigurationDialog(Project project, final Collection<String> undefinedMacros) {
-    final LocalizeValue text = ProjectLocalize.projectLoadUndefinedPathVariablesMessage();
-    final Application application = ApplicationManager.getApplication();
+  public static boolean showMacrosConfigurationDialog(Project project, Collection<String> undefinedMacros) {
+    LocalizeValue text = ProjectLocalize.projectLoadUndefinedPathVariablesMessage();
+    Application application = ApplicationManager.getApplication();
     if (application.isHeadlessEnvironment() || application.isUnitTestMode()) {
       throw new RuntimeException(text + ": " + StringUtil.join(undefinedMacros, ", "));
     }
-    final UndefinedMacrosConfigurable configurable = new UndefinedMacrosConfigurable(text.get(), undefinedMacros);
-    final SingleConfigurableEditor editor = new SingleConfigurableEditor(project, configurable);
+    UndefinedMacrosConfigurable configurable = new UndefinedMacrosConfigurable(text.get(), undefinedMacros);
+    SingleConfigurableEditor editor = new SingleConfigurableEditor(project, configurable);
     editor.show();
     return editor.isOK();
   }
 
-  public static boolean checkNonIgnoredMacros(final Project project, final Set<String> usedMacros) {
-    final PathMacros pathMacros = PathMacros.getInstance();
+  public static boolean checkNonIgnoredMacros(Project project, Set<String> usedMacros) {
+    PathMacros pathMacros = PathMacros.getInstance();
     for (Iterator<String> iterator = usedMacros.iterator(); iterator.hasNext(); ) {
       if (pathMacros.isIgnoredMacroName(iterator.next())) {
         iterator.remove();
@@ -61,15 +61,15 @@ public class ProjectMacrosUtil {
     return checkMacros(project, usedMacros);
   }
 
-  public static boolean checkMacros(final Project project, final Set<String> usedMacros) {
-    final Set<String> defined = getDefinedMacros();
+  public static boolean checkMacros(Project project, Set<String> usedMacros) {
+    Set<String> defined = getDefinedMacros();
     usedMacros.removeAll(defined);
 
     // try to lookup values in System properties
-    final String pathMacroSystemPrefix = "path.macro.";
+    String pathMacroSystemPrefix = "path.macro.";
     for (Iterator it = usedMacros.iterator(); it.hasNext(); ) {
-      final String macro = (String)it.next();
-      final String value = System.getProperty(pathMacroSystemPrefix + macro, null);
+      String macro = (String)it.next();
+      String value = System.getProperty(pathMacroSystemPrefix + macro, null);
       if (value != null) {
         ApplicationManager.getApplication().runWriteAction(() -> PathMacros.getInstance().setMacro(macro, value));
         it.remove();
@@ -81,16 +81,16 @@ public class ProjectMacrosUtil {
     }
 
     // there are undefined macros, need to define them before loading components
-    final boolean[] result = new boolean[1];
+    boolean[] result = new boolean[1];
 
-    final Runnable r = () -> result[0] = showMacrosConfigurationDialog(project, usedMacros);
+    Runnable r = () -> result[0] = showMacrosConfigurationDialog(project, usedMacros);
 
     WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(r, IdeaModalityState.nonModal());
     return result[0];
   }
 
   public static Set<String> getDefinedMacros() {
-    final PathMacros pathMacros = PathMacros.getInstance();
+    PathMacros pathMacros = PathMacros.getInstance();
 
     Set<String> definedMacros = new HashSet<>(pathMacros.getUserMacroNames());
     definedMacros.addAll(pathMacros.getSystemMacroNames());

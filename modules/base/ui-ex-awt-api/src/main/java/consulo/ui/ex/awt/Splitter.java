@@ -133,7 +133,7 @@ public class Splitter extends JPanel implements Splittable {
     setOrientation(myVerticalSplit);
   }
 
-  public void setResizeEnabled(final boolean value) {
+  public void setResizeEnabled(boolean value) {
     myDivider.setResizeEnabled(value);
   }
 
@@ -183,7 +183,7 @@ public class Splitter extends JPanel implements Splittable {
   @Deprecated
   @Override
   public Component add(Component comp) {
-    final int childCount = getComponentCount();
+    int childCount = getComponentCount();
     LOG.assertTrue(childCount >= 1);
     if (childCount > 3) {
       throw new IllegalStateException("" + childCount);
@@ -213,10 +213,10 @@ public class Splitter extends JPanel implements Splittable {
 
   @Override
   public Dimension getMinimumSize() {
-    final int dividerWidth = getDividerWidth();
+    int dividerWidth = getDividerWidth();
     if (myFirstComponent != null && myFirstComponent.isVisible() && mySecondComponent != null && mySecondComponent.isVisible()) {
-      final Dimension firstMinSize = myFirstComponent.getMinimumSize();
-      final Dimension secondMinSize = mySecondComponent.getMinimumSize();
+      Dimension firstMinSize = myFirstComponent.getMinimumSize();
+      Dimension secondMinSize = mySecondComponent.getMinimumSize();
       return isVertical()
              ? new Dimension(Math.max(firstMinSize.width, secondMinSize.width), firstMinSize.height + dividerWidth + secondMinSize.height)
              : new Dimension(firstMinSize.width + dividerWidth + secondMinSize.width, Math.max(firstMinSize.height, secondMinSize.height));
@@ -235,10 +235,10 @@ public class Splitter extends JPanel implements Splittable {
 
   @Override
   public Dimension getPreferredSize() {
-    final int dividerWidth = getDividerWidth();
+    int dividerWidth = getDividerWidth();
     if (myFirstComponent != null && myFirstComponent.isVisible() && mySecondComponent != null && mySecondComponent.isVisible()) {
-      final Dimension firstPrefSize = myFirstComponent.getPreferredSize();
-      final Dimension secondPrefSize = mySecondComponent.getPreferredSize();
+      Dimension firstPrefSize = myFirstComponent.getPreferredSize();
+      Dimension secondPrefSize = mySecondComponent.getPreferredSize();
       return isVertical()
              ? new Dimension(Math.max(firstPrefSize.width, secondPrefSize.width), firstPrefSize.height + dividerWidth + secondPrefSize.height)
              : new Dimension(firstPrefSize.width + dividerWidth + secondPrefSize.width, Math.max(firstPrefSize.height, secondPrefSize.height));
@@ -526,7 +526,7 @@ public class Splitter extends JPanel implements Splittable {
     return mySecondComponent;
   }
 
-  public JComponent getOtherComponent(final Component comp) {
+  public JComponent getOtherComponent(Component comp) {
     if (comp.equals(getFirstComponent())) return getSecondComponent();
     if (comp.equals(getSecondComponent())) return getFirstComponent();
     LOG.error("invalid component");

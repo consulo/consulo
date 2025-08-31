@@ -66,7 +66,7 @@ public class PsiElementRenameHandler implements RenameHandler {
         }
 
         if (project.getApplication().isUnitTestMode()) {
-            final String newName = dataContext.getData(DEFAULT_NAME);
+            String newName = dataContext.getData(DEFAULT_NAME);
             if (newName != null) {
                 rename(element, project, element, editor, newName);
                 return;
@@ -74,7 +74,7 @@ public class PsiElementRenameHandler implements RenameHandler {
         }
 
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
-        final PsiElement nameSuggestionContext =
+        PsiElement nameSuggestionContext =
             InjectedLanguageManager.getInstance(element.getProject()).findElementAtNoCommit(file, editor.getCaretModel().getOffset());
         invoke(element, project, nameSuggestionContext, editor);
     }
@@ -89,7 +89,7 @@ public class PsiElementRenameHandler implements RenameHandler {
         LOG.assertTrue(element != null);
         Editor editor = dataContext.getData(Editor.KEY);
         if (project.getApplication().isUnitTestMode()) {
-            final String newName = dataContext.getData(DEFAULT_NAME);
+            String newName = dataContext.getData(DEFAULT_NAME);
             LOG.assertTrue(newName != null);
             rename(element, project, element, editor, newName);
         }
@@ -108,7 +108,7 @@ public class PsiElementRenameHandler implements RenameHandler {
 
         if (nameSuggestionContext != null && nameSuggestionContext.isPhysical() &&
             (contextFile == null || !ScratchUtil.isScratch(contextFile) && !PsiManager.getInstance(project).isInProject(nameSuggestionContext))) {
-            final String message = "Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?";
+            String message = "Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?";
             if (project.getApplication().isUnitTestMode()) {
                 throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
             }
@@ -164,7 +164,7 @@ public class PsiElementRenameHandler implements RenameHandler {
         }
 
         if (InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element)) {
-            final LocalizeValue message = RefactoringLocalize.errorInInjectedLangPrefixSuffix(UsageViewUtil.getType(element));
+            LocalizeValue message = RefactoringLocalize.errorInInjectedLangPrefixSuffix(UsageViewUtil.getType(element));
             return RefactoringLocalize.cannotPerformRefactoringWithReason(message).get();
         }
 
@@ -177,14 +177,14 @@ public class PsiElementRenameHandler implements RenameHandler {
     }
 
     @RequiredUIAccess
-    public static void rename(PsiElement element, final Project project, PsiElement nameSuggestionContext, Editor editor) {
+    public static void rename(PsiElement element, Project project, PsiElement nameSuggestionContext, Editor editor) {
         rename(element, project, nameSuggestionContext, editor, null);
     }
 
     @RequiredUIAccess
     public static void rename(
         PsiElement element,
-        final Project project,
+        Project project,
         PsiElement nameSuggestionContext,
         Editor editor,
         String defaultName
@@ -233,7 +233,7 @@ public class PsiElementRenameHandler implements RenameHandler {
     }
 
     @Nullable
-    public static PsiElement getElement(final DataContext dataContext) {
+    public static PsiElement getElement(DataContext dataContext) {
         PsiElement[] elementArray = BaseRefactoringAction.getPsiElementArray(dataContext);
 
         if (elementArray.length != 1) {

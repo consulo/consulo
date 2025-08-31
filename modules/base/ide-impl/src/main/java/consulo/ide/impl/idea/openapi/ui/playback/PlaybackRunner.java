@@ -66,7 +66,7 @@ public class PlaybackRunner {
 
   private Disposable myOnStop = Disposable.newDisposable();
 
-  public PlaybackRunner(String script, StatusCallback callback, final boolean useDirectActionCall, boolean stopOnAppDeactivation, boolean useTypingTargets) {
+  public PlaybackRunner(String script, StatusCallback callback, boolean useDirectActionCall, boolean stopOnAppDeactivation, boolean useTypingTargets) {
     myScript = script;
     myCallback = callback;
     myUseDirectActionCall = useDirectActionCall;
@@ -185,7 +185,7 @@ public class PlaybackRunner {
             }
           }
         };
-      final ActionCallback cmdCallback = cmd.execute(context);
+      ActionCallback cmdCallback = cmd.execute(context);
       cmdCallback.doWhenDone(new Runnable() {
         public void run() {
           if (cmd.canGoFurther()) {
@@ -214,9 +214,9 @@ public class PlaybackRunner {
   }
 
   private void includeScript(String scriptText, File scriptDir, ArrayList<PlaybackCommand> commandList, int line) {
-    final StringTokenizer tokens = new StringTokenizer(scriptText, "\n");
+    StringTokenizer tokens = new StringTokenizer(scriptText, "\n");
     while (tokens.hasMoreTokens()) {
-      final String eachLine = tokens.nextToken();
+      String eachLine = tokens.nextToken();
 
       String includeCmd = AbstractCommand.CMD_PREFIX + "include";
       String importCallCmd = AbstractCommand.CMD_PREFIX + "importCall";
@@ -250,7 +250,7 @@ public class PlaybackRunner {
         }
       }
       else {
-        final PlaybackCommand cmd = createCommand(eachLine, line++, scriptDir);
+        PlaybackCommand cmd = createCommand(eachLine, line++, scriptDir);
         commandList.add(cmd);
       }
     }

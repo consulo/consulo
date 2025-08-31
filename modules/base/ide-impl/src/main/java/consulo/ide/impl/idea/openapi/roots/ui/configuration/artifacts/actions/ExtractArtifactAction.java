@@ -56,13 +56,13 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
-        final LayoutTreeSelection selection = treeComponent.getSelection();
+        LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
+        LayoutTreeSelection selection = treeComponent.getSelection();
         final CompositePackagingElement<?> parent = selection.getCommonParentElement();
         if (parent == null) {
             return;
         }
-        final PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
+        PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
         if (parentNode == null) {
             return;
         }
@@ -85,7 +85,7 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
         }
 
         final Project project = myArtifactEditor.getContext().getProject();
-        final ModifiableArtifactModel model = myArtifactEditor.getContext().getOrCreateModifiableArtifactModel();
+        ModifiableArtifactModel model = myArtifactEditor.getContext().getOrCreateModifiableArtifactModel();
         final ModifiableArtifact artifact = model.addArtifact(dialog.getArtifactName(), dialog.getArtifactType());
         treeComponent.editLayout(new Runnable() {
             @Override
@@ -108,7 +108,7 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
 
     @Nullable
     protected IExtractArtifactDialog showDialog(LayoutTreeComponent treeComponent, String initialName) {
-        final ExtractArtifactDialog dialog = new ExtractArtifactDialog(myArtifactEditor.getContext(), treeComponent, initialName);
+        ExtractArtifactDialog dialog = new ExtractArtifactDialog(myArtifactEditor.getContext(), treeComponent, initialName);
         dialog.show();
         if (!dialog.isOK()) {
             return null;

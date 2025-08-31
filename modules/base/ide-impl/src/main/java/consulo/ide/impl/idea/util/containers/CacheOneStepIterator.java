@@ -22,7 +22,7 @@ public class CacheOneStepIterator<T> implements Iterator<T> {
   private final Iterator<T> myProbableIterator;
   private T myPreCalculated;
 
-  public CacheOneStepIterator(final Iterator<T> probableIterator) {
+  public CacheOneStepIterator(Iterator<T> probableIterator) {
     myProbableIterator = probableIterator;
     step();
   }
@@ -42,7 +42,7 @@ public class CacheOneStepIterator<T> implements Iterator<T> {
 
   @Override
   public T next() {
-    final T result = myPreCalculated;
+    T result = myPreCalculated;
     step();
     return result;
   }

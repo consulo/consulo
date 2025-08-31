@@ -21,7 +21,7 @@ import consulo.ui.ex.content.Content;
 import java.util.List;
 
 public interface Grid {
-  GridCell getCellFor(final Content content);
+  GridCell getCellFor(Content content);
 
   List<Content> getContents();
 }

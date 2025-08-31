@@ -54,8 +54,8 @@ public final class PopupNavigationUtil {
     @Nonnull
     public static JBPopup getPsiElementPopup(
         @Nonnull PsiElement[] elements,
-        @Nonnull final PsiElementListCellRenderer<PsiElement> renderer,
-        final String title
+        @Nonnull PsiElementListCellRenderer<PsiElement> renderer,
+        String title
     ) {
         return getPsiElementPopup(elements, renderer, title, element -> {
             Navigatable descriptor = EditSourceUtil.getDescriptor(element);
@@ -69,9 +69,9 @@ public final class PopupNavigationUtil {
     @Nonnull
     public static <T extends PsiElement> JBPopup getPsiElementPopup(
         @Nonnull T[] elements,
-        @Nonnull final PsiElementListCellRenderer<T> renderer,
-        final String title,
-        @Nonnull final PsiElementProcessor<T> processor
+        @Nonnull PsiElementListCellRenderer<T> renderer,
+        String title,
+        @Nonnull PsiElementProcessor<T> processor
     ) {
         return getPsiElementPopup(elements, renderer, title, processor, null);
     }
@@ -79,10 +79,10 @@ public final class PopupNavigationUtil {
     @Nonnull
     public static <T extends PsiElement> JBPopup getPsiElementPopup(
         @Nonnull T[] elements,
-        @Nonnull final PsiElementListCellRenderer<T> renderer,
-        @Nullable final String title,
-        @Nonnull final PsiElementProcessor<T> processor,
-        @Nullable final T initialSelection
+        @Nonnull PsiElementListCellRenderer<T> renderer,
+        @Nullable String title,
+        @Nonnull PsiElementProcessor<T> processor,
+        @Nullable T initialSelection
     ) {
         assert elements.length > 0 : "Attempted to show a navigation popup with zero elements";
         IPopupChooserBuilder<T> builder = JBPopupFactory.getInstance()
@@ -135,7 +135,7 @@ public final class PopupNavigationUtil {
     }
 
     @Nonnull
-    public static JBPopup getRelatedItemsPopup(final List<? extends GotoRelatedItem> items, String title) {
+    public static JBPopup getRelatedItemsPopup(List<? extends GotoRelatedItem> items, String title) {
         return getRelatedItemsPopup(items, title, false);
     }
 
@@ -150,10 +150,10 @@ public final class PopupNavigationUtil {
      * @return
      */
     @Nonnull
-    public static JBPopup getRelatedItemsPopup(final List<? extends GotoRelatedItem> items, String title, boolean showContainingModules) {
+    public static JBPopup getRelatedItemsPopup(List<? extends GotoRelatedItem> items, String title, boolean showContainingModules) {
         Object[] elements = new Object[items.size()];
         //todo[nik] move presentation logic to GotoRelatedItem class
-        final Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<>();
+        Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<>();
         for (int i = 0; i < items.size(); i++) {
             GotoRelatedItem item = items.get(i);
             elements[i] = item.getElement() != null ? item.getElement() : item;

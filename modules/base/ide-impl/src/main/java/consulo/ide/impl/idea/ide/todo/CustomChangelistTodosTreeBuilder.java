@@ -45,7 +45,7 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
   private PsiTodoSearchHelper myPsiTodoSearchHelper;
   private final ChangeListManager myChangeListManager;
 
-  public CustomChangelistTodosTreeBuilder(JTree tree, Project project, final String title, final Collection<? extends TodoItem> todoItems) {
+  public CustomChangelistTodosTreeBuilder(JTree tree, Project project, String title, Collection<? extends TodoItem> todoItems) {
     super(tree, project);
     myProject = project;
     myTitle = title;
@@ -73,29 +73,29 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
       @Nonnull
       @Override
       public PsiFile[] findFilesWithTodoItems() {
-        final List<Change> changes = new ArrayList<>();
-        final List<LocalChangeList> changeLists = myChangeListManager.getChangeLists();
-        final Map<VirtualFile, Change> allChanges = new HashMap<>();
+        List<Change> changes = new ArrayList<>();
+        List<LocalChangeList> changeLists = myChangeListManager.getChangeLists();
+        Map<VirtualFile, Change> allChanges = new HashMap<>();
         for (LocalChangeList changeList : changeLists) {
-          final Collection<Change> currChanges = changeList.getChanges();
+          Collection<Change> currChanges = changeList.getChanges();
           for (Change currChange : currChanges) {
             if (currChange.getAfterRevision() != null && currChange.getAfterRevision().getFile().getVirtualFile() != null) {
               allChanges.put(currChange.getAfterRevision().getFile().getVirtualFile(), currChange);
             }
           }
         }
-        for (final PsiFile next : myIncludedFiles) {
-          final Change change = allChanges.get(next.getVirtualFile());
+        for (PsiFile next : myIncludedFiles) {
+          Change change = allChanges.get(next.getVirtualFile());
           if (change != null) {
             changes.add(change);
           }
         }
         // a hack here with _todo filter
-        final TodoCheckinHandlerWorker worker = new TodoCheckinHandlerWorker(myProject, changes, getTodoTreeStructure().getTodoFilter(), true);
+        TodoCheckinHandlerWorker worker = new TodoCheckinHandlerWorker(myProject, changes, getTodoTreeStructure().getTodoFilter(), true);
         worker.execute();
         buildMap(worker.inOneList());
 
-        final Set<PsiFile> files = myMap.keySet();
+        Set<PsiFile> files = myMap.keySet();
         return files.toArray(PsiFile.EMPTY_ARRAY);
       }
 
@@ -120,12 +120,12 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
       @Nonnull
       @Override
       public TodoItem[] findTodoItems(@Nonnull PsiFile file, int startOffset, int endOffset) {
-        final TodoItem[] todoItems = findTodoItems(file);
+        TodoItem[] todoItems = findTodoItems(file);
         if (todoItems.length == 0) {
           return todoItems;
         }
-        final TextRange textRange = new TextRange(startOffset, endOffset);
-        final List<TodoItem> result = new ArrayList<>();
+        TextRange textRange = new TextRange(startOffset, endOffset);
+        List<TodoItem> result = new ArrayList<>();
         for (TodoItem todoItem : todoItems) {
           if (todoItem.getTextRange().contains(textRange)) {
             result.add(todoItem);
@@ -141,22 +141,22 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
 
       @Override
       public int getTodoItemsCount(@Nonnull PsiFile file, @Nonnull TodoPattern pattern) {
-        final TodoFilter filter = new TodoFilter();
+        TodoFilter filter = new TodoFilter();
         filter.addTodoPattern(pattern);
         return findPatternedTodoItems(file, filter).length;
       }
     };
   }
 
-  private TodoItem[] findPatternedTodoItems(PsiFile file, final TodoFilter todoFilter) {
+  private TodoItem[] findPatternedTodoItems(PsiFile file, TodoFilter todoFilter) {
     if (!myIncludedFiles.contains(file)) return EMPTY_ITEMS;
     if (myDirtyFileSet.contains(file.getVirtualFile())) {
       myMap.remove(file);
-      final Change change = myChangeListManager.getChange(file.getVirtualFile());
+      Change change = myChangeListManager.getChange(file.getVirtualFile());
       if (change != null) {
-        final TodoCheckinHandlerWorker worker = new TodoCheckinHandlerWorker(myProject, Collections.singletonList(change), todoFilter, true);
+        TodoCheckinHandlerWorker worker = new TodoCheckinHandlerWorker(myProject, Collections.singletonList(change), todoFilter, true);
         worker.execute();
-        final Collection<TodoItem> todoItems = worker.inOneList();
+        Collection<TodoItem> todoItems = worker.inOneList();
         if (todoItems != null && !todoItems.isEmpty()) {
           for (TodoItem todoItem : todoItems) {
             myMap.putValue(file, todoItem);
@@ -164,7 +164,7 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
         }
       }
     }
-    final Collection<TodoItem> todoItems = myMap.get(file);
+    Collection<TodoItem> todoItems = myMap.get(file);
     return todoItems.isEmpty() ? EMPTY_ITEMS : todoItems.toArray(new TodoItem[0]);
   }
 

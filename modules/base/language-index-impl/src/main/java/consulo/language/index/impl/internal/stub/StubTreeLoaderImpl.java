@@ -81,8 +81,8 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
   @Override
   @Nullable
-  public ObjectStubTree readOrBuild(Project project, final VirtualFile vFile, @Nullable PsiFile psiFile) {
-    final ObjectStubTree fromIndices = readFromVFile(project, vFile);
+  public ObjectStubTree readOrBuild(Project project, VirtualFile vFile, @Nullable PsiFile psiFile) {
+    ObjectStubTree fromIndices = readFromVFile(project, vFile);
     if (fromIndices != null) {
       return fromIndices;
     }
@@ -91,7 +91,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       byte[] content = vFile.contentsToByteArray();
       vFile.setPreloadedContentHint(content);
       try {
-        final FileContentImpl fc = new FileContentImpl(vFile, content);
+        FileContentImpl fc = new FileContentImpl(vFile, content);
         fc.setProject(project);
         if (psiFile != null && !vFile.getFileType().isBinary()) {
           fc.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, psiFile.getViewProvider().getContents());
@@ -124,12 +124,12 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
   @Override
   @Nullable
-  public ObjectStubTree readFromVFile(Project project, final VirtualFile vFile) {
+  public ObjectStubTree readFromVFile(Project project, VirtualFile vFile) {
     if (DumbService.getInstance(project).isDumb() || NoAccessDuringPsiEvents.isInsideEventProcessing()) {
       return null;
     }
 
-    final int id = SingleEntryFileBasedIndexExtension.getFileKey(vFile);
+    int id = SingleEntryFileBasedIndexExtension.getFileKey(vFile);
     if (id <= 0) {
       return null;
     }
@@ -139,8 +139,8 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     Document document = FileDocumentManager.getInstance().getCachedDocument(vFile);
     boolean saved = document == null || !FileDocumentManager.getInstance().isDocumentUnsaved(document);
 
-    final Map<Integer, SerializedStubTree> datas = FileBasedIndex.getInstance().getFileData(StubUpdatingIndex.INDEX_ID, vFile, project);
-    final int size = datas.size();
+    Map<Integer, SerializedStubTree> datas = FileBasedIndex.getInstance().getFileData(StubUpdatingIndex.INDEX_ID, vFile, project);
+    int size = datas.size();
 
     if (size == 1) {
       SerializedStubTree stubTree = datas.values().iterator().next();
@@ -236,11 +236,11 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     return -1;
   }
 
-  private static ObjectStubTree processError(final VirtualFile vFile, String message, @Nullable Exception e) {
+  private static ObjectStubTree processError(VirtualFile vFile, String message, @Nullable Exception e) {
     LOG.error(message, e);
 
     ApplicationManager.getApplication().invokeLater(() -> {
-      final Document doc = FileDocumentManager.getInstance().getCachedDocument(vFile);
+      Document doc = FileDocumentManager.getInstance().getCachedDocument(vFile);
       if (doc != null) {
         FileDocumentManager.getInstance().saveDocument(doc);
       }
@@ -264,7 +264,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   }
 
   @Override
-  protected boolean hasPsiInManyProjects(@Nonnull final VirtualFile virtualFile) {
+  protected boolean hasPsiInManyProjects(@Nonnull VirtualFile virtualFile) {
     int count = 0;
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       if (PsiManagerEx.getInstanceEx(project).getFileManager().findCachedViewProvider(virtualFile) != null) {

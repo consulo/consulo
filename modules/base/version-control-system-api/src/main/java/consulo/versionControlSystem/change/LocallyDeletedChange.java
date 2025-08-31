@@ -25,7 +25,7 @@ public class LocallyDeletedChange {
   private final String myPresentableUrl;
   private final FilePath myPath;
 
-  public LocallyDeletedChange(@Nonnull final FilePath path) {
+  public LocallyDeletedChange(@Nonnull FilePath path) {
     myPath = path;
     myPresentableUrl = myPath.getPresentableUrl();
   }

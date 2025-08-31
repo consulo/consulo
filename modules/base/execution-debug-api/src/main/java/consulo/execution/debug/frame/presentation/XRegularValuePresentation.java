@@ -35,7 +35,7 @@ public class XRegularValuePresentation extends XValuePresentation {
     this(value, type, DEFAULT_SEPARATOR);
   }
 
-  public XRegularValuePresentation(@Nonnull String value, @Nullable String type, final @Nonnull String separator) {
+  public XRegularValuePresentation(@Nonnull String value, @Nullable String type, @Nonnull String separator) {
     myValue = value;
     myType = type;
     mySeparator = separator;

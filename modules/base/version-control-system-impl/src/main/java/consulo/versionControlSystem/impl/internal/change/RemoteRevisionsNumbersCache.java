@@ -78,7 +78,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   private final VcsConfiguration myVcsConfiguration;
   private final Project myProject;
 
-  RemoteRevisionsNumbersCache(final Project project) {
+  RemoteRevisionsNumbersCache(Project project) {
     myProject = project;
     myLock = new Object();
     myData = new HashMap<>();
@@ -92,16 +92,16 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   public boolean updateStep() {
     mySomethingChanged = false;
     // copy under lock
-    final HashMap<VcsRoot, LazyRefreshingSelfQueue> copyMap;
+    HashMap<VcsRoot, LazyRefreshingSelfQueue> copyMap;
     synchronized (myLock) {
       copyMap = new HashMap<>(myRefreshingQueues);
     }
 
     // filter only items for vcs roots that support background operations
     for (Iterator<Map.Entry<VcsRoot, LazyRefreshingSelfQueue>> iterator = copyMap.entrySet().iterator(); iterator.hasNext();) {
-      final Map.Entry<VcsRoot, LazyRefreshingSelfQueue> entry = iterator.next();
-      final VcsRoot key = entry.getKey();
-      final boolean backgroundOperationsAllowed = key.getVcs().isVcsBackgroundOperationsAllowed(key.getPath());
+      Map.Entry<VcsRoot, LazyRefreshingSelfQueue> entry = iterator.next();
+      VcsRoot key = entry.getKey();
+      boolean backgroundOperationsAllowed = key.getVcs().isVcsBackgroundOperationsAllowed(key.getPath());
       LOG.debug("backgroundOperationsAllowed: " + backgroundOperationsAllowed + " for " + key.getVcs().getName() + ", " + key.getPath().getPath());
       if (! backgroundOperationsAllowed) {
         iterator.remove();
@@ -123,30 +123,30 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       keys = new HashSet<>(myData.keySet());
     }
     // collect new vcs for scheduled files
-    final Map<String, Pair<VirtualFile, AbstractVcs>> vFiles = new HashMap<>();
+    Map<String, Pair<VirtualFile, AbstractVcs>> vFiles = new HashMap<>();
     for (String key : keys) {
-      final VirtualFile vf = myLfs.refreshAndFindFileByIoFile(new File(key));
-      final AbstractVcs newVcs = (vf == null) ? null : myVcsManager.getVcsFor(vf);
+      VirtualFile vf = myLfs.refreshAndFindFileByIoFile(new File(key));
+      AbstractVcs newVcs = (vf == null) ? null : myVcsManager.getVcsFor(vf);
       vFiles.put(key, vf == null ? Pair.create((VirtualFile) null, (AbstractVcs)null) : Pair.create(vf, newVcs));
     }
     synchronized (myLock) {
       keys = new HashSet<>(myData.keySet());
       for (String key : keys) {
-        final Pair<VcsRoot, VcsRevisionNumber> value = myData.get(key);
-        final VcsRoot storedVcsRoot = value.getFirst();
-        final Pair<VirtualFile, AbstractVcs> pair = vFiles.get(key);
+        Pair<VcsRoot, VcsRevisionNumber> value = myData.get(key);
+        VcsRoot storedVcsRoot = value.getFirst();
+        Pair<VirtualFile, AbstractVcs> pair = vFiles.get(key);
         if (pair == null) {
           continue; // already added with new mappings
         }
-        final VirtualFile vf = pair.getFirst();
-        final AbstractVcs newVcs = pair.getSecond();
+        VirtualFile vf = pair.getFirst();
+        AbstractVcs newVcs = pair.getSecond();
 
         if (newVcs == null) {
           myData.remove(key);
           getQueue(storedVcsRoot).forceRemove(key);
         } else {
-          final VirtualFile newRoot = myVcsManager.getVcsRootFor(vf);
-          final VcsRoot newVcsRoot = new VcsRoot(newVcs, newRoot);
+          VirtualFile newRoot = myVcsManager.getVcsRootFor(vf);
+          VcsRoot newVcsRoot = new VcsRoot(newVcs, newRoot);
           if (! storedVcsRoot.equals(newVcsRoot)) {
             switchVcs(storedVcsRoot, newVcsRoot, key);
           }
@@ -155,32 +155,32 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  private void switchVcs(final VcsRoot oldVcsRoot, final VcsRoot newVcsRoot, final String key) {
+  private void switchVcs(VcsRoot oldVcsRoot, VcsRoot newVcsRoot, String key) {
     synchronized (myLock) {
-      final LazyRefreshingSelfQueue<String> oldQueue = getQueue(oldVcsRoot);
-      final LazyRefreshingSelfQueue<String> newQueue = getQueue(newVcsRoot);
+      LazyRefreshingSelfQueue<String> oldQueue = getQueue(oldVcsRoot);
+      LazyRefreshingSelfQueue<String> newQueue = getQueue(newVcsRoot);
       myData.put(key, Pair.create(newVcsRoot, NOT_LOADED));
       oldQueue.forceRemove(key);
       newQueue.addRequest(key);
     }
   }
 
-  public void plus(final Pair<String, AbstractVcs> pair) {
+  public void plus(Pair<String, AbstractVcs> pair) {
     // does not support
     if (pair.getSecond().getDiffProvider() == null) return;
 
-    final String key = pair.getFirst();
-    final AbstractVcs newVcs = pair.getSecond();
+    String key = pair.getFirst();
+    AbstractVcs newVcs = pair.getSecond();
 
-    final VirtualFile root = getRootForPath(key);
+    VirtualFile root = getRootForPath(key);
     if (root == null) return;
 
-    final VcsRoot vcsRoot = new VcsRoot(newVcs, root);
+    VcsRoot vcsRoot = new VcsRoot(newVcs, root);
 
     synchronized (myLock) {
-      final Pair<VcsRoot, VcsRevisionNumber> value = myData.get(key);
+      Pair<VcsRoot, VcsRevisionNumber> value = myData.get(key);
       if (value == null) {
-        final LazyRefreshingSelfQueue<String> queue = getQueue(vcsRoot);
+        LazyRefreshingSelfQueue<String> queue = getQueue(vcsRoot);
         myData.put(key, Pair.create(vcsRoot, NOT_LOADED));
         queue.addRequest(key);
       } else if (! value.getFirst().equals(vcsRoot)) {
@@ -189,14 +189,14 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  public void invalidate(final Collection<String> paths) {
+  public void invalidate(Collection<String> paths) {
     synchronized (myLock) {
       for (String path : paths) {
-        final Pair<VcsRoot, VcsRevisionNumber> pair = myData.remove(path);
+        Pair<VcsRoot, VcsRevisionNumber> pair = myData.remove(path);
         if (pair != null) {
           // vcs [root] seems to not change
-          final VcsRoot vcsRoot = pair.getFirst();
-          final LazyRefreshingSelfQueue<String> queue = getQueue(vcsRoot);
+          VcsRoot vcsRoot = pair.getFirst();
+          LazyRefreshingSelfQueue<String> queue = getQueue(vcsRoot);
           queue.forceRemove(path);
           queue.addRequest(path);
           myData.put(path, Pair.create(vcsRoot, NOT_LOADED));
@@ -206,18 +206,18 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   }
 
   @jakarta.annotation.Nullable
-  private VirtualFile getRootForPath(final String s) {
+  private VirtualFile getRootForPath(String s) {
     return myVcsManager.getVcsRootFor(VcsUtil.getFilePath(s, false));
   }
 
   public void minus(Pair<String, AbstractVcs> pair) {
     // does not support
     if (pair.getSecond().getDiffProvider() == null) return;
-    final VirtualFile root = getRootForPath(pair.getFirst());
+    VirtualFile root = getRootForPath(pair.getFirst());
     if (root == null) return;
 
-    final LazyRefreshingSelfQueue<String> queue;
-    final String key = pair.getFirst();
+    LazyRefreshingSelfQueue<String> queue;
+    String key = pair.getFirst();
     synchronized (myLock) {
       queue = getQueue(new VcsRoot(pair.getSecond(), root));
       myData.remove(key);
@@ -227,7 +227,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
 
   // +-
   @Nonnull
-  private LazyRefreshingSelfQueue<String> getQueue(final VcsRoot vcsRoot) {
+  private LazyRefreshingSelfQueue<String> getQueue(VcsRoot vcsRoot) {
     synchronized (myLock) {
       LazyRefreshingSelfQueue<String> queue = myRefreshingQueues.get(vcsRoot);
       if (queue != null) return queue;
@@ -243,7 +243,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   private class MyUpdater implements Consumer<String> {
     private final VcsRoot myVcsRoot;
 
-    public MyUpdater(final VcsRoot vcsRoot) {
+    public MyUpdater(VcsRoot vcsRoot) {
       myVcsRoot = vcsRoot;
     }
 
@@ -251,18 +251,18 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       LOG.debug("update for: " + s);
       //todo check canceled - check VCS's ready for asynchronous queries
       // get last remote revision for file
-      final VirtualFile vf = myLfs.refreshAndFindFileByIoFile(new File(s));
-      final ItemLatestState state;
-      final DiffProvider diffProvider = myVcsRoot.getVcs().getDiffProvider();
+      VirtualFile vf = myLfs.refreshAndFindFileByIoFile(new File(s));
+      ItemLatestState state;
+      DiffProvider diffProvider = myVcsRoot.getVcs().getDiffProvider();
       if (vf == null) {
         // doesnt matter if directory or not
         state = diffProvider.getLastRevision(VcsUtil.getFilePath(s, false));
       } else {
         state = diffProvider.getLastRevision(vf);
       }
-      final VcsRevisionNumber newNumber = (state == null) || state.isDefaultHead() ? UNKNOWN : state.getNumber();
+      VcsRevisionNumber newNumber = (state == null) || state.isDefaultHead() ? UNKNOWN : state.getNumber();
 
-      final Pair<VcsRoot, VcsRevisionNumber> oldPair;
+      Pair<VcsRoot, VcsRevisionNumber> oldPair;
       // update value in cache
       synchronized (myLock) {
         oldPair = myData.get(s);
@@ -279,22 +279,22 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   private class MyShouldUpdateChecker implements Computable<Boolean> {
     private final VcsRoot myVcsRoot;
 
-    public MyShouldUpdateChecker(final VcsRoot vcsRoot) {
+    public MyShouldUpdateChecker(VcsRoot vcsRoot) {
       myVcsRoot = vcsRoot;
     }
 
     // Check if currently cached vcs root latest revision is less than latest vcs root revision
     // => update should be performed in this case
     public Boolean compute() {
-      final AbstractVcs vcs = myVcsRoot.getVcs();
+      AbstractVcs vcs = myVcsRoot.getVcs();
       // won't be called in parallel for same vcs -> just synchronized map is ok
-      final String vcsName = vcs.getName();
+      String vcsName = vcs.getName();
       LOG.debug("should update for: " + vcsName + " root: " + myVcsRoot.getPath().getPath());
-      final VcsRevisionNumber latestNew = vcs.getDiffProvider().getLatestCommittedRevision(myVcsRoot.getPath());
+      VcsRevisionNumber latestNew = vcs.getDiffProvider().getLatestCommittedRevision(myVcsRoot.getPath());
 
       // TODO: Why vcsName is used as key and not myVcsRoot.getKey()???
       // TODO: This seems to be invalid logic as we get latest revision for vcs root
-      final VcsRevisionNumber latestKnown = myLatestRevisionsMap.get(vcsName);
+      VcsRevisionNumber latestKnown = myLatestRevisionsMap.get(vcsName);
       // not known
       if (latestNew == null) return true;
       if ((latestKnown == null) || (latestNew.compareTo(latestKnown) != 0)) {
@@ -305,14 +305,14 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  private VcsRevisionNumber getNumber(final String path) {
+  private VcsRevisionNumber getNumber(String path) {
     synchronized (myLock) {
-      final Pair<VcsRoot, VcsRevisionNumber> pair = myData.get(path);
+      Pair<VcsRoot, VcsRevisionNumber> pair = myData.get(path);
       return pair == null ? NOT_LOADED : pair.getSecond();
     }
   }
 
-  public boolean isUpToDate(final Change change) {
+  public boolean isUpToDate(Change change) {
     if (change.getBeforeRevision() != null && change.getAfterRevision() != null && (! change.isMoved()) && (! change.isRenamed())) {
       return getRevisionState(change.getBeforeRevision());
     }
@@ -322,12 +322,12 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   /**
    * Returns {@code true} if passed revision is up to date, comparing to latest repository revision.
    */
-  private boolean getRevisionState(final ContentRevision revision) {
+  private boolean getRevisionState(ContentRevision revision) {
     if (revision != null) {
       // TODO: Seems peg revision should also be tracked here.
-      final VcsRevisionNumber local = revision.getRevisionNumber();
-      final String path = revision.getFile().getPath();
-      final VcsRevisionNumber remote = getNumber(path);
+      VcsRevisionNumber local = revision.getRevisionNumber();
+      String path = revision.getFile().getPath();
+      VcsRevisionNumber remote = getNumber(path);
 
       return NOT_LOADED == remote || UNKNOWN == remote || local.compareTo(remote) >= 0;
     }

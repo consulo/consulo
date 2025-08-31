@@ -38,7 +38,7 @@ public abstract class StartedActivated {
   private final MySection myActivate;
   private final Object myLock;
 
-  protected StartedActivated(final Disposable parent) {
+  protected StartedActivated(Disposable parent) {
     myStart = new MySection(() -> start(), () -> shutdown());
     myActivate = new MySection(() -> activate(), () -> deactivate());
     myStart.setDependent(myActivate);
@@ -71,8 +71,8 @@ public abstract class StartedActivated {
 
   protected abstract void deactivate() throws VcsException;
 
-  private void callImpl(final MySection section, final boolean start) throws VcsException {
-    final List<ThrowableRunnable<VcsException>> list = new ArrayList<ThrowableRunnable<VcsException>>(2);
+  private void callImpl(MySection section, boolean start) throws VcsException {
+    List<ThrowableRunnable<VcsException>> list = new ArrayList<ThrowableRunnable<VcsException>>(2);
     synchronized (myLock) {
       if (start) {
         section.start(list);
@@ -111,13 +111,13 @@ public abstract class StartedActivated {
 
     private ThreeState myState;
 
-    public MySection(final ThrowableRunnable<VcsException> start, final ThrowableRunnable<VcsException> stop) {
+    public MySection(ThrowableRunnable<VcsException> start, ThrowableRunnable<VcsException> stop) {
       myStart = start;
       myStop = stop;
       myState = ThreeState.UNSURE;
     }
 
-    public void start(final List<ThrowableRunnable<VcsException>> callList) {
+    public void start(List<ThrowableRunnable<VcsException>> callList) {
       if (myMaster != null) {
         myMaster.start(callList);
       }
@@ -127,7 +127,7 @@ public abstract class StartedActivated {
       }
     }
 
-    public void stop(final List<ThrowableRunnable<VcsException>> callList) {
+    public void stop(List<ThrowableRunnable<VcsException>> callList) {
       if (myDependent != null) {
         myDependent.stop(callList);
       }

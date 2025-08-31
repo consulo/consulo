@@ -84,10 +84,10 @@ public class OnOffButton extends JToggleButton {
 
     @Override
     public Dimension getPreferredSize(JComponent c) {
-      final OnOffButton button = (OnOffButton)c;
+      OnOffButton button = (OnOffButton)c;
       String text = button.getOffText().length() > button.getOnText().length() ? button.getOffText() : button.getOnText();
       text = text.toUpperCase();
-      final FontMetrics fm = c.getFontMetrics(c.getFont());
+      FontMetrics fm = c.getFontMetrics(c.getFont());
       int w = fm.stringWidth(text);
       int h = fm.getHeight();
       h += 2 * 4;
@@ -97,8 +97,8 @@ public class OnOffButton extends JToggleButton {
 
     @Override
     public void paint(Graphics gr, JComponent c) {
-      final OnOffButton button = (OnOffButton)c;
-      final Dimension size = button.getSize();
+      OnOffButton button = (OnOffButton)c;
+      Dimension size = button.getSize();
       int w = size.width - 8;
       int h = size.height - 6;
       if (h % 2 == 1) {

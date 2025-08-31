@@ -80,7 +80,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
 
   @Nullable
   @Override
-  public IdeScriptEngine getEngineForLanguage(@Nonnull final String language, @Nullable ClassLoader loader) {
+  public IdeScriptEngine getEngineForLanguage(@Nonnull String language, @Nullable ClassLoader loader) {
     ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
     return ClassLoaderUtil.runWithClassLoader(
       l,
@@ -90,7 +90,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
 
   @Nullable
   @Override
-  public IdeScriptEngine getEngineForFileExtension(@Nonnull final String extension, @Nullable ClassLoader loader) {
+  public IdeScriptEngine getEngineForFileExtension(@Nonnull String extension, @Nullable ClassLoader loader) {
     ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
     return ClassLoaderUtil.runWithClassLoader(
       l,
@@ -201,7 +201,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
     }
 
     @Override
-    public Object eval(@Nonnull final String script) throws IdeScriptException {
+    public Object eval(@Nonnull String script) throws IdeScriptException {
       return ClassLoaderUtil.runWithClassLoader(myLoader, (ThrowableComputable<Object, IdeScriptException>)() -> {
         try {
           return myEngine.eval(script);

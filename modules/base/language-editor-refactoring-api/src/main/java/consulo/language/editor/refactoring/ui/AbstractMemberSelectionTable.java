@@ -115,8 +115,8 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
     return list;
   }
 
-  private boolean isMemberInfoSelected(final M info) {
-    final boolean memberEnabled = myMemberInfoModel.isMemberEnabled(info);
+  private boolean isMemberInfoSelected(M info) {
+    boolean memberEnabled = myMemberInfoModel.isMemberEnabled(info);
     return (memberEnabled && info.isChecked()) || (!memberEnabled && myMemberInfoModel.isCheckedWhenDisabled(info));
   }
 
@@ -156,16 +156,16 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
     MemberInfoChange<T, M> event = new MemberInfoChange<>(changedMembers);
     for (Object element : list) {
       if (element instanceof MemberInfoChangeListener) {
-        @SuppressWarnings("unchecked") final MemberInfoChangeListener<T, M> changeListener = (MemberInfoChangeListener<T, M>)element;
+        @SuppressWarnings("unchecked") MemberInfoChangeListener<T, M> changeListener = (MemberInfoChangeListener<T, M>)element;
         changeListener.memberInfoChanged(event);
       }
     }
   }
 
   @Override
-  public void calcData(final Key key, final DataSink sink) {
+  public void calcData(Key key, DataSink sink) {
     if (key == PsiElement.KEY) {
-      final Collection<M> memberInfos = getSelectedMemberInfos();
+      Collection<M> memberInfos = getSelectedMemberInfos();
       if (memberInfos.size() > 0) {
         sink.put(PsiElement.KEY, memberInfos.iterator().next().getMember());
       }
@@ -269,7 +269,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-      final M memberInfo = myTable.myMemberInfos.get(rowIndex);
+      M memberInfo = myTable.myMemberInfos.get(rowIndex);
       switch (columnIndex) {
         case CHECKED_COLUMN:
           if (myTable.myMemberInfoModel.isMemberEnabled(memberInfo)) {
@@ -315,7 +315,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
 
     @Override
-    public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
       if (columnIndex == CHECKED_COLUMN) {
         myTable.myMemberInfos.get(rowIndex).setChecked((Boolean)aValue);
       }
@@ -345,21 +345,21 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
     protected void applyValue(int[] rows, boolean valueToBeSet) {
       List<M> changedInfo = new ArrayList<>();
       for (int row : rows) {
-        final M memberInfo = myMemberInfos.get(row);
+        M memberInfo = myMemberInfos.get(row);
         memberInfo.setChecked(valueToBeSet);
         changedInfo.add(memberInfo);
       }
       fireMemberInfoChange(changedInfo);
-      final int[] selectedRows = getSelectedRows();
+      int[] selectedRows = getSelectedRows();
       myTableModel.fireTableDataChanged();
-      final ListSelectionModel selectionModel = getSelectionModel();
+      ListSelectionModel selectionModel = getSelectionModel();
       for (int selectedRow : selectedRows) {
         selectionModel.addSelectionInterval(selectedRow, selectedRow);
       }
     }
 
     @Override
-    protected boolean isRowChecked(final int row) {
+    protected boolean isRowChecked(int row) {
       return myMemberInfos.get(row).isChecked();
     }
   }
@@ -373,9 +373,9 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
     @Override
     @RequiredReadAction
-    public void customizeCellRenderer(JTable table, final Object value, boolean isSelected, boolean hasFocus, final int row, final int column) {
-      final int modelColumn = myTable.convertColumnIndexToModel(column);
-      final M memberInfo = myTable.myMemberInfos.get(row);
+    public void customizeCellRenderer(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+      int modelColumn = myTable.convertColumnIndexToModel(column);
+      M memberInfo = myTable.myMemberInfos.get(row);
       setToolTipText(myTable.myMemberInfoModel.getTooltipText(memberInfo));
       switch (modelColumn) {
         case DISPLAY_NAME_COLUMN: {
@@ -391,11 +391,11 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
       }
       setIconOpaque(false);
       setOpaque(false);
-      final boolean cellEditable = myTable.myMemberInfoModel.isMemberEnabled(memberInfo);
+      boolean cellEditable = myTable.myMemberInfoModel.isMemberEnabled(memberInfo);
       setEnabled(cellEditable);
 
       if (value == null) return;
-      final int problem = myTable.myMemberInfoModel.checkForProblems(memberInfo);
+      int problem = myTable.myMemberInfoModel.checkForProblems(memberInfo);
       Color c = null;
       if (problem == MemberInfoModel.ERROR) {
         c = JBColor.RED;

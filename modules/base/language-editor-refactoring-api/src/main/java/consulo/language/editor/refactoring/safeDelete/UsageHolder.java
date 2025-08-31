@@ -43,7 +43,7 @@ class UsageHolder {
 
     for (UsageInfo usageInfo : usageInfos) {
       if (!(usageInfo instanceof SafeDeleteReferenceUsageInfo)) continue;
-      final SafeDeleteReferenceUsageInfo usage = (SafeDeleteReferenceUsageInfo)usageInfo;
+      SafeDeleteReferenceUsageInfo usage = (SafeDeleteReferenceUsageInfo)usageInfo;
       if (usage.getReferencedElement() != element) continue;
 
       if (!usage.isSafeDelete()) {
@@ -63,7 +63,7 @@ class UsageHolder {
 
   @Nonnull
   public String getDescription() {
-    final PsiElement element = myElementPointer.getElement();
+    PsiElement element = myElementPointer.getElement();
     String message = RefactoringLocalize.zeroHas1UsagesThatAreNotSafeToDelete(
       RefactoringUIUtil.getDescription(element, true),
       myUnsafeUsages

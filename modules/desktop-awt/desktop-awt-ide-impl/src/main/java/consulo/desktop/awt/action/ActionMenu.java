@@ -68,12 +68,12 @@ public final class ActionMenu extends JMenu {
 
     private final boolean myEnableIcons;
 
-    public ActionMenu(final DataContext context,
-                      @Nonnull final String place,
-                      final ActionGroup group,
-                      final PresentationFactory presentationFactory,
-                      final boolean enableMnemonics,
-                      final boolean enableIcons) {
+    public ActionMenu(DataContext context,
+                      @Nonnull String place,
+                      ActionGroup group,
+                      PresentationFactory presentationFactory,
+                      boolean enableMnemonics,
+                      boolean enableIcons) {
         myContext = context;
         myPlace = place;
         myGroup = ActionRef.fromAction(group);
@@ -185,7 +185,7 @@ public final class ActionMenu extends JMenu {
     }
 
     @Override
-    public void setDisplayedMnemonicIndex(final int index) throws IllegalArgumentException {
+    public void setDisplayedMnemonicIndex(int index) throws IllegalArgumentException {
         super.setDisplayedMnemonicIndex(isMnemonicEnabled() ? index : -1);
     }
 
@@ -203,8 +203,8 @@ public final class ActionMenu extends JMenu {
 
     private void updateIcon() {
         if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
-            final Presentation presentation = myPresentation;
-            final Image icon = presentation.getIcon();
+            Presentation presentation = myPresentation;
+            Image icon = presentation.getIcon();
             setIcon(TargetAWT.to(icon));
             if (presentation.getDisabledIcon() != null) {
                 setDisabledIcon(TargetAWT.to(presentation.getDisabledIcon()));

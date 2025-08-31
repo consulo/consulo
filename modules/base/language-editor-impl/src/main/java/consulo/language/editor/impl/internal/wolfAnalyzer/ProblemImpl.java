@@ -30,7 +30,7 @@ public class ProblemImpl implements Problem {
   private final HighlightInfoImpl highlightInfo;
   private final boolean isSyntax;
 
-  public ProblemImpl(@Nonnull VirtualFile virtualFile, @Nonnull HighlightInfoImpl highlightInfo, final boolean isSyntax) {
+  public ProblemImpl(@Nonnull VirtualFile virtualFile, @Nonnull HighlightInfoImpl highlightInfo, boolean isSyntax) {
     this.isSyntax = isSyntax;
     this.virtualFile = virtualFile;
     this.highlightInfo = highlightInfo;
@@ -45,11 +45,11 @@ public class ProblemImpl implements Problem {
     return isSyntax;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final ProblemImpl problem = (ProblemImpl)o;
+    ProblemImpl problem = (ProblemImpl)o;
 
     if (isSyntax != problem.isSyntax) return false;
     if (!highlightInfo.equals(problem.highlightInfo)) return false;

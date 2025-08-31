@@ -56,7 +56,7 @@ public class FileUtilRt {
     }
 
     // do not use getName to avoid extra String creation (File.getName() calls substring)
-    final String path = file.getPath();
+    String path = file.getPath();
     return StringUtilRt.endsWithIgnoreCase(path, ".jar") || StringUtilRt.endsWithIgnoreCase(path, ".zip");
   }
 
@@ -99,9 +99,9 @@ public class FileUtilRt {
     static {
       boolean initSuccess = false;
       try {
-        final Class<?> pathClass = Class.forName("java.nio.file.Path");
-        final Class<?> visitorClass = Class.forName("java.nio.file.FileVisitor");
-        final Class<?> filesClass = Class.forName("java.nio.file.Files");
+        Class<?> pathClass = Class.forName("java.nio.file.Path");
+        Class<?> visitorClass = Class.forName("java.nio.file.FileVisitor");
+        Class<?> filesClass = Class.forName("java.nio.file.Files");
         ourNoSuchFileExceptionClass = Class.forName("java.nio.file.NoSuchFileException");
         ourAccessDeniedExceptionClass = Class.forName("java.nio.file.AccessDeniedException");
 
@@ -117,11 +117,11 @@ public class FileUtilRt {
         ourDeletionVisitor = Proxy.newProxyInstance(FileUtilRt.class.getClassLoader(), new Class[]{visitorClass}, new InvocationHandler() {
           public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (args.length == 2) {
-              final Object second = args[1];
+              Object second = args[1];
               if (second instanceof Throwable) {
                 throw (Throwable)second;
               }
-              final String methodName = method.getName();
+              String methodName = method.getName();
               if ("visitFile".equals(methodName) || "postVisitDirectory".equals(methodName)) {
                 performDelete(args[0]);
               }
@@ -150,14 +150,14 @@ public class FileUtilRt {
                   return Boolean.TRUE;
                 }
                 catch (InvocationTargetException e) {
-                  final Throwable cause = e.getCause();
+                  Throwable cause = e.getCause();
                   if (!(cause instanceof IOException)) {
                     return Boolean.FALSE;
                   }
                   if (ourAccessDeniedExceptionClass.isInstance(cause)) {
                     // file is read-only: fallback to standard java.io API
                     try {
-                      final File file = (File)ourPathToFileMethod.invoke(fileObject);
+                      File file = (File)ourPathToFileMethod.invoke(fileObject);
                       if (file == null) {
                         return Boolean.FALSE;
                       }
@@ -210,7 +210,7 @@ public class FileUtilRt {
     return toCanonicalPath(path, separatorChar, removeLastSlash, null);
   }
 
-  protected static String toCanonicalPath(String path, final char separatorChar, final boolean removeLastSlash, final SymlinkResolver resolver) {
+  protected static String toCanonicalPath(String path, char separatorChar, boolean removeLastSlash, SymlinkResolver resolver) {
     if (path == null || path.length() == 0) {
       return path;
     }
@@ -407,7 +407,7 @@ public class FileUtilRt {
   }
 
 
-  public static String toSystemDependentName(String fileName, final char separatorChar) {
+  public static String toSystemDependentName(String fileName, char separatorChar) {
     return fileName.replace('/', separatorChar).replace('\\', separatorChar);
   }
 
@@ -474,7 +474,7 @@ public class FileUtilRt {
     return relativePath.toString();
   }
 
-  private static String ensureEnds(String s, final char endsWith) {
+  private static String ensureEnds(String s, char endsWith) {
     return StringUtilRt.endsWithChar(s, endsWith) ? s : s + endsWith;
   }
 
@@ -496,7 +496,7 @@ public class FileUtilRt {
 
 
   public static File createTempDirectory(String prefix, String suffix, boolean deleteOnExit) throws IOException {
-    final File dir = new File(getTempDirectory());
+    File dir = new File(getTempDirectory());
     return createTempDirectory(dir, prefix, suffix, deleteOnExit);
   }
 
@@ -543,7 +543,7 @@ public class FileUtilRt {
 
 
   public static File createTempFile(String prefix, String suffix, boolean deleteOnExit) throws IOException {
-    final File dir = new File(getTempDirectory());
+    File dir = new File(getTempDirectory());
     return createTempFile(dir, prefix, suffix, true, deleteOnExit);
   }
 
@@ -639,7 +639,7 @@ public class FileUtilRt {
 
 
   private static File normalizeFile(File temp) throws IOException {
-    final File canonical = temp.getCanonicalFile();
+    File canonical = temp.getCanonicalFile();
     return SystemInfoRt.isWindows && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
   }
 
@@ -653,9 +653,9 @@ public class FileUtilRt {
 
 
   private static String calcCanonicalTempPath() {
-    final File file = new File(System.getProperty("java.io.tmpdir"));
+    File file = new File(System.getProperty("java.io.tmpdir"));
     try {
-      final String canonical = file.getCanonicalPath();
+      String canonical = file.getCanonicalPath();
       if (!SystemInfoRt.isWindows || !canonical.contains(" ")) {
         return canonical;
       }
@@ -665,7 +665,7 @@ public class FileUtilRt {
     return file.getAbsolutePath();
   }
 
-  static void resetCanonicalTempPathCache(final String tempPath) {
+  static void resetCanonicalTempPathCache(String tempPath) {
     ourCanonicalTempPathCache = tempPath;
   }
 
@@ -717,7 +717,7 @@ public class FileUtilRt {
 
 
   public static String loadFile(File file, String encoding, boolean convertLineSeparators) throws IOException {
-    final String s = new String(loadFileText(file, encoding));
+    String s = new String(loadFileText(file, encoding));
     return convertLineSeparators ? StringUtilRt.convertLineSeparators(s) : s;
   }
 
@@ -1012,9 +1012,9 @@ public class FileUtilRt {
 
   public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
     if (USE_FILE_CHANNELS && inputStream instanceof FileInputStream && outputStream instanceof FileOutputStream) {
-      final FileChannel fromChannel = ((FileInputStream)inputStream).getChannel();
+      FileChannel fromChannel = ((FileInputStream)inputStream).getChannel();
       try {
-        final FileChannel toChannel = ((FileOutputStream)outputStream).getChannel();
+        FileChannel toChannel = ((FileOutputStream)outputStream).getChannel();
         try {
           fromChannel.transferTo(0, Long.MAX_VALUE, toChannel);
         }
@@ -1027,7 +1027,7 @@ public class FileUtilRt {
       }
     }
     else {
-      final byte[] buffer = getThreadLocalBuffer();
+      byte[] buffer = getThreadLocalBuffer();
       while (true) {
         int read = inputStream.read(buffer);
         if (read < 0) break;

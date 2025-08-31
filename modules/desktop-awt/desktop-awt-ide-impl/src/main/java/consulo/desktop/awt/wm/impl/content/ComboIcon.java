@@ -27,7 +27,7 @@ public abstract class ComboIcon {
         myImage = UIManager.getIcon("Tree.expandedIcon");
     }
 
-    public void paintIcon(final Component c, final Graphics g) {
+    public void paintIcon(Component c, Graphics g) {
         Rectangle bounds = c.getBounds();
 
         // we need it move to center of label text, not label

@@ -45,7 +45,7 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
     public static final String ID = "project.libraries";
 
     @Inject
-    public ProjectLibrariesConfigurable(final Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
+    public ProjectLibrariesConfigurable(Project project, Provider<MasterDetailsStateService> masterDetailsStateService) {
         super(project, masterDetailsStateService);
         myLevel = LibraryTablesRegistrar.PROJECT_LEVEL;
     }

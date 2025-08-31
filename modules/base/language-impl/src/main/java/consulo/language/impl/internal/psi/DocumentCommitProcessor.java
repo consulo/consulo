@@ -27,8 +27,8 @@ import jakarta.annotation.Nonnull;
 public interface DocumentCommitProcessor {
   void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile);
 
-  void commitAsynchronously(@Nonnull final Project project,
-                            @Nonnull final Document document,
+  void commitAsynchronously(@Nonnull Project project,
+                            @Nonnull Document document,
                             @Nonnull Object reason,
                             @Nonnull ModalityState modalityState);
 }

@@ -156,7 +156,7 @@ public class DesktopTempFileServiceImpl implements TempFileService {
 
   @Nonnull
   private static File normalizeFile(@Nonnull File temp) throws IOException {
-    final File canonical = temp.getCanonicalFile();
+    File canonical = temp.getCanonicalFile();
     return Platform.current().os().isWindows() && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
   }
 
@@ -171,9 +171,9 @@ public class DesktopTempFileServiceImpl implements TempFileService {
 
   @Nonnull
   private static Path calcCanonicalTempPath() {
-    final File file = new File(ContainerPathManager.get().getTempPath());
+    File file = new File(ContainerPathManager.get().getTempPath());
     try {
-      final String canonical = file.getCanonicalPath();
+      String canonical = file.getCanonicalPath();
       if (!Platform.current().os().isWindows() || !canonical.contains(" ")) {
         return Path.of(canonical);
       }

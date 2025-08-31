@@ -48,7 +48,7 @@ public class VcsException extends Exception {
     }
 
     @SuppressWarnings("deprecation")
-    public VcsException(Throwable throwable, final boolean isWarning) {
+    public VcsException(Throwable throwable, boolean isWarning) {
         this(getMessage(throwable), throwable);
         this.isWarning = isWarning;
     }
@@ -57,19 +57,19 @@ public class VcsException extends Exception {
         this(throwable, false);
     }
 
-    public VcsException(@Nonnull LocalizeValue message, final Throwable cause) {
+    public VcsException(@Nonnull LocalizeValue message, Throwable cause) {
         super(message.get(), cause);
         initMessage(message);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public VcsException(final String message, final Throwable cause) {
+    public VcsException(String message, Throwable cause) {
         super(message, cause);
         initMessage(message);
     }
 
-    public VcsException(final String message, final boolean isWarning) {
+    public VcsException(String message, boolean isWarning) {
         this(message);
         this.isWarning = isWarning;
     }
@@ -90,7 +90,7 @@ public class VcsException extends Exception {
         myMessages = List.of(message);
     }
 
-    private void initMessage(final String message) {
+    private void initMessage(String message) {
         myMessages = List.of(message == null ? VcsLocalize.exceptionTextUnknownError() : LocalizeValue.of(message));
     }
 

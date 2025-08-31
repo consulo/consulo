@@ -41,7 +41,7 @@ public abstract class MultiColumnListModel extends AbstractTableModel implements
   @Nullable
   @Override
   public Object getValueAt(int row, int column) {
-    final int index = toListIndex(row, column);
+    int index = toListIndex(row, column);
     return index == -1 || index >= myModel.getSize() ? null
                                                      : myModel.getElementAt(index);
   }

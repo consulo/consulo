@@ -70,7 +70,7 @@ public abstract class PathMacroMap {
     }
   }
 
-  public final void substitute(@Nonnull Element e, boolean caseSensitive, final boolean recursively) {
+  public final void substitute(@Nonnull Element e, boolean caseSensitive, boolean recursively) {
     substitute(e, caseSensitive, recursively, null);
   }
 

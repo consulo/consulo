@@ -35,10 +35,10 @@ public abstract class PsiReferenceProvider {
   public static final PsiReferenceProvider[] EMPTY_ARRAY = new PsiReferenceProvider[0];
 
   @Nonnull
-  public abstract PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull final ProcessingContext context);
+  public abstract PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context);
 
-  public boolean acceptsHints(@Nonnull final PsiElement element, @Nonnull PsiReferenceService.Hints hints) {
-    final PsiElement target = hints.target;
+  public boolean acceptsHints(@Nonnull PsiElement element, @Nonnull PsiReferenceService.Hints hints) {
+    PsiElement target = hints.target;
     return target == null || acceptsTarget(target);
   }
 

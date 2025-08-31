@@ -38,13 +38,13 @@ public class FailedTestsNavigator implements OccurenceNavigator {
 
   @Override
   public OccurenceNavigator.OccurenceInfo goNextOccurence() {
-    final FailedTestInfo result = getNextOccurenceInfo();
+    FailedTestInfo result = getNextOccurenceInfo();
     myModel.selectAndNotify(result.getDefect());
     return new OccurenceInfo(TestsUIUtil.getOpenFileDescriptor(result.myDefect, myModel), result.getDefectNumber(),
                              result.getDefectsCount());
   }
 
-  public void setModel(final TestFrameworkRunningModel model) {
+  public void setModel(TestFrameworkRunningModel model) {
     myModel = model;
     Disposer.register(myModel, new Disposable() {
       @Override
@@ -56,7 +56,7 @@ public class FailedTestsNavigator implements OccurenceNavigator {
 
   @Override
   public OccurenceNavigator.OccurenceInfo goPreviousOccurence() {
-    final FailedTestInfo result = getPreviousOccurenceInfo();
+    FailedTestInfo result = getPreviousOccurenceInfo();
     myModel.selectAndNotify(result.getDefect());
     return new OccurenceInfo(TestsUIUtil.getOpenFileDescriptor(result.myDefect, myModel), result.getDefectNumber(),
                              result.getDefectsCount());
@@ -96,18 +96,18 @@ public class FailedTestsNavigator implements OccurenceNavigator {
     public FailedTestInfo execute() {
       myAllTests = new ArrayList<AbstractTestProxy>(myModel.getRoot().getAllTests());
       myDefects = Filter.DEFECTIVE_LEAF.select(myAllTests);
-      final AbstractTestProxy selectedTest = myModel.getTreeView().getSelectedTest();
-      final int selectionIndex = myAllTests.indexOf(selectedTest);
+      AbstractTestProxy selectedTest = myModel.getTreeView().getSelectedTest();
+      int selectionIndex = myAllTests.indexOf(selectedTest);
       if (selectionIndex == -1)
         return this;
-      final AbstractTestProxy defect = findNextDefect(selectionIndex);
+      AbstractTestProxy defect = findNextDefect(selectionIndex);
       if (defect == null)
         return this;
       if (defect != selectedTest) {
         myDefect = defect;
         return this;
       }
-      final int defectIndex = myDefects.indexOf(defect);
+      int defectIndex = myDefects.indexOf(defect);
       if (defectIndex == -1 || defectIndex == getBoundIndex())
         return this;
       myDefect = myDefects.get(nextIndex(defectIndex));
@@ -116,9 +116,9 @@ public class FailedTestsNavigator implements OccurenceNavigator {
 
 
 
-    private AbstractTestProxy findNextDefect(final int startIndex) {
+    private AbstractTestProxy findNextDefect(int startIndex) {
       for (int i = nextIndex(startIndex); 0 <= i && i < myAllTests.size(); i = nextIndex(i)) {
-        final AbstractTestProxy nextDefect = myAllTests.get(i);
+        AbstractTestProxy nextDefect = myAllTests.get(i);
         if (Filter.DEFECTIVE_LEAF.shouldAccept(nextDefect))
           return nextDefect;
       }
@@ -140,7 +140,7 @@ public class FailedTestsNavigator implements OccurenceNavigator {
 
   private class NextFailedTestInfo extends FailedTestInfo {
     @Override
-    protected int nextIndex(final int defectIndex) {
+    protected int nextIndex(int defectIndex) {
       return defectIndex + 1;
     }
 
@@ -152,7 +152,7 @@ public class FailedTestsNavigator implements OccurenceNavigator {
 
   private class PreviousFailedTestInfo extends FailedTestInfo {
     @Override
-    protected int nextIndex(final int defectIndex) {
+    protected int nextIndex(int defectIndex) {
       return defectIndex - 1;
     }
 

@@ -44,7 +44,7 @@ public class FunctionUtil {
   }
 
   @Nonnull
-  public static <A, B> Function<A, B> constant(final B b) {
+  public static <A, B> Function<A, B> constant(B b) {
     return a -> b;
   }
 

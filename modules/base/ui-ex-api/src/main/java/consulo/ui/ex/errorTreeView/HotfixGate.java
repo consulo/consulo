@@ -19,7 +19,7 @@ public class HotfixGate {
   private final String myGroupName;
   private final MutableErrorTreeView myView;
 
-  public HotfixGate(final String groupName, final MutableErrorTreeView tree) {
+  public HotfixGate(String groupName, MutableErrorTreeView tree) {
     myGroupName = groupName;
     myView = tree;
   }

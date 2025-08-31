@@ -70,7 +70,7 @@ public class LoadedModuleDescriptionImpl implements LoadedModuleDescription {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("LoadedModuleDescriptionImpl{");
+    StringBuilder sb = new StringBuilder("LoadedModuleDescriptionImpl{");
     sb.append("myModule=").append(myModule);
     sb.append('}');
     return sb.toString();

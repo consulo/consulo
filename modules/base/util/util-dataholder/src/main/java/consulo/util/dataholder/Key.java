@@ -96,7 +96,7 @@ public class Key<T> {
     }
 
     public T get(@Nullable UserDataHolder holder, T defaultValue) {
-        final T t = get(holder);
+        T t = get(holder);
         return t == null ? defaultValue : t;
     }
 

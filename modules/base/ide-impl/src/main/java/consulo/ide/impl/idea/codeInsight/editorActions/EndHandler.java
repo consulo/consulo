@@ -46,7 +46,7 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
   }
 
   @Override
-  protected void doExecute(@Nonnull final Editor editor, Caret caret, DataContext dataContext) {
+  protected void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
     CodeInsightSettings settings = CodeInsightSettings.getInstance();
     if (!settings.SMART_END_ACTION) {
       if (myOriginalHandler != null) {
@@ -55,15 +55,15 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
       return;
     }
 
-    final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+    Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
     if (project == null) {
       if (myOriginalHandler != null) {
         myOriginalHandler.execute(editor, caret, dataContext);
       }
       return;
     }
-    final Document document = editor.getDocument();
-    final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
+    Document document = editor.getDocument();
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 
     if (file == null) {
       if (myOriginalHandler != null){
@@ -78,15 +78,15 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
       }
     }
 
-    final CaretModel caretModel = editor.getCaretModel();
-    final int caretOffset = caretModel.getOffset();
+    CaretModel caretModel = editor.getCaretModel();
+    int caretOffset = caretModel.getOffset();
     CharSequence chars = editor.getDocument().getCharsSequence();
     int length = editor.getDocument().getTextLength();
 
     if (caretOffset < length) {
-      final int offset1 = CharArrayUtil.shiftBackward(chars, caretOffset - 1, " \t");
+      int offset1 = CharArrayUtil.shiftBackward(chars, caretOffset - 1, " \t");
       if (offset1 < 0 || chars.charAt(offset1) == '\n' || chars.charAt(offset1) == '\r') {
-        final int offset2 = CharArrayUtil.shiftForward(chars, offset1 + 1, " \t");
+        int offset2 = CharArrayUtil.shiftForward(chars, offset1 + 1, " \t");
         boolean isEmptyLine = offset2 >= length || chars.charAt(offset2) == '\n' || chars.charAt(offset2) == '\r';
         if (isEmptyLine) {
 
@@ -95,7 +95,7 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
           boolean stopProcessing = true;
           PsiDocumentManager.getInstance(project).commitAllDocuments();
           CodeStyleManager styleManager = CodeStyleManager.getInstance(project);
-          final String lineIndent = styleManager.getLineIndent(file, caretOffset);
+          String lineIndent = styleManager.getLineIndent(file, caretOffset);
           if (lineIndent != null) {
             int col = calcColumnNumber(lineIndent, editor.getSettings().getTabSize(project));
             int line = caretModel.getVisualPosition().line;
@@ -128,7 +128,7 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
     }
   }
 
-  private static int calcColumnNumber(final String lineIndent, final int tabSize) {
+  private static int calcColumnNumber(String lineIndent, int tabSize) {
     int result = 0;
     for (char c : lineIndent.toCharArray()) {
       if (c == ' ') result++;

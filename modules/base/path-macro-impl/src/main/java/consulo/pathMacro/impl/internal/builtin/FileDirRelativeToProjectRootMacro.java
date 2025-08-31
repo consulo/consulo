@@ -36,8 +36,8 @@ public class FileDirRelativeToProjectRootMacro extends Macro {
   }
 
   @Override
-  public String expand(final DataContext dataContext) {
-    final Project project = dataContext.getData(Project.KEY);
+  public String expand(DataContext dataContext) {
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return null;
     }
@@ -52,7 +52,7 @@ public class FileDirRelativeToProjectRootMacro extends Macro {
       }
     }
 
-    final VirtualFile contentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
+    VirtualFile contentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
     if (contentRoot == null) {
       return null;
     }

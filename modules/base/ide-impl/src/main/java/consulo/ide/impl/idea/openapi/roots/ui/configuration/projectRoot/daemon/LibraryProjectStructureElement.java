@@ -75,11 +75,11 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
 
     LibrariesConfigurator librariesConfigurator = util.getLibrariesModel(project);
 
-    final LibraryEx library = (LibraryEx)librariesConfigurator.getLibraryModel(myLibrary);
+    LibraryEx library = (LibraryEx)librariesConfigurator.getLibraryModel(myLibrary);
     if (library == null || library.isDisposed()) return;
 
     reportInvalidRoots(project, problemsHolder, library, BinariesOrderRootType.getInstance(), "classes", ProjectStructureProblemType.error("library-invalid-classes-path"));
-    final String libraryName = library.getName();
+    String libraryName = library.getName();
     if (libraryName == null || !libraryName.startsWith("Maven: ")) {
       reportInvalidRoots(project, problemsHolder, library, SourcesOrderRootType.getInstance(), "sources", ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
       reportInvalidRoots(project, problemsHolder, library, DocumentationOrderRootType.getInstance(), "javadoc", ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
@@ -90,15 +90,15 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     Project project,
     ProjectStructureProblemsHolder problemsHolder,
     LibraryEx library,
-    final OrderRootType type,
+    OrderRootType type,
     String rootName,
-    final ProjectStructureProblemType problemType
+    ProjectStructureProblemType problemType
   ) {
-    final List<String> invalidUrls = library.getInvalidRootUrls(type);
+    List<String> invalidUrls = library.getInvalidRootUrls(type);
     if (!invalidUrls.isEmpty()) {
-      final String description = createInvalidRootsDescription(invalidUrls, rootName, library.getName());
-      final PlaceInProjectStructure place = createPlace();
-      final LocalizeValue message = ProjectLocalize.projectRootsErrorMessageInvalidRoots(rootName, invalidUrls.size());
+      String description = createInvalidRootsDescription(invalidUrls, rootName, library.getName());
+      PlaceInProjectStructure place = createPlace();
+      LocalizeValue message = ProjectLocalize.projectRootsErrorMessageInvalidRoots(rootName, invalidUrls.size());
       ProjectStructureProblemDescription.ProblemLevel level =
         library.getTable().getTableLevel().equals(LibraryTablesRegistrar.PROJECT_LEVEL)
           ? ProjectStructureProblemDescription.ProblemLevel.PROJECT
@@ -156,9 +156,9 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
 
   @Nonnull
   private Library getSourceOrThis() {
-    final InvocationHandler invocationHandler = Proxy.isProxyClass(myLibrary.getClass()) ? Proxy.getInvocationHandler(myLibrary) : null;
-    final Library realLibrary = invocationHandler instanceof ModuleEditor.ProxyDelegateAccessor ? (Library)((ModuleEditor.ProxyDelegateAccessor)invocationHandler).getDelegate() : myLibrary;
-    final Library source = realLibrary instanceof LibraryImpl ? ((LibraryImpl)realLibrary).getSource() : null;
+    InvocationHandler invocationHandler = Proxy.isProxyClass(myLibrary.getClass()) ? Proxy.getInvocationHandler(myLibrary) : null;
+    Library realLibrary = invocationHandler instanceof ModuleEditor.ProxyDelegateAccessor ? (Library)((ModuleEditor.ProxyDelegateAccessor)invocationHandler).getDelegate() : myLibrary;
+    Library source = realLibrary instanceof LibraryImpl ? ((LibraryImpl)realLibrary).getSource() : null;
     return source != null ? source : myLibrary;
   }
 
@@ -169,14 +169,14 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
 
   @Override
   public boolean shouldShowWarningIfUnused() {
-    final LibraryTable libraryTable = myLibrary.getTable();
+    LibraryTable libraryTable = myLibrary.getTable();
     if (libraryTable == null) return false;
     return LibraryTablesRegistrar.PROJECT_LEVEL.equals(libraryTable.getTableLevel());
   }
 
   @Override
   public ProjectStructureProblemDescription createUnusedElementWarning(@Nonnull Project project) {
-    final List<ConfigurationErrorQuickFix> fixes = Arrays.asList(new AddLibraryToDependenciesFix(project), new RemoveLibraryFix(project));
+    List<ConfigurationErrorQuickFix> fixes = Arrays.asList(new AddLibraryToDependenciesFix(project), new RemoveLibraryFix(project));
     return new ProjectStructureProblemDescription("Library '" + StringUtil.escapeXml(myLibrary.getName()) + "'" + " is not used", null, createPlace(),
                                                   ProjectStructureProblemType.unused("unused-library"), ProjectStructureProblemDescription.ProblemLevel.PROJECT, fixes, false);
   }
@@ -216,10 +216,10 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
 
       LibrariesConfigurator librariesConfigurator = util.getLibrariesModel(myProject);
 
-      final LibraryTable.ModifiableModel libraryTable = librariesConfigurator.getModifiableLibraryTable(myLibrary.getTable());
+      LibraryTable.ModifiableModel libraryTable = librariesConfigurator.getModifiableLibraryTable(myLibrary.getTable());
       if (libraryTable instanceof LibrariesModifiableModel) {
         for (String invalidRoot : myInvalidUrls) {
-          final ExistingLibraryEditor libraryEditor = ((LibrariesModifiableModel)libraryTable).getLibraryEditor(myLibrary);
+          ExistingLibraryEditor libraryEditor = ((LibrariesModifiableModel)libraryTable).getLibraryEditor(myLibrary);
           libraryEditor.removeRoot(invalidRoot, myType);
         }
         // todo context.getDaemonAnalyzer().queueUpdate(LibraryProjectStructureElement.this);
@@ -228,7 +228,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         ProjectLibrariesConfigurable librariesConfigurable = settings.findConfigurable(ProjectLibrariesConfigurable.class);
 
         navigate(myProject).doWhenDone(() -> {
-          final MasterDetailsConfigurable configurable = librariesConfigurable.getSelectedConfigurable();
+          MasterDetailsConfigurable configurable = librariesConfigurable.getSelectedConfigurable();
           if (configurable instanceof LibraryConfigurable) {
             ((LibraryConfigurable)configurable).updateComponent();
           }

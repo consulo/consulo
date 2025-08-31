@@ -60,7 +60,7 @@ abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId 
     return myName;
   }
 
-  void setName(final String name) {
+  void setName(String name) {
     myName = name;
   }
 

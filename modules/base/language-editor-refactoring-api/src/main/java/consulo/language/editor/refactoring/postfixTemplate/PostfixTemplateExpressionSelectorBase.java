@@ -36,7 +36,7 @@ public abstract class PostfixTemplateExpressionSelectorBase implements PostfixTe
     return !getExpressions(context, copyDocument, newOffset).isEmpty();
   }
 
-  protected Predicate<PsiElement> getBorderOffsetFilter(final int offset) {
+  protected Predicate<PsiElement> getBorderOffsetFilter(int offset) {
     return element -> element.getTextRange().getEndOffset() == offset;
   }
 

@@ -74,7 +74,7 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
     }
 
     @RequiredUIAccess
-    default void navigate(@Nonnull final T orderEntry) {
+    default void navigate(@Nonnull T orderEntry) {
         Project project = orderEntry.getOwnerModule().getProject();
         ShowSettingsUtil.getInstance()
             .showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));

@@ -66,7 +66,7 @@ public class PsiEditorUtil {
     Project project = psiFile.getProject();
     if (virtualFile.isInLocalFileSystem() || virtualFile.getFileSystem() instanceof NonPhysicalFileSystem) {
       // Try to find editor for the real file.
-      final FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(virtualFile);
+      FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(virtualFile);
       for (FileEditor editor : editors) {
         if (editor instanceof TextEditor) {
           return ((TextEditor)editor).getEditor();

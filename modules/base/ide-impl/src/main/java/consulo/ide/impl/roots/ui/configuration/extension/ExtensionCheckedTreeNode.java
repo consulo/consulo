@@ -43,8 +43,8 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
     @Override
     public int compare(TreeNode o1, TreeNode o2) {
-      final ModuleExtensionProvider i1 = ((ExtensionCheckedTreeNode)o1).myProvider;
-      final ModuleExtensionProvider i2 = ((ExtensionCheckedTreeNode)o2).myProvider;
+      ModuleExtensionProvider i1 = ((ExtensionCheckedTreeNode)o1).myProvider;
+      ModuleExtensionProvider i2 = ((ExtensionCheckedTreeNode)o2).myProvider;
       return i1.getName().compareIgnoreCase(i2.getName());
     }
   }
@@ -65,7 +65,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     if (moduleExtensionProvider != null) {
       parentId = moduleExtensionProvider.getId();
 
-      final ModifiableRootModel model = state.getRootModel();
+      ModifiableRootModel model = state.getRootModel();
       if (model != null) {
         myExtension = model.getExtensionWithoutCheck(moduleExtensionProvider.getId());
       }
@@ -75,7 +75,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     Vector<TreeNode> child = new Vector<>();
     for (ModuleExtensionProvider ep : Application.get().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList()) {
       if (Comparing.equal(ep.getParentId(), parentId)) {
-        final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myExtensionEditor);
+        ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myExtensionEditor);
         e.setParent(this);
 
         child.add(e);
@@ -117,14 +117,14 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
       return false;
     }
 
-    final ModifiableRootModel rootModel = myState.getRootModel();
+    ModifiableRootModel rootModel = myState.getRootModel();
     if (rootModel == null) {
       return false;
     }
 
-    final ModuleExtensionProvider absoluteParent = findParentWithoutParent(myExtension.getId());
+    ModuleExtensionProvider absoluteParent = findParentWithoutParent(myExtension.getId());
 
-    final ModuleExtension extension = rootModel.getExtension(absoluteParent.getId());
+    ModuleExtension extension = rootModel.getExtension(absoluteParent.getId());
     if (extension != null) {
       return true;
     }
@@ -134,7 +134,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
       if (ep.getParentId() != null) {
         continue;
       }
-      final ModuleExtension tempExtension = rootModel.getExtension(ep.getId());
+      ModuleExtension tempExtension = rootModel.getExtension(ep.getId());
       if (tempExtension != null) {
         return false;
       }

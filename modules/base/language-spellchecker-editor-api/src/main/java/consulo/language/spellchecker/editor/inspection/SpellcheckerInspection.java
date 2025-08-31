@@ -107,7 +107,7 @@ public abstract class SpellcheckerInspection extends LocalInspectionTool {
   @RequiredReadAction
   public SuppressQuickFix[] getBatchSuppressActions(@Nullable PsiElement element) {
     if (element != null) {
-      final Language language = element.getLanguage();
+      Language language = element.getLanguage();
       SpellcheckingStrategy strategy = getSpellcheckingStrategy(element, language);
       if (strategy instanceof SuppressibleSpellcheckingStrategy) {
         return ((SuppressibleSpellcheckingStrategy)strategy).getSuppressActions(element, getShortName());
@@ -119,7 +119,7 @@ public abstract class SpellcheckerInspection extends LocalInspectionTool {
   @Override
   @RequiredReadAction
   public boolean isSuppressedFor(@Nonnull PsiElement element) {
-    final Language language = element.getLanguage();
+    Language language = element.getLanguage();
     SpellcheckingStrategy strategy = getSpellcheckingStrategy(element, language);
     if (strategy instanceof SuppressibleSpellcheckingStrategy) {
       return ((SuppressibleSpellcheckingStrategy)strategy).isSuppressedFor(element, getShortName());

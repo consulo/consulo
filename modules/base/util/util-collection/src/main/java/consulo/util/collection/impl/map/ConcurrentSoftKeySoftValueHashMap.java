@@ -30,7 +30,7 @@ import java.lang.ref.SoftReference;
  * To instantiate use {@link ContainerUtil#createConcurrentSoftKeySoftValueMap(int, float, int, TObjectHashingStrategy)}
  */
 public class ConcurrentSoftKeySoftValueHashMap<K, V> extends ConcurrentWeakKeySoftValueHashMap<K, V> {
-  public ConcurrentSoftKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentSoftKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
@@ -72,8 +72,8 @@ public class ConcurrentSoftKeySoftValueHashMap<K, V> extends ConcurrentWeakKeySo
 
   @Override
   @Nonnull
-  public KeyReference<K, V> createKeyReference(@Nonnull K k, @Nonnull final V v) {
-    final ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
+  public KeyReference<K, V> createKeyReference(@Nonnull K k, @Nonnull V v) {
+    ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
     SoftKey<K, V> keyReference = new SoftKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
     if (valueReference instanceof SoftValue) {
       ((SoftValue)valueReference).myKeyReference = keyReference;

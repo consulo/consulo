@@ -53,7 +53,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     myProject = project;
   }
 
-  public void setEquals(final boolean equals) {
+  public void setEquals(boolean equals) {
     myEquals = equals;
   }
 
@@ -62,9 +62,9 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   }
 
   public void fillFiles(Set<PsiFile> set, boolean recursively) {
-    final PsiManager psiManager = PsiManager.getInstance(myProject);
+    PsiManager psiManager = PsiManager.getInstance(myProject);
     for (VirtualFile vFile : getRegisteredFiles()) {
-      final PsiFile psiFile = psiManager.findFile(vFile);
+      PsiFile psiFile = psiManager.findFile(vFile);
       if (psiFile != null && psiFile.isValid()) {
         set.add(psiFile);
       }
@@ -115,7 +115,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   }
 
   public String getPresentableFilesCount() {
-    final int filesCount = getContainingFiles();
+    int filesCount = getContainingFiles();
     return filesCount > 0 ? " (" + AnalysisScopeBundle.message("package.dependencies.node.items.count", filesCount) + ")" : "";
   }
 
@@ -147,7 +147,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
 
   @Nullable
   private Editor openTextEditor(boolean focus) {
-    final OpenFileDescriptorImpl descriptor = getDescriptor();
+    OpenFileDescriptorImpl descriptor = getDescriptor();
     if (descriptor != null) {
       return FileEditorManager.getInstance(getProject()).openTextEditor(descriptor, focus);
     }
@@ -157,9 +157,9 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   @Override
   public boolean canNavigate() {
     if (getProject() == null) return false;
-    final PsiElement psiElement = getPsiElement();
+    PsiElement psiElement = getPsiElement();
     if (psiElement == null) return false;
-    final VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
+    VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
     return virtualFile != null && virtualFile.isValid();
   }
 
@@ -170,7 +170,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
 
   @Nullable
   private Project getProject() {
-    final PsiElement psiElement = getPsiElement();
+    PsiElement psiElement = getPsiElement();
     if (psiElement == null || psiElement.getContainingFile() == null) {
       return null;
     }
@@ -180,9 +180,9 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   @Nullable
   private OpenFileDescriptorImpl getDescriptor() {
     if (getProject() == null) return null;
-    final PsiElement psiElement = getPsiElement();
+    PsiElement psiElement = getPsiElement();
     if (psiElement == null) return null;
-    final VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
+    VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
     if (virtualFile == null || !virtualFile.isValid()) return null;
     return new OpenFileDescriptorImpl(getProject(), virtualFile, psiElement.getTextOffset());
   }
@@ -222,7 +222,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
 
   public void sortChildren() {
     if (isSorted()) return;
-    final List children = TreeUtil.listChildren(this);
+    List children = TreeUtil.listChildren(this);
     Collections.sort(children, new DependencyNodeComparator());
     removeAllChildren();
     TreeUtil.addChildrenTo(this, children);

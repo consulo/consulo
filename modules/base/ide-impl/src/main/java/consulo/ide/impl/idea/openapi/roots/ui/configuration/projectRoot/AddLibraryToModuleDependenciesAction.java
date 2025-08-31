@@ -43,10 +43,10 @@ public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final ProjectStructureElement element = myConfigurable.getSelectedElement();
+        ProjectStructureElement element = myConfigurable.getSelectedElement();
         boolean visible = false;
         if (element instanceof LibraryProjectStructureElement) {
-            final LibraryEx library = (LibraryEx) ((LibraryProjectStructureElement) element).getLibrary();
+            LibraryEx library = (LibraryEx) ((LibraryProjectStructureElement) element).getLibrary();
             visible = !LibraryEditingUtil.getSuitableModules(myProject, library.getKind(), library).isEmpty();
         }
         e.getPresentation().setVisible(visible);
@@ -55,11 +55,11 @@ public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final LibraryProjectStructureElement element = (LibraryProjectStructureElement) myConfigurable.getSelectedElement();
+        LibraryProjectStructureElement element = (LibraryProjectStructureElement) myConfigurable.getSelectedElement();
         if (element == null) {
             return;
         }
-        final Library library = element.getLibrary();
+        Library library = element.getLibrary();
         LibraryEditingUtil.showDialogAndAddLibraryToDependencies(library, myProject, false);
     }
 }

@@ -36,9 +36,9 @@ public final class NSDefaults {
             if (myPath.isEmpty())
                 return null;
 
-            final Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
+            Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
             try {
-                final ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
+                ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
                 if (defaults.equals(ID.NIL))
                     return null;
 
@@ -48,11 +48,11 @@ public final class NSDefaults {
                 }
 
                 _readPath(defaults);
-                final Node tail = myPath.get(myPath.size() - 1);
+                Node tail = myPath.get(myPath.size() - 1);
                 if (!tail.isValid())
                     return null;
 
-                final ID valObj = Foundation.invoke(tail.cachedNodeObj, "objectForKey:", Foundation.nsString(key));
+                ID valObj = Foundation.invoke(tail.cachedNodeObj, "objectForKey:", Foundation.nsString(key));
                 if (valObj.equals(ID.NIL))
                     return null;
                 return Foundation.toStringViaUTF8(valObj);
@@ -67,9 +67,9 @@ public final class NSDefaults {
             if (myPath.isEmpty())
                 return;
 
-            final Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
+            Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
             try {
-                final ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
+                ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
                 if (defaults.equals(ID.NIL))
                     return;
 
@@ -84,14 +84,14 @@ public final class NSDefaults {
 
                 child.writeStringValue(key, val);
                 while (pos >= 0) {
-                    final Node parent = myPath.get(pos--);
-                    final ID mnode = Foundation.invoke(parent.cachedNodeObj, "mutableCopy");
+                    Node parent = myPath.get(pos--);
+                    ID mnode = Foundation.invoke(parent.cachedNodeObj, "mutableCopy");
                     Foundation.invoke(mnode, "setObject:forKey:", child.cachedNodeObj, Foundation.nsString(child.myNodeName));
                     parent.cachedNodeObj = mnode;
                     child = parent;
                 }
 
-                final String topWriteSelector = child.isDomain() ? "setPersistentDomain:forName:" : "setObject:forKey:";
+                String topWriteSelector = child.isDomain() ? "setPersistentDomain:forName:" : "setObject:forKey:";
                 Foundation.invoke(defaults, topWriteSelector, child.cachedNodeObj, Foundation.nsString(child.myNodeName));
             }
             finally {
@@ -104,16 +104,16 @@ public final class NSDefaults {
             if (myPath.isEmpty())
                 return -1;
 
-            final Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
+            Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
             try {
-                final ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
+                ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
                 if (defaults.equals(ID.NIL))
                     return -1;
 
                 _readPath(defaults);
 
                 for (int pos = 0; pos < myPath.size(); ++pos) {
-                    final Node pn = myPath.get(pos);
+                    Node pn = myPath.get(pos);
                     if (!pn.isValid())
                         return pos - 1;
                 }
@@ -154,7 +154,7 @@ public final class NSDefaults {
                 if (parent == null || parent.equals(ID.NIL))
                     return;
 
-                final ID nodeObj = Foundation.invoke(parent, mySelector, Foundation.nsString(myNodeName));
+                ID nodeObj = Foundation.invoke(parent, mySelector, Foundation.nsString(myNodeName));
                 if (nodeObj.equals(ID.NIL))
                     return;
 
@@ -166,7 +166,7 @@ public final class NSDefaults {
             }
 
             void writeStringValue(@Nonnull String key, String val) {
-                final ID mnode;
+                ID mnode;
                 if (!isValid()) {
                     if (val == null) // nothing to erase
                         return;
@@ -207,31 +207,31 @@ public final class NSDefaults {
     }
 
     public static String readStringVal(String domain, String key) {
-        final Path result = new Path();
+        Path result = new Path();
         result.myPath.add(new Path.Node("persistentDomainForName:", domain));
         return result.readStringVal(key);
     }
 
     public static boolean isDomainExists(String domain) {
-        final Path result = new Path();
+        Path result = new Path();
         result.myPath.add(new Path.Node("persistentDomainForName:", domain));
         return result.lastValidPos() >= 0;
     }
 
     public static void createPersistentDomain(@Nonnull String domainName, @Nullable Map<String, Object> values) {
-        final Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
+        Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
         try {
-            final ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
+            ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
             if (defaults.equals(ID.NIL))
                 return;
-            final ID dict = Foundation.invoke("NSMutableDictionary", "new");
+            ID dict = Foundation.invoke("NSMutableDictionary", "new");
             if (values != null) {
                 for (Map.Entry<String, Object> me : values.entrySet()) {
-                    final Object val = me.getValue();
+                    Object val = me.getValue();
                     if (val instanceof String)
                         Foundation.invoke(dict, "setObject:forKey:", Foundation.nsString((String) val), Foundation.nsString(me.getKey()));
                     else if (val instanceof Map) {
-                        final ID internalDict = Foundation.invoke("NSMutableDictionary", "new");
+                        ID internalDict = Foundation.invoke("NSMutableDictionary", "new");
                         Foundation.invoke(dict, "setObject:forKey:", internalDict, Foundation.nsString(me.getKey()));
                     }
                     else
@@ -246,9 +246,9 @@ public final class NSDefaults {
     }
 
     public static void removePersistentDomain(@Nonnull String domainName) {
-        final Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
+        Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
         try {
-            final ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
+            ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
             if (defaults.equals(ID.NIL))
                 return;
             Foundation.invoke(defaults, "removePersistentDomainForName:", Foundation.nsString(domainName));
@@ -280,7 +280,7 @@ public final class NSDefaults {
 
     public static boolean isShowFnKeysEnabled(String appId) {
         // 1. check global-mode setting
-        final Path p = new Path();
+        Path p = new Path();
         p.myPath.add(new Path.Node("persistentDomainForName:", ourTouchBarDomain));
         String sval = p.readStringVal(ourGlobalKey);
         if (sval != null && sval.equals(ourShowFnValue)) {
@@ -298,11 +298,11 @@ public final class NSDefaults {
         //  PresentationModeFnModes =     {
         //    functionKeys = app;
         //  };
-        final Path p = new Path();
+        Path p = new Path();
         p.myPath.add(new Path.Node("persistentDomainForName:", ourTouchBarDomain));
         p.myPath.add(new Path.Node("objectForKey:", "PresentationModeFnModes"));
 
-        final String sval = p.readStringVal("functionKeys");
+        String sval = p.readStringVal("functionKeys");
         return sval != null && sval.equals("app");
     }
 
@@ -315,7 +315,7 @@ public final class NSDefaults {
 
     public static boolean setShowFnKeysEnabled(String appId, boolean val, boolean performExtraDebugChecks) {
         if (!isDomainExists(ourTouchBarDomain)) {
-            final Map<String, Object> vals = new HashMap<>();
+            Map<String, Object> vals = new HashMap<>();
             vals.put(ourPerAppKey, new HashMap<>());
             createPersistentDomain(ourTouchBarDomain, vals);
             if (!isDomainExists(ourTouchBarDomain)) {
@@ -324,13 +324,13 @@ public final class NSDefaults {
             }
         }
 
-        final Path path = new Path();
+        Path path = new Path();
         path.myPath.add(new Path.Node("persistentDomainForName:", ourTouchBarDomain));
         path.myPath.add(new Path.Node("objectForKey:", ourPerAppKey));
         String sval = path.readStringVal(appId);
-        final boolean settingEnabled = sval != null && sval.equals(ourShowFnValue);
+        boolean settingEnabled = sval != null && sval.equals(ourShowFnValue);
 
-        final String initDesc = "appId='" + appId
+        String initDesc = "appId='" + appId
             + "', value (requested be set) ='" + val
             + "', initial path (tail) value = '" + sval
             + "', path='" + path + "'";
@@ -345,7 +345,7 @@ public final class NSDefaults {
         if (performExtraDebugChecks) {
             // just for embedded debug: make call of Foundation.invoke(myDefaults, "synchronize") - It waits for any pending asynchronous updates to the defaults database and returns; this method is unnecessary and shouldn't be used.
             sval = path.readStringVal(appId, true);
-            final boolean isFNEnabled = sval != null && sval.equals(ourShowFnValue);
+            boolean isFNEnabled = sval != null && sval.equals(ourShowFnValue);
             if (val != isFNEnabled)
                 LOG.error("can't write value '" + val + "' (was written just now, but read '" + sval + "'): " + initDesc);
             else
@@ -365,7 +365,7 @@ public final class NSDefaults {
                 return "can't delete domain: " + ourTouchBarDomain;
         }
 
-        final Map<String, Object> vals = new HashMap<>();
+        Map<String, Object> vals = new HashMap<>();
         vals.put("TestNSDefaultsKey", "TestNSDefaultsValue");
         vals.put("PresentationModePerApp", new HashMap<>());
         createPersistentDomain(ourTouchBarDomain, vals);
@@ -373,7 +373,7 @@ public final class NSDefaults {
         if (!isDomainExists(ourTouchBarDomain))
             return "can't create domain: " + ourTouchBarDomain;
 
-        final boolean enabled = isShowFnKeysEnabled(TEST_APP_ID);
+        boolean enabled = isShowFnKeysEnabled(TEST_APP_ID);
         setShowFnKeysEnabled(TEST_APP_ID, !enabled);
         if (isShowFnKeysEnabled(TEST_APP_ID) == enabled)
             return "can't write " + ourTouchBarDomain + "." + ourPerAppKey + "=" + !enabled;
@@ -411,15 +411,15 @@ public final class NSDefaults {
     // for debug only
     private static List<String> _listAllKeys() {
         List<String> res = new ArrayList<>(100);
-        final Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
+        Foundation.NSAutoreleasePool pool = new Foundation.NSAutoreleasePool();
         try {
-            final ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
-            final ID allKeysDict = Foundation.invoke(defaults, "dictionaryRepresentation");
-            final ID allKeysArr = Foundation.invoke(allKeysDict, "allKeys");
-            final ID count = Foundation.invoke(allKeysArr, "count");
+            ID defaults = Foundation.invoke("NSUserDefaults", "standardUserDefaults");
+            ID allKeysDict = Foundation.invoke(defaults, "dictionaryRepresentation");
+            ID allKeysArr = Foundation.invoke(allKeysDict, "allKeys");
+            ID count = Foundation.invoke(allKeysArr, "count");
             for (int c = 0; c < count.intValue(); ++c) {
-                final ID nsKeyName = Foundation.invoke(allKeysArr, "objectAtIndex:", c);
-                final String keyName = Foundation.toStringViaUTF8(nsKeyName);
+                ID nsKeyName = Foundation.invoke(allKeysArr, "objectAtIndex:", c);
+                String keyName = Foundation.toStringViaUTF8(nsKeyName);
                 //      System.out.println(keyName);
                 res.add(keyName);
             }

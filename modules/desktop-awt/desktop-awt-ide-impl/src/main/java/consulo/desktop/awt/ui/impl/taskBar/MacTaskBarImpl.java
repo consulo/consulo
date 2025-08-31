@@ -85,8 +85,8 @@ public class MacTaskBarImpl extends DefaultJava9TaskBarImpl {
       double xInset = (myAppImage.getWidth() * 0.05);
       double yInset = (myAppImage.getHeight() * 0.15);
 
-      final double width = myAppImage.getWidth() - xInset * 2;
-      final double y = myAppImage.getHeight() - progressHeight - yInset;
+      double width = myAppImage.getWidth() - xInset * 2;
+      double y = myAppImage.getHeight() - progressHeight - yInset;
 
       Area borderArea = new Area(new RoundRectangle2D.Double(xInset - 1, y - 1, width + 2, progressHeight + 2, (progressHeight + 2), (progressHeight + 2)));
 
@@ -102,7 +102,7 @@ public class MacTaskBarImpl extends DefaultJava9TaskBarImpl {
 
       appImg.myG2d.setColor(PROGRESS_BACKGROUND_COLOR);
       appImg.myG2d.fill(backgroundArea);
-      final ColorValue color = isOk ? scheme.getOkColor() : scheme.getErrorColor();
+      ColorValue color = isOk ? scheme.getOkColor() : scheme.getErrorColor();
       appImg.myG2d.setColor(TargetAWT.to(color));
       appImg.myG2d.fill(progressArea);
       appImg.myG2d.setColor(PROGRESS_OUTLINE_COLOR);

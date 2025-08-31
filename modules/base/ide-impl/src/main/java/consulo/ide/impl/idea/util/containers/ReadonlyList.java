@@ -22,7 +22,7 @@ import java.util.List;
  * @author irengrig
  */
 public interface ReadonlyList<T> {
-  T get(final int idx);
+  T get(int idx);
 
   int getSize();
 

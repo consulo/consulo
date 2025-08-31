@@ -48,7 +48,7 @@ public class StopBackgroundProcessesAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
+    DataContext dataContext = e.getDataContext();
     Project project = e.getData(Project.KEY);
     List<StopAction.HandlerItem> handlerItems = getItemsList(getCancellableProcesses(project));
 
@@ -56,7 +56,7 @@ public class StopBackgroundProcessesAction extends DumbAwareAction {
       return;
     }
 
-    final JBList<StopAction.HandlerItem> list = new JBList<>(handlerItems);
+    JBList<StopAction.HandlerItem> list = new JBList<>(handlerItems);
     list.setCellRenderer(new GroupedItemsListRenderer<>(new ListItemDescriptorAdapter<>() {
       @Nullable
       @Override

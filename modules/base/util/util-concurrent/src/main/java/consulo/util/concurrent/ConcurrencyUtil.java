@@ -122,7 +122,7 @@ public class ConcurrencyUtil {
   }
 
   @Nonnull
-  public static ThreadFactory newNamedThreadFactory(@Nonnull final String name, final boolean isDaemon, final int priority) {
+  public static ThreadFactory newNamedThreadFactory(@Nonnull String name, boolean isDaemon, int priority) {
     return r -> {
       Thread thread = new Thread(r, name);
       thread.setDaemon(isDaemon);
@@ -132,7 +132,7 @@ public class ConcurrencyUtil {
   }
 
   @Nonnull
-  public static ThreadFactory newNamedThreadFactory(@Nonnull final String name) {
+  public static ThreadFactory newNamedThreadFactory(@Nonnull String name) {
     return r -> new Thread(r, name);
   }
 
@@ -195,11 +195,11 @@ public class ConcurrencyUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static Runnable underThreadNameRunnable(@Nonnull final String name, @Nonnull final Runnable runnable) {
+  public static Runnable underThreadNameRunnable(@Nonnull String name, @Nonnull Runnable runnable) {
     return () -> runUnderThreadName(name, runnable);
   }
 
-  public static void runUnderThreadName(@Nonnull final String name, @Nonnull final Runnable runnable) {
+  public static void runUnderThreadName(@Nonnull String name, @Nonnull Runnable runnable) {
     Thread currentThread = Thread.currentThread();
     String oldThreadName = currentThread.getName();
     if (name.equals(oldThreadName)) {
@@ -217,8 +217,8 @@ public class ConcurrencyUtil {
   }
 
   @Nonnull
-  public static Runnable once(@Nonnull final Runnable delegate) {
-    final AtomicBoolean done = new AtomicBoolean(false);
+  public static Runnable once(@Nonnull Runnable delegate) {
+    AtomicBoolean done = new AtomicBoolean(false);
     return () -> {
       if (done.compareAndSet(false, true)) {
         delegate.run();

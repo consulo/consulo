@@ -37,16 +37,16 @@ public class StubOutputStream extends DataOutputStream {
     myNameStorage = nameStorage;
   }
 
-  public void writeUTFFast(@Nonnull final String arg) throws IOException {
+  public void writeUTFFast(@Nonnull String arg) throws IOException {
     IOUtil.writeUTFFast(myStringIOBuffer, this, arg);
   }
 
-  public void writeName(@Nullable final String arg) throws IOException {
-    final int nameId = arg != null ? myNameStorage.enumerate(arg) : 0;
+  public void writeName(@Nullable String arg) throws IOException {
+    int nameId = arg != null ? myNameStorage.enumerate(arg) : 0;
     DataInputOutputUtil.writeINT(this, nameId);
   }
 
-  public void writeVarInt(final int value) throws IOException {
+  public void writeVarInt(int value) throws IOException {
     DataInputOutputUtil.writeINT(this, value);
   }
 }

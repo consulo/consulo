@@ -122,7 +122,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         myShouldUpdatePreview = shouldUpdatePreview;
     }
 
-    private synchronized void setSomethingChanged(final boolean b) {
+    private synchronized void setSomethingChanged(boolean b) {
         mySomethingChanged = b;
     }
 
@@ -157,7 +157,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return editor;
     }
 
-    private static void fillEditorSettings(final EditorSettings editorSettings) {
+    private static void fillEditorSettings(EditorSettings editorSettings) {
         editorSettings.setWhitespacesShown(true);
         editorSettings.setLineMarkerAreaShown(false);
         editorSettings.setIndentGuidesShown(false);
@@ -192,7 +192,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
         int currOffs = myEditor.getScrollingModel().getVerticalScrollOffset();
 
-        final Project project = ProjectUIUtil.guessCurrentProject(getPanel());
+        Project project = ProjectUIUtil.guessCurrentProject(getPanel());
         CommandProcessor.getInstance().newCommand()
             .project(ProjectUIUtil.guessCurrentProject(getPanel()))
             .run(() -> replaceText(project));
@@ -212,7 +212,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     protected abstract int getRightMargin();
 
     @RequiredUIAccess
-    private void replaceText(final Project project) {
+    private void replaceText(Project project) {
         Application.get().runWriteAction(() -> {
             try {
                 Document beforeReformat = null;
@@ -300,7 +300,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
             .createFileFromText("a." + getFileExt(), getFileType(), text, LocalTimeCounter.currentTime(), true);
     }
 
-    protected PsiFile doReformat(final Project project, final PsiFile psiFile) {
+    protected PsiFile doReformat(Project project, PsiFile psiFile) {
         CodeStyleManager.getInstance(project).reformat(psiFile);
         return psiFile;
     }
@@ -382,14 +382,14 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return useSameRange ? range : new TextRange(startOffset, endOffset);
     }
 
-    private void updatePreviewHighlighter(final EditorEx editor) {
+    private void updatePreviewHighlighter(EditorEx editor) {
         EditorColorsScheme scheme = editor.getColorsScheme();
         editor.getSettings().setCaretRowShown(false);
         editor.setHighlighter(createHighlighter(scheme));
     }
 
     @Nullable
-    protected abstract EditorHighlighter createHighlighter(final EditorColorsScheme scheme);
+    protected abstract EditorHighlighter createHighlighter(EditorColorsScheme scheme);
 
     @Nonnull
     protected abstract FileType getFileType();
@@ -399,7 +399,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
     public abstract void apply(CodeStyleSettings settings) throws ConfigurationException;
 
-    public final void reset(final CodeStyleSettings settings) {
+    public final void reset(CodeStyleSettings settings) {
         myShouldUpdatePreview = false;
         try {
             resetImpl(settings);
@@ -433,9 +433,9 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         }
     }
 
-    protected abstract void resetImpl(final CodeStyleSettings settings);
+    protected abstract void resetImpl(CodeStyleSettings settings);
 
-    protected static void fillWrappingCombo(final JComboBox wrapCombo) {
+    protected static void fillWrappingCombo(JComboBox wrapCombo) {
         wrapCombo.addItem(ApplicationLocalize.wrappingDoNotWrap().get());
         wrapCombo.addItem(ApplicationLocalize.wrappingWrapIfLong().get());
         wrapCombo.addItem(ApplicationLocalize.wrappingChopDownIfLong().get());
@@ -443,9 +443,9 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     }
 
     @Nonnull
-    public static String readFromFile(final Class resourceContainerClass, final String fileName) {
+    public static String readFromFile(Class resourceContainerClass, String fileName) {
         try {
-            final InputStream stream = resourceContainerClass.getClassLoader().getResourceAsStream("codeStyle/preview/" + fileName);
+            InputStream stream = resourceContainerClass.getClassLoader().getResourceAsStream("codeStyle/preview/" + fileName);
             return FileUtil.loadTextAndClose(stream, true);
         }
         catch (IOException e) {
@@ -453,7 +453,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         }
     }
 
-    protected void installPreviewPanel(final JPanel previewPanel) {
+    protected void installPreviewPanel(JPanel previewPanel) {
         previewPanel.setLayout(new BorderLayout());
         previewPanel.add(getEditor().getComponent(), BorderLayout.CENTER);
         previewPanel.setBorder(new CustomLineBorder(0, 1, 0, 0));

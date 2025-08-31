@@ -30,7 +30,7 @@ public class StacktraceAnalyzerListener extends ClipboardAnalyzeListener<Stacktr
 
   @Override
   protected void handle(@Nonnull Project project, @Nonnull String value, @Nonnull StacktraceAnalyzer stacktraceAnalyzer) {
-    final UnscrambleDialog dialog = new UnscrambleDialog(project, stacktraceAnalyzer);
+    UnscrambleDialog dialog = new UnscrambleDialog(project, stacktraceAnalyzer);
     dialog.createNormalizeTextAction().actionPerformed(null);
     dialog.doOKAction();
   }

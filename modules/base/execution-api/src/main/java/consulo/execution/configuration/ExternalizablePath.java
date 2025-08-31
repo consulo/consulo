@@ -33,15 +33,15 @@ public class ExternalizablePath implements JDOMExternalizable {
   private String myUrl;
 
   @Override
-  public void readExternal(final Element element) throws InvalidDataException {
-    final String value = element.getAttributeValue(VALUE_ATTRIBUTE);
+  public void readExternal(Element element) throws InvalidDataException {
+    String value = element.getAttributeValue(VALUE_ATTRIBUTE);
     myUrl = value != null ? value : "";
-    final String protocol = VirtualFileManager.extractProtocol(myUrl);
+    String protocol = VirtualFileManager.extractProtocol(myUrl);
     if (protocol == null) myUrl = urlValue(myUrl);
   }
 
   @Override
-  public void writeExternal(final Element element) throws WriteExternalException {
+  public void writeExternal(Element element) throws WriteExternalException {
     element.setAttribute(VALUE_ATTRIBUTE, myUrl);
   }
 

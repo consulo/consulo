@@ -54,7 +54,7 @@ public class RunnerMediator {
   /**
    * Sends sequence of two chars(codes 5 and {@code event}) to a process output stream
    */
-  private static void sendCtrlEventThroughStream(@Nonnull final Process process, final char event) {
+  private static void sendCtrlEventThroughStream(@Nonnull Process process, char event) {
     OutputStream os = process.getOutputStream();
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
     PrintWriter pw = new PrintWriter(os);
@@ -70,11 +70,11 @@ public class RunnerMediator {
    * Returns appropriate process handle, which in case of Unix is able to terminate whole process tree by sending sig_kill
    *
    */
-  public ProcessHandler createProcess(@Nonnull final GeneralCommandLine commandLine) throws ExecutionException {
+  public ProcessHandler createProcess(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     return createProcess(commandLine, false);
   }
 
-  public ProcessHandler createProcess(@Nonnull final GeneralCommandLine commandLine, final boolean useSoftKill) throws ExecutionException {
+  public ProcessHandler createProcess(@Nonnull GeneralCommandLine commandLine, boolean useSoftKill) throws ExecutionException {
     if (Platform.current().os().isWindows()) {
       injectRunnerCommand(commandLine);
     }
@@ -88,7 +88,7 @@ public class RunnerMediator {
     if (!platform.os().isWindows()) {
       throw new IllegalStateException("There is no need of runner under unix based OS");
     }
-    final String path = System.getenv(CONSULO_RUNNERW);
+    String path = System.getenv(CONSULO_RUNNERW);
     if (path != null) {
       if (new File(path).exists()) {
         return path;
@@ -104,7 +104,7 @@ public class RunnerMediator {
   }
 
   static boolean injectRunnerCommand(@Nonnull GeneralCommandLine commandLine) {
-    final String path = getRunnerPath();
+    String path = getRunnerPath();
     if (path != null) {
       commandLine.getParametersList().addAt(0, commandLine.getExePath());
       commandLine.setExePath(path);
@@ -117,7 +117,7 @@ public class RunnerMediator {
    * Destroys process tree: in case of windows via imitating ctrl+break, in case of unix via sending sig_kill to every process in tree.
    * @param process to kill with all sub-processes.
    */
-  public static boolean destroyProcess(@Nonnull final Process process) {
+  public static boolean destroyProcess(@Nonnull Process process) {
     return destroyProcess(process, false);
   }
 
@@ -125,7 +125,7 @@ public class RunnerMediator {
    * Destroys process tree: in case of windows via imitating ctrl+c, in case of unix via sending sig_int to every process in tree.
    * @param process to kill with all sub-processes.
    */
-  static boolean destroyProcess(@Nonnull final Process process, final boolean softKill) {
+  static boolean destroyProcess(@Nonnull Process process, boolean softKill) {
     try {
       if (Platform.current().os().isWindows()) {
         sendCtrlEventThroughStream(process, softKill ? C : BRK);
@@ -156,7 +156,7 @@ public class RunnerMediator {
       this(commandLine, false);
     }
 
-    public CustomDestroyProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine, final boolean softKill) throws ExecutionException {
+    public CustomDestroyProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine, boolean softKill) throws ExecutionException {
       super(commandLine);
       mySoftKill = softKill;
     }

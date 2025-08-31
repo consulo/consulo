@@ -64,7 +64,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
 
     @Override
     public boolean isEnabled(Editor editor, DataContext dataContext) {
-        final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+        TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
         return templateState != null && !templateState.isFinished() || myOriginalHandler.isEnabled(editor, dataContext);
     }
 

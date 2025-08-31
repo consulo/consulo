@@ -95,15 +95,15 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     }
 
     @Override
-    public boolean runProcessWithProgressSynchronously(@Nonnull final Task task) {
-        final long start = System.currentTimeMillis();
-        final boolean result = super.runProcessWithProgressSynchronously(task);
+    public boolean runProcessWithProgressSynchronously(@Nonnull Task task) {
+        long start = System.currentTimeMillis();
+        boolean result = super.runProcessWithProgressSynchronously(task);
         if (result) {
-            final long end = System.currentTimeMillis();
-            final Task.NotificationInfo notificationInfo = task.notifyFinished();
+            long end = System.currentTimeMillis();
+            Task.NotificationInfo notificationInfo = task.notifyFinished();
             long time = end - start;
             if (notificationInfo != null && time > 5000) { // show notification only if process took more than 5 secs
-                final IdeFrame frame = WindowManager.getInstance().getIdeFrame((Project) task.getProject());
+                IdeFrame frame = WindowManager.getInstance().getIdeFrame((Project) task.getProject());
                 if (frame != null && !frame.hasFocus()) {
                     systemNotify(notificationInfo);
                 }
@@ -118,9 +118,9 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
 
     @Override
     public void notifyTaskFinished(@Nonnull Task.Backgroundable task, long elapsed) {
-        final Task.NotificationInfo notificationInfo = task.notifyFinished();
+        Task.NotificationInfo notificationInfo = task.notifyFinished();
         if (notificationInfo != null && elapsed > 5000) { // snow notification if process took more than 5 secs
-            final Component window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+            Component window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
             if (window == null || notificationInfo.isShowWhenFocused()) {
                 systemNotify(notificationInfo);
             }

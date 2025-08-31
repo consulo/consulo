@@ -96,9 +96,9 @@ class UpdateFoldRegionsOperation implements Runnable {
   }
 
   private static void applyExpandStatus(@Nonnull List<? extends FoldRegion> newRegions, @Nonnull Map<FoldRegion, Boolean> shouldExpand, @Nonnull Map<FoldingGroup, Boolean> groupExpand) {
-    for (final FoldRegion region : newRegions) {
-      final FoldingGroup group = region.getGroup();
-      final Boolean expanded = group == null ? shouldExpand.get(region) : groupExpand.get(group);
+    for (FoldRegion region : newRegions) {
+      FoldingGroup group = region.getGroup();
+      Boolean expanded = group == null ? shouldExpand.get(region) : groupExpand.get(group);
 
       if (expanded != null) {
         region.setExpanded(expanded.booleanValue());
@@ -154,7 +154,7 @@ class UpdateFoldRegionsOperation implements Runnable {
         shouldExpand.put(region, expandStatus);
       }
       else {
-        final Boolean alreadyExpanded = groupExpand.get(group);
+        Boolean alreadyExpanded = groupExpand.get(group);
         groupExpand.put(group, alreadyExpanded == null ? expandStatus : alreadyExpanded.booleanValue() || expandStatus);
       }
     }
@@ -174,7 +174,7 @@ class UpdateFoldRegionsOperation implements Runnable {
       return !collapsedByDefault;
     }
 
-    final Boolean oldStatus = rangeToExpandStatusMap.get(range);
+    Boolean oldStatus = rangeToExpandStatusMap.get(range);
     return oldStatus == null || oldStatus.booleanValue() || FoldingUtil.caretInsideRange(myEditor, range);
   }
 
@@ -237,7 +237,7 @@ class UpdateFoldRegionsOperation implements Runnable {
       }
     }
 
-    for (final FoldRegion region : toRemove) {
+    for (FoldRegion region : toRemove) {
       foldingModel.removeFoldRegion(region);
       info.removeRegion(region);
     }
@@ -253,7 +253,7 @@ class UpdateFoldRegionsOperation implements Runnable {
     }
     boolean forceKeepRegion = myKeepCollapsedRegions && !region.isExpanded() && !regionOrGroupCanBeRemovedWhenCollapsed(region);
     Boolean storedCollapsedByDefault = region.getUserData(COLLAPSED_BY_DEFAULT);
-    final Collection<FoldingUpdate.RegionInfo> regionInfos;
+    Collection<FoldingUpdate.RegionInfo> regionInfos;
     if (element != null && !(regionInfos = myElementsToFoldMap.get(element)).isEmpty()) {
       FoldingUpdate.RegionInfo[] array = regionInfos.toArray(new FoldingUpdate.RegionInfo[0]);
       for (FoldingUpdate.RegionInfo regionInfo : array) {

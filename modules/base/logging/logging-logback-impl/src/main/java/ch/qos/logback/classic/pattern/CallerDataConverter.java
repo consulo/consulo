@@ -69,10 +69,10 @@ public class CallerDataConverter extends ClassicConverter {
             addError("Failed to parse depth option [" + depthStr + "]", nfe);
         }
 
-        final List<String> optionList = getOptionList();
+        List<String> optionList = getOptionList();
 
         if (optionList != null && optionList.size() > 1) {
-            final int optionListSize = optionList.size();
+            int optionListSize = optionList.size();
             for (int i = 1; i < optionListSize; i++) {
                 String evaluatorStr = optionList.get(i);
                 Context context = getContext();

@@ -19,7 +19,7 @@ package consulo.util.lang;
  * @author Konstantin Bulenkov
  */
 public final class TimeoutUtil {
-  public static void sleep(final long millis) {
+  public static void sleep(long millis) {
     try {
       Thread.sleep(millis);
     }

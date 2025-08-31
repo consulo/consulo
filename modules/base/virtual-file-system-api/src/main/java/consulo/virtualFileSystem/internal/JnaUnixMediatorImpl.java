@@ -129,7 +129,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   }
 
   @Override
-  public String resolveSymLink(@Nonnull final String path) throws IOException {
+  public String resolveSymLink(@Nonnull String path) throws IOException {
     try {
       return new File(path).getCanonicalPath();
     }

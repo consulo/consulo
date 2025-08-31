@@ -117,10 +117,10 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
     return myType.findPsiElement(injectedPsi, rangeInInjected.getStartOffset(), rangeInInjected.getEndOffset());
   }
 
-  private PsiFile getInjectedFileIn(@Nonnull final PsiElement hostContext, @Nonnull final PsiFile hostFile, @Nonnull final TextRange rangeInHostFile) {
-    final PsiDocumentManagerBase docManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(getProject());
-    final PsiFile[] result = {null};
-    final PsiLanguageInjectionHost.InjectedPsiVisitor visitor = (injectedPsi, places) -> {
+  private PsiFile getInjectedFileIn(@Nonnull PsiElement hostContext, @Nonnull PsiFile hostFile, @Nonnull TextRange rangeInHostFile) {
+    PsiDocumentManagerBase docManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(getProject());
+    PsiFile[] result = {null};
+    PsiLanguageInjectionHost.InjectedPsiVisitor visitor = (injectedPsi, places) -> {
       Document document = docManager.getDocument(injectedPsi);
       if (document instanceof DocumentWindow) {
         DocumentWindow window = (DocumentWindow)docManager.getLastCommittedDocument(document);
@@ -173,7 +173,7 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
 
     Segment segment = myInjectedFileRangeInHostFile.getPsiRange();
     if (segment == null) return null;
-    final TextRange rangeInHostFile = TextRange.create(segment);
+    TextRange rangeInHostFile = TextRange.create(segment);
     return getInjectedFileIn(hostContext, hostFile, rangeInHostFile);
   }
 

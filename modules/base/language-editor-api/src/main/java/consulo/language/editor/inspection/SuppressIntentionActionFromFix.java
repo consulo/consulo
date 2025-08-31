@@ -34,7 +34,7 @@ public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
   }
 
   @Nonnull
-  public static SuppressIntentionAction convertBatchToSuppressIntentionAction(@Nonnull final SuppressQuickFix fix) {
+  public static SuppressIntentionAction convertBatchToSuppressIntentionAction(@Nonnull SuppressQuickFix fix) {
     return new SuppressIntentionActionFromFix(fix);
   }
 

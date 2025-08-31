@@ -73,8 +73,8 @@ public class CharArrayUtil {
         return;
       }
       else if (src instanceof CharBuffer) {
-        final CharBuffer buffer = (CharBuffer)src;
-        final int i = buffer.position();
+        CharBuffer buffer = (CharBuffer)src;
+        int i = buffer.position();
         buffer.position(i + srcOffset);
         buffer.get(dst, dstOffset, len);
         buffer.position(i);
@@ -114,7 +114,7 @@ public class CharArrayUtil {
     }
 
     if (seq instanceof CharBuffer) {
-      final CharBuffer buffer = (CharBuffer)seq;
+      CharBuffer buffer = (CharBuffer)seq;
       if (buffer.hasArray() && !buffer.isReadOnly() && buffer.arrayOffset() == 0 && buffer.position() == 0) {
         return buffer.array();
       }
@@ -161,7 +161,7 @@ public class CharArrayUtil {
    * as that that symbol is not contained at the given 'chars';
    * <code>endOffset</code> otherwise
    */
-  public static int shiftForward(@Nonnull CharSequence buffer, final int startOffset, final int endOffset, @Nonnull String chars) {
+  public static int shiftForward(@Nonnull CharSequence buffer, int startOffset, int endOffset, @Nonnull String chars) {
     for (int offset = startOffset, limit = Math.min(endOffset, buffer.length()); offset < limit; offset++) {
       char c = buffer.charAt(offset);
       int i;
@@ -187,7 +187,7 @@ public class CharArrayUtil {
     }
   }
 
-  private static boolean isSuitable(@Nonnull String chars, final char c) {
+  private static boolean isSuitable(@Nonnull String chars, char c) {
     for (int i = 0; i < chars.length(); i++) {
       if (c == chars.charAt(i)) return true;
     }
@@ -284,7 +284,7 @@ public class CharArrayUtil {
   }
 
   public static boolean regionMatches(@Nonnull char[] buffer, int start, int end, @Nonnull CharSequence s) {
-    final int len = s.length();
+    int len = s.length();
     if (start + len > end) return false;
     if (start < 0) return false;
     for (int i = 0; i < len; i++) {
@@ -294,7 +294,7 @@ public class CharArrayUtil {
   }
 
   public static boolean regionMatches(@Nonnull CharSequence buffer, int start, int end, @Nonnull CharSequence s) {
-    final int len = s.length();
+    int len = s.length();
     if (start + len > end) return false;
     if (start < 0) return false;
 
@@ -363,8 +363,8 @@ public class CharArrayUtil {
    * @param toIndex   end index (exclusive)
    * @return index of the given pattern at the given buffer if the match is found; <code>-1</code> otherwise
    */
-  public static int indexOf(@Nonnull CharSequence buffer, @Nonnull CharSequence pattern, int fromIndex, final int toIndex) {
-    final int patternLength = pattern.length();
+  public static int indexOf(@Nonnull CharSequence buffer, @Nonnull CharSequence pattern, int fromIndex, int toIndex) {
+    int patternLength = pattern.length();
     int limit = toIndex - patternLength + 1;
     if (fromIndex < 0) {
       fromIndex = 0;
@@ -390,7 +390,7 @@ public class CharArrayUtil {
    * <code>[from; to)</code> if target symbol is found;
    * <code>-1</code> otherwise
    */
-  public static int indexOf(@Nonnull char[] buffer, final char symbol, int fromIndex, final int toIndex) {
+  public static int indexOf(@Nonnull char[] buffer, char symbol, int fromIndex, int toIndex) {
     if (fromIndex < 0) {
       fromIndex = 0;
     }
@@ -413,7 +413,7 @@ public class CharArrayUtil {
    * <code>[from; to)</code> if target symbol is found;
    * <code>-1</code> otherwise
    */
-  public static int lastIndexOf(@Nonnull char[] buffer, final char symbol, int fromIndex, final int toIndex) {
+  public static int lastIndexOf(@Nonnull char[] buffer, char symbol, int fromIndex, int toIndex) {
     if (fromIndex < 0) {
       fromIndex = 0;
     }
@@ -478,7 +478,7 @@ public class CharArrayUtil {
   public static boolean containsOnlyWhiteSpaces(@Nullable CharSequence chars) {
     if (chars == null) return true;
     for (int i = 0; i < chars.length(); i++) {
-      final char c = chars.charAt(i);
+      char c = chars.charAt(i);
       if (c == ' ' || c == '\t' || c == '\n' || c == '\r') continue;
       return false;
     }
@@ -537,7 +537,7 @@ public class CharArrayUtil {
   public static boolean containLineBreaks(@Nullable CharSequence seq, int fromOffset, int endOffset) {
     if (seq == null) return false;
     for (int i = fromOffset; i < endOffset; i++) {
-      final char c = seq.charAt(i);
+      char c = seq.charAt(i);
       if (c == '\n' || c == '\r') return true;
     }
     return false;

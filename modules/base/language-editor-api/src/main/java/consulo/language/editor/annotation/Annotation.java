@@ -72,7 +72,7 @@ public final class Annotation implements Segment {
     public final TextRange textRange;
     public final HighlightDisplayKey key;
 
-    public QuickFixInfo(@Nonnull IntentionAction fix, @Nonnull TextRange range, @Nullable final HighlightDisplayKey key) {
+    public QuickFixInfo(@Nonnull IntentionAction fix, @Nonnull TextRange range, @Nullable HighlightDisplayKey key) {
       this.key = key;
       quickFix = fix;
       textRange = range;
@@ -96,8 +96,8 @@ public final class Annotation implements Segment {
    * @see AnnotationHolder#createWarningAnnotation
    * @see AnnotationHolder#createInfoAnnotation
    */
-  public Annotation(final int startOffset,
-                    final int endOffset,
+  public Annotation(int startOffset,
+                    int endOffset,
                     @Nonnull HighlightSeverity severity,
                     @Nonnull LocalizeValue message,
                     @Nonnull LocalizeValue tooltip) {
@@ -143,7 +143,7 @@ public final class Annotation implements Segment {
    * @param fix   the quick fix implementation.
    * @param range the text range (relative to the document) where the quick fix is available.
    */
-  public void registerFix(@Nonnull IntentionAction fix, @Nullable TextRange range, @Nullable final HighlightDisplayKey key) {
+  public void registerFix(@Nonnull IntentionAction fix, @Nullable TextRange range, @Nullable HighlightDisplayKey key) {
     if (range == null) {
       range = new TextRange(myStartOffset, myEndOffset);
     }
@@ -157,7 +157,7 @@ public final class Annotation implements Segment {
    * Registers a quickfix which would be available during batch mode only,
    * in particular during consulo.ide.impl.idea.codeInspection.DefaultHighlightVisitorBasedInspection run
    */
-  public <T extends IntentionAction & LocalQuickFix> void registerBatchFix(@Nonnull T fix, @Nullable TextRange range, @Nullable final HighlightDisplayKey key) {
+  public <T extends IntentionAction & LocalQuickFix> void registerBatchFix(@Nonnull T fix, @Nullable TextRange range, @Nullable HighlightDisplayKey key) {
     if (range == null) {
       range = new TextRange(myStartOffset, myEndOffset);
     }
@@ -173,7 +173,7 @@ public final class Annotation implements Segment {
    */
   public <T extends IntentionAction & LocalQuickFix> void registerUniversalFix(@Nonnull T fix,
                                                                                @Nullable TextRange range,
-                                                                               @Nullable final HighlightDisplayKey key) {
+                                                                               @Nullable HighlightDisplayKey key) {
     registerBatchFix(fix, range, key);
     registerFix(fix, range, key);
   }
@@ -287,7 +287,7 @@ public final class Annotation implements Segment {
    *
    * @param enforcedAttributes the text attributes for highlighting,
    */
-  public void setEnforcedTextAttributes(final TextAttributes enforcedAttributes) {
+  public void setEnforcedTextAttributes(TextAttributes enforcedAttributes) {
     myEnforcedAttributes = enforcedAttributes;
   }
 
@@ -342,7 +342,7 @@ public final class Annotation implements Segment {
    *
    * @param highlightType the ID of the problem type.
    */
-  public void setHighlightType(final ProblemHighlightType highlightType) {
+  public void setHighlightType(ProblemHighlightType highlightType) {
     myHighlightType = highlightType;
   }
 
@@ -351,7 +351,7 @@ public final class Annotation implements Segment {
    *
    * @param enforcedAttributes the text attributes key for highlighting,
    */
-  public void setTextAttributes(final TextAttributesKey enforcedAttributes) {
+  public void setTextAttributes(TextAttributesKey enforcedAttributes) {
     myEnforcedAttributesKey = enforcedAttributes;
   }
 
@@ -370,7 +370,7 @@ public final class Annotation implements Segment {
    *
    * @param afterEndOfLine true if the annotation should be shown after the end of line, false otherwise.
    */
-  public void setAfterEndOfLine(final boolean afterEndOfLine) {
+  public void setAfterEndOfLine(boolean afterEndOfLine) {
     myAfterEndOfLine = afterEndOfLine;
   }
 
@@ -390,7 +390,7 @@ public final class Annotation implements Segment {
    *
    * @param isFileLevelAnnotation {@code true} if this particular annotation should be visualized at file level.
    */
-  public void setFileLevelAnnotation(final boolean isFileLevelAnnotation) {
+  public void setFileLevelAnnotation(boolean isFileLevelAnnotation) {
     myIsFileLevelAnnotation = isFileLevelAnnotation;
   }
 
@@ -409,7 +409,7 @@ public final class Annotation implements Segment {
    *
    * @param gutterIconRenderer the gutter icon renderer instance.
    */
-  public void setGutterIconRenderer(@Nullable final GutterIconRenderer gutterIconRenderer) {
+  public void setGutterIconRenderer(@Nullable GutterIconRenderer gutterIconRenderer) {
     myGutterIconRenderer = gutterIconRenderer;
   }
 

@@ -43,7 +43,7 @@ public class CannotUndoReportDialog extends DialogWrapper {
 
     DefaultListModel model = new DefaultListModel();
     for (DocumentReference file : files) {
-      final VirtualFile vFile = file.getFile();
+      VirtualFile vFile = file.getFile();
       if (vFile != null) {
         model.add(0, vFile.getPresentableUrl());
       }

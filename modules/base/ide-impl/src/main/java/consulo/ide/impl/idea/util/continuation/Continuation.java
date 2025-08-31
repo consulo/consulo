@@ -27,30 +27,30 @@ public class Continuation {
     myGeneralRunner = generalRunner;
   }
 
-  public static Continuation createForCurrentProgress(final Project project, final boolean cancellable, final String commonTitle) {
+  public static Continuation createForCurrentProgress(Project project, boolean cancellable, String commonTitle) {
     return new Continuation(new SameProgressRunner(project, cancellable, commonTitle));
   }
 
-  public static Continuation createFragmented(final Project project, final boolean cancellable) {
+  public static Continuation createFragmented(Project project, boolean cancellable) {
     SeparatePiecesRunner generalRunner = new SeparatePiecesRunner(project, cancellable);
     return new Continuation(generalRunner);
   }
 
-  public void run(final TaskDescriptor... tasks) {
+  public void run(TaskDescriptor... tasks) {
     if (tasks.length == 0) return;
     myGeneralRunner.next(tasks);
 
     myGeneralRunner.ping();
   }
 
-  public void run(final List<TaskDescriptor> tasks) {
+  public void run(List<TaskDescriptor> tasks) {
     if (tasks.isEmpty()) return;
     myGeneralRunner.next(tasks);
 
     myGeneralRunner.ping();
   }
 
-  public <T extends Exception> void addExceptionHandler(final Class<T> clazz, final Consumer<T> consumer) {
+  public <T extends Exception> void addExceptionHandler(Class<T> clazz, Consumer<T> consumer) {
     myGeneralRunner.addExceptionHandler(clazz, consumer);
   }
 
@@ -58,8 +58,8 @@ public class Continuation {
     myGeneralRunner.ping();
   }
 
-  public void resumeOnNewIndicator(final Project project, final boolean cancellable, final String commonTitle) {
-    final SameProgressRunner runner = new SameProgressRunner(project, cancellable, commonTitle);
+  public void resumeOnNewIndicator(Project project, boolean cancellable, String commonTitle) {
+    SameProgressRunner runner = new SameProgressRunner(project, cancellable, commonTitle);
     runner.next(myGeneralRunner.myQueue);
     myGeneralRunner = runner;
     resume();

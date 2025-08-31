@@ -51,7 +51,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
 
     @Override
     @Nullable
-    public NewVirtualFile findChild(@Nonnull @NonNls final String name) {
+    public NewVirtualFile findChild(@Nonnull @NonNls String name) {
         return null;
     }
 
@@ -70,20 +70,20 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     @Override
     @Nonnull
     public NewVirtualFileSystem getFileSystem() {
-        final VirtualFileSystemEntry parent = getParent();
+        VirtualFileSystemEntry parent = getParent();
         assert parent != null;
         return parent.getFileSystem();
     }
 
     @Override
     @Nullable
-    public NewVirtualFile refreshAndFindChild(@Nonnull final String name) {
+    public NewVirtualFile refreshAndFindChild(@Nonnull String name) {
         return null;
     }
 
     @Override
     @Nullable
-    public NewVirtualFile findChildIfCached(@Nonnull final String name) {
+    public NewVirtualFile findChildIfCached(@Nonnull String name) {
         return null;
     }
 
@@ -107,7 +107,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     @Override
     @Nonnull
     public InputStream getInputStream() throws IOException {
-        final byte[] preloadedContent = getUserData(ourPreloadedContentKey);
+        byte[] preloadedContent = getUserData(ourPreloadedContentKey);
 
         return VirtualFileUtil.inputStreamSkippingBOM(preloadedContent == null ? ourPersistence.getInputStream(this) : new DataInputStream(new UnsyncByteArrayInputStream(preloadedContent)), this);
     }
@@ -159,7 +159,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
 
     @Override
     @Nonnull
-    public OutputStream getOutputStream(final Object requestor, final long modStamp, final long timeStamp) throws IOException {
+    public OutputStream getOutputStream(Object requestor, long modStamp, long timeStamp) throws IOException {
         return VirtualFileUtil.outputStreamAddingBOM(ourPersistence.getOutputStream(this, requestor, modStamp, timeStamp), this);
     }
 

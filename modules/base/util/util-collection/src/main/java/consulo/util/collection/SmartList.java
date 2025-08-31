@@ -150,18 +150,18 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
   }
 
   @Override
-  public E set(final int index, final E element) {
+  public E set(int index, E element) {
     if (index < 0 || index >= mySize) {
       throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
     }
 
-    final E oldValue;
+    E oldValue;
     if (mySize == 1) {
       oldValue = (E)myElem;
       myElem = element;
     }
     else {
-      final Object[] array = (Object[])myElem;
+      Object[] array = (Object[])myElem;
       oldValue = (E)array[index];
       array[index] = element;
     }
@@ -169,12 +169,12 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
   }
 
   @Override
-  public E remove(final int index) {
+  public E remove(int index) {
     if (index < 0 || index >= mySize) {
       throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
     }
 
-    final E oldValue;
+    E oldValue;
     if (mySize == 1) {
       oldValue = (E)myElem;
       myElem = null;

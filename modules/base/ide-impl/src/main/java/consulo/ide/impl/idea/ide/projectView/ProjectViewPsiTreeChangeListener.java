@@ -78,7 +78,7 @@ public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdap
     childrenChanged(event.getParent(), true);
   }
 
-  protected void childrenChanged(PsiElement parent, final boolean stopProcessingForThisModificationCount) {
+  protected void childrenChanged(PsiElement parent, boolean stopProcessingForThisModificationCount) {
     if (parent instanceof PsiDirectory && isFlattenPackages()) {
       addSubtreeToUpdateByRoot();
       return;
@@ -131,7 +131,7 @@ public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdap
         addSubtreeToUpdateByRoot();
         return;
       }
-      final PsiElement parent = element.getParent();
+      PsiElement parent = element.getParent();
       if (parent == null || !addSubtreeToUpdateByElementFile(parent)) {
         addSubtreeToUpdateByElementFile(element);
       }

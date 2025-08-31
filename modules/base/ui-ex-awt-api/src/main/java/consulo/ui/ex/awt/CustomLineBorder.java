@@ -48,7 +48,7 @@ public class CustomLineBorder implements Border {
 
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
-        final Color oldColor = g.getColor();
+        Color oldColor = g.getColor();
 
         Color color = myColor;
         if (color == null) {

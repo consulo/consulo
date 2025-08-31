@@ -19,11 +19,11 @@ package consulo.web.gwt.client.util;
  * @since 27.03.2012
  */
 public class BitUtil {
-  public static boolean isSet(final byte value, final byte mask) {
+  public static boolean isSet(byte value, byte mask) {
     assertOneBitMask(mask);
     return (value & mask) == mask;
   }
-  public static boolean isSet(final int value, final int mask) {
+  public static boolean isSet(int value, int mask) {
     assertOneBitMask(mask);
     return (value & mask) == mask;
   }
@@ -36,7 +36,7 @@ public class BitUtil {
     assert (mask & (mask - 1)) == 0 : "Mask must have only one bit set, but got: " + Long.toBinaryString(mask);
   }
 
-  public static boolean notSet(final int value, final int mask) {
+  public static boolean notSet(int value, int mask) {
     return (value & mask) != mask;
   }
 

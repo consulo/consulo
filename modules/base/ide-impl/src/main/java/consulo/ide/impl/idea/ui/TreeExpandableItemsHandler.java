@@ -139,16 +139,16 @@ public class TreeExpandableItemsHandler extends AbstractExpandableItemsHandler<I
   }
 
   @Override
-  protected void doFillBackground(final int height, final int width, final Graphics2D g) {
+  protected void doFillBackground(int height, int width, Graphics2D g) {
       super.doFillBackground(height - 1, width, g);
   }
 
   @Override
-  protected void doPaintTooltipImage(final Component rComponent,
-                                     final Rectangle cellBounds,
-                                     final Graphics2D g,
+  protected void doPaintTooltipImage(Component rComponent,
+                                     Rectangle cellBounds,
+                                     Graphics2D g,
                                      Integer key) {
-    final boolean opaque = rComponent.isOpaque();
+    boolean opaque = rComponent.isOpaque();
     if (rComponent instanceof JComponent) {
       ((JComponent)rComponent).setOpaque(true);
     }
@@ -158,7 +158,7 @@ public class TreeExpandableItemsHandler extends AbstractExpandableItemsHandler<I
     } else {
       Color bg = UIUtil.getTreeTextBackground();
       if (myComponent instanceof Tree && ((Tree)myComponent).isFileColorsEnabled()) {
-        final ColorValue color = ((Tree)myComponent).getFileColorForPath(myComponent.getPathForRow(key));
+        ColorValue color = ((Tree)myComponent).getFileColorForPath(myComponent.getPathForRow(key));
         if (color != null) {
           bg = TargetAWT.to(color);
         }

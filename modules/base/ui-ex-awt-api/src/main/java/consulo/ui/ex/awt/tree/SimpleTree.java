@@ -84,11 +84,11 @@ public class SimpleTree extends Tree implements CellEditorListener {
     setModel(aModel);
   }
 
-  protected void configureUiHelper(final TreeUIHelper helper) {
+  protected void configureUiHelper(TreeUIHelper helper) {
     helper.installTreeSpeedSearch(this);
   }
 
-  public boolean accept(AbstractTreeBuilder builder, final Predicate<SimpleNode> visitor) {
+  public boolean accept(AbstractTreeBuilder builder, Predicate<SimpleNode> visitor) {
     return builder.accept(SimpleNode.class, visitor) != null;
   }
 
@@ -111,7 +111,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
       return NULL_NODE;
     }
 
-    final Object userObject = treeNode.getUserObject();
+    Object userObject = treeNode.getUserObject();
     if (userObject instanceof SimpleNode) {
       return (SimpleNode)userObject;
     }
@@ -122,7 +122,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
 
   @Nullable
   public TreePath getPathFor(SimpleNode node) {
-    final TreeNode nodeWithObject = TreeUtil.findNodeWithObject((DefaultMutableTreeNode)getModel().getRoot(), node);
+    TreeNode nodeWithObject = TreeUtil.findNodeWithObject((DefaultMutableTreeNode)getModel().getRoot(), node);
     if (nodeWithObject != null) {
       return TreeUtil.getPathFromRoot(nodeWithObject);
     }
@@ -140,7 +140,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
 
   @Override
   public boolean isSelectionEmpty() {
-    final TreePath selection = super.getSelectionPath();
+    TreePath selection = super.getSelectionPath();
     return selection == null || getNodeFor(selection) == NULL_NODE;
 
   }
@@ -174,12 +174,12 @@ public class SimpleTree extends Tree implements CellEditorListener {
     g.setColor(UIManager.getColor("Tree.line"));
 
     for (int row = 0; row < getRowCount(); row++) {
-      final TreePath path = getPathForRow(row);
+      TreePath path = getPathForRow(row);
       if (!getNodeFor(path).shouldHaveSeparator()) {
         continue;
       }
 
-      final Rectangle bounds = getRowBounds(row);
+      Rectangle bounds = getRowBounds(row);
       int x = (int)bounds.getMaxX();
       int y = (int)(bounds.getY() + bounds.height / 2);
       g.drawLine(x, y, getWidth() - 5, y);
@@ -274,7 +274,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
   }
 
   @Override
-  public void startEditingAtPath(final TreePath path) {
+  public void startEditingAtPath(TreePath path) {
     if (path != null && isVisible(path)) {
 
       if (isEditing() && !stopEditing()) {
@@ -285,7 +285,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
     }
   }
 
-  private void startEditing(final TreePath path) {
+  private void startEditing(TreePath path) {
 
     CellEditor editor = getCellEditor();
     if (editor != null && editor.isCellEditable(null) && isPathEditable(path)) {
@@ -370,7 +370,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
     return getSelectionRows() != null && getSelectionRows().length > 1;
   }
 
-  private void handleDoubleClickOrEnter(final TreePath treePath, final InputEvent e) {
+  private void handleDoubleClickOrEnter(TreePath treePath, InputEvent e) {
     Runnable runnable = () -> getNodeFor(treePath).handleDoubleClickOrEnter(this, e);
     ApplicationManager.getApplication().invokeLater(runnable, Application.get().getModalityStateForComponent(this));
   }
@@ -384,9 +384,9 @@ public class SimpleTree extends Tree implements CellEditorListener {
     return myPopupGroup;
   }
 
-  protected void invokeContextMenu(final MouseEvent e) {
+  protected void invokeContextMenu(MouseEvent e) {
     SwingUtilities.invokeLater(() -> {
-      final ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(myPlace, myPopupGroup);
+      ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(myPlace, myPopupGroup);
       menu.getComponent().show(e.getComponent(), e.getPoint().x, e.getPoint().y);
     });
   }
@@ -418,7 +418,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
       invokePopup(e);
     }
 
-    private void invokePopup(final MouseEvent e) {
+    private void invokePopup(MouseEvent e) {
       if (e.isPopupTrigger() && insideTreeItemsArea(e)) {
 
         selectPathUnderCursorIfNeeded(e);
@@ -429,7 +429,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
       }
     }
 
-    private void selectPathUnderCursorIfNeeded(final MouseEvent e) {
+    private void selectPathUnderCursorIfNeeded(MouseEvent e) {
       TreePath pathForLocation = getClosestPathForLocation(e.getX(), e.getY());
       if (!isSelected(pathForLocation)) {
         setSelectionPath(pathForLocation);
@@ -446,7 +446,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
     }
   }
 
-  public boolean select(AbstractTreeBuilder aBuilder, final Predicate<SimpleNode> visitor, boolean shouldExpand) {
+  public boolean select(AbstractTreeBuilder aBuilder, Predicate<SimpleNode> visitor, boolean shouldExpand) {
     return aBuilder.select(SimpleNode.class, visitor, null, false);
   }
 
@@ -492,15 +492,15 @@ public class SimpleTree extends Tree implements CellEditorListener {
   }
 
   @Override
-  public void processKeyEvent(final KeyEvent e) {
+  public void processKeyEvent(KeyEvent e) {
     super.processKeyEvent(e);
   }
 
   private int getBoxWidth(TreePath path) {
-    final Object root = getModel().getRoot();
+    Object root = getModel().getRoot();
     if (!isRootVisible()) {
       if (path.getPathCount() == 2) {
-        final TreePath parent = path.getParentPath();
+        TreePath parent = path.getParentPath();
         if (parent.getLastPathComponent() == root && !getShowsRootHandles()) {
           return 0;
         }
@@ -556,7 +556,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
   @Deprecated
   public Icon getEmptyHandle() {
     if (myEmptyHandle == null) {
-      final Icon expand = getExpandedHandle();
+      Icon expand = getExpandedHandle();
       myEmptyHandle = expand != null ? EmptyIcon.create(expand) : EmptyIcon.create(0);
     }
     return myEmptyHandle;

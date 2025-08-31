@@ -44,7 +44,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
   private TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
   @RequiredUIAccess
-  public PsiAwareTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProviderImpl provider) {
+  public PsiAwareTextEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, TextEditorProviderImpl provider) {
     super(project, file, provider);
   }
 
@@ -71,7 +71,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
 
   @Nonnull
   @Override
-  protected TextEditorComponent createEditorComponent(final Project project, final VirtualFile file) {
+  protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
     return new PsiAwareTextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
   }
 
@@ -110,9 +110,9 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     }
 
     @Override
-    public Object getData(@Nonnull final Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
-        final LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
+        LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
         if (lookup != null && lookup.isVisible()) {
           return lookup.getBounds();
         }

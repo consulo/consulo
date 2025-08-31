@@ -117,7 +117,7 @@ public interface ComparisonManager {
    */
   @Nonnull
   List<LineFragment> processBlocks(@Nonnull List<LineFragment> oldFragments,
-                                   @Nonnull final CharSequence text1, @Nonnull final CharSequence text2,
-                                   @Nonnull final ComparisonPolicy policy,
-                                   final boolean squash, final boolean trim);
+                                   @Nonnull CharSequence text1, @Nonnull CharSequence text2,
+                                   @Nonnull ComparisonPolicy policy,
+                                   boolean squash, boolean trim);
 }

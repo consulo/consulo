@@ -39,7 +39,7 @@ public class ResourceUtil {
   public static URL getResource(@Nonnull ClassLoader classLoader, @NonNls @Nonnull String basePath, @NonNls @Nonnull String fileName) {
     if (basePath.endsWith("/")) basePath = basePath.substring(0, basePath.length() - 1);
 
-    final List<String> bundles = calculateBundleNames(basePath, Locale.getDefault());
+    List<String> bundles = calculateBundleNames(basePath, Locale.getDefault());
     for (String bundle : bundles) {
       URL url = classLoader.getResource(bundle + "/" + fileName);
       if (url == null) continue;
@@ -65,13 +65,13 @@ public class ResourceUtil {
    * Copied from java.util.ResourceBundle implementation
    */
   private static List<String> calculateBundleNames(String baseName, Locale locale) {
-    final List<String> result = new ArrayList<String>(3);
-    final String language = locale.getLanguage();
-    final int languageLength = language.length();
-    final String country = locale.getCountry();
-    final int countryLength = country.length();
-    final String variant = locale.getVariant();
-    final int variantLength = variant.length();
+    List<String> result = new ArrayList<String>(3);
+    String language = locale.getLanguage();
+    int languageLength = language.length();
+    String country = locale.getCountry();
+    int countryLength = country.length();
+    String variant = locale.getVariant();
+    int variantLength = variant.length();
 
     result.add(0, baseName);
 
@@ -80,7 +80,7 @@ public class ResourceUtil {
       return result;
     }
 
-    final StringBuilder temp = new StringBuilder(baseName);
+    StringBuilder temp = new StringBuilder(baseName);
     temp.append('_');
     temp.append(language);
     if (languageLength > 0) {
@@ -115,7 +115,7 @@ public class ResourceUtil {
       StringBuilder text = new StringBuilder();
       char[] buf = new char[5000];
       while (reader.ready()) {
-        final int length = reader.read(buf);
+        int length = reader.read(buf);
         if (length == -1) break;
         text.append(buf, 0, length);
       }

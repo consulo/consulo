@@ -28,7 +28,7 @@ import java.util.Comparator;
  */
 public interface ToolWindowPanel {
   @RequiredUIAccess
-  void addButton(final ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator);
+  void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator);
 
   @RequiredUIAccess
   void updateButtonPosition(@Nonnull String id);
@@ -40,8 +40,8 @@ public interface ToolWindowPanel {
   void removeButton(@Nonnull String id);
 
   @RequiredUIAccess
-  void removeDecorator(@Nonnull String id, final boolean dirtyMode);
+  void removeDecorator(@Nonnull String id, boolean dirtyMode);
 
   @RequiredUIAccess
-  void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, final boolean dirtyMode);
+  void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode);
 }

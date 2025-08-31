@@ -34,24 +34,24 @@ import java.awt.event.ActionListener;
  * @author max
  */
 public class NotificationPopup {
-  public NotificationPopup(final JComponent owner, final JComponent content, Color background) {
+  public NotificationPopup(JComponent owner, JComponent content, Color background) {
     this(owner, content, background, true);
   }
 
-  public NotificationPopup(final JComponent owner, final JComponent content, Color background, boolean useDefaultPreferredSize) {
+  public NotificationPopup(JComponent owner, JComponent content, Color background, boolean useDefaultPreferredSize) {
     this(owner, content, background, useDefaultPreferredSize, null, false);
   }
 
-  public NotificationPopup(final JComponent owner, final JComponent content, Color background, final boolean useDefaultPreferredSize, ActionListener clickHandler, boolean closeOnClick) {
-    final IdeFrame frame = findFrame(owner);
+  public NotificationPopup(JComponent owner, final JComponent content, Color background, final boolean useDefaultPreferredSize, ActionListener clickHandler, boolean closeOnClick) {
+    IdeFrame frame = findFrame(owner);
     if (frame == null || !TargetAWT.to(frame.getWindow()).isShowing() || frame.getBalloonLayout() == null) {
       new FramelessNotificationPopup(owner, content, background, useDefaultPreferredSize, clickHandler);
     }
     else {
-      final Wrapper wrapper = new NonOpaquePanel(content) {
+      Wrapper wrapper = new NonOpaquePanel(content) {
         @Override
         public Dimension getPreferredSize() {
-          final Dimension size = super.getPreferredSize();
+          Dimension size = super.getPreferredSize();
           if (useDefaultPreferredSize) {
             if (size.width > 400 || size.height > 200) {
               size.width = 400;
@@ -62,7 +62,7 @@ public class NotificationPopup {
         }
       };
 
-      final Balloon balloon = JBPopupFactory.getInstance().createBalloonBuilder(wrapper).setFadeoutTime(5000).setHideOnClickOutside(false).setHideOnFrameResize(false).setHideOnKeyOutside(false)
+      Balloon balloon = JBPopupFactory.getInstance().createBalloonBuilder(wrapper).setFadeoutTime(5000).setHideOnClickOutside(false).setHideOnFrameResize(false).setHideOnKeyOutside(false)
               .setCloseButtonEnabled(true).setFillColor(background).setShowCallout(false).setClickHandler(clickHandler, closeOnClick).createBalloon();
 
       BalloonLayout layout = frame.getBalloonLayout();
@@ -74,7 +74,7 @@ public class NotificationPopup {
 
   @Nullable
   private static IdeFrame findFrame(JComponent owner) {
-    final Window frame = SwingUtilities.getWindowAncestor(owner);
+    Window frame = SwingUtilities.getWindowAncestor(owner);
     if(frame == null) {
       return null;
     }

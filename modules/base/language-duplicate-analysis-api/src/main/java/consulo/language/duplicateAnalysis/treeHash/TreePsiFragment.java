@@ -12,12 +12,12 @@ import java.util.List;
 public class TreePsiFragment extends PsiFragment {
   private final NodeSpecificHasher myHasher;
 
-  public TreePsiFragment(final NodeSpecificHasher hasher, final PsiElement root, final int cost) {
+  public TreePsiFragment(NodeSpecificHasher hasher, PsiElement root, int cost) {
     super(root, cost);
     myHasher = hasher;
   }
 
-  public TreePsiFragment(final NodeSpecificHasher hasher, final List<? extends PsiElement> element, final int from, final int to) {
+  public TreePsiFragment(NodeSpecificHasher hasher, List<? extends PsiElement> element, int from, int to) {
     super(element, from, to);
     myHasher = hasher;
   }

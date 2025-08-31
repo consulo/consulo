@@ -33,7 +33,7 @@ public class DataLanguageBlockFragmentWrapper implements Block {
   private final Block myOwner;
   private final TextRange myRange;
 
-  public DataLanguageBlockFragmentWrapper(@Nonnull final Block owner, @Nonnull final TextRange range) {
+  public DataLanguageBlockFragmentWrapper(@Nonnull Block owner, @Nonnull TextRange range) {
     myOwner = owner;
     myRange = range;
   }

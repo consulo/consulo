@@ -38,7 +38,7 @@ public abstract class LanguageVersionableSyntaxHighlighterFactory extends Syntax
   @Nonnull
   @Override
   public final SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
-    final LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(getLanguage(), project, virtualFile);
+    LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(getLanguage(), project, virtualFile);
     SyntaxHighlighter syntaxHighlighter = myHighlighters.get(languageVersion);
     if(syntaxHighlighter == null) {
       myHighlighters.put(languageVersion, syntaxHighlighter = getSyntaxHighlighter(languageVersion));

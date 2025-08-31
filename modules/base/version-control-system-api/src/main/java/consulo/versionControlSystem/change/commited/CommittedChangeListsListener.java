@@ -23,7 +23,7 @@ public interface CommittedChangeListsListener {
   /**
    * @return true - continue reporting
    */
-  boolean report(final CommittedChangeList list);
+  boolean report(CommittedChangeList list);
 
   void onAfterEndReport();
 }

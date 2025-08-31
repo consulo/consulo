@@ -44,10 +44,10 @@ public class ResponseProcessor<R extends AbstractResponse> {
         myThread = Thread.currentThread();
         try {
           while (true) {
-            final R r = reader.readResponse();
+            R r = reader.readResponse();
             if (r == null) break;
             if (r instanceof ResponseToRequest) {
-              final int requestId = ((ResponseToRequest)r).getRequestId();
+              int requestId = ((ResponseToRequest)r).getRequestId();
               processResponse(requestId, r);
             }
             else {
@@ -74,7 +74,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
       myTimeoutHandlers.remove(requestId);
     }
 
-    final AbstractResponseToRequestHandler handler;
+    AbstractResponseToRequestHandler handler;
     synchronized (myLock) {
       handler = myHandlers.remove(requestId);
       if (handler == null) return;
@@ -91,11 +91,11 @@ public class ResponseProcessor<R extends AbstractResponse> {
 
   private void processResponse(R response) throws IOException {
     //noinspection unchecked
-    final Class<R> responseClass = (Class<R>)response.getClass();
+    Class<R> responseClass = (Class<R>)response.getClass();
 
     List<AbstractResponseHandler<?>> handlers;
     synchronized (myLock) {
-      final Collection<AbstractResponseHandler<? extends R>> responseHandlers = myClassHandlers.get(responseClass);
+      Collection<AbstractResponseHandler<? extends R>> responseHandlers = myClassHandlers.get(responseClass);
       if (responseHandlers == null) return;
       handlers = new SmartList<>(responseHandlers);
     }
@@ -131,9 +131,9 @@ public class ResponseProcessor<R extends AbstractResponse> {
 
   public void checkTimeout() {
     LOG.debug("Checking timeout");
-    final List<IntObjectMap.IntObjectEntry<TimeoutHandler>> timedOut = new ArrayList<>();
+    List<IntObjectMap.IntObjectEntry<TimeoutHandler>> timedOut = new ArrayList<>();
     synchronized (myLock) {
-      final long time = System.currentTimeMillis();
+      long time = System.currentTimeMillis();
 
       myTimeoutHandlers.entrySet().forEach(e -> {
         if (time > e.getValue().myLastTime) {
@@ -154,13 +154,13 @@ public class ResponseProcessor<R extends AbstractResponse> {
   }
 
   private void scheduleTimeoutCheck() {
-    final Ref<Long> nextTime = Ref.create(Long.MAX_VALUE);
+    Ref<Long> nextTime = Ref.create(Long.MAX_VALUE);
     synchronized (myLock) {
       if (myTimeoutHandlers.isEmpty()) return;
 
       myTimeoutHandlers.forEach((param1, handler) -> nextTime.set(Math.min(nextTime.get(), handler.myLastTime)));
     }
-    final int delay = (int)(nextTime.get() - System.currentTimeMillis() + 100);
+    int delay = (int)(nextTime.get() - System.currentTimeMillis() + 100);
     LOG.debug("schedule timeout check in " + delay + "ms");
     if (delay > 10) {
       if (myTimeoutTask != null) {

@@ -39,8 +39,8 @@ import java.util.Map;
 @ServiceImpl
 public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
   private final Map<String, Class[]> myClasses = ConcurrentFactoryMap.createMap(key -> {
-    final ArrayList<Class> result = new ArrayList<>();
-    final List<String> typeList = key == null ? null : Arrays.asList(key.split(",|\\s"));
+    ArrayList<Class> result = new ArrayList<>();
+    List<String> typeList = key == null ? null : Arrays.asList(key.split(",|\\s"));
     for (PatternClassProvider bean : Application.get().getExtensionPoint(PatternClassProvider.class)) {
       if (typeList == null || typeList.contains(bean.getAlias())) result.add(bean.getPatternClass());
     }

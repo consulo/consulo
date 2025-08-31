@@ -40,7 +40,7 @@ public class CompilerExcludedConfigurable implements ProjectConfigurable {
   private ExcludedEntriesConfigurable myConfigurable;
 
   @Inject
-  public CompilerExcludedConfigurable(final Project project) {
+  public CompilerExcludedConfigurable(Project project) {
     CompilerManager compilerManager = CompilerManager.getInstance(project);
 
     myConfigurable = new ExcludedEntriesConfigurable(project, new FileChooserDescriptor(true, true, false, false, false, true),

@@ -32,7 +32,7 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
   protected final CompletionContributor myContributor;
   private boolean myStopped;
 
-  protected CompletionResultSet(final PrefixMatcher prefixMatcher, Consumer<? super CompletionResult> consumer, CompletionContributor contributor) {
+  protected CompletionResultSet(PrefixMatcher prefixMatcher, Consumer<? super CompletionResult> consumer, CompletionContributor contributor) {
     myPrefixMatcher = prefixMatcher;
     myConsumer = consumer;
     myContributor = contributor;
@@ -52,7 +52,7 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
    *
    * @see #addAllElements(Iterable)
    */
-  public abstract void addElement(@Nonnull final LookupElement element);
+  public abstract void addElement(@Nonnull LookupElement element);
 
   public void passResult(@Nonnull CompletionResult result) {
     myConsumer.accept(result);
@@ -80,7 +80,7 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
    * resulting in varying preselected item in completion and worse user experience. Using {@code addAllElements}
    * instead of {@link #addElement(LookupElement)} helps to avoid that.
    */
-  public void addAllElements(@Nonnull final Iterable<? extends LookupElement> elements) {
+  public void addAllElements(@Nonnull Iterable<? extends LookupElement> elements) {
     startBatch();
     int seldomCounter = 0;
     for (LookupElement element : elements) {
@@ -131,8 +131,8 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
     myStopped = true;
   }
 
-  public LinkedHashSet<CompletionResult> runRemainingContributors(CompletionParameters parameters, final boolean passResult) {
-    final LinkedHashSet<CompletionResult> elements = new LinkedHashSet<>();
+  public LinkedHashSet<CompletionResult> runRemainingContributors(CompletionParameters parameters, boolean passResult) {
+    LinkedHashSet<CompletionResult> elements = new LinkedHashSet<>();
     runRemainingContributors(parameters, result -> {
       if (passResult) {
         passResult(result);
@@ -146,7 +146,7 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
     runRemainingContributors(parameters, (Consumer)consumer, true);
   }
 
-  public void runRemainingContributors(CompletionParameters parameters, Consumer<CompletionResult> consumer, final boolean stop) {
+  public void runRemainingContributors(CompletionParameters parameters, Consumer<CompletionResult> consumer, boolean stop) {
     if (stop) {
       stopHere();
     }

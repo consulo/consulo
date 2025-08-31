@@ -94,7 +94,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
   }
 
   @Nullable
-  static PsiElement[] getElements(final Transferable content) {
+  static PsiElement[] getElements(Transferable content) {
     if (content == null) return null;
     Object transferData;
     try {
@@ -141,9 +141,9 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
 
   static {
     try {
-      final Class<MyData> flavorClass = MyData.class;
-      final Thread currentThread = Thread.currentThread();
-      final ClassLoader currentLoader = currentThread.getContextClassLoader();
+      Class<MyData> flavorClass = MyData.class;
+      Thread currentThread = Thread.currentThread();
+      ClassLoader currentLoader = currentThread.getContextClassLoader();
       try {
         currentThread.setContextClassLoader(flavorClass.getClassLoader());
         ourDataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=" + flavorClass.getName());
@@ -232,15 +232,15 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
         return getDataAsFileList();
       }
       else if (flavor.equals(LinuxDragAndDropSupport.uriListFlavor)) {
-        final List<File> files = getDataAsFileList();
+        List<File> files = getDataAsFileList();
         if (files != null) {
           return LinuxDragAndDropSupport.toUriList(files);
         }
       }
       else if (flavor.equals(LinuxDragAndDropSupport.gnomeFileListFlavor)) {
-        final List<File> files = getDataAsFileList();
+        List<File> files = getDataAsFileList();
         if (files != null) {
-          final String string = (myDataProxy.isCopied() ? "copy\n" : "cut\n") + LinuxDragAndDropSupport.toUriList(files);
+          String string = (myDataProxy.isCopied() ? "copy\n" : "cut\n") + LinuxDragAndDropSupport.toUriList(files);
           return new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
         }
       }
@@ -254,7 +254,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
     @Nullable
     private String getDataAsText() {
       return AccessRule.read(() -> {
-        final List<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         for (PsiElement element : myDataProxy.getElements()) {
           if (element instanceof PsiNamedElement) {
             String name = ((PsiNamedElement)element).getName();

@@ -69,7 +69,7 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
   }
 
   @Override
-  protected void processData(@Nonnull Collection<DataNode<TaskData>> nodes, @Nonnull Project project, @Nullable final ExternalSystemTasksTreeModel model) {
+  protected void processData(@Nonnull Collection<DataNode<TaskData>> nodes, @Nonnull Project project, @Nullable ExternalSystemTasksTreeModel model) {
     if (nodes.isEmpty()) {
       return;
     }

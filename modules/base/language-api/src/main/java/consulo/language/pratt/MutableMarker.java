@@ -33,7 +33,7 @@ public class MutableMarker {
   private final LinkedList<IElementType> myPath;
   private Mode myMode;
 
-  public MutableMarker(final LinkedList<IElementType> path, final PsiBuilder.Marker startMarker, final int initialPathLength) {
+  public MutableMarker(LinkedList<IElementType> path, PsiBuilder.Marker startMarker, int initialPathLength) {
     myPath = path;
     myStartMarker = startMarker;
     myInitialPathLength = initialPathLength;
@@ -41,7 +41,7 @@ public class MutableMarker {
   }
 
   // for easier transition only
-  public MutableMarker(final LinkedList<IElementType> path, final PsiBuilder builder) {
+  public MutableMarker(LinkedList<IElementType> path, PsiBuilder builder) {
     myPath = path;
     myStartMarker = (PsiBuilder.Marker)builder.getLatestDoneMarker();
     myInitialPathLength = path.size();
@@ -65,7 +65,7 @@ public class MutableMarker {
     return myMode == Mode.READY;
   }
 
-  public MutableMarker setResultType(final IElementType resultType) {
+  public MutableMarker setResultType(IElementType resultType) {
     myResultType = resultType;
     return this;
   }
@@ -99,7 +99,7 @@ public class MutableMarker {
     return new MutableMarker(myPath, myStartMarker.precede(), myInitialPathLength);
   }
 
-  public void finish(final IElementType type) {
+  public void finish(IElementType type) {
     setResultType(type);
     finish();
   }
@@ -117,7 +117,7 @@ public class MutableMarker {
     myStartMarker.rollbackTo();
   }
 
-  public void error(final String message) {
+  public void error(String message) {
     assert myMode == Mode.READY : myMode;
     myMode = Mode.ERROR;
     myStartMarker.error(message);

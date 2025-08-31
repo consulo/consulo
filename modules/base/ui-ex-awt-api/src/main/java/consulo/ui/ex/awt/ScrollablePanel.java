@@ -38,7 +38,7 @@ public class ScrollablePanel extends JPanel implements Scrollable {
   @Override
   public void addNotify() {
     super.addNotify();
-    final FontMetrics fontMetrics = getFontMetrics(getFont());
+    FontMetrics fontMetrics = getFontMetrics(getFont());
     if (myUnitHeight < 0) {
       myUnitHeight = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
     }

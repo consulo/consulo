@@ -104,8 +104,8 @@ public class ValueLookupManagerImpl implements ValueLookupManager, EditorMouseLi
         }
     }
 
-    private void requestHint(final QuickEvaluateHandler handler, final Editor editor, final Point point, @Nonnull final ValueHintType type) {
-        final Rectangle area = editor.getScrollingModel().getVisibleArea();
+    private void requestHint(QuickEvaluateHandler handler, Editor editor, Point point, @Nonnull ValueHintType type) {
+        Rectangle area = editor.getScrollingModel().getVisibleArea();
         myAlarm.cancelAllRequests();
         if (type == ValueHintType.MOUSE_OVER_HINT) {
             if (XDebuggerSettingsManager.getInstance().getDataViewSettings().isValueTooltipAutoShow()) {

@@ -20,7 +20,7 @@ public class EventArgUtil {
             return null;
         }
 
-        final Object lastEntry = argArray[argArray.length - 1];
+        Object lastEntry = argArray[argArray.length - 1];
         if (lastEntry instanceof Throwable) {
             return (Throwable) lastEntry;
         }
@@ -38,7 +38,7 @@ public class EventArgUtil {
         if (argArray == null || argArray.length == 0) {
             throw new IllegalStateException("non-sensical empty or null argument array");
         }
-        final int trimemdLen = argArray.length - 1;
+        int trimemdLen = argArray.length - 1;
         Object[] trimmed = new Object[trimemdLen];
         System.arraycopy(argArray, 0, trimmed, 0, trimemdLen);
         return trimmed;

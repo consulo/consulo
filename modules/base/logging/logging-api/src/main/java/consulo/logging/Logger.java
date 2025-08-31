@@ -97,7 +97,7 @@ public interface Logger {
         error(String.valueOf(message));
     }
 
-    default void error(String message, final String details, final Attachment... attachments) {
+    default void error(String message, String details, Attachment... attachments) {
         error(message);
     }
 

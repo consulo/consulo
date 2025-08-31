@@ -113,10 +113,10 @@ public class ZipUtil {
         if (relativePath.length() != 0) {
             addFileToZip(outputStream, dir, relativePath, writtenItemRelativePaths, fileFilter);
         }
-        final File[] children = dir.listFiles();
+        File[] children = dir.listFiles();
         if (children != null) {
             for (File child : children) {
-                final String childRelativePath = (relativePath.length() == 0 ? "" : relativePath + "/") + child.getName();
+                String childRelativePath = (relativePath.length() == 0 ? "" : relativePath + "/") + child.getName();
                 addFileOrDirRecursively(outputStream, jarFile, child, childRelativePath, fileFilter, writtenItemRelativePaths);
             }
         }
@@ -134,29 +134,29 @@ public class ZipUtil {
         }
     }
 
-    public static void extract(final @Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
+    public static void extract(@Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
         extract(zipFile, outputDir, filenameFilter, true);
     }
 
-    public static void extract(final @Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
-        final Enumeration entries = zipFile.entries();
+    public static void extract(@Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
+        Enumeration entries = zipFile.entries();
         while (entries.hasMoreElements()) {
             ZipEntry entry = (ZipEntry) entries.nextElement();
-            final File file = new File(outputDir, entry.getName());
+            File file = new File(outputDir, entry.getName());
             if (filenameFilter == null || filenameFilter.accept(file.getParentFile(), file.getName())) {
                 extractEntry(entry, zipFile.getInputStream(entry), outputDir, overwrite);
             }
         }
     }
 
-    public static void extractEntry(ZipEntry entry, final InputStream inputStream, File outputDir) throws IOException {
+    public static void extractEntry(ZipEntry entry, InputStream inputStream, File outputDir) throws IOException {
         extractEntry(entry, inputStream, outputDir, true);
     }
 
-    public static void extractEntry(ZipEntry entry, final InputStream inputStream, File outputDir, boolean overwrite) throws IOException {
-        final boolean isDirectory = entry.isDirectory();
-        final String relativeName = entry.getName();
-        final File file = new File(outputDir, relativeName);
+    public static void extractEntry(ZipEntry entry, InputStream inputStream, File outputDir, boolean overwrite) throws IOException {
+        boolean isDirectory = entry.isDirectory();
+        String relativeName = entry.getName();
+        File file = new File(outputDir, relativeName);
         file.setLastModified(entry.getTime());
         if (file.exists() && !overwrite) {
             return;
@@ -229,7 +229,7 @@ public class ZipUtil {
                     FileUtil.copy(zis, zos);
                 }
                 else { // replace with the new files
-                    final File file = relpathToFile.get(name);
+                    File file = relpathToFile.get(name);
                     //addFile(file, name, zos);
                     relpathToFile.remove(name);
                     addFileToZip(zos, file, name, null, null);
@@ -237,7 +237,7 @@ public class ZipUtil {
             }
 
             // add the remaining new files
-            for (final String path : relpathToFile.keySet()) {
+            for (String path : relpathToFile.keySet()) {
                 File file = relpathToFile.get(path);
                 addFileToZip(zos, file, path, null, null);
             }

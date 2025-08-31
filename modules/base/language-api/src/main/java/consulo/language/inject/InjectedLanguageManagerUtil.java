@@ -42,7 +42,7 @@ public class InjectedLanguageManagerUtil {
   public static final Key<Boolean> VALUE_PATTERN_KEY_FOR_ADVANCED_INJECT = Key.create("IS_VALUE_REGEXP");
 
   @RequiredReadAction
-  public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull final PsiElement element) {
+  public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull PsiElement element) {
     PsiFile injectedFile = element.getContainingFile();
     if (injectedFile == null) return false;
     Project project = injectedFile.getProject();
@@ -63,8 +63,8 @@ public class InjectedLanguageManagerUtil {
   }
 
   @Nullable
-  public static PsiElement findElementInInjected(@Nonnull PsiLanguageInjectionHost injectionHost, final int offset) {
-    final SimpleReference<PsiElement> ref = SimpleReference.create();
+  public static PsiElement findElementInInjected(@Nonnull PsiLanguageInjectionHost injectionHost, int offset) {
+    SimpleReference<PsiElement> ref = SimpleReference.create();
     InjectedLanguageManager.getInstance(injectionHost.getProject()).enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
     return ref.get();
   }

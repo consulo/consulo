@@ -52,7 +52,7 @@ public class KillRingUtil {
      * @param endOffset   end offset of the target region within the given editor
      * @param cut         flag that identifies if target text region will be cut from the given editor
      */
-    public static void copyToKillRing(@Nonnull final Editor editor, int startOffset, int endOffset, boolean cut) {
+    public static void copyToKillRing(@Nonnull Editor editor, int startOffset, int endOffset, boolean cut) {
         Document document = editor.getDocument();
         String s = document.getCharsSequence().subSequence(startOffset, endOffset).toString();
         s = StringUtil.convertLineSeparators(s);

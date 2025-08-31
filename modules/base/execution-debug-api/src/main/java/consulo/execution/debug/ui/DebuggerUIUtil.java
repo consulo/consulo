@@ -56,8 +56,8 @@ public class DebuggerUIUtil {
         return builder.createPopup();
     }
 
-    public static void focusEditorOnCheck(final JCheckBox checkbox, final JComponent component) {
-        final Runnable runnable = () -> IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(component);
+    public static void focusEditorOnCheck(JCheckBox checkbox, JComponent component) {
+        Runnable runnable = () -> IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(component);
         checkbox.addActionListener(e -> {
             if (checkbox.isSelected()) {
                 SwingUtilities.invokeLater(runnable);

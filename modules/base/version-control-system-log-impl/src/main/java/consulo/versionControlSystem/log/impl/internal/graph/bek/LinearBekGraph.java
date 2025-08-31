@@ -69,7 +69,7 @@ public class LinearBekGraph implements LinearGraph {
     return myGraph.getNodeIndex(nodeId);
   }
 
-  public Collection<GraphEdge> expandEdge(@Nonnull final GraphEdge edge) {
+  public Collection<GraphEdge> expandEdge(@Nonnull GraphEdge edge) {
     Set<GraphEdge> result = new HashSet<>();
 
     assert edge.getType() == GraphEdgeType.DOTTED;

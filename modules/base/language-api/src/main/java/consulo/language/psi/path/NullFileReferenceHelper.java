@@ -36,8 +36,8 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   public static final NullFileReferenceHelper INSTANCE = new NullFileReferenceHelper();
 
   @Override
-  public PsiFileSystemItem findRoot(final Project project, @Nonnull final VirtualFile file) {
-    final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+  public PsiFileSystemItem findRoot(Project project, @Nonnull VirtualFile file) {
+    ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     VirtualFile contentRootForFile = index.getContentRootForFile(file);
 
     return contentRootForFile != null ? PsiManager.getInstance(project).findDirectory(contentRootForFile) : null;
@@ -45,16 +45,16 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
 
   @Override
   @Nonnull
-  public Collection<PsiFileSystemItem> getRoots(@Nonnull final Module module) {
+  public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
     return ContainerUtil.mapNotNull(ModuleRootManager.getInstance(module).getContentRoots(), virtualFile -> PsiManager.getInstance(module.getProject()).findDirectory(virtualFile));
   }
 
   @Override
   @Nonnull
-  public Collection<PsiFileSystemItem> getContexts(final Project project, @Nonnull final VirtualFile file) {
-    final PsiFileSystemItem item = getPsiFileSystemItem(project, file);
+  public Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file) {
+    PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     if (item != null) {
-      final PsiFileSystemItem parent = item.getParent();
+      PsiFileSystemItem parent = item.getParent();
       if (parent != null) {
         return Collections.singleton(parent);
       }
@@ -63,7 +63,7 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  public boolean isMine(final Project project, @Nonnull final VirtualFile file) {
+  public boolean isMine(Project project, @Nonnull VirtualFile file) {
     return ProjectRootManager.getInstance(project).getFileIndex().isInContent(file);
   }
 

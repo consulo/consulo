@@ -60,15 +60,15 @@ public class TestContinuationAction extends AnAction {
         ) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
-                final Continuation continuation = Continuation.createForCurrentProgress(project, true, e.getPresentation().getText());
-                final ReportTask finalBlock = new ReportTask("I'm finally block!");
+                Continuation continuation = Continuation.createForCurrentProgress(project, true, e.getPresentation().getText());
+                ReportTask finalBlock = new ReportTask("I'm finally block!");
                 finalBlock.setHaveMagicCure(true);
                 continuation.run(
                     new LongTaskDescriptor("First"),
                     new ReportTask("First complete"),
                     new TaskDescriptor("Adding task", Where.POOLED) {
                         @Override
-                        public void run(final ContinuationContext context) {
+                        public void run(ContinuationContext context) {
                             addMore(context);
                             try {
                                 Thread.sleep(10000);
@@ -81,7 +81,7 @@ public class TestContinuationAction extends AnAction {
                     new LongTaskDescriptor("Second"), new ReportTask("Second complete"),
                     new TaskDescriptor("Adding task 2", Where.POOLED) {
                         @Override
-                        public void run(final ContinuationContext context) {
+                        public void run(ContinuationContext context) {
                             addMoreSurviving(context);
                             try {
                                 Thread.sleep(10000);
@@ -126,7 +126,7 @@ public class TestContinuationAction extends AnAction {
     }
 
     private void addMoreSurviving(ContinuationContext context) {
-        final ContinuationFinalTasksInserter finalTasksInserter = new ContinuationFinalTasksInserter(context);
+        ContinuationFinalTasksInserter finalTasksInserter = new ContinuationFinalTasksInserter(context);
         finalTasksInserter.allNextAreFinal();
         context.next(new LongTaskDescriptor("Inside surviving"), new ReportTask("Inside surviving complete"));
         finalTasksInserter.removeFinalPropertyAdder();
@@ -150,13 +150,13 @@ public class TestContinuationAction extends AnAction {
     }
 
     private static class LongTaskDescriptor extends TaskDescriptor {
-        private LongTaskDescriptor(final String name) {
+        private LongTaskDescriptor(String name) {
             super(name, Where.POOLED);
         }
 
         @Override
         public void run(ContinuationContext context) {
-            final ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
+            ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
             pi.setText(getName());
             try {
                 Thread.sleep(10000);

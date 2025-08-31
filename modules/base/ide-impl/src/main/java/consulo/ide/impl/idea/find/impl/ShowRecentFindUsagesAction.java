@@ -68,19 +68,19 @@ public class ShowRecentFindUsagesAction extends AnAction {
     BaseListPopupStep<ConfigurableUsageTarget> step =
       new BaseListPopupStep<ConfigurableUsageTarget>(FindLocalize.recentFindUsagesActionTitle().get(), history) {
         @Override
-        public Image getIconFor(final ConfigurableUsageTarget data) {
+        public Image getIconFor(ConfigurableUsageTarget data) {
           ItemPresentation presentation = data == null ? null : data.getPresentation();
           return presentation == null ? null : presentation.getIcon();
         }
 
         @Override
         @Nonnull
-        public String getTextFor(final ConfigurableUsageTarget data) {
+        public String getTextFor(ConfigurableUsageTarget data) {
           return data == null ? FindLocalize.recentFindUsagesActionNothing().get() : data.getLongDescriptiveName();
         }
 
         @Override
-        public PopupStep onChosen(final ConfigurableUsageTarget selectedValue, final boolean finalChoice) {
+        public PopupStep onChosen(ConfigurableUsageTarget selectedValue, boolean finalChoice) {
           return doFinalStep(() -> {
             if (selectedValue != null) {
               findUsagesManager.rerunAndRecallFromHistory(selectedValue);

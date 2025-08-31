@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface ChangesBrowserExtender {
-  void addToolbarActions(final DialogWrapper dialogWrapper);
+  void addToolbarActions(DialogWrapper dialogWrapper);
   // for changelists list
   void addSelectedListChangeListener(SelectedListChangeListener listener);
   

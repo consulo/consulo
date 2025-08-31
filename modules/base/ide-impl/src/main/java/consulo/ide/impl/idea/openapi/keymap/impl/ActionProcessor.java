@@ -29,8 +29,8 @@ public interface ActionProcessor {
   @Nonnull
   AnActionEvent createEvent(InputEvent inputEvent, @Nonnull DataContext context, @Nonnull String place, @Nonnull Presentation presentation, ActionManager manager);
 
-  void onUpdatePassed(final InputEvent inputEvent, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent);
+  void onUpdatePassed(InputEvent inputEvent, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent);
 
-  void performAction(final InputEvent e, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent);
+  void performAction(InputEvent e, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent);
 
 }

@@ -38,9 +38,9 @@ public class AssertFocused extends AbstractCommand {
     final Map<String, String> expected = new LinkedHashMap<String, String>();
 
     if (text.length() > 0) {
-      final String[] keyValue = text.split(",");
+      String[] keyValue = text.split(",");
       for (String each : keyValue) {
-        final String[] eachPair = each.split("=");
+        String[] eachPair = each.split("=");
         if (eachPair.length != 2) {
           context.error("Syntax error, must be comma-separated pairs key=value", getLine());
           result.setRejected();
@@ -68,14 +68,14 @@ public class AssertFocused extends AbstractCommand {
   }
 
   private void doAssert(Map<String, String> expected, PlaybackContext context) throws AssertionError {
-    final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
     if (owner == null) {
       throw new AssertionError("No component focused");
     }
 
     Component eachParent = owner;
-    final LinkedHashMap<String, String> actual = new LinkedHashMap<String, String>();
+    LinkedHashMap<String, String> actual = new LinkedHashMap<String, String>();
     while (eachParent != null) {
       if (eachParent instanceof Queryable) {
         ((Queryable)eachParent).putInfo(actual);
@@ -88,8 +88,8 @@ public class AssertFocused extends AbstractCommand {
     for (String eachKey : expected.keySet()) {
       testedKeys.add(eachKey);
 
-      final String actualValue = actual.get(eachKey);
-      final String expectedValue = expected.get(eachKey);
+      String actualValue = actual.get(eachKey);
+      String expectedValue = expected.get(eachKey);
 
       if (!expectedValue.equals(actualValue)) {
         throw new AssertionError(eachKey + " expected: " + expectedValue + " but was: " + actualValue);

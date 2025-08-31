@@ -8,15 +8,15 @@ import consulo.util.dataholder.UserDataHolderEx;
 public interface UpdateParameterInfoContext extends ParameterInfoContext {
   void removeHint();
 
-  void setParameterOwner(final PsiElement o);
+  void setParameterOwner(PsiElement o);
 
   PsiElement getParameterOwner();
 
-  void setHighlightedParameter(final Object parameter);
+  void setHighlightedParameter(Object parameter);
 
   Object getHighlightedParameter();
 
-  void setCurrentParameter(final int index);
+  void setCurrentParameter(int index);
 
   boolean isUIComponentEnabled(int index);
 

@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.versionControlSystem.change.Change;
 
 public interface ChangeNodeDecorator {
-  void decorate(final Change change, final SimpleColoredComponent component, boolean isShowFlatten);
+  void decorate(Change change, SimpleColoredComponent component, boolean isShowFlatten);
 
   default void preDecorate(Change change, ChangesBrowserNodeRenderer renderer, boolean isShowFlatten) {
   }

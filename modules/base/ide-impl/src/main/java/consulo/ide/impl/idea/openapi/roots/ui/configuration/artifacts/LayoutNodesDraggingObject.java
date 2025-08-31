@@ -40,10 +40,10 @@ public class LayoutNodesDraggingObject extends PackagingElementDraggingObject {
 
   @Override
   public List<PackagingElement<?>> createPackagingElements(ArtifactEditorContext context) {
-    final List<PackagingElement<?>> result = new ArrayList<PackagingElement<?>>();
+    List<PackagingElement<?>> result = new ArrayList<PackagingElement<?>>();
 
     for (PackagingElementNode<?> node : myNodes) {
-      final List<? extends PackagingElement<?>> elements = node.getPackagingElements();
+      List<? extends PackagingElement<?>> elements = node.getPackagingElements();
       for (PackagingElement<?> element : elements) {
         result.add(ArtifactUtil.copyWithChildren(element, myArtifactsEditor.getContext().getProject()));
       }
@@ -64,8 +64,8 @@ public class LayoutNodesDraggingObject extends PackagingElementDraggingObject {
 
   @Override
   public boolean canDropInto(@Nonnull PackagingElementNode node) {
-    final LayoutTree tree = myArtifactsEditor.getLayoutTreeComponent().getLayoutTree();
-    final TreePath path = tree.getPathFor(node);
+    LayoutTree tree = myArtifactsEditor.getLayoutTreeComponent().getLayoutTree();
+    TreePath path = tree.getPathFor(node);
     if (path != null) {
       for (PackagingElementNode<?> selectedNode : myNodes) {
         if (pathContains(path, selectedNode, tree)) {
@@ -78,7 +78,7 @@ public class LayoutNodesDraggingObject extends PackagingElementDraggingObject {
 
   private static boolean pathContains(TreePath path, PackagingElementNode<?> node, LayoutTree tree) {
     while (path != null) {
-      final SimpleNode pathNode = tree.getNodeFor(path);
+      SimpleNode pathNode = tree.getNodeFor(path);
       if (pathNode == node) {
         return true;
       }

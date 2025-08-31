@@ -25,5 +25,5 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsBranchMappingChangedDetailedNotification {
-  void execute(final Project project, final VirtualFile vcsRoot, final List<CommittedChangeList> cachedList);
+  void execute(Project project, VirtualFile vcsRoot, List<CommittedChangeList> cachedList);
 }

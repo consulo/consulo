@@ -46,7 +46,7 @@ public class ImportFilteringUsageViewSetting implements PersistentStateComponent
   }
 
   @Override
-  public void loadState(final ImportFilteringUsageViewSetting state) {
+  public void loadState(ImportFilteringUsageViewSetting state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 }

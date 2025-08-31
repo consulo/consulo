@@ -60,9 +60,9 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
 
     private final LocalizeValue myProjectText;
 
-    public ReopenProjectAction(final String projectPath,
-                               final String projectName,
-                               final String displayName,
+    public ReopenProjectAction(String projectPath,
+                               String projectName,
+                               String displayName,
                                @Nonnull List<String> extensions,
                                @Nullable IdeFrameState frameState,
                                boolean opened) {
@@ -72,7 +72,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         myFrameState = frameState;
         myOpened = opened;
 
-        final Presentation presentation = getTemplatePresentation();
+        Presentation presentation = getTemplatePresentation();
         String text = projectPath.equals(displayName) ? UserHomeFileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
 
         myProjectText = LocalizeValue.of(text);
@@ -102,8 +102,8 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         //Force move focus to IdeFrame
         IdeEventQueueProxy.getInstance().closeAllPopups();
 
-        final int modifiers = e.getModifiers();
-        final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK)
+        int modifiers = e.getModifiers();
+        boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK)
             || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK)
             || ActionPlaces.WELCOME_SCREEN.equals(e.getPlace());
 

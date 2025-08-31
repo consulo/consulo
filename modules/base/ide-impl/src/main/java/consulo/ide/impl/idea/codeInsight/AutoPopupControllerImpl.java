@@ -69,17 +69,17 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
   }
 
   @Override
-  public void autoPopupMemberLookup(final Editor editor, @Nullable final Predicate<? super PsiFile> condition) {
+  public void autoPopupMemberLookup(Editor editor, @Nullable Predicate<? super PsiFile> condition) {
     autoPopupMemberLookup(editor, CompletionType.BASIC, condition);
   }
 
   @Override
-  public void autoPopupMemberLookup(final Editor editor, CompletionType completionType, @Nullable final Predicate<? super PsiFile> condition) {
+  public void autoPopupMemberLookup(Editor editor, CompletionType completionType, @Nullable Predicate<? super PsiFile> condition) {
     scheduleAutoPopup(editor, completionType, condition);
   }
 
   @Override
-  public void scheduleAutoPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, @Nullable final Predicate<? super PsiFile> condition) {
+  public void scheduleAutoPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, @Nullable Predicate<? super PsiFile> condition) {
     boolean alwaysAutoPopup = Boolean.TRUE.equals(editor.getUserData(ALWAYS_AUTO_POPUP));
     if (!CodeInsightSettings.getInstance().AUTO_POPUP_COMPLETION_LOOKUP && !alwaysAutoPopup) {
       return;
@@ -92,7 +92,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
       return;
     }
 
-    final CompletionProgressIndicator currentCompletion = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
+    CompletionProgressIndicator currentCompletion = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
     if (currentCompletion != null) {
       currentCompletion.closeAndFinish(true);
     }
@@ -101,7 +101,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
   }
 
   @Override
-  public void scheduleAutoPopup(final Editor editor) {
+  public void scheduleAutoPopup(Editor editor) {
     scheduleAutoPopup(editor, CompletionType.BASIC, null);
   }
 
@@ -110,7 +110,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
     ShowParameterInfoHandler.invoke(project, editor, file, lbraceOffset, highlightedElement, requestFocus);
   }
 
-  private void addRequest(final Runnable request, final int delay) {
+  private void addRequest(Runnable request, int delay) {
     Runnable runnable = () -> {
       if (!myAlarm.isDisposed()) myAlarm.addRequest(request, delay);
     };
@@ -123,14 +123,14 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
 
   @Override
   @RequiredUIAccess
-  public void autoPopupParameterInfo(@Nonnull final Editor editor, @Nullable final Object highlightedMethod) {
+  public void autoPopupParameterInfo(@Nonnull Editor editor, @Nullable Object highlightedMethod) {
     if (DumbService.isDumb(myProject)) return;
     if (PowerSaveMode.isEnabled()) return;
 
     UIAccess.assertIsUIThread();
-    final CodeInsightSettings settings = CodeInsightSettings.getInstance();
+    CodeInsightSettings settings = CodeInsightSettings.getInstance();
     if (settings.AUTO_POPUP_PARAMETER_INFO) {
-      final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
+      PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
       PsiFile file = documentManager.getPsiFile(editor.getDocument());
       if (file == null) return;
 

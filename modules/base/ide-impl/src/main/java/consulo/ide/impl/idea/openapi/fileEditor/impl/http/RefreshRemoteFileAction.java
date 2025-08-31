@@ -34,7 +34,7 @@ public class RefreshRemoteFileAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final RemoteFileState state = myFile.getFileInfo().getState();
+    RemoteFileState state = myFile.getFileInfo().getState();
     e.getPresentation().setEnabled(state == RemoteFileState.DOWNLOADED || state == RemoteFileState.ERROR_OCCURRED);
   }
 

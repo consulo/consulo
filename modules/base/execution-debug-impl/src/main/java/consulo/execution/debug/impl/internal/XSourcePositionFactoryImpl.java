@@ -66,13 +66,13 @@ public class XSourcePositionFactoryImpl implements XSourcePositionFactory {
 
     @Override
     @Nullable
-    public XSourcePosition createPosition(@Nullable VirtualFile file, final int line, final int column) {
+    public XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column) {
         return file == null ? null : XSourcePositionImpl.create(file, line, column);
     }
 
     @Override
     @Nullable
-    public XSourcePosition createPositionByOffset(final VirtualFile file, final int offset) {
+    public XSourcePosition createPositionByOffset(VirtualFile file, int offset) {
         return XSourcePositionImpl.createByOffset(file, offset);
     }
 

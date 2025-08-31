@@ -39,7 +39,7 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
   }
 
   @Override
-  public void before(@Nonnull final List<? extends VFileEvent> events) {
+  public void before(@Nonnull List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       if (myFileSystem == null || myFileSystem == event.getFileSystem()) {
         fireBefore(myAdapted, event);
@@ -48,7 +48,7 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
   }
 
   @Override
-  public void after(@Nonnull final List<? extends VFileEvent> events) {
+  public void after(@Nonnull List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       if (myFileSystem == null || myFileSystem == event.getFileSystem()) {
         fireAfter(myAdapted, event);
@@ -58,55 +58,55 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
 
   public static void fireAfter(@Nonnull VirtualFileListener adapted, @Nonnull VFileEvent event) {
     if (event instanceof VFileContentChangeEvent) {
-      final VFileContentChangeEvent ce = (VFileContentChangeEvent)event;
-      final VirtualFile file = ce.getFile();
+      VFileContentChangeEvent ce = (VFileContentChangeEvent)event;
+      VirtualFile file = ce.getFile();
       adapted.contentsChanged(new VirtualFileEvent(event.getRequestor(), file, file.getParent(), ce.getOldModificationStamp(), ce.getModificationStamp()));
     }
     else if (event instanceof VFileCopyEvent) {
-      final VFileCopyEvent ce = (VFileCopyEvent)event;
-      final VirtualFile original = ce.getFile();
-      final VirtualFile copy = ce.getNewParent().findChild(ce.getNewChildName());
+      VFileCopyEvent ce = (VFileCopyEvent)event;
+      VirtualFile original = ce.getFile();
+      VirtualFile copy = ce.getNewParent().findChild(ce.getNewChildName());
       if (original != null && copy != null) {
         adapted.fileCopied(new VirtualFileCopyEvent(event.getRequestor(), original, copy));
       }
     }
     else if (event instanceof VFileCreateEvent) {
-      final VFileCreateEvent ce = (VFileCreateEvent)event;
-      final VirtualFile newChild = ce.getFile();
+      VFileCreateEvent ce = (VFileCreateEvent)event;
+      VirtualFile newChild = ce.getFile();
       if (newChild != null) {
         adapted.fileCreated(new VirtualFileEvent(event.getRequestor(), newChild, ce.getChildName(), ce.getParent()));
       }
     }
     else if (event instanceof VFileDeleteEvent) {
-      final VFileDeleteEvent de = (VFileDeleteEvent)event;
+      VFileDeleteEvent de = (VFileDeleteEvent)event;
       adapted.fileDeleted(new VirtualFileEvent(event.getRequestor(), de.getFile(), de.getFile().getParent(), 0, 0));
     }
     else if (event instanceof VFileMoveEvent) {
-      final VFileMoveEvent me = (VFileMoveEvent)event;
+      VFileMoveEvent me = (VFileMoveEvent)event;
       adapted.fileMoved(new VirtualFileMoveEvent(event.getRequestor(), me.getFile(), me.getOldParent(), me.getNewParent()));
     }
     else if (event instanceof VFilePropertyChangeEvent) {
-      final VFilePropertyChangeEvent pce = (VFilePropertyChangeEvent)event;
+      VFilePropertyChangeEvent pce = (VFilePropertyChangeEvent)event;
       adapted.propertyChanged(new VirtualFilePropertyEvent(event.getRequestor(), pce.getFile(), pce.getPropertyName(), pce.getOldValue(), pce.getNewValue()));
     }
   }
 
   public static void fireBefore(@Nonnull VirtualFileListener adapted, @Nonnull VFileEvent event) {
     if (event instanceof VFileContentChangeEvent) {
-      final VFileContentChangeEvent ce = (VFileContentChangeEvent)event;
-      final VirtualFile file = ce.getFile();
+      VFileContentChangeEvent ce = (VFileContentChangeEvent)event;
+      VirtualFile file = ce.getFile();
       adapted.beforeContentsChange(new VirtualFileEvent(event.getRequestor(), file, file.getParent(), ce.getOldModificationStamp(), ce.getModificationStamp()));
     }
     else if (event instanceof VFileDeleteEvent) {
-      final VFileDeleteEvent de = (VFileDeleteEvent)event;
+      VFileDeleteEvent de = (VFileDeleteEvent)event;
       adapted.beforeFileDeletion(new VirtualFileEvent(event.getRequestor(), de.getFile(), de.getFile().getParent(), 0, 0));
     }
     else if (event instanceof VFileMoveEvent) {
-      final VFileMoveEvent me = (VFileMoveEvent)event;
+      VFileMoveEvent me = (VFileMoveEvent)event;
       adapted.beforeFileMovement(new VirtualFileMoveEvent(event.getRequestor(), me.getFile(), me.getOldParent(), me.getNewParent()));
     }
     else if (event instanceof VFilePropertyChangeEvent) {
-      final VFilePropertyChangeEvent pce = (VFilePropertyChangeEvent)event;
+      VFilePropertyChangeEvent pce = (VFilePropertyChangeEvent)event;
       adapted.beforePropertyChange(
               new VirtualFilePropertyEvent(event.getRequestor(), pce.getFile(), pce.getPropertyName(), pce.getOldValue(), pce.getNewValue()));
     }

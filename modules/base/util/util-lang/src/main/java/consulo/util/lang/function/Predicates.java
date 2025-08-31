@@ -56,19 +56,19 @@ public class Predicates {
         return (Predicate<T>)(value ? TRUE : FALSE);
     }
 
-    public static <T> Predicate<T> instanceOf(final Class<?> clazz) {
+    public static <T> Predicate<T> instanceOf(Class<?> clazz) {
         return clazz::isInstance;
     }
 
-    public static <T> Predicate<T> notInstanceOf(final Class<?> clazz) {
+    public static <T> Predicate<T> notInstanceOf(Class<?> clazz) {
         return t -> !clazz.isInstance(t);
     }
 
-    public static Predicate<Class> assignableTo(final Class clazz) {
+    public static Predicate<Class> assignableTo(Class clazz) {
         return clazz::isAssignableFrom;
     }
 
-    public static <T> Predicate<T> instanceOf(final Class<?>... clazz) {
+    public static <T> Predicate<T> instanceOf(Class<?>... clazz) {
         return t -> {
             for (Class<?> aClass : clazz) {
                 if (aClass.isInstance(t)) {
@@ -79,15 +79,15 @@ public class Predicates {
         };
     }
 
-    public static <T> Predicate<T> is(final T option) {
+    public static <T> Predicate<T> is(T option) {
         return equalTo(option);
     }
 
-    public static <T> Predicate<T> equalTo(final Object option) {
+    public static <T> Predicate<T> equalTo(Object option) {
         return t -> Comparing.equal(t, option);
     }
 
-    public static <T> Predicate<T> notEqualTo(final Object option) {
+    public static <T> Predicate<T> notEqualTo(Object option) {
         return t -> !Objects.equals(t, option);
     }
 
@@ -95,7 +95,7 @@ public class Predicates {
         return oneOf(Arrays.asList(options));
     }
 
-    public static <T> Predicate<T> oneOf(final Collection<? extends T> options) {
+    public static <T> Predicate<T> oneOf(Collection<? extends T> options) {
         return options::contains;
     }
 
@@ -140,7 +140,7 @@ public class Predicates {
         return new Or<>(c1, c2);
     }
 
-    public static <A, B> Predicate<A> compose(final Function<? super A, B> fun, final Predicate<? super B> condition) {
+    public static <A, B> Predicate<A> compose(Function<? super A, B> fun, Predicate<? super B> condition) {
         return o -> condition.test(fun.apply(o));
     }
 
@@ -201,8 +201,8 @@ public class Predicates {
 
         @Override
         public final boolean test(T object) {
-            final int key = object.hashCode();
-            final Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
+            int key = object.hashCode();
+            Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
             if (entry == null || entry.first.get() != object) {
                 boolean value = myCondition.test(object);
                 myCache.put(key, Pair.create(new SoftReference<>(object), value));

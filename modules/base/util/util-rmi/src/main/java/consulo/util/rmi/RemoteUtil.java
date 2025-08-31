@@ -41,7 +41,7 @@ public class RemoteUtil {
       return methods;
     }
 
-    final Map<Method, Method> map = new HashMap<Method, Method>();
+    Map<Method, Method> map = new HashMap<Method, Method>();
     for (Method method : key.getValue().getMethods()) {
       Method m = null;
       main:
@@ -66,11 +66,11 @@ public class RemoteUtil {
   }
 
   @Nullable
-  public static <T> T castToRemote(final Object object, final Class<T> clazz) {
+  public static <T> T castToRemote(Object object, Class<T> clazz) {
     if (!Proxy.isProxyClass(object.getClass())) return null;
-    final InvocationHandler handler = Proxy.getInvocationHandler(object);
+    InvocationHandler handler = Proxy.getInvocationHandler(object);
     if (handler instanceof RemoteInvocationHandler) {
-      final RemoteInvocationHandler rih = (RemoteInvocationHandler)handler;
+      RemoteInvocationHandler rih = (RemoteInvocationHandler)handler;
       if (clazz.isInstance(rih.myRemote)) {
         return (T)rih.myRemote;
       }
@@ -78,8 +78,8 @@ public class RemoteUtil {
     return null;
   }
 
-  public static <T> T castToLocal(final Object remote, final Class<T> clazz) {
-    final ClassLoader loader = clazz.getClassLoader();
+  public static <T> T castToLocal(Object remote, Class<T> clazz) {
+    ClassLoader loader = clazz.getClassLoader();
     //noinspection unchecked
     return (T)Proxy.newProxyInstance(loader, new Class[]{clazz}, new RemoteInvocationHandler(remote, clazz, loader));
   }
@@ -87,7 +87,7 @@ public class RemoteUtil {
   private static Class<?> tryFixReturnType(Object result, Class<?> returnType, ClassLoader loader) throws Exception {
     if (returnType.isInterface()) return returnType;
     if (result instanceof RemoteCastable) {
-      final String className = ((RemoteCastable)result).getCastToClassName();
+      String className = ((RemoteCastable)result).getCastToClassName();
       return Class.forName(className, true, loader);
     }
     return returnType;
@@ -159,9 +159,9 @@ public class RemoteUtil {
     return false;
   }
 
-  public static <T> T executeWithClassLoader(final Callable<T> action, final ClassLoader classLoader) throws Exception {
-    final Thread thread = Thread.currentThread();
-    final ClassLoader prev = thread.getContextClassLoader();
+  public static <T> T executeWithClassLoader(Callable<T> action, ClassLoader classLoader) throws Exception {
+    Thread thread = Thread.currentThread();
+    ClassLoader prev = thread.getContextClassLoader();
     try {
       thread.setContextClassLoader(classLoader);
       return action.call();

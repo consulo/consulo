@@ -101,7 +101,7 @@ public class PluginAdvertiserRequester {
             InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
 
             for (PluginDescriptor newPluginDescriptor : list) {
-                final PluginDescriptor installed = PluginManager.findPlugin(newPluginDescriptor.getPluginId());
+                PluginDescriptor installed = PluginManager.findPlugin(newPluginDescriptor.getPluginId());
                 if (installed != null) {
                     int state = StringUtil.compareVersionNumbers(newPluginDescriptor.getVersion(), installed.getVersion());
 

@@ -63,7 +63,7 @@ public class HugeArray {
 
   public Object[] toArray(Object[] array) {
     int firstIndex = 0;
-    final int rowLength = myColumnMask + 1;
+    int rowLength = myColumnMask + 1;
     int lastRowToCopy = calcRow(array.length) + (calcColumn(array.length) == 0 ? 0 : 1);
     for (int rowIndex = 0; rowIndex < lastRowToCopy; rowIndex++) {
       System.arraycopy(myRows[rowIndex], 0, array, firstIndex, Math.min(array.length - firstIndex, rowLength));

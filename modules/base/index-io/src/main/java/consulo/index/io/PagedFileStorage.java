@@ -35,11 +35,11 @@ public class PagedFileStorage implements Forceable {
   private static final int UPPER_LIMIT;
 
   static {
-    final int lower = 100;
-    final int upper = StringUtil.parseInt(System.getProperty("sun.arch.data.model"), 32) == 64 ? 500 : 200;
+    int lower = 100;
+    int upper = StringUtil.parseInt(System.getProperty("sun.arch.data.model"), 32) == 64 ? 500 : 200;
 
     BUFFER_SIZE = Math.max(1, SystemProperties.getIntProperty("idea.paged.storage.page.size", 10)) * MB;
-    final long max = maxDirectMemory() - 2L * BUFFER_SIZE;
+    long max = maxDirectMemory() - 2L * BUFFER_SIZE;
     LOWER_LIMIT = (int)Math.min(lower * MB, max);
     UPPER_LIMIT = (int)Math.min(Math.max(LOWER_LIMIT, SystemProperties.getIntProperty("idea.max.paged.storage.cache", upper) * MB), max);
 
@@ -206,7 +206,7 @@ public class PagedFileStorage implements Forceable {
   }
 
   @SuppressWarnings({"UnusedDeclaration"})
-  public void putByte(final long addr, final byte b) {
+  public void putByte(long addr, byte b) {
     put(addr, b);
   }
 
@@ -250,7 +250,7 @@ public class PagedFileStorage implements Forceable {
       int page_offset = (int)(i % myPageSize);
 
       int page_len = Math.min(l, myPageSize - page_offset);
-      final ByteBuffer buffer = getReadOnlyBuffer(page);
+      ByteBuffer buffer = getReadOnlyBuffer(page);
       try {
         buffer.position(page_offset);
       }
@@ -279,7 +279,7 @@ public class PagedFileStorage implements Forceable {
       int page_offset = (int)(i % myPageSize);
 
       int page_len = Math.min(l, myPageSize - page_offset);
-      final ByteBuffer buffer = getBuffer(page);
+      ByteBuffer buffer = getBuffer(page);
       try {
         buffer.position(page_offset);
       }
@@ -322,9 +322,9 @@ public class PagedFileStorage implements Forceable {
     long oldSize = myFile.length();
     if (oldSize == newSize && oldSize == length()) return;
 
-    final long started = IOStatistics.DEBUG ? System.currentTimeMillis() : 0;
+    long started = IOStatistics.DEBUG ? System.currentTimeMillis() : 0;
     myStorageLockContext.myStorageLock.invalidateBuffer(myStorageIndex | (int)(oldSize / myPageSize)); // TODO long page
-    final long unmapAllFinished = IOStatistics.DEBUG ? System.currentTimeMillis() : 0;
+    long unmapAllFinished = IOStatistics.DEBUG ? System.currentTimeMillis() : 0;
 
     resizeFile(newSize);
 
@@ -356,7 +356,7 @@ public class PagedFileStorage implements Forceable {
     Arrays.fill(buff, (byte)0);
 
     while (length > 0) {
-      final int filled = Math.min((int)length, MAX_FILLER_SIZE);
+      int filled = Math.min((int)length, MAX_FILLER_SIZE);
       put(from, buff, 0, filled);
       length -= filled;
       from += filled;
@@ -620,7 +620,7 @@ public class PagedFileStorage implements Forceable {
 
     @Nonnull
     private ByteBufferWrapper createValue(Integer key) {
-      final int storageIndex = key & FILE_INDEX_MASK;
+      int storageIndex = key & FILE_INDEX_MASK;
       PagedFileStorage owner = getRegisteredPagedFileStorageByIndex(storageIndex);
       assert owner != null : "No storage for index " + storageIndex;
       checkThreadAccess(owner.myStorageLockContext);
@@ -716,7 +716,7 @@ public class PagedFileStorage implements Forceable {
     }
 
     private void unmapBuffersForOwner(int index, StorageLockContext storageLockContext) {
-      final Map<Integer, ByteBufferWrapper> buffers = getBuffersOrderedForOwner(index, storageLockContext);
+      Map<Integer, ByteBufferWrapper> buffers = getBuffersOrderedForOwner(index, storageLockContext);
 
       if (buffers != null) {
         mySegmentsAccessLock.lock();

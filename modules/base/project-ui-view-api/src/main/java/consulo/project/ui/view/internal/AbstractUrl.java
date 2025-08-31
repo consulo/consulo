@@ -57,11 +57,11 @@ public abstract class AbstractUrl {
   public abstract AbstractUrl createUrlByElement(Object element);
 
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final AbstractUrl that = (AbstractUrl)o;
+    AbstractUrl that = (AbstractUrl)o;
 
     if (moduleName != null ? !moduleName.equals(that.moduleName) : that.moduleName != null) return false;
     if (myType != null ? !myType.equals(that.myType) : that.myType != null) return false;

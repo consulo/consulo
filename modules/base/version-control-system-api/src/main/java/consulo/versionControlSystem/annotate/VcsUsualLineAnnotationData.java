@@ -30,7 +30,7 @@ public class VcsUsualLineAnnotationData implements VcsLineAnnotationData {
   }
 
   @Override
-  public void put(final int lineNumber, final VcsRevisionNumber revisionNumber) {
+  public void put(int lineNumber, VcsRevisionNumber revisionNumber) {
     assert lineNumber >= 0 && myData.length > lineNumber;
     myData[lineNumber] = revisionNumber;
   }

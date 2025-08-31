@@ -31,8 +31,8 @@ public final class TodoFileDirAndModuleComparator implements Comparator<NodeDesc
 
   @Override
   public int compare(NodeDescriptor obj1, NodeDescriptor obj2){
-    final int weight1 = obj1.getWeight();
-    final int weight2 = obj2.getWeight();
+    int weight1 = obj1.getWeight();
+    int weight2 = obj2.getWeight();
     if (weight1 != weight2) return weight1 - weight2;
     if (obj1 instanceof ProjectViewNode && obj2 instanceof ProjectViewNode) {
       return ((ProjectViewNode)obj1).getTitle().compareToIgnoreCase(((ProjectViewNode)obj2).getTitle());

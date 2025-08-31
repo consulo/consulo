@@ -76,7 +76,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
   }
 
   @Override
-  public PopupStep onChosen(T selectedValue, final boolean finalChoice) {
+  public PopupStep onChosen(T selectedValue, boolean finalChoice) {
     return FINAL_CHOICE;
   }
 

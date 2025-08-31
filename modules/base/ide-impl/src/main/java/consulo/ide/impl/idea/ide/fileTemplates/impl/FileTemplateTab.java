@@ -50,13 +50,13 @@ abstract class FileTemplateTab {
   public abstract void onTemplateSelected();
 
   public void init(FileTemplate[] templates) {
-    final FileTemplate oldSelection = getSelectedTemplate();
-    final String oldSelectionName = oldSelection != null? ((FileTemplateBase)oldSelection).getQualifiedName() : null;
+    FileTemplate oldSelection = getSelectedTemplate();
+    String oldSelectionName = oldSelection != null? ((FileTemplateBase)oldSelection).getQualifiedName() : null;
 
     myTemplates.clear();
     FileTemplate newSelection = null;
     for (FileTemplate original : templates) {
-      final FileTemplateBase copy = (FileTemplateBase)original.clone();
+      FileTemplateBase copy = (FileTemplateBase)original.clone();
       if (oldSelectionName != null && oldSelectionName.equals(copy.getQualifiedName())) {
         newSelection = copy;
       }

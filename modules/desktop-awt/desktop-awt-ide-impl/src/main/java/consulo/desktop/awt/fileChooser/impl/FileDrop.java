@@ -28,29 +28,29 @@ import java.util.List;
 
 public class FileDrop {
   public FileDrop(JComponent c, final Target target) {
-    final DropTargetListener listener = new DropTargetListener() {
-      public void dragEnter(final DropTargetDragEvent event) {
+    DropTargetListener listener = new DropTargetListener() {
+      public void dragEnter(DropTargetDragEvent event) {
       }
 
-      public void dragOver(final DropTargetDragEvent event) {
+      public void dragOver(DropTargetDragEvent event) {
       }
 
-      public void dropActionChanged(final DropTargetDragEvent event) {
+      public void dropActionChanged(DropTargetDragEvent event) {
       }
 
-      public void dragExit(final DropTargetEvent dte) {
+      public void dragExit(DropTargetEvent dte) {
       }
 
-      public void drop(final DropTargetDropEvent event) {
+      public void drop(DropTargetDropEvent event) {
         event.acceptDrop(event.getDropAction());
 
-        final List<File> fileList = FileCopyPasteUtil.getFileList(event.getTransferable());
+        List<File> fileList = FileCopyPasteUtil.getFileList(event.getTransferable());
         if (fileList == null) return;
 
-        final List<VirtualFile> files = new ArrayList<VirtualFile>();
-        final LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+        List<VirtualFile> files = new ArrayList<VirtualFile>();
+        LocalFileSystem fileSystem = LocalFileSystem.getInstance();
         for (File file : fileList) {
-          final VirtualFile vFile = fileSystem.findFileByIoFile(file);
+          VirtualFile vFile = fileSystem.findFileByIoFile(file);
           if (vFile != null && vFile.exists() && target.getDescriptor().isFileVisible(vFile, target.isHiddenShown())) {
             files.add(vFile);
           }

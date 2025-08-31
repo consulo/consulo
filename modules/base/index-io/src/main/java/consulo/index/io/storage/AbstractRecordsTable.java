@@ -54,7 +54,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
   private IntList myFreeRecordsList = null;
   private boolean myIsDirty = false;
 
-  public AbstractRecordsTable(final File storageFilePath, final PagePool pool) throws IOException {
+  public AbstractRecordsTable(File storageFilePath, PagePool pool) throws IOException {
     myStorage = new RandomAccessDataFile(storageFilePath, pool);
     if (myStorage.length() == 0) {
       myStorage.put(0, new byte[getHeaderSize()], 0, getHeaderSize());
@@ -93,7 +93,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
       return result;
     }
     else {
-      final int result = myFreeRecordsList.removeByIndex(myFreeRecordsList.size() - 1);
+      int result = myFreeRecordsList.removeByIndex(myFreeRecordsList.size() - 1);
       assert getSize(result) == -1;
       setSize(result, 0);
       return result;
@@ -146,7 +146,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
   }
 
   private IntList scanForFreeRecords() throws IOException {
-    final IntList result = IntLists.newArrayList();
+    IntList result = IntLists.newArrayList();
     for (int i = 1; i <= getRecordsCount(); i++) {
       if (getSize(i) == -1) {
         result.add(i);
@@ -191,7 +191,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
     return getHeaderSize() + (record - 1) * getRecordSize() + section;
   }
 
-  public void deleteRecord(final int record) throws IOException {
+  public void deleteRecord(int record) throws IOException {
     markDirty();
     ensureFreeRecordsScanned();
     doCleanRecord(record);
@@ -203,7 +203,7 @@ public abstract class AbstractRecordsTable implements Closeable, Forceable {
     return myStorage.getInt(HEADER_VERSION_OFFSET);
   }
 
-  public void setVersion(final int expectedVersion) {
+  public void setVersion(int expectedVersion) {
     markDirty();
     myStorage.putInt(HEADER_VERSION_OFFSET, expectedVersion);
   }

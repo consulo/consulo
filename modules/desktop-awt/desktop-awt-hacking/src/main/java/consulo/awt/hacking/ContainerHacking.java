@@ -25,7 +25,7 @@ import java.lang.reflect.Field;
  */
 public class ContainerHacking {
   @Nullable
-  public static FocusTraversalPolicy getFocusTraversalPolicyAwtImpl(final Container component) {
+  public static FocusTraversalPolicy getFocusTraversalPolicyAwtImpl(Container component) {
     try {
       Field field = Container.class.getDeclaredField("focusTraversalPolicy");
       field.setAccessible(true);

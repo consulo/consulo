@@ -30,9 +30,9 @@ public class VcsSynchronousProgressWrapper {
   private VcsSynchronousProgressWrapper() {
   }
 
-  public static boolean wrap(final ThrowableRunnable<VcsException> runnable, final Project project, final String title) {
-    final VcsException[] exc = new VcsException[1];
-    final Runnable process = () -> {
+  public static boolean wrap(ThrowableRunnable<VcsException> runnable, Project project, String title) {
+    VcsException[] exc = new VcsException[1];
+    Runnable process = () -> {
       try {
         runnable.run();
       }
@@ -40,7 +40,7 @@ public class VcsSynchronousProgressWrapper {
         exc[0] = e;
       }
     };
-    final boolean notCanceled;
+    boolean notCanceled;
     if (ApplicationManager.getApplication().isDispatchThread()) {
       notCanceled = ProgressManager.getInstance().runProcessWithProgressSynchronously(process, title, true, project);
     } else {

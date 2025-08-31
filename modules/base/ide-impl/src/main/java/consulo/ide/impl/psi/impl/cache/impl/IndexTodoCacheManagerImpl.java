@@ -69,12 +69,12 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
     if (myProject.isDefault()) {
       return PsiFile.EMPTY_ARRAY;
     }
-    final FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
-    final Set<PsiFile> allFiles = new HashSet<>();
+    FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
+    Set<PsiFile> allFiles = new HashSet<>();
 
     fileBasedIndex.ignoreDumbMode(() -> {
       for (IndexPattern indexPattern : IndexPatternUtil.getIndexPatterns()) {
-        final Collection<VirtualFile> files =
+        Collection<VirtualFile> files =
                 fileBasedIndex.getContainingFiles(TodoIndex.NAME, new TodoIndexEntry(indexPattern.getPatternString(), indexPattern.isCaseSensitive()), GlobalSearchScope.allScope(myProject));
         for (VirtualFile file : files) {
           ReadAction.run(() -> {
@@ -97,12 +97,12 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   }
 
   @Override
-  public int getTodoCount(@Nonnull final VirtualFile file, @Nonnull final IndexPatternProvider patternProvider) {
+  public int getTodoCount(@Nonnull VirtualFile file, @Nonnull IndexPatternProvider patternProvider) {
     return getTodoCountImpl(file, patternProvider.getIndexPatterns());
   }
 
   @Override
-  public int getTodoCount(@Nonnull final VirtualFile file, @Nonnull final IndexPattern pattern) {
+  public int getTodoCount(@Nonnull VirtualFile file, @Nonnull IndexPattern pattern) {
     return getTodoCountImpl(file, pattern);
   }
 

@@ -26,11 +26,11 @@ public class CustomizedBreakpointPresentation {
   private Image myIcon;
   private String myErrorMessage;
 
-  public void setIcon(final Image icon) {
+  public void setIcon(Image icon) {
     myIcon = icon;
   }
 
-  public void setErrorMessage(final String errorMessage) {
+  public void setErrorMessage(String errorMessage) {
     myErrorMessage = errorMessage;
   }
 

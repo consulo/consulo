@@ -56,17 +56,17 @@ public class MasterDetailsStateService implements PersistentStateComponent<Maste
   public MasterDetailsState getComponentState(@Nonnull String key, Class<? extends MasterDetailsState> stateClass) {
     ComponentState state = myStates.get(key);
     if (state == null) return null;
-    final Element settings = state.mySettings;
+    Element settings = state.mySettings;
     return settings != null ? XmlSerializer.deserialize(settings, stateClass) : null;
   }
 
   public void setComponentState(@Nonnull @NonNls String key, @Nonnull MasterDetailsState state) {
-    final Element element = XmlSerializer.serialize(state, mySerializationFilter);
+    Element element = XmlSerializer.serialize(state, mySerializationFilter);
     if (element == null) {
       myStates.remove(key);
     }
     else {
-      final ComponentState componentState = new ComponentState();
+      ComponentState componentState = new ComponentState();
       componentState.myKey = key;
       componentState.mySettings = element;
       myStates.put(key, componentState);

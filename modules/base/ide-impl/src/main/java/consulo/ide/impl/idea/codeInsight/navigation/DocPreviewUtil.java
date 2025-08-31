@@ -100,7 +100,7 @@ public class DocPreviewUtil {
    * @param fullText                   full documentation text (if available)
    */
   @Nonnull
-  public static String buildPreview(@Nonnull final String header, @Nullable final String qName, @Nullable final String fullText) {
+  public static String buildPreview(@Nonnull String header, @Nullable String qName, @Nullable String fullText) {
     if (fullText == null) {
       return header;
     }

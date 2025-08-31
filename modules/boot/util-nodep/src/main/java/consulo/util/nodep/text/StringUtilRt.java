@@ -77,23 +77,23 @@ public class StringUtilRt {
         return cs == null || cs.length() == 0;
     }
 
-    public static String notNullize(final String s) {
+    public static String notNullize(String s) {
         return notNullize(s, "");
     }
 
-    public static String notNullize(final String s, String defaultValue) {
+    public static String notNullize(String s, String defaultValue) {
         return s == null ? defaultValue : s;
     }
 
-    public static String notNullizeIfEmpty(final String s, String defaultValue) {
+    public static String notNullizeIfEmpty(String s, String defaultValue) {
         return isEmpty(s) ? defaultValue : s;
     }
 
-    public static String nullize(final String s) {
+    public static String nullize(String s) {
         return nullize(s, false);
     }
 
-    public static String nullize(final String s, boolean nullizeSpaces) {
+    public static String nullize(String s, boolean nullizeSpaces) {
         if (nullizeSpaces) {
             if (isEmptyOrSpaces(s)) {
                 return null;
@@ -124,14 +124,14 @@ public class StringUtilRt {
         return true;
     }
 
-    public static String replace(final String text, final String oldS, final String newS, final boolean ignoreCase) {
+    public static String replace(String text, String oldS, String newS, boolean ignoreCase) {
         if (text.length() < oldS.length()) {
             return text;
         }
         StringBuilder newText = null;
         int i = 0;
         while (i < text.length()) {
-            final int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
+            int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
             if (index < 0) {
                 if (i == 0) {
                     return text;
@@ -260,7 +260,7 @@ public class StringUtilRt {
     public static CharSequence unifyLineSeparators(CharSequence text, String newSeparator, int[] offsetsToKeep, boolean keepCarriageReturn) {
         StringBuilder buffer = null;
         int intactLength = 0;
-        final boolean newSeparatorIsSlashN = "\n".equals(newSeparator);
+        boolean newSeparatorIsSlashN = "\n".equals(newSeparator);
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (c == '\n') {
@@ -332,7 +332,7 @@ public class StringUtilRt {
         }
     }
 
-    public static int parseInt(String string, final int defaultValue) {
+    public static int parseInt(String string, int defaultValue) {
         if (string == null) {
             return defaultValue;
         }
@@ -344,7 +344,7 @@ public class StringUtilRt {
         }
     }
 
-    public static double parseDouble(final String string, final double defaultValue) {
+    public static double parseDouble(String string, double defaultValue) {
         try {
             return Double.parseDouble(string);
         }
@@ -353,7 +353,7 @@ public class StringUtilRt {
         }
     }
 
-    public static boolean parseBoolean(final String string, final boolean defaultValue) {
+    public static boolean parseBoolean(String string, boolean defaultValue) {
         try {
             return Boolean.parseBoolean(string);
         }
@@ -422,8 +422,8 @@ public class StringUtilRt {
     }
 
     public static boolean startsWithIgnoreCase(String str, String prefix) {
-        final int stringLength = str.length();
-        final int prefixLength = prefix.length();
+        int stringLength = str.length();
+        int prefixLength = prefix.length();
         return stringLength >= prefixLength && str.regionMatches(true, 0, prefix, 0, prefixLength);
     }
 

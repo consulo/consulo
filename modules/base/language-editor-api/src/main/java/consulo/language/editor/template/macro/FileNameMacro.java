@@ -46,9 +46,9 @@ public class FileNameMacro extends Macro {
 
   @Override
   public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
-    final PsiFile file = PsiDocumentManager.getInstance(context.getProject()).getPsiFile(context.getEditor().getDocument());
+    PsiFile file = PsiDocumentManager.getInstance(context.getProject()).getPsiFile(context.getEditor().getDocument());
     if (file != null) {
-      final VirtualFile virtualFile = file.getVirtualFile();
+      VirtualFile virtualFile = file.getVirtualFile();
       if (virtualFile != null) {
         return calculateResult(virtualFile);
       }

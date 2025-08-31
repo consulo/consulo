@@ -25,7 +25,7 @@ public class ContentsUtil {
   protected static final String DISPOSABLE_KEY = "TabContentDisposable";
 
   public static void addOrReplaceContent(ContentManager manager, Content content, boolean select) {
-    final String contentName = content.getDisplayName();
+    String contentName = content.getDisplayName();
 
     Content[] contents = manager.getContents();
     Content oldContentFound = null;
@@ -45,7 +45,7 @@ public class ContentsUtil {
     }
   }
 
-  public static void addContent(final ContentManager manager, final Content content, final boolean select) {
+  public static void addContent(ContentManager manager, Content content, boolean select) {
     manager.addContent(content);
     if (select) {
       manager.setSelectedContent(content);

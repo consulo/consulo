@@ -29,7 +29,7 @@ final class CtxPopup {
             return null;
         }
 
-        final TBPanel tb = createScrubberBarFromPopup(listPopup);
+        TBPanel tb = createScrubberBarFromPopup(listPopup);
         TouchBarsManager.registerAndShow(popupComponent, tb);
 
         return () -> {
@@ -39,29 +39,29 @@ final class CtxPopup {
 
     // creates releaseOnClose touchbar
     private static TBPanel createScrubberBarFromPopup(@Nonnull ListPopupImpl listPopup) {
-        final TBPanel result = new TBPanel("popup_scrubber_bar_" + listPopup.hashCode(), new TBPanel.CrossEscInfo(true, false), false);
+        TBPanel result = new TBPanel("popup_scrubber_bar_" + listPopup.hashCode(), new TBPanel.CrossEscInfo(true, false), false);
 
-        final ModalityState ms = LaterInvocator.getCurrentModalityState();
+        ModalityState ms = LaterInvocator.getCurrentModalityState();
 
         final TBItemScrubber scrub = result.addScrubber();
-        final @Nonnull ListPopupStep<Object> listPopupStep = listPopup.getListStep();
-        final @Nonnull List<Object> stepValues = listPopupStep.getValues();
-        final List<Integer> disabledItems = new ArrayList<>();
+        @Nonnull ListPopupStep<Object> listPopupStep = listPopup.getListStep();
+        @Nonnull List<Object> stepValues = listPopupStep.getValues();
+        List<Integer> disabledItems = new ArrayList<>();
         int currIndex = 0;
         final Map<Object, Integer> obj2index = new HashMap<>();
         for (Object obj : stepValues) {
-            final Image ic = listPopupStep.getIconFor(obj);
+            Image ic = listPopupStep.getIconFor(obj);
             String txt = listPopupStep.getTextFor(obj);
 
             if (listPopupStep.isMnemonicsNavigationEnabled()) {
-                final MnemonicNavigationFilter<Object> filter = listPopupStep.getMnemonicNavigationFilter();
-                final int pos = filter == null ? -1 : filter.getMnemonicPos(obj);
+                MnemonicNavigationFilter<Object> filter = listPopupStep.getMnemonicNavigationFilter();
+                int pos = filter == null ? -1 : filter.getMnemonicPos(obj);
                 if (pos != -1) {
                     txt = txt.substring(0, pos) + txt.substring(pos + 1);
                 }
             }
 
-            final Runnable edtAction = () -> {
+            Runnable edtAction = () -> {
                 if (obj != null) {
                     listPopup.getList().setSelectedValue(obj, false);
                 }
@@ -71,7 +71,7 @@ final class CtxPopup {
                 listPopup.handleSelect(true);
             };
 
-            final Runnable action = () -> {
+            Runnable action = () -> {
                 ApplicationManager.getApplication().invokeLater(edtAction, ms);
             };
             scrub.addItem(ic, txt, action);
@@ -94,10 +94,10 @@ final class CtxPopup {
 
             @Override
             public void contentsChanged(ListDataEvent e) {
-                final List<Integer> visibleIndices = new ArrayList<>();
+                List<Integer> visibleIndices = new ArrayList<>();
                 for (int c = 0; c < model.getSize(); ++c) {
-                    final Object visibleItem = model.getElementAt(c);
-                    final Integer itemId = obj2index.get(visibleItem);
+                    Object visibleItem = model.getElementAt(c);
+                    Integer itemId = obj2index.get(visibleItem);
                     if (itemId != null) {
                         visibleIndices.add(itemId);
                     }

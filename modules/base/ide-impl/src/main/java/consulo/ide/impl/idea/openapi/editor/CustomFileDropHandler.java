@@ -30,5 +30,5 @@ public abstract class CustomFileDropHandler {
 
   public abstract boolean canHandle(@Nonnull Transferable t, Editor editor);
 
-  public abstract boolean handleDrop(@Nonnull Transferable t, Editor editor, final Project project);
+  public abstract boolean handleDrop(@Nonnull Transferable t, Editor editor, Project project);
 }

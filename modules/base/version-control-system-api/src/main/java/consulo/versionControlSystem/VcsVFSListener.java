@@ -64,7 +64,7 @@ public abstract class VcsVFSListener implements Disposable {
         public String myNewPath;
         private final VirtualFile myFile;
 
-        public MovedFileInfo(VirtualFile file, final String newPath) {
+        public MovedFileInfo(VirtualFile file, String newPath) {
             myOldPath = file.getPath();
             myNewPath = newPath;
             myFile = file;
@@ -150,7 +150,7 @@ public abstract class VcsVFSListener implements Disposable {
 
     private class MyCommandAdapter implements CommandListener {
         @Override
-        public void commandFinished(final CommandEvent event) {
+        public void commandFinished(CommandEvent event) {
             if (myProject != event.getProject()) {
                 return;
             }
@@ -481,7 +481,7 @@ public abstract class VcsVFSListener implements Disposable {
      * @return selected files or null (that is considered as empty file set)
      */
     @Nonnull
-    protected List<FilePath> selectFilePathsToDelete(final List<FilePath> deletedFiles) {
+    protected List<FilePath> selectFilePathsToDelete(List<FilePath> deletedFiles) {
         return selectFilePathsForOption(
             myRemoveOption,
             deletedFiles,
@@ -559,7 +559,7 @@ public abstract class VcsVFSListener implements Disposable {
         return getSingleFileAddPromptGenerator().apply("{0}").get();
     }
 
-    protected abstract void performAdding(final Collection<VirtualFile> addedFiles, final Map<VirtualFile, VirtualFile> copyFromMap);
+    protected abstract void performAdding(Collection<VirtualFile> addedFiles, Map<VirtualFile, VirtualFile> copyFromMap);
 
     @Nonnull
     protected LocalizeValue getDeleteTitleValue() {

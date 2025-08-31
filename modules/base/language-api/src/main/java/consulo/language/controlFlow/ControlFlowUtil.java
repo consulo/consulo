@@ -39,7 +39,7 @@ public final class ControlFlowUtil {
         };
     }
 
-    public static int findInstructionNumberByElement(final Instruction[] flow, final PsiElement element) {
+    public static int findInstructionNumberByElement(Instruction[] flow, PsiElement element) {
         for (int i = 0; i < flow.length; i++) {
             // Check if canceled
             ProgressManager.checkCanceled();
@@ -54,8 +54,8 @@ public final class ControlFlowUtil {
     /**
      * Process control flow graph in depth first order
      */
-    public static boolean process(final Instruction[] flow, final int start, final Predicate<? super Instruction> processor) {
-        final int length = flow.length;
+    public static boolean process(Instruction[] flow, int start, Predicate<? super Instruction> processor) {
+        int length = flow.length;
         boolean[] visited = new boolean[length];
         Arrays.fill(visited, false);
 
@@ -65,13 +65,13 @@ public final class ControlFlowUtil {
 
         while (!stack.isEmpty()) {
             ProgressManager.checkCanceled();
-            final int num = stack.popInt();
-            final Instruction instruction = flow[num];
+            int num = stack.popInt();
+            Instruction instruction = flow[num];
             if (!processor.test(instruction)) {
                 return false;
             }
             for (Instruction succ : instruction.allSucc()) {
-                final int succNum = succ.num();
+                int succNum = succ.num();
                 if (!visited[succNum]) {
                     visited[succNum] = true;
                     stack.push(succNum);
@@ -81,29 +81,29 @@ public final class ControlFlowUtil {
         return true;
     }
 
-    public static void iteratePrev(final int startInstruction,
-                                   @Nonnull final Instruction[] instructions,
-                                   final @Nonnull Function<? super Instruction, Operation> closure) {
+    public static void iteratePrev(int startInstruction,
+                                   @Nonnull Instruction[] instructions,
+                                   @Nonnull Function<? super Instruction, Operation> closure) {
         iterate(startInstruction, instructions, closure, true);
     }
 
     /**
      * Iterates over write instructions in CFG with reversed order
      */
-    public static void iterate(final int startInstruction,
-                               @Nonnull final Instruction[] instructions,
-                               final @Nonnull Function<? super Instruction, Operation> closure,
+    public static void iterate(int startInstruction,
+                               @Nonnull Instruction[] instructions,
+                               @Nonnull Function<? super Instruction, Operation> closure,
                                boolean prev) {
         //noinspection SSBasedInspection
-        final IntArrayList stack = new IntArrayList(instructions.length);
-        final boolean[] visited = new boolean[instructions.length];
+        IntArrayList stack = new IntArrayList(instructions.length);
+        boolean[] visited = new boolean[instructions.length];
 
         stack.push(startInstruction);
         while (!stack.isEmpty()) {
             ProgressManager.checkCanceled();
-            final int num = stack.popInt();
-            final Instruction instr = instructions[num];
-            final Operation nextOperation = closure.apply(instr);
+            int num = stack.popInt();
+            Instruction instr = instructions[num];
+            Operation nextOperation = closure.apply(instr);
             // Just ignore previous instructions for the current node and move further
             if (nextOperation == Operation.CONTINUE) {
                 continue;
@@ -116,7 +116,7 @@ public final class ControlFlowUtil {
             assert nextOperation == Operation.NEXT;
             Collection<Instruction> nextToProcess = prev ? instr.allPred() : instr.allSucc();
             for (Instruction pred : nextToProcess) {
-                final int predNum = pred.num();
+                int predNum = pred.num();
                 if (!visited[predNum]) {
                     visited[predNum] = true;
                     stack.push(predNum);

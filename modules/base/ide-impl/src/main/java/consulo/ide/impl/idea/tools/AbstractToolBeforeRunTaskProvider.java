@@ -43,7 +43,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
-    final ToolSelectDialog dialog = new ToolSelectDialog(runConfiguration.getProject(), task.getToolActionId(), createToolsPanel());
+    ToolSelectDialog dialog = new ToolSelectDialog(runConfiguration.getProject(), task.getToolActionId(), createToolsPanel());
 
     AsyncResult<Void> result = AsyncResult.undefined();
 
@@ -80,7 +80,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
   @Nonnull
   @Override
   public String getDescription(T task) {
-    final String actionId = task.getToolActionId();
+    String actionId = task.getToolActionId();
     if (actionId == null) {
       LOG.error("Null id");
       return ToolsBundle.message("tools.unknown.external.tool");

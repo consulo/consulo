@@ -43,7 +43,7 @@ public class MockAbstractVcs extends AbstractVcs {
     myAllowNestedRoots = false;
   }
 
-  public MockAbstractVcs(final Project project, final String name) {
+  public MockAbstractVcs(Project project, String name) {
     super(project, name);
   }
 
@@ -83,17 +83,17 @@ public class MockAbstractVcs extends AbstractVcs {
     myCheckinEnvironment = ce;
   }
 
-  public void setCommittedChangesProvider(final CommittedChangesProvider committedChangesProvider) {
+  public void setCommittedChangesProvider(CommittedChangesProvider committedChangesProvider) {
     myCommittedChangesProvider = committedChangesProvider;
   }
 
-  public void setDiffProvider(final DiffProvider diffProvider) {
+  public void setDiffProvider(DiffProvider diffProvider) {
     myDiffProvider = diffProvider;
   }
 
   @Override
   @Nullable
-  public VcsRevisionNumber parseRevisionNumber(final String revisionNumberString) {
+  public VcsRevisionNumber parseRevisionNumber(String revisionNumberString) {
     return new VcsRevisionNumber.Int(Integer.parseInt(revisionNumberString));
   }
 
@@ -102,7 +102,7 @@ public class MockAbstractVcs extends AbstractVcs {
     return ourIntegerPattern;
   }
 
-  public void setChangeProvider(final ChangeProvider changeProvider) {
+  public void setChangeProvider(ChangeProvider changeProvider) {
     myChangeProvider = changeProvider;
   }
 

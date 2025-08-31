@@ -38,7 +38,7 @@ public class CodeFoldingSettingsImpl extends CodeFoldingSettings implements Pers
   }
 
   @Override
-  public void loadState(final CodeFoldingSettings state) {
+  public void loadState(CodeFoldingSettings state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 }

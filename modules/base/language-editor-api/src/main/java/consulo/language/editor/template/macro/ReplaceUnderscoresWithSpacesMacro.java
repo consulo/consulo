@@ -37,7 +37,7 @@ public class ReplaceUnderscoresWithSpacesMacro extends MacroBase {
 
   @Override
   protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
-    final String text = getTextResult(params, context);
+    String text = getTextResult(params, context);
     if (text != null) {
       return new TextResult(text.replace('_', ' '));
     }

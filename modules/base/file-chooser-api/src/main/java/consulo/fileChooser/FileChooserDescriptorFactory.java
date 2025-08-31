@@ -73,13 +73,13 @@ public class FileChooserDescriptorFactory {
   }
 
   public static FileChooserDescriptor getDirectoryChooserDescriptor(String aSearchedObjectName) {
-    final FileChooserDescriptor singleFolderDescriptor = createSingleFolderDescriptor();
+    FileChooserDescriptor singleFolderDescriptor = createSingleFolderDescriptor();
     singleFolderDescriptor.setTitle(FileChooserBundle.message("file.chooser.select.object.title", aSearchedObjectName));
     return singleFolderDescriptor;
   }
 
   public static FileChooserDescriptor getFileChooserDescriptor(String aSearchedObjectName) {
-    final FileChooserDescriptor fileChooserDescriptor = createSingleFileNoJarsDescriptor();
+    FileChooserDescriptor fileChooserDescriptor = createSingleFileNoJarsDescriptor();
     fileChooserDescriptor.setTitle(FileChooserBundle.message("file.chooser.select.object.title", aSearchedObjectName));
     return fileChooserDescriptor;
   }
@@ -87,12 +87,12 @@ public class FileChooserDescriptorFactory {
   public static FileChooserDescriptor createSingleFileDescriptor(final FileType fileType) {
     return new FileChooserDescriptor(true, false, false, false, false, false) {
       @Override
-      public boolean isFileVisible(final VirtualFile file, final boolean showHiddenFiles) {
+      public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
         return file.isDirectory() || file.getFileType() == fileType;
       }
 
       @Override
-      public boolean isFileSelectable(final VirtualFile file) {
+      public boolean isFileSelectable(VirtualFile file) {
         return super.isFileSelectable(file) && file.getFileType() == fileType;
       }
     };

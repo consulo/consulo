@@ -72,7 +72,7 @@ public final class ShowLibraryFramesAction extends ToggleAction {
 
     if (Boolean.TRUE.equals(isSupported)) {
       presentation.setVisible(true);
-      final boolean shouldShow = !Boolean.TRUE.equals(presentation.getClientProperty(SELECTED_PROPERTY));
+      boolean shouldShow = !Boolean.TRUE.equals(presentation.getClientProperty(SELECTED_PROPERTY));
       presentation.setText(shouldShow ? ourTextWhenShowIsOn : ourTextWhenShowIsOff);
     }
     else {

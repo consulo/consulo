@@ -67,7 +67,7 @@ public final class BundleBoxBuilder {
   }
 
   @Nonnull
-  public BundleBoxBuilder withSdkTypeFilterByClass(@Nonnull final Class<? extends SdkTypeId> clazz) {
+  public BundleBoxBuilder withSdkTypeFilterByClass(@Nonnull Class<? extends SdkTypeId> clazz) {
     mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
     return this;
   }
@@ -79,13 +79,13 @@ public final class BundleBoxBuilder {
   }
 
   @Nonnull
-  public BundleBoxBuilder withSdkTypeFilterBySet(@Nonnull final Set<? extends SdkType> sdkTypes) {
+  public BundleBoxBuilder withSdkTypeFilterBySet(@Nonnull Set<? extends SdkType> sdkTypes) {
     mySdkFilter = sdkTypes::contains;
     return this;
   }
 
   @Nonnull
-  public BundleBoxBuilder withSdkTypeFilterByType(@Nonnull final SdkType sdkType) {
+  public BundleBoxBuilder withSdkTypeFilterByType(@Nonnull SdkType sdkType) {
     return withSdkTypeFilterBySet(Collections.singleton(sdkType));
   }
 

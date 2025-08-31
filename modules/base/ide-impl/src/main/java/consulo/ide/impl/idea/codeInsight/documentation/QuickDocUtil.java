@@ -34,7 +34,7 @@ public class QuickDocUtil {
      * @return {@code true} if the action succeeded to run without interruptions, {@code false} otherwise
      */
     public static boolean runInReadActionWithWriteActionPriorityWithRetries(
-        @Nonnull final Runnable action,
+        @Nonnull Runnable action,
         long timeout,
         long pauseBetweenRetries,
         @Nullable ProgressIndicator progressIndicator
@@ -62,7 +62,7 @@ public class QuickDocUtil {
      * progress indicator ({@link ProgressManager#getProgressIndicator()}).
      */
     public static boolean runInReadActionWithWriteActionPriorityWithRetries(
-        @RequiredUIAccess @Nonnull final Runnable action,
+        @RequiredUIAccess @Nonnull Runnable action,
         long timeout,
         long pauseBetweenRetries
     ) {

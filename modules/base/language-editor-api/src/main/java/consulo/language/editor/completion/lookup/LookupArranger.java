@@ -113,7 +113,7 @@ public abstract class LookupArranger implements WeighingContext {
     }
   }
 
-  protected List<LookupElement> retainItems(final Set<LookupElement> retained) {
+  protected List<LookupElement> retainItems(Set<LookupElement> retained) {
     List<LookupElement> filtered = new ArrayList<>();
     List<LookupElement> removed = new ArrayList<>();
     for (LookupElement item : myItems) {
@@ -134,8 +134,8 @@ public abstract class LookupArranger implements WeighingContext {
     return Collections.unmodifiableList(exactly ? myExactPrefixItems : myInexactPrefixItems);
   }
 
-  protected boolean isPrefixItem(LookupElement item, final boolean exactly) {
-    final String pattern = itemPattern(item);
+  protected boolean isPrefixItem(LookupElement item, boolean exactly) {
+    String pattern = itemPattern(item);
     for (String s : item.getAllLookupStrings()) {
       if (!s.equalsIgnoreCase(pattern)) continue;
 

@@ -29,10 +29,10 @@ public abstract class RunnerRegistry {
     return Application.get().getInstance(RunnerRegistry.class);
   }
 
-  public abstract boolean hasRunner(@Nonnull final String executorId, @Nonnull final RunProfile settings);
+  public abstract boolean hasRunner(@Nonnull String executorId, @Nonnull RunProfile settings);
 
   @Nullable
-  public abstract ProgramRunner getRunner(final String executorId, final RunProfile settings);
+  public abstract ProgramRunner getRunner(String executorId, RunProfile settings);
 
   public abstract ProgramRunner[] getRegisteredRunners();
 

@@ -30,8 +30,8 @@ public class IgnoredPathPresentation {
     myProject = project;
   }
 
-  public String alwaysRelative(@Nonnull final String path) {
-    final File file = new File(path);
+  public String alwaysRelative(@Nonnull String path) {
+    File file = new File(path);
     String relativePath = path;
     if (file.isAbsolute()) {
       relativePath = ChangesUtil.getProjectRelativePath(myProject, file);

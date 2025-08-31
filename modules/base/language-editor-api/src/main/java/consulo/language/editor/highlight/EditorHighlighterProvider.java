@@ -52,7 +52,7 @@ public interface EditorHighlighterProvider {
    * @param colors      color scheme highlighter shall be initialized with.   @return EditorHighlighter implementation
    */
   @Nonnull
-  EditorHighlighter getEditorHighlighter(@Nullable Project project, @Nonnull FileType fileType, @Nullable final VirtualFile virtualFile, @Nonnull EditorColorsScheme colors);
+  EditorHighlighter getEditorHighlighter(@Nullable Project project, @Nonnull FileType fileType, @Nullable VirtualFile virtualFile, @Nonnull EditorColorsScheme colors);
 
   @Nonnull
   FileType getFileType();

@@ -105,7 +105,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     DropHandler handler = getDropHandler(event);
     if (handler == null) return;
 
-    final Object attached = event.getAttachedObject();
+    Object attached = event.getAttachedObject();
     TreePath[] sources = getSourcePaths(event.getAttachedObject());
 
     if (sources == null) {
@@ -222,7 +222,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     if (fileList == null) return null;
     List<PsiFileSystemItem> sourceFiles = new ArrayList<>();
     for (File file : fileList) {
-      final VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+      VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
       PsiFileSystemItem psiFile = PsiUtilCore.findFileSystemItem(myProject, vFile);
       if (psiFile != null) {
         sourceFiles.add(psiFile);
@@ -350,7 +350,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     private void doDrop(@Nonnull TreePath target, PsiElement[] sources) {
-      final PsiElement targetElement = getPsiElement(target);
+      PsiElement targetElement = getPsiElement(target);
       if (targetElement == null) return;
 
       if (DumbService.isDumb(myProject)) {
@@ -358,17 +358,17 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
         return;
       }
 
-      final PsiDirectory psiDirectory;
+      PsiDirectory psiDirectory;
       if (targetElement instanceof PsiDirectoryContainer) {
-        final PsiDirectoryContainer directoryContainer = (PsiDirectoryContainer)targetElement;
-        final PsiDirectory[] psiDirectories = directoryContainer.getDirectories();
+        PsiDirectoryContainer directoryContainer = (PsiDirectoryContainer)targetElement;
+        PsiDirectory[] psiDirectories = directoryContainer.getDirectories();
         psiDirectory = psiDirectories.length != 0 ? psiDirectories[0] : null;
       }
       else if (targetElement instanceof PsiDirectory) {
         psiDirectory = (PsiDirectory)targetElement;
       }
       else {
-        final PsiFile containingFile = targetElement.getContainingFile();
+        PsiFile containingFile = targetElement.getContainingFile();
         LOG.assertTrue(containingFile != null, targetElement);
         psiDirectory = containingFile.getContainingDirectory();
       }

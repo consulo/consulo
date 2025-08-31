@@ -134,7 +134,7 @@ public class AccessibleContextUtil {
     String[] lines = StringUtil.splitByLines(text);
 
     // Join lines, ensuring each line end with a punctuation.
-    final StringBuilder result = new StringBuilder();
+    StringBuilder result = new StringBuilder();
     boolean first = true;
     for (String line : lines) {
       line = line.trim();

@@ -43,7 +43,7 @@ public class ProgramRunnerUtil {
   }
 
   @Nullable
-  public static ProgramRunner getRunner(@Nonnull final String executorId, final RunnerAndConfigurationSettings configuration) {
+  public static ProgramRunner getRunner(@Nonnull String executorId, RunnerAndConfigurationSettings configuration) {
     return configuration == null ? null : RunnerRegistry.getInstance().getRunner(executorId, configuration.getConfiguration());
   }
 
@@ -124,7 +124,7 @@ public class ProgramRunnerUtil {
   }
 
   @Nonnull
-  public static Image getConfigurationIcon(final RunnerAndConfigurationSettings settings, final boolean invalid) {
+  public static Image getConfigurationIcon(RunnerAndConfigurationSettings settings, boolean invalid) {
     Image icon = getPrimaryIcon(settings);
 
     if (invalid) {
@@ -150,9 +150,9 @@ public class ProgramRunnerUtil {
     return icon;
   }
 
-  public static String shortenName(final String name, final int toBeAdded) {
+  public static String shortenName(String name, int toBeAdded) {
     if (name == null) return "";
-    final int symbols = Math.max(10, 20 - toBeAdded);
+    int symbols = Math.max(10, 20 - toBeAdded);
     if (name.length() < symbols) {
       return name;
     }

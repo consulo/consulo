@@ -77,5 +77,5 @@ public abstract class JobLauncher {
    * Use {@link Application#executeOnPooledThread(Runnable)} instead
    */
   @Nonnull
-  public abstract Job<Void> submitToJobThread(@Nonnull final Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback);
+  public abstract Job<Void> submitToJobThread(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback);
 }

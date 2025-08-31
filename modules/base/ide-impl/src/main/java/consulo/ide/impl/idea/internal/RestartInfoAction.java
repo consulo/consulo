@@ -26,7 +26,7 @@ import consulo.application.dumb.DumbAware;
  */
 public class RestartInfoAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    final Application app = ApplicationManager.getApplication();
+    Application app = ApplicationManager.getApplication();
     if (app.isRestartCapable()) {
       app.restart();
     }

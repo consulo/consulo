@@ -58,9 +58,9 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
             return;
         }
 
-        final FileViewProvider provider = PsiManager.getInstance(project).findViewProvider(virtualFile);
+        FileViewProvider provider = PsiManager.getInstance(project).findViewProvider(virtualFile);
         if (provider instanceof ConfigurableTemplateLanguageFileViewProvider) {
-            final TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider) provider;
+            TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider) provider;
 
             e.getPresentation()
                 .setTextValue(LanguageLocalize.quickfixChangeTemplateDataLanguageText(viewProvider.getTemplateDataLanguage()
@@ -73,8 +73,8 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
-        final TemplateDataLanguageConfigurable configurable =
+        VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+        TemplateDataLanguageConfigurable configurable =
             new TemplateDataLanguageConfigurable(project, TemplateDataLanguageMappings.getInstance(project));
         ShowSettingsUtil.getInstance().editConfigurable(
             project,

@@ -47,7 +47,7 @@ public class ProblemDescriptorUtil {
     String ref = psiElement.getText();
     if (descriptor instanceof ProblemDescriptorBase) {
       TextRange textRange = ((ProblemDescriptorBase)descriptor).getTextRange();
-      final TextRange elementRange = psiElement.getTextRange();
+      TextRange elementRange = psiElement.getTextRange();
       if (textRange != null && elementRange != null) {
         textRange = textRange.shiftRight(-elementRange.getStartOffset());
         if (textRange.getStartOffset() >= 0 && textRange.getEndOffset() <= elementRange.getLength()) {
@@ -73,7 +73,7 @@ public class ProblemDescriptorUtil {
     if (message == null) return "";
 
     if ((flags & APPEND_LINE_NUMBER) != 0 && descriptor instanceof ProblemDescriptor && !message.contains("#ref") && message.contains("#loc")) {
-      final int lineNumber = ((ProblemDescriptor)descriptor).getLineNumber();
+      int lineNumber = ((ProblemDescriptor)descriptor).getLineNumber();
       if (lineNumber >= 0) {
         message = StringUtil.replace(message, "#loc", "(" + InspectionsBundle.message("inspection.export.results.at.line") + " " + lineNumber + ")");
       }
@@ -88,7 +88,7 @@ public class ProblemDescriptorUtil {
       message = StringUtil.replace(message, "#ref", ref);
     }
 
-    final int endIndex = (flags & TRIM_AT_END) != 0 ? message.indexOf("#end") : (flags & TRIM_AT_TREE_END) != 0 ? message.indexOf("#treeend") : -1;
+    int endIndex = (flags & TRIM_AT_END) != 0 ? message.indexOf("#end") : (flags & TRIM_AT_TREE_END) != 0 ? message.indexOf("#treeend") : -1;
     if (endIndex > 0) {
       message = message.substring(0, endIndex);
     }
@@ -104,7 +104,7 @@ public class ProblemDescriptorUtil {
     return message;
   }
 
-  private static String unescapeXmlCode(final String message) {
+  private static String unescapeXmlCode(String message) {
     List<String> strings = new ArrayList<String>();
     for (String string : StringUtil.split(message, XML_CODE_MARKER.first)) {
       if (string.contains(XML_CODE_MARKER.second)) {
@@ -133,7 +133,7 @@ public class ProblemDescriptorUtil {
 
   @Nonnull
   public static HighlightInfoType highlightTypeFromDescriptor(@Nonnull ProblemDescriptor problemDescriptor, @Nonnull HighlightSeverity severity, @Nonnull SeverityRegistrar severityRegistrar) {
-    final ProblemHighlightType highlightType = problemDescriptor.getHighlightType();
+    ProblemHighlightType highlightType = problemDescriptor.getHighlightType();
     switch (highlightType) {
       case GENERIC_ERROR_OR_WARNING:
         return severityRegistrar.getHighlightInfoTypeBySeverity(severity);
@@ -160,7 +160,7 @@ public class ProblemDescriptorUtil {
       case WARNING:
         return HighlightInfoType.WARNING;
       case INFORMATION:
-        final TextAttributesKey attributes = ((ProblemDescriptorBase)problemDescriptor).getEnforcedTextAttributes();
+        TextAttributesKey attributes = ((ProblemDescriptorBase)problemDescriptor).getEnforcedTextAttributes();
         if (attributes != null) {
           return new HighlightInfoType.HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, attributes);
         }

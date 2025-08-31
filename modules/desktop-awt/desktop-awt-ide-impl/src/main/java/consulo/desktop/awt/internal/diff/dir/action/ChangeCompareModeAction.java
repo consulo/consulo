@@ -50,7 +50,7 @@ class ChangeCompareModeAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final boolean on = myModel.getCompareMode() == myMode;
+        boolean on = myModel.getCompareMode() == myMode;
         e.getPresentation().setIcon(on ? ON : OFF);
         e.getPresentation().setSelectedIcon(on ? ON_SELECTED : OFF);
     }

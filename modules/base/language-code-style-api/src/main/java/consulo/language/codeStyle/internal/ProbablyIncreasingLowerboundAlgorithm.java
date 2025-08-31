@@ -59,7 +59,7 @@ class ProbablyIncreasingLowerboundAlgorithm<T extends AbstractBlockWrapper> {
       return myBlocks.size() - 1;
     }
 
-    final int offset = block.getStartOffset();
+    int offset = block.getStartOffset();
     if (myLastCalculatedOffset != -1) {
       if (offset >= myLastCalculatedOffset) {
         myLastCalculatedAnswerIndex = calcLeftRespNeighborIndexLinear(myLastCalculatedAnswerIndex, offset);
@@ -85,7 +85,7 @@ class ProbablyIncreasingLowerboundAlgorithm<T extends AbstractBlockWrapper> {
     return index;
   }
 
-  private int calcLeftRespNeighborIndex(final int blockOffset) {
+  private int calcLeftRespNeighborIndex(int blockOffset) {
     int l = -1, r = myBlocks.size();
     while (r - l > 1) {
       int m = (l + r) / 2;

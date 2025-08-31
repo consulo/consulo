@@ -106,7 +106,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         showPopup(options, editor);
     }
 
-    private void showPopup(final List<AnAction> options, Editor editor) {
+    private void showPopup(List<AnAction> options, Editor editor) {
         final ScopeHighlighter highlighter = new ScopeHighlighter(editor);
 
         DefaultListModel m = new DefaultListModel();
@@ -114,7 +114,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
             m.addElement(((MyUnwrapAction)a).getName());
         }
 
-        final JList list = new JBList(m);
+        JList list = new JBList(m);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setVisibleRowCount(options.size());
 
@@ -170,7 +170,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final PsiFile file = myElement.getContainingFile();
+            PsiFile file = myElement.getContainingFile();
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }
@@ -211,7 +211,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
             el.putCopyableUserData(CARET_POS_KEY, innerOffset);
         }
 
-        private void restoreCaretPosition(final PsiFile file) {
+        private void restoreCaretPosition(PsiFile file) {
             ((TreeElement)file.getNode()).acceptTree(new RecursiveTreeElementWalkingVisitor() {
                 @Override
                 protected void visitNode(TreeElement element) {
@@ -230,7 +230,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         }
 
         @RequiredReadAction
-        private void highlightExtractedElements(final List<PsiElement> extractedElements) {
+        private void highlightExtractedElements(List<PsiElement> extractedElements) {
             for (PsiElement each : extractedElements) {
                 HighlightManager.getInstance(myProject).addRangeHighlight(
                     myEditor,

@@ -36,7 +36,7 @@ public class DataInputOutputUtil {
   }
 
   public static int readINT(@Nonnull DataInput record) throws IOException {
-    final int val = record.readUnsignedByte();
+    int val = record.readUnsignedByte();
     if (val < 192) {
       return val;
     }
@@ -52,7 +52,7 @@ public class DataInputOutputUtil {
   }
 
   public static int readINT(@Nonnull ByteBuffer byteBuffer) {
-    final int val = byteBuffer.get() & 0xFF;
+    int val = byteBuffer.get() & 0xFF;
     if (val < 192) {
       return val;
     }
@@ -149,7 +149,7 @@ public class DataInputOutputUtil {
   }
 
   public static long readLONG(@Nonnull DataInput record) throws IOException {
-    final int val = record.readUnsignedByte();
+    int val = record.readUnsignedByte();
     if (val < 192) {
       return val;
     }
@@ -200,16 +200,16 @@ public class DataInputOutputUtil {
   }
 
   public static long readTIME(@Nonnull DataInput record) throws IOException {
-    final int first = record.readUnsignedByte();
+    int first = record.readUnsignedByte();
     if (first == 255) {
       return record.readLong();
     }
     else {
-      final int second = record.readUnsignedByte();
+      int second = record.readUnsignedByte();
 
-      final int third = record.readUnsignedByte() << 16;
-      final int fourth = record.readUnsignedByte() << 8;
-      final int fifth = record.readUnsignedByte();
+      int third = record.readUnsignedByte() << 16;
+      int fourth = record.readUnsignedByte() << 8;
+      int fifth = record.readUnsignedByte();
       return ((((long)((first << 8) | second)) << 24) | (third | fourth | fifth)) + timeBase;
     }
   }

@@ -29,7 +29,7 @@ public abstract class SchemeManager<T, E extends ExternalizableScheme> {
     @Nonnull
     public abstract Collection<E> loadSchemes();
 
-    public abstract void addNewScheme(@Nonnull T scheme, final boolean replaceExisting);
+    public abstract void addNewScheme(@Nonnull T scheme, boolean replaceExisting);
 
     public abstract void clearAllSchemes();
 

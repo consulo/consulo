@@ -104,7 +104,7 @@ public class MasterDetailPopupBuilder implements MasterController {
         myPathLabel = new JLabel(" ");
         myPathLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        final Font font = myPathLabel.getFont();
+        Font font = myPathLabel.getFont();
         myPathLabel.setFont(font.deriveFont((float) 10));
 
         if (myDetailView == null) {
@@ -146,7 +146,7 @@ public class MasterDetailPopupBuilder implements MasterController {
         footerPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         footerPanel.add(myPathLabel);
 
-        final PopupChooserBuilder builder = createInnerBuilder().
+        PopupChooserBuilder builder = createInnerBuilder().
             setMovable(true).
             setResizable(true).
             setAutoselectOnMouseMove(false).
@@ -212,7 +212,7 @@ public class MasterDetailPopupBuilder implements MasterController {
 
     private void setupRenderer() {
         if (myChooserComponent instanceof JList) {
-            final JList list = (JList) myChooserComponent;
+            JList list = (JList) myChooserComponent;
             list.setCellRenderer(new ListItemRenderer(myDelegate, myProject));
         }
     }
@@ -283,7 +283,7 @@ public class MasterDetailPopupBuilder implements MasterController {
 
     public void removeSelectedItems(Project project) {
         if (myChooserComponent instanceof JList) {
-            final JList list = (JList) myChooserComponent;
+            JList list = (JList) myChooserComponent;
             int index = list.getSelectedIndex();
             if (index == -1 || index >= list.getModel().getSize()) {
                 return;
@@ -323,7 +323,7 @@ public class MasterDetailPopupBuilder implements MasterController {
         return this;
     }
 
-    public MasterDetailPopupBuilder setList(final JBList list) {
+    public MasterDetailPopupBuilder setList(JBList list) {
         setChooser(list);
         myDetailController.setList(list);
         list.getSelectionModel().addListSelectionListener(event -> myDetailController.updateDetailView());
@@ -402,7 +402,7 @@ public class MasterDetailPopupBuilder implements MasterController {
             myProject = project;
             setBackground(UIUtil.getListBackground());
             this.myDelegate = delegate;
-            final JComponent accessory = myDelegate.createAccessoryView(project);
+            JComponent accessory = myDelegate.createAccessoryView(project);
 
             if (accessory != null) {
                 add(accessory, BorderLayout.WEST);
@@ -416,7 +416,7 @@ public class MasterDetailPopupBuilder implements MasterController {
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value instanceof SplitterItem) {
                 String label = ((SplitterItem) value).getText();
-                final TitledSeparator separator = new TitledSeparator(label);
+                TitledSeparator separator = new TitledSeparator(label);
                 separator.setBackground(UIUtil.getListBackground());
                 separator.setForeground(UIUtil.getListForeground());
                 return separator;

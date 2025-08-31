@@ -40,7 +40,7 @@ public class DirectoryCopyPresentation extends PackagingElementPresentation {
     String parentPath;
     myFile = LocalFileSystem.getInstance().findFileByPath(filePath);
     if (myFile != null) {
-      final VirtualFile parent = myFile.getParent();
+      VirtualFile parent = myFile.getParent();
       parentPath = parent != null ? FileUtil.toSystemDependentName(parent.getPath()) : "";
     }
     else {
@@ -58,7 +58,7 @@ public class DirectoryCopyPresentation extends PackagingElementPresentation {
     presentationData.setIcon(AllIcons.Nodes.CopyOfFolder);
     if (myFile == null || !myFile.isDirectory()) {
       mainAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;
-      final VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(mySourcePath));
+      VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(mySourcePath));
       if (parentFile == null) {
         commentAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;
       }

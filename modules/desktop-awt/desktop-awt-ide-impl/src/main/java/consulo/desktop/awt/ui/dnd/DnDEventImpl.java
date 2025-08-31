@@ -123,13 +123,13 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
       return ((Transferable)myAttachedObject).getTransferData(flavor);
     }
     else if (myAttachedObject instanceof FileFlavorProvider && flavor == DataFlavor.javaFileListFlavor) {
-      final List<File> files = ((FileFlavorProvider)myAttachedObject).asFileList();
+      List<File> files = ((FileFlavorProvider)myAttachedObject).asFileList();
       if (files != null) {
         return files;
       }
     }
     else if (myAttachedObject instanceof FileFlavorProvider && flavor == LinuxDragAndDropSupport.uriListFlavor) {
-      final List<File> files = ((FileFlavorProvider)myAttachedObject).asFileList();
+      List<File> files = ((FileFlavorProvider)myAttachedObject).asFileList();
       if (files != null) {
         return LinuxDragAndDropSupport.toUriList(files);
       }
@@ -282,7 +282,7 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
 
   @Override
   protected Object clone() {
-    final DnDEventImpl result = new DnDEventImpl(myManager, myAction, myAttachedObject, myPoint);
+    DnDEventImpl result = new DnDEventImpl(myManager, myAction, myAttachedObject, myPoint);
     result.myDropHandler = myDropHandler;
     result.myDropPossible = myDropPossible;
     result.myExpectedDropResult = myExpectedDropResult;
@@ -298,7 +298,7 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
       return false;
     }
 
-    final DnDEventImpl event = (DnDEventImpl) o;
+    DnDEventImpl event = (DnDEventImpl) o;
 
     if( myDropPossible != event.myDropPossible ) {
       return false;

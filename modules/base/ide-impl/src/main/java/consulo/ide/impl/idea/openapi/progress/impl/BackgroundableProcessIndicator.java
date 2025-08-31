@@ -63,8 +63,8 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
         myOption = option;
         myInfo = info;
         setTitle(info.getTitle());
-        final Project nonDefaultProject = project == null || project.isDisposed() ? null : project.isDefault() ? null : project;
-        final IdeFrame frame = ((WindowManagerEx) WindowManager.getInstance()).findFrameFor(nonDefaultProject);
+        Project nonDefaultProject = project == null || project.isDisposed() ? null : project.isDefault() ? null : project;
+        IdeFrame frame = ((WindowManagerEx) WindowManager.getInstance()).findFrameFor(nonDefaultProject);
         myStatusBar = frame != null ? (StatusBarEx) frame.getStatusBar() : null;
         myBackgrounded = shouldStartInBackground();
         if (myBackgrounded) {

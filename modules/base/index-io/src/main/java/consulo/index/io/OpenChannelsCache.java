@@ -34,7 +34,7 @@ public class OpenChannelsCache { // TODO: Will it make sense to have a backgroun
   private final String myAccessMode;
   private final Map<File, ChannelDescriptor> myCache;
 
-  public OpenChannelsCache(final int cacheSizeLimit, @NonNls String accessMode) {
+  public OpenChannelsCache(int cacheSizeLimit, @NonNls String accessMode) {
     myCacheSizeLimit = cacheSizeLimit;
     myAccessMode = accessMode;
     myCache = new LinkedHashMap<File, ChannelDescriptor>(cacheSizeLimit, 0.5f, true);
@@ -78,7 +78,7 @@ public class OpenChannelsCache { // TODO: Will it make sense to have a backgroun
   }
 
   public synchronized void closeChannel(File ioFile) {
-    final ChannelDescriptor descriptor = myCache.remove(ioFile);
+    ChannelDescriptor descriptor = myCache.remove(ioFile);
 
     if (descriptor != null) {
       assert !descriptor.isLocked();

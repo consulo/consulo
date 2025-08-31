@@ -52,19 +52,19 @@ public class RawFileLoaderHelper {
     vFile.putCopyableUserData(OUR_NO_SIZE_LIMIT_KEY, Boolean.TRUE);
   }
 
-  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, final long contentSize) {
+  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, long contentSize) {
     if (!checkFileSizeLimit(vFile)) return false;
     return contentSize > RawFileLoader.getInstance().getMaxIntellisenseFileSize();
   }
 
-  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, final long contentSize) {
+  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, long contentSize) {
     return contentSize > RawFileLoader.getInstance().getFileLengthToCacheThreshold();
   }
 
-  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, final long maxBytes) {
+  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, long maxBytes) {
     if (vFile instanceof TextLightVirtualFileBase) {
       // This is optimization in order to avoid conversion of [large] file contents to bytes
-      final int lengthInChars = ((TextLightVirtualFileBase)vFile).getContent().length();
+      int lengthInChars = ((TextLightVirtualFileBase)vFile).getContent().length();
       if (lengthInChars < maxBytes / 2) return false;
       if (lengthInChars > maxBytes) return true;
     }

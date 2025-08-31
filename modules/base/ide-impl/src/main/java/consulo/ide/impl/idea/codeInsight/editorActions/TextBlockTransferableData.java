@@ -25,6 +25,6 @@ public interface TextBlockTransferableData {
   DataFlavor getFlavor();
 
   int getOffsetCount();
-  int getOffsets(final int[] offsets, final int index);
-  int setOffsets(final int[] offsets, final int index);
+  int getOffsets(int[] offsets, int index);
+  int setOffsets(int[] offsets, int index);
 }

@@ -34,7 +34,7 @@ public interface XDebuggerExpressionEditorFactory {
                                      @Nullable String historyId,
                                      @Nullable XSourcePosition sourcePosition,
                                      @Nonnull XExpression text,
-                                     final boolean multiline,
+                                     boolean multiline,
                                      boolean editorFont,
                                      boolean showEditor);
 }

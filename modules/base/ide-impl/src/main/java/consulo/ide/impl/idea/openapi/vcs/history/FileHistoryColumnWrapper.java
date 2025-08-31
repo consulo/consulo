@@ -42,7 +42,7 @@ abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOn
   }
 
   public Comparator<TreeNodeOnVcsRevision> getComparator() {
-    final Comparator<VcsFileRevision> comparator = myBaseColumn.getComparator();
+    Comparator<VcsFileRevision> comparator = myBaseColumn.getComparator();
     if (comparator == null) return null;
     return (o1, o2) -> {
       if (o1 == null) return -1;
@@ -85,7 +85,7 @@ abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOn
   }
 
   public String getMaxStringValue() {
-    final String superValue = myBaseColumn.getMaxStringValue();
+    String superValue = myBaseColumn.getMaxStringValue();
     if (superValue != null) return superValue;
     return getMaxValue(myBaseColumn.getName());
   }
@@ -98,7 +98,7 @@ abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOn
     }
     TableView table = dualView.getFlatView();
     if (table.getRowCount() == 0) return null;
-    final Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
+    Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
     int idx = 0;
     while (columns.hasMoreElements()) {
       TableColumn column = columns.nextElement();
@@ -108,14 +108,14 @@ abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOn
       ++idx;
     }
     if (idx >= table.getColumnModel().getColumnCount() - 1) return null;
-    final FontMetrics fm = table.getFontMetrics(table.getFont().deriveFont(Font.BOLD));
-    final Object header = table.getColumnModel().getColumn(idx).getHeaderValue();
+    FontMetrics fm = table.getFontMetrics(table.getFont().deriveFont(Font.BOLD));
+    Object header = table.getColumnModel().getColumn(idx).getHeaderValue();
     double maxValue = fm.stringWidth((String)header);
     String value = (String)header;
     for (int i = 0; i < table.getRowCount(); i++) {
-      final Object at = table.getValueAt(i, idx);
+      Object at = table.getValueAt(i, idx);
       if (at instanceof String) {
-        final int newWidth = fm.stringWidth((String)at);
+        int newWidth = fm.stringWidth((String)at);
         if (newWidth > maxValue) {
           maxValue = newWidth;
           value = (String)at;

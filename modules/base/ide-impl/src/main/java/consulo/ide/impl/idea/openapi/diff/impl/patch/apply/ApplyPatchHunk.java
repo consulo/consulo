@@ -26,11 +26,11 @@ import java.util.List;
 public class ApplyPatchHunk {
   private final PatchHunk myHunk;
 
-  public ApplyPatchHunk(final PatchHunk hunk) {
+  public ApplyPatchHunk(PatchHunk hunk) {
     myHunk = hunk;
   }
   
-  public ApplyPatchStatus apply(final List<String> lines) throws ApplyPatchException {
+  public ApplyPatchStatus apply(List<String> lines) throws ApplyPatchException {
     List<String> originalLines = new ArrayList<String>(lines);
     try {
       return tryApply(lines, false);
@@ -42,12 +42,12 @@ public class ApplyPatchHunk {
     }
   }
 
-  private ApplyPatchStatus tryApply(final List<String> lines, boolean acceptPartial) throws ApplyPatchException {
-    final List<PatchLine> hunkLines = myHunk.getLines();
+  private ApplyPatchStatus tryApply(List<String> lines, boolean acceptPartial) throws ApplyPatchException {
+    List<PatchLine> hunkLines = myHunk.getLines();
     ApplyPatchStatus result = null;
     int curLine = findStartLine(hunkLines, lines);
     for(PatchLine line: hunkLines) {
-      final String patchLineText = line.getText();
+      String patchLineText = line.getText();
       switch (line.getType()) {
         case CONTEXT:
           checkContextMismatch(lines, curLine, patchLineText);
@@ -88,7 +88,7 @@ public class ApplyPatchHunk {
     return ApplyPatchStatus.SUCCESS;
   }
 
-  private static void checkContextMismatch(final List<String> lines, final int curLine, final String patchLineText) throws ApplyPatchException {
+  private static void checkContextMismatch(List<String> lines, int curLine, String patchLineText) throws ApplyPatchException {
     if (curLine >= lines.size()) {
       throw new ApplyPatchException("Unexpected end of document. Expected line:\n" + patchLineText);
     }
@@ -97,9 +97,9 @@ public class ApplyPatchHunk {
     }
   }
 
-  private int findStartLine(final List<PatchLine> hunkLines, final List<String> lines) throws ApplyPatchException {
+  private int findStartLine(List<PatchLine> hunkLines, List<String> lines) throws ApplyPatchException {
     int totalContextLines = countContextLines(hunkLines);
-    final int startLineBefore = myHunk.getStartLineBefore();
+    int startLineBefore = myHunk.getStartLineBefore();
     if (getLinesProcessingContext(hunkLines, lines, startLineBefore) == totalContextLines) {
       return startLineBefore;
     }
@@ -121,7 +121,7 @@ public class ApplyPatchHunk {
     return maxContextStartLine;
   }
 
-  private int countContextLines(final List<PatchLine> hunkLines) {
+  private int countContextLines(List<PatchLine> hunkLines) {
     int count = 0;
     for(PatchLine line: hunkLines) {
       if (line.getType() == PatchLine.Type.CONTEXT || line.getType() == PatchLine.Type.REMOVE) {
@@ -131,7 +131,7 @@ public class ApplyPatchHunk {
     return count;
   }
 
-  private int getLinesProcessingContext(final List<PatchLine> hunkLines, final List<String> lines, int startLine) {
+  private int getLinesProcessingContext(List<PatchLine> hunkLines, List<String> lines, int startLine) {
     int count = 0;
     for(PatchLine line: hunkLines) {
       PatchLine.Type type = line.getType();

@@ -57,7 +57,7 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
 
   @Inject
   public DesktopIconDeferrerImpl(Application application) {
-    final MessageBusConnection connection = application.getMessageBus().connect();
+    MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
@@ -87,7 +87,7 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
   }
 
   @Override
-  public <T> Image defer(final Image base, final T param, @Nonnull final java.util.function.Function<T, Image> evaluator) {
+  public <T> Image defer(Image base, T param, @Nonnull java.util.function.Function<T, Image> evaluator) {
     return deferImpl(base, param, evaluator, false);
   }
 
@@ -96,7 +96,7 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
     return deferImpl(base, param, evaluator, true);
   }
 
-  private <T> Image deferImpl(Image base, T param, @Nonnull java.util.function.Function<T, Image> evaluator, final boolean autoUpdatable) {
+  private <T> Image deferImpl(Image base, T param, @Nonnull java.util.function.Function<T, Image> evaluator, boolean autoUpdatable) {
     if (ourEvaluationIsInProgress.get()) {
       return evaluator.apply(param);
     }
@@ -104,7 +104,7 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
     synchronized (LOCK) {
       Image result = myIconsCache.get(param);
       if (result == null) {
-        final long started = myLastClearTimestamp;
+        long started = myLastClearTimestamp;
         result = new DesktopDeferredIconImpl<>(base, param, evaluator, (DesktopDeferredIconImpl<T> source, T key, Image r) -> {
           synchronized (LOCK) {
             // check if our results is not outdated yet

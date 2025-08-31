@@ -83,7 +83,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     private final SingleAlarm myAlarm = new SingleAlarm(new Runnable() {
         @Override
         public void run() {
-            final Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
+            Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
             if (editor != null) {
                 editor.getContentComponent().revalidate();
                 editor.getContentComponent().repaint();
@@ -94,7 +94,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     private static final Function<TreePath, String> SPEED_SEARCH_CONVERTER = o -> {
         String text = null;
         if (o != null) {
-            final Object node = o.getLastPathComponent();
+            Object node = o.getLastPathComponent();
             if (node instanceof XDebuggerTreeNode) {
                 text = ((XDebuggerTreeNode) node).getText().toString();
             }
@@ -156,9 +156,9 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     private final List<XDebuggerTreeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
     private final XValueMarkers<?, ?> myValueMarkers;
 
-    public XDebuggerTree(final @Nonnull Project project,
-                         final @Nonnull XDebuggerEditorsProvider editorsProvider,
-                         final @Nullable XSourcePosition sourcePosition,
+    public XDebuggerTree(@Nonnull Project project,
+                         @Nonnull XDebuggerEditorsProvider editorsProvider,
+                         @Nullable XSourcePosition sourcePosition,
                          final @Nonnull String popupActionGroupId, @Nullable XValueMarkers<?, ?> valueMarkers) {
         myValueMarkers = valueMarkers;
         myProject = project;
@@ -210,7 +210,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         final ActionManager actionManager = ActionManager.getInstance();
         addMouseListener(new PopupHandler() {
             @Override
-            public void invokePopup(final Component comp, final int x, final int y) {
+            public void invokePopup(Component comp, int x, int y) {
                 ActionGroup group = (ActionGroup) actionManager.getAction(popupActionGroupId);
                 actionManager.createActionPopupMenu(ActionPlaces.UNKNOWN, group).getComponent().show(comp, x, y);
             }
@@ -258,7 +258,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         myListeners.remove(listener);
     }
 
-    public void setRoot(XDebuggerTreeNode root, final boolean rootVisible) {
+    public void setRoot(XDebuggerTreeNode root, boolean rootVisible) {
         setRootVisible(rootVisible);
         myTreeModel.setRoot(root);
     }
@@ -272,7 +272,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         return mySourcePosition;
     }
 
-    public void setSourcePosition(final @Nullable XSourcePosition sourcePosition) {
+    public void setSourcePosition(@Nullable XSourcePosition sourcePosition) {
         mySourcePosition = sourcePosition;
     }
 
@@ -298,7 +298,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
 
     @Override
     @Nullable
-    public Object getData(@Nonnull final Key dataId) {
+    public Object getData(@Nonnull Key dataId) {
         if (XDEBUGGER_TREE_KEY == dataId || XValueTree.KEY == dataId) {
             return this;
         }
@@ -311,7 +311,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         return null;
     }
 
-    public void rebuildAndRestore(final XDebuggerTreeState treeState) {
+    public void rebuildAndRestore(XDebuggerTreeState treeState) {
         Object rootNode = myTreeModel.getRoot();
         if (rootNode instanceof XDebuggerTreeNode) {
             ((XDebuggerTreeNode) rootNode).clearChildren();
@@ -323,15 +323,15 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         }
     }
 
-    public void childrenLoaded(final @Nonnull XDebuggerTreeNode node,
-                               final @Nonnull List<XValueContainerNode<?>> children,
-                               final boolean last) {
+    public void childrenLoaded(@Nonnull XDebuggerTreeNode node,
+                               @Nonnull List<XValueContainerNode<?>> children,
+                               boolean last) {
         for (XDebuggerTreeListener listener : myListeners) {
             listener.childrenLoaded(node, children, last);
         }
     }
 
-    public void nodeLoaded(final @Nonnull RestorableStateNode node, final @Nonnull String name) {
+    public void nodeLoaded(@Nonnull RestorableStateNode node, @Nonnull String name) {
         for (XDebuggerTreeListener listener : myListeners) {
             listener.nodeLoaded(node, name);
         }
@@ -365,7 +365,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         DebuggerUIImplUtil.registerActionOnComponent(XDebuggerActions.MARK_OBJECT, this, this);
     }
 
-    private static void markNodesObsolete(final XValueContainerNode<?> node) {
+    private static void markNodesObsolete(XValueContainerNode<?> node) {
         node.setObsolete();
         List<? extends XValueContainerNode<?>> loadedChildren = node.getLoadedChildren();
         for (XValueContainerNode<?> child : loadedChildren) {
@@ -374,7 +374,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     }
 
     @Nullable
-    public static XDebuggerTree getTree(final AnActionEvent e) {
+    public static XDebuggerTree getTree(AnActionEvent e) {
         return e.getData(XDEBUGGER_TREE_KEY);
     }
 

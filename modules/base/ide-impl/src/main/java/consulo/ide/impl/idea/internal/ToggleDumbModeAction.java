@@ -41,7 +41,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
     }
     else {
       myDumb = true;
-      final Project project = e.getRequiredData(Project.KEY);
+      Project project = e.getRequiredData(Project.KEY);
 
       DumbService.getInstance(project).queueTask(new DumbModeTask() {
         @Override
@@ -57,8 +57,8 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    final Project project = e.getData(Project.KEY);
+    Presentation presentation = e.getPresentation();
+    Project project = e.getData(Project.KEY);
     presentation.setEnabled(project != null && myDumb == DumbService.getInstance(project).isDumb());
     presentation.setText(myDumb ? "Exit Dumb Mode" : "Enter Dumb Mode");
   }

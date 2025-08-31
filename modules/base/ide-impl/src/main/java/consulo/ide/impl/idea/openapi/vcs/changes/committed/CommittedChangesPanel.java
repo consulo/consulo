@@ -80,9 +80,9 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   private Consumer<String> myIfNotCachedReloader;
 
   public CommittedChangesPanel(Project project,
-                               final CommittedChangesProvider provider,
-                               final ChangeBrowserSettings settings,
-                               @Nullable final RepositoryLocation location,
+                               CommittedChangesProvider provider,
+                               ChangeBrowserSettings settings,
+                               @Nullable RepositoryLocation location,
                                @jakarta.annotation.Nullable ActionGroup extraActions) {
     super(new BorderLayout());
     mySettings = settings;
@@ -94,7 +94,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     Disposer.register(this, myBrowser);
     add(myBrowser, BorderLayout.CENTER);
 
-    final VcsCommittedViewAuxiliary auxiliary = provider.createActions(myBrowser, location);
+    VcsCommittedViewAuxiliary auxiliary = provider.createActions(myBrowser, location);
 
     JPanel toolbarPanel = new JPanel();
     toolbarPanel.setLayout(new BoxLayout(toolbarPanel, BoxLayout.X_AXIS));
@@ -117,7 +117,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
       myBrowser.setTableContextMenu(group, Collections.<AnAction>emptyList());
     }
 
-    final AnAction anAction = ActionManager.getInstance().getAction("CommittedChanges.Refresh");
+    AnAction anAction = ActionManager.getInstance().getAction("CommittedChanges.Refresh");
     anAction.registerCustomShortcutSet(CommonShortcuts.getRerun(), this);
     myBrowser.addFilter(myFilterComponent);
     myIfNotCachedReloader = myLocation == null ? null : (Consumer<String>)s -> refreshChanges(false);
@@ -127,18 +127,18 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     return myLocation;
   }
 
-  public void setMaxCount(final int maxCount) {
+  public void setMaxCount(int maxCount) {
     myMaxCount = maxCount;
   }
 
-  public void setProvider(final CommittedChangesProvider provider) {
+  public void setProvider(CommittedChangesProvider provider) {
     if (myProvider != provider) {
       myProvider = provider;
       mySettings = provider.createDefaultSettings();
     }
   }
 
-  public void refreshChanges(final boolean cacheOnly) {
+  public void refreshChanges(boolean cacheOnly) {
     if (myLocation != null) {
       refreshChangesFromLocation();
     }
@@ -157,7 +157,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
       @Override
       public void run(@Nonnull final ProgressIndicator indicator) {
         try {
-          final AsynchConsumer<List<CommittedChangeList>> appender = new AsynchConsumer<List<CommittedChangeList>>() {
+          AsynchConsumer<List<CommittedChangeList>> appender = new AsynchConsumer<List<CommittedChangeList>>() {
             @Override
             public void finished() {
             }
@@ -208,7 +208,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   }
 
   public void clearCaches() {
-    final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
+    CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
     cache.clearCaches(new Runnable() {
       @Override
       public void run() {
@@ -223,8 +223,8 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   }
 
   @NonNls
-  private void refreshChangesFromCache(final boolean cacheOnly) {
-    final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
+  private void refreshChangesFromCache(boolean cacheOnly) {
+    CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
     cache.hasCachesForAnyRoot(notEmpty -> {
       if (!notEmpty) {
         if (cacheOnly) {
@@ -246,21 +246,21 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   private static class FilterHelper {
     private final String[] myParts;
 
-    FilterHelper(final String filterString) {
+    FilterHelper(String filterString) {
       myParts = filterString.split(" ");
       for (int i = 0; i < myParts.length; ++i) {
         myParts[i] = myParts[i].toLowerCase();
       }
     }
 
-    public boolean filter(@Nonnull final CommittedChangeList cl) {
+    public boolean filter(@Nonnull CommittedChangeList cl) {
       return changeListMatches(cl, myParts);
     }
 
-    private static boolean changeListMatches(@Nonnull final CommittedChangeList changeList, final String[] filterWords) {
+    private static boolean changeListMatches(@Nonnull CommittedChangeList changeList, String[] filterWords) {
       for (String word : filterWords) {
-        final String comment = changeList.getComment();
-        final String committer = changeList.getCommitterName();
+        String comment = changeList.getComment();
+        String committer = changeList.getCommitterName();
         if ((comment != null && comment.toLowerCase().indexOf(word) >= 0) ||
             (committer != null && committer.toLowerCase().indexOf(word) >= 0) ||
             Long.toString(changeList.getNumber()).indexOf(word) >= 0) {
@@ -271,11 +271,11 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     }
   }
 
-  private void updateFilteredModel(List<CommittedChangeList> committedChangeLists, final boolean reset) {
+  private void updateFilteredModel(List<CommittedChangeList> committedChangeLists, boolean reset) {
     if (committedChangeLists == null) {
       return;
     }
-    final LocalizeValue emptyText = reset ? VcsLocalize.committedChangesNotLoadedMessage() : VcsLocalize.committedChangesEmptyMessage();
+    LocalizeValue emptyText = reset ? VcsLocalize.committedChangesNotLoadedMessage() : VcsLocalize.committedChangesEmptyMessage();
     myBrowser.getEmptyText().setText(emptyText);
     myBrowser.setItems(committedChangeLists, CommittedChangesBrowserUseCase.COMMITTED);
   }
@@ -360,8 +360,8 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     @Override
     @Nonnull
     public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
-      final FilterHelper filterHelper = new FilterHelper(myFilterComponent.getFilter());
-      final List<CommittedChangeList> result = new ArrayList<CommittedChangeList>();
+      FilterHelper filterHelper = new FilterHelper(myFilterComponent.getFilter());
+      List<CommittedChangeList> result = new ArrayList<CommittedChangeList>();
       for (CommittedChangeList list : changeLists) {
         if (filterHelper.filter(list)) {
           result.add(list);

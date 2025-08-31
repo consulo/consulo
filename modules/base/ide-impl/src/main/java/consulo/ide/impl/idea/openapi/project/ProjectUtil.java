@@ -62,22 +62,22 @@ public class ProjectUtil {
   }
 
   @Nullable
-  public static String getProjectLocationString(@Nonnull final Project project) {
+  public static String getProjectLocationString(@Nonnull Project project) {
     return UserHomeFileUtil.getLocationRelativeToUserHome(project.getBasePath());
   }
 
   @Nonnull
-  public static String calcRelativeToProjectPath(@Nonnull final VirtualFile file, @Nullable final Project project, final boolean includeFilePath) {
+  public static String calcRelativeToProjectPath(@Nonnull VirtualFile file, @Nullable Project project, boolean includeFilePath) {
     return calcRelativeToProjectPath(file, project, includeFilePath, false, false);
   }
 
   @Nonnull
   public static String calcRelativeToProjectPath(
-    @Nonnull final VirtualFile file,
-    @Nullable final Project project,
-    final boolean includeFilePath,
-    final boolean includeUniqueFilePath,
-    final boolean keepModuleAlwaysOnTheLeft
+    @Nonnull VirtualFile file,
+    @Nullable Project project,
+    boolean includeFilePath,
+    boolean includeUniqueFilePath,
+    boolean keepModuleAlwaysOnTheLeft
   ) {
     if (file instanceof VirtualFilePathWrapper virtualFilePathWrapper) {
       return includeFilePath ? virtualFilePathWrapper.getPresentablePath() : file.getName();
@@ -96,19 +96,19 @@ public class ProjectUtil {
       return url;
     }
     else {
-      final VirtualFile baseDir = project.getBaseDir();
+      VirtualFile baseDir = project.getBaseDir();
       if (baseDir != null && includeFilePath) {
         //noinspection ConstantConditions
-        final String projectHomeUrl = baseDir.getPresentableUrl();
+        String projectHomeUrl = baseDir.getPresentableUrl();
         if (url.startsWith(projectHomeUrl)) {
           url = "..." + url.substring(projectHomeUrl.length());
         }
       }
 
       if (Platform.current().os().isMac() && file.getFileSystem() instanceof ArchiveFileSystem archiveFileSystem) {
-        final VirtualFile fileForJar = archiveFileSystem.getLocalVirtualFileFor(file);
+        VirtualFile fileForJar = archiveFileSystem.getLocalVirtualFileFor(file);
         if (fileForJar != null) {
-          final OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
+          OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
           if (libraryEntry != null) {
             if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry moduleExtensionWithSdkOrderEntry) {
               url = url + " - [" + moduleExtensionWithSdkOrderEntry.getSdkName() + "]";
@@ -123,7 +123,7 @@ public class ProjectUtil {
         }
       }
 
-      final Module module = ModuleUtil.findModuleForFile(file, project);
+      Module module = ModuleUtil.findModuleForFile(file, project);
       if (module == null) return url;
       return !keepModuleAlwaysOnTheLeft && Platform.current().os().isMac()
         ? url + " - [" + module.getName() + "]"
@@ -131,7 +131,7 @@ public class ProjectUtil {
     }
   }
 
-  public static String calcRelativeToProjectPath(final VirtualFile file, final Project project) {
+  public static String calcRelativeToProjectPath(VirtualFile file, Project project) {
     return calcRelativeToProjectPath(file, project, true);
   }
 

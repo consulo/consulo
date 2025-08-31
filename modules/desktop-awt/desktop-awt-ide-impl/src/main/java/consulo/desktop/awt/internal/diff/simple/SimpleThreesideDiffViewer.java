@@ -122,20 +122,20 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
 
     @Override
     @Nonnull
-    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
         try {
             indicator.checkCanceled();
 
-            final List<DiffContent> contents = myRequest.getContents();
-            final List<Document> documents = ContainerUtil.map(contents, content -> ((DocumentContent)content).getDocument());
+            List<DiffContent> contents = myRequest.getContents();
+            List<Document> documents = ContainerUtil.map(contents, content -> ((DocumentContent)content).getDocument());
 
             ThrowableComputable<List<CharSequence>, RuntimeException> action2 = () -> {
                 indicator.checkCanceled();
                 return ContainerUtil.map(documents, Document::getImmutableCharSequence);
             };
-            final List<CharSequence> sequences = AccessRule.read(action2);
+            List<CharSequence> sequences = AccessRule.read(action2);
 
-            final ComparisonPolicy comparisonPolicy = getIgnorePolicy().getComparisonPolicy();
+            ComparisonPolicy comparisonPolicy = getIgnorePolicy().getComparisonPolicy();
 
             ComparisonManager manager = ComparisonManager.getInstance();
             List<MergeLineFragment> lineFragments = manager.compareLines(sequences.get(0), sequences.get(1), sequences.get(2),
@@ -153,8 +153,8 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
                 innerFragments = new ArrayList<>(lineFragments.size());
 
                 for (int i = 0; i < lineFragments.size(); i++) {
-                    final MergeLineFragment fragment = lineFragments.get(i);
-                    final MergeConflictType conflictType = conflictTypes.get(i);
+                    MergeLineFragment fragment = lineFragments.get(i);
+                    MergeConflictType conflictType = conflictTypes.get(i);
 
                     ThrowableComputable<List<CharSequence>, RuntimeException> action = () -> {
                         indicator.checkCanceled();
@@ -198,9 +198,9 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
 
     @Nonnull
     private Runnable apply(
-        @Nonnull final List<MergeLineFragment> fragments,
-        @Nonnull final List<MergeConflictType> conflictTypes,
-        @Nullable final List<MergeInnerDifferences> innerDifferences
+        @Nonnull List<MergeLineFragment> fragments,
+        @Nonnull List<MergeConflictType> conflictTypes,
+        @Nullable List<MergeInnerDifferences> innerDifferences
     ) {
         return () -> {
             myFoldingModel.updateContext(myRequest, getFoldingModelSettings());

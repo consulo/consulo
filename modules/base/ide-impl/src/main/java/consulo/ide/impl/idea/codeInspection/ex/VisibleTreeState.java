@@ -69,15 +69,15 @@ public class VisibleTreeState{
       TreeUtil.selectFirstNode(tree);
     }
     else {
-      for (final TreePath aToSelect : toSelect) {
+      for (TreePath aToSelect : toSelect) {
         TreeUtil.selectPath(tree, aToSelect);
       }
     }
   }
 
-  private void traverseNodes(final DefaultMutableTreeNode root, List<TreePath> pathsToExpand, List<TreePath> toSelect) {
-    final State state = getState((InspectionConfigTreeNode)root);
-    final TreeNode[] rootPath = root.getPath();
+  private void traverseNodes(DefaultMutableTreeNode root, List<TreePath> pathsToExpand, List<TreePath> toSelect) {
+    State state = getState((InspectionConfigTreeNode)root);
+    TreeNode[] rootPath = root.getPath();
     if (mySelectedNodes.contains(state)) {
       toSelect.add(new TreePath(rootPath));
     }
@@ -91,12 +91,12 @@ public class VisibleTreeState{
 
   public void saveVisibleState(Tree tree) {
     myExpandedNodes.clear();
-    final DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)tree.getModel().getRoot();
+    DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)tree.getModel().getRoot();
     Enumeration<TreePath> expanded = tree.getExpandedDescendants(new TreePath(rootNode.getPath()));
     if (expanded != null) {
       while (expanded.hasMoreElements()) {
-        final TreePath treePath = expanded.nextElement();
-        final InspectionConfigTreeNode node = (InspectionConfigTreeNode)treePath.getLastPathComponent();
+        TreePath treePath = expanded.nextElement();
+        InspectionConfigTreeNode node = (InspectionConfigTreeNode)treePath.getLastPathComponent();
         myExpandedNodes.add(getState(node));
       }
     }
@@ -106,12 +106,12 @@ public class VisibleTreeState{
 
   private static State getState(InspectionConfigTreeNode node) {
     Descriptor descriptor = node.getDefaultDescriptor();
-    final State expandedNode;
+    State expandedNode;
     if (descriptor != null) {
       expandedNode = new State(descriptor);
     }
     else {
-      final StringBuilder buf = new StringBuilder();
+      StringBuilder buf = new StringBuilder();
       while (node.getParent() != null) {
         buf.append(node.getGroupName());
         node = (InspectionConfigTreeNode)node.getParent();
@@ -121,11 +121,11 @@ public class VisibleTreeState{
     return expandedNode;
   }
 
-  public void setSelectionPaths(final TreePath[] selectionPaths) {
+  public void setSelectionPaths(TreePath[] selectionPaths) {
     mySelectedNodes.clear();
     if (selectionPaths != null) {
       for (TreePath selectionPath : selectionPaths) {
-        final InspectionConfigTreeNode node = (InspectionConfigTreeNode)selectionPath.getLastPathComponent();
+        InspectionConfigTreeNode node = (InspectionConfigTreeNode)selectionPath.getLastPathComponent();
         mySelectedNodes.add(getState(node));
       }
     }
@@ -173,8 +173,8 @@ public class VisibleTreeState{
     public int compareTo(State other) {
       if (myKey.equals(other.myKey)) {
         if (myDescriptor != null && other.myDescriptor != null) {
-          final String scope1 = myDescriptor.getScopeName();
-          final String scope2 = other.myDescriptor.getScopeName();
+          String scope1 = myDescriptor.getScopeName();
+          String scope2 = other.myDescriptor.getScopeName();
           return scope1.compareTo(scope2);
         }
       }

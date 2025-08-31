@@ -12,7 +12,7 @@ public class FindDialog {
      * @deprecated use {@link FindInProjectUtil#initFileFilter(JComboBox, JCheckBox)}
      */
     @Deprecated
-    public static void initFileFilter(@Nonnull final JComboBox<? super String> fileFilter, @Nonnull final JCheckBox useFileFilter) {
+    public static void initFileFilter(@Nonnull JComboBox<? super String> fileFilter, @Nonnull JCheckBox useFileFilter) {
         FindInProjectUtil.initFileFilter(fileFilter, useFileFilter);
     }
 

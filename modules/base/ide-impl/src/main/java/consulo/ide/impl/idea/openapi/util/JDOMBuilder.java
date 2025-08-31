@@ -32,7 +32,7 @@ public class JDOMBuilder {
   }
 
   public static Element tag(String name, Content...content) {
-    final Element element = new Element(name);
+    Element element = new Element(name);
     for (Content c : content) {
       if (c instanceof AttrContent) {
         AttrContent attrContent = (AttrContent)c;
@@ -46,7 +46,7 @@ public class JDOMBuilder {
     return element;
   }
 
-  public static Content attr(final String name, final String value) {
+  public static Content attr(String name, String value) {
     return new AttrContent(name, value);
   }
 
@@ -54,7 +54,7 @@ public class JDOMBuilder {
     private final String myName;
     private final String myValue;
 
-    public AttrContent(final String name, final String value) {
+    public AttrContent(String name, String value) {
       super(CType.Text);
       myName = name;
       myValue = value;

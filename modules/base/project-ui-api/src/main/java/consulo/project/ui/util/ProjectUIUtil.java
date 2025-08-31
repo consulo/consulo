@@ -32,7 +32,7 @@ import javax.swing.*;
  * @since 21-Jul-22
  */
 public class ProjectUIUtil {
-    public static void focusProjectWindow(final Project p, boolean executeIfAppInactive) {
+    public static void focusProjectWindow(Project p, boolean executeIfAppInactive) {
         JFrame f = WindowManager.getInstance().getFrame(p);
         if (f == null) {
             return;

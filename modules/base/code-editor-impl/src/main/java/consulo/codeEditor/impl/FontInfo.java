@@ -42,7 +42,7 @@ public class FontInfo {
    * @deprecated Use {@link #FontInfo(String, int, int, boolean, FontRenderContext)} instead.
    */
   @Deprecated
-  public FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style) {
+  public FontInfo(String familyName, int size, @JdkConstants.FontStyle int style) {
     this(familyName, size, style, style, false, null);
   }
 
@@ -50,18 +50,18 @@ public class FontInfo {
    * @deprecated Use {@link #FontInfo(String, int, int, boolean, FontRenderContext)} instead.
    */
   @Deprecated
-  public FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style, boolean useLigatures) {
+  public FontInfo(String familyName, int size, @JdkConstants.FontStyle int style, boolean useLigatures) {
     this(familyName, size, style, useLigatures, null);
   }
 
   /**
    * To get valid font metrics from this {@link FontInfo} instance, pass valid {@link FontRenderContext} here as a parameter.
    */
-  public FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style, boolean useLigatures, FontRenderContext fontRenderContext) {
+  public FontInfo(String familyName, int size, @JdkConstants.FontStyle int style, boolean useLigatures, FontRenderContext fontRenderContext) {
     this(familyName, size, style, style, useLigatures, fontRenderContext);
   }
 
-  FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style, @JdkConstants.FontStyle int realStyle, boolean useLigatures, FontRenderContext context) {
+  FontInfo(String familyName, int size, @JdkConstants.FontStyle int style, @JdkConstants.FontStyle int realStyle, boolean useLigatures, FontRenderContext context) {
     mySize = size;
     myStyle = style;
     myUseLigatures = useLigatures;
@@ -86,8 +86,8 @@ public class FontInfo {
   }
 
   @Nullable
-  private static File doFindFileForFont(@Nonnull String familyName, final int style) {
-    final String normalizedFamilyName = familyName.toLowerCase(Locale.getDefault()).replace(" ", "");
+  private static File doFindFileForFont(@Nonnull String familyName, int style) {
+    String normalizedFamilyName = familyName.toLowerCase(Locale.getDefault()).replace(" ", "");
     FilenameFilter filter = (file, name) -> {
       String normalizedName = name.toLowerCase(Locale.getDefault());
       return normalizedName.startsWith(normalizedFamilyName) && (normalizedName.endsWith(".otf") || normalizedName.endsWith(".ttf")) && (style == -1 || style == getFontStyle(normalizedName));
@@ -160,7 +160,7 @@ public class FontInfo {
   }
 
   public int charWidth(int codePoint) {
-    final FontMetrics metrics = fontMetrics();
+    FontMetrics metrics = fontMetrics();
     return FontLayoutService.getInstance().charWidth(metrics, codePoint);
   }
 

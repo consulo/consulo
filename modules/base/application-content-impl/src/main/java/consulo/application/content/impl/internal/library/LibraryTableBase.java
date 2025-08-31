@@ -50,7 +50,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
 
   @Override
   public Element getState() {
-    final Element element = new Element("state");
+    Element element = new Element("state");
     try {
       myModel.writeExternal(element);
     }
@@ -61,13 +61,13 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
   }
 
   @Override
-  public void loadState(final Element element) {
+  public void loadState(Element element) {
     try {
       if (myFirstLoad) {
         myModel.readExternal(element);
       }
       else {
-        final LibraryModel model = new LibraryModel();
+        LibraryModel model = new LibraryModel();
         model.readExternal(element);
         commit(model);
       }
@@ -144,15 +144,15 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
 
   @Override
   public Library createLibrary(String name) {
-    final ModifiableModel modifiableModel = getModifiableModel();
-    final Library library = modifiableModel.createLibrary(name);
+    ModifiableModel modifiableModel = getModifiableModel();
+    Library library = modifiableModel.createLibrary(name);
     modifiableModel.commit();
     return library;
   }
 
   @Override
   public void removeLibrary(@Nonnull Library library) {
-    final ModifiableModel modifiableModel = getModifiableModel();
+    ModifiableModel modifiableModel = getModifiableModel();
     modifiableModel.removeLibrary(library);
     modifiableModel.commit();
   }
@@ -183,12 +183,12 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     myDispatcher.getMulticaster().afterLibraryRemoved(library);
   }
 
-  public void readExternal(final Element element) throws InvalidDataException {
+  public void readExternal(Element element) throws InvalidDataException {
     myModel = new LibraryModel();
     myModel.readExternal(element);
   }
 
-  public void writeExternal(final Element element) throws WriteExternalException {
+  public void writeExternal(Element element) throws WriteExternalException {
     myModel.writeExternal(element);
   }
 
@@ -232,10 +232,10 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
         LibraryImpl library = (LibraryImpl)myLibrary;
         if (Comparing.equal(name, library.getName())) return library;
       }
-      final String libraryPrefix = "library.";
-      final String libPath = System.getProperty(libraryPrefix + name);
+      String libraryPrefix = "library.";
+      String libPath = System.getProperty(libraryPrefix + name);
       if (libPath != null) {
-        final LibraryImpl library = new LibraryImpl(name, null, LibraryTableBase.this, getLibraryOwner());
+        LibraryImpl library = new LibraryImpl(name, null, LibraryTableBase.this, getLibraryOwner());
         library.addRoot(libPath, BinariesOrderRootType.getInstance());
         return library;
       }
@@ -256,7 +256,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     @Override
     public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
       assertWritable();
-      final LibraryImpl library = new LibraryImpl(name, kind, LibraryTableBase.this, getLibraryOwner());
+      LibraryImpl library = new LibraryImpl(name, kind, LibraryTableBase.this, getLibraryOwner());
       myLibraries.add(library);
       return library;
     }
@@ -281,10 +281,10 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
         libraries.put(library.getName(), library);
       }
 
-      final List libraryElements = element.getChildren(LibraryImpl.ELEMENT);
+      List libraryElements = element.getChildren(LibraryImpl.ELEMENT);
       for (Object libraryElement1 : libraryElements) {
         Element libraryElement = (Element)libraryElement1;
-        final LibraryImpl library = new LibraryImpl(LibraryTableBase.this, libraryElement, getLibraryOwner());
+        LibraryImpl library = new LibraryImpl(LibraryTableBase.this, libraryElement, getLibraryOwner());
         if (library.getName() != null) {
           Library oldLibrary = libraries.get(library.getName());
           if (oldLibrary != null) {
@@ -301,12 +301,12 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     public void writeExternal(Element element) throws WriteExternalException {
-      final List<Library> libraries = ContainerUtil.findAll(myLibraries, library -> !library.isDisposed());
+      List<Library> libraries = ContainerUtil.findAll(myLibraries, library -> !library.isDisposed());
 
       // todo: do not sort if project is directory-based
       ContainerUtil.sort(libraries, (o1, o2) -> o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase()));
 
-      for (final Library library : libraries) {
+      for (Library library : libraries) {
         if (library.getName() != null) {
           library.writeExternal(element);
         }

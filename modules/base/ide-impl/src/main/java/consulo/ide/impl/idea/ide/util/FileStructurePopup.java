@@ -479,7 +479,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     }
 
     @Nullable
-    public PsiElement getCurrentElement(@Nullable final PsiFile psiFile) {
+    public PsiElement getCurrentElement(@Nullable PsiFile psiFile) {
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
 
         if (myTreeModelWrapper.getCurrentEditorElement() instanceof PsiElement elementAtCursor) {

@@ -41,8 +41,8 @@ public class HierarchicalFilePathComparator implements Comparator<FilePath> {
 
   @Override
   public int compare(@Nonnull FilePath filePath1, @Nonnull FilePath filePath2) {
-    final String path1 = FileUtil.toSystemIndependentName(filePath1.getPath());
-    final String path2 = FileUtil.toSystemIndependentName(filePath2.getPath());
+    String path1 = FileUtil.toSystemIndependentName(filePath1.getPath());
+    String path2 = FileUtil.toSystemIndependentName(filePath2.getPath());
 
     int index1 = 0;
     int index2 = 0;

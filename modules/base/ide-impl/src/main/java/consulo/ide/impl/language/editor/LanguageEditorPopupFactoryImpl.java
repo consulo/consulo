@@ -86,7 +86,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
             List<NavigatablePsiElement> initialTargetsList = Arrays.asList(myTargets);
             Ref<NavigatablePsiElement[]> updatedTargetsList = Ref.create(myTargets);
 
-            final IPopupChooserBuilder<NavigatablePsiElement> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(initialTargetsList);
+            IPopupChooserBuilder<NavigatablePsiElement> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(initialTargetsList);
             afterPopupBuilderCreated(builder);
             if (myListRenderer instanceof PsiElementListCellRenderer) {
                 ((PsiElementListCellRenderer) myListRenderer).installSpeedSearch(builder);
@@ -106,7 +106,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
                     }
                     return true;
                 });
-            final Ref<UsageView> usageView = new Ref<>();
+            Ref<UsageView> usageView = new Ref<>();
             if (myFindUsagesTitle != null) {
                 popupChooserBuilder = popupChooserBuilder.setCouldPin(popup -> {
                     usageView.set(FindUtil.showInUsageView(null, updatedTargetsList.get(), myFindUsagesTitle, getProject()));
@@ -115,14 +115,14 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
                 });
             }
 
-            final JBPopup popup = popupChooserBuilder.createPopup();
+            JBPopup popup = popupChooserBuilder.createPopup();
             if (builder instanceof PopupChooserBuilder) {
                 JBList<NavigatablePsiElement> list = (JBList) ((PopupChooserBuilder) builder).getChooserComponent();
                 list.setTransferHandler(new TransferHandler() {
                     @Override
                     protected Transferable createTransferable(JComponent c) {
-                        final Object[] selectedValues = list.getSelectedValues();
-                        final PsiElement[] copy = new PsiElement[selectedValues.length];
+                        Object[] selectedValues = list.getSelectedValues();
+                        PsiElement[] copy = new PsiElement[selectedValues.length];
                         for (int i = 0; i < selectedValues.length; i++) {
                             copy[i] = (PsiElement) selectedValues[i];
                         }
@@ -205,10 +205,10 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
 
             @Override
             protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer, JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                final GotoRelatedItem item = (GotoRelatedItem) value;
+                GotoRelatedItem item = (GotoRelatedItem) value;
                 Color color = list.getForeground();
-                final SimpleTextAttributes nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
-                final String name = item.getCustomName();
+                SimpleTextAttributes nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
+                String name = item.getCustomName();
                 if (name == null) {
                     return false;
                 }
@@ -225,21 +225,21 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
                 boolean isSelected,
                 boolean cellHasFocus
             ) {
-                final JPanel component = (JPanel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                JPanel component = (JPanel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (!hasMnemonic.get()) {
                     return component;
                 }
 
-                final JPanel panelWithMnemonic = new JPanel(new BorderLayout());
-                final int mnemonic = getMnemonic(value, itemsMap);
-                final JLabel label = new JLabel("");
+                JPanel panelWithMnemonic = new JPanel(new BorderLayout());
+                int mnemonic = getMnemonic(value, itemsMap);
+                JLabel label = new JLabel("");
                 if (mnemonic != -1) {
                     label.setText(mnemonic + ".");
                     label.setDisplayedMnemonicIndex(0);
                 }
                 label.setPreferredSize(new JLabel("8.").getPreferredSize());
 
-                final JComponent leftRenderer = (JComponent) component.getComponents()[0];
+                JComponent leftRenderer = (JComponent) component.getComponents()[0];
                 component.remove(leftRenderer);
                 panelWithMnemonic.setBorder(BorderFactory.createEmptyBorder(0, 7, 0, 0));
                 panelWithMnemonic.setBackground(leftRenderer.getBackground());
@@ -280,12 +280,12 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
             Map<Object, String> separators = new HashMap<>();
 
             {
-                final ListModel model = popup.getList().getModel();
+                ListModel model = popup.getList().getModel();
                 String current = null;
                 boolean hasTitle = false;
                 for (int i = 0; i < model.getSize(); i++) {
-                    final Object element = model.getElementAt(i);
-                    final GotoRelatedItem item = itemsMap.get(element);
+                    Object element = model.getElementAt(i);
+                    GotoRelatedItem item = itemsMap.get(element);
                     if (item != null && !StringUtil.equals(current, item.getGroup())) {
                         current = item.getGroup();
                         separators.put(element, current);
@@ -302,13 +302,13 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
 
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                final Component component = renderer.getListCellRendererComponent(list, (PsiElement) value, index, isSelected, cellHasFocus);
-                final String separator = separators.get(value);
+                Component component = renderer.getListCellRendererComponent(list, (PsiElement) value, index, isSelected, cellHasFocus);
+                String separator = separators.get(value);
 
                 if (separator != null) {
                     JPanel panel = new JPanel(new BorderLayout());
                     panel.add(component, BorderLayout.CENTER);
-                    final SeparatorWithText sep = new SeparatorWithText() {
+                    SeparatorWithText sep = new SeparatorWithText() {
                         @Override
                         protected void paintComponent(Graphics g) {
                             g.setColor(new JBColor(Color.WHITE, UIUtil.getSeparatorColor()));
@@ -327,9 +327,9 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
         popup.setMinimumSize(new Dimension(200, -1));
 
         for (Object item : elements) {
-            final int mnemonic = getMnemonic(item, itemsMap);
+            int mnemonic = getMnemonic(item, itemsMap);
             if (mnemonic != -1) {
-                final Action action = createNumberAction(mnemonic, popup, itemsMap, processor);
+                Action action = createNumberAction(mnemonic, popup, itemsMap, processor);
                 popup.registerAction(mnemonic + "Action", KeyStroke.getKeyStroke(String.valueOf(mnemonic)), action);
                 popup.registerAction(mnemonic + "Action", KeyStroke.getKeyStroke("NUMPAD" + String.valueOf(mnemonic)), action);
                 hasMnemonic.set(true);
@@ -346,7 +346,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (final Object item : listPopup.getListStep().getValues()) {
+                for (Object item : listPopup.getListStep().getValues()) {
                     if (getMnemonic(item, itemsMap) == mnemonic) {
                         listPopup.setFinalRunnable(() -> processor.accept(item));
                         listPopup.closeOk(null);

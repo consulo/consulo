@@ -86,7 +86,7 @@ public abstract class AbstractVcsHelper {
      */
     public abstract List<VcsException> runTransactionRunnable(AbstractVcs vcs, TransactionRunnable runnable, Object vcsParameters);
 
-    public void showError(final VcsException e, final String tabDisplayName) {
+    public void showError(VcsException e, String tabDisplayName) {
         showErrors(Arrays.asList(e), tabDisplayName);
     }
 
@@ -128,9 +128,9 @@ public abstract class AbstractVcsHelper {
 
     public void showChangesBrowser(
         CommittedChangesProvider provider,
-        final RepositoryLocation location,
+        RepositoryLocation location,
         @Nonnull LocalizeValue title,
-        @Nullable final Component parent
+        @Nullable Component parent
     ) {
         showChangesBrowser(provider, location, title.get(), parent);
     }
@@ -139,9 +139,9 @@ public abstract class AbstractVcsHelper {
     @DeprecationInfo("Use variant with LocalizeValue")
     public void showChangesBrowser(
         CommittedChangesProvider provider,
-        final RepositoryLocation location,
+        RepositoryLocation location,
         @Nls String title,
-        @Nullable final Component parent
+        @Nullable Component parent
     ) {
         showChangesBrowser(provider, location, LocalizeValue.ofNullable(title), parent);
     }
@@ -179,7 +179,7 @@ public abstract class AbstractVcsHelper {
         VirtualFile root,
         ChangeBrowserSettings settings,
         int maxCount,
-        final String title
+        String title
     ) {
         openCommittedChangesTab(vcs, root, settings, maxCount, LocalizeValue.ofNullable(title));
     }
@@ -201,7 +201,7 @@ public abstract class AbstractVcsHelper {
         RepositoryLocation location,
         ChangeBrowserSettings settings,
         int maxCount,
-        final String title
+        String title
     ) {
         openCommittedChangesTab(provider, location, settings, maxCount, LocalizeValue.ofNullable(title));
     }
@@ -241,7 +241,7 @@ public abstract class AbstractVcsHelper {
         }
         MergeProvider provider = null;
         for (VirtualFile virtualFile : files) {
-            final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(myProject).getVcsFor(virtualFile);
+            AbstractVcs vcs = ProjectLevelVcsManager.getInstance(myProject).getVcsFor(virtualFile);
             if (vcs != null) {
                 provider = vcs.getMergeProvider();
                 if (provider != null) {
@@ -267,7 +267,7 @@ public abstract class AbstractVcsHelper {
         @Nullable AnnotationProvider annotationProvider,
         @Nonnull FilePath path,
         @Nullable String repositoryPath,
-        @Nonnull final AbstractVcs vcs
+        @Nonnull AbstractVcs vcs
     );
 
     /**
@@ -302,7 +302,7 @@ public abstract class AbstractVcsHelper {
     public List<VirtualFile> selectFilesToProcess(
         List<VirtualFile> files,
         String title,
-        @Nullable final String prompt,
+        @Nullable String prompt,
         String singleFileTitle,
         String singleFilePromptTemplate,
         VcsShowConfirmationOption confirmationOption
@@ -339,11 +339,11 @@ public abstract class AbstractVcsHelper {
     @Nonnull
     public List<FilePath> selectFilePathsToProcess(
         List<FilePath> files,
-        final String title,
-        @Nullable final String prompt,
-        final String singleFileTitle,
-        final String singleFilePromptTemplate,
-        final VcsShowConfirmationOption confirmationOption
+        String title,
+        @Nullable String prompt,
+        String singleFileTitle,
+        String singleFilePromptTemplate,
+        VcsShowConfirmationOption confirmationOption
     ) {
         return selectFilePathsToProcess(
             files,
@@ -383,11 +383,11 @@ public abstract class AbstractVcsHelper {
     @Nonnull
     public Collection<FilePath> selectFilePathsToProcess(
         List<FilePath> files,
-        final String title,
-        @Nullable final String prompt,
-        final String singleFileTitle,
-        final String singleFilePromptTemplate,
-        final VcsShowConfirmationOption confirmationOption,
+        String title,
+        @Nullable String prompt,
+        String singleFileTitle,
+        String singleFilePromptTemplate,
+        VcsShowConfirmationOption confirmationOption,
         @Nullable String okActionName,
         @Nullable String cancelActionName
     ) {

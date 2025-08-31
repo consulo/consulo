@@ -53,31 +53,31 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
   }
 
   @Override
-  public boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context, @Nonnull final InspectionToolWrapper toolWrapper) {
-    final Map<String, Set<OfflineProblemDescriptor>> content = getFilteredContent(context, toolWrapper);
+  public boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context, @Nonnull InspectionToolWrapper toolWrapper) {
+    Map<String, Set<OfflineProblemDescriptor>> content = getFilteredContent(context, toolWrapper);
     return content != null && !content.values().isEmpty();
   }
 
   @Override
   @Nullable
-  public QuickFixAction[] getQuickFixes(@Nonnull final InspectionToolWrapper toolWrapper, @Nonnull final InspectionTree tree) {
-    final TreePath[] treePaths = tree.getSelectionPaths();
-    final List<RefEntity> selectedElements = new ArrayList<>();
-    final Map<RefEntity, Set<QuickFix>> actions = new HashMap<>();
+  public QuickFixAction[] getQuickFixes(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull InspectionTree tree) {
+    TreePath[] treePaths = tree.getSelectionPaths();
+    List<RefEntity> selectedElements = new ArrayList<>();
+    Map<RefEntity, Set<QuickFix>> actions = new HashMap<>();
     for (TreePath selectionPath : treePaths) {
       TreeUtil.traverseDepth((TreeNode)selectionPath.getLastPathComponent(), node -> {
         if (!((InspectionTreeNode)node).isValid()) return true;
         if (node instanceof OfflineProblemDescriptorNode descriptorNode) {
-          final RefEntity element = descriptorNode.getElement();
+          RefEntity element = descriptorNode.getElement();
           selectedElements.add(element);
           Set<QuickFix> quickFixes = actions.get(element);
           if (quickFixes == null) {
             quickFixes = new HashSet<>();
             actions.put(element, quickFixes);
           }
-          final CommonProblemDescriptor descriptor = descriptorNode.getDescriptor();
+          CommonProblemDescriptor descriptor = descriptorNode.getDescriptor();
           if (descriptor != null) {
-            final QuickFix[] fixes = descriptor.getFixes();
+            QuickFix[] fixes = descriptor.getFixes();
             if (fixes != null) {
               ContainerUtil.addAll(quickFixes, fixes);
             }
@@ -92,7 +92,7 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
 
     if (selectedElements.isEmpty()) return null;
 
-    final RefEntity[] selectedRefElements = selectedElements.toArray(new RefEntity[selectedElements.size()]);
+    RefEntity[] selectedRefElements = selectedElements.toArray(new RefEntity[selectedElements.size()]);
 
     GlobalInspectionContextImpl context = tree.getContext();
     InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
@@ -107,19 +107,19 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
   @Override
   public void appendToolNodeContent(
     @Nonnull GlobalInspectionContextImpl context,
-    @Nonnull final InspectionNode toolNode,
-    @Nonnull final InspectionTreeNode parentNode,
-    final boolean showStructure,
-    @Nonnull final Map<String, Set<RefEntity>> contents,
-    @Nonnull final Map<RefEntity, CommonProblemDescriptor[]> problems,
-    final DefaultTreeModel model
+    @Nonnull InspectionNode toolNode,
+    @Nonnull InspectionTreeNode parentNode,
+    boolean showStructure,
+    @Nonnull Map<String, Set<RefEntity>> contents,
+    @Nonnull Map<RefEntity, CommonProblemDescriptor[]> problems,
+    DefaultTreeModel model
   ) {
     InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
-    final Map<String, Set<OfflineProblemDescriptor>> filteredContent = getFilteredContent(context, toolWrapper);
+    Map<String, Set<OfflineProblemDescriptor>> filteredContent = getFilteredContent(context, toolWrapper);
     if (filteredContent != null && !filteredContent.values().isEmpty()) {
-      final Function<OfflineProblemDescriptor, UserObjectContainer<OfflineProblemDescriptor>> computeContainer =
+      Function<OfflineProblemDescriptor, UserObjectContainer<OfflineProblemDescriptor>> computeContainer =
         descriptor -> new OfflineProblemDescriptorContainer(descriptor);
-      final List<InspectionTreeNode> list =
+      List<InspectionTreeNode> list =
         buildTree(context, filteredContent, false, toolWrapper, computeContainer, showStructure);
       for (InspectionTreeNode node : list) {
         toolNode.add(node);
@@ -137,7 +137,7 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     Map<String, Set<OfflineProblemDescriptor>> content = myContent.get(toolWrapper.getShortName());
     if (content == null) return null;
     if (context.getUIOptions().FILTER_RESOLVED_ITEMS) {
-      final Map<String, Set<OfflineProblemDescriptor>> current = new HashMap<>(content);
+      Map<String, Set<OfflineProblemDescriptor>> current = new HashMap<>(content);
       content = null; //GC it
       InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
       for (RefEntity refEntity : presentation.getIgnoredRefElements()) {
@@ -150,12 +150,12 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     return content;
   }
 
-  private static void excludeProblem(final String externalName, final Map<String, Set<OfflineProblemDescriptor>> content) {
+  private static void excludeProblem(String externalName, Map<String, Set<OfflineProblemDescriptor>> content) {
     for (Iterator<String> iter = content.keySet().iterator(); iter.hasNext(); ) {
-      final String packageName = iter.next();
-      final Set<OfflineProblemDescriptor> excluded = new HashSet<>(content.get(packageName));
+      String packageName = iter.next();
+      Set<OfflineProblemDescriptor> excluded = new HashSet<>(content.get(packageName));
       for (Iterator<OfflineProblemDescriptor> it = excluded.iterator(); it.hasNext(); ) {
-        final OfflineProblemDescriptor ex = it.next();
+        OfflineProblemDescriptor ex = it.next();
         if (Comparing.strEqual(ex.getFQName(), externalName)) {
           it.remove();
         }
@@ -172,13 +172,13 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
   @Override
   protected void appendDescriptor(
     @Nonnull GlobalInspectionContextImpl context,
-    @Nonnull final InspectionToolWrapper toolWrapper,
-    @Nonnull final UserObjectContainer container,
-    @Nonnull final InspectionPackageNode packageNode,
-    final boolean canPackageRepeat
+    @Nonnull InspectionToolWrapper toolWrapper,
+    @Nonnull UserObjectContainer container,
+    @Nonnull InspectionPackageNode packageNode,
+    boolean canPackageRepeat
   ) {
     InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
-    final RefElementNode elemNode = addNodeToParent(container, presentation, packageNode);
+    RefElementNode elemNode = addNodeToParent(container, presentation, packageNode);
     if (toolWrapper instanceof LocalInspectionToolWrapper localInspectionToolWrapper) {
       elemNode.add(new OfflineProblemDescriptorNode(
         ((OfflineProblemDescriptorContainer)container).getUserObject(),
@@ -200,9 +200,9 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     @Override
     @Nullable
     public OfflineProblemDescriptorContainer getOwner() {
-      final OfflineProblemDescriptor descriptor = myDescriptor.getOwner();
+      OfflineProblemDescriptor descriptor = myDescriptor.getOwner();
       if (descriptor != null) {
-        final OfflineProblemDescriptorContainer container = new OfflineProblemDescriptorContainer(descriptor);
+        OfflineProblemDescriptorContainer container = new OfflineProblemDescriptorContainer(descriptor);
         return container.supportStructure() ? container : null;
       }
       return null;
@@ -226,7 +226,7 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     }
 
     @Override
-    public boolean areEqual(final OfflineProblemDescriptor o1, final OfflineProblemDescriptor o2) {
+    public boolean areEqual(OfflineProblemDescriptor o1, OfflineProblemDescriptor o2) {
       if (o1 == null || o2 == null) {
         return o1 == o2;
       }

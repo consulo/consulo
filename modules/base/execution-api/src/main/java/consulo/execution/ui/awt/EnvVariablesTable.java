@@ -46,7 +46,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
 
     @Override
     protected ListTableModel createListModel() {
-        final ColumnInfo name = new ElementsColumnInfoBase<EnvironmentVariable>("Name") {
+        ColumnInfo name = new ElementsColumnInfoBase<EnvironmentVariable>("Name") {
             @Override
             public String valueOf(EnvironmentVariable environmentVariable) {
                 return environmentVariable.getName();
@@ -72,7 +72,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
             }
         };
 
-        final ColumnInfo value = new ElementsColumnInfoBase<EnvironmentVariable>("Value") {
+        ColumnInfo value = new ElementsColumnInfoBase<EnvironmentVariable>("Value") {
             @Override
             public String valueOf(EnvironmentVariable environmentVariable) {
                 return environmentVariable.getValue();
@@ -110,9 +110,9 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         return new ListTableModel((new ColumnInfo[]{name, value}));
     }
 
-    public void editVariableName(final EnvironmentVariable environmentVariable) {
+    public void editVariableName(EnvironmentVariable environmentVariable) {
         Application.get().invokeLater(() -> {
-            final EnvironmentVariable actualEnvVar =
+            EnvironmentVariable actualEnvVar =
                 ContainerUtil.find(getElements(), item -> StringUtil.equals(environmentVariable.getName(), item.getName()));
             if (actualEnvVar == null) {
                 return;

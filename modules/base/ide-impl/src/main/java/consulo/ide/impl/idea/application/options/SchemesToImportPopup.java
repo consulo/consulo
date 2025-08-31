@@ -30,7 +30,7 @@ import java.util.Collection;
 public abstract class SchemesToImportPopup<T> {
   private final Component myParent;
 
-  public SchemesToImportPopup(final Component parent) {
+  public SchemesToImportPopup(Component parent) {
     myParent = parent;
   }
 

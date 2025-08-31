@@ -32,7 +32,7 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
   }
 
   @Override
-  public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     if (!EditorModificationUtil.checkModificationAllowed(editor)) return;
     if (!editor.getSelectionModel().hasSelection()) {
       SurroundWithHandler.selectLogicalLineContentsAtCaret(editor);

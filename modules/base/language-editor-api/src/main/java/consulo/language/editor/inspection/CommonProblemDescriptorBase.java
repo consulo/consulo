@@ -15,7 +15,7 @@ public class CommonProblemDescriptorBase implements CommonProblemDescriptor {
   private final QuickFix[] myFixes;
   private final String myDescriptionTemplate;
 
-  public CommonProblemDescriptorBase(final QuickFix[] fixes, @Nonnull final String descriptionTemplate) {
+  public CommonProblemDescriptorBase(QuickFix[] fixes, @Nonnull String descriptionTemplate) {
     if (fixes == null) {
       myFixes = null;
     }

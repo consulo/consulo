@@ -245,7 +245,7 @@ public class DisposerTest extends Assertions {
     }
 
     private class MyParentDisposable extends MyDisposable implements Disposable.Parent {
-        private MyParentDisposable(final String aName) {
+        private MyParentDisposable(String aName) {
             super(aName);
         }
 

@@ -54,10 +54,10 @@ public class OutputFileUtil {
   private OutputFileUtil() {
   }
 
-  public static File getOutputFile(@Nonnull final RunConfigurationBase configuration) {
+  public static File getOutputFile(@Nonnull RunConfigurationBase configuration) {
     String outputFilePath = configuration.getOutputFilePath();
     if (outputFilePath != null) {
-      final String filePath = FileUtil.toSystemDependentName(outputFilePath);
+      String filePath = FileUtil.toSystemDependentName(outputFilePath);
       File file = new File(filePath);
       if (configuration instanceof CommonProgramRunConfigurationParameters && !FileUtil.isAbsolute(filePath)) {
         String directory = ((CommonProgramRunConfigurationParameters)configuration).getWorkingDirectory();
@@ -72,7 +72,7 @@ public class OutputFileUtil {
 
   public static void attachDumpListener(final RunConfigurationBase base, final ProcessHandler startedProcess, ExecutionConsole console) {
     if (base.isSaveOutputToFile()) {
-      final String outputFilePath = base.getOutputFilePath();
+      String outputFilePath = base.getOutputFilePath();
       if (outputFilePath != null) {
         final String filePath = FileUtil.toSystemDependentName(outputFilePath);
         startedProcess.addProcessListener(new ProcessAdapter() {

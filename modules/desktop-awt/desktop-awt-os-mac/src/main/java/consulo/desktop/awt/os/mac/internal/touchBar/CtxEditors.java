@@ -36,8 +36,8 @@ final class CtxEditors {
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {
             @Override
             public void editorReleased(@Nonnull EditorFactoryEvent event) {
-                final WeakReference<Component> cmpRef = ourEditors.remove(event.getEditor());
-                final Component cmp = cmpRef != null ? cmpRef.get() : null;
+                WeakReference<Component> cmpRef = ourEditors.remove(event.getEditor());
+                Component cmp = cmpRef != null ? cmpRef.get() : null;
                 if (cmp != null) {
                     TouchBarsManager.unregister(cmp);
                 }
@@ -54,9 +54,9 @@ final class CtxEditors {
         }
 
         // register editor
-        final @Nullable Component newCmp = editor.getHeaderComponent();
-        final @Nullable WeakReference<Component> oldCmpRef = ourEditors.put(editor, new WeakReference<>(newCmp));
-        final @Nullable Component oldCmp = oldCmpRef != null ? oldCmpRef.get() : null;
+        @Nullable Component newCmp = editor.getHeaderComponent();
+        @Nullable WeakReference<Component> oldCmpRef = ourEditors.put(editor, new WeakReference<>(newCmp));
+        @Nullable Component oldCmp = oldCmpRef != null ? oldCmpRef.get() : null;
         if (oldCmp != null) {
             TouchBarsManager.unregister(oldCmp);
         }

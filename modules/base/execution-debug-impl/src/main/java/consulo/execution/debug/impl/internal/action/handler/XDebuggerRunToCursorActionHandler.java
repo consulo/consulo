@@ -27,15 +27,15 @@ import jakarta.annotation.Nonnull;
 public class XDebuggerRunToCursorActionHandler extends XDebuggerSuspendedActionHandler {
   private final boolean myIgnoreBreakpoints;
 
-  public XDebuggerRunToCursorActionHandler(final boolean ignoreBreakpoints) {
+  public XDebuggerRunToCursorActionHandler(boolean ignoreBreakpoints) {
     myIgnoreBreakpoints = ignoreBreakpoints;
   }
 
-  protected boolean isEnabled(final @Nonnull XDebugSession session, final DataContext dataContext) {
+  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
     return super.isEnabled(session, dataContext) && XDebuggerUtilImpl.getCaretPosition(session.getProject(), dataContext) != null;
   }
 
-  protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
+  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
     XSourcePosition position = XDebuggerUtilImpl.getCaretPosition(session.getProject(), dataContext);
     if (position != null) {
       session.runToPosition(position, myIgnoreBreakpoints);

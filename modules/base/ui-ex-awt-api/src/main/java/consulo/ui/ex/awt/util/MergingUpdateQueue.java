@@ -223,7 +223,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     restart(myMergingTimeSpan);
   }
 
-  private void restart(final int mergingTimeSpanMillis) {
+  private void restart(int mergingTimeSpanMillis) {
     if (!myActive) return;
 
     clearWaiter();
@@ -257,9 +257,9 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
 
     myFlushing = true;
-    final Runnable toRun = () -> {
+    Runnable toRun = () -> {
       try {
-        final List<Update> all;
+        List<Update> all;
 
         synchronized (myScheduledUpdates) {
           all = getAllScheduledUpdates();
@@ -303,7 +303,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     if (myModalityStateComponent == ANY_COMPONENT) return true;
 
     consulo.ui.ModalityState current = ApplicationManager.getApplication().getCurrentModalityState();
-    final ModalityState modalityState = getModalityState();
+    ModalityState modalityState = getModalityState();
     return !current.dominates(modalityState);
   }
 
@@ -316,7 +316,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   }
 
   protected void execute(@Nonnull Update[] update) {
-    for (final Update each : update) {
+    for (Update each : update) {
       if (isExpired(each)) {
         each.setRejected();
         continue;
@@ -343,7 +343,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   /**
    * Adds a task to be executed.
    */
-  public void queue(@Nonnull final Update update) {
+  public void queue(@Nonnull Update update) {
     if (myDisposed) return;
 
     if (myTrackUiActivity) {
@@ -356,7 +356,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
       return;
     }
 
-    final boolean active = myActive;
+    boolean active = myActive;
     synchronized (myScheduledUpdates) {
       try {
         if (eatThisOrOthers(update)) {
@@ -404,7 +404,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
 
   private void put(@Nonnull Update update) {
     Map<Update, Update> updates = myScheduledUpdates.computeIfAbsent(update.getPriority(), __ -> new LinkedHashMap<>());
-    final Update existing = updates.remove(update);
+    Update existing = updates.remove(update);
     if (existing != null && existing != update) {
       existing.setProcessed();
       existing.setRejected();
@@ -458,7 +458,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     myUiNotifyConnector = connector;
   }
 
-  public MergingUpdateQueue setRestartTimerOnAdd(final boolean restart) {
+  public MergingUpdateQueue setRestartTimerOnAdd(boolean restart) {
     myRestartOnAdd = restart;
     return this;
   }

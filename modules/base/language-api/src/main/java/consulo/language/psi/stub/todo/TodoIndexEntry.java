@@ -23,7 +23,7 @@ public class TodoIndexEntry {
   private final String pattern;
   private final boolean caseSensitive;
 
-  public TodoIndexEntry(final String pattern, final boolean caseSensitive) {
+  public TodoIndexEntry(String pattern, boolean caseSensitive) {
     this.pattern = pattern;
     this.caseSensitive = caseSensitive;
   }
@@ -36,11 +36,11 @@ public class TodoIndexEntry {
     return caseSensitive;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final TodoIndexEntry that = (TodoIndexEntry)o;
+    TodoIndexEntry that = (TodoIndexEntry)o;
 
     if (caseSensitive != that.caseSensitive) return false;
     if (!pattern.equals(that.pattern)) return false;

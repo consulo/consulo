@@ -33,14 +33,14 @@ public class ColorIcon extends EmptyIcon {
   private boolean myBorder;
   private int myColorSize;
 
-  public ColorIcon(int size, int colorSize, @Nonnull Color color, final boolean border) {
+  public ColorIcon(int size, int colorSize, @Nonnull Color color, boolean border) {
     super(size, size);
     myColor = color;
     myColorSize = colorSize;
     myBorder = border;
   }
 
-  public ColorIcon(int size, @Nonnull Color color, final boolean border) {
+  public ColorIcon(int size, @Nonnull Color color, boolean border) {
     this(size, size, color, border);
   }
 
@@ -66,14 +66,14 @@ public class ColorIcon extends EmptyIcon {
   }
 
   @Override
-  public void paintIcon(final Component component, final Graphics g, final int i, final int j) {
-    final int iconWidth = getIconWidth();
-    final int iconHeight = getIconHeight();
+  public void paintIcon(Component component, Graphics g, int i, int j) {
+    int iconWidth = getIconWidth();
+    int iconHeight = getIconHeight();
     g.setColor(getIconColor());
 
-    final int size = getColorSize();
-    final int x = i + (iconWidth - size) / 2;
-    final int y = j + (iconHeight - size) / 2;
+    int size = getColorSize();
+    int x = i + (iconWidth - size) / 2;
+    int y = j + (iconHeight - size) / 2;
 
     g.fillRect(x, y, size, size);
 

@@ -139,7 +139,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     return false;
   }
 
-  public boolean isHighlightableContentNode(final PresentableNodeDescriptor kid) {
+  public boolean isHighlightableContentNode(PresentableNodeDescriptor kid) {
     return true;
   }
 
@@ -195,11 +195,11 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     }
 
 
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      final ColoredFragment that = (ColoredFragment)o;
+      ColoredFragment that = (ColoredFragment)o;
 
       if (myAttributes != null ? !myAttributes.equals(that.myAttributes) : that.myAttributes != null) return false;
       if (myText != null ? !myText.equals(that.myText) : that.myText != null) return false;

@@ -79,7 +79,7 @@ public class ListenerUtil {
   public static void addMouseMotionListener(Component c, MouseMotionListener l) {
     c.addMouseMotionListener(l);
     if (c instanceof Container) {
-      final Container container = (Container)c;
+      Container container = (Container)c;
       Component[] children = container.getComponents();
       for (Component child : children) {
         addMouseMotionListener(child, l);
@@ -117,7 +117,7 @@ public class ListenerUtil {
     }
   }
 
-  public static void removeMouseMotionListener(final Component component, final MouseMotionListener motionListener) {
+  public static void removeMouseMotionListener(Component component, MouseMotionListener motionListener) {
     component.removeMouseMotionListener(motionListener);
     if (component instanceof Container) {
       Container container = (Container)component;

@@ -43,10 +43,10 @@ public class Java9DockDelegateImpl implements DesktopSystemDockImpl.Delegate {
     Application.get().getLastUIAccess().give(() -> {
       RecentProjectsManager projectsManager = RecentProjectsManager.getInstance();
 
-      final AnAction[] recentProjectActions = projectsManager.getRecentProjectsActions(false);
+      AnAction[] recentProjectActions = projectsManager.getRecentProjectsActions(false);
       recentProjectsMenu.removeAll();
 
-      for (final AnAction action : recentProjectActions) {
+      for (AnAction action : recentProjectActions) {
         MenuItem menuItem = new MenuItem(((ReopenProjectAction)action).getProjectName());
         menuItem.addActionListener(e -> action.actionPerformed(AnActionEvent.createFromAnAction(action, null, ActionPlaces.DOCK_MENU, DataManager.getInstance().getDataContext((Component)null))));
         recentProjectsMenu.add(menuItem);

@@ -13,7 +13,7 @@ public class EqTailType extends TailType {
   }
 
   @Override
-  public int processTail(final Editor editor, int tailOffset) {
+  public int processTail(Editor editor, int tailOffset) {
     Document document = editor.getDocument();
     int textLength = document.getTextLength();
     CharSequence chars = document.getCharsSequence();

@@ -27,19 +27,19 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class XDebuggerActionHandler extends DebuggerActionHandler {
 
-  public void perform(@Nonnull final Project project, final AnActionEvent event) {
+  public void perform(@Nonnull Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session != null) {
       perform(session, event.getDataContext());
     }
   }
 
-  public boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
+  public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && isEnabled(session, event.getDataContext());
   }
 
-  protected abstract boolean isEnabled(@Nonnull XDebugSession session, final DataContext dataContext);
+  protected abstract boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext);
 
-  protected abstract void perform(@Nonnull XDebugSession session, final DataContext dataContext);
+  protected abstract void perform(@Nonnull XDebugSession session, DataContext dataContext);
 }

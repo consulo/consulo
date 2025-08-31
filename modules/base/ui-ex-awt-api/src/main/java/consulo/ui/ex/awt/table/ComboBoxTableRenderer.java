@@ -55,7 +55,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
 
   private Runnable myFinalRunnable;
 
-  public ComboBoxTableRenderer(final T[] values) {
+  public ComboBoxTableRenderer(T[] values) {
     myValues = values;
     setFont(UIUtil.getButtonFont());
     setBorder(JBUI.Borders.empty(0, 5, 0, 5));
@@ -71,7 +71,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     return getPreferredSize();
   }
 
-  private static Dimension addIconSize(final Dimension d) {
+  private static Dimension addIconSize(Dimension d) {
     return new Dimension(d.width + AllIcons.General.ArrowDown.getWidth() + JBUI.scale(2),
                          Math.max(d.height, AllIcons.General.ArrowDown.getHeight()));
   }
@@ -84,11 +84,11 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     return null;
   }
 
-  public void setPaintArrow(final boolean paintArrow) {
+  public void setPaintArrow(boolean paintArrow) {
     myPaintArrow = paintArrow;
   }
 
-  protected Runnable onChosen(@Nonnull final T value) {
+  protected Runnable onChosen(@Nonnull T value) {
     stopCellEditing(value);
 
     return () -> stopCellEditing(value);
@@ -99,10 +99,10 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     super.paintComponent(g);
 
     if (!StringUtil.isEmpty(getText()) && myPaintArrow) {
-      final Rectangle r = getBounds();
-      final Insets i = getInsets();
-      final int x = r.width - i.right - AllIcons.General.ArrowDown.getWidth();
-      final int y = i.top + (r.height - i.top - i.bottom - AllIcons.General.ArrowDown.getHeight()) / 2;
+      Rectangle r = getBounds();
+      Insets i = getInsets();
+      int x = r.width - i.right - AllIcons.General.ArrowDown.getWidth();
+      int y = i.top + (r.height - i.top - i.bottom - AllIcons.General.ArrowDown.getHeight()) / 2;
       TargetAWT.to(AllIcons.General.ArrowDown).paintIcon(this, g, x, y);
     }
   }
@@ -114,18 +114,18 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
                                                  boolean hasFocus,
                                                  int row,
                                                  int column) {
-    @SuppressWarnings("unchecked") final T t = (T)value;
+    @SuppressWarnings("unchecked") T t = (T)value;
     customizeComponent(t, table, isSelected);
     return this;
   }
 
   @Override
   public Component getTableCellEditorComponent(JTable table,
-                                               final Object value,
+                                               Object value,
                                                boolean isSelected,
-                                               final int row,
-                                               final int column) {
-    @SuppressWarnings("unchecked") final T t = (T)value;
+                                               int row,
+                                               int column) {
+    @SuppressWarnings("unchecked") T t = (T)value;
     myValue = t;
     customizeComponent(t, table, true);
 
@@ -135,13 +135,13 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     return this;
   }
 
-  protected boolean isApplicable(final T value, final int row) {
+  protected boolean isApplicable(T value, int row) {
     return true;
   }
 
-  private void showPopup(final T value, final int row) {
+  private void showPopup(final T value, int row) {
     List<T> filtered = ContainerUtil.findAll(myValues, t -> isApplicable(t, row));
-    final ListPopup popup = JBPopupFactory.getInstance().createListPopup(new ListStep<T>(filtered, value) {
+    ListPopup popup = JBPopupFactory.getInstance().createListPopup(new ListStep<T>(filtered, value) {
       @Override
       @Nonnull
       public String getTextFor(T value) {
@@ -187,7 +187,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     fireEditingCanceled();
   }
 
-  protected void customizeComponent(final T value, final JTable table, final boolean isSelected) {
+  protected void customizeComponent(T value, JTable table, boolean isSelected) {
     setOpaque(true);
     setText(value == null ? "" : getTextFor(value));
     if (value != null) {
@@ -216,7 +216,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     return true;
   }
 
-  private void stopCellEditing(final T value) {
+  private void stopCellEditing(T value) {
     myValue = value;
     stopCellEditing();
   }
@@ -268,7 +268,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
 
   private void hidePopup() {
     if (myPopupRef != null) {
-      final ListPopup popup = myPopupRef.get();
+      ListPopup popup = myPopupRef.get();
       if (popup != null && popup.isVisible()) {
         popup.cancel();
       }

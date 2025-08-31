@@ -38,10 +38,10 @@ public class LanguageFileTypeStructureViewBuilderProvider implements StructureVi
   @RequiredReadAction
   @Override
   @Nullable
-  public StructureViewBuilder getStructureViewBuilder(@Nonnull final FileType fileType, @Nonnull final VirtualFile file, @Nonnull final Project project) {
+  public StructureViewBuilder getStructureViewBuilder(@Nonnull FileType fileType, @Nonnull VirtualFile file, @Nonnull Project project) {
     if (!(fileType instanceof LanguageFileType)) return null;
 
-    final PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
+    PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
     if (psiFile == null) return null;
 
     return PsiStructureViewFactory.createBuilderForFile(psiFile);

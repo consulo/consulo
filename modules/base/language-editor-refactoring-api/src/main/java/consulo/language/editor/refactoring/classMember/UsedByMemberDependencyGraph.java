@@ -44,7 +44,7 @@ public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C exte
 
   @Override
   public void memberChanged(M memberInfo) {
-    final ClassMembersRefactoringSupport support = ClassMembersRefactoringSupport.forLanguage(memberInfo.getMember().getLanguage());
+    ClassMembersRefactoringSupport support = ClassMembersRefactoringSupport.forLanguage(memberInfo.getMember().getLanguage());
     if (support != null && support.isProperMember(memberInfo)) {
       myDependencies = null;
       myDependenciesToDependent = null;
@@ -75,7 +75,7 @@ public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C exte
       for (T member : myMembers) {
         Set<T> dependent = myMemberDependenciesStorage.getMemberDependencies(member);
         if (dependent != null) {
-          for (final T aDependent : dependent) {
+          for (T aDependent : dependent) {
             if (mySelectedNormal.contains(aDependent) && !mySelectedAbstract.contains(aDependent)) {
               myDependencies.add(member);
               HashSet<T> deps = myDependenciesToDependent.get(member);
@@ -95,13 +95,13 @@ public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C exte
 
   @Override
   public Set<? extends T> getDependenciesOf(T member) {
-    final Set<? extends T> dependent = getDependent();
+    Set<? extends T> dependent = getDependent();
     if (!dependent.contains(member)) return null;
     return myDependenciesToDependent.get(member);
   }
 
   public String getElementTooltip(T element) {
-    final Set<? extends T> dependencies = getDependenciesOf(element);
+    Set<? extends T> dependencies = getDependenciesOf(element);
     if (dependencies == null || dependencies.size() == 0) return null;
 
     ArrayList<String> strings = new ArrayList<>();

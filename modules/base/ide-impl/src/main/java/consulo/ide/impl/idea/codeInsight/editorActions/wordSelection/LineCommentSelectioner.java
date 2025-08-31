@@ -33,7 +33,7 @@ public class LineCommentSelectioner extends WordSelectioner {
   @Override
   public boolean canSelect(PsiElement e) {
     if (e instanceof PsiComment) {
-      final Commenter commenter = Commenter.forLanguage(e.getLanguage());
+      Commenter commenter = Commenter.forLanguage(e.getLanguage());
       if (!(commenter instanceof CodeDocumentationAwareCommenter)) return true;
       return !((CodeDocumentationAwareCommenter) commenter).isDocumentationComment((PsiComment)e);
     }

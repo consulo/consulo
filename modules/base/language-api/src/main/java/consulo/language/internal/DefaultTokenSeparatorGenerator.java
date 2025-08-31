@@ -39,7 +39,7 @@ public class DefaultTokenSeparatorGenerator implements TokenSeparatorGenerator {
     if (rightLang.isKindOf(l)) {
       l = rightLang; // get more precise lexer
     }
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
     if (parserDefinition != null) {
       PsiManager manager = right.getTreeParent().getPsi().getManager();
       ASTNode generatedWhitespace;

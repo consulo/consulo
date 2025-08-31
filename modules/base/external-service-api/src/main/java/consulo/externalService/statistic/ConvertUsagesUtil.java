@@ -33,7 +33,7 @@ public class ConvertUsagesUtil {
   //@NotNull
   public static String convertValueMap(Set<? extends UsageDescriptor> descriptors) {
     assert descriptors != null;
-    final StringBuilder buffer = new StringBuilder();
+    StringBuilder buffer = new StringBuilder();
     for (UsageDescriptor usageDescriptor : descriptors) {
       buffer.append(usageDescriptor.getKey());
       buffer.append("=");
@@ -48,15 +48,15 @@ public class ConvertUsagesUtil {
   //@NotNull
   public static Map<String, Set<UsageDescriptor>> convertValueString(String groupId, String valueData) {
     assert groupId != null;
-    final Map<String, Set<UsageDescriptor>> descriptors = new HashMap<>();
+    Map<String, Set<UsageDescriptor>> descriptors = new HashMap<>();
     for (String value : valueData.split(Character.toString(GROUP_VALUE_SEPARATOR))) {
       if (!isEmptyOrSpaces(value)) {
-        final StringPair pair = getPair(value, "=");
+        StringPair pair = getPair(value, "=");
         if (pair != null) {
-          final String count = pair.second;
+          String count = pair.second;
           if (!isEmptyOrSpaces(count)) {
             try {
-              final int i = Integer.parseInt(count);
+              int i = Integer.parseInt(count);
               if (!descriptors.containsKey(groupId)) {
                 descriptors.put(groupId, new LinkedHashSet<>());
               }
@@ -76,7 +76,7 @@ public class ConvertUsagesUtil {
   public static StringPair getPair(String str, String separator) {
     assert str != null;
     assert separator != null;
-    final int i = str.indexOf(separator);
+    int i = str.indexOf(separator);
     if (i > 0 && i < str.length() - 1) {
       String key = str.substring(0, i).trim();
       String value = str.substring(i + 1).trim();
@@ -97,7 +97,7 @@ public class ConvertUsagesUtil {
     }
   }
 
-  public static boolean isEmptyOrSpaces(final String s) {
+  public static boolean isEmptyOrSpaces(String s) {
     return s == null || s.trim().length() == 0;
   }
 
@@ -113,9 +113,9 @@ public class ConvertUsagesUtil {
 
   //@NotNull
   public static String ensureProperKey(/*@NotNull*/ String input) {
-    final StringBuilder escaped = new StringBuilder();
+    StringBuilder escaped = new StringBuilder();
     for (int i = 0; i < input.length(); i++) {
-      final char ch = input.charAt(i);
+      char ch = input.charAt(i);
       switch (ch) {
         case GROUP_SEPARATOR:
         case GROUPS_SEPARATOR:

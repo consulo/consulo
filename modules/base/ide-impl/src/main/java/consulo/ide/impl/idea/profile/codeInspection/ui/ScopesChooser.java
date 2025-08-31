@@ -50,10 +50,10 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
     private final Set<String> myExcludedScopeNames;
 
     public ScopesChooser(
-        final List<Descriptor> defaultDescriptors,
-        final InspectionProfileImpl inspectionProfile,
-        final Project project,
-        final String[] excludedScopeNames
+        List<Descriptor> defaultDescriptors,
+        InspectionProfileImpl inspectionProfile,
+        Project project,
+        String[] excludedScopeNames
     ) {
         myDefaultDescriptors = defaultDescriptors;
         myInspectionProfile = inspectionProfile;
@@ -66,11 +66,11 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
     @Nonnull
     @Override
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
-        final DefaultActionGroup group = new DefaultActionGroup();
+        DefaultActionGroup group = new DefaultActionGroup();
 
-        final List<NamedScope> predefinedScopes = new ArrayList<>();
-        final List<NamedScope> customScopes = new ArrayList<>();
-        for (final NamedScopesHolder holder : NamedScopesHolder.getAllNamedScopeHolders(myProject)) {
+        List<NamedScope> predefinedScopes = new ArrayList<>();
+        List<NamedScope> customScopes = new ArrayList<>();
+        for (NamedScopesHolder holder : NamedScopesHolder.getAllNamedScopeHolders(myProject)) {
             Collections.addAll(customScopes, holder.getEditableScopes());
             predefinedScopes.addAll(holder.getPredefinedScopes());
         }
@@ -91,7 +91,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
-                final ScopesOrderDialog dlg = new ScopesOrderDialog(myInspectionProfile, myProject);
+                ScopesOrderDialog dlg = new ScopesOrderDialog(myInspectionProfile, myProject);
                 if (dlg.showAndGet()) {
                     onScopesOrderChanged();
                 }
@@ -106,11 +106,11 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
     protected abstract void onScopeAdded();
 
     private void fillActionGroup(
-        final DefaultActionGroup group,
-        final List<NamedScope> scopes,
+        DefaultActionGroup group,
+        List<NamedScope> scopes,
         final List<Descriptor> defaultDescriptors,
         final InspectionProfileImpl inspectionProfile,
-        final Set<String> excludedScopeNames
+        Set<String> excludedScopeNames
     ) {
         for (final NamedScope scope : scopes) {
             final String scopeName = scope.getName();
@@ -121,7 +121,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {
-                    for (final Descriptor defaultDescriptor : defaultDescriptors) {
+                    for (Descriptor defaultDescriptor : defaultDescriptors) {
                         inspectionProfile.addScope(
                             defaultDescriptor.getToolWrapper().createCopy(),
                             scope,

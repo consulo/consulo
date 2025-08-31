@@ -53,17 +53,17 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
 
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
 
     LookupManager.getInstance(project).hideActiveLookup();
 
-    final CharSequence charsSequence = editor.getDocument().getCharsSequence();
+    CharSequence charsSequence = editor.getDocument().getCharsSequence();
 
-    final CompletionData data = computeData(editor, charsSequence);
+    CompletionData data = computeData(editor, charsSequence);
     String currentPrefix = data.myPrefix;
 
-    final CompletionState completionState = getCompletionState(editor);
+    CompletionState completionState = getCompletionState(editor);
 
     String oldPrefix = completionState.oldPrefix;
     CompletionVariant lastProposedVariant = completionState.lastProposedVariant;
@@ -86,7 +86,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     highlightWord(nextVariant, project, data);
   }
 
-  private static void highlightWord(final CompletionVariant variant, final Project project, CompletionData data) {
+  private static void highlightWord(CompletionVariant variant, Project project, CompletionData data) {
     int delta = data.startOffset < variant.offset ? variant.variant.length() - data.myWordUnderCursor.length() : 0;
 
     HighlightManager highlightManager = HighlightManager.getInstance(project);
@@ -103,11 +103,11 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
   }
 
   @Nullable
-  private CompletionVariant computeNextVariant(final Editor editor,
-                                               @Nullable final String prefix,
+  private CompletionVariant computeNextVariant(Editor editor,
+                                               @Nullable String prefix,
                                                @Nullable CompletionVariant lastProposedVariant,
-                                               final CompletionData data, PsiFile file) {
-    final List<CompletionVariant> variants = computeVariants(editor, new CamelHumpMatcher(StringUtil.notNullize(prefix)), file);
+                                               CompletionData data, PsiFile file) {
+    List<CompletionVariant> variants = computeVariants(editor, new CamelHumpMatcher(StringUtil.notNullize(prefix)), file);
     if (variants.isEmpty()) return null;
 
     for (CompletionVariant variant : variants) {
@@ -181,7 +181,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     public final String variant;
     public final int offset;
 
-    public CompletionVariant(final Editor editor, final String variant, final int offset) {
+    public CompletionVariant(Editor editor, String variant, int offset) {
       this.editor = editor;
       this.variant = variant;
       this.offset = offset;
@@ -197,14 +197,14 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     return false;
   }
 
-  private static List<CompletionVariant> computeVariants(@Nonnull final Editor editor, CamelHumpMatcher matcher, PsiFile file) {
+  private static List<CompletionVariant> computeVariants(@Nonnull Editor editor, CamelHumpMatcher matcher, PsiFile file) {
 
-    final CharSequence chars = editor.getDocument().getCharsSequence();
+    CharSequence chars = editor.getDocument().getCharsSequence();
 
-    final ArrayList<CompletionVariant> words = new ArrayList<CompletionVariant>();
-    final List<CompletionVariant> afterWords = new ArrayList<CompletionVariant>();
+    ArrayList<CompletionVariant> words = new ArrayList<CompletionVariant>();
+    List<CompletionVariant> afterWords = new ArrayList<CompletionVariant>();
 
-    final int caretOffset = editor.getCaretModel().getOffset();
+    int caretOffset = editor.getCaretModel().getOffset();
 
     addWordsForEditor((EditorEx)editor, matcher, chars, words, afterWords, caretOffset);
 
@@ -257,7 +257,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
       public boolean processToken(int start, int end) {
         if ((start > caretOffset || end < caretOffset) &&  //skip prefix itself
             end - start > matcher.getPrefix().length()) {
-          final String word = chars.subSequence(start, end).toString();
+          String word = chars.subSequence(start, end).toString();
           if (matcher.isStartMatch(word)) {
             CompletionVariant v = new CompletionVariant(editor, word, start);
             if (end > caretOffset) {
@@ -297,11 +297,11 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     }
   }
 
-  private static boolean isWordPart(final char c) {
+  private static boolean isWordPart(char c) {
     return Character.isJavaIdentifierPart(c) || c == '-' || c == '*' ;
   }
 
-  private static CompletionData computeData(final Editor editor, final CharSequence charsSequence) {
+  private static CompletionData computeData(Editor editor, final CharSequence charsSequence) {
     final int offset = editor.getCaretModel().getOffset();
 
     final CompletionData data = new CompletionData();

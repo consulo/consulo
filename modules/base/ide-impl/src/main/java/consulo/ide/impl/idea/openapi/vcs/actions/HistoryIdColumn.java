@@ -32,7 +32,7 @@ class HistoryIdColumn extends AnnotationFieldGutter {
   private final Map<VcsRevisionNumber, Integer> myHistoryIds;
 
   HistoryIdColumn(FileAnnotation annotation,
-                  final TextAnnotationPresentation presentation,
+                  TextAnnotationPresentation presentation,
                   Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme,
                   Map<VcsRevisionNumber, Integer> ids) {
     super(annotation, presentation, colorScheme);
@@ -42,11 +42,11 @@ class HistoryIdColumn extends AnnotationFieldGutter {
   @Override
   public String getLineText(int line, Editor editor) {
     if (!isAvailable()) return "";
-    final VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(line);
+    VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(line);
     if (revisionNumber != null) {
-      final Integer num = myHistoryIds.get(revisionNumber);
+      Integer num = myHistoryIds.get(revisionNumber);
       if (num != null) {
-        final String size = String.valueOf(myHistoryIds.size());
+        String size = String.valueOf(myHistoryIds.size());
         String value = num.toString();
         while (value.length() < size.length()) {
           value = " " + value;

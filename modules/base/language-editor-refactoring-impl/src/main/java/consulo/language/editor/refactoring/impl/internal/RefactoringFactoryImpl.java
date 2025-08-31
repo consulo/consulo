@@ -36,12 +36,12 @@ public class RefactoringFactoryImpl extends RefactoringFactory {
   private final Project myProject;
 
   @Inject
-  public RefactoringFactoryImpl(final Project project) {
+  public RefactoringFactoryImpl(Project project) {
     myProject = project;
   }
 
   @Override
-  public RenameRefactoring createRename(final PsiElement element, final String newName) {
+  public RenameRefactoring createRename(PsiElement element, String newName) {
     return new RenameRefactoringImpl(myProject, element, newName, true, true);
   }
 
@@ -51,7 +51,7 @@ public class RefactoringFactoryImpl extends RefactoringFactory {
   }
 
   @Override
-  public SafeDeleteRefactoring createSafeDelete(final PsiElement[] elements) {
+  public SafeDeleteRefactoring createSafeDelete(PsiElement[] elements) {
     return new SafeDeleteRefactoringImpl(myProject, elements);
   }
 }

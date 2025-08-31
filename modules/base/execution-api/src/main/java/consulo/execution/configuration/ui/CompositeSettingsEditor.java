@@ -46,14 +46,14 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
 
   @Override
   public void resetEditorFrom(Settings settings) {
-    for (final SettingsEditor<Settings> myEditor : myEditors) {
+    for (SettingsEditor<Settings> myEditor : myEditors) {
       myEditor.resetEditorFrom(settings);
     }
   }
 
   @Override
   public void applyEditorTo(Settings settings) throws ConfigurationException {
-    for (final SettingsEditor<Settings> myEditor : myEditors) {
+    for (SettingsEditor<Settings> myEditor : myEditors) {
       myEditor.applyTo(settings);
     }
   }
@@ -85,7 +85,7 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
   protected final JComponent createEditor() {
     CompositeSettingsBuilder<Settings> builder = getBuilder();
     myEditors = builder.getEditors();
-    for (final SettingsEditor<Settings> editor : myEditors) {
+    for (SettingsEditor<Settings> editor : myEditors) {
       Disposer.register(this, editor);
       editor.setOwner(this);
     }

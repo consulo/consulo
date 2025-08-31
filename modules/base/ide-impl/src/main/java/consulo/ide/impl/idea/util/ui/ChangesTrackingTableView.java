@@ -58,7 +58,7 @@ public abstract class ChangesTrackingTableView<T> extends TableView<T> {
 
   @Override
   public TableCellEditor getCellEditor(int row, int column) {
-    final TableCellEditor editor = super.getCellEditor(row, column);
+    TableCellEditor editor = super.getCellEditor(row, column);
     if (column == 0 && editor instanceof DefaultCellEditor) {
       //((DefaultCellEditor)editor).setClickCountToStart(1);
     }
@@ -78,7 +78,7 @@ public abstract class ChangesTrackingTableView<T> extends TableView<T> {
 
   public static Object getValue(Component component) {
     if (component instanceof CellEditorComponentWithBrowseButton) {
-      final JTextField textField = (JTextField)((CellEditorComponentWithBrowseButton)component).getChildComponent();
+      JTextField textField = (JTextField)((CellEditorComponentWithBrowseButton)component).getChildComponent();
       return textField.getText();
     }
     else if (component instanceof JTextField) {

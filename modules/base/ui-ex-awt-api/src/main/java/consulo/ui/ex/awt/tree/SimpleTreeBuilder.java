@@ -64,7 +64,7 @@ public class SimpleTreeBuilder extends AbstractTreeBuilder {
     }
   }
 
-  protected final DefaultMutableTreeNode createChildNode(final NodeDescriptor childDescr) {
+  protected final DefaultMutableTreeNode createChildNode(NodeDescriptor childDescr) {
     return new PatchedDefaultMutableTreeNode(childDescr);
   }
 

@@ -86,7 +86,7 @@ public abstract class AbstractExternalFilter {
 
     protected abstract String convertReference(String root, String href);
 
-    public CharSequence refFilter(final String root, @Nonnull CharSequence read) {
+    public CharSequence refFilter(String root, @Nonnull CharSequence read) {
       CharSequence toMatch = StringUtil.toUpperCase(read);
       StringBuilder ready = new StringBuilder();
       int prev = 0;
@@ -94,7 +94,7 @@ public abstract class AbstractExternalFilter {
 
       while (matcher.find()) {
         CharSequence before = read.subSequence(prev, matcher.start(1) - 1);     // Before reference
-        final CharSequence href = read.subSequence(matcher.start(1), matcher.end(1)); // The URL
+        CharSequence href = read.subSequence(matcher.start(1), matcher.end(1)); // The URL
         prev = matcher.end(1) + 1;
         ready.append(before);
         ready.append("\"");
@@ -134,7 +134,7 @@ public abstract class AbstractExternalFilter {
 
   @Nullable
   @SuppressWarnings({"HardCodedStringLiteral"})
-  public String getExternalDocInfo(final String url) throws Exception {
+  public String getExternalDocInfo(String url) throws Exception {
     Application app = ApplicationManager.getApplication();
     if (!app.isUnitTestMode() && app.isDispatchThread() || app.isWriteAccessAllowed()) {
       LOG.error("May block indefinitely: shouldn't be called from EDT or under write lock");
@@ -177,7 +177,7 @@ public abstract class AbstractExternalFilter {
   }
 
   @Nullable
-  public String getExternalDocInfoForElement(final String docURL, final PsiElement element) throws Exception {
+  public String getExternalDocInfoForElement(String docURL, PsiElement element) throws Exception {
     return getExternalDocInfo(docURL);
   }
 
@@ -185,9 +185,9 @@ public abstract class AbstractExternalFilter {
     doBuildFromStream(url, input, data, true, true);
   }
 
-  protected void doBuildFromStream(final String url,
+  protected void doBuildFromStream(String url,
                                    Reader input,
-                                   final StringBuilder data,
+                                   StringBuilder data,
                                    boolean searchForEncoding,
                                    boolean matchStart) throws IOException {
     ParseSettings settings = getParseSettings(url);
@@ -249,7 +249,7 @@ public abstract class AbstractExternalFilter {
       data.setLength(0);
       if (matchStart && !settings.forcePatternSearch && input instanceof MyReader myReader) {
         try {
-          final MyReader reader = contentEncoding != null ? new MyReader(myReader.myInputStream, contentEncoding)
+          MyReader reader = contentEncoding != null ? new MyReader(myReader.myInputStream, contentEncoding)
             : new MyReader(myReader.myInputStream, myReader.getEncoding());
           doBuildFromStream(url, reader, data, false, false);
         }
@@ -346,7 +346,7 @@ public abstract class AbstractExternalFilter {
     return matcher.find() ? matcher.group(1) : null;
   }
 
-  private static void appendLine(StringBuilder buffer, final String read) {
+  private static void appendLine(StringBuilder buffer, String read) {
     buffer.append(read);
     buffer.append("\n");
   }

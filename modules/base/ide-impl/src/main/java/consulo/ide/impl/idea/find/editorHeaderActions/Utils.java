@@ -26,7 +26,7 @@ public class Utils {
                                          final JTextComponent textField,
                                          String ad) {
 
-    final Runnable callback = new Runnable() {
+    Runnable callback = new Runnable() {
       @Override
       public void run() {
         String selectedValue = (String)list.getSelectedValue();
@@ -36,11 +36,11 @@ public class Utils {
       }
     };
 
-    final PopupChooserBuilder builder = new PopupChooserBuilder<>(list);
+    PopupChooserBuilder builder = new PopupChooserBuilder<>(list);
     if (title != null) {
       builder.setTitle(title);
     }
-    final JBPopup popup = builder.setMovable(false).setResizable(false)
+    JBPopup popup = builder.setMovable(false).setResizable(false)
             .setRequestFocus(true).setItemChoosenCallback(callback).createPopup();
 
     if (ad != null) {
@@ -55,7 +55,7 @@ public class Utils {
     }
   }
 
-  public static void setSmallerFont(final JComponent component) {
+  public static void setSmallerFont(JComponent component) {
     if (Platform.current().os().isMac()) {
       component.setFont(JBUI.Fonts.smallFont());
     }

@@ -20,7 +20,7 @@ public final class TemplateLanguageUtil {
 
   @Nullable
   public static PsiFile getTemplateFile(PsiFile file) {
-    final FileViewProvider viewProvider = file.getViewProvider();
+    FileViewProvider viewProvider = file.getViewProvider();
     if (viewProvider instanceof TemplateLanguageFileViewProvider) {
       return viewProvider.getPsi(((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage());
     }

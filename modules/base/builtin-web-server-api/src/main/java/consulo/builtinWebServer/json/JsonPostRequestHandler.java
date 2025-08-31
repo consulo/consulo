@@ -61,7 +61,7 @@ public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHan
     try {
       String json = request.getContentAsString(StandardCharsets.UTF_8);
 
-      final Request body = JsonService.getInstance().fromJson(json, myRequestClass);
+      Request body = JsonService.getInstance().fromJson(json, myRequestClass);
 
       handle = handle(body);
     }

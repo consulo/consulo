@@ -91,7 +91,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     private FilterComponent myFilter = new FilterComponent("LOG_FILTER_HISTORY", 5) {
         @Override
         public void filter() {
-            final Task.Backgroundable task = new Task.Backgroundable(myProject, APPLYING_FILTER_TITLE) {
+            Task.Backgroundable task = new Task.Backgroundable(myProject, APPLYING_FILTER_TITLE) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     myModel.updateCustomFilter(getFilter());
@@ -108,7 +108,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         @Nonnull Project project,
         @Nullable Reader reader,
         String title,
-        final boolean buildInActions,
+        boolean buildInActions,
         LogFilterModel model
     ) {
         this(project, reader, title, buildInActions, model, GlobalSearchScope.allScope(project));
@@ -118,7 +118,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         @Nonnull Project project,
         @Nullable Reader reader,
         String title,
-        final boolean buildInActions,
+        boolean buildInActions,
         LogFilterModel model,
         @Nonnull SearchScope scope
     ) {
@@ -156,7 +156,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     }
 
     @Override
-    public void setContentPreprocessor(final LogContentPreprocessor contentPreprocessor) {
+    public void setContentPreprocessor(LogContentPreprocessor contentPreprocessor) {
         myContentPreprocessor = contentPreprocessor;
     }
 
@@ -180,13 +180,13 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
             }
 
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 myFilter.requestFocusInWindow();
             }
         };
 
         if (myBuildInActions) {
-            final JComponent tbComp =
+            JComponent tbComp =
                 ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, getOrCreateActions(), true).getComponent();
             myTopComponent.add(tbComp, BorderLayout.CENTER);
             myTopComponent.add(getSearchComponent(), BorderLayout.EAST);
@@ -202,7 +202,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         }
         DefaultActionGroup group = new DefaultActionGroup();
 
-        final AnAction[] actions = getConsoleNotNull().createConsoleActions();
+        AnAction[] actions = getConsoleNotNull().createConsoleActions();
         for (AnAction action : actions) {
             group.add(action);
         }
@@ -227,7 +227,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     }
 
     @Override
-    public void onFilterStateChange(final LogFilter filter) {
+    public void onFilterStateChange(LogFilter filter) {
         filterConsoleOutput();
     }
 
@@ -250,7 +250,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     public abstract boolean isActive();
 
     public void activate() {
-        final ReaderThread readerThread = myReaderThread;
+        ReaderThread readerThread = myReaderThread;
         if (readerThread == null) {
             return;
         }
@@ -265,7 +265,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         }
     }
 
-    public void stateChanged(final ChangeEvent e) {
+    public void stateChanged(ChangeEvent e) {
         activate();
     }
 
@@ -297,7 +297,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
             fireLoggingWillBeStopped();
         }
 
-        final ReaderThread readerThread = myReaderThread;
+        ReaderThread readerThread = myReaderThread;
         if (readerThread != null && readerThread.myReader != null) {
             if (!checkActive) {
                 readerThread.stopRunning();
@@ -312,7 +312,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
             }
             else {
                 try {
-                    final BufferedReader reader = readerThread.myReader;
+                    BufferedReader reader = readerThread.myReader;
                     while (reader != null && reader.ready()) {
                         addMessage(reader.readLine());
                     }
@@ -324,12 +324,12 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         }
     }
 
-    protected synchronized void addMessage(final String text) {
+    protected synchronized void addMessage(String text) {
         if (text == null) {
             return;
         }
         if (myContentPreprocessor != null) {
-            final List<LogFragment> fragments = myContentPreprocessor.parseLogLine(text + "\n");
+            List<LogFragment> fragments = myContentPreprocessor.parseLogLine(text + "\n");
             myOriginalDocument = getOriginalDocument();
             for (LogFragment fragment : fragments) {
                 myProcessHandler.notifyTextAvailable(fragment.getText(), fragment.getOutputType());
@@ -339,11 +339,11 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
             }
         }
         else {
-            final LogFilterModel.MyProcessingResult processingResult = myModel.processLine(text);
+            LogFilterModel.MyProcessingResult processingResult = myModel.processLine(text);
             if (processingResult.isApplicable()) {
-                final Key key = processingResult.getKey();
+                Key key = processingResult.getKey();
                 if (key != null) {
-                    final String messagePrefix = processingResult.getMessagePrefix();
+                    String messagePrefix = processingResult.getMessagePrefix();
                     if (messagePrefix != null) {
                         myProcessHandler.notifyTextAvailable(messagePrefix, key);
                     }
@@ -359,9 +359,9 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
 
     public void attachStopLogConsoleTrackingListener(final ProcessHandler process) {
         if (process != null) {
-            final ProcessAdapter stopListener = new ProcessAdapter() {
+            ProcessAdapter stopListener = new ProcessAdapter() {
                 @Override
-                public void processTerminated(final ProcessEvent event) {
+                public void processTerminated(ProcessEvent event) {
                     process.removeProcessListener(this);
                     stopRunning(true);
                 }
@@ -372,14 +372,14 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
 
     public StringBuffer getOriginalDocument() {
         if (myOriginalDocument == null) {
-            final Editor editor = getEditor();
+            Editor editor = getEditor();
             if (editor != null) {
                 myOriginalDocument = new StringBuffer(editor.getDocument().getText());
             }
         }
         else {
             if (ConsoleBuffer.useCycleBuffer()) {
-                final int toRemove = myOriginalDocument.length() - ConsoleBuffer.getCycleBufferSize();
+                int toRemove = myOriginalDocument.length() - ConsoleBuffer.getCycleBufferSize();
                 if (toRemove > 0) {
                     myOriginalDocument.delete(0, toRemove);
                 }
@@ -390,7 +390,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
 
     @Nullable
     private Editor getEditor() {
-        final ConsoleView console = getConsole();
+        ConsoleView console = getConsole();
         return console != null ? ((DataProvider) console).getDataUnchecked(Editor.KEY) : null;
     }
 
@@ -402,10 +402,10 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         // we have to do this in dispatch thread, because ConsoleViewImpl can flush something to document otherwise
         myOriginalDocument = getOriginalDocument();
         if (myOriginalDocument != null) {
-            final Editor editor = getEditor();
+            Editor editor = getEditor();
             LOG.assertTrue(editor != null);
-            final Document document = editor.getDocument();
-            final int caretOffset = editor.getCaretModel().getOffset();
+            Document document = editor.getDocument();
+            int caretOffset = editor.getCaretModel().getOffset();
             myLineUnderSelection = null;
             myLineOffset = -1;
             if (caretOffset > -1 && caretOffset < document.getTextLength()) {
@@ -420,7 +420,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
                     );
                 }
                 if (line > -1 && line < document.getLineCount()) {
-                    final int startOffset = document.getLineStartOffset(line);
+                    int startOffset = document.getLineStartOffset(line);
                     myLineUnderSelection = document.getText().substring(startOffset, document.getLineEndOffset(line));
                     myLineOffset = caretOffset - startOffset;
                 }
@@ -433,16 +433,16 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         if (myDisposed) {
             return;
         }
-        final ConsoleView console = getConsoleNotNull();
+        ConsoleView console = getConsoleNotNull();
         console.clear();
         myModel.processingStarted();
 
-        final String[] lines = myOriginalDocument.toString().split("\n");
+        String[] lines = myOriginalDocument.toString().split("\n");
         int offset = 0;
         boolean caretPositioned = false;
 
         for (String line : lines) {
-            final int printed = printMessageToConsole(line);
+            int printed = printMessageToConsole(line);
             if (printed > 0) {
                 if (!caretPositioned) {
                     if (Objects.equals(myLineUnderSelection, line)) {
@@ -466,7 +466,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     }
 
     private int printMessageToConsole(String line) {
-        final ConsoleView console = getConsoleNotNull();
+        ConsoleView console = getConsoleNotNull();
         if (myContentPreprocessor != null) {
             List<LogFragment> fragments = myContentPreprocessor.parseLogLine(line + '\n');
             for (LogFragment fragment : fragments) {
@@ -478,13 +478,13 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
             return line.length() + 1;
         }
         else {
-            final LogFilterModel.MyProcessingResult processingResult = myModel.processLine(line);
+            LogFilterModel.MyProcessingResult processingResult = myModel.processLine(line);
             if (processingResult.isApplicable()) {
-                final Key key = processingResult.getKey();
+                Key key = processingResult.getKey();
                 if (key != null) {
                     ConsoleViewContentType type = ConsoleViewContentType.getConsoleViewType(key);
                     if (type != null) {
-                        final String messagePrefix = processingResult.getMessagePrefix();
+                        String messagePrefix = processingResult.getMessagePrefix();
                         if (messagePrefix != null) {
                             console.print(messagePrefix, type);
                         }
@@ -510,7 +510,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
 
     @Nonnull
     private synchronized ConsoleView getConsoleNotNull() {
-        final ConsoleView console = getConsole();
+        ConsoleView console = getConsole();
         assert console != null : "it looks like console has been disposed";
         return console;
     }
@@ -528,7 +528,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     @Override
     @Nullable
     public JComponent getToolbarContextComponent() {
-        final ConsoleView console = getConsole();
+        ConsoleView console = getConsole();
         return console == null ? null : console.getComponent();
     }
 
@@ -554,7 +554,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
             @Override
             public void actionPerformed(ActionEvent e) {
                 final LogFilter filter = (LogFilter) myLogFilterCombo.getSelectedItem();
-                final Task.Backgroundable task = new Task.Backgroundable(myProject, APPLYING_FILTER_TITLE) {
+                Task.Backgroundable task = new Task.Backgroundable(myProject, APPLYING_FILTER_TITLE) {
                     @Override
                     public void run(@Nonnull ProgressIndicator indicator) {
                         myModel.selectFilter(filter);
@@ -617,7 +617,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
             if (myReader == null) {
                 return;
             }
-            final Runnable runnable = new Runnable() {
+            Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     if (myRunning) {
@@ -627,7 +627,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
 
                             int i = 0;
                             while (i++ < 1000) {
-                                final BufferedReader reader = myReader;
+                                BufferedReader reader = myReader;
                                 if (myRunning && reader != null && reader.ready()) {
                                     addMessage(reader.readLine());
                                 }

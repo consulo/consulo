@@ -61,17 +61,17 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
     if (isLeaf()) {
       return EMPTY;
     }
-    final ArrayList<TemplateLanguageBlock> tlChildren = new ArrayList<>(5);
+    ArrayList<TemplateLanguageBlock> tlChildren = new ArrayList<>(5);
     for (ASTNode childNode = getNode().getFirstChildNode(); childNode != null; childNode = childNode.getTreeNext()) {
       if (FormatterUtil.containsWhiteSpacesOnly(childNode)) continue;
       if (shouldBuildBlockFor(childNode)) {
-        final TemplateLanguageBlock childBlock = myBlockFactory
+        TemplateLanguageBlock childBlock = myBlockFactory
                 .createTemplateLanguageBlock(childNode, createChildWrap(childNode), createChildAlignment(childNode), null, mySettings);
         childBlock.setParent(this);
         tlChildren.add(childBlock);
       }
     }
-    final List<Block> children = (List<Block>)(myForeignChildren == null ? tlChildren : BlockUtil.mergeBlocks(tlChildren, myForeignChildren));
+    List<Block> children = (List<Block>)(myForeignChildren == null ? tlChildren : BlockUtil.mergeBlocks(tlChildren, myForeignChildren));
     //BlockUtil.printBlocks(getTextRange(), children);
     return BlockUtil.setParent(children, this);
   }

@@ -560,7 +560,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     private static class HighlightComponent extends JComponent {
         Color myColor;
 
-        private HighlightComponent(@Nonnull final Color c) {
+        private HighlightComponent(@Nonnull Color c) {
             myColor = c;
         }
 
@@ -589,12 +589,12 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         InspectorTableModel myModel;
         DimensionsComponent myDimensionComponent;
 
-        private InspectorTable(@Nonnull final List<PropertyBean> clickInfo) {
+        private InspectorTable(@Nonnull List<PropertyBean> clickInfo) {
             myModel = new InspectorTableModel(clickInfo);
             init(null);
         }
 
-        private InspectorTable(@Nonnull final Component component) {
+        private InspectorTable(@Nonnull Component component) {
 
             myModel = new InspectorTableModel(component);
             init(component);
@@ -661,15 +661,15 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
                 int column
             ) {
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                final TableModel model = table.getModel();
+                TableModel model = table.getModel();
                 boolean changed = false;
                 if (model instanceof InspectorTableModel inspectorTableModel) {
                     changed = inspectorTableModel.myProperties.get(row).changed;
                 }
 
-                final Color fg =
+                Color fg =
                     isSelected ? table.getSelectionForeground() : changed ? JBCurrentTheme.Link.linkColor() : table.getForeground();
-                final JBFont font = JBUI.Fonts.label();
+                JBFont font = JBUI.Fonts.label();
                 setFont(changed ? font.asBold() : font);
                 setForeground(fg);
                 return this;
@@ -684,7 +684,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         Border myBorder;
         Insets myInsets;
 
-        private DimensionsComponent(@Nonnull final Component component) {
+        private DimensionsComponent(@Nonnull Component component) {
             myComponent = component;
             setOpaque(true);
             setBackground(JBColor.WHITE);
@@ -705,7 +705,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         }
 
         @Override
-        protected void paintComponent(final Graphics g) {
+        protected void paintComponent(Graphics g) {
             Graphics2D g2d = (Graphics2D) g;
             GraphicsConfig config =
                 new GraphicsConfig(g).setAntialiasing(UISettings.getShadowInstance().getIdeAAType() != AntialiasingType.OFF);
@@ -715,7 +715,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             Insets insets = getInsets();
             g2d.fillRect(insets.left, insets.top, bounds.width - insets.left - insets.right, bounds.height - insets.top - insets.bottom);
 
-            final String sizeString = String.format("%d x %d", myWidth, myHeight);
+            String sizeString = String.format("%d x %d", myWidth, myHeight);
 
             FontMetrics fm = g2d.getFontMetrics();
             int sizeWidth = fm.stringWidth(sizeString);
@@ -779,10 +779,10 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             int outerY = innerY - offset;
             int outerHeight = innerHeight + offset * 2;
 
-            final String top = insets != null ? Integer.toString(insets.top) : "-";
-            final String bottom = insets != null ? Integer.toString(insets.bottom) : "-";
-            final String left = insets != null ? Integer.toString(insets.left) : "-";
-            final String right = insets != null ? Integer.toString(insets.right) : "-";
+            String top = insets != null ? Integer.toString(insets.top) : "-";
+            String bottom = insets != null ? Integer.toString(insets.bottom) : "-";
+            String left = insets != null ? Integer.toString(insets.left) : "-";
+            String right = insets != null ? Integer.toString(insets.right) : "-";
 
             int shift = JBUI.scale(7);
             drawCenteredString(g2d, fm, fontHeight, top, outerX + outerWidth / 2, outerY + shift);
@@ -883,7 +883,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class PointRenderer extends JLabel implements Renderer<Point> {
         @Override
-        public JComponent setValue(@Nonnull final Point value) {
+        public JComponent setValue(@Nonnull Point value) {
             setText(String.valueOf(value.x) + ':' + value.y);
             return this;
         }
@@ -891,7 +891,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class DimensionRenderer extends JLabel implements Renderer<Dimension> {
         @Override
-        public JComponent setValue(@Nonnull final Dimension value) {
+        public JComponent setValue(@Nonnull Dimension value) {
             setText(String.valueOf(value.width) + "x" + value.height);
             return this;
         }
@@ -899,7 +899,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class InsetsRenderer extends JLabel implements Renderer<Insets> {
         @Override
-        public JComponent setValue(@Nonnull final Insets value) {
+        public JComponent setValue(@Nonnull Insets value) {
             setText("top: " + value.top + " left:" + value.left + " bottom:" + value.bottom + " right:" + value.right);
             return this;
         }
@@ -907,7 +907,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class RectangleRenderer extends JLabel implements Renderer<Rectangle> {
         @Override
-        public JComponent setValue(@Nonnull final Rectangle value) {
+        public JComponent setValue(@Nonnull Rectangle value) {
             setText(toString(value));
             return this;
         }
@@ -920,7 +920,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class ColorRenderer extends JLabel implements Renderer<Color> {
         @Override
-        public JComponent setValue(@Nonnull final Color value) {
+        public JComponent setValue(@Nonnull Color value) {
             StringBuilder sb = new StringBuilder();
             sb.append(" r:").append(value.getRed());
             sb.append(" g:").append(value.getGreen());
@@ -943,7 +943,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class FontRenderer extends JLabel implements Renderer<Font> {
         @Override
-        public JComponent setValue(@Nonnull final Font value) {
+        public JComponent setValue(@Nonnull Font value) {
             StringBuilder sb = new StringBuilder();
             sb.append(value.getFontName()).append(" (").append(value.getFamily()).append("), ").append(value.getSize()).append("px");
             if (Font.BOLD == (Font.BOLD & value.getStyle())) {
@@ -962,7 +962,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class BooleanRenderer extends JLabel implements Renderer<Boolean> {
         @Override
-        public JComponent setValue(@Nonnull final Boolean value) {
+        public JComponent setValue(@Nonnull Boolean value) {
             setText(value ? "Yes" : "No");
             return this;
         }
@@ -970,7 +970,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class IconRenderer extends JLabel implements Renderer<Icon> {
         @Override
-        public JComponent setValue(@Nonnull final Icon value) {
+        public JComponent setValue(@Nonnull Icon value) {
             setIcon(value);
             setText(getToStringValue(value));
             return this;
@@ -979,7 +979,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private static class BorderRenderer extends JLabel implements Renderer<Border> {
         @Override
-        public JComponent setValue(@Nonnull final Border value) {
+        public JComponent setValue(@Nonnull Border value) {
             setText(getTextDescription(value));
 
             if (value instanceof CompoundBorder compoundBorder) {
@@ -1059,7 +1059,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         }
 
         @Override
-        public JComponent setValue(@Nonnull final Object value) {
+        public JComponent setValue(@Nonnull Object value) {
             setText(getToStringValue(value));
             return this;
         }
@@ -1236,9 +1236,9 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
                     }
                     boolean changed = false;
                     try {
-                        final String checkerMethodName = "is" + StringUtil.capitalize(propertyName) + "Set";
+                        String checkerMethodName = "is" + StringUtil.capitalize(propertyName) + "Set";
                         if (CHECKERS.contains(checkerMethodName)) {
-                            final Object value =
+                            Object value =
                                 ReflectionUtil.findMethod(Arrays.asList(clazz.getMethods()), checkerMethodName).invoke(component);
                             if (value instanceof Boolean b) {
                                 changed = b;
@@ -1362,7 +1362,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         @Override
         @Nullable
         public Object getValueAt(int row, int column) {
-            final PropertyBean bean = myProperties.get(row);
+            PropertyBean bean = myProperties.get(row);
             if (bean != null) {
                 switch (column) {
                     case 0:
@@ -1406,8 +1406,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
                     catch (Exception e) {
                         getter = myComponent.getClass().getMethod("is" + StringUtil.capitalize(name));
                     }
-                    final Method finalGetter = getter;
-                    final Method setter = myComponent.getClass().getMethod("set" + StringUtil.capitalize(name), getter.getReturnType());
+                    Method finalGetter = getter;
+                    Method setter = myComponent.getClass().getMethod("set" + StringUtil.capitalize(name), getter.getReturnType());
                     setter.setAccessible(true);
                     return o -> {
                         try {
@@ -1420,7 +1420,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
                     };
                 }
                 catch (Exception e) {
-                    final Field field = ReflectionUtil.findField(myComponent.getClass(), null, name);
+                    Field field = ReflectionUtil.findField(myComponent.getClass(), null, name);
                     if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
                         return null;
                     }

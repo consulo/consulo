@@ -29,7 +29,7 @@ public class WeightBasedComparator implements Comparator<NodeDescriptor> {
   public static final WeightBasedComparator INSTANCE = new WeightBasedComparator();
   public static final WeightBasedComparator FULL_INSTANCE = new WeightBasedComparator(true) {
     @Override
-    protected int compareWeights(final int w1, final int w2) {
+    protected int compareWeights(int w1, int w2) {
       return w1 - w2;
     }
   };
@@ -38,14 +38,14 @@ public class WeightBasedComparator implements Comparator<NodeDescriptor> {
     this(false);
   }
 
-  public WeightBasedComparator(final boolean compareToString) {
+  public WeightBasedComparator(boolean compareToString) {
     myCompareToString = compareToString;
   }
 
   @Override
   public int compare(NodeDescriptor o1, NodeDescriptor o2) {
-    final int w1 = getWeight(o1);
-    final int w2 = getWeight(o2);
+    int w1 = getWeight(o1);
+    int w2 = getWeight(o2);
     if (myCompareToString && w1 == w2) {
       return compareToString(o1, o2);
     }
@@ -54,15 +54,15 @@ public class WeightBasedComparator implements Comparator<NodeDescriptor> {
     return weights != 0 ? weights : o1.getIndex() - o2.getIndex();
   }
 
-  protected int getWeight(final NodeDescriptor o1) {
+  protected int getWeight(NodeDescriptor o1) {
     return o1.getWeight();
   }
 
-  protected int compareWeights(final int w1, final int w2) {
+  protected int compareWeights(int w1, int w2) {
     return w2 - w1;
   }
 
-  protected static int compareToString(final NodeDescriptor first, final NodeDescriptor second) {
+  protected static int compareToString(NodeDescriptor first, NodeDescriptor second) {
     return StringUtil.compare(first.toString(), second.toString(), true);
   }
 }

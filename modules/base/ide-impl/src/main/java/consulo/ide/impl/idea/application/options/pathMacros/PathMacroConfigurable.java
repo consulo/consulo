@@ -49,7 +49,7 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
   public void apply() throws ConfigurationException {
     myEditor.commit();
 
-    final Project[] projects = ProjectManager.getInstance().getOpenProjects();
+    Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : projects) {
       ProjectStorageUtil.checkUnknownMacros((ProjectEx)project, false);
     }

@@ -59,7 +59,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
     myWizardTree.getAccessibleContext().setAccessibleName("WizardTree");
     myBuilder = new FilteringTreeBuilder(myWizardTree, this, getTreeStep().getStructure(), AlphaComparator.INSTANCE) {
       @Override
-      protected boolean isSelectable(final Object nodeObject) {
+      protected boolean isSelectable(Object nodeObject) {
         return getTreeStep().isSelectable(nodeObject, nodeObject);
       }
     };
@@ -109,7 +109,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
     getActionMap().put("selectChild", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final TreePath path = myWizardTree.getSelectionPath();
+        TreePath path = myWizardTree.getSelectionPath();
         if (path != null && 0 == myWizardTree.getModel().getChildCount(path.getLastPathComponent())) {
           handleSelect(false, null);
           return;
@@ -122,7 +122,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
     getActionMap().put("selectParent", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final TreePath path = myWizardTree.getSelectionPath();
+        TreePath path = myWizardTree.getSelectionPath();
         if (shouldHidePopup(path)) {
           goBack();
           return;
@@ -162,7 +162,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
   @Override
   public void dispose() {
     mySavedExpanded.clear();
-    final Enumeration<TreePath> expanded = myWizardTree.getExpandedDescendants(new TreePath(myWizardTree.getModel().getRoot()));
+    Enumeration<TreePath> expanded = myWizardTree.getExpandedDescendants(new TreePath(myWizardTree.getModel().getRoot()));
     if (expanded != null) {
       while (expanded.hasMoreElements()) {
         mySavedExpanded.add(expanded.nextElement());
@@ -252,7 +252,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
     public void mouseMoved(MouseEvent e) {
       if (!isMouseMoved(e.getLocationOnScreen())) return;
 
-      final TreePath path = getPath(e);
+      TreePath path = getPath(e);
       if (path != null) {
         myWizardTree.setSelectionPath(path);
         notifyParentOnChildSelection();
@@ -278,7 +278,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
 
     @Override
     public void mousePressed(MouseEvent e) {
-      final TreePath path = getPath(e);
+      TreePath path = getPath(e);
       if (path == null) {
         return;
       }
@@ -287,7 +287,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
         return;
       }
 
-      final Object selected = path.getLastPathComponent();
+      Object selected = path.getLastPathComponent();
 
       if (getTreeStep().isSelectable(selected, extractUserObject(selected))) {
         handleSelect(true, e);
@@ -321,18 +321,18 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
   }
 
   private void handleSelect(boolean handleFinalChoices, MouseEvent e) {
-    final boolean pathIsAlreadySelected = myShowingChildPath != null && myShowingChildPath.equals(myWizardTree.getSelectionPath());
+    boolean pathIsAlreadySelected = myShowingChildPath != null && myShowingChildPath.equals(myWizardTree.getSelectionPath());
     if (pathIsAlreadySelected) return;
 
     myPendingChildPath = null;
 
     Object selected = myWizardTree.getLastSelectedPathComponent();
     if (selected != null) {
-      final Object userObject = extractUserObject(selected);
+      Object userObject = extractUserObject(selected);
       if (getTreeStep().isSelectable(selected, userObject)) {
         disposeChildren();
 
-        final boolean hasNextStep = myStep.hasSubstep(userObject);
+        boolean hasNextStep = myStep.hasSubstep(userObject);
         if (!hasNextStep && !handleFinalChoices) {
           myShowingChildPath = null;
           return;
@@ -345,7 +345,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
           }
         }, IdeaModalityState.any());
 
-        final PopupStep queriedStep;
+        PopupStep queriedStep;
         try {
           queriedStep = myStep.onChosen(userObject, handleFinalChoices);
         }
@@ -368,8 +368,8 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
 
   @Override
   public void handleNextStep(PopupStep nextStep, Object parentValue) {
-    final Rectangle pathBounds = myWizardTree.getPathBounds(myWizardTree.getSelectionPath());
-    final Point point = new RelativePoint(myWizardTree, new Point(getContent().getWidth() + 2, (int)pathBounds.getY())).getScreenPoint();
+    Rectangle pathBounds = myWizardTree.getPathBounds(myWizardTree.getSelectionPath());
+    Point point = new RelativePoint(myWizardTree, new Point(getContent().getWidth() + 2, (int)pathBounds.getY())).getScreenPoint();
     myChild = createPopup(this, nextStep, parentValue);
     myChild.show(getContent(), point.x - STEP_X_PADDING, point.y, true);
   }
@@ -379,8 +379,8 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
     @RequiredUIAccess
     @Override
     public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-      final boolean shouldPaintSelected = (getTreeStep().isSelectable(value, extractUserObject(value)) && selected) || (getTreeStep().isSelectable(value, extractUserObject(value)) && hasFocus);
-      final boolean shouldPaintFocus = !getTreeStep().isSelectable(value, extractUserObject(value)) && selected || shouldPaintSelected || hasFocus;
+      boolean shouldPaintSelected = (getTreeStep().isSelectable(value, extractUserObject(value)) && selected) || (getTreeStep().isSelectable(value, extractUserObject(value)) && hasFocus);
+      boolean shouldPaintFocus = !getTreeStep().isSelectable(value, extractUserObject(value)) && selected || shouldPaintSelected || hasFocus;
 
       super.customizeCellRenderer(tree, value, shouldPaintSelected, expanded, leaf, row, shouldPaintFocus);
     }
@@ -408,7 +408,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
 
     @Override
     public Dimension getPreferredSize() {
-      final Dimension pref = super.getPreferredSize();
+      Dimension pref = super.getPreferredSize();
       return new Dimension(pref.width + 10, pref.height);
     }
 
@@ -420,15 +420,15 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
       int rowForLocation = getClosestRowForLocation(0, visibleRect.y);
       int limit = rowForLocation + TreeUtil.getVisibleRowCount(this) + 1;
       for (int i = rowForLocation; i < limit; i++) {
-        final TreePath eachPath = getPathForRow(i);
+        TreePath eachPath = getPathForRow(i);
         if (eachPath == null) continue;
 
-        final Object lastPathComponent = eachPath.getLastPathComponent();
-        final boolean hasNextStep = getTreeStep().hasSubstep(extractUserObject(lastPathComponent));
+        Object lastPathComponent = eachPath.getLastPathComponent();
+        boolean hasNextStep = getTreeStep().hasSubstep(extractUserObject(lastPathComponent));
         if (!hasNextStep) continue;
 
         Icon icon = UIUtil.getMenuArrowIcon(isPathSelected(eachPath));
-        final Rectangle rec = getPathBounds(eachPath);
+        Rectangle rec = getPathBounds(eachPath);
         int x = getSize().width - icon.getIconWidth() - 1;
         int y = rec.y + (rec.height - icon.getIconWidth()) / 2;
         icon.paintIcon(this, g, x, y);

@@ -42,5 +42,5 @@ public interface RunProfileState {
    * @throws ExecutionException if the execution has failed.
    */
   @Nullable
-  ExecutionResult execute(final Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException;
+  ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException;
 }

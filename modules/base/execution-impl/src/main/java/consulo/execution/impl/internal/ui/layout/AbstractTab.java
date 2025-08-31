@@ -37,7 +37,7 @@ abstract class AbstractTab {
 
   boolean myBottomDetached = false;
 
-  void copyFrom(final AbstractTab from) {
+  void copyFrom(AbstractTab from) {
     myIndex = from.myIndex;
     myDefaultIndex = from.myDefaultIndex;
     myDisplayName = from.myDisplayName;

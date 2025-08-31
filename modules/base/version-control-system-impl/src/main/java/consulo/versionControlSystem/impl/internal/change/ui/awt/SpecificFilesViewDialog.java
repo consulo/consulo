@@ -93,10 +93,10 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     return new Action[]{getOKAction()};
   }
 
-  private void initData(@Nonnull final List<VirtualFile> files) {
-    final TreeState state = TreeState.createOn(myView, (ChangesBrowserNode)myView.getModel().getRoot());
+  private void initData(@Nonnull List<VirtualFile> files) {
+    TreeState state = TreeState.createOn(myView, (ChangesBrowserNode)myView.getModel().getRoot());
 
-    final DefaultTreeModel model = TreeModelBuilder.buildFromVirtualFiles(myProject, myView.isShowFlatten(), files);
+    DefaultTreeModel model = TreeModelBuilder.buildFromVirtualFiles(myProject, myView.isShowFlatten(), files);
     myView.setModel(model);
     myView.expandPath(new TreePath(((ChangesBrowserNode)model.getRoot()).getPath()));
 
@@ -106,13 +106,13 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
   private void createPanel() {
     myPanel = new JPanel(new BorderLayout());
 
-    final DefaultActionGroup group = new DefaultActionGroup();
-    final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("SPECIFIC_FILES_DIALOG", group, true);
+    DefaultActionGroup group = new DefaultActionGroup();
+    ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("SPECIFIC_FILES_DIALOG", group, true);
 
     addCustomActions(group, actionToolbar);
 
-    final CommonActionsManager cam = CommonActionsManager.getInstance();
-    final Expander expander = new Expander();
+    CommonActionsManager cam = CommonActionsManager.getInstance();
+    Expander expander = new Expander();
     group.addSeparator();
     group.add(new ToggleShowFlattenAction());
     group.add(cam.createExpandAllAction(expander, myView));

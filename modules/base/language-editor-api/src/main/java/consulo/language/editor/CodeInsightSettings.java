@@ -149,7 +149,7 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   }
 
   @Override
-  public void loadState(final Element state) {
+  public void loadState(Element state) {
     try {
       XmlSerializer.deserializeInto(this, state);
     }
@@ -165,7 +165,7 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
     return element;
   }
 
-  public void writeExternal(final Element element) {
+  public void writeExternal(Element element) {
     try {
       XmlSerializer.serializeInto(this, element, new SkipDefaultValuesSerializationFilters());
     }

@@ -97,13 +97,13 @@ public interface CodeStyleFacade {
      * @deprecated Use {@code CodeStyle.getIndentOptions(PsiFile).TAB_SIZE}. See {@code CodeStyle for more information}
      */
     @Deprecated
-    public abstract int getTabSize(final FileType fileType);
+    public abstract int getTabSize(FileType fileType);
 
     /**
      * @deprecated Use {@code CodeStyle.getIndentOptions(PsiFile).USE_TAB_CHARACTER}. See {@code CodeStyle for more information}
      */
     @Deprecated
-    public abstract boolean useTabCharacter(final FileType fileType);
+    public abstract boolean useTabCharacter(FileType fileType);
 
     /**
      * @deprecated Use {@code getLineSeparator()} method of {@code CodeStyle.getSettings(PsiFile)} or

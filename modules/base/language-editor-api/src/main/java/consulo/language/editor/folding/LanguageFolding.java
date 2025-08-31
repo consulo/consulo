@@ -36,7 +36,7 @@ public class LanguageFolding {
     if (builder instanceof FoldingBuilderEx) {
       return ((FoldingBuilderEx)builder).buildFoldRegions(root, document, quick);
     }
-    final ASTNode astNode = root.getNode();
+    ASTNode astNode = root.getNode();
     if (astNode == null || builder == null) {
       return FoldingDescriptor.EMPTY;
     }

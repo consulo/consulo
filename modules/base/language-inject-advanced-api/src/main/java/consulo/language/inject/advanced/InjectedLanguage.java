@@ -85,7 +85,7 @@ public final class InjectedLanguage {
       if (ourLanguageCache == null || ourLanguageCount != Language.getRegisteredLanguages().size()) {
         initLanguageCache();
       }
-      final Set<String> keys = ourLanguageCache.keySet();
+      Set<String> keys = ourLanguageCache.keySet();
       return ArrayUtil.toStringArray(keys);
     }
   }
@@ -96,7 +96,7 @@ public final class InjectedLanguage {
       if (ourLanguageCache == null || ourLanguageCount != Language.getRegisteredLanguages().size()) {
         initLanguageCache();
       }
-      final Collection<Language> keys = ourLanguageCache.values();
+      Collection<Language> keys = ourLanguageCache.values();
       return keys.toArray(new Language[keys.size()]);
     }
   }
@@ -121,7 +121,7 @@ public final class InjectedLanguage {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final InjectedLanguage that = (InjectedLanguage)o;
+    InjectedLanguage that = (InjectedLanguage)o;
 
     return !(myID != null ? !myID.equals(that.myID) : that.myID != null);
   }

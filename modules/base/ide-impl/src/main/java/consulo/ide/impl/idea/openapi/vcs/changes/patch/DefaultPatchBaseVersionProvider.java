@@ -50,13 +50,13 @@ public class DefaultPatchBaseVersionProvider {
 
   private final AbstractVcs myVcs;
 
-  public DefaultPatchBaseVersionProvider(final Project project, final VirtualFile file, final String versionId) {
+  public DefaultPatchBaseVersionProvider(Project project, VirtualFile file, String versionId) {
     myProject = project;
     myFile = file;
     myVersionId = versionId;
     myVcs = ProjectLevelVcsManager.getInstance(myProject).getVcsFor(myFile);
     if (myVcs != null) {
-      final String vcsPattern = myVcs.getRevisionPattern();
+      String vcsPattern = myVcs.getRevisionPattern();
       if (vcsPattern != null) {
         myRevisionPattern = Pattern.compile("\\(revision (" + vcsPattern + ")\\)");
         return;
@@ -67,26 +67,26 @@ public class DefaultPatchBaseVersionProvider {
 
   @SuppressWarnings("ReturnValueIgnored")
   public void getBaseVersionContent(
-    final FilePath filePath,
-    final Predicate<CharSequence> processor,
-    final List<String> warnings
+    FilePath filePath,
+    Predicate<CharSequence> processor,
+    List<String> warnings
   ) throws VcsException {
     if (myVcs == null) {
       return;
     }
-    final VcsHistoryProvider historyProvider = myVcs.getVcsHistoryProvider();
+    VcsHistoryProvider historyProvider = myVcs.getVcsHistoryProvider();
     if (historyProvider == null) return;
 
     VcsRevisionNumber revision = null;
     if (myRevisionPattern != null) {
-      final Matcher matcher = myRevisionPattern.matcher(myVersionId);
+      Matcher matcher = myRevisionPattern.matcher(myVersionId);
       if (matcher.find()) {
         revision = myVcs.parseRevisionNumber(matcher.group(1), filePath);
-        final VcsRevisionNumber finalRevision = revision;
-        final Boolean[] loadedExactRevision = new Boolean[1];
+        VcsRevisionNumber finalRevision = revision;
+        Boolean[] loadedExactRevision = new Boolean[1];
 
         if (historyProvider instanceof VcsBaseRevisionAdviser vcsBaseRevisionAdviser) {
-          final boolean success = VcsUtil.runVcsProcessWithProgress(
+          boolean success = VcsUtil.runVcsProcessWithProgress(
             () -> loadedExactRevision[0] =
               vcsBaseRevisionAdviser.getBaseVersionContent(filePath, processor, finalRevision.asString(), warnings),
             VcsLocalize.progressText2LoadingRevision(revision.asString()).get(),
@@ -98,11 +98,11 @@ public class DefaultPatchBaseVersionProvider {
         }
         else {
           // use diff provider
-          final DiffProvider diffProvider = myVcs.getDiffProvider();
+          DiffProvider diffProvider = myVcs.getDiffProvider();
           if (diffProvider != null && filePath.getVirtualFile() != null) {
-            final ContentRevision fileContent = diffProvider.createFileContent(finalRevision, filePath.getVirtualFile());
+            ContentRevision fileContent = diffProvider.createFileContent(finalRevision, filePath.getVirtualFile());
 
-            final boolean success = VcsUtil.runVcsProcessWithProgress(
+            boolean success = VcsUtil.runVcsProcessWithProgress(
               () -> loadedExactRevision[0] = !processor.test(fileContent.getContent()),
               VcsLocalize.progressText2LoadingRevision(revision.asString()).get(),
               true,
@@ -119,9 +119,9 @@ public class DefaultPatchBaseVersionProvider {
     Date versionDate = null;
     if (revision == null) {
       try {
-        final Matcher tsMatcher = ourTsPattern.matcher(myVersionId);
+        Matcher tsMatcher = ourTsPattern.matcher(myVersionId);
         if (tsMatcher.find()) {
-          final Long fromTsPattern = getFromTsPattern();
+          Long fromTsPattern = getFromTsPattern();
           if (fromTsPattern == null) return;
           versionDate = new Date(fromTsPattern);
         }
@@ -134,7 +134,7 @@ public class DefaultPatchBaseVersionProvider {
       }
     }
     try {
-      final Ref<VcsHistorySession> ref = new Ref<>();
+      Ref<VcsHistorySession> ref = new Ref<>();
       boolean result = VcsUtil.runVcsProcessWithProgress(
         () -> ref.set(historyProvider.createSessionFor(filePath)),
         VcsLocalize.loadingFileHistoryProgress().get(),
@@ -143,8 +143,8 @@ public class DefaultPatchBaseVersionProvider {
       );
       //if not found or cancelled
       if (ref.isNull() || !result) return;
-      final VcsHistorySession session = ref.get();
-      final List<VcsFileRevision> list = session.getRevisionList();
+      VcsHistorySession session = ref.get();
+      List<VcsFileRevision> list = session.getRevisionList();
       if (list == null) return;
       for (VcsFileRevision fileRevision : list) {
         boolean found;
@@ -152,7 +152,7 @@ public class DefaultPatchBaseVersionProvider {
           found = fileRevision.getRevisionNumber().compareTo(revision) <= 0;
         }
         else {
-          final Date date = fileRevision instanceof VcsFileRevisionDvcsSpecific vcsFileRevisionDvcsSpecific
+          Date date = fileRevision instanceof VcsFileRevisionDvcsSpecific vcsFileRevisionDvcsSpecific
             ? vcsFileRevisionDvcsSpecific.getDateForRevisionsOrdering() : fileRevision.getRevisionDate();
           found = (date != null) && (date.before(versionDate) || date.equals(versionDate));
         }
@@ -192,9 +192,9 @@ public class DefaultPatchBaseVersionProvider {
   }
 
   private Long getFromTsPattern() {
-    final String trimmed = myVersionId.trim();
-    final String startPattern = "(date";
-    final int start = trimmed.indexOf(startPattern);
+    String trimmed = myVersionId.trim();
+    String startPattern = "(date";
+    int start = trimmed.indexOf(startPattern);
     if (start >= 0) {
       String number = trimmed.substring(startPattern.length() + start);
       number = number.endsWith(")") ? number.substring(0, number.length() - 1) : number;

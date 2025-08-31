@@ -87,7 +87,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
 
   private final TextEditorComponentContainer myTextEditorComponentContainer;
 
-  public TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final TextEditorImpl textEditor, @Nonnull TextEditorComponentContainerFactory editorFactory) {
+  public TextEditorComponent(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull TextEditorImpl textEditor, @Nonnull TextEditorComponentContainerFactory editorFactory) {
 
     myProject = project;
     myFile = file;
@@ -231,7 +231,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
    * Updates frame's status bar: insert/overwrite mode, caret position
    */
   private void updateStatusBar() {
-    final StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(myProject);
+    StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(myProject);
     if (statusBar == null) return;
     statusBar.updateWidgets(); // TODO: do we need this?!
   }
@@ -242,13 +242,13 @@ public class TextEditorComponent implements DataProvider, Disposable {
   }
 
   @Override
-  public Object getData(@Nonnull final Key<?> dataId) {
-    final Editor e = validateCurrentEditor();
+  public Object getData(@Nonnull Key<?> dataId) {
+    Editor e = validateCurrentEditor();
     if (e == null || e.isDisposed()) return null;
 
     // There's no FileEditorManager for default project (which is used in diff command-line application)
     if (!myProject.isDisposed() && !myProject.isDefault()) {
-      final Object o = FileEditorManager.getInstance(myProject).getData(dataId, e, e.getCaretModel().getCurrentCaret());
+      Object o = FileEditorManager.getInstance(myProject).getData(dataId, e, e.getCaretModel().getCurrentCaret());
       if (o != null) return o;
     }
 
@@ -295,7 +295,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
     @RequiredUIAccess
-    public void fileTypesChanged(@Nonnull final FileTypeEvent event) {
+    public void fileTypesChanged(@Nonnull FileTypeEvent event) {
       assertThread();
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.
@@ -308,7 +308,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
    */
   private final class MyVirtualFileListener implements VirtualFileListener {
     @Override
-    public void propertyChanged(@Nonnull final VirtualFilePropertyEvent e) {
+    public void propertyChanged(@Nonnull VirtualFilePropertyEvent e) {
       if (VirtualFile.PROP_NAME.equals(e.getPropertyName())) {
         // File can be invalidated after file changes name (extension also
         // can changes). The editor should be removed if it's invalid.

@@ -35,7 +35,7 @@ public class BasicStatusBarUI extends ComponentUI {
   private static final JBValue BW = new JBValue.Float(1);
 
   @Override
-  public void paint(final Graphics g, final JComponent c) {
+  public void paint(Graphics g, JComponent c) {
     Graphics2D g2d = (Graphics2D)g;
     Rectangle r = new Rectangle(c.getSize());
     try {

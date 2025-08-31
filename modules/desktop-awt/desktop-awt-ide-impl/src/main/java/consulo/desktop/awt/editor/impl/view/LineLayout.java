@@ -329,7 +329,7 @@ abstract class LineLayout {
         }
     }
 
-    Iterable<VisualFragment> getFragmentsInVisualOrder(final float startX) {
+    Iterable<VisualFragment> getFragmentsInVisualOrder(float startX) {
         return () -> new VisualOrderIterator(null, 0, startX, 0, 0, getRunsInVisualOrder());
     }
 
@@ -337,11 +337,11 @@ abstract class LineLayout {
      * If {@code quickEvaluationListener} is provided, quick approximate iteration becomes enabled, listener will be invoked
      * if approximation will in fact be used during width calculation.
      */
-    Iterator<VisualFragment> getFragmentsInVisualOrder(final @Nonnull EditorViewImpl view,
-                                                       final int line,
-                                                       final float startX,
-                                                       final int startVisualColumn,
-                                                       final int startOffset,
+    Iterator<VisualFragment> getFragmentsInVisualOrder(@Nonnull EditorViewImpl view,
+                                                       int line,
+                                                       float startX,
+                                                       int startVisualColumn,
+                                                       int startOffset,
                                                        int endOffset,
                                                        @Nullable Runnable quickEvaluationListener) {
         assert startOffset <= endOffset;
@@ -350,7 +350,7 @@ abstract class LineLayout {
         assert !DocumentUtil.isInsideSurrogatePair(document, lineStartOffset + startOffset);
         assert !DocumentUtil.isInsideSurrogatePair(document, lineStartOffset + endOffset);
 
-        final BidiRun[] runs;
+        BidiRun[] runs;
         if (startOffset == endOffset) {
             runs = BidiRun.EMPTY_ARRAY;
         }

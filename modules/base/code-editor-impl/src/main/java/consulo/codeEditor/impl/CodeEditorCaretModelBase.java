@@ -88,7 +88,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
-    public void documentChanged(@Nonnull final DocumentEvent e) {
+    public void documentChanged(@Nonnull DocumentEvent e) {
         myIsInUpdate = false;
         myDocumentUpdateCounter++;
         if (!myEditor.getDocument().isInBulkUpdate()) {
@@ -132,7 +132,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
-    public void moveCaretRelatively(final int columnShift, final int lineShift, final boolean withSelection, final boolean blockSelection, final boolean scrollToCaret) {
+    public void moveCaretRelatively(int columnShift, int lineShift, boolean withSelection, boolean blockSelection, boolean scrollToCaret) {
         getCurrentCaret().moveCaretRelatively(columnShift, lineShift, withSelection, scrollToCaret);
     }
 
@@ -197,7 +197,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
-    public void addCaretListener(@Nonnull final CaretListener listener) {
+    public void addCaretListener(@Nonnull CaretListener listener) {
         myCaretListeners.addListener(listener);
     }
 
@@ -349,12 +349,12 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
-    public void runForEachCaret(@Nonnull final CaretAction action) {
+    public void runForEachCaret(@Nonnull CaretAction action) {
         runForEachCaret(action, false);
     }
 
     @Override
-    public void runForEachCaret(@Nonnull final CaretAction action, final boolean reverseOrder) {
+    public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
         CodeEditorBase.assertIsDispatchThread();
         if (myCurrentCaret.get() != null) {
             throw new IllegalStateException("Recursive runForEachCaret invocations are not allowed");
@@ -480,12 +480,12 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     }
 
     @Override
-    public void setCaretsAndSelections(@Nonnull final List<? extends CaretState> caretStates) {
+    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates) {
         setCaretsAndSelections(caretStates, true);
     }
 
     @Override
-    public void setCaretsAndSelections(@Nonnull final List<? extends CaretState> caretStates, final boolean updateSystemSelection) {
+    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection) {
         CodeEditorBase.assertIsDispatchThread();
         if (caretStates.isEmpty()) {
             throw new IllegalArgumentException("At least one caret should exist");
@@ -574,7 +574,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
             return;
         }
 
-        final Clipboard clip = myEditor.getComponent().getToolkit().getSystemSelection();
+        Clipboard clip = myEditor.getComponent().getToolkit().getSystemSelection();
         if (clip != null) {
             clip.setContents(new StringSelection(myEditor.getSelectionModel().getSelectedText(true)), EmptyClipboardOwner.INSTANCE);
         }

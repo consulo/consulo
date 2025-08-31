@@ -24,9 +24,9 @@ public class PatchVirtualFileReader {
   private PatchVirtualFileReader() {
   }
 
-  public static PatchReader create(final VirtualFile virtualFile) throws IOException {
-    final byte[] patchContents = virtualFile.contentsToByteArray();
-    final CharSequence patchText = LoadTextUtil.getTextByBinaryPresentation(patchContents, virtualFile);
+  public static PatchReader create(VirtualFile virtualFile) throws IOException {
+    byte[] patchContents = virtualFile.contentsToByteArray();
+    CharSequence patchText = LoadTextUtil.getTextByBinaryPresentation(patchContents, virtualFile);
     return new PatchReader(patchText);
   }
 }

@@ -61,24 +61,24 @@ public class NewErrorTreeEditor extends AbstractCellEditor implements TreeCellEd
     public boolean isCellEditable(EventObject e) {
         Object node;
         if (e instanceof MouseEvent) {
-            final Point point = ((MouseEvent) e).getPoint();
-            final TreePath location = myTree.getClosestPathForLocation(point.x, point.y);
+            Point point = ((MouseEvent) e).getPoint();
+            TreePath location = myTree.getClosestPathForLocation(point.x, point.y);
             node = location.getLastPathComponent();
         }
         else {
             node = myTree.getLastSelectedPathComponent();
         }
-        final ErrorTreeElement element = getElement(node);
+        ErrorTreeElement element = getElement(node);
         return element instanceof EditableMessageElement;
     }
 
     @Override
     public Component getTreeCellEditorComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row) {
-        final ErrorTreeElement element = getElement(value);
+        ErrorTreeElement element = getElement(value);
         if (element instanceof EditableMessageElement) {
             EditableMessageElement editableMessageElement = (EditableMessageElement) element;
-            final CustomizeColoredTreeCellRenderer leftSelfRenderer = editableMessageElement.getLeftSelfRenderer();
-            final TreeCellEditor rightSelfEditor = editableMessageElement.getRightSelfEditor();
+            CustomizeColoredTreeCellRenderer leftSelfRenderer = editableMessageElement.getLeftSelfRenderer();
+            TreeCellEditor rightSelfEditor = editableMessageElement.getRightSelfEditor();
             myColoredTreeCellRenderer.setCurrentCallback(leftSelfRenderer);
             myRightCellRenderer.setCurrentCallback(rightSelfEditor);
             return myWrapperEditor.getTreeCellEditorComponent(tree, value, selected, expanded, leaf, row);
@@ -102,7 +102,7 @@ public class NewErrorTreeEditor extends AbstractCellEditor implements TreeCellEd
         if (selRow != -1) {
             TreePath treePath = tree.getPathForRow(selRow);
             if (treePath != null && treePath != tree.getEditingPath()) {
-                final ErrorTreeElement element = getElement(treePath.getLastPathComponent());
+                ErrorTreeElement element = getElement(treePath.getLastPathComponent());
                 if (element instanceof EditableMessageElement && ((EditableMessageElement) element).startEditingOnMouseMove()) {
                     if (!tree.isRowSelected(selRow)) {
                         tree.setSelectionRow(selRow);
@@ -118,7 +118,7 @@ public class NewErrorTreeEditor extends AbstractCellEditor implements TreeCellEd
         if (!(value instanceof DefaultMutableTreeNode)) {
             return null;
         }
-        final Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
+        Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
         if (!(userObject instanceof ErrorTreeNodeDescriptor)) {
             return null;
         }
@@ -138,7 +138,7 @@ public class NewErrorTreeEditor extends AbstractCellEditor implements TreeCellEd
             return myRight;
         }
 
-        public MyWrapperEditor(final TreeCellRenderer left, final TreeCellEditor right) {
+        public MyWrapperEditor(TreeCellRenderer left, TreeCellEditor right) {
             myLeft = left;
             myRight = right;
             myPanel = new JPanel(new BorderLayout());
@@ -184,7 +184,7 @@ public class NewErrorTreeEditor extends AbstractCellEditor implements TreeCellEd
             return myCurrentCallback.getTreeCellEditorComponent(tree, value, selected, expanded, leaf, row);
         }
 
-        public void setCurrentCallback(final TreeCellEditor currentCallback) {
+        public void setCurrentCallback(TreeCellEditor currentCallback) {
             myCurrentCallback = currentCallback;
         }
 

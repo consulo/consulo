@@ -36,24 +36,24 @@ public abstract class SourceScope {
 
   public abstract GlobalSearchScope getLibrariesScope();
 
-  public static Map<Module, Collection<Module>> buildAllDependencies(final Project project) {
+  public static Map<Module, Collection<Module>> buildAllDependencies(Project project) {
     Graph<Module> graph = ModuleManager.getInstance(project).moduleGraph();
     Map<Module, Collection<Module>> result = new HashMap<>();
-    for (final Module module : graph.getNodes()) {
+    for (Module module : graph.getNodes()) {
       buildDependenciesForModule(module, graph, result);
     }
     return result;
   }
 
-  private static void buildDependenciesForModule(final Module module, final Graph<Module> graph, Map<Module, Collection<Module>> map) {
-    final Set<Module> deps = new HashSet<>();
+  private static void buildDependenciesForModule(Module module, Graph<Module> graph, Map<Module, Collection<Module>> map) {
+    Set<Module> deps = new HashSet<>();
     map.put(module, deps);
     traverseModule(deps, graph, module);
   }
 
   private static void traverseModule(Set<Module> deps, Graph<Module> graph, Module m) {
     for (Iterator<Module> iterator = graph.getIn(m); iterator.hasNext(); ) {
-      final Module dep = iterator.next();
+      Module dep = iterator.next();
       if (!deps.contains(dep)) {
         deps.add(dep);
         traverseModule(deps, graph, dep);
@@ -64,7 +64,7 @@ public abstract class SourceScope {
   private abstract static class ModuleSourceScope extends SourceScope {
     private final Project myProject;
 
-    protected ModuleSourceScope(final Project project) {
+    protected ModuleSourceScope(Project project) {
       myProject = project;
     }
 
@@ -105,7 +105,7 @@ public abstract class SourceScope {
       public GlobalSearchScope getGlobalSearchScope() {
         return evaluateScopesAndUnite(modules, new ScopeForModuleEvaluator() {
           @Override
-          public GlobalSearchScope evaluate(final Module module) {
+          public GlobalSearchScope evaluate(Module module) {
             return GlobalSearchScope.moduleWithDependenciesScope(module);
           }
         });
@@ -115,7 +115,7 @@ public abstract class SourceScope {
       public GlobalSearchScope getLibrariesScope() {
         return evaluateScopesAndUnite(modules, new ScopeForModuleEvaluator() {
           @Override
-          public GlobalSearchScope evaluate(final Module module) {
+          public GlobalSearchScope evaluate(Module module) {
             return new ModuleWithDependenciesAndLibsDependencies(module);
           }
         });
@@ -132,11 +132,11 @@ public abstract class SourceScope {
     GlobalSearchScope evaluate(Module module);
   }
 
-  private static GlobalSearchScope evaluateScopesAndUnite(final Module[] modules, final ScopeForModuleEvaluator evaluator) {
+  private static GlobalSearchScope evaluateScopesAndUnite(Module[] modules, ScopeForModuleEvaluator evaluator) {
     GlobalSearchScope scope = evaluator.evaluate(modules[0]);
     for (int i = 1; i < modules.length; i++) {
-      final Module module = modules[i];
-      final GlobalSearchScope otherscope = evaluator.evaluate(module);
+      Module module = modules[i];
+      GlobalSearchScope otherscope = evaluator.evaluate(module);
       scope = scope.uniteWith(otherscope);
     }
     return scope;
@@ -149,7 +149,7 @@ public abstract class SourceScope {
       public GlobalSearchScope getGlobalSearchScope() {
         return evaluateScopesAndUnite(modules, new ScopeForModuleEvaluator() {
           @Override
-          public GlobalSearchScope evaluate(final Module module) {
+          public GlobalSearchScope evaluate(Module module) {
             return GlobalSearchScope.moduleScope(module);
           }
         });
@@ -159,7 +159,7 @@ public abstract class SourceScope {
       public GlobalSearchScope getLibrariesScope() {
         return evaluateScopesAndUnite(modules, new ScopeForModuleEvaluator() {
           @Override
-          public GlobalSearchScope evaluate(final Module module) {
+          public GlobalSearchScope evaluate(Module module) {
             return GlobalSearchScope.moduleWithLibrariesScope(module);
           }
         });
@@ -178,32 +178,32 @@ public abstract class SourceScope {
     private final GlobalSearchScope myMainScope;
     private final List<GlobalSearchScope> myScopes = new ArrayList<>();
 
-    public ModuleWithDependenciesAndLibsDependencies(final Module module) {
+    public ModuleWithDependenciesAndLibsDependencies(Module module) {
       super(module.getProject());
       myMainScope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module);
-      final Map<Module, Collection<Module>> map = buildAllDependencies(module.getProject());
+      Map<Module, Collection<Module>> map = buildAllDependencies(module.getProject());
       if (map == null) return;
-      final Collection<Module> modules = map.get(module);
-      for (final Module dependency : modules) {
+      Collection<Module> modules = map.get(module);
+      for (Module dependency : modules) {
         myScopes.add(GlobalSearchScope.moduleWithLibrariesScope(dependency));
       }
     }
 
     @Override
-    public boolean contains(@Nonnull final VirtualFile file) {
+    public boolean contains(@Nonnull VirtualFile file) {
       return findScopeFor(file) != null;
     }
 
     @Override
-    public int compare(@Nonnull final VirtualFile file1, @Nonnull final VirtualFile file2) {
-      final GlobalSearchScope scope = findScopeFor(file1);
+    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+      GlobalSearchScope scope = findScopeFor(file1);
       assert scope != null;
       if (scope.contains(file2)) return scope.compare(file1, file2);
       return 0;
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull final Module aModule) {
+    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
       return myMainScope.isSearchInModuleContent(aModule);
     }
 
@@ -213,7 +213,7 @@ public abstract class SourceScope {
     }
 
     @Nullable
-    private GlobalSearchScope findScopeFor(final VirtualFile file) {
+    private GlobalSearchScope findScopeFor(VirtualFile file) {
       if (myMainScope.contains(file)) return myMainScope;
       //noinspection ForLoopReplaceableByForEach
       for (int i = 0, size = myScopes.size(); i < size; i++) {

@@ -42,7 +42,7 @@ public class Selector extends NativeLong {
     return String.format("[Selector %s]", myName);
   }
 
-  public Selector initName(final String name) {
+  public Selector initName(String name) {
     myName = name;
     return this;
   }

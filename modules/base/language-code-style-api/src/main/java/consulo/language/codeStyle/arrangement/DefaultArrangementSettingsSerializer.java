@@ -96,16 +96,16 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
 
     StdArrangementSettings settings = (StdArrangementSettings)s;
     if (settings instanceof ArrangementExtendableSettings && myDefaultSettings instanceof ArrangementExtendableSettings) {
-      final Set<StdArrangementRuleAliasToken> tokensDefinition = ((ArrangementExtendableSettings)settings).getRuleAliases();
-      final boolean isDefault = tokensDefinition.equals(((ArrangementExtendableSettings)myDefaultSettings).getRuleAliases());
+      Set<StdArrangementRuleAliasToken> tokensDefinition = ((ArrangementExtendableSettings)settings).getRuleAliases();
+      boolean isDefault = tokensDefinition.equals(((ArrangementExtendableSettings)myDefaultSettings).getRuleAliases());
       if (!isDefault) {
-        final Element tokensElement = new Element(TOKENS_ELEMENT_NAME);
+        Element tokensElement = new Element(TOKENS_ELEMENT_NAME);
         for (StdArrangementRuleAliasToken definition : tokensDefinition) {
-          final Element tokenElement = new Element(TOKEN_ELEMENT_NAME);
+          Element tokenElement = new Element(TOKEN_ELEMENT_NAME);
           tokenElement.setAttribute(TOKEN_ID, definition.getId());
           tokenElement.setAttribute(TOKEN_NAME, definition.getName());
 
-          final Element rulesElement = new Element(RULES_ELEMENT_NAME);
+          Element rulesElement = new Element(RULES_ELEMENT_NAME);
           for (StdArrangementMatchRule rule : definition.getDefinitionRules()) {
             rulesElement.addContent(serialize(rule));
           }
@@ -117,7 +117,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     }
 
     List<ArrangementGroupingRule> groupings = settings.getGroupings();
-    final boolean isDefaultGroupings = groupings.equals(myDefaultSettings.getGroupings());
+    boolean isDefaultGroupings = groupings.equals(myDefaultSettings.getGroupings());
     if (!isDefaultGroupings) {
       Element groupingsElement = new Element(GROUPS_ELEMENT_NAME);
       holder.addContent(groupingsElement);
@@ -129,8 +129,8 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
       }
     }
 
-    final List<ArrangementSectionRule> sections = settings.getSections();
-    final boolean isDefaultRules = sections.equals((myDefaultSettings).getSections());
+    List<ArrangementSectionRule> sections = settings.getSections();
+    boolean isDefaultRules = sections.equals((myDefaultSettings).getSections());
     if (!isDefaultRules) {
       Element rulesElement = new Element(RULES_ELEMENT_NAME);
       holder.addContent(rulesElement);
@@ -143,10 +143,10 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
   @Nullable
   @Override
   public ArrangementSettings deserialize(@Nonnull Element element) {
-    final Set<StdArrangementRuleAliasToken> tokensDefinition = deserializeTokensDefinition(element, myDefaultSettings);
-    final List<ArrangementGroupingRule> groupingRules = deserializeGropings(element, myDefaultSettings);
-    final Element rulesElement = element.getChild(RULES_ELEMENT_NAME);
-    final List<ArrangementSectionRule> sectionRules = ContainerUtil.newArrayList();
+    Set<StdArrangementRuleAliasToken> tokensDefinition = deserializeTokensDefinition(element, myDefaultSettings);
+    List<ArrangementGroupingRule> groupingRules = deserializeGropings(element, myDefaultSettings);
+    Element rulesElement = element.getChild(RULES_ELEMENT_NAME);
+    List<ArrangementSectionRule> sectionRules = ContainerUtil.newArrayList();
     if(rulesElement == null) {
       sectionRules.addAll(myDefaultSettings.getSections());
     }
@@ -154,7 +154,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
       sectionRules.addAll(deserializeSectionRules(rulesElement, tokensDefinition));
       if (sectionRules.isEmpty()) {
         // for backward compatibility
-        final List<StdArrangementMatchRule> rules = deserializeRules(rulesElement, tokensDefinition);
+        List<StdArrangementMatchRule> rules = deserializeRules(rulesElement, tokensDefinition);
         return StdArrangementSettings.createByMatchRules(groupingRules, rules);
       }
     }
@@ -171,19 +171,19 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
       return null;
     }
 
-    final Element tokensRoot = element.getChild(TOKENS_ELEMENT_NAME);
+    Element tokensRoot = element.getChild(TOKENS_ELEMENT_NAME);
     if (tokensRoot == null) {
       return ((ArrangementExtendableSettings)myDefaultSettings).getRuleAliases();
     }
 
-    final Set<StdArrangementRuleAliasToken> tokenDefinitions = new HashSet<StdArrangementRuleAliasToken>();
-    final List<Element> tokens = tokensRoot.getChildren(TOKEN_ELEMENT_NAME);
+    Set<StdArrangementRuleAliasToken> tokenDefinitions = new HashSet<StdArrangementRuleAliasToken>();
+    List<Element> tokens = tokensRoot.getChildren(TOKEN_ELEMENT_NAME);
     for (Element token : tokens) {
-      final Attribute id = token.getAttribute(TOKEN_ID);
-      final Attribute name = token.getAttribute(TOKEN_NAME);
+      Attribute id = token.getAttribute(TOKEN_ID);
+      Attribute name = token.getAttribute(TOKEN_NAME);
       assert id != null && name != null : "Can not find id for token: " + token;
-      final Element rules = token.getChild(RULES_ELEMENT_NAME);
-      final List<StdArrangementMatchRule> tokenRules =
+      Element rules = token.getChild(RULES_ELEMENT_NAME);
+      List<StdArrangementMatchRule> tokenRules =
               rules == null ? List.of() : deserializeRules(rules, null);
       tokenDefinitions.add(new StdArrangementRuleAliasToken(id.getValue(), name.getValue(), tokenRules));
     }
@@ -197,7 +197,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
       return defaultSettings == null ? new ArrayList<>() : defaultSettings.getGroupings();
     }
 
-    final List<ArrangementGroupingRule> groupings = new ArrayList<ArrangementGroupingRule>();
+    List<ArrangementGroupingRule> groupings = new ArrayList<ArrangementGroupingRule>();
     for (Object group : groups.getChildren(GROUP_ELEMENT_NAME)) {
       Element groupElement = (Element)group;
 
@@ -230,25 +230,25 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
   @Nonnull
   private List<ArrangementSectionRule> deserializeSectionRules(@Nonnull Element rulesElement,
                                                                @jakarta.annotation.Nullable Set<StdArrangementRuleAliasToken> tokens) {
-    final List<ArrangementSectionRule> sectionRules = new ArrayList<ArrangementSectionRule>();
+    List<ArrangementSectionRule> sectionRules = new ArrayList<ArrangementSectionRule>();
     for (Object o : rulesElement.getChildren(SECTION_ELEMENT_NAME)) {
-      final Element sectionElement = (Element)o;
-      final List<StdArrangementMatchRule> rules = deserializeRules(sectionElement, tokens);
-      final Attribute start = sectionElement.getAttribute(SECTION_START_ATTRIBUTE);
-      final String startComment = start != null ? start.getValue().trim() : null;
-      final Attribute end = sectionElement.getAttribute(SECTION_END_ATTRIBUTE);
-      final String endComment = end != null ? end.getValue().trim() : null;
+      Element sectionElement = (Element)o;
+      List<StdArrangementMatchRule> rules = deserializeRules(sectionElement, tokens);
+      Attribute start = sectionElement.getAttribute(SECTION_START_ATTRIBUTE);
+      String startComment = start != null ? start.getValue().trim() : null;
+      Attribute end = sectionElement.getAttribute(SECTION_END_ATTRIBUTE);
+      String endComment = end != null ? end.getValue().trim() : null;
       sectionRules.add(ArrangementSectionRule.create(startComment, endComment, rules));
     }
     return sectionRules;
   }
 
   @Nonnull
-  private List<StdArrangementMatchRule> deserializeRules(@Nonnull Element element, @Nullable final Set<StdArrangementRuleAliasToken> aliases) {
+  private List<StdArrangementMatchRule> deserializeRules(@Nonnull Element element, @Nullable Set<StdArrangementRuleAliasToken> aliases) {
     if (aliases != null && myMixin instanceof MutableMixin) {
       ((MutableMixin)myMixin).setMyRuleAliases(aliases);
     }
-    final List<StdArrangementMatchRule> rules = new ArrayList<StdArrangementMatchRule>();
+    List<StdArrangementMatchRule> rules = new ArrayList<StdArrangementMatchRule>();
     for (Object o : element.getChildren(RULE_ELEMENT_NAME)) {
       Element ruleElement = (Element)o;
       Element matcherElement = ruleElement.getChild(MATCHER_ELEMENT_NAME);
@@ -306,7 +306,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
 
   @jakarta.annotation.Nullable
   public Element serialize(@Nonnull ArrangementSectionRule section) {
-    final Element sectionElement = new Element(SECTION_ELEMENT_NAME);
+    Element sectionElement = new Element(SECTION_ELEMENT_NAME);
     if (StringUtil.isNotEmpty(section.getStartComment())) {
       // or only != null ?
       sectionElement.setAttribute(SECTION_START_ATTRIBUTE, section.getStartComment());
@@ -316,7 +316,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     }
 
     //TODO: serialize start & end comment as rule?
-    final List<StdArrangementMatchRule> rules = section.getMatchRules();
+    List<StdArrangementMatchRule> rules = section.getMatchRules();
     for (int i = 0; i < rules.size(); i++) {
       StdArrangementMatchRule rule = rules.get(i);
       if ((i != 0 || StringUtil.isEmpty(section.getStartComment())) &&
@@ -342,7 +342,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     @Nullable
     @Override
     public ArrangementSettingsToken deserializeToken(@Nonnull String id) {
-      final ArrangementSettingsToken token = myDelegate.deserializeToken(id);
+      ArrangementSettingsToken token = myDelegate.deserializeToken(id);
       if (token != null || myRuleAliases == null) {
         return token;
       }

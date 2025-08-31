@@ -30,9 +30,9 @@ public class DefaultRefactoringElementDescriptionProvider implements ElementDesc
   public static final DefaultRefactoringElementDescriptionProvider INSTANCE = new DefaultRefactoringElementDescriptionProvider();
 
   @Override
-  public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
-    final String typeString = UsageViewUtil.getType(element);
-    final String name = DescriptiveNameUtil.getDescriptiveName(element);
+  public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+    String typeString = UsageViewUtil.getType(element);
+    String name = DescriptiveNameUtil.getDescriptiveName(element);
     return typeString + " " + CommonRefactoringUtil.htmlEmphasize(name);
   }
 }

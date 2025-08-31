@@ -39,7 +39,7 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     for (PackagingElement<?> element : myChildren) {
       if (element.isEqualTo(child)) {
         if (element instanceof CompositePackagingElement) {
-          final List<PackagingElement<?>> children = ((CompositePackagingElement<?>)child).getChildren();
+          List<PackagingElement<?>> children = ((CompositePackagingElement<?>)child).getChildren();
           ((CompositePackagingElement<?>)element).addOrFindChildren(children);
         }
         //noinspection unchecked
@@ -76,8 +76,8 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
   public PackagingElement<?> moveChild(int index, int direction) {
     int target = index + direction;
     if (0 <= index && index < myChildren.size() && 0 <= target && target < myChildren.size()) {
-      final PackagingElement<?> element1 = myChildren.get(index);
-      final PackagingElement<?> element2 = myChildren.get(target);
+      PackagingElement<?> element1 = myChildren.get(index);
+      PackagingElement<?> element2 = myChildren.get(target);
       myChildren.set(index, element2);
       myChildren.set(target, element1);
       return element1;

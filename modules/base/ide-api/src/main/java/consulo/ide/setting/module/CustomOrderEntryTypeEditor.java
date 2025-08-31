@@ -47,7 +47,7 @@ public interface CustomOrderEntryTypeEditor<M extends CustomOrderEntryModel> ext
 
   @RequiredUIAccess
   @Override
-  default void navigate(@Nonnull final CustomOrderEntry<M> orderEntry) {
+  default void navigate(@Nonnull CustomOrderEntry<M> orderEntry) {
     navigate(orderEntry, orderEntry.getModel());
   }
 
@@ -57,7 +57,7 @@ public interface CustomOrderEntryTypeEditor<M extends CustomOrderEntryModel> ext
   }
 
   @RequiredUIAccess
-  default void navigate(@Nonnull final CustomOrderEntry<M> orderEntry, @Nonnull M model) {
+  default void navigate(@Nonnull CustomOrderEntry<M> orderEntry, @Nonnull M model) {
     Project project = orderEntry.getOwnerModule().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));
   }

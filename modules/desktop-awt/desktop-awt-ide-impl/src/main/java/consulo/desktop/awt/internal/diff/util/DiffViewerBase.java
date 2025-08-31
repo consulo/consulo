@@ -150,7 +150,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
 
     myTaskExecutor.executeAndTryWait(
       indicator -> {
-        final Runnable callback = performRediff(indicator);
+        Runnable callback = performRediff(indicator);
         return () -> {
           callback.run();
           onAfterRediff();

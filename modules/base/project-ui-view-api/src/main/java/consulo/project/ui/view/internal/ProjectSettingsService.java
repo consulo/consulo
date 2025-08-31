@@ -47,7 +47,7 @@ public class ProjectSettingsService {
   }
 
   @RequiredUIAccess
-  public void openModuleSettings(final Module module) {
+  public void openModuleSettings(Module module) {
   }
 
   public final boolean canOpenModuleSettings() {
@@ -55,7 +55,7 @@ public class ProjectSettingsService {
   }
 
   @RequiredUIAccess
-  public void openModuleLibrarySettings(final Module module) {
+  public void openModuleLibrarySettings(Module module) {
   }
 
   public final boolean canOpenModuleLibrarySettings() {
@@ -63,7 +63,7 @@ public class ProjectSettingsService {
   }
 
   @RequiredUIAccess
-  public void openContentEntriesSettings(final Module module) {
+  public void openContentEntriesSettings(Module module) {
   }
 
   public final boolean canOpenContentEntriesSettings() {
@@ -80,7 +80,7 @@ public class ProjectSettingsService {
 
   @RequiredUIAccess
   @SuppressWarnings("unchecked")
-  public void openLibraryOrSdkSettings(final @Nonnull OrderEntry orderEntry) {
+  public void openLibraryOrSdkSettings(@Nonnull OrderEntry orderEntry) {
   }
 
   @RequiredUIAccess

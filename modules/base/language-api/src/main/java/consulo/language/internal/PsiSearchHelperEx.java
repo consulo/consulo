@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 public interface PsiSearchHelperEx extends PsiSearchHelper {
   boolean processFilesConcurrentlyDespiteWriteActions(@Nonnull Project project,
                                                       @Nonnull List<? extends VirtualFile> files,
-                                                      @Nonnull final ProgressIndicator progress,
+                                                      @Nonnull ProgressIndicator progress,
                                                       @Nonnull AtomicBoolean stopped,
-                                                      @Nonnull final Predicate<? super VirtualFile> localProcessor);
+                                                      @Nonnull Predicate<? super VirtualFile> localProcessor);
 }

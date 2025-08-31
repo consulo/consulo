@@ -130,7 +130,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
 
     @Override
     protected JComponent createSouthPanel() {
-        final JPanel buttonPanel = new JPanel(new GridBagLayout());
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets.right = 5;
         gbc.fill = GridBagConstraints.BOTH;
@@ -183,7 +183,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     }
 
     private void initCurrentStep(boolean forward) {
-        final AbstractCustomizeWizardStep myCurrentStep = mySteps.get(myIndex);
+        AbstractCustomizeWizardStep myCurrentStep = mySteps.get(myIndex);
         boolean disableBack = myCurrentStep.beforeShown(forward);
         myCardLayout.swipe(
             myContentPanel,
@@ -233,7 +233,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     }
 
     public void updateHeader() {
-        final AbstractCustomizeWizardStep myCurrentStep = mySteps.get(myIndex);
+        AbstractCustomizeWizardStep myCurrentStep = mySteps.get(myIndex);
 
         myHeaderLabel.setText(myCurrentStep.getHTMLHeader());
         myFooterLabel.setText(myCurrentStep.getHTMLFooter());

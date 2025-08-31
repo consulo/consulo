@@ -36,7 +36,7 @@ public class UISettingsUtil {
 
   /* This method must not be used for set up antialiasing for editor components
    */
-  public static void setupAntialiasing(final Graphics g) {
+  public static void setupAntialiasing(Graphics g) {
     Graphics2D g2d = (Graphics2D)g;
     g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
 
@@ -96,7 +96,7 @@ public class UISettingsUtil {
     return UIUtil.isJreHiDPIEnabled() ? 1f : JBUI.sysScale();
   }
 
-  public static void setupFractionalMetrics(final Graphics2D g2d) {
+  public static void setupFractionalMetrics(Graphics2D g2d) {
     if (FORCE_USE_FRACTIONAL_METRICS) {
       g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     }

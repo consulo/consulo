@@ -51,9 +51,9 @@ public abstract class WolfTheProblemSolver {
 
   public abstract Problem convertToProblem(VirtualFile virtualFile, int line, int column, String[] message);
 
-  public abstract void reportProblems(final VirtualFile file, Collection<Problem> problems);
+  public abstract void reportProblems(VirtualFile file, Collection<Problem> problems);
 
-  public abstract boolean hasSyntaxErrors(final VirtualFile file);
+  public abstract boolean hasSyntaxErrors(VirtualFile file);
 
   @Deprecated
   public abstract static class ProblemListener implements consulo.language.editor.wolfAnalyzer.ProblemListener {

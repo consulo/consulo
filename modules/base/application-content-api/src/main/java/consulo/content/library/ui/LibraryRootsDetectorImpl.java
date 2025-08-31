@@ -38,7 +38,7 @@ class LibraryRootsDetectorImpl extends LibraryRootsDetector {
   public Collection<DetectedLibraryRoot> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator) {
     List<DetectedLibraryRoot> result = new ArrayList<DetectedLibraryRoot>();
     for (RootDetector detector : myDetectors) {
-      final Collection<VirtualFile> files = detector.detectRoots(rootCandidate, progressIndicator);
+      Collection<VirtualFile> files = detector.detectRoots(rootCandidate, progressIndicator);
       for (VirtualFile file : files) {
         result.add(new DetectedLibraryRoot(file, detector.getRootType(), detector.isJarDirectory()));
       }

@@ -43,7 +43,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   public void customize(@Nonnull ColoredTextContainer component) {
     synchronized (mySections) {
       for (TextSection section : mySections) {
-        final TextAttributes attributes = section.getTextAttributes();
+        TextAttributes attributes = section.getTextAttributes();
         component.append(section.getText(), TextAttributesUtil.fromTextAttributes(attributes));
       }
       component.setIcon(myIcon);
@@ -58,7 +58,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  public void setIcon(@Nullable final Image icon) {
+  public void setIcon(@Nullable Image icon) {
     synchronized (mySections) {
       myIcon = icon;
     }

@@ -42,11 +42,11 @@ public class UsageListCellRenderer extends ColoredListCellRenderer {
   }
 
   @Override
-  protected void customizeCellRenderer(final JList list,
-                                       final Object value,
-                                       final int index,
-                                       final boolean selected,
-                                       final boolean hasFocus) {
+  protected void customizeCellRenderer(JList list,
+                                       Object value,
+                                       int index,
+                                       boolean selected,
+                                       boolean hasFocus) {
     Usage usage = (Usage)value;
     UsagePresentation presentation = usage.getPresentation();
     setIcon(presentation.getIcon());
@@ -67,7 +67,7 @@ public class UsageListCellRenderer extends ColoredListCellRenderer {
     }
   }
 
-  public static VirtualFile getVirtualFile(final Usage usage) {
+  public static VirtualFile getVirtualFile(Usage usage) {
     return usage instanceof UsageInFile ? ((UsageInFile)usage).getFile() : null;
   }
 }

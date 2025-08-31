@@ -21,5 +21,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface VcsExceptionsHotFixer {
-  Map<HotfixData, List<VcsException>> groupExceptions(final ActionType type, final List<VcsException> exceptions);
+  Map<HotfixData, List<VcsException>> groupExceptions(ActionType type, List<VcsException> exceptions);
 }

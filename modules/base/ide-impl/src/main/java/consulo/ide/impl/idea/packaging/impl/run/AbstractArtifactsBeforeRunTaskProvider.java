@@ -52,13 +52,13 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     project.getMessageBus().connect().subscribe(ArtifactListener.class, new ArtifactListener() {
       @Override
       public void artifactRemoved(@Nonnull Artifact artifact) {
-        final RunManager runManager = RunManager.getInstance(myProject);
+        RunManager runManager = RunManager.getInstance(myProject);
         for (RunConfiguration configuration : runManager.getAllConfigurationsList()) {
-          final List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());
+          List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());
           for (AbstractArtifactsBeforeRunTask task : tasks) {
-            final String artifactName = artifact.getName();
-            final List<ArtifactPointer> pointersList = task.getArtifactPointers();
-            final ArtifactPointer[] pointers = pointersList.toArray(new ArtifactPointer[pointersList.size()]);
+            String artifactName = artifact.getName();
+            List<ArtifactPointer> pointersList = task.getArtifactPointers();
+            ArtifactPointer[] pointers = pointersList.toArray(new ArtifactPointer[pointersList.size()]);
             for (ArtifactPointer pointer : pointers) {
               if (pointer.getName().equals(artifactName) && ArtifactManager.getInstance(myProject).findArtifact(artifactName) == null) {
                 task.removeArtifact(pointer);
@@ -101,7 +101,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   @Nonnull
   @Override
   public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
-    final Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
+    Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
     Set<ArtifactPointer> pointers = new HashSet<>();
     for (Artifact artifact : artifacts) {
       pointers.add(ArtifactPointerManager.getInstance(myProject).create(artifact));

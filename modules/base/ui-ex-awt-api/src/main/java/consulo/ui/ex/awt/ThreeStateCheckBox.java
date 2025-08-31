@@ -41,23 +41,23 @@ public class ThreeStateCheckBox extends JCheckBox {
         this(null, null, State.DONT_CARE);
     }
 
-    public ThreeStateCheckBox(final State initial) {
+    public ThreeStateCheckBox(State initial) {
         this(null, null, initial);
     }
 
-    public ThreeStateCheckBox(final String text) {
+    public ThreeStateCheckBox(String text) {
         this(text, null, State.DONT_CARE);
     }
 
-    public ThreeStateCheckBox(final String text, final State initial) {
+    public ThreeStateCheckBox(String text, State initial) {
         this(text, null, initial);
     }
 
-    public ThreeStateCheckBox(final String text, final Icon icon) {
+    public ThreeStateCheckBox(String text, Icon icon) {
         this(text, icon, State.DONT_CARE);
     }
 
-    public ThreeStateCheckBox(final String text, final Icon icon, final State initial) {
+    public ThreeStateCheckBox(String text, Icon icon, State initial) {
         super(text, icon);
 
         setModel(new ToggleButtonModel() {
@@ -97,12 +97,12 @@ public class ThreeStateCheckBox extends JCheckBox {
         return myThirdStateEnabled;
     }
 
-    public void setThirdStateEnabled(final boolean thirdStateEnabled) {
+    public void setThirdStateEnabled(boolean thirdStateEnabled) {
         myThirdStateEnabled = thirdStateEnabled;
     }
 
     @Override
-    public void setSelected(final boolean b) {
+    public void setSelected(boolean b) {
         setState(b ? State.SELECTED : State.NOT_SELECTED);
     }
 

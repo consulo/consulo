@@ -30,7 +30,7 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
   private final Language myLanguage;
   private volatile PsiElement myNavigationElement = this;
 
-  protected LightElement(PsiManager manager, final Language language) {
+  protected LightElement(PsiManager manager, Language language) {
     myManager = manager;
     myLanguage = language;
   }
@@ -113,7 +113,7 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
 
   @Override
   public boolean isValid() {
-    final PsiElement navElement = getNavigationElement();
+    PsiElement navElement = getNavigationElement();
     if (navElement != this) {
       return navElement.isValid();
     }

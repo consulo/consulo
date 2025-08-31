@@ -26,11 +26,11 @@ public class DnDDragStartBean {
   private final Point myPoint;
 
 
-  public DnDDragStartBean(final Object attachedObject) {
+  public DnDDragStartBean(Object attachedObject) {
     this(attachedObject, null);
   }
 
-  public DnDDragStartBean(final Object attachedObject, final Point point) {
+  public DnDDragStartBean(Object attachedObject, Point point) {
     myAttachedObject = attachedObject;
     myPoint = point;
   }

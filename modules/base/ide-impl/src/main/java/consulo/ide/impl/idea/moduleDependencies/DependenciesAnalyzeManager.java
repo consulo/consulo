@@ -90,7 +90,7 @@ public class DependenciesAnalyzeManager implements PersistentStateComponent<Depe
   }
 
   @Override
-  public void loadState(final State state) {
+  public void loadState(State state) {
     myState = state;
   }
 }

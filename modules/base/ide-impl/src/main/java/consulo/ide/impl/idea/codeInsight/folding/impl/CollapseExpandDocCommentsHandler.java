@@ -46,10 +46,10 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
   }
 
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(project);
     foldingManager.updateFoldRegions(editor);
-    final FoldRegion[] allFoldRegions = editor.getFoldingModel().getAllFoldRegions();
+    FoldRegion[] allFoldRegions = editor.getFoldingModel().getAllFoldRegions();
     Runnable processor = () -> {
       for (FoldRegion region : allFoldRegions) {
         PsiElement element = EditorFoldingInfoImpl.get(editor).getPsiElement(region);
@@ -75,9 +75,9 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
    */
   private static boolean hasAllowedTokenType(@Nonnull Editor editor, @Nonnull FoldRegion region, @Nullable PsiElement element) {
     if (element == null) return false;
-    final Commenter commenter = Commenter.forLanguage(element.getLanguage());
+    Commenter commenter = Commenter.forLanguage(element.getLanguage());
     if (!(commenter instanceof CodeDocumentationAwareCommenter)) return false;
-    final HighlighterIterator iterator = editor.getHighlighter().createIterator(region.getStartOffset());
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(region.getStartOffset());
     if (iterator.atEnd()) return false;
     return ((CodeDocumentationAwareCommenter)commenter).getDocumentationCommentTokenType() == iterator.getTokenType();
   }

@@ -41,14 +41,14 @@ public interface IntentionFilterOwner {
      * @param intentionAction the intention action to analyze
      * @return Returns true if the intention action should be available, false otherwise
      */
-    boolean isAvailable(final IntentionAction intentionAction);
+    boolean isAvailable(IntentionAction intentionAction);
 
     /**
      * This filter reports all intentions are available.
      */
     IntentionActionsFilter EVERYTHING_AVAILABLE = new IntentionActionsFilter() {
       @Override
-      public boolean isAvailable(final IntentionAction intentionAction) {
+      public boolean isAvailable(IntentionAction intentionAction) {
         return true;
       }
     };

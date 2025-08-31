@@ -59,7 +59,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
     @Override
     public boolean iterateContent(@Nonnull ContentIterator processor, @Nullable VirtualFileFilter filter) {
         Module[] modules = AccessRule.read(() -> ModuleManager.getInstance(myProject).getModules());
-        for (final Module module : modules) {
+        for (Module module : modules) {
             for (VirtualFile contentRoot : getRootsToIterate(module)) {
                 if (!iterateContentUnderDirectory(contentRoot, processor, filter)) {
                     return false;
@@ -69,7 +69,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
         return true;
     }
 
-    private Set<VirtualFile> getRootsToIterate(final Module module) {
+    private Set<VirtualFile> getRootsToIterate(Module module) {
         return AccessRule.read(() -> {
             if (module.isDisposed()) {
                 return Collections.emptySet();
@@ -169,7 +169,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
     }
 
     @Override
-    public VirtualFile getContentRootForFile(@Nonnull VirtualFile file, final boolean honorExclusion) {
+    public VirtualFile getContentRootForFile(@Nonnull VirtualFile file, boolean honorExclusion) {
         return getContentRootForFile(getInfoForFileOrDirectory(file), file, honorExclusion);
     }
 

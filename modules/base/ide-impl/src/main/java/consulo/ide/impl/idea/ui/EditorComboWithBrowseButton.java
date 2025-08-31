@@ -32,12 +32,12 @@ import java.util.List;
  * @author ven
  */
 public class EditorComboWithBrowseButton extends ComponentWithBrowseButton<EditorComboBox> implements TextAccessor {
-  public EditorComboWithBrowseButton(final ActionListener browseActionListener,
-                                     final String text,
-                                     @Nonnull final Project project,
-                                     final String recentsKey) {
+  public EditorComboWithBrowseButton(ActionListener browseActionListener,
+                                     String text,
+                                     @Nonnull Project project,
+                                     String recentsKey) {
     super(new EditorComboBox(text, project, PlainTextFileType.INSTANCE), browseActionListener);
-    final List<String> recentEntries = RecentsManager.getInstance(project).getRecentEntries(recentsKey);
+    List<String> recentEntries = RecentsManager.getInstance(project).getRecentEntries(recentsKey);
     if (recentEntries != null) {
       setHistory(ArrayUtil.toStringArray(recentEntries));
     }
@@ -52,7 +52,7 @@ public class EditorComboWithBrowseButton extends ComponentWithBrowseButton<Edito
   }
 
   @Override
-  public void setText(final String text) {
+  public void setText(String text) {
     getChildComponent().setText(text);
   }
 

@@ -39,10 +39,10 @@ public class DialogEarthquakeShaker {
     new Animator("EarthQuake", 10, 70, true) {
       @Override
       public void paintNow(int frame, int totalFrames, int cycle) {
-        final long elapsed = System.currentTimeMillis() - myStartTime;
-        final double waveOffset = (elapsed % 70) / 70d;
-        final double angle = waveOffset * 2d * Math.PI;
-        final int shakenX = (int)((Math.sin(angle) * 10) + myNaturalLocation.x);
+        long elapsed = System.currentTimeMillis() - myStartTime;
+        double waveOffset = (elapsed % 70) / 70d;
+        double angle = waveOffset * 2d * Math.PI;
+        int shakenX = (int)((Math.sin(angle) * 10) + myNaturalLocation.x);
         myDialog.setLocation(shakenX, myNaturalLocation.y);
         myDialog.repaint();
         if (elapsed > 150) {

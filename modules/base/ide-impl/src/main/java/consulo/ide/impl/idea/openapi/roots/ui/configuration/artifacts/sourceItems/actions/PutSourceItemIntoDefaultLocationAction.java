@@ -38,14 +38,14 @@ public class PutSourceItemIntoDefaultLocationAction extends PutIntoDefaultLocati
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
+    List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
     boolean enabled = false;
-    final Presentation presentation = e.getPresentation();
+    Presentation presentation = e.getPresentation();
     if (!items.isEmpty()) {
       enabled = true;
       Set<String> paths = new HashSet<String>();
       for (PackagingSourceItem item : items) {
-        final String path = getDefaultPath(item);
+        String path = getDefaultPath(item);
         if (path == null) {
           enabled = false;
           break;

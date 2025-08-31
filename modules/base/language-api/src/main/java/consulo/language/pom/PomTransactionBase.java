@@ -25,7 +25,7 @@ public abstract class PomTransactionBase implements PomTransaction{
   private final PsiElement myScope;
   private final PomModelAspect myAspect;
   private final PomModelEvent myAccumulatedEvent;
-  public PomTransactionBase(PsiElement scope, final PomModelAspect aspect){
+  public PomTransactionBase(PsiElement scope, PomModelAspect aspect){
     myScope = scope;
     myAspect = aspect;
     myAccumulatedEvent = new PomModelEvent(PomManager.getModel(scope.getProject()));
@@ -39,7 +39,7 @@ public abstract class PomTransactionBase implements PomTransaction{
   @Override
   public void run() throws IncorrectOperationException {
     // override accumulated event because transaction should construct full model event in its aspect
-    final PomModelEvent event = runInner();
+    PomModelEvent event = runInner();
     if(event == null){
       // in case of null event aspect change set supposed to be rebuild by low level events
       myAccumulatedEvent.registerChangeSet(myAspect, null);

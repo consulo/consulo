@@ -31,7 +31,7 @@ public final class Surface extends JComponent {
   private final ToolWindowAnchor myAnchor;
   private int myOffset = 0;
 
-  public Surface(final Image topImage, final Image bottomImage, final int direction, final ToolWindowAnchor anchor, final double pixelsPerSec) {
+  public Surface(Image topImage, Image bottomImage, int direction, ToolWindowAnchor anchor, double pixelsPerSec) {
     myTopImage = topImage;
     myBottomImage = bottomImage;
     myAnchor = anchor;
@@ -44,26 +44,26 @@ public final class Surface extends JComponent {
     if(!isShowing()){
       return;
     }
-    final int distance;
-    final Rectangle bounds = getBounds();
+    int distance;
+    Rectangle bounds = getBounds();
     if (myAnchor == ToolWindowAnchor.LEFT || myAnchor == ToolWindowAnchor.RIGHT) {
       distance = bounds.width;
     }
     else {
       distance = bounds.height;
     }
-    final double desiredTime = distance / myPixelsPerSec * 1000;
-    final long startTime = System.currentTimeMillis();
+    double desiredTime = distance / myPixelsPerSec * 1000;
+    long startTime = System.currentTimeMillis();
     int count = 0;
     myOffset = 0;
 
 
     while(true){
       paintImmediately(0,0,getWidth(),getHeight());
-      final long timeSpent = System.currentTimeMillis() - startTime;
+      long timeSpent = System.currentTimeMillis() - startTime;
       count++;
       if (timeSpent >= desiredTime) break;
-      final double onePaintTime = (double)timeSpent / count;
+      double onePaintTime = (double)timeSpent / count;
       int iterations = (int)((desiredTime - timeSpent) / onePaintTime);
       iterations = Math.max(1, iterations);
       myOffset += (distance - myOffset) / iterations;
@@ -71,8 +71,8 @@ public final class Surface extends JComponent {
   }
 
   @Override
-  public final void paint(final Graphics g) {
-    final Rectangle bounds = getBounds();
+  public final void paint(Graphics g) {
+    Rectangle bounds = getBounds();
     if (myAnchor == ToolWindowAnchor.LEFT) {
       if (myDirection == 1) {
         g.setClip(null);

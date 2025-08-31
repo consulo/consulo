@@ -63,8 +63,8 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
-      final Presentation presentation = e.getPresentation();
-      final ProjectView projectView = ProjectView.getInstance(e.getRequiredData(Project.KEY));
+      Presentation presentation = e.getPresentation();
+      ProjectView projectView = ProjectView.getInstance(e.getRequiredData(Project.KEY));
       presentation.setVisible(projectView.getCurrentProjectViewPane() == myPane);
     }
   }

@@ -55,7 +55,7 @@ public class Descriptor {
     myInspectionProfile = inspectionProfile;
     InspectionToolWrapper tool = state.getTool();
     myText = tool.getDisplayName();
-    final String[] groupPath = tool.getGroupPath();
+    String[] groupPath = tool.getGroupPath();
     myGroup = groupPath.length == 0 ? new String[]{InspectionsBundle.message("inspection.general.tools.group.name")} : groupPath;
     myKey = HighlightDisplayKey.find(tool.getShortName());
     myScopeName = state.getScopeId();
@@ -67,7 +67,7 @@ public class Descriptor {
 
   public boolean equals(Object obj) {
     if (!(obj instanceof Descriptor)) return false;
-    final Descriptor descriptor = (Descriptor)obj;
+    Descriptor descriptor = (Descriptor)obj;
     return myKey.equals(descriptor.getKey()) &&
            myLevel.equals(descriptor.getLevel()) &&
            myEnabled == descriptor.isEnabled() &&
@@ -75,7 +75,7 @@ public class Descriptor {
   }
 
   public int hashCode() {
-    final int hash = myKey.hashCode() + 29 * myLevel.hashCode();
+    int hash = myKey.hashCode() + 29 * myLevel.hashCode();
     return myScope != null ? myScope.hashCode() + 29 * hash : hash;
   }
 
@@ -83,7 +83,7 @@ public class Descriptor {
     return myEnabled;
   }
 
-  public void setEnabled(final boolean enabled) {
+  public void setEnabled(boolean enabled) {
     myEnabled = enabled;
   }
 

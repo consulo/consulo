@@ -40,10 +40,10 @@ public class FileContentUtilCore {
   }
 
   @RequiredUIAccess
-  public static void reparseFiles(@Nonnull final Collection<? extends VirtualFile> files) {
+  public static void reparseFiles(@Nonnull Collection<? extends VirtualFile> files) {
     ApplicationManager.getApplication().runWriteAction(() -> {
       // files must be processed under one write action to prevent firing event for invalid files.
-      final Set<VFilePropertyChangeEvent> events = new HashSet<>();
+      Set<VFilePropertyChangeEvent> events = new HashSet<>();
       for (VirtualFile file : files) {
         saveOrReload(file, events);
       }

@@ -37,18 +37,18 @@ public class ComponentPeerHacking {
         }
 
         long nsViewPtr = 0;
-        final ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(window);
+        ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(window);
 
         // sun.lwawt.* isn't available outside of java.desktop => use reflection
         if (peer != null && peer.getClass().getName().equals("sun.lwawt.LWWindowPeer")) {
-            final Method methodGetPlatformWindow;
+            Method methodGetPlatformWindow;
             try {
                 methodGetPlatformWindow = peer.getClass().getMethod("getPlatformWindow");
                 Object platformWindow = methodGetPlatformWindow.invoke(peer);
                 if (platformWindow != null && platformWindow.getClass().getName().equals("sun.lwawt.macosx.CPlatformWindow")) {
-                    final Method methodGetContentView = platformWindow.getClass().getMethod("getContentView");
+                    Method methodGetContentView = platformWindow.getClass().getMethod("getContentView");
                     Object contentView = methodGetContentView.invoke(platformWindow);
-                    final Method methodGetAWTView = contentView.getClass().getMethod("getAWTView");
+                    Method methodGetAWTView = contentView.getClass().getMethod("getAWTView");
                     nsViewPtr = (long) methodGetAWTView.invoke(contentView);
                 }
                 else {

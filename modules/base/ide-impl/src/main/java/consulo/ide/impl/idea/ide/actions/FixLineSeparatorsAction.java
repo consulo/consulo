@@ -57,7 +57,7 @@ public class FixLineSeparatorsAction extends AnAction {
             @Override
             public boolean visitFile(@Nonnull VirtualFile file) {
                 if (!file.isDirectory() && !file.getFileType().isBinary()) {
-                    final Document document = FileDocumentManager.getInstance().getDocument(file);
+                    Document document = FileDocumentManager.getInstance().getDocument(file);
                     if (areSeparatorsBroken(document)) {
                         fixSeparators(document);
                     }
@@ -68,7 +68,7 @@ public class FixLineSeparatorsAction extends AnAction {
     }
 
     private static boolean areSeparatorsBroken(Document document) {
-        final int count = document.getLineCount();
+        int count = document.getLineCount();
         for (int i = 1; i < count; i += 2) {
             if (document.getLineStartOffset(i) != document.getLineEndOffset(i)) {
                 return false;
@@ -78,12 +78,12 @@ public class FixLineSeparatorsAction extends AnAction {
     }
 
     @RequiredUIAccess
-    private static void fixSeparators(final Document document) {
+    private static void fixSeparators(Document document) {
         Application.get().runWriteAction(() -> {
             int i = 1;
             while (i < document.getLineCount()) {
-                final int start = document.getLineEndOffset(i);
-                final int end = document.getLineEndOffset(i) + document.getLineSeparatorLength(i);
+                int start = document.getLineEndOffset(i);
+                int end = document.getLineEndOffset(i) + document.getLineSeparatorLength(i);
                 document.deleteString(start, end);
                 i++;
             }

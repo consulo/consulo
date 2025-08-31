@@ -82,13 +82,13 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   @Override
-  public V get(final Object key) {
-    final Entry<K, V>[] table = this.table;
-    final int hash = HashUtil.hash(key, hashingStrategy);
-    final int index = hash % table.length;
+  public V get(Object key) {
+    Entry<K, V>[] table = this.table;
+    int hash = HashUtil.hash(key, hashingStrategy);
+    int index = hash % table.length;
 
     for (Entry<K, V> e = table[index]; e != null; e = e.hashNext) {
-      final K entryKey;
+      K entryKey;
       if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, (K)key))) {
         moveToTop(e);
         return e.value;
@@ -99,21 +99,21 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   @Override
-  public V put(final K key, @Nonnull final V value) {
-    final Entry<K, V>[] table = this.table;
-    final int hash = HashUtil.hash(key, hashingStrategy);
-    final int index = hash % table.length;
+  public V put(K key, @Nonnull V value) {
+    Entry<K, V>[] table = this.table;
+    int hash = HashUtil.hash(key, hashingStrategy);
+    int index = hash % table.length;
     for (Entry<K, V> e = table[index]; e != null; e = e.hashNext) {
-      final K entryKey;
+      K entryKey;
       if (e.keyHash == hash && ((entryKey = e.key) == key || hashingStrategy.equals(entryKey, key))) {
         moveToTop(e);
         return e.setValue(value);
       }
     }
-    final Entry<K, V> e = new Entry<K, V>(key, value, hash);
+    Entry<K, V> e = new Entry<K, V>(key, value, hash);
     e.hashNext = table[index];
     table[index] = e;
-    final Entry<K, V> top = this.top;
+    Entry<K, V> top = this.top;
     e.next = top;
     if (top != null) {
       top.previous = e;
@@ -133,20 +133,20 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   public void doRemoveEldestEntry() {
-    final V val = remove(back.key);
+    V val = remove(back.key);
     assert val != null : "LinkedHashMap.Entry was not removed. Possibly mutable key: " + back.key;
   }
 
   @Override
-  public boolean containsKey(final Object key) {
+  public boolean containsKey(Object key) {
     return get(key) != null;
   }
 
   @Override
-  public V remove(final Object key) {
-    final Entry<K, V>[] table = this.table;
-    final int hash = HashUtil.hash(key, hashingStrategy);
-    final int index = hash % table.length;
+  public V remove(Object key) {
+    Entry<K, V>[] table = this.table;
+    int hash = HashUtil.hash(key, hashingStrategy);
+    int index = hash % table.length;
     Entry<K, V> e = table[index];
     if (e == null) {
       return null;
@@ -157,7 +157,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     }
     else {
       for (; ; ) {
-        final Entry<K, V> last = e;
+        Entry<K, V> last = e;
         e = e.hashNext;
         if (e == null) {
           return null;
@@ -223,15 +223,15 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return top != null ? top.value : null;
   }
 
-  private void moveToTop(final Entry<K, V> e) {
+  private void moveToTop(Entry<K, V> e) {
     if (!accessOrder) {
       return;
     }
 
-    final Entry<K, V> top = this.top;
+    Entry<K, V> top = this.top;
     if (top != e) {
-      final Entry<K, V> prev = e.previous;
-      final Entry<K, V> next = e.next;
+      Entry<K, V> prev = e.previous;
+      Entry<K, V> next = e.next;
       prev.next = next;
       if (next != null) {
         next.previous = prev;
@@ -246,9 +246,9 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     }
   }
 
-  private void unlink(final Entry<K, V> e) {
-    final Entry<K, V> prev = e.previous;
-    final Entry<K, V> next = e.next;
+  private void unlink(Entry<K, V> e) {
+    Entry<K, V> prev = e.previous;
+    Entry<K, V> next = e.next;
     if (prev != null) {
       prev.next = next;
     }
@@ -270,10 +270,10 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   private void rehash(int capacity) {
     table = new Entry[HashUtil.adjustTableSize((int)(capacity / loadFactor))];
     this.capacity = capacity;
-    final Entry<K, V>[] table = this.table;
-    final int tableLen = table.length;
+    Entry<K, V>[] table = this.table;
+    int tableLen = table.length;
     for (Entry<K, V> e = back; e != null; e = e.previous) {
-      final int hash = e.keyHash % tableLen;
+      int hash = e.keyHash % tableLen;
       e.hashNext = table[hash];
       table[hash] = e;
     }
@@ -288,7 +288,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     private Entry<K, V> previous;
     private Entry<K, V> hashNext;
 
-    public Entry(final K key, final V value, int hash) {
+    public Entry(K key, V value, int hash) {
       this.key = key;
       keyHash = hash;
       this.value = value;
@@ -305,8 +305,8 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     }
 
     @Override
-    public V setValue(final V value) {
-      final V result = this.value;
+    public V setValue(V value) {
+      V result = this.value;
       this.value = value;
       return result;
     }
@@ -332,7 +332,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     }
 
     protected LinkedHashMap.Entry<K, V> nextEntry() {
-      final LinkedHashMap.Entry<K, V> result = last = e;
+      LinkedHashMap.Entry<K, V> result = last = e;
       e = result.previous;
       return result;
     }
@@ -356,8 +356,8 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
       if (!(o instanceof Map.Entry)) {
         return false;
       }
-      final Map.Entry<K, V> e = (Map.Entry<K, V>)o;
-      final V value = get(e.getKey());
+      Map.Entry<K, V> e = (Map.Entry<K, V>)o;
+      V value = get(e.getKey());
       return value != null && value.equals(e.getValue());
     }
 
@@ -366,7 +366,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
       if (!(o instanceof Map.Entry)) {
         return false;
       }
-      final Map.Entry<K, V> e = (Map.Entry<K, V>)o;
+      Map.Entry<K, V> e = (Map.Entry<K, V>)o;
       return LinkedHashMap.this.remove(e.getKey()) != null;
     }
 

@@ -65,16 +65,16 @@ public abstract class MacroBase extends Macro {
   }
 
   @Nullable
-  public static String getTextResult(@Nonnull Expression[] params, final ExpressionContext context) {
+  public static String getTextResult(@Nonnull Expression[] params, ExpressionContext context) {
     return getTextResult(params, context, false);
   }
 
   @Nullable
-  public static String getTextResult(@Nonnull Expression[] params, final ExpressionContext context, boolean useSelection) {
+  public static String getTextResult(@Nonnull Expression[] params, ExpressionContext context, boolean useSelection) {
     if (params.length == 1) {
       Result result = params[0].calculateResult(context);
       if (result == null && useSelection) {
-        final String property = context.getProperty(ExpressionContext.SELECTION);
+        String property = context.getProperty(ExpressionContext.SELECTION);
         if (property != null) {
           result = new TextResult(property);
         }

@@ -38,7 +38,7 @@ public class FormatProcessor {
   @Nonnull
   private final StateProcessor myStateProcessor;
 
-  public FormatProcessor(final FormattingDocumentModel docModel,
+  public FormatProcessor(FormattingDocumentModel docModel,
                          Block rootBlock,
                          CodeStyleSettings settings,
                          CommonCodeStyleSettings.IndentOptions indentOptions,
@@ -47,7 +47,7 @@ public class FormatProcessor {
     this(docModel, rootBlock, new FormatOptions(settings, indentOptions, affectedRanges), progressCallback);
   }
 
-  public FormatProcessor(final FormattingDocumentModel model, Block block, FormatOptions options, @Nonnull FormattingProgressCallback callback) {
+  public FormatProcessor(FormattingDocumentModel model, Block block, FormatOptions options, @Nonnull FormattingProgressCallback callback) {
     myProgressCallback = callback;
 
     CommonCodeStyleSettings.IndentOptions defaultIndentOption = options.myIndentOptions;
@@ -57,7 +57,7 @@ public class FormatProcessor {
     myDocument = model.getDocument();
     myReformatContext = options.isReformatWithContext();
 
-    final InitialInfoBuilder builder = InitialInfoBuilder.prepareToBuildBlocksSequentially(block, model, options, defaultIndentOption, myProgressCallback);
+    InitialInfoBuilder builder = InitialInfoBuilder.prepareToBuildBlocksSequentially(block, model, options, defaultIndentOption, myProgressCallback);
     myWrapState = new WrapBlocksState(builder, blockIndentOptions);
 
     FormatTextRanges ranges = options.myAffectedRanges;
@@ -153,23 +153,23 @@ public class FormatProcessor {
     public final ChildAttributes attributes;
     public final int index;
 
-    public ChildAttributesInfo(final AbstractBlockWrapper parent, final ChildAttributes attributes, final int index) {
+    public ChildAttributesInfo(AbstractBlockWrapper parent, ChildAttributes attributes, int index) {
       this.parent = parent;
       this.attributes = attributes;
       this.index = index;
     }
   }
 
-  public IndentInfo getIndentAt(final int offset) {
+  public IndentInfo getIndentAt(int offset) {
     LeafBlockWrapper current = processBlocksBefore(offset);
     AbstractBlockWrapper parent = getParentFor(offset, current);
     if (parent == null) {
-      final LeafBlockWrapper previousBlock = current.getPreviousBlock();
+      LeafBlockWrapper previousBlock = current.getPreviousBlock();
       if (previousBlock != null) parent = getParentFor(offset, previousBlock);
       if (parent == null) return new IndentInfo(0, 0, 0);
     }
     int index = getNewChildPosition(parent, offset);
-    final Block block = myWrapState.getBlockToInfoMap().get(parent);
+    Block block = myWrapState.getBlockToInfoMap().get(parent);
 
     if (block == null) {
       return new IndentInfo(0, 0, 0);
@@ -185,14 +185,14 @@ public class FormatProcessor {
   }
 
   @Nullable
-  private static ChildAttributesInfo getChildAttributesInfo(@Nonnull final Block block, final int index, @Nullable AbstractBlockWrapper parent) {
+  private static ChildAttributesInfo getChildAttributesInfo(@Nonnull Block block, int index, @Nullable AbstractBlockWrapper parent) {
     if (parent == null) {
       return null;
     }
     ChildAttributes childAttributes = block.getChildAttributes(index);
 
     if (childAttributes == ChildAttributes.DELEGATE_TO_PREV_CHILD) {
-      final Block newBlock = block.getSubBlocks().get(index - 1);
+      Block newBlock = block.getSubBlocks().get(index - 1);
       AbstractBlockWrapper prevWrappedBlock;
       if (parent instanceof CompositeBlockWrapper) {
         prevWrappedBlock = ((CompositeBlockWrapper)parent).getChildren().get(index - 1);
@@ -225,10 +225,10 @@ public class FormatProcessor {
     }
   }
 
-  private static int getNewChildPosition(final AbstractBlockWrapper parent, final int offset) {
+  private static int getNewChildPosition(AbstractBlockWrapper parent, int offset) {
     AbstractBlockWrapper parentBlockToUse = getLastNestedCompositeBlockForSameRange(parent);
     if (!(parentBlockToUse instanceof CompositeBlockWrapper)) return 0;
-    final List<AbstractBlockWrapper> subBlocks = ((CompositeBlockWrapper)parentBlockToUse).getChildren();
+    List<AbstractBlockWrapper> subBlocks = ((CompositeBlockWrapper)parentBlockToUse).getChildren();
     if (subBlocks != null) {
       for (int i = 0; i < subBlocks.size(); i++) {
         AbstractBlockWrapper block = subBlocks.get(i);
@@ -242,7 +242,7 @@ public class FormatProcessor {
   }
 
   @Nullable
-  private static AbstractBlockWrapper getParentFor(final int offset, AbstractBlockWrapper block) {
+  private static AbstractBlockWrapper getParentFor(int offset, AbstractBlockWrapper block) {
     AbstractBlockWrapper current = block;
     while (current != null) {
       if (current.getStartOffset() < offset && current.getEndOffset() >= offset) {
@@ -254,7 +254,7 @@ public class FormatProcessor {
   }
 
   @Nullable
-  private AbstractBlockWrapper getParentFor(final int offset, LeafBlockWrapper block) {
+  private AbstractBlockWrapper getParentFor(int offset, LeafBlockWrapper block) {
     AbstractBlockWrapper previous = getPreviousIncompleteBlock(block, offset);
     if (previous != null) {
       return getLastNestedCompositeBlockForSameRange(previous);
@@ -265,7 +265,7 @@ public class FormatProcessor {
   }
 
   @Nullable
-  private AbstractBlockWrapper getPreviousIncompleteBlock(final LeafBlockWrapper block, final int offset) {
+  private AbstractBlockWrapper getPreviousIncompleteBlock(LeafBlockWrapper block, int offset) {
     if (block == null) {
       LeafBlockWrapper lastTokenBlock = myWrapState.getLastBlock();
       if (lastTokenBlock.isIncomplete()) {
@@ -292,8 +292,8 @@ public class FormatProcessor {
 
     if (current.getParent() == null) return null;
 
-    final List<AbstractBlockWrapper> subBlocks = current.getParent().getChildren();
-    final int index = subBlocks.indexOf(current);
+    List<AbstractBlockWrapper> subBlocks = current.getParent().getChildren();
+    int index = subBlocks.indexOf(current);
     if (index < 0) {
       LOG.assertTrue(false);
     }
@@ -311,10 +311,10 @@ public class FormatProcessor {
   }
 
   @Nullable
-  private static AbstractBlockWrapper getLastChildOf(final AbstractBlockWrapper currentResult) {
+  private static AbstractBlockWrapper getLastChildOf(AbstractBlockWrapper currentResult) {
     AbstractBlockWrapper parentBlockToUse = getLastNestedCompositeBlockForSameRange(currentResult);
     if (!(parentBlockToUse instanceof CompositeBlockWrapper)) return null;
-    final List<AbstractBlockWrapper> subBlocks = ((CompositeBlockWrapper)parentBlockToUse).getChildren();
+    List<AbstractBlockWrapper> subBlocks = ((CompositeBlockWrapper)parentBlockToUse).getChildren();
     if (subBlocks.isEmpty()) return null;
     return subBlocks.get(subBlocks.size() - 1);
   }
@@ -327,7 +327,7 @@ public class FormatProcessor {
    * @return the most nested block of the given one that shares the same text range if any; given block otherwise
    */
   @Nonnull
-  private static AbstractBlockWrapper getLastNestedCompositeBlockForSameRange(@Nonnull final AbstractBlockWrapper block) {
+  private static AbstractBlockWrapper getLastNestedCompositeBlockForSameRange(@Nonnull AbstractBlockWrapper block) {
     if (!(block instanceof CompositeBlockWrapper)) {
       return block;
     }
@@ -351,7 +351,7 @@ public class FormatProcessor {
     return result;
   }
 
-  private LeafBlockWrapper processBlocksBefore(final int offset) {
+  private LeafBlockWrapper processBlocksBefore(int offset) {
     AdjustWhiteSpacesState state = new AdjustWhiteSpacesState(myWrapState, myProgressCallback, myReformatContext);
     state.prepare();
 

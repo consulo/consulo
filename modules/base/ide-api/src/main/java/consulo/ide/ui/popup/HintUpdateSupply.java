@@ -101,7 +101,7 @@ public abstract class HintUpdateSupply {
   protected void installTableListener(@Nonnull final JTable table) {
     ListSelectionListener listener = new ListSelectionListener() {
       @Override
-      public void valueChanged(final ListSelectionEvent e) {
+      public void valueChanged(ListSelectionEvent e) {
         if (!isHintVisible(HintUpdateSupply.this.myHint) || isSelectedByMouse(table)) return;
 
         int selected = ((ListSelectionModel)e.getSource()).getLeadSelectionIndex();
@@ -121,12 +121,12 @@ public abstract class HintUpdateSupply {
   protected void installTreeListener(@Nonnull final JTree tree) {
     tree.addTreeSelectionListener(new TreeSelectionListener() {
       @Override
-      public void valueChanged(final TreeSelectionEvent e) {
+      public void valueChanged(TreeSelectionEvent e) {
         if (!isHintVisible(HintUpdateSupply.this.myHint) || isSelectedByMouse(tree)) return;
 
         TreePath path = tree.getSelectionPath();
         if (path != null) {
-          final PsiElement psiElement = getPsiElementForHint(path.getLastPathComponent());
+          PsiElement psiElement = getPsiElementForHint(path.getLastPathComponent());
           if (psiElement != null && psiElement.isValid()) {
             updateHint(psiElement);
           }
@@ -138,7 +138,7 @@ public abstract class HintUpdateSupply {
   protected void installListListener(@Nonnull final JList list) {
     list.addListSelectionListener(new ListSelectionListener() {
       @Override
-      public void valueChanged(final ListSelectionEvent e) {
+      public void valueChanged(ListSelectionEvent e) {
         if (!isHintVisible(HintUpdateSupply.this.myHint) || isSelectedByMouse(list)) return;
 
         Object[] selectedValues = ((JList)e.getSource()).getSelectedValues();

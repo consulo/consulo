@@ -54,11 +54,11 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   private String myAdText;
   private final MergingUpdateQueue myRepaintQueue = new MergingUpdateQueue("ChooseByNamePopup repaint", 50, true, myList, this);
 
-  protected ChooseByNamePopup(@Nullable final Project project,
+  protected ChooseByNamePopup(@Nullable Project project,
                               @Nonnull ChooseByNameModel model,
                               @Nonnull ChooseByNameItemProvider provider,
                               @Nullable ChooseByNamePopup oldPopup,
-                              @Nullable final String predefinedText,
+                              @Nullable String predefinedText,
                               boolean mayRequestOpenInCurrentWindow,
                               int initialIndex) {
     super(project, model, provider, oldPopup != null ? oldPopup.getEnteredText() : predefinedText, initialIndex);
@@ -79,7 +79,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   }
 
   @Override
-  protected void initUI(final Callback callback, final ModalityState modalityState, boolean allowMultipleSelection) {
+  protected void initUI(Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
     super.initUI(callback, modalityState, allowMultipleSelection);
     if (myOldPopup != null) {
       myTextField.setCaretPosition(myOldPopup.myTextField.getCaretPosition());
@@ -137,12 +137,12 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     ListModel<Object> model = myList.getModel();
     if (model == null || model.getSize() == 0) return;
 
-    final JLayeredPane layeredPane = myTextField.getRootPane().getLayeredPane();
+    JLayeredPane layeredPane = myTextField.getRootPane().getLayeredPane();
 
     Point location = layeredPane.getLocationOnScreen();
     location.y += layeredPane.getHeight();
 
-    final Dimension preferredScrollPaneSize = myListScrollPane.getPreferredSize();
+    Dimension preferredScrollPaneSize = myListScrollPane.getPreferredSize();
     preferredScrollPaneSize.width = Math.max(myTextFieldPanel.getWidth(), preferredScrollPaneSize.width);
 
     // in 'focus follows mouse' mode, to avoid focus escaping to editor, don't reduce popup size when list size is reduced
@@ -194,14 +194,14 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   }
 
   @Override
-  public void close(final boolean isOk) {
+  public void close(boolean isOk) {
     if (checkDisposed()) {
       return;
     }
 
     myModel.saveInitialCheckBoxState(myCheckBox.getValueOrError());
     if (isOk) {
-      final List<Object> chosenElements = getChosenElements();
+      List<Object> chosenElements = getChosenElements();
       if (myActionListener instanceof MultiElementsCallback) {
         ((MultiElementsCallback)myActionListener).elementsChosen(chosenElements);
       }
@@ -216,13 +216,13 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
       }
 
       if (!chosenElements.isEmpty()) {
-        final String enteredText = getTrimmedText();
+        String enteredText = getTrimmedText();
         if (enteredText.indexOf('*') >= 0) {
           FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.wildcards");
         }
         else {
           for (Object element : chosenElements) {
-            final String name = myModel.getElementName(element);
+            String name = myModel.getElementName(element);
             if (name != null) {
               if (!StringUtil.startsWithIgnoreCase(name, enteredText)) {
                 FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.camelprefix");
@@ -267,35 +267,35 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     }
   }
 
-  public static ChooseByNamePopup createPopup(final Project project, final ChooseByNameModel model, final PsiElement context) {
+  public static ChooseByNamePopup createPopup(Project project, ChooseByNameModel model, PsiElement context) {
     return createPopup(project, model, ChooseByNameModelEx.getItemProvider(model, context), null);
   }
 
-  public static ChooseByNamePopup createPopup(final Project project, final ChooseByNameModel model, final PsiElement context, @Nullable final String predefinedText) {
+  public static ChooseByNamePopup createPopup(Project project, ChooseByNameModel model, PsiElement context, @Nullable String predefinedText) {
     return createPopup(project, model, ChooseByNameModelEx.getItemProvider(model, context), predefinedText, false, 0);
   }
 
-  public static ChooseByNamePopup createPopup(final Project project, final ChooseByNameModel model, final PsiElement context,
-                                              @Nullable final String predefinedText,
-                                              boolean mayRequestOpenInCurrentWindow, final int initialIndex) {
+  public static ChooseByNamePopup createPopup(Project project, ChooseByNameModel model, PsiElement context,
+                                              @Nullable String predefinedText,
+                                              boolean mayRequestOpenInCurrentWindow, int initialIndex) {
     return createPopup(project, model, ChooseByNameModelEx.getItemProvider(model, context), predefinedText, mayRequestOpenInCurrentWindow, initialIndex);
   }
 
-  public static ChooseByNamePopup createPopup(final Project project, @Nonnull ChooseByNameModel model, @Nonnull ChooseByNameItemProvider provider) {
+  public static ChooseByNamePopup createPopup(Project project, @Nonnull ChooseByNameModel model, @Nonnull ChooseByNameItemProvider provider) {
     return createPopup(project, model, provider, null);
   }
 
-  public static ChooseByNamePopup createPopup(final Project project, @Nonnull ChooseByNameModel model, @Nonnull ChooseByNameItemProvider provider, @Nullable final String predefinedText) {
+  public static ChooseByNamePopup createPopup(Project project, @Nonnull ChooseByNameModel model, @Nonnull ChooseByNameItemProvider provider, @Nullable String predefinedText) {
     return createPopup(project, model, provider, predefinedText, false, 0);
   }
 
-  public static ChooseByNamePopup createPopup(final Project project,
-                                              @Nonnull final ChooseByNameModel model,
+  public static ChooseByNamePopup createPopup(Project project,
+                                              @Nonnull ChooseByNameModel model,
                                               @Nonnull ChooseByNameItemProvider provider,
-                                              @Nullable final String predefinedText,
+                                              @Nullable String predefinedText,
                                               boolean mayRequestOpenInCurrentWindow,
-                                              final int initialIndex) {
-    final ChooseByNamePopup oldPopup = project == null ? null : project.getUserData(CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY);
+                                              int initialIndex) {
+    ChooseByNamePopup oldPopup = project == null ? null : project.getUserData(CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY);
     if (oldPopup != null) {
       oldPopup.close(false);
     }
@@ -322,7 +322,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   @Nonnull
   @Override
   public String transformPattern(@Nonnull String pattern) {
-    final ChooseByNameModel model = getModel();
+    ChooseByNameModel model = getModel();
     return getTransformedPattern(pattern, model);
   }
 
@@ -346,7 +346,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     }
 
     if (regex != null) {
-      final Matcher matcher = regex.matcher(pattern);
+      Matcher matcher = regex.matcher(pattern);
       if (matcher.matches()) {
         pattern = matcher.group(1);
       }
@@ -363,13 +363,13 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     return getLineOrColumn(true);
   }
 
-  private int getLineOrColumn(final boolean line) {
-    final Matcher matcher = patternToDetectLinesAndColumns.matcher(getTrimmedText());
+  private int getLineOrColumn(boolean line) {
+    Matcher matcher = patternToDetectLinesAndColumns.matcher(getTrimmedText());
     if (matcher.matches()) {
-      final int groupNumber = line ? 2 : 3;
+      int groupNumber = line ? 2 : 3;
       try {
         if (groupNumber <= matcher.groupCount()) {
-          final String group = matcher.group(groupNumber);
+          String group = matcher.group(groupNumber);
           if (group != null) return Integer.parseInt(group) - 1;
         }
         if (!line && getLineOrColumn(true) != -1) return 0;
@@ -393,8 +393,8 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
 
   @Nullable
   public String getMemberPattern() {
-    final String enteredText = getTrimmedText();
-    final int index = enteredText.lastIndexOf('#');
+    String enteredText = getTrimmedText();
+    int index = enteredText.lastIndexOf('#');
     if (index == -1) {
       return null;
     }
@@ -414,7 +414,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     return myAdText;
   }
 
-  public void setAdText(final String adText) {
+  public void setAdText(String adText) {
     myAdText = adText;
   }
 
@@ -423,7 +423,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   }
 
   public Object getSelectionByPoint(Point point) {
-    final int index = myList.locationToIndex(point);
+    int index = myList.locationToIndex(point);
     return index > -1 ? myList.getModel().getElementAt(index) : null;
   }
 

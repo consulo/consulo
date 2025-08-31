@@ -36,14 +36,14 @@ import java.util.List;
  * @since 2006-11-02
  */
 public class RollbackDeletionAction extends AbstractMissingFilesAction {
-  protected List<VcsException> processFiles(final AbstractVcs vcs, final List<FilePath> files) {
+  protected List<VcsException> processFiles(AbstractVcs vcs, List<FilePath> files) {
     RollbackEnvironment environment = vcs.getRollbackEnvironment();
     if (environment == null) return Collections.emptyList();
-    final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator != null) {
       indicator.setText(vcs.getDisplayName() + ": performing rollback...");
     }
-    final List<VcsException> result = new ArrayList<VcsException>(0);
+    List<VcsException> result = new ArrayList<VcsException>(0);
     try {
       environment.rollbackMissingFileDeletion(files, result, new RollbackProgressModifier(files.size(), indicator));
     }

@@ -45,7 +45,7 @@ public class XDebuggerEditBreakpointActionHandler extends EditBreakpointActionHa
         if (editor == null) {
             return false;
         }
-        final Pair<GutterIconRenderer, Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);
+        Pair<GutterIconRenderer, Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);
         return pair.first != null && pair.second instanceof XLineBreakpointImpl;
     }
 }

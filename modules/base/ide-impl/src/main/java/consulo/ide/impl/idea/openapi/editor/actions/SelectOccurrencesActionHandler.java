@@ -44,9 +44,9 @@ abstract public class SelectOccurrencesActionHandler extends EditorActionHandler
     }
 
     @RequiredUIAccess
-    protected static void showHint(final Editor editor) {
+    protected static void showHint(Editor editor) {
         LocalizeValue message = FindLocalize.selectNextOccurenceNotFoundMessage();
-        final LightweightHintImpl hint = new LightweightHintImpl(HintUtil.createInformationLabel(message.get()));
+        LightweightHintImpl hint = new LightweightHintImpl(HintUtil.createInformationLabel(message.get()));
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,
             editor,

@@ -150,7 +150,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
    * @return {@code true} if general postfix templates setting is enabled and this template is enabled in settings
    */
   public boolean isEnabled(PostfixTemplateProvider provider) {
-    final PostfixTemplatesSettings settings = PostfixTemplatesSettings.getInstance();
+    PostfixTemplatesSettings settings = PostfixTemplatesSettings.getInstance();
     return settings.isPostfixTemplatesEnabled() && settings.isTemplateEnabled(this, provider);
   }
 

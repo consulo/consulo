@@ -68,7 +68,7 @@ public abstract class SyntaxHighlighterBase implements SyntaxHighlighter {
    * @deprecated use safeMap() instead
    */
   @Deprecated
-  protected static void fillMap(final Map<IElementType, TextAttributesKey> map, final TextAttributesKey value, final IElementType... types) {
+  protected static void fillMap(Map<IElementType, TextAttributesKey> map, TextAttributesKey value, IElementType... types) {
     for (int i = 0; i < types.length; i++) {
       map.put(types[i], value);
     }
@@ -79,11 +79,11 @@ public abstract class SyntaxHighlighterBase implements SyntaxHighlighter {
    * Throws error if the map already contains different mapping for one of given keys.
    */
   protected static void safeMap(
-    @Nonnull final Map<IElementType, TextAttributesKey> map,
-    @Nonnull final TokenSet keys,
-    @Nonnull final TextAttributesKey value)
+    @Nonnull Map<IElementType, TextAttributesKey> map,
+    @Nonnull TokenSet keys,
+    @Nonnull TextAttributesKey value)
   {
-    for (final IElementType type : keys.getTypes()) {
+    for (IElementType type : keys.getTypes()) {
       safeMap(map, type, value);
     }
   }
@@ -93,11 +93,11 @@ public abstract class SyntaxHighlighterBase implements SyntaxHighlighter {
    * Throws error if the map already contains different mapping for given key.
    */
   protected static void safeMap(
-    @Nonnull final Map<IElementType, TextAttributesKey> map,
-    @Nonnull final IElementType type,
-    @Nonnull final TextAttributesKey value)
+    @Nonnull Map<IElementType, TextAttributesKey> map,
+    @Nonnull IElementType type,
+    @Nonnull TextAttributesKey value)
   {
-    final TextAttributesKey oldVal = map.put(type, value);
+    TextAttributesKey oldVal = map.put(type, value);
     if (oldVal != null && !oldVal.equals(value)) {
       LOG.error("Remapping highlighting for \"" + type + "\" val: old=" + oldVal + " new=" + value);
     }

@@ -37,7 +37,7 @@ public class DelayedNotificator implements ChangeListListener {
     myScheduler = scheduler;
   }
 
-  public void callNotify(final ChangeListCommand command) {
+  public void callNotify(ChangeListCommand command) {
     myScheduler.submit(() -> {
       try {
         command.doNotify(myDispatcher);
@@ -49,47 +49,47 @@ public class DelayedNotificator implements ChangeListListener {
   }
 
   @Override
-  public void changeListAdded(final ChangeList list) {
+  public void changeListAdded(ChangeList list) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().changeListAdded(list));
   }
 
   @Override
-  public void changesRemoved(final Collection<Change> changes, final ChangeList fromList) {
+  public void changesRemoved(Collection<Change> changes, ChangeList fromList) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().changesRemoved(changes, fromList));
   }
 
   @Override
-  public void changesAdded(final Collection<Change> changes, final ChangeList toList) {
+  public void changesAdded(Collection<Change> changes, ChangeList toList) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().changesAdded(changes, toList));
   }
 
   @Override
-  public void changeListRemoved(final ChangeList list) {
+  public void changeListRemoved(ChangeList list) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().changeListRemoved(list));
   }
 
   @Override
-  public void changeListChanged(final ChangeList list) {
+  public void changeListChanged(ChangeList list) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().changeListChanged(list));
   }
 
   @Override
-  public void changeListRenamed(final ChangeList list, final String oldName) {
+  public void changeListRenamed(ChangeList list, String oldName) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().changeListRenamed(list, oldName));
   }
 
   @Override
-  public void changeListCommentChanged(final ChangeList list, final String oldComment) {
+  public void changeListCommentChanged(ChangeList list, String oldComment) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().changeListCommentChanged(list, oldComment));
   }
 
   @Override
-  public void changesMoved(final Collection<Change> changes, final ChangeList fromList, final ChangeList toList) {
+  public void changesMoved(Collection<Change> changes, ChangeList fromList, ChangeList toList) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().changesMoved(changes, fromList, toList));
   }
 
   @Override
-  public void defaultListChanged(final ChangeList oldDefaultList, final ChangeList newDefaultList) {
+  public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
     myScheduler.submit(() -> myDispatcher.getMulticaster().defaultListChanged(oldDefaultList, newDefaultList));
   }
 

@@ -40,7 +40,7 @@ public abstract class ExtendWordSelectionHandlerBase implements ExtendWordSelect
 
   @Override
   public List<TextRange> select(PsiElement e, CharSequence editorText, int cursorOffset, Editor editor) {
-    final TextRange originalRange = e.getTextRange();
+    TextRange originalRange = e.getTextRange();
     LOG.assertTrue(originalRange.getEndOffset() <= editorText.length(), getClass() + "; " + e);
 
     List<TextRange> ranges = expandToWholeLine(editorText, originalRange, true);

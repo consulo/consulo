@@ -98,7 +98,7 @@ public class ProxyTest extends Assert {
   private abstract static class Implementation implements Interface2 {
     private String myField;
 
-    protected Implementation(final String field) {
+    protected Implementation(String field) {
       myField = field;
     }
 
@@ -106,7 +106,7 @@ public class ProxyTest extends Assert {
       return myField;
     }
 
-    public void setField(final String field) {
+    public void setField(String field) {
       myField = field;
     }
 
@@ -128,7 +128,7 @@ public class ProxyTest extends Assert {
   @Test
   @Ignore
   public void testAddInterfaces() throws Throwable {
-    final BaseImpl proxy = AdvancedProxyBuilder.create(BaseImpl.class).withInterfaces(BaseIEx.class).withInvocationHandler((proxy1, method, args) -> "a").build();
+    BaseImpl proxy = AdvancedProxyBuilder.create(BaseImpl.class).withInterfaces(BaseIEx.class).withInvocationHandler((proxy1, method, args) -> "a").build();
     Assert.assertEquals(proxy.sayA(), "a");
     Assert.assertEquals(((BaseI)proxy).sayA(), "a");
     Assert.assertEquals(((BaseIEx)proxy).sayA(), "a");
@@ -160,7 +160,7 @@ public class ProxyTest extends Assert {
 
   @Test
   public void testCovariantFromInterface() throws Throwable {
-    final AbstractBase.AbstractBaseImpl proxy =
+    AbstractBase.AbstractBaseImpl proxy =
             AdvancedProxyBuilder.<AbstractBase.AbstractBaseImpl>create(AbstractBase.AbstractBaseImpl.class).withInvocationHandler((proxy1, method, args) -> "a").build();
 
     Assert.assertEquals(proxy.sayA(), "a");
@@ -188,7 +188,7 @@ public class ProxyTest extends Assert {
   @Test
   @Ignore
   public void testCovariantFromBaseClass() throws Throwable {
-    final CovariantFromBaseClassTest.Impl proxy =
+    CovariantFromBaseClassTest.Impl proxy =
             AdvancedProxyBuilder.<CovariantFromBaseClassTest.Impl>create(CovariantFromBaseClassTest.Impl.class).withInvocationHandler((proxy1, method, args) -> "a").withInterceptObjectMethods(false)
                     .build();
 

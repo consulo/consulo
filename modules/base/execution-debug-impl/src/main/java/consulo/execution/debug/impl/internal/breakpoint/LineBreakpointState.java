@@ -34,8 +34,8 @@ public class LineBreakpointState<P extends XBreakpointProperties> extends Breakp
   public LineBreakpointState() {
   }
 
-  public LineBreakpointState(final boolean enabled, final String typeId, final String fileUrl, final int line, boolean temporary,
-                             final long timeStamp, final SuspendPolicy suspendPolicy) {
+  public LineBreakpointState(boolean enabled, String typeId, String fileUrl, int line, boolean temporary,
+                             long timeStamp, SuspendPolicy suspendPolicy) {
     super(enabled, typeId, timeStamp, suspendPolicy);
     myFileUrl = fileUrl;
     myLine = line;
@@ -47,7 +47,7 @@ public class LineBreakpointState<P extends XBreakpointProperties> extends Breakp
     return myFileUrl;
   }
 
-  public void setFileUrl(final String fileUrl) {
+  public void setFileUrl(String fileUrl) {
     myFileUrl = fileUrl;
   }
 
@@ -56,7 +56,7 @@ public class LineBreakpointState<P extends XBreakpointProperties> extends Breakp
     return myLine;
   }
 
-  public void setLine(final int line) {
+  public void setLine(int line) {
     myLine = line;
   }
 
@@ -69,7 +69,7 @@ public class LineBreakpointState<P extends XBreakpointProperties> extends Breakp
   }
 
   @Override
-  public XBreakpointBase<XLineBreakpoint<P>,P, ?> createBreakpoint(@Nonnull final XLineBreakpointType<P> type, @Nonnull XBreakpointManagerImpl breakpointManager) {
+  public XBreakpointBase<XLineBreakpoint<P>,P, ?> createBreakpoint(@Nonnull XLineBreakpointType<P> type, @Nonnull XBreakpointManagerImpl breakpointManager) {
     return new XLineBreakpointImpl<>(type, breakpointManager, this);
   }
 }

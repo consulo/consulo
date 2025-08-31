@@ -50,30 +50,30 @@ public class EditInjectionSettingsAction implements IntentionAction, LowPriority
 
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-        final int offset = editor.getCaretModel().getOffset();
-        final PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
+        int offset = editor.getCaretModel().getOffset();
+        PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
         if (psiFile == null) {
             return false;
         }
-        final LanguageInjectionSupport support = psiFile.getUserData(LanguageInjectionSupport.SETTINGS_EDITOR);
+        LanguageInjectionSupport support = psiFile.getUserData(LanguageInjectionSupport.SETTINGS_EDITOR);
         return support != null;
     }
 
     @Override
-    public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         project.getApplication().runReadAction(() -> invokeImpl(project, editor, file));
     }
 
     private static void invokeImpl(Project project, Editor editor, PsiFile file) {
-        final PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
+        PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
         if (psiFile == null) {
             return;
         }
-        final PsiLanguageInjectionHost host = InjectedLanguageManager.getInstance(project).getInjectionHost(psiFile);
+        PsiLanguageInjectionHost host = InjectedLanguageManager.getInstance(project).getInjectionHost(psiFile);
         if (host == null) {
             return;
         }
-        final LanguageInjectionSupport support = psiFile.getUserData(LanguageInjectionSupport.SETTINGS_EDITOR);
+        LanguageInjectionSupport support = psiFile.getUserData(LanguageInjectionSupport.SETTINGS_EDITOR);
         if (support == null) {
             return;
         }

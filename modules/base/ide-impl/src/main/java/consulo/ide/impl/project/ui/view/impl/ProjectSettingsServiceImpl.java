@@ -63,14 +63,14 @@ public class ProjectSettingsServiceImpl extends ProjectSettingsService {
 
   @Override
   @RequiredUIAccess
-  public void openModuleSettings(final Module module) {
+  public void openModuleSettings(Module module) {
     Project project = module.getProject();
     myShowSettingsUtil.showProjectStructureDialog(project, config -> config.select(module.getName(), null, true));
   }
 
   @Override
   @RequiredUIAccess
-  public void openModuleLibrarySettings(final Module module) {
+  public void openModuleLibrarySettings(Module module) {
     myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
                                                   config -> config.select(module.getName(),
                                                                           ProjectBundle.message("modules.classpath.title"),
@@ -79,7 +79,7 @@ public class ProjectSettingsServiceImpl extends ProjectSettingsService {
 
   @Override
   @RequiredUIAccess
-  public void openContentEntriesSettings(final Module module) {
+  public void openContentEntriesSettings(Module module) {
     myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
                                                   config -> config.select(module.getName(),
                                                                           ProjectBundle.message("module.paths.title"),
@@ -95,7 +95,7 @@ public class ProjectSettingsServiceImpl extends ProjectSettingsService {
   @Override
   @RequiredUIAccess
   @SuppressWarnings("unchecked")
-  public void openLibraryOrSdkSettings(final @Nonnull OrderEntry orderEntry) {
+  public void openLibraryOrSdkSettings(@Nonnull OrderEntry orderEntry) {
     OrderEntryType type = orderEntry.getType();
 
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());

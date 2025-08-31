@@ -201,7 +201,7 @@ public class EditorFragmentComponent extends JPanel {
       y = Math.max(0, y);
     }
 
-    final JComponent c = editor.getComponent();
+    JComponent c = editor.getComponent();
     int x = SwingUtilities.convertPoint(c, new Point(JBUIScale.scale(-3), 0), UIUtil.getRootPane(c)).x; //IDEA-68016
 
     LightweightHintImpl currentHint = SoftReference.dereference(editor.getUserData(CURRENT_HINT));
@@ -259,8 +259,8 @@ public class EditorFragmentComponent extends JPanel {
     boolean showGutter,
     boolean useCaretRowBackground
   ) {
-    final EditorEx editorEx = (EditorEx)editor;
-    final ColorValue old = editorEx.getBackgroundColor();
+    EditorEx editorEx = (EditorEx)editor;
+    ColorValue old = editorEx.getBackgroundColor();
     ColorValue backColor = getBackgroundColor(editor, useCaretRowBackground);
     editorEx.setBackgroundColor(backColor);
     EditorFragmentComponent fragmentComponent = new EditorFragmentComponent(component, editorEx, startLine, endLine, showFolding, showGutter);

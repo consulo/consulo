@@ -70,7 +70,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
     validationParent.remove(parent);
   }
 
-  protected AbstractExpandableItemsHandler(@Nonnull final ComponentType component) {
+  protected AbstractExpandableItemsHandler(@Nonnull ComponentType component) {
     myComponent = component;
     myComponent.add(myRendererPane);
     myComponent.validate();
@@ -274,7 +274,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
 
   private static boolean isHintsAllowed(Window window) {
     if (window instanceof RootPaneContainer rootPaneContainer) {
-      final JRootPane pane = rootPaneContainer.getRootPane();
+      JRootPane pane = rootPaneContainer.getRootPane();
       if (pane != null) {
         return Boolean.TRUE.equals(pane.getClientProperty(AbstractPopup.SHOW_HINTS));
       }
@@ -401,7 +401,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
     return JBColor.border();
   }
 
-  protected Dimension getImageSize(final int width, final int height) {
+  protected Dimension getImageSize(int width, int height) {
     return new Dimension(width, height);
   }
 

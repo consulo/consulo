@@ -29,14 +29,14 @@ public class IncomingChangeState {
   private final String myRevision;
   private final State myState;
 
-  public IncomingChangeState(final Change change, final String revision, State state) {
+  public IncomingChangeState(Change change, String revision, State state) {
     myRevision = revision;
     myStatus = change.getFileStatus();
     myPath = ChangesUtil.getFilePath(change);
     myState = state;
   }
 
-  public static void header(final String location) {
+  public static void header(String location) {
     INCOMING_LOG.debug("[------------- " + location + " --------------]");
   }
 
@@ -76,7 +76,7 @@ public class IncomingChangeState {
     private final String myName;
     private final int myCode;
 
-    private State(final String name, final boolean accounted, final int code) {
+    private State(String name, boolean accounted, int code) {
       myName = name;
       myAccounted = accounted;
       myCode = code;

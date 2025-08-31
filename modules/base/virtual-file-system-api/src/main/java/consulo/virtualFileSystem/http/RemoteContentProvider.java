@@ -29,7 +29,7 @@ public abstract class RemoteContentProvider {
 
   public abstract boolean canProvideContent(@Nonnull String url);
 
-  public abstract void saveContent(final String url, @Nonnull File targetFile, @Nonnull DownloadingCallback callback);
+  public abstract void saveContent(String url, @Nonnull File targetFile, @Nonnull DownloadingCallback callback);
 
   public abstract boolean isUpToDate(@Nonnull String url, @Nonnull VirtualFile local);
 

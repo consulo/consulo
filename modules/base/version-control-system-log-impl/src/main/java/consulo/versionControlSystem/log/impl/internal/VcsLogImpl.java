@@ -78,7 +78,7 @@ public class VcsLogImpl implements VcsLog {
 
   @Nonnull
   @Override
-  public Future<Boolean> jumpToReference(final String reference) {
+  public Future<Boolean> jumpToReference(String reference) {
     SettableFuture<Boolean> future = SettableFuture.create();
     VcsLogRefs refs = myUi.getDataPack().getRefs();
     ApplicationManager.getApplication().executeOnPooledThread(() -> {

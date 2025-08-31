@@ -36,13 +36,13 @@ import java.util.List;
 public class SdkOrLibraryWeigher extends ProximityWeigher {
 
   @Override
-  public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
+  public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
     Project project = location.getProject();
     return project == null ? null : isSdkElement(element, project);
   }
 
-  public static boolean isSdkElement(PsiElement element, @Nonnull final Project project) {
-    final VirtualFile file = PsiUtilCore.getVirtualFile(element);
+  public static boolean isSdkElement(PsiElement element, @Nonnull Project project) {
+    VirtualFile file = PsiUtilCore.getVirtualFile(element);
     if (file != null) {
       List<OrderEntry> orderEntries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
       if (!orderEntries.isEmpty() && orderEntries.get(0) instanceof ModuleExtensionWithSdkOrderEntry) {

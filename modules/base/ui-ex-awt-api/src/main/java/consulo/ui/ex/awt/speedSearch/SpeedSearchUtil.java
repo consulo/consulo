@@ -49,7 +49,7 @@ public final class SpeedSearchUtil {
   }
 
   public static void appendColoredFragmentForMatcher(@Nonnull String text, ColoredTextContainer component,
-                                                     @Nonnull final SimpleTextAttributes attributes,
+                                                     @Nonnull SimpleTextAttributes attributes,
                                                      Matcher matcher,
                                                      Color selectedBg,
                                                      boolean selected) {
@@ -58,12 +58,12 @@ public final class SpeedSearchUtil {
       return;
     }
 
-    final Iterable<MatcherTextRange> iterable = ((MinusculeMatcher)matcher).matchingFragments(text);
+    Iterable<MatcherTextRange> iterable = ((MinusculeMatcher)matcher).matchingFragments(text);
     if (iterable != null) {
-      final Color fg = attributes.getFgColor();
-      final int style = attributes.getStyle();
-      final SimpleTextAttributes plain = new SimpleTextAttributes(style, fg);
-      final SimpleTextAttributes highlighted = new SimpleTextAttributes(selectedBg, fg, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH);
+      Color fg = attributes.getFgColor();
+      int style = attributes.getStyle();
+      SimpleTextAttributes plain = new SimpleTextAttributes(style, fg);
+      SimpleTextAttributes highlighted = new SimpleTextAttributes(selectedBg, fg, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH);
       appendColoredFragments(component, text, iterable, plain, highlighted);
     }
     else {
@@ -71,11 +71,11 @@ public final class SpeedSearchUtil {
     }
   }
 
-  public static void appendColoredFragments(final ColoredTextContainer simpleColoredComponent,
-                                            final String text,
+  public static void appendColoredFragments(ColoredTextContainer simpleColoredComponent,
+                                            String text,
                                             Iterable<MatcherTextRange> colored,
-                                            final SimpleTextAttributes plain,
-                                            final SimpleTextAttributes highlighted) {
+                                            SimpleTextAttributes plain,
+                                            SimpleTextAttributes highlighted) {
     SpeedSearchUtilBase.appendColoredFragments(simpleColoredComponent, text, colored, plain, highlighted);
   }
 

@@ -52,7 +52,7 @@ public class RefactoringTransactionImpl implements RefactoringTransaction {
     ArrayList<RefactoringElementListener> listenerList = new ArrayList<>();
     for (RefactoringElementListenerProvider provider : myListenerProviders) {
       try {
-        final RefactoringElementListener listener = provider.getListener(oldElement);
+        RefactoringElementListener listener = provider.getListener(oldElement);
         if (listener != null) {
           listenerList.add(listener);
         }

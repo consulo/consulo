@@ -65,7 +65,7 @@ public class PathEditor {
   private final FileChooserDescriptor myDescriptor;
   private VirtualFile myAddBaseDir;
 
-  public PathEditor(final FileChooserDescriptor descriptor) {
+  public PathEditor(FileChooserDescriptor descriptor) {
     myDescriptor = descriptor;
     myDescriptor.putUserData(FileChooserDialog.PREFER_LAST_OVER_TO_SELECT, Boolean.TRUE);
     myModel = createListModel();
@@ -88,11 +88,11 @@ public class PathEditor {
   }
 
   public VirtualFile[] getRoots() {
-    final int count = getRowCount();
+    int count = getRowCount();
     if (count == 0) {
       return VirtualFile.EMPTY_ARRAY;
     }
-    final VirtualFile[] roots = new VirtualFile[count];
+    VirtualFile[] roots = new VirtualFile[count];
     for (int i = 0; i < count; i++) {
       roots[i] = getValueAt(i);
     }
@@ -124,7 +124,7 @@ public class PathEditor {
       ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myList)
         .disableUpDownActions()
         .setAddAction(button-> {
-          final VirtualFile[] added = doAdd();
+          VirtualFile[] added = doAdd();
           if (added.length > 0) {
             setModified(true);
           }
@@ -201,7 +201,7 @@ public class PathEditor {
    * @param files     a selected file set
    * @return adjusted file set
    */
-  protected VirtualFile[] adjustAddedFileSet(final Component component, final VirtualFile[] files) {
+  protected VirtualFile[] adjustAddedFileSet(Component component, VirtualFile[] files) {
     return files;
   }
 
@@ -219,7 +219,7 @@ public class PathEditor {
   public void addPaths(VirtualFile... paths) {
     boolean added = false;
     keepSelectionState();
-    for (final VirtualFile path : paths) {
+    for (VirtualFile path : paths) {
       if (addElement(path)) {
         added = true;
       }
@@ -230,16 +230,16 @@ public class PathEditor {
   }
 
   public void removePaths(VirtualFile... paths) {
-    final Set<VirtualFile> pathsSet = new HashSet<>(Arrays.asList(paths));
+    Set<VirtualFile> pathsSet = new HashSet<>(Arrays.asList(paths));
     int size = getRowCount();
-    final IntList indicesToRemove = IntLists.newArrayList(paths.length);
+    IntList indicesToRemove = IntLists.newArrayList(paths.length);
     for (int idx = 0; idx < size; idx++) {
       VirtualFile path = getValueAt(idx);
       if (pathsSet.contains(path)) {
         indicesToRemove.add(idx);
       }
     }
-    final List list = ListUtil.removeIndices(myList, indicesToRemove.toArray());
+    List list = ListUtil.removeIndices(myList, indicesToRemove.toArray());
     itemsRemoved(list);
   }
 
@@ -286,7 +286,7 @@ public class PathEditor {
   }
 
   private void keepSelectionState() {
-    final Object[] selectedItems = getSelectedRoots();
+    Object[] selectedItems = getSelectedRoots();
 
     SwingUtilities.invokeLater(() -> {
       if (selectedItems != null) {
@@ -314,7 +314,7 @@ public class PathEditor {
   }
 
   @Nullable
-  private static FileType findFileType(final VirtualFile file) {
+  private static FileType findFileType(VirtualFile file) {
     return Application.get().runReadAction((Supplier<FileType>)() -> {
       VirtualFile tempFile = file;
       if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
@@ -335,7 +335,7 @@ public class PathEditor {
    */
   private static consulo.ui.image.Image getIconForRoot(Object projectRoot) {
     if (projectRoot instanceof VirtualFile) {
-      final VirtualFile file = (VirtualFile)projectRoot;
+      VirtualFile file = (VirtualFile)projectRoot;
       if (!file.isValid()) {
         return AllIcons.Nodes.PpInvalid;
       }
@@ -361,7 +361,7 @@ public class PathEditor {
   }
 
   private final class MyCellRenderer extends DefaultListCellRenderer {
-    private String getPresentableString(final Object value) {
+    private String getPresentableString(Object value) {
       return Application.get().runReadAction((Supplier<String>)() -> {
         //noinspection HardCodedStringLiteral
         return (value instanceof VirtualFile virtualFile) ? virtualFile.getPresentableUrl() : "UNKNOWN OBJECT";

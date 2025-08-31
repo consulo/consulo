@@ -214,7 +214,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * @return the analyzer for the current settings
      */
     public ModuleDependenciesAnalyzer getAnalyzer() {
-        final Pair<ClasspathType, Boolean> key = Pair.create(getClasspathType(), mySettings.isSdkIncluded());
+        Pair<ClasspathType, Boolean> key = Pair.create(getClasspathType(), mySettings.isSdkIncluded());
         ModuleDependenciesAnalyzer a = myClasspaths.get(key);
         if (a == null) {
             a = new ModuleDependenciesAnalyzer(myModule, !mySettings.isTest(), !mySettings.isRuntime(), mySettings.isSdkIncluded());
@@ -258,14 +258,14 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
-            final Module module = e.getData(Module.KEY);
+            Module module = e.getData(Module.KEY);
             if (module == null) {
                 return;
             }
-            final ModuleDependenciesAnalyzer.OrderPathElement element = e.getData(ORDER_PATH_ELEMENT_KEY);
+            ModuleDependenciesAnalyzer.OrderPathElement element = e.getData(ORDER_PATH_ELEMENT_KEY);
             if (element != null && element instanceof ModuleDependenciesAnalyzer.OrderEntryPathElement o) {
-                final OrderEntry entry = o.entry();
-                final Module m = entry.getOwnerModule();
+                OrderEntry entry = o.entry();
+                Module m = entry.getOwnerModule();
 
                 ShowSettingsUtil.getInstance().showProjectStructureDialog(
                     m.getProject(),
@@ -321,7 +321,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             myExplanationTree.setCellRenderer(new ExplanationTreeRenderer());
             DataManager.registerDataProvider(myExplanationTree, this);
             TreeUtil.expandAll(myExplanationTree);
-            final NavigateAction navigateAction = new NavigateAction();
+            NavigateAction navigateAction = new NavigateAction();
             navigateAction.registerCustomShortcutSet(
                 new CustomShortcutSet(CommonShortcuts.DOUBLE_CLICK_1.getShortcuts()[0]),
                 myExplanationTree
@@ -406,7 +406,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          */
         @Override
         public JComponent createOptionsPanel() {
-            final JComponent tree = createTreeComponent();
+            JComponent tree = createTreeComponent();
             JPanel panel = new JPanel(new BorderLayout());
             JLabel paths = new JLabel("Available Through Paths:");
             paths.setDisplayedMnemonic('P');
@@ -488,12 +488,12 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             boolean hasFocus
         ) {
             DefaultMutableTreeNode n = (DefaultMutableTreeNode) value;
-            final Object userObject = n.getUserObject();
+            Object userObject = n.getUserObject();
             if (!(userObject instanceof ModuleDependenciesAnalyzer.OrderPathElement)) {
                 return;
             }
             ModuleDependenciesAnalyzer.OrderPathElement e = (ModuleDependenciesAnalyzer.OrderPathElement) userObject;
-            final Consumer<ColoredTextContainer> appearance = e.getRender(selected);
+            Consumer<ColoredTextContainer> appearance = e.getRender(selected);
             appearance.accept(this);
         }
     }
@@ -517,17 +517,17 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
-        public Consumer<ColoredTextContainer> getRender(boolean selected, final boolean isBold) {
+        public Consumer<ColoredTextContainer> getRender(boolean selected, boolean isBold) {
             return component -> {
                 component.setIcon(myExplanation.getIcon());
-                final Font font = UIUtil.getTreeFont();
+                Font font = UIUtil.getTreeFont();
                 if (isBold) {
                     component.setFont(font.deriveFont(Font.BOLD));
                 }
                 else {
                     component.setFont(font.deriveFont(Font.PLAIN));
                 }
-                final String p = VirtualFilePathUtil.toPresentableUrl(getEditableObject().url());
+                String p = VirtualFilePathUtil.toPresentableUrl(getEditableObject().url());
                 component.append(
                     PathUtil.getFileName(p),
                     isBold ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES
@@ -541,7 +541,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          */
         @Override
         public String getBannerSlogan() {
-            final VirtualFile f = myExplanation.getLocalFile();
+            VirtualFile f = myExplanation.getLocalFile();
             String p = f == null ? myExplanation.url() : f.getPath();
             p = suffixForBanner(p);
             return p;
@@ -575,7 +575,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * {@inheritDoc}
          */
         @Override
-        public Consumer<ColoredTextContainer> getRender(boolean selected, final boolean isBold) {
+        public Consumer<ColoredTextContainer> getRender(boolean selected, boolean isBold) {
             if (myExplanation.entry() instanceof ModuleSourceOrderEntry e) {
                 if (e.getOwnerModule() == myModule) {
                     return component -> {
@@ -599,7 +599,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
                 return prefixForBanner("Module " + e.getOwnerModule().getName());
             }
             else {
-                final String p =
+                String p =
                     myExplanation.entry().getPresentableName() + " in module " + myExplanation.entry().getOwnerModule().getName();
                 return suffixForBanner(p);
             }
@@ -711,7 +711,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
-            final Presentation presentation = e.getPresentation();
+            Presentation presentation = e.getPresentation();
             updateText(presentation);
         }
 
@@ -721,7 +721,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
          * @param presentation the presentaiton to update
          */
         private void updateText(Presentation presentation) {
-            final ClasspathType classpathType = getClasspathType();
+            ClasspathType classpathType = getClasspathType();
             String t = classpathType.getDescription();
             presentation.setText(t);
         }

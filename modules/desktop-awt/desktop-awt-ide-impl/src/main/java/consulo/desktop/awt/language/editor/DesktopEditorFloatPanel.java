@@ -35,7 +35,7 @@ public class DesktopEditorFloatPanel extends JPanel {
   }
 
   @Override
-  protected void paintChildren(final Graphics g) {
+  protected void paintChildren(Graphics g) {
     Graphics2D graphics = (Graphics2D)g.create();
     try {
       graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getChildrenOpacity()));
@@ -53,7 +53,7 @@ public class DesktopEditorFloatPanel extends JPanel {
   }
 
   @Override
-  public void paintComponent(final Graphics g) {
+  public void paintComponent(Graphics g) {
     Graphics2D graphics = (Graphics2D)g.create();
     try {
       Rectangle r = getBounds();

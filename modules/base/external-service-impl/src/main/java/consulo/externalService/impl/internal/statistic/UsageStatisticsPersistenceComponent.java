@@ -69,7 +69,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     }
 
     @Override
-    public void loadState(final Element element) {
+    public void loadState(Element element) {
         List<Element> groupsList = element.getChildren(GROUP_TAG);
         for (Element groupElement : groupsList) {
             String groupId = groupElement.getAttributeValue(GROUP_ID_ATTR);
@@ -92,7 +92,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
             setSentTime(0);
         }
 
-        final String isAllowedValue = element.getAttributeValue("allowed");
+        String isAllowedValue = element.getAttributeValue("allowed");
         // if disabled by hand - store it, anyway - left for selection of new logic
         if (!StringUtil.isEmptyOrSpaces(isAllowedValue) && !Boolean.parseBoolean(isAllowedValue)) {
             myExternalServiceConfiguration.setState(ExternalService.STATISTICS, ThreeState.NO);
@@ -157,7 +157,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     }
 
     public boolean isTimeToSend() {
-        final long timeDelta = System.currentTimeMillis() - getLastTimeSent();
+        long timeDelta = System.currentTimeMillis() - getLastTimeSent();
 
         return Math.abs(timeDelta) > getPeriod().getMillis();
     }

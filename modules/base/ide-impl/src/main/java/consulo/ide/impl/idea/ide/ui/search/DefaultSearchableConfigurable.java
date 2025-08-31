@@ -33,7 +33,7 @@ public class DefaultSearchableConfigurable implements Configurable {
   private final SearchableConfigurable myDelegate;
   private JComponent myComponent;
 
-  public DefaultSearchableConfigurable(final SearchableConfigurable delegate) {
+  public DefaultSearchableConfigurable(SearchableConfigurable delegate) {
     myDelegate = delegate;
   }
 

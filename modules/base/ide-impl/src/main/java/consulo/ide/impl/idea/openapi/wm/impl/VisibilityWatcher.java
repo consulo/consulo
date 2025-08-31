@@ -28,19 +28,19 @@ import java.beans.PropertyChangeListener;
 public abstract class VisibilityWatcher extends ComponentAdapter implements PropertyChangeListener{
   protected static final String ANCESTOR_PROPERTY_NAME = "ancestor";
 
-  public final void componentHidden(final ComponentEvent e){
+  public final void componentHidden(ComponentEvent e){
     visibilityChanged();
   }
 
-  public final void componentShown(final ComponentEvent e){
+  public final void componentShown(ComponentEvent e){
     visibilityChanged();
   }
 
-  public final void propertyChange(final PropertyChangeEvent e){
+  public final void propertyChange(PropertyChangeEvent e){
     if(ANCESTOR_PROPERTY_NAME.equals(e.getPropertyName())){
-      final Component oldAncestor=(Component)e.getOldValue();
+      Component oldAncestor=(Component)e.getOldValue();
       deinstall(oldAncestor);
-      final Component newAncestor=(Component)e.getNewValue();
+      Component newAncestor=(Component)e.getNewValue();
       install(newAncestor);
       visibilityChanged();
     }else{

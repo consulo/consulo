@@ -72,7 +72,7 @@ public class BreakpointEditor {
     public BreakpointEditor() {
         myDoneButton.addActionListener(actionEvent -> done());
 
-        final AnAction doneAction = new AnAction() {
+        AnAction doneAction = new AnAction() {
             @Override
             public void update(@Nonnull AnActionEvent e) {
                 super.update(e);

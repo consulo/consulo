@@ -77,12 +77,12 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
 
 
   @Override
-  public void setIndeterminate(final boolean indeterminate) {
+  public void setIndeterminate(boolean indeterminate) {
     if (isIndeterminate() == indeterminate) return;
     super.setIndeterminate(indeterminate);
   }
 
-  public void update(final String scanningPackagesMessage, final boolean indeterminate, final double ffraction) {
+  public void update(String scanningPackagesMessage, boolean indeterminate, double ffraction) {
     if (myPaintInQueue) return;
     checkCanceled();
     myPaintInQueue = true;
@@ -99,7 +99,7 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
     }, 10, TimeUnit.MILLISECONDS);
   }
 
-  public void setBordersVisible(final boolean visible) {
+  public void setBordersVisible(boolean visible) {
     myProgressPanel.myLeftPanel.setVisible(visible);
     myProgressPanel.myRightPanel.setVisible(visible);
   }

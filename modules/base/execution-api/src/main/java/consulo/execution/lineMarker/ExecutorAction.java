@@ -51,7 +51,7 @@ public class ExecutorAction extends AnAction {
     private static final Key<List<ConfigurationFromContext>> CONFIGURATION_CACHE = Key.create("ConfigurationFromContext");
 
     @Nonnull
-    public static AnAction[] getActions(final int order) {
+    public static AnAction[] getActions(int order) {
         return ContainerUtil.map2Array(ExecutorRegistry.getInstance().getRegisteredExecutors(), AnAction.class,
             (Function<Executor, AnAction>) executor ->
                 new ExecutorAction(ActionManager.getInstance().getAction(executor.getContextActionId()), executor, order)
@@ -93,7 +93,7 @@ public class ExecutorAction extends AnAction {
 
     @Nonnull
     private static List<ConfigurationFromContext> calcConfigurations(DataContext dataContext) {
-        final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
+        ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         if (context.getLocation() == null) {
             return Collections.emptyList();
         }

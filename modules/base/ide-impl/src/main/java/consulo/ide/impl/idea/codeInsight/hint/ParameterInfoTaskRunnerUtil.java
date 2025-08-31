@@ -46,11 +46,11 @@ class ParameterInfoTaskRunnerUtil {
     AtomicReference<CancellablePromise<?>> cancellablePromiseRef = new AtomicReference<>();
     Consumer<Boolean> stopAction = startProgressAndCreateStopAction(editor.getProject(), progressTitle, cancellablePromiseRef, editor);
 
-    final VisibleAreaListener visibleAreaListener = new CancelProgressOnScrolling(cancellablePromiseRef);
+    VisibleAreaListener visibleAreaListener = new CancelProgressOnScrolling(cancellablePromiseRef);
 
     editor.getScrollingModel().addVisibleAreaListener(visibleAreaListener);
 
-    final Component focusOwner = getFocusOwner(project);
+    Component focusOwner = getFocusOwner(project);
 
     cancellablePromiseRef.set(nonBlockingReadAction.finishOnUiThread(Application::getDefaultModalityState, continuation -> {
       CancellablePromise<?> promise = cancellablePromiseRef.get();
@@ -94,7 +94,7 @@ class ParameterInfoTaskRunnerUtil {
         @Override
         protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
           parent.setLayout(new FlowLayout(FlowLayout.LEFT));
-          final NonOpaquePanel result = new NonOpaquePanel();
+          NonOpaquePanel result = new NonOpaquePanel();
           result.add(icon);
           parent.add(result);
           return result;

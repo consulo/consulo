@@ -59,7 +59,7 @@ public interface RefEntity extends UserDataHolder {
    *
    * @param refVisitor the visitor to accept.
    */
-  void accept(final RefVisitor refVisitor);
+  void accept(RefVisitor refVisitor);
 
   /**
    * Returns a user-readable name for the element corresponding to the node.

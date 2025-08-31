@@ -248,7 +248,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         toolbar.setTargetComponent(consoleView.getComponent());
         panel.add(toolbar.getComponent(), BorderLayout.WEST);
 
-        final RunContentDescriptor descriptor = new RunContentDescriptor(consoleView, null, panel, psiFile.getName()) {
+        RunContentDescriptor descriptor = new RunContentDescriptor(consoleView, null, panel, psiFile.getName()) {
             @Override
             public boolean isContentReuseProhibited() {
                 return true;

@@ -28,7 +28,7 @@ public abstract class ActionWithTempFile {
   @NonNls private static final String TMP_PREFIX = "vcs";
   @NonNls private static final String TMP_SUFFIX = "tmp";
 
-  public ActionWithTempFile(final File sourceFile){
+  public ActionWithTempFile(File sourceFile){
     mySourceFile = sourceFile;
   }
 

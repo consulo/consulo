@@ -47,7 +47,7 @@ public abstract class SyntaxHighlighterFactory implements LanguageExtension {
    * @param virtualFile might be necessary to collect file specific settings
    * @return {@code SyntaxHighlighter} interface implementation for the given file type
    */
-  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language language, @Nullable Project project, @Nullable final VirtualFile virtualFile) {
+  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     SyntaxHighlighterFactory highlighterFactory = Application.get().getExtensionPoint(SyntaxHighlighterFactory.class).getOrBuildCache(KEY).get(language);
     assert highlighterFactory != null;
     return highlighterFactory.getSyntaxHighlighter(project, virtualFile);
@@ -64,7 +64,7 @@ public abstract class SyntaxHighlighterFactory implements LanguageExtension {
    * @return {@code SyntaxHighlighter} interface implementation for the given file type
    */
   @Nullable
-  public static SyntaxHighlighter getSyntaxHighlighter(final FileType fileType, final @Nullable Project project, final @Nullable VirtualFile virtualFile) {
+  public static SyntaxHighlighter getSyntaxHighlighter(FileType fileType, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     for (SyntaxHighlighterProvider provider : Application.get().getExtensionPoint(SyntaxHighlighterProvider.class).getExtensionList()) {
       SyntaxHighlighter highlighter = provider.create(fileType, project, virtualFile);
       if (highlighter != null) {

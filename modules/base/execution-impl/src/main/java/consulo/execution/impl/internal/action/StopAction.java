@@ -114,7 +114,7 @@ public class StopAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
+    DataContext dataContext = e.getDataContext();
     Project project = e.getData(Project.KEY);
     List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(dataContext);
     int stopCount = stoppableDescriptors.size();
@@ -224,7 +224,7 @@ public class StopAction extends DumbAwareAction {
     List<HandlerItem> items = new ArrayList<>(descriptors.size());
     HandlerItem selected = null;
     for (final RunContentDescriptor descriptor : descriptors) {
-      final ProcessHandler handler = descriptor.getProcessHandler();
+      ProcessHandler handler = descriptor.getProcessHandler();
       if (handler != null) {
         HandlerItem item = new HandlerItem(descriptor.getDisplayName(), descriptor.getIcon(), false) {
           @Override
@@ -244,14 +244,14 @@ public class StopAction extends DumbAwareAction {
 
   @Nullable
   public static RunContentDescriptor getRecentlyStartedContentDescriptor(@Nonnull DataContext dataContext) {
-    final RunContentDescriptor contentDescriptor = dataContext.getData(RunContentDescriptor.KEY);
+    RunContentDescriptor contentDescriptor = dataContext.getData(RunContentDescriptor.KEY);
     if (contentDescriptor != null) {
       // toolwindow case
       return contentDescriptor;
     }
     else {
       // main menu toolbar
-      final Project project = dataContext.getData(Project.KEY);
+      Project project = dataContext.getData(Project.KEY);
       return project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
     }
   }

@@ -23,7 +23,7 @@ public final class ValidationResult {
   private final String myTitle;
   private final Runnable myQuickFix;
 
-  public ValidationResult(final String message, final String title, final Runnable quickFix) {
+  public ValidationResult(String message, String title, Runnable quickFix) {
     myMessage = message;
     myTitle = title;
     myQuickFix = quickFix;

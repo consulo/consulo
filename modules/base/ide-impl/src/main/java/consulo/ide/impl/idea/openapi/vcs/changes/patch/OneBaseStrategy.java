@@ -42,12 +42,12 @@ class OneBaseStrategy extends AutoMatchStrategy {
       mySucceeded = false;
       return;
     }
-    final List<TextFilePatchInProgress> results = new LinkedList<>();
-    final Set<VirtualFile> keysToRemove = new HashSet<>(myVariants.keySet());
+    List<TextFilePatchInProgress> results = new LinkedList<>();
+    Set<VirtualFile> keysToRemove = new HashSet<>(myVariants.keySet());
     for (VirtualFile file : foundByName) {
-      final TextFilePatchInProgress textFilePatchInProgress = processMatch(patch, file);
+      TextFilePatchInProgress textFilePatchInProgress = processMatch(patch, file);
       if (textFilePatchInProgress != null) {
-        final VirtualFile base = textFilePatchInProgress.getBase();
+        VirtualFile base = textFilePatchInProgress.getBase();
         if (myCheckExistingVariants && (! myVariants.containsKey(base))) continue;
         keysToRemove.remove(base);
         results.add(textFilePatchInProgress);
@@ -62,7 +62,7 @@ class OneBaseStrategy extends AutoMatchStrategy {
         return;
       }
     }
-    final Collection<VirtualFile> exactMatch = filterVariants(patch, foundByName);
+    Collection<VirtualFile> exactMatch = filterVariants(patch, foundByName);
     for (TextFilePatchInProgress textFilePatchInProgress : results) {
       textFilePatchInProgress.setAutoBases(exactMatch);
       myVariants.putValue(textFilePatchInProgress.getBase(), textFilePatchInProgress);
@@ -73,7 +73,7 @@ class OneBaseStrategy extends AutoMatchStrategy {
   @Override
   public void processCreation(TextFilePatch creation) {
     if (! mySucceeded) return;
-    final TextFilePatchInProgress textFilePatchInProgress;
+    TextFilePatchInProgress textFilePatchInProgress;
     if (myVariants.isEmpty()) {
       textFilePatchInProgress = new TextFilePatchInProgress(creation, null, myBaseDir);
     } else {
@@ -93,7 +93,7 @@ class OneBaseStrategy extends AutoMatchStrategy {
     if (myVariants.size() > 1) {
       Pair<VirtualFile, Collection<TextFilePatchInProgress>> privilegedSurvivor = null;
       for (VirtualFile file : myVariants.keySet()) {
-        final Collection<TextFilePatchInProgress> patches = myVariants.get(file);
+        Collection<TextFilePatchInProgress> patches = myVariants.get(file);
         int numStrip = -1;
         boolean sameStrip = true;
         for (TextFilePatchInProgress patch : patches) {
@@ -112,7 +112,7 @@ class OneBaseStrategy extends AutoMatchStrategy {
         }
       }
       if (privilegedSurvivor == null) {
-        final VirtualFile first = myVariants.keySet().iterator().next();
+        VirtualFile first = myVariants.keySet().iterator().next();
         privilegedSurvivor = Pair.create(first, myVariants.get(first));
       }
       myVariants.clear();

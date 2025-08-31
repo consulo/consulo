@@ -30,13 +30,13 @@ import jakarta.annotation.Nonnull;
  */
 public class ReadonlyStatusHandlerUtil {
   public static boolean ensureDocumentWritable(@Nonnull Project project, @Nonnull Document document) {
-    final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     boolean okWritable;
     if (psiFile == null) {
       okWritable = document.isWritable();
     }
     else {
-      final VirtualFile virtualFile = psiFile.getVirtualFile();
+      VirtualFile virtualFile = psiFile.getVirtualFile();
       if (virtualFile != null) {
         okWritable = ReadonlyStatusHandler.ensureFilesWritable(project, virtualFile);
       }

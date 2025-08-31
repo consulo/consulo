@@ -96,7 +96,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     myDataMap.put(dataId, data);
   }
 
-  public void setProject(@Nonnull final Project project) {
+  public void setProject(@Nonnull Project project) {
     myProject = project;
     setData(Project.KEY, project);
     ProjectManager.getInstance().addProjectManagerListener(project, myProjectListener);
@@ -108,7 +108,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   public void show(boolean restoreBounds) {
-    final Window frame = getFrame();
+    Window frame = getFrame();
 
     if (myStatusBar != null) {
       consulo.ui.Window uiWindow = TargetAWT.from(frame);
@@ -123,7 +123,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       ((JDialog)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-    final WindowAdapter focusListener = new WindowAdapter() {
+    WindowAdapter focusListener = new WindowAdapter() {
       @Override
       public void windowOpened(WindowEvent e) {
         IdeFocusManager fm = ProjectIdeFocusManager.getInstance(myProject);
@@ -221,7 +221,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     return myDisposed;
   }
 
-  private void addCloseOnEsc(final RootPaneContainer frame) {
+  private void addCloseOnEsc(RootPaneContainer frame) {
     JRootPane rootPane = frame.getRootPane();
     ActionListener closeAction = new ActionListener() {
       @Override
@@ -244,7 +244,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     assert !myDisposed : "Already disposed!";
 
     if (myFrame == null) {
-      final IdeFrame parent = WindowManager.getInstance().getIdeFrame(myProject);
+      IdeFrame parent = WindowManager.getInstance().getIdeFrame(myProject);
       myFrame = myIsDialog ? createJDialog(parent) : createJFrame(parent);
     }
     return myFrame;
@@ -305,12 +305,12 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   protected void loadFrameState(@Nullable WindowState state) {
-    final Window frame = getFrame();
+    Window frame = getFrame();
     if(state != null) {
       state.applyTo(frame);
     }
     else {
-      final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
+      IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
       if (ideFrame != null) {
         frame.setBounds(TargetAWT.to(ideFrame.suggestChildFrameBounds()));
       }

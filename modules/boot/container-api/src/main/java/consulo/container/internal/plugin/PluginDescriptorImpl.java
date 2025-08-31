@@ -97,7 +97,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
 
     private void readExternal(SimpleXmlElement element, ContainerLogger log) throws SimpleXmlParsingException {
-        final PluginBean pluginBean = PluginBeanParser.parseBean(element, null);
+        PluginBean pluginBean = PluginBeanParser.parseBean(element, null);
         assert pluginBean != null;
         url = pluginBean.url;
         myName = pluginBean.name;
@@ -312,7 +312,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
             return Collections.emptyList();
         }
 
-        final List<ClassPathItem> result = new ArrayList<ClassPathItem>();
+        List<ClassPathItem> result = new ArrayList<ClassPathItem>();
         File libDir = new File(myPath, "lib");
 
         Map<String, Set<String>> data = readIndex(libDir);
@@ -368,9 +368,9 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
 
     private static void fillLibs(File libDirectory, List<ClassPathItem> result, Map<String, Set<String>> data) {
-        final File[] files = libDirectory.listFiles();
+        File[] files = libDirectory.listFiles();
         if (files != null && files.length > 0) {
-            for (final File f : files) {
+            for (File f : files) {
                 String fileName = f.getName();
 
                 if (StringUtilRt.endsWithIgnoreCase(fileName, ".jar")) {
@@ -470,7 +470,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
             return false;
         }
 
-        final PluginDescriptorImpl pluginDescriptor = (PluginDescriptorImpl) o;
+        PluginDescriptorImpl pluginDescriptor = (PluginDescriptorImpl) o;
 
         return myName == null ? pluginDescriptor.myName == null : myName.equals(pluginDescriptor.myName);
     }

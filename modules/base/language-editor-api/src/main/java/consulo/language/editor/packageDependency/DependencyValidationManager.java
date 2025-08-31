@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DependencyValidationManager extends NamedScopesHolder {
-  public DependencyValidationManager(final Project project) {
+  public DependencyValidationManager(Project project) {
     super(project);
   }
 

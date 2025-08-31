@@ -52,7 +52,7 @@ public class CacheSettingsDialog extends DialogWrapper {
     super.doOKAction();
   }
 
-  public static boolean showSettingsDialog(final Project project) {
+  public static boolean showSettingsDialog(Project project) {
     CacheSettingsDialog dialog = new CacheSettingsDialog(project);
     dialog.show();
     if (!dialog.isOK()) {

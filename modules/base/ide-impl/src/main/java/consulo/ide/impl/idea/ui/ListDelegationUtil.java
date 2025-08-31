@@ -32,12 +32,12 @@ import java.awt.event.KeyListener;
  * @author Konstantin Bulenkov
  */
 public class ListDelegationUtil {
-  public static ActionCallback installKeyboardDelegation(final JComponent focusedComponent, final JList delegateTo) {
-    final KeyListener keyListener = new KeyAdapter() {
+  public static ActionCallback installKeyboardDelegation(JComponent focusedComponent, final JList delegateTo) {
+    KeyListener keyListener = new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
-        final int code = e.getKeyCode();
-        final int modifiers = e.getModifiers();
+        int code = e.getKeyCode();
+        int modifiers = e.getModifiers();
         switch (code) {
           case KeyEvent.VK_UP:
             ScrollingUtil.moveUp(delegateTo, modifiers);
@@ -63,7 +63,7 @@ public class ListDelegationUtil {
 
     focusedComponent.addKeyListener(keyListener);
 
-    final ActionCallback callback = new ActionCallback();
+    ActionCallback callback = new ActionCallback();
     callback.doWhenProcessed(() -> focusedComponent.removeKeyListener(keyListener));
     return callback;
   }

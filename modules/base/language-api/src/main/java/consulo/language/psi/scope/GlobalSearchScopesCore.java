@@ -51,12 +51,12 @@ public class GlobalSearchScopesCore {
   }
 
   @Nonnull
-  public static GlobalSearchScope directoryScope(@Nonnull PsiDirectory directory, final boolean withSubdirectories) {
+  public static GlobalSearchScope directoryScope(@Nonnull PsiDirectory directory, boolean withSubdirectories) {
     return new DirectoryScope(directory, withSubdirectories);
   }
 
   @Nonnull
-  public static GlobalSearchScope directoryScope(@Nonnull Project project, @Nonnull VirtualFile directory, final boolean withSubdirectories) {
+  public static GlobalSearchScope directoryScope(@Nonnull Project project, @Nonnull VirtualFile directory, boolean withSubdirectories) {
     return new DirectoryScope(project, directory, withSubdirectories);
   }
 
@@ -91,7 +91,7 @@ public class GlobalSearchScopesCore {
       Project project = getProject();
       NamedScopesHolder[] holders = NamedScopesHolder.getAllNamedScopeHolders(project);
       for (NamedScopesHolder holder : holders) {
-        final PackageSet packageSet = mySet.getValue();
+        PackageSet packageSet = mySet.getValue();
         if (packageSet != null) {
           return packageSet.contains(file, project, holder);
         }
@@ -158,7 +158,7 @@ public class GlobalSearchScopesCore {
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull final Module aModule, final boolean testSources) {
+    public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
       return !testSources;
     }
 
@@ -199,7 +199,7 @@ public class GlobalSearchScopesCore {
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull final Module aModule, final boolean testSources) {
+    public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
       return testSources;
     }
 
@@ -219,13 +219,13 @@ public class GlobalSearchScopesCore {
     private final VirtualFile myDirectory;
     private final boolean myWithSubdirectories;
 
-    private DirectoryScope(@Nonnull PsiDirectory psiDirectory, final boolean withSubdirectories) {
+    private DirectoryScope(@Nonnull PsiDirectory psiDirectory, boolean withSubdirectories) {
       super(psiDirectory.getProject());
       myWithSubdirectories = withSubdirectories;
       myDirectory = psiDirectory.getVirtualFile();
     }
 
-    private DirectoryScope(@Nonnull Project project, @Nonnull VirtualFile directory, final boolean withSubdirectories) {
+    private DirectoryScope(@Nonnull Project project, @Nonnull VirtualFile directory, boolean withSubdirectories) {
       super(project);
       myWithSubdirectories = withSubdirectories;
       myDirectory = directory;

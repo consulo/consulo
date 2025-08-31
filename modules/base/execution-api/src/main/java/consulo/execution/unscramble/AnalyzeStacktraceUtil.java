@@ -53,7 +53,7 @@ public class AnalyzeStacktraceUtil {
     private AnalyzeStacktraceUtil() {
     }
 
-    public static void printStacktrace(final ConsoleView consoleView, final String unscrambledTrace) {
+    public static void printStacktrace(ConsoleView consoleView, String unscrambledTrace) {
         consoleView.clear();
         consoleView.print(unscrambledTrace + "\n", ConsoleViewContentType.ERROR_OUTPUT);
         consoleView.scrollTo(0);
@@ -68,7 +68,7 @@ public class AnalyzeStacktraceUtil {
         JComponent createConsoleComponent(ConsoleView consoleView, DefaultActionGroup toolbarActions);
     }
 
-    public static void addConsole(Project project, @Nullable ConsoleFactory consoleFactory, final String tabTitle, String text) {
+    public static void addConsole(Project project, @Nullable ConsoleFactory consoleFactory, String tabTitle, String text) {
         addConsole(project, consoleFactory, tabTitle, text, null);
     }
 
@@ -79,22 +79,22 @@ public class AnalyzeStacktraceUtil {
         String text,
         @Nullable Image icon
     ) {
-        final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
+        TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
         builder.filters(project.getExtensionList(AnalyzeStackTraceFilter.class));
         final ConsoleView consoleView = builder.getConsole();
 
-        final DefaultActionGroup toolbarActions = new DefaultActionGroup();
+        DefaultActionGroup toolbarActions = new DefaultActionGroup();
         JComponent consoleComponent = consoleFactory != null
             ? consoleFactory.createConsoleComponent(consoleView, toolbarActions)
             : new MyConsolePanel(consoleView, toolbarActions);
-        final RunContentDescriptor descriptor = new RunContentDescriptor(consoleView, null, consoleComponent, tabTitle, icon) {
+        RunContentDescriptor descriptor = new RunContentDescriptor(consoleView, null, consoleComponent, tabTitle, icon) {
             @Override
             public boolean isContentReuseProhibited() {
                 return true;
             }
         };
 
-        final Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+        Executor executor = DefaultRunExecutor.getRunExecutorInstance();
         for (AnAction action : consoleView.createConsoleActions()) {
             toolbarActions.add(action);
         }
@@ -165,13 +165,13 @@ public class AnalyzeStacktraceUtil {
         }
 
         @RequiredUIAccess
-        public final void setText(@Nonnull final String text) {
+        public final void setText(@Nonnull String text) {
             CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .groupId(this)
                 .inWriteAction()
                 .run(() -> {
-                    final Document document = myEditor.getDocument();
+                    Document document = myEditor.getDocument();
                     document.replaceString(0, document.getTextLength(), StringUtil.convertLineSeparators(text));
                 });
         }

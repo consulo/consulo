@@ -29,13 +29,13 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
 
   public PathMappingsComponent() {
     super();
-    final TextFieldWithBrowseButton pathTextField = new TextFieldWithBrowseButton();
+    TextFieldWithBrowseButton pathTextField = new TextFieldWithBrowseButton();
     pathTextField.setEditable(false);
     setComponent(pathTextField);
     setText("Path mappings:");
     getComponent().addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(final ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         showConfigureMappingsDialog();
       }
     });
@@ -50,7 +50,7 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
     return myMappingSettings;
   }
 
-  public void setMappingSettings(@Nullable final PathMappingSettings mappingSettings) {
+  public void setMappingSettings(@Nullable PathMappingSettings mappingSettings) {
     if (mappingSettings == null) {
       myMappingSettings = new PathMappingSettings();
     }
@@ -64,7 +64,7 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
   }
 
   private void setTextRepresentation(@Nonnull PathMappingSettings mappingSettings) {
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     for (PathMappingSettings.PathMapping mapping : mappingSettings.getPathMappings()) {
       sb.append(mapping.getLocalRoot()).append("=").append(mapping.getRemoteRoot()).append(";");
     }
@@ -75,12 +75,12 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
   }
 
   @Override
-  public void addChangeListener(final ChangeListener changeListener) {
+  public void addChangeListener(ChangeListener changeListener) {
     myListeners.add(changeListener);
   }
 
   @Override
-  public void removeChangeListener(final ChangeListener changeListener) {
+  public void removeChangeListener(ChangeListener changeListener) {
     myListeners.remove(changeListener);
   }
 

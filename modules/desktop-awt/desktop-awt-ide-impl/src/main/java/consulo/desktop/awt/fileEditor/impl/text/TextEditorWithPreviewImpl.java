@@ -120,7 +120,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
     @Override
     public JComponent getComponent() {
         if (myComponent == null) {
-            final OnePixelSplitter splitter = new OnePixelSplitter(false, 0.5f, 0.15f, 0.85f);
+            OnePixelSplitter splitter = new OnePixelSplitter(false, 0.5f, 0.15f, 0.85f);
             splitter.setSplitterProportionKey(getSplitterProportionKey());
             splitter.setFirstComponent(myEditor.getComponent());
             splitter.setSecondComponent(myPreview.getComponent());
@@ -169,7 +169,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         myToolbarWrapper.refresh();
         myComponent.repaint();
 
-        final JComponent focusComponent = getPreferredFocusedComponent();
+        JComponent focusComponent = getPreferredFocusedComponent();
         if (focusComponent != null) {
             IdeFocusManager.findInstanceByComponent(focusComponent).requestFocus(focusComponent, true);
         }
@@ -211,7 +211,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         myEditor.addPropertyChangeListener(listener);
         myPreview.addPropertyChangeListener(listener);
 
-        final DoublingEventListenerDelegate delegate = myListenersGenerator.addListenerAndGetDelegate(listener);
+        DoublingEventListenerDelegate delegate = myListenersGenerator.addListenerAndGetDelegate(listener);
         myEditor.addPropertyChangeListener(delegate);
         myPreview.addPropertyChangeListener(delegate);
     }
@@ -221,7 +221,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         myEditor.removePropertyChangeListener(listener);
         myPreview.removePropertyChangeListener(listener);
 
-        final DoublingEventListenerDelegate delegate = myListenersGenerator.removeListenerAndGetDelegate(listener);
+        DoublingEventListenerDelegate delegate = myListenersGenerator.removeListenerAndGetDelegate(listener);
         if (delegate != null) {
             myEditor.removePropertyChangeListener(delegate);
             myPreview.removePropertyChangeListener(delegate);
@@ -295,7 +295,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
                 myMap.put(listener, Pair.create(1, new DoublingEventListenerDelegate(listener)));
             }
             else {
-                final Pair<Integer, DoublingEventListenerDelegate> oldPair = myMap.get(listener);
+                Pair<Integer, DoublingEventListenerDelegate> oldPair = myMap.get(listener);
                 myMap.put(listener, Pair.create(oldPair.getFirst() + 1, oldPair.getSecond()));
             }
 
@@ -304,7 +304,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
 
         @Nullable
         public DoublingEventListenerDelegate removeListenerAndGetDelegate(@Nonnull PropertyChangeListener listener) {
-            final Pair<Integer, DoublingEventListenerDelegate> oldPair = myMap.get(listener);
+            Pair<Integer, DoublingEventListenerDelegate> oldPair = myMap.get(listener);
             if (oldPair == null) {
                 return null;
             }
@@ -341,10 +341,10 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
             }
         };
 
-        public SplitEditorToolbar(@Nonnull final JComponent targetComponentForActions) {
+        public SplitEditorToolbar(@Nonnull JComponent targetComponentForActions) {
             super(new BorderLayout());
 
-            final ActionToolbar leftToolbar = createToolbar();
+            ActionToolbar leftToolbar = createToolbar();
             if (leftToolbar != null) {
                 leftToolbar.setTargetComponent(targetComponentForActions);
                 add(leftToolbar.getComponent(), BorderLayout.WEST);

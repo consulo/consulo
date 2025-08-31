@@ -44,14 +44,14 @@ public class JobLauncherImpl extends JobLauncher {
   }
 
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull final List<? extends T> things,
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things,
                                                      ProgressIndicator progress,
                                                      boolean runInReadAction,
                                                      boolean failFastOnAcquireReadAction,
-                                                     @Nonnull final Predicate<? super T> thingProcessor) throws ProcessCanceledException {
+                                                     @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     // supply our own indicator even if we haven't given one - to support cancellation
     // use StandardProgressIndicator by default to avoid assertion in SensitiveProgressWrapper() ctr later
-    final ProgressIndicator wrapper = progress == null ? new StandardProgressIndicatorBase() : new SensitiveProgressWrapper(progress);
+    ProgressIndicator wrapper = progress == null ? new StandardProgressIndicatorBase() : new SensitiveProgressWrapper(progress);
 
     Boolean result = processImmediatelyIfTooFew(things, wrapper, runInReadAction, thingProcessor);
     if (result != null) return result.booleanValue();
@@ -106,10 +106,10 @@ public class JobLauncherImpl extends JobLauncher {
 
   // if {@code things} are too few to be processed in the real pool, returns TRUE if processed successfully, FALSE if not
   // returns null if things need to be processed in the real pool
-  private static <T> Boolean processImmediatelyIfTooFew(@Nonnull final List<? extends T> things,
-                                                        @Nonnull final ProgressIndicator progress,
+  private static <T> Boolean processImmediatelyIfTooFew(@Nonnull List<? extends T> things,
+                                                        @Nonnull ProgressIndicator progress,
                                                         boolean runInReadAction,
-                                                        @Nonnull final Predicate<? super T> thingProcessor) {
+                                                        @Nonnull Predicate<? super T> thingProcessor) {
     // commit can be invoked from within write action
     //if (runInReadAction && ApplicationManager.getApplication().isWriteAccessAllowed()) {
     //  throw new RuntimeException("Must not run invokeConcurrentlyUnderProgress() from under write action because of imminent deadlock");
@@ -117,7 +117,7 @@ public class JobLauncherImpl extends JobLauncher {
     if (things.isEmpty()) return true;
 
     if (things.size() <= 1 || JobSchedulerImpl.getJobPoolParallelism() <= CORES_FORK_THRESHOLD || runInReadAction && ApplicationManager.getApplication().isWriteAccessAllowed()) {
-      final AtomicBoolean result = new AtomicBoolean(true);
+      AtomicBoolean result = new AtomicBoolean(true);
       Runnable runnable = () -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < things.size(); i++) {
@@ -143,7 +143,7 @@ public class JobLauncherImpl extends JobLauncher {
 
   @Nonnull
   @Override
-  public Job<Void> submitToJobThread(@Nonnull final Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
+  public Job<Void> submitToJobThread(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
     VoidForkJoinTask task = new VoidForkJoinTask(action, onDoneCallback);
     task.submit();
     return task;

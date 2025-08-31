@@ -49,7 +49,7 @@ public class SubmittedReportInfo {
    * @param linkText short text that UI interface pointing to the issue should have.
    * @param status   submission success/failure
    */
-  public SubmittedReportInfo(@Nullable String url, @Nullable String linkText, final SubmissionStatus status) {
+  public SubmittedReportInfo(@Nullable String url, @Nullable String linkText, SubmissionStatus status) {
     myURL = url;
     myLinkText = linkText;
     myStatus = status;

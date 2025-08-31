@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class LookupActionUpHandler extends LookupActionHandler {
   @Override
-  protected void executeInLookup(final LookupEx lookup, DataContext context, Caret caret) {
+  protected void executeInLookup(LookupEx lookup, DataContext context, Caret caret) {
     if (!UISettings.getInstance().getCycleScrolling() && !lookup.isFocused() && lookup.getSelectedIndex() == 0) {
       myOriginalHandler.execute(lookup.getEditor(), caret, context);
       return;

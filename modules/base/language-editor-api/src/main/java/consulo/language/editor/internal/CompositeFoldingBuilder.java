@@ -58,7 +58,7 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
   @RequiredReadAction
   @Nonnull
   public FoldingDescriptor[] buildFoldRegions(@Nonnull PsiElement root, @Nonnull Document document, boolean quick) {
-    final List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
+    List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
 
     for (FoldingBuilder builder : myBuilders) {
       for (FoldingDescriptor descriptor : LanguageFolding.buildFoldingDescriptors(builder, root, document, quick)) {
@@ -73,21 +73,21 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
   @RequiredReadAction
   @Override
   public String getPlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range) {
-    final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
+    FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder == null ? node.getText() : builder instanceof FoldingBuilderEx ? ((FoldingBuilderEx)builder).getPlaceholderText(node, range) : builder.getPlaceholderText(node);
   }
 
   @RequiredReadAction
   @Override
   public String getPlaceholderText(@Nonnull ASTNode node) {
-    final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
+    FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder == null ? node.getText() : builder.getPlaceholderText(node);
   }
 
   @Override
   @RequiredReadAction
   public boolean isCollapsedByDefault(@Nonnull ASTNode node) {
-    final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
+    FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder != null && builder.isCollapsedByDefault(node);
   }
 

@@ -35,10 +35,10 @@ final public class TurboFilterList extends CopyOnWriteArrayList<TurboFilter> {
      * or DENY, then that value is returned. If all of the filters return NEUTRAL,
      * then NEUTRAL is returned.
      */
-    public FilterReply getTurboFilterChainDecision(final Marker marker, final Logger logger, final Level level,
-            final String format, final Object[] params, final Throwable t) {
+    public FilterReply getTurboFilterChainDecision(Marker marker, Logger logger, Level level,
+                                                   String format, Object[] params, Throwable t) {
 
-        final int size = size();
+        int size = size();
         // if (size == 0) {
         // return FilterReply.NEUTRAL;
         // }
@@ -52,11 +52,11 @@ final public class TurboFilterList extends CopyOnWriteArrayList<TurboFilter> {
         }
 
         Object[] tfa = toArray();
-        final int len = tfa.length;
+        int len = tfa.length;
         for (int i = 0; i < len; i++) {
             // for (TurboFilter tf : this) {
-            final TurboFilter tf = (TurboFilter) tfa[i];
-            final FilterReply r = tf.decide(marker, logger, level, format, params, t);
+            TurboFilter tf = (TurboFilter) tfa[i];
+            FilterReply r = tf.decide(marker, logger, level, format, params, t);
             if (r == FilterReply.DENY || r == FilterReply.ACCEPT) {
                 return r;
             }

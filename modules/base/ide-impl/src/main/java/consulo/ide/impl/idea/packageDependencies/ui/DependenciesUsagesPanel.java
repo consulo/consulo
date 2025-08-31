@@ -35,7 +35,7 @@ import java.util.Set;
 public class DependenciesUsagesPanel extends UsagesPanel {
   private final List<DependenciesBuilder> myBuilders;
 
-  public DependenciesUsagesPanel(Project project, final List<DependenciesBuilder> builders) {
+  public DependenciesUsagesPanel(Project project, List<DependenciesBuilder> builders) {
     super(project);
     myBuilders = builders;
     setToInitialPosition();
@@ -51,12 +51,12 @@ public class DependenciesUsagesPanel extends UsagesPanel {
     return myBuilders.get(0).getRootNodeNameInUsageView();
   }
 
-  public void findUsages(final Set<PsiFile> searchIn, final Set<PsiFile> searchFor) {
+  public void findUsages(Set<PsiFile> searchIn, Set<PsiFile> searchFor) {
     cancelCurrentFindRequest();
 
     myAlarm.cancelAllRequests();
     myAlarm.addRequest(() -> myProject.getApplication().executeOnPooledThread(() -> {
-      final ProgressIndicator progress = new PanelProgressIndicator(myProject.getUIAccess().getScheduler(), this::setToComponent);
+      ProgressIndicator progress = new PanelProgressIndicator(myProject.getUIAccess().getScheduler(), this::setToComponent);
       myCurrentProgress = progress;
       ProgressManager.getInstance().runProcess(() -> {
         myProject.getApplication().runReadAction(() -> {
@@ -81,8 +81,8 @@ public class DependenciesUsagesPanel extends UsagesPanel {
           }
 
           if (!progress.isCanceled()) {
-            final UsageInfo[] finalUsages = usages;
-            final PsiElement[] _elementsToSearch =
+            UsageInfo[] finalUsages = usages;
+            PsiElement[] _elementsToSearch =
               elementsToSearch != null ? PsiUtilCore.toPsiElementArray(elementsToSearch) : PsiElement.EMPTY_ARRAY;
             myProject.getApplication()
                      .invokeLater(() -> showUsages(_elementsToSearch, finalUsages), IdeaModalityState.stateForComponent(this));

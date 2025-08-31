@@ -78,25 +78,25 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
             return;
         }
 
-        final EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
+        EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
 
-        final String overrideStripTrailingSpacesData = file.getUserData(OverrideEditorFileKeys.OVERRIDE_STRIP_TRAILING_SPACES_KEY);
-        final Boolean overrideEnsureNewlineData = file.getUserData(OverrideEditorFileKeys.OVERRIDE_ENSURE_NEWLINE_KEY);
+        String overrideStripTrailingSpacesData = file.getUserData(OverrideEditorFileKeys.OVERRIDE_STRIP_TRAILING_SPACES_KEY);
+        Boolean overrideEnsureNewlineData = file.getUserData(OverrideEditorFileKeys.OVERRIDE_ENSURE_NEWLINE_KEY);
         @EditorSettingsExternalizable.StripTrailingSpaces
         String stripTrailingSpaces =
             overrideStripTrailingSpacesData != null ? overrideStripTrailingSpacesData : settings.getStripTrailingSpaces();
         final boolean doStrip = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE);
-        final boolean ensureEOL = overrideEnsureNewlineData != null ? overrideEnsureNewlineData : settings.isEnsureNewLineAtEOF();
+        boolean ensureEOL = overrideEnsureNewlineData != null ? overrideEnsureNewlineData : settings.isEnsureNewLineAtEOF();
 
         if (doStrip) {
-            final boolean inChangedLinesOnly = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE);
+            boolean inChangedLinesOnly = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE);
             boolean success = strip(document, inChangedLinesOnly, settings.isKeepTrailingSpacesOnCaretLine());
             if (!success) {
                 myDocumentsToStripLater.add(document);
             }
         }
 
-        final int lines = document.getLineCount();
+        int lines = document.getLineCount();
         if (ensureEOL && lines > 0) {
             final int start = document.getLineStartOffset(lines - 1);
             final int end = document.getLineEndOffset(lines - 1);
@@ -133,7 +133,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
         // when virtual space enabled, we can strip whitespace anywhere
         boolean isVirtualSpaceEnabled = activeEditor == null || activeEditor.getSettings().isVirtualSpace();
 
-        final EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
+        EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
         if (settings == null) {
             return;
         }
@@ -143,8 +143,8 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
             return;
         }
         String stripTrailingSpaces = settings.getStripTrailingSpaces();
-        final boolean doStrip = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE);
-        final boolean inChangedLinesOnly = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE);
+        boolean doStrip = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE);
+        boolean inChangedLinesOnly = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE);
 
         int[] caretLines;
         if (activeEditor != null && inChangedLinesOnly && doStrip && !isVirtualSpaceEnabled) {
@@ -181,8 +181,8 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
         }
         Editor activeEditor = getActiveEditor(document);
 
-        final List<Caret> carets = activeEditor == null ? Collections.emptyList() : activeEditor.getCaretModel().getAllCarets();
-        final List<VisualPosition> visualCarets = new ArrayList<>(carets.size());
+        List<Caret> carets = activeEditor == null ? Collections.emptyList() : activeEditor.getCaretModel().getAllCarets();
+        List<VisualPosition> visualCarets = new ArrayList<>(carets.size());
         int[] caretOffsets = new int[carets.size()];
         for (int i = 0; i < carets.size(); i++) {
             Caret caret = carets.get(i);

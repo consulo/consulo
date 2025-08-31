@@ -96,14 +96,14 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
       return urlDir;
     }
 
-    final URL pageURL = myLoader.getResource(DESCRIPTION_FOLDER + "/" + myDescriptionDirectoryName + "/" + BeforeAfterActionMetaData.DESCRIPTION_FILE_NAME);
+    URL pageURL = myLoader.getResource(DESCRIPTION_FOLDER + "/" + myDescriptionDirectoryName + "/" + BeforeAfterActionMetaData.DESCRIPTION_FILE_NAME);
     if (LOG.isDebugEnabled()) {
       LOG.debug("Path:" + DESCRIPTION_FOLDER + "/" + myDescriptionDirectoryName);
       LOG.debug("URL:" + pageURL);
     }
     if (pageURL != null) {
       try {
-        final String url = pageURL.toExternalForm();
+        String url = pageURL.toExternalForm();
         urlDir = URLUtil.internProtocol(new URL(url.substring(0, url.lastIndexOf('/'))));
         return urlDir;
       }

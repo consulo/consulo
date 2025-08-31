@@ -78,7 +78,7 @@ public class RelativeRectangle {
     return getPoint().getComponent();
   }
 
-  public boolean contains(final RelativePoint relativePoint) {
+  public boolean contains(RelativePoint relativePoint) {
     return getScreenRectangle().contains(relativePoint.getScreenPoint());
   }
 }

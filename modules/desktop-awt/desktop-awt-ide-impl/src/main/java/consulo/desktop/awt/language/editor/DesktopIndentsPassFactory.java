@@ -37,7 +37,7 @@ public class DesktopIndentsPassFactory implements TextEditorHighlightingPassFact
 
   @Override
   @Nonnull
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
     return new DesktopAWTIndentPass(file.getProject(), editor, file);
   }
 }

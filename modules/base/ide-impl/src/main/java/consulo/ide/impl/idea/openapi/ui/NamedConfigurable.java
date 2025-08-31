@@ -93,7 +93,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
   public final JComponent createComponent(@Nonnull Disposable parentDisposable) {
     if (myOptionsComponent == null) {
       myOptionsComponent = createOptionsPanel(parentDisposable);
-      final JComponent component = createTopRightComponent(myNameField);
+      JComponent component = createTopRightComponent(myNameField);
       if (component == null) {
         myTopRightPanel.setVisible(false);
       }

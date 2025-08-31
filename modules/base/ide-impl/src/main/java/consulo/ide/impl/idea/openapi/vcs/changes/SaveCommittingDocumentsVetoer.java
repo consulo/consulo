@@ -39,7 +39,7 @@ public class SaveCommittingDocumentsVetoer extends FileDocumentSynchronizationVe
 
   @Override
   public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
-    final Object beingCommitted = document.getUserData(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY);
+    Object beingCommitted = document.getUserData(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY);
     if (beingCommitted == VetoSavingCommittingDocumentsAdapter.SAVE_DENIED) {
       return false;
     }

@@ -187,7 +187,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     fireShortcutChanged(actionId);
   }
 
-  private void addShortcutSilently(String actionId, Shortcut shortcut, final boolean checkParentShortcut) {
+  private void addShortcutSilently(String actionId, Shortcut shortcut, boolean checkParentShortcut) {
     LinkedHashSet<Shortcut> list = myActionId2ListOfShortcuts.get(actionId);
     if (list == null) {
       list = new LinkedHashSet<>();
@@ -266,7 +266,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     return myGesture2ListOfIds;
   }
 
-  private <T extends Shortcut>void fillShortcut2ListOfIds(final Map<T,List<String>> map, final Class<T> shortcutClass) {
+  private <T extends Shortcut>void fillShortcut2ListOfIds(Map<T,List<String>> map, Class<T> shortcutClass) {
     for (String id : ContainerUtil.concat(myActionId2ListOfShortcuts.keySet(), getKeymapManager().getBoundActions())) {
       addAction2ShortcutsMap(id, map, shortcutClass);
     }
@@ -281,7 +281,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     return myMouseShortcut2ListOfIds;
   }
 
-  private <T extends Shortcut>void addAction2ShortcutsMap(final String actionId, final Map<T, List<String>> strokesMap, final Class<T> shortcutClass) {
+  private <T extends Shortcut>void addAction2ShortcutsMap(String actionId, Map<T, List<String>> strokesMap, Class<T> shortcutClass) {
     LinkedHashSet<Shortcut> listOfShortcuts = _getShortcuts(actionId);
     for (Shortcut shortcut : listOfShortcuts) {
       if (!shortcutClass.isAssignableFrom(shortcut.getClass())) {
@@ -303,7 +303,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     }
   }
 
-  private void addKeystrokesMap(final String actionId, final Map<KeyStroke, List<String>> strokesMap) {
+  private void addKeystrokesMap(String actionId, Map<KeyStroke, List<String>> strokesMap) {
     LinkedHashSet<Shortcut> listOfShortcuts = _getShortcuts(actionId);
     for (Shortcut shortcut : listOfShortcuts) {
       if (!(shortcut instanceof KeyboardShortcut)) {
@@ -323,7 +323,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     }
   }
 
-  private LinkedHashSet<Shortcut> _getShortcuts(final String actionId) {
+  private LinkedHashSet<Shortcut> _getShortcuts(String actionId) {
     KeymapManagerEx keymapManager = getKeymapManager();
     LinkedHashSet<Shortcut> listOfShortcuts = myActionId2ListOfShortcuts.get(actionId);
     if (listOfShortcuts != null) {
@@ -333,7 +333,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
       listOfShortcuts = new LinkedHashSet<>();
     }
 
-    final String actionBinding = keymapManager.getActionBinding(actionId);
+    String actionBinding = keymapManager.getActionBinding(actionId);
     if (actionBinding != null) {
       listOfShortcuts.addAll(_getShortcuts(actionBinding));
     }
@@ -352,7 +352,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
 
   private String[] getActionIds(KeyboardModifierGestureShortcut shortcut) {
     // first, get keystrokes from own map
-    final Map<KeyboardModifierGestureShortcut, List<String>> map = getGesture2ListOfIds();
+    Map<KeyboardModifierGestureShortcut, List<String>> map = getGesture2ListOfIds();
     List<String> list = new ArrayList<>();
 
     for (Map.Entry<KeyboardModifierGestureShortcut, List<String>> entry : map.entrySet()) {
@@ -424,10 +424,10 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
   }
 
   @Override
-  public String[] getActionIds(final Shortcut shortcut) {
+  public String[] getActionIds(Shortcut shortcut) {
     if (shortcut instanceof KeyboardShortcut kb) {
-      final KeyStroke first = kb.getFirstKeyStroke();
-      final KeyStroke second = kb.getSecondKeyStroke();
+      KeyStroke first = kb.getFirstKeyStroke();
+      KeyStroke second = kb.getSecondKeyStroke();
       return second != null ? getActionIds(first, second) : getActionIds(first);
     }
     else if (shortcut instanceof MouseShortcut mouseShortcut) {
@@ -480,7 +480,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     return ids;
   }
 
-  public boolean isActionBound(@Nonnull final String actionId) {
+  public boolean isActionBound(@Nonnull String actionId) {
     return getKeymapManager().getBoundActions().contains(actionId);
   }
 
@@ -538,8 +538,8 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     myName = keymapElement.getAttributeValue(NAME_ATTRIBUTE);
 
     Map<String, ArrayList<Shortcut>> id2shortcuts = new HashMap<>();
-    final boolean skipInserts = Platform.current().os().isMac() && !ApplicationManager.getApplication().isUnitTestMode();
-    for (final Object o : keymapElement.getChildren()) {
+    boolean skipInserts = Platform.current().os().isMac() && !ApplicationManager.getApplication().isUnitTestMode();
+    for (Object o : keymapElement.getChildren()) {
       Element actionElement = (Element)o;
       if (ACTION.equals(actionElement.getName())) {
         String id = actionElement.getAttributeValue(ID_ATTRIBUTE);
@@ -547,7 +547,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
           throw new InvalidDataException("Attribute 'id' cannot be null; Keymap's name=" + myName);
         }
         id2shortcuts.put(id, new ArrayList<>(1));
-        for (final Object o1 : actionElement.getChildren()) {
+        for (Object o1 : actionElement.getChildren()) {
           Element shortcutElement = (Element)o1;
           if (KEYBOARD_SHORTCUT.equals(shortcutElement.getName())) {
 
@@ -585,12 +585,12 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
           }
           else if (KEYBOARD_GESTURE_SHORTCUT.equals(shortcutElement.getName())) {
             KeyStroke stroke = null;
-            final String strokeText = shortcutElement.getAttributeValue(KEYBOARD_GESTURE_KEY);
+            String strokeText = shortcutElement.getAttributeValue(KEYBOARD_GESTURE_KEY);
             if (strokeText != null) {
               stroke = KeyStrokeAdapter.getKeyStroke(strokeText);
             }
 
-            final String modifierText = shortcutElement.getAttributeValue(KEYBOARD_GESTURE_MODIFIER);
+            String modifierText = shortcutElement.getAttributeValue(KEYBOARD_GESTURE_MODIFIER);
             KeyboardGestureAction.ModifierType modifier = null;
             if (KeyboardGestureAction.ModifierType.dblClick.toString().equalsIgnoreCase(modifierText)) {
               modifier = KeyboardGestureAction.ModifierType.dblClick;
@@ -607,7 +607,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
             }
 
             Shortcut shortcut = KeyboardModifierGestureShortcut.newInstance(modifier, stroke);
-            final ArrayList<Shortcut> shortcuts = id2shortcuts.get(id);
+            ArrayList<Shortcut> shortcuts = id2shortcuts.get(id);
             shortcuts.add(shortcut);
           }
           else if (MOUSE_SHORTCUT.equals(shortcutElement.getName())) {
@@ -657,7 +657,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     return keymapElement;
   }
 
-  private void writeOwnActionIds(final Element keymapElement) {
+  private void writeOwnActionIds(Element keymapElement) {
     String[] ownActionIds = getOwnActionIds();
     Arrays.sort(ownActionIds);
     for (String actionId : ownActionIds) {
@@ -681,7 +681,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
           actionElement.addContent(element);
         }
         else if (shortcut instanceof KeyboardModifierGestureShortcut gesture) {
-          final Element element = new Element(KEYBOARD_GESTURE_SHORTCUT);
+          Element element = new Element(KEYBOARD_GESTURE_SHORTCUT);
           element.setAttribute(KEYBOARD_GESTURE_SHORTCUT, getKeyShortcutString(gesture.getStroke()));
           element.setAttribute(KEYBOARD_GESTURE_MODIFIER, gesture.getType().name());
           actionElement.addContent(element);
@@ -811,7 +811,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
         continue;
       }
 
-      final String useShortcutOf = myKeymapManager.getActionBinding(id);
+      String useShortcutOf = myKeymapManager.getActionBinding(id);
       if (useShortcutOf != null && useShortcutOf.equals(actionId)) {
         continue;
       }

@@ -29,7 +29,7 @@ public class UpdateTreeCellRenderer extends ColoredTreeCellRenderer{
 
     AbstractTreeNode treeNode = (AbstractTreeNode)value;
     append(treeNode.getText(), treeNode.getAttributes());
-    final String errorText = treeNode.getErrorText();
+    String errorText = treeNode.getErrorText();
     if (errorText != null) {
       append(" - ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
       append("Error: ", SimpleTextAttributes.ERROR_ATTRIBUTES);

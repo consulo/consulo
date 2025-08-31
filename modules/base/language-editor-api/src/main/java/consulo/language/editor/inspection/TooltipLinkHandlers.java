@@ -25,10 +25,10 @@ import jakarta.annotation.Nullable;
  * @author peter
  */
 public class TooltipLinkHandlers {
-  public static boolean handleLink(@Nonnull final String ref, @Nonnull final Editor editor) {
-    for (final TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
+  public static boolean handleLink(@Nonnull String ref, @Nonnull Editor editor) {
+    for (TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
       if (ref.startsWith(handler.getPrefix())) {
-        final String refSuffix = ref.substring(handler.getPrefix().length());
+        String refSuffix = ref.substring(handler.getPrefix().length());
         return handler.handleLink(refSuffix.replaceAll("<br/>", "\n"), editor);
       }
     }
@@ -36,10 +36,10 @@ public class TooltipLinkHandlers {
   }
 
   @Nullable
-  public static String getDescription(@Nonnull final String ref, @Nonnull final Editor editor) {
-    for (final TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
+  public static String getDescription(@Nonnull String ref, @Nonnull Editor editor) {
+    for (TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
       if (ref.startsWith(handler.getPrefix())) {
-        final String refSuffix = ref.substring(handler.getPrefix().length());
+        String refSuffix = ref.substring(handler.getPrefix().length());
         return handler.getDescription(refSuffix, editor);
       }
     }
@@ -48,7 +48,7 @@ public class TooltipLinkHandlers {
 
   @Nonnull
   public static String getDescriptionTitle(@Nonnull String ref, @Nonnull Editor editor) {
-    for (final TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
+    for (TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
       if (ref.startsWith(handler.getPrefix())) {
         String refSuffix = ref.substring(handler.getPrefix().length());
         return handler.getDescriptionTitle(refSuffix, editor);

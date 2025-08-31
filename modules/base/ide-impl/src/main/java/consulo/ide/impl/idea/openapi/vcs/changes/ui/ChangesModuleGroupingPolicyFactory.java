@@ -39,7 +39,7 @@ public class ChangesModuleGroupingPolicyFactory extends ChangesGroupingPolicyFac
   }
 
   @Override
-  public ChangesGroupingPolicy createGroupingPolicy(final DefaultTreeModel model) {
+  public ChangesGroupingPolicy createGroupingPolicy(DefaultTreeModel model) {
     return new ChangesModuleGroupingPolicy(myProject, model);
   }
 }

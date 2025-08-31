@@ -36,19 +36,19 @@ public abstract class DesktopBaseLazyImageImpl extends JBUI.RasterJBIcon impleme
     if (updateScaleContext(JBUI.ScaleContext.create((Graphics2D)g))) {
       myIcon = null;
     }
-    final Icon icon = getOrComputeIcon();
+    Icon icon = getOrComputeIcon();
     icon.paintIcon(c, g, x, y);
   }
 
   @Override
   public int getIconWidth() {
-    final Icon icon = getOrComputeIcon();
+    Icon icon = getOrComputeIcon();
     return icon.getIconWidth();
   }
 
   @Override
   public int getIconHeight() {
-    final Icon icon = getOrComputeIcon();
+    Icon icon = getOrComputeIcon();
     return icon.getIconHeight();
   }
 

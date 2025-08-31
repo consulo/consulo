@@ -32,24 +32,24 @@ import jakarta.annotation.Nullable;
 
 public class CommentUtilCore {
   @RequiredReadAction
-  public static boolean isComment(@Nullable final PsiElement element) {
+  public static boolean isComment(@Nullable PsiElement element) {
     return element != null && isCommentToken(element.getNode().getElementType(), element.getLanguageVersion());
   }
 
   @RequiredReadAction
-  public static boolean isComment(@Nullable final ASTNode node) {
+  public static boolean isComment(@Nullable ASTNode node) {
     if (node == null) {
       return false;
     }
-    final PsiElement psi = node.getPsi();
+    PsiElement psi = node.getPsi();
     return psi != null && isComment(psi);
   }
 
   @RequiredReadAction
-  public static boolean isCommentTextElement(final PsiElement element) {
-    final Commenter commenter = Commenter.forLanguage(element.getLanguage());
+  public static boolean isCommentTextElement(PsiElement element) {
+    Commenter commenter = Commenter.forLanguage(element.getLanguage());
     if (commenter instanceof CodeDocumentationAwareCommenterEx) {
-      final CodeDocumentationAwareCommenterEx commenterEx = (CodeDocumentationAwareCommenterEx)commenter;
+      CodeDocumentationAwareCommenterEx commenterEx = (CodeDocumentationAwareCommenterEx)commenter;
       if (commenterEx.isDocumentationCommentText(element)) return true;
       if (element instanceof PsiComment && commenterEx.isDocumentationComment((PsiComment)element)) return false;
     }
@@ -58,15 +58,15 @@ public class CommentUtilCore {
   }
 
   public static boolean isCommentToken(@Nonnull IElementType tokenType, @Nonnull LanguageVersion languageVersion) {
-    final Language language = tokenType.getLanguage();
+    Language language = tokenType.getLanguage();
     if(language != languageVersion.getLanguage()) {
       return false;
     }
 
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
 
     if (parserDefinition != null) {
-      final TokenSet commentTokens = parserDefinition.getCommentTokens(languageVersion);
+      TokenSet commentTokens = parserDefinition.getCommentTokens(languageVersion);
 
       if (commentTokens.contains(tokenType)) {
         return true;

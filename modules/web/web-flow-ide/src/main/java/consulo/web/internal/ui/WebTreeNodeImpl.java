@@ -123,7 +123,7 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("WebTreeNodeImpl{");
+    StringBuilder sb = new StringBuilder("WebTreeNodeImpl{");
     sb.append("myNode=").append(myNode);
     sb.append('}');
     return sb.toString();

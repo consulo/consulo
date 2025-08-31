@@ -44,7 +44,7 @@ public abstract class CompositePackagingElementType<E extends CompositePackaging
   @Override
   @Nonnull
   public List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
-    final PackagingElement<?> composite = createComposite(parent, null, context);
+    PackagingElement<?> composite = createComposite(parent, null, context);
     return composite != null ? Collections.singletonList(composite) : Collections.<E>emptyList();
   }
 }

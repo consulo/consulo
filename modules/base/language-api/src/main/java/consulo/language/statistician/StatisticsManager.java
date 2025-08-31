@@ -40,7 +40,7 @@ public abstract class StatisticsManager {
   @SuppressWarnings("unchecked")
   public static <T, Loc, Stat extends Statistician<T, Loc, Stat>> StatisticsInfo serialize(Key<? extends Statistician<T, Loc, Stat>> key, T element, Loc location) {
     for (Statistician<T, Loc, Stat> statistician : Statistician.forKey(key)) {
-      final StatisticsInfo info = statistician.serialize(element, location);
+      StatisticsInfo info = statistician.serialize(element, location);
       if (info != null) return info;
     }
     return null;
@@ -67,13 +67,13 @@ public abstract class StatisticsManager {
    */
   public abstract void incUseCount(@Nonnull StatisticsInfo info);
 
-  public <T, Loc, Stat extends Statistician<T, Loc, Stat>> int getUseCount(final Key<? extends Statistician<T, Loc, Stat>> key, final T element, final Loc location) {
-    final StatisticsInfo info = serialize(key, element, location);
+  public <T, Loc, Stat extends Statistician<T, Loc, Stat>> int getUseCount(Key<? extends Statistician<T, Loc, Stat>> key, T element, Loc location) {
+    StatisticsInfo info = serialize(key, element, location);
     return info == null ? 0 : getUseCount(info);
   }
 
-  public <T, Loc, Stat extends Statistician<T, Loc, Stat>> void incUseCount(final Key<? extends Statistician<T, Loc, Stat>> key, final T element, final Loc location) {
-    final StatisticsInfo info = serialize(key, element, location);
+  public <T, Loc, Stat extends Statistician<T, Loc, Stat>> void incUseCount(Key<? extends Statistician<T, Loc, Stat>> key, T element, Loc location) {
+    StatisticsInfo info = serialize(key, element, location);
     if (info != null) {
       incUseCount(info);
     }

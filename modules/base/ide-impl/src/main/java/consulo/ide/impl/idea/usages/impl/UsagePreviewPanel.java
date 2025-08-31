@@ -104,7 +104,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   }
 
   @RequiredUIAccess
-  private void resetEditor(@Nonnull final List<? extends UsageInfo> infos) {
+  private void resetEditor(@Nonnull List<? extends UsageInfo> infos) {
     UIAccess.assertIsUIThread();
     PsiElement psiElement = infos.get(0).getElement();
     if (psiElement == null) return;
@@ -117,7 +117,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
       if (psiFile == null) return;
     }
 
-    final Document document = PsiDocumentManager.getInstance(psiFile.getProject()).getDocument(psiFile);
+    Document document = PsiDocumentManager.getInstance(psiFile.getProject()).getDocument(psiFile);
     if (document == null) return;
     if (myEditor == null || document != myEditor.getDocument()) {
       releaseEditor();
@@ -149,7 +149,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
   private static final Key<Boolean> IN_PREVIEW_USAGE_FLAG = Key.create("IN_PREVIEW_USAGE_FLAG");
 
-  public static void highlight(@Nonnull final List<? extends UsageInfo> infos, @Nonnull final Editor editor, @Nonnull final Project project, boolean highlightOnlyNameElements, int highlightLayer) {
+  public static void highlight(@Nonnull List<? extends UsageInfo> infos, @Nonnull Editor editor, @Nonnull Project project, boolean highlightOnlyNameElements, int highlightLayer) {
     LOG.assertTrue(!PsiDocumentManager.getInstance(project).hasUncommitedDocuments());
 
     MarkupModel markupModel = editor.getMarkupModel();
@@ -260,7 +260,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
   private static final Key<UsagePreviewPanel> PREVIEW_EDITOR_FLAG = Key.create("PREVIEW_EDITOR_FLAG");
 
-  private Editor createEditor(final PsiFile psiFile, Document document) {
+  private Editor createEditor(PsiFile psiFile, Document document) {
     if (isDisposed) return null;
     Project project = psiFile.getProject();
 
@@ -309,7 +309,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   }
 
   @Nullable
-  public final String getCannotPreviewMessage(@Nullable final List<? extends UsageInfo> infos) {
+  public final String getCannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
     return cannotPreviewMessage(infos);
   }
 
@@ -336,7 +336,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   }
 
   @Override
-  public void updateLayoutLater(@Nullable final List<? extends UsageInfo> infos) {
+  public void updateLayoutLater(@Nullable List<? extends UsageInfo> infos) {
     String cannotPreviewMessage = cannotPreviewMessage(infos);
     if (cannotPreviewMessage != null) {
       releaseEditor();
@@ -388,7 +388,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     }
 
     @Override
-    public RelativePoint recalculateLocation(final Balloon balloon) {
+    public RelativePoint recalculateLocation(Balloon balloon) {
       int startOffset = myRange.getStartOffset();
       int endOffset = myRange.getEndOffset();
 
@@ -402,7 +402,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
           public void visibleAreaChanged(@Nonnull VisibleAreaEvent e) {
             if (insideVisibleArea(myEditor, myRange)) {
               showBalloon(myProject, myEditor, myRange, myFindModel);
-              final VisibleAreaListener visibleAreaListener = this;
+              VisibleAreaListener visibleAreaListener = this;
               myEditor.getScrollingModel().removeVisibleAreaListener(visibleAreaListener);
             }
           }

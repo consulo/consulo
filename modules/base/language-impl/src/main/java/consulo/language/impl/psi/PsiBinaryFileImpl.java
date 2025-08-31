@@ -65,7 +65,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  public boolean processChildren(@Nonnull final PsiElementProcessor<PsiFileSystemItem> processor) {
+  public boolean processChildren(@Nonnull PsiElementProcessor<PsiFileSystemItem> processor) {
     return true;
   }
 

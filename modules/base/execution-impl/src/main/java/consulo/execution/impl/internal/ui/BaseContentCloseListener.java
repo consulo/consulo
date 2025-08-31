@@ -38,7 +38,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
   public BaseContentCloseListener(@Nonnull Content content, @Nonnull Project project) {
     myContent = content;
     myProject = project;
-    final ContentManager contentManager = content.getManager();
+    ContentManager contentManager = content.getManager();
     if (contentManager != null) {
       contentManager.addContentManagerListener(this);
     }
@@ -50,8 +50,8 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
 
   @RequiredUIAccess
   @Override
-  public void contentRemoved(@Nonnull final ContentManagerEvent event) {
-    final Content content = event.getContent();
+  public void contentRemoved(@Nonnull ContentManagerEvent event) {
+    Content content = event.getContent();
     if (content == myContent) {
       dispose();
     }
@@ -60,9 +60,9 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
   public void dispose() {
     if (myContent == null) return;
 
-    final Content content = myContent;
+    Content content = myContent;
     myContent = null;
-    final ContentManager contentManager = content.getManager();
+    ContentManager contentManager = content.getManager();
     if (contentManager != null) {
       contentManager.removeContentManagerListener(this);
     }

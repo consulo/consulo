@@ -58,7 +58,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
                                      @Nonnull String dir,
                                      @Nonnull StateSplitterEx splitter,
                                      @Nonnull Disposable parentDisposable,
-                                     @Nullable final StateStorageListener listener,
+                                     @Nullable StateStorageListener listener,
                                      @Nonnull PathMacrosService pathMacrosService) {
         super(pathMacroSubstitutor, pathMacrosService);
 
@@ -264,9 +264,9 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
         }
 
         private void saveStates(@Nonnull Path dir) {
-            final Element storeElement = new Element(StorageData.COMPONENT);
+            Element storeElement = new Element(StorageData.COMPONENT);
 
-            for (final String componentName : copiedStorageData.getComponentNames()) {
+            for (String componentName : copiedStorageData.getComponentNames()) {
                 copiedStorageData.processComponent(componentName, (fileName, state) -> {
                     if (!dirtyFileNames.contains(fileName)) {
                         return;

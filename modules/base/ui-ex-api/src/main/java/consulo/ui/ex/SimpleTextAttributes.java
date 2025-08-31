@@ -92,9 +92,9 @@ public final class SimpleTextAttributes {
     this(null, fgColor, waveColor, style);
   }
 
-  public SimpleTextAttributes(@Nullable final Color bgColor,
-                              final Color fgColor,
-                              @Nullable final Color waveColor,
+  public SimpleTextAttributes(@Nullable Color bgColor,
+                              Color fgColor,
+                              @Nullable Color waveColor,
                               @StyleAttributeConstant int style) {
     if ((~(STYLE_PLAIN |
       STYLE_BOLD |
@@ -190,29 +190,29 @@ public final class SimpleTextAttributes {
   }
 
   // take what differs from REGULAR
-  public static SimpleTextAttributes merge(final SimpleTextAttributes weak, final SimpleTextAttributes strong) {
-    final int style;
+  public static SimpleTextAttributes merge(SimpleTextAttributes weak, SimpleTextAttributes strong) {
+    int style;
     if (strong.getStyle() != REGULAR_ATTRIBUTES.getStyle()) {
       style = strong.getStyle();
     }
     else {
       style = weak.getStyle();
     }
-    final Color wave;
+    Color wave;
     if (!Comparing.equal(strong.getWaveColor(), REGULAR_ATTRIBUTES.getWaveColor())) {
       wave = strong.getWaveColor();
     }
     else {
       wave = weak.getWaveColor();
     }
-    final Color fg;
+    Color fg;
     if (!Comparing.equal(strong.getFgColor(), REGULAR_ATTRIBUTES.getFgColor())) {
       fg = strong.getFgColor();
     }
     else {
       fg = weak.getFgColor();
     }
-    final Color bg;
+    Color bg;
     if (!Comparing.equal(strong.getBgColor(), REGULAR_ATTRIBUTES.getBgColor())) {
       bg = strong.getBgColor();
     }

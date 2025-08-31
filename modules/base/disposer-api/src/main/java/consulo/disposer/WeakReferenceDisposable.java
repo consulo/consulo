@@ -22,7 +22,7 @@ public abstract class WeakReferenceDisposable<T> extends WeakReference<T> implem
 
   @Override
   public final void dispose() {
-    final T referent = get();
+    T referent = get();
     if (referent == null) return;
     clear();
     disposeReferent(referent);
@@ -32,7 +32,7 @@ public abstract class WeakReferenceDisposable<T> extends WeakReference<T> implem
 
   private static void reapCollectedRefs() {
     while (true) {
-      final Reference<?> ref = ourRefQueue.poll();
+      Reference<?> ref = ourRefQueue.poll();
       if (ref == null) break;
       if (!(ref instanceof WeakReferenceDisposable)) continue;
       Disposer.dispose((Disposable)ref);  // the referent is gone, remove from the Disposer tree

@@ -29,7 +29,7 @@ public class FilterPattern extends ObjectPattern<Object,FilterPattern> {
   public FilterPattern(@Nullable final ElementFilter filter) {
     super(new InitialPatternCondition<Object>(Object.class) {
       @Override
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
         return filter == null ||
                o != null &&
                filter.isClassAcceptable(o.getClass()) &&
@@ -39,11 +39,11 @@ public class FilterPattern extends ObjectPattern<Object,FilterPattern> {
     myFilter = filter;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof FilterPattern)) return false;
 
-    final FilterPattern that = (FilterPattern)o;
+    FilterPattern that = (FilterPattern)o;
 
     if (myFilter != null ? !myFilter.equals(that.myFilter) : that.myFilter != null) return false;
 

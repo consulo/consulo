@@ -52,7 +52,7 @@ public class EditCleanupProfileIntentionAction implements IntentionAction {
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
-    final ProjectInspectionToolsConfigurable configurable = new ProjectInspectionToolsConfigurable(InspectionProfileManager.getInstance(), profileManager) {
+    ProjectInspectionToolsConfigurable configurable = new ProjectInspectionToolsConfigurable(InspectionProfileManager.getInstance(), profileManager) {
       @Override
       protected boolean acceptTool(InspectionToolWrapper entry) {
         return super.acceptTool(entry) && entry.isCleanupTool();

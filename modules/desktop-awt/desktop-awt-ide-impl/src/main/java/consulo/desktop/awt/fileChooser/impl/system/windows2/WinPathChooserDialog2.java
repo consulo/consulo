@@ -95,8 +95,8 @@ public class WinPathChooserDialog2 implements FileChooserDialog {
         String fileName = null;
         VirtualFile toSelect = toSelectFiles.length > 1 ? toSelectFiles[0] : null;
 
-        final VirtualFile lastOpenedFile = FileChooserUtil.getLastOpenedFile(myProject);
-        final VirtualFile newSelectFile = FileChooserUtil.getFileToSelect(myChooserDescriptor, myProject, toSelect, lastOpenedFile);
+        VirtualFile lastOpenedFile = FileChooserUtil.getLastOpenedFile(myProject);
+        VirtualFile newSelectFile = FileChooserUtil.getFileToSelect(myChooserDescriptor, myProject, toSelect, lastOpenedFile);
         if (newSelectFile != null && newSelectFile.isValid()) {
             toSelect = newSelectFile;
         }
@@ -115,7 +115,7 @@ public class WinPathChooserDialog2 implements FileChooserDialog {
 
         AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
 
-        final String finalDirectoryName = directoryName;
+        String finalDirectoryName = directoryName;
         SwingUtilities.invokeLater(() -> {
             Pointer owner = Native.getWindowPointer(window);
             FileOpenDialog dialog = createNativeOpenDialog();
@@ -136,7 +136,7 @@ public class WinPathChooserDialog2 implements FileChooserDialog {
                 dialog.SetFolder(ppv.getValue());
             }
 
-            final CommandProcessorEx commandProcessor = (CommandProcessorEx)CommandProcessor.getInstance();
+            CommandProcessorEx commandProcessor = (CommandProcessorEx)CommandProcessor.getInstance();
 
             commandProcessor.enterModal();
             LaterInvocator.enterModal(this);

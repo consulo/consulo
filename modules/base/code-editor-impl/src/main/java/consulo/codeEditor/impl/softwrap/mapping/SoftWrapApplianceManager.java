@@ -271,8 +271,8 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     }
 
     // Define start of the visual line that holds target range start.
-    final int start = event.getStartOffset();
-    final LogicalPosition logical = event.getStartLogicalPosition();
+    int start = event.getStartOffset();
+    LogicalPosition logical = event.getStartLogicalPosition();
 
     Document document = myEditor.getDocument();
     myContext.text = document.getCharsSequence();
@@ -562,7 +562,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
   }
 
   private boolean createSoftWrapIfPossible() {
-    final int offset = myContext.currentPosition.offset;
+    int offset = myContext.currentPosition.offset;
     myContext.logicalLineData.update(offset);
     int softWrapStartOffset = myContext.softWrapStartOffset;
     int preferredOffset = Math.max(softWrapStartOffset, offset - 1 /* reserve a column for the soft wrap sign */);
@@ -827,7 +827,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
       return recalculateSoftWraps(); // Recalculate existing dirty regions if any.
     }
 
-    final JScrollBar scrollBar = myEditor.getScrollPane().getVerticalScrollBar();
+    JScrollBar scrollBar = myEditor.getScrollPane().getVerticalScrollBar();
     int verticalScrollBarWidth = scrollBar.getWidth();
     if (verticalScrollBarWidth <= 0) {
       verticalScrollBarWidth = scrollBar.getPreferredSize().width;
@@ -854,7 +854,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     // before the target offset on recalculation start and compare it with the number of soft-wrapped lines before the same offset
     // after the recalculation.
     int softWrapsBefore = -1;
-    final ScrollingModelEx scrollingModel = myEditor.getScrollingModel();
+    ScrollingModelEx scrollingModel = myEditor.getScrollingModel();
     int yScrollOffset = scrollingModel.getVerticalScrollOffset();
     int anchorOffset = myLastTopLeftCornerOffset;
     if (myVisibleAreaWidth != QUICK_DUMMY_WRAPPING) { // don't scroll after soft-wrap recalculation if it's the first time editor is showing
@@ -865,7 +865,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     reset();
     myStorage.removeAll();
     myVisibleAreaWidth = currentVisibleAreaWidth;
-    final boolean result = recalculateSoftWraps();
+    boolean result = recalculateSoftWraps();
     if (!result) {
       return false;
     }
@@ -893,7 +893,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
   }
 
   private int getNumberOfSoftWrapsBefore(int offset) {
-    final int i = myStorage.getSoftWrapIndex(offset);
+    int i = myStorage.getSoftWrapIndex(offset);
     return i >= 0 ? i : -i - 1;
   }
 
@@ -1384,7 +1384,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
       currentPosition.advance(foldRegion);
       currentPosition.x += placeHolderWidthInPixels;
       if (currentPosition.logicalLine > logicalLineBefore) {
-        final DocumentEx document = myEditor.getDocument();
+        DocumentEx document = myEditor.getDocument();
         int endFoldLine = document.getLineNumber(foldRegion.getEndOffset());
         logicalLineData.endLineOffset = document.getLineEndOffset(endFoldLine);
       }

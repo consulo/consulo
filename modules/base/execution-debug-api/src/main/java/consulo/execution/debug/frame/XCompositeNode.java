@@ -40,7 +40,7 @@ public interface XCompositeNode extends Obsolescent {
    * @param children child nodes to add
    * @param last <code>true</code> if all children added
    */
-  void addChildren(@Nonnull XValueChildrenList children, final boolean last);
+  void addChildren(@Nonnull XValueChildrenList children, boolean last);
 
   /**
    * Add an ellipsis node ("...") indicating that the node has too many children. If user double-click on that node
@@ -68,5 +68,5 @@ public interface XCompositeNode extends Obsolescent {
    */
   void setErrorMessage(@Nonnull String errorMessage, @Nullable XDebuggerTreeNodeHyperlink link);
 
-  void setMessage(@Nonnull String message, final @Nullable Image icon, final @Nonnull SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link);
+  void setMessage(@Nonnull String message, @Nullable Image icon, @Nonnull SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link);
 }

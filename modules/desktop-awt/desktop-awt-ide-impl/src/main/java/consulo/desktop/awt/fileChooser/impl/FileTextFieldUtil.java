@@ -39,7 +39,7 @@ public final class FileTextFieldUtil {
 
     FileTextFieldImpl.addMacroPaths(result, typed, finder, macroMap);
 
-    final String typedText = finder.normalize(typed);
+    String typedText = finder.normalize(typed);
 
 
     result.current = getClosestParent(typed, finder, fileSpitRegExp);
@@ -50,7 +50,7 @@ public final class FileTextFieldUtil {
         ? typedText.equals(result.current.getAbsolutePath()) : typedText.equalsIgnoreCase(result.current.getAbsolutePath());
 
       result.closedPath = typed.endsWith(finder.getSeparator()) && typedText.length() > finder.getSeparator().length();
-      final String currentParentText = result.current.getAbsolutePath();
+      String currentParentText = result.current.getAbsolutePath();
 
       if (!StringUtil.toUpperCase(typedText).startsWith(StringUtil.toUpperCase(currentParentText))) return;
 
@@ -66,7 +66,7 @@ public final class FileTextFieldUtil {
 
       result.currentGrandparent = result.current.getParent();
       if (result.currentGrandparent != null && result.currentParentMatch && !result.closedPath) {
-        final String currentGrandparentText = result.currentGrandparent.getAbsolutePath();
+        String currentGrandparentText = result.currentGrandparent.getAbsolutePath();
         if (StringUtil.startsWithConcatenation(typedText, currentGrandparentText, finder.getSeparator())) {
           result.grandparentPrefix = currentParentText.substring(currentGrandparentText.length() + finder.getSeparator().length());
         }
@@ -87,7 +87,7 @@ public final class FileTextFieldUtil {
           }
 
           if (result.grandparentPrefix != null) {
-            final List<FileLookup.LookupFile> siblings = getMatchingChildren(result.grandparentPrefix, result.currentGrandparent);
+            List<FileLookup.LookupFile> siblings = getMatchingChildren(result.grandparentPrefix, result.currentGrandparent);
             result.myToComplete.addAll(0, siblings);
             result.mySiblings.addAll(siblings);
           }
@@ -138,7 +138,7 @@ public final class FileTextFieldUtil {
       }
 
       private List<FileLookup.LookupFile> getMatchingChildren(String prefix, FileLookup.LookupFile parent) {
-        final MinusculeMatcher matcher = createMatcher(prefix);
+        MinusculeMatcher matcher = createMatcher(prefix);
         return parent.getChildren(file -> !file.equals(result.current) && filter.isAccepted(file) && matcher.matches(file.getName()));
       }
     });
@@ -149,7 +149,7 @@ public final class FileTextFieldUtil {
   }
 
   @Nullable
-  private static FileLookup.LookupFile getClosestParent(final String typed, Finder finder, String fileSpitRegExp) {
+  private static FileLookup.LookupFile getClosestParent(String typed, Finder finder, String fileSpitRegExp) {
     if (typed == null) return null;
     FileLookup.LookupFile lastFound = finder.find(typed);
     if (lastFound == null) return null;
@@ -159,7 +159,7 @@ public final class FileTextFieldUtil {
       return lastFound;
     }
 
-    final String[] splits = finder.normalize(typed).split(fileSpitRegExp);
+    String[] splits = finder.normalize(typed).split(fileSpitRegExp);
     StringBuilder fullPath = new StringBuilder();
     for (int i = 0; i < splits.length; i++) {
       String each = splits[i];
@@ -167,7 +167,7 @@ public final class FileTextFieldUtil {
       if (i < splits.length - 1) {
         fullPath.append(finder.getSeparator());
       }
-      final FileLookup.LookupFile file = finder.find(fullPath.toString());
+      FileLookup.LookupFile file = finder.find(fullPath.toString());
       if (file == null || !file.exists()) return lastFound;
       lastFound = file;
     }
@@ -277,7 +277,7 @@ public final class FileTextFieldUtil {
 
     doc.removeSelection();
 
-    final String name = file.getName();
+    String name = file.getName();
     boolean toRemoveExistingName;
 
     if (caretPos >= start) {
@@ -330,14 +330,14 @@ public final class FileTextFieldUtil {
         int caretPos = doc.getCaretPosition();
         if (finder.getSeparator().equals(doc.getText(caretPos, 1))) {
           for (; caretPos < doc.getLength(); caretPos++) {
-            final String eachChar = doc.getText(caretPos, 1);
+            String eachChar = doc.getText(caretPos, 1);
             if (!finder.getSeparator().equals(eachChar)) break;
           }
         }
 
         int start = caretPos > 0 ? caretPos - 1 : caretPos;
         while (start >= 0) {
-          final String each = doc.getText(start, 1);
+          String each = doc.getText(start, 1);
           if (finder.getSeparator().equals(each)) {
             start++;
             break;
@@ -347,7 +347,7 @@ public final class FileTextFieldUtil {
 
         int end = Math.max(start, caretPos);
         while (end <= doc.getLength()) {
-          final String each = doc.getText(end, 1);
+          String each = doc.getText(end, 1);
           if (finder.getSeparator().equals(each)) {
             break;
           }

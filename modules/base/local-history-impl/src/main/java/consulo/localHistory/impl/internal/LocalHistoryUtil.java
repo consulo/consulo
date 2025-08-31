@@ -29,7 +29,7 @@ public class LocalHistoryUtil {
   static int findRevisionIndexToRevert(@Nonnull HistoryDialogModel dirHistoryModel, @Nonnull LabelImpl label) {
     List<RevisionItem> revs = dirHistoryModel.getRevisions();
     for (int i = 0; i < revs.size(); i++) {
-      final RevisionItem rev = revs.get(i);
+      RevisionItem rev = revs.get(i);
       if (isLabelRevision(rev, label)) return i;
       //when lvcs model is not constructed yet or is empty then PutLabelChange is created but without label, so we need to scan revisions themselves
       if (isChangeWithId(rev.revision, label.getLabelChangeId())) return i;
@@ -38,7 +38,7 @@ public class LocalHistoryUtil {
   }
 
   static boolean isLabelRevision(@Nonnull RevisionItem rev, @Nonnull LabelImpl label) {
-    final long targetChangeId = label.getLabelChangeId();
+    long targetChangeId = label.getLabelChangeId();
     return ContainerUtil.exists(rev.labels, revision -> isChangeWithId(revision, targetChangeId));
   }
 

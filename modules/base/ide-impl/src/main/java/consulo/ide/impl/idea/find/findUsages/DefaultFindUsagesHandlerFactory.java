@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "default", order = "last")
 public final class DefaultFindUsagesHandlerFactory extends FindUsagesHandlerFactory {
     @Override
-    public boolean canFindUsages(@Nonnull final PsiElement element) {
+    public boolean canFindUsages(@Nonnull PsiElement element) {
         if (element instanceof PsiFileSystemItem) {
             if (((PsiFileSystemItem) element).getVirtualFile() == null) {
                 return false;
@@ -42,7 +42,7 @@ public final class DefaultFindUsagesHandlerFactory extends FindUsagesHandlerFact
     }
 
     @Override
-    public FindUsagesHandler createFindUsagesHandler(@Nonnull final PsiElement element, final boolean forHighlightUsages) {
+    public FindUsagesHandler createFindUsagesHandler(@Nonnull final PsiElement element, boolean forHighlightUsages) {
         if (canFindUsages(element)) {
             return new FindUsagesHandler(element) {
                 @Override

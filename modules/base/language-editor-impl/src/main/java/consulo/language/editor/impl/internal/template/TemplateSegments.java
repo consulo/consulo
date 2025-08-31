@@ -57,7 +57,7 @@ public class TemplateSegments {
   }
 
   public void setSegmentsGreedy(boolean greedy) {
-    for (final RangeMarker segment : mySegments) {
+    for (RangeMarker segment : mySegments) {
       segment.setGreedyToRight(greedy);
       segment.setGreedyToLeft(greedy);
     }
@@ -89,14 +89,14 @@ public class TemplateSegments {
     mySegments.set(index, rangeMarker);
   }
 
-  public void setNeighboursGreedy(final int segmentNumber, final boolean greedy) {
+  public void setNeighboursGreedy(int segmentNumber, boolean greedy) {
     if (segmentNumber > 0) {
-      final RangeMarker left = mySegments.get(segmentNumber - 1);
+      RangeMarker left = mySegments.get(segmentNumber - 1);
       left.setGreedyToLeft(greedy);
       left.setGreedyToRight(greedy);
     }
     if (segmentNumber + 1 < mySegments.size()) {
-      final RangeMarker right = mySegments.get(segmentNumber + 1);
+      RangeMarker right = mySegments.get(segmentNumber + 1);
       right.setGreedyToLeft(greedy);
       right.setGreedyToRight(greedy);
     }
@@ -107,18 +107,18 @@ public class TemplateSegments {
    *
    * prevent two different segments to grow simultaneously if they both starts at the same offset.
    */
-  public void lockSegmentAtTheSameOffsetIfAny(final int number) {
+  public void lockSegmentAtTheSameOffsetIfAny(int number) {
     if (number == -1) {
       return;
     }
 
-    final RangeMarker current = mySegments.get(number);
+    RangeMarker current = mySegments.get(number);
     int offset = current.getStartOffset();
 
     for (int i = 0; i < mySegments.size(); i++) {
       if (i != number) {
-        final RangeMarker segment = mySegments.get(i);
-        final int startOffset2 = segment.getStartOffset();
+        RangeMarker segment = mySegments.get(i);
+        int startOffset2 = segment.getStartOffset();
         if (offset == startOffset2) {
           segment.setGreedyToLeft(false);
         }
@@ -128,8 +128,8 @@ public class TemplateSegments {
 
   public int getSegmentWithTheSameStart(int segmentNumber, int start) {
     for (int i = segmentNumber + 1; i < mySegments.size(); i++) {
-      final RangeMarker segment = mySegments.get(i);
-      final int startOffset2 = segment.getStartOffset();
+      RangeMarker segment = mySegments.get(i);
+      int startOffset2 = segment.getStartOffset();
       if (start == startOffset2) {
         return i;
       }

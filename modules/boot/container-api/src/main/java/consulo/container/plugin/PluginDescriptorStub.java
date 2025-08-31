@@ -138,7 +138,7 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public <K, V> V computeUserData(K key, final UserDataCalculator<K, V> function) {
+  public <K, V> V computeUserData(K key, UserDataCalculator<K, V> function) {
     V data = getUserData(key);
     if (data != null) {
       return data;

@@ -37,7 +37,7 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
     /**
      * Invoked by reflection
      */
-    public static ComponentUI createUI(final JComponent c) {
+    public static ComponentUI createUI(JComponent c) {
         return new BasicStripeButtonUI();
     }
 
@@ -47,7 +47,7 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
     }
 
     @Override
-    public Dimension getPreferredSize(final JComponent c) {
+    public Dimension getPreferredSize(JComponent c) {
         AnchoredButton button = (AnchoredButton) c;
         Dimension dim = super.getPreferredSize(button);
 
@@ -65,7 +65,7 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
     }
 
     @Override
-    public void paint(final Graphics g, final JComponent c) {
+    public void paint(Graphics g, JComponent c) {
         AnchoredButton button = (AnchoredButton) c;
 
         String text = button.getText();

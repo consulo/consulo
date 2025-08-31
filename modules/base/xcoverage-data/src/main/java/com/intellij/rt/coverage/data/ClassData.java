@@ -32,7 +32,7 @@ public class ClassData implements CoverageData {
     private int[] myLineMask;
     private String mySource;
 
-    public ClassData(final String name) {
+    public ClassData(String name) {
         myClassName = name;
     }
 
@@ -40,15 +40,15 @@ public class ClassData implements CoverageData {
         return myClassName;
     }
 
-    public void save(final DataOutputStream os, DictionaryLookup dictionaryLookup) throws IOException {
+    public void save(DataOutputStream os, DictionaryLookup dictionaryLookup) throws IOException {
         CoverageIOUtil.writeINT(os, dictionaryLookup.getDictionaryIndex(myClassName));
-        final Map sigLines = prepareSignaturesMap(dictionaryLookup);
-        final Set sigs = sigLines.keySet();
+        Map sigLines = prepareSignaturesMap(dictionaryLookup);
+        Set sigs = sigLines.keySet();
         CoverageIOUtil.writeINT(os, sigs.size());
         for (Iterator it = sigs.iterator(); it.hasNext(); ) {
-            final String sig = (String)it.next();
+            String sig = (String)it.next();
             CoverageIOUtil.writeUTF(os, sig);
-            final List lines = (List)sigLines.get(sig);
+            List lines = (List)sigLines.get(sig);
             CoverageIOUtil.writeINT(os, lines.size());
             for (int i = 0; i < lines.size(); i++) {
                 ((LineData)lines.get(i)).save(os);
@@ -57,19 +57,19 @@ public class ClassData implements CoverageData {
     }
 
     private Map prepareSignaturesMap(DictionaryLookup dictionaryLookup) {
-        final Map sigLines = new HashMap();
+        Map sigLines = new HashMap();
         if (myLinesArray == null) {
             return sigLines;
         }
         for (int i = 0; i < myLinesArray.length; i++) {
-            final LineData lineData = myLinesArray[i];
+            LineData lineData = myLinesArray[i];
             if (lineData == null) {
                 continue;
             }
             if (myLineMask != null) {
                 lineData.setHits(myLineMask[lineData.getLineNumber()]);
             }
-            final String sig = CoverageIOUtil.collapse(lineData.getMethodSignature(), dictionaryLookup);
+            String sig = CoverageIOUtil.collapse(lineData.getMethodSignature(), dictionaryLookup);
             List lines = (List)sigLines.get(sig);
             if (lines == null) {
                 lines = new ArrayList();
@@ -80,10 +80,10 @@ public class ClassData implements CoverageData {
         return sigLines;
     }
 
-    public void merge(final CoverageData data) {
+    public void merge(CoverageData data) {
         ClassData classData = (ClassData)data;
         mergeLines(classData.myLinesArray);
-        final Iterator iterator = getMethodSigs().iterator();
+        Iterator iterator = getMethodSigs().iterator();
         while (iterator.hasNext()) {
             myStatus.put(iterator.next(), null);
         }
@@ -104,7 +104,7 @@ public class ClassData implements CoverageData {
             myLinesArray = lines;
         }
         for (int i = 0; i < dLines.length; i++) {
-            final LineData mergedData = dLines[i];
+            LineData mergedData = dLines[i];
             if (mergedData == null) {
                 continue;
             }
@@ -123,21 +123,21 @@ public class ClassData implements CoverageData {
     }
 
     public void touch(int line) {
-        final LineData lineData = getLineData(line);
+        LineData lineData = getLineData(line);
         if (lineData != null) {
             lineData.touch();
         }
     }
 
     public void touch(int line, int jump, boolean hit) {
-        final LineData lineData = getLineData(line);
+        LineData lineData = getLineData(line);
         if (lineData != null) {
             lineData.touchBranch(jump, hit);
         }
     }
 
     public void touch(int line, int switchNumber, int key) {
-        final LineData lineData = getLineData(line);
+        LineData lineData = getLineData(line);
         if (lineData != null) {
             lineData.touchBranch(switchNumber, key);
         }
@@ -187,7 +187,7 @@ public class ClassData implements CoverageData {
         Integer methodStatus = (Integer)myStatus.get(methodSignature);
         if (methodStatus == null) {
             for (int i = 0; i < myLinesArray.length; i++) {
-                final LineData lineData = myLinesArray[i];
+                LineData lineData = myLinesArray[i];
                 if (lineData != null && methodSignature.equals(lineData.getMethodSignature())
                     && lineData.getStatus() != LineCoverage.NONE) {
                     methodStatus = (int) LineCoverage.PARTIAL;
@@ -212,7 +212,7 @@ public class ClassData implements CoverageData {
             Arrays.fill(myLineMask, 0);
             if (myLinesArray != null) {
                 for (int i = 0; i < myLinesArray.length; i++) {
-                    final LineData data = myLinesArray[i];
+                    LineData data = myLinesArray[i];
                     if (data != null) {
                         myLineMask[i] = data.getHits();
                     }
@@ -248,7 +248,7 @@ public class ClassData implements CoverageData {
             try {
                 result = new LineData[linesMap.length];
                 for (int i = 0, linesMapLength = linesMap.length; i < linesMapLength; i++) {
-                    final LineMapData mapData = linesMap[i];
+                    LineMapData mapData = linesMap[i];
                     if (mapData != null) {
                         result[mapData.getSourceLineNumber()] = classData.createSourceLineData(mapData);
                     }
@@ -265,10 +265,10 @@ public class ClassData implements CoverageData {
 
     private LineData createSourceLineData(LineMapData lineMapData) {
         for (int i = lineMapData.getTargetMinLine(); i <= lineMapData.getTargetMaxLine() && i < myLinesArray.length; i++) {
-            final LineData targetLineData = getLineData(i);
+            LineData targetLineData = getLineData(i);
             if (targetLineData != null) { //todo ??? show info according to one target line
 
-                final LineData lineData = new LineData(lineMapData.getSourceLineNumber(), targetLineData.getMethodSignature());
+                LineData lineData = new LineData(lineMapData.getSourceLineNumber(), targetLineData.getMethodSignature());
 
                 lineData.merge(targetLineData);
                 if (myLineMask != null) {

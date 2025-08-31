@@ -35,15 +35,15 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
   private boolean myDisposed;
   private ActionToolbar myActionToolbar;
 
-  public ContextMenuImpl(@Nonnull final JScrollPane container, @Nonnull final DesktopEditorImpl editor) {
+  public ContextMenuImpl(@Nonnull final JScrollPane container, @Nonnull DesktopEditorImpl editor) {
     setLayout(new BorderLayout());
     myEditor = editor;
 
-    final ActionManager actionManager = ActionManager.getInstance();
+    ActionManager actionManager = ActionManager.getInstance();
 
     editor.addEditorMouseListener(new EditorMouseListener() {
       @Override
-      public void mouseExited(@Nonnull final EditorMouseEvent e) {
+      public void mouseExited(@Nonnull EditorMouseEvent e) {
         if (!isInsideActivationArea(container, e.getMouseEvent().getPoint())) {
           toggleContextToolbar(false);
         }
@@ -53,7 +53,7 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
     editor.addEditorMouseMotionListener(new EditorMouseMotionListener() {
       @RequiredUIAccess
       @Override
-      public void mouseMoved(@Nonnull final EditorMouseEvent e) {
+      public void mouseMoved(@Nonnull EditorMouseEvent e) {
         toggleContextToolbar(isInsideActivationArea(container, e.getMouseEvent().getPoint()));
       }
     });
@@ -76,22 +76,22 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
   }
 
   private boolean isInsideActivationArea(JScrollPane container, Point p) {
-    final Rectangle r = myEditor.getContentComponent().getBounds();
+    Rectangle r = myEditor.getContentComponent().getBounds();
 
-    final Rectangle activationArea = new Rectangle(0, 0, r.width, r.height);
+    Rectangle activationArea = new Rectangle(0, 0, r.width, r.height);
     return activationArea.contains(p.x, p.y);
   }
 
-  public static boolean mayShowToolbar(@Nullable final Document document) {
+  public static boolean mayShowToolbar(@Nullable Document document) {
     if (document == null) {
       return false;
     }
 
-    final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     return file != null && file.isValid();
   }
 
-  private void toggleContextToolbar(final boolean show) {
+  private void toggleContextToolbar(boolean show) {
     if (myShow != show) {
       myShow = show;
       restartTimer();
@@ -176,9 +176,9 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
       if (myDisposed) return;
 
       if (myComponent.isVisible()) {
-        final PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
         if (pointerInfo != null) {
-          final Point location = pointerInfo.getLocation();
+          Point location = pointerInfo.getLocation();
           SwingUtilities.convertPointFromScreen(location, myComponent);
           if (!myComponent.getBounds().contains(location)) {
             toggleContextToolbar(false);
@@ -214,7 +214,7 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
   private static class ContextMenuPanel extends DesktopEditorFloatPanel {
     private final ContextMenuImpl myContextMenu;
 
-    private ContextMenuPanel(final ContextMenuImpl contextMenu) {
+    private ContextMenuPanel(ContextMenuImpl contextMenu) {
       myContextMenu = contextMenu;
     }
 

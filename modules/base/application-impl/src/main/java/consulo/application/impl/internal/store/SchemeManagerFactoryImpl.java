@@ -51,7 +51,7 @@ public class SchemeManagerFactoryImpl extends SchemeManagerFactory implements Se
   }
 
   @Override
-  public <T, E extends ExternalizableScheme> SchemeManager<T, E> createSchemeManager(final String fileSpec, final SchemeProcessor<T, E> processor, final RoamingType roamingType) {
+  public <T, E extends ExternalizableScheme> SchemeManager<T, E> createSchemeManager(String fileSpec, SchemeProcessor<T, E> processor, RoamingType roamingType) {
     StateStorageManager stateStorageManager = myApplicationStore.getStateStorageManager();
     
     String baseDirPath = stateStorageManager.expandMacros(fileSpec);

@@ -25,7 +25,7 @@ public abstract class AbstractCalledLater implements Runnable {
   private final Project myProject;
   private final consulo.ui.ModalityState myState;
 
-  protected AbstractCalledLater(final Project project, final consulo.ui.ModalityState modalityState) {
+  protected AbstractCalledLater(Project project, consulo.ui.ModalityState modalityState) {
     myProject = project;
     myState = modalityState;
   }

@@ -72,14 +72,14 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
   private static Collection<? extends PackagingSourceItem> createClasspathItems(ArtifactEditorContext editorContext,
                                                                                 Artifact artifact,
                                                                                 @Nonnull Module module) {
-    final List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
-    final ModuleRootModel rootModel = editorContext.getModulesProvider().getRootModel(module);
+    List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
+    ModuleRootModel rootModel = editorContext.getModulesProvider().getRootModel(module);
     List<Library> libraries = new ArrayList<Library>();
     for (OrderEntry orderEntry : rootModel.getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry) {
-        final LibraryOrderEntry libraryEntry = (LibraryOrderEntry)orderEntry;
-        final Library library = libraryEntry.getLibrary();
-        final DependencyScope scope = libraryEntry.getScope();
+        LibraryOrderEntry libraryEntry = (LibraryOrderEntry)orderEntry;
+        Library library = libraryEntry.getLibrary();
+        DependencyScope scope = libraryEntry.getScope();
         if (library != null && scope.isForProductionRuntime()) {
           libraries.add(library);
         }
@@ -104,8 +104,8 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
 
   private static Collection<? extends PackagingSourceItem> createModuleItems(ArtifactEditorContext editorContext, Artifact artifact,
                                                                              @Nonnull String[] groupPath) {
-    final Module[] modules = editorContext.getModulesProvider().getModules();
-    final List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
+    Module[] modules = editorContext.getModulesProvider().getModules();
+    List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
     Set<String> groups = new HashSet<String>();
     for (Module module : modules) {
       String[] path = ModuleManager.getInstance(editorContext.getProject()).getModuleGroupPath(module);
@@ -155,7 +155,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     return false;
   }
 
-  private static List<? extends Library> getNotAddedLibraries(@Nonnull final ArtifactEditorContext context,
+  private static List<? extends Library> getNotAddedLibraries(@Nonnull ArtifactEditorContext context,
                                                               @Nonnull Artifact artifact,
                                                               List<Library> librariesList) {
     final Set<VirtualFile> roots = new HashSet<VirtualFile>();
@@ -163,14 +163,14 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
       .processPackagingElements(artifact, FileCopyElementType.getInstance(), new Processor<FileCopyPackagingElement>() {
         @Override
         public boolean process(FileCopyPackagingElement fileCopyPackagingElement) {
-          final VirtualFile root = fileCopyPackagingElement.getLibraryRoot();
+          VirtualFile root = fileCopyPackagingElement.getLibraryRoot();
           if (root != null) {
             roots.add(root);
           }
           return true;
         }
       }, context, true);
-    final List<Library> result = new ArrayList<Library>();
+    List<Library> result = new ArrayList<Library>();
     for (Library library : librariesList) {
       if (!roots.containsAll(Arrays.asList(library.getFiles(BinariesOrderRootType.getInstance())))) {
         result.add(library);

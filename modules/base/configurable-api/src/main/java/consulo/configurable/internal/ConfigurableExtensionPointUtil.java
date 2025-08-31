@@ -34,9 +34,9 @@ public class ConfigurableExtensionPointUtil {
     }
 
     public static List<Configurable> buildConfigurablesList(List<Configurable> extensions, @Nullable Predicate<Configurable> filter) {
-        final List<Configurable> result = new ArrayList<>();
+        List<Configurable> result = new ArrayList<>();
 
-        final Map<String, ConfigurableWrapper> idToConfigurable = new HashMap<>();
+        Map<String, ConfigurableWrapper> idToConfigurable = new HashMap<>();
         for (Configurable configurable : extensions) {
             // do not disable if disable
             if (configurable instanceof OptionalConfigurable && !((OptionalConfigurable) configurable).needDisplay()) {
@@ -51,11 +51,11 @@ public class ConfigurableExtensionPointUtil {
         }
 
         //modify configurables (append children)
-        for (final String id : idToConfigurable.keySet()) {
-            final ConfigurableWrapper wrapper = idToConfigurable.get(id);
-            final String parentId = wrapper.getParentId();
+        for (String id : idToConfigurable.keySet()) {
+            ConfigurableWrapper wrapper = idToConfigurable.get(id);
+            String parentId = wrapper.getParentId();
             if (parentId != null) {
-                final ConfigurableWrapper parent = idToConfigurable.get(parentId);
+                ConfigurableWrapper parent = idToConfigurable.get(parentId);
                 if (parent != null) {
                     idToConfigurable.put(parentId, parent.addChild(wrapper));
                 }
@@ -65,9 +65,9 @@ public class ConfigurableExtensionPointUtil {
             }
         }
         //leave only roots (i.e. configurables without parents)
-        for (final Iterator<String> iterator = idToConfigurable.keySet().iterator(); iterator.hasNext(); ) {
-            final String key = iterator.next();
-            final ConfigurableWrapper wrapper = idToConfigurable.get(key);
+        for (Iterator<String> iterator = idToConfigurable.keySet().iterator(); iterator.hasNext(); ) {
+            String key = iterator.next();
+            ConfigurableWrapper wrapper = idToConfigurable.get(key);
             if (wrapper.getParentId() != null) {
                 iterator.remove();
             }

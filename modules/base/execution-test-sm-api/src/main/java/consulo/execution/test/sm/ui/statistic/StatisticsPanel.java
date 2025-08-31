@@ -173,7 +173,7 @@ public class StatisticsPanel implements DataProvider {
         return this::selectProxy;
     }
 
-    public void selectProxy(@Nullable final SMTestProxy selectedTestProxy, @Nonnull Object sender, final boolean requestFocus) {
+    public void selectProxy(@Nullable SMTestProxy selectedTestProxy, @Nonnull Object sender, boolean requestFocus) {
         SMRunnerUtil.addToInvokeLater(() -> {
             // Select tab if focus was requested
             if (requestFocus) {

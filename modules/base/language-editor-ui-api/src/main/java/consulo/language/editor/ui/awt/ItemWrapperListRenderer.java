@@ -33,7 +33,7 @@ public class ItemWrapperListRenderer extends ColoredListCellRenderer {
   @Override
   protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
     if (value instanceof ItemWrapper) {
-      final ItemWrapper wrapper = (ItemWrapper)value;
+      ItemWrapper wrapper = (ItemWrapper)value;
       wrapper.setupRenderer(this, myProject, selected);
       if (myAccessory != null) {
         wrapper.updateAccessoryView(myAccessory);

@@ -270,16 +270,16 @@ public class Tool implements SchemeElement {
   /**
    * @return <code>true</code> if task has been started successfully
    */
-  public boolean execute(AnActionEvent event, DataContext dataContext, long executionId, @Nullable final ProcessListener processListener) {
-    final Project project = dataContext.getData(Project.KEY);
+  public boolean execute(AnActionEvent event, DataContext dataContext, long executionId, @Nullable ProcessListener processListener) {
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return false;
     }
     FileDocumentManager.getInstance().saveAllDocuments();
     try {
       if (isUseConsole()) {
-        final ToolRunProfile profile = new ToolRunProfile(this, dataContext);
-        final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(DefaultRunExecutor.EXECUTOR_ID, profile);
+        ToolRunProfile profile = new ToolRunProfile(this, dataContext);
+        ProgramRunner runner = RunnerRegistry.getInstance().getRunner(DefaultRunExecutor.EXECUTOR_ID, profile);
         assert runner != null;
 
         ExecutionEnvironment executionEnvironment = new ExecutionEnvironmentBuilder(project, DefaultRunExecutor.getRunExecutorInstance())
@@ -328,7 +328,7 @@ public class Tool implements SchemeElement {
 
       commandLine.getParametersList().addParametersString(
               MacroManager.getInstance().expandMacrosInString(paramString, false, dataContext));
-      final String workDirExpanded = MacroManager.getInstance().expandMacrosInString(workingDir, false, dataContext);
+      String workDirExpanded = MacroManager.getInstance().expandMacrosInString(workingDir, false, dataContext);
       if (!StringUtil.isEmpty(workDirExpanded)) {
         commandLine.setWorkDirectory(workDirExpanded);
       }
@@ -351,7 +351,7 @@ public class Tool implements SchemeElement {
   }
 
   @Override
-  public void setGroupName(final String name) {
+  public void setGroupName(String name) {
     setGroup(name);
   }
 

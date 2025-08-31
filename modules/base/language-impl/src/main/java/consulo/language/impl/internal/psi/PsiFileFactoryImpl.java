@@ -64,7 +64,7 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   private final PsiManager myManager;
 
   @Inject
-  public PsiFileFactoryImpl(Application application, final PsiManager manager) {
+  public PsiFileFactoryImpl(Application application, PsiManager manager) {
       myApplication = application;
       myManager = manager;
   }
@@ -75,7 +75,7 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
                                     @Nonnull FileType fileType,
                                     @Nonnull CharSequence text,
                                     long modificationStamp,
-                                    final boolean physical) {
+                                    boolean physical) {
     return createFileFromText(name, fileType, text, modificationStamp, physical, true);
   }
 
@@ -97,7 +97,7 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
                                     @Nonnull Language language,
                                     @Nonnull CharSequence text,
                                     boolean physical,
-                                    final boolean markAsCopy) {
+                                    boolean markAsCopy) {
     return createFileFromText(name, language, text, physical, markAsCopy, false);
   }
 
@@ -153,35 +153,35 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
                                     @Nonnull FileType fileType,
                                     @Nonnull CharSequence text,
                                     long modificationStamp,
-                                    final boolean physical,
+                                    boolean physical,
                                     boolean markAsCopy) {
-    final LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
+    LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
     if (fileType instanceof LanguageFileType) {
-      final Language language =
+      Language language =
         LanguageSubstitutors.substituteLanguage(((LanguageFileType)fileType).getLanguage(), virtualFile, myManager.getProject());
-      final PsiFile file = trySetupPsiForFile(virtualFile, language, LanguageVersionUtil.findDefaultVersion(language), physical, markAsCopy);
+      PsiFile file = trySetupPsiForFile(virtualFile, language, LanguageVersionUtil.findDefaultVersion(language), physical, markAsCopy);
       if (file != null) return file;
     }
-    final SingleRootFileViewProvider singleRootFileViewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
-    final PsiPlainTextFileImpl plainTextFile = new PsiPlainTextFileImpl(singleRootFileViewProvider);
+    SingleRootFileViewProvider singleRootFileViewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
+    PsiPlainTextFileImpl plainTextFile = new PsiPlainTextFileImpl(singleRootFileViewProvider);
     if (markAsCopy) CodeEditUtil.setNodeGenerated(plainTextFile.getNode(), true);
     return plainTextFile;
   }
 
   @Nullable
-  public PsiFile trySetupPsiForFile(final LightVirtualFile virtualFile,
+  public PsiFile trySetupPsiForFile(LightVirtualFile virtualFile,
                                     @Nonnull Language language,
                                     @Nonnull LanguageVersion languageVersion,
-                                    final boolean physical,
-                                    final boolean markAsCopy) {
-    final FileViewProviderFactory factory = LanguageFileViewProviderFactory.forLanguage(language);
+                                    boolean physical,
+                                    boolean markAsCopy) {
+    FileViewProviderFactory factory = LanguageFileViewProviderFactory.forLanguage(language);
     FileViewProvider viewProvider = factory != null ? factory.createFileViewProvider(virtualFile, language, myManager, physical) : null;
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
 
     language = viewProvider.getBaseLanguage();
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
     if (parserDefinition != null) {
-      final PsiFile psiFile = viewProvider.getPsi(language);
+      PsiFile psiFile = viewProvider.getPsi(language);
       if (psiFile != null) {
         psiFile.putUserData(LanguageVersion.KEY, languageVersion);
         if (markAsCopy) {
@@ -196,21 +196,21 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   @Nonnull
   public PsiFile createFileFromText(@Nonnull String name,
                                     @Nonnull FileType fileType,
-                                    final Language language,
+                                    Language language,
                                     @Nonnull Language targetLanguage,
                                     @Nonnull CharSequence text,
                                     long modificationStamp,
-                                    final boolean physical,
+                                    boolean physical,
                                     boolean markAsCopy) {
-    final LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
+    LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
 
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
-    final FileViewProviderFactory factory = LanguageFileViewProviderFactory.forLanguage(language);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
+    FileViewProviderFactory factory = LanguageFileViewProviderFactory.forLanguage(language);
     FileViewProvider viewProvider = factory != null ? factory.createFileViewProvider(virtualFile, language, myManager, physical) : null;
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
 
     if (parserDefinition != null) {
-      final PsiFile psiFile = viewProvider.getPsi(targetLanguage);
+      PsiFile psiFile = viewProvider.getPsi(targetLanguage);
       if (psiFile != null) {
         if (markAsCopy) {
           markGenerated(psiFile);
@@ -219,8 +219,8 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
       }
     }
 
-    final SingleRootFileViewProvider singleRootFileViewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
-    final PsiPlainTextFileImpl plainTextFile = new PsiPlainTextFileImpl(singleRootFileViewProvider);
+    SingleRootFileViewProvider singleRootFileViewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
+    PsiPlainTextFileImpl plainTextFile = new PsiPlainTextFileImpl(singleRootFileViewProvider);
     if (markAsCopy) CodeEditUtil.setNodeGenerated(plainTextFile.getNode(), true);
     return plainTextFile;
   }
@@ -243,9 +243,9 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   }
 
   @Override
-  public PsiFile createFileFromText(FileType fileType, final String fileName, CharSequence chars, int startOffset, int endOffset) {
+  public PsiFile createFileFromText(FileType fileType, String fileName, CharSequence chars, int startOffset, int endOffset) {
     LOG.assertTrue(!fileType.isBinary());
-    final CharSequence text =
+    CharSequence text =
       startOffset == 0 && endOffset == chars.length() ? chars : new CharSequenceSubSequence(chars, startOffset, endOffset);
     return createFileFromText(fileName, fileType, text);
   }
@@ -253,7 +253,7 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   @Nullable
   @Override
   public PsiFile createFileFromText(@Nonnull CharSequence chars, @Nonnull PsiFile original) {
-    final PsiFile file = createFileFromText(original.getName(), original.getLanguage(), chars, false, true);
+    PsiFile file = createFileFromText(original.getName(), original.getLanguage(), chars, false, true);
     if (file != null) {
       file.putUserData(ORIGINAL_FILE, original);
     }
@@ -262,23 +262,23 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
 
   @Override
   @Nullable
-  public PsiElement createElementFromText(@Nullable final String text,
-                                          @Nonnull final Language language,
-                                          @Nonnull final LanguageVersion languageVersion,
-                                          @Nonnull final IElementType type,
-                                          @Nullable final PsiElement context) {
+  public PsiElement createElementFromText(@Nullable String text,
+                                          @Nonnull Language language,
+                                          @Nonnull LanguageVersion languageVersion,
+                                          @Nonnull IElementType type,
+                                          @Nullable PsiElement context) {
     if (text == null) return null;
-    final DummyHolder result = DummyHolderFactory.createHolder(myManager, language, context);
-    final FileElement holder = result.getTreeElement();
+    DummyHolder result = DummyHolderFactory.createHolder(myManager, language, context);
+    FileElement holder = result.getTreeElement();
 
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
     if (parserDefinition == null) {
       throw new AssertionError("No parser definition for " + language);
     }
-    final Project project = myManager.getProject();
-    final Lexer lexer = parserDefinition.createLexer(languageVersion);
-    final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, holder, lexer, language, languageVersion, text);
-    final ASTNode node = parserDefinition.createParser(languageVersion).parse(type, builder, languageVersion);
+    Project project = myManager.getProject();
+    Lexer lexer = parserDefinition.createLexer(languageVersion);
+    PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, holder, lexer, language, languageVersion, text);
+    ASTNode node = parserDefinition.createParser(languageVersion).parse(type, builder, languageVersion);
     holder.rawAddChildren((TreeElement)node);
     markGenerated(result);
     return node.getPsi();
@@ -286,7 +286,7 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
 
 
   public static void markGenerated(PsiElement element) {
-    final TreeElement node = (TreeElement)element.getNode();
+    TreeElement node = (TreeElement)element.getNode();
     assert node != null;
     node.acceptTree(new GeneratedMarkerVisitor());
   }

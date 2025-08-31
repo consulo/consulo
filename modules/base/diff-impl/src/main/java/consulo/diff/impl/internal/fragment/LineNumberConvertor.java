@@ -108,14 +108,14 @@ public class LineNumberConvertor {
   }
 
 
-  private static int convert(@Nonnull final TreeMap<Integer, Integer> fragments, int value, boolean approximate) {
+  private static int convert(@Nonnull TreeMap<Integer, Integer> fragments, int value, boolean approximate) {
     return approximate ? convertApproximate(fragments, value) : convert(fragments, value);
   }
 
   /*
    * This convertor returns exact matching between lines, and -1 if it's impossible
    */
-  private static int convert(@Nonnull final TreeMap<Integer, Integer> fragments, int value) {
+  private static int convert(@Nonnull TreeMap<Integer, Integer> fragments, int value) {
     Map.Entry<Integer, Integer> floor = fragments.floorEntry(value);
     if (floor == null || floor.getValue() == -1) return -1;
     return floor.getValue() - floor.getKey() + value;
@@ -124,7 +124,7 @@ public class LineNumberConvertor {
   /*
    * This convertor returns 'good enough' position, even if exact matching is impossible
    */
-  private static int convertApproximate(@Nonnull final TreeMap<Integer, Integer> fragments, int value) {
+  private static int convertApproximate(@Nonnull TreeMap<Integer, Integer> fragments, int value) {
     Map.Entry<Integer, Integer> floor = fragments.floorEntry(value);
     if (floor == null) return 0;
     if (floor.getValue() != -1) return floor.getValue() - floor.getKey() + value;

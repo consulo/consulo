@@ -37,7 +37,7 @@ public abstract class AddDeleteListPanel<T> extends JPanel implements ComponentW
   protected JBList<T> myList = new JBList<>(myListModel);
 
   @SuppressWarnings("unchecked")
-  public AddDeleteListPanel(final String title, final List<T> initialList) {
+  public AddDeleteListPanel(String title, List<T> initialList) {
     myTitle = title;
     for (T o : initialList) {
       if (o != null) {
@@ -49,7 +49,7 @@ public abstract class AddDeleteListPanel<T> extends JPanel implements ComponentW
   }
 
   protected void initPanel() {
-    final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList)
+    ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList)
       .disableUpAction()
       .disableDownAction()
       .setAddAction(b -> addElement(findItemToAdd()));

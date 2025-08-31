@@ -27,7 +27,7 @@ import java.util.function.BiPredicate;
 public class PatternValuesIndex {
 
   public static Set<String> buildStringIndex(Collection<ElementPattern<?>> patterns) {
-    final Set<String> result = new HashSet<>();
+    Set<String> result = new HashSet<>();
     processStringValues(patterns, (elementPattern, value) -> {
       for (Object o : value) {
         if (o instanceof String) {
@@ -39,14 +39,14 @@ public class PatternValuesIndex {
     return result;
   }
 
-  public static boolean processStringValues(Collection<ElementPattern<?>> patterns, final BiPredicate<ElementPattern<?>, Collection<Object>> valueProcessor) {
-    final LinkedList<ElementPattern<?>> stack = new LinkedList<>();
-    for (final ElementPattern<?> next : patterns) {
+  public static boolean processStringValues(Collection<ElementPattern<?>> patterns, BiPredicate<ElementPattern<?>, Collection<Object>> valueProcessor) {
+    LinkedList<ElementPattern<?>> stack = new LinkedList<>();
+    for (ElementPattern<?> next : patterns) {
       stack.add(next);
       while (!stack.isEmpty()) {
-        final ElementPattern<?> pattern = stack.removeFirst();
-        final ElementPatternCondition<?> patternCondition = pattern.getCondition();
-        final InitialPatternCondition<?> initialCondition = patternCondition.getInitialCondition();
+        ElementPattern<?> pattern = stack.removeFirst();
+        ElementPatternCondition<?> patternCondition = pattern.getCondition();
+        InitialPatternCondition<?> initialCondition = patternCondition.getInitialCondition();
         if (initialCondition instanceof InitialPatternConditionPlus) {
           stack.addAll(((InitialPatternConditionPlus<?>)initialCondition).getPatterns());
         }

@@ -32,7 +32,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
 
   private final ManageButtonBuilder myBuilder;
 
-  public ManageButton(final ManageButtonBuilder builder) {
+  public ManageButton(ManageButtonBuilder builder) {
     myBuilder = builder;
     getTemplatePresentation().setText("Manage");
   }

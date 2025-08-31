@@ -122,14 +122,14 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
 
     @Override
     @Nonnull
-    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
         return () -> {
             clearDiffPresentation();
 
             boolean shouldHighlight = getTextSettings().getHighlightPolicy() != HighlightPolicy.DO_NOT_HIGHLIGHT;
             if (shouldHighlight) {
-                final DocumentContent content = getContent();
-                final Document document = content.getDocument();
+                DocumentContent content = getContent();
+                Document document = content.getDocument();
 
                 TextDiffType type = getSide().select(TextDiffType.DELETED, TextDiffType.INSERTED);
 
@@ -154,7 +154,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     // Impl
     //
 
-    private void doScrollToChange(final boolean animated) {
+    private void doScrollToChange(boolean animated) {
         DiffImplUtil.moveCaret(getEditor(), 0);
         DiffImplUtil.scrollEditor(getEditor(), 0, animated);
     }

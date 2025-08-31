@@ -33,7 +33,7 @@ public class LogFilter implements JDOMExternalizable {
   public String myName;
   private Image myIcon;
 
-  public LogFilter(final String name, final Image icon) {
+  public LogFilter(String name, Image icon) {
     myName = name;
     myIcon = icon;
   }
@@ -51,7 +51,7 @@ public class LogFilter implements JDOMExternalizable {
     return myName;
   }
 
-  public void setIcon(final Image icon) {
+  public void setIcon(Image icon) {
     myIcon = icon;
   }
 

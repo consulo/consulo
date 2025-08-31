@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 public class RearrangeCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
   @Nonnull
-  public CheckinHandler createHandler(@Nonnull final CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {
+  public CheckinHandler createHandler(@Nonnull CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {
     return new RearrangeBeforeCheckinHandler(panel.getProject(), panel);
   }
 }

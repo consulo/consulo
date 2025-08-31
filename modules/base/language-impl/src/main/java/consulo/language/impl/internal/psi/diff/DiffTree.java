@@ -58,7 +58,7 @@ public class DiffTree<OT, NT> {
                                    @Nonnull ShallowNodeComparator<OT, NT> comparator,
                                    @Nonnull DiffTreeChangeBuilder<OT, NT> consumer,
                                    @Nonnull CharSequence oldText) {
-    final DiffTree<OT, NT> tree = new DiffTree<OT, NT>(oldTree, newTree, comparator, oldText);
+    DiffTree<OT, NT> tree = new DiffTree<OT, NT>(oldTree, newTree, comparator, oldText);
     tree.build(oldTree.getRoot(), newTree.getRoot(), 0, consumer);
   }
 
@@ -101,13 +101,13 @@ public class DiffTree<OT, NT> {
       myOldChildrenLists.add(new SimpleReference<OT[]>());
     }
 
-    final SimpleReference<OT[]> oldChildrenR = myOldChildrenLists.get(level);
+    SimpleReference<OT[]> oldChildrenR = myOldChildrenLists.get(level);
     int oldChildrenSize = myOldTree.getChildren(oldNode, oldChildrenR);
-    final OT[] oldChildren = oldChildrenR.get();
+    OT[] oldChildren = oldChildrenR.get();
 
-    final SimpleReference<NT[]> newChildrenR = myNewChildrenLists.get(level);
+    SimpleReference<NT[]> newChildrenR = myNewChildrenLists.get(level);
     int newChildrenSize = myNewTree.getChildren(newNode, newChildrenR);
-    final NT[] newChildren = newChildrenR.get();
+    NT[] newChildren = newChildrenR.get();
 
     CompareResult result;
     if (Math.abs(oldChildrenSize - newChildrenSize) > CHANGE_PARENT_VERSUS_CHILDREN_THRESHOLD) {
@@ -124,7 +124,7 @@ public class DiffTree<OT, NT> {
       }
     }
     else {
-      final ShallowNodeComparator<OT, NT> comparator = myComparator;
+      ShallowNodeComparator<OT, NT> comparator = myComparator;
 
       int minSize = Math.min(oldChildrenSize, newChildrenSize);
       int suffixLength = match(oldChildren, oldChildrenSize - 1, newChildren, newChildrenSize - 1, level, -1, minSize);

@@ -48,18 +48,18 @@ import java.util.function.Supplier;
  */
 public class SdkUtil {
   @Nonnull
-  public static String createUniqueSdkName(@Nonnull Platform platform, @Nonnull BundleType type, Path home, final Sdk[] sdks) {
+  public static String createUniqueSdkName(@Nonnull Platform platform, @Nonnull BundleType type, Path home, Sdk[] sdks) {
     return createUniqueSdkName(type.suggestSdkName(platform, null, home), sdks);
   }
 
   @Nonnull
-  public static String createUniqueSdkName(@Nonnull SdkType type, String home, final Sdk[] sdks) {
+  public static String createUniqueSdkName(@Nonnull SdkType type, String home, Sdk[] sdks) {
     return createUniqueSdkName(type.suggestSdkName(null, home), sdks);
   }
 
   @Nonnull
-  public static String createUniqueSdkName(final String suggestedName, final Sdk[] sdks) {
-    final Set<String> names = new HashSet<>();
+  public static String createUniqueSdkName(String suggestedName, Sdk[] sdks) {
+    Set<String> names = new HashSet<>();
     for (Sdk sdk : sdks) {
       names.add(sdk.getName());
     }
@@ -107,11 +107,11 @@ public class SdkUtil {
    * @return newly created SDK, or null.
    */
   @Nullable
-  public static Sdk createAndAddSDK(final String path, SdkType sdkType, @Nonnull UIAccess uiAccess) {
+  public static Sdk createAndAddSDK(String path, SdkType sdkType, @Nonnull UIAccess uiAccess) {
     VirtualFile sdkHome = ApplicationManager.getApplication()
       .runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
     if (sdkHome != null) {
-      final Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, null, null, uiAccess);
+      Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, null, null, uiAccess);
       if (newSdk != null) {
         ApplicationManager.getApplication().runWriteAction(() -> SdkTable.getInstance().addSdk(newSdk));
       }
@@ -121,12 +121,12 @@ public class SdkUtil {
   }
 
   @Nullable
-  public static Sdk setupSdk(final Sdk[] allSdks,
-                             final VirtualFile homeDir,
-                             final SdkType sdkType,
-                             final boolean silent,
-                             @Nullable final SdkAdditionalData additionalData,
-                             @Nullable final String customSdkSuggestedName,
+  public static Sdk setupSdk(Sdk[] allSdks,
+                             VirtualFile homeDir,
+                             SdkType sdkType,
+                             boolean silent,
+                             @Nullable SdkAdditionalData additionalData,
+                             @Nullable String customSdkSuggestedName,
                              @Nonnull UIAccess uiAccess) {
     if (sdkType instanceof BundleType bundleType) {
       return setupBundle(Platform.current(), allSdks, homeDir, bundleType, silent, additionalData, customSdkSuggestedName, uiAccess);
@@ -141,10 +141,10 @@ public class SdkUtil {
                                 VirtualFile homeDir,
                                 BundleType bundleType,
                                 boolean silent,
-                                @Nullable final SdkAdditionalData additionalData,
-                                @Nullable final String customSdkSuggestedName,
+                                @Nullable SdkAdditionalData additionalData,
+                                @Nullable String customSdkSuggestedName,
                                 @Nonnull UIAccess uiAccess) {
-    final Sdk sdk;
+    Sdk sdk;
     try {
       Path homeNioPath = homeDir.toNioPath();
 
@@ -183,15 +183,15 @@ public class SdkUtil {
 
   @Nullable
   public static Sdk setupLegacySdk(
-    final Sdk[] allSdks,
-    final VirtualFile homeDir,
-    final SdkType sdkType,
-    final boolean silent,
-    @Nullable final SdkAdditionalData additionalData,
-    @Nullable final String customSdkSuggestedName,
+    Sdk[] allSdks,
+    VirtualFile homeDir,
+    SdkType sdkType,
+    boolean silent,
+    @Nullable SdkAdditionalData additionalData,
+    @Nullable String customSdkSuggestedName,
     @Nonnull UIAccess uiAccess
   ) {
-    final Sdk sdk;
+    Sdk sdk;
     try {
       String sdkPath = sdkType.sdkPath(homeDir);
 
@@ -230,7 +230,7 @@ public class SdkUtil {
 
   @RequiredUIAccess
   @Deprecated
-  public static void selectSdkHome(final SdkType sdkType, @Nonnull @RequiredUIAccess final Consumer<String> consumer) {
+  public static void selectSdkHome(SdkType sdkType, @Nonnull @RequiredUIAccess Consumer<String> consumer) {
     if (sdkType instanceof BundleType bundleType) {
       selectSdkHome(Platform.current(), bundleType, path -> consumer.accept(path.toString()));
     } else {
@@ -239,17 +239,17 @@ public class SdkUtil {
   }
 
   @RequiredUIAccess
-  public static void selectSdkHome(Platform platform, BundleType bundleType, @Nonnull @RequiredUIAccess final Consumer<Path> consumer) {
-    final FileChooserDescriptor descriptor = bundleType.getHomeChooserDescriptor(platform);
+  public static void selectSdkHome(Platform platform, BundleType bundleType, @Nonnull @RequiredUIAccess Consumer<Path> consumer) {
+    FileChooserDescriptor descriptor = bundleType.getHomeChooserDescriptor(platform);
 
     FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(bundleType)).doWhenDone(virtualFiles -> {
-      final Path path = virtualFiles[0].toNioPath();
+      Path path = virtualFiles[0].toNioPath();
       if (bundleType.isValidSdkHome(platform, path)) {
         consumer.accept(path);
         return;
       }
 
-      final Path adjustedPath = bundleType.adjustSelectedSdkHome(platform, path);
+      Path adjustedPath = bundleType.adjustSelectedSdkHome(platform, path);
       if (bundleType.isValidSdkHome(platform, adjustedPath)) {
         consumer.accept(adjustedPath);
       }
@@ -257,17 +257,17 @@ public class SdkUtil {
   }
 
   @RequiredUIAccess
-  private static void selectLegacySdkHome(final SdkType sdkType, @Nonnull @RequiredUIAccess final Consumer<String> consumer) {
-    final FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
+  private static void selectLegacySdkHome(SdkType sdkType, @Nonnull @RequiredUIAccess Consumer<String> consumer) {
+    FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
 
     FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(virtualFiles -> {
-      final String path = virtualFiles[0].getPath();
+      String path = virtualFiles[0].getPath();
       if (sdkType.isValidSdkHome(path)) {
         consumer.accept(path);
         return;
       }
 
-      final String adjustedPath = sdkType.adjustSelectedSdkHome(path);
+      String adjustedPath = sdkType.adjustSelectedSdkHome(path);
       if (sdkType.isValidSdkHome(adjustedPath)) {
         consumer.accept(adjustedPath);
       }

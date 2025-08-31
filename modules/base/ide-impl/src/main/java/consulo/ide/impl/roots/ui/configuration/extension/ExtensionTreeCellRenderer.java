@@ -37,7 +37,7 @@ public class ExtensionTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRend
     if (value instanceof ExtensionCheckedTreeNode) {
       ExtensionCheckedTreeNode extensionCheckedTreeNode = (ExtensionCheckedTreeNode)value;
 
-      final ModuleExtensionProvider providerEP = extensionCheckedTreeNode.getProvider();
+      ModuleExtensionProvider providerEP = extensionCheckedTreeNode.getProvider();
       if (providerEP == null) {
         return;
       }

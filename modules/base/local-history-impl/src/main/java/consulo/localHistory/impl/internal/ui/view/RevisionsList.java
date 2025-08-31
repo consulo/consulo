@@ -290,7 +290,7 @@ public class RevisionsList {
       RevisionItem r = (RevisionItem)value;
       LabelsAndColor labelsAndColor = getLabelsAndColor(r);
 
-      final Period p = ((MyModel)table.getModel()).getPeriod(r);
+      Period p = ((MyModel)table.getModel()).getPeriod(r);
       if (p == null) {
         myPeriodLabel.setVisible(false);
       }
@@ -345,7 +345,7 @@ public class RevisionsList {
     private LabelsAndColor getLabelsAndColor(RevisionItem item) {
       Revision r = item.revision;
 
-      final Pair<List<String>, Integer> affected = r.getAffectedFileNames();
+      Pair<List<String>, Integer> affected = r.getAffectedFileNames();
 
       String title = r.getChangeSetName();
       boolean named = title != null;

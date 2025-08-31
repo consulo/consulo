@@ -101,7 +101,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
             @Override
             protected void updateValueInsideUI(@Nonnull Project project, @Nonnull VirtualFile key, @Nonnull EditorTablInfo value) {
-                final W[] windows = getWindows();
+                W[] windows = getWindows();
                 for (int i = 0; i != windows.length; ++i) {
                     for (VirtualFile file : windows[i].getFiles()) {
                         if (file.equals(key)) {
@@ -143,10 +143,10 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     @RequiredUIAccess
     @Override
     public void closeFile(VirtualFile file, boolean moveFocus) {
-        final List<W> windows = findWindows(file);
+        List<W> windows = findWindows(file);
         if (!windows.isEmpty()) {
-            final VirtualFile nextFile = findNextFile(file);
-            for (final W window : windows) {
+            VirtualFile nextFile = findNextFile(file);
+            for (W window : windows) {
                 LOG.assertTrue(window.getSelectedEditor() != null);
                 window.closeFile(file, false, moveFocus);
                 if (window.getTabCount() == 0 && nextFile != null && myProject.isOpen()) {
@@ -155,7 +155,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
                 }
             }
             // cleanup windows with no tabs
-            for (final W window : windows) {
+            for (W window : windows) {
                 if (window.isDisposed()) {
                     // call to window.unsplit() which might make its sibling disposed
                     continue;
@@ -168,11 +168,11 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Nullable
-    private VirtualFile findNextFile(final VirtualFile file) {
-        final W[] windows = getWindows(); // TODO: use current file as base
+    private VirtualFile findNextFile(VirtualFile file) {
+        W[] windows = getWindows(); // TODO: use current file as base
         for (int i = 0; i != windows.length; ++i) {
-            final VirtualFile[] files = windows[i].getFiles();
-            for (final VirtualFile fileAt : files) {
+            VirtualFile[] files = windows[i].getFiles();
+            for (VirtualFile fileAt : files) {
                 if (!Objects.equals(fileAt, file)) {
                     return fileAt;
                 }
@@ -182,8 +182,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    public void setTabsPlacement(final int tabPlacement) {
-        final W[] windows = getWindows();
+    public void setTabsPlacement(int tabPlacement) {
+        W[] windows = getWindows();
         for (int i = 0; i != windows.length; ++i) {
             windows[i].setTabsPlacement(tabPlacement);
         }
@@ -191,14 +191,14 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
     @Override
     public void setTabLayoutPolicy(int scrollTabLayout) {
-        final W[] windows = getWindows();
+        W[] windows = getWindows();
         for (int i = 0; i != windows.length; ++i) {
             windows[i].setTabLayoutPolicy(scrollTabLayout);
         }
     }
 
     @Override
-    public void trimToSize(final int editor_tab_limit) {
+    public void trimToSize(int editor_tab_limit) {
         for (W window : myWindows) {
             window.trimToSize(editor_tab_limit, null, true);
         }
@@ -213,8 +213,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         myIconUpdater.queueAdd(file);
     }
 
-    private void collectFileIcons(final VirtualFile file, Consumer<Pair<W, Image>> windowIcons) {
-        final Collection<W> windows = findWindows(file);
+    private void collectFileIcons(VirtualFile file, Consumer<Pair<W, Image>> windowIcons) {
+        Collection<W> windows = findWindows(file);
         for (W window : windows) {
             Image fileIcon = myProject.getApplication().runReadAction((Supplier<Image>) () -> window.getFileIcon(file));
 
@@ -227,10 +227,10 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    public void updateFileColor(@Nonnull final VirtualFile file) {
-        final Collection<W> windows = findWindows(file);
+    public void updateFileColor(@Nonnull VirtualFile file) {
+        Collection<W> windows = findWindows(file);
         for (W window : windows) {
-            final int index = window.findEditorIndex(window.findFileComposite(file));
+            int index = window.findEditorIndex(window.findFileComposite(file));
             LOG.assertTrue(index != -1);
             window.setForegroundAt(index, TargetAWT.to(myManager.getFileColor(file)));
             window.setWaveColor(index, myManager.isProblem(file) ? JBColor.red : null);
@@ -239,7 +239,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
     @Override
     public void updateFileBackgroundColor(@Nonnull VirtualFile file) {
-        final W[] windows = getWindows();
+        W[] windows = getWindows();
         for (int i = 0; i != windows.length; ++i) {
             windows[i].updateFileBackgroundColor(file);
         }
@@ -256,10 +256,10 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
     @Nonnull
     @Override
-    public FileEditorWindow getOrCreateCurrentWindow(final VirtualFile file) {
-        final List<W> windows = findWindows(file);
+    public FileEditorWindow getOrCreateCurrentWindow(VirtualFile file) {
+        List<W> windows = findWindows(file);
         if (getCurrentWindow() == null) {
-            final Iterator<W> iterator = myWindows.iterator();
+            Iterator<W> iterator = myWindows.iterator();
             if (!windows.isEmpty()) {
                 setCurrentWindow(windows.get(0), false);
             }
@@ -286,7 +286,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
      * @param requestFocus whether to request focus to the editor currently selected in this window
      */
     @Override
-    public void setCurrentWindow(@Nullable final FileEditorWindow window, final boolean requestFocus) {
+    public void setCurrentWindow(@Nullable FileEditorWindow window, boolean requestFocus) {
         FileEditorWithProviderComposite newEditor = window == null ? null : window.getSelectedEditor();
 
         Runnable fireRunnable = () -> myManager.fireSelectionChanged(newEditor);
@@ -296,7 +296,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         myManager.updateFileName(window == null ? null : window.getSelectedFile());
 
         if (window != null) {
-            final FileEditorWithProviderComposite selectedEditor = window.getSelectedEditor();
+            FileEditorWithProviderComposite selectedEditor = window.getSelectedEditor();
             if (selectedEditor != null) {
                 fireRunnable.run();
             }
@@ -310,7 +310,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         }
     }
 
-    protected void setCurrentWindow(@Nullable final W currentWindow) {
+    protected void setCurrentWindow(@Nullable W currentWindow) {
         if (currentWindow != null && !myWindows.contains(currentWindow)) {
             throw new IllegalArgumentException(currentWindow + " is not a member of this container");
         }
@@ -318,7 +318,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    public void readExternal(final Element element) {
+    public void readExternal(Element element) {
         mySplittersElement = element;
     }
 
@@ -345,9 +345,9 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Override
-    public final void updateFileNameAsync(@Nullable final VirtualFile updatedFile) {
+    public final void updateFileNameAsync(@Nullable VirtualFile updatedFile) {
         if (updatedFile == null) {
-            final W[] windows = getWindows();
+            W[] windows = getWindows();
             for (int i = 0; i != windows.length; ++i) {
                 for (VirtualFile file : windows[i].getFiles()) {
                     myFileNameUpdater.queueAdd(file);
@@ -358,7 +358,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
             myFileNameUpdater.queueAdd(updatedFile);
         }
 
-        final IdeFrame frame = getFrame(myProject);
+        IdeFrame frame = getFrame(myProject);
         if (frame != null) {
             VirtualFile file = getCurrentFile();
 
@@ -375,7 +375,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
                     return;
                 }
 
-                final IdeFrame otherFrame = getFrame(myProject);
+                IdeFrame otherFrame = getFrame(myProject);
                 if (otherFrame != null) {
                     frame.setFileTitle(pair.getFirst(), pair.getSecond());
                 }
@@ -388,10 +388,10 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     @Override
     @Nonnull
     public VirtualFile[] getOpenFiles() {
-        final Set<VirtualFile> files = new LinkedHashSet<>();
-        for (final W myWindow : myWindows) {
-            final FileEditorWithProviderComposite[] editors = myWindow.getEditors();
-            for (final FileEditorWithProviderComposite editor : editors) {
+        Set<VirtualFile> files = new LinkedHashSet<>();
+        for (W myWindow : myWindows) {
+            FileEditorWithProviderComposite[] editors = myWindow.getEditors();
+            for (FileEditorWithProviderComposite editor : editors) {
                 VirtualFile file = editor.getFile();
                 // background thread may call this method when invalid file is being removed
                 // do not return it here as it will quietly drop out soon
@@ -406,15 +406,15 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     @Override
     @Nonnull
     public VirtualFile[] getSelectedFiles() {
-        final Set<VirtualFile> files = new LinkedHashSet<>();
-        for (final W window : myWindows) {
-            final VirtualFile file = window.getSelectedFile();
+        Set<VirtualFile> files = new LinkedHashSet<>();
+        for (W window : myWindows) {
+            VirtualFile file = window.getSelectedFile();
             if (file != null) {
                 files.add(file);
             }
         }
-        final VirtualFile[] virtualFiles = VirtualFileUtil.toVirtualFileArray(files);
-        final VirtualFile currentFile = getCurrentFile();
+        VirtualFile[] virtualFiles = VirtualFileUtil.toVirtualFileArray(files);
+        VirtualFile currentFile = getCurrentFile();
         if (currentFile != null) {
             for (int i = 0; i != virtualFiles.length; ++i) {
                 if (Objects.equals(virtualFiles[i], currentFile)) {
@@ -432,13 +432,13 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     @SuppressWarnings("unchecked")
     public FileEditor[] getSelectedEditors() {
         Set<W> windows = new HashSet<>(myWindows);
-        final FileEditorWindow currentWindow = getCurrentWindow();
+        FileEditorWindow currentWindow = getCurrentWindow();
         if (currentWindow != null) {
             windows.add((W) currentWindow);
         }
         List<FileEditor> editors = new ArrayList<>();
-        for (final W window : windows) {
-            final FileEditorWithProviderComposite composite = window.getSelectedEditor();
+        for (W window : windows) {
+            FileEditorWithProviderComposite composite = window.getSelectedEditor();
             if (composite != null) {
                 editors.add(composite.getSelectedEditor());
             }
@@ -467,8 +467,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     public FileEditorWithProviderComposite[] getEditorsComposites() {
         List<FileEditorWithProviderComposite> res = new ArrayList<>();
 
-        for (final FileEditorWindow myWindow : myWindows) {
-            final FileEditorWithProviderComposite[] editors = myWindow.getEditors();
+        for (FileEditorWindow myWindow : myWindows) {
+            FileEditorWithProviderComposite[] editors = myWindow.getEditors();
             ContainerUtil.addAll(res, editors);
         }
         return res.toArray(new FileEditorWithProviderComposite[res.size()]);
@@ -480,8 +480,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     @Nonnull
     public List<FileEditorWithProviderComposite> findEditorComposites(@Nonnull VirtualFile file) {
         List<FileEditorWithProviderComposite> res = new ArrayList<>();
-        for (final FileEditorWindow window : myWindows) {
-            final FileEditorWithProviderComposite fileComposite = window.findFileComposite(file);
+        for (FileEditorWindow window : myWindows) {
+            FileEditorWithProviderComposite fileComposite = window.findFileComposite(file);
             if (fileComposite != null) {
                 res.add(fileComposite);
             }
@@ -490,7 +490,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     @Nonnull
-    protected List<W> findWindows(final VirtualFile file) {
+    protected List<W> findWindows(VirtualFile file) {
         List<W> res = new ArrayList<>();
         for (W window : myWindows) {
             if (window.findFileComposite(file) != null) {
@@ -514,7 +514,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     }
 
     protected IdeFrame getFrame(Project project) {
-        final IdeFrame frame = WindowManagerEx.getInstance().getIdeFrame(project);
+        IdeFrame frame = WindowManagerEx.getInstance().getIdeFrame(project);
         LOG.assertTrue(ApplicationManager.getApplication().isUnitTestMode() || frame != null);
         return frame;
     }

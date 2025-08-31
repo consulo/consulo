@@ -51,7 +51,7 @@ class CollectionBinding extends AbstractCollectionBinding {
   }
 
   @Override
-  protected String getCollectionTagName(@Nullable final Object target) {
+  protected String getCollectionTagName(@Nullable Object target) {
     if (target instanceof Set) {
       return Constants.SET;
     }

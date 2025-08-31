@@ -44,8 +44,8 @@ public interface ChangeProvider extends VcsProviderMarker {
    * @param addGate
    * @throws VcsException if there there is a VCS specific problem
    */
-  void getChanges(final VcsDirtyScope dirtyScope, final ChangelistBuilder builder, final ProgressIndicator progress,
-                  final ChangeListManagerGate addGate) throws VcsException;
+  void getChanges(VcsDirtyScope dirtyScope, ChangelistBuilder builder, ProgressIndicator progress,
+                  ChangeListManagerGate addGate) throws VcsException;
 
   /**
    * Returns true if the initial unsaved modification of a document should cause dirty scope invalidation
@@ -59,5 +59,5 @@ public interface ChangeProvider extends VcsProviderMarker {
    * performs working copy "cleanup"
    * @param files - locked directories
    */
-  void doCleanup(final List<VirtualFile> files);
+  void doCleanup(List<VirtualFile> files);
 }

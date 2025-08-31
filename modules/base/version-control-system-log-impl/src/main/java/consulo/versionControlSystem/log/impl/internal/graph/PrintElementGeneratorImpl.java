@@ -197,7 +197,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
   private Function<GraphEdge, Integer> createEndPositionFunction(int visibleRowIndex) {
     List<GraphElement> visibleElementsInNextRow = getSortedVisibleElementsInRow(visibleRowIndex + 1);
 
-    final Map<GraphElement, Integer> toPosition = new HashMap<>();
+    Map<GraphElement, Integer> toPosition = new HashMap<>();
     for (int position = 0; position < visibleElementsInNextRow.size(); position++) {
       toPosition.put(visibleElementsInNextRow.get(position), position);
     }

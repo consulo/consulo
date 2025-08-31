@@ -76,7 +76,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         protected class AccessibleIdeFrameImpl extends AccessibleJFrame {
             @Override
             public String getAccessibleName() {
-                final StringBuilder builder = new StringBuilder();
+                StringBuilder builder = new StringBuilder();
 
                 if (myProject != null) {
                     builder.append(myProject.getName());
@@ -124,7 +124,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         }
 
         @Override
-        public void setTitle(final String title) {
+        public void setTitle(String title) {
             if (myUpdatingTitle) {
                 super.setTitle(title);
             }
@@ -212,7 +212,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     private static final class TitleBuilder {
         public StringBuilder sb = new StringBuilder();
 
-        public TitleBuilder append(@Nullable final String s) {
+        public TitleBuilder append(@Nullable String s) {
             if (s == null || s.isEmpty()) {
                 return this;
             }
@@ -262,7 +262,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myTitlelessDecorator = TitlelessDecorator.of(myRootPane, TitlelessDecorator.MAIN_WINDOW);
         myJFrame.setBackground(UIUtil.getPanelBackground());
         AppIconUtil.updateWindowIcon(myJFrame);
-        final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
+        Dimension size = ScreenUtil.getMainScreenBounds().getSize();
 
         size.width = Math.min(1400, size.width - 20);
         size.height = Math.min(1000, size.height - 40);
@@ -362,14 +362,14 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myJFrame.addWindowListener(new WindowAdapter() {
             @Override
             @RequiredUIAccess
-            public void windowClosing(@Nonnull final WindowEvent e) {
+            public void windowClosing(@Nonnull WindowEvent e) {
                 if (isTemporaryDisposed()) {
                     return;
                 }
 
                 ProjectManagerEx projectManager = (ProjectManagerEx) ProjectManager.getInstance();
 
-                final Project[] openProjects = projectManager.getOpenProjects();
+                Project[] openProjects = projectManager.getOpenProjects();
                 if (openProjects.length > 1 || openProjects.length == 1 && TopApplicationMenuUtil.isMacSystemMenu) {
                     if (myProject != null && myProject.isOpen()) {
                         projectManager.closeAndDispose(myProject);
@@ -392,12 +392,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     }
 
     @Override
-    public void setFrameTitle(final String text) {
+    public void setFrameTitle(String text) {
         myJFrame.setTitleWithoutCheck(text);
     }
 
     @Override
-    public void setFileTitle(@Nullable final String fileTitle, @Nullable File file) {
+    public void setFileTitle(@Nullable String fileTitle, @Nullable File file) {
         myFileTitle = fileTitle;
         myCurrentFile = file;
         updateTitle();
@@ -413,7 +413,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         updateTitle(myJFrame, myTitle, myFileTitle, myCurrentFile);
     }
 
-    public static void updateTitle(JFrame frame, final String title, final String fileTitle, final File currentFile) {
+    public static void updateTitle(JFrame frame, String title, String fileTitle, File currentFile) {
         if (myUpdatingTitle) {
             return;
         }
@@ -423,8 +423,8 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
             frame.getRootPane().putClientProperty("Window.documentFile", currentFile);
 
-            final String applicationName = FrameTitleUtil.buildTitle();
-            final TitleBuilder titleBuilder = new TitleBuilder();
+            String applicationName = FrameTitleUtil.buildTitle();
+            TitleBuilder titleBuilder = new TitleBuilder();
             if (Platform.current().os().isMac()) {
                 boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
                 titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
@@ -474,7 +474,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return null;
     }
 
-    public void setProject(final Project project) {
+    public void setProject(Project project) {
         if (WindowManager.getInstance().isFullScreenSupportedInCurrentOS() && myProject != project && project != null) {
             myRestoreFullScreen = myProject == null && shouldRestoreFullScreen(project);
 
@@ -572,7 +572,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     @Override
     public Rectangle2D suggestChildFrameBounds() {
         //todo [kirillk] a dummy implementation
-        final Rectangle b = myJFrame.getBounds();
+        Rectangle b = myJFrame.getBounds();
         b.x += 100;
         b.width -= 200;
         b.y += 100;
@@ -637,7 +637,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         }
     }
 
-    private boolean temporaryFixForIdea156004(final boolean state) {
+    private boolean temporaryFixForIdea156004(boolean state) {
         if (Platform.current().os().isMac()) {
             JDialog modalBlocker = WindowHacking.getModalBlockerFor(myJFrame);
             if (modalBlocker != null) {

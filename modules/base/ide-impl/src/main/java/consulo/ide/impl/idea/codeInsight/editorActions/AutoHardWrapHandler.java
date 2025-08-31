@@ -111,7 +111,7 @@ public class AutoHardWrapHandler {
     int startOffset = document.getLineStartOffset(line);
     int endOffset = document.getLineEndOffset(line);
 
-    final CharSequence endOfString = document.getCharsSequence().subSequence(caretOffset, endOffset);
+    CharSequence endOfString = document.getCharsSequence().subSequence(caretOffset, endOffset);
     final boolean endsWithSpaces = StringUtil.isEmptyOrSpaces(String.valueOf(endOfString));
     // Check if right margin is exceeded.
     int margin = editor.getSettings().getRightMargin(project);
@@ -150,8 +150,8 @@ public class AutoHardWrapHandler {
       myAutoWrapChanges.put(document, change);
     }
     else {
-      final int start = change.change.getStart();
-      final int end = change.change.getEnd();
+      int start = change.change.getStart();
+      int end = change.change.getEnd();
       if (!change.isEmpty() && start < end) {
         document.replaceString(start, end, change.change.getText());
       }

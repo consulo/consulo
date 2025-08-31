@@ -115,7 +115,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
 
     AbstractPopup popup = (AbstractPopup)findPopup();
 
-    final MouseEvent mouseEvent = (MouseEvent)event;
+    MouseEvent mouseEvent = (MouseEvent)event;
 
     Point point = (Point)mouseEvent.getPoint().clone();
     SwingUtilities.convertPointToScreen(point, mouseEvent.getComponent());
@@ -126,13 +126,13 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
         if (window != null && window != popup.getPopupWindow() && SwingUtilities.isDescendingFrom(window, popup.getPopupWindow())) {
           return false;
         }
-        final Component content = popup.getContent();
+        Component content = popup.getContent();
         if (!content.isShowing()) {
           popup.cancel();
           return false;
         }
 
-        final Rectangle bounds = new Rectangle(content.getLocationOnScreen(), content.getSize());
+        Rectangle bounds = new Rectangle(content.getLocationOnScreen(), content.getSize());
         if (bounds.contains(point) || !popup.isCancelOnClickOutside()) {
           return false;
         }
@@ -164,7 +164,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
   private JBPopup findPopup() {
     while (true) {
       if (myStack.isEmpty()) break;
-      final AbstractPopup each = (AbstractPopup)myStack.peek();
+      AbstractPopup each = (AbstractPopup)myStack.peek();
       if (each == null || each.isDisposed()) {
         myStack.pop();
       }
@@ -177,8 +177,8 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
   }
 
   @Override
-  public boolean dispatchKeyEvent(final KeyEvent e) {
-    final boolean closeRequest = AbstractPopup.isCloseRequest(e);
+  public boolean dispatchKeyEvent(KeyEvent e) {
+    boolean closeRequest = AbstractPopup.isCloseRequest(e);
 
     JBPopup popup = closeRequest ? findPopup() : getFocusedPopup();
     if (popup == null) return false;
@@ -215,7 +215,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
   public boolean requestFocus() {
     if (myStack.isEmpty()) return false;
 
-    final AbstractPopup popup = (AbstractPopup)myStack.peek();
+    AbstractPopup popup = (AbstractPopup)myStack.peek();
     return popup.requestFocus();
   }
 
@@ -251,7 +251,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
   public boolean closeActivePopup() {
     if (myStack.isEmpty()) return false;
 
-    final AbstractPopup popup = (AbstractPopup)myStack.peek();
+    AbstractPopup popup = (AbstractPopup)myStack.peek();
     if (popup != null && popup.isVisible() && popup.isCancelOnWindowDeactivation() && popup.canClose()) {
       popup.cancel();
       // setCancelCallback(..) can override cancel()

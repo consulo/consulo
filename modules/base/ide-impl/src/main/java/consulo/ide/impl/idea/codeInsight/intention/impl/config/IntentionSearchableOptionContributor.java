@@ -57,12 +57,12 @@ public class IntentionSearchableOptionContributor extends SearchableOptionContri
 
       IntentionActionMetaData data = new IntentionActionMetaData(action, categories, descriptionDirectoryName);
 
-      final TextDescriptor description = data.getDescription();
+      TextDescriptor description = data.getDescription();
 
       try {
         String descriptionText = description.getText().toLowerCase();
         descriptionText = IntentionManagerSettings.HTML_PATTERN.matcher(descriptionText).replaceAll(" ");
-        final Set<String> words = processor.getProcessedWordsWithoutStemming(descriptionText);
+        Set<String> words = processor.getProcessedWordsWithoutStemming(descriptionText);
         words.addAll(processor.getProcessedWords(data.getActionText()));
         for (String word : words) {
           processor.addOption(word, data.getActionText(), data.getActionText(), "editor.code.intentions", CodeInsightBundle.message("intention.settings"));

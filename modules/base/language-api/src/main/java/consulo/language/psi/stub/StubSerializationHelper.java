@@ -95,7 +95,7 @@ public class StubSerializationHelper {
   }
 
   private void serializeChildren(@Nonnull Stub parent, @Nonnull StubOutputStream stream, IntEnumerator serializerLocalEnumerator) throws IOException {
-    final List<? extends Stub> children = parent.getChildrenStubs();
+    List<? extends Stub> children = parent.getChildrenStubs();
     DataInputOutputUtil.writeINT(stream, children.size());
     for (Stub child : children) {
       serializeSelf(child, stream, serializerLocalEnumerator);
@@ -111,7 +111,7 @@ public class StubSerializationHelper {
     boolean doDefaultSerialization = true;
 
     if (rootStub instanceof PsiFileStubImpl) {
-      final PsiFileStub[] roots = ((PsiFileStubImpl<?>)rootStub).getStubRoots();
+      PsiFileStub[] roots = ((PsiFileStubImpl<?>)rootStub).getStubRoots();
       if (roots.length == 0) {
         Logger.getInstance(getClass()).error("Incorrect stub files count during serialization:" + rootStub + "," + rootStub.getStubType());
       }
@@ -134,7 +134,7 @@ public class StubSerializationHelper {
     resultStream.write(out.getInternalBuffer(), 0, out.size());
   }
 
-  private int getClassId(final ObjectStubSerializer serializer) {
+  private int getClassId(ObjectStubSerializer serializer) {
     Integer idValue = mySerializerToId.get(serializer);
     if (idValue == null) {
       String name = serializer.getExternalId();
@@ -156,25 +156,25 @@ public class StubSerializationHelper {
     IntEnumerator serializerLocalEnumerator = IntEnumerator.read(inputStream);
     FileLocalStringEnumerator.readEnumeratedStrings(storage, inputStream, this::intern);
 
-    final int stubFilesCount = DataInputOutputUtil.readINT(inputStream);
+    int stubFilesCount = DataInputOutputUtil.readINT(inputStream);
     if (stubFilesCount <= 0) {
       Logger.getInstance(getClass()).error("Incorrect stub files count during deserialization:" + stubFilesCount);
     }
 
     Stub baseStub = deserializeRoot(inputStream, storage, serializerLocalEnumerator);
-    final List<PsiFileStub> stubs = new ArrayList<>(stubFilesCount);
+    List<PsiFileStub> stubs = new ArrayList<>(stubFilesCount);
     if (baseStub instanceof PsiFileStub) stubs.add((PsiFileStub)baseStub);
     for (int j = 1; j < stubFilesCount; j++) {
       Stub deserialize = deserializeRoot(inputStream, storage, serializerLocalEnumerator);
       if (deserialize instanceof PsiFileStub) {
-        final PsiFileStub fileStub = (PsiFileStub)deserialize;
+        PsiFileStub fileStub = (PsiFileStub)deserialize;
         stubs.add(fileStub);
       }
       else {
         Logger.getInstance(getClass()).error("Stub root must be PsiFileStub for files with several stub roots");
       }
     }
-    final PsiFileStub[] stubsArray = stubs.toArray(PsiFileStub.EMPTY_ARRAY);
+    PsiFileStub[] stubsArray = stubs.toArray(PsiFileStub.EMPTY_ARRAY);
     for (PsiFileStub stub : stubsArray) {
       if (stub instanceof PsiFileStubImpl) {
         ((PsiFileStubImpl)stub).setStubRoots(stubsArray);

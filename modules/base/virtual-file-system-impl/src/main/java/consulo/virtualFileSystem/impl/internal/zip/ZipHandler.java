@@ -40,7 +40,7 @@ public abstract class ZipHandler extends ArchiveHandler {
   private static final FileAccessorCache<ZipHandler, ArchiveFile> ourZipFileFileAccessorCache = new FileAccessorCache<ZipHandler, ArchiveFile>(20, 10) {
     @Override
     protected ArchiveFile createAccessor(ZipHandler key) throws IOException {
-      final String canonicalPathToZip = key.getCanonicalPathToZip();
+      String canonicalPathToZip = key.getCanonicalPathToZip();
       FileAttributes attributes = FileSystemUtil.getAttributes(canonicalPathToZip);
       key.myFileStamp = attributes != null ? attributes.lastModified : DEFAULT_TIMESTAMP;
       key.myFileLength = attributes != null ? attributes.length : DEFAULT_LENGTH;
@@ -49,7 +49,7 @@ public abstract class ZipHandler extends ArchiveHandler {
     }
 
     @Override
-    protected void disposeAccessor(final ArchiveFile fileAccessor) throws IOException {
+    protected void disposeAccessor(ArchiveFile fileAccessor) throws IOException {
       // todo: ZipFile isn't disposable for Java6, replace the code below with 'disposeCloseable(fileAccessor);'
       fileAccessor.close();
     }

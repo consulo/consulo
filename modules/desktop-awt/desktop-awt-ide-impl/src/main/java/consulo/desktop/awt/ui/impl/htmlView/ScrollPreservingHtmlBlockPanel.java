@@ -25,11 +25,11 @@ class ScrollPreservingHtmlBlockPanel extends HtmlBlockPanel {
             int oldX = 32768;
             int oldY = 32768;
             if (rblock != null) {
-                final RBlockViewport viewport = rblock.getRBlockViewport();
+                RBlockViewport viewport = rblock.getRBlockViewport();
                 oldX = viewport.getX();
                 oldY = viewport.getY();
             }
-            final RBlock block = new RBlock(node, 0, this.ucontext, this.rcontext,
+            RBlock block = new RBlock(node, 0, this.ucontext, this.rcontext,
                 this.frameContext, this);
             // block.setDefaultPaddingInsets(this.defaultPaddingInsets);
             block.setDefaultOverflowX(this.defaultOverflowX);

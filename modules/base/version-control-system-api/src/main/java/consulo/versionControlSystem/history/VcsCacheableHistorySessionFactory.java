@@ -31,10 +31,10 @@ public interface VcsCacheableHistorySessionFactory<Cacheable extends Serializabl
    * define if path should be changed for session construction (file can be moved)
    */
   @Nullable
-  FilePath getUsedFilePath(final T session);
+  FilePath getUsedFilePath(T session);
 
   @Nullable
-  Cacheable getAddinionallyCachedData(final T session);
+  Cacheable getAddinionallyCachedData(T session);
 
-  T createFromCachedData(@Nullable final Cacheable cacheable, @Nonnull final List<VcsFileRevision> revisions, @Nonnull final FilePath filePath, @Nullable final VcsRevisionNumber currentRevision);
+  T createFromCachedData(@Nullable Cacheable cacheable, @Nonnull List<VcsFileRevision> revisions, @Nonnull FilePath filePath, @Nullable VcsRevisionNumber currentRevision);
 }

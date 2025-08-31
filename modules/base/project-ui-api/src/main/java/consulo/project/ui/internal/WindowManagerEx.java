@@ -108,13 +108,13 @@ public abstract class WindowManagerEx extends WindowManager {
   /**
    * @return bounds for the screen device for the given project frame
    */
-  public abstract Rectangle getScreenBounds(@Nonnull final Project project);
+  public abstract Rectangle getScreenBounds(@Nonnull Project project);
 
   public abstract void setWindowMask(Window window, Shape mask);
 
   public abstract void setWindowShadow(Window window, WindowShadowMode mode);
 
-  public abstract void resetWindow(final Window window);
+  public abstract void resetWindow(Window window);
 
   /**
    * Either dispose the dialog immediately if project's frame has focus or just hide and dispose when frame gets focus or closes.

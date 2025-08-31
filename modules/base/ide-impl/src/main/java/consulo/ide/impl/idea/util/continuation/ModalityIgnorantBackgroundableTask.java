@@ -54,14 +54,14 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
   }
 
   @RequiredUIAccess
-  protected abstract void doInAwtIfFail(final Exception e);
+  protected abstract void doInAwtIfFail(Exception e);
   @RequiredUIAccess
   protected abstract void doInAwtIfCancel();
   @RequiredUIAccess
   protected abstract void doInAwtIfSuccess();
   protected abstract void runImpl(@Nonnull ProgressIndicator indicator);
 
-  public void runSteadily(final Consumer<Backgroundable> consumer) {
+  public void runSteadily(Consumer<Backgroundable> consumer) {
     myRunner = consumer;
     myCnt = 100;
     consumer.accept(this);

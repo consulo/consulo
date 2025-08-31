@@ -49,7 +49,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
       return;
     }
 
-    final IdeaModalityState initial = IdeaModalityState.current();
+    IdeaModalityState initial = IdeaModalityState.current();
     ALARM.cancelAllRequests();
     ALARM.addRequest(() -> dumpThreads(project, initial), MAX_ALLOWED_TIME);
 
@@ -66,13 +66,13 @@ public class FreezeLoggerImpl extends FreezeLogger {
   }
 
   private static void dumpThreads(@Nullable ComponentManager project, @Nonnull IdeaModalityState initialState) {
-    final ThreadInfo[] infos = ThreadDumper.getThreadInfos();
-    final String edtTrace = ThreadDumper.dumpEdtStackTrace(infos);
+    ThreadInfo[] infos = ThreadDumper.getThreadInfos();
+    String edtTrace = ThreadDumper.dumpEdtStackTrace(infos);
     if (edtTrace.contains("java.lang.ClassLoader.loadClass")) {
       return;
     }
 
-    final boolean isInDumbMode = project != null && !project.isDisposed() && DumbService.isDumb((Project)project);
+    boolean isInDumbMode = project != null && !project.isDisposed() && DumbService.isDumb((Project)project);
 
     ApplicationManager.getApplication().invokeLater(() -> {
       if (!initialState.equals(IdeaModalityState.current())) return;

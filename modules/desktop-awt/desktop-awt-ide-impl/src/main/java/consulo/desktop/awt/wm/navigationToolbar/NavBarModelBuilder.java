@@ -24,7 +24,7 @@ public abstract class NavBarModelBuilder {
   }
 
   public List<Object> createModel(@Nonnull PsiElement psiElement, @Nonnull Set<VirtualFile> roots, @Nullable NavBarModelExtension ownerExtension) {
-    final List<Object> model = new ArrayList<>();
+    List<Object> model = new ArrayList<>();
     traverseToRoot(psiElement, roots, model, ownerExtension);
     return model;
   }

@@ -39,10 +39,10 @@ public class MoveProjectToGroupAction extends RecentProjectsWelcomeScreenActionB
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final List<AnAction> elements = getSelectedElements(e);
+    List<AnAction> elements = getSelectedElements(e);
     for (AnAction element : elements) {
       if (element instanceof ReopenProjectAction) {
-        final String path = ((ReopenProjectAction)element).getProjectPath();
+        String path = ((ReopenProjectAction)element).getProjectPath();
         for (ProjectGroup group : RecentProjectsManager.getInstance().getGroups()) {
           group.removeProject(path);
           myGroup.addProject(path);

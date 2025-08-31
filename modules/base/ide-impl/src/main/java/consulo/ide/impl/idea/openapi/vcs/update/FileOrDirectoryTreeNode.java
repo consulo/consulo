@@ -89,8 +89,8 @@ public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implement
   }
 
   @Override
-  public void setUserObject(final Object userObject) {
-    final Object oldObject = getUserObject();
+  public void setUserObject(Object userObject) {
+    Object oldObject = getUserObject();
     try {
       super.setUserObject(userObject);
     }

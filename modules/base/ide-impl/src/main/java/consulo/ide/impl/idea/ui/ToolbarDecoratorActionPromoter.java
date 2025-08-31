@@ -35,8 +35,8 @@ public class ToolbarDecoratorActionPromoter implements ActionPromoter {
     @Override
     public int compare(AnAction a1, AnAction a2) {
       if (a1 instanceof AnActionButton && a2 instanceof AnActionButton) {
-        final JComponent c1 = ((AnActionButton)a1).getContextComponent();
-        final JComponent c2 = ((AnActionButton)a2).getContextComponent();
+        JComponent c1 = ((AnActionButton)a1).getContextComponent();
+        JComponent c2 = ((AnActionButton)a2).getContextComponent();
         return c1.hasFocus() ? -1 : c2.hasFocus() ? 1 : 0;
       }
       return 0;
@@ -45,7 +45,7 @@ public class ToolbarDecoratorActionPromoter implements ActionPromoter {
 
   @Override
   public List<AnAction> promote(List<AnAction> actions, DataContext context) {
-    final List<AnAction> result = Lists.newSortedList(ACTION_BUTTONS_SORTER);
+    List<AnAction> result = Lists.newSortedList(ACTION_BUTTONS_SORTER);
     result.addAll(actions);
     return result;
   }

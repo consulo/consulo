@@ -245,12 +245,12 @@ public class ConsoleHistoryController {
     }
 
     @RequiredUIAccess
-    protected void setConsoleText(final String command, final boolean storeUserText, final boolean regularMode) {
+    protected void setConsoleText(String command, boolean storeUserText, boolean regularMode) {
         if (regularMode && myMultiline && StringUtil.isEmptyOrSpaces(command)) {
             return;
         }
-        final Editor editor = myConsole.getCurrentEditor();
-        final Document document = editor.getDocument();
+        Editor editor = myConsole.getCurrentEditor();
+        Document document = editor.getDocument();
         CommandProcessor.getInstance().newCommand()
             .project(myConsole.getProject())
             .inWriteAction()
@@ -305,7 +305,7 @@ public class ConsoleHistoryController {
         @Nonnull
         private final Collection<KeyStroke> myUpDownKeystrokes;
 
-        public MyAction(final boolean next, @Nonnull Collection<KeyStroke> upDownKeystrokes) {
+        public MyAction(boolean next, @Nonnull Collection<KeyStroke> upDownKeystrokes) {
             myNext = next;
             myUpDownKeystrokes = upDownKeystrokes;
             getTemplatePresentation().setVisible(false);
@@ -342,10 +342,10 @@ public class ConsoleHistoryController {
         }
     }
 
-    private boolean canMoveInEditor(final boolean next) {
-        final Editor consoleEditor = myConsole.getCurrentEditor();
-        final Document document = consoleEditor.getDocument();
-        final CaretModel caretModel = consoleEditor.getCaretModel();
+    private boolean canMoveInEditor(boolean next) {
+        Editor consoleEditor = myConsole.getCurrentEditor();
+        Document document = consoleEditor.getDocument();
+        CaretModel caretModel = consoleEditor.getCaretModel();
 
         if (LookupManager.getActiveLookup(consoleEditor) != null) {
             return false;
@@ -355,7 +355,7 @@ public class ConsoleHistoryController {
             return document.getLineNumber(caretModel.getOffset()) == 0;
         }
         else {
-            final int lineCount = document.getLineCount();
+            int lineCount = document.getLineCount();
             return (lineCount == 0 || document.getLineNumber(caretModel.getOffset()) == lineCount - 1)
                 && StringUtil.isEmptyOrSpaces(document.getText().substring(caretModel.getOffset()));
         }
@@ -375,7 +375,7 @@ public class ConsoleHistoryController {
             String s2 = KeymapUtil.getFirstKeyboardShortcutText(myHistoryPrev);
             String title = myConsole.getTitle() + " History" +
                 (StringUtil.isNotEmpty(s1) && StringUtil.isNotEmpty(s2) ? " (" + s1 + " and " + s2 + " while in editor)" : "");
-            final ContentChooser<String> chooser = new ContentChooser<>(myConsole.getProject(), title, true, true) {
+            ContentChooser<String> chooser = new ContentChooser<>(myConsole.getProject(), title, true, true) {
 
                 @Override
                 protected void removeContentAt(String content) {
@@ -463,7 +463,7 @@ public class ConsoleHistoryController {
         }
 
         @Nonnull
-        private String getOldHistoryFilePath(final String id) {
+        private String getOldHistoryFilePath(String id) {
             String pathName = myRootType.getConsoleTypeId() + Long.toHexString(StringHash.calc(id));
             return ContainerPathManager.get().getSystemPath() + File.separator + "userHistory" + File.separator + pathName + ".hist.xml";
         }
@@ -529,7 +529,7 @@ public class ConsoleHistoryController {
 
         private void saveHistoryOld() {
             File file = new File(PathUtil.toSystemDependentName(getOldHistoryFilePath(myId)));
-            final File dir = file.getParentFile();
+            File dir = file.getParentFile();
             if (!dir.exists() && !dir.mkdirs() || !dir.isDirectory()) {
                 LOG.error("failed to create folder: " + dir.getAbsolutePath());
                 return;
@@ -616,15 +616,15 @@ public class ConsoleHistoryController {
 
     @Nullable
     public static VirtualFile getContentFile(
-        @Nonnull final ConsoleRootType rootType,
+        @Nonnull ConsoleRootType rootType,
         @Nonnull String id,
         ScratchFileService.Option option
     ) {
-        final String pathName = PathUtil.makeFileName(rootType.getContentPathName(id), rootType.getDefaultFileExtension());
+        String pathName = PathUtil.makeFileName(rootType.getContentPathName(id), rootType.getDefaultFileExtension());
         try {
             return rootType.findFile(null, pathName, option);
         }
-        catch (final IOException e) {
+        catch (IOException e) {
             LOG.warn(e);
             Application.get().invokeLater(() -> {
                 String message = String.format(
@@ -661,7 +661,7 @@ public class ConsoleHistoryController {
     private static Collection<KeyStroke> getKeystrokesUpDown(boolean isUp) {
         Collection<KeyStroke> result = new ArrayList<>();
 
-        final ShortcutSet shortcutSet = getShortcutUpDown(isUp);
+        ShortcutSet shortcutSet = getShortcutUpDown(isUp);
         for (Shortcut shortcut : shortcutSet.getShortcuts()) {
             if (shortcut.isKeyboard() && ((KeyboardShortcut)shortcut).getSecondKeyStroke() == null) {
                 result.add(((KeyboardShortcut)shortcut).getFirstKeyStroke());

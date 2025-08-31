@@ -17,7 +17,7 @@ public final class StubProcessingHelper extends StubProcessingHelperBase {
   private final ThreadLocal<Set<VirtualFile>> myFilesHavingProblems = new ThreadLocal<>();
 
   @Override
-  protected void onInternalError(final VirtualFile file) {
+  protected void onInternalError(VirtualFile file) {
     Set<VirtualFile> set = myFilesHavingProblems.get();
     if (set == null) myFilesHavingProblems.set(set = new HashSet<>());
     set.add(file);

@@ -64,16 +64,16 @@ public class LineStatusTrackerDrawing {
     @Nonnull
     @Override
     protected ActionToolbar buildToolbar(@Nullable Point mousePosition, @Nonnull Disposable parentDisposable) {
-      final DefaultActionGroup group = new DefaultActionGroup();
+      DefaultActionGroup group = new DefaultActionGroup();
 
-      final ShowPrevChangeMarkerAction localShowPrevAction =
+      ShowPrevChangeMarkerAction localShowPrevAction =
         new ShowPrevChangeMarkerAction(myTracker.getPrevRange(myRange), myTracker, myEditor);
-      final ShowNextChangeMarkerAction localShowNextAction =
+      ShowNextChangeMarkerAction localShowNextAction =
         new ShowNextChangeMarkerAction(myTracker.getNextRange(myRange), myTracker, myEditor);
-      final RollbackLineStatusRangeAction rollback = new RollbackLineStatusRangeAction(myTracker, myRange, myEditor);
-      final ShowLineStatusRangeDiffAction showDiff = new ShowLineStatusRangeDiffAction(myTracker, myRange, myEditor);
-      final CopyLineStatusRangeAction copyRange = new CopyLineStatusRangeAction(myTracker, myRange);
-      final ToggleByWordDiffAction toggleWordDiff = new ToggleByWordDiffAction(myRange, myEditor, myTracker, mousePosition);
+      RollbackLineStatusRangeAction rollback = new RollbackLineStatusRangeAction(myTracker, myRange, myEditor);
+      ShowLineStatusRangeDiffAction showDiff = new ShowLineStatusRangeDiffAction(myTracker, myRange, myEditor);
+      CopyLineStatusRangeAction copyRange = new CopyLineStatusRangeAction(myTracker, myRange);
+      ToggleByWordDiffAction toggleWordDiff = new ToggleByWordDiffAction(myRange, myEditor, myTracker, mousePosition);
 
       group.add(localShowPrevAction);
       group.add(localShowNextAction);
@@ -89,7 +89,7 @@ public class LineStatusTrackerDrawing {
       registerAction(showDiff, editorComponent);
       registerAction(copyRange, editorComponent);
 
-      final List<AnAction> actionList = ActionImplUtil.getActions(editorComponent);
+      List<AnAction> actionList = ActionImplUtil.getActions(editorComponent);
       Disposer.register(parentDisposable, () -> {
         actionList.remove(localShowPrevAction);
         actionList.remove(localShowNextAction);

@@ -89,12 +89,12 @@ public abstract class ChooseByNameFilter<T> {
         DefaultActionGroup actionGroup = new DefaultActionGroup("go.to.file.filter", false);
         ToggleAction action = new ToggleAction("Filter", "Filter files by type", AllIcons.General.Filter) {
             @Override
-            public boolean isSelected(final AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return myPopup != null;
             }
 
             @Override
-            public void setSelected(final AnActionEvent e, final boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 if (state) {
                     createPopup();
                 }
@@ -126,7 +126,7 @@ public abstract class ChooseByNameFilter<T> {
         JButton all = new JButton("All");
         all.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 myChooser.setAllElementsMarked(true);
             }
         });
@@ -134,7 +134,7 @@ public abstract class ChooseByNameFilter<T> {
         JButton none = new JButton("None");
         none.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 myChooser.setAllElementsMarked(false);
             }
         });
@@ -142,7 +142,7 @@ public abstract class ChooseByNameFilter<T> {
         JButton invert = new JButton("Invert");
         invert.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 myChooser.invertSelection();
             }
         });
@@ -166,17 +166,17 @@ public abstract class ChooseByNameFilter<T> {
         List<T> elements = new ArrayList<T>(getAllFilterValues());
         final ElementsChooser<T> chooser = new ElementsChooser<T>(elements, true) {
             @Override
-            protected String getItemText(@Nonnull final T value) {
+            protected String getItemText(@Nonnull T value) {
                 return textForFilterValue(value);
             }
 
             @Override
-            protected Image getItemIcon(@Nonnull final T value) {
+            protected Image getItemIcon(@Nonnull T value) {
                 return iconForFilterValue(value);
             }
         };
         chooser.setFocusable(false);
-        final int count = chooser.getElementCount();
+        int count = chooser.getElementCount();
         for (int i = 0; i < count; i++) {
             T type = chooser.getElementAt(i);
             if (!DumbService.getInstance(myProject).isDumb() && !filterConfiguration.isFileTypeVisible(type)) {
@@ -186,7 +186,7 @@ public abstract class ChooseByNameFilter<T> {
         updateModel(model, chooser, true);
         chooser.addElementsMarkListener(new ElementsChooser.ElementsMarkListener<T>() {
             @Override
-            public void elementMarkChanged(final T element, final boolean isMarked) {
+            public void elementMarkChanged(T element, boolean isMarked) {
                 filterConfiguration.setVisible(element, isMarked);
                 updateModel(model, chooser, false);
             }
@@ -209,7 +209,7 @@ public abstract class ChooseByNameFilter<T> {
      * @param chooser       a file type chooser
      */
     protected void updateModel(@Nonnull FilteringGotoByModel<T> gotoFileModel, @Nonnull ElementsChooser<T> chooser, boolean initial) {
-        final List<T> markedElements = chooser.getMarkedElements();
+        List<T> markedElements = chooser.getMarkedElements();
         gotoFileModel.setFilterItems(markedElements);
         myParentPopup.rebuildList(initial);
     }

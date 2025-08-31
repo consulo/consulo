@@ -48,7 +48,7 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
   @Override
   public void persistPatch(@Nonnull Map<String, Set<PatchedUsage>> patchedDescriptorMap) {
     for (Map.Entry<String, Set<PatchedUsage>> entry : patchedDescriptorMap.entrySet()) {
-      final String groupDescriptor = entry.getKey();
+      String groupDescriptor = entry.getKey();
       for (PatchedUsage patchedUsage : entry.getValue()) {
         UsageDescriptor usageDescriptor = StatisticsUploadAssistant.findDescriptor(mySentDescriptors, Pair.create(groupDescriptor, patchedUsage.getKey()));
         if (usageDescriptor != null) {

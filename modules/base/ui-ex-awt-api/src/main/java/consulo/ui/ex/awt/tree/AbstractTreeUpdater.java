@@ -48,12 +48,12 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
 
   public AbstractTreeUpdater(@Nonnull AbstractTreeBuilder treeBuilder) {
     myTreeBuilder = treeBuilder;
-    final JTree tree = myTreeBuilder.getTree();
-    final JComponent component = tree instanceof TreeTableTree ? ((TreeTableTree)tree).getTreeTable() : tree;
+    JTree tree = myTreeBuilder.getTree();
+    JComponent component = tree instanceof TreeTableTree ? ((TreeTableTree)tree).getTreeTable() : tree;
     myUpdateQueue = new MergingUpdateQueue("UpdateQueue", 100, component.isShowing(), component);
     myUpdateQueue.setRestartTimerOnAdd(false);
 
-    final UiNotifyConnector uiNotifyConnector = new UiNotifyConnector(component, myUpdateQueue);
+    UiNotifyConnector uiNotifyConnector = new UiNotifyConnector(component, myUpdateQueue);
     Disposer.register(this, myUpdateQueue);
     Disposer.register(this, uiNotifyConnector);
   }
@@ -110,7 +110,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
 
     assert !toAdd.isExpired();
 
-    final AbstractTreeUi ui = myTreeBuilder.getUi();
+    AbstractTreeUi ui = myTreeBuilder.getUi();
     if (ui == null) return;
 
     if (ui.isUpdatingChildrenNow(toAdd.getNode())) {
@@ -118,7 +118,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
     }
     else {
       for (Iterator<TreeUpdatePass> iterator = myNodeQueue.iterator(); iterator.hasNext(); ) {
-        final TreeUpdatePass passInQueue = iterator.next();
+        TreeUpdatePass passInQueue = iterator.next();
 
         boolean isMatchingPass = toAdd.isUpdateStructure() == passInQueue.isUpdateStructure() && toAdd.isUpdateChildren() == passInQueue.isUpdateChildren();
         if (isMatchingPass) {
@@ -153,9 +153,9 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
     long newUpdateCount = toAdd.getUpdateStamp() == -1 ? myUpdateCount : myUpdateCount + 1;
 
     if (!toAdd.isExpired()) {
-      final Collection<TreeUpdatePass> yielding = ui.getYeildingPasses();
+      Collection<TreeUpdatePass> yielding = ui.getYeildingPasses();
       for (TreeUpdatePass eachYielding : yielding) {
-        final DefaultMutableTreeNode eachNode = eachYielding.getCurrentNode();
+        DefaultMutableTreeNode eachNode = eachYielding.getCurrentNode();
         if (eachNode != null) {
           if (eachNode.isNodeAncestor(toAdd.getNode())) {
             eachYielding.setUpdateStamp(newUpdateCount);
@@ -252,7 +252,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
   }
 
   private void maybeRunAfterUpdate() {
-    final Runnable runnable = new TreeRunnable("AbstractTreeUpdater.maybeRunAfterUpdate") {
+    Runnable runnable = new TreeRunnable("AbstractTreeUpdater.maybeRunAfterUpdate") {
       @Override
       public void perform() {
         List<Runnable> runAfterUpdate = null;
@@ -301,7 +301,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
     myUpdateQueue.cancelAllUpdates();
   }
 
-  public void runAfterUpdate(final Runnable runnable) {
+  public void runAfterUpdate(Runnable runnable) {
     if (runnable != null) {
       synchronized (myRunAfterUpdate) {
         myRunAfterUpdate.add(runnable);

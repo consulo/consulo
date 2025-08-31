@@ -30,8 +30,8 @@ public class BlockRangesMap {
     myTextRangeToWrapper = buildTextRangeToInfoMap(first);
   }
 
-  private static IntObjectMap<LeafBlockWrapper> buildTextRangeToInfoMap(final LeafBlockWrapper first) {
-    final IntObjectMap<LeafBlockWrapper> result = IntMaps.newIntObjectHashMap();
+  private static IntObjectMap<LeafBlockWrapper> buildTextRangeToInfoMap(LeafBlockWrapper first) {
+    IntObjectMap<LeafBlockWrapper> result = IntMaps.newIntObjectHashMap();
     LeafBlockWrapper current = first;
     while (current != null) {
       result.put(current.getStartOffset(), current);
@@ -40,11 +40,11 @@ public class BlockRangesMap {
     return result;
   }
 
-  public boolean containsLineFeeds(final TextRange dependency) {
+  public boolean containsLineFeeds(TextRange dependency) {
     LeafBlockWrapper child = myTextRangeToWrapper.get(dependency.getStartOffset());
     if (child == null) return false;
     if (child.containsLineFeeds()) return true;
-    final int endOffset = dependency.getEndOffset();
+    int endOffset = dependency.getEndOffset();
     while (child.getEndOffset() < endOffset) {
       child = child.getNextBlock();
       if (child == null) return false;
@@ -55,11 +55,11 @@ public class BlockRangesMap {
   }
 
   @Nullable
-  public LeafBlockWrapper getBlockAtOrAfter(final int startOffset) {
+  public LeafBlockWrapper getBlockAtOrAfter(int startOffset) {
     int current = startOffset;
     LeafBlockWrapper result = null;
     while (current < myLastBlock.getEndOffset()) {
-      final LeafBlockWrapper currentValue = myTextRangeToWrapper.get(current);
+      LeafBlockWrapper currentValue = myTextRangeToWrapper.get(current);
       if (currentValue != null) {
         result = currentValue;
         break;
@@ -78,7 +78,7 @@ public class BlockRangesMap {
   }
 
   @Nullable
-  private LeafBlockWrapper getPrevBlock(@Nullable final LeafBlockWrapper result) {
+  private LeafBlockWrapper getPrevBlock(@Nullable LeafBlockWrapper result) {
     if (result != null) {
       return result.getPreviousBlock();
     }

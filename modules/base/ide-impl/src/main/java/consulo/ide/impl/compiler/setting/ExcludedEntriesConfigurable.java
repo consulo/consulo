@@ -47,7 +47,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
   private final ExcludedEntriesConfiguration myConfiguration;
   private ExcludedEntriesPanel myExcludedEntriesPanel;
 
-  public ExcludedEntriesConfigurable(Project project, FileChooserDescriptor descriptor, final ExcludedEntriesConfiguration configuration) {
+  public ExcludedEntriesConfigurable(Project project, FileChooserDescriptor descriptor, ExcludedEntriesConfiguration configuration) {
     myDescriptor = descriptor;
     myConfiguration = configuration;
     myProject = project;
@@ -124,7 +124,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
         }
         int savedSelected = selected;
 
-        for (final VirtualFile chosenFile : chosen) {
+        for (VirtualFile chosenFile : chosen) {
           if (isFileExcluded(chosenFile)) {
             continue;
           }
@@ -147,8 +147,8 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
     }
 
     private boolean isFileExcluded(VirtualFile file) {
-      for (final ExcludeEntryDescription description : myExcludeEntryDescriptions) {
-        final VirtualFile descriptionFile = description.getVirtualFile();
+      for (ExcludeEntryDescription description : myExcludeEntryDescriptions) {
+        VirtualFile descriptionFile = description.getVirtualFile();
         if (descriptionFile == null) {
           continue;
         }
@@ -175,7 +175,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
       int indexToSelect = selected[selected.length - 1];
       int removedCount = 0;
       for (int indexToRemove : selected) {
-        final int row = indexToRemove - removedCount;
+        int row = indexToRemove - removedCount;
         ExcludeEntryDescription description = myExcludeEntryDescriptions.get(row);
         Disposer.dispose(description);
         myExcludeEntryDescriptions.remove(row);
@@ -251,7 +251,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
           if (col == 1) {
             description.setIncludeSubdirectories(aValue.equals(Boolean.TRUE));
           } else {
-            final String path = (String)aValue;
+            String path = (String)aValue;
             description.setPresentableUrl(path);
           }
         }
@@ -265,8 +265,8 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
       myExcludedTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
       myExcludedTable.setDefaultRenderer(Object.class, new MyObjectRenderer());
       myExcludedTable.getColumn(names[0]).setPreferredWidth(350);
-      final int cbWidth = 15 + myExcludedTable.getTableHeader().getFontMetrics(myExcludedTable.getTableHeader().getFont()).stringWidth(names[1]);
-      final TableColumn cbColumn = myExcludedTable.getColumn(names[1]);
+      int cbWidth = 15 + myExcludedTable.getTableHeader().getFontMetrics(myExcludedTable.getTableHeader().getFont()).stringWidth(names[1]);
+      TableColumn cbColumn = myExcludedTable.getColumn(names[1]);
       cbColumn.setPreferredWidth(cbWidth);
       cbColumn.setMaxWidth(cbWidth);
       myExcludedTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -321,8 +321,8 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      final Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-      final ExcludeEntryDescription description = myExcludeEntryDescriptions.get(row);
+      Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+      ExcludeEntryDescription description = myExcludeEntryDescriptions.get(row);
       component.setForeground(!description.isValid() ? JBColor.RED : isSelected ? table.getSelectionForeground() : table.getForeground());
       component.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
       return component;

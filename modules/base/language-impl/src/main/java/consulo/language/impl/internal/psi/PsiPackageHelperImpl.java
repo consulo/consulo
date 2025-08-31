@@ -42,7 +42,7 @@ public class PsiPackageHelperImpl extends PsiPackageHelper {
 
   @Override
   @Nonnull
-  public String getQualifiedName(@Nonnull final PsiDirectory directory, final boolean presentable) {
+  public String getQualifiedName(@Nonnull PsiDirectory directory, boolean presentable) {
     if (presentable) {
       return UserHomeFileUtil.getLocationRelativeToUserHome(directory.getVirtualFile().getPresentableUrl());
     }

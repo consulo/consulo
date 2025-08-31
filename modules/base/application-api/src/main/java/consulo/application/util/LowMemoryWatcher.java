@@ -78,7 +78,7 @@ public class LowMemoryWatcher {
    * Registers a runnable to run on low memory events. The notifications will be issued until parentDisposable is disposed.
    */
   public static void register(@Nonnull Runnable runnable, @Nonnull LowMemoryWatcherType notificationType, @Nonnull Disposable parentDisposable) {
-    final LowMemoryWatcher watcher = new LowMemoryWatcher(runnable, notificationType);
+    LowMemoryWatcher watcher = new LowMemoryWatcher(runnable, notificationType);
     Disposer.register(parentDisposable, () -> watcher.stop());
   }
 

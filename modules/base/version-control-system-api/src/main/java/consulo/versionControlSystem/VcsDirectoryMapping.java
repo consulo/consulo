@@ -42,12 +42,12 @@ public class VcsDirectoryMapping {
   public VcsDirectoryMapping() {
   }
 
-  public VcsDirectoryMapping(@Nonnull final String directory, final String vcs) {
+  public VcsDirectoryMapping(@Nonnull String directory, String vcs) {
     setDirectory(directory);
     myVcs = vcs;
   }
 
-  public VcsDirectoryMapping(final String directory, final String vcs, final VcsRootSettings rootSettings) {
+  public VcsDirectoryMapping(String directory, String vcs, VcsRootSettings rootSettings) {
     setDirectory(directory);
     myVcs = vcs;
     myRootSettings = rootSettings;
@@ -77,11 +77,11 @@ public class VcsDirectoryMapping {
     return myVcs;
   }
 
-  public void setVcs(final String vcs) {
+  public void setVcs(String vcs) {
     myVcs = vcs;
   }
 
-  public void setDirectory(@Nonnull final String directory) {
+  public void setDirectory(@Nonnull String directory) {
     myDirectory = directory;
     initSystemIndependentPath();
   }
@@ -102,7 +102,7 @@ public class VcsDirectoryMapping {
    *
    * @param rootSettings the VCS-specific settings.
    */
-  public void setRootSettings(final VcsRootSettings rootSettings) {
+  public void setRootSettings(VcsRootSettings rootSettings) {
     myRootSettings = rootSettings;
   }
 
@@ -110,11 +110,11 @@ public class VcsDirectoryMapping {
     return myDirectory.length() == 0;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final VcsDirectoryMapping mapping = (VcsDirectoryMapping)o;
+    VcsDirectoryMapping mapping = (VcsDirectoryMapping)o;
 
     if (myDirectory != null ? !myDirectory.equals(mapping.myDirectory) : mapping.myDirectory != null) return false;
     if (myVcs != null ? !myVcs.equals(mapping.myVcs) : mapping.myVcs != null) return false;

@@ -36,18 +36,18 @@ public class FilePathChangesTreeList extends ChangesTreeList<FilePath> {
   }
 
   @Override
-  protected DefaultTreeModel buildTreeModel(final List<FilePath> changes, ChangeNodeDecorator changeNodeDecorator) {
+  protected DefaultTreeModel buildTreeModel(List<FilePath> changes, ChangeNodeDecorator changeNodeDecorator) {
     return TreeModelBuilder.buildFromFilePaths(myProject, isShowFlatten(), changes);
   }
 
   @Override
-  protected List<FilePath> getSelectedObjects(final ChangesBrowserNode<FilePath> node) {
+  protected List<FilePath> getSelectedObjects(ChangesBrowserNode<FilePath> node) {
     return node.getAllFilePathsUnder();
   }
 
   @Override
   @Nullable
-  protected FilePath getLeadSelectedObject(final ChangesBrowserNode node) {
+  protected FilePath getLeadSelectedObject(ChangesBrowserNode node) {
     Object userObject = node.getUserObject();
     return userObject instanceof FilePath ? (FilePath)userObject : null;
   }

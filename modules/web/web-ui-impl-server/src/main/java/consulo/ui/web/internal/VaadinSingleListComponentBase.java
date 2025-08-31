@@ -88,13 +88,13 @@ public abstract class VaadinSingleListComponentBase<E> extends VaadinComponent {
       getState().mySelectedIndex = -1;
     }
     else {
-      final int i = myModel.indexOf(value);
+      int i = myModel.indexOf(value);
       // -1 - value not found
       getState().mySelectedIndex = i;
     }
 
     if (fireEvents) {
-      final ValueComponent.ValueEvent<E> event = new ValueComponent.ValueEvent<>(toUIComponent(), value);
+      ValueComponent.ValueEvent<E> event = new ValueComponent.ValueEvent<>(toUIComponent(), value);
       toUIComponent().getListenerDispatcher(ValueComponent.ValueListener.class).valueChanged(event);
     }
 

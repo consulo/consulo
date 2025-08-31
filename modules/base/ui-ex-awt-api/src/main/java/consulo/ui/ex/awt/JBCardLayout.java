@@ -79,7 +79,7 @@ public class JBCardLayout extends CardLayout {
     }
   }
 
-  public void swipe(@Nonnull final Container parent, @Nonnull final String name, @Nonnull SwipeDirection direction) {
+  public void swipe(@Nonnull Container parent, @Nonnull String name, @Nonnull SwipeDirection direction) {
     swipe(parent, name, direction, null);
   }
 

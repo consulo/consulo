@@ -38,9 +38,9 @@ public class FilePackageSetParserExtension implements PackageSetParserExtension 
     String id = getTokenText(lexer);
     if (FilePatternPackageSet.SCOPE_FILE.equals(id)) {
 
-      final CharSequence buf = lexer.getBufferSequence();
-      final int end = lexer.getTokenEnd();
-      final int bufferEnd = lexer.getBufferEnd();
+      CharSequence buf = lexer.getBufferSequence();
+      int end = lexer.getTokenEnd();
+      int bufferEnd = lexer.getBufferEnd();
 
       if (end >= bufferEnd || buf.charAt(end) != ':' && buf.charAt(end) != '[') {
         return null;
@@ -55,7 +55,7 @@ public class FilePackageSetParserExtension implements PackageSetParserExtension 
 
   @Override
   @Nullable
-  public PackageSet parsePackageSet(final Lexer lexer, final String scope, final String modulePattern) throws ParsingException {
+  public PackageSet parsePackageSet(Lexer lexer, String scope, String modulePattern) throws ParsingException {
     if (scope != FilePatternPackageSet.SCOPE_FILE) return null;
     return new FilePatternPackageSet(modulePattern, parseFilePattern(lexer));
   }

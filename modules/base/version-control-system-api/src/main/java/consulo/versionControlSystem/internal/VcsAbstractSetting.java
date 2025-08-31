@@ -26,7 +26,7 @@ public class VcsAbstractSetting {
   protected final String myDisplayName;
   private final Collection<AbstractVcs> myApplicable = new HashSet<AbstractVcs>();
 
-  protected VcsAbstractSetting(final String displayName) {
+  protected VcsAbstractSetting(String displayName) {
     myDisplayName = displayName;
   }
 

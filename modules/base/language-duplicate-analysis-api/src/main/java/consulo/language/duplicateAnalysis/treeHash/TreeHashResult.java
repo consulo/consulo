@@ -10,7 +10,7 @@ public class TreeHashResult {
   int myCost;
   PsiFragment myFragment;
 
-  public TreeHashResult(final int hash, final int cost, final PsiFragment fragment) {
+  public TreeHashResult(int hash, int cost, PsiFragment fragment) {
     myHash = hash;
     myCost = cost;
     myFragment = fragment;

@@ -34,7 +34,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
   private volatile int myBufferPosition;
   private static final int ourAppendBufferLength = 4096;
 
-  public AppendableStorageBackedByResizableMappedFile(final File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned)
+  public AppendableStorageBackedByResizableMappedFile(File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned)
           throws IOException {
     super(file, initialSize, lockContext, pageSize, valuesAreBufferAligned);
     myReadStream = new MyDataIS(this);
@@ -63,7 +63,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
   private static final boolean testMode = false;
 
-  public <Data> Data read(final int addr, KeyDescriptor<Data> descriptor) throws IOException {
+  public <Data> Data read(int addr, KeyDescriptor<Data> descriptor) throws IOException {
     Data tempData = null;
 
     if (myFileLength <= addr) {
@@ -107,11 +107,11 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
   }
 
   public <Data> int append(Data value, KeyDescriptor<Data> descriptor) throws IOException {
-    final BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
+    BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
     DataOutput out = new DataOutputStream(bos);
     descriptor.save(out, value);
-    final int size = bos.size();
-    final byte[] buffer = bos.getInternalBuffer();
+    int size = bos.size();
+    byte[] buffer = bos.getInternalBuffer();
 
     int currentLength = getCurrentLength();
 
@@ -134,8 +134,8 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     return currentLength;
   }
 
-  <Data> boolean checkBytesAreTheSame(final int addr, Data value, KeyDescriptor<Data> descriptor) throws IOException {
-    final boolean[] sameValue = new boolean[1];
+  <Data> boolean checkBytesAreTheSame(int addr, Data value, KeyDescriptor<Data> descriptor) throws IOException {
+    boolean[] sameValue = new boolean[1];
     OutputStream comparer = buildOldComparerStream(addr, sameValue);
 
     DataOutput out = new DataOutputStream(comparer);
@@ -143,7 +143,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     comparer.close();
 
     if (testMode) {
-      final boolean[] sameValue2 = new boolean[1];
+      boolean[] sameValue2 = new boolean[1];
       OutputStream comparer2 = buildOldComparerStream(addr, sameValue2);
       out = new DataOutputStream(comparer2);
       descriptor.save(out, value);
@@ -219,7 +219,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
   }
 
   private static class MyBufferedIS extends BufferedInputStream {
-    MyBufferedIS(final InputStream in) {
+    MyBufferedIS(InputStream in) {
       super(in, 512);
     }
 

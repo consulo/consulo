@@ -43,8 +43,8 @@ public abstract class CompositeLexer extends LexerBase {
 
     @Override
     public int getState() {
-        final int state = myLexer1.getState();
-        final int state2 = myLexer2.getState();
+        int state = myLexer1.getState();
+        int state2 = myLexer2.getState();
 
         if (state >= 0 && state < Short.MAX_VALUE &&
             state2 >= 0 && state2 < Short.MAX_VALUE) {

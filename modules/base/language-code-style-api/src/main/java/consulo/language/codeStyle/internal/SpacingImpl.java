@@ -36,20 +36,20 @@ public class SpacingImpl extends Spacing {
   private static final int SHOULD_KEEP_LINE_BREAKS_MASK = 4;
   private static final int SHOULD_KEEP_FIRST_COLUMN_MASK = 8;
 
-  public SpacingImpl(final int minSpaces,
-                     final int maxSpaces,
-                     final int minLineFeeds,
-                     final boolean isReadOnly,
-                     final boolean safe,
-                     final boolean shouldKeepLineBreaks,
-                     final int keepBlankLines,
-                     final boolean keepFirstColumn,
-                     final int prefLineFeeds) {
+  public SpacingImpl(int minSpaces,
+                     int maxSpaces,
+                     int minLineFeeds,
+                     boolean isReadOnly,
+                     boolean safe,
+                     boolean shouldKeepLineBreaks,
+                     int keepBlankLines,
+                     boolean keepFirstColumn,
+                     int prefLineFeeds) {
     init(minSpaces, maxSpaces, minLineFeeds, isReadOnly, safe, shouldKeepLineBreaks, keepBlankLines, keepFirstColumn, prefLineFeeds);
   }
 
-  public void init(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean isReadOnly, final boolean safe,
-            final boolean shouldKeepLineBreaks, final int keepBlankLines, final boolean keepFirstColumn, final int prefLineFeeds)
+  public void init(int minSpaces, int maxSpaces, int minLineFeeds, boolean isReadOnly, boolean safe,
+                   boolean shouldKeepLineBreaks, int keepBlankLines, boolean keepFirstColumn, int prefLineFeeds)
   {
     myMinSpaces = minSpaces;
 
@@ -118,7 +118,7 @@ public class SpacingImpl extends Spacing {
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof SpacingImpl)) return false;
-    final SpacingImpl spacing = (SpacingImpl)o;
+    SpacingImpl spacing = (SpacingImpl)o;
     return myFlags == spacing.myFlags &&
            myMinSpaces == spacing.myMinSpaces &&
            myMaxSpaces == spacing.myMaxSpaces &&

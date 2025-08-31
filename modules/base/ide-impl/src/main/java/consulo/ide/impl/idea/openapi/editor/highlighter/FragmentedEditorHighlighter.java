@@ -46,7 +46,7 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
     this(sourceIterator, ranges, 0, false);
   }
 
-  public FragmentedEditorHighlighter(HighlighterIterator sourceIterator, List<TextRange> ranges, final int additionalOffset, boolean mergeByTextAttributes) {
+  public FragmentedEditorHighlighter(HighlighterIterator sourceIterator, List<TextRange> ranges, int additionalOffset, boolean mergeByTextAttributes) {
     myMergeByTextAttributes = mergeByTextAttributes;
     myDocument = sourceIterator.getDocument();
     myPieces = new TreeMap<Integer, Element>();
@@ -66,8 +66,8 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
         int relativeStart = iterator.getStart() - range.getStartOffset();
         boolean merged = false;
         if (myMergeByTextAttributes && !myPieces.isEmpty()) {
-          final Integer first = myPieces.descendingKeySet().first();
-          final Element element = myPieces.get(first);
+          Integer first = myPieces.descendingKeySet().first();
+          Element element = myPieces.get(first);
           if (element.getEnd() >= offset + relativeStart && myPieces.get(first).getAttributes().equals(iterator.getTextAttributes())) {
             // merge
             merged = true;
@@ -172,10 +172,10 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
     }
   }
 
-  private boolean isUsualAttributes(final TextAttributes ta) {
+  private boolean isUsualAttributes(TextAttributes ta) {
     if (myUsualAttributes == null) {
-      final EditorColorsManager manager = EditorColorsManager.getInstance();
-      final EditorColorsScheme[] schemes = manager.getAllSchemes();
+      EditorColorsManager manager = EditorColorsManager.getInstance();
+      EditorColorsScheme[] schemes = manager.getAllSchemes();
       EditorColorsScheme defaultScheme = schemes[0];
       for (EditorColorsScheme scheme : schemes) {
         if (manager.isDefaultScheme(scheme)) {

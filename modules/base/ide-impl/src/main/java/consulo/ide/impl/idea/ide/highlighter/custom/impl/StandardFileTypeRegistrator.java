@@ -33,13 +33,13 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class StandardFileTypeRegistrator implements FileTypeRegistrator {
   @Override
-  public void initFileType(final FileType fileType) {
+  public void initFileType(FileType fileType) {
     if (fileType instanceof AbstractFileType) {
       init(((AbstractFileType)fileType));
     }
   }
 
-  private static void init(final AbstractFileType abstractFileType) {
+  private static void init(AbstractFileType abstractFileType) {
     SyntaxTable table = abstractFileType.getSyntaxTable();
 
     if (!isEmpty(table.getStartComment()) && !isEmpty(table.getEndComment()) ||
@@ -58,7 +58,7 @@ public class StandardFileTypeRegistrator implements FileTypeRegistrator {
   private static class MyCommenter implements Commenter {
     private final CustomSyntaxTableFileType myAbstractFileType;
 
-    public MyCommenter(final CustomSyntaxTableFileType abstractFileType) {
+    public MyCommenter(CustomSyntaxTableFileType abstractFileType) {
 
       myAbstractFileType = abstractFileType;
     }

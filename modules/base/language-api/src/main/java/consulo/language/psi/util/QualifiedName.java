@@ -127,7 +127,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
       return false;
     }
     for (int i = 0; i < prefix.getComponentCount(); i++) {
-      final String component = getComponents().get(i);
+      String component = getComponents().get(i);
       if (component == null || !component.equals(prefix.getComponents().get(i))) {
         return false;
       }
@@ -161,7 +161,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     else {
       qName = new QualifiedName(size);
       for (int i = 0; i < size; i++) {
-        final StringRef name = dataStream.readName();
+        StringRef name = dataStream.readName();
         qName.myComponents.add(name == null ? null : name.getString());
       }
     }
@@ -197,7 +197,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return join(".");
   }
 
-  public String join(final String separator) {
+  public String join(String separator) {
     return StringUtil.join(myComponents, separator);
   }
 

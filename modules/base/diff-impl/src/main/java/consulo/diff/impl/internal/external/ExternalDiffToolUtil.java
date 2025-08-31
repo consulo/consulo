@@ -109,7 +109,7 @@ public class ExternalDiffToolUtil {
   }
 
   @Nonnull
-  private static File createTempFile(@Nonnull final DocumentContent content, @Nonnull FileNameInfo fileName) throws IOException {
+  private static File createTempFile(@Nonnull DocumentContent content, @Nonnull FileNameInfo fileName) throws IOException {
     FileDocumentManager.getInstance().saveDocument(content.getDocument());
 
     LineSeparator separator = content.getLineSeparator();
@@ -247,7 +247,7 @@ public class ExternalDiffToolUtil {
           public void run(@Nonnull ProgressIndicator indicator) {
             final Semaphore semaphore = new Semaphore(0);
 
-            final Thread waiter = new Thread("external process waiter") {
+            Thread waiter = new Thread("external process waiter") {
               @Override
               public void run() {
                 try {
@@ -388,7 +388,7 @@ public class ExternalDiffToolUtil {
     @Override
     @RequiredUIAccess
     public void apply() throws IOException {
-      final String content = StringUtil.convertLineSeparators(Files.readString(myLocalFile.toPath(), myCharset));
+      String content = StringUtil.convertLineSeparators(Files.readString(myLocalFile.toPath(), myCharset));
       Application.get().runWriteAction(() -> myDocument.setText(content));
     }
   }

@@ -203,9 +203,9 @@ public class JavacOutputParser implements BuildOutputParser {
     if (messages.size() <= 1) {
       return messages;
     }
-    final String line0 = messages.get(0);
-    final String line1 = messages.get(1);
-    final int colonIndex = line1.indexOf(':');
+    String line0 = messages.get(0);
+    String line1 = messages.get(1);
+    int colonIndex = line1.indexOf(':');
     if (colonIndex > 0) {
       @NonNls String part1 = line1.substring(0, colonIndex).trim();
       // jikes

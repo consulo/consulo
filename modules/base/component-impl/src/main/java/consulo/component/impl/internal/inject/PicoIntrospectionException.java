@@ -26,7 +26,7 @@ class PicoIntrospectionException extends PicoException {
    *
    * @param message the message detailing the exception.
    */
-  public PicoIntrospectionException(final String message) {
+  public PicoIntrospectionException(String message) {
     super(message);
   }
 
@@ -35,7 +35,7 @@ class PicoIntrospectionException extends PicoException {
    *
    * @param cause the exception that caused this one.
    */
-  protected PicoIntrospectionException(final Throwable cause) {
+  protected PicoIntrospectionException(Throwable cause) {
     super(cause);
   }
 
@@ -45,7 +45,7 @@ class PicoIntrospectionException extends PicoException {
    * @param message the message detailing the exception.
    * @param cause   the exception that caused this one.
    */
-  public PicoIntrospectionException(final String message, final Throwable cause) {
+  public PicoIntrospectionException(String message, Throwable cause) {
     super(message, cause);
   }
 }

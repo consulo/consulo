@@ -23,16 +23,16 @@ public class ProcessEvent extends EventObject{
   private String myText;
   private int myExitCode;
 
-  public ProcessEvent(final ProcessHandler source) {
+  public ProcessEvent(ProcessHandler source) {
     super(source);
   }
 
-  public ProcessEvent(final ProcessHandler source, final String text) {
+  public ProcessEvent(ProcessHandler source, String text) {
     super(source);
     myText = text;
   }
 
-  public ProcessEvent(final ProcessHandler source, final int exitCode) {
+  public ProcessEvent(ProcessHandler source, int exitCode) {
     super(source);
     myExitCode = exitCode;
   }

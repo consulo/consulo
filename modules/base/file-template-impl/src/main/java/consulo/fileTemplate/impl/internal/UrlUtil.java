@@ -49,7 +49,7 @@ public class UrlUtil {
   }
 
   public static List<String> getChildrenRelativePaths(URL root) throws IOException {
-    final String protocol = root.getProtocol();
+    String protocol = root.getProtocol();
     if ("jar".equalsIgnoreCase(protocol)) {
       return getChildPathsFromJar(root);
     }
@@ -61,13 +61,13 @@ public class UrlUtil {
 
   private static List<String> getChildPathsFromFile(URL root) {
     final List<String> paths = new ArrayList<String>();
-    final File rootFile = new File(FileUtil.unquote(root.getPath()));
+    File rootFile = new File(FileUtil.unquote(root.getPath()));
     new Object() {
       void collectFiles(File fromFile, String prefix) {
-        final File[] list = fromFile.listFiles();
+        File[] list = fromFile.listFiles();
         if (list != null) {
           for (File file : list) {
-            final String childRelativePath = prefix.length() == 0 ? file.getName() : prefix + URL_PATH_SEPARATOR + file.getName();
+            String childRelativePath = prefix.length() == 0 ? file.getName() : prefix + URL_PATH_SEPARATOR + file.getName();
             if (file.isDirectory()) {
               collectFiles(file, childRelativePath);
             }
@@ -82,12 +82,12 @@ public class UrlUtil {
   }
 
   private static List<String> getChildPathsFromJar(URL root) throws IOException {
-    final List<String> paths = new ArrayList<String>();
+    List<String> paths = new ArrayList<String>();
     String file = root.getFile();
     if (file.startsWith(FILE_PROTOCOL_PREFIX)) {
       file = file.substring(FILE_PROTOCOL_PREFIX.length());
     }
-    final int jarSeparatorIndex = file.indexOf(JAR_SEPARATOR);
+    int jarSeparatorIndex = file.indexOf(JAR_SEPARATOR);
     assert jarSeparatorIndex > 0;
 
     String rootDirName = file.substring(jarSeparatorIndex + 2);
@@ -95,11 +95,11 @@ public class UrlUtil {
       rootDirName += URL_PATH_SEPARATOR;
     }
     try (ZipFile zipFile = new ZipFile(FileUtil.unquote(file.substring(0, jarSeparatorIndex)))) {
-      final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+      Enumeration<? extends ZipEntry> entries = zipFile.entries();
       while (entries.hasMoreElements()) {
-        final ZipEntry entry = entries.nextElement();
+        ZipEntry entry = entries.nextElement();
         if (!entry.isDirectory()) {
-          final String relPath = entry.getName();
+          String relPath = entry.getName();
           if (relPath.startsWith(rootDirName)) {
             paths.add(relPath.substring(rootDirName.length()));
           }

@@ -63,13 +63,13 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
 
   private void requestModelUpdateFromContextOrObject(DataContext dataContext, Object object) {
     try {
-      final NavBarModel model = myPanel.getModel();
+      NavBarModel model = myPanel.getModel();
       if (dataContext != null) {
         if (dataContext.getData(Project.KEY) != myPanel.getProject() || myPanel.isNodePopupActive()) {
           requestModelUpdate(null, myPanel.getContextObject(), true);
           return;
         }
-        final Window window = SwingUtilities.getWindowAncestor(myPanel);
+        Window window = SwingUtilities.getWindowAncestor(myPanel);
         if (window != null && !window.isFocused()) {
           model.updateModel(DataManager.getInstance().getDataContext(myPanel));
         }
@@ -100,7 +100,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
       return;
     }
 
-    final Project project = myPanel.getProject();
+    Project project = myPanel.getProject();
     ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
       Window wnd = SwingUtilities.windowForComponent(myPanel);
       if (wnd == null) return;
@@ -114,7 +114,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         }
       }
       else {
-        final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
         if (window instanceof Dialog dialog && dialog.isModal() && !SwingUtilities.isDescendingFrom(myPanel, dialog)) {
           return;
         }
@@ -166,8 +166,8 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
 
     myPanel.clearItems();
     for (int index = 0; index < myPanel.getModel().size(); index++) {
-      final Object object = myPanel.getModel().get(index);
-      final NavBarItem label = new NavBarItem(myPanel, object, index, null);
+      Object object = myPanel.getModel().get(index);
+      NavBarItem label = new NavBarItem(myPanel, object, index, null);
 
       myPanel.installActions(index, label);
       myPanel.addItem(label);
@@ -201,7 +201,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     queue(new AfterModelUpdate(ID.REVALIDATE) {
       @Override
       protected void after() {
-        final LightweightHintImpl hint = myPanel.getHint();
+        LightweightHintImpl hint = myPanel.getHint();
         if (hint != null) {
           myPanel.getHintContainerShowPoint().doWhenDone(relativePoint -> {
             hint.setSize(myPanel.getPreferredSize());

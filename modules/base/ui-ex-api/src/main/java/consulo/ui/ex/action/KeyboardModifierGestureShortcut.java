@@ -35,7 +35,7 @@ public class KeyboardModifierGestureShortcut extends Shortcut {
     throw new IllegalArgumentException(type.toString());
   }
 
-  protected KeyboardModifierGestureShortcut(final KeyStroke stroke, KeyboardGestureAction.ModifierType type) {
+  protected KeyboardModifierGestureShortcut(KeyStroke stroke, KeyboardGestureAction.ModifierType type) {
     myStroke = stroke;
     myType = type;
   }
@@ -54,10 +54,10 @@ public class KeyboardModifierGestureShortcut extends Shortcut {
   }
 
   @Override
-  public boolean startsWith(final Shortcut sc) {
+  public boolean startsWith(Shortcut sc) {
     if (!(sc instanceof KeyboardModifierGestureShortcut)) return false;
 
-    final KeyboardModifierGestureShortcut other = (KeyboardModifierGestureShortcut)sc;
+    KeyboardModifierGestureShortcut other = (KeyboardModifierGestureShortcut)sc;
     if (myType.equals(other.myType)) {
       if (myStroke.getModifiers() != other.myStroke.getModifiers()) return false;
       return other.myStroke.getKeyCode() != -1 || other.myStroke.getKeyCode() == myStroke.getKeyCode();
@@ -67,11 +67,11 @@ public class KeyboardModifierGestureShortcut extends Shortcut {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final KeyboardModifierGestureShortcut that = (KeyboardModifierGestureShortcut)o;
+    KeyboardModifierGestureShortcut that = (KeyboardModifierGestureShortcut)o;
 
     if (myStroke != null ? !myStroke.equals(that.myStroke) : that.myStroke != null) return false;
     if (myType != that.myType) return false;
@@ -95,13 +95,13 @@ public class KeyboardModifierGestureShortcut extends Shortcut {
   }
 
   public static class DblClick extends KeyboardModifierGestureShortcut {
-    public DblClick(final KeyStroke stroke) {
+    public DblClick(KeyStroke stroke) {
       super(stroke, KeyboardGestureAction.ModifierType.dblClick);
     }
   }
 
   public static class Hold extends KeyboardModifierGestureShortcut {
-    public Hold(final KeyStroke stroke) {
+    public Hold(KeyStroke stroke) {
       super(stroke, KeyboardGestureAction.ModifierType.hold);
     }
   }

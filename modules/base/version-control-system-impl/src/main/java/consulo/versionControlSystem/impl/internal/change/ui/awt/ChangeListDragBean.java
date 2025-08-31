@@ -32,8 +32,8 @@ public class ChangeListDragBean {
   private final List<VirtualFile> myIgnoredFiles;
   private ChangesBrowserNode myTargetNode;
 
-  public ChangeListDragBean(final JComponent sourceComponent, final Change[] changes, final List<VirtualFile> unversionedFiles,
-                            final List<VirtualFile> ignoredFiles) {
+  public ChangeListDragBean(JComponent sourceComponent, Change[] changes, List<VirtualFile> unversionedFiles,
+                            List<VirtualFile> ignoredFiles) {
     mySourceComponent = sourceComponent;
     myChanges = changes;
     myUnversionedFiles = unversionedFiles;
@@ -60,7 +60,7 @@ public class ChangeListDragBean {
     return myTargetNode;
   }
 
-  public void setTargetNode(final ChangesBrowserNode targetNode) {
+  public void setTargetNode(ChangesBrowserNode targetNode) {
     myTargetNode = targetNode;
   }
 }

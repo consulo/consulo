@@ -36,7 +36,7 @@ public class FileGroupingProjectNode extends ProjectViewNodeWithChildrenList<Fil
 
   public FileGroupingProjectNode(Project project, File file, ViewSettings viewSettings) {
     super(project, file, viewSettings);
-    final LocalFileSystem lfs = LocalFileSystem.getInstance();
+    LocalFileSystem lfs = LocalFileSystem.getInstance();
     myVirtualFile = lfs.findFileByIoFile(file);
     if (myVirtualFile == null) {
       myVirtualFile = lfs.refreshAndFindFileByIoFile(file);

@@ -73,7 +73,7 @@ abstract class ContentLayout {
         Content content = myUi.myManager.getContent(0);
         if (content == null) return null;
 
-        final String text = content.getDisplayName();
+        String text = content.getDisplayName();
         if (text != null && text.trim().length() > 0 && myUi.myManager.canCloseContents()) {
           return ":";
         }
@@ -98,7 +98,7 @@ abstract class ContentLayout {
   public abstract String getNextContentActionName();
 
   protected boolean shouldShowId() {
-    final JComponent component = myUi.myWindow.getComponent();
+    JComponent component = myUi.myWindow.getComponent();
     return component != null && !"true".equals(component.getClientProperty(DesktopToolWindowContentUi.HIDE_ID_LABEL));
   }
 

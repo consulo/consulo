@@ -71,7 +71,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
     private final DocumentListener myDocumentListener = new BulkAwareDocumentListener.Simple() {
         @Override
-        public void afterDocumentChange(@Nonnull final Document document) {
+        public void afterDocumentChange(@Nonnull Document document) {
             if (!myTrackingDocument) {
                 myChanged = true;
                 return;
@@ -123,10 +123,10 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
         myUserActivityDelay = userActivityDelay;
     }
 
-    public void updateInBackground(@Nonnull FindModel findModel, final boolean allowedToChangedEditorSelection) {
-        final int stamp = mySearchResults.getStamp();
+    public void updateInBackground(@Nonnull FindModel findModel, boolean allowedToChangedEditorSelection) {
+        int stamp = mySearchResults.getStamp();
         myLivePreviewAlarm.cancelAllRequests();
-        final FindModel copy = new FindModel();
+        FindModel copy = new FindModel();
         copy.copyFrom(findModel);
         mySearchResults.setUpdating(true);
         if (myComponent != null) {
@@ -165,7 +165,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
     @Nullable
     @RequiredUIAccess
-    public TextRange performReplace(final FindResult occurrence, final String replacement, final Editor editor) {
+    public TextRange performReplace(FindResult occurrence, String replacement, Editor editor) {
         Project project = mySearchResults.getProject();
         if (myReplaceDenied || !ReadonlyStatusHandlerUtil.ensureDocumentWritable(project, editor.getDocument())) {
             return null;
@@ -192,12 +192,12 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
             return;
         }
         if (mySearchResults.getFindModel() != null) {
-            final FindModel copy = new FindModel();
+            FindModel copy = new FindModel();
             copy.copyFrom(mySearchResults.getFindModel());
 
-            final SelectionModel selectionModel = mySearchResults.getEditor().getSelectionModel();
+            SelectionModel selectionModel = mySearchResults.getEditor().getSelectionModel();
 
-            final int offset;
+            int offset;
             if (!selectionModel.hasSelection() || copy.isGlobal()) {
                 copy.setGlobal(true);
                 offset = 0;
@@ -222,7 +222,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
     public boolean canReplace() {
         if (mySearchResults != null && mySearchResults.getCursor() != null && !isReplaceDenied()) {
 
-            final String replacement;
+            String replacement;
             try {
                 replacement = getStringToReplace(getEditor(), mySearchResults.getCursor());
             }
@@ -245,7 +245,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
         if (replacement == null) {
             return;
         }
-        final TextRange textRange = performReplace(mySearchResults.getCursor(), replacement, getEditor());
+        TextRange textRange = performReplace(mySearchResults.getCursor(), replacement, getEditor());
         if (textRange == null) {
             mySuppressUpdate = false;
         }

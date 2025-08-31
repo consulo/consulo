@@ -113,7 +113,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         init();
     }
 
-    protected void resetElementsWithDefaultComparator(T[] elements, final boolean restoreSelectedElements) {
+    protected void resetElementsWithDefaultComparator(T[] elements, boolean restoreSelectedElements) {
         myComparator = myAlphabeticallySorted ? new AlphaComparator() : new OrderComparator();
         resetElements(elements, null, restoreSelectedElements);
     }
@@ -124,8 +124,8 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
 
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
-    public void resetElements(T[] elements, final @Nullable Comparator<T> sortComparator, final boolean restoreSelectedElements) {
-        final List<T> selectedElements = restoreSelectedElements && mySelectedElements != null ? new ArrayList<>(mySelectedElements) : null;
+    public void resetElements(T[] elements, @Nullable Comparator<T> sortComparator, boolean restoreSelectedElements) {
+        List<T> selectedElements = restoreSelectedElements && mySelectedElements != null ? new ArrayList<>(mySelectedElements) : null;
         myElements = elements;
         if (sortComparator != null) {
             myComparator = new ElementNodeComparatorWrapper(sortComparator);
@@ -169,8 +169,8 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
      * should be invoked in read action
      */
     private DefaultTreeModel buildModel() {
-        final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
-        final Ref<Integer> count = new Ref<>(0);
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
+        Ref<Integer> count = new Ref<>(0);
         Ref<Map<MemberChooserObject, ParentNode>> mapRef = new Ref<>();
         mapRef.set(FactoryMap.create(key -> {
             ParentNode node = null;
@@ -184,7 +184,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
                 }
             }
             if (isContainerNode(key)) {
-                final ContainerNode containerNode = new ContainerNode(parentNode1, key, count);
+                ContainerNode containerNode = new ContainerNode(parentNode1, key, count);
                 node = containerNode;
                 myContainerNodes.add(containerNode);
             }
@@ -194,11 +194,11 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
             return node;
         }));
 
-        final Map<MemberChooserObject, ParentNode> map = mapRef.get();
+        Map<MemberChooserObject, ParentNode> map = mapRef.get();
 
         for (T object : myElements) {
-            final ParentNode parentNode = map.get(object.getParentNodeDelegate());
-            final MemberNode elementNode = createMemberNode(count, object, parentNode);
+            ParentNode parentNode = map.get(object.getParentNodeDelegate());
+            MemberNode elementNode = createMemberNode(count, object, parentNode);
             myNodeToParentMap.put(elementNode, parentNode);
             myElementToNodeMap.put(object, elementNode);
         }
@@ -236,7 +236,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     @Override
     @Nonnull
     protected Action[] createActions() {
-        final List<Action> actions = new ArrayList<>();
+        List<Action> actions = new ArrayList<>();
         actions.add(getOKAction());
         if (myAllowEmptySelection) {
             actions.add(new SelectNoneAction());
@@ -261,7 +261,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         JPanel panel = new JPanel(new GridBagLayout());
 
         JPanel optionsPanel = new JPanel(new VerticalFlowLayout());
-        for (final CheckBox component : myOptionComponents.values()) {
+        for (CheckBox component : myOptionComponents.values()) {
             optionsPanel.add(TargetAWT.to(component));
         }
 
@@ -402,11 +402,11 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     protected void installSpeedSearch() {
-        final TreeSpeedSearch treeSpeedSearch = new TreeSpeedSearch(myTree, new Convertor<>() {
+        TreeSpeedSearch treeSpeedSearch = new TreeSpeedSearch(myTree, new Convertor<>() {
             @Override
             @Nullable
             public String convert(TreePath path) {
-                final ElementNode lastPathComponent = (ElementNode) path.getLastPathComponent();
+                ElementNode lastPathComponent = (ElementNode) path.getLastPathComponent();
                 if (lastPathComponent == null) {
                     return null;
                 }
@@ -424,16 +424,16 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         return new SpeedSearchComparator(false);
     }
 
-    protected void disableAlphabeticalSorting(final AnActionEvent event) {
+    protected void disableAlphabeticalSorting(AnActionEvent event) {
         mySortAction.setSelected(event, false);
     }
 
-    protected void onAlphabeticalSortingEnabled(final AnActionEvent event) {
+    protected void onAlphabeticalSortingEnabled(AnActionEvent event) {
         //do nothing by default
     }
 
     protected void fillToolbarActions(ActionGroup.Builder group) {
-        final boolean alphabeticallySorted = PropertiesComponent.getInstance().isTrueValue(PROP_SORTED);
+        boolean alphabeticallySorted = PropertiesComponent.getInstance().isTrueValue(PROP_SORTED);
         if (alphabeticallySorted) {
             setSortComparator(new AlphaComparator());
         }
@@ -469,7 +469,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
 
     @Nullable
     public List<T> getSelectedElements() {
-        final LinkedHashSet<T> list = getSelectedElementsList();
+        LinkedHashSet<T> list = getSelectedElementsList();
         return list == null ? null : new ArrayList<>(list);
     }
 
@@ -491,7 +491,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     @SuppressWarnings("unchecked")
-    protected void changeSortComparator(final Comparator<T> comparator) {
+    protected void changeSortComparator(Comparator<T> comparator) {
         setSortComparator(new ElementNodeComparatorWrapper(comparator));
     }
 
@@ -516,7 +516,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         restoreSelection(pair);
     }
 
-    private static void sortNode(ParentNode node, final Comparator<ElementNode> sortComparator) {
+    private static void sortNode(ParentNode node, Comparator<ElementNode> sortComparator) {
         ArrayList<ElementNode> arrayList = new ArrayList<>();
         Enumeration<TreeNode> children = node.children();
         while (children.hasMoreElements()) {
@@ -528,7 +528,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         replaceChildren(node, arrayList);
     }
 
-    private static void replaceChildren(final DefaultMutableTreeNode node, final Collection<? extends ElementNode> arrayList) {
+    private static void replaceChildren(DefaultMutableTreeNode node, Collection<? extends ElementNode> arrayList) {
         node.removeAllChildren();
         for (ElementNode child : arrayList) {
             node.add(child);
@@ -544,9 +544,9 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
             Enumeration<TreeNode> children = getRootNodeChildren();
             ParentNode newRoot = new ParentNode(null, new MemberChooserObjectBase(getAllContainersNodeName()), new Ref<>(0));
             while (children.hasMoreElements()) {
-                final ParentNode nextElement = (ParentNode) children.nextElement();
+                ParentNode nextElement = (ParentNode) children.nextElement();
                 if (nextElement instanceof ContainerNode) {
-                    final ContainerNode containerNode = (ContainerNode) nextElement;
+                    ContainerNode containerNode = (ContainerNode) nextElement;
                     Enumeration<TreeNode> memberNodes = containerNode.children();
                     List<MemberNode> memberNodesList = new ArrayList<>();
                     while (memberNodes.hasMoreElements()) {
@@ -648,7 +648,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         instance.setValue(PROP_SORTED, Boolean.toString(isAlphabeticallySorted()));
         instance.setValue(PROP_SHOWCLASSES, Boolean.toString(myShowClasses));
 
-        final Container contentPane = getContentPane();
+        Container contentPane = getContentPane();
         if (contentPane != null) {
             contentPane.removeAll();
         }
@@ -658,7 +658,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     @Override
-    public void calcData(final Key key, final DataSink sink) {
+    public void calcData(Key key, DataSink sink) {
         if (PsiElement.KEY == key) {
             if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
                 T selectedElement = mySelectedElements.iterator().next();
@@ -679,7 +679,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
             for (int i = 0; i < paths.length; i++) {
                 Object node = paths[i].getLastPathComponent();
                 if (node instanceof MemberNode) {
-                    final MemberNode memberNode = (MemberNode) node;
+                    MemberNode memberNode = (MemberNode) node;
                     if (e.isAddedPath(i)) {
                         if (!mySelectedNodes.contains(memberNode)) {
                             mySelectedNodes.add(memberNode);
@@ -767,7 +767,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
             if (path == null) {
                 return;
             }
-            final Object lastComponent = path.getLastPathComponent();
+            Object lastComponent = path.getLastPathComponent();
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 if (lastComponent instanceof ParentNode) {
                     return;
@@ -777,7 +777,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
             }
             else if (e.getKeyCode() == KeyEvent.VK_INSERT) {
                 if (lastComponent instanceof ElementNode) {
-                    final DefaultMutableTreeNode node = (DefaultMutableTreeNode) lastComponent;
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) lastComponent;
                     if (!mySelectedNodes.contains(node)) {
                         if (node.getNextNode() != null) {
                             myTree.setSelectionPath(new TreePath(node.getNextNode().getPath()));
@@ -825,7 +825,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     protected class ShowContainersAction extends ToggleAction {
-        public ShowContainersAction(final LocalizeValue text, final Image icon) {
+        public ShowContainersAction(LocalizeValue text, Image icon) {
             super(text, text, icon);
         }
 
@@ -898,13 +898,13 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     private static class ElementNodeComparatorWrapper<T> implements Comparator<ElementNode> {
         private final Comparator<T> myDelegate;
 
-        public ElementNodeComparatorWrapper(final Comparator<T> delegate) {
+        public ElementNodeComparatorWrapper(Comparator<T> delegate) {
             myDelegate = delegate;
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public int compare(final ElementNode o1, final ElementNode o2) {
+        public int compare(ElementNode o1, ElementNode o2) {
             return myDelegate.compare((T) o1.getDelegate(), (T) o2.getDelegate());
         }
     }

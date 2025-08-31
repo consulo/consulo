@@ -21,9 +21,9 @@ import consulo.versionControlSystem.change.VcsDirtyScope;
 import jakarta.annotation.Nullable;
 
 public abstract class VcsModifiableDirtyScope extends VcsDirtyScope {
-  public abstract void addDirtyFile(final FilePath newcomer);
+  public abstract void addDirtyFile(FilePath newcomer);
 
-  public abstract void addDirtyDirRecursively(final FilePath newcomer);
+  public abstract void addDirtyDirRecursively(FilePath newcomer);
 
   @Nullable
   public VcsDirtyScopeModifier getModifier() {

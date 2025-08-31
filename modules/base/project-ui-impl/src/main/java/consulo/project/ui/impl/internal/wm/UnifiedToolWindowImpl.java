@@ -46,11 +46,11 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
     @RequiredUIAccess
     @Override
     protected void init(boolean canCloseContent, @Nullable Object component) {
-        final ContentFactory contentFactory = ContentFactory.getInstance();
+        ContentFactory contentFactory = ContentFactory.getInstance();
         ContentManager contentManager = myContentManager = contentFactory.createContentManager(new UnifiedToolWindowContentUI(this), canCloseContent, myToolWindowManager.getProject());
 
         if (component != null) {
-            final Content content = contentFactory.createUIContent((Component) component, "", false);
+            Content content = contentFactory.createUIContent((Component) component, "", false);
             contentManager.addContent(content);
             contentManager.setSelectedContent(content, false);
         }

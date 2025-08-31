@@ -41,7 +41,7 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
 
   @Override
   @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
     return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
   }
 
@@ -57,12 +57,12 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   }
 
   @Override
-  public JComponent getFocusTargetFor(@Nonnull final JComponent comp) {
+  public JComponent getFocusTargetFor(@Nonnull JComponent comp) {
     return IdeFocusManager.getGlobalInstance().getFocusTargetFor(comp);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull final Runnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
     IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(runnable);
   }
 
@@ -78,7 +78,7 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
 
   @Override
   @Nullable
-  public Component getFocusedDescendantFor(@Nonnull final Component comp) {
+  public Component getFocusedDescendantFor(@Nonnull Component comp) {
     return IdeFocusManager.getGlobalInstance().getFocusedDescendantFor(comp);
   }
 

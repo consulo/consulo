@@ -26,7 +26,7 @@ public abstract class GotoDeclarationHandlerBase implements GotoDeclarationHandl
   @Nullable
   @Override
   public PsiElement[] getGotoDeclarationTargets(PsiElement sourceElement, int offset, Editor editor) {
-    final PsiElement target = getGotoDeclarationTarget(sourceElement, editor);
+    PsiElement target = getGotoDeclarationTarget(sourceElement, editor);
     return target != null ? new PsiElement[] {target} : null;
   }
 

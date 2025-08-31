@@ -32,9 +32,9 @@ public abstract class BundleBase {
 
   public static boolean assertKeyIsFound = false;
 
-  public static String messageOrDefault(@Nullable final ResourceBundle bundle,
+  public static String messageOrDefault(@Nullable ResourceBundle bundle,
                                         @Nonnull String key,
-                                        @Nullable final String defaultValue,
+                                        @Nullable String defaultValue,
                                         @Nonnull Object... params) {
     if (bundle == null) return defaultValue;
 
@@ -73,7 +73,7 @@ public abstract class BundleBase {
     return messageOrDefault(bundle, key, null, params);
   }
 
-  public static String replaceMnemonicAmpersand(@Nullable final String value) {
+  public static String replaceMnemonicAmpersand(@Nullable String value) {
     if (value == null) {
       return null;
     }

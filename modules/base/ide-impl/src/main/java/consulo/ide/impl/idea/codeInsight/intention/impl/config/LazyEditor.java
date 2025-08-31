@@ -51,7 +51,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
 
   private Editor getEditor() {
     if (myEditor == null) {
-      final Project project = myFile.getProject();
+      Project project = myFile.getProject();
       myEditor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, myFile.getVirtualFile(), 0), false);
       assert myEditor != null;
     }
@@ -158,24 +158,24 @@ class LazyEditor extends UserDataHolderBase implements Editor {
 
   @Override
   @Nonnull
-  public Point logicalPositionToXY(@Nonnull final LogicalPosition pos) {
+  public Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
     return getEditor().logicalPositionToXY(pos);
   }
 
   @Override
-  public int logicalPositionToOffset(@Nonnull final LogicalPosition pos) {
+  public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
     return getEditor().logicalPositionToOffset(pos);
   }
 
   @Override
   @Nonnull
-  public VisualPosition logicalToVisualPosition(@Nonnull final LogicalPosition logicalPos) {
+  public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos) {
     return getEditor().logicalToVisualPosition(logicalPos);
   }
 
   @Override
   @Nonnull
-  public Point visualPositionToXY(@Nonnull final VisualPosition visible) {
+  public Point visualPositionToXY(@Nonnull VisualPosition visible) {
     return getEditor().visualPositionToXY(visible);
   }
 
@@ -187,19 +187,19 @@ class LazyEditor extends UserDataHolderBase implements Editor {
 
   @Override
   @Nonnull
-  public LogicalPosition visualToLogicalPosition(@Nonnull final VisualPosition visiblePos) {
+  public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos) {
     return getEditor().visualToLogicalPosition(visiblePos);
   }
 
   @Override
   @Nonnull
-  public LogicalPosition offsetToLogicalPosition(final int offset) {
+  public LogicalPosition offsetToLogicalPosition(int offset) {
     return getEditor().offsetToLogicalPosition(offset);
   }
 
   @Override
   @Nonnull
-  public VisualPosition offsetToVisualPosition(final int offset) {
+  public VisualPosition offsetToVisualPosition(int offset) {
     return getEditor().offsetToVisualPosition(offset);
   }
 
@@ -211,13 +211,13 @@ class LazyEditor extends UserDataHolderBase implements Editor {
 
   @Override
   @Nonnull
-  public LogicalPosition xyToLogicalPosition(@Nonnull final Point p) {
+  public LogicalPosition xyToLogicalPosition(@Nonnull Point p) {
     return getEditor().xyToLogicalPosition(p);
   }
 
   @Override
   @Nonnull
-  public VisualPosition xyToVisualPosition(@Nonnull final Point p) {
+  public VisualPosition xyToVisualPosition(@Nonnull Point p) {
     return getEditor().xyToVisualPosition(p);
   }
 
@@ -228,22 +228,22 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  public void addEditorMouseListener(@Nonnull final EditorMouseListener listener) {
+  public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
     getEditor().addEditorMouseListener(listener);
   }
 
   @Override
-  public void removeEditorMouseListener(@Nonnull final EditorMouseListener listener) {
+  public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
     getEditor().removeEditorMouseListener(listener);
   }
 
   @Override
-  public void addEditorMouseMotionListener(@Nonnull final EditorMouseMotionListener listener) {
+  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
     getEditor().addEditorMouseMotionListener(listener);
   }
 
   @Override
-  public void removeEditorMouseMotionListener(@Nonnull final EditorMouseMotionListener listener) {
+  public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
     getEditor().removeEditorMouseMotionListener(listener);
   }
 
@@ -281,12 +281,12 @@ class LazyEditor extends UserDataHolderBase implements Editor {
 
   @Override
   @Nullable
-  public EditorMouseEventArea getMouseEventArea(@Nonnull final MouseEvent e) {
+  public EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e) {
     return getEditor().getMouseEventArea(e);
   }
 
   @Override
-  public void setHeaderComponent(@Nullable final JComponent header) {
+  public void setHeaderComponent(@Nullable JComponent header) {
     getEditor().setHeaderComponent(header);
   }
 

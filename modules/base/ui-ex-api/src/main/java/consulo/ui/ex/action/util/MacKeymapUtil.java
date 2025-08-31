@@ -163,8 +163,8 @@ public class MacKeymapUtil {
   }
 
   public static String getKeyStrokeText(KeyStroke keyStroke) {
-    final String modifiers = getModifiersText(keyStroke.getModifiers());
-    final String key = getKeyText(keyStroke.getKeyCode());
+    String modifiers = getModifiersText(keyStroke.getModifiers());
+    String key = getKeyText(keyStroke.getKeyCode());
     return modifiers + key;
   }
 }

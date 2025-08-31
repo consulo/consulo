@@ -36,7 +36,7 @@ public class TimedOutCallback extends ActionCallback implements Runnable, Dispos
   private SimpleTimerTask myTask;
   private boolean myShouldDumpError;
 
-  public TimedOutCallback(final long timeOut, String message, Throwable allocation, boolean isEdt) {
+  public TimedOutCallback(long timeOut, String message, Throwable allocation, boolean isEdt) {
     scheduleCheck(timeOut, message, allocation, isEdt);
   }
 
@@ -45,7 +45,7 @@ public class TimedOutCallback extends ActionCallback implements Runnable, Dispos
     scheduleCheck(timeOut, message, allocation, isEdt);
   }
 
-  private void scheduleCheck(final long timeOut, final String message, Throwable allocation, final boolean isEdt) {
+  private void scheduleCheck(final long timeOut, String message, Throwable allocation, final boolean isEdt) {
     myMessage = message;
     myAllocation = allocation;
     final long current = System.currentTimeMillis();

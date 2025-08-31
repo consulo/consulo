@@ -61,11 +61,11 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
    * @deprecated use {@link #invoke(Project, Editor, PsiFile, int, PsiElement, boolean)} instead
    */
   @Deprecated
-  public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement) {
+  public static void invoke(Project project, Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement) {
     invoke(project, editor, file, lbraceOffset, highlightedElement, false);
   }
 
-  public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus) {
+  public static void invoke(Project project, Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus) {
     invoke(
       project,
       editor,
@@ -83,8 +83,8 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   /**
    * @param progressTitle null means no loading panel should be shown
    */
-  public static void invoke(final Project project,
-                            final Editor editor,
+  public static void invoke(Project project,
+                            Editor editor,
                             PsiFile file,
                             int lbraceOffset,
                             Object highlightedElement,
@@ -92,34 +92,34 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
                             boolean singleParameterHint,
                             @Nullable String progressTitle,
                             Consumer<IndexNotReadyException> indexNotReadyExceptionConsumer) {
-    final DumbService dumbService = DumbService.getInstance(project);
+    DumbService dumbService = DumbService.getInstance(project);
 
-    final int initialOffset = editor.getCaretModel().getOffset();
+    int initialOffset = editor.getCaretModel().getOffset();
 
     Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
     LookupElement lookupElement = lookup != null ? lookup.getCurrentItem() : null;
 
     runTask(project, ReadAction.nonBlocking(() -> {
-      final int offset = editor.getCaretModel().getOffset();
-      final int fileLength = file.getTextLength();
+      int offset = editor.getCaretModel().getOffset();
+      int fileLength = file.getTextLength();
       if (fileLength == 0) return null;
 
       // file.findElementAt(file.getTextLength()) returns null but we may need to show parameter info at EOF offset (for example in SQL)
-      final int offsetForLangDetection = offset > 0 && offset == fileLength ? offset - 1 : offset;
-      final Language language = PsiUtilCore.getLanguageAtOffset(file, offsetForLangDetection);
+      int offsetForLangDetection = offset > 0 && offset == fileLength ? offset - 1 : offset;
+      Language language = PsiUtilCore.getLanguageAtOffset(file, offsetForLangDetection);
 
-      final ShowParameterInfoContext context = new ShowParameterInfoContext(editor, project, file, offset, lbraceOffset, requestFocus, singleParameterHint);
+      ShowParameterInfoContext context = new ShowParameterInfoContext(editor, project, file, offset, lbraceOffset, requestFocus, singleParameterHint);
 
       context.setHighlightedElement(highlightedElement);
       context.setRequestFocus(requestFocus);
 
-      final ParameterInfoHandler<PsiElement, Object>[] handlers = ObjectUtil.notNull(getHandlers(project, language, file.getViewProvider().getBaseLanguage()), EMPTY_HANDLERS);
+      ParameterInfoHandler<PsiElement, Object>[] handlers = ObjectUtil.notNull(getHandlers(project, language, file.getViewProvider().getBaseLanguage()), EMPTY_HANDLERS);
 
       if (lookup != null) {
         if (lookupElement != null) {
           for (ParameterInfoHandler<PsiElement, Object> handler : handlers) {
             if (handler.couldShowInLookup()) {
-              final Object[] items = handler.getParametersForLookup(lookupElement, context);
+              Object[] items = handler.getParametersForLookup(lookupElement, context);
               if (items != null && items.length > 0) {
                 return (Runnable)() -> {
                   showLookupEditorHint(items, editor, handler, requestFocus);
@@ -158,14 +158,14 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     }, progressTitle, editor);
   }
 
-  private static void showLookupEditorHint(Object[] descriptors, final Editor editor, ParameterInfoHandler handler, boolean requestFocus) {
+  private static void showLookupEditorHint(Object[] descriptors, Editor editor, ParameterInfoHandler handler, boolean requestFocus) {
     ParameterInfoComponent component = new ParameterInfoComponent(descriptors, editor, handler, requestFocus, false);
     component.update(false);
 
-    final LightweightHintImpl hint = new LightweightHintImpl(component);
+    LightweightHintImpl hint = new LightweightHintImpl(component);
     hint.setSelectingHint(true);
-    final HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
-    final Pair<Point, Short> pos = ParameterInfoController.chooseBestHintPosition(editor, null, hint, HintManager.DEFAULT, true);
+    HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
+    Pair<Point, Short> pos = ParameterInfoController.chooseBestHintPosition(editor, null, hint, HintManager.DEFAULT, true);
     Application.get().invokeLater(() -> {
       if (!EditorActivityManager.getInstance().isVisible(editor)) return;
       hintManager.showEditorHint(
@@ -181,10 +181,10 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   }
 
   @Nullable
-  public static ParameterInfoHandler[] getHandlers(Project project, final Language... languages) {
+  public static ParameterInfoHandler[] getHandlers(Project project, Language... languages) {
     Set<ParameterInfoHandler> handlers = new LinkedHashSet<>();
     DumbService dumbService = DumbService.getInstance(project);
-    for (final Language language : languages) {
+    for (Language language : languages) {
       handlers.addAll(dumbService.filterByDumbAwareness(ParameterInfoHandler.forLanguage(language)));
     }
     if (handlers.isEmpty()) return null;

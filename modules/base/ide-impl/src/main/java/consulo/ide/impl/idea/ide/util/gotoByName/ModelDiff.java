@@ -44,7 +44,7 @@ public class ModelDiff {
     int deleted = 0;
     while (change != null) {
       if (change.deleted > 0) {
-        final int start = change.line0 + inserted - deleted;
+        int start = change.line0 + inserted - deleted;
         commands.add(new RemoveCmd<>(listModel, start, start + change.deleted - 1));
       }
 
@@ -83,7 +83,7 @@ public class ModelDiff {
     private final int start;
     private final int end;
 
-    private RemoveCmd(@Nonnull Model<T> model, final int start, final int end) {
+    private RemoveCmd(@Nonnull Model<T> model, int start, int end) {
       myListModel = model;
       this.start = start;
       this.end = end;
@@ -112,7 +112,7 @@ public class ModelDiff {
     private final int idx;
     private final List<? extends T> elements;
 
-    private InsertCmd(@Nonnull Model<T> model, final int idx, @Nonnull List<? extends T> elements) {
+    private InsertCmd(@Nonnull Model<T> model, int idx, @Nonnull List<? extends T> elements) {
       myListModel = model;
       this.idx = idx;
       this.elements = elements;

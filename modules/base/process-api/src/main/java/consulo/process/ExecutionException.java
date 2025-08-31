@@ -18,20 +18,20 @@ package consulo.process;
 import java.io.IOException;
 
 public class ExecutionException extends Exception {
-  public ExecutionException(final String s) {
+  public ExecutionException(String s) {
     super(s);
   }
 
-  public ExecutionException(final Throwable cause) {
+  public ExecutionException(Throwable cause) {
     super(cause == null ? null : cause.getMessage(), cause);
   }
 
-  public ExecutionException(final String s, Throwable cause) {
+  public ExecutionException(String s, Throwable cause) {
     super(s, cause);
   }
 
   public IOException toIOException() {
-    final Throwable cause = getCause();
+    Throwable cause = getCause();
     return cause instanceof IOException ? (IOException)cause : new IOException(this);
   }
 }

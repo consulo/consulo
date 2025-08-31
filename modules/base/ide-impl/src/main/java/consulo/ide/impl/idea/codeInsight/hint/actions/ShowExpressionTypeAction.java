@@ -53,7 +53,7 @@ public class ShowExpressionTypeAction extends BaseCodeInsightAction implements D
     }
 
     @Override
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
         return !ShowExpressionTypeHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()).isEmpty();
     }

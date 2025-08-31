@@ -25,7 +25,7 @@ import consulo.language.psi.ElementDescriptionProvider;
 public class NonCodeSearchDescriptionLocation extends ElementDescriptionLocation {
   private final boolean myNonJava;
 
-  private NonCodeSearchDescriptionLocation(final boolean nonJava) {
+  private NonCodeSearchDescriptionLocation(boolean nonJava) {
     myNonJava = nonJava;
   }
 

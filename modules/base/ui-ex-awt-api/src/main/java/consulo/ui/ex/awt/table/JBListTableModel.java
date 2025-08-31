@@ -68,7 +68,7 @@ public abstract class JBListTableModel extends AbstractTableModel implements Edi
 
   @Override
   public void addRow() {
-    final int count = myModel.getRowCount();
+    int count = myModel.getRowCount();
     if (myModel instanceof EditableModel) {
       ((EditableModel)myModel).addRow();
     }

@@ -28,7 +28,7 @@ import java.awt.*;
 public class SwingHelper {
   @Nonnull
   public static JEditorPane createHtmlViewer(boolean lineWrap, @Nullable Font font, @Nullable Color background, @Nullable Color foreground) {
-    final JEditorPane textPane;
+    JEditorPane textPane;
     if (lineWrap) {
       textPane = new JEditorPane() {
         @Override

@@ -50,7 +50,7 @@ public class ProjectViewTree extends DnDAwareTree {
 
     myApplicationFileColorManager = ApplicationFileColorManager.getInstance();
 
-    final NodeRenderer cellRenderer = new NodeRenderer() {
+    NodeRenderer cellRenderer = new NodeRenderer() {
       @Override
       protected void doPaint(Graphics2D g) {
         super.doPaint(g);
@@ -169,7 +169,7 @@ public class ProjectViewTree extends DnDAwareTree {
       if (!psi.isValid()) return null;
 
       Project project = psi.getProject();
-      final VirtualFile file = PsiUtilCore.getVirtualFile(psi);
+      VirtualFile file = PsiUtilCore.getVirtualFile(psi);
 
       if (file != null) {
         color = VfsPresentationUtil.getFileBackgroundColor(project, file);
@@ -178,7 +178,7 @@ public class ProjectViewTree extends DnDAwareTree {
         color = VfsPresentationUtil.getFileBackgroundColor(project, ((PsiDirectory)psi).getVirtualFile());
       }
       else if (psi instanceof PsiDirectoryContainer) {
-        final PsiDirectory[] dirs = ((PsiDirectoryContainer)psi).getDirectories();
+        PsiDirectory[] dirs = ((PsiDirectoryContainer)psi).getDirectories();
         for (PsiDirectory dir : dirs) {
             ColorValue c = VfsPresentationUtil.getFileBackgroundColor(project, dir.getVirtualFile());
           if (c != null && color == null) {

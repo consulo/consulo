@@ -30,7 +30,7 @@ public class CurrentTimeMacro extends SimpleMacro {
   }
 
   @Override
-  protected String evaluateSimpleMacro(Expression[] params, final ExpressionContext context) {
+  protected String evaluateSimpleMacro(Expression[] params, ExpressionContext context) {
     return CurrentDateMacro.formatUserDefined(params, context, false);
   }
 }

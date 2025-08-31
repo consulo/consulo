@@ -31,12 +31,12 @@ public final class ScreenUtil {
         }
         Rectangle[] allScreenBounds = getAllScreenBounds();
         for (Rectangle screenBounds : allScreenBounds) {
-            final Rectangle intersection = screenBounds.intersection(bounds);
+            Rectangle intersection = screenBounds.intersection(bounds);
             if (intersection.isEmpty()) {
                 continue;
             }
-            final int sq1 = intersection.width * intersection.height;
-            final int sq2 = bounds.width * bounds.height;
+            int sq1 = intersection.width * intersection.height;
+            int sq2 = bounds.width * bounds.height;
             double visibleFraction = (double) sq1 / (double) sq2;
             if (visibleFraction > 0.1) {
                 return true;
@@ -137,7 +137,7 @@ public final class ScreenUtil {
 
         for (GraphicsDevice device : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
             GraphicsConfiguration config = device.getDefaultConfiguration();
-            final Rectangle rect = config.getBounds();
+            Rectangle rect = config.getBounds();
             Rectangle intersection = rect.intersection(bounds);
             if (intersection.isEmpty()) {
                 continue;
@@ -177,14 +177,14 @@ public final class ScreenUtil {
         return rect;
     }
 
-    public static Insets getScreenInsets(final GraphicsConfiguration gc) {
+    public static Insets getScreenInsets(GraphicsConfiguration gc) {
         if (ourInsetsCache == null) {
             return calcInsets(gc);
         }
 
         synchronized (ourInsetsCache) {
             Pair<Insets, Long> data = ourInsetsCache.get(gc);
-            final long now = System.currentTimeMillis();
+            long now = System.currentTimeMillis();
             if (data == null || now > data.second + ourInsetsTimeout) {
                 data = Pair.create(calcInsets(gc), now);
                 ourInsetsCache.put(gc, data);
@@ -405,15 +405,15 @@ public final class ScreenUtil {
     }
 
     public static Point findNearestPointOnBorder(Rectangle rect, Point p) {
-        final int x0 = rect.x;
-        final int y0 = rect.y;
-        final int x1 = x0 + rect.width;
-        final int y1 = y0 + rect.height;
+        int x0 = rect.x;
+        int y0 = rect.y;
+        int x1 = x0 + rect.width;
+        int y1 = y0 + rect.height;
         double distance = -1;
         Point best = null;
-        final Point[] variants = {new Point(p.x, y0), new Point(p.x, y1), new Point(x0, p.y), new Point(x1, p.y)};
+        Point[] variants = {new Point(p.x, y0), new Point(p.x, y1), new Point(x0, p.y), new Point(x1, p.y)};
         for (Point variant : variants) {
-            final double d = variant.distance(p.x, p.y);
+            double d = variant.distance(p.x, p.y);
             if (best == null || distance > d) {
                 best = variant;
                 distance = d;
@@ -425,7 +425,7 @@ public final class ScreenUtil {
     public static void cropRectangleToFitTheScreen(Rectangle rect) {
         int screenX = rect.x;
         int screenY = rect.y;
-        final Rectangle screen = getScreenRectangle(screenX, screenY);
+        Rectangle screen = getScreenRectangle(screenX, screenY);
 
         if (rect.getMaxX() > screen.getMaxX()) {
             rect.width = (int) screen.getMaxX() - rect.x;
@@ -450,7 +450,7 @@ public final class ScreenUtil {
      * @param bounds       - area to check if location shifted towards or not. Also in screen coordinates
      * @return true if movement from prevLocation to location is towards specified rectangular area
      */
-    public static boolean isMovementTowards(final Point prevLocation, final Point location, final Rectangle bounds) {
+    public static boolean isMovementTowards(Point prevLocation, Point location, Rectangle bounds) {
         if (bounds == null) {
             return false;
         }

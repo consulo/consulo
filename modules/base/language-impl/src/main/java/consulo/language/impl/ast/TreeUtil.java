@@ -193,7 +193,7 @@ public class TreeUtil {
   public static ASTNode findCommonParent(ASTNode one, ASTNode two) {
     // optimization
     if (one == two) return one;
-    final Set<ASTNode> parents = new HashSet<>(20);
+    Set<ASTNode> parents = new HashSet<>(20);
     while (one != null) {
       parents.add(one);
       one = one.getTreeParent();
@@ -228,10 +228,10 @@ public class TreeUtil {
     return Couple.of(one, two);
   }
 
-  public static void clearCaches(@Nonnull final TreeElement tree) {
+  public static void clearCaches(@Nonnull TreeElement tree) {
     tree.acceptTree(new RecursiveTreeElementWalkingVisitor(false) {
       @Override
-      protected void visitNode(final TreeElement element) {
+      protected void visitNode(TreeElement element) {
         element.clearCaches();
         super.visitNode(element);
       }
@@ -239,12 +239,12 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static LeafElement nextLeaf(@Nonnull final LeafElement node) {
+  public static LeafElement nextLeaf(@Nonnull LeafElement node) {
     return nextLeaf(node, null);
   }
 
   @Nullable
-  public static ASTNode nextLeaf(@Nonnull final ASTNode node) {
+  public static ASTNode nextLeaf(@Nonnull ASTNode node) {
     return nextLeaf((TreeElement)node, null);
   }
 
@@ -262,7 +262,7 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static ASTNode prevLeaf(final ASTNode node) {
+  public static ASTNode prevLeaf(ASTNode node) {
     return prevLeaf((TreeElement)node, null);
   }
 
@@ -422,12 +422,12 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static ASTNode skipWhitespaceAndComments(final ASTNode node, boolean forward) {
+  public static ASTNode skipWhitespaceAndComments(ASTNode node, boolean forward) {
     return skipWhitespaceCommentsAndTokens(node, TokenSet.EMPTY, forward);
   }
 
   @Nullable
-  public static ASTNode skipWhitespaceCommentsAndTokens(final ASTNode node, @Nonnull TokenSet alsoSkip, boolean forward) {
+  public static ASTNode skipWhitespaceCommentsAndTokens(ASTNode node, @Nonnull TokenSet alsoSkip, boolean forward) {
     ASTNode element = node;
     while (true) {
       if (element == null) return null;

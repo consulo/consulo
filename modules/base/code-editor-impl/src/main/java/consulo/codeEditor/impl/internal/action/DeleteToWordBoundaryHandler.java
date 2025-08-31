@@ -39,7 +39,7 @@ class DeleteToWordBoundaryHandler extends EditorWriteActionHandler.ForEachCaret 
             return;
         }
 
-        final TextRange range = myIsUntilStart
+        TextRange range = myIsUntilStart
             ? EditorActionUtil.getRangeToWordStart(editor, camelMode, true)
             : EditorActionUtil.getRangeToWordEnd(editor, camelMode, true);
         if (!range.isEmpty()) {

@@ -45,7 +45,7 @@ public class TextEditor extends PropertyEditor {
     });
     myTextField.getDocument().addDocumentListener(
       new DocumentAdapter() {
-        protected void textChanged(final DocumentEvent e) {
+        protected void textChanged(DocumentEvent e) {
           preferredSizeChanged();
         }
       }

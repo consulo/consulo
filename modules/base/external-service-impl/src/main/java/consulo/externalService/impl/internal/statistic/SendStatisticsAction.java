@@ -37,7 +37,7 @@ public class SendStatisticsAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }

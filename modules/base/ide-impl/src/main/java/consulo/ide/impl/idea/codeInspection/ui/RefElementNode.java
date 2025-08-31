@@ -67,7 +67,7 @@ public class RefElementNode extends InspectionTreeNode {
   }
 
   public String toString() {
-    final RefEntity element = getElement();
+    RefEntity element = getElement();
     if (element == null || !element.isValid()) {
       return InspectionsBundle.message("inspection.reference.invalid");
     }
@@ -76,7 +76,7 @@ public class RefElementNode extends InspectionTreeNode {
 
   @Override
   public boolean isValid() {
-    final RefEntity refEntity = getElement();
+    RefEntity refEntity = getElement();
     return refEntity != null && refEntity.isValid();
   }
 

@@ -20,11 +20,11 @@ import org.jetbrains.annotations.Contract;
 
 public abstract class ImmutableCharSequence implements CharSequence {
 
-    public static CharSequence asImmutable(@Nonnull final CharSequence cs) {
+    public static CharSequence asImmutable(@Nonnull CharSequence cs) {
         return isImmutable(cs) ? cs : cs.toString();
     }
 
-    public static boolean isImmutable(@Nonnull final CharSequence cs) {
+    public static boolean isImmutable(@Nonnull CharSequence cs) {
         if (cs instanceof ImmutableCharSequence) {
             return true;
         }

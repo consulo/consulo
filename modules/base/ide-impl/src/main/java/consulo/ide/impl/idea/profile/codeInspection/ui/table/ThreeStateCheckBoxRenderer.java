@@ -55,20 +55,20 @@ public class ThreeStateCheckBoxRenderer extends ThreeStateCheckBox implements Ta
   }
 
   @Override
-  public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected, final int row, final int column) {
+  public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
     return tune(value, isSelected, row, table);
   }
 
   @Override
-  public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     return tune(value, isSelected, row, table);
   }
 
-  private JCheckBox tune(final Object value, final boolean isSelected, final int row, final JTable table) {
-    final Color bg = UIUtil.isUnderNimbusLookAndFeel() && row % 2 == 1 ? UIUtil.TRANSPARENT_COLOR : table.getBackground();
-    final Color fg = table.getForeground();
-    final Color selBg = table.getSelectionBackground();
-    final Color selFg = table.getSelectionForeground();
+  private JCheckBox tune(Object value, boolean isSelected, int row, JTable table) {
+    Color bg = UIUtil.isUnderNimbusLookAndFeel() && row % 2 == 1 ? UIUtil.TRANSPARENT_COLOR : table.getBackground();
+    Color fg = table.getForeground();
+    Color selBg = table.getSelectionBackground();
+    Color selFg = table.getSelectionForeground();
 
     setForeground(isSelected ? selFg : fg);
     setBackground(isSelected ? selBg : bg);
@@ -88,19 +88,19 @@ public class ThreeStateCheckBoxRenderer extends ThreeStateCheckBox implements Ta
   }
 
   @Override
-  public boolean isCellEditable(final EventObject anEvent) {
+  public boolean isCellEditable(EventObject anEvent) {
     return true;
   }
 
   @Override
-  public boolean shouldSelectCell(final EventObject anEvent) {
+  public boolean shouldSelectCell(EventObject anEvent) {
     return true;
   }
 
   @Override
   public boolean stopCellEditing() {
-    final ChangeEvent e = new ChangeEvent(this);
-    for (final CellEditorListener listener : new ArrayList<CellEditorListener>(myListeners)) {
+    ChangeEvent e = new ChangeEvent(this);
+    for (CellEditorListener listener : new ArrayList<CellEditorListener>(myListeners)) {
       listener.editingStopped(e);
     }
     return true;
@@ -108,19 +108,19 @@ public class ThreeStateCheckBoxRenderer extends ThreeStateCheckBox implements Ta
 
   @Override
   public void cancelCellEditing() {
-    final ChangeEvent e = new ChangeEvent(this);
-    for (final CellEditorListener listener : new ArrayList<CellEditorListener>(myListeners)) {
+    ChangeEvent e = new ChangeEvent(this);
+    for (CellEditorListener listener : new ArrayList<CellEditorListener>(myListeners)) {
       listener.editingCanceled(e);
     }
   }
 
   @Override
-  public void addCellEditorListener(final CellEditorListener l) {
+  public void addCellEditorListener(CellEditorListener l) {
     myListeners.add(l);
   }
 
   @Override
-  public void removeCellEditorListener(final CellEditorListener l) {
+  public void removeCellEditorListener(CellEditorListener l) {
     myListeners.remove(l);
   }
 }

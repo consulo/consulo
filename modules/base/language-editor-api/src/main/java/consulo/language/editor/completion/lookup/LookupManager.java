@@ -24,10 +24,10 @@ public abstract class LookupManager {
   public static LookupEx getActiveLookup(@Nullable Editor editor) {
     if (editor == null) return null;
 
-    final Project project = editor.getProject();
+    Project project = editor.getProject();
     if (project == null || project.isDisposed()) return null;
 
-    final LookupEx lookup = getInstance(project).getActiveLookup();
+    LookupEx lookup = getInstance(project).getActiveLookup();
     if (lookup == null) return null;
 
     return lookup.getTopLevelEditor() == EditorWindow.getTopLevelEditor(editor) ? lookup : null;
@@ -66,6 +66,6 @@ public abstract class LookupManager {
   public abstract void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
   @Nonnull
-  public abstract Lookup createLookup(@Nonnull Editor editor, @Nonnull LookupElement[] items, @Nonnull final String prefix, @Nonnull LookupArranger arranger);
+  public abstract Lookup createLookup(@Nonnull Editor editor, @Nonnull LookupElement[] items, @Nonnull String prefix, @Nonnull LookupArranger arranger);
 
 }

@@ -15,7 +15,7 @@ public class SimpleMatch {
   private final Map<String, String> myChangedParameters;
   private String myChangedOutput;
 
-  public SimpleMatch(@Nonnull final PsiElement start, @Nonnull final PsiElement endElement) {
+  public SimpleMatch(@Nonnull PsiElement start, @Nonnull PsiElement endElement) {
     myStartElement = start;
     myEndElement = endElement;
     myChangedParameters = new HashMap<String, String>();
@@ -33,11 +33,11 @@ public class SimpleMatch {
     return myChangedParameters;
   }
 
-  public void changeParameter(@Nonnull final String from, @Nonnull final String to) {
+  public void changeParameter(@Nonnull String from, @Nonnull String to) {
     myChangedParameters.put(from, to);
   }
 
-  public void changeOutput(@Nonnull final String to) {
+  public void changeOutput(@Nonnull String to) {
     myChangedOutput = to;
   }
 

@@ -39,12 +39,12 @@ final class ActionsLoader {
         }
 
         // TODO: read setting from proper place (think where)
-        final String propVal = System.getProperty(SETTINS_AUTOCLOSE_KEY + '.' + toolWindowId);
+        String propVal = System.getProperty(SETTINS_AUTOCLOSE_KEY + '.' + toolWindowId);
         if (propVal == null || propVal.isEmpty()) {
             return getAutoCloseActionsDefault(toolWindowId);
         }
 
-        final String[] split = propVal.split(",");
+        String[] split = propVal.split(",");
         if (split.length == 0) {
             return null;
         }
@@ -74,10 +74,10 @@ final class ActionsLoader {
             null /*project-default touchbar never replaces esc-button*/,
             null /*project-default touchbar mustn't be closed because of auto-close actions*/,
             (parentInfo, butt, presentation) -> {
-                final String actId = ActionManager.getInstance().getId(butt.getAnAction());
+                String actId = ActionManager.getInstance().getId(butt.getAnAction());
 
-                final boolean isRunConfigPopover = "RunConfiguration".equals(actId);
-                final boolean isOpenInTerminalAction = "Terminal.OpenInTerminal".equals(actId) || "Terminal.OpenInReworkedTerminal".equals(actId);
+                boolean isRunConfigPopover = "RunConfiguration".equals(actId);
+                boolean isOpenInTerminalAction = "Terminal.OpenInTerminal".equals(actId) || "Terminal.OpenInReworkedTerminal".equals(actId);
                 if (isRunConfigPopover || isOpenInTerminalAction) {
                     butt.setText(presentation.getText());
                     butt.setIconFromPresentation(presentation);
@@ -109,13 +109,13 @@ final class ActionsLoader {
             LOG.debug("Services tool-window will use action-group from debug tool window");
             toolWindowId = "Debug";
         }
-        final @Nullable Map<Long, ActionGroup> actions = getActionGroup(IdeActions.GROUP_TOUCHBAR + toolWindowId);
+        @Nullable Map<Long, ActionGroup> actions = getActionGroup(IdeActions.GROUP_TOUCHBAR + toolWindowId);
         if (actions == null || actions.get(0L) == null) {
             LOG.debug("null action group (or it doesn't contain main-layout) for tool window: %s", toolWindowId);
             return null;
         }
 
-        final Customizer customizer = new Customizer(
+        Customizer customizer = new Customizer(
             TOOLWINDOW_CROSS_ESC ? new TBPanel.CrossEscInfo(TOOLWINDOW_EMULATE_ESC, TOOLWINDOW_PERSISTENT) : null,
             getAutoCloseActions(toolWindowId)
         );
@@ -124,16 +124,16 @@ final class ActionsLoader {
 
     static @Nullable Map<Long, ActionGroup> getActionGroup(@Nonnull String groupId) {
         // 1. build full name of group
-        final String fullGroupId = groupId.startsWith(IdeActions.GROUP_TOUCHBAR) ? groupId : IdeActions.GROUP_TOUCHBAR + groupId;
+        String fullGroupId = groupId.startsWith(IdeActions.GROUP_TOUCHBAR) ? groupId : IdeActions.GROUP_TOUCHBAR + groupId;
 
         // 2. read touchbar-actions from CustomActionsSchema and select proper child
-        final ActionGroup allTouchbarActions = (ActionGroup) CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_TOUCHBAR);
+        ActionGroup allTouchbarActions = (ActionGroup) CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_TOUCHBAR);
         if (allTouchbarActions == null) {
             LOG.debug("can't create touchbar because ActionGroup isn't defined: %s", IdeActions.GROUP_TOUCHBAR);
             return null;
         }
 
-        final ActionManager actionManager = ActionManager.getInstance();
+        ActionManager actionManager = ActionManager.getInstance();
         ActionGroup actionGroup = null;
         for (AnAction act : allTouchbarActions.getChildren(null)) {
             if (!(act instanceof ActionGroup)) {
@@ -153,7 +153,7 @@ final class ActionsLoader {
         // 3. when group wasn't found in CustomActionsSchema just read group from ActionManager
         if (actionGroup == null) {
             LOG.debug("group %s wasn't found in CustomActionsSchema, will obtain it directly from ActionManager", groupId);
-            final AnAction act = actionManager.getAction(fullGroupId);
+            AnAction act = actionManager.getAction(fullGroupId);
             if (!(act instanceof ActionGroup)) {
                 LOG.debug("can't create touchbar because corresponding ActionGroup isn't defined: %s", groupId);
                 return null;
@@ -163,7 +163,7 @@ final class ActionsLoader {
 
         // 4. extract main layout and alternative layouts with modifers
         Map<Long, ActionGroup> result = new HashMap<>();
-        final DefaultActionGroup mainLayout = new DefaultActionGroup();
+        DefaultActionGroup mainLayout = new DefaultActionGroup();
         mainLayout.getTemplatePresentation().copyFrom(actionGroup.getTemplatePresentation()); // just for convenience debug
         result.put(0L, mainLayout);
         for (AnAction act : actionGroup.getChildren(null)) {
@@ -173,7 +173,7 @@ final class ActionsLoader {
             }
             String gid = actionManager.getId(act instanceof CustomisedActionGroup o ? o.getDelegate() : act);
             if (gid.startsWith(fullGroupId + "_")) {
-                final long mask = _str2mask(gid.substring(fullGroupId.length() + 1));
+                long mask = _str2mask(gid.substring(fullGroupId.length() + 1));
                 if (mask != 0) {
                     result.put(mask, (ActionGroup) act);
                 }
@@ -190,7 +190,7 @@ final class ActionsLoader {
     }
 
     static @Nonnull Pair<Map<Long, ActionGroup>, Customizer> getFnActionGroup() {
-        final DefaultActionGroup result = new DefaultActionGroup(IdeBundle.message("action.fn.keys.text"), false);
+        DefaultActionGroup result = new DefaultActionGroup(IdeBundle.message("action.fn.keys.text"), false);
         for (int c = 1; c <= 12; ++c) {
             result.add(new FNKeyAction(c));
         }
@@ -201,7 +201,7 @@ final class ActionsLoader {
             if (butt.getAnAction() instanceof FNKeyAction act) {
                 butt.setWidth(FN_WIDTH);
                 butt.setIcon(null);
-                final String hint = presentation.getText() == null || presentation.getText().isEmpty() ? " " : presentation.getText();
+                String hint = presentation.getText() == null || presentation.getText().isEmpty() ? " " : presentation.getText();
                 butt.setText(String.format("F%d", act.getFN()), hint, act.isActionDisabled());
             }
         });
@@ -225,7 +225,7 @@ final class ActionsLoader {
             return 0;
         }
 
-        final String[] spl = modifierId.split("\\.");
+        String[] spl = modifierId.split("\\.");
         long mask = 0;
         for (String sub : spl) {
             mask |= _str2mask(sub);

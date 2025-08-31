@@ -33,12 +33,12 @@ public class ExportTestResultsDialog extends DialogWrapper {
   public ExportTestResultsDialog(Project project, ExportTestResultsConfiguration config, String defaultFileName) {
     super(project);
     myConfig = config;
-    final String defaultFolder;
+    String defaultFolder;
     if (StringUtil.isNotEmpty(config.getOutputFolder())) {
       defaultFolder = FileUtil.toSystemDependentName(config.getOutputFolder());
     }
     else {
-      final VirtualFile dir = project.getBaseDir();
+      VirtualFile dir = project.getBaseDir();
       assert dir != null;
       defaultFolder = FileUtil.toSystemDependentName(dir.getPresentableUrl());
     }

@@ -68,16 +68,16 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
 
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-    final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(file.getProject());
+    InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = projectProfileManager.getInspectionProfile();
     editToolSettings(project,
                      inspectionProfile, true,
                      myShortName);
   }
 
-  public AsyncResult<Void> editToolSettings(final Project project,
-                                            final InspectionProfileImpl inspectionProfile,
-                                            final boolean canChooseDifferentProfiles) {
+  public AsyncResult<Void> editToolSettings(Project project,
+                                            InspectionProfileImpl inspectionProfile,
+                                            boolean canChooseDifferentProfiles) {
     return editToolSettings(project,
                             inspectionProfile,
                             canChooseDifferentProfiles,
@@ -85,11 +85,11 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   }
 
   @RequiredUIAccess
-  public static AsyncResult<Void> editToolSettings(final Project project,
-                                                   final InspectionProfile inspectionProfile,
-                                                   final boolean canChooseDifferentProfile,
-                                                   final String selectedToolShortName) {
-    final ShowSettingsUtil settingsUtil = ShowSettingsUtil.getInstance();
+  public static AsyncResult<Void> editToolSettings(Project project,
+                                                   InspectionProfile inspectionProfile,
+                                                   boolean canChooseDifferentProfile,
+                                                   String selectedToolShortName) {
+    ShowSettingsUtil settingsUtil = ShowSettingsUtil.getInstance();
 
     return settingsUtil.showAndSelect(project, ProjectInspectionToolsConfigurable.class, errorsConfigurable -> {
       errorsConfigurable.selectProfile(inspectionProfile);

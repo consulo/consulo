@@ -71,7 +71,7 @@ public abstract class FileBasedIndex {
 
     public abstract void removeIndexableSet(@Nonnull IndexableFileSet set);
 
-    public static int getFileId(@Nonnull final VirtualFile file) {
+    public static int getFileId(@Nonnull VirtualFile file) {
         if (file instanceof VirtualFileWithId) {
             return ((VirtualFileWithId)file).getId();
         }

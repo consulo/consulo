@@ -83,8 +83,8 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     Position position;
     StatusBarWidget widget;
 
-    static WidgetBean create(@Nonnull final StatusBarWidget widget, @Nonnull final Position position, @Nonnull final PseudoComponent component) {
-      final WidgetBean bean = new WidgetBean();
+    static WidgetBean create(@Nonnull StatusBarWidget widget, @Nonnull Position position, @Nonnull PseudoComponent component) {
+      WidgetBean bean = new WidgetBean();
       bean.widget = widget;
       bean.position = position;
       bean.component = component;
@@ -121,14 +121,14 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     myComponent.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
   }
 
-  private void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull final Position pos) {
+  private void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Position pos) {
     UIAccess uiAccess = myApplication.getLastUIAccess();
 
     uiAccess.giveIfNeed(() -> addWidget(widget, pos, List.of()));
   }
 
   @Override
-  public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull List<String> order, @Nonnull final Disposable parentDisposable) {
+  public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull List<String> order, @Nonnull Disposable parentDisposable) {
     UIAccess uiAccess = myApplication.getLastUIAccess();
 
     uiAccess.giveIfNeed(() -> addWidget(widget, Position.RIGHT, order));
@@ -323,7 +323,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public void updateWidgets() {
-    for (final String s : myWidgetMap.keySet()) {
+    for (String s : myWidgetMap.keySet()) {
       updateWidget(s);
     }
 
@@ -331,7 +331,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void updateWidget(@Nonnull final String id) {
+  public void updateWidget(@Nonnull String id) {
     UIAccess uiAccess = myApplication.getLastUIAccess();
     uiAccess.giveIfNeed(() -> {
       PseudoComponent widgetComponent = getWidgetComponent(id);

@@ -59,7 +59,7 @@ public class ProjectGroup {
   }
 
   public void addProject(String path) {
-    final List<String> projects = getProjects();
+    List<String> projects = getProjects();
     projects.add(path);
     save(projects);
   }
@@ -73,7 +73,7 @@ public class ProjectGroup {
   }
 
   public void removeProject(String path) {
-    final List<String> projects = getProjects();
+    List<String> projects = getProjects();
     projects.remove(path);
     save(projects);
   }

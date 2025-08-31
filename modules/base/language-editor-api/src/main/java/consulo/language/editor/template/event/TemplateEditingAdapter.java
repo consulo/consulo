@@ -25,7 +25,7 @@ import consulo.language.editor.template.TemplateState;
 public abstract class TemplateEditingAdapter implements TemplateEditingListener {
 
   @Override
-  public void beforeTemplateFinished(final TemplateState state, final Template template) {
+  public void beforeTemplateFinished(TemplateState state, Template template) {
   }
 
   @Override

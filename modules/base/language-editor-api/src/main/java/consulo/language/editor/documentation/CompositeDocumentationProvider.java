@@ -188,7 +188,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   public String fetchExternalDocumentation(Project project, PsiElement element, List<String> docUrls) {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof ExternalDocumentationProvider) {
-        final String doc = ((ExternalDocumentationProvider)provider).fetchExternalDocumentation(project, element, docUrls);
+        String doc = ((ExternalDocumentationProvider)provider).fetchExternalDocumentation(project, element, docUrls);
         if (doc != null) {
           return doc;
         }
@@ -233,7 +233,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   }
 
   public static boolean hasUrlsFor(DocumentationProvider provider, PsiElement element, PsiElement originalElement) {
-    final List<String> urls = provider.getUrlFor(element, originalElement);
+    List<String> urls = provider.getUrlFor(element, originalElement);
     if (urls != null && !urls.isEmpty()) return true;
     return false;
   }

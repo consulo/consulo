@@ -27,7 +27,7 @@ public class LimitedPool<T> {
   private Object[] storage;
   private int index = 0;
 
-  public LimitedPool(final int capacity, ObjectFactory<T> factory) {
+  public LimitedPool(int capacity, ObjectFactory<T> factory) {
     this.capacity = capacity;
     this.factory = factory;
     storage = new Object[10];

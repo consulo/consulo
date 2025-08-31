@@ -43,7 +43,7 @@ public class Java9ModuleInitializer {
         return ModuleFinder.of(paths);
     }
 
-    public static ModuleLayer initializeBaseModules(List<File> files, final ClassLoader targetClassLoader, ContainerLogger containerLogger, Java9ModuleProcessor processor) {
+    public static ModuleLayer initializeBaseModules(List<File> files, ClassLoader targetClassLoader, ContainerLogger containerLogger, Java9ModuleProcessor processor) {
         ModuleFinder moduleFinder = moduleFinderOf(files);
 
         Set<String> toResolve = new LinkedHashSet<>();
@@ -108,7 +108,7 @@ public class Java9ModuleInitializer {
         return controller.layer();
     }
 
-    public static ModuleLayer initializeEtcModules(List<ModuleLayer> moduleLayers, List<File> files, final ClassLoader targetClassLoader) {
+    public static ModuleLayer initializeEtcModules(List<ModuleLayer> moduleLayers, List<File> files, ClassLoader targetClassLoader) {
         ModuleFinder moduleFinder = moduleFinderOf(files);
 
         Set<String> toResolve = new LinkedHashSet<>();

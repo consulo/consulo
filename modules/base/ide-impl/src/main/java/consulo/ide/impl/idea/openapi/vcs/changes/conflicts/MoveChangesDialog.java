@@ -69,7 +69,7 @@ public class MoveChangesDialog extends DialogWrapper {
 
       @Override
       protected Change getLeadSelectedObject(ChangesBrowserNode node) {
-        final Object o = node.getUserObject();
+        Object o = node.getUserObject();
         if (o instanceof Change) {
           return (Change) o;
         }

@@ -24,19 +24,19 @@ public class ApplyFilePatchFactory {
   private ApplyFilePatchFactory() {
   }
 
-  public static ApplyTextFilePatch create(final TextFilePatch patch) {
+  public static ApplyTextFilePatch create(TextFilePatch patch) {
     return new ApplyTextFilePatch(patch);
   }
 
-  public static ApplyBinaryFilePatch create(final BinaryFilePatch patch) {
+  public static ApplyBinaryFilePatch create(BinaryFilePatch patch) {
     return new ApplyBinaryFilePatch(patch);
   }
 
-  public static ApplyBinaryShelvedFilePatch create(final ShelvedBinaryFilePatch patch) {
+  public static ApplyBinaryShelvedFilePatch create(ShelvedBinaryFilePatch patch) {
     return new ApplyBinaryShelvedFilePatch(patch);
   }
 
-  public static ApplyFilePatchBase createGeneral(final FilePatch patch) {
+  public static ApplyFilePatchBase createGeneral(FilePatch patch) {
     if (patch instanceof TextFilePatch) {
       return create((TextFilePatch) patch);
     } else if (patch instanceof BinaryFilePatch) {

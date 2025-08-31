@@ -55,7 +55,7 @@ public class IncomingChangesViewFactory implements ChangesViewContentFactory {
 
   @Override
   public boolean isAvailable() {
-    final AbstractVcs[] abstractVcses = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+    AbstractVcs[] abstractVcses = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
     for (AbstractVcs vcs : abstractVcses) {
       CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
       if (provider instanceof CachingCommittedChangesProvider && provider.supportsIncomingChanges()) {

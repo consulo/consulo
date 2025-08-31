@@ -38,7 +38,7 @@ public interface FileEditorWindow {
   void closeAllExcept(VirtualFile selectedFile);
 
   @Nullable
-  FileEditorWindow split(final int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew);
+  FileEditorWindow split(int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew);
 
   void unsplit(boolean setCurrent);
 
@@ -54,7 +54,7 @@ public interface FileEditorWindow {
   VirtualFile[] getFiles();
 
   @Nullable
-  FileEditorWithProviderComposite findFileComposite(final VirtualFile file);
+  FileEditorWithProviderComposite findFileComposite(VirtualFile file);
 
   @Nullable
   FileEditorWithProviderComposite getSelectedEditor();
@@ -71,25 +71,25 @@ public interface FileEditorWindow {
 
   boolean inSplitter();
 
-  default void closeFile(final VirtualFile file) {
+  default void closeFile(VirtualFile file) {
     closeFile(file, true);
   }
 
-  default void closeFile(final VirtualFile file, final boolean disposeIfNeeded) {
+  default void closeFile(VirtualFile file, boolean disposeIfNeeded) {
     closeFile(file, disposeIfNeeded, true);
   }
 
-  void closeFile(@Nonnull final VirtualFile file, final boolean disposeIfNeeded, final boolean transferFocus);
+  void closeFile(@Nonnull VirtualFile file, boolean disposeIfNeeded, boolean transferFocus);
 
   void clear();
 
-  int findFileIndex(final VirtualFile fileToFind);
+  int findFileIndex(VirtualFile fileToFind);
 
   void setTabsPlacement(int placement);
 
-  boolean isFilePinned(final VirtualFile file);
+  boolean isFilePinned(VirtualFile file);
 
-  void setFilePinned(final VirtualFile file, final boolean pinned);
+  void setFilePinned(VirtualFile file, boolean pinned);
 
   boolean isFileOpen(VirtualFile virtualFile);
 
@@ -98,12 +98,12 @@ public interface FileEditorWindow {
   void unsplitAll();
 
   @RequiredUIAccess
-  default void setEditor(@Nullable final FileEditorWithProviderComposite editor, final boolean focusEditor) {
+  default void setEditor(@Nullable FileEditorWithProviderComposite editor, boolean focusEditor) {
     setEditor(editor, true, focusEditor);
   }
 
   @RequiredUIAccess
-  void setEditor(@Nullable final FileEditorWithProviderComposite editor, final boolean selectEditor, final boolean focusEditor);
+  void setEditor(@Nullable FileEditorWithProviderComposite editor, boolean selectEditor, boolean focusEditor);
 
   void setAsCurrentWindow(boolean value);
 

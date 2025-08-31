@@ -122,7 +122,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   protected void doDestroyProcess() {
     // Override this method if you want to customize default destroy behaviour, e.g.
     // if you want use some soft-kill.
-    final Process process = getProcess();
+    Process process = getProcess();
     if (shouldDestroyProcessRecursively() && processCanBeKilledByOS(process)) {
       killProcessTree(process);
     }
@@ -141,13 +141,13 @@ public class OSProcessHandler extends BaseOSProcessHandler {
    *
    * @param process Process
    */
-  protected void killProcessTree(@Nonnull final Process process) {
+  protected void killProcessTree(@Nonnull Process process) {
     executeTask(() -> killProcessTreeSync(process));
   }
 
   private void killProcessTreeSync(@Nonnull Process process) {
     LOG.debug("killing process tree");
-    final boolean destroyed = OSProcessManager.getInstance().killProcessTree(process);
+    boolean destroyed = OSProcessManager.getInstance().killProcessTree(process);
     if (!destroyed) {
       if (!process.isAlive()) {
         LOG.warn("Process has been already terminated: " + myCommandLine);

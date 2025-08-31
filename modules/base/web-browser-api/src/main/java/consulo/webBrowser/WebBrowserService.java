@@ -44,7 +44,7 @@ public interface WebBrowserService {
     public abstract Url getUrlForContext(@Nonnull PsiElement sourceElement);
 
     @Nonnull
-    default Collection<Url> getUrlsToOpen(@Nonnull final PsiElement element, boolean preferLocalUrl)
+    default Collection<Url> getUrlsToOpen(@Nonnull PsiElement element, boolean preferLocalUrl)
         throws WebBrowserUrlProvider.BrowserException {
         OpenInBrowserRequest request = OpenInBrowserRequest.create(element);
         return request == null ? Collections.<Url>emptyList() : getUrlsToOpen(request, preferLocalUrl);

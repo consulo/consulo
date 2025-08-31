@@ -100,7 +100,7 @@ public class VcsLogUserFilterImpl implements VcsLogUserFilter {
   }
 
   @Override
-  public boolean matches(@Nonnull final VcsCommitMetadata commit) {
+  public boolean matches(@Nonnull VcsCommitMetadata commit) {
     return ContainerUtil.exists(myUsers, name -> {
       Set<VcsUser> users = getUsers(commit.getRoot(), name);
       if (!users.isEmpty()) {

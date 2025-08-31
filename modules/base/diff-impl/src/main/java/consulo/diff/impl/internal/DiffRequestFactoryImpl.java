@@ -268,7 +268,7 @@ public class DiffRequestFactoryImpl implements DiffRequestFactoryEx {
     if (byteContents.size() != 3) throw new IllegalArgumentException();
     if (contentTitles.size() != 3) throw new IllegalArgumentException();
 
-    final Document outputDocument = FileDocumentManager.getInstance().getDocument(output);
+    Document outputDocument = FileDocumentManager.getInstance().getDocument(output);
     if (outputDocument == null) throw new InvalidDiffRequestException("Can't get output document: " + output.getPresentableUrl());
     if (!DiffImplUtil.canMakeWritable(outputDocument)) throw new InvalidDiffRequestException("Output is read only: " + output.getPresentableUrl());
 

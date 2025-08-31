@@ -48,7 +48,7 @@ public final class ConcurrentSoftValueHashMap<K, V> extends ConcurrentRefValueHa
     // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
     // otherwise it's just canonical equals on referents for replace(K,V,V) to work
     @Override
-    public final boolean equals(final Object o) {
+    public final boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 

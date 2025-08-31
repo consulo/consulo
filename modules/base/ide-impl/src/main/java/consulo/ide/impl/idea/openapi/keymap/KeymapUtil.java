@@ -235,13 +235,13 @@ public class KeymapUtil {
       if ((keyEvent.getModifiers() & each.intValue()) > 0) return false;
     }
 
-    final int code = keyEvent.getKeyCode();
+    int code = keyEvent.getKeyCode();
 
     return code == KeyEvent.VK_META || code == KeyEvent.VK_CONTROL || code == KeyEvent.VK_SHIFT || code == KeyEvent.VK_ALT;
   }
 
   private static void updateTooltipRequestKey(RegistryValue value) {
-    final String text = value.asString();
+    String text = value.asString();
 
     ourTooltipKeys.clear();
     ourOtherTooltipKeys.clear();
@@ -276,7 +276,7 @@ public class KeymapUtil {
   }
 
   @Nullable
-  public static KeyStroke getKeyStroke(@Nonnull final ShortcutSet shortcutSet) {
+  public static KeyStroke getKeyStroke(@Nonnull ShortcutSet shortcutSet) {
     return ShortcutUtil.getKeyStroke(shortcutSet);
   }
 
@@ -293,11 +293,11 @@ public class KeymapUtil {
   /**
    * Checks that one of the mouse shortcuts assigned to the provided action has the same modifiers as provided
    */
-  public static boolean matchActionMouseShortcutsModifiers(final Keymap activeKeymap, @JdkConstants.InputEventMask int modifiers, final String actionId) {
-    final MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
+  public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, @JdkConstants.InputEventMask int modifiers, String actionId) {
+    MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
     for (Shortcut shortcut : activeKeymap.getShortcuts(actionId)) {
       if (shortcut instanceof MouseShortcut) {
-        final MouseShortcut mouseShortcut = (MouseShortcut)shortcut;
+        MouseShortcut mouseShortcut = (MouseShortcut)shortcut;
         if (mouseShortcut.getModifiers() == syntheticShortcut.getModifiers()) {
           return true;
         }

@@ -842,7 +842,7 @@ public class mxUtils {
   /**
    * Sorts the given cells according to the order in the cell hierarchy.
    */
-  public static Object[] sortCells(Object[] cells, final boolean ascending) {
+  public static Object[] sortCells(Object[] cells, boolean ascending) {
     return sortCells(Arrays.asList(cells), ascending).toArray();
   }
 

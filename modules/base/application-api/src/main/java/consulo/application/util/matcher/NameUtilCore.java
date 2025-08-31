@@ -18,7 +18,7 @@ public class NameUtilCore {
    */
   @Nonnull
   public static String[] splitNameIntoWords(@Nonnull String name) {
-    final String[] underlineDelimited = name.split("_");
+    String[] underlineDelimited = name.split("_");
     List<String> result = new ArrayList<>();
     for (String word : underlineDelimited) {
       addAllWords(word, result);

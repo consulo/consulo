@@ -35,10 +35,10 @@ public class ChangeListTodosTreeStructure extends TodoTreeStructure {
   }
 
   @Override
-  public boolean accept(final PsiFile psiFile) {
+  public boolean accept(PsiFile psiFile) {
     if (!psiFile.isValid()) return false;
     boolean isAffected = false;
-    final Collection<Change> changes = ChangeListManager.getInstance(myProject).getDefaultChangeList().getChanges();
+    Collection<Change> changes = ChangeListManager.getInstance(myProject).getDefaultChangeList().getChanges();
     for (Change change : changes) {
       if (change.affectsFile(VfsUtil.virtualToIoFile(psiFile.getVirtualFile()))) {
         isAffected = true;

@@ -49,7 +49,7 @@ public abstract class AutoPopupController {
 
   public abstract void scheduleAutoPopup(Editor editor);
 
-  public abstract void showParameterInfo(Project project, final Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus);
+  public abstract void showParameterInfo(Project project, Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus);
 
   public abstract void autoPopupParameterInfo(@Nonnull Editor editor, @Nullable Object highlightedMethod);
 

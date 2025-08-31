@@ -31,12 +31,12 @@ public class StringLenComparator implements Comparator<String> {
     return ourDescendingInstance;
   }
 
-  private StringLenComparator(final boolean value) {
+  private StringLenComparator(boolean value) {
     myAscending = value;
   }
 
-  public int compare(final String o1, final String o2) {
-    final int revertor = myAscending ? 1 : -1;
+  public int compare(String o1, String o2) {
+    int revertor = myAscending ? 1 : -1;
     return (o1.length() == o2.length()) ? 0 : (revertor * ((o1.length() < o2.length()) ? -1 : 1));
   }
 }

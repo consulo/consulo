@@ -49,20 +49,20 @@ import java.util.Map;
  */
 public class GenericInlineHandlerImpl {
     @RequiredUIAccess
-    public static boolean invoke(final PsiElement element, @Nullable Editor editor, final InlineHandler languageSpecific) {
-        final PsiReference invocationReference = editor != null ? TargetElementUtil.findReference(editor) : null;
-        final InlineHandler.Settings settings = languageSpecific.prepareInlineElement(element, editor, invocationReference != null);
+    public static boolean invoke(PsiElement element, @Nullable Editor editor, InlineHandler languageSpecific) {
+        PsiReference invocationReference = editor != null ? TargetElementUtil.findReference(editor) : null;
+        InlineHandler.Settings settings = languageSpecific.prepareInlineElement(element, editor, invocationReference != null);
         if (settings == null || settings == InlineHandler.Settings.CANNOT_INLINE_SETTINGS) {
             return settings != null;
         }
 
-        final Collection<? extends PsiReference> allReferences;
+        Collection<? extends PsiReference> allReferences;
 
         if (settings.isOnlyOneReferenceToInline()) {
             allReferences = Collections.singleton(invocationReference);
         }
         else {
-            final SimpleReference<Collection<? extends PsiReference>> usagesRef = new SimpleReference<>();
+            SimpleReference<Collection<? extends PsiReference>> usagesRef = new SimpleReference<>();
             ProgressManager.getInstance().runProcessWithProgressSynchronously(
                 () -> usagesRef.set(ReferencesSearch.search(element).findAll()),
                 "Find Usages",
@@ -72,20 +72,20 @@ public class GenericInlineHandlerImpl {
             allReferences = usagesRef.get();
         }
 
-        final MultiMap<PsiElement, String> conflicts = new MultiMap<>();
-        final Map<Language, InlineHandler.Inliner> inliners = GenericInlineHandler.initializeInliners(element, settings, allReferences);
+        MultiMap<PsiElement, String> conflicts = new MultiMap<>();
+        Map<Language, InlineHandler.Inliner> inliners = GenericInlineHandler.initializeInliners(element, settings, allReferences);
 
         for (PsiReference reference : allReferences) {
             GenericInlineHandler.collectConflicts(reference, element, inliners, conflicts);
         }
 
-        final Project project = element.getProject();
+        Project project = element.getProject();
         if (!conflicts.isEmpty()) {
             if (project.getApplication().isUnitTestMode()) {
                 throw new BaseRefactoringProcessor.ConflictsInTestsException(conflicts.values());
             }
             else {
-                final ConflictsDialog conflictsDialog = new ConflictsDialog(project, conflicts);
+                ConflictsDialog conflictsDialog = new ConflictsDialog(project, conflicts);
                 conflictsDialog.show();
                 if (!conflictsDialog.isOK()) {
                     return true;
@@ -108,15 +108,15 @@ public class GenericInlineHandlerImpl {
             return true;
         }
         project.getApplication().runWriteAction(() -> {
-            final String subj = element instanceof PsiNamedElement namedElement ? namedElement.getName() : "element";
+            String subj = element instanceof PsiNamedElement namedElement ? namedElement.getName() : "element";
 
             CommandProcessor.getInstance().newCommand()
                 .project(project)
                 .name(RefactoringLocalize.inlineCommand(StringUtil.notNullize(subj, "<nameless>")))
                 .run(() -> {
-                    final PsiReference[] references = GenericInlineHandler.sortDepthFirstRightLeftOrder(allReferences);
+                    PsiReference[] references = GenericInlineHandler.sortDepthFirstRightLeftOrder(allReferences);
 
-                    final UsageInfo[] usages = new UsageInfo[references.length];
+                    UsageInfo[] usages = new UsageInfo[references.length];
                     for (int i = 0; i < references.length; i++) {
                         usages[i] = new UsageInfo(references[i]);
                     }

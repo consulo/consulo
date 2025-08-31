@@ -47,7 +47,7 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
     this(contentManager, helpId, true);
   }
 
-  public PanelWithActionsAndCloseButton(ContentManager contentManager, @NonNls String helpId, final boolean verticalToolbar) {
+  public PanelWithActionsAndCloseButton(ContentManager contentManager, @NonNls String helpId, boolean verticalToolbar) {
     super(new BorderLayout());
     myContentManager = contentManager;
     myHelpId = helpId;
@@ -121,8 +121,8 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
         if (content != null) {
           ContentsUtil.closeContentTab(myContentManager, content);
           if (content instanceof TabbedContent && ((TabbedContent)content).getTabs().size() > 1) {
-            final TabbedContent tabbedContent = (TabbedContent)content;
-            final JComponent component = content.getComponent();
+            TabbedContent tabbedContent = (TabbedContent)content;
+            JComponent component = content.getComponent();
             tabbedContent.removeContent(component);
             myContentManager.setSelectedContent(content, true, true); //we should request focus here
           } else {

@@ -59,19 +59,19 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
 
   @Nullable
   public static String getLanguageForComponent(@Nonnull Component component) {
-    final Locale locale = getLocaleForComponent(component);
+    Locale locale = getLocaleForComponent(component);
     return locale == null ? null : locale.getLanguage();
   }
 
   @Nullable
   protected static Locale getLocaleForComponent(@Nonnull Component component) {
-    final InputContext context = component.getInputContext();
+    InputContext context = component.getInputContext();
     return context == null ? null : context.getLocale();
   }
 
   @Nullable
   public static String getDisplayLanguageNameForComponent(@Nonnull Component component) {
-    final Locale locale = getLocaleForComponent(component);
+    Locale locale = getLocaleForComponent(component);
     return locale == null ? null : locale.getDisplayLanguage();
   }
 

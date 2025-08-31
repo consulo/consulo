@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.RefreshQueue;
  * @author yole
 */
 public class RefreshFileChooserAction extends AnAction implements DumbAware {
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     RefreshQueue.getInstance().refresh(true, true, null, IdeaModalityState.current(), ManagingFS.getInstance().getLocalRoots());
   }
 }

@@ -30,10 +30,10 @@ public abstract class ChildFocusWatcher implements AWTEventListener, Disposable 
     Toolkit.getDefaultToolkit().addAWTEventListener(this, FocusEvent.FOCUS_EVENT_MASK);
   }
 
-  public void eventDispatched(final AWTEvent event) {
+  public void eventDispatched(AWTEvent event) {
     if (event instanceof FocusEvent) {
-      final FocusEvent fe = (FocusEvent)event;
-      final Component component = fe.getComponent();
+      FocusEvent fe = (FocusEvent)event;
+      Component component = fe.getComponent();
       if (component == null) return;
       if (!SwingUtilities.isDescendingFrom(component, myParent)) return;
 

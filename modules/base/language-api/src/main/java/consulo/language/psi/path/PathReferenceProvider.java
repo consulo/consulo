@@ -31,10 +31,10 @@ import java.util.List;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PathReferenceProvider {
 
-  boolean createReferences(@Nonnull PsiElement psiElement, final @Nonnull List<PsiReference> references, final boolean soft);
+  boolean createReferences(@Nonnull PsiElement psiElement, @Nonnull List<PsiReference> references, boolean soft);
 
   @Nullable
-  PathReference getPathReference(@Nonnull String path, @Nonnull final PsiElement element);
+  PathReference getPathReference(@Nonnull String path, @Nonnull PsiElement element);
 
   /**
    * Will move provider to end of providers, and will ignored by {@link PathReferenceManager#getPathReference}

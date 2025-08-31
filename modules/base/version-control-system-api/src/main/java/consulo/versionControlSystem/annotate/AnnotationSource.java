@@ -51,7 +51,7 @@ public enum AnnotationSource {
   @Nonnull
   public abstract EditorColorKey getColor();
 
-  public static AnnotationSource getInstance(final boolean showMerged) {
+  public static AnnotationSource getInstance(boolean showMerged) {
     return showMerged ? MERGE : LOCAL;
   }
 }

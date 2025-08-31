@@ -48,14 +48,14 @@ public class ChooseByNameLanguageFilter extends ChooseByNameFilter<Language> {
   @Nullable
   @Override
   protected Image iconForFilterValue(@Nonnull Language value) {
-    final LanguageFileType fileType = value.getAssociatedFileType();
+    LanguageFileType fileType = value.getAssociatedFileType();
     return fileType != null ? fileType.getIcon() : null;
   }
 
   @Nonnull
   @Override
   protected Collection<Language> getAllFilterValues() {
-    final Collection<Language> registeredLanguages = Language.getRegisteredLanguages();
+    Collection<Language> registeredLanguages = Language.getRegisteredLanguages();
     List<Language> accepted = new ArrayList<Language>();
     for (Language language : registeredLanguages) {
       if (language != Language.ANY && !(language instanceof DependentLanguage)) {

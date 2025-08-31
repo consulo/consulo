@@ -49,8 +49,8 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
   }
 
   @Override
-  public boolean createReferences(@Nonnull PsiElement psiElement, final @Nonnull List<PsiReference> references, final boolean soft) {
-    final ElementManipulator<PsiElement> manipulator = ElementManipulators.getManipulator(psiElement);
+  public boolean createReferences(@Nonnull PsiElement psiElement, @Nonnull List<PsiReference> references, boolean soft) {
+    ElementManipulator<PsiElement> manipulator = ElementManipulators.getManipulator(psiElement);
     if (manipulator == null) {
       return false;
     }
@@ -76,7 +76,7 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
 
   @Override
   @Nullable
-  public PathReference getPathReference(@Nonnull String path, @Nonnull final PsiElement element) {
+  public PathReference getPathReference(@Nonnull String path, @Nonnull PsiElement element) {
     return URLUtil.containsScheme(path) ? new PathReference(path, PathReference.NULL_ICON) : null;
   }
 }

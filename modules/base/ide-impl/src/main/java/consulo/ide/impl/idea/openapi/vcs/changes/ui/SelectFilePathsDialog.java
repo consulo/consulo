@@ -36,10 +36,10 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
     private final ChangesTreeList<FilePath> myFileList;
 
     public SelectFilePathsDialog(
-        final Project project,
+        Project project,
         List<FilePath> originalFiles,
-        final String prompt,
-        final VcsShowConfirmationOption confirmationOption,
+        String prompt,
+        VcsShowConfirmationOption confirmationOption,
         @Nonnull LocalizeValue okActionName,
         @Nonnull LocalizeValue cancelActionName,
         boolean showDoNotAskOption
@@ -59,10 +59,10 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public SelectFilePathsDialog(
-        final Project project,
+        Project project,
         List<FilePath> originalFiles,
-        final String prompt,
-        final VcsShowConfirmationOption confirmationOption,
+        String prompt,
+        VcsShowConfirmationOption confirmationOption,
         @Nullable String okActionName,
         @Nullable String cancelActionName,
         boolean showDoNotAskOption

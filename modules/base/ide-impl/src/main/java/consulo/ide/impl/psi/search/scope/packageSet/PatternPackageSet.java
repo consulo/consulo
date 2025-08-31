@@ -161,25 +161,25 @@ public class PatternPackageSet extends PatternBasedPackageSet {
         return myAspectJSyntaxPattern;
     }
 
-    public static boolean matchesLibrary(final Pattern libPattern,
-                                         final VirtualFile file,
-                                         final ProjectFileIndex fileIndex) {
+    public static boolean matchesLibrary(Pattern libPattern,
+                                         VirtualFile file,
+                                         ProjectFileIndex fileIndex) {
         if (libPattern != null) {
-            final List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(file);
+            List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(file);
             for (OrderEntry orderEntry : entries) {
                 if (orderEntry instanceof LibraryOrderEntry) {
-                    final String libraryName = ((LibraryOrderEntry) orderEntry).getLibraryName();
+                    String libraryName = ((LibraryOrderEntry) orderEntry).getLibraryName();
                     if (libraryName != null) {
                         if (libPattern.matcher(libraryName).matches()) return true;
                     }
                     else {
-                        final String presentableName = orderEntry.getPresentableName();
-                        final String fileName = new File(presentableName).getName();
+                        String presentableName = orderEntry.getPresentableName();
+                        String fileName = new File(presentableName).getName();
                         if (libPattern.matcher(fileName).matches()) return true;
                     }
                 }
                 else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-                    final String jdkName = ((ModuleExtensionWithSdkOrderEntry) orderEntry).getSdkName();
+                    String jdkName = ((ModuleExtensionWithSdkOrderEntry) orderEntry).getSdkName();
                     if (jdkName != null && libPattern.matcher(jdkName).matches()) return true;
                 }
             }

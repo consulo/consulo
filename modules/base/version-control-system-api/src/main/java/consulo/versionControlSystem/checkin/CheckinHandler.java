@@ -70,7 +70,7 @@ public abstract class CheckinHandler {
    * @param parentDisposable
    */
   @Nullable
-  public RefreshableOnComponent getAfterCheckinConfigurationPanel(final Disposable parentDisposable) {
+  public RefreshableOnComponent getAfterCheckinConfigurationPanel(Disposable parentDisposable) {
     return null;
   }
 

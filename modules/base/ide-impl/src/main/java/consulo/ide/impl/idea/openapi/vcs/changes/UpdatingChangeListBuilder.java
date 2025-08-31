@@ -48,11 +48,11 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   private final ChangeListManagerGate myGate;
   private Supplier<JComponent> myAdditionalInfo;
 
-  UpdatingChangeListBuilder(final ChangeListWorker changeListWorker,
-                            final FileHolderComposite composite,
-                            final Supplier<Boolean> disposedGetter,
-                            final ChangeListManager changeListManager,
-                            final ChangeListManagerGate gate) {
+  UpdatingChangeListBuilder(ChangeListWorker changeListWorker,
+                            FileHolderComposite composite,
+                            Supplier<Boolean> disposedGetter,
+                            ChangeListManager changeListManager,
+                            ChangeListManagerGate gate) {
     myChangeListWorker = changeListWorker;
     myComposite = composite;
     myDisposedGetter = disposedGetter;
@@ -65,23 +65,23 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     if (myDisposedGetter.get()) throw new ProcessCanceledException();
   }
 
-  public void setCurrent(final VcsDirtyScope scope, final FoldersCutDownWorker foldersWorker) {
+  public void setCurrent(VcsDirtyScope scope, FoldersCutDownWorker foldersWorker) {
     myScope = scope;
     myFoldersCutDownWorker = foldersWorker;
   }
 
   @Override
-  public void processChange(final Change change, VcsKey vcsKey) {
+  public void processChange(Change change, VcsKey vcsKey) {
     processChangeInList(change, (ChangeList)null, vcsKey);
   }
 
   @Override
-  public void processChangeInList(final Change change, @Nullable final ChangeList changeList, final VcsKey vcsKey) {
+  public void processChangeInList(Change change, @Nullable ChangeList changeList, VcsKey vcsKey) {
     checkIfDisposed();
 
     LOG.debug("[processChangeInList-1] entering, cl name: " + ((changeList == null) ? null : changeList.getName()) +
               " change: " + ChangesUtil.getFilePath(change).getPath());
-    final String fileName = ChangesUtil.getFilePath(change).getName();
+    String fileName = ChangesUtil.getFilePath(change).getName();
     if (FileTypeManager.getInstance().isFileIgnored(fileName)) {
       LOG.debug("[processChangeInList-1] file type ignored");
       return;
@@ -103,7 +103,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processChangeInList(final Change change, final String changeListName, VcsKey vcsKey) {
+  public void processChangeInList(Change change, String changeListName, VcsKey vcsKey) {
     checkIfDisposed();
 
     LocalChangeList list = null;
@@ -121,7 +121,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     myChangeListWorker.removeRegisteredChangeFor(path);
   }
 
-  private boolean isIgnoredByVcs(final VirtualFile file) {
+  private boolean isIgnoredByVcs(VirtualFile file) {
     return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> {
       checkIfDisposed();
       return myVcsManager.isIgnored(file);
@@ -129,7 +129,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processUnversionedFile(final VirtualFile file) {
+  public void processUnversionedFile(VirtualFile file) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("processUnversionedFile " + file);
     }
@@ -152,14 +152,14 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processLocallyDeletedFile(final FilePath file) {
+  public void processLocallyDeletedFile(FilePath file) {
     processLocallyDeletedFile(new LocallyDeletedChange(file));
   }
 
   @Override
   public void processLocallyDeletedFile(LocallyDeletedChange locallyDeletedChange) {
     checkIfDisposed();
-    final FilePath file = locallyDeletedChange.getPath();
+    FilePath file = locallyDeletedChange.getPath();
     if (FileTypeManager.getInstance().isFileIgnored(file.getName())) return;
     if (myScope.belongsTo(file)) {
       myChangeListWorker.addLocallyDeleted(locallyDeletedChange);
@@ -167,7 +167,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processModifiedWithoutCheckout(final VirtualFile file) {
+  public void processModifiedWithoutCheckout(VirtualFile file) {
     if (file == null) return;
     checkIfDisposed();
     if (isIgnoredByVcs(file)) return;
@@ -180,7 +180,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processIgnoredFile(final VirtualFile file) {
+  public void processIgnoredFile(VirtualFile file) {
     if (file == null) return;
     checkIfDisposed();
     if (isIgnoredByVcs(file)) return;
@@ -190,7 +190,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processLockedFolder(final VirtualFile file) {
+  public void processLockedFolder(VirtualFile file) {
     if (file == null) return;
     checkIfDisposed();
     if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
@@ -210,7 +210,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processSwitchedFile(final VirtualFile file, final String branch, final boolean recursive) {
+  public void processSwitchedFile(VirtualFile file, String branch, boolean recursive) {
     if (file == null) return;
     checkIfDisposed();
     if (isIgnoredByVcs(file)) return;

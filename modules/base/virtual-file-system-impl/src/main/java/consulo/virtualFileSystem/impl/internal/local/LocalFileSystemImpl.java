@@ -201,7 +201,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         }
     }
 
-    private boolean isAlreadyWatched(final WatchRequestImpl request) {
+    private boolean isAlreadyWatched(WatchRequestImpl request) {
         if (myNormalizedTree == null) {
             normalizeRootsForRefresh();
         }
@@ -407,7 +407,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
     }
 
     @Override
-    public void refreshWithoutFileWatcher(final boolean asynchronous) {
+    public void refreshWithoutFileWatcher(boolean asynchronous) {
         Runnable heavyRefresh = () -> {
             for (VirtualFile root : myManagingFS.getRoots(this)) {
                 ((NewVirtualFile) root).markDirtyRecursively();

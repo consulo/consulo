@@ -35,14 +35,14 @@ public class RollbackProgressModifier implements RollbackProgressListener {
   private final ProgressIndicator myIndicator;
   private int myCnt;
 
-  public RollbackProgressModifier(final double total, final ProgressIndicator indicator) {
+  public RollbackProgressModifier(double total, ProgressIndicator indicator) {
     myTotal = total;
     myIndicator = indicator;
     myTakenPaths = new HashSet<String>();
     myCnt = 0;
   }
 
-  private void acceptImpl(final String name) {
+  private void acceptImpl(String name) {
     if (myIndicator != null) {
       myIndicator.setText2(VcsBundle.message("rolling.back.file", name));
       checkName(name);
@@ -53,7 +53,7 @@ public class RollbackProgressModifier implements RollbackProgressListener {
     }
   }
 
-  private void checkName(final String name) {
+  private void checkName(String name) {
     if (! myTakenPaths.contains(name)) {
       myTakenPaths.add(name);
       if (myTotal >= (myCnt + 1)) {
@@ -74,20 +74,20 @@ public class RollbackProgressModifier implements RollbackProgressListener {
     }
   }
 
-  public void accept(@Nonnull final Change change) {
+  public void accept(@Nonnull Change change) {
     acceptImpl(ChangesUtil.getFilePath(change).getIOFile().getAbsolutePath());
   }
 
-  public void accept(@Nonnull final FilePath filePath) {
+  public void accept(@Nonnull FilePath filePath) {
     acceptImpl(filePath.getIOFile().getAbsolutePath());
   }
 
-  public void accept(final List<FilePath> paths) {
+  public void accept(List<FilePath> paths) {
     if (myIndicator != null) {
       if (paths != null && (! paths.isEmpty())) {
         for (int i = 0; i < paths.size(); i++) {
-          final FilePath path = paths.get(i);
-          final String name = path.getIOFile().getAbsolutePath();
+          FilePath path = paths.get(i);
+          String name = path.getIOFile().getAbsolutePath();
           checkName(name);
         }
         myIndicator.setFraction(myCnt / myTotal);
@@ -96,11 +96,11 @@ public class RollbackProgressModifier implements RollbackProgressListener {
     }
   }
 
-  public void accept(final File file) {
+  public void accept(File file) {
     acceptImpl(file.getAbsolutePath());
   }
 
-  public void accept(final VirtualFile file) {
+  public void accept(VirtualFile file) {
     acceptImpl(new File(file.getPath()).getAbsolutePath());
   }
 

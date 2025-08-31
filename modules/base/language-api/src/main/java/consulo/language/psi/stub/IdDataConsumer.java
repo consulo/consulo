@@ -31,25 +31,25 @@ public class IdDataConsumer {
   private final IntIntMap myResult = IntMaps.newIntIntHashMap();
 
   public Map<IdIndexEntry, Integer> getResult() {
-    final Map<IdIndexEntry, Integer> result = new HashMap<>(myResult.size());
+    Map<IdIndexEntry, Integer> result = new HashMap<>(myResult.size());
     myResult.forEach((key, value) -> result.put(new IdIndexEntry(key), value));
     return result;
   }
   
   public void addOccurrence(CharSequence charSequence, int start, int end, int occurrenceMask) {
-    final int hashCode = StringUtil.stringHashCode(charSequence, start, end);
+    int hashCode = StringUtil.stringHashCode(charSequence, start, end);
     addOccurrence(hashCode,occurrenceMask);
-    final int hashCodeNoCase = StringUtil.stringHashCodeInsensitive(charSequence, start, end);
+    int hashCodeNoCase = StringUtil.stringHashCodeInsensitive(charSequence, start, end);
     if (hashCodeNoCase != hashCode) {
       addOccurrence(hashCodeNoCase,occurrenceMask);
     }
   }
 
   public void addOccurrence(char[] chars, int start, int end, int occurrenceMask) {
-    final int hashCode = StringUtil.stringHashCode(chars, start, end);
+    int hashCode = StringUtil.stringHashCode(chars, start, end);
     addOccurrence(hashCode,occurrenceMask);
     
-    final int hashCodeNoCase = StringUtil.stringHashCodeInsensitive(chars, start, end);
+    int hashCodeNoCase = StringUtil.stringHashCodeInsensitive(chars, start, end);
     if (hashCodeNoCase != hashCode) {
       addOccurrence(hashCodeNoCase,occurrenceMask);
     }
@@ -57,7 +57,7 @@ public class IdDataConsumer {
 
   private void addOccurrence(int hashcode, int occurrenceMask) {
     if (occurrenceMask != 0) {
-      final int old = myResult.getInt(hashcode);
+      int old = myResult.getInt(hashcode);
       int v = old | occurrenceMask;
       if (v != old) {
         myResult.putInt(hashcode, v);

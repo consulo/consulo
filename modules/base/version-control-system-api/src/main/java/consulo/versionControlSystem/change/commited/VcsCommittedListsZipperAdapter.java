@@ -30,33 +30,33 @@ public abstract class VcsCommittedListsZipperAdapter implements VcsCommittedList
   private final GroupCreator myGroupCreator;
 
   public interface GroupCreator {
-    Object createKey(final RepositoryLocation location);
-    RepositoryLocationGroup createGroup(final Object key, final Collection<RepositoryLocation> locations);
+    Object createKey(RepositoryLocation location);
+    RepositoryLocationGroup createGroup(Object key, Collection<RepositoryLocation> locations);
   }
 
-  protected VcsCommittedListsZipperAdapter(final GroupCreator groupCreator) {
+  protected VcsCommittedListsZipperAdapter(GroupCreator groupCreator) {
     myGroupCreator = groupCreator;
   }
 
   @Override
-  public Pair<List<RepositoryLocationGroup>, List<RepositoryLocation>> groupLocations(final List<RepositoryLocation> in) {
-    final List<RepositoryLocationGroup> groups = new ArrayList<RepositoryLocationGroup>();
-    final List<RepositoryLocation> singles = new ArrayList<RepositoryLocation>();
+  public Pair<List<RepositoryLocationGroup>, List<RepositoryLocation>> groupLocations(List<RepositoryLocation> in) {
+    List<RepositoryLocationGroup> groups = new ArrayList<RepositoryLocationGroup>();
+    List<RepositoryLocation> singles = new ArrayList<RepositoryLocation>();
 
-    final MultiMap<Object, RepositoryLocation> map = new MultiMap<Object, RepositoryLocation>();
+    MultiMap<Object, RepositoryLocation> map = new MultiMap<Object, RepositoryLocation>();
 
     for (RepositoryLocation location : in) {
-      final Object key = myGroupCreator.createKey(location);
+      Object key = myGroupCreator.createKey(location);
       map.putValue(key, location);
     }
 
-    final Set<Object> keys = map.keySet();
+    Set<Object> keys = map.keySet();
     for (Object key : keys) {
-      final Collection<RepositoryLocation> locations = map.get(key);
+      Collection<RepositoryLocation> locations = map.get(key);
       if (locations.size() == 1) {
         singles.addAll(locations);
       } else {
-        final RepositoryLocationGroup group = myGroupCreator.createGroup(key, locations);
+        RepositoryLocationGroup group = myGroupCreator.createGroup(key, locations);
         groups.add(group);
       }
     }
@@ -65,15 +65,15 @@ public abstract class VcsCommittedListsZipperAdapter implements VcsCommittedList
   }
 
   @Override
-  public CommittedChangeList zip(final RepositoryLocationGroup group, final List<CommittedChangeList> lists) {
+  public CommittedChangeList zip(RepositoryLocationGroup group, List<CommittedChangeList> lists) {
     if (lists.size() == 1) {
       return lists.get(0);
     }
-    final CommittedChangeList result = lists.get(0);
+    CommittedChangeList result = lists.get(0);
     for (int i = 1; i < lists.size(); i++) {
-      final CommittedChangeList list = lists.get(i);
+      CommittedChangeList list = lists.get(i);
       for (Change change : list.getChanges()) {
-        final Collection<Change> resultChanges = result.getChanges();
+        Collection<Change> resultChanges = result.getChanges();
         if (! resultChanges.contains(change)) {
           resultChanges.add(change);
         }
@@ -83,7 +83,7 @@ public abstract class VcsCommittedListsZipperAdapter implements VcsCommittedList
   }
 
   @Override
-  public long getNumber(final CommittedChangeList list) {
+  public long getNumber(CommittedChangeList list) {
     return list.getNumber();
   }
 }

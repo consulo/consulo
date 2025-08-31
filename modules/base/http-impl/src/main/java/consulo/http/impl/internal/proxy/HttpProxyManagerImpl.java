@@ -123,7 +123,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     public void afterLoadState() {
 // all settings are defaults
         // trying user's proxy configuration entered while obtaining the license
-        final SharedProxyConfig.ProxyParameters cfg = SharedProxyConfig.load();
+        SharedProxyConfig.ProxyParameters cfg = SharedProxyConfig.load();
         if (cfg != null) {
             SharedProxyConfig.clear();
             if (cfg.host != null) {
@@ -153,7 +153,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
 
     @Override
     public void dispose() {
-        final String name = getClass().getName();
+        String name = getClass().getName();
         CommonProxy.getInstance().removeCustom(name);
         CommonProxy.getInstance().removeCustomAuth(name);
     }
@@ -187,7 +187,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         }
     }
 
-    public void setGenericPasswordCanceled(final String host, final int port) {
+    public void setGenericPasswordCanceled(String host, int port) {
         synchronized (myLock) {
             myGenericCancelled.add(new CommonProxy.HostInfo(null, host, port));
         }
@@ -195,7 +195,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
 
     @Override
     public PasswordAuthentication getGenericPassword(@Nonnull String host, int port) {
-        final ProxyInfo proxyInfo;
+        ProxyInfo proxyInfo;
         synchronized (myLock) {
             proxyInfo = myGenericPasswords.get(new CommonProxy.HostInfo(null, host, port));
         }
@@ -205,7 +205,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return new PasswordAuthentication(proxyInfo.getUsername(), decode(String.valueOf(proxyInfo.getPasswordCrypt())).toCharArray());
     }
 
-    public void putGenericPassword(final String host, final int port, @Nonnull PasswordAuthentication authentication, boolean remember) {
+    public void putGenericPassword(String host, int port, @Nonnull PasswordAuthentication authentication, boolean remember) {
         PasswordAuthentication coded =
             new PasswordAuthentication(authentication.getUserName(), encode(String.valueOf(authentication.getPassword())).toCharArray());
         synchronized (myLock) {
@@ -250,17 +250,17 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     public PasswordAuthentication getGenericPromptedAuthentication(
-        final String prefix,
-        final String host,
-        final String prompt,
-        final int port,
-        final boolean remember
+        String prefix,
+        String host,
+        String prompt,
+        int port,
+        boolean remember
     ) {
         if (Application.get().isUnitTestMode()) {
             return myTestGenericAuthRunnable.get();
         }
 
-        final Ref<PasswordAuthentication> value = Ref.create();
+        Ref<PasswordAuthentication> value = Ref.create();
         runAboveAll(() -> {
             if (isGenericPasswordCanceled(host, port)) {
                 return;
@@ -286,14 +286,14 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return value.get();
     }
 
-    public PasswordAuthentication getPromptedAuthentication(final String host, final String prompt) {
+    public PasswordAuthentication getPromptedAuthentication(String host, String prompt) {
         if (AUTHENTICATION_CANCELLED) {
             return null;
         }
 
-        final String password = getPlainProxyPassword();
+        String password = getPlainProxyPassword();
         if (myState.PROXY_AUTHENTICATION) {
-            final String login = getSecure("proxy.login");
+            String login = getSecure("proxy.login");
             if (!StringUtil.isEmptyOrSpaces(login) && !StringUtil.isEmptyOrSpaces(password)) {
                 return new PasswordAuthentication(login, password.toCharArray());
             }
@@ -308,16 +308,16 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         if (application.isUnitTestMode()) {
             return myTestGenericAuthRunnable.get();
         }
-        final PasswordAuthentication[] value = new PasswordAuthentication[1];
+        PasswordAuthentication[] value = new PasswordAuthentication[1];
         runAboveAll(() -> {
             if (AUTHENTICATION_CANCELLED) {
                 return;
             }
 
             // password might have changed, and the check below is for that
-            final String password1 = getPlainProxyPassword();
+            String password1 = getPlainProxyPassword();
             if (myState.PROXY_AUTHENTICATION) {
-                final String login = getSecure("proxy.login");
+                String login = getSecure("proxy.login");
                 if (!StringUtil.isEmptyOrSpaces(login) && !StringUtil.isEmptyOrSpaces(password1)) {
                     value[0] = new PasswordAuthentication(login, password1.toCharArray());
                     return;
@@ -333,7 +333,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
             );
             if (data != null) {
                 myState.PROXY_AUTHENTICATION = true;
-                final boolean keepPass = data.isRememberPassword();
+                boolean keepPass = data.isRememberPassword();
                 myState.KEEP_PROXY_PASSWORD = keepPass;
                 storeSecure("proxy.login", StringUtil.nullize(data.getLogin()));
                 if (keepPass) {
@@ -351,7 +351,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return value[0];
     }
 
-    private static void runAboveAll(@Nonnull final Runnable runnable) {
+    private static void runAboveAll(@Nonnull Runnable runnable) {
         ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
         if (progressIndicator != null && progressIndicator.isModal()) {
             WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(runnable);
@@ -384,9 +384,9 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     @Override
     @Nonnull
     public URLConnection openConnection(@Nonnull String location) throws IOException {
-        final URL url = new URL(location);
+        URL url = new URL(location);
         URLConnection urlConnection = null;
-        final List<Proxy> proxies = CommonProxy.getInstance().select(url);
+        List<Proxy> proxies = CommonProxy.getInstance().select(url);
         if (ContainerUtil.isEmpty(proxies)) {
             urlConnection = url.openConnection();
         }
@@ -570,11 +570,11 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
      */
     @SuppressWarnings({"deprecation", "unused"})
     @Nonnull
-    public static List<String> convertArguments(@Nonnull final List<Pair<String, String>> list) {
+    public static List<String> convertArguments(@Nonnull List<Pair<String, String>> list) {
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
-        final List<String> result = new ArrayList<>(list.size());
+        List<String> result = new ArrayList<>(list.size());
         for (Pair<String, String> value : list) {
             result.add("-D" + value.getFirst() + "=" + value.getSecond());
         }
@@ -639,7 +639,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         try {
             //return PasswordSafe.getInstance().getPassword(null, HttpProxyManagerImpl.class, key);
             synchronized (myProxyCredentials) {
-                final Properties props = myProxyCredentials.get();
+                Properties props = myProxyCredentials.get();
                 return props.getProperty(key, null);
             }
         }
@@ -658,7 +658,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         try {
             //PasswordSafe.getInstance().storePassword(null, HttpProxyManagerImpl.class, key, value);
             synchronized (myProxyCredentials) {
-                final Properties props = myProxyCredentials.get();
+                Properties props = myProxyCredentials.get();
                 props.setProperty(key, value);
                 myEncryptionSupport.store(props, "Proxy Credentials", PROXY_CREDENTIALS_FILE);
             }
@@ -672,7 +672,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         try {
             //PasswordSafe.getInstance().removePassword(null, HttpProxyManagerImpl.class, key);
             synchronized (myProxyCredentials) {
-                final Properties props = myProxyCredentials.get();
+                Properties props = myProxyCredentials.get();
                 props.remove(key);
                 myEncryptionSupport.store(props, "Proxy Credentials", PROXY_CREDENTIALS_FILE);
             }

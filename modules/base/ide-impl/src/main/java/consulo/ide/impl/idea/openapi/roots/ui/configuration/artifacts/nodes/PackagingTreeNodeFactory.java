@@ -45,7 +45,7 @@ public class PackagingTreeNodeFactory {
                               ArtifactType artifactType,
                               Set<PackagingElement<?>> processed) {
     for (PackagingElement<?> element : elements) {
-      final PackagingElementNode<?> prev = findEqual(nodes, element);
+      PackagingElementNode<?> prev = findEqual(nodes, element);
       if (prev != null) {
         prev.addElement(element, parentElement, nodeSources);
         continue;
@@ -59,11 +59,11 @@ public class PackagingTreeNodeFactory {
                                                     artifactType));
       }
       else if (element instanceof ComplexPackagingElement) {
-        final ComplexPackagingElement<?> complexElement = (ComplexPackagingElement<?>)element;
+        ComplexPackagingElement<?> complexElement = (ComplexPackagingElement<?>)element;
         if (processed.add(element) && substitutionParameters.shouldSubstitute(complexElement)) {
-          final List<? extends PackagingElement<?>> substitution = complexElement.getSubstitution(context, artifactType);
+          List<? extends PackagingElement<?>> substitution = complexElement.getSubstitution(context, artifactType);
           if (substitution != null) {
-            final PackagingNodeSource source = new PackagingNodeSource(complexElement, parentNode, parentElement, nodeSources);
+            PackagingNodeSource source = new PackagingNodeSource(complexElement, parentNode, parentElement, nodeSources);
             addNodes(substitution, parentNode, parentElement, context, substitutionParameters, Collections.singletonList(source), nodes,
                      artifactType, processed);
             continue;
@@ -89,7 +89,7 @@ public class PackagingTreeNodeFactory {
 
   @Nonnull
   public static ArtifactRootNode createRootNode(ArtifactEditorImpl artifactsEditor, ArtifactEditorContext context,
-                                                ComplexElementSubstitutionParameters substitutionParameters, final ArtifactType artifactType) {
+                                                ComplexElementSubstitutionParameters substitutionParameters, ArtifactType artifactType) {
     return new ArtifactRootNode(artifactsEditor, context, substitutionParameters, artifactType);
   }
 }

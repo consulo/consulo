@@ -48,13 +48,13 @@ final class TBPanelActionGroup extends TBPanel {
 
         // prepare list of AutoClose-actions
         if (!IS_AUTOCLOSE_DISABLED && customizations != null && customizations.getAutoCloseActionIds() != null) {
-            final ActionManager actionManager = ActionManager.getInstance();
-            final ArrayList<AnAction> autoCloseActions = new ArrayList<>();
+            ActionManager actionManager = ActionManager.getInstance();
+            ArrayList<AnAction> autoCloseActions = new ArrayList<>();
             for (String actId : customizations.getAutoCloseActionIds()) {
                 if (actId == null || actId.isEmpty()) {
                     continue;
                 }
-                final AnAction act = actionManager.getAction(actId);
+                AnAction act = actionManager.getAction(actId);
                 if (act == null) {
                     continue;
                 }
@@ -92,8 +92,8 @@ final class TBPanelActionGroup extends TBPanel {
         }
 
         // use 50-ms timeout to prevent freezes (just for insurance)
-        final long startTimeMs = System.currentTimeMillis();
-        final AnAction result = ProgressIndicatorUtils.withTimeout(50/*ms*/, () -> updateAutoCloseAndCheckImpl());
+        long startTimeMs = System.currentTimeMillis();
+        AnAction result = ProgressIndicatorUtils.withTimeout(50/*ms*/, () -> updateAutoCloseAndCheckImpl());
         long spentTimeMs = System.currentTimeMillis() - startTimeMs;
         if (spentTimeMs > 10) {
             LOG.debug("updateAutoCloseAndCheckImpl spent %d ms", spentTimeMs);
@@ -103,7 +103,7 @@ final class TBPanelActionGroup extends TBPanel {
 
     // returns action that is hidden or disabled
     AnAction updateAutoCloseAndCheckImpl() {
-        final Application app = ApplicationManager.getApplication();
+        Application app = ApplicationManager.getApplication();
         if (app == null || app.isDisposed() || myAutoCloseActions == null) {
             return null;
         }
@@ -125,7 +125,7 @@ final class TBPanelActionGroup extends TBPanel {
             );
             event.setInjectedContext(action.isInInjectedContext());
 
-            final boolean result;
+            boolean result;
             try {
                 result = !ActionImplUtil.performDumbAwareUpdate(action, event, false);
             }
@@ -164,7 +164,7 @@ final class TBPanelActionGroup extends TBPanel {
     public synchronized void release() {
         super.release();
 
-        final long startNs = myStats != null ? System.nanoTime() : 0;
+        long startNs = myStats != null ? System.nanoTime() : 0;
         myActionButtonPool.forEach((act, item) -> item.releaseNativePeer());
         myActionButtonPool.clear();
         myGroupPool.forEach((n, item) -> item.releaseNativePeer());
@@ -282,14 +282,14 @@ final class TBPanelActionGroup extends TBPanel {
             }
 
             // 3. update button with use of presentation
-            final @Nonnull Presentation presentation = myFactory.getPresentation(action);
+            @Nonnull Presentation presentation = myFactory.getPresentation(action);
 
             butt.myIsVisible = presentation.isVisible();
 
             if (!butt.myIsVisible)
                 continue;
 
-            final long startNs = butt.actionStats != null ? System.nanoTime() : 0;
+            long startNs = butt.actionStats != null ? System.nanoTime() : 0;
             butt.setDisabled(!presentation.isEnabled());
 
             boolean isSelected = false;
@@ -303,8 +303,8 @@ final class TBPanelActionGroup extends TBPanel {
             if (myCustomizer == null || !myCustomizer.applyCustomizations(butt, presentation)) {
                 // Customizations weren't found, so use default view style: only icon (if presented, otherwise text)
                 butt.setIconFromPresentation(presentation);
-                final boolean hideText = butt.originIcon != null;
-                final String text = hideText ? null : presentation.getText();
+                boolean hideText = butt.originIcon != null;
+                String text = hideText ? null : presentation.getText();
                 butt.setText(text);
             }
 
@@ -339,7 +339,7 @@ final class TBPanelActionGroup extends TBPanel {
             }
 
             // 2. if autoclose action is disabled (or hidden) then we must close this touchbar
-            final @Nonnull Presentation presentation = myFactory.getPresentation(autocloseAction);
+            @Nonnull Presentation presentation = myFactory.getPresentation(autocloseAction);
             if (!presentation.isVisible() || !presentation.isEnabled()) {
                 return autocloseAction;
             }
@@ -349,13 +349,13 @@ final class TBPanelActionGroup extends TBPanel {
     }
 
     private void _applyPresentationChanges(List<? extends AnAction> actions) {
-        final long startNs = System.nanoTime();
+        long startNs = System.nanoTime();
 
         if (actions == null) {
             return;
         }
 
-        final AnAction autoCloseReason = _checkAutoClose(actions);
+        AnAction autoCloseReason = _checkAutoClose(actions);
         if (autoCloseReason != null) {
             LOG.debug("touchbar '%s' was auto-closed because of: %s | %s", myName, autoCloseReason.getTemplateText(), autoCloseReason);
             _closeSelf();
@@ -380,7 +380,7 @@ final class TBPanelActionGroup extends TBPanel {
         // try find action with the same template-text
         for (Iterator<Map.Entry<AnAction, TBItemAnActionButton>> it = myActionButtonPool.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<AnAction, TBItemAnActionButton> entry = it.next();
-            final TBItemAnActionButton butt = entry.getValue();
+            TBItemAnActionButton butt = entry.getValue();
             if (Objects.equals(action.getTemplateText(), butt.getAnAction().getTemplateText())) {
                 it.remove();
                 butt.setAnAction(action);
@@ -406,8 +406,8 @@ final class TBPanelActionGroup extends TBPanel {
             return;
         }
 
-        final long timeNs = System.nanoTime();
-        final long elapsedFromStartShowNs = timeNs - myStartShowNs;
+        long timeNs = System.nanoTime();
+        long elapsedFromStartShowNs = timeNs - myStartShowNs;
         myLastUpdateNs = timeNs;
 
         if (USE_CACHED_PRESENTATIONS && elapsedFromStartShowNs < DELAY_FOR_CACHED_PRESENTATIONS_NS) {
@@ -417,7 +417,7 @@ final class TBPanelActionGroup extends TBPanel {
                 myStats.incrementCounter(StatsCounters.forceUseCached);
             }
             // start manual timer to update action-buttons if necessary
-            final Timer t = new Timer(DELAY_FOR_CACHED_PRESENTATIONS_MS, e -> {
+            Timer t = new Timer(DELAY_FOR_CACHED_PRESENTATIONS_MS, e -> {
                 if (System.nanoTime() - myLastUpdateNs > DELAY_FOR_CACHED_PRESENTATIONS_NS) { // update action-buttons if last update was long time ago
                     if (myStats != null) {
                         myStats.incrementCounter(StatsCounters.forceCachedDelayedUpdateCount);

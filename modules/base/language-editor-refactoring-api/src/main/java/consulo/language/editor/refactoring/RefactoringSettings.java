@@ -56,7 +56,7 @@ public class RefactoringSettings implements PersistentStateComponent<Refactoring
   }
 
   @Override
-  public void loadState(final RefactoringSettings state) {
+  public void loadState(RefactoringSettings state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 }

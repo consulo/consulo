@@ -85,7 +85,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     void forceStepInto();
 
-    void runToPosition(@Nonnull XSourcePosition position, final boolean ignoreBreakpoints);
+    void runToPosition(@Nonnull XSourcePosition position, boolean ignoreBreakpoints);
 
     void pause();
 
@@ -132,7 +132,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
      */
     boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nullable String evaluatedLogExpression, @Nonnull XSuspendContext suspendContext);
 
-    void breakpointReachedNoProcessing(@Nonnull final XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
+    void breakpointReachedNoProcessing(@Nonnull XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
 
     /**
      * @deprecated use {@link #breakpointReached(XBreakpoint, String, XSuspendContext)} instead
@@ -173,11 +173,11 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     void removeSessionListener(@Nonnull XDebugSessionListener listener);
 
-    default void reportError(@Nonnull final String message) {
+    default void reportError(@Nonnull String message) {
         reportMessage(message, NotificationType.ERROR);
     }
 
-    default void reportMessage(@Nonnull final String message, @Nonnull final NotificationType type) {
+    default void reportMessage(@Nonnull String message, @Nonnull NotificationType type) {
         reportMessage(message, type, null);
     }
 

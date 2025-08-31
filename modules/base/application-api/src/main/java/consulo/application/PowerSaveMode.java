@@ -43,7 +43,7 @@ public class PowerSaveMode {
   }
 
   public static void setEnabled(boolean value) {
-    final PowerSaveMode instance = Application.get().getInstance(PowerSaveMode.class);
+    PowerSaveMode instance = Application.get().getInstance(PowerSaveMode.class);
     if (instance.myEnabled != value) {
       instance.myEnabled = value;
       instance.myBus.syncPublisher(PowerSaveModeListener.class).powerSaveStateChanged();

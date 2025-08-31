@@ -34,7 +34,7 @@ public abstract class ChooseOneOrAllRunnable<T extends PsiElement> implements Ru
   private final Editor myEditor;
   private final String myTitle;
 
-  public ChooseOneOrAllRunnable(final List<T> classes, final Editor editor, final String title, Class<T> type) {
+  public ChooseOneOrAllRunnable(List<T> classes, Editor editor, String title, Class<T> type) {
     myClasses = ArrayUtil.toObjectArray(classes, type);
     myEditor = editor;
     myTitle = title;

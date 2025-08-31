@@ -57,8 +57,8 @@ public class mxTraversal {
         visitor.visit(cell, edge);
         seen.add(cell);
 
-        final Object[] edges = aGraph.getEdges(cell, null, false, true);
-        final Object[] opposites = aGraph.getOpposites(edges, cell);
+        Object[] edges = aGraph.getEdges(cell, null, false, true);
+        Object[] opposites = aGraph.getOpposites(edges, cell);
 
         for (int i = 0; i < opposites.length; i++) {
           dfsRec(aGraph, opposites[i], edges[i], seen, visitor);
@@ -117,7 +117,7 @@ public class mxTraversal {
 
       visitor.visit(cell, incomingEdge);
 
-      final Object[] edges = aGraph.getEdges(cell, null, false, false);
+      Object[] edges = aGraph.getEdges(cell, null, false, false);
 
       for (int i = 0; i < edges.length; i++) {
         Object[] currEdge = {edges[i]};

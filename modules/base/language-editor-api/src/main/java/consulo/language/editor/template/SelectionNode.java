@@ -32,7 +32,7 @@ public class SelectionNode extends Expression {
 
   @Override
   public Result calculateQuickResult(ExpressionContext context) {
-    final String selection = context.getProperty(ExpressionContext.SELECTION);
+    String selection = context.getProperty(ExpressionContext.SELECTION);
     return new TextResult(selection == null ? "" : selection);
   }
 

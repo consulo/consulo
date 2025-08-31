@@ -105,7 +105,7 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
     myLoginAnonymouslyJBCheckBox.setSelected(repository.isLoginAnonymously());
     myLoginAnonymouslyJBCheckBox.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(final ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         loginAnonymouslyChanged(!myLoginAnonymouslyJBCheckBox.isSelected());
       }
     });
@@ -170,7 +170,7 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
     return null;
   }
 
-  protected void afterTestConnection(final boolean connectionSuccessful) {
+  protected void afterTestConnection(boolean connectionSuccessful) {
   }
 
   protected void enableButtons() {
@@ -197,7 +197,7 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
     comboBox.addItemListener(e -> doApply());
   }
 
-  protected void installListener(final Document document) {
+  protected void installListener(Document document) {
     document.addDocumentListener(new consulo.document.event.DocumentAdapter() {
       @Override
       public void documentChanged(consulo.document.event.DocumentEvent e) {
@@ -260,7 +260,7 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
   }
 
   @Override
-  public void setAnchor(@Nullable final JComponent anchor) {
+  public void setAnchor(@Nullable JComponent anchor) {
     myAnchor = anchor;
     myUrlLabel.setAnchor(anchor);
     myUsernameLabel.setAnchor(anchor);

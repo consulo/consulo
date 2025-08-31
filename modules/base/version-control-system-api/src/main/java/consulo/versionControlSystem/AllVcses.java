@@ -36,7 +36,7 @@ public interface AllVcses {
   AbstractVcs getByName(String name);
 
   @Nullable
-  VcsDescriptor getDescriptor(final String name);
+  VcsDescriptor getDescriptor(String name);
 
   VcsDescriptor[] getAll();
 

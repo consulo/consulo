@@ -89,7 +89,7 @@ class HTMLTextPainter {
 
     List<LineMarkerInfo> methodSeparators = new ArrayList<>();
     if (document != null) {
-      final List<LineMarkerInfo> separators = FileSeparatorUtil.getFileSeparators(psiFile, document);
+      List<LineMarkerInfo> separators = FileSeparatorUtil.getFileSeparators(psiFile, document);
       methodSeparators.addAll(separators);
     }
 
@@ -335,7 +335,7 @@ class HTMLTextPainter {
     writer.write("<pre>\r\n");
   }
 
-  private void writeStyles(@NonNls final Writer writer) throws IOException {
+  private void writeStyles(@NonNls Writer writer) throws IOException {
     writer.write("<style type=\"text/css\">\n");
     writer.write(".ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }\n");
     HighlighterIterator hIterator = myHighlighter.createIterator(myOffset);
@@ -345,7 +345,7 @@ class HTMLTextPainter {
         String styleName = "s" + myStyleMap.size();
         myStyleMap.put(textAttributes, styleName);
         writer.write("." + styleName + " { ");
-        final ColorValue foreColor = textAttributes.getForegroundColor();
+        ColorValue foreColor = textAttributes.getForegroundColor();
         if (foreColor != null) {
           RGBColor rgb = foreColor.toRGB();
           writer.write("color: rgb(" + rgb.getRed() + "," + rgb.getGreen() + "," + rgb.getBlue() + "); ");

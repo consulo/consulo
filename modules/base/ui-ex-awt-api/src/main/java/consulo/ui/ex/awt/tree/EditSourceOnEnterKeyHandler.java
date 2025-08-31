@@ -46,7 +46,7 @@ public class EditSourceOnEnterKeyHandler{
     );
   }
 
-  public static void install(final JComponent component, @Nullable final Runnable whenPerformed) {
+  public static void install(JComponent component, @Nullable Runnable whenPerformed) {
     component.registerKeyboardAction(
       e -> {
         DataContext dataContext = DataManager.getInstance().getDataContext(component);
@@ -59,9 +59,9 @@ public class EditSourceOnEnterKeyHandler{
   }
 
   public static void install(
-    @Nullable final Runnable before,
-    final JComponent component,
-    @Nullable final Runnable whenPerformed
+    @Nullable Runnable before,
+    JComponent component,
+    @Nullable Runnable whenPerformed
   ) {
     component.registerKeyboardAction(
       e -> {

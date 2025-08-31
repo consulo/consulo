@@ -25,6 +25,6 @@ import jakarta.annotation.Nullable;
 public interface RefactoringListenerProvider {
 
   @Nullable
-  RefactoringElementListener getRefactoringElementListener(final PsiElement element);
+  RefactoringElementListener getRefactoringElementListener(PsiElement element);
 
 }

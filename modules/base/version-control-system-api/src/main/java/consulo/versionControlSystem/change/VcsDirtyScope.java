@@ -103,7 +103,7 @@ public abstract class VcsDirtyScope {
    * @param path a path to check
    * @return true if path belongs to the dirty scope.
    */
-  public abstract boolean belongsTo(final FilePath path);
+  public abstract boolean belongsTo(FilePath path);
 
   public abstract boolean wasEveryThingDirty();
 

@@ -48,7 +48,7 @@ public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFact
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
     return myAutoImportHelper.canChangeFileSilently(file) ? new ShowAutoImportPass(file.getProject(), file, editor) : null;
   }
 }

@@ -68,8 +68,8 @@ public class ProgressIndicatorUtils {
      * Same as {@link #runInReadActionWithWriteActionPriority(Runnable)}, optionally allowing to pass a {@link ProgressIndicator}
      * instance, which can be used to cancel action externally.
      */
-    public static boolean runInReadActionWithWriteActionPriority(@Nonnull final Runnable action, @Nullable ProgressIndicator progressIndicator) {
-        final SimpleReference<Boolean> result = new SimpleReference<>(Boolean.FALSE);
+    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator progressIndicator) {
+        SimpleReference<Boolean> result = new SimpleReference<>(Boolean.FALSE);
         runWithWriteActionPriority(() -> result.set(ApplicationManagerEx.getApplicationEx().tryRunReadAction(action)),
             progressIndicator == null ? new ProgressIndicatorBase(false, false) : progressIndicator);
         return result.get();
@@ -90,7 +90,7 @@ public class ProgressIndicatorUtils {
      * If caller needs to retry the invocation of this method in a loop, it should consider pausing between attempts, to avoid potential
      * 100% CPU usage. There is also alternative that implements the re-trying logic {@link NonBlockingReadAction}
      */
-    public static boolean runInReadActionWithWriteActionPriority(@Nonnull final Runnable action) {
+    public static boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action) {
         return runInReadActionWithWriteActionPriority(action, null);
     }
 
@@ -170,7 +170,7 @@ public class ProgressIndicatorUtils {
     }
 
     @Nonnull
-    public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull final ProgressIndicator progressIndicator, @Nonnull final Executor executor, @Nonnull final ReadTask readTask) {
+    public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull final ProgressIndicator progressIndicator, @Nonnull Executor executor, @Nonnull final ReadTask readTask) {
         // invoke later even if on EDT
         // to avoid tasks eagerly restarting immediately, allocating many pooled threads
         // which get cancelled too soon when a next write action arrives in the same EDT batch
@@ -184,7 +184,7 @@ public class ProgressIndicatorUtils {
                 return;
             }
             Disposable listenerDisposable = Disposable.newDisposable();
-            final ApplicationListener listener = new ApplicationListener() {
+            ApplicationListener listener = new ApplicationListener() {
                 @Override
                 public void beforeWriteActionStart(@Nonnull Object action) {
                     if (!progressIndicator.isCanceled()) {
@@ -252,7 +252,7 @@ public class ProgressIndicatorUtils {
         return future;
     }
 
-    private static ReadTask.Continuation runUnderProgress(@Nonnull final ProgressIndicator progressIndicator, @Nonnull final ReadTask task) {
+    private static ReadTask.Continuation runUnderProgress(@Nonnull ProgressIndicator progressIndicator, @Nonnull ReadTask task) {
         return ProgressManager.getInstance().runProcess(() -> {
             try {
                 return task.runBackgroundProcess(progressIndicator);

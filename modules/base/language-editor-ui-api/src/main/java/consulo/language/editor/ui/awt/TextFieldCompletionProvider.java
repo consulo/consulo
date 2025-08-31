@@ -45,16 +45,16 @@ public abstract class TextFieldCompletionProvider {
     apply(field, "");
   }
 
-  private Document createDocument(final Project project, @Nonnull String text) {
-    final FileType fileType = PlainTextLanguage.INSTANCE.getAssociatedFileType();
+  private Document createDocument(Project project, @Nonnull String text) {
+    FileType fileType = PlainTextLanguage.INSTANCE.getAssociatedFileType();
     assert fileType != null;
 
-    final long stamp = LocalTimeCounter.currentTime();
-    final PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("Dummy." + fileType.getDefaultExtension(), fileType, text, stamp, true, false);
+    long stamp = LocalTimeCounter.currentTime();
+    PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("Dummy." + fileType.getDefaultExtension(), fileType, text, stamp, true, false);
 
     psiFile.putUserData(COMPLETING_TEXT_FIELD_KEY, this);
 
-    final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
+    Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
     assert document != null;
     return document;
   }
@@ -76,7 +76,7 @@ public abstract class TextFieldCompletionProvider {
   }
 
   @Nonnull
-  public EditorTextField createEditor(Project project, final boolean shouldHaveBorder) {
+  public EditorTextField createEditor(Project project, boolean shouldHaveBorder) {
     return createEditor(project, shouldHaveBorder, null);
   }
 

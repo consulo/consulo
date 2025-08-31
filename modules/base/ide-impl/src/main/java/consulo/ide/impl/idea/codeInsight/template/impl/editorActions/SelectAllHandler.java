@@ -35,10 +35,10 @@ public class SelectAllHandler extends EditorActionHandler implements ExtensionEd
 
   @Override
   public void execute(Editor editor, DataContext dataContext) {
-    final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+    TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
-      final TextRange range = templateState.getCurrentVariableRange();
-      final int caretOffset = editor.getCaretModel().getOffset();
+      TextRange range = templateState.getCurrentVariableRange();
+      int caretOffset = editor.getCaretModel().getOffset();
       if (range != null && range.getStartOffset() <= caretOffset && caretOffset <= range.getEndOffset()) {
         editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
         return;

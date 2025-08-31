@@ -67,8 +67,8 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
-        final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
+    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
+        Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
         LOG.assertTrue(module != null);
         Messages.showInputDialog(
             project,
@@ -103,9 +103,9 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
 
         @Override
         @RequiredUIAccess
-        public boolean canClose(final String inputString) {
-            final String oldName = myModule.getName();
-            final ModifiableModuleModel modifiableModel = renameModule(inputString);
+        public boolean canClose(String inputString) {
+            String oldName = myModule.getName();
+            ModifiableModuleModel modifiableModel = renameModule(inputString);
             if (modifiableModel == null) {
                 return false;
             }
@@ -120,7 +120,7 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
         @Nullable
         @RequiredUIAccess
         private ModifiableModuleModel renameModule(String inputString) {
-            final ModifiableModuleModel modifiableModel = ModuleManager.getInstance(myProject).getModifiableModel();
+            ModifiableModuleModel modifiableModel = ModuleManager.getInstance(myProject).getModifiableModel();
             try {
                 modifiableModel.renameModule(myModule, inputString);
             }

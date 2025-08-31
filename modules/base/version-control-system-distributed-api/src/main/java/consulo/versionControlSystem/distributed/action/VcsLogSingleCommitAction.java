@@ -80,7 +80,7 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
     return true;
   }
 
-  protected boolean isVisible(@Nonnull final Project project, @Nonnull Repo repository, @Nonnull Hash hash) {
+  protected boolean isVisible(@Nonnull Project project, @Nonnull Repo repository, @Nonnull Hash hash) {
     return !getRepositoryManager(project).isExternal(repository);
   }
 

@@ -56,7 +56,7 @@ public class SimpleProgramParameters {
     return myEnv.put(name, value);
   }
 
-  public void setEnv(final Map<String, String> env) {
+  public void setEnv(Map<String, String> env) {
     myEnv = env;
   }
 
@@ -64,7 +64,7 @@ public class SimpleProgramParameters {
     return myPassParentEnvs;
   }
 
-  public void setPassParentEnvs(final boolean passDefaultEnvs) {
+  public void setPassParentEnvs(boolean passDefaultEnvs) {
     myPassParentEnvs = passDefaultEnvs;
   }
 

@@ -62,7 +62,7 @@ public class SmartRefElementPointerImpl implements SmartRefElementPointer {
     myType = jDomElement.getAttributeValue(TYPE_ATTR);
   }
 
-  public SmartRefElementPointerImpl(final String type, final String fqName) {
+  public SmartRefElementPointerImpl(String type, String fqName) {
     myIsPersistent = true;
     myFQName = fqName;
     myType = type;

@@ -41,7 +41,7 @@ public abstract class TabbedConfigurable extends CompositeConfigurable<Configura
   public JComponent createComponent() {
     myTabbedPane = new TabbedPaneWrapper(myParent);
     createConfigurableTabs();
-    final JComponent component = myTabbedPane.getComponent();
+    JComponent component = myTabbedPane.getComponent();
     component.setPreferredSize(new Dimension(500, 400));
     return component;
   }

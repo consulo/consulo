@@ -88,11 +88,11 @@ public abstract class XDebuggerEditorBase {
 
     private JBPopup myExpandedPopup;
 
-    protected XDebuggerEditorBase(final Project project,
+    protected XDebuggerEditorBase(Project project,
                                   @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
                                   @Nonnull EvaluationMode mode,
                                   @Nullable String historyId,
-                                  final @Nullable XSourcePosition sourcePosition) {
+                                  @Nullable XSourcePosition sourcePosition) {
         myProject = project;
         myDebuggerEditorsProvider = debuggerEditorsProvider;
         myMode = mode;
@@ -269,7 +269,7 @@ public abstract class XDebuggerEditorBase {
         saveTextInHistory(getExpression());
     }
 
-    private void saveTextInHistory(final XExpression text) {
+    private void saveTextInHistory(XExpression text) {
         if (myHistoryId != null) {
             boolean update = XDebuggerHistoryManager.getInstance(myProject).addRecentExpression(myHistoryId, text);
             myHistoryIndex = -1; //meaning not from the history list
@@ -296,7 +296,7 @@ public abstract class XDebuggerEditorBase {
         return myProject;
     }
 
-    protected Document createDocument(final XExpression text) {
+    protected Document createDocument(XExpression text) {
         XDebuggerEditorsProvider provider = getEditorsProvider();
         if (myContext != null && provider instanceof XDebuggerEditorsProviderBase) {
             return ((XDebuggerEditorsProviderBase) provider).createDocument(getProject(), text, myContext, myMode);
@@ -315,7 +315,7 @@ public abstract class XDebuggerEditorBase {
     }
 
     public void goBackward() {
-        final List<XExpression> expressions = getRecentExpressions();
+        List<XExpression> expressions = getRecentExpressions();
         if (myHistoryIndex < expressions.size() - 1) {
             myHistoryIndex++;
             setExpression(expressions.get(myHistoryIndex));
@@ -426,7 +426,7 @@ public abstract class XDebuggerEditorBase {
     }
 
     public void goForward() {
-        final List<XExpression> expressions = getRecentExpressions();
+        List<XExpression> expressions = getRecentExpressions();
         if (myHistoryIndex > 0) {
             myHistoryIndex--;
             setExpression(expressions.get(myHistoryIndex));

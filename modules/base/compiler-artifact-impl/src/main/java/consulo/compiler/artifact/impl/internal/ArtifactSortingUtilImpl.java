@@ -87,9 +87,9 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
 
   private Map<String, String> computeArtifactToSelfIncludingNameMap() {
     final Map<String, String> result = new HashMap<>();
-    final GraphGenerator<String> graph = createArtifactsGraph();
+    GraphGenerator<String> graph = createArtifactsGraph();
     for (String artifactName : graph.getNodes()) {
-      final Iterator<String> in = graph.getIn(artifactName);
+      Iterator<String> in = graph.getIn(artifactName);
       while (in.hasNext()) {
         String next = in.next();
         if (next.equals(artifactName)) {
@@ -102,7 +102,7 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
     final DFSTBuilder<String> builder = new DFSTBuilder<>(graph);
     if (builder.isAcyclic() && result.isEmpty()) return Collections.emptyMap();
 
-    final IntList sccs = builder.getSCCs();
+    IntList sccs = builder.getSCCs();
     sccs.forEach(new IntConsumer() {
       int myTNumber = 0;
 
@@ -110,7 +110,7 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
       public void accept(int size) {
         if (size > 1) {
           for (int j = 0; j < size; j++) {
-            final String artifactName = builder.getNodeByTNumber(myTNumber + j);
+            String artifactName = builder.getNodeByTNumber(myTNumber + j);
             result.put(artifactName, artifactName);
           }
         }
@@ -119,11 +119,11 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
     });
 
     for (int i = 0; i < graph.getNodes().size(); i++) {
-      final String artifactName = builder.getNodeByTNumber(i);
+      String artifactName = builder.getNodeByTNumber(i);
       if (!result.containsKey(artifactName)) {
-        final Iterator<String> in = graph.getIn(artifactName);
+        Iterator<String> in = graph.getIn(artifactName);
         while (in.hasNext()) {
-          final String name = result.get(in.next());
+          String name = result.get(in.next());
           if (name != null) {
             result.put(artifactName, name);
           }
@@ -135,7 +135,7 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
   }
 
   private GraphGenerator<String> createArtifactsGraph() {
-    final ArtifactManager artifactManager = ArtifactManager.getInstance(myProject);
+    ArtifactManager artifactManager = ArtifactManager.getInstance(myProject);
     return GraphGenerator.create(CachingSemiGraph.create(new ArtifactsGraph(artifactManager)));
   }
 
@@ -159,8 +159,8 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
     @Override
     public Iterator<String> getIn(String name) {
       final Set<String> included = new LinkedHashSet<>();
-      final PackagingElementResolvingContext context = myArtifactManager.getResolvingContext();
-      final Artifact artifact = context.getArtifactModel().findArtifact(name);
+      PackagingElementResolvingContext context = myArtifactManager.getResolvingContext();
+      Artifact artifact = context.getArtifactModel().findArtifact(name);
       if (artifact != null) {
         ArtifactUtil.processPackagingElements(artifact,
                                               ArtifactElementType.getInstance(),
@@ -168,7 +168,7 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
                                                 @Override
                                                 public boolean process(@Nonnull ArtifactPackagingElement element,
                                                                        @Nonnull PackagingElementPath path) {
-                                                  final String artifactName = element.getArtifactName();
+                                                  String artifactName = element.getArtifactName();
                                                   if (myArtifactNames.contains(artifactName)) {
                                                     included.add(artifactName);
                                                   }

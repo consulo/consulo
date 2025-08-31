@@ -28,7 +28,7 @@ public class StoppableLexerAdapter extends DelegateLexer {
     private final StoppingCondition myCondition;
     private boolean myStopped = false;
 
-    public StoppableLexerAdapter(final StoppingCondition condition, final Lexer original) {
+    public StoppableLexerAdapter(StoppingCondition condition, Lexer original) {
         super(original);
         myCondition = condition;
         myStopped = myCondition.stopsAt(original.getTokenType(), original.getTokenStart(), original.getTokenEnd());

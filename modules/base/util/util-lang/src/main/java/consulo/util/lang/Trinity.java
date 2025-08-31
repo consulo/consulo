@@ -65,7 +65,7 @@ public class Trinity<A, B, C> {
     return hashCode;
   }
 
-  private static int hashCode(final Object o) {
+  private static int hashCode(Object o) {
     return o instanceof Object[] ? Arrays.hashCode((Object[])o) : o.hashCode();
   }
 

@@ -246,7 +246,7 @@ public class TBItemButton extends TBItem {
     }
 
     private TBItemButton _setFlag(int nstLibFlag, boolean val) {
-        final int flags = _applyFlag(myFlags, val, nstLibFlag);
+        int flags = _applyFlag(myFlags, val, nstLibFlag);
         if (flags != myFlags) {
             myFlags = flags;
             updateOptions |= NSTLibrary.BUTTON_UPDATE_FLAGS;
@@ -339,7 +339,7 @@ public class TBItemButton extends TBItem {
         if (originIcon != null && rasterPromise == null) {
             updateLater(true);
         }
-        final ID result = NST.createButton(
+        ID result = NST.createButton(
             getUid(),
             myLayoutBits, _validateFlags(),
             myText, myHint, myIsHintDisabled ? 1 : 0,

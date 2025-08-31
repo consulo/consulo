@@ -25,10 +25,10 @@ public class CheckboxTreeBase extends CheckboxTreeNoPolicy {
     final boolean checkParentWithCheckedChild;
     final boolean uncheckParentWithUncheckedChild;
 
-    public CheckPolicy(final boolean checkChildrenWithCheckedParent,
-                       final boolean uncheckChildrenWithUncheckedParent,
-                       final boolean checkParentWithCheckedChild,
-                       final boolean uncheckParentWithUncheckedChild) {
+    public CheckPolicy(boolean checkChildrenWithCheckedParent,
+                       boolean uncheckChildrenWithUncheckedParent,
+                       boolean checkParentWithCheckedChild,
+                       boolean uncheckParentWithUncheckedChild) {
       this.checkChildrenWithCheckedParent = checkChildrenWithCheckedParent;
       this.uncheckChildrenWithUncheckedParent = uncheckChildrenWithUncheckedParent;
       this.checkParentWithCheckedChild = checkParentWithCheckedChild;
@@ -43,7 +43,7 @@ public class CheckboxTreeBase extends CheckboxTreeNoPolicy {
     this(new CheckboxTreeCellRendererBase(), null);
   }
 
-  public CheckboxTreeBase(final CheckboxTreeCellRendererBase cellRenderer, CheckedTreeNode root) {
+  public CheckboxTreeBase(CheckboxTreeCellRendererBase cellRenderer, CheckedTreeNode root) {
     this(cellRenderer, root, DEFAULT_POLICY);
   }
 
@@ -53,7 +53,7 @@ public class CheckboxTreeBase extends CheckboxTreeNoPolicy {
   }
 
   @Override
-  protected void adjustParentsAndChildren(final CheckedTreeNode node, final boolean checked) {
+  protected void adjustParentsAndChildren(CheckedTreeNode node, boolean checked) {
     changeNodeState(node, checked);
     if (!checked) {
       if (myCheckPolicy.uncheckParentWithUncheckedChild) {

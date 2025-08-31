@@ -53,7 +53,7 @@ public class FileTemplateImplUtil {
 
     public static String mergeTemplate(Map attributes, String content, boolean useSystemLineSeparators) throws IOException {
         VelocityContext context = new VelocityContext();
-        for (final Object o : attributes.keySet()) {
+        for (Object o : attributes.keySet()) {
             String name = (String)o;
             context.put(name, attributes.get(name));
         }
@@ -77,7 +77,7 @@ public class FileTemplateImplUtil {
         @Nonnull String content,
         FileTemplate[] templates
     ) {
-        final Set<String> names = new HashSet<>();
+        Set<String> names = new HashSet<>();
         for (FileTemplate template : templates) {
             names.add(template.getName());
         }
@@ -86,7 +86,7 @@ public class FileTemplateImplUtil {
         while (names.contains(name)) {
             name = prefName + " (" + ++i + ")";
         }
-        final FileTemplate newTemplate = new CustomFileTemplate(name, extension);
+        FileTemplate newTemplate = new CustomFileTemplate(name, extension);
         newTemplate.setText(content);
         return newTemplate;
     }
@@ -100,25 +100,25 @@ public class FileTemplateImplUtil {
         return handler.canCreate(dirs);
     }
 
-    private static String mergeTemplate(String templateContent, final VelocityContext context, boolean useSystemLineSeparators)
+    private static String mergeTemplate(String templateContent, VelocityContext context, boolean useSystemLineSeparators)
         throws IOException {
-        final StringWriter stringWriter = new StringWriter();
+        StringWriter stringWriter = new StringWriter();
         try {
             VelocityWrapper.evaluate(null, context, stringWriter, templateContent);
         }
         catch (ParseErrorException e) {
             throw new FileTemplateParseException(e);
         }
-        catch (final VelocityException e) {
+        catch (VelocityException e) {
             LOG.error("Error evaluating template:\n" + templateContent, e);
             Application.get().invokeLater(
                 () -> Alerts.okError(FileTemplateLocalize.errorParsingFileTemplate(e.getMessage())).showAsync()
             );
         }
-        final String result = stringWriter.toString();
+        String result = stringWriter.toString();
 
         if (useSystemLineSeparators) {
-            final String newSeparator =
+            String newSeparator =
                 CodeStyleSettingsManager.getSettings(ProjectManager.getInstance().getDefaultProject()).getLineSeparator();
             if (!"\n".equals(newSeparator)) {
                 return StringUtil.convertLineSeparators(result, newSeparator);
@@ -159,8 +159,8 @@ public class FileTemplateImplUtil {
         Project project
     ) throws FileTemplateParseException {
         try {
-            final Set<String> unsetAttributes = new LinkedHashSet<>();
-            final Set<String> definedAttributes = new HashSet<>();
+            Set<String> unsetAttributes = new LinkedHashSet<>();
+            Set<String> definedAttributes = new HashSet<>();
             SimpleNode template = VelocityWrapper.parse(new StringReader(templateContent), "MyTemplate");
             collectAttributes(
                 unsetAttributes,
@@ -185,8 +185,8 @@ public class FileTemplateImplUtil {
         Set<String> referenced,
         Set<String> defined,
         Node apacheNode,
-        final Set<String> propertiesNames,
-        final boolean includeDummies,
+        Set<String> propertiesNames,
+        boolean includeDummies,
         Set<String> visitedIncludes,
         Project project
     ) throws ParseException {
@@ -219,7 +219,7 @@ public class FileTemplateImplUtil {
                     Token firstToken = literal.getFirstToken();
                     if (firstToken != null) {
                         String s = StringUtil.unquoteString(firstToken.toString());
-                        final FileTemplate includedTemplate = FileTemplateManager.getInstance(project).getTemplate(s);
+                        FileTemplate includedTemplate = FileTemplateManager.getInstance(project).getTemplate(s);
                         if (includedTemplate != null && visitedIncludes.add(s)) {
                             SimpleNode template =
                                 VelocityWrapper.parse(new StringReader(includedTemplate.getText()), "MyTemplate");

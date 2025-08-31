@@ -59,7 +59,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
     public boolean iterateContent(@Nonnull ContentIterator processor, @Nullable VirtualFileFilter filter) {
         DirectoryIndex directoryIndex = myDirectoryIndexProvider.get();
 
-        final Set<VirtualFile> contentRoots = AccessRule.read(() -> {
+        Set<VirtualFile> contentRoots = AccessRule.read(() -> {
             if (myModule.isDisposed()) {
                 return Collections.emptySet();
             }

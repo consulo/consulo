@@ -44,7 +44,7 @@ public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCom
   }
 
   @Nullable
-  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull final T item) {
+  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull T item) {
     return null;
   }
 

@@ -66,7 +66,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
   @RequiredUIAccess
   @Override
   @Nonnull
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull final VirtualFile file) {
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
     LOG.assertTrue(accept(project, file));
     return new TextEditorImpl(project, file, this);
   }
@@ -88,7 +88,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
     return new EditorWrapper(editor);
   }
 
-  public void setStateImpl(final Project project, final Editor editor, final TextEditorState state){
+  public void setStateImpl(Project project, Editor editor, TextEditorState state){
     if (state.CARETS != null && state.CARETS.length > 0) {
       if (editor.getCaretModel().supportsMultipleCarets()) {
         CaretModel caretModel = editor.getCaretModel();
@@ -117,7 +117,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
       }
     }
 
-    final int relativeCaretPosition = state.RELATIVE_CARET_POSITION;
+    int relativeCaretPosition = state.RELATIVE_CARET_POSITION;
     Runnable scrollingRunnable = () -> {
       if (!editor.isDisposed()) {
         editor.getScrollingModel().disableAnimation();
@@ -183,7 +183,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
       VirtualFile file = FileDocumentManager.getInstance().getFile(myEditor.getDocument());
       if (file == null) return null;
 
-      final Project project = myEditor.getProject();
+      Project project = myEditor.getProject();
       LOG.assertTrue(project != null);
       for (StructureViewBuilderProvider provider : project.getApplication().getExtensionList(StructureViewBuilderProvider.class)) {
         StructureViewBuilder builder = provider.getStructureViewBuilder(file.getFileType(), file, project);
@@ -247,12 +247,12 @@ public class TextEditorProviderImpl extends TextEditorProvider {
     }
 
     @Override
-    public boolean canNavigateTo(@Nonnull final Navigatable navigatable) {
+    public boolean canNavigateTo(@Nonnull Navigatable navigatable) {
       return false;
     }
 
     @Override
-    public void navigateTo(@Nonnull final Navigatable navigatable) {
+    public void navigateTo(@Nonnull Navigatable navigatable) {
     }
   }
 }

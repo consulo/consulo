@@ -107,10 +107,10 @@ public class ReformatFilesDialog extends DialogWrapper implements ReformatFilesO
     private void $$$setupUI$$$() {
         myPanel = new JPanel();
         myPanel.setLayout(new GridLayoutManager(1, 2, JBUI.insetsLeft(4), -1, -1));
-        final JPanel panel1 = new JPanel();
+        JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(5, 1, JBUI.emptyInsets(), -1, -1));
         myPanel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label1 = new JLabel();
+        JLabel label1 = new JLabel();
         this.$$$loadLabelText$$$(label1, CodeInsightBundle.message("dialog.reformat.files.reformat.selected.files.label"));
         panel1.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         myOptimizeImports = new JCheckBox();
@@ -119,14 +119,14 @@ public class ReformatFilesDialog extends DialogWrapper implements ReformatFilesO
         myOnlyChangedText = new JCheckBox();
         this.$$$loadButtonText$$$(myOnlyChangedText, CodeInsightBundle.message("reformat.option.vcs.changed.region"));
         panel1.add(myOnlyChangedText, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
+        Spacer spacer1 = new Spacer();
         panel1.add(spacer1, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         myRearrangeEntriesCb = new JCheckBox();
         myRearrangeEntriesCb.setText("Rearrange entries");
         myRearrangeEntriesCb.setMnemonic('R');
         myRearrangeEntriesCb.setDisplayedMnemonicIndex(0);
         panel1.add(myRearrangeEntriesCb, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
+        Spacer spacer2 = new Spacer();
         myPanel.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     }
 

@@ -75,7 +75,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
 
     protected abstract void updateContainer(Tree tree, String title);
 
-    protected void addToHistory(final D item) {
+    protected void addToHistory(D item) {
         if (myCurrentIndex < HISTORY_SIZE) {
             if (myCurrentIndex != -1) {
                 myCurrentIndex += 1;
@@ -169,7 +169,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
                 Object node = path.getLastPathComponent();
                 myTreeCreator.createDescriptorByNode(node, new ResultConsumer<D>() {
                     @Override
-                    public void onSuccess(final D value) {
+                    public void onSuccess(D value) {
                         if (value != null) {
                             Application.get().invokeLater(() -> {
                                 addToHistory(value);

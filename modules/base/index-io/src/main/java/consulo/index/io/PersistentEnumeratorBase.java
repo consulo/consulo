@@ -86,7 +86,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     @Nonnull
     abstract byte[] getRecordBuffer(T enumerator);
 
-    abstract void setupRecord(T enumerator, int hashCode, final int dataOffset, final byte[] buf);
+    abstract void setupRecord(T enumerator, int hashCode, int dataOffset, byte[] buf);
   }
 
   private static class CacheKey implements ShareableKey {
@@ -104,11 +104,11 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof CacheKey)) return false;
 
-      final CacheKey cacheKey = (CacheKey)o;
+      CacheKey cacheKey = (CacheKey)o;
 
       if (!key.equals(cacheKey.key)) return false;
       if (!owner.equals(cacheKey.owner)) return false;
@@ -283,12 +283,12 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
   private int doEnumerate(Data value, boolean onlyCheckForExisting, boolean saveNewValue) throws IOException {
     if (myDoCaching && !saveNewValue) {
       synchronized (ourEnumerationCache) {
-        final Integer cachedId = ourEnumerationCache.get(sharedKey(value, this));
+        Integer cachedId = ourEnumerationCache.get(sharedKey(value, this));
         if (cachedId != null) return cachedId.intValue();
       }
     }
 
-    final int id;
+    int id;
     try {
       id = enumerateImpl(value, onlyCheckForExisting, saveNewValue);
     }
@@ -363,7 +363,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
   public boolean processAllDataObject(@Nonnull final Predicate<? super Data> processor, @Nullable final DataFilter filter) throws IOException {
     return traverseAllRecords(new RecordsProcessor() {
       @Override
-      public boolean process(final int record) throws IOException {
+      public boolean process(int record) throws IOException {
         if (filter == null || filter.accept(record)) {
           return processor.test(valueOf(record));
         }
@@ -374,8 +374,8 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
   }
 
   @Nonnull
-  public Collection<Data> getAllDataObjects(@Nullable final DataFilter filter) throws IOException {
-    final List<Data> values = new ArrayList<>();
+  public Collection<Data> getAllDataObjects(@Nullable DataFilter filter) throws IOException {
+    List<Data> values = new ArrayList<>();
     processAllDataObject(data -> {
       values.add(data);
       return true;
@@ -399,26 +399,26 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
 
   public abstract boolean traverseAllRecords(RecordsProcessor p) throws IOException;
 
-  protected abstract int enumerateImpl(final Data value, final boolean onlyCheckForExisting, boolean saveNewValue) throws IOException;
+  protected abstract int enumerateImpl(Data value, boolean onlyCheckForExisting, boolean saveNewValue) throws IOException;
 
-  protected boolean isKeyAtIndex(final Data value, final int idx) throws IOException {
+  protected boolean isKeyAtIndex(Data value, int idx) throws IOException {
     if (myKeyStorage == null) return false;
 
     // check if previous serialized state is the same as for value
     // this is much faster than myDataDescriptor.isEqualTo(valueOf(idx), value) for identical objects
     // TODO: key storage lock
-    final int addr = indexToAddr(idx);
+    int addr = indexToAddr(idx);
 
     if (myKeyStorage.checkBytesAreTheSame(addr, value, myDataDescriptor)) return true;
     if (myAssumeDifferentSerializedBytesMeansObjectsInequality) return false;
     return myDataDescriptor.equals(valueOf(idx), value);
   }
 
-  protected int writeData(final Data value, int hashCode) {
+  protected int writeData(Data value, int hashCode) {
     try {
       markDirty(true);
 
-      final int dataOff = doWriteData(value);
+      int dataOff = doWriteData(value);
 
       return setupValueId(hashCode, dataOff);
     }
@@ -441,9 +441,9 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
   }
 
   protected int setupValueId(int hashCode, int dataOff) {
-    final byte[] buf = myRecordHandler.getRecordBuffer(this);
+    byte[] buf = myRecordHandler.getRecordBuffer(this);
     myRecordHandler.setupRecord(this, hashCode, dataOff, buf);
-    final int pos = myRecordHandler.recordWriteOffset(this, buf);
+    int pos = myRecordHandler.recordWriteOffset(this, buf);
     myStorage.put(pos, buf, 0, buf.length);
 
     return pos;

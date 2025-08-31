@@ -27,7 +27,7 @@ public enum VcsInitObject {
 
   private final int myOrder;
 
-  VcsInitObject(final int order) {
+  VcsInitObject(int order) {
     myOrder = order;
   }
 

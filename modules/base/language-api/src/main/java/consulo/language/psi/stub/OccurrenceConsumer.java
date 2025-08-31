@@ -24,12 +24,12 @@ public final class OccurrenceConsumer {
   private ObjectIntMap<IndexPattern> myTodoOccurrences;
   private final boolean myNeedToDo;
 
-  public OccurrenceConsumer(final IdDataConsumer indexDataConsumer, boolean needToDo) {
+  public OccurrenceConsumer(IdDataConsumer indexDataConsumer, boolean needToDo) {
     myIndexDataConsumer = indexDataConsumer;
     myNeedToDo = needToDo;
   }
 
-  public void addOccurrence(final CharSequence charSequence, char[] charArray, final int start, final int end, final int occurrenceMask) {
+  public void addOccurrence(CharSequence charSequence, char[] charArray, int start, int end, int occurrenceMask) {
     if (myIndexDataConsumer == null) return;
     if (charArray != null) {
       myIndexDataConsumer.addOccurrence(charArray, start, end, occurrenceMask);
@@ -39,7 +39,7 @@ public final class OccurrenceConsumer {
     }
   }
 
-  public void incTodoOccurrence(final IndexPattern pattern) {
+  public void incTodoOccurrence(IndexPattern pattern) {
     if (myTodoOccurrences == null) {
       myTodoOccurrences = ObjectMaps.newObjectIntHashMap();
       for (IndexPattern indexPattern : IndexPatternUtil.getIndexPatterns()) {

@@ -39,7 +39,7 @@ public class SpeedSearchObjectWithWeight {
     List<SpeedSearchObjectWithWeight> elements = new ArrayList<SpeedSearchObjectWithWeight>();
     pattern = pattern.trim();
     //noinspection unchecked
-    final ListIterator<Object> it = speedSearch.getElementIterator(0);
+    ListIterator<Object> it = speedSearch.getElementIterator(0);
     while (it.hasNext()) {
       Object element = it.next();
       String text = speedSearch.getElementText(element);
@@ -56,7 +56,7 @@ public class SpeedSearchObjectWithWeight {
         continue;
       }
 
-      final int i = element.compareWith(cur);
+      int i = element.compareWith(cur);
       if (i == 0) {
         current.add(element);
       } else if (i < 0) {

@@ -35,18 +35,18 @@ public interface CacheManager {
   }
 
   @Nonnull
-  PsiFile[] getFilesWithWord(@Nonnull String word, short occurenceMask, @Nonnull GlobalSearchScope scope, final boolean caseSensitively);
+  PsiFile[] getFilesWithWord(@Nonnull String word, short occurenceMask, @Nonnull GlobalSearchScope scope, boolean caseSensitively);
 
   @Nonnull
   VirtualFile[] getVirtualFilesWithWord(@Nonnull String word,
                                         short occurenceMask,
                                         @Nonnull GlobalSearchScope scope,
-                                        final boolean caseSensitively);
+                                        boolean caseSensitively);
 
   boolean processFilesWithWord(@Nonnull Predicate<PsiFile> processor,
                                @Nonnull String word,
                                short occurenceMask,
                                @Nonnull GlobalSearchScope scope,
-                               final boolean caseSensitively);
+                               boolean caseSensitively);
 }
 

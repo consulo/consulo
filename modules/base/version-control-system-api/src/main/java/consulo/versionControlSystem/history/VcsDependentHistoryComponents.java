@@ -25,13 +25,13 @@ public class VcsDependentHistoryComponents {
   private final Consumer<VcsFileRevision> myRevisionListener;
   private final JComponent myDetailsComponent;
 
-  public VcsDependentHistoryComponents(final ColumnInfo[] columns, final Consumer<VcsFileRevision> revisionListener, final JComponent detailsComponent) {
+  public VcsDependentHistoryComponents(ColumnInfo[] columns, Consumer<VcsFileRevision> revisionListener, JComponent detailsComponent) {
     myColumns = columns;
     myRevisionListener = revisionListener;
     myDetailsComponent = detailsComponent;
   }
 
-  public static VcsDependentHistoryComponents createOnlyColumns(final ColumnInfo[] columns) {
+  public static VcsDependentHistoryComponents createOnlyColumns(ColumnInfo[] columns) {
     return new VcsDependentHistoryComponents(columns, null, null);
   }
 

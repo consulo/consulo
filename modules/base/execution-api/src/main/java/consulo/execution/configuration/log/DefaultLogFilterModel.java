@@ -79,7 +79,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
   @Override
   public List<LogFilter> getLogFilters() {
     LogConsolePreferences prefs = getPreferences();
-    final ArrayList<LogFilter> filters = new ArrayList<LogFilter>();
+    ArrayList<LogFilter> filters = new ArrayList<LogFilter>();
     if (myCheckStandartFilters) {
       addStandartFilters(filters, prefs);
     }
@@ -159,14 +159,14 @@ public class DefaultLogFilterModel extends LogFilterModel {
   @Override
   @Nonnull
   public MyProcessingResult processLine(String line) {
-    final String type = LogConsolePreferences.getType(line);
+    String type = LogConsolePreferences.getType(line);
     Key contentType = type != null
                       ? LogConsolePreferences.getProcessOutputTypes(type)
                       : (LogConsolePreferences.ERROR.equals(myPrevType) ? ProcessOutputTypes.STDERR : ProcessOutputTypes.STDOUT);
     if (type != null) {
       myPrevType = type;
     }
-    final boolean applicable = isApplicable(line);
+    boolean applicable = isApplicable(line);
     return new MyProcessingResult(contentType, applicable, null);
   }
 

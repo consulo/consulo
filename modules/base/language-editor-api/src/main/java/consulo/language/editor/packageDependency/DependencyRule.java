@@ -39,8 +39,8 @@ public class DependencyRule {
 
   public boolean isForbiddenToUse(PsiFile from, PsiFile to) {
     if (myFromScope == null || myToScope == null) return false;
-    final PackageSet fromSet = myFromScope.getValue();
-    final PackageSet toSet = myToScope.getValue();
+    PackageSet fromSet = myFromScope.getValue();
+    PackageSet toSet = myToScope.getValue();
     if (fromSet == null || toSet == null) return false;
     DependencyValidationManager holder = DependencyValidationManager.getInstance(from.getProject());
     return (myDenyRule
@@ -51,7 +51,7 @@ public class DependencyRule {
 
   public boolean isApplicable(PsiFile file){
     if (myFromScope == null || myToScope == null) return false;
-    final PackageSet fromSet = myFromScope.getValue();
+    PackageSet fromSet = myFromScope.getValue();
     if (fromSet == null) return false;
 
     Project project = file.getProject();
@@ -83,7 +83,7 @@ public class DependencyRule {
   @Nullable
   private static String getPackageSetPresentation(NamedScope scope) {
     if (scope != null) {
-      final PackageSet packageSet = scope.getValue();
+      PackageSet packageSet = scope.getValue();
       if (packageSet != null) {
         return packageSet.getText();
       }

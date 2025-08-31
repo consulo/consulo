@@ -124,7 +124,7 @@ public final class FlushQueue {
 
   private boolean runNextEvent() {
     long startedAt = System.currentTimeMillis();
-    final RunnableInfo lastInfo = getNextEvent(true);
+    RunnableInfo lastInfo = getNextEvent(true);
     myLastInfo = lastInfo;
 
     if (lastInfo != null) {

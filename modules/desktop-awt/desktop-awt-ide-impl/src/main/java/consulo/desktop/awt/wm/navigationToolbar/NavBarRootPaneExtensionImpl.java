@@ -87,7 +87,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
 
     @Override
     public void revalidate() {
-        final UISettings settings = UISettings.getInstance();
+        UISettings settings = UISettings.getInstance();
         if (!settings.getShowMainToolbar() && settings.getShowNavigationBar() && !UISettings.getInstance().getPresentationMode()) {
             toggleRunPanel(false);
             toggleRunPanel(true);
@@ -104,7 +104,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
     }
 
     public static boolean runToolbarExists() {
-        final AnAction correctedAction = CustomActionsSchemaImpl.getInstance().getCorrectedAction("NavBarToolBar");
+        AnAction correctedAction = CustomActionsSchemaImpl.getInstance().getCorrectedAction("NavBarToolBar");
         return correctedAction instanceof DefaultActionGroup && ((DefaultActionGroup) correctedAction).getChildrenCount() > 0 ||
             correctedAction instanceof CustomisedActionGroup && ((CustomisedActionGroup) correctedAction).getFirstAction() != null;
     }
@@ -147,15 +147,15 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
         }
     }
 
-    private void toggleRunPanel(final boolean show) {
+    private void toggleRunPanel(boolean show) {
         if (show && myRunPanel == null && runToolbarExists()) {
-            final ActionManager manager = ActionManager.getInstance();
+            ActionManager manager = ActionManager.getInstance();
             AnAction toolbarRunGroup = CustomActionsSchemaImpl.getInstance().getCorrectedAction("NavBarToolBar");
             if (toolbarRunGroup instanceof ActionGroup) {
-                final boolean needGap = isNeedGap(toolbarRunGroup);
-                final ActionToolbar actionToolbar = manager.createActionToolbar(ActionPlaces.NAVIGATION_BAR_TOOLBAR, (ActionGroup) toolbarRunGroup, true);
+                boolean needGap = isNeedGap(toolbarRunGroup);
+                ActionToolbar actionToolbar = manager.createActionToolbar(ActionPlaces.NAVIGATION_BAR_TOOLBAR, (ActionGroup) toolbarRunGroup, true);
                 actionToolbar.setTargetComponent(null);
-                final JComponent component = actionToolbar.getComponent();
+                JComponent component = actionToolbar.getComponent();
                 myRunPanel = new JPanel(new BorderLayout()) {
                     @Override
                     public void doLayout() {
@@ -179,16 +179,16 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
         return (uiWindow != null && !(uiWindow.getUserData(IdeFrame.KEY) instanceof IdeFrameEx)) || !UISettings.getInstance().getShowMainToolbar() || !UISettings.getInstance().getPresentationMode();
     }
 
-    private static boolean isNeedGap(final AnAction group) {
-        final AnAction firstAction = getFirstAction(group);
+    private static boolean isNeedGap(AnAction group) {
+        AnAction firstAction = getFirstAction(group);
         return firstAction instanceof ComboBoxAction;
     }
 
     @Nullable
-    private static AnAction getFirstAction(final AnAction group) {
+    private static AnAction getFirstAction(AnAction group) {
         if (group instanceof DefaultActionGroup) {
             AnAction firstAction = null;
-            for (final AnAction action : ((DefaultActionGroup) group).getChildActionsOrStubs()) {
+            for (AnAction action : ((DefaultActionGroup) group).getChildActionsOrStubs()) {
                 if (action instanceof DefaultActionGroup) {
                     firstAction = getFirstAction(action);
                 }
@@ -224,7 +224,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                final Component navBar = myScrollPane;
+                Component navBar = myScrollPane;
                 Insets insets = getInsets();
                 Rectangle r = navBar.getBounds();
 
@@ -239,15 +239,15 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
             @Override
             public void doLayout() {
                 // align vertically
-                final Rectangle r = getBounds();
-                final Insets insets = getInsets();
+                Rectangle r = getBounds();
+                Insets insets = getInsets();
                 int x = insets.left;
                 if (myScrollPane == null) {
                     return;
                 }
-                final Component navBar = myScrollPane;
+                Component navBar = myScrollPane;
 
-                final Dimension preferredSize = navBar.getPreferredSize();
+                Dimension preferredSize = navBar.getPreferredSize();
 
                 navBar.setBounds(x, (r.height - preferredSize.height) / 2, r.width - insets.left - insets.right, preferredSize.height);
             }
@@ -276,7 +276,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
     }
 
     @Override
-    public void uiSettingsChanged(final UISettings settings) {
+    public void uiSettingsChanged(UISettings settings) {
         if (myNavigationBar != null) {
             myNavigationBar.updateState(settings.getShowNavigationBar());
             myWrapperPanel.setVisible(settings.getShowNavigationBar() && !UISettings.getInstance().getPresentationMode());
@@ -286,7 +286,7 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
             myWrapperPanel.repaint();
 
             if (myWrapperPanel.getComponentCount() > 0) {
-                final Component c = myWrapperPanel.getComponent(0);
+                Component c = myWrapperPanel.getComponent(0);
                 if (c instanceof JComponent) {
                     ((JComponent) c).setOpaque(false);
                 }
@@ -311,8 +311,8 @@ public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, Ide
 
     @Override
     public void rebuildAndSelectTail() {
-        final JComponent c = getComponent();
-        final NavBarPanel panel = (NavBarPanel) c.getClientProperty("NavBarPanel");
+        JComponent c = getComponent();
+        NavBarPanel panel = (NavBarPanel) c.getClientProperty("NavBarPanel");
         panel.rebuildAndSelectTail(true);
     }
 }

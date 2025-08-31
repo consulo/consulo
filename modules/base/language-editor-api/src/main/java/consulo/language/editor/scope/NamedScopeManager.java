@@ -34,7 +34,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class NamedScopeManager extends NamedScopesHolder {
   @Inject
-  public NamedScopeManager(final Project project) {
+  public NamedScopeManager(Project project) {
     super(project);
   }
 

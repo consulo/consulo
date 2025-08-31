@@ -67,7 +67,7 @@ public class SelectInEditorManagerImpl implements SelectInEditorManager, Disposa
   }
 
   @Override
-  public void selectInEditor(VirtualFile file, final int startOffset, final int endOffset, final boolean toSelectLine, final boolean toUseNormalSelection) {
+  public void selectInEditor(VirtualFile file, int startOffset, int endOffset, final boolean toSelectLine, final boolean toUseNormalSelection) {
     releaseAll();
     final TextRange textRange;
     if (file instanceof VirtualFileWindow) {
@@ -91,7 +91,7 @@ public class SelectInEditorManagerImpl implements SelectInEditorManager, Disposa
     });
   }
 
-  private void doSelect(final boolean toUseNormalSelection, @Nonnull final Editor editor, final boolean toSelectLine, final TextRange textRange) {
+  private void doSelect(boolean toUseNormalSelection, @Nonnull Editor editor, boolean toSelectLine, TextRange textRange) {
     int startOffset = textRange.getStartOffset();
     int endOffset = textRange.getEndOffset();
     if (toUseNormalSelection) {

@@ -59,11 +59,11 @@ public class Change {
   // if null, vcs's is used. intended: for property conflict case
   private Supplier<MergeTexts> myMergeProvider;
 
-  public Change(@Nullable final ContentRevision beforeRevision, @Nullable final ContentRevision afterRevision) {
+  public Change(@Nullable ContentRevision beforeRevision, @Nullable ContentRevision afterRevision) {
     this(beforeRevision, afterRevision, convertStatus(beforeRevision, afterRevision));
   }
 
-  public Change(@Nullable final ContentRevision beforeRevision, @Nullable final ContentRevision afterRevision, @Nullable FileStatus fileStatus) {
+  public Change(@Nullable ContentRevision beforeRevision, @Nullable ContentRevision afterRevision, @Nullable FileStatus fileStatus) {
     assert beforeRevision != null || afterRevision != null;
     myBeforeRevision = beforeRevision;
     myAfterRevision = afterRevision;
@@ -86,7 +86,7 @@ public class Change {
     myMergeProvider = mergeProvider;
   }
 
-  public void addAdditionalLayerElement(final String name, final Change change) {
+  public void addAdditionalLayerElement(String name, Change change) {
     myOtherLayers.put(name, change);
   }
 
@@ -146,15 +146,15 @@ public class Change {
     return myAfterRevision == null ? null : myAfterRevision.getFile().getVirtualFile();
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || (! (o instanceof Change))) return false;
-    final Change otherChange = ((Change)o);
+    Change otherChange = ((Change)o);
 
-    final ContentRevision br1 = getBeforeRevision();
-    final ContentRevision br2 = otherChange.getBeforeRevision();
-    final ContentRevision ar1 = getAfterRevision();
-    final ContentRevision ar2 = otherChange.getAfterRevision();
+    ContentRevision br1 = getBeforeRevision();
+    ContentRevision br2 = otherChange.getBeforeRevision();
+    ContentRevision ar1 = getAfterRevision();
+    ContentRevision ar2 = otherChange.getAfterRevision();
 
     FilePath fbr1 = br1 != null ? br1.getFile() : null;
     FilePath fbr2 = br2 != null ? br2.getFile() : null;
@@ -202,7 +202,7 @@ public class Change {
     return myMoveRelativePath;
   }
 
-  private void cacheRenameOrMove(final Project project) {
+  private void cacheRenameOrMove(Project project) {
     if (myBeforeRevision != null && myAfterRevision != null && (! revisionPathsSame())) {
       if (!myRenameOrMoveCached) {
         myRenameOrMoveCached = true;
@@ -220,14 +220,14 @@ public class Change {
   }
 
   private boolean revisionPathsSame() {
-    final String path1 = myBeforeRevision.getFile().getIOFile().getAbsolutePath();
-    final String path2 = myAfterRevision.getFile().getIOFile().getAbsolutePath();
+    String path1 = myBeforeRevision.getFile().getIOFile().getAbsolutePath();
+    String path2 = myAfterRevision.getFile().getIOFile().getAbsolutePath();
     return path1.equals(path2);
   }
 
   @NonNls
   public String toString() {
-    final Type type = getType();
+    Type type = getType();
     //noinspection EnumSwitchStatementWhichMissesCases
     switch (type) {
       case NEW: return "A: " + myAfterRevision;
@@ -238,7 +238,7 @@ public class Change {
   }
 
   @Nullable
-  public String getOriginText(final Project project) {
+  public String getOriginText(Project project) {
     cacheRenameOrMove(project);
     if (isMoved()) {
       return getMovedText(project);
@@ -254,7 +254,7 @@ public class Change {
   }
 
   @Nullable
-  protected String getMovedText(final Project project) {
+  protected String getMovedText(Project project) {
     return VcsLocalize.changeFileMovedFromText(getMoveRelativePath(project)).get();
   }
 
@@ -262,7 +262,7 @@ public class Change {
     return myIsReplaced;
   }
 
-  public void setIsReplaced(final boolean isReplaced) {
+  public void setIsReplaced(boolean isReplaced) {
     myIsReplaced = isReplaced;
   }
 

@@ -35,9 +35,9 @@ public abstract class FrameTitleBuilder {
 
   @Nonnull
   @RequiredReadAction
-  public abstract String getProjectTitle(@Nonnull final Project project);
+  public abstract String getProjectTitle(@Nonnull Project project);
 
   @Nonnull
   @RequiredReadAction
-  public abstract String getFileTitle(@Nonnull final Project project, @Nonnull final VirtualFile file);
+  public abstract String getFileTitle(@Nonnull Project project, @Nonnull VirtualFile file);
 }

@@ -50,12 +50,12 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
   private JSpinner myChangedOnServerInterval;
   private CacheSettingsPanel myCacheSettingsPanel;
 
-  public VcsBackgroundOperationsConfigurationPanel(final Project project) {
+  public VcsBackgroundOperationsConfigurationPanel(Project project) {
     myProject = project;
 
     if (! myProject.isDefault()) {
       myCacheSettingsPanel.initPanel(project);
-      final VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
+      VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
       myChangedOnServerInterval.setModel(new SpinnerNumberModel(settings.CHANGED_ON_SERVER_INTERVAL, 5, 48 * 10 * 60, 5));
 
       myTrackChangedOnServer.addActionListener(e -> myChangedOnServerInterval.setEnabled(myTrackChangedOnServer.isSelected()));

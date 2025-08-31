@@ -54,8 +54,8 @@ public class AddSpaceInsertHandler implements InsertHandler<LookupElement> {
   }
 
   private static boolean isCharAtSpace(Editor editor) {
-    final int startOffset = editor.getCaretModel().getOffset();
-    final Document document = editor.getDocument();
+    int startOffset = editor.getCaretModel().getOffset();
+    Document document = editor.getDocument();
     return document.getTextLength() > startOffset && document.getCharsSequence().charAt(startOffset) == ' ';
   }
 }

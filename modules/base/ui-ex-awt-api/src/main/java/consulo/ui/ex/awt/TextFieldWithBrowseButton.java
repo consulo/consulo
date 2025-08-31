@@ -68,13 +68,13 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
     installPathCompletion(listener.getFileChooserDescriptor());
   }
 
-  protected void installPathCompletion(final FileChooserDescriptor fileChooserDescriptor) {
+  protected void installPathCompletion(FileChooserDescriptor fileChooserDescriptor) {
     installPathCompletion(fileChooserDescriptor, null);
   }
 
-  protected void installPathCompletion(final FileChooserDescriptor fileChooserDescriptor,
+  protected void installPathCompletion(FileChooserDescriptor fileChooserDescriptor,
                                        @Nullable Disposable parent) {
-    final Application application = ApplicationManager.getApplication();
+    Application application = ApplicationManager.getApplication();
     if (application == null || application.isUnitTestMode() || application.isHeadlessEnvironment()) return;
     FileChooserFactory.getInstance().installFileCompletion(getChildComponent(), fileChooserDescriptor, true, parent);
   }
@@ -92,7 +92,7 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
   }
 
   @Override
-  public void setText(final String text){
+  public void setText(String text){
     getTextField().setText(text);
   }
 
@@ -114,20 +114,20 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
     public NoPathCompletion() {
     }
 
-    public NoPathCompletion(final JTextField field) {
+    public NoPathCompletion(JTextField field) {
       super(field);
     }
 
-    public NoPathCompletion(final JTextField field, final ActionListener browseActionListener) {
+    public NoPathCompletion(JTextField field, ActionListener browseActionListener) {
       super(field, browseActionListener);
     }
 
-    public NoPathCompletion(final ActionListener browseActionListener) {
+    public NoPathCompletion(ActionListener browseActionListener) {
       super(browseActionListener);
     }
 
     @Override
-    protected void installPathCompletion(final FileChooserDescriptor fileChooserDescriptor) {
+    protected void installPathCompletion(FileChooserDescriptor fileChooserDescriptor) {
     }
   }
 }

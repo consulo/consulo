@@ -99,7 +99,7 @@ public abstract class PackagingElementFactory {
   public abstract CompositePackagingElement<?> getOrCreateArchive(@Nonnull CompositePackagingElement<?> parent, @Nonnull String relativePath);
 
   public abstract void addFileCopy(@Nonnull CompositePackagingElement<?> root, @Nonnull String outputDirectoryPath, @Nonnull String sourceFilePath,
-                                   final String outputFileName);
+                                   String outputFileName);
 
   public abstract void addFileCopy(@Nonnull CompositePackagingElement<?> root, @Nonnull String outputDirectoryPath, @Nonnull String sourceFilePath);
 

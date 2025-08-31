@@ -88,11 +88,11 @@ public class VcsBalloonProblemNotifier implements Runnable {
     }
 
     private static void show(
-        final Project project,
-        final String message,
-        final NotificationType type,
-        final boolean showOverChangesView,
-        @Nullable final NamedRunnable[] notificationListener
+        Project project,
+        String message,
+        NotificationType type,
+        boolean showOverChangesView,
+        @Nullable NamedRunnable[] notificationListener
     ) {
         Application application = Application.get();
         if (application.isHeadlessEnvironment()) {

@@ -81,7 +81,7 @@ public class ProgressManagerQueue {
     }
   }
 
-  private static void runStuff(final Runnable stuff) {
+  private static void runStuff(Runnable stuff) {
     try {
       stuff.run();
     }
@@ -90,7 +90,7 @@ public class ProgressManagerQueue {
     }
   }
 
-  public void run(@Nonnull final Runnable stuff) {
+  public void run(@Nonnull Runnable stuff) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       runStuff(stuff);
       return;
@@ -117,7 +117,7 @@ public class ProgressManagerQueue {
     public void run() {
       while (true) {
         try {
-          final Runnable stuff;
+          Runnable stuff;
           synchronized (myLock) {
             stuff = myQueue.poll();
           }

@@ -173,14 +173,14 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
             return;
         }
 
-        final RunConfiguration runConfiguration = (RunConfiguration) profile;
-        final List<BeforeRunTask> beforeRunTasks = RunManagerEx.getInstanceEx(myProject).getBeforeRunTasks(runConfiguration);
+        RunConfiguration runConfiguration = (RunConfiguration) profile;
+        List<BeforeRunTask> beforeRunTasks = RunManagerEx.getInstanceEx(myProject).getBeforeRunTasks(runConfiguration);
         if (beforeRunTasks.isEmpty()) {
             startRunnable.run();
         }
         else {
             DataContext context = environment.getDataContext();
-            final DataContext projectContext = context != null ? context : DataContext.builder().add(Project.KEY, myProject).build();
+            DataContext projectContext = context != null ? context : DataContext.builder().add(Project.KEY, myProject).build();
 
             AsyncResult<Void> result = AsyncResult.undefined();
 
@@ -249,19 +249,19 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
 
     @RequiredUIAccess
     @Override
-    public void startRunProfile(@Nonnull final RunProfileStarter starter,
-                                @Nonnull final RunProfileState state,
-                                @Nonnull final ExecutionEnvironment environment) {
+    public void startRunProfile(@Nonnull RunProfileStarter starter,
+                                @Nonnull RunProfileState state,
+                                @Nonnull ExecutionEnvironment environment) {
         UIAccess.assertIsUIThread();
 
-        final Project project = environment.getProject();
+        Project project = environment.getProject();
         RunContentDescriptor reuseContent = getContentManager().getReuseContent(environment);
         if (reuseContent != null) {
             reuseContent.setExecutionId(environment.getExecutionId());
             environment.setContentToReuse(reuseContent);
         }
 
-        final Executor executor = environment.getExecutor();
+        Executor executor = environment.getExecutor();
         project.getMessageBus().syncPublisher(ExecutionListener.class).processStartScheduled(executor.getId(), environment);
 
         InProgressEntry entry = new InProgressEntry(executor.getId(), environment.getRunner().getRunnerId());
@@ -308,7 +308,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
                         }
 
                         contentManager.showRunContent(executor, descriptor, environment.getContentToReuse());
-                        final ProcessHandler processHandler = descriptor.getProcessHandler();
+                        ProcessHandler processHandler = descriptor.getProcessHandler();
                         if (processHandler != null) {
                             if (!processHandler.isStartNotified()) {
                                 processHandler.startNotify();
@@ -559,8 +559,8 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
             }
         };
 
-        final StringBuilder names = new StringBuilder();
-        for (final RunContentDescriptor descriptor : runningIncompatibleDescriptors) {
+        StringBuilder names = new StringBuilder();
+        for (RunContentDescriptor descriptor : runningIncompatibleDescriptors) {
             String name = descriptor.getDisplayName();
             if (names.length() > 0) {
                 names.append(", ");
@@ -588,13 +588,13 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     }
 
     @Nonnull
-    private List<RunContentDescriptor> getRunningDescriptorsOfTheSameConfigType(@Nonnull final RunnerAndConfigurationSettings configurationAndSettings) {
+    private List<RunContentDescriptor> getRunningDescriptorsOfTheSameConfigType(@Nonnull RunnerAndConfigurationSettings configurationAndSettings) {
         return getRunningDescriptors(runningConfigurationAndSettings -> configurationAndSettings == runningConfigurationAndSettings);
     }
 
     @Nonnull
     private List<RunContentDescriptor> getIncompatibleRunningDescriptors(@Nonnull RunnerAndConfigurationSettings configurationAndSettings) {
-        final RunConfiguration configurationToCheckCompatibility = configurationAndSettings.getConfiguration();
+        RunConfiguration configurationToCheckCompatibility = configurationAndSettings.getConfiguration();
         return getRunningDescriptors(runningConfigurationAndSettings -> {
             RunConfiguration runningConfiguration =
                 runningConfigurationAndSettings == null ? null : runningConfigurationAndSettings.getConfiguration();

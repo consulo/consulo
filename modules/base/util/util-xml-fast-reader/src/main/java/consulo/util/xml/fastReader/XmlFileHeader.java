@@ -26,7 +26,7 @@ public class XmlFileHeader {
   private final String myPublicId;
   private final String mySystemId;
 
-  public XmlFileHeader(final String rootTagLocalName, final String rootTagNamespace, final String publicId, final String systemId) {
+  public XmlFileHeader(String rootTagLocalName, String rootTagNamespace, String publicId, String systemId) {
     myPublicId = publicId;
     myRootTagLocalName = rootTagLocalName;
     myRootTagNamespace = rootTagNamespace;
@@ -54,11 +54,11 @@ public class XmlFileHeader {
     return "XmlFileHeader: name=" + myRootTagLocalName + "; namespace=" + myRootTagNamespace + "; publicId=" + myPublicId + "; systemId=" + mySystemId;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof XmlFileHeader)) return false;
 
-    final XmlFileHeader header = (XmlFileHeader)o;
+    XmlFileHeader header = (XmlFileHeader)o;
 
     if (myPublicId != null ? !myPublicId.equals(header.myPublicId) : header.myPublicId != null) return false;
     if (myRootTagLocalName != null ? !myRootTagLocalName.equals(header.myRootTagLocalName) : header.myRootTagLocalName != null)

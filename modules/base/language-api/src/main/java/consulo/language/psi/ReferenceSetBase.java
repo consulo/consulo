@@ -43,7 +43,7 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
     this(ElementManipulators.getValueText(element), element, offset, DOT_SEPARATOR);
   }
 
-  public ReferenceSetBase(final String text, @Nonnull PsiElement element, int offset, final char separator) {
+  public ReferenceSetBase(String text, @Nonnull PsiElement element, int offset, char separator) {
     myElement = element;
     mySeparator = separator;
     myReferences = parse(text, offset);
@@ -56,31 +56,31 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
   @Nonnull
   protected List<T> parse(String str, int offset) {
 
-    final List<T> references = new ArrayList<T>();
+    List<T> references = new ArrayList<T>();
     int current = -1;
     int index = 0;
     int next;
     do {
       next = findNextSeparator(str, current);
-      final TextRange range = new TextRange(offset + current + 1, offset + (next >= 0 ? next : str.length()));
+      TextRange range = new TextRange(offset + current + 1, offset + (next >= 0 ? next : str.length()));
       references.addAll(createReferences(range, index ++));
     } while ((current = next) >= 0);
 
     return references;
   }
 
-  protected int findNextSeparator(final String str, final int current) {
-    final int next;
+  protected int findNextSeparator(String str, int current) {
+    int next;
     next = str.indexOf(mySeparator, current + 1);
     return next;
   }
 
   @Nullable
-  protected T createReference(final TextRange range, final int index) {
+  protected T createReference(TextRange range, int index) {
     return null;
   }
 
-  protected List<T> createReferences(final TextRange range, final int index) {
+  protected List<T> createReferences(TextRange range, int index) {
     T reference = createReference(range, index);
 
     return reference == null? Collections.<T>emptyList() : Collections.singletonList(reference);

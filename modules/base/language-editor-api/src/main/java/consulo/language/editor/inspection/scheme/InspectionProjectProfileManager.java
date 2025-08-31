@@ -45,9 +45,9 @@ public interface InspectionProjectProfileManager extends SeverityProvider, Proje
   InspectionProfile getInspectionProfile();
 
   public static boolean isInformationLevel(String shortName, @Nonnull PsiElement element) {
-    final HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
+    HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
     if (key != null) {
-      final HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getCurrentProfile().getErrorLevel(key, element);
+      HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getCurrentProfile().getErrorLevel(key, element);
       return HighlightDisplayLevel.DO_NOT_SHOW.equals(errorLevel);
     }
     return false;

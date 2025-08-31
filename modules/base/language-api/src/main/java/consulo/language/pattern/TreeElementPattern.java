@@ -28,18 +28,18 @@ import java.util.function.BiPredicate;
  */
 public abstract class TreeElementPattern<ParentType, T extends ParentType, Self extends TreeElementPattern<ParentType, T, Self>> extends ObjectPattern<T, Self> {
 
-  protected TreeElementPattern(@Nonnull final InitialPatternCondition<T> condition) {
+  protected TreeElementPattern(@Nonnull InitialPatternCondition<T> condition) {
     super(condition);
   }
 
-  protected TreeElementPattern(final Class<T> aClass) {
+  protected TreeElementPattern(Class<T> aClass) {
     super(aClass);
   }
 
   @Nullable
   protected abstract ParentType getParent(@Nonnull ParentType parentType);
 
-  protected abstract ParentType[] getChildren(@Nonnull final ParentType parentType);
+  protected abstract ParentType[] getChildren(@Nonnull ParentType parentType);
 
   public Self withParents(@Nonnull final Class<? extends ParentType>... types) {
     return with(new PatternCondition<T>("withParents") {
@@ -57,23 +57,23 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
     });
   }
 
-  public Self withParent(@Nonnull final Class<? extends ParentType> type) {
+  public Self withParent(@Nonnull Class<? extends ParentType> type) {
     return withParent(StandardPatterns.instanceOf(type));
   }
 
-  public Self withParent(@Nonnull final ElementPattern<? extends ParentType> pattern) {
+  public Self withParent(@Nonnull ElementPattern<? extends ParentType> pattern) {
     return withSuperParent(1, pattern);
   }
 
-  public Self withChild(@Nonnull final ElementPattern<? extends ParentType> pattern) {
+  public Self withChild(@Nonnull ElementPattern<? extends ParentType> pattern) {
     return withChildren(StandardPatterns.<ParentType>collection().atLeastOne(pattern));
   }
 
-  public Self withFirstChild(@Nonnull final ElementPattern<? extends ParentType> pattern) {
+  public Self withFirstChild(@Nonnull ElementPattern<? extends ParentType> pattern) {
     return withChildren(StandardPatterns.<ParentType>collection().first(pattern));
   }
 
-  public Self withLastChild(@Nonnull final ElementPattern<? extends ParentType> pattern) {
+  public Self withLastChild(@Nonnull ElementPattern<? extends ParentType> pattern) {
     return withChildren(StandardPatterns.<ParentType>collection().last(pattern));
   }
 
@@ -89,10 +89,10 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
   public Self isFirstAcceptedChild(@Nonnull final ElementPattern<? super ParentType> pattern) {
     return with(new PatternCondition<T>("isFirstAcceptedChild") {
       @Override
-      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
-        final ParentType parent = getParent(t);
+      public boolean accepts(@Nonnull T t, ProcessingContext context) {
+        ParentType parent = getParent(t);
         if (parent != null) {
-          final ParentType[] children = getChildren(parent);
+          ParentType[] children = getChildren(parent);
           for (ParentType child : children) {
             if (pattern.accepts(child, context)) {
               return child == t;
@@ -105,7 +105,7 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
     });
   }
 
-  public Self withSuperParent(final int level, @Nonnull final Class<? extends ParentType> aClass) {
+  public Self withSuperParent(int level, @Nonnull Class<? extends ParentType> aClass) {
     return withSuperParent(level, StandardPatterns.instanceOf(aClass));
   }
 
@@ -124,11 +124,11 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
     });
   }
 
-  public Self inside(@Nonnull final Class<? extends ParentType> pattern) {
+  public Self inside(@Nonnull Class<? extends ParentType> pattern) {
     return inside(StandardPatterns.instanceOf(pattern));
   }
 
-  public Self inside(@Nonnull final ElementPattern<? extends ParentType> pattern) {
+  public Self inside(@Nonnull ElementPattern<? extends ParentType> pattern) {
     return inside(false, pattern);
   }
 
@@ -183,7 +183,7 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
   public Self insideSequence(final boolean strict, @Nonnull final ElementPattern<? extends ParentType>... patterns) {
     return with(new PatternCondition<T>("insideSequence") {
       @Override
-      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull T t, ProcessingContext context) {
         int i = 0;
         ParentType element = strict ? getParent(t) : t;
         while (element != null && i < patterns.length) {
@@ -205,10 +205,10 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
     return with(new PatternCondition<T>("afterSibling") {
       @Override
       public boolean accepts(@Nonnull T t, ProcessingContext context) {
-        final ParentType parent = getParent(t);
+        ParentType parent = getParent(t);
         if (parent == null) return false;
-        final ParentType[] children = getChildren(parent);
-        final int i = Arrays.asList(children).indexOf(t);
+        ParentType[] children = getChildren(parent);
+        int i = Arrays.asList(children).indexOf(t);
         if (i <= 0) return false;
         return pattern.accepts(children[i - 1], context);
       }
@@ -219,9 +219,9 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
     return with(new PatternCondition<T>("afterSiblingSkipping") {
       @Override
       public boolean accepts(@Nonnull T t, ProcessingContext context) {
-        final ParentType parent = getParent(t);
+        ParentType parent = getParent(t);
         if (parent == null) return false;
-        final ParentType[] children = getChildren(parent);
+        ParentType[] children = getChildren(parent);
         int i = Arrays.asList(children).indexOf(t);
         while (--i >= 0) {
           if (!skip.accepts(children[i], context)) {

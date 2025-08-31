@@ -29,7 +29,7 @@ public class HashBangChecker {
     if (firstCharsIfText == null) {
       return false;
     }
-    final int lineBreak = StringUtil.indexOf(firstCharsIfText, '\n');
+    int lineBreak = StringUtil.indexOf(firstCharsIfText, '\n');
     if (lineBreak < 0) {
       return false;
     }

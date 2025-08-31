@@ -32,9 +32,9 @@ public class NamedPackageSetReference extends PackageSetBase {
 
   @Override
   public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
-    final NamedScope scope = holder.getScope(myName);
+    NamedScope scope = holder.getScope(myName);
     if (scope != null) {
-      final PackageSet packageSet = scope.getValue();
+      PackageSet packageSet = scope.getValue();
       if (packageSet != null) {
         return packageSet.contains(file, project, holder);
       }

@@ -44,7 +44,7 @@ public interface ViewContext extends Disposable {
   CellTransform.Facade getCellTransform();
 
   @Nullable
-  Tab getTabFor(final Grid grid);
+  Tab getTabFor(Grid grid);
 
   View getStateFor(@Nonnull Content content);
 
@@ -60,7 +60,7 @@ public interface ViewContext extends Disposable {
 
   RunnerLayoutUi getRunnerLayoutUi();
 
-  GridCell findCellFor(@Nonnull final Content content);
+  GridCell findCellFor(@Nonnull Content content);
 
   Grid findGridFor(@Nonnull Content content);
 
@@ -68,7 +68,7 @@ public interface ViewContext extends Disposable {
 
   boolean isStateBeingRestored();
 
-  void setStateIsBeingRestored(boolean state, final Object requestor);
+  void setStateIsBeingRestored(boolean state, Object requestor);
 
   void validate(Content content, ActiveRunnable toRestore);
 

@@ -32,21 +32,21 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern ofType(final FileType type) {
     return with(new PatternCondition<VirtualFile>("ofType") {
       @Override
-      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull VirtualFile virtualFile, ProcessingContext context) {
         return type.equals(virtualFile.getFileType());
       }
     });
   }
 
-  public VirtualFilePattern withName(final String name) {
+  public VirtualFilePattern withName(String name) {
     return withName(PlatformPatterns.string().equalTo(name));
   }
 
   public VirtualFilePattern withExtension(@Nonnull final String... alternatives) {
     return with(new PatternCondition<VirtualFile>("withExtension") {
       @Override
-      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
-        final String extension = virtualFile.getExtension();
+      public boolean accepts(@Nonnull VirtualFile virtualFile, ProcessingContext context) {
+        String extension = virtualFile.getExtension();
         for (String alternative : alternatives) {
           if (alternative.equals(extension)) {
             return true;
@@ -60,7 +60,7 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern withExtension(@Nonnull final String extension) {
     return with(new PatternCondition<VirtualFile>("withExtension") {
       @Override
-      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull VirtualFile virtualFile, ProcessingContext context) {
         return extension.equals(virtualFile.getExtension());
       }
     });
@@ -69,7 +69,7 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern withName(final ElementPattern<String> namePattern) {
     return with(new PatternCondition<VirtualFile>("withName") {
       @Override
-      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull VirtualFile virtualFile, ProcessingContext context) {
         return namePattern.getCondition().accepts(virtualFile.getName(), context);
       }
     });
@@ -78,19 +78,19 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern withPath(final ElementPattern<String> pathPattern) {
     return with(new PatternCondition<VirtualFile>("withName") {
       @Override
-      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull VirtualFile virtualFile, ProcessingContext context) {
         return pathPattern.accepts(virtualFile.getPath(), context);
       }
     });
   }
 
   @Override
-  protected VirtualFile getParent(@Nonnull final VirtualFile t) {
+  protected VirtualFile getParent(@Nonnull VirtualFile t) {
     return t.getParent();
   }
 
   @Override
-  protected VirtualFile[] getChildren(@Nonnull final VirtualFile file) {
+  protected VirtualFile[] getChildren(@Nonnull VirtualFile file) {
     return file.getChildren();
   }
 }

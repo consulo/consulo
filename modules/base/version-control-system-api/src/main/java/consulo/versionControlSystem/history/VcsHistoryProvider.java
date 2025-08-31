@@ -28,9 +28,9 @@ import javax.swing.*;
 
 public interface VcsHistoryProvider extends VcsProviderMarker {
 
-  VcsDependentHistoryComponents getUICustomization(final VcsHistorySession session, final JComponent forShortcutRegistration);
+  VcsDependentHistoryComponents getUICustomization(VcsHistorySession session, JComponent forShortcutRegistration);
 
-  AnAction[] getAdditionalActions(final Runnable refresher);
+  AnAction[] getAdditionalActions(Runnable refresher);
 
   /**
    * Returns whether the history provider submits the custom-formatted date
@@ -53,7 +53,7 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
   @Nullable
   VcsHistorySession createSessionFor(FilePath filePath) throws VcsException;
 
-  void reportAppendableHistory(final FilePath path, final VcsAppendableHistorySessionPartner partner) throws VcsException;
+  void reportAppendableHistory(FilePath path, VcsAppendableHistorySessionPartner partner) throws VcsException;
 
   boolean supportsHistoryForDirectories();
 

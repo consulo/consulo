@@ -39,7 +39,7 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
   private final PsiFile myFile;
   private final FileIncludeManager myIncludeManager;
 
-  public FileIncludeContextHectorPanel(final PsiFile file, final FileIncludeManager includeManager) {
+  public FileIncludeContextHectorPanel(PsiFile file, FileIncludeManager includeManager) {
     myFile = file;
     myIncludeManager = includeManager;
 
@@ -62,10 +62,10 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
 
   @Override
   public void reset() {
-    final JComboBox comboBox = myContextFile.getComboBox();
+    JComboBox comboBox = myContextFile.getComboBox();
 
     comboBox.setRenderer(new MyListCellRenderer(comboBox));
-    final VirtualFile[] includingFiles = myIncludeManager.getIncludingFiles(myFile.getVirtualFile(), false);
+    VirtualFile[] includingFiles = myIncludeManager.getIncludingFiles(myFile.getVirtualFile(), false);
     comboBox.setModel(new DefaultComboBoxModel(includingFiles));
     myContextFile.setTextFieldPreferredWidth(30);
   }
@@ -77,23 +77,23 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
     private final JComboBox myComboBox;
     private int myMaxWidth;
 
-    public MyListCellRenderer(final JComboBox comboBox) {
+    public MyListCellRenderer(JComboBox comboBox) {
       myComboBox = comboBox;
       myMaxWidth = comboBox.getPreferredSize().width;
     }
 
     @Override
-    public Component getListCellRendererComponent(final JList list,
-                                                  final Object value,
-                                                  final int index,
-                                                  final boolean isSelected,
-                                                  final boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList list,
+                                                  Object value,
+                                                  int index,
+                                                  boolean isSelected,
+                                                  boolean cellHasFocus) {
 
-      final Component rendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+      Component rendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
       String path = getPath(value);
       if (path != null) {
-        final int max = index == -1 ? myComboBox.getWidth() - myContextFile.getButton().getWidth() : myComboBox.getWidth() * 3;
+        int max = index == -1 ? myComboBox.getWidth() - myContextFile.getButton().getWidth() : myComboBox.getWidth() * 3;
         path = trimPath(path, myComboBox, "/", max);
         setText(path);
       }
@@ -101,9 +101,9 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
     }
 
     @Nullable
-    protected String getPath(final Object value) {
-      final VirtualFile file = (VirtualFile)value;
-      final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myFile.getProject()).getFileIndex();
+    protected String getPath(Object value) {
+      VirtualFile file = (VirtualFile)value;
+      ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myFile.getProject()).getFileIndex();
       if (file != null) {
         VirtualFile root = fileIndex.getSourceRootForFile(file);
         if (root == null) {
@@ -118,21 +118,21 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
 
     private String trimPath(String path, Component component, String separator, int length) {
 
-      final FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
-      final int maxWidth = fontMetrics.stringWidth(path);
+      FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
+      int maxWidth = fontMetrics.stringWidth(path);
       if (maxWidth <= length) {
         myMaxWidth = Math.max(maxWidth, myMaxWidth);
         return path;
       }
-      final StringBuilder result = new StringBuilder(path);
+      StringBuilder result = new StringBuilder(path);
       if (path.startsWith(separator)) {
         result.delete(0, 1);
       }
-      final String[] strings = result.toString().split(separator);
+      String[] strings = result.toString().split(separator);
       result.replace(0, strings[0].length(), "...");
       for (int i = 1; i < strings.length; i++) {
-        final String clipped = result.toString();
-        final int width = fontMetrics.stringWidth(clipped);
+        String clipped = result.toString();
+        int width = fontMetrics.stringWidth(clipped);
         if (width <= length) {
           myMaxWidth = Math.max(width, myMaxWidth);
           return clipped;

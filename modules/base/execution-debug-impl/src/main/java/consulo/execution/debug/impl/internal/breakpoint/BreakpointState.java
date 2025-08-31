@@ -50,7 +50,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
   public BreakpointState() {
   }
 
-  public BreakpointState(final boolean enabled, final String typeId, final long timeStamp, final SuspendPolicy suspendPolicy) {
+  public BreakpointState(boolean enabled, String typeId, long timeStamp, SuspendPolicy suspendPolicy) {
     myEnabled = enabled;
     myTypeId = typeId;
     myTimeStamp = timeStamp;
@@ -62,7 +62,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     return myEnabled;
   }
 
-  public void setEnabled(final boolean enabled) {
+  public void setEnabled(boolean enabled) {
     myEnabled = enabled;
   }
 
@@ -71,7 +71,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     return myTypeId;
   }
 
-  public void setTypeId(final String typeId) {
+  public void setTypeId(String typeId) {
     myTypeId = typeId;
   }
 
@@ -80,7 +80,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     return myPropertiesElement;
   }
 
-  public void setPropertiesElement(final Element propertiesElement) {
+  public void setPropertiesElement(Element propertiesElement) {
     myPropertiesElement = propertiesElement;
   }
 
@@ -89,7 +89,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     return mySuspendPolicy.name();
   }
 
-  public void setSuspendPolicyString(final String suspendPolicy) {
+  public void setSuspendPolicyString(String suspendPolicy) {
     mySuspendPolicy = SuspendPolicy.valueOf(suspendPolicy);
   }
 
@@ -107,7 +107,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     return myLogMessage;
   }
 
-  public void setLogMessage(final boolean logMessage) {
+  public void setLogMessage(boolean logMessage) {
     myLogMessage = logMessage;
   }
 
@@ -166,7 +166,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     return myDependencyState;
   }
 
-  public void setDependencyState(final XBreakpointDependencyState dependencyState) {
+  public void setDependencyState(XBreakpointDependencyState dependencyState) {
     myDependencyState = dependencyState;
   }
 

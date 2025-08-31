@@ -26,7 +26,7 @@ import consulo.project.Project;
  */
 public class XCompareWithClipboardAction extends XFetchValueActionBase {
     @Override
-    protected void handle(final Project project, final String value, XDebuggerTree tree) {
+    protected void handle(Project project, String value, XDebuggerTree tree) {
         project.getUIAccess().give(() -> {
             DiffRequest request = DiffRequestFactory.getInstance().createClipboardVsValue(value);
             DiffManager.getInstance().showDiff(project, request);

@@ -55,19 +55,19 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
   }
 
   public static <CommitId> SimpleGraphInfo<CommitId> build(
-    @Nonnull final LinearGraph linearGraph,
+    @Nonnull LinearGraph linearGraph,
     @Nonnull GraphLayout oldLayout,
-    @Nonnull final PermanentCommitsInfo<CommitId> permanentCommitsInfo,
+    @Nonnull PermanentCommitsInfo<CommitId> permanentCommitsInfo,
     int permanentGraphSize,
     @Nonnull Set<Integer> branchNodeIds
   ) {
     int firstVisibleRow = 1000; // todo get first visible row from table somehow
     int delta = 1000;
-    final int start = Math.max(0, firstVisibleRow - delta);
-    final int end = Math.min(linearGraph.nodesCount(), start + 2 * delta); // no more than 2*1000 commits;
+    int start = Math.max(0, firstVisibleRow - delta);
+    int end = Math.min(linearGraph.nodesCount(), start + 2 * delta); // no more than 2*1000 commits;
 
-    final List<GraphCommit<CommitId>> graphCommits = new ArrayList<>(end - start);
-    final List<CommitId> commitsIdMap = new ArrayList<>(end - start);
+    List<GraphCommit<CommitId>> graphCommits = new ArrayList<>(end - start);
+    List<CommitId> commitsIdMap = new ArrayList<>(end - start);
 
     for (int row = start; row < end; row++) {
       int nodeId = linearGraph.getNodeId(row);
@@ -85,7 +85,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       Function<Integer, CommitId> function = createCommitIdMapFunction(commitsIdMap);
     PermanentLinearGraphImpl newLinearGraph = PermanentLinearGraphBuilder.newInstance(graphCommits).build();
 
-    final int[] layoutIndexes = new int[end - start];
+    int[] layoutIndexes = new int[end - start];
     List<Integer> headNodeIndexes = new ArrayList<>();
 
     ObjectIntMap<CommitId> commitIdToInteger = reverseCommitIdMap(permanentCommitsInfo, permanentGraphSize);

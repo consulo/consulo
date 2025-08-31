@@ -43,7 +43,7 @@ public final class DesktopRequestFocusInToolWindowCmd {
 
   private final Project myProject;
 
-  public DesktopRequestFocusInToolWindowCmd(IdeFocusManager focusManager, final DesktopToolWindowImpl toolWindow, final FocusWatcher focusWatcher, Project project) {
+  public DesktopRequestFocusInToolWindowCmd(IdeFocusManager focusManager, DesktopToolWindowImpl toolWindow, FocusWatcher focusWatcher, Project project) {
     myFocusManager = focusManager;
     myToolWindow = toolWindow;
     myFocusWatcher = focusWatcher;
@@ -51,7 +51,7 @@ public final class DesktopRequestFocusInToolWindowCmd {
   }
 
   private void bringOwnerToFront() {
-    final Window owner = SwingUtilities.getWindowAncestor(myToolWindow.getComponent());
+    Window owner = SwingUtilities.getWindowAncestor(myToolWindow.getComponent());
     //Toolwindow component shouldn't take focus back if new dialog or frame appears
     //Example: Ctrl+D on file history brings a diff dialog to front and then hides it by main frame by calling
     // toFront on toolwindow window
@@ -69,7 +69,7 @@ public final class DesktopRequestFocusInToolWindowCmd {
     // 3. At that time "preview" tool window is being activated and modal "don't show..." dialog
     // isn't active.
     if (owner != null && owner.getFocusOwner() == null) {
-      final Window activeWindow = getActiveWindow(owner.getOwnedWindows());
+      Window activeWindow = getActiveWindow(owner.getOwnedWindows());
       if (activeWindow == null || activeWindow instanceof DesktopFloatingDecorator) {
         LOG.debug("owner.toFront()");
         //Thread.dumpStack();
@@ -92,7 +92,7 @@ public final class DesktopRequestFocusInToolWindowCmd {
         }
         Component c = getShowingComponentToRequestFocus();
         if (c != null) {
-          final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
+          Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
           if (owner != c) {
             myFocusManager.requestFocusInProject(c, myProject);
             bringOwnerToFront();
@@ -139,9 +139,9 @@ public final class DesktopRequestFocusInToolWindowCmd {
     updateFocusedComponentForWatcher(c);
   }
 
-  private static void updateFocusedComponentForWatcher(final Component c) {
-    final DesktopWindowWatcher watcher = ((DesktopWindowManagerImpl)WindowManager.getInstance()).getWindowWatcher();
-    final FocusWatcher focusWatcher = watcher.getFocusWatcherFor(c);
+  private static void updateFocusedComponentForWatcher(Component c) {
+    DesktopWindowWatcher watcher = ((DesktopWindowManagerImpl)WindowManager.getInstance()).getWindowWatcher();
+    FocusWatcher focusWatcher = watcher.getFocusWatcherFor(c);
     if (focusWatcher != null && c.isFocusOwner()) {
       focusWatcher.setFocusedComponentImpl(c);
     }
@@ -151,7 +151,7 @@ public final class DesktopRequestFocusInToolWindowCmd {
    * @return first active window from hierarchy with specified roots. Returns <code>null</code>
    * if there is no active window in the hierarchy.
    */
-  private static Window getActiveWindow(final Window[] windows) {
+  private static Window getActiveWindow(Window[] windows) {
     for (Window window : windows) {
       if (window.isShowing() && window.isActive()) {
         return window;

@@ -79,7 +79,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
           ToolWindowManager.getInstance(myProject).registerToolWindow(ToolWindowId.TASKS, true, ToolWindowAnchor.RIGHT, myProject, true);
         new TasksToolWindowFactory().createToolWindowContent(myProject, toolWindow);
       }
-      final ToolWindow finalToolWindow = toolWindow;
+      ToolWindow finalToolWindow = toolWindow;
         myProject.getApplication().invokeLater(() -> {
         finalToolWindow.setAvailable(true, null);
         finalToolWindow.show(null);
@@ -88,7 +88,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     }
     else {
       if (toolWindow != null) {
-        final ToolWindow finalToolWindow = toolWindow;
+        ToolWindow finalToolWindow = toolWindow;
           myProject.getApplication().invokeLater(() -> finalToolWindow.setAvailable(false, null));
       }
     }
@@ -106,19 +106,19 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
 
     myTimeTrackingTimer = UIUtil.createNamedTimer("TaskManager time tracking", TIME_TRACKING_TIME_UNIT, new ActionListener() {
       @Override
-      public void actionPerformed(final ActionEvent e) {
-        final LocalTask activeTask = myTaskManager.getActiveTask();
+      public void actionPerformed(ActionEvent e) {
+        LocalTask activeTask = myTaskManager.getActiveTask();
         if (myLastActiveTask != activeTask) {
           activeTask.addWorkItem(new WorkItem(new Date()));
         }
         if (getState().autoMode) {
-          final WorkItem lastWorkItem = activeTask.getWorkItems().get(activeTask.getWorkItems().size() - 1);
+          WorkItem lastWorkItem = activeTask.getWorkItems().get(activeTask.getWorkItems().size() - 1);
           lastWorkItem.duration += TIME_TRACKING_TIME_UNIT;
           getState().totallyTimeSpent += TIME_TRACKING_TIME_UNIT;
         }
         else {
           if (activeTask.isRunning()) {
-            final WorkItem lastWorkItem = activeTask.getWorkItems().get(activeTask.getWorkItems().size() - 1);
+            WorkItem lastWorkItem = activeTask.getWorkItems().get(activeTask.getWorkItems().size() - 1);
             lastWorkItem.duration += TIME_TRACKING_TIME_UNIT;
             getState().totallyTimeSpent += TIME_TRACKING_TIME_UNIT;
           }
@@ -130,11 +130,11 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     myActivityListener = new Runnable() {
       @Override
       public void run() {
-        final IdeFrame frame = (IdeFrame)IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
+        IdeFrame frame = (IdeFrame)IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
         if (frame == null) {
           return;
         }
-        final Project project = frame.getProject();
+        Project project = frame.getProject();
         if (project == null || !myProject.equals(project)) {
           return;
         }
@@ -146,8 +146,8 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     }
   }
 
-  public void setAutoMode(final boolean on) {
-    final boolean oldState = getState().autoMode;
+  public void setAutoMode(boolean on) {
+    boolean oldState = getState().autoMode;
     if (on != oldState) {
       getState().autoMode = on;
       if (on) {
@@ -182,7 +182,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
   }
 
   @Override
-  public void loadState(final TimeTrackingManager.Config state) {
+  public void loadState(TimeTrackingManager.Config state) {
     XmlSerializerUtil.copyBean(state, myConfig);
   }
 

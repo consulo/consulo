@@ -26,7 +26,7 @@ public abstract class LexerBasedIdIndexer implements IdIndexer, IdAndToDoScanner
   
   @Override
   @Nonnull
-  public final Map<IdIndexEntry,Integer> map(final FileContent inputData) {
+  public final Map<IdIndexEntry,Integer> map(FileContent inputData) {
     return BaseFilterLexerUtil.scanContent(inputData, this).idMap;
   }
 }

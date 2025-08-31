@@ -32,7 +32,7 @@ public abstract class EnableDisableAction extends AbstractAction {
     int[] rows = getTable().getSelectedRows();
     if (rows.length > 0) {
       boolean valueToBeSet = false;
-      for (final int row : rows) {
+      for (int row : rows) {
         if (!isRowChecked(row)) {
           valueToBeSet = true;
           break;
@@ -54,7 +54,7 @@ public abstract class EnableDisableAction extends AbstractAction {
     JTable table = getTable();
     InputMap inputMap = table.getInputMap();
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "enable_disable");
-    final ActionMap actionMap = table.getActionMap();
+    ActionMap actionMap = table.getActionMap();
     actionMap.put("enable_disable", this);
   }
 }

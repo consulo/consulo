@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class LookupActionPageUpHandler extends LookupActionHandler {
   @Override
-  protected void executeInLookup(final LookupEx lookup, DataContext context, Caret caret) {
+  protected void executeInLookup(LookupEx lookup, DataContext context, Caret caret) {
     lookup.setFocusDegree(LookupFocusDegree.FOCUSED);
     lookup.movePageUp();
   }

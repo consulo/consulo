@@ -88,7 +88,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   private WeakReference<Component> myLastDropHandler;
 
   @Inject
-  public DnDManagerImpl(final Application app) {
+  public DnDManagerImpl(Application app) {
     myApp = app;
   }
 
@@ -97,9 +97,9 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   @Override
-  public void registerSource(@Nonnull final AdvancedDnDSource source) {
+  public void registerSource(@Nonnull AdvancedDnDSource source) {
     if (!getApplication().isHeadlessEnvironment()) {
-      final JComponent c = source.getComponent();
+      JComponent c = source.getComponent();
       registerSource(source, c);
     }
   }
@@ -108,14 +108,14 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   public void registerSource(DnDSource source, JComponent component) {
     if (!getApplication().isHeadlessEnvironment()) {
       component.putClientProperty(SOURCE_KEY, source);
-      final DragSource defaultDragSource = DragSource.getDefaultDragSource();
+      DragSource defaultDragSource = DragSource.getDefaultDragSource();
       defaultDragSource.createDefaultDragGestureRecognizer(component, DnDConstants.ACTION_COPY_OR_MOVE, myDragGestureListener);
     }
   }
 
   @Override
   public void unregisterSource(AdvancedDnDSource source) {
-    final JComponent c = source.getComponent();
+    JComponent c = source.getComponent();
     unregisterSource(source, c);
   }
 
@@ -126,7 +126,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     cleanup(source, null, null);
   }
 
-  private void cleanup(@Nullable final DnDSource source, @Nullable final DnDTarget target, @Nullable final JComponent targetComponent) {
+  private void cleanup(@Nullable DnDSource source, @Nullable DnDTarget target, @Nullable JComponent targetComponent) {
     Runnable cleanup = () -> {
       if (shouldCancelCurrentDnDOperation(source, target, targetComponent)) {
         myLastProcessedOverComponent = null;
@@ -144,7 +144,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   private boolean shouldCancelCurrentDnDOperation(DnDSource source, DnDTarget target, JComponent targetComponent) {
-    final DnDEvent currentDnDEvent = myLastProcessedEvent;
+    DnDEvent currentDnDEvent = myLastProcessedEvent;
     if (currentDnDEvent == null) return true;
 
     if (source != null && currentDnDEvent.equals(source)) {
@@ -205,7 +205,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
     if (currentEvent == null) return currentEvent;
 
-    final DnDAction dndAction = getDnDActionForPlatformAction(nativeAction);
+    DnDAction dndAction = getDnDActionForPlatformAction(nativeAction);
     if (dndAction == null) return null;
 
     currentEvent.updateAction(dndAction);
@@ -227,7 +227,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     DnDTarget immediateTarget = target;
     Component eachParent = aComponentOverDragging;
 
-    final Pair<Image, Point> pair = currentEvent.getUserData(DRAGGED_IMAGE_KEY);
+    Pair<Image, Point> pair = currentEvent.getUserData(DRAGGED_IMAGE_KEY);
     if (pair != null) {
       target.updateDraggedImage(pair.first, aPoint, pair.second);
     }
@@ -265,15 +265,15 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
     updateCursor();
 
-    final Container current = (Container)currentEvent.getCurrentOverComponent();
-    final Point point = currentEvent.getPointOn(getLayeredPane(current));
+    Container current = (Container)currentEvent.getCurrentOverComponent();
+    Point point = currentEvent.getPointOn(getLayeredPane(current));
     Rectangle inPlaceRect = new Rectangle(point.x - 5, point.y - 5, 5, 5);
 
     if (!currentEvent.equals(myLastProcessedEvent)) {
       hideCurrentHighlighter();
     }
 
-    final DnDTarget processedTarget = getLastProcessedTarget();
+    DnDTarget processedTarget = getLastProcessedTarget();
     boolean sameTarget = processedTarget != null && processedTarget.equals(target);
     if (sameTarget) {
       if (currentEvent.isDropPossible()) {
@@ -334,7 +334,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     LOG.debug("update target:" + target);
 
     currentEvent.clearDelegatedTarget();
-    final boolean canGoToParent = target.update(currentEvent);
+    boolean canGoToParent = target.update(currentEvent);
 
 
     String message;
@@ -365,7 +365,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
         return null;
       }
 
-      final DnDTarget target = getTarget(eachParent);
+      DnDTarget target = getTarget(eachParent);
       if (target != NULL_TARGET) {
         return eachParent;
       }
@@ -388,22 +388,22 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     return NULL_TARGET;
   }
 
-  void showHighlighter(final Component aComponent, final int aType, final DnDEvent aEvent) {
-    final Rectangle bounds = aComponent.getBounds();
-    final Container parent = aComponent.getParent();
+  void showHighlighter(Component aComponent, int aType, DnDEvent aEvent) {
+    Rectangle bounds = aComponent.getBounds();
+    Container parent = aComponent.getParent();
 
     showHighlighter(parent, aEvent, bounds, aType);
   }
 
-  void showHighlighter(final RelativeRectangle rectangle, final int aType, final DnDEvent aEvent) {
-    final JLayeredPane layeredPane = getLayeredPane(rectangle.getPoint().getComponent());
-    final Rectangle bounds = rectangle.getRectangleOn(layeredPane);
+  void showHighlighter(RelativeRectangle rectangle, int aType, DnDEvent aEvent) {
+    JLayeredPane layeredPane = getLayeredPane(rectangle.getPoint().getComponent());
+    Rectangle bounds = rectangle.getRectangleOn(layeredPane);
 
     showHighlighter(layeredPane, aEvent, bounds, aType);
   }
 
-  void showHighlighter(JLayeredPane layeredPane, final RelativeRectangle rectangle, final int aType, final DnDEvent event) {
-    final Rectangle bounds = rectangle.getRectangleOn(layeredPane);
+  void showHighlighter(JLayeredPane layeredPane, RelativeRectangle rectangle, int aType, DnDEvent event) {
+    Rectangle bounds = rectangle.getRectangleOn(layeredPane);
     showHighlighter(layeredPane, event, bounds, aType);
   }
 
@@ -411,8 +411,8 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     return event.equals(getLastHighlightedEvent());
   }
 
-  private void showHighlighter(final Component parent, final DnDEvent aEvent, final Rectangle bounds, final int aType) {
-    final JLayeredPane layeredPane = getLayeredPane(parent);
+  private void showHighlighter(Component parent, DnDEvent aEvent, Rectangle bounds, int aType) {
+    JLayeredPane layeredPane = getLayeredPane(parent);
     if (layeredPane == null) {
       return;
     }
@@ -423,7 +423,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       }
     }
 
-    final Rectangle rectangle = SwingUtilities.convertRectangle(parent, bounds, layeredPane);
+    Rectangle rectangle = SwingUtilities.convertRectangle(parent, bounds, layeredPane);
     setLastHighlightedEvent((DnDEvent)((DnDEventImpl)aEvent).clone(), rectangle);
 
     Highlighters.hide();
@@ -438,7 +438,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     }
   }
 
-  private void queueTooltip(final DnDEvent aEvent, final JLayeredPane aLayeredPane, final Rectangle aRectangle) {
+  private void queueTooltip(DnDEvent aEvent, JLayeredPane aLayeredPane, Rectangle aRectangle) {
     myHighlighterShowRequest = () -> {
       if (myCurrentEvent != aEvent) return;
       Highlighters.hide(DnDEvent.DropTargetHighlightingType.TEXT | DnDEvent.DropTargetHighlightingType.ERROR_TEXT);
@@ -452,7 +452,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     myTooltipTimer.restart();
   }
 
-  private static boolean isMessageProvided(final DnDEvent aEvent) {
+  private static boolean isMessageProvided(DnDEvent aEvent) {
     return aEvent.getExpectedDropResult() != null && aEvent.getExpectedDropResult().trim().length() > 0;
   }
 
@@ -489,7 +489,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       return ((JDialog)aComponent).getRootPane().getLayeredPane();
     }
 
-    final Window window = SwingUtilities.getWindowAncestor(aComponent);
+    Window window = SwingUtilities.getWindowAncestor(aComponent);
 
     if (window instanceof JFrame) {
       return ((JFrame)window).getRootPane().getLayeredPane();
@@ -556,7 +556,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
       try {
-        final DnDSource source = getSource(dge.getComponent());
+        DnDSource source = getSource(dge.getComponent());
         if (source == null || !MouseDragHelper.checkModifiers(dge.getTriggerEvent())) return;
 
         DnDAction action = getDnDActionForPlatformAction(dge.getDragAction());
@@ -625,7 +625,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   private class MyDragSourceListener implements DragSourceListener {
     private final DnDSource mySource;
 
-    public MyDragSourceListener(final DnDSource source) {
+    public MyDragSourceListener(DnDSource source) {
       mySource = source;
     }
 
@@ -649,7 +649,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     @Override
     public void dragDropEnd(DragSourceDropEvent dsde) {
       mySource.dragDropEnd();
-      final DnDTarget target = getLastProcessedTarget();
+      DnDTarget target = getLastProcessedTarget();
       if (target != null) {
         target.cleanUpOnLeave();
       }
@@ -666,9 +666,9 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
   private class MyDropTargetListener extends DropTargetAdapter {
     @Override
-    public void drop(final DropTargetDropEvent dtde) {
+    public void drop(DropTargetDropEvent dtde) {
       try {
-        final Component component = dtde.getDropTargetContext().getComponent();
+        Component component = dtde.getDropTargetContext().getComponent();
 
         DnDEventImpl event = updateCurrentEvent(component, dtde.getLocation(), dtde.getDropAction(), dtde.getCurrentDataFlavors(), dtde.getTransferable());
 
@@ -712,7 +712,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
     @Override
     public void dragOver(DropTargetDragEvent dtde) {
-      final DnDEventImpl event = updateCurrentEvent(dtde.getDropTargetContext().getComponent(), dtde.getLocation(), dtde.getDropAction(), dtde.getCurrentDataFlavors(), dtde.getTransferable());
+      DnDEventImpl event = updateCurrentEvent(dtde.getDropTargetContext().getComponent(), dtde.getLocation(), dtde.getDropAction(), dtde.getCurrentDataFlavors(), dtde.getTransferable());
       if (myCurrentEvent == null) {
         if (event != null && event.isDropPossible()) {
           dtde.acceptDrag(event.getAction().getActionId());
@@ -730,7 +730,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       cleanTargetComponent(dte.getDropTargetContext().getComponent());
     }
 
-    private void cleanTargetComponent(final Component c) {
+    private void cleanTargetComponent(Component c) {
       DnDTarget target = getTarget(c);
       if (target instanceof DnDNativeTarget && c instanceof JComponent) {
         ((JComponent)c).putClientProperty(DnDNativeTarget.EVENT_KEY, null);
@@ -748,7 +748,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       myCurrentDragContext.setCursor(null);
     }
 
-    final DnDTarget target = getLastProcessedTarget();
+    DnDTarget target = getLastProcessedTarget();
     if (target != null) {
       target.cleanUpOnLeave();
     }

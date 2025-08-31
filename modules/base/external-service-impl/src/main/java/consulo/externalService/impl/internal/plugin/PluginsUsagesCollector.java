@@ -34,8 +34,8 @@ public class PluginsUsagesCollector extends UsagesCollector {
   @Override
   @Nonnull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    final List<PluginDescriptor> plugins = PluginManager.getPlugins();
-    final List<PluginDescriptor> enabledPlugins = ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()));
+    List<PluginDescriptor> plugins = PluginManager.getPlugins();
+    List<PluginDescriptor> enabledPlugins = ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()));
 
     return ContainerUtil.map2Set(enabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
   }

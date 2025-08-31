@@ -100,7 +100,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         // So, we tweak vertical offset if necessary.
         int maxY = Math.max(myEditor.getLineHeight(), myEditor.getDocument().getLineCount() * myEditor.getLineHeight());
         int minPreferredY = maxY - getVisibleArea().height * 2 / 3;
-        final int currentOffset = getVerticalScrollOffset();
+        int currentOffset = getVerticalScrollOffset();
         int offsetToUse = Math.min(minPreferredY, currentOffset);
         if (offsetToUse != currentOffset) {
             scroll(getHorizontalScrollOffset(), offsetToUse);
@@ -524,8 +524,8 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
                     double time = ((double) (frame + 1)) / (double) totalFrames;
                     double fraction = timeToFraction(time);
 
-                    final int hOffset = (int) (myStartHOffset + (myEndHOffset - myStartHOffset) * fraction + 0.5);
-                    final int vOffset = (int) (myStartVOffset + (myEndVOffset - myStartVOffset) * fraction + 0.5);
+                    int hOffset = (int) (myStartHOffset + (myEndHOffset - myStartHOffset) * fraction + 0.5);
+                    int vOffset = (int) (myStartVOffset + (myEndVOffset - myStartVOffset) * fraction + 0.5);
 
                     _scrollHorizontally(hOffset);
                     _scrollVertically(vOffset);

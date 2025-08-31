@@ -76,12 +76,12 @@ public class GotItMessage {
   }
 
   public void show(RelativePoint point, Balloon.Position position) {
-    final GotItPanel panel = new GotItPanel();
+    GotItPanel panel = new GotItPanel();
     panel.myTitle.setText(myTitle);
     panel.myMessage.setText(myMessage);
 
     panel.myButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    final BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(panel.myRoot);
+    BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(panel.myRoot);
     if (myDisposable != null) {
       builder.setDisposable(myDisposable);
     }

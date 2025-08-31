@@ -62,8 +62,8 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
-        final Library library = dataContext.getData(Library.KEY);
+    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
+        Library library = dataContext.getData(Library.KEY);
         LOG.assertTrue(library != null);
         Messages.showInputDialog(
             project,
@@ -100,11 +100,11 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
         @RequiredUIAccess
         public boolean canClose(final String inputString) {
             final String oldName = myLibrary.getName();
-            final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
+            Library.ModifiableModel modifiableModel = renameLibrary(inputString);
             if (modifiableModel == null) {
                 return false;
             }
-            final SimpleReference<Boolean> success = SimpleReference.create(Boolean.TRUE);
+            SimpleReference<Boolean> success = SimpleReference.create(Boolean.TRUE);
             CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .name(IdeLocalize.commandRenamingModule(oldName))
@@ -112,7 +112,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
                     UndoableAction action = new BasicUndoableAction() {
                         @Override
                         public void undo() throws UnexpectedUndoException {
-                            final Library.ModifiableModel modifiableModel1 = renameLibrary(oldName);
+                            Library.ModifiableModel modifiableModel1 = renameLibrary(oldName);
                             if (modifiableModel1 != null) {
                                 modifiableModel1.commit();
                             }
@@ -120,7 +120,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
 
                         @Override
                         public void redo() throws UnexpectedUndoException {
-                            final Library.ModifiableModel modifiableModel1 = renameLibrary(inputString);
+                            Library.ModifiableModel modifiableModel1 = renameLibrary(inputString);
                             if (modifiableModel1 != null) {
                                 modifiableModel1.commit();
                             }
@@ -134,7 +134,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
 
         @Nullable
         private Library.ModifiableModel renameLibrary(String inputString) {
-            final Library.ModifiableModel modifiableModel = myLibrary.getModifiableModel();
+            Library.ModifiableModel modifiableModel = myLibrary.getModifiableModel();
             modifiableModel.setName(inputString);
             return modifiableModel;
         }

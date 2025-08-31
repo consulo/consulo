@@ -80,7 +80,7 @@ public class DefaultKeymap {
     }
 
 
-    private void loadKeymapsFromElement(final Element element) throws InvalidDataException {
+    private void loadKeymapsFromElement(Element element) throws InvalidDataException {
         if (!element.getName().equals(KEY_MAP)) {
             throw new IllegalArgumentException("Expecting tag: " + KEY_MAP);
         }

@@ -56,7 +56,7 @@ public interface IdeFocusManager extends FocusRequestor {
      * @return suitable component to focus
      */
     @Nullable
-    public abstract JComponent getFocusTargetFor(@Nonnull final JComponent comp);
+    public abstract JComponent getFocusTargetFor(@Nonnull JComponent comp);
 
 
     /**
@@ -87,7 +87,7 @@ public interface IdeFocusManager extends FocusRequestor {
      * Finds focused component among descendants of the given component. Descendants may be in child popups and windows
      */
     @Nullable
-    public abstract Component getFocusedDescendantFor(final Component comp);
+    public abstract Component getFocusedDescendantFor(Component comp);
 
     /**
      * Requests default focus. The method should not be called by the user code.
@@ -137,7 +137,7 @@ public interface IdeFocusManager extends FocusRequestor {
 
     @Nonnull
     public static IdeFocusManager findInstanceByComponent(@Nonnull Component c) {
-        final IdeFocusManager instance = findByComponent(c);
+        IdeFocusManager instance = findByComponent(c);
         return instance != null ? instance : findInstanceByContext(null);
     }
 
@@ -148,7 +148,7 @@ public interface IdeFocusManager extends FocusRequestor {
 
     @Nonnull
     public static IdeFocusManager findInstance() {
-        final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         return owner != null ? findInstanceByComponent(owner) : findInstanceByContext(null);
     }
 

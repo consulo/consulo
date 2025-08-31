@@ -142,7 +142,7 @@ public class TextAttributesEffectsBuilder {
      * @apiNote this method is not a thread safe, builder can't be modified in some other thread when applying to something
      */
     @Nonnull
-    public TextAttributes applyTo(@Nonnull final TextAttributes targetAttributes) {
+    public TextAttributes applyTo(@Nonnull TextAttributes targetAttributes) {
         Iterator<EffectDescriptor> effectsIterator = myEffectsMap.values().iterator();
         if (!effectsIterator.hasNext()) {
             targetAttributes.setEffectColor(null);

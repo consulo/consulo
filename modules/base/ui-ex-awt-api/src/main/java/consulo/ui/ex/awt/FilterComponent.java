@@ -46,7 +46,7 @@ public abstract class FilterComponent extends JPanel {
     myFilter = new SearchTextFieldWithStoredHistory(propertyName) {
       @Override
       protected Consumer<String> createItemChosenCallback() {
-        final Consumer<String> callback = super.createItemChosenCallback();
+        Consumer<String> callback = super.createItemChosenCallback();
         return (value) -> {
           callback.accept(value);
           filter();
@@ -66,7 +66,7 @@ public abstract class FilterComponent extends JPanel {
     };
     myFilter.getTextEditor().addKeyListener(new KeyAdapter() {
       //to consume enter in combo box - do not process this event by default button from DialogWrapper
-      public void keyPressed(final KeyEvent e) {
+      public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
           e.consume();
           myFilter.addCurrentTextToHistory();
@@ -129,11 +129,11 @@ public abstract class FilterComponent extends JPanel {
     return myFilter.getText();
   }
 
-  public void setSelectedItem(final String filter) {
+  public void setSelectedItem(String filter) {
     myFilter.setSelectedItem(filter);
   }
 
-  public void setFilter(final String filter){
+  public void setFilter(String filter){
     myFilter.setText(filter);
   }
 

@@ -76,7 +76,7 @@ public class LinePainter2D {
   /**
    * @see #paint(Graphics2D, double, double, double, double, StrokeType, double, Object)
    */
-  public static void paint(@Nonnull final Graphics2D g, @Nonnull Line2D line, @Nonnull StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
+  public static void paint(@Nonnull Graphics2D g, @Nonnull Line2D line, @Nonnull StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
     paint(g, line.getX1(), line.getY1(), line.getX2(), line.getY2(), strokeType, strokeWidth, valueAA);
   }
 
@@ -93,7 +93,7 @@ public class LinePainter2D {
    * @param valueAA     overrides current {@link RenderingHints#KEY_ANTIALIASING} to {@code valueAA}
    */
   @SuppressWarnings("Duplicates")
-  public static void paint(@Nonnull final Graphics2D g, double x1, double y1, double x2, double y2, @Nonnull StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
+  public static void paint(@Nonnull Graphics2D g, double x1, double y1, double x2, double y2, @Nonnull StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
     boolean horizontal = y1 == y2;
     boolean vertical = x1 == x2;
     boolean dot = horizontal && vertical;
@@ -183,7 +183,7 @@ public class LinePainter2D {
         swy_1 = sw_1 * cos;
         swy_2 = sw_2 * cos;
       }
-      final Path2D path = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+      Path2D path = new Path2D.Double(Path2D.WIND_EVEN_ODD);
       path.moveTo(x1 - swx_1 - capx_1, y1 - swy_1 - capy_1);
       path.lineTo(x2 - swx_1 + capx_2, y2 - swy_1 + capy_2);
       path.lineTo(x2 + swx_2 + capx_2, y2 + swy_2 + capy_2);
@@ -193,7 +193,7 @@ public class LinePainter2D {
       PaintUtil.paintWithAA(g, valueAA, () -> g.fill(path));
     }
     else {
-      final Line2D line = new Line2D.Double(x1, y1, x2, y2);
+      Line2D line = new Line2D.Double(x1, y1, x2, y2);
       PaintUtil.paintWithAA(g, valueAA, () -> g.draw(line));
     }
   }
@@ -209,9 +209,9 @@ public class LinePainter2D {
    * @param strokeWidth the stroke width
    * @param valueAA     overrides current {@link RenderingHints#KEY_ANTIALIASING} to {@code valueAA}
    */
-  public static void fillPolygon(@Nonnull final Graphics2D g, double[] xPoints, double[] yPoints, int nPoints, StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
+  public static void fillPolygon(@Nonnull Graphics2D g, double[] xPoints, double[] yPoints, int nPoints, StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
     // [tav] todo: mind strokeWidth and strokeType
-    final Path2D path = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+    Path2D path = new Path2D.Double(Path2D.WIND_EVEN_ODD);
     path.moveTo(xPoints[0], yPoints[0]);
     for (int p = 1; p < nPoints; p++) {
       path.lineTo(xPoints[p], yPoints[p]);

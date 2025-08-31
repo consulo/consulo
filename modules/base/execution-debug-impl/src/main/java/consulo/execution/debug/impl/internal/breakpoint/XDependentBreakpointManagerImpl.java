@@ -36,12 +36,12 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
     private final XBreakpointManagerImpl myBreakpointManager;
     private final EventDispatcher<XDependentBreakpointListener> myDispatcher;
 
-    public XDependentBreakpointManagerImpl(final XBreakpointManagerImpl breakpointManager) {
+    public XDependentBreakpointManagerImpl(XBreakpointManagerImpl breakpointManager) {
         myBreakpointManager = breakpointManager;
         myDispatcher = EventDispatcher.create(XDependentBreakpointListener.class);
         myBreakpointManager.addBreakpointListener(new XBreakpointListener<>() {
             @Override
-            public void breakpointRemoved(@Nonnull final XBreakpoint<?> breakpoint) {
+            public void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
                 XDependentBreakpointInfo info = mySlave2Info.remove(breakpoint);
                 if (info != null) {
                     myMaster2Info.remove(info.myMasterBreakpoint, info);
@@ -60,11 +60,11 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         });
     }
 
-    public void addListener(final XDependentBreakpointListener listener) {
+    public void addListener(XDependentBreakpointListener listener) {
         myDispatcher.addListener(listener);
     }
 
-    public void removeListener(final XDependentBreakpointListener listener) {
+    public void removeListener(XDependentBreakpointListener listener) {
         myDispatcher.removeListener(listener);
     }
 
@@ -142,7 +142,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         }
     }
 
-    private void addDependency(final XBreakpointBase<?, ?, ?> master, final XBreakpointBase<?, ?, ?> slave, final boolean leaveEnabled) {
+    private void addDependency(XBreakpointBase<?, ?, ?> master, XBreakpointBase<?, ?, ?> slave, boolean leaveEnabled) {
         XDependentBreakpointInfo info = new XDependentBreakpointInfo(master, slave, leaveEnabled);
         mySlave2Info.put(slave, info);
         myMaster2Info.put(master, info);
@@ -160,7 +160,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         return info != null && info.myLeaveEnabled;
     }
 
-    public List<XBreakpoint<?>> getSlaveBreakpoints(final XBreakpoint<?> breakpoint) {
+    public List<XBreakpoint<?>> getSlaveBreakpoints(XBreakpoint<?> breakpoint) {
         Collection<XDependentBreakpointInfo> slaveInfos = myMaster2Info.get((XBreakpointBase) breakpoint);
         if (slaveInfos == null) {
             return Collections.emptyList();
@@ -172,7 +172,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         return breakpoints;
     }
 
-    public boolean isMasterOrSlave(final XBreakpoint<?> breakpoint) {
+    public boolean isMasterOrSlave(XBreakpoint<?> breakpoint) {
         return myMaster2Info.containsKey((XBreakpointBase) breakpoint) || mySlave2Info.containsKey(breakpoint);
     }
 
@@ -185,7 +185,7 @@ public class XDependentBreakpointManagerImpl implements XDependentBreakpointMana
         private final XBreakpointBase mySlaveBreakpoint;
         private boolean myLeaveEnabled;
 
-        private XDependentBreakpointInfo(final @Nonnull XBreakpointBase masterBreakpoint, final XBreakpointBase slaveBreakpoint, final boolean leaveEnabled) {
+        private XDependentBreakpointInfo(@Nonnull XBreakpointBase masterBreakpoint, XBreakpointBase slaveBreakpoint, boolean leaveEnabled) {
             myMasterBreakpoint = masterBreakpoint;
             myLeaveEnabled = leaveEnabled;
             mySlaveBreakpoint = slaveBreakpoint;

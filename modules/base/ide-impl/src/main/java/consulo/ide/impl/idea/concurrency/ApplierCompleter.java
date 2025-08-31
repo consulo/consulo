@@ -100,7 +100,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
     }
   }
 
-  private void wrapInReadActionAndIndicator(@Nonnull final Runnable process) {
+  private void wrapInReadActionAndIndicator(@Nonnull Runnable process) {
     Runnable toRun = runInReadAction ? () -> {
       if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(process)) {
         failedSubTasks.add(this);
@@ -239,9 +239,9 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   }
 
   boolean completeTaskWhichFailToAcquireReadAction() {
-    final boolean[] result = {true};
+    boolean[] result = {true};
     // these tasks could not be executed in the other thread; do them here
-    for (final ApplierCompleter<T> task : failedSubTasks) {
+    for (ApplierCompleter<T> task : failedSubTasks) {
       ProgressManager.checkCanceled();
       ApplicationManager.getApplication().runReadAction(() -> task.wrapInReadActionAndIndicator(() -> {
         for (int i = task.lo; i < task.hi; ++i) {

@@ -174,17 +174,17 @@ public class EditorUtil {
     public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor,
                                                                               @Nonnull VisualPosition start,
                                                                               @Nonnull VisualPosition end) {
-        final Document document = editor.getDocument();
-        final FoldingModel foldingModel = editor.getFoldingModel();
+        Document document = editor.getDocument();
+        FoldingModel foldingModel = editor.getFoldingModel();
 
         LogicalPosition first = editor.visualToLogicalPosition(new VisualPosition(start.line, 0));
         for (int line = first.line, offset = document.getLineStartOffset(line); offset >= 0; offset = document.getLineStartOffset(line)) {
-            final FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
+            FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
             if (foldRegion == null) {
                 first = new LogicalPosition(line, 0);
                 break;
             }
-            final int foldEndLine = document.getLineNumber(foldRegion.getStartOffset());
+            int foldEndLine = document.getLineNumber(foldRegion.getStartOffset());
             if (foldEndLine <= line) {
                 first = new LogicalPosition(line, 0);
                 break;
@@ -196,12 +196,12 @@ public class EditorUtil {
         LogicalPosition second = editor.visualToLogicalPosition(new VisualPosition(end.line, 0));
         for (int line = second.line, offset = document.getLineEndOffset(line); offset <= document.getTextLength();
              offset = document.getLineEndOffset(line)) {
-            final FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
+            FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
             if (foldRegion == null) {
                 second = new LogicalPosition(line + 1, 0);
                 break;
             }
-            final int foldEndLine = document.getLineNumber(foldRegion.getEndOffset());
+            int foldEndLine = document.getLineNumber(foldRegion.getEndOffset());
             if (foldEndLine <= line) {
                 second = new LogicalPosition(line + 1, 0);
                 break;
@@ -308,16 +308,16 @@ public class EditorUtil {
 
     public static int calcColumnNumber(@Nonnull Editor editor,
                                        @Nonnull CharSequence text,
-                                       final int start,
-                                       final int offset) {
+                                       int start,
+                                       int offset) {
         return calcColumnNumber(editor, text, start, offset, getTabSize(editor));
     }
 
     public static int calcColumnNumber(@Nullable Editor editor,
                                        @Nonnull CharSequence text,
-                                       final int start,
-                                       final int offset,
-                                       final int tabSize) {
+                                       int start,
+                                       int offset,
+                                       int tabSize) {
         if (editor instanceof TextComponentEditor) {
             return offset - start;
         }

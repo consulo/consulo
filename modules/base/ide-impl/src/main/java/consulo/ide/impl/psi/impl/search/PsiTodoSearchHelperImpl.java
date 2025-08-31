@@ -57,7 +57,7 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   @Override
   @Nonnull
   public TodoItem[] findTodoItems(@Nonnull PsiFile file, int startOffset, int endOffset) {
-    final Collection<IndexPatternOccurrence> occurrences = IndexPatternSearch.search(file, TodoIndexPatternProvider.getInstance()).findAll();
+    Collection<IndexPatternOccurrence> occurrences = IndexPatternSearch.search(file, TodoIndexPatternProvider.getInstance()).findAll();
     if (occurrences.isEmpty()) {
       return EMPTY_TODO_ITEMS;
     }
@@ -69,7 +69,7 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   private static TodoItem[] processTodoOccurences(int startOffset, int endOffset, Collection<IndexPatternOccurrence> occurrences) {
     List<TodoItem> items = new ArrayList<>(occurrences.size());
     TextRange textRange = new TextRange(startOffset, endOffset);
-    final TodoItemsCreator todoItemsCreator = new TodoItemsCreator();
+    TodoItemsCreator todoItemsCreator = new TodoItemsCreator();
     for(IndexPatternOccurrence occurrence: occurrences) {
       TextRange occurrenceRange = occurrence.getTextRange();
       if (textRange.contains(occurrenceRange)) {
@@ -89,7 +89,7 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   @Nonnull
   @Override
   public TodoItem[] findTodoItemsLight(@Nonnull PsiFile file, int startOffset, int endOffset) {
-    final Collection<IndexPatternOccurrence> occurrences =
+    Collection<IndexPatternOccurrence> occurrences =
             LightIndexPatternSearch.SEARCH.createQuery(new IndexPatternSearch.SearchParameters(file, TodoIndexPatternProvider.getInstance())).findAll();
 
     if (occurrences.isEmpty()) {

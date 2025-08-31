@@ -183,11 +183,11 @@ public class CompactRecordsTable extends AbstractRecordsTable {
 
   @Override
   public void deleteRecord(int record) throws IOException {
-    final int sizeAndCapacityOfRecordAbsoluteOffset = getOffset(record, SIZE_AND_CAPACITY_OFFSET);
-    final int sizeAndCapacityValue = myStorage.getInt(sizeAndCapacityOfRecordAbsoluteOffset);
+    int sizeAndCapacityOfRecordAbsoluteOffset = getOffset(record, SIZE_AND_CAPACITY_OFFSET);
+    int sizeAndCapacityValue = myStorage.getInt(sizeAndCapacityOfRecordAbsoluteOffset);
 
-    final int addressOfRecordAbsoluteOffset = getOffset(record, ADDRESS_OFFSET);
-    final int existingAddressValue = myStorage.getInt(addressOfRecordAbsoluteOffset);
+    int addressOfRecordAbsoluteOffset = getOffset(record, ADDRESS_OFFSET);
+    int existingAddressValue = myStorage.getInt(addressOfRecordAbsoluteOffset);
 
     super.deleteRecord(record);
 
@@ -239,16 +239,16 @@ public class CompactRecordsTable extends AbstractRecordsTable {
 
   @Nonnull
   private BitSet buildIdSetOfExtraRecords() throws IOException {
-    final BitSet extraRecords = new BitSet();
+    BitSet extraRecords = new BitSet();
 
-    final RecordIdIterator iterator = super.createRecordIdIterator();
+    RecordIdIterator iterator = super.createRecordIdIterator();
     while(iterator.hasNextId()) {
       int recordId = iterator.nextId();
-      final int sizeAndCapacityOfRecordAbsoluteOffset = getOffset(recordId, SIZE_AND_CAPACITY_OFFSET);
-      final int sizeAndCapacityValue = myStorage.getInt(sizeAndCapacityOfRecordAbsoluteOffset);
+      int sizeAndCapacityOfRecordAbsoluteOffset = getOffset(recordId, SIZE_AND_CAPACITY_OFFSET);
+      int sizeAndCapacityValue = myStorage.getInt(sizeAndCapacityOfRecordAbsoluteOffset);
 
-      final int addressOfRecordAbsoluteOffset = getOffset(recordId, ADDRESS_OFFSET);
-      final int existingAddressValue = myStorage.getInt(addressOfRecordAbsoluteOffset);
+      int addressOfRecordAbsoluteOffset = getOffset(recordId, ADDRESS_OFFSET);
+      int existingAddressValue = myStorage.getInt(addressOfRecordAbsoluteOffset);
 
       if (sizeAndCapacityValue < 0) {
         extraRecords.set(-sizeAndCapacityValue);

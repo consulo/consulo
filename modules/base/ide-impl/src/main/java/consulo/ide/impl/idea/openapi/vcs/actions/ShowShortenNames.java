@@ -31,9 +31,9 @@ import java.util.ArrayList;
 public class ShowShortenNames extends ActionGroup {
   private final AnAction[] myChildren;
 
-  public ShowShortenNames(final EditorGutterComponentEx gutter) {
+  public ShowShortenNames(EditorGutterComponentEx gutter) {
     super("Names", true);
-    final ArrayList<AnAction> kids = new ArrayList<>(ShortNameType.values().length);
+    ArrayList<AnAction> kids = new ArrayList<>(ShortNameType.values().length);
     for (ShortNameType type : ShortNameType.values()) {
       kids.add(new SetShortNameTypeAction(type, gutter));
     }

@@ -52,7 +52,7 @@ public class LightFileDocumentManager implements FileDocumentManager {
   private static final Key<Document> MOCK_DOC_KEY = Key.create("MOCK_DOC_KEY");
 
   private static boolean isBinaryWithoutDecompiler(VirtualFile file) {
-    final FileType ft = file.getFileType();
+    FileType ft = file.getFileType();
     return ft.isBinary() && BinaryFileDecompiler.forFileType(ft) == null;
   }
 
@@ -121,7 +121,7 @@ public class LightFileDocumentManager implements FileDocumentManager {
   }
 
   @Override
-  public void reloadFiles(@Nonnull final VirtualFile... files) {
+  public void reloadFiles(@Nonnull VirtualFile... files) {
   }
 
   @Override

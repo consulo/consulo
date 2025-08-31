@@ -35,19 +35,19 @@ public class TreeBackedLighterAST extends LighterAST {
   }
 
   @Override
-  public LighterASTNode getParent(@Nonnull final LighterASTNode node) {
+  public LighterASTNode getParent(@Nonnull LighterASTNode node) {
     ASTNode parent = ((NodeWrapper)node).myNode.getTreeParent();
     return parent == null ? null : wrap(parent);
   }
 
   @Nonnull
   @Override
-  public List<LighterASTNode> getChildren(@Nonnull final LighterASTNode parent) {
-    final ASTNode[] children = ((NodeWrapper)parent).myNode.getChildren(null);
+  public List<LighterASTNode> getChildren(@Nonnull LighterASTNode parent) {
+    ASTNode[] children = ((NodeWrapper)parent).myNode.getChildren(null);
     if (children.length == 0) return List.of();
 
     List<LighterASTNode> result = new ArrayList<>(children.length);
-    for (final ASTNode child : children) {
+    for (ASTNode child : children) {
       result.add(wrap(child));
     }
     return result;
@@ -92,10 +92,10 @@ public class TreeBackedLighterAST extends LighterAST {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof NodeWrapper)) return false;
-      final NodeWrapper that = (NodeWrapper)o;
+      NodeWrapper that = (NodeWrapper)o;
       if (myNode != null ? !myNode.equals(that.myNode) : that.myNode != null) return false;
       return true;
     }
@@ -112,7 +112,7 @@ public class TreeBackedLighterAST extends LighterAST {
   }
 
   private static class TokenNodeWrapper extends NodeWrapper implements LighterASTTokenNode {
-    public TokenNodeWrapper(final ASTNode node) {
+    public TokenNodeWrapper(ASTNode node) {
       super(node);
     }
 

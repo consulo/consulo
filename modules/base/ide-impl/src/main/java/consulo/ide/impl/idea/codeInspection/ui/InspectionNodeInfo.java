@@ -91,13 +91,13 @@ public class InspectionNodeInfo extends JPanel {
   //}
 
   public static String stripUIRefsFromInspectionDescription(@Nonnull String description) {
-    final int descriptionEnd = description.indexOf("<!-- tooltip end -->");
+    int descriptionEnd = description.indexOf("<!-- tooltip end -->");
     if (descriptionEnd < 0) {
-      final Pattern pattern = Pattern.compile(".*Use.*(the (panel|checkbox|checkboxes|field|button|controls).*below).*", Pattern.DOTALL);
-      final Matcher matcher = pattern.matcher(description);
+      Pattern pattern = Pattern.compile(".*Use.*(the (panel|checkbox|checkboxes|field|button|controls).*below).*", Pattern.DOTALL);
+      Matcher matcher = pattern.matcher(description);
       int startFindIdx = 0;
       while (matcher.find(startFindIdx)) {
-        final int end = matcher.end(1);
+        int end = matcher.end(1);
         startFindIdx = end;
         description = description.substring(0, matcher.start(1)) + " inspection settings " + description.substring(end);
       }

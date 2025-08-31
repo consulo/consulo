@@ -44,14 +44,14 @@ public class RefactoringUIUtil {
                                                                  : RefactoringDescriptionLocation.WITHOUT_PARENT);
   }
 
-  public static void processIncorrectOperation(final Project project, IncorrectOperationException e) {
+  public static void processIncorrectOperation(Project project, IncorrectOperationException e) {
     @NonNls String message = e.getMessage();
-    final int index = message != null ? message.indexOf("java.io.IOException") : -1;
+    int index = message != null ? message.indexOf("java.io.IOException") : -1;
     if (index > 0) {
       message = message.substring(index + "java.io.IOException".length());
     }
 
-    final String s = message;
+    String s = message;
     Application.get()
       .invokeLater(() -> Messages.showMessageDialog(project, s, RefactoringLocalize.errorTitle().get(), UIUtil.getErrorIcon()));
   }

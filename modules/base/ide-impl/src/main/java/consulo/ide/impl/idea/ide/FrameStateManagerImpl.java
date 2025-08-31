@@ -101,7 +101,7 @@ public class FrameStateManagerImpl extends FrameStateManager {
   }
 
   @Override
-  public void addListener(@Nonnull final FrameStateListener listener, @Nonnull Disposable disposable) {
+  public void addListener(@Nonnull FrameStateListener listener, @Nonnull Disposable disposable) {
     myDispatcher.addListener(listener, disposable);
   }
 

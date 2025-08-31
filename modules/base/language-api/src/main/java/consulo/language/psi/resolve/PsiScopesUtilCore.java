@@ -33,10 +33,10 @@ public class PsiScopesUtilCore {
     return treeWalkUp(processor, entrance, maxScope, ResolveState.initial());
   }
 
-  public static boolean treeWalkUp(@Nonnull final PsiScopeProcessor processor,
-                                   @Nonnull final PsiElement entrance,
-                                   @Nullable final PsiElement maxScope,
-                                   @Nonnull final ResolveState state) {
+  public static boolean treeWalkUp(@Nonnull PsiScopeProcessor processor,
+                                   @Nonnull PsiElement entrance,
+                                   @Nullable PsiElement maxScope,
+                                   @Nonnull ResolveState state) {
     if (!entrance.isValid()) {
       LOGGER.error(new PsiInvalidElementAccessException(entrance));
     }

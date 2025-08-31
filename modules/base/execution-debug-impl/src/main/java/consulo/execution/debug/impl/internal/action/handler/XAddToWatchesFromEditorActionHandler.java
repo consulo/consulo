@@ -36,7 +36,7 @@ public class XAddToWatchesFromEditorActionHandler extends XDebuggerActionHandler
 
   @Nullable
   protected static String getTextToEvaluate(DataContext dataContext, XDebugSession session) {
-    final Editor editor = dataContext.getData(Editor.KEY);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) {
       return null;
     }
@@ -54,7 +54,7 @@ public class XAddToWatchesFromEditorActionHandler extends XDebuggerActionHandler
 
   @Override
   protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
-    final String text = getTextToEvaluate(dataContext, session);
+    String text = getTextToEvaluate(dataContext, session);
     if (text == null) return;
 
     ((XDebugSessionImpl)session).getSessionTab().getWatchesView().addWatchExpression(XExpression.fromText(text), -1, true);

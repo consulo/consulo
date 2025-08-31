@@ -37,7 +37,7 @@ import java.util.function.Predicate;
 public class EmptyMarkupModel implements MarkupModelEx {
     private final Document myDocument;
 
-    public EmptyMarkupModel(final Document document) {
+    public EmptyMarkupModel(Document document) {
         myDocument = document;
     }
 
@@ -129,7 +129,7 @@ public class EmptyMarkupModel implements MarkupModelEx {
     }
 
     @Override
-    public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
+    public void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes) {
 
     }
 

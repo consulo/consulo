@@ -28,7 +28,7 @@ public class ErrorReporter {
     private final static SimpleDateFormat myDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     private static String basePath;
 
-    public static synchronized void reportError(final String message) {
+    public static synchronized void reportError(String message) {
         PrintStream os = null;
         try {
             os = getErrorLogStream();
@@ -47,7 +47,7 @@ public class ErrorReporter {
         }
     }
 
-    public static synchronized void reportError(final String message, Throwable t) {
+    public static synchronized void reportError(String message, Throwable t) {
         PrintStream os = null;
         try {
             os = getErrorLogStream();
@@ -69,7 +69,7 @@ public class ErrorReporter {
         }
     }
 
-    public static synchronized void logError(final String message) {
+    public static synchronized void logError(String message) {
         PrintStream os = null;
         try {
             os = getErrorLogStream();
@@ -90,7 +90,7 @@ public class ErrorReporter {
         return new PrintStream(new FileOutputStream(basePath != null ? new File(basePath, ERROR_FILE) : new File(ERROR_FILE), true));
     }
 
-    private static StringBuffer prepareMessage(final String message) {
+    private static StringBuffer prepareMessage(String message) {
         StringBuffer buf = new StringBuffer();
         buf.append("[");
         buf.append(myDateFormat.format(new Date()));

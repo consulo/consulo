@@ -21,7 +21,7 @@ public class BackspaceHandler extends EditorActionHandler implements ExtensionEd
   private EditorActionHandler myOriginalHandler;
 
   @Override
-  public void doExecute(@Nonnull final Editor editor, Caret caret, final DataContext dataContext) {
+  public void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null) {
       myOriginalHandler.execute(editor, caret, dataContext);
@@ -37,13 +37,13 @@ public class BackspaceHandler extends EditorActionHandler implements ExtensionEd
     truncatePrefix(dataContext, lookup, myOriginalHandler, hideOffset, caret);
   }
 
-  static void truncatePrefix(final DataContext dataContext, LookupEx lookup, final EditorActionHandler handler, final int hideOffset, final Caret caret) {
-    final Editor editor = lookup.getEditor();
+  static void truncatePrefix(DataContext dataContext, LookupEx lookup, EditorActionHandler handler, int hideOffset, Caret caret) {
+    Editor editor = lookup.getEditor();
     if (!lookup.performGuardedChange(() -> handler.execute(editor, caret, dataContext))) {
       return;
     }
 
-    final CompletionProgressIndicator process = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
+    CompletionProgressIndicator process = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
     lookup.truncatePrefix(process == null || !process.isAutopopupCompletion(), hideOffset);
   }
 

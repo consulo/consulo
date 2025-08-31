@@ -62,7 +62,7 @@ public class MacGestureSupportForEditor {
 
             if (presentation.isEnabled()) {
               actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-              final Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+              Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
 
               if (context != null && !context.isShowing()) continue;
 
@@ -85,9 +85,9 @@ public class MacGestureSupportForEditor {
 
     // search in main keymap
     if (KeymapManagerImpl.ourKeymapManagerInitialized) {
-      final KeymapManager keymapManager = KeymapManager.getInstance();
-      final Keymap keymap = keymapManager.getActiveKeymap();
-      final String[] actionIds = keymap.getActionIds(mouseShortcut);
+      KeymapManager keymapManager = KeymapManager.getInstance();
+      Keymap keymap = keymapManager.getActiveKeymap();
+      String[] actionIds = keymap.getActionIds(mouseShortcut);
 
       ActionManager actionManager = ActionManager.getInstance();
       for (String actionId : actionIds) {

@@ -86,7 +86,7 @@ public class ToggleActionCommand extends AbstractCommand {
     fm.doWhenFocusSettlesDown(new Runnable() {
       @Override
       public void run() {
-        final Presentation presentation = (Presentation)action.getTemplatePresentation().clone();
+        Presentation presentation = (Presentation)action.getTemplatePresentation().clone();
         AnActionEvent event =
             new AnActionEvent(inputEvent, DataManager.getInstance()
                 .getDataContext(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()), ActionPlaces.UNKNOWN,

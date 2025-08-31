@@ -123,8 +123,8 @@ public class HideableDecorator {
     if (!myAdjustWindow) return;
     final Window window = SwingUtilities.getWindowAncestor(myPanel);
     if (window == null) return;
-    final Dimension size = window.getSize();
-    final Dimension contentSize = myPreviousContentSize != null && myPreviousContentSize.width > 0 && myPreviousContentSize.height > 0
+    Dimension size = window.getSize();
+    Dimension contentSize = myPreviousContentSize != null && myPreviousContentSize.width > 0 && myPreviousContentSize.height > 0
                                   ? myPreviousContentSize
                                   : myContent.getPreferredSize();
     final Dimension newSize;
@@ -151,7 +151,7 @@ public class HideableDecorator {
   }
 
   private void registerMnemonic() {
-    final int mnemonicIndex = UIUtil.getDisplayMnemonicIndex(getTitle());
+    int mnemonicIndex = UIUtil.getDisplayMnemonicIndex(getTitle());
     if (mnemonicIndex != -1) {
       myPanel.getActionMap().put("Collapse/Expand on mnemonic", new AbstractAction() {
         @Override
@@ -164,7 +164,7 @@ public class HideableDecorator {
           }
         }
       });
-      final Character mnemonicCharacter = UIUtil.removeMnemonic(getTitle()).toUpperCase().charAt(mnemonicIndex);
+      Character mnemonicCharacter = UIUtil.removeMnemonic(getTitle()).toUpperCase().charAt(mnemonicIndex);
       myPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
         .put(KeyStroke.getKeyStroke(mnemonicCharacter, InputEvent.ALT_MASK, false), "Collapse/Expand on mnemonic");
     }

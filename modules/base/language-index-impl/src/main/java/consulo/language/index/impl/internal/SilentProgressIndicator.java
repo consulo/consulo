@@ -35,7 +35,7 @@ class SilentProgressIndicator extends DelegatingProgressIndicator {
 
   @Nullable
   static SilentProgressIndicator create() {
-    final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     return indicator != null ? new SilentProgressIndicator(indicator) : null;
   }
 

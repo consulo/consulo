@@ -20,6 +20,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.function.Supplier;
@@ -29,15 +30,15 @@ import java.util.function.Supplier;
  */
 public class EmptyChangelistBuilder implements ChangelistBuilder {
   @Override
-  public void processChange(final Change change, VcsKey vcsKey) {
+  public void processChange(Change change, VcsKey vcsKey) {
   }
 
   @Override
-  public void processChangeInList(final Change change, @jakarta.annotation.Nullable final ChangeList changeList, VcsKey vcsKey) {
+  public void processChangeInList(Change change, @Nullable ChangeList changeList, VcsKey vcsKey) {
   }
 
   @Override
-  public void processChangeInList(final Change change, final String changeListName, VcsKey vcsKey) {
+  public void processChangeInList(Change change, String changeListName, VcsKey vcsKey) {
   }
 
   @Override
@@ -45,11 +46,11 @@ public class EmptyChangelistBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processUnversionedFile(final VirtualFile file) {
+  public void processUnversionedFile(VirtualFile file) {
   }
 
   @Override
-  public void processLocallyDeletedFile(final FilePath file) {
+  public void processLocallyDeletedFile(FilePath file) {
   }
 
   @Override
@@ -57,15 +58,15 @@ public class EmptyChangelistBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processModifiedWithoutCheckout(final VirtualFile file) {
+  public void processModifiedWithoutCheckout(VirtualFile file) {
   }
 
   @Override
-  public void processIgnoredFile(final VirtualFile file) {
+  public void processIgnoredFile(VirtualFile file) {
   }
 
   @Override
-  public void processLockedFolder(final VirtualFile file) {
+  public void processLockedFolder(VirtualFile file) {
   }
 
   @Override
@@ -73,7 +74,7 @@ public class EmptyChangelistBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processSwitchedFile(final VirtualFile file, final String branch, final boolean recursive) {
+  public void processSwitchedFile(VirtualFile file, String branch, boolean recursive) {
   }
 
   @Override
@@ -86,13 +87,10 @@ public class EmptyChangelistBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void reportAdditionalInfo(final String text) {
+  public void reportAdditionalInfo(String text) {
   }
 
   @Override
   public void reportAdditionalInfo(Supplier<JComponent> infoComponent) {
-  }
-
-  public void reportWarningMessage(final String message) {
   }
 }

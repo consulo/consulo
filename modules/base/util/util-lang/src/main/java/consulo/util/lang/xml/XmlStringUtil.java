@@ -49,11 +49,11 @@ public class XmlStringUtil {
     return escapeString(str, false);
   }
 
-  public static String escapeString(@Nullable String str, final boolean escapeWhiteSpace) {
+  public static String escapeString(@Nullable String str, boolean escapeWhiteSpace) {
     return escapeString(str, escapeWhiteSpace, true);
   }
 
-  public static String escapeString(@Nullable String str, final boolean escapeWhiteSpace, final boolean convertNoBreakSpace) {
+  public static String escapeString(@Nullable String str, boolean escapeWhiteSpace, boolean convertNoBreakSpace) {
     if (str == null) return null;
     StringBuilder buffer = null;
     for (int i = 0; i < str.length(); i++) {

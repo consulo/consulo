@@ -49,21 +49,21 @@ public class FocusWatcher implements ContainerListener, FocusListener {
     }
 
     @Override
-    public final void componentAdded(final ContainerEvent e) {
+    public final void componentAdded(ContainerEvent e) {
         installImpl(e.getChild());
     }
 
     @Override
-    public final void componentRemoved(final ContainerEvent e) {
+    public final void componentRemoved(ContainerEvent e) {
         Component removedChild = e.getChild();
         deinstall(removedChild, e);
     }
 
-    public final void deinstall(final Component component) {
+    public final void deinstall(Component component) {
         deinstall(component, null);
     }
 
-    public final void deinstall(final Component component, @Nullable AWTEvent cause) {
+    public final void deinstall(Component component, @Nullable AWTEvent cause) {
         if (component instanceof Container) {
             Container container = (Container) component;
             int componentCount = container.getComponentCount();
@@ -81,8 +81,8 @@ public class FocusWatcher implements ContainerListener, FocusListener {
     }
 
     @Override
-    public final void focusGained(final FocusEvent e) {
-        final Component component = e.getComponent();
+    public final void focusGained(FocusEvent e) {
+        Component component = e.getComponent();
         if (e.isTemporary() || !component.isShowing()) {
             return;
         }
@@ -91,7 +91,7 @@ public class FocusWatcher implements ContainerListener, FocusListener {
     }
 
     @Override
-    public final void focusLost(final FocusEvent e) {
+    public final void focusLost(FocusEvent e) {
         Component component = e.getOppositeComponent();
         if (component != null && !SwingUtilities.isDescendingFrom(component, myTopComponent)) {
             focusLostImpl(e);
@@ -142,12 +142,12 @@ public class FocusWatcher implements ContainerListener, FocusListener {
         _setFocused(component, cause);
     }
 
-    private void _setFocused(final Component component, final AWTEvent cause) {
+    private void _setFocused(Component component, AWTEvent cause) {
         setFocusedComponent(component);
         focusedComponentChanged(component, cause);
     }
 
-    protected boolean isFocusedComponentChangeValid(final Component comp, final AWTEvent cause) {
+    protected boolean isFocusedComponentChangeValid(Component comp, AWTEvent cause) {
         return comp != null || cause != null;
     }
 
@@ -159,13 +159,13 @@ public class FocusWatcher implements ContainerListener, FocusListener {
      * @param component currenly focused component. The component can be <code>null</code>
      * @param cause
      */
-    protected void focusedComponentChanged(Component component, @Nullable final AWTEvent cause) {
+    protected void focusedComponentChanged(Component component, @Nullable AWTEvent cause) {
     }
 
-    protected void focusLostImpl(final FocusEvent e) {
+    protected void focusLostImpl(FocusEvent e) {
     }
 
-    private void setFocusedComponent(final Component focusedComponent) {
+    private void setFocusedComponent(Component focusedComponent) {
         myFocusedComponent = new WeakReference<>(focusedComponent);
     }
 }

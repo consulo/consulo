@@ -122,7 +122,7 @@ public abstract class MessageDecoder extends Decoder {
    * freely granted, provided that this notice is preserved.
    */
   public static int parseInt(@Nonnull CharSequence value, int start, boolean isNegative, int radix) {
-    final int end = value.length();
+    int end = value.length();
     int result = 0; // Accumulates negatively (avoid MIN_VALUE overflow).
     int i = start;
     for (; i < end; i++) {

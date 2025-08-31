@@ -56,13 +56,13 @@ public class InstallPluginAction {
                                boolean alwaysShowDialog,
                                @Nullable Runnable onSuccess) {
 
-        final List<PluginDescriptor> list = new ArrayList<>();
+        List<PluginDescriptor> list = new ArrayList<>();
         PluginNode pluginNode = null;
         if (descr instanceof PluginNode) {
             pluginNode = (PluginNode) descr;
         }
         else if (descr.isLoaded()) {
-            final PluginId pluginId = descr.getPluginId();
+            PluginId pluginId = descr.getPluginId();
             pluginNode = new PluginNode(pluginId);
             pluginNode.setName(descr.getName());
             pluginNode.setExperimental(descr.isExperimental());
@@ -85,7 +85,7 @@ public class InstallPluginAction {
             list.add(pluginNode);
         }
 
-        final Consumer<Collection<PluginDescriptor>> afterCallback = pluginNodes -> {
+        Consumer<Collection<PluginDescriptor>> afterCallback = pluginNodes -> {
             if (pluginNodes.isEmpty()) {
                 return;
             }
@@ -138,8 +138,8 @@ public class InstallPluginAction {
     private static void installedPluginsToModel(@Nullable PluginsPanel pluginsPanel,
                                                 Collection<PluginDescriptor> list) {
         for (PluginDescriptor pluginNode : list) {
-            final PluginId id = pluginNode.getPluginId();
-            final InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
+            PluginId id = pluginNode.getPluginId();
+            InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
 
             pluginsState.getInstalledPlugins().add(id);
             pluginsState.getOutdatedPlugins().remove(id);

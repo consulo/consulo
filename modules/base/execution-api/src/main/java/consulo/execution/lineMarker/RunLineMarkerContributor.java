@@ -59,7 +59,7 @@ public abstract class RunLineMarkerContributor implements LanguageExtension {
       this.tooltipProvider = tooltipProvider;
     }
 
-    public Info(@Nonnull final AnAction action) {
+    public Info(@Nonnull AnAction action) {
       this(action.getTemplatePresentation().getIcon(), element -> getText(action, element), action);
     }
   }

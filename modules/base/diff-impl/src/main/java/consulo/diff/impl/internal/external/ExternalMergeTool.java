@@ -43,8 +43,8 @@ public class ExternalMergeTool {
     return ExternalDiffSettings.getInstance().isMergeEnabled();
   }
 
-  public static void show(@jakarta.annotation.Nullable final Project project,
-                          @Nonnull final MergeRequest request) {
+  public static void show(@jakarta.annotation.Nullable Project project,
+                          @Nonnull MergeRequest request) {
     try {
       if (canShow(request)) {
         showRequest(project, request);

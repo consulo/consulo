@@ -110,7 +110,7 @@ public abstract class ModuleEditor implements Disposable {
 
   @Nullable
   public Module getModule() {
-    final Module[] all = myModulesConfigurator.getModules();
+    Module[] all = myModulesConfigurator.getModules();
     for (Module each : all) {
       if (each == myModule) return myModule;
     }
@@ -121,7 +121,7 @@ public abstract class ModuleEditor implements Disposable {
   @RequiredReadAction
   public ModifiableRootModel getModifiableRootModel() {
     if (myModifiableRootModel == null) {
-      final Module module = getModule();
+      Module module = getModule();
       if (module != null) {
         myModifiableRootModel = ((ModuleRootManagerImpl)ModuleRootManager.getInstance(module)).getModifiableModel(new UIRootConfigurationAccessor(myModulesConfigurator, myLibrariesConfigurator));
       }
@@ -140,7 +140,7 @@ public abstract class ModuleEditor implements Disposable {
 
   public ModifiableRootModel getModifiableRootModelProxy() {
     if (myModifiableRootModelProxy == null) {
-      final ModifiableRootModel rootModel = getModifiableRootModel();
+      ModifiableRootModel rootModel = getModifiableRootModel();
       if (rootModel != null) {
         myModifiableRootModelProxy =
                 (ModifiableRootModel)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{ModifiableRootModel.class}, new ModifiableRootModelInvocationHandler(rootModel));
@@ -171,7 +171,7 @@ public abstract class ModuleEditor implements Disposable {
     myEditors.add(contentEntriesEditor);
     CompilerOutputsEditor compilerOutputEditor = new CompilerOutputsEditor(state);
     myEditors.add(compilerOutputEditor);
-    final ClasspathEditor classpathEditor = new ClasspathEditor(state);
+    ClasspathEditor classpathEditor = new ClasspathEditor(state);
     myEditors.add(classpathEditor);
     myEditors.add(new ExtensionEditor(state, compilerOutputEditor, classpathEditor, contentEntriesEditor));
   }
@@ -192,7 +192,7 @@ public abstract class ModuleEditor implements Disposable {
 
     myGenericSettingsPanel.add(northPanel, BorderLayout.NORTH);
 
-    final JComponent component = createCenterPanel(parentUIDisposable);
+    JComponent component = createCenterPanel(parentUIDisposable);
     myGenericSettingsPanel.add(component, BorderLayout.CENTER);
     return myGenericSettingsPanel;
   }
@@ -208,7 +208,7 @@ public abstract class ModuleEditor implements Disposable {
   public void fireModuleStateChanged() {
     if (getModule() != null) { //module with attached module libraries was deleted
       //getPanel(parentUIDisposable);  //init editor if needed
-      for (final ModuleConfigurationEditor myEditor : myEditors) {
+      for (ModuleConfigurationEditor myEditor : myEditors) {
         myEditor.moduleStateChanged();
       }
       myEventDispatcher.getMulticaster().moduleStateChanged(getModifiableRootModelProxy());
@@ -217,7 +217,7 @@ public abstract class ModuleEditor implements Disposable {
 
   public void updateCompilerOutputPathChanged(String baseUrl, String moduleName) {
     if (myGenericSettingsPanel == null) return; //wasn't initialized yet
-    for (final ModuleConfigurationEditor myEditor : myEditors) {
+    for (ModuleConfigurationEditor myEditor : myEditors) {
       if (myEditor instanceof ModuleElementsEditor) {
         ((ModuleElementsEditor)myEditor).moduleCompileOutputChanged(baseUrl, moduleName);
       }
@@ -227,7 +227,7 @@ public abstract class ModuleEditor implements Disposable {
   @Override
   public void dispose() {
     try {
-      for (final ModuleConfigurationEditor myEditor : myEditors) {
+      for (ModuleConfigurationEditor myEditor : myEditors) {
         myEditor.disposeUIResources();
       }
 
@@ -286,9 +286,9 @@ public abstract class ModuleEditor implements Disposable {
 
     @Override
     public Object invoke(Object object, Method method, Object[] params) throws Throwable {
-      final boolean needUpdate = myCheckedNames.contains(method.getName());
+      boolean needUpdate = myCheckedNames.contains(method.getName());
       try {
-        final Object result = method.invoke(myDelegateModel, unwrapParams(params));
+        Object result = method.invoke(myDelegateModel, unwrapParams(params));
         if (result instanceof LibraryTable) {
           return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{LibraryTable.class}, new LibraryTableInvocationHandler((LibraryTable)result));
         }
@@ -315,9 +315,9 @@ public abstract class ModuleEditor implements Disposable {
 
     @Override
     public Object invoke(Object object, Method method, Object[] params) throws Throwable {
-      final boolean needUpdate = myCheckedNames.contains(method.getName());
+      boolean needUpdate = myCheckedNames.contains(method.getName());
       try {
-        final Object result = method.invoke(myDelegateTable, unwrapParams(params));
+        Object result = method.invoke(myDelegateTable, unwrapParams(params));
         if (result instanceof Library) {
           return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{result instanceof LibraryEx ? LibraryEx.class : Library.class}, new LibraryInvocationHandler((Library)result));
         }
@@ -361,7 +361,7 @@ public abstract class ModuleEditor implements Disposable {
     @Override
     public Object invoke(Object object, Method method, Object[] params) throws Throwable {
       try {
-        final Object result = method.invoke(myDelegateLibrary, unwrapParams(params));
+        Object result = method.invoke(myDelegateLibrary, unwrapParams(params));
         if (result instanceof LibraryEx.ModifiableModelEx) {
           return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{LibraryEx.ModifiableModelEx.class}, new LibraryModifiableModelInvocationHandler((LibraryEx.ModifiableModelEx)result));
         }
@@ -387,7 +387,7 @@ public abstract class ModuleEditor implements Disposable {
 
     @Override
     public Object invoke(Object object, Method method, Object[] params) throws Throwable {
-      final boolean needUpdate = METHOD_COMMIT.equals(method.getName());
+      boolean needUpdate = METHOD_COMMIT.equals(method.getName());
       try {
         return method.invoke(myDelegateModel, unwrapParams(params));
       }
@@ -416,7 +416,7 @@ public abstract class ModuleEditor implements Disposable {
 
     @Override
     public Object invoke(Object object, Method method, Object[] params) throws Throwable {
-      final boolean needUpdate = METHOD_COMMIT.equals(method.getName());
+      boolean needUpdate = METHOD_COMMIT.equals(method.getName());
       try {
         Object result = method.invoke(myDelegateModel, unwrapParams(params));
         if (result instanceof Library[]) {
@@ -455,11 +455,11 @@ public abstract class ModuleEditor implements Disposable {
     if (params == null || params.length == 0) {
       return params;
     }
-    final Object[] unwrappedParams = new Object[params.length];
+    Object[] unwrappedParams = new Object[params.length];
     for (int idx = 0; idx < params.length; idx++) {
       Object param = params[idx];
       if (param != null && Proxy.isProxyClass(param.getClass())) {
-        final InvocationHandler invocationHandler = Proxy.getInvocationHandler(param);
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(param);
         if (invocationHandler instanceof ProxyDelegateAccessor) {
           param = ((ProxyDelegateAccessor)invocationHandler).getDelegate();
         }
@@ -474,11 +474,11 @@ public abstract class ModuleEditor implements Disposable {
     if (myEditors.isEmpty()) {
       return null;
     }
-    final ModuleConfigurationEditor selectedEditor = getSelectedEditor();
+    ModuleConfigurationEditor selectedEditor = getSelectedEditor();
     return selectedEditor != null ? selectedEditor.getHelpTopic() : null;
   }
 
-  public void setModuleName(final String name) {
+  public void setModuleName(String name) {
     myName = name;
   }
 

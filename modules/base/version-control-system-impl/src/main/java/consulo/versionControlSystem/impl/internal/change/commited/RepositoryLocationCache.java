@@ -32,17 +32,17 @@ public class RepositoryLocationCache {
   private final Project myProject;
   private final Map<Pair<String, String>, RepositoryLocation> myMap;
 
-  public RepositoryLocationCache(final Project project) {
+  public RepositoryLocationCache(Project project) {
     myProject = project;
     myMap = Collections.synchronizedMap(new HashMap<Pair<String, String>, RepositoryLocation>());
-    final MessageBusConnection connection = myProject.getMessageBus().connect();
-    final VcsListener listener = () -> reset();
+    MessageBusConnection connection = myProject.getMessageBus().connect();
+    VcsListener listener = () -> reset();
     connection.subscribe(VcsMappingListener.class, listener);
     connection.subscribe(PluginVcsMappingListener.class, listener);
   }
 
-  public RepositoryLocation getLocation(final AbstractVcs vcs, final FilePath filePath, final boolean silent) {
-    final Pair<String, String> key = new Pair<String, String>(vcs.getName(), filePath.getIOFile().getAbsolutePath());
+  public RepositoryLocation getLocation(AbstractVcs vcs, FilePath filePath, boolean silent) {
+    Pair<String, String> key = new Pair<String, String>(vcs.getName(), filePath.getIOFile().getAbsolutePath());
     RepositoryLocation location = myMap.get(key);
     if (location != null) {
       return location;
@@ -52,8 +52,8 @@ public class RepositoryLocationCache {
     return location;
   }
 
-  private RepositoryLocation getUnderProgress(final AbstractVcs vcs, final FilePath filePath, final boolean silent) {
-    final MyLoader loader = new MyLoader(vcs, filePath);
+  private RepositoryLocation getUnderProgress(AbstractVcs vcs, FilePath filePath, boolean silent) {
+    MyLoader loader = new MyLoader(vcs, filePath);
     if ((! silent) && ApplicationManager.getApplication().isDispatchThread()) {
       ProgressManager.getInstance().runProcessWithProgressSynchronously(loader, "Discovering location of " + filePath.getPresentableUrl(), true, myProject);
     } else {
@@ -71,14 +71,14 @@ public class RepositoryLocationCache {
     private final FilePath myFilePath;
     private RepositoryLocation myLocation;
 
-    private MyLoader(@Nonnull final AbstractVcs vcs, @Nonnull FilePath filePath) {
+    private MyLoader(@Nonnull AbstractVcs vcs, @Nonnull FilePath filePath) {
       myVcs = vcs;
       myFilePath = filePath;
     }
 
     @Override
     public void run() {
-      final CommittedChangesProvider committedChangesProvider = myVcs.getCommittedChangesProvider();
+      CommittedChangesProvider committedChangesProvider = myVcs.getCommittedChangesProvider();
       if (committedChangesProvider != null) {
         myLocation = committedChangesProvider.getLocationFor(myFilePath);
       }

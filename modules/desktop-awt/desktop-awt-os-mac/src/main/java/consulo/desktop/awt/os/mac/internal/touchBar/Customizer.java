@@ -64,7 +64,7 @@ class Customizer {
     }
 
     boolean applyCustomizations(@Nonnull TBItemAnActionButton button, @Nonnull Presentation presentation) {
-        final @Nullable ActionGroupInfo parentInfo = myAct2Parent.get(button.getAnAction());
+        @Nullable ActionGroupInfo parentInfo = myAct2Parent.get(button.getAnAction());
         boolean result = false;
 
         // 1. apply base customizations
@@ -76,7 +76,7 @@ class Customizer {
         }
 
         // 2. apply per-action customizations
-        final List<ItemCustomizer> customizers = myAct2ButtCustomizer.get(button.getAnAction());
+        List<ItemCustomizer> customizers = myAct2ButtCustomizer.get(button.getAnAction());
         if (customizers != null && !customizers.isEmpty()) {
             result = true;
             for (ItemCustomizer c : customizers) {
@@ -87,7 +87,7 @@ class Customizer {
         // 3. apply per-group customizations
         ActionGroupInfo p = parentInfo;
         while (p != null) {
-            final List<ItemCustomizer> cs = myGroupCustomizers.get(p.group);
+            List<ItemCustomizer> cs = myGroupCustomizers.get(p.group);
             if (cs != null && !cs.isEmpty()) {
                 result = true;
                 for (ItemCustomizer c : cs) {

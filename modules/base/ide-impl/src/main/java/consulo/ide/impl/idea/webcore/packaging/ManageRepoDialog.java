@@ -35,7 +35,7 @@ public class ManageRepoDialog extends DialogWrapper {
   private boolean myEnabled;
   private static final Logger LOG = Logger.getInstance(ManageRepoDialog.class);
 
-  public ManageRepoDialog(Project project, final PackageManagementService controller) {
+  public ManageRepoDialog(Project project, PackageManagementService controller) {
     super(project, false);
     init();
     setTitle(IdeBundle.message("manage.repositories.dialog.title"));
@@ -63,11 +63,11 @@ public class ManageRepoDialog extends DialogWrapper {
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     myList.addListSelectionListener(event -> {
-      final String selected = myList.getSelectedValue();
+      String selected = myList.getSelectedValue();
       myEnabled = controller.canModifyRepository(selected);
     });
 
-    final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions();
+    ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions();
     decorator.setAddActionName(IdeBundle.message("action.add.repository"));
     decorator.setRemoveActionName(IdeBundle.message("action.remove.repository.from.list"));
     decorator.setEditActionName(IdeBundle.message("action.edit.repository.url"));
@@ -80,7 +80,7 @@ public class ManageRepoDialog extends DialogWrapper {
       }
     });
     decorator.setEditAction(button -> {
-      final String oldValue = myList.getSelectedValue();
+      String oldValue = myList.getSelectedValue();
 
       String url = Messages.showInputDialog(IdeBundle.message("please.edit.repository.url"), IdeBundle.message("repository.url.title"), null, oldValue, new InputValidator() {
         @Override
@@ -109,7 +109,7 @@ public class ManageRepoDialog extends DialogWrapper {
     decorator.setRemoveActionUpdater(e -> myEnabled);
     decorator.setEditActionUpdater(e -> myEnabled);
 
-    final JPanel panel = decorator.createPanel();
+    JPanel panel = decorator.createPanel();
     panel.setPreferredSize(JBUI.size(800, 600));
     myMainPanel.add(panel);
 

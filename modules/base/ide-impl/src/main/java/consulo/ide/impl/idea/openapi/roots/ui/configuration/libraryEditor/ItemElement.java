@@ -33,7 +33,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
   protected final String myUrl;
   private final OrderRootType myRootType;
 
-  public ItemElement(@Nonnull OrderRootTypeElement parent, @Nonnull String url, @Nonnull OrderRootType rootType, final boolean isJarDirectory,
+  public ItemElement(@Nonnull OrderRootTypeElement parent, @Nonnull String url, @Nonnull OrderRootType rootType, boolean isJarDirectory,
                      boolean isValid) {
     super(parent);
     myUrl = url;
@@ -43,8 +43,8 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     myRootType = rootType;
   }
 
-  private static Image getIconForUrl(final String url, final boolean isValid, final boolean isJarDirectory) {
-    final Image icon;
+  private static Image getIconForUrl(String url, boolean isValid, boolean isJarDirectory) {
+    Image icon;
     if (isValid) {
       VirtualFile presentableFile;
       if (isArchiveFileRoot(url)) {
@@ -81,7 +81,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return icon;
   }
 
-  public static String getPresentablePath(final String url) {
+  public static String getPresentablePath(String url) {
     String presentablePath = VirtualFileManager.extractPath(url);
     if (isArchiveFileRoot(url)) {
       presentablePath = presentablePath.substring(0, presentablePath.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
@@ -89,7 +89,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return presentablePath;
   }
 
-  private static boolean isArchiveFileRoot(final String url) {
+  private static boolean isArchiveFileRoot(String url) {
     return VirtualFileManager.extractPath(url).endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR);
   }
 
@@ -107,7 +107,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     if (this == o) return true;
     if (!(o instanceof ItemElement)) return false;
 
-    final ItemElement itemElement = (ItemElement)o;
+    ItemElement itemElement = (ItemElement)o;
 
     if (!getParent().equals(itemElement.getParent())) return false;
     if (!myRootType.equals(itemElement.myRootType)) return false;

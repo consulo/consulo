@@ -43,7 +43,7 @@ public class RenamePackagingElementAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
+    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
     e.getPresentation().setEnabledAndVisible(
         selection.getElementIfSingle() instanceof RenameablePackagingElement renameablePackagingElement
             && renameablePackagingElement.canBeRenamed()
@@ -53,13 +53,13 @@ public class RenamePackagingElementAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    final PackagingElementNode<?> node = selection.getNodeIfSingle();
-    final PackagingElement<?> element = selection.getElementIfSingle();
+    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
+    PackagingElementNode<?> node = selection.getNodeIfSingle();
+    PackagingElement<?> element = selection.getElementIfSingle();
     if (node == null || element == null) return;
     if (!myArtifactEditor.getLayoutTreeComponent().checkCanModify(element, node)) return;
     
-    final TreePath path = selection.getPath(node);
+    TreePath path = selection.getPath(node);
     myArtifactEditor.getLayoutTreeComponent().startRenaming(path);
   }
 }

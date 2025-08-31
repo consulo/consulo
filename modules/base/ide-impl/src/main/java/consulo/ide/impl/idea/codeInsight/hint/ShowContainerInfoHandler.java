@@ -44,7 +44,7 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
 
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     PsiElement container = null;
@@ -98,11 +98,11 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
       return;
     }
 
-    final TextRange range = DeclarationRangeUtil.getPossibleDeclarationAtRange(container);
+    TextRange range = DeclarationRangeUtil.getPossibleDeclarationAtRange(container);
     if (range == null) {
       return;
     }
-    final PsiElement _container = container;
+    PsiElement _container = container;
     ApplicationManager.getApplication().invokeLater(() -> {
       LightweightHintImpl hint1 = EditorFragmentComponent.showEditorFragmentHint(editor, range, true, true);
       if (hint1 != null) {
@@ -119,7 +119,7 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
 
   private static boolean isDeclarationVisible(PsiElement container, Editor editor) {
     Rectangle viewRect = editor.getScrollingModel().getVisibleArea();
-    final TextRange range = DeclarationRangeUtil.getPossibleDeclarationAtRange(container);
+    TextRange range = DeclarationRangeUtil.getPossibleDeclarationAtRange(container);
     if (range == null) {
       return false;
     }

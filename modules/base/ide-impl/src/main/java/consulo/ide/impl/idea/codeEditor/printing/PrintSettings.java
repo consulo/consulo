@@ -112,7 +112,7 @@ public class PrintSettings implements PersistentStateComponent<PrintSettings> {
   }
 
   @Override
-  public void loadState(final PrintSettings state) {
+  public void loadState(PrintSettings state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 }

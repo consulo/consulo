@@ -100,7 +100,7 @@ public class VcsPushDialog extends DialogWrapper {
     @Override
     @Nonnull
     protected Action[] createActions() {
-        final List<Action> actions = new ArrayList<>();
+        List<Action> actions = new ArrayList<>();
         myForcePushAction = new ForcePushAction();
         myForcePushAction.setEnabled(canForcePush());
         myPushAction = new ComplexPushAction(myForcePushAction);

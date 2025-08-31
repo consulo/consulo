@@ -100,9 +100,9 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
     myQuickListsList.setCellRenderer(new MyQuickListCellRenderer());
     myQuickListsList.addListSelectionListener(e -> {
       myRightPanel.removeAll();
-      final Object selectedValue = myQuickListsList.getSelectedValue();
+      Object selectedValue = myQuickListsList.getSelectedValue();
       if (selectedValue instanceof QuickList) {
-        final QuickList quickList = (QuickList)selectedValue;
+        QuickList quickList = (QuickList)selectedValue;
         updateRightPanel(quickList);
         myQuickListsList.repaint();
       }
@@ -129,7 +129,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
   }
 
   private void addDescriptionLabel() {
-    final JLabel descLabel =
+    JLabel descLabel =
             new JLabel("<html>Quick Lists allow you to define commonly used groups of actions (for example, refactoring or VCS actions)" + " and to assign keyboard shortcuts to such groups.</html>");
     descLabel.setBorder(new EmptyBorder(0, 25, 0, 25));
     myRightPanel.add(descLabel, BorderLayout.CENTER);
@@ -137,7 +137,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
 
   private String createUniqueName() {
     String str = KeyMapLocalize.unnamedListDisplayName().get();
-    final ArrayList<String> names = new ArrayList<>();
+    ArrayList<String> names = new ArrayList<>();
     for (int i = 0; i < myQuickListsModel.getSize(); i++) {
       names.add(((QuickList)myQuickListsModel.getElementAt(i)).getName());
     }
@@ -149,14 +149,14 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
     }
   }
 
-  private void updateRightPanel(final QuickList quickList) {
+  private void updateRightPanel(QuickList quickList) {
     final int index = myQuickListsList.getSelectedIndex();
     if (myQuickListPanel != null && myCurrentIndex > -1 && myCurrentIndex < myQuickListsModel.getSize()) {
       updateList(myCurrentIndex);
       myKeymapListener.processCurrentKeymapChanged(getCurrentQuickListIds());
     }
     myQuickListPanel = new QuickListPanel(quickList, getCurrentQuickListIds());
-    final DocumentAdapter documentAdapter = new DocumentAdapter() {
+    DocumentAdapter documentAdapter = new DocumentAdapter() {
       @Override
       protected void textChanged(DocumentEvent e) {
         updateList(index);

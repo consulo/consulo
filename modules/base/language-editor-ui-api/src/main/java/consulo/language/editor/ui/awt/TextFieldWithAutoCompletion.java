@@ -57,9 +57,9 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
   }
 
 
-  public TextFieldWithAutoCompletion(final Project project,
-                                     @Nonnull final TextFieldWithAutoCompletionListProvider<T> provider,
-                                     final boolean showAutocompletionIsAvailableHint, @Nullable final String text) {
+  public TextFieldWithAutoCompletion(Project project,
+                                     @Nonnull TextFieldWithAutoCompletionListProvider<T> provider,
+                                     boolean showAutocompletionIsAvailableHint, @Nullable String text) {
     super(PlainTextLanguage.INSTANCE, project, text == null ? "" : text);
 
     myShowAutocompletionIsAvailableHint = showAutocompletionIsAvailableHint;
@@ -68,18 +68,18 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
     TextFieldWithAutoCompletionContributor.installCompletion(getDocument(), project, provider, true);
   }
 
-  public static TextFieldWithAutoCompletion<String> create(final Project project,
-                                                           @Nonnull final Collection<String> items,
-                                                           final boolean showAutocompletionIsAvailableHint,
-                                                           @Nullable final String text) {
+  public static TextFieldWithAutoCompletion<String> create(Project project,
+                                                           @Nonnull Collection<String> items,
+                                                           boolean showAutocompletionIsAvailableHint,
+                                                           @Nullable String text) {
     return create(project, items, null, showAutocompletionIsAvailableHint, text);
   }
 
-  public static TextFieldWithAutoCompletion<String> create(final Project project,
-                                                           @Nonnull final Collection<String> items,
-                                                           @Nullable final Image icon,
-                                                           final boolean showAutocompletionIsAvailableHint,
-                                                           @Nullable final String text) {
+  public static TextFieldWithAutoCompletion<String> create(Project project,
+                                                           @Nonnull Collection<String> items,
+                                                           @Nullable Image icon,
+                                                           boolean showAutocompletionIsAvailableHint,
+                                                           @Nullable String text) {
     return new TextFieldWithAutoCompletion<String>(project, new StringsCompletionProvider(items, icon), showAutocompletionIsAvailableHint,
                                                    text);
   }
@@ -94,7 +94,7 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
 
   @Override
   protected EditorEx createEditor() {
-    final EditorEx editor = super.createEditor();
+    EditorEx editor = super.createEditor();
 
     if (!myShowAutocompletionIsAvailableHint) {
       return editor;
@@ -138,35 +138,35 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
   public static class StringsCompletionProvider extends TextFieldWithAutoCompletionListProvider<String> {
     @Nullable private final Image myIcon;
 
-    public StringsCompletionProvider(@Nullable final Collection<String> variants,
-                                     @Nullable final Image icon) {
+    public StringsCompletionProvider(@Nullable Collection<String> variants,
+                                     @Nullable Image icon) {
       super(variants);
       myIcon = icon;
     }
 
     @Override
-    public int compare(final String item1, final String item2) {
+    public int compare(String item1, String item2) {
       return StringUtil.compare(item1, item2, false);
     }
 
     @Override
-    protected Image getIcon(@Nonnull final String item) {
+    protected Image getIcon(@Nonnull String item) {
       return myIcon;
     }
 
     @Nonnull
     @Override
-    protected String getLookupString(@Nonnull final String item) {
+    protected String getLookupString(@Nonnull String item) {
       return item;
     }
 
     @Override
-    protected String getTailText(@Nonnull final String item) {
+    protected String getTailText(@Nonnull String item) {
       return null;
     }
 
     @Override
-    protected String getTypeText(@Nonnull final String item) {
+    protected String getTypeText(@Nonnull String item) {
       return null;
     }
   }

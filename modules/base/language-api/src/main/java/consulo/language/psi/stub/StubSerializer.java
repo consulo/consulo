@@ -31,7 +31,7 @@ public interface StubSerializer<T extends StubElement> extends ObjectStubSeriali
 
   @Nonnull
   @Override
-  T deserialize(@Nonnull StubInputStream dataStream, final StubElement parentStub) throws IOException;
+  T deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException;
 
   @Override
   void indexStub(@Nonnull T stub, @Nonnull IndexSink sink);

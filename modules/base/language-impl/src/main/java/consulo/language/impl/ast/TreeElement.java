@@ -230,13 +230,13 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   public void rawInsertBeforeMe(@Nonnull TreeElement firstNew) {
-    final TreeElement anchorPrev = getTreePrev();
+    TreeElement anchorPrev = getTreePrev();
     if (anchorPrev == null) {
       firstNew.rawRemoveUpToLast();
-      final CompositeElement p = getTreeParent();
+      CompositeElement p = getTreeParent();
       if (p != null) p.setFirstChildNode(firstNew);
       while (true) {
-        final TreeElement treeNext = firstNew.getTreeNext();
+        TreeElement treeNext = firstNew.getTreeNext();
         assert treeNext != this : "Attempt to create cycle";
         firstNew.setTreeParent(p);
         if (treeNext == null) break;
@@ -256,7 +256,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   public void rawInsertAfterMe(@Nonnull TreeElement firstNew) {
     rawInsertAfterMeWithoutNotifications(firstNew);
 
-    final CompositeElement parent = getTreeParent();
+    CompositeElement parent = getTreeParent();
     if (parent != null) {
       parent.subtreeChanged();
     }
@@ -264,12 +264,12 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
 
   final void rawInsertAfterMeWithoutNotifications(@Nonnull TreeElement firstNew) {
     firstNew.rawRemoveUpToWithoutNotifications(null, false);
-    final CompositeElement p = getTreeParent();
-    final TreeElement treeNext = getTreeNext();
+    CompositeElement p = getTreeParent();
+    TreeElement treeNext = getTreeNext();
     firstNew.setTreePrev(this);
     setTreeNext(firstNew);
     while (true) {
-      final TreeElement n = firstNew.getTreeNext();
+      TreeElement n = firstNew.getTreeNext();
       assert n != this : "Attempt to create cycle";
       firstNew.setTreeParent(p);
       if (n == null) break;
@@ -290,9 +290,9 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   public void rawRemove() {
-    final TreeElement next = getTreeNext();
-    final CompositeElement parent = getTreeParent();
-    final TreeElement prev = getTreePrev();
+    TreeElement next = getTreeNext();
+    CompositeElement parent = getTreeParent();
+    TreeElement prev = getTreePrev();
 
     if (prev != null) {
       prev.setTreeNext(next);
@@ -353,9 +353,9 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   final void rawRemoveUpToWithoutNotifications(@Nullable TreeElement end, boolean invalidate) {
     if (this == end) return;
 
-    final CompositeElement parent = getTreeParent();
-    final TreeElement startPrev = getTreePrev();
-    final TreeElement endPrev = end != null ? end.getTreePrev() : null;
+    CompositeElement parent = getTreeParent();
+    TreeElement startPrev = getTreePrev();
+    TreeElement endPrev = end != null ? end.getTreePrev() : null;
 
     assert end == null || end.getTreeParent() == parent : "Trying to remove non-child";
 

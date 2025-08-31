@@ -69,7 +69,7 @@ public class HyperlinkLabel extends HighlightableComponent {
     this(text, JBColor.BLUE, background, JBColor.BLUE);
   }
 
-  public HyperlinkLabel(String text, final Color textForegroundColor, final Color textBackgroundColor, final Color textEffectColor) {
+  public HyperlinkLabel(String text, Color textForegroundColor, Color textBackgroundColor, Color textEffectColor) {
     myAnchorAttributes = new CustomTextAttributes(TargetAWT.from(textBackgroundColor));
     enforceBackgroundOutsideText(textBackgroundColor);
     setHyperlinkText(text);
@@ -98,7 +98,7 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
   protected void adjustSize() {
-    final Dimension preferredSize = this.getPreferredSize();
+    Dimension preferredSize = this.getPreferredSize();
     this.setMinimumSize(preferredSize);
   }
 
@@ -141,7 +141,7 @@ public class HyperlinkLabel extends HighlightableComponent {
     if (myUseIconAsLink && myIcon != null && x < myIcon.getWidth()) {
       return true;
     }
-    final HighlightedRegion region = findRegionByX(x);
+    HighlightedRegion region = findRegionByX(x);
     return region != null && region.textAttributes == myAnchorAttributes;
   }
 
@@ -161,7 +161,7 @@ public class HyperlinkLabel extends HighlightableComponent {
     super.setText(text);
   }
 
-  public void setHyperlinkTarget(@Nullable final String url) {
+  public void setHyperlinkTarget(@Nullable String url) {
     if (myHyperlinkListener != null) {
       removeHyperlinkListener(myHyperlinkListener);
     }

@@ -40,7 +40,7 @@ public class ControlBinder {
   }
 
   public void bindControl(JComponent control, String propertyName, boolean instant) {
-    final ControlValueAccessor controlAccessor;
+    ControlValueAccessor controlAccessor;
     if (control instanceof JCheckBox) {
       controlAccessor = ValueAccessor.checkBoxAccessor((JCheckBox)control);
     }

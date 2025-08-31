@@ -51,11 +51,11 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
         return super.checkAutoPopup(c, project, editor, psiFile);
       }
 
-      final int selectionStart = selectionModel.getSelectionStart();
-      final int selectionEnd = selectionModel.getSelectionEnd();
+      int selectionStart = selectionModel.getSelectionStart();
+      int selectionEnd = selectionModel.getSelectionEnd();
       if (selectedText.length() > 1) {
-        final char firstChar = selectedText.charAt(0);
-        final char lastChar = selectedText.charAt(selectedText.length() - 1);
+        char firstChar = selectedText.charAt(0);
+        char lastChar = selectedText.charAt(selectedText.length() - 1);
         if (isSimilarDelimiters(firstChar, c) &&
             lastChar == getMatchingDelimiter(firstChar) &&
             (isQuote(firstChar) || firstChar != c) &&
@@ -64,9 +64,9 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
           selectedText = selectedText.substring(1, selectedText.length() - 1);
         }
       }
-      final int caretOffset = selectionModel.getSelectionStart();
-      final char c2 = getMatchingDelimiter(c);
-      final String newText = String.valueOf(c) + selectedText + c2;
+      int caretOffset = selectionModel.getSelectionStart();
+      char c2 = getMatchingDelimiter(c);
+      String newText = String.valueOf(c) + selectedText + c2;
       myLtrSelection = selectionModel.getLeadSelectionOffset() != selectionModel.getSelectionEnd();
       if (editor instanceof EditorEx) {
         myRestoreStickySelection = ((EditorEx)editor).isStickySelection();
@@ -102,24 +102,24 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
     return c;
   }
 
-  private static boolean isDelimiter(final char c) {
+  private static boolean isDelimiter(char c) {
     return isBracket(c) || isQuote(c);
   }
 
-  private static boolean isBracket(final char c) {
+  private static boolean isBracket(char c) {
     return c == '(' || c == '{' || c == '[' || c == '<';
   }
 
-  private static boolean isQuote(final char c) {
+  private static boolean isQuote(char c) {
     return c == '"' || c == '\'' || c == '`';
   }
 
-  private static boolean isSimilarDelimiters(final char c1, final char c2) {
+  private static boolean isSimilarDelimiters(char c1, char c2) {
     return (isBracket(c1) && isBracket(c2)) || (isQuote(c1) && isQuote(c2));
   }
 
   @Override
-  public Result beforeCharTyped(final char charTyped, final Project project, final Editor editor, final PsiFile file, final FileType fileType) {
+  public Result beforeCharTyped(char charTyped, Project project, Editor editor, PsiFile file, FileType fileType) {
     // TODO[oleg] remove this hack when API changes
     if (myReplacedTextRange != null) {
       if (myReplacedTextRange.getEndOffset() <= editor.getDocument().getTextLength()) {

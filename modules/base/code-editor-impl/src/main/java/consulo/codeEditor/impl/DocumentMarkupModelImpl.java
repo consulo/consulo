@@ -56,8 +56,8 @@ public class DocumentMarkupModelImpl {
     @Nonnull
     public static MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
         if (document instanceof DocumentWindow) {
-            final Document delegate = ((DocumentWindow) document).getDelegate();
-            final MarkupModelEx baseMarkupModel = forDocument(delegate, project, true);
+            Document delegate = ((DocumentWindow) document).getDelegate();
+            MarkupModelEx baseMarkupModel = forDocument(delegate, project, true);
             return new MarkupModelWindow(baseMarkupModel, (DocumentWindow) document);
         }
 
@@ -76,7 +76,7 @@ public class DocumentMarkupModelImpl {
             return markupModel;
         }
 
-        final DocumentMarkupModelManager documentMarkupModelManager =
+        DocumentMarkupModelManager documentMarkupModelManager =
             project.isDisposed() ? null : DocumentMarkupModelManager.getInstance(project);
         if (documentMarkupModelManager == null || documentMarkupModelManager.isDisposed() || project.isDisposed()) {
             return new EmptyMarkupModel(document);

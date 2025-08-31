@@ -40,7 +40,7 @@ class TreeStructureActionsOwner implements TreeActionsOwner {
 
   @Override
   public boolean isActionActive(String name) {
-    for (final Sorter sorter : myModel.getSorters()) {
+    for (Sorter sorter : myModel.getSorters()) {
       if (sorter.getName().equals(name)) {
         if (!sorter.isVisible()) return true;
       }
@@ -51,7 +51,7 @@ class TreeStructureActionsOwner implements TreeActionsOwner {
     return Sorter.ALPHA_SORTER_ID.equals(name);
   }
 
-  public void setActionIncluded(final TreeAction filter, final boolean selected) {
+  public void setActionIncluded(TreeAction filter, boolean selected) {
     if (selected) {
       myActions.add(filter);
     }

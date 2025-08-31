@@ -57,7 +57,7 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
 
       @Override
       public RefreshableOnComponent getAfterCheckinConfigurationPanel(Disposable parentDisposable) {
-        final JLabel label = new JLabel(ToolsBundle.message("tools.after.commit.description"));
+        JLabel label = new JLabel(ToolsBundle.message("tools.after.commit.description"));
         ComboboxWithBrowseButton listComponent = new ComboboxWithBrowseButton();
         final JComboBox comboBox = listComponent.getComboBox();
         comboBox.setModel(new CollectionComboBoxModel(getComboBoxElements(), null));
@@ -79,12 +79,12 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
         listComponent.getButton().addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
-            final Object item = comboBox.getSelectedItem();
+            Object item = comboBox.getSelectedItem();
             String id = null;
             if (item instanceof Tool) {
               id = ((Tool)item).getActionId();
             }
-            final ToolSelectDialog dialog = new ToolSelectDialog(panel.getProject(), id, new ToolsPanel());
+            ToolSelectDialog dialog = new ToolSelectDialog(panel.getProject(), id, new ToolsPanel());
             dialog.show();
             if (!dialog.isOK()) {
               return;
@@ -119,7 +119,7 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
             }
             else {
               for (int i = 0; i < comboBox.getItemCount(); i++) {
-                final Object itemAt = comboBox.getItemAt(i);
+                Object itemAt = comboBox.getItemAt(i);
                 if (itemAt instanceof Tool && id.equals(((Tool)itemAt).getActionId())) {
                   comboBox.setSelectedIndex(i);
                   return;

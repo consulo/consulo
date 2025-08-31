@@ -30,14 +30,14 @@ public abstract class FileChooserAction extends AnAction implements DumbAware {
         setEnabledInModalContext(true);
     }
 
-    protected FileChooserAction(final LocalizeValue text, final LocalizeValue description, final Image icon) {
+    protected FileChooserAction(LocalizeValue text, LocalizeValue description, Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);
     }
 
     @Deprecated
     @DeprecationInfo("Use constructor with LocalizeValue")
-    protected FileChooserAction(final String text, final String description, final Image icon) {
+    protected FileChooserAction(String text, String description, Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);
     }

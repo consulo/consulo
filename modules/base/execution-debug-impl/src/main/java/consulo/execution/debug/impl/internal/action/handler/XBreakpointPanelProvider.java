@@ -72,9 +72,9 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
     }
 
     @Override
-    public void addListener(final BreakpointsListener listener, Project project, Disposable disposable) {
+    public void addListener(BreakpointsListener listener, Project project, Disposable disposable) {
         XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
-        final MyXBreakpointListener listener1 = new MyXBreakpointListener(listener, breakpointManager);
+        MyXBreakpointListener listener1 = new MyXBreakpointListener(listener, breakpointManager);
         breakpointManager.addBreakpointListener(listener1);
         myListeners.add(listener1);
         Disposer.register(disposable, () -> removeListener(listener));
@@ -99,7 +99,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
     @Override
     @Nullable
-    public XBreakpoint<?> findBreakpoint(@Nonnull final Project project, @Nonnull final Document document, final int offset) {
+    public XBreakpoint<?> findBreakpoint(@Nonnull Project project, @Nonnull Document document, int offset) {
         XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
         int line = document.getLineNumber(offset);
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
@@ -128,15 +128,15 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
     }
 
     @Override
-    public void onDialogClosed(final Project project) {
+    public void onDialogClosed(Project project) {
     }
 
     @Override
     public void provideBreakpointItems(Project project, Collection<BreakpointItem> items) {
-        final List<XBreakpointType> types = XBreakpointUtil.getBreakpointTypes();
-        final XBreakpointManager manager = XDebuggerManager.getInstance(project).getBreakpointManager();
+        List<XBreakpointType> types = XBreakpointUtil.getBreakpointTypes();
+        XBreakpointManager manager = XDebuggerManager.getInstance(project).getBreakpointManager();
         for (XBreakpointType<?, ?> type : types) {
-            final Collection<? extends XBreakpoint<?>> breakpoints = manager.getBreakpoints(type);
+            Collection<? extends XBreakpoint<?>> breakpoints = manager.getBreakpoints(type);
             if (breakpoints.isEmpty()) {
                 continue;
             }

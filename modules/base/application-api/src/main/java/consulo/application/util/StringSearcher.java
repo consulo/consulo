@@ -123,7 +123,7 @@ public class StringSearcher {
     if (_start > _end) {
       throw new AssertionError("start > end, " + _start + ">" + _end);
     }
-    final int textLength = text.length();
+    int textLength = text.length();
     if (_end > textLength) {
       throw new AssertionError("end > length, " + _end + ">" + textLength);
     }
@@ -220,7 +220,7 @@ public class StringSearcher {
    * @deprecated Use {@link #scan(CharSequence)} instead
    */
   public int scan(char[] text, int startOffset, int endOffset){
-    final int res = scan(new CharArrayCharSequence(text), text, startOffset, endOffset);
+    int res = scan(new CharArrayCharSequence(text), text, startOffset, endOffset);
     return res >= 0 ? res: -1;
   }
 

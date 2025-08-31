@@ -60,13 +60,13 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
 
   @Override
   public Set<? extends T> getDependenciesOf(T member) {
-    final Set dependent = getDependent();
+    Set dependent = getDependent();
     if (!dependent.contains(member)) return null;
     return myDependenciesToDependentMap.get(member);
   }
 
   public String getElementTooltip(T element) {
-    final Set<? extends T> dependencies = getDependenciesOf(element);
+    Set<? extends T> dependencies = getDependenciesOf(element);
     if (dependencies == null || dependencies.size() == 0) return null;
 
     ArrayList<String> strings = new ArrayList<>();
@@ -84,10 +84,10 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
       buildDepsRecursively(sourceElement, members);
     }
     else {
-      for (final T member : members) {
-        final Set<T> dependencies = myMemberDependenciesStorage.getMemberDependencies(member);
+      for (T member : members) {
+        Set<T> dependencies = myMemberDependenciesStorage.getMemberDependencies(member);
         if (dependencies != null) {
-          for (final T dependency : dependencies) {
+          for (T dependency : dependencies) {
             addDependency(dependency, member);
           }
         }
@@ -95,7 +95,7 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
     }
   }
 
-  private void buildDepsRecursively(final T sourceElement, @Nullable final Set<T> members) {
+  private void buildDepsRecursively(T sourceElement, @Nullable Set<T> members) {
     if (members != null) {
       for (T member : members) {
         if (!myDependencies.contains(member)) {
@@ -108,7 +108,7 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
     }
   }
 
-  private void addDependency(final T member, final T sourceElement) {
+  private void addDependency(T member, T sourceElement) {
     if (LOG.isDebugEnabled()) {
       LOG.debug(member.toString());
     }
@@ -125,7 +125,7 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
 
   @Override
   public void memberChanged(M memberInfo) {
-    final ClassMembersRefactoringSupport support = ClassMembersRefactoringSupport.forLanguage(memberInfo.getMember().getLanguage());
+    ClassMembersRefactoringSupport support = ClassMembersRefactoringSupport.forLanguage(memberInfo.getMember().getLanguage());
     if (support != null && support.isProperMember(memberInfo)) {
       myDependencies = null;
       myDependenciesToDependentMap = null;

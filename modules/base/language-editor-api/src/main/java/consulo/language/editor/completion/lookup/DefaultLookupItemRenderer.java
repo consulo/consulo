@@ -32,7 +32,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
   public static final DefaultLookupItemRenderer INSTANCE = new DefaultLookupItemRenderer();
 
   @Override
-  public void renderElement(final LookupItem item, final LookupElementPresentation presentation) {
+  public void renderElement(LookupItem item, LookupElementPresentation presentation) {
     presentation.setIcon(getRawIcon(item));
 
     presentation.setItemText(getName(item));
@@ -44,14 +44,14 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
   @Nullable
   @RequiredReadAction
   @Deprecated
-  public static Image getRawIcon(final LookupElement item, boolean real) {
+  public static Image getRawIcon(LookupElement item, boolean real) {
     return getRawIcon(item);
   }
 
   @Nullable
   @RequiredReadAction
-  public static Image getRawIcon(final LookupElement item) {
-    final Image icon = _getRawIcon(item);
+  public static Image getRawIcon(LookupElement item) {
+    Image icon = _getRawIcon(item);
     if (icon != null && icon.getHeight() > Image.DEFAULT_ICON_SIZE) {
       return ImageEffects.resize(icon, icon.getWidth(), Image.DEFAULT_ICON_SIZE);
     }
@@ -72,7 +72,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
       return ((Iconable)o).getIcon(0);
     }
 
-    final PsiElement element = item.getPsiElement();
+    PsiElement element = item.getPsiElement();
     if (element != null && element.isValid()) {
       return IconDescriptorUpdaters.getIcon(element, 0);
     }
@@ -81,7 +81,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
 
 
   @Nullable
-  private static String getText3(final LookupItem item) {
+  private static String getText3(LookupItem item) {
     Object o = item.getObject();
     String text;
     if (o instanceof LookupValueWithUIHint) {
@@ -93,17 +93,17 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
     return text;
   }
 
-  private static String getText2(final LookupItem item) {
+  private static String getText2(LookupItem item) {
     return (String)item.getAttribute(LookupItem.TAIL_TEXT_ATTR);
   }
 
-  private static String getName(final LookupItem item) {
-    final String presentableText = item.getPresentableText();
+  private static String getName(LookupItem item) {
+    String presentableText = item.getPresentableText();
     if (presentableText != null) return presentableText;
-    final Object o = item.getObject();
+    Object o = item.getObject();
     String name = null;
     if (o instanceof PsiElement) {
-      final PsiElement element = (PsiElement)o;
+      PsiElement element = (PsiElement)o;
       if (element.isValid()) {
         name = PsiUtilCore.getName(element);
       }

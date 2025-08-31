@@ -33,8 +33,8 @@ import java.util.List;
 public class FileSeparatorUtil {
   @Nonnull
   @RequiredReadAction
-  public static List<LineMarkerInfo> getFileSeparators(final PsiFile file, final Document document) {
-    final List<LineMarkerInfo> result = new ArrayList<>();
+  public static List<LineMarkerInfo> getFileSeparators(PsiFile file, Document document) {
+    List<LineMarkerInfo> result = new ArrayList<>();
     for (LineMarkerInfo lineMarkerInfo : LineMarkersPass.queryLineMarkers(file, document)) {
       if (lineMarkerInfo.separatorColor != null) {
         result.add(lineMarkerInfo);

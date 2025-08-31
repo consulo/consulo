@@ -59,7 +59,7 @@ public enum AutoCompletionPolicy {
 
   @Nullable
   public static AutoCompletionPolicy getPolicy(LookupElement element) {
-    final PolicyDecorator decorator = element.as(PolicyDecorator.CLASS_CONDITION_KEY);
+    PolicyDecorator decorator = element.as(PolicyDecorator.CLASS_CONDITION_KEY);
     if (decorator != null) {
       return decorator.myPolicy;
     }

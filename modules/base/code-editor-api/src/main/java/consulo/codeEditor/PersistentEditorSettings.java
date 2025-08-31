@@ -234,15 +234,15 @@ public interface PersistentEditorSettings {
 
     boolean isVariableInplaceRenameEnabled();
 
-    void setVariableInplaceRenameEnabled(final boolean val);
+    void setVariableInplaceRenameEnabled(boolean val);
 
     boolean isPreselectRename();
 
-    void setPreselectRename(final boolean val);
+    void setPreselectRename(boolean val);
 
     boolean isShowInlineLocalDialog();
 
-    void setShowInlineLocalDialog(final boolean val);
+    void setShowInlineLocalDialog(boolean val);
 
     boolean addCaretsOnDoubleCtrl();
 

@@ -60,13 +60,13 @@ class BekBranchCreator {
   }
 
   public List<Integer> createNextBranch(int headNode) {
-    final List<Integer> nodeIndexes = new ArrayList<>();
+    List<Integer> nodeIndexes = new ArrayList<>();
 
     assert !myDoneNodes.get(headNode);
     myDoneNodes.set(headNode, true);
     nodeIndexes.add(headNode);
 
-    final int startLayout = myGraphLayout.getLayoutIndex(headNode);
+    int startLayout = myGraphLayout.getLayoutIndex(headNode);
 
     myDfsUtil.nodeDfsIterator(headNode, currentNode -> {
       int currentLayout = myGraphLayout.getLayoutIndex(currentNode);

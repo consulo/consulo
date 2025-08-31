@@ -81,7 +81,7 @@ public class PluginHeaderPanel {
         myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
 
         if (plugin instanceof PluginNode) {
-            final PluginNode node = (PluginNode) plugin;
+            PluginNode node = (PluginNode) plugin;
 
             myDownloads.setText(node.getDownloads() + " downloads");
             myUpdated.setText("Updated " + DateFormatUtil.formatDate(node.getDate()));
@@ -161,7 +161,7 @@ public class PluginHeaderPanel {
             myActionListener = null;
         }
 
-        final PluginAction finalAction = action;
+        PluginAction finalAction = action;
         myActionListener = e -> {
             UIAccess uiAccess = UIAccess.current();
 
@@ -185,7 +185,7 @@ public class PluginHeaderPanel {
                     if (installedTab != null) {
                         installedTab.apply();
                     }
-                    final DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
+                    DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
                     if (dialog != null) {
                         dialog.doOKActionPublic();
 
@@ -240,7 +240,7 @@ public class PluginHeaderPanel {
 
         myUpdated = new JBLabel();
 
-        final Font smallFont = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
+        Font smallFont = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
         myDownloads.setFont(smallFont);
         myUpdated.setFont(smallFont);
         myRoot.setVisible(false);

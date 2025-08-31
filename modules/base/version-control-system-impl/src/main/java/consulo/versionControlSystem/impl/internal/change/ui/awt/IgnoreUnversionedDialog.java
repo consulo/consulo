@@ -60,7 +60,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
   private boolean myInternalChange;
   private final IgnoredPathPresentation myPresentation;
 
-  public IgnoreUnversionedDialog(final Project project) {
+  public IgnoreUnversionedDialog(Project project) {
     super(project, false);
     myProject = project;
     myPresentation = new IgnoredPathPresentation(myProject);
@@ -74,7 +74,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     );
     myIgnoreFileTextField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
-      protected void textChanged(final DocumentEvent e) {
+      protected void textChanged(DocumentEvent e) {
         // on text change, clear remembered files to ignore
         if (!myInternalChange) {
           myFilesToIgnore = null;
@@ -159,7 +159,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     }
     updateControls();
 
-    final VirtualFile[] ancestors = VirtualFileUtil.getCommonAncestors(VirtualFileUtil.toVirtualFileArray(virtualFiles));
+    VirtualFile[] ancestors = VirtualFileUtil.getCommonAncestors(VirtualFileUtil.toVirtualFileArray(virtualFiles));
     if (dirCount > 1) {
       myIgnoreDirectoryTextField.setText(VcsLocalize.ignoredEditMultipleDirectories(dirCount).get());
     }
@@ -170,15 +170,15 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
       myIgnoreDirectoryTextField.setText(virtualFiles.get(0).getParent().getPresentableUrl());
     }
 
-    final Set<String> extensions = new HashSet<>();
+    Set<String> extensions = new HashSet<>();
     for (VirtualFile vf : virtualFiles) {
-      final String extension = vf.getExtension();
+      String extension = vf.getExtension();
       if (extension != null) {
         extensions.add(extension);
       }
     }
     if (extensions.size() > 0) {
-      final String[] extensionArray = ArrayUtil.toStringArray(extensions);
+      String[] extensionArray = ArrayUtil.toStringArray(extensions);
       myIgnoreMaskTextField.setText("*." + extensionArray[0]);
     }
     else {
@@ -186,8 +186,8 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     }
   }
 
-  public void setIgnoredFile(final IgnoredFileBean bean) {
-    final String pathFromBean = bean.getPath();
+  public void setIgnoredFile(IgnoredFileBean bean) {
+    String pathFromBean = bean.getPath();
     if (pathFromBean != null) {
       String path = pathFromBean.replace('/', File.separatorChar);
       if (path.endsWith(File.separator)) {
@@ -218,7 +218,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
       if (getDirectoriesToIgnore() > 1) {
         return getBeansFromFilesToIgnore(true);
       }
-      final String path = myIgnoreDirectoryTextField.getText();
+      String path = myIgnoreDirectoryTextField.getText();
       return new IgnoredFileBean[]{IgnoredBeanFactory.ignoreUnderDirectory(myPresentation.alwaysRelative(path), myProject)};
     }
     if (myIgnoreAllFilesMatchingRadioButton.isSelected()) {

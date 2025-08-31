@@ -64,7 +64,7 @@ public class InspectionProfileLoadUtil {
   ) throws JDOMException, IOException, InvalidDataException {
     Element element = JDOMUtil.loadDocument(file).getRootElement();
     InspectionProfileImpl profile = new InspectionProfileImpl(getProfileName(file, element), registrar, profileManager);
-    final Element profileElement = element.getChild(PROFILE_TAG);
+    Element profileElement = element.getChild(PROFILE_TAG);
     if (profileElement != null) {
       element = profileElement;
     }

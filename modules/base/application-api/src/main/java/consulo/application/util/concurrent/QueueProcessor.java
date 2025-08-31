@@ -208,16 +208,16 @@ public class QueueProcessor<T> {
     }
     isProcessing = true;
     final T item = myQueue.removeFirst();
-    final Runnable runnable = new Runnable() {
+    Runnable runnable = new Runnable() {
       @Override
       public void run() {
         if (myDeathCondition.getAsBoolean()) return;
         runSafely(() -> myProcessor.accept(item, myContinuationContext));
       }
     };
-    final Application application = Application.get();
+    Application application = Application.get();
     if (myThreadToUse == ThreadToUse.AWT || myThreadToUse == ThreadToUse.UI) {
-      final ModalityState state = myModalityState.remove(new MyOverrideEquals(item));
+      ModalityState state = myModalityState.remove(new MyOverrideEquals(item));
       if (state != null) {
         application.invokeLater(runnable, state);
       }

@@ -66,7 +66,7 @@ public final class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighter
         final int myLayer;
 
         RHNode(@Nonnull RangeHighlighterTree rangeMarkerTree,
-               final @Nonnull RangeHighlighterEx key,
+               @Nonnull RangeHighlighterEx key,
                int start,
                int end,
                boolean greedyToLeft,

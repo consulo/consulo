@@ -59,7 +59,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
 
       myElements.putValue(string, added);
       mySortedStrings.add(string);
-      final NavigableSet<String> after = mySortedStrings.tailSet(string, false);
+      NavigableSet<String> after = mySortedStrings.tailSet(string, false);
       for (String s : after) {
         if (!s.startsWith(string)) {
           break;
@@ -101,9 +101,9 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
     return liftShorterElements(source, null, context);
   }
 
-  private Iterable<LookupElement> liftShorterElements(final Iterable<LookupElement> source,
-                                                      @Nullable final Set<LookupElement> lifted, final ProcessingContext context) {
-    final Set<LookupElement> srcSet = newIdentityTroveSet(source instanceof Collection ? ((Collection)source).size() : myCount);
+  private Iterable<LookupElement> liftShorterElements(Iterable<LookupElement> source,
+                                                      @Nullable Set<LookupElement> lifted, ProcessingContext context) {
+    Set<LookupElement> srcSet = newIdentityTroveSet(source instanceof Collection ? ((Collection)source).size() : myCount);
     ContainerUtil.addAll(srcSet, source);
 
     if (srcSet.size() < 2) {
@@ -116,7 +116,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
   @Nonnull
   @Override
   public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
-    final Set<LookupElement> lifted = newIdentityTroveSet();
+    Set<LookupElement> lifted = newIdentityTroveSet();
     Iterable<LookupElement> iterable = liftShorterElements(ContainerUtil.newArrayList(items), lifted, context);
     return ContainerUtil.map(iterable, element -> new Pair<LookupElement, Object>(element, lifted.contains(element)));
   }
@@ -174,7 +174,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
       final Set<LookupElement> processed = newIdentityTroveSet(mySrcSet.size());
       final Set<Collection<LookupElement>> arraysProcessed = newIdentityTroveSet();
 
-      final Iterable<LookupElement> next = myNext.classify(mySource, myContext);
+      Iterable<LookupElement> next = myNext.classify(mySource, myContext);
       Iterator<LookupElement> base = FilteringIterator.create(next.iterator(), element -> processed.add(element));
       return new FlatteningIterator<>(base) {
         @Override

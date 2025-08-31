@@ -37,16 +37,16 @@ public class UpDownHandler {
   private UpDownHandler() {
   }
 
-  public static void register(JComponent input, final JComponent affectedComponent) {
+  public static void register(JComponent input, JComponent affectedComponent) {
     register(input, affectedComponent, true);
   }
   
-  public static void register(final JComponent input, final JComponent affectedComponent, boolean registerOnBothComponents) {
-    final SelectionMover mover = new SelectionMover(affectedComponent);
-    final AnAction up = new UpDownAction(mover, input, true);
+  public static void register(JComponent input, JComponent affectedComponent, boolean registerOnBothComponents) {
+    SelectionMover mover = new SelectionMover(affectedComponent);
+    AnAction up = new UpDownAction(mover, input, true);
     up.registerCustomShortcutSet(UP_KEY, input);
 
-    final AnAction down = new UpDownAction(mover, input, false);
+    AnAction down = new UpDownAction(mover, input, false);
     down.registerCustomShortcutSet(DOWN_KEY, input);
     if (registerOnBothComponents) {
       up.registerCustomShortcutSet(UP_KEY, affectedComponent);
@@ -119,7 +119,7 @@ public class UpDownHandler {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      final LookupEx lookup;
+      LookupEx lookup;
       if (myInput instanceof EditorTextField) {
         lookup = LookupManager.getActiveLookup(((EditorTextField)myInput).getEditor());
       } else if (myInput instanceof EditorHolder) {

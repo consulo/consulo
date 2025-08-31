@@ -32,8 +32,8 @@ public class PrattParsingUtil {
     searchFor(builder, true, types);
   }
 
-  public static boolean searchFor(final PrattBuilder builder, final boolean consume, final PrattTokenType... types) {
-    final TokenSet set = TokenSet.create(types);
+  public static boolean searchFor(PrattBuilder builder, boolean consume, PrattTokenType... types) {
+    TokenSet set = TokenSet.create(types);
     if (!set.contains(builder.getTokenType())) {
       builder.assertToken(types[0]);
       while (!set.contains(builder.getTokenType()) && !builder.isEof()) {
@@ -47,9 +47,9 @@ public class PrattParsingUtil {
   }
 
   @Nullable
-  public static IElementType parseOption(final PrattBuilder builder, int rightPriority) {
-    final MutableMarker marker = builder.mark();
-    final IElementType type = builder.createChildBuilder(rightPriority).parse();
+  public static IElementType parseOption(PrattBuilder builder, int rightPriority) {
+    MutableMarker marker = builder.mark();
+    IElementType type = builder.createChildBuilder(rightPriority).parse();
     if (type == null) {
       marker.rollback();
     } else {

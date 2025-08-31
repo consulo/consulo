@@ -77,7 +77,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
         if (option.getValue() == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) {
             return false;
         }
-        final ConfirmationDialog dialog = new ConfirmationDialog(project, message, title, icon, option, okActionName, cancelActionName);
+        ConfirmationDialog dialog = new ConfirmationDialog(project, message, title, icon, option, okActionName, cancelActionName);
         if (!option.isPersistent()) {
             dialog.setDoNotAskOption(null);
         }
@@ -102,7 +102,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
         if (option.getValue() == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) {
             return false;
         }
-        final ConfirmationDialog dialog = new ConfirmationDialog(project, message, title, icon, option, okActionName, cancelActionName);
+        ConfirmationDialog dialog = new ConfirmationDialog(project, message, title, icon, option, okActionName, cancelActionName);
         if (!option.isPersistent()) {
             dialog.setDoNotAskOption(null);
         }
@@ -116,8 +116,8 @@ public class ConfirmationDialog extends OptionsMessageDialog {
         Project project,
         @Nonnull LocalizeValue message,
         @Nonnull LocalizeValue title,
-        final Image icon,
-        final VcsShowConfirmationOption option
+        Image icon,
+        VcsShowConfirmationOption option
     ) {
         this(project, message, title, icon, option, CommonLocalize.buttonYes(), CommonLocalize.buttonNo());
     }
@@ -126,10 +126,10 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     @DeprecationInfo("Use variant with LocalizeValue")
     public ConfirmationDialog(
         Project project,
-        final String message,
+        String message,
         String title,
-        final Image icon,
-        final VcsShowConfirmationOption option
+        Image icon,
+        VcsShowConfirmationOption option
     ) {
         this(project, message, title, icon, option, CommonLocalize.buttonYes().get(), CommonLocalize.buttonNo().get());
     }
@@ -138,8 +138,8 @@ public class ConfirmationDialog extends OptionsMessageDialog {
         Project project,
         @Nonnull LocalizeValue message,
         @Nonnull LocalizeValue title,
-        final Image icon,
-        final VcsShowConfirmationOption option,
+        Image icon,
+        VcsShowConfirmationOption option,
         @Nonnull LocalizeValue okActionName,
         @Nonnull LocalizeValue cancelActionName
     ) {
@@ -154,10 +154,10 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     @DeprecationInfo("Use variant with LocalizeValue")
     public ConfirmationDialog(
         Project project,
-        final String message,
+        String message,
         String title,
-        final Image icon,
-        final VcsShowConfirmationOption option,
+        Image icon,
+        VcsShowConfirmationOption option,
         @Nullable String okActionName,
         @Nullable String cancelActionName
     ) {
@@ -175,7 +175,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public void setDoNotShowAgainMessage(final String doNotShowAgainMessage) {
+    public void setDoNotShowAgainMessage(String doNotShowAgainMessage) {
         setDoNotShowAgainMessage(LocalizeValue.ofNullable(doNotShowAgainMessage));
     }
 
@@ -218,7 +218,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     @Override
     protected void setToBeShown(boolean value, boolean onOk) {
-        final VcsShowConfirmationOption.Value optionValue = value
+        VcsShowConfirmationOption.Value optionValue = value
             ? VcsShowConfirmationOption.Value.SHOW_CONFIRMATION
             : onOk
             ? VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY

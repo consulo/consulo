@@ -42,15 +42,15 @@ public class TabImpl extends AbstractTab implements Tab {
     return myIcon;
   }
 
-  public void setIndex(final int index) {
+  public void setIndex(int index) {
     myIndex = index;
   }
 
-  public void setDefaultIndex(final int index) {
+  public void setDefaultIndex(int index) {
     myDefaultIndex = index;
   }
 
-  public void setDisplayName(final String displayName) {
+  public void setDisplayName(String displayName) {
     myDisplayName = displayName;
   }
 
@@ -58,7 +58,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myLeftProportion;
   }
 
-  public void setLeftProportion(final float leftProportion) {
+  public void setLeftProportion(float leftProportion) {
     if (leftProportion < 0 || leftProportion > 1.0) return;
     myLeftProportion = leftProportion;
   }
@@ -67,7 +67,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myRightProportion;
   }
 
-  public void setRightProportion(final float rightProportion) {
+  public void setRightProportion(float rightProportion) {
     if (rightProportion < 0 || rightProportion > 1.0) return;
     myRightProportion = rightProportion;
   }
@@ -76,7 +76,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myBottomProportion;
   }
 
-  public void setBottomProportion(final float bottomProportion) {
+  public void setBottomProportion(float bottomProportion) {
     if (bottomProportion < 0 || bottomProportion > 1.0) return;
     myBottomProportion = bottomProportion;
   }
@@ -85,7 +85,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myLeftDetached;
   }
 
-  public void setLeftDetached(final boolean leftDetached) {
+  public void setLeftDetached(boolean leftDetached) {
     myLeftDetached = leftDetached;
   }
 
@@ -93,7 +93,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myCenterDetached;
   }
 
-  public void setCenterDetached(final boolean centerDetached) {
+  public void setCenterDetached(boolean centerDetached) {
     myCenterDetached = centerDetached;
   }
 
@@ -101,7 +101,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myRightDetached;
   }
 
-  public void setRightDetached(final boolean rightDetached) {
+  public void setRightDetached(boolean rightDetached) {
     myRightDetached = rightDetached;
   }
 
@@ -109,7 +109,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myBottomDetached;
   }
 
-  public void setBottomDetached(final boolean bottomDetached) {
+  public void setBottomDetached(boolean bottomDetached) {
     myBottomDetached = bottomDetached;
   }
 
@@ -154,7 +154,7 @@ public class TabImpl extends AbstractTab implements Tab {
 
   public static class Default extends AbstractTab {
 
-    public Default(final int index, final String displayName, final Image icon) {
+    public Default(int index, String displayName, Image icon) {
       myIndex = index;
       myDefaultIndex = index;
       myDisplayName = displayName;
@@ -162,7 +162,7 @@ public class TabImpl extends AbstractTab implements Tab {
     }
 
     public TabImpl createTab() {
-      final TabImpl tab = new TabImpl();
+      TabImpl tab = new TabImpl();
       tab.copyFrom(this);
       return tab;
     }

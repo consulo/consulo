@@ -55,7 +55,7 @@ public class RemoteServer {
 
     try {
       Remote stub = UnicastRemoteObject.exportObject(ourRemote, 0);
-      final String name = remote.getClass().getSimpleName() + Integer.toHexString(stub.hashCode());
+      String name = remote.getClass().getSimpleName() + Integer.toHexString(stub.hashCode());
       registry.bind(name, stub);
 
       String id = port + "/" + name;
@@ -98,13 +98,13 @@ public class RemoteServer {
   @SuppressWarnings("UnusedDeclaration")
   public static class Jndi implements InitialContextFactory, InvocationHandler {
     @Override
-    public Context getInitialContext(final Hashtable<?, ?> environment) throws NamingException {
+    public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
       return (Context)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Context.class}, this);
     }
 
     @Nullable
     @Override
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       return null;
     }
   }

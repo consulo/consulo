@@ -60,7 +60,7 @@ public class CommonActionsPanel extends JPanel {
             return null;
         }
 
-        MyActionButton createButton(final Listener listener, String name, Image icon) {
+        MyActionButton createButton(Listener listener, String name, Image icon) {
             return new MyActionButton(this, listener, name == null ? StringUtil.capitalize(name().toLowerCase()) : name, icon);
         }
 
@@ -141,7 +141,7 @@ public class CommonActionsPanel extends JPanel {
         Buttons... buttons
     ) {
         super(new BorderLayout());
-        final Listener listener = factory.createListener(this);
+        Listener listener = factory.createListener(this);
         AnAction[] actions = new AnAction[buttons.length];
         for (int i = 0; i < buttons.length; i++) {
             Buttons button = buttons[i];
@@ -163,13 +163,13 @@ public class CommonActionsPanel extends JPanel {
                     name = moveDownName;
                     break;
             }
-            final MyActionButton b =
+            MyActionButton b =
                 button.createButton(listener, name, button == Buttons.ADD && addIcon != null ? addIcon : button.getIcon());
             actions[i] = b;
             myButtons.put(button, b);
         }
         if (additionalActions != null && additionalActions.length > 0) {
-            final ArrayList<AnAction> allActions = new ArrayList<>(Arrays.asList(actions));
+            ArrayList<AnAction> allActions = new ArrayList<>(Arrays.asList(actions));
             allActions.addAll(Arrays.asList(additionalActions));
             actions = allActions.toArray(new AnAction[allActions.size()]);
         }
@@ -189,8 +189,8 @@ public class CommonActionsPanel extends JPanel {
             }
         }
 
-        final ActionManager mgr = ActionManager.getInstance();
-        final ActionToolbar toolbar = mgr.createActionToolbar(
+        ActionManager mgr = ActionManager.getInstance();
+        ActionToolbar toolbar = mgr.createActionToolbar(
             ActionPlaces.UNKNOWN,
             new DefaultActionGroup(toolbarActions.toArray(new AnAction[toolbarActions.size()])),
             position == ActionToolbarPosition.BOTTOM || position == ActionToolbarPosition.TOP
@@ -207,9 +207,9 @@ public class CommonActionsPanel extends JPanel {
 
     @Override
     public void addNotify() {
-        final JRootPane pane = getRootPane();
+        JRootPane pane = getRootPane();
         for (AnAction button : myActions) {
-            final ShortcutSet shortcut = button instanceof AnActionButton ? ((AnActionButton) button).getShortcut() : null;
+            ShortcutSet shortcut = button instanceof AnActionButton ? ((AnActionButton) button).getShortcut() : null;
             if (shortcut != null) {
                 if (button instanceof MyActionButton
                     && ((MyActionButton) button).isAddButton()
@@ -238,12 +238,12 @@ public class CommonActionsPanel extends JPanel {
 
             @Override
             public void update(@Nonnull AnActionEvent e) {
-                final JComponent contextComponent = removeButton.getContextComponent();
+                JComponent contextComponent = removeButton.getContextComponent();
                 if (contextComponent instanceof JTable table && table.isEditing()) {
                     e.getPresentation().setEnabled(false);
                     return;
                 }
-                final SpeedSearchSupply supply = SpeedSearchSupply.getSupply(contextComponent);
+                SpeedSearchSupply supply = SpeedSearchSupply.getSupply(contextComponent);
                 if (supply != null && supply.isPopupActive()) {
                     e.getPresentation().setEnabled(false);
                     return;
@@ -254,7 +254,7 @@ public class CommonActionsPanel extends JPanel {
     }
 
     public void setEnabled(Buttons button, boolean enabled) {
-        final MyActionButton b = myButtons.get(button);
+        MyActionButton b = myButtons.get(button);
         if (b != null) {
             b.setEnabled(enabled);
         }
@@ -288,14 +288,14 @@ public class CommonActionsPanel extends JPanel {
                 return;
             }
 
-            final JComponent c = getContextComponent();
+            JComponent c = getContextComponent();
             if (c instanceof JTable || c instanceof JList) {
-                final ListSelectionModel model = c instanceof JTable ? ((JTable) c).getSelectionModel()
+                ListSelectionModel model = c instanceof JTable ? ((JTable) c).getSelectionModel()
                     : ((JList) c).getSelectionModel();
-                final int size = c instanceof JTable ? ((JTable) c).getRowCount()
+                int size = c instanceof JTable ? ((JTable) c).getRowCount()
                     : ((JList) c).getModel().getSize();
-                final int min = model.getMinSelectionIndex();
-                final int max = model.getMaxSelectionIndex();
+                int min = model.getMinSelectionIndex();
+                int max = model.getMaxSelectionIndex();
 
                 if ((myButton == Buttons.UP && min < 1)
                     || (myButton == Buttons.DOWN && max == size - 1)

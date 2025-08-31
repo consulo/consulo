@@ -203,8 +203,8 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-    public ActionCallback type(final String text) {
-        final ActionCallback result = new ActionCallback();
+    public ActionCallback type(String text) {
+        ActionCallback result = new ActionCallback();
         UIUtil.invokeLaterIfNeeded(() -> myEditor.type(text).notify(result));
         return result;
     }
@@ -515,18 +515,18 @@ public class EditorComponentImpl extends JTextComponent
 
         @Override
         @RequiredUIAccess
-        public void remove(final int offset, final int length) throws BadLocationException {
+        public void remove(int offset, int length) throws BadLocationException {
             editDocumentSafely(offset, length, null);
         }
 
         @Override
         @RequiredUIAccess
-        public void insertString(final int offset, final String text, AttributeSet attributeSet) throws BadLocationException {
+        public void insertString(int offset, String text, AttributeSet attributeSet) throws BadLocationException {
             editDocumentSafely(offset, 0, text);
         }
 
         @Override
-        public String getText(final int offset, final int length) throws BadLocationException {
+        public String getText(int offset, int length) throws BadLocationException {
             return Application.get().runReadAction(
                 (Supplier<String>)() -> myEditor.getDocument().getText(new TextRange(offset, offset + length))
             );
@@ -707,9 +707,9 @@ public class EditorComponentImpl extends JTextComponent
      * Inserts, removes or replaces the given text at the given offset
      */
     @RequiredUIAccess
-    private void editDocumentSafely(final int offset, final int length, @Nullable final String text) {
-        final Project project = myEditor.getProject();
-        final Document document = myEditor.getDocument();
+    private void editDocumentSafely(int offset, int length, @Nullable String text) {
+        Project project = myEditor.getProject();
+        Document document = myEditor.getDocument();
         if (!FileDocumentManager.getInstance().requestWriting(document, project)) {
             return;
         }
@@ -978,8 +978,8 @@ public class EditorComponentImpl extends JTextComponent
         }
 
         @Override
-        public void documentChanged(final DocumentEvent event) {
-            final Integer pos = event.getOffset();
+        public void documentChanged(DocumentEvent event) {
+            Integer pos = event.getOffset();
             if (Application.get().isDispatchThread()) {
                 firePropertyChange(ACCESSIBLE_TEXT_PROPERTY, null, pos);
                 if (Platform.current().os().isMac()) {

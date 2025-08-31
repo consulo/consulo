@@ -116,11 +116,11 @@ public abstract class PersistentFS extends ManagingFS {
 
     @Nonnull
     public static FileAttributes toFileAttributes(int attributes) {
-        final boolean isDirectory = isSet(attributes, IS_DIRECTORY_FLAG);
-        final boolean isSpecial = isSet(attributes, IS_SPECIAL);
-        final boolean isSymlink = isSet(attributes, IS_SYMLINK);
-        final boolean isHidden = isSet(attributes, IS_HIDDEN);
-        final boolean isWritable = !isSet(attributes, IS_READ_ONLY);
+        boolean isDirectory = isSet(attributes, IS_DIRECTORY_FLAG);
+        boolean isSpecial = isSet(attributes, IS_SPECIAL);
+        boolean isSymlink = isSet(attributes, IS_SYMLINK);
+        boolean isHidden = isSet(attributes, IS_HIDDEN);
+        boolean isWritable = !isSet(attributes, IS_READ_ONLY);
         return new FileAttributes(isDirectory, isSpecial, isSymlink, isHidden, -1, -1, isWritable);
     }
 }

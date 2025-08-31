@@ -316,7 +316,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
       // console actions should be integrated with the provided toolbar when the console is shown not on Build tw
       return AnAction.EMPTY_ARRAY;
     }
-    final DefaultActionGroup rerunActionGroup = new DefaultActionGroup();
+    DefaultActionGroup rerunActionGroup = new DefaultActionGroup();
     AnAction stopAction = null;
     if (myBuildDescriptor.getProcessHandler() != null) {
       stopAction = new StopProcessAction(
@@ -332,11 +332,11 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     if (consoleView instanceof ConsoleView) {
       consoleView.getComponent(); //create editor to be able to add console editor actions
       if (stopAction == null) {
-        final AnAction[] consoleActions = ((ConsoleView)consoleView).createConsoleActions();
+        AnAction[] consoleActions = ((ConsoleView)consoleView).createConsoleActions();
         stopAction = ContainerUtil.find(consoleActions, StopAction.class::isInstance);
       }
     }
-    final DefaultActionGroup actionGroup = new DefaultActionGroup();
+    DefaultActionGroup actionGroup = new DefaultActionGroup();
     for (AnAction anAction : myBuildDescriptor.getRestartActions()) {
       rerunActionGroup.add(anAction);
     }
@@ -345,7 +345,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
       rerunActionGroup.add(stopAction);
     }
     actionGroup.add(rerunActionGroup);
-    final DefaultActionGroup otherActionGroup = new DefaultActionGroup();
+    DefaultActionGroup otherActionGroup = new DefaultActionGroup();
 
     List<AnAction> otherActions = myBuildDescriptor.getActions();
     if (!otherActions.isEmpty()) {

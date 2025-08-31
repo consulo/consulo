@@ -38,7 +38,7 @@ public class FileRelativePathMacro extends Macro {
   @Override
   public String expand(DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
-    final VirtualFile baseDir = project == null ? null : project.getBaseDir();
+    VirtualFile baseDir = project == null ? null : project.getBaseDir();
     if (baseDir == null) {
       return null;
     }

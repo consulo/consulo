@@ -82,7 +82,7 @@ public abstract class AbstractValueHint {
     private Runnable myHideRunnable;
 
     public AbstractValueHint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Point point, @Nonnull ValueHintType type,
-                             final TextRange textRange) {
+                             TextRange textRange) {
         myPoint = point;
         myProject = project;
         myEditor = editor;
@@ -198,7 +198,7 @@ public abstract class AbstractValueHint {
     private boolean myInsideShow = false;
 
     @RequiredUIAccess
-    protected boolean showHint(final JComponent component) {
+    protected boolean showHint(JComponent component) {
         myInsideShow = true;
         if (myCurrentHint != null) {
             myCurrentHint.hide();
@@ -254,8 +254,8 @@ public abstract class AbstractValueHint {
         return myHintHidden;
     }
 
-    protected JComponent createExpandableHintComponent(final SimpleColoredText text, final Runnable expand) {
-        final JComponent component = HintUtil.createInformationLabel(text, PlatformIconGroup.generalAdd());
+    protected JComponent createExpandableHintComponent(SimpleColoredText text, final Runnable expand) {
+        JComponent component = HintUtil.createInformationLabel(text, PlatformIconGroup.generalAdd());
         addClickListenerToHierarchy(component, new ClickListener() {
             @Override
             public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
@@ -291,7 +291,7 @@ public abstract class AbstractValueHint {
     }
 
     @Nullable
-    public static ValueHintType getHintType(final EditorMouseEvent e) {
+    public static ValueHintType getHintType(EditorMouseEvent e) {
         int modifiers = e.getMouseEvent().getModifiers();
         if (modifiers == 0) {
             return ValueHintType.MOUSE_OVER_HINT;

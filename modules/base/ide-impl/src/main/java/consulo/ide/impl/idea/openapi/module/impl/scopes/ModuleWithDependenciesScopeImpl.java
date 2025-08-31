@@ -89,7 +89,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     if (!hasOption(MODULES)) en.withoutDepModules();
     if (!hasOption(TESTS)) en.productionOnly();
 
-    final LinkedHashSet<Module> modules = new LinkedHashSet<>();
+    LinkedHashSet<Module> modules = new LinkedHashSet<>();
 
     en.forEach(each -> {
       if (each instanceof ModuleOrderEntry moduleOrderEntry) {
@@ -103,7 +103,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
 
     myModules = new HashSet<>(modules);
 
-    final LinkedHashSet<VirtualFile> roots = new LinkedHashSet<>();
+    LinkedHashSet<VirtualFile> roots = new LinkedHashSet<>();
 
     if (hasOption(CONTENT)) {
       for (Module m : modules) {

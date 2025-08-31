@@ -15,7 +15,7 @@ import jakarta.annotation.Nonnull;
 public class CreateNewProjectGroupAction extends RecentProjectsWelcomeScreenActionBase {
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final InputValidator validator = new InputValidator() {
+        InputValidator validator = new InputValidator() {
             @Override
             public boolean checkInput(String inputString) {
                 inputString = inputString.trim();
@@ -27,7 +27,7 @@ public class CreateNewProjectGroupAction extends RecentProjectsWelcomeScreenActi
                 return true;
             }
         };
-        final String newGroup =
+        String newGroup =
             Messages.showInputDialog((Project) null, "Project group name", "Create New Project Group", null, null, validator);
         if (newGroup != null) {
             RecentProjectsManager.getInstance().addGroup(new ProjectGroup(newGroup));

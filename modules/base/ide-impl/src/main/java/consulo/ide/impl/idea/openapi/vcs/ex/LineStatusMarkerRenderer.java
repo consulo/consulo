@@ -63,7 +63,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     ) {
         TextAttributes attributes = getTextAttributes(range);
 
-        final RangeHighlighter highlighter = markupModel.addRangeHighlighter(
+        RangeHighlighter highlighter = markupModel.addRangeHighlighter(
             textRange.getStartOffset(),
             textRange.getEndOffset(),
             HighlighterLayer.FIRST - 1,
@@ -190,10 +190,10 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         ColorValue borderColor = getGutterBorderColor(editor);
 
         Rectangle area = getMarkerArea(editor, r, myRange.getLine1(), myRange.getLine2());
-        final int x = area.x;
-        final int endX = area.x + area.width;
-        final int y = area.y;
-        final int endY = area.y + area.height;
+        int x = area.x;
+        int endX = area.x + area.width;
+        int y = area.y;
+        int endY = area.y + area.height;
 
         Graphics2D graphics2D = (Graphics2D)g;
 
@@ -286,7 +286,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
 
     public static boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
-        final EditorGutterComponentEx gutter = (EditorGutterComponentEx)e.getComponent();
+        EditorGutterComponentEx gutter = (EditorGutterComponentEx)e.getComponent();
         return gutter.isInsideMarkerArea(e);
     }
 
@@ -322,7 +322,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
     @Nullable
     private static ColorValue getGutterColor(@Nonnull Range.InnerRange range, @Nullable Editor editor) {
-        final EditorColorsScheme scheme = getColorScheme(editor);
+        EditorColorsScheme scheme = getColorScheme(editor);
         return switch (range.getType()) {
             case Range.INSERTED -> scheme.getColor(EditorColors.ADDED_LINES_COLOR);
             case Range.DELETED -> scheme.getColor(EditorColors.DELETED_LINES_COLOR);
@@ -334,7 +334,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
     @Nullable
     private static ColorValue getErrorStripeColor(@Nonnull Range range, @Nullable Editor editor) {
-        final EditorColorsScheme scheme = getColorScheme(editor);
+        EditorColorsScheme scheme = getColorScheme(editor);
         return switch (range.getType()) {
             case Range.INSERTED -> scheme.getAttributes(DiffColors.DIFF_INSERTED).getErrorStripeColor();
             case Range.DELETED -> scheme.getAttributes(DiffColors.DIFF_DELETED).getErrorStripeColor();
@@ -345,7 +345,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
     @Nullable
     private static ColorValue getGutterColor(@Nonnull Range range, @Nullable Editor editor) {
-        final EditorColorsScheme scheme = getColorScheme(editor);
+        EditorColorsScheme scheme = getColorScheme(editor);
         return switch (range.getType()) {
             case Range.INSERTED -> scheme.getColor(EditorColors.ADDED_LINES_COLOR);
             case Range.DELETED -> scheme.getColor(EditorColors.DELETED_LINES_COLOR);

@@ -119,8 +119,8 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
       return new GutterIconNavigationHandler<>() {
         @RequiredUIAccess
         @Override
-        public void navigate(final MouseEvent e, PsiElement elt) {
-          final List<LineMarkerInfo> infos = new ArrayList<>(markers);
+        public void navigate(MouseEvent e, PsiElement elt) {
+          List<LineMarkerInfo> infos = new ArrayList<>(markers);
           Collections.sort(infos, (o1, o2) -> o1.startOffset - o2.startOffset);
           IPopupChooserBuilder<LineMarkerInfo> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(infos);
           builder.setRenderer(LanguageEditorInternalHelper.getInstance().createMergeableLineMarkerRender(new Function<>() {
@@ -128,13 +128,13 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
             @Override
             public Pair<String, Image> apply(LineMarkerInfo dom) {
               Image icon = null;
-              final GutterIconRenderer renderer = dom.createGutterRenderer();
+              GutterIconRenderer renderer = dom.createGutterRenderer();
               if (renderer != null) {
                 icon = renderer.getIcon();
               }
               PsiElement element = dom.getElement();
               assert element != null;
-              final String elementPresentation = dom instanceof MergeableLineMarkerInfo ? ((MergeableLineMarkerInfo)dom).getElementPresentation(element) : element.getText();
+              String elementPresentation = dom instanceof MergeableLineMarkerInfo ? ((MergeableLineMarkerInfo)dom).getElementPresentation(element) : element.getText();
               String text = StringUtil.first(elementPresentation, 100, true).replace('\n', ' ');
 
               return Pair.create(text, icon);
@@ -142,7 +142,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
           }));
           builder.setItemChosenCallback(value -> {
             if (value != null) {
-              final GutterIconNavigationHandler handler = value.getNavigationHandler();
+              GutterIconNavigationHandler handler = value.getNavigationHandler();
               if (handler != null) {
                 //noinspection unchecked
                 handler.navigate(e, value.getElement());

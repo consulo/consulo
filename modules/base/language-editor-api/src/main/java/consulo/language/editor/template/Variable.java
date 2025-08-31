@@ -104,7 +104,7 @@ public class Variable implements Cloneable {
     if (this == o) return true;
     if (!(o instanceof Variable)) return false;
 
-    final Variable variable = (Variable) o;
+    Variable variable = (Variable) o;
 
     if (myAlwaysStopAt != variable.myAlwaysStopAt) return false;
     if (mySkipOnStart != variable.mySkipOnStart) return false;

@@ -38,23 +38,23 @@ public abstract class ComboBoxCellEditor extends DefaultCellEditor {
 
   @Override
   public boolean stopCellEditing() {
-    final JComboBox comboBox = (JComboBox)editorComponent;
+    JComboBox comboBox = (JComboBox)editorComponent;
     comboBox.removeActionListener(delegate);
-    final boolean result = super.stopCellEditing();
+    boolean result = super.stopCellEditing();
     comboBox.addActionListener(delegate);
     return result;
   }
 
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
     String currentValue = (String)value;
-    final JComboBox component = (JComboBox)super.getTableCellEditorComponent(table, value, isSelected, row, column);
+    JComboBox component = (JComboBox)super.getTableCellEditorComponent(table, value, isSelected, row, column);
     component.removeActionListener(delegate);
     component.setBorder(null);
     component.removeAllItems();
-    final List<String> items = getComboBoxItems();
+    List<String> items = getComboBoxItems();
     int selected = -1;
     for (int i = 0; i < items.size(); i++) {
-      final String item = items.get(i);
+      String item = items.get(i);
       component.addItem(item);
       if (Comparing.equal(item, currentValue)) {
         selected = i;

@@ -24,7 +24,7 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
   }
 
   @Override
-  public void refreshWithoutFileWatcher(final boolean asynchronous) {
+  public void refreshWithoutFileWatcher(boolean asynchronous) {
     refresh(asynchronous);
   }
 
@@ -34,7 +34,7 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
   }
 
   @Override
-  public boolean isSymLink(@Nonnull final VirtualFile file) {
+  public boolean isSymLink(@Nonnull VirtualFile file) {
     return false;
   }
 
@@ -47,14 +47,14 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
   public abstract String extractRootPath(@Nonnull String path);
 
   @Override
-  public void addVirtualFileListener(@Nonnull final VirtualFileListener listener) {
+  public void addVirtualFileListener(@Nonnull VirtualFileListener listener) {
     VirtualFileListener wrapper = new VirtualFileFilteringListener(listener, this);
     VirtualFileManager.getInstance().addVirtualFileListener(wrapper);
     myListenerWrappers.put(listener, wrapper);
   }
 
   @Override
-  public void removeVirtualFileListener(@Nonnull final VirtualFileListener listener) {
+  public void removeVirtualFileListener(@Nonnull VirtualFileListener listener) {
     VirtualFileListener wrapper = myListenerWrappers.remove(listener);
     if (wrapper != null) {
       VirtualFileManager.getInstance().removeVirtualFileListener(wrapper);
@@ -82,7 +82,7 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
   public abstract void moveFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException;
 
   @Override
-  public abstract void renameFile(final Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException;
+  public abstract void renameFile(Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException;
 
   public boolean markNewFilesAsDirty() {
     return false;

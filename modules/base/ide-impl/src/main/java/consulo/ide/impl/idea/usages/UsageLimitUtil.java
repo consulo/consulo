@@ -49,10 +49,10 @@ public class UsageLimitUtil {
   }
 
   @Nonnull
-  public static Result showTooManyUsagesWarning(@Nonnull final Project project,
-                                                @Nonnull final String message,
-                                                @Nonnull final UsageViewPresentation usageViewPresentation) {
-    final String[] buttons = {UsageViewBundle.message("button.text.continue"), UsageViewBundle.message("button.text.abort")};
+  public static Result showTooManyUsagesWarning(@Nonnull Project project,
+                                                @Nonnull String message,
+                                                @Nonnull UsageViewPresentation usageViewPresentation) {
+    String[] buttons = {UsageViewBundle.message("button.text.continue"), UsageViewBundle.message("button.text.abort")};
     int result = runOrInvokeAndWait(() -> {
       String title = UsageViewBundle.message("find.excessive.usages.title", StringUtil.capitalize(StringUtil.pluralize(usageViewPresentation.getUsagesWord())));
       return Messages.showOkCancelDialog(
@@ -67,8 +67,8 @@ public class UsageLimitUtil {
     return result == Messages.OK ? Result.CONTINUE : Result.ABORT;
   }
 
-  private static int runOrInvokeAndWait(@Nonnull final Computable<Integer> f) {
-    final int[] answer = new int[1];
+  private static int runOrInvokeAndWait(@Nonnull Computable<Integer> f) {
+    int[] answer = new int[1];
     try {
       GuiUtils.runOrInvokeAndWait(() -> answer[0] = f.compute());
     }

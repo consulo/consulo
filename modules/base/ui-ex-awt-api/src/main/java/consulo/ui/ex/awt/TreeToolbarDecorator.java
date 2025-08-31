@@ -35,7 +35,7 @@ class TreeToolbarDecorator extends ToolbarDecorator {
   @Nullable
   private final ElementProducer<?> myProducer;
 
-  TreeToolbarDecorator(JTree tree, @Nullable final ElementProducer<?> producer) {
+  TreeToolbarDecorator(JTree tree, @Nullable ElementProducer<?> producer) {
     myTree = tree;
     myProducer = producer;
     myAddActionEnabled = myRemoveActionEnabled = myUpActionEnabled = myDownActionEnabled = myTree.getModel() instanceof EditableTreeModel;
@@ -47,11 +47,11 @@ class TreeToolbarDecorator extends ToolbarDecorator {
   }
 
   private void createDefaultTreeActions() {
-    final EditableTreeModel model = (EditableTreeModel)myTree.getModel();
+    EditableTreeModel model = (EditableTreeModel)myTree.getModel();
     myAddAction = button -> {
-      final TreePath path = myTree.getSelectionPath();
-      final DefaultMutableTreeNode selected = path == null ? (DefaultMutableTreeNode)myTree.getModel().getRoot() : (DefaultMutableTreeNode)path.getLastPathComponent();
-      final Object selectedNode = selected.getUserObject();
+      TreePath path = myTree.getSelectionPath();
+      DefaultMutableTreeNode selected = path == null ? (DefaultMutableTreeNode)myTree.getModel().getRoot() : (DefaultMutableTreeNode)path.getLastPathComponent();
+      Object selectedNode = selected.getUserObject();
 
       myTree.stopEditing();
       Object element;
@@ -69,7 +69,7 @@ class TreeToolbarDecorator extends ToolbarDecorator {
       if (parent != null) {
         parent.insert(new DefaultMutableTreeNode(element), parent.getChildCount());
       }
-      final TreePath createdPath = model.addNode(new TreePath(parent.getPath()));
+      TreePath createdPath = model.addNode(new TreePath(parent.getPath()));
       if (path != null) {
         TreeUtil.selectPath(myTree, createdPath);
         IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
@@ -78,7 +78,7 @@ class TreeToolbarDecorator extends ToolbarDecorator {
 
     myRemoveAction = button -> {
       myTree.stopEditing();
-      final TreePath path = myTree.getSelectionPath();
+      TreePath path = myTree.getSelectionPath();
       model.removeNode(path);
     };
   }

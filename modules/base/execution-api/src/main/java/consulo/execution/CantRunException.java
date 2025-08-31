@@ -25,7 +25,7 @@ import consulo.process.ExecutionException;
 import jakarta.annotation.Nonnull;
 
 public class CantRunException extends ExecutionException {
-  public CantRunException(final String message) {
+  public CantRunException(String message) {
     super(message);
   }
 
@@ -33,7 +33,7 @@ public class CantRunException extends ExecutionException {
     super(s, cause);
   }
 
-  public static CantRunException noModuleConfigured(final String moduleName) {
+  public static CantRunException noModuleConfigured(String moduleName) {
     if (moduleName.trim().length() == 0) {
       return new CantRunException(ExecutionLocalize.noModuleDefinedErrorMessage().get());
     }
@@ -41,33 +41,33 @@ public class CantRunException extends ExecutionException {
   }
 
   @Deprecated
-  public static CantRunException noJdkForModule(@Nonnull final Module module) {
+  public static CantRunException noJdkForModule(@Nonnull Module module) {
     return new CantRunException(ExecutionLocalize.noJdkForModuleErrorMessage(module.getName()).get());
   }
 
-  public static CantRunException noModuleExtension(@Nonnull Module module, @Nonnull final Class<? extends ModuleExtension> extensionName) {
+  public static CantRunException noModuleExtension(@Nonnull Module module, @Nonnull Class<? extends ModuleExtension> extensionName) {
 
     return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(extensionName.getName(), module.getName()).get());
   }
 
-  public static CantRunException noSdkForModuleExtension(@Nonnull final ModuleExtension e) {
+  public static CantRunException noSdkForModuleExtension(@Nonnull ModuleExtension e) {
     String moduleExtensionName = ModuleExtensionHelper.getInstance(e.getProject()).getModuleExtensionName(e);
     return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(moduleExtensionName, e.getModule().getName()).get());
   }
 
-  public static CantRunException jdkMisconfigured(@Nonnull final Sdk jdk, @Nonnull final Module module) {
+  public static CantRunException jdkMisconfigured(@Nonnull Sdk jdk, @Nonnull Module module) {
     return new CantRunException(ExecutionLocalize.jdkIsBadConfiguredErrorMessage(jdk.getName()).get());
   }
 
-  public static CantRunException classNotFound(@Nonnull final String className, @Nonnull final Module module) {
+  public static CantRunException classNotFound(@Nonnull String className, @Nonnull Module module) {
     return new CantRunException(ExecutionLocalize.classNotFoundInModuleErrorMessage(className, module.getName()).get());
   }
 
-  public static CantRunException packageNotFound(final String packageName) {
+  public static CantRunException packageNotFound(String packageName) {
     return new CantRunException(ExecutionLocalize.packageNotFoundErrorMessage(packageName).get());
   }
 
-  public static CantRunException noJdkConfigured(final String jdkName) {
+  public static CantRunException noJdkConfigured(String jdkName) {
     if (jdkName != null) {
       return new CantRunException(ExecutionLocalize.jdkNotConfiguredErrorMessage(jdkName).get());
     }

@@ -46,13 +46,13 @@ public class RangeBlinker {
 
   private Future<?> myBlinkingFuture;
 
-  public RangeBlinker(Editor editor, final TextAttributes attributes, int timeToLive) {
+  public RangeBlinker(Editor editor, TextAttributes attributes, int timeToLive) {
     myAttributes = attributes;
     myEditor = editor;
     myTimeToLive = timeToLive;
   }
 
-  public void resetMarkers(final List<Segment> markers) {
+  public void resetMarkers(List<Segment> markers) {
     removeHighlights();
     myMarkers.clear();
     stopBlinking();

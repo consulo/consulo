@@ -33,11 +33,11 @@ public class TreeNodePartListener extends LinkMouseListenerBase {
     myRenderer = renderer;
   }
 
-  protected Object getTagAt(final MouseEvent e) {
-    final JTree tree = (JTree) e.getSource();
-    final TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+  protected Object getTagAt(MouseEvent e) {
+    JTree tree = (JTree) e.getSource();
+    TreePath path = tree.getPathForLocation(e.getX(), e.getY());
     if (path != null) {
-      final DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+      DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) path.getLastPathComponent();
       if (myLastHitNode != treeNode) {
         myLastHitNode = treeNode;
         myRenderedComp = myRenderer.getTreeCellRendererComponent(tree, treeNode, false, false, treeNode.isLeaf(), -1, false);
@@ -50,8 +50,8 @@ public class TreeNodePartListener extends LinkMouseListenerBase {
             tree.getCellRenderer().getTreeCellRendererComponent(tree, treeNode, false, false, treeNode.isLeaf(), -1, false);
           root.setSize(bounds.getSize());
           root.doLayout();
-          final int compX = myRenderedComp.getX() + bounds.x;
-          final int compY = myRenderedComp.getY() + bounds.y;
+          int compX = myRenderedComp.getX() + bounds.x;
+          int compY = myRenderedComp.getY() + bounds.y;
           if ((compX < e.getX()) && ((compX + myRenderedComp.getWidth()) > e.getX()) &&
             (compY < e.getY()) && ((compY + myRenderedComp.getHeight()) > e.getY())) {
             return myRenderer.getTag();

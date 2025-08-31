@@ -42,11 +42,11 @@ public abstract class SingleEntryIndexer<V> implements DataIndexer<Integer, V, F
     if (inputData == null) {
       return Collections.emptyMap();
     }
-    final V value = computeValue(inputData);
+    V value = computeValue(inputData);
     if (value == null && !myAcceptNullValues) {
       return Collections.emptyMap();
     }
-    final int key = Math.abs(FileBasedIndex.getFileId(inputData.getFile()));
+    int key = Math.abs(FileBasedIndex.getFileId(inputData.getFile()));
     return Collections.singletonMap(key, value);
   }
 

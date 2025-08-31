@@ -181,7 +181,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -189,7 +189,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
             return false;
         }
 
-        final TextAttributesKey that = (TextAttributesKey)o;
+        TextAttributesKey that = (TextAttributesKey)o;
 
         return myExternalName.equals(that.myExternalName);
     }
@@ -207,7 +207,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
     public TextAttributes getDefaultAttributes() {
         if (myDefaultAttributes == NULL_ATTRIBUTES) {
             myDefaultAttributes = null;
-            final TextAttributeKeyDefaultsProvider provider = ourDefaultsProvider.get();
+            TextAttributeKeyDefaultsProvider provider = ourDefaultsProvider.get();
             if (provider != null) {
                 myDefaultAttributes = provider.getDefaultAttributes(this);
             }

@@ -50,6 +50,6 @@ public class FavoritesRootNode extends AbstractTreeNode<String> {
   }
 
   @Override
-  public void update(final PresentationData presentation) {
+  public void update(PresentationData presentation) {
   }
 }

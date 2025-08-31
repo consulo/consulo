@@ -68,7 +68,7 @@ public abstract class ShowSettingsUtil implements ProjectStructureSettingsUtil {
 
   @RequiredUIAccess
   @Nonnull
-  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, final String id2Select, final String filter);
+  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter);
 
   @RequiredUIAccess
   @Nonnull

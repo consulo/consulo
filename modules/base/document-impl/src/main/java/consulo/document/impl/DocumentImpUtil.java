@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DocumentImpUtil {
   @Deprecated
-  public static void writeInRunUndoTransparentAction(@Nonnull final Runnable runnable) {
+  public static void writeInRunUndoTransparentAction(@Nonnull Runnable runnable) {
     UndoUtil.writeInRunUndoTransparentAction(runnable);
   }
 }

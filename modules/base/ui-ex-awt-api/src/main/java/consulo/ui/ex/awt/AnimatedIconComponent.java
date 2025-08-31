@@ -46,7 +46,7 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
 
   private final String myName;
 
-  public AnimatedIconComponent(final String name, consulo.ui.image.Image[] icons, consulo.ui.image.Image passiveIcon, int cycleLength) {
+  public AnimatedIconComponent(String name, consulo.ui.image.Image[] icons, consulo.ui.image.Image passiveIcon, int cycleLength) {
     myName = name;
     myIcons = icons.length == 0 ? new consulo.ui.image.Image[]{passiveIcon} : icons;
     myPassiveIcon = passiveIcon;
@@ -54,8 +54,8 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
 
     myAnimator = new Animator(myName, icons.length, cycleLength, true) {
       @Override
-      public void paintNow(final int frame, final int totalFrames, final int cycle) {
-        final int len = myIcons.length;
+      public void paintNow(int frame, int totalFrames, int cycle) {
+        int len = myIcons.length;
         myCurrentIconIndex = frame < 0 ? 0 : frame >= len ? len - 1 : frame;
         paintImmediately(0, 0, getWidth(), getHeight());
       }
@@ -132,7 +132,7 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
 
   @Override
   public Dimension getPreferredSize() {
-    final Insets insets = getInsets();
+    Insets insets = getInsets();
     return new Dimension(myPrefSize.width + insets.left + insets.right, myPrefSize.height + insets.top + insets.bottom);
   }
 
@@ -151,7 +151,7 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
     //if (myPaintingBgNow) return;
 
     if (isOpaque()) {
-      final Container parent = getParent();
+      Container parent = getParent();
       JComponent opaque = null;
       if (parent instanceof JComponent) {
         opaque = (JComponent)UIUtil.findNearestOpaque(parent);
@@ -170,7 +170,7 @@ public class AnimatedIconComponent extends JComponent implements Disposable {
       icon = getPassiveIcon();
     }
 
-    final Dimension size = getSize();
+    Dimension size = getSize();
     int x = (size.width - icon.getWidth()) / 2;
     int y = (size.height - icon.getHeight()) / 2;
 

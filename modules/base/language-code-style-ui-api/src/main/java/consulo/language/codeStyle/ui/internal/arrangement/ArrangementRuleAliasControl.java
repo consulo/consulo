@@ -39,7 +39,7 @@ public class ArrangementRuleAliasControl extends ArrangementMatchingRulesControl
   }
 
   public List<StdArrangementMatchRule> getRuleSequences() {
-    final List<StdArrangementMatchRule> rulesSequences = new ArrayList<StdArrangementMatchRule>();
+    List<StdArrangementMatchRule> rulesSequences = new ArrayList<StdArrangementMatchRule>();
     for (int i = 0; i < getModel().getSize(); i++) {
       Object element = getModel().getElementAt(i);
       if (element instanceof StdArrangementMatchRule) {

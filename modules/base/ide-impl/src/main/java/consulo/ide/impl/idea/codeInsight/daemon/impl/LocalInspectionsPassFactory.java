@@ -55,7 +55,7 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
     TextRange textRange = calculateRangeToProcess(editor);
     if (textRange == null || !InspectionProjectProfileManager.getInstance(file.getProject()).isProfileLoaded()){
       return new ProgressableTextEditorHighlightingPass.EmptyPass(file.getProject(), editor.getDocument());
@@ -68,7 +68,7 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
   public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
                                                                @Nonnull Document document,
                                                                @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
-    final TextRange textRange = file.getTextRange();
+    TextRange textRange = file.getTextRange();
     LOG.assertTrue(textRange != null, "textRange is null for " + file + " (" + PsiUtilCore.getVirtualFile(file) + ")");
     return new MyLocalInspectionsPass(file, document, textRange, LocalInspectionsPass.EMPTY_PRIORITY_RANGE, highlightInfoProcessor);
   }

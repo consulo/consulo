@@ -30,10 +30,10 @@ public class UIVcsUtil {
   private UIVcsUtil() {
   }
 
-  public static JPanel errorPanel(final String text, boolean isError) {
-    final JLabel label = new JLabel("<html><body>" + escapeXmlAndAddBr(text) + "</body></html>");
+  public static JPanel errorPanel(String text, boolean isError) {
+    JLabel label = new JLabel("<html><body>" + escapeXmlAndAddBr(text) + "</body></html>");
     label.setForeground(isError ? SimpleTextAttributes.ERROR_ATTRIBUTES.getFgColor() : UIUtil.getInactiveTextColor());
-    final JPanel wrapper = new JPanel(new GridBagLayout());
+    JPanel wrapper = new JPanel(new GridBagLayout());
     wrapper.add(label, new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.CENTER, GridBagConstraints.NONE,
                                                          new Insets(1,1,1,1), 0,0));
     return wrapper;
@@ -45,10 +45,10 @@ public class UIVcsUtil {
     return escaped;
   }
 
-  public static JPanel infoPanel(final String header, final String text) {
-    final JLabel label = new JLabel("<html><body><h4>" + StringUtil.escapeXml(header) +
+  public static JPanel infoPanel(String header, String text) {
+    JLabel label = new JLabel("<html><body><h4>" + StringUtil.escapeXml(header) +
                                     "</h4>" + escapeXmlAndAddBr(text) + "</body></html>");
-    final JPanel wrapper = new JPanel(new GridBagLayout());
+    JPanel wrapper = new JPanel(new GridBagLayout());
     wrapper.add(label, new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.CENTER, GridBagConstraints.NONE,
                                                          new Insets(1,1,1,1), 0,0));
     return wrapper;

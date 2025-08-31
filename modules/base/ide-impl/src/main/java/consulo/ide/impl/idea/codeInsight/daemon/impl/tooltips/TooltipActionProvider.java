@@ -30,11 +30,11 @@ public interface TooltipActionProvider {
   boolean SHOW_FIXES_DEFAULT_VALUE = true;
 
   @Nullable
-  TooltipAction getTooltipAction(@Nonnull final HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile);
+  TooltipAction getTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile);
 
 
   @Nullable
-  static TooltipAction calcTooltipAction(@Nonnull final HighlightInfo info, @Nonnull Editor editor) {
+  static TooltipAction calcTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor) {
     if (!Registry.is("ide.tooltip.show.with.actions")) return null;
 
     Project project = editor.getProject();

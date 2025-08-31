@@ -61,7 +61,7 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
     protected void customizeCellRenderer(@Nonnull JList<? extends FileTemplate> list, FileTemplate value, int index, boolean selected, boolean hasFocus) {
       Image icon;
       icon = FileTemplateUtil.getIcon(value);
-      final boolean internalTemplate = AllFileTemplatesConfigurable.isInternalTemplate(value.getName(), getTitle());
+      boolean internalTemplate = AllFileTemplatesConfigurable.isInternalTemplate(value.getName(), getTitle());
       if (internalTemplate) {
         setFont(getFont().deriveFont(Font.BOLD));
         append(value.getName());
@@ -82,12 +82,12 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
 
   @Override
   public void removeSelected() {
-    final FileTemplate selectedTemplate = getSelectedTemplate();
+    FileTemplate selectedTemplate = getSelectedTemplate();
     if (selectedTemplate == null) {
       return;
     }
-    final DefaultListModel model = (DefaultListModel) myList.getModel();
-    final int selectedIndex = myList.getSelectedIndex();
+    DefaultListModel model = (DefaultListModel) myList.getModel();
+    int selectedIndex = myList.getSelectedIndex();
     model.remove(selectedIndex);
     if (!model.isEmpty()) {
       myList.setSelectedIndex(Math.min(selectedIndex, model.size() - 1));
@@ -127,7 +127,7 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
   @Override
   @Nonnull
   public FileTemplate[] getTemplates() {
-    final int size = myModel.getSize();
+    int size = myModel.getSize();
     List<FileTemplate> templates = new ArrayList<>(size);
     for (int i =0; i<size; i++) {
       templates.add((FileTemplate) myModel.getElementAt(i));
@@ -147,7 +147,7 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
 
   @Override
   public FileTemplate getSelectedTemplate() {
-    final Object value = myList.getSelectedValue();
+    Object value = myList.getSelectedValue();
     return value instanceof FileTemplate ? (FileTemplate) value : null;
   }
 

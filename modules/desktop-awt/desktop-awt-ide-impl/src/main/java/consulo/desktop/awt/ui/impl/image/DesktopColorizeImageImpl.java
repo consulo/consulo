@@ -51,15 +51,15 @@ public class DesktopColorizeImageImpl extends JBUI.CachingScalableJBIcon<Desktop
   }
 
   @Nonnull
-  private BufferedImage colorize(@Nonnull final Icon source, @Nonnull Color color, boolean keepGray) {
+  private BufferedImage colorize(@Nonnull Icon source, @Nonnull Color color, boolean keepGray) {
     float[] base = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 
-    final BufferedImage image = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
-    final Graphics2D g = image.createGraphics();
+    BufferedImage image = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
+    Graphics2D g = image.createGraphics();
     source.paintIcon(null, g, 0, 0);
     g.dispose();
 
-    final BufferedImage img = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
+    BufferedImage img = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
     int[] rgba = new int[4];
     float[] hsb = new float[3];
     for (int y = 0; y < image.getRaster().getHeight(); y++) {

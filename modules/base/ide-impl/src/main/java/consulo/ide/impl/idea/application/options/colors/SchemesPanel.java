@@ -144,7 +144,7 @@ public class SchemesPanel implements SkipSelfSearchComponent {
   }
 
   @RequiredUIAccess
-  public void resetSchemesCombo(final Object source) {
+  public void resetSchemesCombo(Object source) {
     if (this != source) {
       setListLoaded(false);
 
@@ -165,7 +165,7 @@ public class SchemesPanel implements SkipSelfSearchComponent {
     }
   }
 
-  private void setListLoaded(final boolean b) {
+  private void setListLoaded(boolean b) {
     myListLoaded = b;
   }
 

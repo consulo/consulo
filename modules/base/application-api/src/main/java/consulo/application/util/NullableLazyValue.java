@@ -37,7 +37,7 @@ public abstract class NullableLazyValue<T> implements Supplier<T>{
     };
   }
 
-  public static <E> NullableLazyValue<E> of(@Nonnull final Supplier<E> factory) {
+  public static <E> NullableLazyValue<E> of(@Nonnull Supplier<E> factory) {
     return createValue(factory);
   }
 

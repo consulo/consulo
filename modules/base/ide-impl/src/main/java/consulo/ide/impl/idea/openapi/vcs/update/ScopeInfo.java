@@ -28,12 +28,12 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.ArrayList;
 
 public interface ScopeInfo {
-  FilePath[] getRoots(VcsContext context, final ActionInfo actionInfo);
-  String getScopeName(VcsContext dataContext, final ActionInfo actionInfo);
+  FilePath[] getRoots(VcsContext context, ActionInfo actionInfo);
+  String getScopeName(VcsContext dataContext, ActionInfo actionInfo);
   boolean filterExistsInVcs();
 
   ScopeInfo PROJECT = new ScopeInfo() {
-    public String getScopeName(VcsContext dataContext, final ActionInfo actionInfo) {
+    public String getScopeName(VcsContext dataContext, ActionInfo actionInfo) {
       return VcsBundle.message("update.project.scope.name");
     }
 
@@ -41,14 +41,14 @@ public interface ScopeInfo {
       return true;
     }
 
-    public FilePath[] getRoots(VcsContext context, final ActionInfo actionInfo) {
+    public FilePath[] getRoots(VcsContext context, ActionInfo actionInfo) {
       ArrayList<FilePath> result = new ArrayList<FilePath>();
       Project project = context.getProject();
-      final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
-      final AbstractVcs[] vcses = vcsManager.getAllActiveVcss();
+      ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+      AbstractVcs[] vcses = vcsManager.getAllActiveVcss();
       for(AbstractVcs vcs: vcses) {
         if (actionInfo.getEnvironment(vcs) != null) {
-          final VirtualFile[] files = vcsManager.getRootsUnderVcs(vcs);
+          VirtualFile[] files = vcsManager.getRootsUnderVcs(vcs);
           for(VirtualFile file: files) {
             result.add(new FilePathImpl(file));
           }
@@ -59,7 +59,7 @@ public interface ScopeInfo {
   };
 
   ScopeInfo FILES = new ScopeInfo() {
-    public String getScopeName(VcsContext dataContext, final ActionInfo actionInfo) {
+    public String getScopeName(VcsContext dataContext, ActionInfo actionInfo) {
       FilePath[] roots = getRoots(dataContext, actionInfo);
       if (roots == null || roots.length == 0) {
         return VcsBundle.message("update.files.scope.name");
@@ -88,7 +88,7 @@ public interface ScopeInfo {
       return true;
     }
 
-    public FilePath[] getRoots(VcsContext context, final ActionInfo actionInfo) {
+    public FilePath[] getRoots(VcsContext context, ActionInfo actionInfo) {
       return context.getSelectedFilePaths();
     }
 

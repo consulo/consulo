@@ -180,7 +180,7 @@ class Browser extends JPanel {
         myHyperLinkListener = Browser.this::hyperlinkUpdate;
         myHTMLViewer.addHyperlinkListener(myHyperLinkListener);
 
-        final JScrollPane pane = ScrollPaneFactory.createScrollPane(myHTMLViewer);
+        JScrollPane pane = ScrollPaneFactory.createScrollPane(myHTMLViewer);
         pane.setBorder(null);
         add(pane, BorderLayout.CENTER);
         setupStyle();
@@ -241,13 +241,13 @@ class Browser extends JPanel {
                 }
             }
             else if (ref.startsWith("suppress:")) {
-                final SuppressActionWrapper.SuppressTreeAction[] suppressTreeActions =
+                SuppressActionWrapper.SuppressTreeAction[] suppressTreeActions =
                     new SuppressActionWrapper(
                         myView.getProject(),
                         getToolWrapper(),
                         myView.getTree().getSelectionPaths()
                     ).getChildren(null);
-                final List<AnAction> activeActions = new ArrayList<>();
+                List<AnAction> activeActions = new ArrayList<>();
                 for (SuppressActionWrapper.SuppressTreeAction suppressTreeAction : suppressTreeActions) {
                     if (suppressTreeAction.isAvailable()) {
                         activeActions.add(suppressTreeAction);
@@ -308,9 +308,9 @@ class Browser extends JPanel {
     }
 
     @RequiredReadAction
-    private String generateHTML(final RefEntity refEntity, @Nonnull final InspectionToolWrapper toolWrapper) {
-        final StringBuffer buf = new StringBuffer();
-        final HTMLComposerBase htmlComposer = getPresentation(toolWrapper).getComposer();
+    private String generateHTML(RefEntity refEntity, @Nonnull InspectionToolWrapper toolWrapper) {
+        StringBuffer buf = new StringBuffer();
+        HTMLComposerBase htmlComposer = getPresentation(toolWrapper).getComposer();
         if (refEntity instanceof RefElement) {
             Application.get().runReadAction(() -> htmlComposer.compose(buf, refEntity));
         }
@@ -334,14 +334,14 @@ class Browser extends JPanel {
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
-    private static void insertHeaderFooter(final StringBuffer buf) {
+    private static void insertHeaderFooter(StringBuffer buf) {
         buf.insert(0, "<HTML><BODY>");
         buf.append("</BODY></HTML>");
     }
 
-    private String generateHTML(final RefEntity refEntity, final CommonProblemDescriptor descriptor) {
-        final StringBuffer buf = new StringBuffer();
-        final Runnable action = () -> {
+    private String generateHTML(RefEntity refEntity, CommonProblemDescriptor descriptor) {
+        StringBuffer buf = new StringBuffer();
+        Runnable action = () -> {
             InspectionToolWrapper toolWrapper = getToolWrapper(refEntity);
             getPresentation(toolWrapper).getComposer().compose(buf, refEntity, descriptor);
         };
@@ -357,10 +357,10 @@ class Browser extends JPanel {
         return buf.toString();
     }
 
-    private InspectionToolWrapper getToolWrapper(final RefEntity refEntity) {
+    private InspectionToolWrapper getToolWrapper(RefEntity refEntity) {
         InspectionToolWrapper toolWrapper = getToolWrapper();
         assert toolWrapper != null;
-        final GlobalInspectionContextImpl context = myView.getGlobalInspectionContext();
+        GlobalInspectionContextImpl context = myView.getGlobalInspectionContext();
         if (refEntity instanceof RefElement) {
             PsiElement element = ((RefElement)refEntity).getPsiElement();
             if (element == null) {
@@ -373,15 +373,15 @@ class Browser extends JPanel {
         return toolWrapper;
     }
 
-    private void appendSuppressSection(final StringBuffer buf) {
-        final InspectionToolWrapper toolWrapper = getToolWrapper();
+    private void appendSuppressSection(StringBuffer buf) {
+        InspectionToolWrapper toolWrapper = getToolWrapper();
         if (toolWrapper != null) {
-            final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+            HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
             if (key != null) {//dummy entry points
-                final SuppressActionWrapper.SuppressTreeAction[] suppressActions =
+                SuppressActionWrapper.SuppressTreeAction[] suppressActions =
                     new SuppressActionWrapper(myView.getProject(), toolWrapper, myView.getTree().getSelectionPaths()).getChildren(null);
                 if (suppressActions.length > 0) {
-                    final List<AnAction> activeSuppressActions = new ArrayList<>();
+                    List<AnAction> activeSuppressActions = new ArrayList<>();
                     for (SuppressActionWrapper.SuppressTreeAction suppressAction : suppressActions) {
                         if (suppressAction.isAvailable()) {
                             activeSuppressActions.add(suppressAction);
@@ -389,7 +389,7 @@ class Browser extends JPanel {
                     }
                     if (!activeSuppressActions.isEmpty()) {
                         int idx = 0;
-                        @NonNls final String br = "<br>";
+                        @NonNls String br = "<br>";
                         buf.append(br);
                         HTMLComposerBase.appendHeading(buf, InspectionLocalize.inspectionExportResultsSuppress());
                         for (AnAction suppressAction : activeSuppressActions) {
@@ -398,7 +398,7 @@ class Browser extends JPanel {
                                 buf.append(br);
                             }
                             HTMLComposer.appendAfterHeaderIndention(buf);
-                            @NonNls final String href = "<a HREF=\"file://bred.txt#suppress:" + idx + "\">" +
+                            @NonNls String href = "<a HREF=\"file://bred.txt#suppress:" + idx + "\">" +
                                 suppressAction.getTemplatePresentation().getText() + "</a>";
                             buf.append(href);
                             idx++;
@@ -409,7 +409,7 @@ class Browser extends JPanel {
         }
     }
 
-    private static void uppercaseFirstLetter(final StringBuffer buf) {
+    private static void uppercaseFirstLetter(StringBuffer buf) {
         if (buf.length() > 1) {
             char[] firstLetter = new char[1];
             buf.getChars(0, 1, firstLetter, 0);
@@ -446,7 +446,7 @@ class Browser extends JPanel {
         HTMLComposer.appendHeading(page, InspectionLocalize.inspectionToolInBrowserDescriptionTitle());
         page.append("</td></tr>");
         page.append("<tr><td width='37'></td><td>");
-        @NonNls final String underConstruction =
+        @NonNls String underConstruction =
             "<b>" + InspectionLocalize.inspectionToolDescriptionUnderConstructionText() + "</b></html>";
         try {
             @NonNls String description = toolWrapper.loadDescription();
@@ -473,11 +473,11 @@ class Browser extends JPanel {
         if (myView.getTree().getSelectionCount() != 1) {
             return;
         }
-        final InspectionTreeNode node = (InspectionTreeNode)myView.getTree().getSelectionPath().getLastPathComponent();
+        InspectionTreeNode node = (InspectionTreeNode)myView.getTree().getSelectionPath().getLastPathComponent();
         if (node instanceof ProblemDescriptionNode) {
-            final ProblemDescriptionNode problemNode = (ProblemDescriptionNode)node;
-            final CommonProblemDescriptor descriptor = problemNode.getDescriptor();
-            final RefEntity element = problemNode.getElement();
+            ProblemDescriptionNode problemNode = (ProblemDescriptionNode)node;
+            CommonProblemDescriptor descriptor = problemNode.getDescriptor();
+            RefEntity element = problemNode.getElement();
             invokeFix(element, descriptor, idx);
         }
         else if (node instanceof RefElementNode) {
@@ -490,8 +490,8 @@ class Browser extends JPanel {
         }
     }
 
-    private void invokeFix(final RefEntity element, final CommonProblemDescriptor descriptor, final int idx) {
-        final QuickFix[] fixes = descriptor.getFixes();
+    private void invokeFix(RefEntity element, CommonProblemDescriptor descriptor, int idx) {
+        QuickFix[] fixes = descriptor.getFixes();
         if (fixes != null && fixes.length > idx && fixes[idx] != null) {
             if (element instanceof RefElement) {
                 PsiElement psiElement = ((RefElement)element).getPsiElement();
@@ -509,15 +509,15 @@ class Browser extends JPanel {
     }
 
     @RequiredUIAccess
-    private void performFix(final RefEntity element, final CommonProblemDescriptor descriptor, final int idx, final QuickFix fix) {
+    private void performFix(RefEntity element, CommonProblemDescriptor descriptor, int idx, QuickFix fix) {
         CommandProcessor.getInstance().newCommand()
             .project(myView.getProject())
             .name(LocalizeValue.ofNullable(fix.getName()))
             .inWriteAction()
             .inGlobalUndoAction()
             .run(() -> {
-                final PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
-                final long startCount = tracker.getModificationCount();
+                PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
+                long startCount = tracker.getModificationCount();
                 //CCE here means QuickFix was incorrectly inherited
                 fix.applyFix(myView.getProject(), descriptor);
                 if (startCount != tracker.getModificationCount()) {

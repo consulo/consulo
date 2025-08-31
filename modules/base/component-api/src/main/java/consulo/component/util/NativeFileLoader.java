@@ -28,7 +28,7 @@ public final class NativeFileLoader {
 
     String libFileName = Platform.current().mapLibraryName(libName);
 
-    final String libPath;
+    String libPath;
     File nativePluginDirectory = new File(plugin.getPath(), "native");
     File libFile = new File(nativePluginDirectory, libFileName);
 

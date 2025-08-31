@@ -46,18 +46,18 @@ public interface RefactoringQuickFix extends LocalQuickFix {
   RefactoringActionHandler getHandler();
 
   default PsiElement getElementToRefactor(PsiElement element) {
-    final PsiElement parent = element.getParent();
+    PsiElement parent = element.getParent();
     return (parent instanceof PsiNamedElement) ? parent : element;
   }
 
   default void doFix(@Nonnull PsiElement element) {
-    final PsiElement elementToRefactor = getElementToRefactor(element);
+    PsiElement elementToRefactor = getElementToRefactor(element);
     if (elementToRefactor == null) {
       return;
     }
-    final Consumer<DataContext> consumer = dataContext -> {
+    Consumer<DataContext> consumer = dataContext -> {
       dataContext = enhanceDataContext(dataContext);
-      final RefactoringActionHandler handler = getHandler();
+      RefactoringActionHandler handler = getHandler();
       handler.invoke(element.getProject(), new PsiElement[]{elementToRefactor}, dataContext);
     };
     DataManager.getInstance().getDataContextFromFocus().doWhenDone(consumer);

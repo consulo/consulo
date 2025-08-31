@@ -27,5 +27,5 @@ import jakarta.annotation.Nonnull;
 @FunctionalInterface
 public interface CompletionProvider {
   @RequiredReadAction
-  void addCompletions(@Nonnull CompletionParameters parameters, final ProcessingContext context, @Nonnull CompletionResultSet result);
+  void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result);
 }

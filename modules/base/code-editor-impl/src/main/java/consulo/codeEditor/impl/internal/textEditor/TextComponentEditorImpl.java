@@ -52,7 +52,7 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   private final TextComponentFoldingModel myFoldingModel;
   private EditorSettings mySettings;
 
-  public TextComponentEditorImpl(final Project project, @Nonnull JTextComponent textComponent) {
+  public TextComponentEditorImpl(Project project, @Nonnull JTextComponent textComponent) {
     myProject = project;
     myTextComponent = textComponent;
     if (textComponent instanceof JTextArea) {
@@ -176,12 +176,12 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
 
   @Override
   @Nonnull
-  public Point logicalPositionToXY(@Nonnull final LogicalPosition pos) {
+  public Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public int logicalPositionToOffset(@Nonnull final LogicalPosition pos) {
+  public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
     if (pos.line >= myDocument.getLineCount()) {
       return myDocument.getTextLength();
     }
@@ -190,13 +190,13 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
 
   @Override
   @Nonnull
-  public VisualPosition logicalToVisualPosition(@Nonnull final LogicalPosition logicalPos) {
+  public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos) {
     return new VisualPosition(logicalPos.line, logicalPos.column);
   }
 
   @Override
   @Nonnull
-  public Point visualPositionToXY(@Nonnull final VisualPosition visible) {
+  public Point visualPositionToXY(@Nonnull VisualPosition visible) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -208,23 +208,23 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
 
   @Override
   @Nonnull
-  public LogicalPosition visualToLogicalPosition(@Nonnull final VisualPosition visiblePos) {
+  public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos) {
     return new LogicalPosition(visiblePos.line, visiblePos.column);
   }
 
   @Override
   @Nonnull
-  public LogicalPosition offsetToLogicalPosition(final int offset) {
+  public LogicalPosition offsetToLogicalPosition(int offset) {
     int line = myDocument.getLineNumber(offset);
-    final int lineStartOffset = myDocument.getLineStartOffset(line);
+    int lineStartOffset = myDocument.getLineStartOffset(line);
     return new LogicalPosition(line, offset - lineStartOffset);
   }
 
   @Override
   @Nonnull
-  public VisualPosition offsetToVisualPosition(final int offset) {
+  public VisualPosition offsetToVisualPosition(int offset) {
     int line = myDocument.getLineNumber(offset);
-    final int lineStartOffset = myDocument.getLineStartOffset(line);
+    int lineStartOffset = myDocument.getLineStartOffset(line);
     return new VisualPosition(line, offset - lineStartOffset);
   }
 
@@ -236,13 +236,13 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
 
   @Override
   @Nonnull
-  public LogicalPosition xyToLogicalPosition(@Nonnull final Point p) {
+  public LogicalPosition xyToLogicalPosition(@Nonnull Point p) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
   @Nonnull
-  public VisualPosition xyToVisualPosition(@Nonnull final Point p) {
+  public VisualPosition xyToVisualPosition(@Nonnull Point p) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -253,22 +253,22 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   }
 
   @Override
-  public void addEditorMouseListener(@Nonnull final EditorMouseListener listener) {
+  public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void removeEditorMouseListener(@Nonnull final EditorMouseListener listener) {
+  public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void addEditorMouseMotionListener(@Nonnull final EditorMouseMotionListener listener) {
+  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void removeEditorMouseMotionListener(@Nonnull final EditorMouseMotionListener listener) {
+  public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -306,12 +306,12 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
 
   @Override
   @Nullable
-  public EditorMouseEventArea getMouseEventArea(@Nonnull final MouseEvent e) {
+  public EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void setHeaderComponent(@Nullable final JComponent header) {
+  public void setHeaderComponent(@Nullable JComponent header) {
     throw new UnsupportedOperationException("Not implemented");
   }
 

@@ -122,11 +122,11 @@ public class ChooseActionsDialog extends DialogWrapper {
     }
 
     private JPanel createToolbarPanel() {
-        final JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
         DefaultActionGroup group = new DefaultActionGroup();
-        final JComponent toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
-        final CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
-        final TreeExpander treeExpander = new TreeExpander() {
+        JComponent toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
+        CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
+        TreeExpander treeExpander = new TreeExpander() {
             public void expandAll() {
                 TreeUtil.expandAll(myActionsTree.getTree());
             }
@@ -161,9 +161,9 @@ public class ChooseActionsDialog extends DialogWrapper {
                         if (!myTreeExpansionMonitor.isFreeze()) {
                             myTreeExpansionMonitor.freeze();
                         }
-                        final String filter = getFilter();
+                        String filter = getFilter();
                         myActionsTree.filter(filter, myQuicklists);
-                        final JTree tree = myActionsTree.getTree();
+                        JTree tree = myActionsTree.getTree();
                         TreeUtil.expandAll(tree);
                         if (filter == null || filter.length() == 0) {
                             TreeUtil.collapseAll(tree, 0);
@@ -211,11 +211,11 @@ public class ChooseActionsDialog extends DialogWrapper {
     }
 
     private void filterTreeByShortcut(
-        final ShortcutTextField firstShortcut,
-        final JCheckBox enable2Shortcut,
-        final ShortcutTextField secondShortcut
+        ShortcutTextField firstShortcut,
+        JCheckBox enable2Shortcut,
+        ShortcutTextField secondShortcut
     ) {
-        final KeyStroke keyStroke = firstShortcut.getKeyStroke();
+        KeyStroke keyStroke = firstShortcut.getKeyStroke();
         if (keyStroke != null) {
             if (!myTreeExpansionMonitor.isFreeze()) {
                 myTreeExpansionMonitor.freeze();
@@ -224,7 +224,7 @@ public class ChooseActionsDialog extends DialogWrapper {
                 new KeyboardShortcut(keyStroke, enable2Shortcut.isSelected() ? secondShortcut.getKeyStroke() : null),
                 myQuicklists
             );
-            final JTree tree = myActionsTree.getTree();
+            JTree tree = myActionsTree.getTree();
             TreeUtil.expandAll(tree);
         }
     }
@@ -232,7 +232,7 @@ public class ChooseActionsDialog extends DialogWrapper {
     private JPanel createFilteringPanel() {
         myActionsTree.reset(myKeymap, myQuicklists);
 
-        final JLabel firstLabel = new JLabel(KeyMapBundle.message("filter.first.stroke.input"));
+        JLabel firstLabel = new JLabel(KeyMapBundle.message("filter.first.stroke.input"));
         final JCheckBox enable2Shortcut = new JCheckBox(KeyMapBundle.message("filter.second.stroke.input"));
         final ShortcutTextField firstShortcut = new ShortcutTextField();
         firstShortcut.setColumns(10);

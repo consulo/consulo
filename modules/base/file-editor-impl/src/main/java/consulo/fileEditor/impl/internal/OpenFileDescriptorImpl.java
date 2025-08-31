@@ -230,7 +230,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
     }
 
     public void navigateIn(@Nonnull Editor e) {
-        final int offset = getOffset();
+        int offset = getOffset();
         CaretModel caretModel = e.getCaretModel();
         boolean caretMoved = false;
         if (myLogicalLine >= 0) {
@@ -254,7 +254,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         }
     }
 
-    private static void unfoldCurrentLine(@Nonnull final Editor editor) {
+    private static void unfoldCurrentLine(@Nonnull Editor editor) {
         final FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
         final TextRange range = getRangeToUnfoldOnNavigation(editor);
         editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
@@ -271,7 +271,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
 
     @Nonnull
     public static TextRange getRangeToUnfoldOnNavigation(@Nonnull Editor editor) {
-        final int offset = editor.getCaretModel().getOffset();
+        int offset = editor.getCaretModel().getOffset();
         int line = editor.getDocument().getLineNumber(offset);
         int start = editor.getDocument().getLineStartOffset(line);
         int end = editor.getDocument().getLineEndOffset(line);

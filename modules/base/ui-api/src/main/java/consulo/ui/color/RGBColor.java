@@ -154,7 +154,7 @@ public final class RGBColor implements Serializable, ColorValue {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("RGBColor{");
+    StringBuilder sb = new StringBuilder("RGBColor{");
     sb.append("myRed=").append(myRed);
     sb.append(", myGreed=").append(myGreen);
     sb.append(", myBlue=").append(myBlue);

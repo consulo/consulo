@@ -120,22 +120,22 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
 
     setIcon(myIcon);
 
-    final boolean focused = isFocusedOrPopupElement();
-    final boolean selected = isSelected();
+    boolean focused = isFocusedOrPopupElement();
+    boolean selected = isSelected();
 
     setBackground(myUI.getBackground(selected, focused));
 
     Color fg = myUI.getForeground(selected, focused, isInactive());
     if (fg == null) fg = myAttributes.getFgColor();
 
-    final Color bg = getBackground();
+    Color bg = getBackground();
     append(myText, new SimpleTextAttributes(bg, fg, myAttributes.getWaveColor(), myAttributes.getStyle()));
 
     //repaint();
   }
 
   public boolean isInactive() {
-    final NavBarModel model = myPanel.getModel();
+    NavBarModel model = myPanel.getModel();
     return model.getSelectedIndex() < myIndex && model.getSelectedIndex() != -1 && !myPanel.isUpdating();
   }
 
@@ -173,8 +173,8 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   @Nonnull
   @Override
   public Dimension getPreferredSize() {
-    final Dimension size = super.getPreferredSize();
-    final Dimension offsets = myUI.getOffsets(this);
+    Dimension size = super.getPreferredSize();
+    Dimension offsets = myUI.getOffsets(this);
     int width = size.width + offsets.width;
     if (!needPaintIcon() && myIcon != null) {
       width -= myIcon.getWidth();
@@ -210,7 +210,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   }
 
   public boolean isSelected() {
-    final NavBarModel model = myPanel.getModel();
+    NavBarModel model = myPanel.getModel();
     return isPopupElement ? myPanel.isSelectedInPopup(getObject()) : model.getSelectedIndex() == myIndex;
   }
 

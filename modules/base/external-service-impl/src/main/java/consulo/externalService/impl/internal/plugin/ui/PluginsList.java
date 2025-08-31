@@ -119,8 +119,8 @@ public class PluginsList {
         myTextFilter = StringUtil.nullize(textFilter, true);
 
         if (myTextFilter != null) {
-            final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
-            final Set<String> search = optionsRegistrar.getProcessedWords(textFilter);
+            SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
+            Set<String> search = optionsRegistrar.getProcessedWords(textFilter);
 
             myFilters.put("text", p -> PluginTab.isAccepted(myTextFilter, search, p));
         }

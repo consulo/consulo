@@ -59,7 +59,7 @@ public class ShelvedChange {
   private final AtomicReference<Boolean> myIsConflicting;
   private Change myChange;
 
-  public ShelvedChange(final String patchPath, final String beforePath, final String afterPath, final FileStatus fileStatus) {
+  public ShelvedChange(String patchPath, String beforePath, String afterPath, FileStatus fileStatus) {
     myPatchPath = patchPath;
     myBeforePath = beforePath;
     // optimisation: memory
@@ -68,7 +68,7 @@ public class ShelvedChange {
     myIsConflicting = new AtomicReference<Boolean>();
   }
 
-  public boolean isConflictingChange(final Project project) {
+  public boolean isConflictingChange(Project project) {
     Boolean isConflicting = myIsConflicting.get();
     if (isConflicting != null) return isConflicting;
 
@@ -92,10 +92,10 @@ public class ShelvedChange {
   }
 
   @Nullable
-  public VirtualFile getBeforeVFUnderProject(final Project project) {
+  public VirtualFile getBeforeVFUnderProject(Project project) {
     if (myBeforePath == null || project.getBaseDir() == null) return null;
-    final File baseDir = new File(project.getBaseDir().getPath());
-    final File file = new File(baseDir, myBeforePath);
+    File baseDir = new File(project.getBaseDir().getPath());
+    File file = new File(baseDir, myBeforePath);
     return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
   }
 
@@ -146,7 +146,7 @@ public class ShelvedChange {
       }
       ContentRevision afterRevision = null;
       if (myFileStatus != FileStatus.DELETED) {
-        final FilePathImpl afterPath = new FilePathImpl(getAbsolutePath(baseDir, myAfterPath), false);
+        FilePathImpl afterPath = new FilePathImpl(getAbsolutePath(baseDir, myAfterPath), false);
         afterRevision = new PatchedContentRevision(project, beforePath, afterPath);
       }
       myChange = new Change(beforeRevision, afterRevision, myFileStatus);
@@ -154,7 +154,7 @@ public class ShelvedChange {
     return myChange;
   }
 
-  private static File getAbsolutePath(final File baseDir, final String relativePath) {
+  private static File getAbsolutePath(File baseDir, String relativePath) {
     File file;
     try {
       file = new File(baseDir, relativePath).getCanonicalFile();
@@ -167,7 +167,7 @@ public class ShelvedChange {
   }
 
   @jakarta.annotation.Nullable
-  public TextFilePatch loadFilePatch(final Project project, CommitContext commitContext) throws IOException, PatchSyntaxException {
+  public TextFilePatch loadFilePatch(Project project, CommitContext commitContext) throws IOException, PatchSyntaxException {
     List<TextFilePatch> filePatches = ShelveChangesManager.loadPatches(project, myPatchPath, commitContext);
     for(TextFilePatch patch: filePatches) {
       if (myBeforePath.equals(patch.getBeforeName())) {
@@ -178,11 +178,11 @@ public class ShelvedChange {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof ShelvedChange)) return false;
 
-    final ShelvedChange that = (ShelvedChange)o;
+    ShelvedChange that = (ShelvedChange)o;
 
     if (myAfterPath != null ? !myAfterPath.equals(that.myAfterPath) : that.myAfterPath != null) return false;
     if (myBeforePath != null ? !myBeforePath.equals(that.myBeforePath) : that.myBeforePath != null) return false;
@@ -207,7 +207,7 @@ public class ShelvedChange {
     private final FilePath myAfterFilePath;
     private String myContent;
 
-    public PatchedContentRevision(Project project, final FilePath beforeFilePath, final FilePath afterFilePath) {
+    public PatchedContentRevision(Project project, FilePath beforeFilePath, FilePath afterFilePath) {
       myProject = project;
       myBeforeFilePath = beforeFilePath;
       myAfterFilePath = afterFilePath;
@@ -237,14 +237,14 @@ public class ShelvedChange {
       return null;
     }
 
-    private String loadContent(final TextFilePatch patch) throws ApplyPatchException {
+    private String loadContent(TextFilePatch patch) throws ApplyPatchException {
       if (patch.isNewFile()) {
         return patch.getNewFileText();
       }
       if (patch.isDeletedFile()) {
         return null;
       }
-      final GenericPatchApplier applier = new GenericPatchApplier(getBaseContent(), patch.getHunks());
+      GenericPatchApplier applier = new GenericPatchApplier(getBaseContent(), patch.getHunks());
       if (applier.execute()) {
         return applier.getAfter();
       }
@@ -253,7 +253,7 @@ public class ShelvedChange {
 
     private String getBaseContent() {
       myBeforeFilePath.refresh();
-      final Document doc = FileDocumentManager.getInstance().getDocument(myBeforeFilePath.getVirtualFile());
+      Document doc = FileDocumentManager.getInstance().getDocument(myBeforeFilePath.getVirtualFile());
       return doc.getText();
     }
 

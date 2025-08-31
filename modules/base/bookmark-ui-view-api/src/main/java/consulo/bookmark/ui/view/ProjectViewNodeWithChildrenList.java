@@ -45,12 +45,12 @@ public abstract class ProjectViewNodeWithChildrenList<T> extends ProjectViewNode
     return myChildren;
   }
 
-  public void addChild(final AbstractTreeNode node) {
+  public void addChild(AbstractTreeNode node) {
     myChildren.add(node);
     node.setParent(this);
   }
 
-  public void addChildBefore(final AbstractTreeNode newNode, final AbstractTreeNode existingNode) {
+  public void addChildBefore(AbstractTreeNode newNode, AbstractTreeNode existingNode) {
     int idx = -1;
     for (int i = 0; i < myChildren.size(); i++) {
       AbstractTreeNode node = myChildren.get(i);

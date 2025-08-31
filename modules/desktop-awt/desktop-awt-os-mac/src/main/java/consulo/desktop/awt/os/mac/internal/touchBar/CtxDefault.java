@@ -45,7 +45,7 @@ final class CtxDefault {
             public void projectClosed(@Nonnull Project project) {
                 LOG.debug("closed project: %s", project);
 
-                final JFrame frame = WindowManager.getInstance().getFrame(project);
+                JFrame frame = WindowManager.getInstance().getFrame(project);
                 if (frame == null) {
                     // can be when frame is closing (and project is disposing)
                     LOG.debug("null frame for project: %s", project);
@@ -74,13 +74,13 @@ final class CtxDefault {
             return;
         }
 
-        final JFrame frame = WindowManager.getInstance().getFrame(project);
+        JFrame frame = WindowManager.getInstance().getFrame(project);
         if (frame == null) {
             LOG.debug("null frame for project: %s", project);
             return;
         }
 
-        final @Nullable Pair<Map<Long, ActionGroup>, Customizer> defaultGroup = ActionsLoader.getProjectDefaultActionGroup();
+        @Nullable Pair<Map<Long, ActionGroup>, Customizer> defaultGroup = ActionsLoader.getProjectDefaultActionGroup();
         if (defaultGroup == null) {
             LOG.debug("can't load default action group for project: %s", project);
             TouchBarsManager.unregister(frame);
@@ -111,7 +111,7 @@ final class CtxDefault {
     private static final String RUN_DEBUG_GROUP_TOUCHBAR = "RunnerActionsTouchbar";
 
     private static void fillRunDebugGroup() {
-        final ActionManager actionManager = ActionManager.getInstance();
+        ActionManager actionManager = ActionManager.getInstance();
 
         AnAction runButtons = actionManager.getAction(RUN_DEBUG_GROUP_TOUCHBAR);
         if (runButtons == null) {

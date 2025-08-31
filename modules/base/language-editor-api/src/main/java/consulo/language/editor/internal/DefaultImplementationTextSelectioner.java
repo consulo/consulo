@@ -31,15 +31,15 @@ public class DefaultImplementationTextSelectioner implements ImplementationTextS
   private static final Logger LOG = Logger.getInstance(DefaultImplementationTextSelectioner.class);
 
   @Override
-  public int getTextStartOffset(@Nonnull final PsiElement parent) {
-    final TextRange textRange = parent.getTextRange();
+  public int getTextStartOffset(@Nonnull PsiElement parent) {
+    TextRange textRange = parent.getTextRange();
     LOG.assertTrue(textRange != null, parent);
     return textRange.getStartOffset();
   }
 
   @Override
   public int getTextEndOffset(@Nonnull PsiElement element) {
-    final TextRange textRange = element.getTextRange();
+    TextRange textRange = element.getTextRange();
     LOG.assertTrue(textRange != null, element);
     return textRange.getEndOffset();
   }

@@ -416,7 +416,7 @@ public class mxGraphStructure {
       mxGraphProperties.setDirected(aGraph.getProperties(), false);
       final ArrayList<Object> bFSList = new ArrayList<Object>();
       mxGraph graph = aGraph.getGraph();
-      final mxIGraphModel model = graph.getModel();
+      mxIGraphModel model = graph.getModel();
       Object parent = graph.getDefaultParent();
 
       mxTraversal.bfs(aGraph, startVertex, new mxICellVisitor() {

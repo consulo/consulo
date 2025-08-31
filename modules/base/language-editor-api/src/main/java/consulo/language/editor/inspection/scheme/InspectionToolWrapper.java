@@ -179,7 +179,7 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
             return descriptionValue.get();
         }
 
-        final String description = getTool().getStaticDescription();
+        String description = getTool().getStaticDescription();
         if (description != null) {
             return description;
         }
@@ -202,7 +202,7 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
 
     @Nullable
     protected URL superGetDescriptionUrl() {
-        final String fileName = getDescriptionFileName();
+        String fileName = getDescriptionFileName();
         return ResourceUtil.getResource(getDescriptionContextClass(), "/inspectionDescriptions", fileName);
     }
 

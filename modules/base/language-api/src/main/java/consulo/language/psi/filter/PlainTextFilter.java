@@ -26,17 +26,17 @@ public class PlainTextFilter implements ElementFilter {
   protected final String[] myValue;
   protected boolean myCaseInsensitiveFlag = false;
 
-  public PlainTextFilter(final String value, final boolean insensitiveFlag) {
+  public PlainTextFilter(String value, boolean insensitiveFlag) {
     myCaseInsensitiveFlag = insensitiveFlag;
     myValue = new String[1];
     myValue[0] = value;
   }
 
-  public PlainTextFilter(final String... values) {
+  public PlainTextFilter(String... values) {
     myValue = values;
   }
 
-  public PlainTextFilter(final String value1, final String value2) {
+  public PlainTextFilter(String value1, String value2) {
     myValue = new String[2];
     myValue[0] = value1;
     myValue[1] = value2;
@@ -50,11 +50,11 @@ public class PlainTextFilter implements ElementFilter {
   @Override
   public boolean isAcceptable(Object element, PsiElement context) {
     if (element != null) {
-      for (final String value : myValue) {
+      for (String value : myValue) {
         if (value == null) {
           return true;
         }
-        final String elementText = getTextByElement(element);
+        String elementText = getTextByElement(element);
         if (myCaseInsensitiveFlag) {
           if (value.equalsIgnoreCase(elementText)) return true;
         }

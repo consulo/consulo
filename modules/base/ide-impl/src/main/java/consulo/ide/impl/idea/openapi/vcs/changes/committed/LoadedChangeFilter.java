@@ -31,11 +31,11 @@ public class LoadedChangeFilter {
     myRoots = roots;
   }
 
-  public boolean ok(final CommittedChangeList list) {
-    final Collection<Change> changes = list.getChanges();
+  public boolean ok(CommittedChangeList list) {
+    Collection<Change> changes = list.getChanges();
     for (Change change : changes) {
       if (change.getBeforeRevision() != null) {
-        final FilePath path = change.getBeforeRevision().getFile();
+        FilePath path = change.getBeforeRevision().getFile();
         if (ok(path.getIOFile())) {
           return true;
         }
@@ -43,7 +43,7 @@ public class LoadedChangeFilter {
       if (change.getAfterRevision() != null) {
         if (! (change.getBeforeRevision() != null &&
                change.getAfterRevision().getFile().equals(change.getBeforeRevision().getFile()))) {
-          final FilePath path = change.getAfterRevision().getFile();
+          FilePath path = change.getAfterRevision().getFile();
           if (ok(path.getIOFile())) {
             return true;
           }
@@ -53,7 +53,7 @@ public class LoadedChangeFilter {
     return false;
   }
 
-  private boolean ok(final File vf) {
+  private boolean ok(File vf) {
     for (File root : myRoots) {
       if (VfsUtil.isAncestor(root, vf, false)) {
         return true;

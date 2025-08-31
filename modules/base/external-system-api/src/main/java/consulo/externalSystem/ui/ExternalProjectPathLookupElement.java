@@ -61,11 +61,11 @@ public class ExternalProjectPathLookupElement extends LookupElement {
       }
     });
     
-    final Document document = editor.getDocument();
+    Document document = editor.getDocument();
     final int startOffset = context.getStartOffset();
     
     document.replaceString(startOffset, document.getTextLength(), myProjectPath);
-    final Project project = context.getProject();
+    Project project = context.getProject();
     PsiDocumentManager.getInstance(project).commitDocument(document);
     
     foldingModel.runBatchFoldingOperationDoNotCollapseCaret(new Runnable() {

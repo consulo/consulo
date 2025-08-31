@@ -39,15 +39,15 @@ public class FCTSBackedLighterAST extends LighterAST {
   }
 
   @Override
-  public LighterASTNode getParent(@Nonnull final LighterASTNode node) {
+  public LighterASTNode getParent(@Nonnull LighterASTNode node) {
     return myTreeStructure.getParent(node);
   }
 
   @Nonnull
   @Override
-  public List<LighterASTNode> getChildren(@Nonnull final LighterASTNode parent) {
-    final SimpleReference<LighterASTNode[]> into = SimpleReference.create();
-    final int numKids = myTreeStructure.getChildren(myTreeStructure.prepareForGetChildren(parent), into);
+  public List<LighterASTNode> getChildren(@Nonnull LighterASTNode parent) {
+    SimpleReference<LighterASTNode[]> into = SimpleReference.create();
+    int numKids = myTreeStructure.getChildren(myTreeStructure.prepareForGetChildren(parent), into);
     if (numKids == 0) {
       return List.of();
     }
@@ -66,7 +66,7 @@ public class FCTSBackedLighterAST extends LighterAST {
     }
 
     @Override
-    public LighterASTNode get(final int index) {
+    public LighterASTNode get(int index) {
       if (index < 0 || index >= mySize) throw new IndexOutOfBoundsException("index:" + index + " size:" + mySize);
       return myElements[index];
     }

@@ -112,7 +112,7 @@ public class SharedIndicesData {
       super.doForce();
     }
 
-    static IndexedStateMap createMap(final File indexFile) throws IOException {
+    static IndexedStateMap createMap(File indexFile) throws IOException {
       return IOUtil.openCleanOrResetBroken(
               () -> new IndexedStateMap(indexFile), indexFile);
     }
@@ -400,7 +400,7 @@ public class SharedIndicesData {
                   out
           );
 
-          final IndexedState indexedState = stateHandle != null ? stateHandle.get() : null;
+          IndexedState indexedState = stateHandle != null ? stateHandle.get() : null;
           if (indexedState != null) {
             indexedState.appendIndexedState(indexId, indexCreationStamp, internalBuffer, size);
           }

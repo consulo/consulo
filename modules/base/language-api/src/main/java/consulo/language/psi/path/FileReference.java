@@ -61,21 +61,21 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   @Nonnull
   private final FileReferenceSet myFileReferenceSet;
 
-  public FileReference(@Nonnull final FileReferenceSet fileReferenceSet, TextRange range, int index, String text) {
+  public FileReference(@Nonnull FileReferenceSet fileReferenceSet, TextRange range, int index, String text) {
     myFileReferenceSet = fileReferenceSet;
     myIndex = index;
     myRange = range;
     myText = text;
   }
 
-  public FileReference(final FileReference original) {
+  public FileReference(FileReference original) {
     this(original.myFileReferenceSet, original.myRange, original.myIndex, original.myText);
   }
 
   @Nullable
-  public static FileReference findFileReference(@Nonnull final PsiReference original) {
+  public static FileReference findFileReference(@Nonnull PsiReference original) {
     if (original instanceof PsiMultiReference) {
-      final PsiMultiReference multiReference = (PsiMultiReference)original;
+      PsiMultiReference multiReference = (PsiMultiReference)original;
       for (PsiReference reference : multiReference.getReferences()) {
         if (reference instanceof FileReference) {
           return (FileReference)reference;
@@ -83,7 +83,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
       }
     }
     else if (original instanceof FileReferenceOwner) {
-      final PsiFileReference fileReference = ((FileReferenceOwner)original).getLastFileReference();
+      PsiFileReference fileReference = ((FileReferenceOwner)original).getLastFileReference();
       if (fileReference instanceof FileReference) {
         return (FileReference)fileReference;
       }
@@ -94,7 +94,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
   @Nonnull
   public Collection<PsiFileSystemItem> getContexts() {
-    final FileReference contextRef = getContextReference();
+    FileReference contextRef = getContextReference();
     ArrayList<PsiFileSystemItem> result = new ArrayList<>();
 
     if (contextRef == null) {
@@ -122,52 +122,52 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
   @Override
   @Nonnull
-  public ResolveResult[] multiResolve(final boolean incompleteCode) {
+  public ResolveResult[] multiResolve(boolean incompleteCode) {
     PsiFile file = getElement().getContainingFile();
     return ResolveCache.getInstance(file.getProject()).resolveWithCaching(this, MyResolver.INSTANCE, false, false, file);
   }
 
   @Nonnull
   protected ResolveResult[] innerResolve(boolean caseSensitive, @Nonnull PsiFile containingFile) {
-    final String referenceText = getText();
+    String referenceText = getText();
     if (referenceText.isEmpty() && myIndex == 0) {
       return new ResolveResult[]{new PsiElementResolveResult(containingFile)};
     }
-    final Collection<PsiFileSystemItem> contexts = getContexts();
-    final Collection<ResolveResult> result = new HashSet<>();
-    for (final PsiFileSystemItem context : contexts) {
+    Collection<PsiFileSystemItem> contexts = getContexts();
+    Collection<ResolveResult> result = new HashSet<>();
+    for (PsiFileSystemItem context : contexts) {
       innerResolveInContext(referenceText, context, result, caseSensitive);
     }
     if (contexts.isEmpty() && isAllowedEmptyPath(referenceText)) {
       result.add(new PsiElementResolveResult(containingFile));
     }
-    final int resultCount = result.size();
+    int resultCount = result.size();
     return resultCount > 0 ? result.toArray(new ResolveResult[resultCount]) : ResolveResult.EMPTY_ARRAY;
   }
 
-  protected void innerResolveInContext(@Nonnull final String text, @Nonnull PsiFileSystemItem context, final Collection<ResolveResult> result, final boolean caseSensitive) {
+  protected void innerResolveInContext(@Nonnull String text, @Nonnull PsiFileSystemItem context, final Collection<ResolveResult> result, final boolean caseSensitive) {
     if (isAllowedEmptyPath(text) || "".equals(text) || "/".equals(text)) {
       result.add(new PsiElementResolveResult(context));
     }
     else if ("".equals(text)) {
-      final PsiFileSystemItem resolved = context.getParent();
+      PsiFileSystemItem resolved = context.getParent();
       if (resolved != null) {
         result.add(new PsiElementResolveResult(resolved));
       }
     }
     else {
-      final int separatorIndex = text.indexOf('/');
+      int separatorIndex = text.indexOf('/');
       if (separatorIndex >= 0) {
-        final List<ResolveResult> resolvedContexts = new ArrayList<>();
+        List<ResolveResult> resolvedContexts = new ArrayList<>();
         if (separatorIndex == 0 /*starts with slash*/ && "/".equals(context.getName())) {
           resolvedContexts.add(new PsiElementResolveResult(context));
         }
         else {
           innerResolveInContext(text.substring(0, separatorIndex), context, resolvedContexts, caseSensitive);
         }
-        final String restOfText = text.substring(separatorIndex + 1);
+        String restOfText = text.substring(separatorIndex + 1);
         for (ResolveResult contextVariant : resolvedContexts) {
-          final PsiFileSystemItem item = (PsiFileSystemItem)contextVariant.getElement();
+          PsiFileSystemItem item = (PsiFileSystemItem)contextVariant.getElement();
           if (item != null) {
             innerResolveInContext(restOfText, item, result, caseSensitive);
           }
@@ -293,11 +293,11 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
    * Converts a wrapper like WebDirectoryElement into plain PsiFile
    */
   public static PsiFileSystemItem getOriginalFile(PsiFileSystemItem fileSystemItem) {
-    final VirtualFile file = fileSystemItem.getVirtualFile();
+    VirtualFile file = fileSystemItem.getVirtualFile();
     if (file != null && !file.isDirectory()) {
-      final PsiManager psiManager = fileSystemItem.getManager();
+      PsiManager psiManager = fileSystemItem.getManager();
       if (psiManager != null) {
-        final PsiFile psiFile = psiManager.findFile(file);
+        PsiFile psiFile = psiManager.findFile(file);
         if (psiFile != null) {
           fileSystemItem = psiFile;
         }
@@ -307,7 +307,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Nullable
-  public String encode(final String name, PsiElement psiElement) {
+  public String encode(String name, PsiElement psiElement) {
     try {
       return new URI(null, null, name, null).toString();
     }
@@ -316,7 +316,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     }
   }
 
-  protected static void processVariants(final PsiFileSystemItem context, final PsiFileSystemItemProcessor processor) {
+  protected static void processVariants(PsiFileSystemItem context, PsiFileSystemItemProcessor processor) {
     context.processChildren(processor);
   }
 
@@ -337,8 +337,8 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Nullable
-  public PsiFileSystemItem innerSingleResolve(final boolean caseSensitive, @Nonnull PsiFile containingFile) {
-    final ResolveResult[] resolveResults = innerResolve(caseSensitive, containingFile);
+  public PsiFileSystemItem innerSingleResolve(boolean caseSensitive, @Nonnull PsiFile containingFile) {
+    ResolveResult[] resolveResults = innerResolve(caseSensitive, containingFile);
     return resolveResults.length == 1 ? (PsiFileSystemItem)resolveResults[0].getElement() : null;
   }
 
@@ -346,7 +346,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   public boolean isReferenceTo(PsiElement element) {
     if (!(element instanceof PsiFileSystemItem)) return false;
 
-    final PsiFileSystemItem item = resolve();
+    PsiFileSystemItem item = resolve();
     return item != null && FileReferenceHelperRegistrar.areElementsEquivalent(item, (PsiFileSystemItem)element);
   }
 
@@ -372,7 +372,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
   @Override
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-    final ElementManipulator<PsiElement> manipulator = CachingReference.getManipulator(getElement());
+    ElementManipulator<PsiElement> manipulator = CachingReference.getManipulator(getElement());
     myFileReferenceSet.setElement(manipulator.handleContentChange(getElement(), getRangeInElement(), newElementName));
     //Correct ranges
     int delta = newElementName.length() - myRange.getLength();
@@ -384,7 +384,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return myFileReferenceSet.getElement();
   }
 
-  public PsiElement bindToElement(@Nonnull final PsiElement element, final boolean absolute) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull PsiElement element, boolean absolute) throws IncorrectOperationException {
     if (!(element instanceof PsiFileSystemItem)) {
       throw new IncorrectOperationException("Cannot bind to element, should be instanceof PsiFileSystemItem: " + element);
     }
@@ -392,24 +392,24 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     // handle empty reference that resolves to current file
     if (getCanonicalText().isEmpty() && element == getElement().getContainingFile()) return getElement();
 
-    final PsiFileSystemItem fileSystemItem = (PsiFileSystemItem)element;
+    PsiFileSystemItem fileSystemItem = (PsiFileSystemItem)element;
     VirtualFile dstVFile = fileSystemItem.getVirtualFile();
     if (dstVFile == null) throw new IncorrectOperationException("Cannot bind to non-physical element:" + element);
 
     PsiFile file = getElement().getContainingFile();
     PsiElement contextPsiFile = InjectedLanguageManager.getInstance(file.getProject()).getInjectionHost(file);
     if (contextPsiFile != null) file = contextPsiFile.getContainingFile(); // use host file!
-    final VirtualFile curVFile = file.getVirtualFile();
+    VirtualFile curVFile = file.getVirtualFile();
     if (curVFile == null) throw new IncorrectOperationException("Cannot bind from non-physical element:" + file);
 
-    final Project project = element.getProject();
+    Project project = element.getProject();
 
     String newName;
 
     if (absolute) {
       PsiFileSystemItem root = null;
       PsiFileSystemItem dstItem = null;
-      for (final FileReferenceHelper helper : FileReferenceHelperRegistrar.getHelpers()) {
+      for (FileReferenceHelper helper : FileReferenceHelperRegistrar.getHelpers()) {
         if (!helper.isMine(project, dstVFile)) continue;
         PsiFileSystemItem _dstItem = helper.getPsiFileSystemItem(project, dstVFile);
         if (_dstItem != null) {
@@ -436,7 +436,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
         }
       }
 
-      final String relativePath = PsiFileSystemItemUtil.getRelativePath(root, dstItem);
+      String relativePath = PsiFileSystemItemUtil.getRelativePath(root, dstItem);
       if (relativePath == null) {
         return getElement();
       }
@@ -444,15 +444,15 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     }
     else { // relative path
 
-      final FileReferenceHelper helper = FileReferenceHelperRegistrar.getNotNullHelper(file);
+      FileReferenceHelper helper = FileReferenceHelperRegistrar.getNotNullHelper(file);
 
-      final Collection<PsiFileSystemItem> contexts = getContextsForBindToElement(curVFile, project, helper);
+      Collection<PsiFileSystemItem> contexts = getContextsForBindToElement(curVFile, project, helper);
 
       for (PsiFileSystemItem context : contexts) {
-        final VirtualFile contextFile = context.getVirtualFile();
+        VirtualFile contextFile = context.getVirtualFile();
         assert contextFile != null;
         if (VirtualFileUtil.isAncestor(contextFile, dstVFile, true)) {
-          final String path = VirtualFileUtil.getRelativePath(dstVFile, contextFile, '/');
+          String path = VirtualFileUtil.getRelativePath(dstVFile, contextFile, '/');
           if (path != null) {
             return rename(path);
           }
@@ -499,12 +499,12 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
   /* Happens when it's been moved to another folder */
   @Override
-  public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
     return bindToElement(element, myFileReferenceSet.isAbsolutePathReference());
   }
 
-  protected PsiElement rename(final String newName) throws IncorrectOperationException {
-    final TextRange range = new TextRange(myFileReferenceSet.getStartInElement(), getRangeInElement().getEndOffset());
+  protected PsiElement rename(String newName) throws IncorrectOperationException {
+    TextRange range = new TextRange(myFileReferenceSet.getStartInElement(), getRangeInElement().getEndOffset());
     PsiElement element = getElement();
     try {
       return CachingReference.getManipulator(element).handleContentChange(element, range, newName);

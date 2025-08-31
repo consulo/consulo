@@ -35,7 +35,7 @@ public class ShareSchemePanel {
     return myPanel;
   }
 
-  public void setName(final String name) {
+  public void setName(String name) {
     mySharedSchemeName.setText(name);
   }
 }

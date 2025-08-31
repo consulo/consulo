@@ -26,7 +26,7 @@ public class IndentedIcon implements Icon {
   private final Icon myBaseIcon;
   private final int myIndent;
 
-  public IndentedIcon(final Icon baseIcon, final int indent) {
+  public IndentedIcon(Icon baseIcon, int indent) {
     myBaseIcon = baseIcon;
     myIndent = indent;
   }

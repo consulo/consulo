@@ -25,7 +25,7 @@ public class UnsyncCharArrayReader extends Reader {
   private final int myLength;
   private int myCurPos;
 
-  public UnsyncCharArrayReader(final char[] text, int offset, int length) {
+  public UnsyncCharArrayReader(char[] text, int offset, int length) {
     myText = text;
     myLength = length;
     myCurPos = offset;

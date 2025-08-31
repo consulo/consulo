@@ -99,14 +99,14 @@ public class Restarter {
     }
   }
 
-  private static void restartOnWindows(@Nonnull final String... beforeRestart) throws IOException {
+  private static void restartOnWindows(@Nonnull String... beforeRestart) throws IOException {
     Kernel32 kernel32 = Native.load("kernel32", Kernel32.class);
     Shell32 shell32 = Native.load("shell32", Shell32.class);
 
-    final int pid = kernel32.GetCurrentProcessId();
-    final IntByReference argc = new IntByReference();
+    int pid = kernel32.GetCurrentProcessId();
+    IntByReference argc = new IntByReference();
     Pointer argv_ptr = shell32.CommandLineToArgvW(kernel32.GetCommandLineW(), argc);
-    final String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
+    String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
     kernel32.LocalFree(argv_ptr);
 
     String restarterExe = Platform.current().mapAnyExecutableName("restarter");
@@ -125,7 +125,7 @@ public class Restarter {
     TimeoutUtil.sleep(500);
   }
 
-  private static void restartOnMac(@Nonnull final String... beforeRestart) throws IOException {
+  private static void restartOnMac(@Nonnull String... beforeRestart) throws IOException {
     File distributionDirectory = ContainerPathManager.get().getAppHomeDirectory();
 
     File appDirectory = distributionDirectory.getParentFile();

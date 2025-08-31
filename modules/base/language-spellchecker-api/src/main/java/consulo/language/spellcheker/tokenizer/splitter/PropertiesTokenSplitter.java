@@ -39,7 +39,7 @@ public class PropertiesTokenSplitter extends BaseTokenSplitter {
     if (text == null || StringUtil.isEmpty(text)) {
       return;
     }
-    final IdentifierTokenSplitter splitter = IdentifierTokenSplitter.getInstance();
+    IdentifierTokenSplitter splitter = IdentifierTokenSplitter.getInstance();
     Matcher matcher = WORD.matcher(range.substring(text));
     while (matcher.find()) {
       if (matcher.end() - matcher.start() < MIN_RANGE_LENGTH) {

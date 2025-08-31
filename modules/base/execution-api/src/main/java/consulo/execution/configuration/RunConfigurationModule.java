@@ -95,7 +95,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
     return getModuleManager().findModuleByName(moduleName);
   }
 
-  public void setModule(final Module module) {
+  public void setModule(Module module) {
     myModulePointer = module != null ? ModulePointerManager.getInstance(myProject).create(module) : null;
   }
 
@@ -116,7 +116,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   }
 
   public void checkForWarning() throws RuntimeConfigurationException {
-    final Module module = getModule();
+    Module module = getModule();
     if (module == null) {
       if (myModulePointer != null) {
         String moduleName = myModulePointer.getName();

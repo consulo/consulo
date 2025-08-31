@@ -48,7 +48,7 @@ public class PersistentUtil {
     return project.getLocationHash() + "." + Integer.toHexString(hashcode);
   }
 
-  private static int calcLogProvidersHash(@Nonnull final Map<VirtualFile, VcsLogProvider> logProviders) {
+  private static int calcLogProvidersHash(@Nonnull Map<VirtualFile, VcsLogProvider> logProviders) {
     List<VirtualFile> sortedRoots = ContainerUtil.sorted(logProviders.keySet(), Comparator.comparing(VirtualFile::getPath));
     return StringUtil.join(sortedRoots, root -> root.getPath() + "." + logProviders.get(root).getSupportedVcs().getName(), ".").hashCode();
   }
@@ -57,7 +57,7 @@ public class PersistentUtil {
   public static File getStorageFile(@Nonnull String storageKind, @Nonnull String logId, int version) {
     File subdir = new File(LOG_CACHE, storageKind);
     String safeLogId = PathUtil.suggestFileName(logId, true, true);
-    final File mapFile = new File(subdir, safeLogId + "." + version);
+    File mapFile = new File(subdir, safeLogId + "." + version);
     if (!mapFile.exists()) {
       IOUtil.deleteAllFilesStartingWith(new File(subdir, safeLogId));
     }

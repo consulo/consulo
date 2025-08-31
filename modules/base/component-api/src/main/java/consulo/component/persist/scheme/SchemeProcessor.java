@@ -37,7 +37,7 @@ public interface SchemeProcessor<T, E extends ExternalizableScheme> {
 
   void onSchemeDeleted(@Nonnull E scheme);
 
-  void onCurrentSchemeChanged(final E oldCurrentScheme);
+  void onCurrentSchemeChanged(E oldCurrentScheme);
 
   @Nonnull
   String getName(@Nonnull T immutableElement);

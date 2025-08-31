@@ -181,7 +181,7 @@ public interface CredAdvapi32 extends StdCallLibrary {
             super();
         }
 
-        public CREDENTIAL(final int size) {
+        public CREDENTIAL(int size) {
             super(new Memory(size));
         }
 

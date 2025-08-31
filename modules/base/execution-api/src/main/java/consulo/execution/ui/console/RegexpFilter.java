@@ -66,7 +66,7 @@ public class RegexpFilter implements Filter {
       throw new InvalidExpressionException("Expression must contain " + FILE_PATH_MACROS + " macros.");
     }
 
-    final TreeMap<Integer, String> map = new TreeMap<Integer, String>();
+    TreeMap<Integer, String> map = new TreeMap<Integer, String>();
 
     map.put(filePathIndex, FILE_STR);
 
@@ -84,9 +84,9 @@ public class RegexpFilter implements Filter {
 
     // The block below determines the registers based on the sorted map.
     int count = 0;
-    for (final Integer integer : map.keySet()) {
+    for (Integer integer : map.keySet()) {
       count++;
-      final String s = map.get(integer);
+      String s = map.get(integer);
 
       if (FILE_STR.equals(s)) {
         filePathIndex = count;
@@ -137,9 +137,9 @@ public class RegexpFilter implements Filter {
   }
 
   @Override
-  public Result applyFilter(final String line, final int entireLength) {
+  public Result applyFilter(String line, int entireLength) {
 
-    final Matcher matcher = myPattern.matcher(line);
+    Matcher matcher = myPattern.matcher(line);
     if (matcher.find()) {
       return createResult(matcher, entireLength - line.length());
     }
@@ -147,8 +147,8 @@ public class RegexpFilter implements Filter {
     return null;
   }
 
-  private Result createResult(final Matcher matcher, final int entireLen) {
-    final String filePath = matcher.group(myFileRegister);
+  private Result createResult(Matcher matcher, int entireLen) {
+    String filePath = matcher.group(myFileRegister);
 
     String lineNumber = "0";
 
@@ -175,17 +175,17 @@ public class RegexpFilter implements Filter {
     if (line > 0) line -= 1;
     if (column > 0) column -= 1;
     // Calculate the offsets relative to the entire text.
-    final int highlightStartOffset = entireLen + matcher.start(myFileRegister);
-    final int highlightEndOffset = highlightStartOffset + filePath.length();
+    int highlightStartOffset = entireLen + matcher.start(myFileRegister);
+    int highlightEndOffset = highlightStartOffset + filePath.length();
 
-    final HyperlinkInfo info = createOpenFileHyperlink(filePath, line, column);
+    HyperlinkInfo info = createOpenFileHyperlink(filePath, line, column);
     return new Result(highlightStartOffset, highlightEndOffset, info);
   }
 
   @Nullable
-  protected HyperlinkInfo createOpenFileHyperlink(String fileName, final int line, final int column) {
+  protected HyperlinkInfo createOpenFileHyperlink(String fileName, int line, int column) {
     fileName = fileName.replace(File.separatorChar, '/');
-    final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(fileName);
+    VirtualFile file = LocalFileSystem.getInstance().findFileByPath(fileName);
     if (file == null) return null;
     return new OpenFileHyperlinkInfo(myProject, file, line, column);
   }

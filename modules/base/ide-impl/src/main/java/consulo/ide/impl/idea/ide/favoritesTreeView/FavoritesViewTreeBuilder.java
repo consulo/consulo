@@ -40,7 +40,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
 
   public FavoritesViewTreeBuilder(@Nonnull Project project, JTree tree, DefaultTreeModel treeModel, ProjectAbstractTreeStructureBase treeStructure) {
     super(project, tree, treeModel, treeStructure, new FavoriteComparator());
-    final MessageBusConnection bus = myProject.getMessageBus().connect(this);
+    MessageBusConnection bus = myProject.getMessageBus().connect(this);
     ProjectViewPsiTreeChangeListener psiTreeChangeListener = new ProjectViewPsiTreeChangeListener(myProject) {
       @Override
       protected DefaultMutableTreeNode getRootNode() {
@@ -58,7 +58,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
       }
 
       @Override
-      protected void childrenChanged(PsiElement parent, final boolean stopProcessingForThisModificationCount) {
+      protected void childrenChanged(PsiElement parent, boolean stopProcessingForThisModificationCount) {
         PsiElement containingFile = parent instanceof PsiDirectory ? parent : parent.getContainingFile();
         if (containingFile != null && findNodeByElement(containingFile) == null) {
           queueUpdate(true);
@@ -101,13 +101,13 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
 
   @Nonnull
   public FavoritesTreeStructure getStructure() {
-    final AbstractTreeStructure structure = getTreeStructure();
+    AbstractTreeStructure structure = getTreeStructure();
     assert structure instanceof FavoritesTreeStructure;
     return (FavoritesTreeStructure)structure;
   }
 
   public AbstractTreeNode getRoot() {
-    final Object rootElement = getRootElement();
+    Object rootElement = getRootElement();
     assert rootElement instanceof AbstractTreeNode;
     return (AbstractTreeNode)rootElement;
   }
@@ -128,7 +128,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
   @Nonnull
   @Override
   public Promise<Object> selectAsync(Object element, VirtualFile file, boolean requestFocus) {
-    final DefaultMutableTreeNode node = findSmartFirstLevelNodeByElement(element);
+    DefaultMutableTreeNode node = findSmartFirstLevelNodeByElement(element);
     if (node != null) {
       return Promises.toPromise(TreeUtil.selectInTree(node, requestFocus, getTree()));
     }
@@ -136,9 +136,9 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
   }
 
   @Nullable
-  private static DefaultMutableTreeNode findFirstLevelNodeWithObject(final DefaultMutableTreeNode aRoot, final Object aObject) {
+  private static DefaultMutableTreeNode findFirstLevelNodeWithObject(DefaultMutableTreeNode aRoot, Object aObject) {
     for (int i = 0; i < aRoot.getChildCount(); i++) {
-      final DefaultMutableTreeNode child = (DefaultMutableTreeNode)aRoot.getChildAt(i);
+      DefaultMutableTreeNode child = (DefaultMutableTreeNode)aRoot.getChildAt(i);
       Object userObject = child.getUserObject();
       if (userObject instanceof FavoritesTreeNodeDescriptor) {
         if (Comparing.equal(((FavoritesTreeNodeDescriptor)userObject).getElement(), aObject)) {
@@ -151,13 +151,13 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
 
   @Override
   protected Object findNodeByElement(@Nonnull Object element) {
-    final Object node = findSmartFirstLevelNodeByElement(element);
+    Object node = findSmartFirstLevelNodeByElement(element);
     if (node != null) return node;
     return super.findNodeByElement(element);
   }
 
   @Nullable
-  DefaultMutableTreeNode findSmartFirstLevelNodeByElement(final Object element) {
+  DefaultMutableTreeNode findSmartFirstLevelNodeByElement(Object element) {
     for (Object child : getRoot().getChildren()) {
       AbstractTreeNode favorite = (AbstractTreeNode)child;
       Object currentValue = favorite.getValue();
@@ -171,7 +171,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
         }
       }*/
       if (Comparing.equal(element, currentValue)) {
-        final DefaultMutableTreeNode nodeWithObject = findFirstLevelNodeWithObject((DefaultMutableTreeNode)getTree().getModel().getRoot(), favorite);
+        DefaultMutableTreeNode nodeWithObject = findFirstLevelNodeWithObject((DefaultMutableTreeNode)getTree().getModel().getRoot(), favorite);
         if (nodeWithObject != null) {
           return nodeWithObject;
         }
@@ -182,7 +182,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
 
   @Override
   protected boolean isAlwaysShowPlus(NodeDescriptor nodeDescriptor) {
-    final Object[] childElements = getStructure().getChildElements(nodeDescriptor);
+    Object[] childElements = getStructure().getChildElements(nodeDescriptor);
     return childElements != null && childElements.length > 0;
   }
 

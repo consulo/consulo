@@ -68,13 +68,13 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
     myQueue = IdeEventQueue.getInstance();
 
-    final AppListener listener = new AppListener();
+    AppListener listener = new AppListener();
     application.getMessageBus().connect().subscribe(ApplicationActivationListener.class, listener);
 
     IdeEventQueue.getInstance().addDispatcher(e -> {
       if (e instanceof FocusEvent) {
-        final FocusEvent fe = (FocusEvent)e;
-        final Component c = fe.getComponent();
+        FocusEvent fe = (FocusEvent)e;
+        Component c = fe.getComponent();
         if (c instanceof Window || c == null) return false;
 
         Component parent = UIUtil.findUltimateParent(c);
@@ -135,7 +135,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
   @Override
   @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
     c.requestFocus();
     return AsyncResult.resolved();
   }
@@ -162,7 +162,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull final Runnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
     myQueue.executeWhenAllFocusEventsLeftTheQueue(runnable);
   }
 
@@ -200,7 +200,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     }
 
     if (result == null) {
-      final Component permOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
+      Component permOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
       if (permOwner != null) {
         result = permOwner;
       }
@@ -246,7 +246,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
     if (c == null) return;
 
-    final Window window = UIUtil.getParentOfType(Window.class, c);
+    Window window = UIUtil.getParentOfType(Window.class, c);
     if (window != null && window.isShowing()) {
       doWhenFocusSettlesDown(() -> {
         if (myApplication.isActive()) {
@@ -265,7 +265,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
     @Override
     public void delayedApplicationDeactivated(@Nonnull IdeFrame ideFrame) {
-      final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+      Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
       Component parent = UIUtil.findUltimateParent(owner);
 
       if (parent == ideFrame) {
@@ -281,7 +281,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
   @Override
   public Component getFocusedDescendantFor(Component comp) {
-    final Component focused = getFocusOwner();
+    Component focused = getFocusOwner();
     if (focused == null) return null;
 
     if (focused == comp || SwingUtilities.isDescendingFrom(focused, comp)) return focused;
@@ -342,13 +342,13 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   @Override
   @Nonnull
   public IdeFocusManager findInstanceByComponent(@Nonnull Component c) {
-    final IdeFocusManager instance = findByComponent(c);
+    IdeFocusManager instance = findByComponent(c);
     return instance != null ? instance : findInstanceByContext(null);
   }
 
   @Nullable
   private IdeFocusManager findByComponent(Component c) {
-    final Component parent = UIUtil.findUltimateParent(c);
+    Component parent = UIUtil.findUltimateParent(c);
     if (parent instanceof Window) {
       consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
 

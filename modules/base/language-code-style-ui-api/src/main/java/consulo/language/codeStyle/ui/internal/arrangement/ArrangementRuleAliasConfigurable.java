@@ -49,21 +49,21 @@ public class ArrangementRuleAliasConfigurable implements UnnamedConfigurable {
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_REMOVE, CommonShortcuts.getDelete(), myTokenRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_MOVE_UP, CommonShortcuts.MOVE_UP, myTokenRulesPanel);
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_MOVE_DOWN, CommonShortcuts.MOVE_DOWN, myTokenRulesPanel);
-    final CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+    CustomShortcutSet edit = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_EDIT, edit, myTokenRulesPanel);
   }
 
   private static void registerShortcut(@Nonnull String actionId,
                                        @Nonnull ShortcutSet shortcut,
                                        @Nonnull JComponent component) {
-    final AnAction action = ActionManager.getInstance().getAction(actionId);
+    AnAction action = ActionManager.getInstance().getAction(actionId);
     if (action != null) {
       action.registerCustomShortcutSet(shortcut, component);
     }
   }
 
   private static void unregisterShortcut(@Nonnull String actionId, @Nonnull JComponent component) {
-    final AnAction action = ActionManager.getInstance().getAction(actionId);
+    AnAction action = ActionManager.getInstance().getAction(actionId);
     if (action != null) {
       action.unregisterCustomShortcutSet(component);
     }
@@ -77,7 +77,7 @@ public class ArrangementRuleAliasConfigurable implements UnnamedConfigurable {
 
   @Override
   public boolean isModified() {
-    final List<StdArrangementMatchRule> newRules = myTokenRulesPanel.getRuleSequences();
+    List<StdArrangementMatchRule> newRules = myTokenRulesPanel.getRuleSequences();
     return !newRules.equals(myToken.getDefinitionRules());
   }
 

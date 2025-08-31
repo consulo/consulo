@@ -30,7 +30,7 @@ import consulo.language.psi.PsiReference;
 public class FileReferenceCharFilter extends CharFilter{
   @Override
   public Result acceptChar(char c, int prefixLength, Lookup lookup) {
-    final LookupElement item = lookup.getCurrentItem();
+    LookupElement item = lookup.getCurrentItem();
     if ('.' == c && item != null && item.getObject() instanceof PsiFileSystemItem) {
       PsiReference referenceAtCaret = lookup.getPsiFile().findReferenceAt(lookup.getLookupStart());
       if (referenceAtCaret != null && FileReference.findFileReference(referenceAtCaret) != null) {

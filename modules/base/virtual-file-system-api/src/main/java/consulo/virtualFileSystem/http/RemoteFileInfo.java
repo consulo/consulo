@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public interface RemoteFileInfo extends RemoteContentProvider.DownloadingCallback {
   void addDownloadingListener(@Nonnull FileDownloadingListener listener);
 
-  void removeDownloadingListener(final @Nonnull FileDownloadingListener listener);
+  void removeDownloadingListener(@Nonnull FileDownloadingListener listener);
 
   String getUrl();
 

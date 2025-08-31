@@ -44,7 +44,7 @@ public class Pair<A, B> implements Map.Entry<A, B> {
   }
 
   @Nonnull
-  public static <A, B> Function<A, Pair<A, B>> createFunction(final B value) {
+  public static <A, B> Function<A, Pair<A, B>> createFunction(B value) {
     return a -> create(a, value);
   }
 

@@ -51,7 +51,7 @@ public abstract class FindUsagesInProjectStructureActionBase extends AnAction im
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        final ProjectStructureElement selected = getSelectedElement();
+        ProjectStructureElement selected = getSelectedElement();
         if (selected == null) {
             return;
         }

@@ -26,12 +26,12 @@ import consulo.language.psi.PsiElement;
 public class PsiElementProcessorAdapter<T extends PsiElement> extends ReadActionProcessor<T> implements Processor<T> {
     private final PsiElementProcessor<T> myProcessor;
 
-    public PsiElementProcessorAdapter(final PsiElementProcessor<T> processor) {
+    public PsiElementProcessorAdapter(PsiElementProcessor<T> processor) {
         myProcessor = processor;
     }
 
     @RequiredReadAction
-    public boolean processInReadAction(final T t) {
+    public boolean processInReadAction(T t) {
         return myProcessor.execute(t);
     }
 }

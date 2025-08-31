@@ -161,7 +161,7 @@ public class IdeTooltip extends ComparableObject.Impl {
 
     public int getDismissDelay() {
         if (myComponent instanceof JComponent) {
-            final Object value = ((JComponent) myComponent).getClientProperty(TOOLTIP_DISMISS_DELAY_KEY);
+            Object value = ((JComponent) myComponent).getClientProperty(TOOLTIP_DISMISS_DELAY_KEY);
             if (value instanceof Integer) {
                 return ((Integer) value).intValue();
             }

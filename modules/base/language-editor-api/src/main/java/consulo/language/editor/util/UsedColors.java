@@ -40,8 +40,8 @@ public class UsedColors {
     }
   }
 
-  public static int getOrAddColorIndex(@Nonnull final UserDataHolder context,
-                                       @Nonnull final String name,
+  public static int getOrAddColorIndex(@Nonnull UserDataHolder context,
+                                       @Nonnull String name,
                                        int colorsCount) {
     int colorIndex;
     while (true) {

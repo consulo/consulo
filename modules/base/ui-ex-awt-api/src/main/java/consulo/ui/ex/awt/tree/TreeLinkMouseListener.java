@@ -35,13 +35,13 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
   private final ColoredTreeCellRenderer myRenderer;
   protected WeakReference<TreeNode> myLastHitNode;
 
-  public TreeLinkMouseListener(final ColoredTreeCellRenderer renderer) {
+  public TreeLinkMouseListener(ColoredTreeCellRenderer renderer) {
     myRenderer = renderer;
   }
 
-  protected void showTooltip(final JTree tree, final MouseEvent e, final HaveTooltip launcher) {
-    final String text = tree.getToolTipText(e);
-    final String newText = launcher == null ? null : launcher.getTooltip();
+  protected void showTooltip(JTree tree, MouseEvent e, HaveTooltip launcher) {
+    String text = tree.getToolTipText(e);
+    String newText = launcher == null ? null : launcher.getTooltip();
     if (!Comparing.equal(text, newText)) {
       tree.setToolTipText(newText);
     }
@@ -49,14 +49,14 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
 
   @Nullable
   @Override
-  protected Object getTagAt(@Nonnull final MouseEvent e) {
+  protected Object getTagAt(@Nonnull MouseEvent e) {
     JTree tree = (JTree)e.getSource();
     Object tag = null;
     HaveTooltip haveTooltip = null;
-    final TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+    TreePath path = tree.getPathForLocation(e.getX(), e.getY());
     if (path != null) {
       int dx = getRendererRelativeX(e, tree, path);
-      final TreeNode treeNode = (TreeNode)path.getLastPathComponent();
+      TreeNode treeNode = (TreeNode)path.getLastPathComponent();
       if (myLastHitNode == null || myLastHitNode.get() != treeNode) {
         if (doCacheLastNode()) {
           myLastHitNode = new WeakReference<>(treeNode);
@@ -73,7 +73,7 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
   }
 
   protected int getRendererRelativeX(@Nonnull MouseEvent e, @Nonnull JTree tree, @Nonnull TreePath path) {
-    final Rectangle rectangle = tree.getPathBounds(path);
+    Rectangle rectangle = tree.getPathBounds(path);
     assert rectangle != null;
     return e.getX() - rectangle.x;
   }

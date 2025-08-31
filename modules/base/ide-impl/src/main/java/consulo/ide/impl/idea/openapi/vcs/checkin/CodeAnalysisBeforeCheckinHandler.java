@@ -56,7 +56,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
   private final CheckinProjectPanel myCheckinPanel;
   private static final Logger LOG = Logger.getInstance(CodeAnalysisBeforeCheckinHandler.class);
 
-  public CodeAnalysisBeforeCheckinHandler(final Project project, CheckinProjectPanel panel) {
+  public CodeAnalysisBeforeCheckinHandler(Project project, CheckinProjectPanel panel) {
     myProject = project;
     myCheckinPanel = panel;
   }
@@ -94,7 +94,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
     return VcsConfiguration.getInstance(myProject);
   }
 
-  private ReturnResult processFoundCodeSmells(final List<CodeSmellInfo> codeSmells, @Nullable CommitExecutor executor) {
+  private ReturnResult processFoundCodeSmells(List<CodeSmellInfo> codeSmells, @Nullable CommitExecutor executor) {
     int errorCount = collectErrors(codeSmells);
     int warningCount = codeSmells.size() - errorCount;
     String commitButtonText = executor != null ? executor.getActionText() : myCheckinPanel.getCommitActionName();
@@ -102,7 +102,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
       commitButtonText = commitButtonText.substring(0, commitButtonText.length()-3);
     }
 
-    final int answer = Messages.showYesNoCancelDialog(myProject,
+    int answer = Messages.showYesNoCancelDialog(myProject,
       VcsBundle.message("before.commit.files.contain.code.smells.edit.them.confirm.text", errorCount, warningCount),
       VcsBundle.message("code.smells.error.messages.tab.name"), VcsBundle.message("code.smells.review.button"),
       commitButtonText, CommonBundle.getCancelButtonText(), UIUtil.getWarningIcon());
@@ -118,7 +118,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
     }
   }
 
-  private static int collectErrors(final List<CodeSmellInfo> codeSmells) {
+  private static int collectErrors(List<CodeSmellInfo> codeSmells) {
     int result = 0;
     for (CodeSmellInfo codeSmellInfo : codeSmells) {
       if (codeSmellInfo.getSeverity() == HighlightSeverity.ERROR) result++;
@@ -145,7 +145,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
       }
 
       try {
-        final List<CodeSmellInfo> codeSmells =
+        List<CodeSmellInfo> codeSmells =
           CodeSmellDetector.getInstance(myProject).findCodeSmells(new ArrayList<VirtualFile>(myCheckinPanel.getVirtualFiles()));
         if (!codeSmells.isEmpty()) {
           return processFoundCodeSmells(codeSmells, executor);

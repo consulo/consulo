@@ -40,7 +40,7 @@ public class StubTreeBuilder {
   }
 
   @Nullable
-  public static Stub buildStubTree(final FileContent inputData) {
+  public static Stub buildStubTree(FileContent inputData) {
     Stub data = inputData.getUserData(stubElementKey);
     if (data != null) return data;
 
@@ -49,9 +49,9 @@ public class StubTreeBuilder {
       data = inputData.getUserData(stubElementKey);
       if (data != null) return data;
 
-      final FileType fileType = inputData.getFileType();
+      FileType fileType = inputData.getFileType();
 
-      final BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
+      BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
       if (builder != null) {
         data = builder.buildStubTree(inputData);
         if (data instanceof PsiFileStubImpl && !((PsiFileStubImpl)data).rootsAreSet()) {
@@ -62,7 +62,7 @@ public class StubTreeBuilder {
         CharSequence contentAsText = inputData.getContentAsText();
         PsiDependentFileContent fileContent = (PsiDependentFileContent)inputData;
         PsiFile psi = fileContent.getPsiFile();
-        final FileViewProvider viewProvider = psi.getViewProvider();
+        FileViewProvider viewProvider = psi.getViewProvider();
         psi = viewProvider.getStubBindingRoot();
         psi.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, contentAsText);
 
@@ -72,30 +72,30 @@ public class StubTreeBuilder {
         try {
           IStubFileElementType stubFileElementType = ((PsiFileWithStubSupport)psi).getElementTypeForStubBuilder();
           if (stubFileElementType != null) {
-            final StubBuilder stubBuilder = stubFileElementType.getBuilder();
+            StubBuilder stubBuilder = stubFileElementType.getBuilder();
             if (stubBuilder instanceof LightStubBuilder) {
               LightStubBuilder.FORCED_AST.set(fileContent.getLighterAST());
             }
             data = stubBuilder.buildStubTree(psi);
 
-            final List<Pair<IStubFileElementType, PsiFile>> stubbedRoots = getStubbedRoots(viewProvider);
-            final List<PsiFileStub> stubs = new ArrayList<>(stubbedRoots.size());
+            List<Pair<IStubFileElementType, PsiFile>> stubbedRoots = getStubbedRoots(viewProvider);
+            List<PsiFileStub> stubs = new ArrayList<>(stubbedRoots.size());
             stubs.add((PsiFileStub)data);
 
             for (Pair<IStubFileElementType, PsiFile> stubbedRoot : stubbedRoots) {
-              final PsiFile secondaryPsi = stubbedRoot.second;
+              PsiFile secondaryPsi = stubbedRoot.second;
               if (psi == secondaryPsi) continue;
-              final StubBuilder stubbedRootBuilder = stubbedRoot.first.getBuilder();
+              StubBuilder stubbedRootBuilder = stubbedRoot.first.getBuilder();
               if (stubbedRootBuilder instanceof LightStubBuilder) {
                 LightStubBuilder.FORCED_AST.set(new TreeBackedLighterAST(secondaryPsi.getNode()));
               }
-              final StubElement element = stubbedRootBuilder.buildStubTree(secondaryPsi);
+              StubElement element = stubbedRootBuilder.buildStubTree(secondaryPsi);
               if (element instanceof PsiFileStub) {
                 stubs.add((PsiFileStub)element);
               }
               ensureNormalizedOrder(element);
             }
-            final PsiFileStub[] stubsArray = stubs.toArray(PsiFileStub.EMPTY_ARRAY);
+            PsiFileStub[] stubsArray = stubs.toArray(PsiFileStub.EMPTY_ARRAY);
             for (PsiFileStub stub : stubsArray) {
               if (stub instanceof PsiFileStubImpl) {
                 ((PsiFileStubImpl)stub).setStubRoots(stubsArray);
@@ -126,12 +126,12 @@ public class StubTreeBuilder {
    */
   @Nonnull
   public static List<Pair<IStubFileElementType, PsiFile>> getStubbedRoots(@Nonnull FileViewProvider viewProvider) {
-    final List<Trinity<Language, IStubFileElementType, PsiFile>> roots = new SmartList<>();
-    final PsiFile stubBindingRoot = viewProvider.getStubBindingRoot();
+    List<Trinity<Language, IStubFileElementType, PsiFile>> roots = new SmartList<>();
+    PsiFile stubBindingRoot = viewProvider.getStubBindingRoot();
     for (Language language : viewProvider.getLanguages()) {
-      final PsiFile file = viewProvider.getPsi(language);
+      PsiFile file = viewProvider.getPsi(language);
       if (file instanceof PsiFileWithStubSupport) {
-        final IElementType type = ((PsiFileWithStubSupport)file).getElementTypeForStubBuilder();
+        IElementType type = ((PsiFileWithStubSupport)file).getElementTypeForStubBuilder();
         if (type != null) {
           roots.add(Trinity.create(language, (IStubFileElementType)type, file));
         }

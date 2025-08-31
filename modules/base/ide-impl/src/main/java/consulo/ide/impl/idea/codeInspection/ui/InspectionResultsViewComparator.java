@@ -81,8 +81,8 @@ public class InspectionResultsViewComparator implements Comparator {
 
     if (node1 instanceof OfflineRefElementNode && node2 instanceof OfflineRefElementNode ||
         node1 instanceof OfflineProblemDescriptorNode && node2 instanceof OfflineProblemDescriptorNode) {
-      final Object userObject1 = node1.getUserObject();
-      final Object userObject2 = node2.getUserObject();
+      Object userObject1 = node1.getUserObject();
+      Object userObject2 = node2.getUserObject();
       if (userObject1 instanceof OfflineProblemDescriptor descriptor1 && userObject2 instanceof OfflineProblemDescriptor descriptor2) {
         if (descriptor1.getLine() != descriptor2.getLine()) return descriptor1.getLine() - descriptor2.getLine();
         return descriptor1.getFQName().compareTo(descriptor2.getFQName());
@@ -99,8 +99,8 @@ public class InspectionResultsViewComparator implements Comparator {
       return compareEntities(refElementNode1.getElement(), refElementNode2.getElement());
     }
     if (node1 instanceof ProblemDescriptionNode descriptionNode1 && node2 instanceof ProblemDescriptionNode descriptionNode2) {
-      final CommonProblemDescriptor descriptor1 = descriptionNode1.getDescriptor();
-      final CommonProblemDescriptor descriptor2 = descriptionNode2.getDescriptor();
+      CommonProblemDescriptor descriptor1 = descriptionNode1.getDescriptor();
+      CommonProblemDescriptor descriptor2 = descriptionNode2.getDescriptor();
       if (descriptor1 instanceof ProblemDescriptor problemDescriptor1 && descriptor2 instanceof ProblemDescriptor problemDescriptor2) {
         //TODO: Do not materialise lazy pointers
         return problemDescriptor1.getLineNumber() - problemDescriptor2.getLineNumber();
@@ -113,7 +113,7 @@ public class InspectionResultsViewComparator implements Comparator {
     }
 
     if (node1 instanceof RefElementNode refElementNode1 && node2 instanceof ProblemDescriptionNode descriptionNode2) {
-      final CommonProblemDescriptor descriptor2 = descriptionNode2.getDescriptor();
+      CommonProblemDescriptor descriptor2 = descriptionNode2.getDescriptor();
       if (descriptor2 instanceof ProblemDescriptor problemDescriptor) {
         return compareEntity(refElementNode1.getElement(), problemDescriptor.getPsiElement());
       }
@@ -121,7 +121,7 @@ public class InspectionResultsViewComparator implements Comparator {
     }
 
     if (node2 instanceof RefElementNode refElementNode2 && node1 instanceof ProblemDescriptionNode problemDescriptionNode1) {
-      final CommonProblemDescriptor descriptor1 = problemDescriptionNode1.getDescriptor();
+      CommonProblemDescriptor descriptor1 = problemDescriptionNode1.getDescriptor();
       if (descriptor1 instanceof ProblemDescriptor problemDescriptor1) {
         return -compareEntity(refElementNode2.getElement(), problemDescriptor1.getPsiElement());
       }
@@ -132,9 +132,9 @@ public class InspectionResultsViewComparator implements Comparator {
     return 0;
   }
 
-  private static int compareEntity(final RefEntity entity, final PsiElement element) {
+  private static int compareEntity(RefEntity entity, PsiElement element) {
     if (entity instanceof RefElement refElement) {
-      final PsiElement psiElement = refElement.getPsiElement();
+      PsiElement psiElement = refElement.getPsiElement();
       if (psiElement != null && element != null) {
         return PsiUtilCore.compareElementsByPosition(psiElement, element);
       }
@@ -149,7 +149,7 @@ public class InspectionResultsViewComparator implements Comparator {
     return -1;
   }
 
-  private static int compareEntities(final RefEntity entity1, final RefEntity entity2) {
+  private static int compareEntities(RefEntity entity1, RefEntity entity2) {
     if (entity1 instanceof RefElement && entity2 instanceof RefElement) {
       return PsiUtilCore.compareElementsByPosition(((RefElement)entity1).getPsiElement(), ((RefElement)entity2).getPsiElement());
     }
@@ -160,9 +160,9 @@ public class InspectionResultsViewComparator implements Comparator {
     return entity2 != null ? 1 : 0;
   }
 
-  private static int compareLineNumbers(final Object userObject, final OfflineProblemDescriptor descriptor) {
+  private static int compareLineNumbers(Object userObject, OfflineProblemDescriptor descriptor) {
     if (userObject instanceof RefElement refElement) {
-      final PsiElement psiElement = refElement.getPsiElement();
+      PsiElement psiElement = refElement.getPsiElement();
       if (psiElement != null) {
         Document document = PsiDocumentManager.getInstance(psiElement.getProject()).getDocument(psiElement.getContainingFile());
         if (document != null) {

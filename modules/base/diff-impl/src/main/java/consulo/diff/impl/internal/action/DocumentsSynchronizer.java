@@ -84,10 +84,10 @@ public abstract class DocumentsSynchronizer {
 
     @RequiredUIAccess
     protected void replaceString(
-        @Nonnull final Document document,
-        final int startOffset,
-        final int endOffset,
-        @Nonnull final CharSequence newText
+        @Nonnull Document document,
+        int startOffset,
+        int endOffset,
+        @Nonnull CharSequence newText
     ) {
         try {
             myDuringModification = true;

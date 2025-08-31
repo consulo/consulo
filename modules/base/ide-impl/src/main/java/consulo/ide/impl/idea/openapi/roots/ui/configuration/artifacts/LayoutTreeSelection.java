@@ -38,15 +38,15 @@ public class LayoutTreeSelection {
   private final Map<PackagingElementNode<?>, TreePath> myNode2Path = new HashMap<PackagingElementNode<?>, TreePath>();
 
   public LayoutTreeSelection(@Nonnull LayoutTree tree) {
-    final TreePath[] paths = tree.getSelectionPaths();
+    TreePath[] paths = tree.getSelectionPaths();
     if (paths == null) {
       return;
     }
 
     for (TreePath path : paths) {
-      final SimpleNode node = tree.getNodeFor(path);
+      SimpleNode node = tree.getNodeFor(path);
       if (node instanceof PackagingElementNode) {
-        final PackagingElementNode<?> elementNode = (PackagingElementNode<?>)node;
+        PackagingElementNode<?> elementNode = (PackagingElementNode<?>)node;
         mySelectedNodes.add(elementNode);
         myNode2Path.put(elementNode, path);
         for (PackagingElement<?> element : elementNode.getPackagingElements()) {
@@ -77,10 +77,10 @@ public class LayoutTreeSelection {
   public CompositePackagingElement<?> getCommonParentElement() {
     CompositePackagingElement<?> commonParent = null;
     for (PackagingElementNode<?> selectedNode : mySelectedNodes) {
-      final PackagingElement<?> element = selectedNode.getElementIfSingle();
+      PackagingElement<?> element = selectedNode.getElementIfSingle();
       if (element == null) return null;
 
-      final CompositePackagingElement<?> parentElement = selectedNode.getParentElement(element);
+      CompositePackagingElement<?> parentElement = selectedNode.getParentElement(element);
       if (parentElement == null || commonParent != null && !commonParent.equals(parentElement)) {
         return null;
       }

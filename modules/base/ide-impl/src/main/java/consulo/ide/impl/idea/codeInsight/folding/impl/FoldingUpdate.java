@@ -49,11 +49,11 @@ public class FoldingUpdate {
   }
 
   @Nullable
-  static Runnable updateFoldRegions(@Nonnull final Editor editor, @Nonnull PsiFile file, final boolean applyDefaultState, final boolean quick) {
+  static Runnable updateFoldRegions(@Nonnull Editor editor, @Nonnull PsiFile file, boolean applyDefaultState, boolean quick) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
-    final Project project = file.getProject();
-    final Document document = editor.getDocument();
+    Project project = file.getProject();
+    Document document = editor.getDocument();
     LOG.assertTrue(!PsiDocumentManager.getInstance(project).isUncommited(document));
 
     CachedValue<Runnable> value = editor.getUserData(CODE_FOLDING_KEY);
@@ -75,12 +75,12 @@ public class FoldingUpdate {
   private static CachedValueProvider.Result<Runnable> getUpdateResult(PsiFile file,
                                                                       @Nonnull Document document,
                                                                       boolean quick,
-                                                                      final Project project,
-                                                                      final Editor editor,
-                                                                      final boolean applyDefaultState) {
+                                                                      Project project,
+                                                                      Editor editor,
+                                                                      boolean applyDefaultState) {
 
-    final List<RegionInfo> elementsToFold = getFoldingsFor(file, document, quick);
-    final UpdateFoldRegionsOperation operation = new UpdateFoldRegionsOperation(project, editor, file, elementsToFold, applyDefaultStateMode(applyDefaultState), !applyDefaultState, false);
+    List<RegionInfo> elementsToFold = getFoldingsFor(file, document, quick);
+    UpdateFoldRegionsOperation operation = new UpdateFoldRegionsOperation(project, editor, file, elementsToFold, applyDefaultStateMode(applyDefaultState), !applyDefaultState, false);
     int documentLength = document.getTextLength();
     AtomicBoolean alreadyExecuted = new AtomicBoolean();
     Runnable runnable = () -> {
@@ -110,25 +110,25 @@ public class FoldingUpdate {
   private static final Key<Object> LAST_UPDATE_INJECTED_STAMP_KEY = Key.create("LAST_UPDATE_INJECTED_STAMP_KEY");
 
   @Nullable
-  public static Runnable updateInjectedFoldRegions(@Nonnull final Editor editor, @Nonnull final PsiFile file, final boolean applyDefaultState) {
+  public static Runnable updateInjectedFoldRegions(@Nonnull Editor editor, @Nonnull PsiFile file, boolean applyDefaultState) {
     if (file instanceof PsiCompiledElement) return null;
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
-    final Project project = file.getProject();
+    Project project = file.getProject();
     Document document = editor.getDocument();
     LOG.assertTrue(!PsiDocumentManager.getInstance(project).isUncommited(document));
-    final FoldingModel foldingModel = editor.getFoldingModel();
+    FoldingModel foldingModel = editor.getFoldingModel();
 
-    final long timeStamp = document.getModificationStamp();
+    long timeStamp = document.getModificationStamp();
     Object lastTimeStamp = editor.getUserData(LAST_UPDATE_INJECTED_STAMP_KEY);
     if (lastTimeStamp instanceof Long && ((Long)lastTimeStamp).longValue() == timeStamp) return null;
 
     List<DocumentWindow> injectedDocuments = InjectedLanguageManager.getInstance(project).getCachedInjectedDocumentsInRange(file, file.getTextRange());
     if (injectedDocuments.isEmpty()) return null;
-    final List<EditorWindow> injectedEditors = new ArrayList<>();
-    final List<PsiFile> injectedFiles = new ArrayList<>();
-    final List<List<RegionInfo>> lists = new ArrayList<>();
-    for (final DocumentWindow injectedDocument : injectedDocuments) {
+    List<EditorWindow> injectedEditors = new ArrayList<>();
+    List<PsiFile> injectedFiles = new ArrayList<>();
+    List<List<RegionInfo>> lists = new ArrayList<>();
+    for (DocumentWindow injectedDocument : injectedDocuments) {
       if (!injectedDocument.isValid()) {
         continue;
       }
@@ -139,14 +139,14 @@ public class FoldingUpdate {
 
         injectedEditors.add((EditorWindow)injectedEditor);
         injectedFiles.add(injectedFile);
-        final List<RegionInfo> map = new ArrayList<>();
+        List<RegionInfo> map = new ArrayList<>();
         lists.add(map);
         getFoldingsFor(injectedFile, injectedEditor.getDocument(), map, false);
       });
     }
 
     return () -> {
-      final ArrayList<Runnable> updateOperations = new ArrayList<>(injectedEditors.size());
+      ArrayList<Runnable> updateOperations = new ArrayList<>(injectedEditors.size());
       for (int i = 0; i < injectedEditors.size(); i++) {
         EditorWindow injectedEditor = injectedEditors.get(i);
         PsiFile injectedFile = injectedFiles.get(i);
@@ -189,9 +189,9 @@ public class FoldingUpdate {
    * @return true  if folding initialization available in the Dumb Mode
    */
   private static boolean supportsDumbModeFolding(@Nonnull PsiFile file) {
-    final FileViewProvider viewProvider = file.getViewProvider();
-    for (final Language language : viewProvider.getLanguages()) {
-      final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
+    FileViewProvider viewProvider = file.getViewProvider();
+    for (Language language : viewProvider.getLanguages()) {
+      FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
       if (foldingBuilder != null && !DumbService.isDumbAware(foldingBuilder)) return false;
     }
     return true;
@@ -207,7 +207,7 @@ public class FoldingUpdate {
   }
 
   private static void getFoldingsFor(@Nonnull PsiFile file, @Nonnull Document document, @Nonnull List<? super RegionInfo> elementsToFold, boolean quick) {
-    final FileViewProvider viewProvider = file.getViewProvider();
+    FileViewProvider viewProvider = file.getViewProvider();
     TextRange docRange = TextRange.from(0, document.getTextLength());
     Comparator<Language> preferBaseLanguage = Comparator.comparing((Language l) -> l != viewProvider.getBaseLanguage());
     List<Language> languages = ContainerUtil.sorted(viewProvider.getLanguages(), preferBaseLanguage.thenComparing(Language::getID));
@@ -216,8 +216,8 @@ public class FoldingUpdate {
     List<RangeMarker> hardRefToRangeMarkers = new ArrayList<>();
 
     for (Language language : languages) {
-      final PsiFile psi = viewProvider.getPsi(language);
-      final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
+      PsiFile psi = viewProvider.getPsi(language);
+      FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
       if (psi != null && foldingBuilder != null) {
         for (FoldingDescriptor descriptor : LanguageFolding.buildFoldingDescriptors(foldingBuilder, psi, document, quick)) {
           PsiElement psiElement = descriptor.getElement().getPsi();

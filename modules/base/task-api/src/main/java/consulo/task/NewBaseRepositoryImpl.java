@@ -142,14 +142,14 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
   private static class PreemptiveBasicAuthInterceptor implements HttpRequestInterceptor {
     @Override
     public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-      final CredentialsProvider provider = (CredentialsProvider)context.getAttribute(HttpClientContext.CREDS_PROVIDER);
-      final Credentials credentials = provider.getCredentials(BASIC_AUTH_SCOPE);
+      CredentialsProvider provider = (CredentialsProvider)context.getAttribute(HttpClientContext.CREDS_PROVIDER);
+      Credentials credentials = provider.getCredentials(BASIC_AUTH_SCOPE);
       if (credentials != null) {
         request.addHeader(new BasicScheme(StandardCharsets.UTF_8).authenticate(credentials, request, context));
       }
-      final HttpHost proxyHost = ((HttpRoute)context.getAttribute(HttpClientContext.HTTP_ROUTE)).getProxyHost();
+      HttpHost proxyHost = ((HttpRoute)context.getAttribute(HttpClientContext.HTTP_ROUTE)).getProxyHost();
       if (proxyHost != null) {
-        final Credentials proxyCredentials = provider.getCredentials(new AuthScope(proxyHost));
+        Credentials proxyCredentials = provider.getCredentials(new AuthScope(proxyHost));
         if (proxyCredentials != null) {
           request.addHeader(BasicScheme.authenticate(proxyCredentials, CharsetToolkit.UTF8, true));
         }

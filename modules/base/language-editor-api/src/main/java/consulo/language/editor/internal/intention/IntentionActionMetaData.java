@@ -69,11 +69,11 @@ public final class IntentionActionMetaData {
     myDescriptionDirectoryName = descriptionDirectoryName;
   }
 
-  public IntentionActionMetaData(@Nonnull final IntentionAction action,
-                                 @Nonnull final String[] category,
-                                 final TextDescriptor description,
-                                 final TextDescriptor[] exampleUsagesBefore,
-                                 final TextDescriptor[] exampleUsagesAfter) {
+  public IntentionActionMetaData(@Nonnull IntentionAction action,
+                                 @Nonnull String[] category,
+                                 TextDescriptor description,
+                                 TextDescriptor[] exampleUsagesBefore,
+                                 TextDescriptor[] exampleUsagesAfter) {
     myAction = action;
     myCategory = category;
     myExampleUsagesBefore = exampleUsagesBefore;
@@ -112,7 +112,7 @@ public final class IntentionActionMetaData {
   public TextDescriptor getDescription() {
     if (myDescription == null) {
       try {
-        final URL dirURL = getDirURL();
+        URL dirURL = getDirURL();
         if (dirURL == null) {
           myDescription = new PlainTextDescriptor("", "text.txt");
         }
@@ -153,9 +153,9 @@ public final class IntentionActionMetaData {
       }
     }
     else {
-      final FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
+      FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
       for (FileType fileType : fileTypes) {
-        final String[] extensions = FileTypeManager.getInstance().getAssociatedExtensions(fileType);
+        String[] extensions = FileTypeManager.getInstance().getAssociatedExtensions(fileType);
         for (String extension : extensions) {
           for (int i = 0; ; i++) {
             URL url = new URL(descriptionDirectory.toExternalForm() + "/" + prefix + "." + extension + (i == 0 ? "" : Integer.toString(i)) + suffix);
@@ -199,14 +199,14 @@ public final class IntentionActionMetaData {
 
   @Nullable
   private static URL getIntentionDescriptionDirURL(ClassLoader aClassLoader, String intentionFolderName) {
-    final URL pageURL = aClassLoader.getResource(INTENTION_DESCRIPTION_FOLDER + "/" + intentionFolderName + "/" + DESCRIPTION_FILE_NAME);
+    URL pageURL = aClassLoader.getResource(INTENTION_DESCRIPTION_FOLDER + "/" + intentionFolderName + "/" + DESCRIPTION_FILE_NAME);
     if (LOG.isDebugEnabled()) {
       LOG.debug("Path:" + "intentionDescriptions/" + intentionFolderName);
       LOG.debug("URL:" + pageURL);
     }
     if (pageURL != null) {
       try {
-        final String url = pageURL.toExternalForm();
+        String url = pageURL.toExternalForm();
         return URLUtil.internProtocol(new URL(url.substring(0, url.lastIndexOf('/'))));
       }
       catch (MalformedURLException e) {

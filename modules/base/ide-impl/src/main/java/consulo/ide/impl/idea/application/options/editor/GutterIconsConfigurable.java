@@ -149,7 +149,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     Map<GutterIconDescriptor, PluginDescriptor> pluginDescriptorMap = new HashMap<>();
     Set<String> ids = new HashSet<>();
     myDescriptors = new ArrayList<>();
-    for (final PluginDescriptor descriptor : map.keySet()) {
+    for (PluginDescriptor descriptor : map.keySet()) {
       Collection<LineMarkerProvider> markerProviders = map.get(descriptor);
       for (LineMarkerProvider provider : markerProviders) {
         GutterIconDescriptor instance = (GutterIconDescriptor)provider;

@@ -79,7 +79,7 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
   }
 
   private FileChooserDescriptor createFileChooserDescriptor() {
-    final FileChooserDescriptor chooserDescriptor;
+    FileChooserDescriptor chooserDescriptor;
     final List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors = new ArrayList<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>>();
     for (LibraryRootsComponentDescriptor componentDescriptor : myLibraryTypes.keySet()) {
       descriptors.add(Pair.create(componentDescriptor, componentDescriptor.createAttachFilesChooserDescriptor(null)));
@@ -123,7 +123,7 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
       return Collections.emptyList();
     }
 
-    final List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors = new ArrayList<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>>();
+    List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors = new ArrayList<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>>();
     for (LibraryRootsComponentDescriptor componentDescriptor : myLibraryTypes.keySet()) {
       descriptors.add(Pair.create(componentDescriptor, componentDescriptor.createAttachFilesChooserDescriptor(null)));
     }
@@ -135,7 +135,7 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
       }
     }
 
-    final LibraryRootsComponentDescriptor rootsComponentDescriptor;
+    LibraryRootsComponentDescriptor rootsComponentDescriptor;
     LibraryType libraryType = null;
     if (suitableDescriptors.size() == 1) {
       rootsComponentDescriptor = suitableDescriptors.get(0);
@@ -146,12 +146,12 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
     }
     List<OrderRoot> chosenRoots = RootDetectionUtil.detectRoots(chosenFiles, null, layer.getProject(), rootsComponentDescriptor);
 
-    final List<OrderRoot> roots = filterAlreadyAdded(layer, chosenRoots);
+    List<OrderRoot> roots = filterAlreadyAdded(layer, chosenRoots);
     if (roots.isEmpty()) {
       return Collections.emptyList();
     }
 
-    final List<Library> addedLibraries = new ArrayList<Library>();
+    List<Library> addedLibraries = new ArrayList<Library>();
     boolean onlyClasses = true;
     for (OrderRoot root : roots) {
       onlyClasses &= root.getType() == BinariesOrderRootType.getInstance();
@@ -176,12 +176,12 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
     return orderEntries;
   }
 
-  private Library createLibraryFromRoots(ModifiableModuleRootLayer layer, List<OrderRoot> roots, @Nullable final LibraryType libraryType) {
-    final LibraryTable.ModifiableModel moduleLibraryModel = layer.getModuleLibraryTable().getModifiableModel();
+  private Library createLibraryFromRoots(ModifiableModuleRootLayer layer, List<OrderRoot> roots, @Nullable LibraryType libraryType) {
+    LibraryTable.ModifiableModel moduleLibraryModel = layer.getModuleLibraryTable().getModifiableModel();
 
-    final PersistentLibraryKind kind = libraryType == null ? null : libraryType.getKind();
-    final Library library = ((LibraryTableBase.ModifiableModelEx)moduleLibraryModel).createLibrary(null, kind);
-    final LibraryEx.ModifiableModelEx libModel = (LibraryEx.ModifiableModelEx)library.getModifiableModel();
+    PersistentLibraryKind kind = libraryType == null ? null : libraryType.getKind();
+    Library library = ((LibraryTableBase.ModifiableModelEx)moduleLibraryModel).createLibrary(null, kind);
+    LibraryEx.ModifiableModelEx libModel = (LibraryEx.ModifiableModelEx)library.getModifiableModel();
 
     for (OrderRoot root : roots) {
       if (root.isJarDirectory()) {
@@ -195,13 +195,13 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
     return library;
   }
 
-  private List<OrderRoot> filterAlreadyAdded(ModifiableModuleRootLayer layer, final List<OrderRoot> roots) {
+  private List<OrderRoot> filterAlreadyAdded(ModifiableModuleRootLayer layer, List<OrderRoot> roots) {
     if (roots == null || roots.isEmpty()) {
       return Collections.emptyList();
     }
 
-    final List<OrderRoot> result = new ArrayList<OrderRoot>();
-    final Library[] libraries = layer.getModuleLibraryTable().getLibraries();
+    List<OrderRoot> result = new ArrayList<OrderRoot>();
+    Library[] libraries = layer.getModuleLibraryTable().getLibraries();
     for (OrderRoot root : roots) {
       if (!isIncluded(root, libraries)) {
         result.add(root);

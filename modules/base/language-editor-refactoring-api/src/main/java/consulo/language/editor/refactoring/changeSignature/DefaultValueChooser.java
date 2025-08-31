@@ -42,7 +42,7 @@ public class DefaultValueChooser extends DialogWrapper{
   public DefaultValueChooser(Project project, String name, String defaultValue) {
     super(project);
     new RadioUpDownListener(myLeaveBlankRadioButton, myFeelLuckyRadioButton, myUseValueRadioButton);
-    final ActionListener actionListener = new ActionListener() {
+    ActionListener actionListener = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         myValueEditor.setEnabled(myUseValueRadioButton.isSelected());

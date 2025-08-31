@@ -32,7 +32,7 @@ public interface TraceableDisposable {
 
   void killExceptionally(@Nonnull Throwable throwable);
 
-  void throwObjectNotDisposedError(@Nonnull final String msg);
+  void throwObjectNotDisposedError(@Nonnull String msg);
 
   void throwDisposalError(String msg) throws RuntimeException;
 

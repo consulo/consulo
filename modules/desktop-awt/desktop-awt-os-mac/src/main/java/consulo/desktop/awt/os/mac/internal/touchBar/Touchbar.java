@@ -99,12 +99,12 @@ public final class Touchbar {
     private static @Nonnull DefaultActionGroup buildActionsFromButtons(Collection<? extends JButton> buttons,
                                                                        JButton defaultButton,
                                                                        boolean isPrincipal) {
-        final DefaultActionGroup result = new DefaultActionGroup();
+        DefaultActionGroup result = new DefaultActionGroup();
         if (EXPAND_OPTION_BUTTONS) {
             DefaultActionGroup options = null;
             for (JButton jb : buttons) {
                 if (jb instanceof JBOptionButton ob) {
-                    final Action[] opts = ob.getOptions();
+                    Action[] opts = ob.getOptions();
                     if (opts != null) {
                         for (Action a : opts) {
                             if (a == null) {
@@ -128,7 +128,7 @@ public final class Touchbar {
         }
 
         for (JButton jb : buttons) {
-            final AnAction anAct = _createActionFromButton(jb.getAction(), jb, false);
+            AnAction anAct = _createActionFromButton(jb.getAction(), jb, false);
             if (anAct != null) {
                 if (jb == defaultButton) {
                     TouchbarActionCustomizations.setDefault(anAct, true);

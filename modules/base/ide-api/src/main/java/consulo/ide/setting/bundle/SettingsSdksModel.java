@@ -47,9 +47,9 @@ public interface SettingsSdksModel extends SdkModel {
 
   void removeSdk(Sdk sdk);
 
-  default void createAddActions(DefaultActionGroup group, final JComponent parent, final Consumer<Sdk> updateTree) {
+  default void createAddActions(DefaultActionGroup group, JComponent parent, Consumer<Sdk> updateTree) {
     createAddActions(group, parent, updateTree, null);
   }
 
-  void createAddActions(DefaultActionGroup group, final JComponent parent, final Consumer<Sdk> updateTree, @Nullable Predicate<SdkTypeId> filter);
+  void createAddActions(DefaultActionGroup group, JComponent parent, Consumer<Sdk> updateTree, @Nullable Predicate<SdkTypeId> filter);
 }

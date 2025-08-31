@@ -34,11 +34,11 @@ public class FieldPanel extends AbstractFieldPanel {
     createComponent();
   }
 
-  public FieldPanel(String labelText, final String viewerDialogTitle, ActionListener browseButtonActionListener, final Runnable documentListener) {
+  public FieldPanel(String labelText, String viewerDialogTitle, ActionListener browseButtonActionListener, Runnable documentListener) {
     this(new JTextField(30), labelText, viewerDialogTitle, browseButtonActionListener, documentListener);
   }
 
-  public FieldPanel(JTextField textField, String labelText, final String viewerDialogTitle, ActionListener browseButtonActionListener, final Runnable documentListener) {
+  public FieldPanel(JTextField textField, String labelText, String viewerDialogTitle, ActionListener browseButtonActionListener, Runnable documentListener) {
     super(textField, labelText, viewerDialogTitle, browseButtonActionListener, documentListener);
     myTextField = textField;
     createComponent();

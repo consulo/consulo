@@ -82,7 +82,7 @@ public class CompositeArrangementSettingsToken {
 
   @Nonnull
   private static StdArrangementTokenUiRole deduceRole(@Nonnull ArrangementSettingsToken token) {
-    final StdArrangementTokenUiRole role = token instanceof StdArrangementSettingsToken ? ((StdArrangementSettingsToken)token).getTokenType().getUiRole() : null;
+    StdArrangementTokenUiRole role = token instanceof StdArrangementSettingsToken ? ((StdArrangementSettingsToken)token).getTokenType().getUiRole() : null;
     if (role == null) {
       throw new IllegalArgumentException("Can't deduce UI role for token " + token);
     }

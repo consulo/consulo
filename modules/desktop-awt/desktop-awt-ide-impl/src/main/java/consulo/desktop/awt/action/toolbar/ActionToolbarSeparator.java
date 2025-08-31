@@ -68,7 +68,7 @@ final class ActionToolbarSeparator extends JComponent {
     }
 
     @Override
-    protected void paintComponent(final Graphics g) {
+    protected void paintComponent(Graphics g) {
         if (getParent() == null) {
             return;
         }

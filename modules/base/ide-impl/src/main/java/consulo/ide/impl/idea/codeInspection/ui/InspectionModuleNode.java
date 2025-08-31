@@ -10,7 +10,7 @@ import consulo.ui.image.Image;
  */
 public class InspectionModuleNode extends InspectionTreeNode{
   private final Module myModule;
-  public InspectionModuleNode(final Module module) {
+  public InspectionModuleNode(Module module) {
     super(module);
     myModule = module;
   }

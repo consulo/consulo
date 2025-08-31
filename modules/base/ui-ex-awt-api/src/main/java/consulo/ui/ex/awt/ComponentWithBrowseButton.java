@@ -126,13 +126,13 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         return myComponent;
     }
 
-    public void setTextFieldPreferredWidth(final int charCount) {
-        final Comp comp = getChildComponent();
+    public void setTextFieldPreferredWidth(int charCount) {
+        Comp comp = getChildComponent();
         Dimension size = GuiUtils.getSizeByChars(charCount, comp);
         comp.setPreferredSize(size);
 
         if (getComponentCount() != 1) {
-            final Dimension preferredSize = myBrowseButton.getPreferredSize();
+            Dimension preferredSize = myBrowseButton.getPreferredSize();
             setPreferredSize(new Dimension(
                 size.width + preferredSize.width + 2,
                 preferredSize.height + 2
@@ -214,7 +214,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
      */
     @Deprecated
     @SuppressWarnings("UnusedParameters")
-    public void addBrowseFolderListener(@Nullable ComponentManager project, final BrowseFolderActionListener<Comp> actionListener) {
+    public void addBrowseFolderListener(@Nullable ComponentManager project, BrowseFolderActionListener<Comp> actionListener) {
         addActionListener(actionListener);
     }
 
@@ -225,7 +225,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     @SuppressWarnings("UnusedParameters")
     public void addBrowseFolderListener(
         @Nullable ComponentManager project,
-        final BrowseFolderActionListener<Comp> actionListener,
+        BrowseFolderActionListener<Comp> actionListener,
         boolean autoRemoveOnHide
     ) {
         addActionListener(actionListener);

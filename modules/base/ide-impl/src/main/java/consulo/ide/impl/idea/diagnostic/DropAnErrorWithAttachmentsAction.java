@@ -32,7 +32,7 @@ public class DropAnErrorWithAttachmentsAction extends DumbAwareAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        final boolean multipleAttachments = (e.getModifiers() & InputEvent.SHIFT_MASK) != 0;
+        boolean multipleAttachments = (e.getModifiers() & InputEvent.SHIFT_MASK) != 0;
         Attachment[] attachments;
         if (multipleAttachments) {
             attachments = new Attachment[]{

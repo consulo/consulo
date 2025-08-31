@@ -172,7 +172,7 @@ public abstract class SwingWorker {
       }
     };
 
-    final Thread workerThread = new Thread(doConstruct, "SwingWorker work thread");
+    Thread workerThread = new Thread(doConstruct, "SwingWorker work thread");
     workerThread.setPriority(Thread.NORM_PRIORITY);
     myThreadVar = new ThreadVar(workerThread);
   }

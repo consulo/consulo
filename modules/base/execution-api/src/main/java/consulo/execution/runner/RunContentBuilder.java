@@ -108,18 +108,18 @@ public class RunContentBuilder extends RunTab {
     return myExecutionResult;
   }
 
-  public void addAction(@Nonnull final AnAction action) {
+  public void addAction(@Nonnull AnAction action) {
     myRunnerActions.add(action);
   }
 
   @Nonnull
   private RunContentDescriptor createDescriptor() {
-    final RunProfile profile = myEnvironment.getRunProfile();
+    RunProfile profile = myEnvironment.getRunProfile();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return new RunContentDescriptor(profile, myExecutionResult, myUi);
     }
 
-    final ExecutionConsole console = myExecutionResult.getExecutionConsole();
+    ExecutionConsole console = myExecutionResult.getExecutionConsole();
     RunContentDescriptor contentDescriptor = new RunContentDescriptor(profile, myExecutionResult, myUi);
     if (console != null) {
       if (console instanceof ExecutionConsoleEx) {
@@ -158,8 +158,8 @@ public class RunContentBuilder extends RunTab {
     return runnerType;
   }
 
-  public static void buildConsoleUiDefault(RunnerLayoutUi ui, final ExecutionConsole console) {
-    final Content consoleContent = ui.createContent(ExecutionConsole.CONSOLE_CONTENT_ID, console.getComponent(), "Console",
+  public static void buildConsoleUiDefault(RunnerLayoutUi ui, ExecutionConsole console) {
+    Content consoleContent = ui.createContent(ExecutionConsole.CONSOLE_CONTENT_ID, console.getComponent(), "Console",
                                                     ExecutionIconGroup.console(),
                                                     console.getPreferredFocusableComponent());
 
@@ -168,8 +168,8 @@ public class RunContentBuilder extends RunTab {
     ui.addContent(consoleContent, 0, PlaceInGrid.bottom, false);
   }
 
-  public static void addAdditionalConsoleEditorActions(final ExecutionConsole console, final Content consoleContent) {
-    final DefaultActionGroup consoleActions = new DefaultActionGroup();
+  public static void addAdditionalConsoleEditorActions(ExecutionConsole console, Content consoleContent) {
+    DefaultActionGroup consoleActions = new DefaultActionGroup();
     if (console instanceof ConsoleView) {
       for (AnAction action : ((ConsoleView)console).createConsoleActions()) {
         consoleActions.add(action);
@@ -181,9 +181,9 @@ public class RunContentBuilder extends RunTab {
 
   @Nonnull
   private ActionGroup createActionToolbar(@Nonnull RunContentDescriptor contentDescriptor) {
-    final DefaultActionGroup actionGroup = new DefaultActionGroup();
+    DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_RERUN));
-    final AnAction[] actions = contentDescriptor.getRestartActions();
+    AnAction[] actions = contentDescriptor.getRestartActions();
     actionGroup.addAll(actions);
     if (actions.length > 0) {
       actionGroup.addSeparator();

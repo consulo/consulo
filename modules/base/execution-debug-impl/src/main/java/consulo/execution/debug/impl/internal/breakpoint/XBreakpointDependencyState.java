@@ -30,11 +30,11 @@ public class XBreakpointDependencyState {
   public XBreakpointDependencyState() {
   }
 
-  public XBreakpointDependencyState(final String id) {
+  public XBreakpointDependencyState(String id) {
     myId = id;
   }
 
-  public XBreakpointDependencyState(final String id, final String masterBreakpointId, final boolean leaveEnabled) {
+  public XBreakpointDependencyState(String id, String masterBreakpointId, boolean leaveEnabled) {
     myId = id;
     myMasterBreakpointId = masterBreakpointId;
     myLeaveEnabled = leaveEnabled;
@@ -55,15 +55,15 @@ public class XBreakpointDependencyState {
     return myLeaveEnabled;
   }
 
-  public void setId(final String id) {
+  public void setId(String id) {
     myId = id;
   }
 
-  public void setMasterBreakpointId(final String masterBreakpointId) {
+  public void setMasterBreakpointId(String masterBreakpointId) {
     myMasterBreakpointId = masterBreakpointId;
   }
 
-  public void setLeaveEnabled(final boolean leaveEnabled) {
+  public void setLeaveEnabled(boolean leaveEnabled) {
     myLeaveEnabled = leaveEnabled;
   }
 }

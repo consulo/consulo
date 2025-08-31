@@ -58,7 +58,7 @@ public class ChangeListChooserPanel extends JPanel {
   private String myLastTypedDescription;
   private boolean myNewNameSuggested = false;
 
-  public ChangeListChooserPanel(final Project project, @Nonnull final Consumer<String> okEnabledListener) {
+  public ChangeListChooserPanel(Project project, @Nonnull Consumer<String> okEnabledListener) {
     super(new BorderLayout());
     myProject = project;
     myExistingListsCombo = new MyEditorComboBox(project);
@@ -77,10 +77,10 @@ public class ChangeListChooserPanel extends JPanel {
           if (visibleWidth == 0) {
             visibleWidth = MyEditorComboBox.PREF_WIDTH;
           }
-          final FontMetrics fm = list.getFontMetrics(list.getFont());
-          final int width = fm.stringWidth(name);
+          FontMetrics fm = list.getFontMetrics(list.getFont());
+          int width = fm.stringWidth(name);
           if (width > visibleWidth) {
-            final String truncated = CommittedChangeListRenderer
+            String truncated = CommittedChangeListRenderer
                     .truncateDescription(name, fm, visibleWidth - fm.stringWidth(" ..") - 7);
             if (truncated.length() > 5) {
               name = truncated + " ..";
@@ -205,7 +205,7 @@ public class ChangeListChooserPanel extends JPanel {
     VcsConfiguration.getInstance(project).MAKE_NEW_CHANGELIST_ACTIVE = setActive;
   }
 
-  public void setDefaultSelection(final ChangeList defaultSelection) {
+  public void setDefaultSelection(ChangeList defaultSelection) {
     if (defaultSelection == null) {
       selectActiveChangeListIfExist();
     }

@@ -37,7 +37,7 @@ public class ScopesAndSeveritiesHintTable extends JBTable {
   private final static int SCOPE_COLUMN = 0;
   private final static int SEVERITY_COLUMN = 1;
 
-  public ScopesAndSeveritiesHintTable(final LinkedHashMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap, String defaultScopeName) {
+  public ScopesAndSeveritiesHintTable(LinkedHashMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap, String defaultScopeName) {
     super(new MyModel(scopeToAverageSeverityMap, defaultScopeName));
 
     getColumnModel().getColumn(SCOPE_COLUMN).setCellRenderer(new DefaultTableCellRenderer() {
@@ -57,14 +57,14 @@ public class ScopesAndSeveritiesHintTable extends JBTable {
 
     getColumnModel().getColumn(SEVERITY_COLUMN).setCellRenderer(new DefaultTableCellRenderer() {
       @Override
-      public Component getTableCellRendererComponent(final JTable table,
-                                                     final Object value,
-                                                     final boolean isSelected,
-                                                     final boolean hasFocus,
-                                                     final int row,
-                                                     final int column) {
+      public Component getTableCellRendererComponent(JTable table,
+                                                     Object value,
+                                                     boolean isSelected,
+                                                     boolean hasFocus,
+                                                     int row,
+                                                     int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        final HighlightDisplayLevel level = (HighlightDisplayLevel)value;
+        HighlightDisplayLevel level = (HighlightDisplayLevel)value;
         setIcon(TargetAWT.to(level.getIcon()));
         setText(SingleInspectionProfilePanel.renderSeverity(level.getSeverity()));
         setOpaque(false);
@@ -79,9 +79,9 @@ public class ScopesAndSeveritiesHintTable extends JBTable {
 
     for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
       int w = 0;
-      final TableColumn column = getColumnModel().getColumn(i);
+      TableColumn column = getColumnModel().getColumn(i);
       for (int j = 0; j < getModel().getRowCount(); j++) {
-        final Component component = prepareRenderer(column.getCellRenderer(), j, i);
+        Component component = prepareRenderer(column.getCellRenderer(), j, i);
         w = Math.max(component.getPreferredSize().width, w);
       }
       column.setPreferredWidth(w + 1);
@@ -94,14 +94,14 @@ public class ScopesAndSeveritiesHintTable extends JBTable {
     private final String myDefaultScopeName;
     private final List<String> myScopes;
 
-    public MyModel(final LinkedHashMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap, String defaultScopeName) {
+    public MyModel(LinkedHashMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap, String defaultScopeName) {
       myScopeToAverageSeverityMap = scopeToAverageSeverityMap;
       myDefaultScopeName = defaultScopeName;
       myScopes = new ArrayList<String>(myScopeToAverageSeverityMap.keySet());
     }
 
     @Override
-    public Class<?> getColumnClass(final int columnIndex) {
+    public Class<?> getColumnClass(int columnIndex) {
       switch (columnIndex) {
         case SCOPE_COLUMN: return String.class;
         case SEVERITY_COLUMN: return HighlightDisplayLevel.class;
@@ -120,8 +120,8 @@ public class ScopesAndSeveritiesHintTable extends JBTable {
     }
 
     @Override
-    public Object getValueAt(final int rowIndex, final int columnIndex) {
-      final String scopeName = myScopes.get(rowIndex);
+    public Object getValueAt(int rowIndex, int columnIndex) {
+      String scopeName = myScopes.get(rowIndex);
       switch (columnIndex) {
         case SCOPE_COLUMN:
           return myDefaultScopeName.equals(scopeName) ? "Everywhere else" : scopeName;

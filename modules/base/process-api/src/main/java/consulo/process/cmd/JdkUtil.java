@@ -33,11 +33,11 @@ class JdkUtil {
   private JdkUtil() {
   }
 
-  public static GeneralCommandLine setupJVMCommandLine(final String jdkHome, final SimpleJavaParameters javaParameters) {
-    final GeneralCommandLine commandLine = new GeneralCommandLine();
+  public static GeneralCommandLine setupJVMCommandLine(String jdkHome, SimpleJavaParameters javaParameters) {
+    GeneralCommandLine commandLine = new GeneralCommandLine();
     commandLine.setExePath(getBinPath(jdkHome) + File.separator + (Platform.current().os().isWindows() ? "java.exe" : "java"));
 
-    final ParametersList vmParametersList = javaParameters.getVMParametersList();
+    ParametersList vmParametersList = javaParameters.getVMParametersList();
     commandLine.getEnvironment().putAll(javaParameters.getEnv());
     commandLine.setPassParentEnvironment(javaParameters.isPassParentEnvs());
 
@@ -50,7 +50,7 @@ class JdkUtil {
       commandLine.addParameter(javaParameters.getClassPath().getPathsString());
     }
 
-    final String mainClass = javaParameters.getMainClass();
+    String mainClass = javaParameters.getMainClass();
     commandLine.addParameter(mainClass);
     commandLine.addParameters(javaParameters.getProgramParametersList().getList());
 

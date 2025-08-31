@@ -30,7 +30,7 @@ public class ValueMarkup {
   @Nullable
   private final String myToolTipText;
 
-  public ValueMarkup(final String text, final Color color, @Nullable String toolTipText) {
+  public ValueMarkup(String text, Color color, @Nullable String toolTipText) {
     myText = text;
     myColor = color;
     myToolTipText = toolTipText;

@@ -22,22 +22,22 @@ import java.awt.*;
 public class SameHeightPanel extends JPanel {
   private final JComponent myOriginalHeightComponent;
 
-  public SameHeightPanel(final LayoutManager layout, final JComponent originalHeightComponent) {
+  public SameHeightPanel(LayoutManager layout, JComponent originalHeightComponent) {
     super(layout);
     myOriginalHeightComponent = originalHeightComponent;
   }
 
   @Override
   public Dimension getPreferredSize() {
-    final Dimension preferredSize = super.getPreferredSize();
-    final int originalHeight = myOriginalHeightComponent.getPreferredSize().height;
+    Dimension preferredSize = super.getPreferredSize();
+    int originalHeight = myOriginalHeightComponent.getPreferredSize().height;
     if (preferredSize.height > originalHeight)
       return preferredSize;
     return new Dimension(preferredSize.width, originalHeight);
   }
 
-  public static SameHeightPanel wrap(final JComponent component, final JComponent original) {
-    final SameHeightPanel panel = new SameHeightPanel(new BorderLayout(), original);
+  public static SameHeightPanel wrap(JComponent component, JComponent original) {
+    SameHeightPanel panel = new SameHeightPanel(new BorderLayout(), original);
     panel.add(component, BorderLayout.CENTER);
     return panel;
   }

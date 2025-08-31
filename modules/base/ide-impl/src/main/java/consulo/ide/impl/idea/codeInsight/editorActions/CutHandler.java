@@ -67,7 +67,7 @@ public class CutHandler extends EditorWriteActionHandler implements ExtensionEdi
       return;
     }
 
-    final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
 
     if (file == null) {
       if (myOriginalHandler != null) {

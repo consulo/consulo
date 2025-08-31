@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "stats", order = "after priority")
 public class StatisticsWeigher extends CompletionWeigher {
     @Override
-    public Comparable weigh(@Nonnull final LookupElement item, @Nonnull final CompletionLocation location) {
+    public Comparable weigh(@Nonnull LookupElement item, @Nonnull CompletionLocation location) {
         throw new UnsupportedOperationException();
     }
 }

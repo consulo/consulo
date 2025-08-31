@@ -44,9 +44,9 @@ public class EditScopesAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        final String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
+        String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
         LOG.assertTrue(scopeName != null);
-        final ScopeChooserConfigurable scopeChooserConfigurable =
+        ScopeChooserConfigurable scopeChooserConfigurable =
             new ScopeChooserConfigurable(project, () -> MasterDetailsStateService.getInstance(project));
         ShowSettingsUtil.getInstance()
             .editConfigurable(project, scopeChooserConfigurable, () -> scopeChooserConfigurable.selectNodeInTree(scopeName));
@@ -56,11 +56,11 @@ public class EditScopesAction extends AnAction implements DumbAware {
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(false);
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project != null) {
-            final ProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
+            ProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
             if (projectViewPane != null) {
-                final String scopeName = projectViewPane.getSubId();
+                String scopeName = projectViewPane.getSubId();
                 if (scopeName != null) {
                     e.getPresentation().setEnabled(true);
                 }

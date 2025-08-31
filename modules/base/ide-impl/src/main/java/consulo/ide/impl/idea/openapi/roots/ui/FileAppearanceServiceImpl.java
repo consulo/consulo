@@ -40,12 +40,12 @@ import java.util.function.Consumer;
 public class FileAppearanceServiceImpl extends FileAppearanceService {
   @Nonnull
   @Override
-  public CellAppearanceEx forVirtualFile(@Nonnull final VirtualFile file) {
+  public CellAppearanceEx forVirtualFile(@Nonnull VirtualFile file) {
     if (!file.isValid()) {
       return forInvalidUrl(file.getPresentableUrl());
     }
 
-    final VirtualFileSystem fileSystem = file.getFileSystem();
+    VirtualFileSystem fileSystem = file.getFileSystem();
     if (fileSystem instanceof ArchiveFileSystem) {
       return new JarSubfileCellAppearance(file);
     }
@@ -60,8 +60,8 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
 
   @Nonnull
   @Override
-  public CellAppearanceEx forIoFile(@Nonnull final File file) {
-    final String absolutePath = file.getAbsolutePath();
+  public CellAppearanceEx forIoFile(@Nonnull File file) {
+    String absolutePath = file.getAbsolutePath();
     if (!file.exists()) {
       return forInvalidUrl(absolutePath);
     }
@@ -70,17 +70,17 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
       return SimpleTextCellAppearance.regular(absolutePath, AllIcons.Nodes.Folder);
     }
 
-    final String name = file.getName();
-    final FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
-    final File parent = file.getParentFile();
-    final CompositeAppearance appearance = CompositeAppearance.textComment(name, parent.getAbsolutePath());
+    String name = file.getName();
+    FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
+    File parent = file.getParentFile();
+    CompositeAppearance appearance = CompositeAppearance.textComment(name, parent.getAbsolutePath());
     appearance.setIcon(fileType.getIcon());
     return appearance;
   }
 
   @Override
   @Nonnull
-  public CellAppearanceEx forInvalidUrl(@Nonnull final String text) {
+  public CellAppearanceEx forInvalidUrl(@Nonnull String text) {
     return SimpleTextCellAppearance.invalid(text, AllIcons.Nodes.PpInvalid);
   }
 
@@ -106,7 +106,7 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
   @Nonnull
   @Override
   public Consumer<ColoredTextContainer> getRenderForIoFile(@Nonnull File file) {
-    final String absolutePath = file.getAbsolutePath();
+    String absolutePath = file.getAbsolutePath();
     if (!file.exists()) {
       return getRenderForInvalidUrl(absolutePath);
     }
@@ -119,9 +119,9 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
     }
 
     return it -> {
-      final String name = file.getName();
-      final FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
-      final File parent = file.getParentFile();
+      String name = file.getName();
+      FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
+      File parent = file.getParentFile();
 
       it.setIcon(fileType.getIcon());
       it.append(name);

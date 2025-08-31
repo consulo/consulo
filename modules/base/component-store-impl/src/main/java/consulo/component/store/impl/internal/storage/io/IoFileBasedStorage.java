@@ -58,7 +58,7 @@ public final class IoFileBasedStorage extends XmlElementStorage implements FileB
     @Nullable TrackingPathMacroSubstitutor pathMacroManager,
     @Nonnull String rootElementName,
     @Nonnull Disposable parentDisposable,
-    @Nullable final StateStorageListener listener,
+    @Nullable StateStorageListener listener,
     @Nullable StreamProvider streamProvider,
     boolean useXmlProlog,
     @Nonnull PathMacrosService pathMacrosService

@@ -56,9 +56,9 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
     private final Project myProject;
 
     public ExpressionInputComponent(
-        final @Nonnull Project project,
+        @Nonnull Project project,
         @Nonnull XDebuggerEditorsProvider editorsProvider,
-        final @Nullable XSourcePosition sourcePosition,
+        @Nullable XSourcePosition sourcePosition,
         @Nullable XExpression expression,
         Disposable parentDisposable
     ) {
@@ -80,7 +80,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         historyButton.setToolTipText(XDebuggerLocalize.xdebuggerEvaluateHistoryHint().get());
         historyButton.addActionListener(e -> showHistory());
         myMainPanel.add(historyButton, BorderLayout.EAST);
-        final JBLabel help = new JBLabel(
+        JBLabel help = new JBLabel(
             XDebuggerBundle.message(
                 "xdebugger.evaluate.addtowatches.hint",
                 ShortcutUtil.getKeystrokeText(XDebuggerEvaluationDialog.ADD_WATCH_KEYSTROKE)

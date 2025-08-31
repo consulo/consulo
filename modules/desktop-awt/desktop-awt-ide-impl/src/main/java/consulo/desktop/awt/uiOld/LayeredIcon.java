@@ -108,7 +108,7 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
     if (!(o instanceof LayeredIcon)) return false;
     if (!super.equals(o)) return false;
 
-    final LayeredIcon icon = (LayeredIcon)o;
+    LayeredIcon icon = (LayeredIcon)o;
 
     if (myHeight != icon.myHeight) return false;
     if (myWidth != icon.myWidth) return false;
@@ -286,8 +286,8 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
     }
   }
 
-  public static Icon create(final Icon backgroundIcon, final Icon foregroundIcon) {
-    final LayeredIcon layeredIcon = new LayeredIcon(2);
+  public static Icon create(Icon backgroundIcon, Icon foregroundIcon) {
+    LayeredIcon layeredIcon = new LayeredIcon(2);
     layeredIcon.setIcon(backgroundIcon, 0);
     layeredIcon.setIcon(foregroundIcon, 1);
     return layeredIcon;

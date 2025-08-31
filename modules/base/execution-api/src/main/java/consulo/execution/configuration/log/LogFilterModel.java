@@ -40,9 +40,9 @@ public abstract class LogFilterModel {
   private Pattern getCustomPattern() {
     String customFilter = getCustomFilter();
     if (myCustomPattern == null && customFilter != null) {
-      final StringBuilder buf = new StringBuilder();
+      StringBuilder buf = new StringBuilder();
       for (int i = 0; i < customFilter.length(); i++) {
-        final char c = customFilter.charAt(i);
+        char c = customFilter.charAt(i);
         if (Character.isLetterOrDigit(c)) {
           buf.append(Character.toUpperCase(c));
         }
@@ -61,7 +61,7 @@ public abstract class LogFilterModel {
 
   public boolean isApplicable(String line) {
     if (getCustomFilter() != null) {
-      final Pattern pattern = getCustomPattern();
+      Pattern pattern = getCustomPattern();
       if (pattern != null && !pattern.matcher(StringUtil.toUpperCase(line)).matches()) return false;
     }
     return true;

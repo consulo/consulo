@@ -140,13 +140,13 @@ public class InjectorUtils {
     }
     boolean injectionStarted = false;
     for (Trinity<PsiLanguageInjectionHost, InjectedLanguage, TextRange> trinity : list) {
-      final PsiLanguageInjectionHost host = trinity.first;
+      PsiLanguageInjectionHost host = trinity.first;
       if (host.getContainingFile() != containingFile || !host.isValidHost()) {
         continue;
       }
 
-      final TextRange textRange = trinity.third;
-      final InjectedLanguage injectedLanguage = trinity.second;
+      TextRange textRange = trinity.third;
+      InjectedLanguage injectedLanguage = trinity.second;
 
       if (!injectionStarted) {
         registrar.startInjecting(language);
@@ -169,26 +169,26 @@ public class InjectorUtils {
   }
 
   @Nullable
-  public static LanguageInjectionSupport findInjectionSupport(final String id) {
+  public static LanguageInjectionSupport findInjectionSupport(String id) {
     return LanguageSupportCache.getInstance().getSupport(id);
   }
 
   @Nonnull
-  public static Class[] getPatternClasses(final String supportId) {
-    final LanguageInjectionSupport support = findInjectionSupport(supportId);
+  public static Class[] getPatternClasses(String supportId) {
+    LanguageInjectionSupport support = findInjectionSupport(supportId);
     return support == null ? ArrayUtil.EMPTY_CLASS_ARRAY : support.getPatternClasses();
   }
 
   @Nonnull
-  public static LanguageInjectionSupport findNotNullInjectionSupport(final String id) {
-    final LanguageInjectionSupport result = findInjectionSupport(id);
+  public static LanguageInjectionSupport findNotNullInjectionSupport(String id) {
+    LanguageInjectionSupport result = findInjectionSupport(id);
     assert result != null : id + " injector not found";
     return result;
   }
 
   public static StringBuilder appendStringPattern(@Nonnull StringBuilder sb, @Nonnull String prefix, @Nonnull String text, @Nonnull String suffix) {
     sb.append(prefix).append("string().");
-    final String[] parts = text.split("[,|\\s]+");
+    String[] parts = text.split("[,|\\s]+");
     boolean useMatches = false;
     for (String part : parts) {
       if (isRegexp(part)) {
@@ -220,10 +220,10 @@ public class InjectorUtils {
     return sb;
   }
 
-  public static boolean isRegexp(final String s) {
+  public static boolean isRegexp(String s) {
     boolean hasReChars = false;
     for (int i = 0, len = s.length(); i < len; i++) {
-      final char c = s.charAt(i);
+      char c = s.charAt(i);
       if (c == ' ' || c == '_' || c == '-' || Character.isLetterOrDigit(c)) {
         continue;
       }
@@ -291,8 +291,8 @@ public class InjectorUtils {
     if (StringUtil.isEmpty(charSequence)) {
       return Collections.emptyMap();
     }
-    final Matcher matcher = MAP_ENTRY_PATTERN.matcher(charSequence);
-    final LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+    Matcher matcher = MAP_ENTRY_PATTERN.matcher(charSequence);
+    LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
     while (matcher.find()) {
       map.put(StringUtil.unescapeStringCharacters(matcher.group(1)), StringUtil.unescapeStringCharacters(StringUtil.unquoteString(matcher.group(2))));
     }

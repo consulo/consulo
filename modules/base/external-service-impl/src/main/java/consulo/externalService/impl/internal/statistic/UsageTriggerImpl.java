@@ -48,7 +48,7 @@ public class UsageTriggerImpl implements UsageTrigger, PersistentStateComponent<
   @Override
   public void doTrigger(String feature) {
     ConvertUsagesUtil.assertDescriptorName(feature);
-    final Integer count = myState.myValues.get(feature);
+    Integer count = myState.myValues.get(feature);
     if (count == null) {
       myState.myValues.put(feature, 1);
     }
@@ -63,7 +63,7 @@ public class UsageTriggerImpl implements UsageTrigger, PersistentStateComponent<
   }
 
   @Override
-  public void loadState(final State state) {
+  public void loadState(State state) {
     myState = state;
   }
 }

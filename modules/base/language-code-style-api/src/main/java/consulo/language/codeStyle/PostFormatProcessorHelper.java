@@ -28,7 +28,7 @@ public class PostFormatProcessorHelper {
     private final CommonCodeStyleSettings mySettings;
     private TextRange myResultTextRange;
 
-    public PostFormatProcessorHelper(final CommonCodeStyleSettings settings) {
+    public PostFormatProcessorHelper(CommonCodeStyleSettings settings) {
         mySettings = settings;
     }
 
@@ -36,7 +36,7 @@ public class PostFormatProcessorHelper {
         return mySettings;
     }
 
-    public void updateResultRange(final int oldTextLength, final int newTextLength) {
+    public void updateResultRange(int oldTextLength, int newTextLength) {
         if (myResultTextRange == null) {
             return;
         }
@@ -46,12 +46,12 @@ public class PostFormatProcessorHelper {
     }
 
     @RequiredReadAction
-    public boolean isElementPartlyInRange(@Nonnull final PsiElement element) {
+    public boolean isElementPartlyInRange(@Nonnull PsiElement element) {
         if (myResultTextRange == null) {
             return true;
         }
 
-        final TextRange elementRange = element.getTextRange();
+        TextRange elementRange = element.getTextRange();
         if (elementRange.getEndOffset() < myResultTextRange.getStartOffset()) {
             return false;
         }
@@ -60,12 +60,12 @@ public class PostFormatProcessorHelper {
     }
 
     @RequiredReadAction
-    public boolean isElementFullyInRange(final PsiElement element) {
+    public boolean isElementFullyInRange(PsiElement element) {
         if (myResultTextRange == null) {
             return true;
         }
 
-        final TextRange elementRange = element.getTextRange();
+        TextRange elementRange = element.getTextRange();
 
         return elementRange.getStartOffset() >= myResultTextRange.getStartOffset()
             && elementRange.getEndOffset() <= myResultTextRange.getEndOffset();
@@ -81,7 +81,7 @@ public class PostFormatProcessorHelper {
         }
     }
 
-    public void setResultTextRange(final TextRange resultTextRange) {
+    public void setResultTextRange(TextRange resultTextRange) {
         myResultTextRange = resultTextRange;
     }
 

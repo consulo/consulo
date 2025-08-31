@@ -29,7 +29,7 @@ public interface Condition<T> {
 
   Condition<Object> NOT_NULL = new Condition<Object>() {
     @Override
-    public boolean value(final Object object) {
+    public boolean value(Object object) {
       return object != null;
     }
 
@@ -44,7 +44,7 @@ public interface Condition<T> {
    */
   Condition TRUE = new Condition() {
     @Override
-    public boolean value(final Object object) {
+    public boolean value(Object object) {
       return true;
     }
 
@@ -58,7 +58,7 @@ public interface Condition<T> {
    */
   Condition FALSE = new Condition() {
     @Override
-    public boolean value(final Object object) {
+    public boolean value(Object object) {
       return false;
     }
 

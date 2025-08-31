@@ -33,7 +33,7 @@ public class FocusBasedCurrentEditorProvider implements CurrentEditorProvider {
   public FileEditor getCurrentEditor() {
     // [kirillk] this is a hack, since much of editor-related code was written long before
     // own focus managenent in the platform, so this method should be strictly synchronous
-    final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     return DataManager.getInstance().getDataContext(owner).getData(FileEditor.KEY);
   }
 }

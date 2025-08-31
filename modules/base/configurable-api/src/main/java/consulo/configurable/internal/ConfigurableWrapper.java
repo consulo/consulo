@@ -171,7 +171,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @Nonnull
   @Override
   public Class<?> getOriginalClass() {
-    final UnnamedConfigurable configurable = getConfigurable();
+    UnnamedConfigurable configurable = getConfigurable();
     return configurable instanceof SearchableConfigurable ? ((SearchableConfigurable)configurable).getOriginalClass() : configurable.getClass();
   }
 
@@ -183,7 +183,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @Nullable
   @Override
   public Runnable enableSearch(String option) {
-    final UnnamedConfigurable configurable = getConfigurable();
+    UnnamedConfigurable configurable = getConfigurable();
     return configurable instanceof SearchableConfigurable ? ((SearchableConfigurable)configurable).enableSearch(option) : null;
   }
 

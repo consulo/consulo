@@ -36,7 +36,7 @@ public class DefaultModulesProvider implements ModulesProvider {
 
   private final Project myProject;
 
-  public DefaultModulesProvider(final Project project) {
+  public DefaultModulesProvider(Project project) {
     myProject = project;
   }
 

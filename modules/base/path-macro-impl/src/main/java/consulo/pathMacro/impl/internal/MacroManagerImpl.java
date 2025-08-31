@@ -195,7 +195,7 @@ public final class MacroManagerImpl implements MacroManager {
 
   @Override
   public String expandSilentMarcos(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.ExecutionCancelledException {
-    final Function<Macro, Macro> convertor = macro -> {
+    Function<Macro, Macro> convertor = macro -> {
       if (macro instanceof PromptingMacro) {
         return new Macro.Silent(macro, "");
       }

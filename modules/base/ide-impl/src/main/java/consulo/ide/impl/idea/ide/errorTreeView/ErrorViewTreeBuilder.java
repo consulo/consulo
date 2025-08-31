@@ -49,7 +49,7 @@ public class ErrorViewTreeBuilder extends AbstractTreeBuilder{
   }
 
   protected boolean isAlwaysShowPlus(NodeDescriptor nodeDescriptor) {
-    final ErrorTreeElement element = (ErrorTreeElement)nodeDescriptor.getElement();
+    ErrorTreeElement element = (ErrorTreeElement)nodeDescriptor.getElement();
     if (element instanceof GroupingElement) {
       return ((ErrorViewStructure)getTreeStructure()).getChildCount((GroupingElement)element) > 0;
     }

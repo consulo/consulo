@@ -37,7 +37,7 @@ public abstract class ArtifactModelBase implements ArtifactModel {
   @Nonnull
   public Artifact[] getArtifacts() {
     if (myArtifactsArray == null) {
-      final List<? extends Artifact> validArtifacts = ContainerUtil.findAll(getArtifactsList(), VALID_ARTIFACT_CONDITION);
+      List<? extends Artifact> validArtifacts = ContainerUtil.findAll(getArtifactsList(), VALID_ARTIFACT_CONDITION);
       myArtifactsArray = validArtifacts.toArray(new Artifact[validArtifacts.size()]);
     }
     return myArtifactsArray;
@@ -70,7 +70,7 @@ public abstract class ArtifactModelBase implements ArtifactModel {
 
   @Nonnull
   public Collection<? extends Artifact> getArtifactsByType(@Nonnull ArtifactType type) {
-    final List<Artifact> result = new ArrayList<Artifact>();
+    List<Artifact> result = new ArrayList<Artifact>();
     for (Artifact artifact : getArtifacts()) {
       if (artifact.getArtifactType().equals(type)) {
         result.add(artifact);

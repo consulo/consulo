@@ -27,7 +27,7 @@ public abstract class ClickListener {
 
       @Override
       public void mousePressed(MouseEvent e) {
-        final Point point = e.getPoint();
+        Point point = e.getPoint();
         SwingUtilities.convertPointToScreen(point, e.getComponent());
 
         if (Math.abs(lastTimeClicked - e.getWhen()) > UIUtil.getMultiClickInterval() || lastClickPoint != null && !isWithinEps(lastClickPoint, point)) {

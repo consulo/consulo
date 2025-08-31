@@ -46,7 +46,7 @@ public class SimpleTimer {
   }
 
   @Nonnull
-  public SimpleTimerTask setUp(@Nonnull final Runnable runnable, final long delay) {
+  public SimpleTimerTask setUp(@Nonnull Runnable runnable, long delay) {
     final ScheduledFuture<?> future = myScheduledExecutorService.schedule(runnable, delay, TimeUnit.MILLISECONDS);
     return new SimpleTimerTask() {
       @Override

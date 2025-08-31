@@ -53,7 +53,7 @@ public abstract class PopupUpdateProcessor extends PopupUpdateProcessorBase {
         @Override
         public void currentItemChanged(LookupEvent event) {
           if (windowEvent.asPopup().isVisible()) { //was not canceled yet
-            final LookupElement item = event.getItem();
+            LookupElement item = event.getItem();
             if (item != null) {
               PsiElement targetElement = CompletionUtil.getTargetElement(item);
               if (targetElement == null) {
@@ -69,7 +69,7 @@ public abstract class PopupUpdateProcessor extends PopupUpdateProcessorBase {
       });
     }
     else {
-      final Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent(myProject);
+      Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent(myProject);
       boolean fromQuickSearch = focusedComponent != null && focusedComponent.getParent() instanceof ChooseByNameBase.JPanelProvider;
       if (fromQuickSearch) {
         ChooseByNameBase.JPanelProvider panelProvider = (ChooseByNameBase.JPanelProvider)focusedComponent.getParent();

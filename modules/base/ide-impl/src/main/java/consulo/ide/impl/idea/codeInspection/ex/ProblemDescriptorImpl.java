@@ -62,7 +62,7 @@ public class ProblemDescriptorImpl extends ProblemDescriptorBase implements Prob
                                @Nonnull ProblemHighlightType highlightType,
                                boolean isAfterEndOfLine,
                                @Nullable TextRange rangeInElement,
-                               final boolean tooltip,
+                               boolean tooltip,
                                @Nullable HintAction hintAction,
                                boolean onTheFly) {
 

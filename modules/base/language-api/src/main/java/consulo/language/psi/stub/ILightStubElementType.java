@@ -24,13 +24,13 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class ILightStubElementType<StubT extends StubElement, PsiT extends PsiElement> extends IStubElementType<StubT, PsiT> {
-  public ILightStubElementType(@Nonnull  final String debugName, @Nullable final Language language) {
+  public ILightStubElementType(@Nonnull String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 
-  public abstract StubT createStub(final LighterAST tree, final LighterASTNode node, final StubElement parentStub);
+  public abstract StubT createStub(LighterAST tree, LighterASTNode node, StubElement parentStub);
 
-  public boolean shouldCreateStub(final LighterAST tree, final LighterASTNode node, final StubElement parentStub) {
+  public boolean shouldCreateStub(LighterAST tree, LighterASTNode node, StubElement parentStub) {
     return true;
   }
 }

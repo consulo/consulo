@@ -56,12 +56,12 @@ public class UnifiedEditorTrackerImpl extends EditorTracker {
   @RequiredUIAccess
   @Override
   protected void editorCreated(@Nonnull EditorFactoryEvent editorFactoryEvent) {
-    final Editor editor = editorFactoryEvent.getEditor();
+    Editor editor = editorFactoryEvent.getEditor();
     if ((editor.getProject() != null && editor.getProject() != myProject) || myProject.isDisposedOrDisposeInProgress()) {
       return;
     }
 
-    final PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
+    PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     if (psiFile == null) return;
 
     Component uiComponent = editor.getUIComponent();

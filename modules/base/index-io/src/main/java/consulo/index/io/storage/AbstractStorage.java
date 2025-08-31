@@ -53,12 +53,12 @@ public abstract class AbstractStorage implements Closeable, Forceable {
   private final CapacityAllocationPolicy myCapacityAllocationPolicy;
 
   public static boolean deleteFiles(String storageFilePath) {
-    final File recordsFile = new File(storageFilePath + INDEX_EXTENSION);
-    final File dataFile = new File(storageFilePath + DATA_EXTENSION);
+    File recordsFile = new File(storageFilePath + INDEX_EXTENSION);
+    File dataFile = new File(storageFilePath + DATA_EXTENSION);
 
     // ensure both files deleted
-    final boolean deletedRecordsFile = FileUtil.delete(recordsFile);
-    final boolean deletedDataFile = FileUtil.delete(dataFile);
+    boolean deletedRecordsFile = FileUtil.delete(recordsFile);
+    boolean deletedDataFile = FileUtil.delete(dataFile);
     return deletedRecordsFile && deletedDataFile;
   }
 
@@ -91,8 +91,8 @@ public abstract class AbstractStorage implements Closeable, Forceable {
   private void tryInit(String storageFilePath, PagePool pool, int retryCount) throws IOException {
     convertFromOldExtensions(storageFilePath);
 
-    final File recordsFile = new File(storageFilePath + INDEX_EXTENSION);
-    final File dataFile = new File(storageFilePath + DATA_EXTENSION);
+    File recordsFile = new File(storageFilePath + INDEX_EXTENSION);
+    File dataFile = new File(storageFilePath + DATA_EXTENSION);
 
     if (recordsFile.exists() != dataFile.exists()) {
       deleteFiles(storageFilePath);
@@ -136,7 +136,7 @@ public abstract class AbstractStorage implements Closeable, Forceable {
 
   protected abstract AbstractRecordsTable createRecordsTable(PagePool pool, File recordsFile) throws IOException;
 
-  private void compact(final String path) {
+  private void compact(String path) {
     synchronized (myLock) {
       LOG.info("Space waste in " + path + " is " + myDataTable.getWaste() + " bytes. Compacting now.");
       long start = System.currentTimeMillis();
@@ -151,16 +151,16 @@ public abstract class AbstractStorage implements Closeable, Forceable {
 
         RecordIdIterator recordIterator = myRecordsTable.createRecordIdIterator();
         while(recordIterator.hasNextId()) {
-          final int recordId = recordIterator.nextId();
-          final long addr = myRecordsTable.getAddress(recordId);
-          final int size = myRecordsTable.getSize(recordId);
+          int recordId = recordIterator.nextId();
+          long addr = myRecordsTable.getAddress(recordId);
+          int size = myRecordsTable.getSize(recordId);
 
           if (size > 0) {
             assert addr > 0;
 
-            final int capacity = myCapacityAllocationPolicy.calculateCapacity(size);
-            final long newaddr = newDataTable.allocateSpace(capacity);
-            final byte[] bytes = new byte[size];
+            int capacity = myCapacityAllocationPolicy.calculateCapacity(size);
+            long newaddr = newDataTable.allocateSpace(capacity);
+            byte[] bytes = new byte[size];
             myDataTable.readBytes(addr, bytes);
             newDataTable.writeBytes(newaddr, bytes);
             myRecordsTable.setAddress(recordId, newaddr);
@@ -235,10 +235,10 @@ public abstract class AbstractStorage implements Closeable, Forceable {
     return myRecordsTable.createRecordIdIterator();
   }
 
-  public StorageDataOutput writeStream(final int record) {
+  public StorageDataOutput writeStream(int record) {
     return writeStream(record, false);
   }
-  public StorageDataOutput writeStream(final int record, boolean fixedSize) {
+  public StorageDataOutput writeStream(int record, boolean fixedSize) {
     return new StorageDataOutput(this, record, fixedSize);
   }
 
@@ -247,17 +247,17 @@ public abstract class AbstractStorage implements Closeable, Forceable {
   }
 
   public DataInputStream readStream(int record) throws IOException {
-    final byte[] bytes = readBytes(record);
+    byte[] bytes = readBytes(record);
     return new DataInputStream(new UnsyncByteArrayInputStream(bytes));
   }
 
   protected byte[] readBytes(int record) throws IOException {
     synchronized (myLock) {
-      final int length = myRecordsTable.getSize(record);
+      int length = myRecordsTable.getSize(record);
       if (length == 0) return ArrayUtil.EMPTY_BYTE_ARRAY;
       assert length > 0;
 
-      final long address = myRecordsTable.getAddress(record);
+      long address = myRecordsTable.getAddress(record);
       byte[] result = new byte[length];
       myDataTable.readBytes(address, result);
 
@@ -266,7 +266,7 @@ public abstract class AbstractStorage implements Closeable, Forceable {
   }
 
   protected void appendBytes(int record, ByteArraySequence bytes) throws IOException {
-    final int delta = bytes.getLength();
+    int delta = bytes.getLength();
     if (delta == 0) return;
 
     synchronized (myLock) {
@@ -275,7 +275,7 @@ public abstract class AbstractStorage implements Closeable, Forceable {
       int newSize = oldSize + delta;
       if (newSize > capacity) {
         if (oldSize > 0) {
-          final byte[] newbytes = new byte[newSize];
+          byte[] newbytes = new byte[newSize];
           System.arraycopy(readBytes(record), 0, newbytes, 0, oldSize);
           System.arraycopy(bytes.getBytes(), bytes.getOffset(), newbytes, oldSize, delta);
           writeBytes(record, new ByteArraySequence(newbytes), false);
@@ -294,15 +294,15 @@ public abstract class AbstractStorage implements Closeable, Forceable {
 
   public void writeBytes(int record, ByteArraySequence bytes, boolean fixedSize) throws IOException {
     synchronized (myLock) {
-      final int requiredLength = bytes.getLength();
-      final int currentCapacity = myRecordsTable.getCapacity(record);
+      int requiredLength = bytes.getLength();
+      int currentCapacity = myRecordsTable.getCapacity(record);
 
-      final int currentSize = myRecordsTable.getSize(record);
+      int currentSize = myRecordsTable.getSize(record);
       assert currentSize >= 0;
 
       if (requiredLength == 0 && currentSize == 0) return;
 
-      final long address;
+      long address;
       if (currentCapacity >= requiredLength) {
         address = myRecordsTable.getAddress(record);
       }
@@ -334,11 +334,11 @@ public abstract class AbstractStorage implements Closeable, Forceable {
     }
   }
 
-  public void checkSanity(final int record) {
+  public void checkSanity(int record) {
     synchronized (myLock) {
-      final int size = myRecordsTable.getSize(record);
+      int size = myRecordsTable.getSize(record);
       assert size >= 0;
-      final long address = myRecordsTable.getAddress(record);
+      long address = myRecordsTable.getAddress(record);
       assert address >= 0;
       assert address + size < myDataTable.getFileSize();
     }
@@ -346,15 +346,15 @@ public abstract class AbstractStorage implements Closeable, Forceable {
 
   public void replaceBytes(int record, int offset, ByteArraySequence bytes) throws IOException {
     synchronized (myLock) {
-      final int changedBytesLength = bytes.getLength();
+      int changedBytesLength = bytes.getLength();
 
-      final int currentSize = myRecordsTable.getSize(record);
+      int currentSize = myRecordsTable.getSize(record);
       assert currentSize >= 0;
       assert offset + bytes.getLength() <= currentSize;
 
       if (changedBytesLength == 0) return;
 
-      final long address = myRecordsTable.getAddress(record);
+      long address = myRecordsTable.getAddress(record);
 
       myDataTable.writeBytes(address + offset, bytes.getBytes(), bytes.getOffset(), bytes.getLength());
     }
@@ -375,7 +375,7 @@ public abstract class AbstractStorage implements Closeable, Forceable {
     @Override
     public void close() throws IOException {
       super.close();
-      final BufferExposingByteArrayOutputStream byteStream = getByteStream();
+      BufferExposingByteArrayOutputStream byteStream = getByteStream();
       myStorage.writeBytes(myRecordId, new ByteArraySequence(byteStream.getInternalBuffer(), 0, byteStream.size()), myFixedSize);
     }
 
@@ -400,7 +400,7 @@ public abstract class AbstractStorage implements Closeable, Forceable {
     @Override
     public void close() throws IOException {
       super.close();
-      final BufferExposingByteArrayOutputStream _out = (BufferExposingByteArrayOutputStream)out;
+      BufferExposingByteArrayOutputStream _out = (BufferExposingByteArrayOutputStream)out;
       appendBytes(myRecordId, new ByteArraySequence(_out.getInternalBuffer(), 0, _out.size()));
     }
   }

@@ -53,7 +53,7 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
 
     private static boolean containsWhitespacesOnly(@Nonnull CharSequence chars, int start, int end) {
       for (int i = start; i < end; i++) {
-        final char c = chars.charAt(i);
+        char c = chars.charAt(i);
         if (c == ' ' || c == '\t' || c == '\n' || c == '\r') continue;
         return false;
       }

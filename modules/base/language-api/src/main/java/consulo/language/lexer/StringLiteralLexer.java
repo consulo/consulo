@@ -47,7 +47,7 @@ public class StringLiteralLexer extends LexerBase {
     private final boolean myAllowOctal;
     private final boolean myAllowHex;
 
-    public StringLiteralLexer(char quoteChar, final IElementType originalLiteralToken) {
+    public StringLiteralLexer(char quoteChar, IElementType originalLiteralToken) {
         this(quoteChar, originalLiteralToken, false, null);
     }
 
@@ -59,7 +59,7 @@ public class StringLiteralLexer extends LexerBase {
      */
     public StringLiteralLexer(
         char quoteChar,
-        final IElementType originalLiteralToken,
+        IElementType originalLiteralToken,
         boolean canEscapeEolOrFramingSpaces,
         String additionalValidEscapes
     ) {
@@ -72,7 +72,7 @@ public class StringLiteralLexer extends LexerBase {
      */
     public StringLiteralLexer(
         char quoteChar,
-        final IElementType originalLiteralToken,
+        IElementType originalLiteralToken,
         boolean canEscapeEolOrFramingSpaces,
         String additionalValidEscapes,
         boolean allowOctal,
@@ -172,9 +172,9 @@ public class StringLiteralLexer extends LexerBase {
     }
 
     // all subsequent chars are escaped spaces
-    private boolean isTrailingSpace(final int start) {
+    private boolean isTrailingSpace(int start) {
         for (int i = start; i < myBufferEnd; i += 2) {
-            final char c = myBuffer.charAt(i);
+            char c = myBuffer.charAt(i);
             if (c != '\\') {
                 return false;
             }

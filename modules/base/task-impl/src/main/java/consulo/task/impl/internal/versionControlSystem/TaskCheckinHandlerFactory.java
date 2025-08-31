@@ -42,14 +42,14 @@ public class TaskCheckinHandlerFactory extends CheckinHandlerFactory {
 
   @Nonnull
   @Override
-  public CheckinHandler createHandler(final CheckinProjectPanel panel, final CommitContext commitContext) {
+  public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
     return new CheckinHandler() {
       @Override
       public void checkinSuccessful() {
-        final String message = panel.getCommitMessage();
+        String message = panel.getCommitMessage();
         if (message != null) {
           final Project project = panel.getProject();
-          final TaskManagerImpl manager = (TaskManagerImpl)TaskManager.getManager(project);
+          TaskManagerImpl manager = (TaskManagerImpl)TaskManager.getManager(project);
           if (manager.getState().saveContextOnCommit) {
             Task task = findTaskInRepositories(message, manager);
             if (task == null) {

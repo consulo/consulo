@@ -157,7 +157,7 @@ public interface ActionToolbar {
     /**
      * @param component will be used for datacontext computations
      */
-    default void setTargetComponent(final javax.swing.JComponent component) {
+    default void setTargetComponent(javax.swing.JComponent component) {
         throw new AbstractMethodError();
     }
 
@@ -209,7 +209,7 @@ public interface ActionToolbar {
     }
 
     @Deprecated
-    default void setReservePlaceAutoPopupIcon(final boolean reserve) {
+    default void setReservePlaceAutoPopupIcon(boolean reserve) {
     }
 
     @Deprecated

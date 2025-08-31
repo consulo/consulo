@@ -63,7 +63,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   private boolean myShowConsoleOnStdErr = false;
   private String myFileOutputPath = null;
 
-  protected RunConfigurationBase(final Project project, final ConfigurationFactory factory, final String name) {
+  protected RunConfigurationBase(Project project, ConfigurationFactory factory, String name) {
     myProject = project;
     myFactory = factory;
     myName = name;
@@ -81,7 +81,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   }
 
   @Override
-  public final void setName(final String name) {
+  public final void setName(String name) {
     myName = name;
   }
 
@@ -122,13 +122,13 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     return true;
   }
 
-  public final boolean equals(final Object obj) {
+  public final boolean equals(Object obj) {
     return super.equals(obj);
   }
 
   @Override
   public RunConfiguration clone() {
-    final RunConfigurationBase runConfiguration = (RunConfigurationBase)super.clone();
+    RunConfigurationBase runConfiguration = (RunConfigurationBase)super.clone();
     runConfiguration.myLogFiles = new ArrayList<>(myLogFiles);
     runConfiguration.myPredefinedLogFiles = new ArrayList<>(myPredefinedLogFiles);
     runConfiguration.myFileOutputPath = myFileOutputPath;
@@ -157,9 +157,9 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   }
 
   public ArrayList<LogFileOptions> getAllLogFiles() {
-    final ArrayList<LogFileOptions> list = new ArrayList<>(myLogFiles);
+    ArrayList<LogFileOptions> list = new ArrayList<>(myLogFiles);
     for (PredefinedLogFile predefinedLogFile : myPredefinedLogFiles) {
-      final LogFileOptions options = getOptionsForPredefinedLogFile(predefinedLogFile);
+      LogFileOptions options = getOptionsForPredefinedLogFile(predefinedLogFile);
       if (options != null) {
         list.add(options);
       }
@@ -175,7 +175,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     myLogFiles.add(new LogFileOptions(alias, file, checked, true, false));
   }
 
-  public void addLogFile(String file, String alias, boolean checked, boolean skipContent, final boolean showAll) {
+  public void addLogFile(String file, String alias, boolean checked, boolean skipContent, boolean showAll) {
     myLogFiles.add(new LogFileOptions(alias, file, checked, skipContent, showAll));
   }
 
@@ -194,22 +194,22 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   @Override
   public void readExternal(Element element) throws InvalidDataException {
     myLogFiles.clear();
-    for (final Object o : element.getChildren(LOG_FILE)) {
+    for (Object o : element.getChildren(LOG_FILE)) {
       LogFileOptions logFileOptions = new LogFileOptions();
       logFileOptions.readExternal((Element)o);
       myLogFiles.add(logFileOptions);
     }
     myPredefinedLogFiles.clear();
-    final List list = element.getChildren(PREDEFINED_LOG_FILE_ELEMENT);
+    List list = element.getChildren(PREDEFINED_LOG_FILE_ELEMENT);
     for (Object fileElement : list) {
-      final PredefinedLogFile logFile = new PredefinedLogFile();
+      PredefinedLogFile logFile = new PredefinedLogFile();
       logFile.readExternal((Element)fileElement);
       myPredefinedLogFiles.add(logFile);
     }
-    final Element fileOutputElement = element.getChild(FILE_OUTPUT);
+    Element fileOutputElement = element.getChild(FILE_OUTPUT);
     if (fileOutputElement != null) {
       myFileOutputPath = fileOutputElement.getAttributeValue(OUTPUT_FILE);
-      final String isSave = fileOutputElement.getAttributeValue(SAVE);
+      String isSave = fileOutputElement.getAttributeValue(SAVE);
       mySaveOutput = isSave != null && Boolean.parseBoolean(isSave);
     }
     myShowConsoleOnStdOut = Boolean.parseBoolean(element.getAttributeValue(SHOW_CONSOLE_ON_STD_OUT));
@@ -218,7 +218,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
-    for (final LogFileOptions options : myLogFiles) {
+    for (LogFileOptions options : myLogFiles) {
       Element logFile = new Element(LOG_FILE);
       options.writeExternal(logFile);
       element.addContent(logFile);
@@ -228,7 +228,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
       predefinedLogFile.writeExternal(fileElement);
       element.addContent(fileElement);
     }
-    final Element fileOutputPathElement = new Element(FILE_OUTPUT);
+    Element fileOutputPathElement = new Element(FILE_OUTPUT);
     if (myFileOutputPath != null) {
       fileOutputPathElement.setAttribute(OUTPUT_FILE, myFileOutputPath);
     }

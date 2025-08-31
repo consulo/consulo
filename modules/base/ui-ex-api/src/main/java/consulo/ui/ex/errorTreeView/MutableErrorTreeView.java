@@ -18,13 +18,13 @@ package consulo.ui.ex.errorTreeView;
 import java.util.List;
 
 public interface MutableErrorTreeView extends ErrorTreeView {
-  void removeGroup(final String name);
+  void removeGroup(String name);
 
-  List<Object> getGroupChildrenData(final String groupName);
+  List<Object> getGroupChildrenData(String groupName);
 
-  void addFixedHotfixGroup(final String text, final List<SimpleErrorData> children);
+  void addFixedHotfixGroup(String text, List<SimpleErrorData> children);
 
-  void addHotfixGroup(final HotfixData hotfixData, final List<SimpleErrorData> children);
+  void addHotfixGroup(HotfixData hotfixData, List<SimpleErrorData> children);
 
   void reload();
 }

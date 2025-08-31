@@ -109,7 +109,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
         myState = ServiceManager.getService(PlaybackDebuggerState.class);
 
-        final DefaultActionGroup controlGroup = new DefaultActionGroup();
+        DefaultActionGroup controlGroup = new DefaultActionGroup();
         controlGroup.add(new RunOnFameActivationAction());
         controlGroup.add(new ActivateFrameAndRun());
         controlGroup.add(new StopAction());
@@ -120,12 +120,12 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
             BorderLayout.WEST
         );
 
-        final JPanel right = new JPanel(new BorderLayout());
+        JPanel right = new JPanel(new BorderLayout());
         right.add(myCurrentScript, BorderLayout.CENTER);
         myCurrentScript.setText(myState.currentScript);
         myCurrentScript.setEditable(false);
 
-        final DefaultActionGroup fsGroup = new DefaultActionGroup();
+        DefaultActionGroup fsGroup = new DefaultActionGroup();
         SaveAction saveAction = new SaveAction();
         saveAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke("control S")), myComponent);
         fsGroup.add(saveAction);
@@ -136,7 +136,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         newScriptAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke("control N")), myComponent);
         fsGroup.add(newScriptAction);
 
-        final ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, fsGroup, true);
+        ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, fsGroup, true);
         tb.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
         right.add(tb.getComponent(), BorderLayout.EAST);
         north.add(right, BorderLayout.CENTER);
@@ -164,7 +164,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
             loadFrom(pathToFile());
         }
 
-        final Splitter script2Log = new Splitter(true);
+        Splitter script2Log = new Splitter(true);
         script2Log.setFirstComponent(ScrollPaneFactory.createScrollPane(myCodeEditor));
 
         script2Log.setSecondComponent(ScrollPaneFactory.createScrollPane(myLog));
@@ -174,7 +174,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         myVfsListener = new VirtualFileAdapter() {
             @Override
             public void contentsChanged(@Nonnull VirtualFileEvent event) {
-                final VirtualFile file = pathToFile();
+                VirtualFile file = pathToFile();
                 if (file != null && file.equals(event.getFile())) {
                     loadFrom(event.getFile());
                 }
@@ -279,7 +279,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     private void save() {
         try {
             VirtualFile file = pathToFile();
-            final String toWrite = myCodeEditor.getText();
+            String toWrite = myCodeEditor.getText();
             String text = toWrite != null ? toWrite : "";
             VfsUtil.saveText(file, text);
             myChanged = false;
@@ -291,7 +291,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     private void loadFrom(@Nonnull VirtualFile file) {
         try {
-            final String text =
+            String text =
                 CharsetToolkit.bytesToString(file.contentsToByteArray(), EncodingRegistry.getInstance().getDefaultCharset());
             fillDocument(text);
             myChanged = false;
@@ -302,12 +302,12 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     }
 
     private File getScriptsFile() {
-        final String text = myScriptsPath.getText();
+        String text = myScriptsPath.getText();
         if (text == null) {
             return null;
         }
 
-        final File file = new File(text);
+        File file = new File(text);
         return file.exists() ? file : null;
     }
 
@@ -371,9 +371,9 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
         myLog.setText(null);
 
-        final DesktopIdeFrameImpl frame = getFrame();
+        DesktopIdeFrameImpl frame = getFrame();
 
-        final Component c = ((WindowManagerEx) WindowManager.getInstance()).getFocusedComponent(TargetAWT.to(frame.getWindow()));
+        Component c = ((WindowManagerEx) WindowManager.getInstance()).getFocusedComponent(TargetAWT.to(frame.getWindow()));
 
         if (c != null) {
             IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(c);
@@ -393,7 +393,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     }
 
     private DesktopIdeFrameImpl getFrame() {
-        final Frame[] all = Frame.getFrames();
+        Frame[] all = Frame.getFrames();
         for (Frame each : all) {
             Window uiWindow = TargetAWT.from(each);
 
@@ -475,7 +475,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     }
 
     @Override
-    public void message(@Nullable final PlaybackContext context, final String text, final Type type) {
+    public void message(@Nullable PlaybackContext context, String text, Type type) {
         message(context, text, context != null ? context.getCurrentLine() : -1, type, false);
     }
 

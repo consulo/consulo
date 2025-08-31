@@ -61,7 +61,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Override
   @Nullable
   public Sdk getSdk() {
-    final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
+    ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension == null) {
       return null;
     }
@@ -72,7 +72,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Override
   @Nullable
   public String getSdkName() {
-    final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
+    ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension == null) {
       return null;
     }
@@ -91,7 +91,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
     ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension != null) {
-      final Sdk sdk = moduleExtension.getSdk();
+      Sdk sdk = moduleExtension.getSdk();
       if (sdk == null) {
         builder.append(moduleExtension.getSdkName());
       }

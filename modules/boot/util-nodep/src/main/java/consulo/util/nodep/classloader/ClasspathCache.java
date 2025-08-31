@@ -105,7 +105,7 @@ public class ClasspathCache {
 
   private final ReadWriteLock myLock = new ReentrantReadWriteLock();
 
-  public void applyLoaderData(LoaderData loaderData, final Loader loader) {
+  public void applyLoaderData(LoaderData loaderData, Loader loader) {
     myLock.writeLock().lock();
     try {
       for (int resourcePackageHash : loaderData.myResourcePackageHashes) {
@@ -155,7 +155,7 @@ public class ClasspathCache {
   }
 
   static int getPackageNameHash(String resourcePath) {
-    final int idx = resourcePath.lastIndexOf('/');
+    int idx = resourcePath.lastIndexOf('/');
     int h = 0;
     for (int off = 0; off < idx; off++) {
       h = 31 * h + resourcePath.charAt(off);

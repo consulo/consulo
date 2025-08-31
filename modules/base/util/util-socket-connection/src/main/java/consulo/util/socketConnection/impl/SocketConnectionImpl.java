@@ -66,7 +66,7 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
 
   @Nonnull
   private Socket createSocket() throws IOException {
-    final InetAddress host = myHost != null ? myHost : InetAddress.getLocalHost();
+    InetAddress host = myHost != null ? myHost : InetAddress.getLocalHost();
     IOException exc = null;
     for (int i = 0; i < myPortsNumberToTry; i++) {
       int port = myInitialPort + i;

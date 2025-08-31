@@ -26,15 +26,15 @@ import java.awt.*;
  * @author Denis Fokin
  */
 public class ModalityHelper {
-  public static boolean isModalBlocked(final Window window) {
+  public static boolean isModalBlocked(Window window) {
     return WindowHacking.isModalBlocked(window);
   }
 
-  public static JDialog getModalBlockerFor(final Window window) {
+  public static JDialog getModalBlockerFor(Window window) {
     return WindowHacking.getModalBlockerFor(window);
   }
 
-  public static JDialog getBlockerForFrame(final FocusableFrame ideFrame) {
+  public static JDialog getBlockerForFrame(FocusableFrame ideFrame) {
     if (ideFrame == null) return null;
     Component c = ideFrame.getComponent();
     if (c == null) return null;

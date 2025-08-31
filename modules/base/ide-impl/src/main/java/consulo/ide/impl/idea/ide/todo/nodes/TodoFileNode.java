@@ -107,13 +107,13 @@ public final class TodoFileNode extends PsiFileNode {
     ArrayList<AbstractTreeNode> children = new ArrayList<>();
 
     PsiFile psiFile = getValue();
-    final TodoItem[] items = findAllTodos(psiFile, myBuilder.getTodoTreeStructure().getSearchHelper());
-    final Document document = PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
+    TodoItem[] items = findAllTodos(psiFile, myBuilder.getTodoTreeStructure().getSearchHelper());
+    Document document = PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
 
     if (document != null) {
-      for (final TodoItem todoItem : items) {
+      for (TodoItem todoItem : items) {
         if (todoItem.getTextRange().getEndOffset() < document.getTextLength() + 1) {
-          final SmartTodoItemPointer pointer = new SmartTodoItemPointer(todoItem, document);
+          SmartTodoItemPointer pointer = new SmartTodoItemPointer(todoItem, document);
           TodoFilter todoFilter = getToDoFilter();
           if (todoFilter != null) {
             if (todoFilter.contains(todoItem.getPattern())) {

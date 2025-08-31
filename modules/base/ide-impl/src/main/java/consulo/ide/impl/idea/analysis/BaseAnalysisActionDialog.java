@@ -81,9 +81,9 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     @Nonnull String title,
     @Nonnull String analysisNoon,
     @Nonnull Project project,
-    @Nonnull final AnalysisScope scope,
-    final String moduleName,
-    final boolean rememberScope,
+    @Nonnull AnalysisScope scope,
+    String moduleName,
+    boolean rememberScope,
     @Nonnull AnalysisUIOptions analysisUIOptions,
     @Nullable PsiElement context
   ) {
@@ -127,8 +127,8 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     myModuleButton.setVisible(myModuleName != null && ModuleManager.getInstance(myProject).getModules().length > 1);
 
     boolean useUncommitedFiles = false;
-    final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
-    final boolean hasVCS = !changeListManager.getAffectedFiles().isEmpty();
+    ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
+    boolean hasVCS = !changeListManager.getAffectedFiles().isEmpty();
     if (hasVCS){
       useUncommitedFiles = myAnalysisOptions.SCOPE_TYPE == AnalysisScope.UNCOMMITTED_FILES;
       myUncommitedFilesButton.setSelected(myRememberScope && useUncommitedFiles);
@@ -137,7 +137,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 
     DefaultComboBoxModel model = new DefaultComboBoxModel();
     model.addElement(ALL);
-    final List<? extends ChangeList> changeLists = changeListManager.getChangeListsCopy();
+    List<? extends ChangeList> changeLists = changeListManager.getChangeListsCopy();
     for (ChangeList changeList : changeLists) {
       model.addElement(changeList.getName());
     }
@@ -191,8 +191,8 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 
     myScopeCombo.setEnabled(myCustomScopeButton.isSelected());
 
-    final ActionListener radioButtonPressed = e -> onScopeRadioButtonPressed();
-    final Enumeration<AbstractButton> enumeration = myGroup.getElements();
+    ActionListener radioButtonPressed = e -> onScopeRadioButtonPressed();
+    Enumeration<AbstractButton> enumeration = myGroup.getElements();
     while (enumeration.hasMoreElements()) {
       enumeration.nextElement().addActionListener(radioButtonPressed);
     }
@@ -200,7 +200,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     //additional panel - inspection profile chooser
     JPanel wholePanel = new JPanel(new BorderLayout());
     wholePanel.add(myPanel, BorderLayout.NORTH);
-    final JComponent additionalPanel = getAdditionalActionSettings(myProject);
+    JComponent additionalPanel = getAdditionalActionSettings(myProject);
     if (additionalPanel!= null){
       wholePanel.add(additionalPanel, BorderLayout.CENTER);
     }
@@ -216,12 +216,12 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 
   private int getSelectedScopeMnemonic() {
 
-    final int fileIdx = StringUtil.indexOfIgnoreCase(myFileName, "file", 0);
+    int fileIdx = StringUtil.indexOfIgnoreCase(myFileName, "file", 0);
     if (fileIdx > -1) {
       return fileIdx;
     }
 
-    final int dirIdx = StringUtil.indexOfIgnoreCase(myFileName, "directory", 0);
+    int dirIdx = StringUtil.indexOfIgnoreCase(myFileName, "directory", 0);
     if (dirIdx > -1) {
       return dirIdx;
     }
@@ -236,9 +236,9 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 
   @Override
   public JComponent getPreferredFocusedComponent() {
-    final Enumeration<AbstractButton> enumeration = myGroup.getElements();
+    Enumeration<AbstractButton> enumeration = myGroup.getElements();
     while (enumeration.hasMoreElements()) {
-      final AbstractButton button = enumeration.nextElement();
+      AbstractButton button = enumeration.nextElement();
       if (button.isSelected()) {
         return button;
       }
@@ -247,7 +247,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
   }
 
   @Nullable
-  protected JComponent getAdditionalActionSettings(final Project project) {
+  protected JComponent getAdditionalActionSettings(Project project) {
     return null;
   }
 
@@ -288,7 +288,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
       uiOptions.SCOPE_TYPE = AnalysisScope.PROJECT;
     }
     else {
-      final SearchScope customScope = getCustomScope();
+      SearchScope customScope = getCustomScope();
       if (customScope != null) {
         scope = new AnalysisScope(customScope, project);
         uiOptions.SCOPE_TYPE = AnalysisScope.CUSTOM;
@@ -299,7 +299,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         uiOptions.SCOPE_TYPE = AnalysisScope.MODULE;
       }
       else if (isUncommitedFilesSelected()) {
-        final ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+        ChangeListManager changeListManager = ChangeListManager.getInstance(project);
         List<VirtualFile> files;
         if (myChangeLists.getSelectedItem() == ALL) {
           files = changeListManager.getAffectedFiles();
@@ -308,11 +308,11 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
           files = new ArrayList<>();
           for (ChangeList list : changeListManager.getChangeListsCopy()) {
             if (!Comparing.strEqual(list.getName(), (String)myChangeLists.getSelectedItem())) continue;
-            final Collection<Change> changes = list.getChanges();
+            Collection<Change> changes = list.getChanges();
             for (Change change : changes) {
-              final ContentRevision afterRevision = change.getAfterRevision();
+              ContentRevision afterRevision = change.getAfterRevision();
               if (afterRevision != null) {
-                final VirtualFile vFile = afterRevision.getFile().getVirtualFile();
+                VirtualFile vFile = afterRevision.getFile().getVirtualFile();
                 if (vFile != null) {
                   files.add(vFile);
                 }

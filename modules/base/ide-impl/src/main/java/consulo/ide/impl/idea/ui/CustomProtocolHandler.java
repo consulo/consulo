@@ -36,14 +36,14 @@ public class CustomProtocolHandler {
 
   public void openLink(@Nonnull URI uri) {
     LOG.info("CustomProtocolHandler.openLink");
-    final List<String> args = getOpenArgs(uri);
+    List<String> args = getOpenArgs(uri);
     CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), null);
   }
 
   @Nonnull
   public List<String> getOpenArgs(URI uri) {
-    final List<String> args = new ArrayList<String>();
-    final String query = uri.getQuery();
+    List<String> args = new ArrayList<String>();
+    String query = uri.getQuery();
     String file = null;
     String line = null;
     if (query != null) {

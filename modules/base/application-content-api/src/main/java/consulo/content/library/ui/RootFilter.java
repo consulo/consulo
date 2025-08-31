@@ -29,7 +29,7 @@ import java.util.Collections;
  * @author nik
  */
 public abstract class RootFilter extends RootDetector {
-  public RootFilter(OrderRootType rootType, boolean jarDirectory, final String presentableRootTypeName) {
+  public RootFilter(OrderRootType rootType, boolean jarDirectory, String presentableRootTypeName) {
     super(rootType, jarDirectory, presentableRootTypeName);
   }
 

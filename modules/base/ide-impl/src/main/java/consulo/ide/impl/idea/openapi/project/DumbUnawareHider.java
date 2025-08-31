@@ -29,7 +29,7 @@ public class DumbUnawareHider extends JPanel {
     public DumbUnawareHider(JComponent dumbUnawareContent) {
         super(new CardLayout());
         add(dumbUnawareContent, CONTENT);
-        final JLabel label = new JLabel("This view is not available until indices are built");
+        JLabel label = new JLabel("This view is not available until indices are built");
         label.setHorizontalAlignment(SwingConstants.CENTER);
         add(label, EXCUSE);
     }

@@ -57,7 +57,7 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
       @Override
       public void save(@Nonnull DataOutput out, @Nonnull Collection<IdIndexEntry> value) throws IOException {
         int size = value.size();
-        final int[] values = spareBufferLocal.getBuffer(size);
+        int[] values = spareBufferLocal.getBuffer(size);
         int ptr = 0;
         for (IdIndexEntry ie : value) {
           values[ptr++] = ie.getWordHashCode();
@@ -77,7 +77,7 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
         ArrayList<IdIndexEntry> entries = new ArrayList<>(length);
         int prev = 0;
         while (length-- > 0) {
-          final int l = (int)(DataInputOutputUtil.readLONG(in) + prev);
+          int l = (int)(DataInputOutputUtil.readLONG(in) + prev);
           entries.add(new IdIndexEntry(l));
           prev = l;
         }

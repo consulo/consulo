@@ -33,7 +33,7 @@ public class ZipArchivePackagingElement extends ArchivePackagingElement {
     @Nonnull
     @Override
     public ZipOutputStream createArchiveObject(@Nonnull File tempFile) throws IOException {
-      final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(tempFile));
+      BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(tempFile));
       return new ZipOutputStream(outputStream);
     }
 

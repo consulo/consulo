@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
  * @author Gregory.Shrago
  */
 public interface ExecutionConsoleEx extends ExecutionConsole {
-  void buildUi(final RunnerLayoutUi layoutUi);
+  void buildUi(RunnerLayoutUi layoutUi);
 
   @Nullable
   String getExecutionConsoleId();

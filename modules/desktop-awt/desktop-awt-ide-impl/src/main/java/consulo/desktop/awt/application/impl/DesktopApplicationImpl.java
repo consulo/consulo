@@ -121,7 +121,7 @@ public class DesktopApplicationImpl extends BaseApplication {
                 LOG.info("ApplicationImpl.externalInstanceListener invocation");
 
                 CommandLineProcessor.processExternalCommandLine(commandLineArgs, null).doWhenDone(project -> {
-                    final IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
+                    IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
 
                     if (frame != null) {
                         AppIcon.getInstance().requestFocus(frame.getWindow());
@@ -132,7 +132,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             WindowsCommandLineProcessor.LISTENER = (currentDirectory, commandLine) -> {
                 LOG.info("Received external Windows command line: current directory " + currentDirectory + ", command line " + commandLine);
                 invokeLater(() -> {
-                    final List<String> args = StringUtil.splitHonorQuotes(commandLine, ' ');
+                    List<String> args = StringUtil.splitHonorQuotes(commandLine, ' ');
                     args.remove(0);   // process name
                     CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), currentDirectory);
                 });
@@ -174,11 +174,11 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @RequiredUIAccess
-    private boolean disposeSelf(final boolean checkCanCloseProject) {
-        final ProjectManagerEx manager = ProjectManagerEx.getInstanceEx();
-        final boolean[] canClose = {true};
+    private boolean disposeSelf(boolean checkCanCloseProject) {
+        ProjectManagerEx manager = ProjectManagerEx.getInstanceEx();
+        boolean[] canClose = {true};
         boolean wantSaveSettingsAgain = false;
-        for (final Project project : manager.getOpenProjects()) {
+        for (Project project : manager.getOpenProjects()) {
             try {
                 CommandProcessor.getInstance().newCommand()
                     .project(project)
@@ -224,12 +224,12 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    public void invokeLater(@Nonnull final Runnable runnable) {
+    public void invokeLater(@Nonnull Runnable runnable) {
         invokeLater(runnable, getDisposed());
     }
 
     @Override
-    public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final BooleanSupplier expired) {
+    public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
         invokeLater(runnable, IdeaModalityState.defaultModalityState(), expired);
     }
 
@@ -240,9 +240,9 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public void invokeLater(
-        @Nonnull final Runnable runnable,
-        @Nonnull final ModalityState state,
-        @Nonnull final BooleanSupplier expired
+        @Nonnull Runnable runnable,
+        @Nonnull ModalityState state,
+        @Nonnull BooleanSupplier expired
     ) {
         LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(runnable), state, expired, null);
     }
@@ -304,12 +304,12 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    public void exit(boolean force, final boolean exitConfirmed) {
+    public void exit(boolean force, boolean exitConfirmed) {
         exit(false, exitConfirmed, true, false);
     }
 
     @Override
-    public void restart(final boolean exitConfirmed) {
+    public void restart(boolean exitConfirmed) {
         exit(false, exitConfirmed, true, true);
     }
 
@@ -376,7 +376,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             return false;
         }
 
-        final boolean success = disposeSelf(allowListenersToCancel);
+        boolean success = disposeSelf(allowListenersToCancel);
         if (!success || isUnitTestMode()) {
             return false;
         }
@@ -523,7 +523,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         if (isDispatchThread()) {
             return;
         }
-        final Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
+        Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
         throw new LogEventException(
             message,
             " EventQueue.isDispatchThread()=" + EventQueue.isDispatchThread() +
@@ -551,7 +551,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         if (isWriteThread()) {
             return;
         }
-        final Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
+        Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
         throw new LogEventException(
             message,
             " EventQueue.isDispatchThread()=" + EventQueue.isDispatchThread() +

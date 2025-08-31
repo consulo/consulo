@@ -39,18 +39,18 @@ public class DnDAwareTree extends Tree implements DnDAware {
         initDnD();
     }
 
-    public DnDAwareTree(final TreeModel treemodel) {
+    public DnDAwareTree(TreeModel treemodel) {
         super(treemodel);
         initDnD();
     }
 
-    public DnDAwareTree(final TreeNode root) {
+    public DnDAwareTree(TreeNode root) {
         super(root);
         initDnD();
     }
 
     @Override
-    public void processMouseEvent(final MouseEvent e) {
+    public void processMouseEvent(MouseEvent e) {
         //todo [kirillk] to delegate this to DnDEnabler
         if (getToolTipText() == null && e.getID() == MouseEvent.MOUSE_ENTERED) {
             return;
@@ -67,8 +67,8 @@ public class DnDAwareTree extends Tree implements DnDAware {
     }
 
     @Override
-    public final boolean isOverSelection(final Point point) {
-        final TreePath path = getClosestPathForLocation(point.x, point.y);
+    public final boolean isOverSelection(Point point) {
+        TreePath path = getClosestPathForLocation(point.x, point.y);
         if (path == null) {
             return false;
         }
@@ -76,7 +76,7 @@ public class DnDAwareTree extends Tree implements DnDAware {
     }
 
     @Override
-    public void dropSelectionButUnderPoint(final Point point) {
+    public void dropSelectionButUnderPoint(Point point) {
         TreeUtil.dropSelectionButUnderPoint(this, point);
     }
 
@@ -108,7 +108,7 @@ public class DnDAwareTree extends Tree implements DnDAware {
         c.setBackground(tree.getBackground());
         c.setFont(tree.getFont());
         c.setSize(c.getPreferredSize());
-        final BufferedImage image = UIUtil.createImage(c, c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = UIUtil.createImage(c, c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) image.getGraphics();
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
         c.paint(g2);

@@ -2695,7 +2695,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    */
   @Override
   @Nonnull
-  public V cacheOrGet(final long key, @Nonnull final V defaultValue) {
+  public V cacheOrGet(long key, @Nonnull V defaultValue) {
     V v = get(key);
     if (v != null) return v;
     V prev = putIfAbsent(key, defaultValue);

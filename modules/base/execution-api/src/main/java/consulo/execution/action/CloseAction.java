@@ -37,7 +37,7 @@ public class CloseAction extends AnAction implements DumbAware {
         myContentDescriptor = contentDescriptor;
         myProject = project;
         copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE));
-        final Presentation templatePresentation = getTemplatePresentation();
+        Presentation templatePresentation = getTemplatePresentation();
         templatePresentation.setIcon(PlatformIconGroup.actionsCancel());
         templatePresentation.setTextValue(ExecutionLocalize.closeTabActionName());
         templatePresentation.setDescriptionValue(LocalizeValue.empty());
@@ -46,11 +46,11 @@ public class CloseAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final RunContentDescriptor contentDescriptor = getContentDescriptor();
+        RunContentDescriptor contentDescriptor = getContentDescriptor();
         if (contentDescriptor == null) {
             return;
         }
-        final boolean removedOk =
+        boolean removedOk =
             ExecutionManager.getInstance(myProject).getContentManager().removeRunContent(getExecutor(), contentDescriptor);
         if (removedOk) {
             myContentDescriptor = null;

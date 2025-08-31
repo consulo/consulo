@@ -46,7 +46,7 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
   }
 
   @Override
-  protected AbstractTreeNode createRoot(final Project project, ViewSettings settings) {
+  protected AbstractTreeNode createRoot(Project project, ViewSettings settings) {
     return new FavoritesRootNode(project);
   }
 
@@ -61,20 +61,20 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
       return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
-    final AbstractTreeNode favTreeElement = (AbstractTreeNode)element;
+    AbstractTreeNode favTreeElement = (AbstractTreeNode)element;
     try {
       if (!(element instanceof FavoritesListNode)) {
         return super.getChildElements(favTreeElement);
       }
 
-      final List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
-      final FavoritesListNode listNode = (FavoritesListNode)element;
+      List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+      FavoritesListNode listNode = (FavoritesListNode)element;
       if (listNode.getProvider() != null) {
         return ArrayUtil.toObjectArray(listNode.getChildren());
       }
-      final Collection<AbstractTreeNode> roots = FavoritesListNode.getFavoritesRoots(myProject, listNode.getName(), listNode);
+      Collection<AbstractTreeNode> roots = FavoritesListNode.getFavoritesRoots(myProject, listNode.getName(), listNode);
       for (AbstractTreeNode<?> abstractTreeNode : roots) {
-        final Object value = abstractTreeNode.getValue();
+        Object value = abstractTreeNode.getValue();
 
         if (value == null) continue;
         if (value instanceof PsiElement && !((PsiElement)value).isValid()) continue;
@@ -113,7 +113,7 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
       }
 
       @Override
-      public void update(final PresentationData presentation) {
+      public void update(PresentationData presentation) {
         presentation.setPresentableText(getValue());
       }
     };

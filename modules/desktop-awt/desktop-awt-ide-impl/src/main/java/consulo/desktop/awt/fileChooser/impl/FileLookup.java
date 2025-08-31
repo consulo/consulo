@@ -27,7 +27,7 @@ public interface FileLookup {
     @Nullable
     LookupFile find(@Nonnull String path);
 
-    String normalize(@Nonnull final String path);
+    String normalize(@Nonnull String path);
 
     String getSeparator();
   }

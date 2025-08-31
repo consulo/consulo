@@ -221,7 +221,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
     @Override
     protected void onSelection(@Nonnull int[] selection) {
       rebuildCommitPanels(selection);
-      final List<Integer> currentSelection = mySelection;
+      List<Integer> currentSelection = mySelection;
       Application.get().executeOnPooledThread(() -> {
         List<Collection<VcsRef>> result = new ArrayList<>();
         for (Integer row : currentSelection) {

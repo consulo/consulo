@@ -35,7 +35,7 @@ class IndexConfiguration {
 
   <K, V> UpdatableIndex<K, V, FileContent> getIndex(ID<K, V> indexId) {
     assert myFreezed;
-    final Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
+    Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
 
     //noinspection unchecked
     return pair != null ? (UpdatableIndex<K, V, FileContent>)pair.getFirst() : null;
@@ -43,7 +43,7 @@ class IndexConfiguration {
 
   FileBasedIndex.InputFilter getInputFilter(@Nonnull ID<?, ?> indexId) {
     assert myFreezed;
-    final Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
+    Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
 
     assert pair != null : "Index data is absent for index " + indexId;
 

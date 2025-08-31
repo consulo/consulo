@@ -30,7 +30,7 @@ import consulo.language.editor.completion.lookup.LookupElementDecorator;
 public class DecoratorCompletionStatistician extends CompletionStatistician {
 
   @Override
-  public StatisticsInfo serialize(final LookupElement element, final CompletionLocation location) {
+  public StatisticsInfo serialize(LookupElement element, CompletionLocation location) {
     if (element instanceof LookupElementDecorator) {
       return StatisticsManager.serialize(STATISTICS_KEY, ((LookupElementDecorator)element).getDelegate(), location);
     }

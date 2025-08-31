@@ -208,7 +208,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @return quickfix to be shown in editor when server side inspections are enabled
    */
   @Nullable
-  public QuickFix getQuickFix(final String hint) {
+  public QuickFix getQuickFix(String hint) {
     return null;
   }
 

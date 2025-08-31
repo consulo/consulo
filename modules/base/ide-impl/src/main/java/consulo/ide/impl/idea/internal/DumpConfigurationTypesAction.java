@@ -38,8 +38,8 @@ public class DumpConfigurationTypesAction extends AnAction implements DumbAware 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
-        final List<ConfigurationType> factories = RunManager.getInstance(project).getConfigurationFactories();
+        Project project = e.getRequiredData(Project.KEY);
+        List<ConfigurationType> factories = RunManager.getInstance(project).getConfigurationFactories();
         for (ConfigurationType factory : factories) {
             System.out.println(factory.getDisplayName() + " : " + factory.getId());
         }

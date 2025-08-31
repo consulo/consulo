@@ -36,7 +36,7 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
   }
 
   public void addGroup(SettingsEditorGroup<T> group) {
-    for (final Pair<String, SettingsEditor<T>> pair : group.myEditors) {
+    for (Pair<String, SettingsEditor<T>> pair : group.myEditors) {
       Disposer.register(this, pair.second);
     }
     myEditors.addAll(group.myEditors);

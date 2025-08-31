@@ -74,7 +74,7 @@ public abstract class BaseButtonBehavior {
     repaintComponent();
   }
 
-  public void setMouseDeadzone(final TimedDeadzone.Length deadZone) {
+  public void setMouseDeadzone(TimedDeadzone.Length deadZone) {
     myMouseDeadzone.setLength(deadZone);
   }
 
@@ -155,8 +155,8 @@ public abstract class BaseButtonBehavior {
       return false;
     }
 
-    private boolean passIfNeeded(final MouseEvent e, boolean considerDeadZone) {
-      final boolean actionClick = UIUtil.isActionClick(e, myActionTrigger);
+    private boolean passIfNeeded(MouseEvent e, boolean considerDeadZone) {
+      boolean actionClick = UIUtil.isActionClick(e, myActionTrigger);
 
       if (!actionClick || (considerDeadZone && myMouseDeadzone.isWithin())) {
         pass(e);
@@ -169,12 +169,12 @@ public abstract class BaseButtonBehavior {
 
   private class MyMouseMotionListener extends MouseMotionAdapter {
     @Override
-    public void mouseMoved(final MouseEvent e) {
+    public void mouseMoved(MouseEvent e) {
       myMouseDeadzone.enter(e);
     }
   }
 
-  protected abstract void execute(final MouseEvent e);
+  protected abstract void execute(MouseEvent e);
 
   protected void pass(MouseEvent e) {
 

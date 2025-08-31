@@ -33,9 +33,9 @@ public class TreeViewUtil {
   @Nonnull
   @RequiredReadAction
   public static String calcAbbreviatedPackageFQName(@Nonnull PsiPackage aPackage) {
-    final StringBuilder name = new StringBuilder(aPackage.getName());
+    StringBuilder name = new StringBuilder(aPackage.getName());
     for (PsiPackage parentPackage = aPackage.getParentPackage(); parentPackage != null; parentPackage = parentPackage.getParentPackage()) {
-      final String packageName = parentPackage.getName();
+      String packageName = parentPackage.getName();
       if (packageName == null || packageName.isEmpty()) {
         break; // reached default package
       }
@@ -52,17 +52,17 @@ public class TreeViewUtil {
 
   @Nonnull
   @RequiredReadAction
-  public static String getNodeName(@Nonnull ViewSettings settings, PsiPackage aPackage, final PsiPackage parentPackageInTree, @Nonnull String defaultShortName, boolean isFQNameShown) {
-    final String name;
+  public static String getNodeName(@Nonnull ViewSettings settings, PsiPackage aPackage, PsiPackage parentPackageInTree, @Nonnull String defaultShortName, boolean isFQNameShown) {
+    String name;
     if (isFQNameShown) {
       name = settings.isAbbreviatePackageNames() ? aPackage == null ? defaultShortName : calcAbbreviatedPackageFQName(aPackage) : aPackage == null ? defaultShortName : aPackage.getQualifiedName();
     }
     else if (parentPackageInTree != null || aPackage != null && aPackage.getParentPackage() != null) {
       PsiPackage parentPackage = aPackage.getParentPackage();
-      final StringBuilder buf = new StringBuilder();
+      StringBuilder buf = new StringBuilder();
       buf.append(aPackage.getName());
       while (parentPackage != null && (parentPackageInTree == null || !parentPackage.equals(parentPackageInTree))) {
-        final String parentPackageName = parentPackage.getName();
+        String parentPackageName = parentPackage.getName();
         if (parentPackageName == null || parentPackageName.isEmpty()) {
           break; // reached default package
         }

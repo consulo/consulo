@@ -40,24 +40,24 @@ public class PrattBuilderImpl extends PrattBuilder {
   private int myPriority = Integer.MIN_VALUE;
   private MutableMarker myStartMarker;
 
-  private PrattBuilderImpl(final PsiBuilder builder, final PrattBuilder parent, final PrattRegistry registry) {
+  private PrattBuilderImpl(PsiBuilder builder, PrattBuilder parent, PrattRegistry registry) {
     myBuilder = builder;
     myParentBuilder = parent;
     myRegistry = registry;
   }
 
-  public static PrattBuilder createBuilder(final PsiBuilder builder, final PrattRegistry registry) {
+  public static PrattBuilder createBuilder(PsiBuilder builder, PrattRegistry registry) {
     return new PrattBuilderImpl(builder, null, registry);
   }
 
   @Override
-  public PrattBuilder expecting(final String expectedMessage) {
+  public PrattBuilder expecting(String expectedMessage) {
     myExpectedMessage = expectedMessage;
     return this;
   }
 
   @Override
-  public PrattBuilder withLowestPriority(final int priority) {
+  public PrattBuilder withLowestPriority(int priority) {
     myPriority = priority;
     return this;
   }
@@ -68,7 +68,7 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  public void setTokenTypeRemapper(@Nullable final ITokenTypeRemapper remapper) {
+  public void setTokenTypeRemapper(@Nullable ITokenTypeRemapper remapper) {
     myBuilder.setTokenTypeRemapper(remapper);
   }
 
@@ -124,8 +124,8 @@ public class PrattBuilderImpl extends PrattBuilder {
 
   @Nullable
   private TokenParser findParser() {
-    final IElementType tokenType = getTokenType();
-    for (final Trinity<Integer, PathPattern, TokenParser> trinity : myRegistry.getParsers(tokenType)) {
+    IElementType tokenType = getTokenType();
+    for (Trinity<Integer, PathPattern, TokenParser> trinity : myRegistry.getParsers(tokenType)) {
       if (trinity.first > myPriority && trinity.second.accepts(this)) {
         return trinity.third;
       }
@@ -140,8 +140,8 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  public void error(final String errorText) {
-    final PsiBuilder.Marker marker = myBuilder.mark();
+  public void error(String errorText) {
+    PsiBuilder.Marker marker = myBuilder.mark();
     myBuilder.error(errorText);
     marker.drop();
   }
@@ -159,7 +159,7 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  public void reduce(@Nonnull final IElementType type) {
+  public void reduce(@Nonnull IElementType type) {
     myStartMarker.finish(type);
     myStartMarker = myStartMarker.precede();
   }

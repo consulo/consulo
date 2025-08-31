@@ -59,7 +59,7 @@ public class FeatureDescriptor {
     myGroupId = group.getId();
   }
 
-  public FeatureDescriptor(final String id) {
+  public FeatureDescriptor(String id) {
     myId = id;
   }
 

@@ -28,7 +28,7 @@ public class Table extends JBTable {
     super();
   }
 
-  public Table(final TableModel model) {
+  public Table(TableModel model) {
     super(model);
   }
 }

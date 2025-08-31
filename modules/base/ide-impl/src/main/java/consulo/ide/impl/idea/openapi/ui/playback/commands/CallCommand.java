@@ -37,26 +37,26 @@ public class CallCommand extends AbstractCommand {
   }
 
   @Override
-  protected ActionCallback _execute(final PlaybackContext context) {
-    final ActionCallback cmdResult = new ActionCallback();
+  protected ActionCallback _execute(PlaybackContext context) {
+    ActionCallback cmdResult = new ActionCallback();
 
-    final String cmd = getText().substring(PREFIX.length()).trim();
-    final int open = cmd.indexOf("(");
+    String cmd = getText().substring(PREFIX.length()).trim();
+    int open = cmd.indexOf("(");
     if (open == -1) {
       context.error("( expected", getLine());
       return new ActionCallback.Done();
     }
 
-    final int close = cmd.lastIndexOf(")");
+    int close = cmd.lastIndexOf(")");
     if (close == -1) {
       context.error(") expected", getLine());
       return new ActionCallback.Done();
     }
 
 
-    final String methodName = cmd.substring(0, open);
+    String methodName = cmd.substring(0, open);
     String [] args = cmd.substring(open + 1, close).split(",");
-    final boolean noArgs = args.length == 1 && args[0].length() == 0;
+    boolean noArgs = args.length == 1 && args[0].length() == 0;
     Class[] types = noArgs ? new Class[1] : new Class[args.length + 1];
     types[0] = PlaybackContext.class;
     for (int i = 1; i < types.length; i++) {

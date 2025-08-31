@@ -46,7 +46,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
 
   @Override
   public void addValue(int inputId, Value value) {
-    final Object fileSetObject = getFileSetObject(value);
+    Object fileSetObject = getFileSetObject(value);
 
     if (fileSetObject == null) {
       attachFileSetForNewValue(value, inputId);
@@ -102,8 +102,8 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     if (myInputIdMapping == null) return;
     List<Object> fileSetObjects = null;
     List<Value> valueObjects = null;
-    for (final InvertedIndexValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext(); ) {
-      final Value value = valueIterator.next();
+    for (InvertedIndexValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext(); ) {
+      Value value = valueIterator.next();
 
       if (valueIterator.getValueAssociationPredicate().contains(inputId)) {
         if (fileSetObjects == null) {
@@ -135,7 +135,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     }
 
     if (fileSet instanceof ChangeBufferingList) {
-      final ChangeBufferingList changesList = (ChangeBufferingList)fileSet;
+      ChangeBufferingList changesList = (ChangeBufferingList)fileSet;
       changesList.remove(inputId);
       if (!changesList.isEmpty()) return;
     }
@@ -289,7 +289,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     if (input == null) return EMPTY_PREDICATE;
 
     if (input instanceof Integer) {
-      final int singleId = (Integer)input;
+      int singleId = (Integer)input;
 
       return id -> id == singleId;
     }
@@ -326,7 +326,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
       ValueContainerImpl<Value> clone = (ValueContainerImpl<Value>)super.clone();
       HashMap<Value, Object> mapping = asMapping();
       if (mapping != null) {
-        final HashMap<Value, Object> cloned = (HashMap<Value, Object>)mapping.clone();
+        HashMap<Value, Object> cloned = (HashMap<Value, Object>)mapping.clone();
         for (Map.Entry<Value, Object> entry : mapping.entrySet()) {
           Value key = entry.getKey();
           Object value = entry.getValue();
@@ -395,7 +395,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
       return null;
     }
 
-    final ChangeBufferingList fileSet = new ChangeBufferingList(count);
+    ChangeBufferingList fileSet = new ChangeBufferingList(count);
     attachFileSetForNewValue(value, fileSet);
     return fileSet;
   }
@@ -422,8 +422,8 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
   public void saveTo(DataOutput out, DataExternalizer<? super Value> externalizer) throws IOException {
     DataInputOutputUtil.writeINT(out, size());
 
-    for (final InvertedIndexValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext(); ) {
-      final Value value = valueIterator.next();
+    for (InvertedIndexValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext(); ) {
+      Value value = valueIterator.next();
       externalizer.save(out, value);
       Object fileSetObject = valueIterator.getFileSetObject();
 
@@ -459,10 +459,10 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     FileId2ValueMapping<Value> mapping = null;
 
     while (stream.available() > 0) {
-      final int valueCount = DataInputOutputUtil.readINT(stream);
+      int valueCount = DataInputOutputUtil.readINT(stream);
       if (valueCount < 0) {
         // ChangeTrackingValueContainer marked inputId as invalidated, see ChangeTrackingValueContainer.saveTo
-        final int inputId = inputRemapping.applyAsInt(-valueCount);
+        int inputId = inputRemapping.applyAsInt(-valueCount);
 
         if (mapping == null && size() > NUMBER_OF_VALUES_THRESHOLD) { // avoid O(NumberOfValues)
           mapping = new FileId2ValueMapping<>(this);
@@ -481,7 +481,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
       }
       else {
         for (int valueIdx = 0; valueIdx < valueCount; valueIdx++) {
-          final Value value = externalizer.read(stream);
+          Value value = externalizer.read(stream);
           int idCountOrSingleValue = DataInputOutputUtil.readINT(stream);
 
           if (idCountOrSingleValue > 0) {
@@ -494,7 +494,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
             int prev = 0;
 
             for (int i = 0; i < idCountOrSingleValue; i++) {
-              final int id = DataInputOutputUtil.readINT(stream);
+              int id = DataInputOutputUtil.readINT(stream);
               int remappedInputId = inputRemapping.applyAsInt(prev + id);
               if (changeBufferingList != null) changeBufferingList.add(remappedInputId);
               else addValue(remappedInputId, value);

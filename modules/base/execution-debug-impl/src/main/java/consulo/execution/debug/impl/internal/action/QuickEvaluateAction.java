@@ -48,7 +48,7 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
     private static class QuickEvaluateHandlerWrapper extends DebuggerActionHandler {
         private final QuickEvaluateHandler myHandler;
 
-        public QuickEvaluateHandlerWrapper(final QuickEvaluateHandler handler) {
+        public QuickEvaluateHandlerWrapper(QuickEvaluateHandler handler) {
             myHandler = handler;
         }
 

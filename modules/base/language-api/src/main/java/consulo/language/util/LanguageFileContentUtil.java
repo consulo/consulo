@@ -36,14 +36,14 @@ import java.io.IOException;
  */
 public class LanguageFileContentUtil extends FileContentUtilCore {
     @RequiredWriteAction
-    public static void setFileText(@Nullable Project project, final VirtualFile virtualFile, final String text) throws IOException {
+    public static void setFileText(@Nullable Project project, VirtualFile virtualFile, String text) throws IOException {
         if (project == null) {
             project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
         }
         if (project != null) {
-            final PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
-            final PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
-            final Document document = psiFile == null ? null : psiDocumentManager.getDocument(psiFile);
+            PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+            PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
+            Document document = psiFile == null ? null : psiDocumentManager.getDocument(psiFile);
             if (document != null) {
                 document.setText(text != null ? text : "");
                 psiDocumentManager.commitDocument(document);

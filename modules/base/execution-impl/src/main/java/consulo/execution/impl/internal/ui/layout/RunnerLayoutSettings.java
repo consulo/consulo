@@ -56,10 +56,10 @@ public class RunnerLayoutSettings implements PersistentStateComponent<Element> {
 
   @Override
   public Element getState() {
-    final Element runners = new Element("runners");
+    Element runners = new Element("runners");
     for (String eachID : myRunnerId2Settings.keySet()) {
-      final RunnerLayoutImpl layout = myRunnerId2Settings.get(eachID);
-      final Element runnerElement = new Element("runner");
+      RunnerLayoutImpl layout = myRunnerId2Settings.get(eachID);
+      Element runnerElement = new Element("runner");
       runnerElement.setAttribute("id", eachID);
       layout.write(runnerElement);
       runners.addContent(runnerElement);
@@ -68,12 +68,12 @@ public class RunnerLayoutSettings implements PersistentStateComponent<Element> {
   }
 
   @Override
-  public void loadState(final Element state) {
-    final List runners = state.getChildren("runner");
+  public void loadState(Element state) {
+    List runners = state.getChildren("runner");
     for (Object each : runners) {
       Element eachRunnerElement = (Element)each;
-      final String eachID = eachRunnerElement.getAttributeValue("id");
-      final RunnerLayoutImpl eachLayout = new RunnerLayoutImpl(eachID);
+      String eachID = eachRunnerElement.getAttributeValue("id");
+      RunnerLayoutImpl eachLayout = new RunnerLayoutImpl(eachID);
       eachLayout.read(eachRunnerElement);
       myRunnerId2Settings.put(eachID, eachLayout);
     }

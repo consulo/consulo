@@ -57,12 +57,12 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
   @RequiredUIAccess
   @Override
   protected void init(boolean canCloseContent, @Nullable Object component) {
-    final ContentFactory contentFactory = ContentFactory.getInstance();
+    ContentFactory contentFactory = ContentFactory.getInstance();
     myContentUI = new DesktopToolWindowContentUi(this);
     ContentManager contentManager = myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
 
     if (component != null) {
-      final Content content = contentFactory.createContent((JComponent)component, "", false);
+      Content content = contentFactory.createContent((JComponent)component, "", false);
       contentManager.addContent(content);
       contentManager.setSelectedContent(content, false);
     }
@@ -86,8 +86,8 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
 
   @Nonnull
   @Override
-  public AsyncResult<Void> getReady(@Nonnull final Object requestor) {
-    final AsyncResult<Void> result = AsyncResult.undefined();
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    AsyncResult<Void> result = AsyncResult.undefined();
     myShowing.getReady(this).doWhenDone(() -> {
       ProjectIdeFocusManager.getInstance(myToolWindowManager.getProject()).doWhenFocusSettlesDown(() -> {
         if (myContentManager.isDisposed()) return;

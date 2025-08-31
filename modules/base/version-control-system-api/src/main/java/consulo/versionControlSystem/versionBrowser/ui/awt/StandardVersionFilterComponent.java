@@ -54,7 +54,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
         myDateFilterComponent.getPanel().setVisible(showDateFilter);
     }
 
-    protected void init(final T settings) {
+    protected void init(T settings) {
         myVersionNumberPanel.setBorder(IdeBorderFactory.createTitledBorder(getChangeNumberTitle(), true));
         installCheckBoxesListeners();
         initValues(settings);
@@ -73,7 +73,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
     }
 
     private void installCheckBoxesListeners() {
-        final ActionListener filterListener = new ActionListener() {
+        ActionListener filterListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateAllEnabled(e);
@@ -87,7 +87,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
     public static void updatePair(JCheckBox checkBox, JComponent textField, ActionEvent e) {
         textField.setEnabled(checkBox.isSelected());
         if (e != null && e.getSource() instanceof JCheckBox && ((JCheckBox) e.getSource()).isSelected()) {
-            final Object source = e.getSource();
+            Object source = e.getSource();
             if (source == checkBox && checkBox.isSelected()) {
                 IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
                     IdeFocusManager.getGlobalInstance().requestFocus(textField, true);
@@ -97,7 +97,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
 
     }
 
-    protected void updateAllEnabled(final ActionEvent e) {
+    protected void updateAllEnabled(ActionEvent e) {
         updatePair(myUseNumBeforeFilter, myNumBefore, e);
         updatePair(myUseNumAfterFilter, myNumAfter, e);
     }
@@ -120,7 +120,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
         settings.CHANGE_AFTER = myNumAfter.getText();
     }
 
-    protected void installCheckBoxListener(final ActionListener filterListener) {
+    protected void installCheckBoxListener(ActionListener filterListener) {
         myUseNumBeforeFilter.addActionListener(filterListener);
         myUseNumAfterFilter.addActionListener(filterListener);
     }

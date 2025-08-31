@@ -55,7 +55,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     return (T)ObjectUtil.NULL;
   }
 
-  private static <T> T notNull(final Object key) {
+  private static <T> T notNull(Object key) {
     //noinspection unchecked
     return key == null ? FAKE_NULL() : (T)key;
   }
@@ -107,12 +107,12 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   }
 
   @Override
-  public boolean containsValue(final Object value) {
+  public boolean containsValue(Object value) {
     return myMap.containsValue(notNull(value));
   }
 
   @Override
-  public void putAll(@Nonnull final Map<? extends K, ? extends V> m) {
+  public void putAll(@Nonnull Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }

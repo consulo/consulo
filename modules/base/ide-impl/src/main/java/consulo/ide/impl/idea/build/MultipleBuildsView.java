@@ -149,7 +149,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
         RunContentDescriptor contentDescriptor;
         Supplier<? extends RunContentDescriptor> contentDescriptorSupplier = buildInfo.getContentDescriptorSupplier();
         contentDescriptor = contentDescriptorSupplier != null ? contentDescriptorSupplier.get() : null;
-        final Runnable activationCallback;
+        Runnable activationCallback;
         if (contentDescriptor != null) {
           buildInfo.setActivateToolWindowWhenAdded(contentDescriptor.isActivateToolWindowWhenAdded());
           if (contentDescriptor instanceof BuildContentDescriptor) {
@@ -254,7 +254,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
             }
           });
 
-          final JComponent consoleComponent = new MultipleBuildsPanel();
+          JComponent consoleComponent = new MultipleBuildsPanel();
           consoleComponent.add(myThreeComponentsSplitter, BorderLayout.CENTER);
           myToolbarActions = new DefaultActionGroup();
           ActionToolbar tb = ActionManager.getInstance().createActionToolbar("BuildView", myToolbarActions, false);

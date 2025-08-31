@@ -42,15 +42,15 @@ public class VcsAnnotation {
     myFilePath = filePath;
   }
 
-  public void addAnnotation(final Object o, final VcsLineAnnotationData vcsLineAnnotationData) {
+  public void addAnnotation(Object o, VcsLineAnnotationData vcsLineAnnotationData) {
     myAdditionalAnnotations.put(o, vcsLineAnnotationData);
   }
 
-  public void addCachedRevision(final VcsRevisionNumber number, final VcsFileRevision revision) {
+  public void addCachedRevision(VcsRevisionNumber number, VcsFileRevision revision) {
     myCachedOtherRevisions.put(number, revision);
   }
 
-  public void addCachedOtherRevisions(final Map<VcsRevisionNumber, VcsFileRevision> revisions) {
+  public void addCachedOtherRevisions(Map<VcsRevisionNumber, VcsFileRevision> revisions) {
     myCachedOtherRevisions.putAll(revisions);
   }
 

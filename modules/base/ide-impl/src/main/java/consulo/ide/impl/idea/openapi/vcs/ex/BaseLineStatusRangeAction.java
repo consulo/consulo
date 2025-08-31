@@ -26,12 +26,12 @@ public abstract class BaseLineStatusRangeAction extends AnAction implements Dumb
     protected final LineStatusTracker myLineStatusTracker;
     protected final Range myRange;
 
-    BaseLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
+    BaseLineStatusRangeAction(LineStatusTracker lineStatusTracker, Range range) {
         myLineStatusTracker = lineStatusTracker;
         myRange = range;
     }
 
-    public void update(final AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isEnabled());
     }
 

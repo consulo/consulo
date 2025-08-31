@@ -158,9 +158,9 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
     manager.removeContent(this, true);
     ApplicationPropertiesComponent.getInstance().setValue(SPLIT_PROPERTY_PREFIX + prefix, Boolean.TRUE.toString());
     for (int i = 0; i < copy.size(); i++) {
-      final boolean select = i == selectedTab;
-      final JComponent component = copy.get(i).second;
-      final String tabName = copy.get(i).first;
+      boolean select = i == selectedTab;
+      JComponent component = copy.get(i).second;
+      String tabName = copy.get(i).first;
       ContentUtilEx.addTabbedContent(manager, component, prefix, tabName, select);
     }
   }

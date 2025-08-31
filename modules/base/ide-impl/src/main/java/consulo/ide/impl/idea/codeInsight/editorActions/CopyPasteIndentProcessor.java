@@ -77,9 +77,9 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
   public List<IndentTransferableData> extractTransferableData(Transferable content) {
     IndentTransferableData indentData = new IndentTransferableData(-1);
     try {
-      final DataFlavor flavor = IndentTransferableData.getDataFlavorStatic();
+      DataFlavor flavor = IndentTransferableData.getDataFlavorStatic();
       if (flavor != null) {
-        final Object transferData = content.getTransferData(flavor);
+        Object transferData = content.getTransferData(flavor);
         if (transferData instanceof IndentTransferableData) {
           indentData = (IndentTransferableData)transferData;
         }
@@ -97,7 +97,7 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
                                       final RangeMarker bounds,
                                       final int caretOffset,
                                       final SimpleReference<Boolean> indented,
-                                      final List<IndentTransferableData> values) {
+                                      List<IndentTransferableData> values) {
     if (!CodeInsightSettings.getInstance().INDENT_TO_CARET_ON_PASTE) {
       return;
     }
@@ -135,10 +135,10 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
                              document.getText(TextRange.create(bounds.getEndOffset(), document.getTextLength()));
         int toIndent = 0;
         if (initialText.length() > 0) {
-          final DocumentImpl initialDocument = new DocumentImpl(initialText);
+          DocumentImpl initialDocument = new DocumentImpl(initialText);
           int lineNumber = initialDocument.getTextLength() > caretOffset? initialDocument.getLineNumber(caretOffset)
                                                                         : initialDocument.getLineCount() - 1;
-          final int offset = getLineStartSafeOffset(initialDocument, lineNumber);
+          int offset = getLineStartSafeOffset(initialDocument, lineNumber);
 
           if (bounds.getStartOffset() == offset) {
             String toString = initialDocument.getText(TextRange.create(offset, initialDocument.getLineEndOffset(lineNumber)));
@@ -184,7 +184,7 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
     //System.out.println("--- after indent ---\n" + document.getText());
   }
 
-  private static int getLineStartSafeOffset(final Document document, int line) {
+  private static int getLineStartSafeOffset(Document document, int line) {
     if (line >= document.getLineCount()) return document.getTextLength();
     return document.getLineStartOffset(line);
   }

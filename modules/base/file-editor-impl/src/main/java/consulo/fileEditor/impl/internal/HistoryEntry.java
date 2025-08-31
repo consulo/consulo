@@ -174,7 +174,7 @@ public final class HistoryEntry {
     element.addContent(e);
     e.setAttribute(FILE_ATTR, myFilePointer.getUrl());
 
-    for (final Map.Entry<FileEditorProvider, FileEditorState> entry : myProvider2State.entrySet()) {
+    for (Map.Entry<FileEditorProvider, FileEditorState> entry : myProvider2State.entrySet()) {
       FileEditorProvider provider = entry.getKey();
 
       Element providerElement = new Element(PROVIDER_ELEMENT);

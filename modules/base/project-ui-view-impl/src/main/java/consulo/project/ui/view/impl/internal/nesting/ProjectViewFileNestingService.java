@@ -48,7 +48,7 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
     static @Nonnull List<NestingRule> loadDefaultNestingRules() {
         List<NestingRule> result = new ArrayList<>();
 
-        final ProjectViewNestingRulesProvider.Consumer consumer = (parentFileSuffix, childFileSuffix) -> {
+        ProjectViewNestingRulesProvider.Consumer consumer = (parentFileSuffix, childFileSuffix) -> {
             LOG.assertTrue(!parentFileSuffix.isEmpty() && !childFileSuffix.isEmpty(), "file suffix must not be empty");
             LOG.assertTrue(!parentFileSuffix.equals(childFileSuffix), "parent and child suffixes must be different: " + parentFileSuffix);
             result.add(new NestingRule(parentFileSuffix, childFileSuffix));
@@ -67,7 +67,7 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
     }
 
     @Override
-    public void loadState(final @Nonnull MyState state) {
+    public void loadState(@Nonnull MyState state) {
         myState = state;
         myModCount++;
     }
@@ -80,7 +80,7 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
         return myState.myRules;
     }
 
-    public void setRules(final @Nonnull List<NestingRule> rules) {
+    public void setRules(@Nonnull List<NestingRule> rules) {
         myState.myRules.clear();
         myState.myRules.addAll(rules);
         myModCount++;
@@ -120,7 +120,7 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
             return myParentFileSuffix;
         }
 
-        public void setParentFileSuffix(final @Nonnull String parentFileSuffix) {
+        public void setParentFileSuffix(@Nonnull String parentFileSuffix) {
             myParentFileSuffix = parentFileSuffix;
         }
 
@@ -129,7 +129,7 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
             return myChildFileSuffix;
         }
 
-        public void setChildFileSuffix(final @Nonnull String childFileSuffix) {
+        public void setChildFileSuffix(@Nonnull String childFileSuffix) {
             myChildFileSuffix = childFileSuffix;
         }
 

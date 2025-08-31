@@ -117,7 +117,7 @@ public class XValueHint extends AbstractValueHint {
 
     @RequiredUIAccess
     @Override
-    protected boolean showHint(final JComponent component) {
+    protected boolean showHint(JComponent component) {
         boolean result = super.showHint(component);
         if (result && getType() == ValueHintType.MOUSE_OVER_HINT) {
             myDisposable = Disposable.newDisposable();
@@ -126,7 +126,7 @@ public class XValueHint extends AbstractValueHint {
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {
                     hideHint();
-                    final Point point = new Point(myPoint.x, myPoint.y + getEditor().getLineHeight());
+                    Point point = new Point(myPoint.x, myPoint.y + getEditor().getLineHeight());
                     new XValueHint(
                         getProject(),
                         getEditor(),
@@ -256,7 +256,7 @@ public class XValueHint extends AbstractValueHint {
             }
 
             @Override
-            public void errorOccurred(@Nonnull final String errorMessage) {
+            public void errorOccurred(@Nonnull String errorMessage) {
                 if (getType() == ValueHintType.MOUSE_CLICK_HINT) {
                     ApplicationManager.getApplication().invokeLater(() -> showHint(HintUtil.createErrorLabel(errorMessage)));
                 }

@@ -54,7 +54,7 @@ public abstract class AbstractFieldPanel extends JPanel {
     public AbstractFieldPanel(
         JComponent component,
         String labelText,
-        final String viewerDialogTitle,
+        String viewerDialogTitle,
         ActionListener browseButtonActionListener,
         Runnable changeListener
     ) {
@@ -168,7 +168,7 @@ public abstract class AbstractFieldPanel extends JPanel {
             );
         }
         if (myViewerDialogTitle != null) {
-            final FixedSizeButton showViewerButton = new FixedSizeButton(getComponent());
+            FixedSizeButton showViewerButton = new FixedSizeButton(getComponent());
             if (myBrowseButtonActionListener == null) {
                 LOG.assertTrue(myDoClickAction == null);
                 myDoClickAction = new TextFieldWithBrowseButton.MyDoClickAction(showViewerButton);

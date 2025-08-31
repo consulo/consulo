@@ -30,5 +30,5 @@ public interface CustomMatcherModel {
    * @param userPattern Pattern defined by user in Choose by name popup
    * @return True if matches
    */
-  boolean matches(@Nonnull final String popupItem, @Nonnull final String userPattern);
+  boolean matches(@Nonnull String popupItem, @Nonnull String userPattern);
 }

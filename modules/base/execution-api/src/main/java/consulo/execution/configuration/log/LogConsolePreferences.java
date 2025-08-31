@@ -98,7 +98,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
       if (myRegisteredLogFilters.get(filter).booleanValue() && !filter.isAcceptable(text)) return false;
     }
     if (checkStandartFilters) {
-      final String type = getType(text);
+      String type = getType(text);
       boolean selfTyped = false;
       if (type != null) {
         if (!isApplicable(type)) return false;
@@ -109,7 +109,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
     return true;
   }
 
-  private boolean isApplicable(final String type) {
+  private boolean isApplicable(String type) {
     if (type.equals(ERROR)) {
       return !FILTER_ERRORS;
     }
@@ -165,12 +165,12 @@ public class LogConsolePreferences extends LogFilterRegistrar {
   }
 
   @Override
-  public void loadState(final Element object) {
+  public void loadState(Element object) {
     try {
-      final List children = object.getChildren(FILTER);
+      List children = object.getChildren(FILTER);
       for (Object child : children) {
         Element filterElement = (Element)child;
-        final LogFilter filter = new LogFilter();
+        LogFilter filter = new LogFilter();
         filter.readExternal(filterElement);
         setFilterSelected(filter, Boolean.parseBoolean(filterElement.getAttributeValue(IS_ACTIVE)));
       }
@@ -193,7 +193,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
 
   @Override
   public boolean isFilterSelected(LogFilter filter) {
-    final Boolean isSelected = myRegisteredLogFilters.get(filter);
+    Boolean isSelected = myRegisteredLogFilters.get(filter);
     if (isSelected != null) {
       return isSelected.booleanValue();
     }
@@ -223,7 +223,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
     }
   }
 
-  private void fireStateChanged(final LogFilter filter) {
+  private void fireStateChanged(LogFilter filter) {
     for (LogFilterListener listener : myListeners) {
       listener.onFilterStateChange(filter);
     }

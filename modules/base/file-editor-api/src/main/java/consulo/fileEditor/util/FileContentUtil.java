@@ -30,7 +30,7 @@ import java.util.LinkedHashSet;
  * @author peter
  */
 public class FileContentUtil extends FileContentUtilCore {
-  public static void reparseFiles(@Nonnull final Project project, @Nonnull final Collection<? extends VirtualFile> files, final boolean includeOpenFiles) {
+  public static void reparseFiles(@Nonnull Project project, @Nonnull Collection<? extends VirtualFile> files, boolean includeOpenFiles) {
     LinkedHashSet<VirtualFile> fileSet = new LinkedHashSet<VirtualFile>(files);
     if (includeOpenFiles) {
       for (VirtualFile open : FileEditorManager.getInstance(project).getOpenFiles()) {

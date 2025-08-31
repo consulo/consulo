@@ -73,12 +73,12 @@ public class JDOMExternalizer {
     else {
       mapRoot = root;
     }
-    final String[] names = ArrayUtil.toStringArray(map.keySet());
+    String[] names = ArrayUtil.toStringArray(map.keySet());
     Arrays.sort(names);
     for (String name : names) {
-      @NonNls final Element element = new Element(entryName);
+      @NonNls Element element = new Element(entryName);
       element.setAttribute("name", name);
-      final String value = map.get(name);
+      String value = map.get(name);
       if (value != null) {
         element.setAttribute("value", value);
       }
@@ -114,12 +114,12 @@ public class JDOMExternalizer {
    * @param values a pack of values to add
    * @see #loadStringsList(org.jdom.Element, String, String)
    */
-  public static void saveStringsList(@Nonnull final Element parent,
-                                     @Nonnull final String nodeName,
-                                     @Nonnull final String attrName,
-                                     @Nonnull final String... values) {
-    for (final String value : values) {
-      final Element node = new Element(nodeName);
+  public static void saveStringsList(@Nonnull Element parent,
+                                     @Nonnull String nodeName,
+                                     @Nonnull String attrName,
+                                     @Nonnull String... values) {
+    for (String value : values) {
+      Element node = new Element(nodeName);
       node.setAttribute(attrName, value);
       parent.addContent(node);
     }
@@ -127,9 +127,9 @@ public class JDOMExternalizer {
 
   @Nonnull
   public static List<String> loadStringsList(Element element, String rootName, String attrName) {
-    final List<String> paths = new LinkedList<String>();
+    List<String> paths = new LinkedList<String>();
     if (element != null) {
-      @Nonnull final List list = element.getChildren(rootName);
+      @Nonnull List list = element.getChildren(rootName);
       for (Object o : list) {
         paths.add(((Element)o).getAttribute(attrName).getValue());
       }

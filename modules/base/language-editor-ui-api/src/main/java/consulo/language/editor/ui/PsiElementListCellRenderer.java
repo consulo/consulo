@@ -101,7 +101,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         private final String myModuleName;
         private final ItemMatchers myMatchers;
 
-        LeftRenderer(final String moduleName, @Nonnull ItemMatchers matchers) {
+        LeftRenderer(String moduleName, @Nonnull ItemMatchers matchers) {
             myModuleName = moduleName;
             myMatchers = matchers;
         }
@@ -228,7 +228,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
 
         if (value instanceof NavigationItem) {
             TextAttributesKey attributesKey = null;
-            final ItemPresentation presentation = ((NavigationItem)value).getPresentation();
+            ItemPresentation presentation = ((NavigationItem)value).getPresentation();
             if (presentation instanceof ColoredItemPresentation) {
                 attributesKey = ((ColoredItemPresentation)presentation).getTextAttributesKey();
             }
@@ -261,9 +261,9 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
             null,
             value == null ? new ItemMatchers(null, null) : getItemMatchers(list, value)
         );
-        final Component leftCellRendererComponent = leftRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        Component leftCellRendererComponent = leftRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         add(leftCellRendererComponent, LEFT);
-        final Color bg = isSelected ? UIUtil.getListSelectionBackground(true) : leftCellRendererComponent.getBackground();
+        Color bg = isSelected ? UIUtil.getListSelectionBackground(true) : leftCellRendererComponent.getBackground();
         setBackground(bg);
         if (rightCellRendererComponent != null) {
             rightCellRendererComponent.setBackground(bg);
@@ -291,7 +291,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
     }
 
     @Nullable
-    protected DefaultListCellRenderer getRightCellRenderer(final Object value) {
+    protected DefaultListCellRenderer getRightCellRenderer(Object value) {
         if (UISettings.getInstance().SHOW_ICONS_IN_QUICK_NAVIGATION) {
             return new PsiElementModuleRenderer();
         }
@@ -301,7 +301,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
     public abstract String getElementText(T element);
 
     @Nullable
-    protected abstract String getContainerText(T element, final String name);
+    protected abstract String getContainerText(T element, String name);
 
     @Nullable
     protected String getContainerTextForLeftComponent(T element, String name, int maxWidth, FontMetrics fm) {
@@ -333,10 +333,10 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         installSpeedSearch(builder, false);
     }
 
-    public void installSpeedSearch(IPopupChooserBuilder builder, final boolean includeContainerText) {
+    public void installSpeedSearch(IPopupChooserBuilder builder, boolean includeContainerText) {
         builder.setNamerForFiltering(o -> {
             if (o instanceof PsiElement) {
-                final String elementText = getElementText((T)o);
+                String elementText = getElementText((T)o);
                 if (includeContainerText) {
                     return elementText + " " + getContainerText((T)o, elementText);
                 }

@@ -202,7 +202,7 @@ public interface EditorSettings {
 
     boolean isPreselectRename();
 
-    void setPreselectRename(final boolean val);
+    void setPreselectRename(boolean val);
 
     boolean isShowIntentionBulb();
 

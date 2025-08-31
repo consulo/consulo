@@ -38,7 +38,7 @@ public class CharTableImpl implements CharTable {
 
   @Nonnull
   @Override
-  public CharSequence intern(@Nonnull final CharSequence text) {
+  public CharSequence intern(@Nonnull CharSequence text) {
     CharSequence result;
     if (text.length() > INTERN_THRESHOLD) {
       result = createSequence(text);
@@ -71,7 +71,7 @@ public class CharTableImpl implements CharTable {
 
   @Nonnull
   @Override
-  public CharSequence intern(@Nonnull final CharSequence baseText, final int startOffset, final int endOffset) {
+  public CharSequence intern(@Nonnull CharSequence baseText, int startOffset, int endOffset) {
     CharSequence result;
     if (endOffset - startOffset == baseText.length()) {
       result = intern(baseText);
@@ -113,7 +113,7 @@ public class CharTableImpl implements CharTable {
   }
 
   private static StringHashToCharSequencesMap newStaticSet() {
-    final StringHashToCharSequencesMap r = new StringHashToCharSequencesMap();
+    StringHashToCharSequencesMap r = new StringHashToCharSequencesMap();
     r.add("==");
     r.add("!=");
     r.add("||");

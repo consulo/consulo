@@ -22,5 +22,5 @@ import consulo.codeEditor.EditorHighlighter;
  * @author max
  */
 public interface EditorHighlightingProvidingColorSettingsPage extends ColorSettingsPage {
-    EditorHighlighter createEditorHighlighter(final EditorColorsScheme scheme);
+    EditorHighlighter createEditorHighlighter(EditorColorsScheme scheme);
 }

@@ -27,14 +27,14 @@ import java.awt.*;
 public class AuthenticationDialogImpl extends DialogWrapper {
   private final AuthenticationPanel panel;
 
-  public AuthenticationDialogImpl(@Nonnull Component component, String title, String description, final String login, final String password, final boolean rememberPassword) {
+  public AuthenticationDialogImpl(@Nonnull Component component, String title, String description, String login, String password, boolean rememberPassword) {
     super(component, true);
     setTitle(title);
 
     MnemonicHelper.init(getContentPane());
     panel = new AuthenticationPanel(description, login, password, rememberPassword);
 
-    final Window window = getWindow();
+    Window window = getWindow();
     if (window instanceof JDialog) {
       ((JDialog) window).setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
@@ -42,14 +42,14 @@ public class AuthenticationDialogImpl extends DialogWrapper {
     init();
   }
 
-  public AuthenticationDialogImpl(String title, String description, final String login, final String password, final boolean rememberPassword) {
+  public AuthenticationDialogImpl(String title, String description, String login, String password, boolean rememberPassword) {
     super(JOptionPane.getRootFrame(), true);
     setTitle(title);
 
     MnemonicHelper.init(getContentPane());
     panel = new AuthenticationPanel(description, login, password, rememberPassword);
 
-    final Window window = getWindow();
+    Window window = getWindow();
     if (window instanceof JDialog) {
       ((JDialog) window).setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }

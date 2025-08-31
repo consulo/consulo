@@ -560,8 +560,8 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
       getListPanel().setHighlightRow(event.getItemIndex());
     }
 
-    final Widget widget = getListItemFactory().createWidget(model.getSelected());
-    final SimplePanel selectedValue = getSelectedValue();
+    Widget widget = getListItemFactory().createWidget(model.getSelected());
+    SimplePanel selectedValue = getSelectedValue();
     selectedValue.setWidget(widget);
   }
 
@@ -597,7 +597,7 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
   @Override
   protected void prepareSelectedValue() {
     super.prepareSelectedValue();
-    final Widget widget = getListItemFactory().createWidget(getModel().getSelected());
+    Widget widget = getListItemFactory().createWidget(getModel().getSelected());
     getSelectedValue().setWidget(widget);
   }
 

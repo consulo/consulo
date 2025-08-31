@@ -136,7 +136,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     @NonNls
     public static final String PROP_CACHED_ENCODING_CHANGED = "cachedEncoding";
 
-    private void handleDocument(@Nonnull final Document document) {
+    private void handleDocument(@Nonnull Document document) {
         VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
         if (virtualFile == null) {
             return;
@@ -168,8 +168,8 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
      * @return returns null if charset set cannot be determined from content
      */
     @Nullable
-    static Charset computeCharsetFromContent(@Nonnull final VirtualFile virtualFile) {
-        final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
+    static Charset computeCharsetFromContent(@Nonnull VirtualFile virtualFile) {
+        Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
         if (document == null) {
             return null;
         }
@@ -178,7 +178,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
             return cached;
         }
 
-        final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
+        Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
         return ReadAction.compute(() -> {
             Charset charsetFromContent = LoadTextUtil.charsetFromContentOrNull(project, virtualFile, document.getImmutableCharSequence());
             if (charsetFromContent != null) {
@@ -311,7 +311,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    public boolean isNative2Ascii(@Nonnull final VirtualFile virtualFile) {
+    public boolean isNative2Ascii(@Nonnull VirtualFile virtualFile) {
         Project project = guessProject(virtualFile);
         return project != null && EncodingProjectManager.getInstance(project).isNative2Ascii(virtualFile);
     }
@@ -323,7 +323,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    public void setNative2AsciiForPropertiesFiles(final VirtualFile virtualFile, final boolean native2Ascii) {
+    public void setNative2AsciiForPropertiesFiles(VirtualFile virtualFile, boolean native2Ascii) {
         Project project = guessProject(virtualFile);
         if (project == null) {
             return;
@@ -350,7 +350,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
 
     @Override
     @Nullable
-    public Charset getDefaultCharsetForPropertiesFiles(@Nullable final VirtualFile virtualFile) {
+    public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
         Project project = guessProject(virtualFile);
         if (project == null) {
             return null;
@@ -359,7 +359,7 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
     }
 
     @Override
-    public void setDefaultCharsetForPropertiesFiles(@Nullable final VirtualFile virtualFile, final Charset charset) {
+    public void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, Charset charset) {
         Project project = guessProject(virtualFile);
         if (project == null) {
             return;
@@ -392,8 +392,8 @@ public class EncodingManagerImpl implements PersistentStateComponent<EncodingMan
 
     static void firePropertyChange(@Nullable Document document,
                                    @Nonnull String propertyName,
-                                   final Object oldValue,
-                                   final Object newValue,
+                                   Object oldValue,
+                                   Object newValue,
                                    @Nullable Project project) {
         MessageBus messageBus = (project != null ? project : ApplicationManager.getApplication()).getMessageBus();
         EncodingManagerListener publisher = messageBus.syncPublisher(EncodingManagerListener.class);

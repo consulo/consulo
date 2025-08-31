@@ -24,7 +24,7 @@ public abstract class AbstractRunConfiguration extends ModuleBasedConfiguration<
     return myEnvs;
   }
 
-  public void setEnvs(final Map<String, String> envs) {
+  public void setEnvs(Map<String, String> envs) {
     myEnvs.clear();
     myEnvs.putAll(envs);
   }
@@ -33,7 +33,7 @@ public abstract class AbstractRunConfiguration extends ModuleBasedConfiguration<
     return myPassParentEnvs;
   }
 
-  public void setPassParentEnvs(final boolean passParentEnvs) {
+  public void setPassParentEnvs(boolean passParentEnvs) {
     myPassParentEnvs = passParentEnvs;
   }
 }

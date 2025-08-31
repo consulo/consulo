@@ -80,13 +80,13 @@ public class DownloadUtil {
     @Nonnull
     public static <V> Outcome<V> provideDataWithProgressSynchronously(@Nullable Project project,
                                                                       @Nonnull String progressTitle,
-                                                                      @Nonnull final String actionShortDescription,
-                                                                      @Nonnull final Callable<V> supplier,
+                                                                      @Nonnull String actionShortDescription,
+                                                                      @Nonnull Callable<V> supplier,
                                                                       @Nullable Supplier<Boolean> tryAgainProvider) {
         int attemptNumber = 1;
         while (true) {
-            final Ref<V> dataRef = Ref.create(null);
-            final Ref<Exception> innerExceptionRef = Ref.create(null);
+            Ref<V> dataRef = Ref.create(null);
+            Ref<Exception> innerExceptionRef = Ref.create(null);
             boolean completed = ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
                 ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
                 indicator.setText(actionShortDescription);

@@ -29,8 +29,8 @@ import jakarta.annotation.Nonnull;
 public class SameModuleWeigher extends ProximityWeigher {
 
   @Override
-  public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
-    final Module elementModule = element.getModule();
+  public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
+    Module elementModule = element.getModule();
     if (location.getPositionModule() == elementModule) {
       return 2;
     }

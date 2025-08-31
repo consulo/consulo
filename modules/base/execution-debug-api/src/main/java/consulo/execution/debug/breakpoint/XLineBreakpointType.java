@@ -52,7 +52,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class XLineBreakpointType<P extends XBreakpointProperties> extends XBreakpointType<XLineBreakpoint<P>,P> {
-  protected XLineBreakpointType(@NonNls @Nonnull final String id, @Nls @Nonnull final String title) {
+  protected XLineBreakpointType(@NonNls @Nonnull String id, @Nls @Nonnull String title) {
     super(id, title);
   }
 
@@ -64,7 +64,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   public abstract P createBreakpointProperties(@Nonnull VirtualFile file, int line);
 
   @Override
-  public String getDisplayText(final XLineBreakpoint<P> breakpoint) {
+  public String getDisplayText(XLineBreakpoint<P> breakpoint) {
     return fileLineDisplayText(breakpoint.getPresentableFilePath(), breakpoint.getLine());
   }
 

@@ -91,7 +91,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
 
   @Nullable
   @Override
-  public RunProfileState getState(@Nonnull Executor executor, @Nonnull final ExecutionEnvironment environment) throws ExecutionException {
+  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
     try {
       checkConfiguration();
     }
@@ -101,7 +101,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
     return new RunProfileState() {
       @Nullable
       @Override
-      public ExecutionResult execute(final Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+      public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
         ApplicationManager.getApplication().invokeLater(() -> {
           RunManagerImpl manager = RunManagerImpl.getInstanceImpl(getProject());
           for (RunConfiguration configuration : getSetToRun()) {

@@ -51,7 +51,7 @@ public class ReplacePathToMacroMap extends PathMacroMap {
         }
     }
 
-    private void putIfAbsent(final String path, final String substitution, final boolean overwrite) {
+    private void putIfAbsent(String path, String substitution, boolean overwrite) {
         if (overwrite || !myMacroMap.containsKey(path)) {
             myMacroMap.put(path, substitution);
         }
@@ -64,13 +64,13 @@ public class ReplacePathToMacroMap extends PathMacroMap {
             return null;
         }
 
-        for (final String path : getPathIndex()) {
+        for (String path : getPathIndex()) {
             text = replacePathMacro(text, path, caseSensitive);
         }
         return text;
     }
 
-    private String replacePathMacro(String text, final String path, boolean caseSensitive) {
+    private String replacePathMacro(String text, String path, boolean caseSensitive) {
         if (text.length() < path.length() || path.isEmpty()) {
             return text;
         }
@@ -84,7 +84,7 @@ public class ReplacePathToMacroMap extends PathMacroMap {
         //check that this is complete path (ends with "/" or "!/")
         // do not collapse partial paths, i.e. do not substitute "/a/b/cd" in paths like "/a/b/cdeFgh"
         int endOfOccurrence = path.length();
-        final boolean isWindowsRoot = path.endsWith(":/");
+        boolean isWindowsRoot = path.endsWith(":/");
         if (!isWindowsRoot &&
             endOfOccurrence < text.length() &&
             text.charAt(endOfOccurrence) != '/' &&
@@ -96,14 +96,14 @@ public class ReplacePathToMacroMap extends PathMacroMap {
     }
 
     @Override
-    public String substituteRecursively(String text, final boolean caseSensitive) {
-        for (final String path : getPathIndex()) {
+    public String substituteRecursively(String text, boolean caseSensitive) {
+        for (String path : getPathIndex()) {
             text = replacePathMacroRecursively(text, path, caseSensitive);
         }
         return text;
     }
 
-    private String replacePathMacroRecursively(String text, final String path, boolean caseSensitive) {
+    private String replacePathMacroRecursively(String text, String path, boolean caseSensitive) {
         if (text.length() < path.length()) {
             return text;
         }
@@ -112,8 +112,8 @@ public class ReplacePathToMacroMap extends PathMacroMap {
             return text;
         }
 
-        final StringBuilder newText = new StringBuilder();
-        final boolean isWindowsRoot = path.endsWith(":/");
+        StringBuilder newText = new StringBuilder();
+        boolean isWindowsRoot = path.endsWith(":/");
         int i = 0;
         while (i < text.length()) {
             int occurrenceOfPath = caseSensitive ? text.indexOf(path, i) : StringUtil.indexOfIgnoreCase(text, path, i);
@@ -154,8 +154,8 @@ public class ReplacePathToMacroMap extends PathMacroMap {
         return newText.toString();
     }
 
-    private static int getIndex(final Map.Entry<String, String> s) {
-        final String replacement = s.getValue();
+    private static int getIndex(Map.Entry<String, String> s) {
+        String replacement = s.getValue();
         if (replacement.contains("..")) {
             return 1;
         }
@@ -184,7 +184,7 @@ public class ReplacePathToMacroMap extends PathMacroMap {
         if (myPathsIndex == null || myPathsIndex.size() != myMacroMap.size()) {
             List<Map.Entry<String, String>> entries = new ArrayList<Map.Entry<String, String>>(myMacroMap.entrySet());
 
-            final ObjectIntMap<Map.Entry<String, String>> weights = ObjectMaps.newObjectIntHashMap();
+            ObjectIntMap<Map.Entry<String, String>> weights = ObjectMaps.newObjectIntHashMap();
             for (Map.Entry<String, String> entry : entries) {
                 weights.putInt(entry, getIndex(entry) * 512 + stripPrefix(entry.getKey()));
             }

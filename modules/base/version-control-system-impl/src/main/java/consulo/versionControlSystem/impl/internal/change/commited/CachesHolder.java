@@ -40,14 +40,14 @@ public class CachesHolder {
   private final RepositoryLocationCache myLocationCache;
   private final ProjectLevelVcsManager myPlManager;
 
-  public CachesHolder(final Project project, final RepositoryLocationCache locationCache) {
+  public CachesHolder(Project project, RepositoryLocationCache locationCache) {
     myProject = project;
     myLocationCache = locationCache;
     myPlManager = ProjectLevelVcsManager.getInstance(myProject);
     myCacheFiles = new ConcurrentHashMap<>();
   }
 
-  public CachesHolder(final Project project, final RepositoryLocationCache locationCache, final ProjectLevelVcsManager manager) {
+  public CachesHolder(Project project, RepositoryLocationCache locationCache, ProjectLevelVcsManager manager) {
     myProject = project;
     myPlManager = manager;
     myLocationCache = locationCache;
@@ -57,19 +57,19 @@ public class CachesHolder {
   /**
    * Returns all paths that will be used to collect committed changes about. ideally, for one checkout there should be one file
    */
-  public Map<VirtualFile, RepositoryLocation> getAllRootsUnderVcs(final AbstractVcs vcs) {
-    final RootsCalculator calculator = new RootsCalculator(myProject, vcs, myLocationCache);
+  public Map<VirtualFile, RepositoryLocation> getAllRootsUnderVcs(AbstractVcs vcs) {
+    RootsCalculator calculator = new RootsCalculator(myProject, vcs, myLocationCache);
     return calculator.getRoots();
   }
 
-  public void iterateAllRepositoryLocations(final BiPredicate<RepositoryLocation, AbstractVcs> locationProcessor) {
-    final AbstractVcs[] vcses = myPlManager.getAllActiveVcss();
+  public void iterateAllRepositoryLocations(BiPredicate<RepositoryLocation, AbstractVcs> locationProcessor) {
+    AbstractVcs[] vcses = myPlManager.getAllActiveVcss();
     for (AbstractVcs vcs : vcses) {
-      final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+      CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
       if (provider instanceof CachingCommittedChangesProvider) {
-        final Map<VirtualFile, RepositoryLocation> map = getAllRootsUnderVcs(vcs);
+        Map<VirtualFile, RepositoryLocation> map = getAllRootsUnderVcs(vcs);
         for (VirtualFile root : map.keySet()) {
-          final RepositoryLocation location = map.get(root);
+          RepositoryLocation location = map.get(root);
           if (!locationProcessor.test(location, vcs)) {
             return;
           }
@@ -78,15 +78,15 @@ public class CachesHolder {
     }
   }
 
-  public void iterateAllCaches(final Function<ChangesCacheFile, Boolean> consumer) {
-    final AbstractVcs[] vcses = myPlManager.getAllActiveVcss();
+  public void iterateAllCaches(Function<ChangesCacheFile, Boolean> consumer) {
+    AbstractVcs[] vcses = myPlManager.getAllActiveVcss();
     for (AbstractVcs vcs : vcses) {
-      final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+      CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
       if (provider instanceof CachingCommittedChangesProvider) {
-        final Map<VirtualFile, RepositoryLocation> map = getAllRootsUnderVcs(vcs);
+        Map<VirtualFile, RepositoryLocation> map = getAllRootsUnderVcs(vcs);
         for (VirtualFile root : map.keySet()) {
-          final RepositoryLocation location = map.get(root);
-          final ChangesCacheFile cacheFile = getCacheFile(vcs, root, location);
+          RepositoryLocation location = map.get(root);
+          ChangesCacheFile cacheFile = getCacheFile(vcs, root, location);
           if (Boolean.TRUE.equals(consumer.apply(cacheFile))) {
             return;
           }
@@ -106,7 +106,7 @@ public class CachesHolder {
     final List<ChangesCacheFile> result = new ArrayList<>();
     iterateAllCaches(new Function<>() {
       @Nonnull
-      public Boolean apply(final ChangesCacheFile changesCacheFile) {
+      public Boolean apply(ChangesCacheFile changesCacheFile) {
         result.add(changesCacheFile);
         return false;
       }
@@ -115,7 +115,7 @@ public class CachesHolder {
   }
 
   public ChangesCacheFile getCacheFile(AbstractVcs vcs, VirtualFile root, RepositoryLocation location) {
-    final String key = location.getKey();
+    String key = location.getKey();
     ChangesCacheFile cacheFile = myCacheFiles.get(key);
     if (cacheFile == null) {
       cacheFile = new ChangesCacheFile(myProject, getCachePath(location), vcs, root, location);
@@ -131,12 +131,12 @@ public class CachesHolder {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  private File getCachePath(final RepositoryLocation location) {
+  private File getCachePath(RepositoryLocation location) {
     File file = getCacheBasePath();
     file.mkdirs();
     String s = location.getKey();
     try {
-      final byte[] bytes = MessageDigest.getInstance("MD5").digest(s.getBytes(StandardCharsets.UTF_8));
+      byte[] bytes = MessageDigest.getInstance("MD5").digest(s.getBytes(StandardCharsets.UTF_8));
       StringBuilder result = new StringBuilder();
       for (byte aByte : bytes) {
         result.append(String.format("%02x", aByte));

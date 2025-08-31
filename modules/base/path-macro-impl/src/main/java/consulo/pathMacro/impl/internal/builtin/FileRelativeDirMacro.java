@@ -37,7 +37,7 @@ public class FileRelativeDirMacro extends Macro {
 
   @Override
   public String expand(DataContext dataContext) {
-    final VirtualFile baseDir = dataContext.getData(Project.PROJECT_FILE_DIRECTORY);
+    VirtualFile baseDir = dataContext.getData(Project.PROJECT_FILE_DIRECTORY);
     if (baseDir == null) {
       return null;
     }

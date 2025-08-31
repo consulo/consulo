@@ -31,7 +31,7 @@ public class IndentData {
     mySpaces = spaces;
   }
 
-  public IndentData(final int indentSpaces) {
+  public IndentData(int indentSpaces) {
     this(indentSpaces, 0);
   }
 
@@ -47,11 +47,11 @@ public class IndentData {
     return mySpaces;
   }
 
-  public IndentData add(final IndentData childOffset) {
+  public IndentData add(IndentData childOffset) {
     return new IndentData(myIndentSpaces + childOffset.getIndentSpaces(), mySpaces + childOffset.getSpaces());
   }
 
-  public IndentData add(final WhiteSpace whiteSpace) {
+  public IndentData add(WhiteSpace whiteSpace) {
     return new IndentData(myIndentSpaces + whiteSpace.getIndentOffset(), mySpaces + whiteSpace.getSpaces());
   }
 

@@ -36,8 +36,8 @@ public class CommittedChangeListImpl implements CommittedChangeList {
   private final long myNumber;
   protected ArrayList<Change> myChanges;
 
-  public CommittedChangeListImpl(final String name, final String comment, final String committerName,
-                                 final long number, final Date commitDate, final Collection<Change> changes) {
+  public CommittedChangeListImpl(String name, String comment, String committerName,
+                                 long number, Date commitDate, Collection<Change> changes) {
     myCommitterName = committerName;
     myCommitDate = commitDate;
     myName = name;
@@ -86,7 +86,7 @@ public class CommittedChangeListImpl implements CommittedChangeList {
     myComment = newMessage;
   }
 
-  public static Collection<Change> getChangesWithMovedTreesImpl(final CommittedChangeList list) {
+  public static Collection<Change> getChangesWithMovedTreesImpl(CommittedChangeList list) {
     return list.getChanges();
   }
 

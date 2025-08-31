@@ -26,12 +26,12 @@ public abstract class LayoutAttractionPolicy {
 
   public static class Bounce extends LayoutAttractionPolicy {
     @Override
-    public void attract(final Content content, final RunnerLayoutUi ui) {
+    public void attract(Content content, RunnerLayoutUi ui) {
       ui.setBouncing(content, true);
     }
 
     @Override
-    public void clearAttraction(final Content content, final RunnerLayoutUi ui) {
+    public void clearAttraction(Content content, RunnerLayoutUi ui) {
       ui.setBouncing(content, false);
     }
   }
@@ -45,12 +45,12 @@ public abstract class LayoutAttractionPolicy {
       this(true);
     }
 
-    public FocusOnce(final boolean requestFocus) {
+    public FocusOnce(boolean requestFocus) {
       myRequestFocus = requestFocus;
     }
 
     @Override
-    public void attract(final Content content, final RunnerLayoutUi ui) {
+    public void attract(Content content, RunnerLayoutUi ui) {
       if (!myWasAttracted) {
         myWasAttracted = true;
         ui.selectAndFocus(content, myRequestFocus, true, true);
@@ -60,19 +60,19 @@ public abstract class LayoutAttractionPolicy {
     }
 
     @Override
-    public void clearAttraction(final Content content, final RunnerLayoutUi ui) {
+    public void clearAttraction(Content content, RunnerLayoutUi ui) {
       ui.setBouncing(content, false);
     }
   }
 
   public static class FocusAlways extends LayoutAttractionPolicy {
     @Override
-    public void attract(final Content content, final RunnerLayoutUi ui) {
+    public void attract(Content content, RunnerLayoutUi ui) {
       ui.selectAndFocus(content, true, true);
     }
 
     @Override
-    public void clearAttraction(final Content content, final RunnerLayoutUi ui) {
+    public void clearAttraction(Content content, RunnerLayoutUi ui) {
     }
   }
 

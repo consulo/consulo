@@ -41,19 +41,19 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   private final Map<Component, String> myComponentToIdMap = new HashMap<>();
   private final StepListener myStepListener = this::updateStep;
 
-  public AbstractWizard(final String title, final Component dialogParent) {
+  public AbstractWizard(String title, Component dialogParent) {
     super(dialogParent, true);
     mySteps = new ArrayList<>();
     initWizard(title);
   }
 
-  public AbstractWizard(final String title, @Nullable final Project project) {
+  public AbstractWizard(String title, @Nullable Project project) {
     super(project, true);
     mySteps = new ArrayList<>();
     initWizard(title);
   }
 
-  private void initWizard(final String title) {
+  private void initWizard(String title) {
     setTitle(title);
     myCurrentStep = 0;
     myPreviousButton = Button.create(IdeLocalize.buttonWizardPrevious());
@@ -116,9 +116,9 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
       buttonPanel.setLayout(layout);
       layout.setAutoCreateGaps(true);
 
-      final GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-      final GroupLayout.ParallelGroup vGroup = layout.createParallelGroup();
-      final Collection<Component> buttons = new ArrayList<>(5);
+      GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+      GroupLayout.ParallelGroup vGroup = layout.createParallelGroup();
+      Collection<Component> buttons = new ArrayList<>(5);
 
       add(hGroup, vGroup, null, Box.createHorizontalGlue());
       if (mySteps.size() > 1) {
@@ -137,13 +137,13 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     myNextButton.addClickListener(e -> {
       if (isLastStep()) {
         // Commit data of current step and perform OK action
-        final Step currentStep = mySteps.get(myCurrentStep);
+        Step currentStep = mySteps.get(myCurrentStep);
         LOG.assertTrue(currentStep != null);
         try {
           currentStep._commit(true);
           doOKAction();
         }
-        catch (final CommitStepException exc) {
+        catch (CommitStepException exc) {
           String message = exc.getMessage();
           if (message != null) {
             Messages.showErrorDialog(myContentPanel, message);
@@ -165,7 +165,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return myContentPanel;
   }
 
-  private static void add(final GroupLayout.Group hGroup, final GroupLayout.Group vGroup, @Nullable final Collection<? super Component> collection, final Component... components) {
+  private static void add(GroupLayout.Group hGroup, GroupLayout.Group vGroup, @Nullable Collection<? super Component> collection, Component... components) {
     for (Component component : components) {
       hGroup.addComponent(component);
       vGroup.addComponent(component);
@@ -191,11 +191,11 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
       if (myIcon == null) {
         return;
       }
-      final BufferedImage image = UIUtil.createImage(g, myIcon.getIconWidth(), myIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-      final Graphics2D gg = image.createGraphics();
+      BufferedImage image = UIUtil.createImage(g, myIcon.getIconWidth(), myIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+      Graphics2D gg = image.createGraphics();
       myIcon.paintIcon(this, gg, 0, 0);
 
-      final Rectangle bounds = g.getClipBounds();
+      Rectangle bounds = g.getClipBounds();
       int y = myIcon.getIconHeight() - 1;
       while (y < bounds.y + bounds.height) {
         g.drawImage(image, bounds.x, y, bounds.x + bounds.width, y + 1, 0, myIcon.getIconHeight() - 1, bounds.width, myIcon.getIconHeight(), this);
@@ -226,7 +226,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
   @Override
   protected JComponent createCenterPanel() {
-    final JPanel panel = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
     panel.add(myContentPanel, BorderLayout.CENTER);
     panel.add(myIcon, BorderLayout.WEST);
     return panel;
@@ -244,18 +244,18 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return mySteps.get(myCurrentStep);
   }
 
-  public void addStep(@Nonnull final T step) {
+  public void addStep(@Nonnull T step) {
     addStep(step, mySteps.size());
   }
 
-  public void addStep(@Nonnull final T step, int index) {
+  public void addStep(@Nonnull T step, int index) {
     mySteps.add(index, step);
 
     if (step instanceof StepAdapter stepAdapter) {
       stepAdapter.registerStepListener(myStepListener);
     }
     // card layout is used
-    final Component component = step.getComponent();
+    Component component = step.getComponent();
     if (component != null) {
       addStepComponent(component);
     }
@@ -268,7 +268,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   }
 
 
-  protected String addStepComponent(final Component component) {
+  protected String addStepComponent(Component component) {
     String id = myComponentToIdMap.get(component);
     if (id == null) {
       id = Integer.toString(myComponentToIdMap.size());
@@ -278,7 +278,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return id;
   }
 
-  private void showStepComponent(final Component component) {
+  private void showStepComponent(Component component) {
     String id = myComponentToIdMap.get(component);
     if (id == null) {
       id = addStepComponent(component);
@@ -290,12 +290,12 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
   protected void doPreviousAction() {
     // Commit data of current step
-    final Step currentStep = mySteps.get(myCurrentStep);
+    Step currentStep = mySteps.get(myCurrentStep);
     LOG.assertTrue(currentStep != null);
     try {
       currentStep._commit(false);
     }
-    catch (final CommitStepException exc) {
+    catch (CommitStepException exc) {
       Messages.showErrorDialog(myContentPanel, exc.getMessage());
       return;
     }
@@ -318,13 +318,13 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
   protected void doNextAction() {
     // Commit data of current step
-    final Step currentStep = mySteps.get(myCurrentStep);
+    Step currentStep = mySteps.get(myCurrentStep);
     LOG.assertTrue(currentStep != null);
     LOG.assertTrue(!isLastStep(), "steps: " + mySteps + " current: " + currentStep);
     try {
       currentStep._commit(false);
     }
-    catch (final CommitStepException exc) {
+    catch (CommitStepException exc) {
       Messages.showErrorDialog(myContentPanel, exc.getMessage());
       return;
     }
@@ -340,7 +340,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
    * @return the next step's index
    */
   protected int getNextStep(int step) {
-    final int stepCount = mySteps.size();
+    int stepCount = mySteps.size();
     if (++step >= stepCount) {
       step = stepCount - 1;
     }
@@ -378,7 +378,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
       return;
     }
 
-    final Step step = mySteps.get(myCurrentStep);
+    Step step = mySteps.get(myCurrentStep);
     LOG.assertTrue(step != null);
     step._init();
     myCurrentStepComponent = step.getComponent();
@@ -397,9 +397,9 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     requestFocusTo(component != null ? component : TargetAWT.to(myNextButton));
   }
 
-  private static void requestFocusTo(final Component component) {
+  private static void requestFocusTo(Component component) {
     UiNotifyConnector.doWhenFirstShown(component, () -> {
-      final IdeFocusManager focusManager = IdeFocusManager.findInstanceByComponent(component);
+      IdeFocusManager focusManager = IdeFocusManager.findInstanceByComponent(component);
       focusManager.requestFocus(component, false);
     });
   }

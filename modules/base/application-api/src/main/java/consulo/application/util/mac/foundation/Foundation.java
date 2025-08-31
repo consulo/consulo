@@ -76,18 +76,18 @@ public class Foundation {
     return invokArgs;
   }
 
-  public static ID invoke(final ID id, final Pointer selector, Object... args) {
+  public static ID invoke(ID id, Pointer selector, Object... args) {
     // objc_msgSend is called with the calling convention of the target method
     // on x86_64 this does not make a difference, but arm64 uses a different calling convention for varargs
     // it is therefore important to not call objc_msgSend as a vararg function
     return new ID(myObjcMsgSend.invokeLong(prepInvoke(id, selector, args)));
   }
 
-  public static ID invoke(final String cls, final String selector, Object... args) {
+  public static ID invoke(String cls, String selector, Object... args) {
     return invoke(getObjcClass(cls), createSelector(selector), args);
   }
 
-  public static ID invoke(final ID id, final String selector, Object... args) {
+  public static ID invoke(ID id, String selector, Object... args) {
     return invoke(id, createSelector(selector), args);
   }
 
@@ -153,14 +153,14 @@ public class Foundation {
     return myFoundationLibrary.objc_getMetaClass(className);
   }
 
-  public static boolean isPackageAtPath(@Nonnull final String path) {
-    final ID workspace = invoke("NSWorkspace", "sharedWorkspace");
-    final ID result = invoke(workspace, createSelector("isFilePackageAtPath:"), nsString(path));
+  public static boolean isPackageAtPath(@Nonnull String path) {
+    ID workspace = invoke("NSWorkspace", "sharedWorkspace");
+    ID result = invoke(workspace, createSelector("isFilePackageAtPath:"), nsString(path));
 
     return result.intValue() == 1;
   }
 
-  public static boolean isPackageAtPath(@Nonnull final File file) {
+  public static boolean isPackageAtPath(@Nonnull File file) {
     if (!file.isDirectory()) return false;
     return isPackageAtPath(file.getPath());
   }
@@ -248,7 +248,7 @@ public class Foundation {
     boolean myUseAutoreleasePool;
   }
 
-  public static void executeOnMainThread(final boolean withAutoreleasePool, final boolean waitUntilDone, final Runnable runnable) {
+  public static void executeOnMainThread(boolean withAutoreleasePool, boolean waitUntilDone, Runnable runnable) {
     initRunnableSupport();
 
     synchronized (RUNNABLE_LOCK) {
@@ -256,21 +256,21 @@ public class Foundation {
       ourMainThreadRunnables.put(String.valueOf(ourCurrentRunnableCount), new RunnableInfo(runnable, withAutoreleasePool));
     }
 
-    final ID ideaRunnable = getObjcClass("IdeaRunnable");
-    final ID runnableObject = invoke(invoke(ideaRunnable, "alloc"), "init");
+    ID ideaRunnable = getObjcClass("IdeaRunnable");
+    ID runnableObject = invoke(invoke(ideaRunnable, "alloc"), "init");
     invoke(runnableObject, "performSelectorOnMainThread:withObject:waitUntilDone:", createSelector("run:"), nsString(String.valueOf(ourCurrentRunnableCount)), Boolean.valueOf(waitUntilDone));
     invoke(runnableObject, "release");
   }
 
   private static void initRunnableSupport() {
     if (ourRunnableCallback == null) {
-      final ID runnableClass = allocateObjcClassPair(getObjcClass("NSObject"), "IdeaRunnable");
+      ID runnableClass = allocateObjcClassPair(getObjcClass("NSObject"), "IdeaRunnable");
       registerObjcClassPair(runnableClass);
 
-      final Callback callback = new Callback() {
+      Callback callback = new Callback() {
         @SuppressWarnings("UnusedDeclaration")
         public void callback(ID self, String selector, ID keyObject) {
-          final String key = toStringViaUTF8(keyObject);
+          String key = toStringViaUTF8(keyObject);
 
           RunnableInfo info;
           synchronized (RUNNABLE_LOCK) {
@@ -462,8 +462,8 @@ public class Foundation {
     }
   }
 
-  public static ID fillArray(final Object[] a) {
-    final ID result = invoke("NSMutableArray", "array");
+  public static ID fillArray(Object[] a) {
+    ID result = invoke("NSMutableArray", "array");
     for (Object s : a) {
       invoke(result, "addObject:", convertType(s));
     }
@@ -471,14 +471,14 @@ public class Foundation {
     return result;
   }
 
-  public static ID createDict(@Nonnull final String[] keys, @Nonnull final Object[] values) {
-    final ID nsKeys = invoke("NSArray", "arrayWithObjects:", convertTypes(keys));
-    final ID nsData = invoke("NSArray", "arrayWithObjects:", convertTypes(values));
+  public static ID createDict(@Nonnull String[] keys, @Nonnull Object[] values) {
+    ID nsKeys = invoke("NSArray", "arrayWithObjects:", convertTypes(keys));
+    ID nsData = invoke("NSArray", "arrayWithObjects:", convertTypes(values));
     return invoke("NSDictionary", "dictionaryWithObjects:forKeys:", nsData, nsKeys);
   }
 
   private static Object[] convertTypes(@Nonnull Object[] v) {
-    final Object[] result = new Object[v.length];
+    Object[] result = new Object[v.length];
     for (int i = 0; i < v.length; i++) {
       result[i] = convertType(v[i]);
     }

@@ -32,7 +32,7 @@ public class Page {
       return ByteBuffer.allocate(PAGE_SIZE);
     }
 
-    public void cleanup(final ByteBuffer byteBuffer) {
+    public void cleanup(ByteBuffer byteBuffer) {
     }
   });
 
@@ -65,7 +65,7 @@ public class Page {
     if (!read) {
       if (myWriteMask != null) {
         byte[] content = new byte[PAGE_SIZE];
-        final ByteBuffer b = getBuf();
+        ByteBuffer b = getBuf();
         b.position(0);
         b.get(content, 0, PAGE_SIZE);
 
@@ -96,7 +96,7 @@ public class Page {
   private final Range myContinuousRange = new Range();
 
   @Nullable
-  private Range calcContinousRange(final BitSet mask) {
+  private Range calcContinousRange(BitSet mask) {
     int lowestByte = mask.nextSetBit(0);
     int highestByte;
     if (lowestByte >= 0) {
@@ -184,8 +184,8 @@ public class Page {
       myFinalizationId = 0;
       ensureReadOrWriteMaskExists();
 
-      final int start = (int)(index - offset);
-      final ByteBuffer b = getBuf();
+      int start = (int)(index - offset);
+      ByteBuffer b = getBuf();
       b.position(start);
 
       int count = Math.min(length, PAGE_SIZE - start);
@@ -203,8 +203,8 @@ public class Page {
       myFinalizationId = 0;
       ensureRead();
 
-      final int start = (int)(index - offset);
-      final ByteBuffer b = getBuf();
+      int start = (int)(index - offset);
+      ByteBuffer b = getBuf();
       b.position(start);
 
       int count = Math.min(length, PAGE_SIZE - start);
@@ -236,7 +236,7 @@ public class Page {
     return myKey;
   }
 
-  public boolean flushIfFinalizationIdIsEqualTo(final long finalizationId) {
+  public boolean flushIfFinalizationIdIsEqualTo(long finalizationId) {
     synchronized (lock) {
       if (myFinalizationId == finalizationId) {
         flush();
@@ -247,7 +247,7 @@ public class Page {
     }
   }
 
-  public boolean recycleIfFinalizationIdIsEqualTo(final long finalizationId) {
+  public boolean recycleIfFinalizationIdIsEqualTo(long finalizationId) {
     synchronized (lock) {
       if (myFinalizationId == finalizationId) {
         recycle();

@@ -62,7 +62,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public void setTextValue(final LocalizeValue text) {
+  public void setTextValue(LocalizeValue text) {
     myIndicator.setTextValue(text);
   }
 
@@ -72,7 +72,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public void setText2Value(final LocalizeValue text) {
+  public void setText2Value(LocalizeValue text) {
     myIndicator.setText2Value(text);
   }
 
@@ -87,7 +87,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public void setFraction(final double fraction) {
+  public void setFraction(double fraction) {
     myIndicator.setFraction(fraction);
   }
 
@@ -123,7 +123,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public void setModalityProgress(final ProgressIndicator modalityProgress) {
+  public void setModalityProgress(ProgressIndicator modalityProgress) {
     myIndicator.setModalityProgress(modalityProgress);
   }
 
@@ -133,7 +133,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public void setIndeterminate(final boolean indeterminate) {
+  public void setIndeterminate(boolean indeterminate) {
     myIndicator.setIndeterminate(indeterminate);
   }
 

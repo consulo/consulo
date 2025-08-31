@@ -48,7 +48,7 @@ public class ArtifactEditorSettings implements PersistentStateComponent<Artifact
 
   @Override
   public ArtifactEditorSettingsState getState() {
-    final ArtifactEditorSettingsState state = new ArtifactEditorSettingsState();
+    ArtifactEditorSettingsState state = new ArtifactEditorSettingsState();
     state.mySortElements = mySortElements;
     for (ComplexPackagingElementType<?> type : myTypesToShowContent) {
       state.myTypesToShowContentIds.add(type.getId());
@@ -61,7 +61,7 @@ public class ArtifactEditorSettings implements PersistentStateComponent<Artifact
     mySortElements = state.mySortElements;
     myTypesToShowContent.clear();
     for (String id : state.myTypesToShowContentIds) {
-      final PackagingElementType<?> type = PackagingElementFactory.getInstance(myProject).findElementType(id);
+      PackagingElementType<?> type = PackagingElementFactory.getInstance(myProject).findElementType(id);
       if (type instanceof ComplexPackagingElementType<?>) {
         myTypesToShowContent.add((ComplexPackagingElementType<?>)type);
       }

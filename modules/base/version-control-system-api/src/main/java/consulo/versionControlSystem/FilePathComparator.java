@@ -27,7 +27,7 @@ public final class FilePathComparator implements Comparator<VirtualFile> {
     return ourInstance;
   }
 
-  public int compare(final VirtualFile o1, final VirtualFile o2) {
+  public int compare(VirtualFile o1, VirtualFile o2) {
     if (Comparing.equal(o1, o2)) return 0;
     return o1.getPath().compareTo(o2.getPath());
   }

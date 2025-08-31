@@ -43,7 +43,7 @@ public class WrapImpl extends Wrap {
   private static final Type[] myTypes = Type.values();
 
 
-  public boolean isChildOf(@Nullable final WrapImpl wrap, LeafBlockWrapper leaf) {
+  public boolean isChildOf(@Nullable WrapImpl wrap, LeafBlockWrapper leaf) {
     if (getIgnoreParentWraps()) return false;
     if (leaf != null && myIgnoredWraps != null) {
       Collection<LeafBlockWrapper> leaves = myIgnoredWraps.get(wrap);
@@ -114,7 +114,7 @@ public class WrapImpl extends Wrap {
    * @param wrap          target wrap
    * @param currentBlock  target block for which given wrap should be ignored
    */
-  public void ignoreParentWrap(@Nullable final WrapImpl wrap, final LeafBlockWrapper currentBlock) {
+  public void ignoreParentWrap(@Nullable WrapImpl wrap, LeafBlockWrapper currentBlock) {
     if (myIgnoredWraps == null) {
       myIgnoredWraps = new HashMap<>(5);
     }
@@ -148,7 +148,7 @@ public class WrapImpl extends Wrap {
    *
    * @param startOffset   new '{@link #getWrapOffset() firstPosition}' property value to use if current value is undefined (negative)
    */
-  public void setWrapOffset(final int startOffset) {
+  public void setWrapOffset(int startOffset) {
     if (myWrapOffset < 0) {
       myWrapOffset = startOffset;
     }

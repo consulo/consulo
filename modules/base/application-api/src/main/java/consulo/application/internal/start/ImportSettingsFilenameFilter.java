@@ -42,11 +42,11 @@ public class ImportSettingsFilenameFilter implements FilenameFilter {
         if (name.equals(SETTINGS_ZIP_MARKER)) {
             return false;
         }
-        final File configPath = new File(ContainerPathManager.get().getConfigPath());
-        final String rPath = FileUtil.getRelativePath(configPath, new File(dir, name));
+        File configPath = new File(ContainerPathManager.get().getConfigPath());
+        String rPath = FileUtil.getRelativePath(configPath, new File(dir, name));
         assert rPath != null;
-        final String relativePath = FileUtil.toSystemIndependentName(rPath);
-        for (final String allowedRelPath : myRelativeNamesToExtract) {
+        String relativePath = FileUtil.toSystemIndependentName(rPath);
+        for (String allowedRelPath : myRelativeNamesToExtract) {
             if (relativePath.startsWith(allowedRelPath)) {
                 return true;
             }
@@ -60,7 +60,7 @@ public class ImportSettingsFilenameFilter implements FilenameFilter {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ImportSettingsFilenameFilter{");
+        StringBuilder sb = new StringBuilder("ImportSettingsFilenameFilter{");
         sb.append("myRelativeNamesToExtract=").append(myRelativeNamesToExtract);
         sb.append('}');
         return sb.toString();

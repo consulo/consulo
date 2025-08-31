@@ -47,22 +47,22 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
   }
 
   @Override
-  public String expandPath(final String path) {
+  public String expandPath(String path) {
     return ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().substitute(path, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
-  public String collapsePath(final String path) {
+  public String collapsePath(String path) {
     return ((BasePathMacroManager)myPathMacroManager.get()).getReplacePathMap().substitute(path, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
-  public void expandPaths(final Element element) {
+  public void expandPaths(Element element) {
     ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().substitute(element, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
-  public void collapsePaths(final Element element) {
+  public void collapsePaths(Element element) {
     ((BasePathMacroManager)myPathMacroManager.get()).getReplacePathMap().substitute(element, Platform.current().fs().isCaseSensitive());
   }
 
@@ -72,10 +72,10 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
   }
 
   @Override
-  public void invalidateUnknownMacros(final Set<String> macros) {
-    for (final String macro : macros) {
-      final Set<String> components = myMacroToComponentNames.get(macro);
-      for (final String component : components) {
+  public void invalidateUnknownMacros(Set<String> macros) {
+    for (String macro : macros) {
+      Set<String> components = myMacroToComponentNames.get(macro);
+      for (String component : components) {
         myComponentNameToMacros.remove(component);
       }
 
@@ -84,8 +84,8 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
   }
 
   @Override
-  public Set<String> getComponents(final Collection<String> macros) {
-    final Set<String> result = new HashSet<>();
+  public Set<String> getComponents(Collection<String> macros) {
+    Set<String> result = new HashSet<>();
     for (String macro : myMacroToComponentNames.keySet()) {
       if (macros.contains(macro)) {
         result.addAll(myMacroToComponentNames.get(macro));
@@ -96,18 +96,18 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
   }
 
   @Override
-  public Set<String> getUnknownMacros(final String componentName) {
-    final Set<String> result = new HashSet<>();
+  public Set<String> getUnknownMacros(String componentName) {
+    Set<String> result = new HashSet<>();
     result.addAll(componentName == null ? myMacroToComponentNames.keySet() : myComponentNameToMacros.get(componentName));
     return Collections.unmodifiableSet(result);
   }
 
   @Override
-  public void addUnknownMacros(final String componentName, final Collection<String> unknownMacros) {
+  public void addUnknownMacros(String componentName, Collection<String> unknownMacros) {
     if (unknownMacros.isEmpty()) return;
 
     for (String unknownMacro : unknownMacros) {
-      final Set<String> stringList = myMacroToComponentNames.get(unknownMacro);
+      Set<String> stringList = myMacroToComponentNames.get(unknownMacro);
       stringList.add(componentName);
     }
 

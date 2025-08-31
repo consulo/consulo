@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 public abstract class PromptingMacro extends Macro {
   @Override
   public final String expand(DataContext dataContext) throws ExecutionCancelledException {
-    final String userInput = promptUser(dataContext);
+    String userInput = promptUser(dataContext);
     if (userInput == null) {
       throw new ExecutionCancelledException();
     }

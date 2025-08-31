@@ -25,15 +25,15 @@ import java.nio.channels.FileChannel;
  * @author max
  */
 public class ReadOnlyMappedBufferWrapper extends MappedBufferWrapper {
-  protected ReadOnlyMappedBufferWrapper(final File file, final int pos) {
+  protected ReadOnlyMappedBufferWrapper(File file, int pos) {
     super(file, pos, file.length() - pos);
   }
 
   @Override
   protected MappedByteBuffer map() throws IOException {
-    final FileInputStream stream = new FileInputStream(myFile);
+    FileInputStream stream = new FileInputStream(myFile);
     try {
-      final FileChannel channel = stream.getChannel();
+      FileChannel channel = stream.getChannel();
       try {
         return channel.map(FileChannel.MapMode.READ_ONLY, myPosition, myLength);
       }

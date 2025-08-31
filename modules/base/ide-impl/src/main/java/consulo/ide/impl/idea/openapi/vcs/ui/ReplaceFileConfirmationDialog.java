@@ -56,7 +56,7 @@ public class ReplaceFileConfirmationDialog {
     }
   }
 
-  public boolean requestConfirmation(final Collection modifiedFiles) {
+  public boolean requestConfirmation(Collection modifiedFiles) {
     if (modifiedFiles.isEmpty()) return true;
 
     return Messages.showOkCancelDialog(createMessage(modifiedFiles), myActionName,

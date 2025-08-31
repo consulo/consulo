@@ -35,7 +35,7 @@ public class CacheUpdateRunner {
 
   public static void processFiles(@Nonnull ProgressIndicator indicator, @Nonnull Collection<VirtualFile> files, @Nonnull Project project, @Nonnull Consumer<? super IndexFileContent> processor) {
     indicator.checkCanceled();
-    final FileContentQueue queue = new FileContentQueue(project, files, indicator);
+    FileContentQueue queue = new FileContentQueue(project, files, indicator);
     final double total = files.size();
     queue.startLoading();
 
@@ -99,17 +99,17 @@ public class CacheUpdateRunner {
         return true; // the inner indicator must be always cancelable
       }
     };
-    final ApplicationListener canceller = new ApplicationListener() {
+    ApplicationListener canceller = new ApplicationListener() {
       @Override
       public void beforeWriteActionStart(@Nonnull Object action) {
         innerIndicator.cancel();
       }
     };
-    final Application application = ApplicationManager.getApplication();
+    Application application = ApplicationManager.getApplication();
     Disposable listenerDisposable = Disposable.newDisposable();
     application.invokeAndWait(() -> application.addApplicationListener(canceller, listenerDisposable), ModalityState.any());
 
-    final AtomicBoolean isFinished = new AtomicBoolean();
+    AtomicBoolean isFinished = new AtomicBoolean();
     try {
       int threadsCount = indexingThreadCount();
       if (threadsCount == 1 || application.isWriteAccessAllowed()) {
@@ -217,16 +217,16 @@ public class CacheUpdateRunner {
         try {
           mySuspendableIndicator.checkCanceled();
 
-          final IndexFileContent fileContent = myQueue.take(myInnerIndicator);
+          IndexFileContent fileContent = myQueue.take(myInnerIndicator);
           if (fileContent == null) {
             myFinished.set(true);
             return;
           }
 
-          final Runnable action = () -> {
+          Runnable action = () -> {
             myInnerIndicator.checkCanceled();
             if (!myProject.isDisposedOrDisposeInProgress()) {
-              final VirtualFile file = fileContent.getVirtualFile();
+              VirtualFile file = fileContent.getVirtualFile();
               try {
                 myProgressUpdater.processingStarted(file);
                 if (!file.isDirectory() && !Boolean.TRUE.equals(file.getUserData(FAILED_TO_INDEX))) {

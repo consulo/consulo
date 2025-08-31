@@ -38,13 +38,13 @@ import java.util.function.Function;
 @ServiceImpl
 public class TreeUIHelperImpl extends TreeUIHelper {
   @Override
-  public void installToolTipHandler(final JTree tree) {
+  public void installToolTipHandler(JTree tree) {
     if (tree instanceof Tree) return;
     new TreeExpandableItemsHandler(tree);
   }
 
   @Override
-  public void installToolTipHandler(final JTable table) {
+  public void installToolTipHandler(JTable table) {
     if (table instanceof JBTable) return;
     new TableExpandableItemsHandler(table);
   }
@@ -56,12 +56,12 @@ public class TreeUIHelperImpl extends TreeUIHelper {
   }
 
   @Override
-  public void installEditSourceOnDoubleClick(final JTree tree) {
+  public void installEditSourceOnDoubleClick(JTree tree) {
     EditSourceOnDoubleClickHandler.install(tree);
   }
 
   @Override
-  public void installTreeSpeedSearch(final JTree tree) {
+  public void installTreeSpeedSearch(JTree tree) {
     new TreeSpeedSearch(tree);
   }
 
@@ -81,17 +81,17 @@ public class TreeUIHelperImpl extends TreeUIHelper {
   }
 
   @Override
-  public void installEditSourceOnEnterKeyHandler(final JTree tree) {
+  public void installEditSourceOnEnterKeyHandler(JTree tree) {
     EditSourceOnEnterKeyHandler.install(tree);
   }
 
   @Override
-  public void installSmartExpander(final JTree tree) {
+  public void installSmartExpander(JTree tree) {
     SmartExpander.installOn(tree);
   }
 
   @Override
-  public void installSelectionSaver(final JTree tree) {
+  public void installSelectionSaver(JTree tree) {
     SelectionSaver.installOn(tree);
   }
 }

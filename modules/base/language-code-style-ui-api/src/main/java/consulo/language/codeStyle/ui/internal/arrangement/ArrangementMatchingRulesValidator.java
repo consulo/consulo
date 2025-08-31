@@ -37,10 +37,10 @@ public class ArrangementMatchingRulesValidator {
       return null;
     }
 
-    final Object target = myRulesModel.getElementAt(index);
+    Object target = myRulesModel.getElementAt(index);
     if (target instanceof StdArrangementMatchRule) {
       for (int i = 0; i < index; i++) {
-        final Object element = myRulesModel.getElementAt(i);
+        Object element = myRulesModel.getElementAt(i);
         if (element instanceof StdArrangementMatchRule && target.equals(element)) {
           return ApplicationBundle.message("arrangement.settings.validation.duplicate.matching.rule");
         }

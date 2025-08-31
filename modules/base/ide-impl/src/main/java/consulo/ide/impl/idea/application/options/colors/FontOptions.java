@@ -77,7 +77,7 @@ public class FontOptions implements OptionsPanel {
     this(options, ApplicationBundle.message("group.editor.font"));
   }
 
-  protected FontOptions(@Nonnull ColorAndFontOptions options, final String title) {
+  protected FontOptions(@Nonnull ColorAndFontOptions options, String title) {
     JPanel mainPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
     mainPanel.setBorder(JBUI.Borders.empty(5));
 
@@ -272,7 +272,7 @@ public class FontOptions implements OptionsPanel {
   }
 
 
-  public static void showReadOnlyMessage(JComponent parent, final boolean sharedScheme) {
+  public static void showReadOnlyMessage(JComponent parent, boolean sharedScheme) {
     if (!sharedScheme) {
       Messages.showMessageDialog(parent, ApplicationBundle.message("error.readonly.scheme.cannot.be.modified"), ApplicationBundle.message("title.cannot.modify.readonly.scheme"),
                                  Messages.getInformationIcon());
@@ -326,7 +326,7 @@ public class FontOptions implements OptionsPanel {
 
   @Override
   @Nullable
-  public Runnable showOption(final String option) {
+  public Runnable showOption(String option) {
     return null;
   }
 
@@ -335,7 +335,7 @@ public class FontOptions implements OptionsPanel {
   }
 
   @Override
-  public void selectOption(final String typeToSelect) {
+  public void selectOption(String typeToSelect) {
   }
 
   protected EditorColorsScheme getCurrentScheme() {

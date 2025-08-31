@@ -17,7 +17,7 @@ public class ReadWriteDirectBufferWrapper extends DirectBufferWrapper {
   private static final Logger LOG = LoggerFactory.getLogger(ReadWriteDirectBufferWrapper.class);
   private static final String RW = "rw";
 
-  protected ReadWriteDirectBufferWrapper(final File file, final long offset, final long length) {
+  protected ReadWriteDirectBufferWrapper(File file, long offset, long length) {
     super(file, offset, length);
     assert length <= Integer.MAX_VALUE : length;
   }

@@ -16,7 +16,7 @@ public class SimpleContentRevision implements ContentRevision {
   private final FilePath myNewFilePath;
   private final String myRevision;
 
-  public SimpleContentRevision(final String content, final FilePath newFilePath, final String revision) {
+  public SimpleContentRevision(String content, FilePath newFilePath, String revision) {
     myContent = content;
     myNewFilePath = newFilePath;
     myRevision = revision;
@@ -39,7 +39,7 @@ public class SimpleContentRevision implements ContentRevision {
         return myRevision;
       }
 
-      public int compareTo(final VcsRevisionNumber o) {
+      public int compareTo(VcsRevisionNumber o) {
         return 0;
       }
     };

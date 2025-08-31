@@ -29,7 +29,7 @@ public class NanoXmlUtil {
   }
 
 
-  public static void parse(final InputStream is, final IXMLBuilder builder) {
+  public static void parse(InputStream is, IXMLBuilder builder) {
     try {
       parse(new MyXMLReader(is), builder);
     }
@@ -47,11 +47,11 @@ public class NanoXmlUtil {
     }
   }
 
-  public static void parse(final CharSequence text, final IXMLBuilder builder) {
+  public static void parse(CharSequence text, IXMLBuilder builder) {
     parse(text, builder, null);
   }
 
-  public static void parse(final Reader reader, final IXMLBuilder builder) {
+  public static void parse(Reader reader, IXMLBuilder builder) {
     parse(reader, builder, null);
   }
 
@@ -76,13 +76,13 @@ public class NanoXmlUtil {
     }
   }
 
-  public static void parse(final IXMLReader r, final IXMLBuilder builder) {
+  public static void parse(IXMLReader r, IXMLBuilder builder) {
     parse(r, builder, null);
   }
 
-  public static void parse(final IXMLReader r, final IXMLBuilder builder, @Nullable final IXMLValidator validator) {
+  public static void parse(IXMLReader r, IXMLBuilder builder, @Nullable IXMLValidator validator) {
     try {
-      final IXMLParser parser = XMLParserFactory.createDefaultXMLParser();
+      IXMLParser parser = XMLParserFactory.createDefaultXMLParser();
       parser.setReader(r);
       parser.setBuilder(builder);
       parser.setValidator(validator == null ? new EmptyValidator() : validator);
@@ -117,13 +117,13 @@ public class NanoXmlUtil {
   }
 
   @Nonnull
-  public static XmlFileHeader parseHeader(final Reader reader) {
+  public static XmlFileHeader parseHeader(Reader reader) {
     return parseHeader(new MyXMLReader(reader));
   }
 
   @Nonnull
-  private static XmlFileHeader parseHeader(final MyXMLReader r) {
-    final RootTagInfoBuilder builder = new RootTagInfoBuilder();
+  private static XmlFileHeader parseHeader(MyXMLReader r) {
+    RootTagInfoBuilder builder = new RootTagInfoBuilder();
     parse(r, builder);
     return new XmlFileHeader(builder.getRootTagName(), builder.getNamespace(), r.publicId, r.systemId);
   }
@@ -171,7 +171,7 @@ public class NanoXmlUtil {
       myLocation.pop();
     }
 
-    protected static String readText(final Reader reader) throws IOException {
+    protected static String readText(Reader reader) throws IOException {
       return new String(StreamUtil.readTextAndConvertSeparators(reader));
     }
 
@@ -296,34 +296,34 @@ public class NanoXmlUtil {
     private String myNamespace;
 
     @Override
-    public void startBuilding(final String systemID, final int lineNr) {
+    public void startBuilding(String systemID, int lineNr) {
     }
 
     @Override
-    public void newProcessingInstruction(final String target, final Reader reader) {
+    public void newProcessingInstruction(String target, Reader reader) {
     }
 
     @Override
-    public void startElement(final String name, final String nsPrefix, final String nsURI, final String systemID, final int lineNr) throws Exception {
+    public void startElement(String name, String nsPrefix, String nsURI, String systemID, int lineNr) throws Exception {
       myRootTagName = name;
       myNamespace = nsURI;
       throw ParserStoppedXmlException.INSTANCE;
     }
 
     @Override
-    public void addAttribute(final String key, final String nsPrefix, final String nsURI, final String value, final String type) {
+    public void addAttribute(String key, String nsPrefix, String nsURI, String value, String type) {
     }
 
     @Override
-    public void elementAttributesProcessed(final String name, final String nsPrefix, final String nsURI) {
+    public void elementAttributesProcessed(String name, String nsPrefix, String nsURI) {
     }
 
     @Override
-    public void endElement(final String name, final String nsPrefix, final String nsURI) {
+    public void endElement(String name, String nsPrefix, String nsURI) {
     }
 
     @Override
-    public void addPCData(final Reader reader, final String systemID, final int lineNr) {
+    public void addPCData(Reader reader, String systemID, int lineNr) {
     }
 
     public String getNamespace() {

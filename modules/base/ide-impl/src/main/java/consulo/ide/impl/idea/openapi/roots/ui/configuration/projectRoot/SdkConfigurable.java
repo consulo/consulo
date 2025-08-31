@@ -45,7 +45,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
   private final BaseSdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
-  public SdkConfigurable(@Nonnull final SdkImpl sdk, final SdkModel sdksModel, final Runnable updateTree) {
+  public SdkConfigurable(@Nonnull SdkImpl sdk, SdkModel sdksModel, Runnable updateTree) {
     super(!sdk.isPredefined(), updateTree);
     mySdk = sdk;
     mySdkEditor = createSdkEditor(sdksModel, mySdk);
@@ -62,7 +62,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
   }
 
   @Override
-  public void setDisplayName(final String name) {
+  public void setDisplayName(String name) {
     mySdk.setName(name);
   }
 

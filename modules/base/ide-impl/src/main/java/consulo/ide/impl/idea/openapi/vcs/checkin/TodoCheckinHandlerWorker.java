@@ -80,8 +80,8 @@ public class TodoCheckinHandlerWorker {
   private final MyEditedFileProcessor myEditedFileProcessor;
 
 
-  public TodoCheckinHandlerWorker(final Project project, final Collection<Change> changes, final TodoFilter todoFilter,
-                                  final boolean includePattern) {
+  public TodoCheckinHandlerWorker(Project project, Collection<Change> changes, TodoFilter todoFilter,
+                                  boolean includePattern) {
     this.changes = changes;
     myTodoFilter = todoFilter;
     myIncludePattern = includePattern;
@@ -157,10 +157,10 @@ public class TodoCheckinHandlerWorker {
     return file;
   }
 
-  private static void applyFilterAndRemoveDuplicates(final List<TodoItem> todoItems, final TodoFilter filter) {
+  private static void applyFilterAndRemoveDuplicates(List<TodoItem> todoItems, TodoFilter filter) {
     TodoItem previous = null;
     for (Iterator<TodoItem> iterator = todoItems.iterator(); iterator.hasNext(); ) {
-      final TodoItem next = iterator.next();
+      TodoItem next = iterator.next();
       if (filter != null && ! filter.contains(next.getPattern())) {
         iterator.remove();
         continue;
@@ -186,13 +186,13 @@ public class TodoCheckinHandlerWorker {
     private final Acceptor myAcceptor;
     private final TodoFilter myTodoFilter;
 
-    private MyEditedFileProcessor(final Project project, Acceptor acceptor, final TodoFilter todoFilter) {
+    private MyEditedFileProcessor(Project project, Acceptor acceptor, TodoFilter todoFilter) {
       myAcceptor = acceptor;
       myTodoFilter = todoFilter;
       myPsiFileFactory = PsiFileFactory.getInstance(project);
     }
 
-    public void process(final Change change, final List<TodoItem> newTodoItems) {
+    public void process(Change change, List<TodoItem> newTodoItems) {
       myBeforeFile = null;
       //myFileText = null;
       myOldItems = null;
@@ -213,14 +213,14 @@ public class TodoCheckinHandlerWorker {
         ArrayList<LineFragment> lineFragments = getLineFragments(myAfterFile.getPath(), myBeforeContent, myAfterContent);
         for (Iterator<LineFragment> iterator = lineFragments.iterator(); iterator.hasNext(); ) {
           ProgressManager.checkCanceled();
-          final LineFragment next = iterator.next();
-          final TextDiffTypeEnum type = next.getType();
+          LineFragment next = iterator.next();
+          TextDiffTypeEnum type = next.getType();
           assert ! TextDiffTypeEnum.CONFLICT.equals(type);
           if (type == null || TextDiffTypeEnum.DELETED.equals(type) || TextDiffTypeEnum.NONE.equals(type)) {
             iterator.remove();
           }
         }
-        final StepIntersection<TodoItem, LineFragment> intersection =
+        StepIntersection<TodoItem, LineFragment> intersection =
                 new StepIntersection<TodoItem, LineFragment>(TodoItemConvertor.getInstance(), LineFragmentConvertor.getInstance(), lineFragments,
                                                              new Getter<String>() {
                                                                @Override
@@ -239,7 +239,7 @@ public class TodoCheckinHandlerWorker {
               myCurrentLineFragment = lineFragment;
               myOldTodoTexts = null;
             }
-            final TextDiffTypeEnum type = lineFragment.getType();
+            TextDiffTypeEnum type = lineFragment.getType();
             if (TextDiffTypeEnum.INSERT.equals(type)) {
               myAcceptor.addedOrEdited(todoItem);
             } else {
@@ -264,11 +264,11 @@ public class TodoCheckinHandlerWorker {
         });
       }
       if (myOldItems == null)  {
-        final Collection<IndexPatternOccurrence> all =
+        Collection<IndexPatternOccurrence> all =
                 LightIndexPatternSearch.SEARCH.createQuery(new IndexPatternSearch.SearchParameters(myBeforeFile, TodoIndexPatternProvider
                         .getInstance())).findAll();
 
-        final TodoItemsCreator todoItemsCreator = new TodoItemsCreator();
+        TodoItemsCreator todoItemsCreator = new TodoItemsCreator();
         myOldItems = new ArrayList<TodoItem>();
         if (all.isEmpty()) {
           myAcceptor.addedOrEdited(newTodoItem);
@@ -280,7 +280,7 @@ public class TodoCheckinHandlerWorker {
         applyFilterAndRemoveDuplicates(myOldItems, myTodoFilter);
       }
       if (myOldTodoTexts == null) {
-        final StepIntersection<LineFragment, TodoItem> intersection = new StepIntersection<LineFragment, TodoItem>(
+        StepIntersection<LineFragment, TodoItem> intersection = new StepIntersection<LineFragment, TodoItem>(
                 LineFragmentConvertor.getInstance(), TodoItemConvertor.getInstance(), myOldItems, new Getter<String>() {
           @Override
           public String get() {
@@ -295,7 +295,7 @@ public class TodoCheckinHandlerWorker {
           }
         });
       }
-      final String text = getTodoText(newTodoItem, myAfterContent);
+      String text = getTodoText(newTodoItem, myAfterContent);
       if (! myOldTodoTexts.contains(text)) {
         myAcceptor.addedOrEdited(newTodoItem);
       } else {
@@ -306,8 +306,8 @@ public class TodoCheckinHandlerWorker {
 
   interface Acceptor {
     void skipped(Pair<FilePath, String> pair);
-    void addedOrEdited(final TodoItem todoItem);
-    void inChanged(final TodoItem todoItem);
+    void addedOrEdited(TodoItem todoItem);
+    void inChanged(TodoItem todoItem);
   }
 
   public List<TodoItem> getAddedOrEditedTodos() {
@@ -322,12 +322,12 @@ public class TodoCheckinHandlerWorker {
     return mySkipped;
   }
 
-  private static String getTodoText(TodoItem oldItem, final String content) {
-    final String fragment = content.substring(oldItem.getTextRange().getStartOffset(), oldItem.getTextRange().getEndOffset());
+  private static String getTodoText(TodoItem oldItem, String content) {
+    String fragment = content.substring(oldItem.getTextRange().getStartOffset(), oldItem.getTextRange().getEndOffset());
     return StringUtil.join(fragment.split("\\s"), " ");
   }
 
-  private static ArrayList<LineFragment> getLineFragments(final String fileName, String beforeContent, String afterContent) throws VcsException {
+  private static ArrayList<LineFragment> getLineFragments(String fileName, String beforeContent, String afterContent) throws VcsException {
     try {
       DiffFragmentOld[] woFormattingBlocks =
               DiffPolicyOld.LINES_WO_FORMATTING.buildFragments(DiffString.create(beforeContent), DiffString.create(afterContent));
@@ -352,7 +352,7 @@ public class TodoCheckinHandlerWorker {
 
     @Override
     public TextRange convert(TodoItem o) {
-      final TextRange textRange = o.getTextRange();
+      TextRange textRange = o.getTextRange();
       return new TextRange(textRange.getStartOffset(), textRange.getEndOffset() - 1);
     }
   }
@@ -366,13 +366,13 @@ public class TodoCheckinHandlerWorker {
 
     @Override
     public TextRange convert(LineFragment o) {
-      final TextRange textRange = o.getRange(FragmentSide.SIDE2);
+      TextRange textRange = o.getRange(FragmentSide.SIDE2);
       return new TextRange(textRange.getStartOffset(), textRange.getEndOffset() - 1);
     }
   }
 
   public List<TodoItem> inOneList() {
-    final List<TodoItem> list = new ArrayList<TodoItem>();
+    List<TodoItem> list = new ArrayList<TodoItem>();
     list.addAll(getAddedOrEditedTodos());
     list.addAll(getInChangedTodos());
     return list;

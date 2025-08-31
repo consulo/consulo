@@ -42,7 +42,7 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
       return ((IElementTypeAsPsiFactory)elementType).createElement(node);
     }
 
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(elementType.getLanguage());
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(elementType.getLanguage());
     if (parserDefinition != null) {
       return parserDefinition.createElement(node);
     }

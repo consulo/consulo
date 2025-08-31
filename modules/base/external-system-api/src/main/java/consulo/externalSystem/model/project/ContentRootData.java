@@ -43,7 +43,7 @@ public class ContentRootData extends AbstractExternalEntityData {
    */
   @Nonnull
   public Collection<SourceRoot> getPaths(@Nonnull ExternalSystemSourceType type) {
-    final Collection<SourceRoot> result = myData.get(type);
+    Collection<SourceRoot> result = myData.get(type);
     return result == null ? Collections.<SourceRoot>emptyList() : result;
   }
 

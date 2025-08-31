@@ -53,7 +53,7 @@ public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory 
         return new RefreshableOnComponent() {
           @Override
           public JComponent getComponent() {
-            final JPanel panel = new JPanel(new BorderLayout());
+            JPanel panel = new JPanel(new BorderLayout());
             panel.add(updateCopyrightCb, BorderLayout.WEST);
             return panel;
           }
@@ -84,11 +84,11 @@ public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory 
       }
 
       private PsiFile[] getPsiFiles() {
-        final Collection<VirtualFile> files = panel.getVirtualFiles();
-        final List<PsiFile> psiFiles = new ArrayList<PsiFile>();
-        final PsiManager manager = PsiManager.getInstance(panel.getProject());
-        for (final VirtualFile file : files) {
-          final PsiFile psiFile = manager.findFile(file);
+        Collection<VirtualFile> files = panel.getVirtualFiles();
+        List<PsiFile> psiFiles = new ArrayList<PsiFile>();
+        PsiManager manager = PsiManager.getInstance(panel.getProject());
+        for (VirtualFile file : files) {
+          PsiFile psiFile = manager.findFile(file);
           if (psiFile != null) {
             psiFiles.add(psiFile);
           }

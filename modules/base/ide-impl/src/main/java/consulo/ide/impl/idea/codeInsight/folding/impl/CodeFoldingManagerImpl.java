@@ -60,7 +60,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   @RequiredUIAccess
   public void releaseFoldings(@Nonnull Editor editor) {
     UIAccess.assertIsUIThread();
-    final Project project = editor.getProject();
+    Project project = editor.getProject();
     if (project != null && (!project.equals(myProject) || !project.isOpen())) return;
 
     Document document = editor.getDocument();
@@ -71,8 +71,8 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   }
 
   @Override
-  public void buildInitialFoldings(@Nonnull final Editor editor) {
-    final Project project = editor.getProject();
+  public void buildInitialFoldings(@Nonnull Editor editor) {
+    Project project = editor.getProject();
     if (project == null || !project.equals(myProject) || editor.isDisposed()) return;
     if (!editor.getFoldingModel().isFoldingEnabled()) return;
     if (!FoldingUpdate.supportsDumbModeFolding(editor)) return;
@@ -87,7 +87,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
 
   @Nullable
   @Override
-  public CodeFoldingState buildInitialFoldings(@Nonnull final Document document) {
+  public CodeFoldingState buildInitialFoldings(@Nonnull Document document) {
     if (myProject.isDisposed()) {
       return null;
     }
@@ -98,18 +98,18 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
       return null;
     }
     //Do not save/restore folding for code fragments
-    final PsiFile file = psiDocumentManager.getPsiFile(document);
+    PsiFile file = psiDocumentManager.getPsiFile(document);
     if (file == null || !file.isValid() || !file.getViewProvider().isPhysical() && !ApplicationManager.getApplication().isUnitTestMode()) {
       return null;
     }
 
 
-    final List<FoldingUpdate.RegionInfo> regionInfos = FoldingUpdate.getFoldingsFor(file, document, true);
+    List<FoldingUpdate.RegionInfo> regionInfos = FoldingUpdate.getFoldingsFor(file, document, true);
 
     return editor -> {
       UIAccess.assertIsUIThread();
       if (myProject.isDisposed() || editor.isDisposed()) return;
-      final FoldingModelEx foldingModel = (FoldingModelEx)editor.getFoldingModel();
+      FoldingModelEx foldingModel = (FoldingModelEx)editor.getFoldingModel();
       if (!foldingModel.isFoldingEnabled()) return;
       if (isFoldingsInitializedInEditor(editor)) return;
       if (DumbService.isDumb(myProject) && !FoldingUpdate.supportsDumbModeFolding(editor)) return;
@@ -131,8 +131,8 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
     DaemonCodeAnalyzer.getInstance(myProject).restart();
   }
 
-  private void initFolding(@Nonnull final Editor editor) {
-    final Document document = editor.getDocument();
+  private void initFolding(@Nonnull Editor editor) {
+    Document document = editor.getDocument();
     editor.getFoldingModel().runBatchFoldingOperation(() -> {
       DocumentFoldingInfo documentFoldingInfo = getDocumentFoldingInfo(document);
       Editor[] editors = EditorFactory.getInstance().getEditors(document, myProject);
@@ -175,9 +175,9 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
 
   @Override
   @Nullable
-  public Runnable updateFoldRegionsAsync(@Nonnull final Editor editor, final boolean firstTime) {
+  public Runnable updateFoldRegionsAsync(@Nonnull Editor editor, boolean firstTime) {
     if (!editor.getSettings().isAutoCodeFoldingEnabled()) return null;
-    final Runnable runnable = updateFoldRegions(editor, firstTime, false);
+    Runnable runnable = updateFoldRegions(editor, firstTime, false);
     return () -> {
       if (runnable != null) {
         runnable.run();

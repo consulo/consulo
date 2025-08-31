@@ -35,7 +35,7 @@ public class FileDeleteAction extends DeleteAction {
 
     @Override
     public void update(@Nonnull AnActionEvent event) {
-        final Boolean available = event.getData(FileChooserKeys.DELETE_ACTION_AVAILABLE);
+        Boolean available = event.getData(FileChooserKeys.DELETE_ACTION_AVAILABLE);
         if (available != null && !available) {
             event.getPresentation().setEnabledAndVisible(false);
             return;

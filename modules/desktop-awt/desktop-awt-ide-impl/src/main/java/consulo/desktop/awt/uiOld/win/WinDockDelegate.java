@@ -50,7 +50,7 @@ public class WinDockDelegate implements DesktopSystemDockImpl.Delegate {
     myExecutorService.execute(() -> {
       RecentTasksManager.clear(myApplication);
 
-      final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
+      AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
 
       if (recentProjectActions.length == 0) {
         return;

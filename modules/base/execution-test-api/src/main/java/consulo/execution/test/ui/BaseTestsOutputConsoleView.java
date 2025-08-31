@@ -37,7 +37,7 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
   protected TestConsoleProperties myProperties;
   protected TestResultsPanel myTestResultsPanel;
 
-  public BaseTestsOutputConsoleView(final TestConsoleProperties properties, final AbstractTestProxy unboundOutputRoot) {
+  public BaseTestsOutputConsoleView(TestConsoleProperties properties, AbstractTestProxy unboundOutputRoot) {
     myProperties = properties;
 
     TextConsoleBuilderFactory factory = TextConsoleBuilderFactory.getInstance();
@@ -64,12 +64,12 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
   protected abstract TestResultsPanel createTestResultsPanel();
 
   @Override
-  public void attachToProcess(final ProcessHandler processHandler) {
+  public void attachToProcess(ProcessHandler processHandler) {
     myConsole.attachToProcess(processHandler);
   }
 
   @Override
-  public void print(final String s, final ConsoleViewContentType contentType) {
+  public void print(String s, ConsoleViewContentType contentType) {
     printNew(printer -> printer.print(s, contentType));
   }
 
@@ -94,12 +94,12 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
   }
 
   @Override
-  public void scrollTo(final int offset) {
+  public void scrollTo(int offset) {
     myConsole.scrollTo(offset);
   }
 
   @Override
-  public void setOutputPaused(final boolean value) {
+  public void setOutputPaused(boolean value) {
     if (myPrinter != null) {
       myPrinter.pause(value);
     }
@@ -117,22 +117,22 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
   }
 
   @Override
-  public void performWhenNoDeferredOutput(final Runnable runnable) {
+  public void performWhenNoDeferredOutput(Runnable runnable) {
     myConsole.performWhenNoDeferredOutput(runnable);
   }
 
   @Override
-  public void setHelpId(final String helpId) {
+  public void setHelpId(String helpId) {
     myConsole.setHelpId(helpId);
   }
 
   @Override
-  public void addMessageFilter(final Filter filter) {
+  public void addMessageFilter(Filter filter) {
     myConsole.addMessageFilter(filter);
   }
 
   @Override
-  public void printHyperlink(final String hyperlinkText, final HyperlinkInfo info) {
+  public void printHyperlink(String hyperlinkText, HyperlinkInfo info) {
     printNew(new HyperLink(hyperlinkText, info));
   }
 
@@ -164,7 +164,7 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
   }
 
   @Override
-  public void addChangeListener(@Nonnull final ChangeListener listener, @Nonnull final Disposable parent) {
+  public void addChangeListener(@Nonnull ChangeListener listener, @Nonnull Disposable parent) {
     if (myConsole instanceof ObservableConsoleView) {
       ((ObservableConsoleView)myConsole).addChangeListener(listener, parent);
     } else {
@@ -187,7 +187,7 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
     return myPrinter;
   }
 
-  private void printNew(final Printable printable) {
+  private void printNew(Printable printable) {
     if (myPrinter != null) {
       myPrinter.onNewAvailable(printable);
     }

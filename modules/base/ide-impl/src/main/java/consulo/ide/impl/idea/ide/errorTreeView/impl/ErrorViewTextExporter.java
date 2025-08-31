@@ -74,17 +74,17 @@ public class ErrorViewTextExporter implements ExporterToTextFile {
     return true;
   }
 
-  private void getReportText(StringBuffer buffer, final ErrorTreeElement element, boolean withUsages, final int indent) {
-    final String newline = SystemProperties.getLineSeparator();
+  private void getReportText(StringBuffer buffer, ErrorTreeElement element, boolean withUsages, int indent) {
+    String newline = SystemProperties.getLineSeparator();
     Object[] children = myStructure.getChildElements(element);
-    for (final Object child : children) {
+    for (Object child : children) {
       if (!(child instanceof ErrorTreeElement)) {
         continue;
       }
       if (!withUsages && child instanceof NavigatableMessageElement) {
         continue;
       }
-      final ErrorTreeElement childElement = (ErrorTreeElement)child;
+      ErrorTreeElement childElement = (ErrorTreeElement)child;
       if (buffer.length() > 0) {
         buffer.append(newline);
       }
@@ -94,13 +94,13 @@ public class ErrorViewTextExporter implements ExporterToTextFile {
     }
   }
 
-  public static void exportElement(ErrorTreeElement element, final StringBuffer buffer, int baseIntent, final String newline) {
-    final int startLength = buffer.length();
+  public static void exportElement(ErrorTreeElement element, StringBuffer buffer, int baseIntent, String newline) {
+    int startLength = buffer.length();
     buffer.append(element.getKind().getPresentableText());
     buffer.append(element.getExportTextPrefix());
-    final int localIndent = startLength - buffer.length();
+    int localIndent = startLength - buffer.length();
 
-    final String[] text = element.getText();
+    String[] text = element.getText();
     if (text != null && text.length > 0) {
       buffer.append(text[0]);
       for (int i = 1; i < text.length; i++) {

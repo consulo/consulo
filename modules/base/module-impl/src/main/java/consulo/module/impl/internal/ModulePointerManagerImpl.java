@@ -65,7 +65,7 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
   }
 
   @Override
-  protected void registerPointer(final Module value, final NamedPointerImpl<Module> pointer) {
+  protected void registerPointer(Module value, NamedPointerImpl<Module> pointer) {
     super.registerPointer(value, pointer);
 
     Disposer.register(value, () -> unregisterPointer(value));

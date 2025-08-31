@@ -32,9 +32,9 @@ public class ExpandAll extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Component c = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        Component c = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         if (c != null) {
-            final JTree tree = UIUtil.getParentOfType(JTree.class, c);
+            JTree tree = UIUtil.getParentOfType(JTree.class, c);
             if (tree != null) {
                 TreeUtil.expandAll(tree);
             }

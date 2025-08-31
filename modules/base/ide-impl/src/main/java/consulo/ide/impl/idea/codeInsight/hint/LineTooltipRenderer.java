@@ -72,7 +72,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         this(text, 0, comparable);
     }
 
-    public LineTooltipRenderer(@Nullable final String text, final int width, @Nonnull Object[] comparable) {
+    public LineTooltipRenderer(@Nullable String text, int width, @Nonnull Object[] comparable) {
         super(comparable);
         myCurrentWidth = width;
         myText = text;
@@ -80,7 +80,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
     @Nonnull
     private static JPanel createMainPanel(
-        @Nonnull final HintHint hintHint,
+        @Nonnull HintHint hintHint,
         @Nonnull JComponent pane,
         @Nonnull JEditorPane editorPane,
         boolean newLayout,
@@ -174,11 +174,11 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
     @Override
     public LightweightHintImpl show(
-        @Nonnull final Editor editor,
-        @Nonnull final Point p,
-        final boolean alignToRight,
-        @Nonnull final TooltipGroup group,
-        @Nonnull final HintHint hintHint
+        @Nonnull Editor editor,
+        @Nonnull Point p,
+        boolean alignToRight,
+        @Nonnull TooltipGroup group,
+        @Nonnull HintHint hintHint
     ) {
         LightweightHintImpl hint = createHint(editor, p, alignToRight, group, hintHint, true, true, true, null);
         if (hint != null) {
@@ -197,10 +197,10 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     }
 
     public LightweightHintImpl createHint(
-        @Nonnull final Editor editor,
-        @Nonnull final Point p,
-        final boolean alignToRight,
-        @Nonnull final TooltipGroup group,
+        @Nonnull Editor editor,
+        @Nonnull Point p,
+        boolean alignToRight,
+        @Nonnull TooltipGroup group,
         @Nonnull final HintHint hintHint,
         boolean newLayout,
         boolean highlightActions,
@@ -219,11 +219,11 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
         final JComponent contentComponent = editor.getContentComponent();
 
-        final JComponent editorComponent = editor.getComponent();
+        JComponent editorComponent = editor.getComponent();
         if (!editorComponent.isShowing()) {
             return null;
         }
-        final JLayeredPane layeredPane = editorComponent.getRootPane().getLayeredPane();
+        JLayeredPane layeredPane = editorComponent.getRootPane().getLayeredPane();
 
         String textToDisplay = newLayout ? colorizeSeparators(dressedText) : dressedText;
         JEditorPane editorPane =
@@ -305,7 +305,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
             }
 
             @Override
-            public void actionPerformed(@Nonnull final AnActionEvent e) {
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 // The tooltip gets the focus if using a screen reader and invocation through a keyboard shortcut.
                 hintHint.setRequestFocus(ScreenReader.isActive() && e.getInputEvent() instanceof KeyEvent);
                 //TooltipActionsLogger.INSTANCE.logShowDescription(e.getProject(), "shortcut", e.getInputEvent(), e.getPlace());
@@ -320,14 +320,14 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
                 return;
             }
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                final URL url = e.getURL();
+                URL url = e.getURL();
                 if (url != null) {
                     BrowserUtil.browse(url);
                     hint.hide();
                     return;
                 }
 
-                final String description = e.getDescription();
+                String description = e.getDescription();
                 if (description != null && handle(description, editor)) {
                     hint.hide();
                     return;
@@ -346,7 +346,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
                 // This listener makes hint transparent for mouse events. It means that hint is closed
                 // by MousePressed and this MousePressed goes into the underlying editor component.
                 @Override
-                public void mouseReleased(final MouseEvent e) {
+                public void mouseReleased(MouseEvent e) {
                     if (!myActiveLink) {
                         MouseEvent newMouseEvent = SwingUtilities.convertMouseEvent(e.getComponent(), e, contentComponent);
                         hint.hide();
@@ -357,7 +357,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
             ListenerUtil.addMouseListener(grid, new MouseAdapter() {
                 @Override
-                public void mouseExited(final MouseEvent e) {
+                public void mouseExited(MouseEvent e) {
                     if (expanded) {
                         return;
                     }
@@ -450,7 +450,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         hintHint.setBorderInsets(JBUI.insets(0));
     }
 
-    private static boolean handle(@Nonnull final String ref, @Nonnull final Editor editor) {
+    private static boolean handle(@Nonnull String ref, @Nonnull Editor editor) {
         return TooltipLinkHandlers.handleLink(ref, editor);
     }
 
@@ -462,8 +462,8 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         boolean expanded,
         int currentWidth
     ) {
-        final JComponent editorComponent = editor.getComponent();
-        final JLayeredPane layeredPane = editorComponent.getRootPane().getLayeredPane();
+        JComponent editorComponent = editor.getComponent();
+        JLayeredPane layeredPane = editorComponent.getRootPane().getLayeredPane();
 
         int widthLimit = layeredPane.getWidth() - 10;
         int heightLimit = layeredPane.getHeight() - 5;
@@ -563,7 +563,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     }
 
     @Nonnull
-    protected String dressDescription(@Nonnull final Editor editor, @Nonnull String tooltipText, boolean expanded) {
+    protected String dressDescription(@Nonnull Editor editor, @Nonnull String tooltipText, boolean expanded) {
         return tooltipText;
     }
 

@@ -56,14 +56,14 @@ public class IncomingChangesIndicator {
       return;
     }
 
-    final MessageBusConnection connection = project.getMessageBus().connect();
+    MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(CommittedChangesListener.class, new CommittedChangesAdapter() {
       @Override
-      public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
+      public void incomingChangesUpdated(@Nullable List<CommittedChangeList> receivedChanges) {
         application.invokeLater(() -> updateWidget());
       }
     });
-    final VcsListener listener = () -> application.invokeLater(this::updateWidget);
+    VcsListener listener = () -> application.invokeLater(this::updateWidget);
     connection.subscribe(VcsMappingListener.class, listener);
     connection.subscribe(PluginVcsMappingListener.class, listener);
   }
@@ -75,7 +75,7 @@ public class IncomingChangesIndicator {
   }
 
   public boolean needIndicator() {
-    final AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+    AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
     for (AbstractVcs vcs : vcss) {
       CachingCommittedChangesProvider provider = vcs.getCachingCommittedChangesProvider();
       if (provider != null && provider.supportsIncomingChanges()) {

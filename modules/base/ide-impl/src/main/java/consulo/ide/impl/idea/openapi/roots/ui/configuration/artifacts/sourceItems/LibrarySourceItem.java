@@ -99,18 +99,18 @@ public class LibrarySourceItem extends PackagingSourceItem {
 
     @Override
     public String getPresentableName() {
-      final String name = myLibrary.getName();
+      String name = myLibrary.getName();
       if (name != null) {
         return name;
       }
-      final VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
+      VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
       return files.length > 0 ? files[0].getName() : "Empty Library";
     }
 
     @Override
     public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
-      final String name = myLibrary.getName();
+      String name = myLibrary.getName();
       if (name != null) {
         presentationData.setIcon(AllIcons.Nodes.PpLib);
         presentationData.addText(name, mainAttributes);
@@ -122,9 +122,9 @@ public class LibrarySourceItem extends PackagingSourceItem {
           presentationData.addText("Invalid Library", SimpleTextAttributes.ERROR_ATTRIBUTES);
           return;
         }
-        final VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
+        VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
         if (files.length > 0) {
-          final VirtualFile file = files[0];
+          VirtualFile file = files[0];
           presentationData.setIcon(VirtualFilePresentation.getIcon(file));
           presentationData.addText(file.getName(), mainAttributes);
         }

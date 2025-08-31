@@ -20,7 +20,7 @@ public class BeforeAfter<T> {
   private final T myBefore;
   private final T myAfter;
 
-  public BeforeAfter(final T before, final T after) {
+  public BeforeAfter(T before, T after) {
     myAfter = after;
     myBefore = before;
   }

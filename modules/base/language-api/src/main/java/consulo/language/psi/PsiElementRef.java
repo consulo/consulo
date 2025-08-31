@@ -42,7 +42,7 @@ public final class PsiElementRef<T extends PsiElement> {
 
   @Nonnull
   public final T ensurePsiElementExists() {
-    final PsiRefColleague.Real<T> realColleague = myColleague.makeReal();
+    PsiRefColleague.Real<T> realColleague = myColleague.makeReal();
     myColleague = realColleague;
     return realColleague.getPsiElement();
   }
@@ -66,11 +66,11 @@ public final class PsiElementRef<T extends PsiElement> {
     return myColleague.isValid();
   }
 
-  public static <T extends PsiElement> PsiElementRef<T> real(@Nonnull final T element) {
+  public static <T extends PsiElement> PsiElementRef<T> real(@Nonnull T element) {
     return new PsiElementRef<T>(new PsiRefColleague.Real<T>(element));
   }
 
-  public static <Child extends PsiElement, Parent extends PsiElement> PsiElementRef<Child> imaginary(final PsiElementRef<? extends Parent> parent, final PsiRefElementCreator<Parent, Child> creator) {
+  public static <Child extends PsiElement, Parent extends PsiElement> PsiElementRef<Child> imaginary(PsiElementRef<? extends Parent> parent, PsiRefElementCreator<Parent, Child> creator) {
     return new PsiElementRef<Child>(new PsiRefColleague.Imaginary<Child, Parent>(parent, creator));
   }
 

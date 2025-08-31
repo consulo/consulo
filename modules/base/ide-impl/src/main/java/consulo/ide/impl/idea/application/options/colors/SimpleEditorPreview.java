@@ -67,11 +67,11 @@ public class SimpleEditorPreview implements PreviewPanel {
     private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
     private final HighlightsExtractor myHighlightsExtractor;
 
-    public SimpleEditorPreview(final ColorAndFontOptions options, final ColorSettingsPage page) {
+    public SimpleEditorPreview(ColorAndFontOptions options, ColorSettingsPage page) {
         this(options, page, true);
     }
 
-    public SimpleEditorPreview(final ColorAndFontOptions options, final ColorSettingsPage page, final boolean navigatable) {
+    public SimpleEditorPreview(ColorAndFontOptions options, ColorSettingsPage page, boolean navigatable) {
         myOptions = options;
         myPage = page;
 
@@ -106,15 +106,15 @@ public class SimpleEditorPreview implements PreviewPanel {
         return myEditor;
     }
 
-    public void setDemoText(final String text) {
+    public void setDemoText(String text) {
         myEditor.getSelectionModel().removeSelection();
         myHighlightData.clear();
         myEditor.getDocument().setText(myHighlightsExtractor.extractHighlights(text, myHighlightData));
     }
 
-    private void navigate(boolean select, @Nonnull final LogicalPosition pos) {
+    private void navigate(boolean select, @Nonnull LogicalPosition pos) {
         int offset = myEditor.logicalPositionToOffset(pos);
-        final SyntaxHighlighter highlighter = myPage.getHighlighter();
+        SyntaxHighlighter highlighter = myPage.getHighlighter();
 
         String type;
         HighlightData highlightData = getDataFromOffset(offset);
@@ -181,7 +181,7 @@ public class SimpleEditorPreview implements PreviewPanel {
             highlighter = ((EditorHighlightingProvidingColorSettingsPage) myPage).createEditorHighlighter(scheme);
         }
         if (highlighter == null) {
-            final SyntaxHighlighter pageHighlighter = myPage.getHighlighter();
+            SyntaxHighlighter pageHighlighter = myPage.getHighlighter();
             highlighter = HighlighterFactory.createHighlighter(pageHighlighter, scheme);
         }
         myEditor.setHighlighter(highlighter);
@@ -196,8 +196,8 @@ public class SimpleEditorPreview implements PreviewPanel {
                 return;
             }
             removeDecorations(myEditor);
-            final Map<TextAttributesKey, LocalizeValue> displayText = ColorSettingsUtil.keyToDisplayTextMap(myPage);
-            for (final HighlightData data : myHighlightData) {
+            Map<TextAttributesKey, LocalizeValue> displayText = ColorSettingsUtil.keyToDisplayTextMap(myPage);
+            for (HighlightData data : myHighlightData) {
                 data.addHighlToView(myEditor, myOptions.getSelectedScheme(), displayText);
             }
         });
@@ -226,7 +226,7 @@ public class SimpleEditorPreview implements PreviewPanel {
         }
     }
 
-    void scrollHighlightInView(@Nullable final List<HighlightData> highlightDatas) {
+    void scrollHighlightInView(@Nullable List<HighlightData> highlightDatas) {
         if (highlightDatas == null) {
             return;
         }
@@ -246,7 +246,7 @@ public class SimpleEditorPreview implements PreviewPanel {
         }
     }
 
-    private boolean isOffsetVisible(final int startOffset) {
+    private boolean isOffsetVisible(int startOffset) {
         return myEditor
             .getScrollingModel()
             .getVisibleArea()
@@ -257,13 +257,13 @@ public class SimpleEditorPreview implements PreviewPanel {
         myBlinkingAlarm.cancelAllRequests();
     }
 
-    private List<HighlightData> startBlinkingHighlights(final EditorEx editor,
-                                                        final String attrKey,
-                                                        final SyntaxHighlighter highlighter,
-                                                        final boolean show,
-                                                        final Alarm alarm,
-                                                        final int count,
-                                                        final ColorSettingsPage page) {
+    private List<HighlightData> startBlinkingHighlights(EditorEx editor,
+                                                        String attrKey,
+                                                        SyntaxHighlighter highlighter,
+                                                        boolean show,
+                                                        Alarm alarm,
+                                                        int count,
+                                                        ColorSettingsPage page) {
         if (show && count <= 0) {
             return Collections.emptyList();
         }
@@ -284,7 +284,7 @@ public class SimpleEditorPreview implements PreviewPanel {
             do {
                 IElementType tokenType = (IElementType) iterator.getTokenType();
                 TextAttributesKey[] tokenHighlights = highlighter.getTokenHighlights(tokenType);
-                for (final TextAttributesKey tokenHighlight : tokenHighlights) {
+                for (TextAttributesKey tokenHighlight : tokenHighlights) {
                     String type = tokenHighlight.getExternalName();
                     if (show && type != null && type.equals(attrKey)) {
                         HighlightData highlightData = new HighlightData(iterator.getStart(), iterator.getEnd(), BLINKING_HIGHLIGHTS_ATTRIBUTES);
@@ -297,7 +297,7 @@ public class SimpleEditorPreview implements PreviewPanel {
             while (!iterator.atEnd());
         }
 
-        final Map<TextAttributesKey, LocalizeValue> displayText = ColorSettingsUtil.keyToDisplayTextMap(page);
+        Map<TextAttributesKey, LocalizeValue> displayText = ColorSettingsUtil.keyToDisplayTextMap(page);
 
         // sort highlights to avoid overlappings
         Collections.sort(highlights, Comparator.comparingInt(HighlightData::getStartOffset));
@@ -321,7 +321,7 @@ public class SimpleEditorPreview implements PreviewPanel {
 
 
     @Override
-    public void addListener(@Nonnull final ColorAndFontSettingsListener listener) {
+    public void addListener(@Nonnull ColorAndFontSettingsListener listener) {
         myDispatcher.addListener(listener);
     }
 
@@ -333,16 +333,16 @@ public class SimpleEditorPreview implements PreviewPanel {
     }
 
     private void setCursor(@JdkConstants.CursorType int type) {
-        final Cursor cursor = type == Cursor.TEXT_CURSOR ? UIUtil.getTextCursor(TargetAWT.to(myEditor.getBackgroundColor()))
+        Cursor cursor = type == Cursor.TEXT_CURSOR ? UIUtil.getTextCursor(TargetAWT.to(myEditor.getBackgroundColor()))
             : Cursor.getPredefinedCursor(type);
         myEditor.getContentComponent().setCursor(cursor);
     }
 
     public void setupRainbow(@Nonnull EditorColorsScheme colorsScheme, @Nonnull RainbowColorSettingsPage page) {
-        final List<HighlightData> initialMarkup = new ArrayList<>();
+        List<HighlightData> initialMarkup = new ArrayList<>();
         myHighlightsExtractor.extractHighlights(page.getDemoText(), initialMarkup);
 
-        final List<HighlightData> rainbowMarkup = setupRainbowHighlighting(
+        List<HighlightData> rainbowMarkup = setupRainbowHighlighting(
             page,
             initialMarkup,
             new RainbowHighlighter(colorsScheme).getRainbowTempKeys(),
@@ -353,9 +353,9 @@ public class SimpleEditorPreview implements PreviewPanel {
     }
 
     @Nonnull
-    private List<HighlightData> setupRainbowHighlighting(@Nonnull final RainbowColorSettingsPage page,
-                                                         @Nonnull final List<HighlightData> initialMarkup,
-                                                         @Nonnull final TextAttributesKey[] rainbowTempKeys,
+    private List<HighlightData> setupRainbowHighlighting(@Nonnull RainbowColorSettingsPage page,
+                                                         @Nonnull List<HighlightData> initialMarkup,
+                                                         @Nonnull TextAttributesKey[] rainbowTempKeys,
                                                          boolean isRainbowOn) {
         int colorCount = rainbowTempKeys.length;
         if (colorCount == 0) {
@@ -366,11 +366,11 @@ public class SimpleEditorPreview implements PreviewPanel {
         int tempKeyIndex = 0;
         boolean repeatAnchor = true;
         for (HighlightData d : initialMarkup) {
-            final TextAttributesKey highlightKey = d.getHighlightKey();
-            final boolean rainbowType = page.isRainbowType(highlightKey);
-            final boolean rainbowDemoType = highlightKey == RainbowHighlighter.RAINBOW_GRADIENT_DEMO;
+            TextAttributesKey highlightKey = d.getHighlightKey();
+            boolean rainbowType = page.isRainbowType(highlightKey);
+            boolean rainbowDemoType = highlightKey == RainbowHighlighter.RAINBOW_GRADIENT_DEMO;
             if (rainbowType || rainbowDemoType) {
-                final HighlightData rainbowAnchor = new HighlightData(d.getStartOffset(), d.getEndOffset(), RainbowHighlighter.RAINBOW_ANCHOR);
+                HighlightData rainbowAnchor = new HighlightData(d.getStartOffset(), d.getEndOffset(), RainbowHighlighter.RAINBOW_ANCHOR);
                 if (isRainbowOn) {
                     // rainbow on
                     HighlightData rainbowTemp;

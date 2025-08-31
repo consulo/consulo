@@ -214,7 +214,7 @@ public abstract class LRUPopupBuilder<T> {
             }
 
             @Override
-            public PopupStep onChosen(final T t, boolean finalChoice) {
+            public PopupStep onChosen(T t, boolean finalChoice) {
                 if (!extra.contains(t)) {
                     storeLRUItems(t);
                 }
@@ -303,7 +303,7 @@ public abstract class LRUPopupBuilder<T> {
             return;
         }
 
-        final Set<VirtualFile> matchedExtensions = new LinkedHashSet<>();
+        Set<VirtualFile> matchedExtensions = new LinkedHashSet<>();
         final Map<VirtualFile, Language> oldMapping = new HashMap<>();
         for (VirtualFile file : sortedFiles) {
             oldMapping.put(file, mappings.getMapping(file));

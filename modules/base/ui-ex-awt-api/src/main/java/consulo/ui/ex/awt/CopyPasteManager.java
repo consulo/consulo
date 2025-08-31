@@ -69,6 +69,6 @@ public abstract class CopyPasteManager {
   public abstract void stopKillRings();
 
   public interface ContentChangedListener extends EventListener {
-    void contentChanged(@Nullable final Transferable oldTransferable, final Transferable newTransferable);
+    void contentChanged(@Nullable Transferable oldTransferable, Transferable newTransferable);
   }
 }

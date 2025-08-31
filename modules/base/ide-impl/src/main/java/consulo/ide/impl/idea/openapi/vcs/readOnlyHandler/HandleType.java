@@ -61,11 +61,11 @@ public abstract class HandleType {
     return myUseVcs;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final HandleType that = (HandleType)o;
+    HandleType that = (HandleType)o;
 
     if (myUseVcs != that.myUseVcs) return false;
     if (myName != null ? !myName.equals(that.myName) : that.myName != null) return false;
@@ -80,7 +80,7 @@ public abstract class HandleType {
     return result;
   }
 
-  public abstract void processFiles(final Collection<VirtualFile> virtualFiles, @Nullable String changelist);
+  public abstract void processFiles(Collection<VirtualFile> virtualFiles, @Nullable String changelist);
 
   public List<String> getChangelists() {
     return Collections.emptyList();

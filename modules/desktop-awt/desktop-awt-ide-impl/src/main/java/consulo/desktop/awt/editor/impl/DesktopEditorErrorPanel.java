@@ -135,14 +135,14 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
         if (!dimensionsAreValid) {
             recalcEditorDimensions();
         }
-        final int safeY = Math.max(0, y - myEditorScrollbarTop);
+        int safeY = Math.max(0, y - myEditorScrollbarTop);
         VisualPosition visual;
         if (myEditorSourceHeight < myEditorTargetHeight) {
             visual = myEditor.xyToVisualPosition(new Point(0, safeY));
         }
         else {
             float fraction = Math.max(0, Math.min(1, safeY / (float)myEditorTargetHeight));
-            final int lineCount = myEditorSourceHeight / myEditor.getLineHeight();
+            int lineCount = myEditorSourceHeight / myEditor.getLineHeight();
             visual = new VisualPosition((int)(fraction * lineCount), 0);
         }
         int line = myEditor.visualToLogicalPosition(visual).line;
@@ -154,15 +154,15 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
             return document.getTextLength();
         }
 
-        final FoldingModelEx foldingModel = myEditor.getFoldingModel();
+        FoldingModelEx foldingModel = myEditor.getFoldingModel();
         if (beginLine) {
-            final int offset = document.getLineStartOffset(line);
-            final FoldRegion startCollapsed = foldingModel.getCollapsedRegionAtOffset(offset);
+            int offset = document.getLineStartOffset(line);
+            FoldRegion startCollapsed = foldingModel.getCollapsedRegionAtOffset(offset);
             return startCollapsed != null ? Math.min(offset, startCollapsed.getStartOffset()) : offset;
         }
         else {
-            final int offset = document.getLineEndOffset(line);
-            final FoldRegion startCollapsed = foldingModel.getCollapsedRegionAtOffset(offset);
+            int offset = document.getLineEndOffset(line);
+            FoldRegion startCollapsed = foldingModel.getCollapsedRegionAtOffset(offset);
             return startCollapsed != null ? Math.max(offset, startCollapsed.getEndOffset()) : offset;
         }
     }
@@ -256,7 +256,7 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
     }
 
     @RequiredUIAccess
-    public void mouseClicked(final MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {
         CommandProcessor.getInstance().newCommand()
             .project(myEditor.getProject())
             .document(myEditor.getDocument())
@@ -325,7 +325,7 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
         });
     }
 
-    public void showTooltip(MouseEvent e, final TooltipRenderer tooltipObject, @Nonnull HintHint hintHint) {
+    public void showTooltip(MouseEvent e, TooltipRenderer tooltipObject, @Nonnull HintHint hintHint) {
         TooltipController tooltipController = TooltipController.getInstance();
         tooltipController.showTooltipByMouseMove(
             myEditor,
@@ -337,9 +337,9 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
         );
     }
 
-    public void cancelMyToolTips(final MouseEvent e, boolean checkIfShouldSurvive) {
+    public void cancelMyToolTips(MouseEvent e, boolean checkIfShouldSurvive) {
         hideMyEditorPreviewHint();
-        final TooltipController tooltipController = TooltipController.getInstance();
+        TooltipController tooltipController = TooltipController.getInstance();
         if (!checkIfShouldSurvive || !tooltipController.shouldSurvive(e)) {
             tooltipController.cancelTooltip(ERROR_STRIPE_TOOLTIP_GROUP, e, true);
         }

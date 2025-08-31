@@ -84,7 +84,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
     }
 
     XVariablesView.InlineVariablesInfo data = project.getUserData(XVariablesView.DEBUG_VARIABLES);
-    final Document doc = FileDocumentManager.getInstance().getDocument(file);
+    Document doc = FileDocumentManager.getInstance().getDocument(file);
 
     if (data == null || doc == null) {
       return null;
@@ -98,9 +98,9 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
     List<XValueNodeImpl> values = data.get(file, lineNumber, doc.getModificationStamp());
     if (values != null && !values.isEmpty()) {
       XDebugSession session = XDebugView.getSession(values.iterator().next().getTree());
-      final int bpLine = getCurrentBreakPointLineInFile(session, file);
+      int bpLine = getCurrentBreakPointLineInFile(session, file);
       boolean isTopFrame = session instanceof XDebugSessionImpl && ((XDebugSessionImpl)session).isTopFrameSelected();
-      final TextAttributes attributes = bpLine == lineNumber && isTopFrame
+      TextAttributes attributes = bpLine == lineNumber && isTopFrame
         && ((XDebuggerManagerImpl)XDebuggerManager.getInstance(project)).isFullLineHighlighter()
         ? getTopFrameSelectedAttributes()
         : getNormalAttributes();
@@ -109,7 +109,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
       for (XValueNodeImpl value : values) {
         SimpleColoredText text = new SimpleColoredText();
         XValueTextRendererImpl renderer = new XValueTextRendererImpl(text);
-        final XValuePresentation presentation = value.getValuePresentation();
+        XValuePresentation presentation = value.getValuePresentation();
         if (presentation == null) continue;
         try {
           if (presentation instanceof XValueCompactPresentation && !value.getTree().isUnderRemoteDebug()) {
@@ -119,7 +119,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
             presentation.renderValue(renderer);
           }
           if (StringUtil.isEmpty(text.toString())) {
-            final String type = value.getValuePresentation().getType();
+            String type = value.getValuePresentation().getType();
             if (!StringUtil.isEmpty(type)) {
               text.append(type, SimpleTextAttributes.REGULAR_ATTRIBUTES);
             }
@@ -129,11 +129,11 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
           continue;
         }
 
-        final String name = value.getName();
+        String name = value.getName();
         if (StringUtil.isEmpty(text.toString())) {
           continue;
         }
-        final VariableText res = new VariableText();
+        VariableText res = new VariableText();
         result.add(res);
         res.add(new LineExtensionInfo("  " + name + ": ", attributes));
 
@@ -154,7 +154,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
           variableValue.produceChangedParts(res.infos);
         }
       }
-      final List<LineExtensionInfo> infos = new ArrayList<>();
+      List<LineExtensionInfo> infos = new ArrayList<>();
       for (VariableText text : result) {
         infos.addAll(text.infos);
       }
@@ -166,7 +166,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   private static int getCurrentBreakPointLineInFile(@Nullable XDebugSession session, VirtualFile file) {
     try {
       if (session != null) {
-        final XSourcePosition position = session.getCurrentPosition();
+        XSourcePosition position = session.getCurrentPosition();
         if (position != null && position.getFile().equals(file)) {
           return position.getLine();
         }

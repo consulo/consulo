@@ -94,7 +94,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
     private final TabInfo.DragOutDelegate myDragOutDelegate = new MyDragOutDelegate();
 
-    DesktopAWTEditorTabbedContainer(final DesktopFileEditorWindow window, Project project) {
+    DesktopAWTEditorTabbedContainer(DesktopFileEditorWindow window, Project project) {
         myWindow = window;
         myProject = project;
         final ActionManager actionManager = ActionManager.getInstance();
@@ -130,16 +130,16 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             .getJBTabs()
             .addListener(new TabsListener.Adapter() {
                 @Override
-                public void selectionChanged(final TabInfo oldSelection, final TabInfo newSelection) {
-                    final FileEditorManager editorManager = FileEditorManager.getInstance(myProject);
-                    final FileEditor oldEditor =
+                public void selectionChanged(TabInfo oldSelection, TabInfo newSelection) {
+                    FileEditorManager editorManager = FileEditorManager.getInstance(myProject);
+                    FileEditor oldEditor =
                         oldSelection != null ? editorManager.getSelectedEditor((VirtualFile)oldSelection.getObject()) : null;
                     if (oldEditor != null) {
                         oldEditor.deselectNotify();
                     }
 
                     VirtualFile newFile = (VirtualFile)newSelection.getObject();
-                    final FileEditor newEditor = editorManager.getSelectedEditor(newFile);
+                    FileEditor newEditor = editorManager.getSelectedEditor(newFile);
                     if (newEditor != null) {
                         newEditor.selectNotify();
                     }
@@ -150,7 +150,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
                 }
             })
             .setSelectionChangeHandler((info, requestFocus, doChangeSelection) -> {
-                final ActionCallback result = new ActionCallback();
+                ActionCallback result = new ActionCallback();
                 CommandProcessor.getInstance().newCommand()
                     .project(myProject)
                     .name(LocalizeValue.localizeTODO("EditorChange"))
@@ -169,7 +169,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
                     return;
                 }
                 if (!e.isPopupTrigger() && SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
-                    final ActionManager mgr = ActionManager.getInstance();
+                    ActionManager mgr = ActionManager.getInstance();
                     mgr.tryToExecute(mgr.getAction("HideAllWindows"), e, null, ActionPlaces.UNKNOWN, true);
                 }
             }
@@ -186,7 +186,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             }
 
             @Override
-            public void toolWindowRegistered(@Nonnull final String id) {
+            public void toolWindowRegistered(@Nonnull String id) {
                 updateTabBorder();
             }
         });
@@ -202,13 +202,13 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
     @Override
     @Nonnull
-    public ActionCallback setSelectedIndex(final int indexToSelect) {
+    public ActionCallback setSelectedIndex(int indexToSelect) {
         return setSelectedIndex(indexToSelect, true);
     }
 
     @Override
     @Nonnull
-    public ActionCallback setSelectedIndex(final int indexToSelect, boolean focusEditor) {
+    public ActionCallback setSelectedIndex(int indexToSelect, boolean focusEditor) {
         if (indexToSelect >= myTabs.getTabCount()) {
             return ActionCallback.REJECTED;
         }
@@ -291,14 +291,14 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
     @Nonnull
     @Override
-    public ActionCallback removeTabAt(final int componentIndex, int indexToSelect, boolean transferFocus) {
+    public ActionCallback removeTabAt(int componentIndex, int indexToSelect, boolean transferFocus) {
         TabInfo toSelect = indexToSelect >= 0 && indexToSelect < myTabs.getTabCount() ? myTabs.getTabAt(indexToSelect) : null;
-        final TabInfo info = myTabs.getTabAt(componentIndex);
+        TabInfo info = myTabs.getTabAt(componentIndex);
         // removing hidden tab happens on end of drag-out, we've already selected the correct tab for this case in dragOutStarted
         if (info.isHidden() || !myProject.isOpen()) {
             toSelect = null;
         }
-        final ActionCallback callback = myTabs.removeTab(info, toSelect, transferFocus);
+        ActionCallback callback = myTabs.removeTab(info, toSelect, transferFocus);
         return myProject.isOpen() ? callback : ActionCallback.DONE;
     }
 
@@ -307,33 +307,33 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         return myTabs.getIndexOf(myTabs.getSelectedInfo());
     }
 
-    void setForegroundAt(final int index, final Color color) {
+    void setForegroundAt(int index, Color color) {
         myTabs.getTabAt(index).setDefaultForeground(color);
     }
 
-    void setWaveColor(final int index, @Nullable final Color color) {
-        final TabInfo tab = myTabs.getTabAt(index);
+    void setWaveColor(int index, @Nullable Color color) {
+        TabInfo tab = myTabs.getTabAt(index);
         tab.setDefaultStyle(color == null ? SimpleTextAttributes.STYLE_PLAIN : SimpleTextAttributes.STYLE_WAVED);
         tab.setDefaultWaveColor(color);
     }
 
-    void setIconAt(final int index, final consulo.ui.image.Image icon) {
+    void setIconAt(int index, consulo.ui.image.Image icon) {
         myTabs.getTabAt(index).setIcon(icon);
     }
 
-    public void setTitleAt(final int index, final String text) {
+    public void setTitleAt(int index, String text) {
         myTabs.getTabAt(index).setText(text);
     }
 
-    void setToolTipTextAt(final int index, final String text) {
+    void setToolTipTextAt(int index, String text) {
         myTabs.getTabAt(index).setTooltipText(text);
     }
 
-    void setBackgroundColorAt(final int index, final Color color) {
+    void setBackgroundColorAt(int index, Color color) {
         myTabs.getTabAt(index).setTabColor(color);
     }
 
-    void setTabLayoutPolicy(final int policy) {
+    void setTabLayoutPolicy(int policy) {
         switch (policy) {
             case JTabbedPane.SCROLL_TAB_LAYOUT:
                 myTabs.getPresentation().setSingleRow(true);
@@ -346,7 +346,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         }
     }
 
-    public void setTabPlacement(final int tabPlacement) {
+    public void setTabPlacement(int tabPlacement) {
         myTabs.getPresentation().setHideTabs(false);
         switch (tabPlacement) {
             case UISettings.PLACEMENT_EDITOR_TAB_TOP:
@@ -371,16 +371,16 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
     @Nullable
     public Object getSelectedComponent() {
-        final TabInfo info = myTabs.getTargetInfo();
+        TabInfo info = myTabs.getTargetInfo();
         return info != null ? info.getComponent() : null;
     }
 
     public void insertTab(
-        final VirtualFile file,
-        final consulo.ui.image.Image icon,
-        final JComponent comp,
-        final String tooltip,
-        final int indexToInsert,
+        VirtualFile file,
+        consulo.ui.image.Image icon,
+        JComponent comp,
+        String tooltip,
+        int indexToInsert,
         FileEditorWindow window
     ) {
         TabInfo tab = myTabs.findInfo(file);
@@ -396,7 +396,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             .setDragOutDelegate(myDragOutDelegate);
         tab.setTestableUi(new MyQueryable(tab));
 
-        final ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
+        ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
         tabActions.add(new CloseTab(comp, myProject, file, myWindow));
 
         tab.setTabLabelActions(tabActions.build(), ActionPlaces.EDITOR_TAB);
@@ -434,8 +434,8 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         }
     }
 
-    public Component getComponentAt(final int i) {
-        final TabInfo tab = myTabs.getTabAt(i);
+    public Component getComponentAt(int i) {
+        TabInfo tab = myTabs.getTabAt(i);
         return tab.getComponent();
     }
 
@@ -451,7 +451,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
                 return myProject;
             }
             if (VirtualFile.KEY == dataId) {
-                final VirtualFile selectedFile = myWindow.getSelectedFile();
+                VirtualFile selectedFile = myWindow.getSelectedFile();
                 return selectedFile != null && selectedFile.isValid() ? selectedFile : null;
             }
             if (DesktopFileEditorWindow.DATA_KEY == dataId) {
@@ -483,8 +483,8 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             return;
         }
 
-        final VirtualFile file = (VirtualFile)selected.getObject();
-        final FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);
+        VirtualFile file = (VirtualFile)selected.getObject();
+        FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);
 
         AsyncResult<FileEditorWindow> window = mgr.getActiveWindow();
         window.doWhenDone(wnd -> {
@@ -506,7 +506,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         @Override
         public void mouseReleased(MouseEvent e) {
             if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_RELEASED)) {
-                final TabInfo info = myTabs.findInfo(e);
+                TabInfo info = myTabs.findInfo(e);
                 if (info != null) {
                     IdeEventQueue.getInstance().blockNextEvents(e);
                     if (e.isAltDown() && e.getButton() == MouseEvent.BUTTON1) {//close others
@@ -526,18 +526,18 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         }
 
         @Override
-        public void mousePressed(final MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             if (UIUtil.isActionClick(e)) {
                 if (e.getClickCount() == 1) {
                     myActionClickCount = 0;
                 }
                 // clicks on the close window button don't count in determining whether we have a double-click on tab (IDEA-70403)
-                final Component deepestComponent = SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
+                Component deepestComponent = SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
                 if (!(deepestComponent instanceof ActionButtonComponent)) {
                     myActionClickCount++;
                 }
                 if (myActionClickCount > 1 && !isFloating()) {
-                    final ActionManager mgr = ActionManager.getInstance();
+                    ActionManager mgr = ActionManager.getInstance();
                     mgr.tryToExecute(mgr.getAction("HideAllWindows"), e, null, ActionPlaces.UNKNOWN, true);
                 }
             }
@@ -547,9 +547,9 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         public void mouseClicked(MouseEvent e) {
             if (UIUtil.isActionClick(e, MouseEvent.MOUSE_CLICKED)
                 && (e.isMetaDown() || !Platform.current().os().isMac() && e.isControlDown())) {
-                final TabInfo info = myTabs.findInfo(e);
+                TabInfo info = myTabs.findInfo(e);
                 if (info != null && info.getObject() != null) {
-                    final VirtualFile vFile = (VirtualFile)info.getObject();
+                    VirtualFile vFile = (VirtualFile)info.getObject();
                     if (vFile != null) {
                         ShowFilePathAction.show(vFile, e);
                     }
@@ -565,8 +565,8 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
         @Override
         public void dragOutStarted(MouseEvent mouseEvent, TabInfo info) {
-            final TabInfo previousSelection = info.getPreviousSelection();
-            final Image img = JBTabsImpl.getComponentImage(info);
+            TabInfo previousSelection = info.getPreviousSelection();
+            Image img = JBTabsImpl.getComponentImage(info);
             info.setHidden(true);
             if (previousSelection != null) {
                 myTabs.select(previousSelection, true);

@@ -9,7 +9,7 @@ public class CommaTailType extends TailType {
   public static final TailType INSTANCE = new CommaTailType();
 
   @Override
-  public int processTail(final Editor editor, int tailOffset) {
+  public int processTail(Editor editor, int tailOffset) {
     CommonCodeStyleSettings styleSettings = EditorCodeStyle.getLocalLanguageSettings(editor, tailOffset);
     if (styleSettings.SPACE_BEFORE_COMMA) tailOffset = insertChar(editor, tailOffset, ' ');
     tailOffset = insertChar(editor, tailOffset, ',');

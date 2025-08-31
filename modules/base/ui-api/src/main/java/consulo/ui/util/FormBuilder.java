@@ -53,7 +53,7 @@ public class FormBuilder {
   @Nonnull
   @RequiredUIAccess
   @Deprecated
-  public FormBuilder addLabeled(@Nonnull final String labelText, @Nonnull Component component) {
+  public FormBuilder addLabeled(@Nonnull String labelText, @Nonnull Component component) {
     if (!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
     }
@@ -72,7 +72,7 @@ public class FormBuilder {
 
   @Nonnull
   @RequiredUIAccess
-  public FormBuilder addLabeled(@Nonnull final LocalizeValue labelText, @Nonnull Component component) {
+  public FormBuilder addLabeled(@Nonnull LocalizeValue labelText, @Nonnull Component component) {
     if(!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
     }
@@ -89,7 +89,7 @@ public class FormBuilder {
 
   @Nonnull
   @RequiredUIAccess
-  public FormBuilder addLabeled(@Nonnull final Component label, @Nonnull Component component) {
+  public FormBuilder addLabeled(@Nonnull Component label, @Nonnull Component component) {
     if (!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
     }

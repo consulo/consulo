@@ -60,7 +60,7 @@ public final class CustomShortcutSet implements ShortcutSet {
 
   @Nonnull
   public static CustomShortcutSet fromString(@Nonnull String... keyboardShortcuts) {
-    final KeyboardShortcut[] shortcuts = new KeyboardShortcut[keyboardShortcuts.length];
+    KeyboardShortcut[] shortcuts = new KeyboardShortcut[keyboardShortcuts.length];
     for (int i = 0; i < keyboardShortcuts.length; i++) {
       shortcuts[i] = KeyboardShortcut.fromString(keyboardShortcuts[i]);
     }

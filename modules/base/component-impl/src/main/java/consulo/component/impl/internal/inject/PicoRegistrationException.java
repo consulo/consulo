@@ -25,7 +25,7 @@ class PicoRegistrationException extends PicoException {
    *
    * @param message the message detailing the exception.
    */
-  public PicoRegistrationException(final String message) {
+  public PicoRegistrationException(String message) {
     super(message);
   }
 
@@ -34,7 +34,7 @@ class PicoRegistrationException extends PicoException {
    *
    * @param cause the exception that caused this one.
    */
-  protected PicoRegistrationException(final Throwable cause) {
+  protected PicoRegistrationException(Throwable cause) {
     super(cause);
   }
 

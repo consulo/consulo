@@ -33,7 +33,7 @@ public class DirDiffToolbarActions extends ActionGroup {
 
     public DirDiffToolbarActions(DirDiffTableModel model, JComponent panel) {
         super("Directory Diff Actions", false);
-        final List<AnAction> actions = new ArrayList<AnAction>(Arrays.asList(
+        List<AnAction> actions = new ArrayList<AnAction>(Arrays.asList(
             new RefreshDirDiffAction(model),
             AnSeparator.getInstance(),
             new EnableLeft(model),
@@ -56,7 +56,7 @@ public class DirDiffToolbarActions extends ActionGroup {
 
         for (AnAction action : actions) {
             if (action instanceof ShortcutProvider) {
-                final ShortcutSet shortcut = ((ShortcutProvider) action).getShortcut();
+                ShortcutSet shortcut = ((ShortcutProvider) action).getShortcut();
                 if (shortcut != null) {
                     action.registerCustomShortcutSet(shortcut, panel);
                 }

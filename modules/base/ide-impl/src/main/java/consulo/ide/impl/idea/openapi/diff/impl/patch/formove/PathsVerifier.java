@@ -74,7 +74,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   private List<FilePath> myDeletedPaths;
   private boolean myIgnoreContentRootsCheck;
 
-  public PathsVerifier(final Project project, final VirtualFile baseDirectory, final List<FilePatch> patches, BaseMapper baseMapper) {
+  public PathsVerifier(Project project, VirtualFile baseDirectory, List<FilePatch> patches, BaseMapper baseMapper) {
     myProject = project;
     myBaseDirectory = baseDirectory;
     myPatches = patches;
@@ -95,7 +95,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
   // those to be moved to CL: target + created dirs
   public List<FilePath> getDirectlyAffected() {
-    final List<FilePath> affected = new ArrayList<>();
+    List<FilePath> affected = new ArrayList<>();
     addAllFilePath(myCreatedDirectories, affected);
     addAllFilePath(myWritableFiles, affected);
     affected.addAll(myBeforePaths);
@@ -104,20 +104,20 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
   // old parents of moved files
   public List<VirtualFile> getAllAffected() {
-    final List<VirtualFile> affected = new ArrayList<>();
+    List<VirtualFile> affected = new ArrayList<>();
     affected.addAll(myCreatedDirectories);
     affected.addAll(myWritableFiles);
 
     // after files' parent
     for (VirtualFile file : myMovedFiles.keySet()) {
-      final VirtualFile parent = file.getParent();
+      VirtualFile parent = file.getParent();
       if (parent != null) {
         affected.add(parent);
       }
     }
     // before..
     for (FilePath path : myBeforePaths) {
-      final FilePath parent = path.getParentPath();
+      FilePath parent = path.getParentPath();
       if (parent != null) {
         affected.add(parent.getVirtualFile());
       }
@@ -125,7 +125,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return affected;
   }
 
-  private static void addAllFilePath(final Collection<VirtualFile> files, final Collection<FilePath> paths) {
+  private static void addAllFilePath(Collection<VirtualFile> files, Collection<FilePath> paths) {
     for (VirtualFile file : files) {
       paths.add(VcsUtil.getFilePath(file));
     }
@@ -136,13 +136,13 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     List<FilePatch> failedToApply = new ArrayList<>();
     myDelayedPrecheckContext = new DelayedPrecheckContext(myProject);
     for (FilePatch patch : myPatches) {
-      final CheckPath checker = getChecker(patch);
+      CheckPath checker = getChecker(patch);
       if (!checker.canBeApplied(myDelayedPrecheckContext)) {
         revert(checker.getErrorMessage());
         failedToApply.add(patch);
       }
     }
-    final Collection<FilePatch> skipped = myDelayedPrecheckContext.doDelayed();
+    Collection<FilePatch> skipped = myDelayedPrecheckContext.doDelayed();
     mySkipped.addAll(skipped);
     myPatches.removeAll(skipped);
     myPatches.removeAll(failedToApply);
@@ -156,9 +156,9 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   public List<FilePatch> execute() {
     List<FilePatch> failedPatches = new ArrayList<>();
     try {
-      final List<CheckPath> checkers = new ArrayList<>(myPatches.size());
+      List<CheckPath> checkers = new ArrayList<>(myPatches.size());
       for (FilePatch patch : myPatches) {
-        final CheckPath checker = getChecker(patch);
+        CheckPath checker = getChecker(patch);
         checkers.add(checker);
       }
       for (CheckPath checker : checkers) {
@@ -175,9 +175,9 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return failedPatches;
   }
 
-  private CheckPath getChecker(final FilePatch patch) {
-    final String beforeFileName = patch.getBeforeName();
-    final String afterFileName = patch.getAfterName();
+  private CheckPath getChecker(FilePatch patch) {
+    String beforeFileName = patch.getBeforeName();
+    String afterFileName = patch.getAfterName();
 
     if ((beforeFileName == null) || (patch.isNewFile())) {
       return new CheckAdded(patch);
@@ -204,7 +204,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   public Collection<FilePatch> filterBadFileTypePatches() {
     List<Pair<VirtualFile, ApplyTextFilePatch>> failedTextPatches =
       ContainerUtil.findAll(myTextPatches, textPatch -> {
-        final VirtualFile file = textPatch.getFirst();
+        VirtualFile file = textPatch.getFirst();
         return !file.isDirectory() && !isFileTypeOk(file);
       });
     myTextPatches.removeAll(failedTextPatches);
@@ -233,18 +233,18 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   private class CheckModified extends CheckDeleted {
-    private CheckModified(final FilePatch path) {
+    private CheckModified(FilePatch path) {
       super(path);
     }
   }
 
   private class CheckDeleted extends CheckPath {
-    protected CheckDeleted(final FilePatch path) {
+    protected CheckDeleted(FilePatch path) {
       super(path);
     }
 
     @Override
-    protected boolean precheck(final VirtualFile beforeFile, final VirtualFile afterFile, DelayedPrecheckContext context) {
+    protected boolean precheck(VirtualFile beforeFile, VirtualFile afterFile, DelayedPrecheckContext context) {
       if (beforeFile == null) {
         context.addSkip(myBaseMapper.getPath(myPatch, myBeforeName), myPatch);
       }
@@ -253,7 +253,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
     @Override
     protected boolean check() throws IOException {
-      final VirtualFile beforeFile = myBaseMapper.getFile(myPatch, myBeforeName);
+      VirtualFile beforeFile = myBaseMapper.getFile(myPatch, myBeforeName);
       if (! checkExistsAndValid(beforeFile, myBeforeName)) {
         return false;
       }
@@ -268,12 +268,12 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   private class CheckAdded extends CheckPath {
-    private CheckAdded(final FilePatch path) {
+    private CheckAdded(FilePatch path) {
       super(path);
     }
 
     @Override
-    protected boolean precheck(final VirtualFile beforeFile, final VirtualFile afterFile, DelayedPrecheckContext context) {
+    protected boolean precheck(VirtualFile beforeFile, VirtualFile afterFile, DelayedPrecheckContext context) {
       if (afterFile != null) {
         context.addOverrideExisting(myPatch, VcsUtil.getFilePath(afterFile));
       }
@@ -282,8 +282,8 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
     @Override
     public boolean check() throws IOException {
-      final String[] pieces = RelativePathCalculator.split(myAfterName);
-      final VirtualFile parent = makeSureParentPathExists(pieces);
+      String[] pieces = RelativePathCalculator.split(myAfterName);
+      VirtualFile parent = makeSureParentPathExists(pieces);
       if (parent == null) {
         setErrorMessage(fileNotFoundMessage(myAfterName));
         return false;
@@ -291,7 +291,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       String name = pieces[pieces.length - 1];
       File afterFile = new File(parent.getPath(), name);
       //if user already accepted overwriting, we shouldn't have created a new one
-      final VirtualFile file = myDelayedPrecheckContext.getOverridenPaths().contains(VcsUtil.getFilePath(afterFile))
+      VirtualFile file = myDelayedPrecheckContext.getOverridenPaths().contains(VcsUtil.getFilePath(afterFile))
                                ? parent.findChild(name)
                                : createFile(parent, name);
       if (file == null) {
@@ -308,16 +308,16 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   private class CheckMoved extends CheckPath {
-    private CheckMoved(final FilePatch path) {
+    private CheckMoved(FilePatch path) {
       super(path);
     }
 
     // before exists; after does not exist
     @Override
     protected boolean precheck(
-      final VirtualFile beforeFile,
-      final VirtualFile afterFile,
-      final DelayedPrecheckContext context
+      VirtualFile beforeFile,
+      VirtualFile afterFile,
+      DelayedPrecheckContext context
     ) {
       if (beforeFile == null) {
         setErrorMessage(fileNotFoundMessage(myBeforeName));
@@ -329,13 +329,13 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
     @Override
     public boolean check() throws IOException {
-      final String[] pieces = RelativePathCalculator.split(myAfterName);
-      final VirtualFile afterFileParent = makeSureParentPathExists(pieces);
+      String[] pieces = RelativePathCalculator.split(myAfterName);
+      VirtualFile afterFileParent = makeSureParentPathExists(pieces);
       if (afterFileParent == null) {
         setErrorMessage(fileNotFoundMessage(myAfterName));
         return false;
       }
-      final VirtualFile beforeFile = myBaseMapper.getFile(myPatch, myBeforeName);
+      VirtualFile beforeFile = myBaseMapper.getFile(myPatch, myBeforeName);
       if (! checkExistsAndValid(beforeFile, myBeforeName)) {
         return false;
       }
@@ -352,7 +352,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     protected final FilePatch myPatch;
     private String myErrorMessage;
 
-    public CheckPath(final FilePatch path) {
+    public CheckPath(FilePatch path) {
       myPatch = path;
       myBeforeName = path.getBeforeName();
       myAfterName = path.getAfterName();
@@ -362,22 +362,22 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return myErrorMessage;
     }
 
-    public void setErrorMessage(final String errorMessage) {
+    public void setErrorMessage(String errorMessage) {
       myErrorMessage = errorMessage;
     }
 
     public boolean canBeApplied(DelayedPrecheckContext context) {
-      final VirtualFile beforeFile = myBaseMapper.getFile(myPatch, myBeforeName);
-      final VirtualFile afterFile = myBaseMapper.getFile(myPatch, myAfterName);
+      VirtualFile beforeFile = myBaseMapper.getFile(myPatch, myBeforeName);
+      VirtualFile afterFile = myBaseMapper.getFile(myPatch, myAfterName);
       return precheck(beforeFile, afterFile, context);
     }
 
-    protected abstract boolean precheck(final VirtualFile beforeFile,
-                                        final VirtualFile afterFile,
+    protected abstract boolean precheck(VirtualFile beforeFile,
+                                        VirtualFile afterFile,
                                         DelayedPrecheckContext context);
     protected abstract boolean check() throws IOException;
 
-    protected boolean checkExistsAndValid(final VirtualFile file, final String name) {
+    protected boolean checkExistsAndValid(VirtualFile file, String name) {
       if (file == null) {
         setErrorMessage(fileNotFoundMessage(name));
         return false;
@@ -385,7 +385,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return checkModificationValid(file, name);
     }
 
-    protected boolean checkModificationValid(final VirtualFile file, final String name) {
+    protected boolean checkModificationValid(VirtualFile file, String name) {
       if (myProject.getApplication().isUnitTestMode() && myIgnoreContentRootsCheck) return true;
       // security check to avoid overwriting system files with a patch
       if ((file == null) || (!inContent(file)) || (myVcsManager.getVcsRootFor(file) == null)) {
@@ -404,11 +404,11 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     }
   }
 
-  private void addPatch(final FilePatch patch, final VirtualFile file) {
+  private void addPatch(FilePatch patch, VirtualFile file) {
     if (patch instanceof TextFilePatch textFilePatch) {
       myTextPatches.add(Pair.create(file, ApplyFilePatchFactory.create(textFilePatch)));
     } else {
-      final ApplyFilePatchBase<BinaryType> applyBinaryPatch =
+      ApplyFilePatchBase<BinaryType> applyBinaryPatch =
         (ApplyFilePatchBase<BinaryType>)(
           (patch instanceof BinaryFilePatch binaryFilePatch)
             ? ApplyFilePatchFactory.create(binaryFilePatch)
@@ -419,15 +419,15 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     myWritableFiles.add(file);
   }
 
-  private static String fileNotFoundMessage(final String path) {
+  private static String fileNotFoundMessage(String path) {
     return VcsLocalize.cannotFindFileToPatch(path).get();
   }
 
-  private static String fileAlreadyExists(final String path) {
+  private static String fileAlreadyExists(String path) {
     return VcsLocalize.cannotApplyFileAlreadyExists(path).get();
   }
 
-  private void revert(final String errorMessage) {
+  private void revert(String errorMessage) {
     PatchApplier.showError(myProject, errorMessage, true);
 
     // move back
@@ -471,7 +471,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
 
-  private static VirtualFile createFile(final VirtualFile parent, final String name) throws IOException {
+  private static VirtualFile createFile(VirtualFile parent, String name) throws IOException {
     return parent.createChildData(PatchApplier.class, name);
     /*final Ref<IOException> ioExceptionRef = new Ref<IOException>();
     final Ref<VirtualFile> result = new Ref<VirtualFile>();
@@ -491,7 +491,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return result.get();*/
   }
 
-  private static VirtualFile moveFile(final VirtualFile file, final VirtualFile newParent) throws IOException {
+  private static VirtualFile moveFile(VirtualFile file, VirtualFile newParent) throws IOException {
     file.move(FilePatch.class, newParent);
     return file;
     /*final Ref<IOException> ioExceptionRef = new Ref<IOException>();
@@ -512,12 +512,12 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   @Nullable
-  private VirtualFile makeSureParentPathExists(final String[] pieces) throws IOException {
+  private VirtualFile makeSureParentPathExists(String[] pieces) throws IOException {
     VirtualFile child = myBaseDirectory;
 
-    final int size = (pieces.length - 1);
+    int size = (pieces.length - 1);
     for (int i = 0; i < size; i++) {
-      final String piece = pieces[i];
+      String piece = pieces[i];
       if (StringUtil.isEmptyOrSpaces(piece)) {
         continue;
       }
@@ -550,8 +550,8 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   @RequiredUIAccess
-  public void doMoveIfNeeded(final VirtualFile file) throws IOException {
-    final MovedFileData movedFile = myMovedFiles.get(file);
+  public void doMoveIfNeeded(VirtualFile file) throws IOException {
+    MovedFileData movedFile = myMovedFiles.get(file);
     if (movedFile != null) {
       myBeforePaths.add(VcsUtil.getFilePath(file));
       myProject.getApplication().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> movedFile.doMove());
@@ -563,7 +563,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     private final VirtualFile myCurrent;
     private final String myNewName;
 
-    private MovedFileData(@Nonnull final VirtualFile newParent, @Nonnull final VirtualFile current, @Nonnull final String newName) {
+    private MovedFileData(@Nonnull VirtualFile newParent, @Nonnull VirtualFile current, @Nonnull String newName) {
       myNewParent = newParent;
       myCurrent = current;
       myNewName = newName;
@@ -582,7 +582,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     }
 
     public VirtualFile doMove() throws IOException {
-      final VirtualFile oldParent = myCurrent.getParent();
+      VirtualFile oldParent = myCurrent.getParent();
       boolean needRename = !Comparing.equal(myCurrent.getName(), myNewName);
       boolean needMove = !myNewParent.equals(oldParent);
       if (needRename) {
@@ -621,8 +621,8 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
   public interface BaseMapper {
     @Nullable
-    VirtualFile getFile(final FilePatch patch, final String path);
-    FilePath getPath(final FilePatch patch, final String path);
+    VirtualFile getFile(FilePatch patch, String path);
+    FilePath getPath(FilePatch patch, String path);
   }
 
   private static class DelayedPrecheckContext {
@@ -631,18 +631,18 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     private final List<FilePath> myOverridenPaths;
     private final Project myProject;
 
-    private DelayedPrecheckContext(final Project project) {
+    private DelayedPrecheckContext(Project project) {
       myProject = project;
       myOverrideExisting = new HashMap<>();
       mySkipDeleted = new HashMap<>();
       myOverridenPaths = new LinkedList<>();
     }
 
-    public void addSkip(final FilePath path, final FilePatch filePatch) {
+    public void addSkip(FilePath path, FilePatch filePatch) {
       mySkipDeleted.put(path, filePatch);
     }
 
-    public void addOverrideExisting(final FilePatch patch, final FilePath filePath) {
+    public void addOverrideExisting(FilePatch patch, FilePath filePath) {
       if (! myOverrideExisting.containsKey(filePath)) {
         myOverrideExisting.put(filePath, patch);
       }
@@ -650,10 +650,10 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
     // returns those to be skipped
     public Collection<FilePatch> doDelayed() {
-      final List<FilePatch> result = new LinkedList<>();
+      List<FilePatch> result = new LinkedList<>();
       if (! myOverrideExisting.isEmpty()) {
-        final String title = "Overwrite Existing Files";
-        final Collection<FilePath> selected = AbstractVcsHelper.getInstance(myProject).selectFilePathsToProcess(
+        String title = "Overwrite Existing Files";
+        Collection<FilePath> selected = AbstractVcsHelper.getInstance(myProject).selectFilePathsToProcess(
                 new ArrayList<>(myOverrideExisting.keySet()), title,
                 "\nThe following files should be created by patch, but they already exist.\nDo you want to overwrite them?\n", title,
                 "The following file should be created by patch, but it already exists.\nDo you want to overwrite it?\n{0}",

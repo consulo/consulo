@@ -28,7 +28,7 @@ public abstract class SerializationManager {
     synchronized (this) {
       if (mySerializersLoaded) return;
       List<ObjectStubSerializerProvider> lazySerializers = IStubElementType.loadRegisteredStubElementTypes();
-      final IElementType[] stubElementTypes = IElementType.enumerate(type -> type instanceof StubSerializer);
+      IElementType[] stubElementTypes = IElementType.enumerate(type -> type instanceof StubSerializer);
 
       for (IElementType type : stubElementTypes) {
         if (type instanceof StubFileElementType && StubFileElementType.DEFAULT_EXTERNAL_ID.equals(((StubFileElementType)type).getExternalId())) {

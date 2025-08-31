@@ -27,12 +27,12 @@ public class EditComment implements ChangeListCommand {
   private String myOldComment;
   private LocalChangeList myListCopy;
 
-  public EditComment(final String name, final String newComment) {
+  public EditComment(String name, String newComment) {
     myNewComment = newComment;
     myName = name;
   }
 
-  public void apply(final ChangeListWorker worker) {
+  public void apply(ChangeListWorker worker) {
     myListCopy = worker.getCopyByName(myName);
     if (myListCopy != null) {
       myOldComment = worker.editComment(myName, myNewComment);
@@ -42,7 +42,7 @@ public class EditComment implements ChangeListCommand {
     }
   }
 
-  public void doNotify(final EventDispatcher<ChangeListListener> dispatcher) {
+  public void doNotify(EventDispatcher<ChangeListListener> dispatcher) {
     if (myListCopy != null) {
       dispatcher.getMulticaster().changeListCommentChanged(myListCopy, myOldComment);
     }

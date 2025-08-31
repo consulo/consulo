@@ -40,7 +40,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
 
   private final Project myProject;
 
-  public ShelveChangesCommitExecutor(final Project project) {
+  public ShelveChangesCommitExecutor(Project project) {
     myProject = project;
   }
 
@@ -71,7 +71,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
     }
 
     @Nullable
-    public JComponent getAdditionalConfigurationUI(final Collection<Change> changes, final String commitMessage) {
+    public JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
       return null;
     }
 
@@ -90,7 +90,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
         return;
       }
       try {
-        final ShelvedChangeList list = ShelveChangesManager.getInstance(myProject).shelveChanges(changes, commitMessage, true);
+        ShelvedChangeList list = ShelveChangesManager.getInstance(myProject).shelveChanges(changes, commitMessage, true);
         ShelvedChangesViewManager.getInstance(myProject).activateView(list);
 
         Change[] changesArray = changes.toArray(new Change[changes.size()]);

@@ -34,7 +34,7 @@ public interface RealEditor extends EditorEx {
     Key<Boolean> FORCED_SOFT_WRAPS = Key.create("forced.soft.wraps");
     Key<Boolean> SOFT_WRAPS_EXIST = Key.create("soft.wraps.exist");
 
-    void throwEditorNotDisposedError(@Nonnull final String msg);
+    void throwEditorNotDisposedError(@Nonnull String msg);
 
     void release();
 

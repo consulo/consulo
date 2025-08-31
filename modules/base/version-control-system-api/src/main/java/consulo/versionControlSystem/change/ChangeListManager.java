@@ -50,38 +50,38 @@ public abstract class ChangeListManager {
 
   public abstract void scheduleUpdate(boolean updateUnversionedFiles);
 
-  public abstract void invokeAfterUpdate(final Runnable afterUpdate,
-                                         final InvokeAfterUpdateMode mode,
-                                         final String title,
-                                         final ModalityState state);
+  public abstract void invokeAfterUpdate(Runnable afterUpdate,
+                                         InvokeAfterUpdateMode mode,
+                                         String title,
+                                         ModalityState state);
 
-  public abstract void invokeAfterUpdate(final Runnable afterUpdate,
-                                         final InvokeAfterUpdateMode mode,
-                                         final String title,
-                                         final Consumer<VcsDirtyScopeManager> dirtyScopeManager,
-                                         final ModalityState state);
+  public abstract void invokeAfterUpdate(Runnable afterUpdate,
+                                         InvokeAfterUpdateMode mode,
+                                         String title,
+                                         Consumer<VcsDirtyScopeManager> dirtyScopeManager,
+                                         ModalityState state);
 
 
   @Nonnull
   public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable Object data);
 
-  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable final String comment);
+  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment);
 
   public abstract void setDefaultChangeList(@Nonnull LocalChangeList list);
 
-  public abstract void removeChangeList(final String name);
+  public abstract void removeChangeList(String name);
 
-  public abstract void removeChangeList(final LocalChangeList list);
+  public abstract void removeChangeList(LocalChangeList list);
 
-  public abstract void moveChangesTo(final LocalChangeList list, final Change... changes);
+  public abstract void moveChangesTo(LocalChangeList list, Change... changes);
 
   // added - since ChangeListManager wouldn't pass internal lists, only copies
-  public abstract boolean setReadOnly(final String name, final boolean value);
+  public abstract boolean setReadOnly(String name, boolean value);
 
   public abstract boolean editName(@Nonnull String fromName, @Nonnull String toName);
 
   @Nullable
-  public abstract String editComment(@Nonnull String fromName, final String newComment);
+  public abstract String editComment(@Nonnull String fromName, String newComment);
 
   @TestOnly
   public abstract boolean ensureUpToDate(boolean canBeCanceled);
@@ -104,7 +104,7 @@ public abstract class ChangeListManager {
   @Nonnull
   public abstract List<VirtualFile> getAffectedFiles();
 
-  public abstract boolean isFileAffected(final VirtualFile file);
+  public abstract boolean isFileAffected(VirtualFile file);
 
   /**
    * @return all changes in all changelists.
@@ -113,7 +113,7 @@ public abstract class ChangeListManager {
   public abstract Collection<Change> getAllChanges();
 
   @Nullable
-  public abstract LocalChangeList findChangeList(final String name);
+  public abstract LocalChangeList findChangeList(String name);
 
   @Nullable
   public abstract LocalChangeList getChangeList(String id);
@@ -134,7 +134,7 @@ public abstract class ChangeListManager {
   public abstract String getChangeListNameIfOnlyOne(Change[] changes);
 
   @Nonnull
-  public abstract Runnable prepareForChangeDeletion(final Collection<Change> changes);
+  public abstract Runnable prepareForChangeDeletion(Collection<Change> changes);
 
   @Nullable
   public abstract Change getChange(@Nonnull VirtualFile file);
@@ -186,11 +186,11 @@ public abstract class ChangeListManager {
 
   public abstract List<CommitExecutor> getRegisteredExecutors();
 
-  public abstract void addFilesToIgnore(final IgnoredFileBean... ignoredFiles);
+  public abstract void addFilesToIgnore(IgnoredFileBean... ignoredFiles);
 
   public abstract void addDirectoryToIgnoreImplicitly(@Nonnull String path);
 
-  public abstract void setFilesToIgnore(final IgnoredFileBean... ignoredFiles);
+  public abstract void setFilesToIgnore(IgnoredFileBean... ignoredFiles);
 
   public abstract IgnoredFileBean[] getFilesToIgnore();
 
@@ -200,7 +200,7 @@ public abstract class ChangeListManager {
 
   public abstract boolean isIgnoredFile(@Nonnull FilePath file);
 
-  public abstract boolean isContainedInLocallyDeleted(final FilePath filePath);
+  public abstract boolean isContainedInLocallyDeleted(FilePath filePath);
 
   @Nullable
   public abstract String getSwitchedBranch(VirtualFile file);

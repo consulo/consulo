@@ -36,7 +36,7 @@ public abstract class ExecutorRegistry {
   @Nonnull
   public abstract Executor[] getRegisteredExecutors();
 
-  public abstract Executor getExecutorById(final String executorId);
+  public abstract Executor getExecutorById(String executorId);
 
   /**
    * Consider to use {@link #isStarting(ExecutionEnvironment)}

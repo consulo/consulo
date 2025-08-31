@@ -67,7 +67,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     invokeInAlarm(runnable, !ApplicationManager.getApplication().isDispatchThread() || ApplicationManager.getApplication().isUnitTestMode());
   }
 
-  public static void invokeInAlarm(Runnable runnable, final boolean sync) {
+  public static void invokeInAlarm(Runnable runnable, boolean sync) {
     if (sync) {
       runnable.run();
     }
@@ -76,15 +76,15 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     }
   }
 
-  public void printOn(final Printer printer) {
-    final ArrayList<Printable> printables;
+  public void printOn(Printer printer) {
+    ArrayList<Printable> printables;
     synchronized (myNestedPrintables) {
       printables = new ArrayList<>(myNestedPrintables);
     }
     myWrapper.printOn(printer, printables);
   }
 
-  public void printOwnPrintablesOn(final Printer printer) {
+  public void printOwnPrintablesOn(Printer printer) {
     printOwnPrintablesOn(printer, true);
   }
 
@@ -96,7 +96,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     myWrapper.printOn(printer, printables, skipFileContent);
   }
 
-  public void addLast(@Nonnull final Printable printable) {
+  public void addLast(@Nonnull Printable printable) {
     synchronized (myNestedPrintables) {
       myNestedPrintables.add(printable);
       if (myNestedPrintables.size() > 500) {
@@ -105,7 +105,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     }
   }
 
-  public void insert(@Nonnull final Printable printable, int i) {
+  public void insert(@Nonnull Printable printable, int i) {
     synchronized (myNestedPrintables) {
       if (i >= myNestedPrintables.size()) {
         myNestedPrintables.add(printable);
@@ -154,13 +154,13 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     myFrameworkOutputFile = frameworkOutputFile;
   }
 
-  public void printFromFrameworkOutputFile(final Printer console) {
+  public void printFromFrameworkOutputFile(Printer console) {
     if (myFrameworkOutputFile != null) {
-      final Runnable runnable = () -> {
-        final File inputFile = new File(myFrameworkOutputFile);
+      Runnable runnable = () -> {
+        File inputFile = new File(myFrameworkOutputFile);
         if (inputFile.exists()) {
           try {
-            final String fileText = RawFileLoader.getInstance().loadFileText(inputFile, StandardCharsets.UTF_8);
+            String fileText = RawFileLoader.getInstance().loadFileText(inputFile, StandardCharsets.UTF_8);
             console.print(fileText, ConsoleViewContentType.NORMAL_OUTPUT);
           }
           catch (IOException e) {
@@ -186,7 +186,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     private synchronized File getFile() {
       if (myFile == null) {
         try {
-          final File tempFile = FileUtil.createTempFile("consulo_test_", ".out");
+          File tempFile = FileUtil.createTempFile("consulo_test_", ".out");
           if (tempFile.exists()) {
             myFile = tempFile;
             return myFile;
@@ -208,13 +208,13 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
       return myFile != null;
     }
 
-    public void flush(final List<Printable> printables) {
+    public void flush(List<Printable> printables) {
       if (printables.isEmpty()) return;
-      final ArrayList<Printable> currentPrintables = new ArrayList<>(printables);
+      ArrayList<Printable> currentPrintables = new ArrayList<>(printables);
       //move out from AWT thread
-      final Runnable request = () -> {
+      Runnable request = () -> {
         synchronized (myFileLock) {
-          for (final Printable printable : currentPrintables) {
+          for (Printable printable : currentPrintables) {
             printable.printOn(myPrinter);
           }
           myPrinter.close();
@@ -224,17 +224,17 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
       invokeInAlarm(request, ApplicationManager.getApplication().isUnitTestMode());
     }
 
-    public void printOn(final Printer console, final List<Printable> printables) {
+    public void printOn(Printer console, List<Printable> printables) {
       printOn(console, printables, false);
     }
 
-    public void printOn(final Printer console, final List<Printable> printables, final boolean skipFileContent) {
-      final Runnable request = () -> {
+    public void printOn(Printer console, List<Printable> printables, boolean skipFileContent) {
+      Runnable request = () -> {
         if (skipFileContent) {
           readFileContentAndPrint(console, null, printables);
           return;
         }
-        final File file = hasOutput() ? getFile() : null;
+        File file = hasOutput() ? getFile() : null;
         synchronized (myFileLock) {
           readFileContentAndPrint(console, file, printables);
         }
@@ -249,7 +249,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
       private DataOutputStream getFileWriter() {
         if (myFileWriter == null) {
           try {
-            final File file = getFile();
+            File file = getFile();
             LOG.assertTrue(file != null);
             myFileWriter = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file, true)));
           }
@@ -279,7 +279,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
       @Override
       public void print(String text, ConsoleViewContentType contentType) {
         try {
-          final DataOutputStream writer = getFileWriter();
+          DataOutputStream writer = getFileWriter();
           if (writer != null) {
             IOUtil.writeString(contentType.toString(), writer);
             IOUtil.writeString(text, writer);
@@ -296,9 +296,9 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
       @Override
       public void printHyperlink(String text, HyperlinkInfo info) {
         if (info instanceof DiffHyperlink.DiffHyperlinkInfo) {
-          final DiffHyperlink diffHyperlink = ((DiffHyperlink.DiffHyperlinkInfo)info).getPrintable();
+          DiffHyperlink diffHyperlink = ((DiffHyperlink.DiffHyperlinkInfo)info).getPrintable();
           try {
-            final DataOutputStream fileWriter = getFileWriter();
+            DataOutputStream fileWriter = getFileWriter();
             if (fileWriter != null) {
               IOUtil.writeString(HYPERLINK, fileWriter);
               IOUtil.writeString(diffHyperlink.getLeft(), fileWriter);
@@ -336,7 +336,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
           try {
             while (reader.available() > 0 && !wasPrintableChanged(printer)) {
               if (lineNum == CompositePrintable.this.getExceptionMark() && lineNum > 0) printer.mark();
-              final String firstToken = IOUtil.readString(reader);
+              String firstToken = IOUtil.readString(reader);
               if (firstToken == null) break;
               if (firstToken.equals(HYPERLINK)) {
                 new DiffHyperlink(IOUtil.readString(reader), IOUtil.readString(reader), IOUtil.readString(reader), false).printOn(printer);

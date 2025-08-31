@@ -111,7 +111,7 @@ public class ObjectIntCache<K> implements Iterable {
   }
 
   public void removeAll() {
-    final ArrayList<K> keys = new ArrayList<K>(count());
+    ArrayList<K> keys = new ArrayList<K>(count());
     for (int current = myTop; current > 0;) {
       if (myCache[current].key != null) {
         keys.add((K)myCache[current].key);
@@ -288,7 +288,7 @@ public class ObjectIntCache<K> implements Iterable {
   }
 
   private void fireListenersAboutDeletion(int index) {
-    final CacheEntry cacheEntry = myCache[index];
+    CacheEntry cacheEntry = myCache[index];
     myEventDispatcher.getMulticaster().objectRemoved(cacheEntry.key, cacheEntry.value);
   }
 

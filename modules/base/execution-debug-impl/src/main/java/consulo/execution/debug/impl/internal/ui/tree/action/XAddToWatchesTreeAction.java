@@ -37,13 +37,13 @@ import jakarta.annotation.Nullable;
  */
 public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
     @Override
-    protected boolean isEnabled(@Nonnull final XValueNodeImpl node, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
         return super.isEnabled(node, e) && DebuggerUIImplUtil.hasEvaluationExpression(node.getValueContainer()) && getWatchesView(e) != null;
     }
 
     @Override
-    protected void perform(final XValueNodeImpl node, @Nonnull final String nodeName, final AnActionEvent e) {
-        final XWatchesView watchesView = getWatchesView(e);
+    protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
+        XWatchesView watchesView = getWatchesView(e);
         if (watchesView != null) {
             node.getValueContainer().calculateEvaluationExpression().doWhenDone(expression -> {
                 if (expression != null) {

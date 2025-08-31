@@ -125,7 +125,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
                         mutator = Function.identity();
                     }
                     else {
-                        final int selectedRow = table.getSelectedRow();
+                        int selectedRow = table.getSelectedRow();
                         mutator = item12 -> helper.getMutable(item12, selectedRow);
                     }
                     ((DialogItemEditor<T>) itemEditor).edit(item, mutator, false);
@@ -295,10 +295,10 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
         return model.items;
     }
 
-    public void selectItem(@Nonnull final T item) {
+    public void selectItem(@Nonnull T item) {
         table.clearSelection();
 
-        final Ref<T> ref;
+        Ref<T> ref;
         if (helper.hasModifiedItems()) {
             ref = Ref.create();
             helper.process((modified, original) -> {
@@ -317,7 +317,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     @Nonnull
     public List<T> apply() {
         if (helper.hasModifiedItems()) {
-            @SuppressWarnings("unchecked") final ColumnInfo<T, Object>[] columns = model.getColumnInfos();
+            @SuppressWarnings("unchecked") ColumnInfo<T, Object>[] columns = model.getColumnInfos();
             helper.process((newItem, oldItem) -> {
                 for (ColumnInfo<T, Object> column : columns) {
                     if (column.isCellEditable(newItem)) {

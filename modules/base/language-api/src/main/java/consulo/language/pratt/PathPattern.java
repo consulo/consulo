@@ -64,7 +64,7 @@ public class PathPattern {
 
   public boolean accepts(PrattBuilder builder) {
     ListIterator<IElementType> iterator = null;
-    for (final ElementPattern pattern : myPath) {
+    for (ElementPattern pattern : myPath) {
       if (builder == null) return false;
 
       if (iterator == null) {

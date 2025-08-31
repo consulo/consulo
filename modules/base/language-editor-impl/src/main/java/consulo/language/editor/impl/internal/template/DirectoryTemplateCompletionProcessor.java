@@ -28,7 +28,7 @@ import consulo.language.psi.PsiFileSystemItem;
 @ExtensionImpl
 public class DirectoryTemplateCompletionProcessor implements TemplateCompletionProcessor {
   @Override
-  public boolean nextTabOnItemSelected(final ExpressionContext context, final LookupElement item) {
+  public boolean nextTabOnItemSelected(ExpressionContext context, LookupElement item) {
     Object object = item.getObject();
     if (object instanceof PsiFileSystemItem && ((PsiFileSystemItem)object).isDirectory()) {
       return false;

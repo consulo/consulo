@@ -130,8 +130,8 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
   @Override
   protected String getAdText(PsiElement source, int length) {
     if (length > 0 && !TestFinderHelper.isTest(source)) {
-      final Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
-      final Shortcut[] shortcuts = keymap.getShortcuts(DefaultRunExecutor.getRunExecutorInstance().getContextActionId());
+      Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+      Shortcut[] shortcuts = keymap.getShortcuts(DefaultRunExecutor.getRunExecutorInstance().getContextActionId());
       if (shortcuts.length > 0) {
         return ("Press " + KeymapUtil.getShortcutText(shortcuts[0]) + " to run selected tests");
       }

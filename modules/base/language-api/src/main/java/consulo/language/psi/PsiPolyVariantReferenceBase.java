@@ -25,7 +25,7 @@ import jakarta.annotation.Nullable;
  */
 public abstract class PsiPolyVariantReferenceBase<T extends PsiElement> extends PsiReferenceBase<T> implements PsiPolyVariantReference {
 
-  public PsiPolyVariantReferenceBase(final T psiElement) {
+  public PsiPolyVariantReferenceBase(T psiElement) {
     super(psiElement);
   }
 
@@ -33,11 +33,11 @@ public abstract class PsiPolyVariantReferenceBase<T extends PsiElement> extends 
     super(element, range);
   }
 
-  public PsiPolyVariantReferenceBase(final T psiElement, final boolean soft) {
+  public PsiPolyVariantReferenceBase(T psiElement, boolean soft) {
     super(psiElement, soft);
   }
 
-  public PsiPolyVariantReferenceBase(final T element, final TextRange range, final boolean soft) {
+  public PsiPolyVariantReferenceBase(T element, TextRange range, boolean soft) {
     super(element, range, soft);
   }
 
@@ -50,7 +50,7 @@ public abstract class PsiPolyVariantReferenceBase<T extends PsiElement> extends 
 
   @Override
   public boolean isReferenceTo(PsiElement element) {
-    final ResolveResult[] results = multiResolve(false);
+    ResolveResult[] results = multiResolve(false);
     for (ResolveResult result : results) {
       if (getElement().getManager().areElementsEquivalent(result.getElement(), element)) {
         return true;

@@ -127,7 +127,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setRightMarginShown(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myIsRightMarginShown)) {
             return;
         }
@@ -182,7 +182,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setIndentGuidesShown(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myIndentGuidesShown)) {
             return;
         }
@@ -198,7 +198,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setLineNumbersShown(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myAreLineNumbersShown)) {
             return;
         }
@@ -213,7 +213,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setGutterIconsShown(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myGutterIconsShown)) {
             return;
         }
@@ -254,7 +254,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setRightMargin(int rightMargin) {
-        final Integer newValue = rightMargin;
+        Integer newValue = rightMargin;
         if (newValue.equals(myRightMargin)) {
             return;
         }
@@ -333,7 +333,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setFoldingOutlineShown(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myIsFoldingOutlineShown)) {
             return;
         }
@@ -359,7 +359,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setUseTabCharacter(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myUseTabCharacter)) {
             return;
         }
@@ -388,15 +388,15 @@ public class SettingsImpl implements EditorSettings {
         if (myEditor == null || myEditor.isViewer()) {
             return;
         }
-        final Project project = myEditor.getProject();
-        final Document document = myEditor.getDocument();
+        Project project = myEditor.getProject();
+        Document document = myEditor.getDocument();
 
         if (project == null || project.isDisposed()) {
             return;
         }
 
-        final PsiDocumentManager psiManager = PsiDocumentManager.getInstance(project);
-        final PsiFile file = psiManager.getPsiFile(document);
+        PsiDocumentManager psiManager = PsiDocumentManager.getInstance(project);
+        PsiFile file = psiManager.getPsiFile(document);
         if (file == null) {
             return;
         }
@@ -440,7 +440,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setTabSize(int tabSize) {
-        final Integer newValue = tabSize;
+        Integer newValue = tabSize;
         if (newValue.equals(myTabSize)) {
             return;
         }
@@ -455,7 +455,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setSmartHome(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myIsSmartHome)) {
             return;
         }
@@ -473,7 +473,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setVirtualSpace(boolean allow) {
-        final Boolean newValue = allow;
+        Boolean newValue = allow;
         if (newValue.equals(myIsVirtualSpace)) {
             return;
         }
@@ -501,7 +501,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setCaretInsideTabs(boolean allow) {
-        final Boolean newValue = allow;
+        Boolean newValue = allow;
         if (newValue.equals(myIsCaretInsideTabs)) {
             return;
         }
@@ -516,7 +516,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setBlockCursor(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myIsBlockCursor)) {
             return;
         }
@@ -531,7 +531,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setCaretRowShown(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myCaretRowShown)) {
             return;
         }
@@ -581,7 +581,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setBlinkCaret(boolean val) {
-        final Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myIsCaretBlinking)) {
             return;
         }
@@ -596,7 +596,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setCaretBlinkPeriod(int blinkPeriod) {
-        final Integer newValue = blinkPeriod;
+        Integer newValue = blinkPeriod;
         if (newValue.equals(myCaretBlinkingPeriod)) {
             return;
         }
@@ -667,7 +667,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public void setUseSoftWraps(boolean use) {
-        final Boolean newValue = use ? Boolean.TRUE : Boolean.FALSE;
+        Boolean newValue = use ? Boolean.TRUE : Boolean.FALSE;
         if (newValue.equals(myUseSoftWraps)) {
             return;
         }

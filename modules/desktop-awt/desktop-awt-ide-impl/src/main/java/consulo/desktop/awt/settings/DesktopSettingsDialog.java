@@ -132,13 +132,13 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel, () -> myAfteLoad.accept(this));
         myEditor.getContext().addColleague(new OptionsEditorColleague() {
             @Override
-            public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
+            public AsyncResult<Void> onModifiedAdded(Configurable configurable) {
                 updateStatus();
                 return AsyncResult.resolved();
             }
 
             @Override
-            public AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
+            public AsyncResult<Void> onModifiedRemoved(Configurable configurable) {
                 updateStatus();
                 return AsyncResult.resolved();
             }
@@ -156,14 +156,14 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     public boolean updateStatus() {
         myApplyAction.setEnabled(myEditor.canApply());
 
-        final Map<Configurable, ConfigurationException> errors = myEditor.getContext().getErrors();
+        Map<Configurable, ConfigurationException> errors = myEditor.getContext().getErrors();
         if (errors.size() == 0) {
             clearErrorText();
         }
         else {
             String text = "Changes were not applied because of an error";
 
-            final String errorMessage = getErrorMessage(errors);
+            String errorMessage = getErrorMessage(errors);
             if (errorMessage != null) {
                 text += "<br>" + errorMessage;
             }
@@ -175,9 +175,9 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @Nullable
-    private static String getErrorMessage(final Map<Configurable, ConfigurationException> errors) {
-        final Collection<ConfigurationException> values = errors.values();
-        final ConfigurationException[] exceptions = values.toArray(new ConfigurationException[values.size()]);
+    private static String getErrorMessage(Map<Configurable, ConfigurationException> errors) {
+        Collection<ConfigurationException> values = errors.values();
+        ConfigurationException[] exceptions = values.toArray(new ConfigurationException[values.size()]);
         if (exceptions.length > 0) {
             return exceptions[0].getMessage();
         }
@@ -213,7 +213,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
             return;
         }
         
-        final Configurable current = myEditor.getContext().getCurrentConfigurable();
+        Configurable current = myEditor.getContext().getCurrentConfigurable();
         if (current == null) {
             return;
         }
@@ -222,7 +222,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @Override
-    public void doCancelAction(final AWTEvent source) {
+    public void doCancelAction(AWTEvent source) {
         if (source instanceof KeyEvent || source instanceof ActionEvent) {
             if (myEditor.getContext().isHoldingFilter()) {
                 myEditor.clearFilter();
@@ -249,7 +249,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     @Override
     @RequiredUIAccess
     protected void doHelpAction() {
-        final String topic = myEditor.getHelpTopic();
+        String topic = myEditor.getHelpTopic();
         HelpManager.getInstance().invokeHelp(topic);
     }
 

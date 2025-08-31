@@ -208,7 +208,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
                 dlg.setLink(link);
                 dlg.show();
                 if (dlg.isOK()) {
-                    final IssueNavigationLink editedLink = dlg.getLink();
+                    IssueNavigationLink editedLink = dlg.getLink();
                     link.setIssueRegexp(editedLink.getIssueRegexp());
                     link.setLinkRegexp(editedLink.getLinkRegexp());
                     myModel.fireTableDataChanged();

@@ -79,7 +79,7 @@ public class DebuggerUIImplUtil {
     private DebuggerUIImplUtil() {
     }
 
-    public static void enableEditorOnCheck(final JCheckBox checkbox, final JComponent textfield) {
+    public static void enableEditorOnCheck(JCheckBox checkbox, JComponent textfield) {
         checkbox.addActionListener(e -> {
             boolean selected = checkbox.isSelected();
             textfield.setEnabled(selected);
@@ -87,7 +87,7 @@ public class DebuggerUIImplUtil {
         textfield.setEnabled(checkbox.isSelected());
     }
 
-    public static void focusEditorOnCheck(final JCheckBox checkbox, final JComponent component) {
+    public static void focusEditorOnCheck(JCheckBox checkbox, JComponent component) {
         DebuggerUIUtil.focusEditorOnCheck(checkbox, component);
     }
 
@@ -109,7 +109,7 @@ public class DebuggerUIImplUtil {
         EditorTextField textArea = new TextViewer("Evaluating...", project);
         textArea.setBackground(TargetAWT.to(HintColorUtil.getInformationColor()));
 
-        final FullValueEvaluationCallbackImpl callback = new FullValueEvaluationCallbackImpl(textArea);
+        FullValueEvaluationCallbackImpl callback = new FullValueEvaluationCallbackImpl(textArea);
         evaluator.startEvaluation(callback);
 
         Size2D size = DimensionService.getInstance().getSize(FULL_VALUE_POPUP_DIMENSION_KEY, project);
@@ -135,22 +135,22 @@ public class DebuggerUIImplUtil {
         }
     }
 
-    public static JBPopup createValuePopup(Project project, JComponent component, @Nullable final FullValueEvaluationCallbackImpl callback) {
+    public static JBPopup createValuePopup(Project project, JComponent component, @Nullable FullValueEvaluationCallbackImpl callback) {
         return DebuggerUIUtil.createValuePopup(project, component, callback == null ? null : callback::setObsolete);
     }
 
-    public static void showXBreakpointEditorBalloon(final Project project,
-                                                    @Nullable final Point point,
-                                                    final JComponent component,
-                                                    final boolean showAllOptions,
+    public static void showXBreakpointEditorBalloon(Project project,
+                                                    @Nullable Point point,
+                                                    JComponent component,
+                                                    boolean showAllOptions,
                                                     final XBreakpoint breakpoint) {
-        final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+        XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
         final XLightBreakpointPropertiesPanel propertiesPanel =
             new XLightBreakpointPropertiesPanel(project, breakpointManager, (XBreakpointBase) breakpoint, showAllOptions);
 
-        final Ref<Balloon> balloonRef = Ref.create(null);
-        final Ref<Boolean> isLoading = Ref.create(Boolean.FALSE);
-        final Ref<Boolean> moreOptionsRequested = Ref.create(Boolean.FALSE);
+        Ref<Balloon> balloonRef = Ref.create(null);
+        Ref<Boolean> isLoading = Ref.create(Boolean.FALSE);
+        Ref<Boolean> moreOptionsRequested = Ref.create(Boolean.FALSE);
 
         propertiesPanel.setDelegate(() -> {
             if (!isLoading.get()) {
@@ -206,16 +206,16 @@ public class DebuggerUIImplUtil {
     }
 
     public static Balloon showBreakpointEditor(Project project,
-                                               final JComponent mainPanel,
-                                               final Point whereToShow,
-                                               final JComponent component,
+                                               JComponent mainPanel,
+                                               Point whereToShow,
+                                               JComponent component,
                                                @Nullable final Runnable showMoreOptions,
                                                Object breakpoint) {
-        final BreakpointEditor editor = new BreakpointEditor();
+        BreakpointEditor editor = new BreakpointEditor();
         editor.setPropertiesPanel(mainPanel);
         editor.setShowMoreOptionsLink(true);
 
-        final JPanel panel = editor.getMainPanel();
+        JPanel panel = editor.getMainPanel();
         final Balloon balloon =
             JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null).setHideOnClickOutside(true).setCloseButtonEnabled(false).setAnimationCycle(0)
                 .setBlockClicksThroughBalloon(true).createBalloon();
@@ -235,7 +235,7 @@ public class DebuggerUIImplUtil {
             }
         });
 
-        final ComponentAdapter moveListener = new ComponentAdapter() {
+        ComponentAdapter moveListener = new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
                 balloon.hide();
@@ -249,10 +249,10 @@ public class DebuggerUIImplUtil {
         }
         else {
             //todo[kb] modify and move to BalloonImpl?
-            final Window window = SwingUtilities.windowForComponent(component);
-            final RelativePoint p = new RelativePoint(component, whereToShow);
+            Window window = SwingUtilities.windowForComponent(component);
+            RelativePoint p = new RelativePoint(component, whereToShow);
             if (window != null) {
-                final RelativePoint point = new RelativePoint(window, new Point(0, 0));
+                RelativePoint point = new RelativePoint(window, new Point(0, 0));
                 if (p.getScreenPoint().getX() - point.getScreenPoint().getX() < 40) { // triangle + offsets is ~40px
                     p.getPoint().x += 40;
                 }
@@ -279,17 +279,17 @@ public class DebuggerUIImplUtil {
         private final AtomicBoolean myObsolete = new AtomicBoolean(false);
         private final EditorTextField myTextArea;
 
-        public FullValueEvaluationCallbackImpl(final EditorTextField textArea) {
+        public FullValueEvaluationCallbackImpl(EditorTextField textArea) {
             myTextArea = textArea;
         }
 
         @Override
-        public void evaluated(@Nonnull final String fullValue) {
+        public void evaluated(@Nonnull String fullValue) {
             evaluated(fullValue, null);
         }
 
         @Override
-        public void evaluated(@Nonnull final String fullValue, @Nullable final Font font) {
+        public void evaluated(@Nonnull String fullValue, @Nullable Font font) {
             AppUIUtil.invokeOnEdt(() -> {
                 myTextArea.setText(fullValue);
                 if (font != null) {
@@ -299,7 +299,7 @@ public class DebuggerUIImplUtil {
         }
 
         @Override
-        public void errorOccurred(@Nonnull final String errorMessage) {
+        public void errorOccurred(@Nonnull String errorMessage) {
             AppUIUtil.invokeOnEdt(() -> {
                 myTextArea.setForeground(XDebuggerUIConstants.ERROR_MESSAGE_ATTRIBUTES.getFgColor());
                 myTextArea.setText(errorMessage);
@@ -342,7 +342,7 @@ public class DebuggerUIImplUtil {
         action.registerCustomShortcutSet(action.getShortcutSet(), component, parentDisposable);
     }
 
-    public static void registerExtraHandleShortcuts(final ListPopup popup, String... actionNames) {
+    public static void registerExtraHandleShortcuts(ListPopup popup, String... actionNames) {
         DebuggerUIUtil.registerExtraHandleShortcuts(popup, actionNames);
     }
 
@@ -383,7 +383,7 @@ public class DebuggerUIImplUtil {
             }
 
             @Override
-            public void errorOccurred(@Nonnull final String errorMessage) {
+            public void errorOccurred(@Nonnull String errorMessage) {
                 AppUIUtil.invokeOnEdt(() -> {
                     tree.rebuildAndRestore(treeState);
                     errorConsumer.accept(errorMessage);

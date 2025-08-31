@@ -66,27 +66,27 @@ class RangeMarkerWindow implements RangeMarkerEx {
 
   ////////////////////////////delegates
   @Override
-  public void setGreedyToLeft(final boolean greedy) {
+  public void setGreedyToLeft(boolean greedy) {
     myHostMarker.setGreedyToLeft(greedy);
   }
 
   @Override
-  public void setGreedyToRight(final boolean greedy) {
+  public void setGreedyToRight(boolean greedy) {
     myHostMarker.setGreedyToRight(greedy);
   }
 
   @Override
-  public <T> T getUserData(@Nonnull final Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myHostMarker.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@Nonnull final Key<T> key, final T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, T value) {
     myHostMarker.putUserData(key, value);
   }
 
   @Override
-  public void documentChanged(@Nonnull final DocumentEvent e) {
+  public void documentChanged(@Nonnull DocumentEvent e) {
     myHostMarker.documentChanged(e);
   }
 

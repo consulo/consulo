@@ -240,7 +240,7 @@ public class DialogBuilder implements Disposable {
         myOkOperation = runnable;
     }
 
-    public void setOkActionEnabled(final boolean isEnabled) {
+    public void setOkActionEnabled(boolean isEnabled) {
         myDialogWrapper.setOKActionEnabled(isEnabled);
     }
 
@@ -260,7 +260,7 @@ public class DialogBuilder implements Disposable {
         return get(getActionDescriptors(), OkActionDescriptor.class);
     }
 
-    private static CustomizableAction get(final ArrayList<ActionDescriptor> actionDescriptors, final Class aClass) {
+    private static CustomizableAction get(ArrayList<ActionDescriptor> actionDescriptors, Class aClass) {
         for (ActionDescriptor actionDescriptor : actionDescriptors) {
             if (actionDescriptor.getClass().isAssignableFrom(aClass)) {
                 return (CustomizableAction)actionDescriptor;
@@ -532,11 +532,11 @@ public class DialogBuilder implements Disposable {
         }
     }
 
-    public void setErrorText(@Nullable final String text) {
+    public void setErrorText(@Nullable String text) {
         myDialogWrapper.setErrorText(text);
     }
 
-    public void setErrorText(@Nullable final String text, @Nullable JComponent component) {
+    public void setErrorText(@Nullable String text, @Nullable JComponent component) {
         myDialogWrapper.setErrorText(text, component);
     }
 }

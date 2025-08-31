@@ -139,7 +139,7 @@ public class VcsRepositoryManager implements Disposable {
 
   @Nullable
   public Repository getRepositoryForFile(@Nonnull VirtualFile file, boolean quick) {
-    final VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
+    VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
     if (vcsRoot == null) {
       return getExternalRepositoryForFile(file);
     }
@@ -299,13 +299,13 @@ public class VcsRepositoryManager implements Disposable {
   }
 
   @Nonnull
-  private Collection<VirtualFile> findInvalidRoots(@Nonnull final Collection<VirtualFile> roots) {
-    final VirtualFile[] validRoots = myVcsManager.getAllVersionedRoots();
+  private Collection<VirtualFile> findInvalidRoots(@Nonnull Collection<VirtualFile> roots) {
+    VirtualFile[] validRoots = myVcsManager.getAllVersionedRoots();
     return ContainerUtil.filter(roots, file -> !ArrayUtil.contains(file, validRoots));
   }
 
   @Nullable
-  private VcsRepositoryCreator getRepositoryCreator(@Nullable final AbstractVcs vcs) {
+  private VcsRepositoryCreator getRepositoryCreator(@Nullable AbstractVcs vcs) {
     if (vcs == null) return null;
     return ContainerUtil.find(myProject.getExtensionList(VcsRepositoryCreator.class),
                               creator -> creator.getVcsKey().equals(vcs.getKeyInstanceMethod()));

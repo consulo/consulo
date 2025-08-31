@@ -58,7 +58,7 @@ public class LookupStatisticsWeigher extends Classifier<LookupElement> {
 
   @Nonnull
   @Override
-  public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull final ProcessingContext context) {
+  public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull ProcessingContext context) {
     List<LookupElement> initialList = getInitialNoStatElements(source, context);
     Iterable<LookupElement> rest = withoutInitial(source, initialList);
     Collection<List<LookupElement>> byWeight = buildMapByWeight(rest).descendingMap().values();
@@ -129,7 +129,7 @@ public class LookupStatisticsWeigher extends Classifier<LookupElement> {
     return w;
   }
 
-  private static int weigh(final StatisticsInfo baseInfo) {
+  private static int weigh(StatisticsInfo baseInfo) {
     if (baseInfo == StatisticsInfo.EMPTY) {
       return 0;
     }
@@ -139,7 +139,7 @@ public class LookupStatisticsWeigher extends Classifier<LookupElement> {
 
   @Nonnull
   @Override
-  public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull final ProcessingContext context) {
+  public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
     return ContainerUtil.map(items, lookupElement -> new Pair<LookupElement, Object>(lookupElement, getWeight(lookupElement)));
   }
 

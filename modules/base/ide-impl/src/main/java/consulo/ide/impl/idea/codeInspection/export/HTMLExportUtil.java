@@ -31,13 +31,13 @@ import java.io.File;
 import java.io.IOException;
 
 public class HTMLExportUtil {
-  public static void writeFile(final String folder, @NonNls final String fileName, CharSequence buf, final Project project) {
+  public static void writeFile(String folder, @NonNls String fileName, CharSequence buf, Project project) {
     try {
       HTMLExporter.writeFileImpl(folder, fileName, buf);
     }
     catch (IOException e) {
       Runnable showError = () -> {
-        final String fullPath = folder + File.separator + fileName;
+        String fullPath = folder + File.separator + fileName;
         Messages.showMessageDialog(
           project,
           InspectionLocalize.inspectionExportErrorWritingTo(fullPath).get(),
@@ -50,7 +50,7 @@ public class HTMLExportUtil {
     }
   }
 
-  public static void runExport(final Project project, @Nonnull ThrowableRunnable<IOException> runnable) {
+  public static void runExport(Project project, @Nonnull ThrowableRunnable<IOException> runnable) {
     try {
       runnable.run();
     }

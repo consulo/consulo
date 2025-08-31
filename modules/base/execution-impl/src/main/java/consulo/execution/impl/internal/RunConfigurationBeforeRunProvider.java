@@ -140,13 +140,13 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
   private List<RunnerAndConfigurationSettings> getAvailableConfigurations(RunConfiguration runConfiguration) {
     Project project = runConfiguration.getProject();
     if (project == null || !project.isInitialized()) return Collections.emptyList();
-    final RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
+    RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
 
-    final ArrayList<RunnerAndConfigurationSettings> configurations = new ArrayList<>(runManager.getSortedConfigurations());
+    ArrayList<RunnerAndConfigurationSettings> configurations = new ArrayList<>(runManager.getSortedConfigurations());
     String executorId = DefaultRunExecutor.getRunExecutorInstance().getId();
     for (Iterator<RunnerAndConfigurationSettings> iterator = configurations.iterator(); iterator.hasNext(); ) {
       RunnerAndConfigurationSettings settings = iterator.next();
-      final ProgramRunner runner = ProgramRunnerUtil.getRunner(executorId, settings);
+      ProgramRunner runner = ProgramRunnerUtil.getRunner(executorId, settings);
       if (runner == null || settings.getConfiguration() == runConfiguration) iterator.remove();
     }
     return configurations;
@@ -159,7 +159,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
       return false;
     }
     String executorId = DefaultRunExecutor.getRunExecutorInstance().getId();
-    final ProgramRunner runner = ProgramRunnerUtil.getRunner(executorId, settings);
+    ProgramRunner runner = ProgramRunnerUtil.getRunner(executorId, settings);
     if (runner == null) return false;
     return runner.canRun(executorId, settings.getConfiguration());
   }
@@ -171,11 +171,11 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
     if (settings == null) {
       return AsyncResult.rejected();
     }
-    final Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+    Executor executor = DefaultRunExecutor.getRunExecutorInstance();
     String executorId = executor.getId();
-    final ProgramRunner runner = ProgramRunnerUtil.getRunner(executorId, settings);
+    ProgramRunner runner = ProgramRunnerUtil.getRunner(executorId, settings);
     if (runner == null) return AsyncResult.rejected();
-    final ExecutionEnvironment environment = new ExecutionEnvironment(executor, runner, settings, myProject);
+    ExecutionEnvironment environment = new ExecutionEnvironment(executor, runner, settings, myProject);
     environment.setExecutionId(env.getExecutionId());
     if (!ExecutionTargetManager.canRun(settings, env.getExecutionTarget())) {
       return AsyncResult.rejected();

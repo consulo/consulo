@@ -61,7 +61,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   }
 
   public static String getSelectedTextForClipboard(@Nonnull Editor editor, @Nonnull Collection<TextBlockTransferableData> extraDataCollector) {
-    final StringBuilder buf = new StringBuilder();
+    StringBuilder buf = new StringBuilder();
     String separator = "";
     List<Caret> carets = editor.getCaretModel().getAllCarets();
     int[] startOffsets = new int[carets.size()];

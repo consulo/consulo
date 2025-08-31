@@ -40,7 +40,7 @@ public class FavoritesTreeNodeDescriptor extends PresentableNodeDescriptor<Abstr
   private final Project myProject;
   private final AbstractTreeNode myElement;
 
-  public FavoritesTreeNodeDescriptor(final Project project, final NodeDescriptor parentDescriptor, final AbstractTreeNode element) {
+  public FavoritesTreeNodeDescriptor(Project project, NodeDescriptor parentDescriptor, AbstractTreeNode element) {
     super(parentDescriptor);
     myProject = project;
     myElement = element;
@@ -61,7 +61,7 @@ public class FavoritesTreeNodeDescriptor extends PresentableNodeDescriptor<Abstr
     return getLocation(myElement, myProject);
   }
 
-  public static String getLocation(final AbstractTreeNode element, final Project project) {
+  public static String getLocation(AbstractTreeNode element, Project project) {
     Object nodeElement = element.getValue();
     if (nodeElement instanceof SmartPsiElementPointer) {
       nodeElement = ((SmartPsiElementPointer)nodeElement).getElement();
@@ -71,8 +71,8 @@ public class FavoritesTreeNodeDescriptor extends PresentableNodeDescriptor<Abstr
         return ((PsiDirectory)nodeElement).getVirtualFile().getPresentableUrl();
       }
       if (nodeElement instanceof PsiFile) {
-        final PsiFile containingFile = (PsiFile)nodeElement;
-        final VirtualFile virtualFile = containingFile.getVirtualFile();
+        PsiFile containingFile = (PsiFile)nodeElement;
+        VirtualFile virtualFile = containingFile.getVirtualFile();
         return virtualFile != null ? virtualFile.getPresentableUrl() : "";
       }
     }
@@ -81,8 +81,8 @@ public class FavoritesTreeNodeDescriptor extends PresentableNodeDescriptor<Abstr
       return ((LibraryGroupElement)nodeElement).getModule().getName();
     }
     if (nodeElement instanceof NamedLibraryElement) {
-      final NamedLibraryElement namedLibraryElement = ((NamedLibraryElement)nodeElement);
-      final Module module = namedLibraryElement.getModule();
+      NamedLibraryElement namedLibraryElement = ((NamedLibraryElement)nodeElement);
+      Module module = namedLibraryElement.getModule();
       return (module != null ? module.getName() : "") + ":" + namedLibraryElement.getOrderEntry().getPresentableName();
     }
 

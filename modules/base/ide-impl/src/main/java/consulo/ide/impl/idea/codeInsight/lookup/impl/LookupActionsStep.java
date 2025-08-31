@@ -45,7 +45,7 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
 
         int w = 0, h = 0;
         for (LookupElementAction action : actions) {
-            final Image icon = action.getIcon();
+            Image icon = action.getIcon();
             if (icon != null) {
                 w = Math.max(w, icon.getWidth());
                 h = Math.max(h, icon.getHeight());
@@ -57,7 +57,7 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
     @Override
     @RequiredUIAccess
     public PopupStep onChosen(LookupElementAction selectedValue, boolean finalChoice) {
-        final LookupElementAction.Result result = selectedValue.performLookupAction();
+        LookupElementAction.Result result = selectedValue.performLookupAction();
         if (result == LookupElementAction.Result.HIDE_LOOKUP) {
             myLookup.hideLookup(true);
         }

@@ -39,8 +39,8 @@ public class ShowParameterInfoAction extends BaseCodeInsightAction implements Du
   }
 
   @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
-    final Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
+  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
     return ShowParameterInfoHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()) != null;
   }
 

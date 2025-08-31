@@ -102,7 +102,7 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
     public ExternalSystemTask findTask(
         @Nonnull ExternalSystemTaskType type,
         @Nonnull ProjectSystemId projectSystemId,
-        @Nonnull final String externalProjectPath
+        @Nonnull String externalProjectPath
     ) {
         for (ExternalSystemTask task : myTasksDetails.values()) {
             if (task instanceof AbstractExternalSystemTask externalSystemTask

@@ -79,7 +79,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   @Nonnull
   public String getValue() {
     String text = myElement.getText();
-    final TextRange range = getRangeInElement();
+    TextRange range = getRangeInElement();
     try {
       return range.substring(text);
     }
@@ -128,11 +128,11 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     return getElement().getManager().areElementsEquivalent(resolve(), element);
   }
 
-  public static <T extends PsiElement> PsiReferenceBase<T> createSelfReference(T element, final PsiElement resolveTo) {
+  public static <T extends PsiElement> PsiReferenceBase<T> createSelfReference(T element, PsiElement resolveTo) {
     return new Immediate<T>(element, true, resolveTo);
   }
 
-  public static <T extends PsiElement> PsiReferenceBase<T> createSelfReference(T element, TextRange range, final PsiElement resolveTo) {
+  public static <T extends PsiElement> PsiReferenceBase<T> createSelfReference(T element, TextRange range, PsiElement resolveTo) {
     return new Immediate<T>(element, range, resolveTo);
   }
 
@@ -151,21 +151,21 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
 
   public static abstract class Poly<T extends PsiElement> extends PsiReferenceBase<T> implements PsiPolyVariantReference {
 
-    public Poly(final T psiElement) {
+    public Poly(T psiElement) {
       super(psiElement);
     }
 
-    public Poly(final T element, final boolean soft) {
+    public Poly(T element, boolean soft) {
       super(element, soft);
     }
 
-    public Poly(final T element, final TextRange range, final boolean soft) {
+    public Poly(T element, TextRange range, boolean soft) {
       super(element, range, soft);
     }
 
     @Override
     public boolean isReferenceTo(PsiElement element) {
-      final ResolveResult[] results = multiResolve(false);
+      ResolveResult[] results = multiResolve(false);
       for (ResolveResult result : results) {
         if (element.getManager().areElementsEquivalent(result.getElement(), element)) {
           return true;
@@ -207,7 +207,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
 
     //do nothing. the element will be renamed via PsiMetaData (consulo.ide.impl.idea.refactoring.rename.RenameUtil.doRenameGenericNamedElement())
     @Override
-    public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
       return getElement();
     }
 

@@ -35,7 +35,7 @@ public class SelectFilesToAddTextsToPatchPanel {
   private static final Logger LOG = Logger.getInstance(SelectFilesToAddTextsToPatchPanel.class);
 
   public static Set<Change> getBig(List<Change> changes) {
-    final Set<Change> exclude = new HashSet<>();
+    Set<Change> exclude = new HashSet<>();
     for (Change change : changes) {
       // try to estimate size via VF: we assume that base content hasn't been changed much
       VirtualFile virtualFile = getVfFromChange(change);
@@ -51,7 +51,7 @@ public class SelectFilesToAddTextsToPatchPanel {
         try {
           String content = beforeRevision.getContent();
           if (content == null) {
-            final FilePath file = beforeRevision.getFile();
+            FilePath file = beforeRevision.getFile();
             LOG.info("null content for " + (file.getPath()) + ", is dir: " + (file.isDirectory()));
             continue;
           }

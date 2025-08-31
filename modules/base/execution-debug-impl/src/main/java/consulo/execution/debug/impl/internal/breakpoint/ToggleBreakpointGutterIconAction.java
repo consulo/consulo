@@ -32,7 +32,7 @@ class ToggleBreakpointGutterIconAction extends AnAction implements DumbAware {
     this.myBreakpoint = breakpoint;
   }
 
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     myBreakpoint.setEnabled(!myBreakpoint.isEnabled());
   }
 }

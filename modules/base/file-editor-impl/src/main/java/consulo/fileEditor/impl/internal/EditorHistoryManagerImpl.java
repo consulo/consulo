@@ -108,16 +108,16 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * Makes file most recent one
    */
   @RequiredUIAccess
-  private void fileOpenedImpl(@Nonnull final VirtualFile file,
-                              @Nullable final FileEditor fallbackEditor,
+  private void fileOpenedImpl(@Nonnull VirtualFile file,
+                              @Nullable FileEditor fallbackEditor,
                               @Nullable FileEditorProvider fallbackProvider) {
     UIAccess.assertIsUIThread();
     // don't add files that cannot be found via VFM (light & etc.)
     if (VirtualFileManager.getInstance().findFileByUrl(file.getUrl()) == null) return;
 
-    final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(myProject);
+    FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(myProject);
 
-    final Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders = editorManager.getEditorsWithProviders(file);
+    Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders = editorManager.getEditorsWithProviders(file);
     FileEditor[] editors = editorsWithProviders.getFirst();
     FileEditorProvider[] oldProviders = editorsWithProviders.getSecond();
     if (editors.length <= 0 && fallbackEditor != null) {
@@ -134,16 +134,16 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
       selectedEditor = fallbackEditor;
     }
     LOG.assertTrue(selectedEditor != null);
-    final int selectedProviderIndex = ArrayUtil.find(editors, selectedEditor);
+    int selectedProviderIndex = ArrayUtil.find(editors, selectedEditor);
     LOG.assertTrue(selectedProviderIndex != -1, "Can't find " + selectedEditor + " among " + Arrays.asList(editors));
 
-    final HistoryEntry entry = getEntry(file);
+    HistoryEntry entry = getEntry(file);
     if (entry != null) {
       moveOnTop(entry);
     }
     else {
-      final FileEditorState[] states = new FileEditorState[editors.length];
-      final FileEditorProvider[] providers = new FileEditorProvider[editors.length];
+      FileEditorState[] states = new FileEditorState[editors.length];
+      FileEditorProvider[] providers = new FileEditorProvider[editors.length];
       for (int i = states.length - 1; i >= 0; i--) {
         FileEditorProvider provider = oldProviders[i];
         LOG.assertTrue(provider != null);
@@ -158,20 +158,20 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
     }
   }
 
-  public void updateHistoryEntry(@Nullable final VirtualFile file, final boolean changeEntryOrderOnly) {
+  public void updateHistoryEntry(@Nullable VirtualFile file, boolean changeEntryOrderOnly) {
     updateHistoryEntry(file, null, null, changeEntryOrderOnly);
   }
 
   @RequiredUIAccess
-  private void updateHistoryEntry(@Nullable final VirtualFile file,
-                                  @Nullable final FileEditor fallbackEditor,
+  private void updateHistoryEntry(@Nullable VirtualFile file,
+                                  @Nullable FileEditor fallbackEditor,
                                   @Nullable FileEditorProvider fallbackProvider,
-                                  final boolean changeEntryOrderOnly) {
+                                  boolean changeEntryOrderOnly) {
     if (file == null) {
       return;
     }
-    final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(myProject);
-    final Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders = editorManager.getEditorsWithProviders(file);
+    FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(myProject);
+    Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders = editorManager.getEditorsWithProviders(file);
     FileEditor[] editors = editorsWithProviders.getFirst();
     FileEditorProvider[] providers = editorsWithProviders.getSecond();
     if (editors.length <= 0 && fallbackEditor != null) {
@@ -184,7 +184,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
       // makes no sense to put the file in the history
       return;
     }
-    final HistoryEntry entry = getEntry(file);
+    HistoryEntry entry = getEntry(file);
     if (entry == null) {
       // Size of entry list can be less than number of opened editors (some entries can be removed)
       if (file.isValid()) {
@@ -197,22 +197,22 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
     if (!changeEntryOrderOnly) { // update entry state
       //LOG.assertTrue(editors.length > 0);
       for (int i = editors.length - 1; i >= 0; i--) {
-        final FileEditor editor = editors[i];
-        final FileEditorProvider provider = providers[i];
+        FileEditor editor = editors[i];
+        FileEditorProvider provider = providers[i];
         if (!editor.isValid()) {
           // this can happen for example if file extension was changed
           // and this method was called during corresponding myEditor close up
           continue;
         }
 
-        final FileEditorState oldState = entry.getState(provider);
-        final FileEditorState newState = editor.getState(FileEditorStateLevel.FULL);
+        FileEditorState oldState = entry.getState(provider);
+        FileEditorState newState = editor.getState(FileEditorStateLevel.FULL);
         if (!newState.equals(oldState)) {
           entry.putState(provider, newState);
         }
       }
     }
-    final FileEditorWithProvider selectedEditorWithProvider = editorManager.getSelectedEditorWithProvider(file);
+    FileEditorWithProvider selectedEditorWithProvider = editorManager.getSelectedEditorWithProvider(file);
     if (selectedEditorWithProvider != null) {
       //LOG.assertTrue(selectedEditorWithProvider != null);
       entry.setSelectedProvider(selectedEditorWithProvider.getProvider());
@@ -228,7 +228,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * @return array of valid files that are in the history, oldest first. May contain duplicates.
    */
   public synchronized VirtualFile[] getFiles() {
-    final List<VirtualFile> result = new ArrayList<>(myEntriesList.size());
+    List<VirtualFile> result = new ArrayList<>(myEntriesList.size());
     for (HistoryEntry entry : myEntriesList) {
       VirtualFile file = entry.getFile();
       if (file != null) result.add(file);
@@ -280,16 +280,16 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    *                                  is <code>null</code>
    */
   @Override
-  public synchronized void removeFile(@Nonnull final VirtualFile file) {
-    final HistoryEntry entry = getEntry(file);
+  public synchronized void removeFile(@Nonnull VirtualFile file) {
+    HistoryEntry entry = getEntry(file);
     if (entry != null) {
       removeEntry(entry);
     }
   }
 
   @Override
-  public FileEditorState getState(@Nonnull VirtualFile file, final FileEditorProvider provider) {
-    final HistoryEntry entry = getEntry(file);
+  public FileEditorState getState(@Nonnull VirtualFile file, FileEditorProvider provider) {
+    HistoryEntry entry = getEntry(file);
     return entry != null ? entry.getState(provider) : null;
   }
 
@@ -297,14 +297,14 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * @return may be null
    */
   @Override
-  public FileEditorProvider getSelectedProvider(final VirtualFile file) {
-    final HistoryEntry entry = getEntry(file);
+  public FileEditorProvider getSelectedProvider(VirtualFile file) {
+    HistoryEntry entry = getEntry(file);
     return entry != null ? entry.getSelectedProvider() : null;
   }
 
   private synchronized HistoryEntry getEntry(@Nonnull VirtualFile file) {
     for (int i = myEntriesList.size() - 1; i >= 0; i--) {
-      final HistoryEntry entry = myEntriesList.get(i);
+      HistoryEntry entry = myEntriesList.get(i);
       VirtualFile entryFile = entry.getFile();
       if (file.equals(entryFile)) {
         return entry;
@@ -320,7 +320,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * @param uiSettings
    */
   private synchronized void trimToSize(UISettings uiSettings) {
-    final int limit = uiSettings.RECENT_FILES_LIMIT + 1;
+    int limit = uiSettings.RECENT_FILES_LIMIT + 1;
     while (myEntriesList.size() > limit) {
       HistoryEntry removed = myEntriesList.remove(0);
       removed.destroy();
@@ -332,7 +332,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
     // we have to delay xml processing because history entries require EditorStates to be created
     // which is done via corresponding EditorProviders, those are not accessible before their
     // is initComponent() called
-    final Element state = element.clone();
+    Element state = element.clone();
     StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
       for (Element e : state.getChildren(HistoryEntry.TAG)) {
         try {
@@ -352,9 +352,9 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   @RequiredUIAccess
   @Override
   public HistoryEntry[] getStateFromUI() {
-    final VirtualFile[] openFiles = FileEditorManager.getInstance(myProject).getOpenFiles();
+    VirtualFile[] openFiles = FileEditorManager.getInstance(myProject).getOpenFiles();
     for (int i = openFiles.length - 1; i >= 0; i--) {
-      final VirtualFile file = openFiles[i];
+      VirtualFile file = openFiles[i];
       // we have to update only files that are in history
       if (getEntry(file) != null) {
         updateHistoryEntry(file, false);
@@ -379,7 +379,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
     }*/
 
     Element element = new Element("state");
-    for (final HistoryEntry entry : entries) {
+    for (HistoryEntry entry : entries) {
       entry.writeExternal(element, myProject);
     }
     return element;
@@ -399,12 +399,12 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   private final class MyEditorManagerListener extends FileEditorManagerAdapter {
     @Override
     @RequiredUIAccess
-    public void fileOpened(@Nonnull final FileEditorManager source, @Nonnull final VirtualFile file) {
+    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
       fileOpenedImpl(file, null, null);
     }
 
     @Override
-    public void selectionChanged(@Nonnull final FileEditorManagerEvent event) {
+    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
       // updateHistoryEntry does commitDocument which is 1) very expensive and 2) cannot be performed from within PSI change listener
       // so defer updating history entry until documents committed to improve responsiveness
       PsiDocumentManager.getInstance(myProject).performWhenAllCommitted(() -> {

@@ -42,11 +42,11 @@ public class CheckBoxList<T> extends JBList {
   private CheckBoxListListener checkBoxListListener;
   private final BidirectionalMap<T, JCheckBox> myItemMap = new BidirectionalMap<>();
 
-  public CheckBoxList(final CheckBoxListListener checkBoxListListener) {
+  public CheckBoxList(CheckBoxListListener checkBoxListListener) {
     this(new DefaultListModel(), checkBoxListListener);
   }
 
-  public CheckBoxList(final DefaultListModel dataModel, final CheckBoxListListener checkBoxListListener) {
+  public CheckBoxList(DefaultListModel dataModel, CheckBoxListListener checkBoxListListener) {
     this(dataModel);
     setCheckBoxListListener(checkBoxListListener);
   }
@@ -55,7 +55,7 @@ public class CheckBoxList<T> extends JBList {
     this(new DefaultListModel());
   }
 
-  public CheckBoxList(final DefaultListModel dataModel) {
+  public CheckBoxList(DefaultListModel dataModel) {
     super();
     //noinspection unchecked
     setModel(dataModel);
@@ -189,7 +189,7 @@ public class CheckBoxList<T> extends JBList {
     return (JCheckBox)getModel().getElementAt(index);
   }
 
-  public void setStringItems(final Map<String, Boolean> items) {
+  public void setStringItems(Map<String, Boolean> items) {
     clear();
     for (Map.Entry<String, Boolean> entry : items.entrySet()) {
       //noinspection unchecked
@@ -197,11 +197,11 @@ public class CheckBoxList<T> extends JBList {
     }
   }
 
-  public void setItems(final List<T> items, @Nullable Function<T, String> converter) {
+  public void setItems(List<T> items, @Nullable Function<T, String> converter) {
     setItems(items, converter, t -> false);
   }
 
-  public void setItems(final List<T> items, @Nullable Function<T, String> converter, Function<T, Boolean> stateFunc) {
+  public void setItems(List<T> items, @Nullable Function<T, String> converter, Function<T, Boolean> stateFunc) {
     clear();
     for (T item : items) {
       String text = converter != null ? converter.apply(item) : item.toString();
@@ -269,7 +269,7 @@ public class CheckBoxList<T> extends JBList {
     repaint();
 
     // fire change notification in case if we've already initialized model
-    final ListModel model = getModel();
+    ListModel model = getModel();
     if (model instanceof DefaultListModel) {
       //noinspection unchecked
       ((DefaultListModel)model).setElementAt(getModel().getElementAt(index), index);
@@ -284,7 +284,7 @@ public class CheckBoxList<T> extends JBList {
     this.checkBoxListListener = checkBoxListListener;
   }
 
-  protected JComponent adjustRendering(JComponent rootComponent, final JCheckBox checkBox, int index, final boolean selected, final boolean hasFocus) {
+  protected JComponent adjustRendering(JComponent rootComponent, JCheckBox checkBox, int index, boolean selected, boolean hasFocus) {
     return rootComponent;
   }
 
@@ -362,11 +362,11 @@ public class CheckBoxList<T> extends JBList {
     return null;
   }
 
-  protected Color getBackground(final boolean isSelected) {
+  protected Color getBackground(boolean isSelected) {
     return isSelected ? getSelectionBackground() : getBackground();
   }
 
-  protected Color getForeground(final boolean isSelected) {
+  protected Color getForeground(boolean isSelected) {
     return isSelected ? getSelectionForeground() : getForeground();
   }
 }

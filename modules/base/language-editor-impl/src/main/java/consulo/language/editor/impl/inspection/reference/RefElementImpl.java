@@ -81,21 +81,21 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
     return ReadAction.compute(() -> {
       if (getRefManager().getProject().isDisposed()) return false;
 
-      final PsiFile file = myID.getContainingFile();
+      PsiFile file = myID.getContainingFile();
       //no need to check resolve in offline mode
       if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
         return file != null && file.isPhysical();
       }
 
-      final PsiElement element = getPsiElement();
+      PsiElement element = getPsiElement();
       return element != null && element.isPhysical();
     });
   }
 
   @Override
   @Nullable
-  public Image getIcon(final boolean expanded) {
-    final PsiElement element = getPsiElement();
+  public Image getIcon(boolean expanded) {
+    PsiElement element = getPsiElement();
     if (element != null && element.isValid()) {
       return IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
     }
@@ -104,7 +104,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
 
   @Override
   public RefModule getModule() {
-    final RefEntity owner = getOwner();
+    RefEntity owner = getOwner();
     return owner instanceof RefElement ? ((RefElement)owner).getModule() : null;
   }
 
@@ -239,11 +239,11 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   @Override
   @Nullable
   public String getURL() {
-    final PsiElement element = getPsiElement();
+    PsiElement element = getPsiElement();
     if (element == null || !element.isPhysical()) return null;
-    final PsiFile containingFile = element.getContainingFile();
+    PsiFile containingFile = element.getContainingFile();
     if (containingFile == null) return null;
-    final VirtualFile virtualFile = containingFile.getVirtualFile();
+    VirtualFile virtualFile = containingFile.getVirtualFile();
     if (virtualFile == null) return null;
     return virtualFile.getUrl() + "#" + element.getTextOffset();
   }
@@ -251,7 +251,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   public abstract void initialize();
 
   @Override
-  public void addSuppression(final String text) {
+  public void addSuppression(String text) {
     mySuppressions = text.split("[, ]");
   }
 
@@ -267,7 +267,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
         }
       }
     }
-    final RefEntity entity = getOwner();
+    RefEntity entity = getOwner();
     return entity instanceof RefElementImpl && ((RefElementImpl)entity).isSuppressed(toolId);
   }
 }

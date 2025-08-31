@@ -72,7 +72,7 @@ public class LanguageEditorNavigationUtil {
             .project(element.getProject())
             .compute(() -> {
                 if (openAsNativeFinal || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
-                    final NavigationItem navigationItem = (NavigationItem)element;
+                    NavigationItem navigationItem = (NavigationItem)element;
                     if (navigationItem.canNavigate()) {
                         navigationItem.navigate(requestFocus);
                         return true;
@@ -98,7 +98,7 @@ public class LanguageEditorNavigationUtil {
             return false;
         }
         elt = elt.getNavigationElement();
-        final PsiFile file = elt.getContainingFile();
+        PsiFile file = elt.getContainingFile();
         if (file == null || !file.isValid()) {
             return false;
         }
@@ -108,17 +108,17 @@ public class LanguageEditorNavigationUtil {
             return false;
         }
 
-        final FileEditorManager fem = FileEditorManager.getInstance(elt.getProject());
+        FileEditorManager fem = FileEditorManager.getInstance(elt.getProject());
         if (!fem.isFileOpen(vFile)) {
             fem.openFile(vFile, requestFocus, searchForOpen);
         }
 
-        final TextRange range = elt.getTextRange();
+        TextRange range = elt.getTextRange();
         if (range == null) {
             return false;
         }
 
-        final FileEditor[] editors = fem.getEditors(vFile);
+        FileEditor[] editors = fem.getEditors(vFile);
         for (FileEditor editor : editors) {
             if (editor instanceof TextEditor textEditor) {
                 Editor text = textEditor.getEditor();

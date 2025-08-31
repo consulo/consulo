@@ -122,11 +122,11 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
     throw new InstantiationException("no constructor found in " + nodeClass);
   }
 
-  public boolean someChildContainsFile(final VirtualFile file) {
+  public boolean someChildContainsFile(VirtualFile file) {
     return someChildContainsFile(file, true);
   }
 
-  public boolean someChildContainsFile(final VirtualFile file, boolean optimizeByCheckingFileRootsFirst) {
+  public boolean someChildContainsFile(VirtualFile file, boolean optimizeByCheckingFileRootsFirst) {
     VirtualFile parent = file.getParent();
 
     boolean mayContain = false;
@@ -154,7 +154,7 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
     }
 
     Collection<? extends AbstractTreeNode> kids = getChildren();
-    for (final AbstractTreeNode kid : kids) {
+    for (AbstractTreeNode kid : kids) {
       ProjectViewNode node = (ProjectViewNode)kid;
       if (node.contains(file)) return true;
     }

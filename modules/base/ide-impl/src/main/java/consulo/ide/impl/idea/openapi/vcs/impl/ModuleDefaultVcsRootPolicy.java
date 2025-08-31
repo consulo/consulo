@@ -61,7 +61,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   private final ModuleManager myModuleManager;
 
   @Inject
-  public ModuleDefaultVcsRootPolicy(final Project project) {
+  public ModuleDefaultVcsRootPolicy(Project project) {
     myProject = project;
     myBaseDir = project.getBaseDir();
     myModuleManager = ModuleManager.getInstance(myProject);
@@ -71,17 +71,17 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   @Nonnull
   public Collection<VirtualFile> getDefaultVcsRoots(@Nonnull NewMappings mappingList, @Nonnull String vcsName) {
     Set<VirtualFile> result = new HashSet<>();
-    final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
+    ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     if (myBaseDir != null && vcsName.equals(mappingList.getVcsFor(myBaseDir))) {
-      final AbstractVcs vcsFor = vcsManager.getVcsFor(myBaseDir);
+      AbstractVcs vcsFor = vcsManager.getVcsFor(myBaseDir);
       if (vcsFor != null && vcsName.equals(vcsFor.getName())) {
         result.add(myBaseDir);
       }
     }
     if (ProjectCoreUtil.isDirectoryBased(myProject) && myBaseDir != null) {
-      final VirtualFile ideaDir = ProjectCoreUtil.getDirectoryStoreFile(myProject);
+      VirtualFile ideaDir = ProjectCoreUtil.getDirectoryStoreFile(myProject);
       if (ideaDir != null) {
-        final AbstractVcs vcsFor = vcsManager.getVcsFor(ideaDir);
+        AbstractVcs vcsFor = vcsManager.getVcsFor(ideaDir);
         if (vcsFor != null && vcsName.equals(vcsFor.getName())) {
           result.add(ideaDir);
         }
@@ -90,12 +90,12 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     // assertion for read access inside
     Module[] modules = AccessRule.read(myModuleManager::getModules);
     for (Module module : modules) {
-      final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
+      VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
       for (VirtualFile file : files) {
         // if we're currently processing moduleAdded notification, getModuleForFile() will return null, so we pass the module
         // explicitly (we know it anyway)
         VcsDirectoryMapping mapping = mappingList.getMappingFor(file, module);
-        final String mappingVcs = mapping != null ? mapping.getVcs() : null;
+        String mappingVcs = mapping != null ? mapping.getVcs() : null;
         if (vcsName.equals(mappingVcs) && file.isDirectory()) {
           result.add(file);
         }
@@ -105,13 +105,13 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   }
 
   @Override
-  public boolean matchesDefaultMapping(@Nonnull final VirtualFile file, final Object matchContext) {
+  public boolean matchesDefaultMapping(@Nonnull VirtualFile file, Object matchContext) {
     return matchContext != null || myBaseDir != null && VfsUtilCore.isAncestor(myBaseDir, file, false);
   }
 
   @Override
   @Nullable
-  public Object getMatchContext(final VirtualFile file) {
+  public Object getMatchContext(VirtualFile file) {
     return ModuleUtilCore.findModuleForFile(file, myProject);
   }
 

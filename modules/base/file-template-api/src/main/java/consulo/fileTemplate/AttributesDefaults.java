@@ -35,12 +35,12 @@ public class AttributesDefaults {
   private Map<String, Object> myDefaultProperties = null;
   private boolean myFixedName;
 
-  public AttributesDefaults(@Nullable final String defaultName, @Nullable final TextRange defaultRange) {
+  public AttributesDefaults(@Nullable String defaultName, @Nullable TextRange defaultRange) {
     myDefaultName = defaultName;
     myDefaultRange = defaultRange;
   }
 
-  public AttributesDefaults(@Nullable final String defaultName) {
+  public AttributesDefaults(@Nullable String defaultName) {
     this(defaultName, null);
   }
 
@@ -58,11 +58,11 @@ public class AttributesDefaults {
     return myDefaultRange;
   }
 
-  public void add(@NonNls @Nonnull final String attributeKey, @NonNls @Nonnull final String value, @Nullable final TextRange selectionRange) {
+  public void add(@NonNls @Nonnull String attributeKey, @NonNls @Nonnull String value, @Nullable TextRange selectionRange) {
     myNamesToValueAndRangeMap.put(attributeKey, new Pair<>(value, selectionRange));
   }
 
-  public void add(@NonNls @Nonnull final String attributeKey, @NonNls @Nonnull final String value) {
+  public void add(@NonNls @Nonnull String attributeKey, @NonNls @Nonnull String value) {
     add(attributeKey, value, null);
   }
 
@@ -79,14 +79,14 @@ public class AttributesDefaults {
   }
 
   @Nullable
-  public TextRange getRangeFor(@NonNls @Nonnull final String attributeKey) {
-    final Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
+  public TextRange getRangeFor(@NonNls @Nonnull String attributeKey) {
+    Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
     return valueAndRange == null ? null : valueAndRange.second;
   }
 
   @Nullable
-  public String getDefaultValueFor(@NonNls @Nonnull final String attributeKey) {
-    final Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
+  public String getDefaultValueFor(@NonNls @Nonnull String attributeKey) {
+    Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
     return valueAndRange == null ? null : valueAndRange.first;
   }
 

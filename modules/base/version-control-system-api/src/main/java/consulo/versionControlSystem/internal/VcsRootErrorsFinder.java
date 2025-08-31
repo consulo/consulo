@@ -119,9 +119,9 @@ public class VcsRootErrorsFinder {
     return new VcsRootErrorsFinder(project);
   }
 
-  private boolean isRoot(@Nonnull final VcsDirectoryMapping mapping) {
+  private boolean isRoot(@Nonnull VcsDirectoryMapping mapping) {
     List<VcsRootChecker> checkers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
-    final String pathToCheck = mapping.isDefaultMapping() ? myProject.getBasePath() : mapping.getDirectory();
+    String pathToCheck = mapping.isDefaultMapping() ? myProject.getBasePath() : mapping.getDirectory();
     return ContainerUtil.find(checkers, checker -> checker.getSupportedVcs().getName().equalsIgnoreCase(mapping.getVcs()) && checker.isRoot(pathToCheck)) != null;
   }
 }

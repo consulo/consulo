@@ -866,7 +866,7 @@ public class ByteArrayList implements ByteList, Cloneable {
    * @return a <code>String</code> value
    */
   public String toString() {
-    final StringBuilder buf = new StringBuilder("{");
+    StringBuilder buf = new StringBuilder("{");
     forEach(val -> {
       buf.append(val);
       buf.append(", ");

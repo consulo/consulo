@@ -27,7 +27,7 @@ public enum CommittedChangesFilterPriority {
 
   private final int myPriority;
 
-  private CommittedChangesFilterPriority(final int priority) {
+  private CommittedChangesFilterPriority(int priority) {
     myPriority = priority;
   }
 

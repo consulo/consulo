@@ -215,8 +215,8 @@ public class UnifiedDiffChange {
                     return;
                 }
 
-                final Project project = e.getData(Project.KEY);
-                final Document document = myViewer.getDocument(sourceSide.other());
+                Project project = e.getData(Project.KEY);
+                Document document = myViewer.getDocument(sourceSide.other());
 
                 DiffImplUtil.newWriteCommand()
                     .project(project)

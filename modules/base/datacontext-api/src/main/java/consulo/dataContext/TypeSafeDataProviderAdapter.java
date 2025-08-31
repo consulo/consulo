@@ -28,7 +28,7 @@ public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
   private Key<?> myLastKey = null;
   private Object myValue = null;
 
-  public TypeSafeDataProviderAdapter(final TypeSafeDataProvider provider) {
+  public TypeSafeDataProviderAdapter(TypeSafeDataProvider provider) {
     myProvider = provider;
   }
 

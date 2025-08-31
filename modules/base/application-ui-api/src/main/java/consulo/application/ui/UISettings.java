@@ -176,7 +176,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
     @Deprecated
     @DeprecationInfo("Use UISettingsListener#TOPIC")
-    public void addUISettingsListener(@Nonnull final UISettingsListener listener, @Nonnull Disposable parentDisposable) {
+    public void addUISettingsListener(@Nonnull UISettingsListener listener, @Nonnull Disposable parentDisposable) {
         Application.get().getMessageBus().connect(parentDisposable).subscribe(UISettingsListener.class, listener);
     }
 

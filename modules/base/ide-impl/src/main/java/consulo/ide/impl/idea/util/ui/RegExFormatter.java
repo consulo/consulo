@@ -30,7 +30,7 @@ public class RegExFormatter extends DefaultFormatter {
     public Object stringToValue(String string) throws ParseException {
         try {
             return Pattern.compile(string);
-        } catch (final PatternSyntaxException e) {
+        } catch (PatternSyntaxException e) {
             throw new ParseException(e.getMessage(), e.getIndex());
         }
     }

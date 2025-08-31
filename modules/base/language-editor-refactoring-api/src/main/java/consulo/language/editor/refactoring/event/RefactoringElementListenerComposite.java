@@ -25,19 +25,19 @@ import java.util.List;
 public class RefactoringElementListenerComposite implements RefactoringElementListener, UndoRefactoringElementListener {
   private final List<RefactoringElementListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-  public void addListener(final RefactoringElementListener listener){
+  public void addListener(RefactoringElementListener listener){
     myListeners.add(listener);
   }
 
   @Override
-  public void elementMoved(@Nonnull final PsiElement newElement){
+  public void elementMoved(@Nonnull PsiElement newElement){
     for (RefactoringElementListener myListener : myListeners) {
       myListener.elementMoved(newElement);
     }
   }
 
   @Override
-  public void elementRenamed(@Nonnull final PsiElement newElement){
+  public void elementRenamed(@Nonnull PsiElement newElement){
     for (RefactoringElementListener myListener : myListeners) {
       myListener.elementRenamed(newElement);
     }

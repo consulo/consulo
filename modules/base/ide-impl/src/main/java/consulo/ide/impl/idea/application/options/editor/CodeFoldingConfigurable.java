@@ -88,9 +88,9 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
   protected void afterApply() {
     super.afterApply();
 
-    final List<Pair<Editor, Project>> toUpdate = new ArrayList<Pair<Editor, Project>>();
-    for (final Editor editor : EditorFactory.getInstance().getAllEditors()) {
-      final Project project = editor.getProject();
+    List<Pair<Editor, Project>> toUpdate = new ArrayList<Pair<Editor, Project>>();
+    for (Editor editor : EditorFactory.getInstance().getAllEditors()) {
+      Project project = editor.getProject();
       if (project != null && !project.isDefault()) {
         toUpdate.add(Pair.create(editor, project));
       }
@@ -101,7 +101,7 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
         if (each.second == null || each.second.isDisposed()) {
           continue;
         }
-        final CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(each.second);
+        CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(each.second);
         if (foldingManager != null) {
           foldingManager.buildInitialFoldings(each.first);
         }

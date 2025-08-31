@@ -36,7 +36,7 @@ public class PathReference {
   private final String myPath;
   private final Supplier<Image> myIcon;
 
-  public PathReference(@Nonnull String path, final @Nonnull Function<PathReference, Image> icon) {
+  public PathReference(@Nonnull String path, @Nonnull Function<PathReference, Image> icon) {
     myPath = path;
     myIcon = LazyValue.nullable(() -> icon.apply(PathReference.this));
   }
@@ -61,7 +61,7 @@ public class PathReference {
     return null;
   }
 
-  public static String trimPath(final String url) {
+  public static String trimPath(String url) {
     for (int i = 0; i < url.length(); i++) {
       switch (url.charAt(i)) {
         case '?':
@@ -76,13 +76,13 @@ public class PathReference {
     public static final ResolveFunction NULL_RESOLVE_FUNCTION = new ResolveFunction(null);
     private final Image myDefaultIcon;
 
-    public ResolveFunction(@Nullable final Image defaultValue) {
+    public ResolveFunction(@Nullable Image defaultValue) {
       myDefaultIcon = defaultValue;
     }
 
     @Override
-    public Image apply(final PathReference pathReference) {
-      final PsiElement element = pathReference.resolve();
+    public Image apply(PathReference pathReference) {
+      PsiElement element = pathReference.resolve();
       return element == null ? myDefaultIcon : IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS);
     }
   }

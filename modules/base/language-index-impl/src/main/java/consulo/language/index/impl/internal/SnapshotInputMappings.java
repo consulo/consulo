@@ -216,7 +216,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
 
   private PersistentMapBasedForwardIndex createContentsIndex() throws IOException {
     if (SharedIndicesData.ourFileSharedIndicesEnabled && !SharedIndicesData.DO_CHECKS) return null;
-    final File saved = new File(IndexInfrastructure.getPersistentIndexRootDir(myIndexId), "values");
+    File saved = new File(IndexInfrastructure.getPersistentIndexRootDir(myIndexId), "values");
     try {
       return new PersistentMapBasedForwardIndex(saved);
     }
@@ -227,7 +227,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
   }
 
   private PersistentHashMap<Integer, String> createIndexingTrace() throws IOException {
-    final File mapFile = new File(IndexInfrastructure.getIndexRootDir(myIndexId), "indextrace");
+    File mapFile = new File(IndexInfrastructure.getIndexRootDir(myIndexId), "indextrace");
     try {
       return new PersistentHashMap<>(mapFile, EnumeratorIntegerDescriptor.INSTANCE, new DataExternalizer<String>() {
         @Override

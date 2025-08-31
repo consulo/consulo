@@ -72,11 +72,11 @@ public class WSLUtil {
   public static List<WSLDistribution> getAvailableDistributions() {
     if (!isSystemCompatible()) return Collections.emptyList();
 
-    final Path executableRoot = getExecutableRootPath();
+    Path executableRoot = getExecutableRootPath();
     if (executableRoot == null) return Collections.emptyList();
 
     Collection<WslDistributionDescriptor> descriptors = WSLDistributionService.getInstance().getDescriptors();
-    final List<WSLDistribution> result = new ArrayList<>(descriptors.size() + 1 /* LEGACY_WSL */);
+    List<WSLDistribution> result = new ArrayList<>(descriptors.size() + 1 /* LEGACY_WSL */);
 
     for (WslDistributionDescriptor descriptor : descriptors) {
 

@@ -377,7 +377,7 @@ public class DefaultActionGroup extends ActionGroup {
             children[i] = action;
         }
         for (int i = 0; i < myPairs.size(); i++) {
-            final Pair<AnAction, Constraints> pair = myPairs.get(i);
+            Pair<AnAction, Constraints> pair = myPairs.get(i);
             AnAction action = pair.first;
             if (action == null) {
                 LOG.error("Empty pair child: " + this + ", " + getClass() + "; index=" + i);

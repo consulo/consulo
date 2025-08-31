@@ -35,7 +35,7 @@ public abstract class ModuleSdkPathMacro extends Macro {
 
   @Override
   public String expand(DataContext dataContext) {
-    final Module module = dataContext.getData(LangDataKeys.MODULE);
+    Module module = dataContext.getData(LangDataKeys.MODULE);
     if(module == null) {
       return null;
     }

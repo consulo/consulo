@@ -49,10 +49,10 @@ public abstract class FilteringGotoByModel<T> extends ContributorsBasedGotoByMod
   }
 
   @Override
-  protected boolean acceptItem(final NavigationItem item) {
+  protected boolean acceptItem(NavigationItem item) {
     T filterValue = filterValueFor(item);
     if (filterValue != null) {
-      final Collection<T> types = getFilterItems();
+      Collection<T> types = getFilterItems();
       return types == null || types.contains(filterValue);
     }
     return true;

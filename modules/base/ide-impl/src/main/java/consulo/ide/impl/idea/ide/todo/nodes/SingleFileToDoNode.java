@@ -66,12 +66,12 @@ public class SingleFileToDoNode extends BaseToDoNode<PsiFile> {
   }
 
   @Override
-  public int getFileCount(final PsiFile val) {
+  public int getFileCount(PsiFile val) {
     return 1;
   }
 
   @Override
-  public int getTodoItemCount(final PsiFile val) {
+  public int getTodoItemCount(PsiFile val) {
     return getTreeStructure().getTodoItemCount(val);
   }
 }

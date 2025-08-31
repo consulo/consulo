@@ -29,7 +29,7 @@ public class SelectGroupingAction extends LabeledComboBoxAction {
   private final Project myProject;
   private final CommittedChangesTreeBrowser myBrowser;
 
-  public SelectGroupingAction(Project project, final CommittedChangesTreeBrowser browser) {
+  public SelectGroupingAction(Project project, CommittedChangesTreeBrowser browser) {
     super(VcsBundle.message("committed.changes.group.title"));
     myProject = project;
     myBrowser = browser;
@@ -43,9 +43,9 @@ public class SelectGroupingAction extends LabeledComboBoxAction {
   protected ComboBoxModel createModel() {
     DefaultComboBoxModel model =
             new DefaultComboBoxModel(new Object[]{new DateChangeListGroupingStrategy(), ChangeListGroupingStrategy.USER});
-    final AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+    AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
     for (AbstractVcs vcs : vcss) {
-      final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+      CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
       if (provider != null) {
         for (ChangeListColumn column : provider.getColumns()) {
           if (ChangeListColumn.isCustom(column) && column.getComparator() != null) {

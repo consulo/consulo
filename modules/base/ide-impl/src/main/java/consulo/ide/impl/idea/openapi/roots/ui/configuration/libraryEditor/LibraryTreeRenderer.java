@@ -31,7 +31,7 @@ public class LibraryTreeRenderer extends ColoredTreeCellRenderer {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
       Object userObject = node.getUserObject();
       if (userObject instanceof NodeDescriptor) {
-        final NodeDescriptor descriptor = (NodeDescriptor)userObject;
+        NodeDescriptor descriptor = (NodeDescriptor)userObject;
         setIcon(descriptor.getIcon());
         append(descriptor.toString(), new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, TargetAWT.to(descriptor.getColor())));
       }

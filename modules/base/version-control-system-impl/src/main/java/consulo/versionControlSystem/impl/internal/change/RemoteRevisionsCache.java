@@ -61,12 +61,12 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
   private final Map<String, RemoteDifferenceStrategy> myKinds;
   private final ControlledCycle myControlledCycle;
 
-  public static RemoteRevisionsCache getInstance(final Project project) {
+  public static RemoteRevisionsCache getInstance(Project project) {
     return project.getInstance(RemoteRevisionsCache.class);
   }
 
   @Inject
-  RemoteRevisionsCache(final Project project, ProjectLevelVcsManager projectLevelVcsManager, VcsConfiguration vcsConfiguration) {
+  RemoteRevisionsCache(Project project, ProjectLevelVcsManager projectLevelVcsManager, VcsConfiguration vcsConfiguration) {
     myProject = project;
     myLock = new Object();
 
@@ -82,7 +82,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
     myKinds = new HashMap<>();
 
     myControlledCycle = new ControlledCycle(project, () -> {
-      final boolean shouldBeDone = vcsConfiguration.isChangedOnServerEnabled() && myVcsManager.hasActiveVcss();
+      boolean shouldBeDone = vcsConfiguration.isChangedOnServerEnabled() && myVcsManager.hasActiveVcss();
 
       if (shouldBeDone) {
         boolean somethingChanged = myRemoteRevisionsNumbersCache.updateStep();
@@ -120,7 +120,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
   }
 
   private void manageAlarm() {
-    final VcsConfiguration vcsConfiguration = VcsConfiguration.getInstance(myProject);
+    VcsConfiguration vcsConfiguration = VcsConfiguration.getInstance(myProject);
     if ((!myProject.isDefault()) && myVcsManager.hasActiveVcss() && vcsConfiguration.isChangedOnServerEnabled()) {
       // will check whether is already started inside
       // interval is checked further, this is small and constant
@@ -132,10 +132,10 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
   }
 
   private void updateRoots() {
-    final VcsRoot[] roots = myVcsManager.getAllVcsRoots();
+    VcsRoot[] roots = myVcsManager.getAllVcsRoots();
     synchronized (myLock) {
       for (VcsRoot root : roots) {
-        final AbstractVcs vcs = root.getVcs();
+        AbstractVcs vcs = root.getVcs();
         if (!myKinds.containsKey(vcs.getId())) {
           myKinds.put(vcs.getId(), vcs.getRemoteDifferenceStrategy());
         }
@@ -166,8 +166,8 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
   }
 
   @Override
-  public void plus(final Pair<String, AbstractVcs> pair) {
-    final AbstractVcs vcs = pair.getSecond();
+  public void plus(Pair<String, AbstractVcs> pair) {
+    AbstractVcs vcs = pair.getSecond();
     if (RemoteDifferenceStrategy.ASK_TREE_PROVIDER.equals(vcs.getRemoteDifferenceStrategy())) {
       myRemoteRevisionsStateCache.plus(pair);
     }
@@ -176,18 +176,18 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
     }
   }
 
-  public void invalidate(final UpdatedFiles updatedFiles) {
-    final Map<String, RemoteDifferenceStrategy> strategyMap;
+  public void invalidate(UpdatedFiles updatedFiles) {
+    Map<String, RemoteDifferenceStrategy> strategyMap;
     synchronized (myLock) {
       strategyMap = new HashMap<>(myKinds);
     }
-    final Collection<String> newForTree = new LinkedList<>();
-    final Collection<String> newForUsual = new LinkedList<>();
+    Collection<String> newForTree = new LinkedList<>();
+    Collection<String> newForUsual = new LinkedList<>();
     UpdateFilesHelper.iterateAffectedFiles(updatedFiles, pair -> {
-      final String vcsName = pair.getSecond();
+      String vcsName = pair.getSecond();
       RemoteDifferenceStrategy strategy = strategyMap.get(vcsName);
       if (strategy == null) {
-        final AbstractVcs vcs = myVcsManager.findVcsByName(vcsName);
+        AbstractVcs vcs = myVcsManager.findVcsByName(vcsName);
         if (vcs == null) return;
         strategy = vcs.getRemoteDifferenceStrategy();
       }
@@ -205,7 +205,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
 
   @Override
   public void minus(Pair<String, AbstractVcs> pair) {
-    final AbstractVcs vcs = pair.getSecond();
+    AbstractVcs vcs = pair.getSecond();
     if (RemoteDifferenceStrategy.ASK_TREE_PROVIDER.equals(vcs.getRemoteDifferenceStrategy())) {
       myRemoteRevisionsStateCache.minus(pair);
     }
@@ -217,10 +217,10 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
   /**
    * @return false if not up to date
    */
-  public boolean isUpToDate(final Change change) {
-    final AbstractVcs vcs = ChangesUtil.getVcsForChange(change, myProject);
+  public boolean isUpToDate(Change change) {
+    AbstractVcs vcs = ChangesUtil.getVcsForChange(change, myProject);
     if (vcs == null) return true;
-    final RemoteDifferenceStrategy strategy = vcs.getRemoteDifferenceStrategy();
+    RemoteDifferenceStrategy strategy = vcs.getRemoteDifferenceStrategy();
     if (RemoteDifferenceStrategy.ASK_TREE_PROVIDER.equals(strategy)) {
       return myRemoteRevisionsStateCache.isUpToDate(change);
     }

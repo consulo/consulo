@@ -49,12 +49,12 @@ public class TestStatusLine extends JPanel {
     myState.append(ExecutionLocalize.junitRuningInfoStartingLabel().get());
   }
 
-  public void formatTestMessage(final int testsTotal,
-                                final int finishedTestsCount,
-                                final int failuresCount,
-                                final int ignoredTestsCount,
-                                final Long duration,
-                                final long endTime) {
+  public void formatTestMessage(int testsTotal,
+                                int finishedTestsCount,
+                                int failuresCount,
+                                int ignoredTestsCount,
+                                Long duration,
+                                long endTime) {
     myState.clear();
     if (testsTotal == 0) return;
     if (duration == null || endTime == 0) {
@@ -120,7 +120,7 @@ public class TestStatusLine extends JPanel {
   }
 
   public void setPreferredSize(boolean orientation) {
-    final Dimension size = new JBDimension(orientation ? 150 : 450 , -1);
+    Dimension size = new JBDimension(orientation ? 150 : 450 , -1);
     myProgressPanel.setMaximumSize(size);
     myProgressPanel.setMinimumSize(size);
     myProgressPanel.setPreferredSize(size);

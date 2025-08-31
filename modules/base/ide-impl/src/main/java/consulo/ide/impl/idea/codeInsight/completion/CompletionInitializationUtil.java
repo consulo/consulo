@@ -49,7 +49,7 @@ public class CompletionInitializationUtil {
       PsiDocumentManager.getInstance(project).commitAllDocuments();
       CompletionAssertions.checkEditorValid(editor);
 
-      final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(caret, project);
+      PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(caret, project);
       assert psiFile != null : "no PSI file: " + FileDocumentManager.getInstance().getFile(editor.getDocument());
       psiFile.putUserData(PsiFileEx.BATCH_REFERENCE_PROCESSING, Boolean.TRUE);
       CompletionAssertions.assertCommitSuccessful(editor, psiFile);
@@ -74,7 +74,7 @@ public class CompletionInitializationUtil {
       }
     };
     Project project = psiFile.getProject();
-    for (final CompletionContributor contributor : CompletionContributor.forLanguageHonorDumbness(context.getPositionLanguage(), project)) {
+    for (CompletionContributor contributor : CompletionContributor.forLanguageHonorDumbness(context.getPositionLanguage(), project)) {
       current.set(contributor);
       contributor.beforeCompletion(context);
       CompletionAssertions.checkEditorValid(editor);
@@ -154,12 +154,12 @@ public class CompletionInitializationUtil {
   }
 
   private static PsiFile obtainFileCopy(PsiFile file) {
-    final VirtualFile virtualFile = file.getVirtualFile();
+    VirtualFile virtualFile = file.getVirtualFile();
     boolean mayCacheCopy = file.isPhysical() &&
                            // we don't want to cache code fragment copies even if they appear to be physical
                            virtualFile != null && virtualFile.isInLocalFileSystem();
     if (mayCacheCopy) {
-      final Pair<PsiFile, Document> cached = SoftReference.dereference(file.getUserData(FILE_COPY_KEY));
+      Pair<PsiFile, Document> cached = SoftReference.dereference(file.getUserData(FILE_COPY_KEY));
       if (cached != null && isCopyUpToDate(cached.second, cached.first, file)) {
         PsiFile copy = cached.first;
         CompletionAssertions.assertCorrectOriginalFile("Cached", file, copy);
@@ -167,14 +167,14 @@ public class CompletionInitializationUtil {
       }
     }
 
-    final PsiFile copy = (PsiFile)file.copy();
+    PsiFile copy = (PsiFile)file.copy();
     if (copy.isPhysical() || copy.getViewProvider().isEventSystemEnabled()) {
       LOG.error("File copy should be non-physical and non-event-system-enabled! Language=" + file.getLanguage() + "; file=" + file + " of " + file.getClass());
     }
     CompletionAssertions.assertCorrectOriginalFile("New", file, copy);
 
     if (mayCacheCopy) {
-      final Document document = copy.getViewProvider().getDocument();
+      Document document = copy.getViewProvider().getDocument();
       assert document != null;
       syncAcceptSlashR(file.getViewProvider().getDocument(), document);
       file.putUserData(FILE_COPY_KEY, new SoftReference<>(Pair.create(copy, document)));

@@ -39,7 +39,7 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
   protected final Project myProject;
   private final CheckinProjectPanel myPanel;
 
-  public OptimizeImportsBeforeCheckinHandler(final Project project, final CheckinProjectPanel panel) {
+  public OptimizeImportsBeforeCheckinHandler(Project project, CheckinProjectPanel panel) {
     myProject = project;
     myPanel = panel;
   }
@@ -53,7 +53,7 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
     return new RefreshableOnComponent() {
       @Override
       public JComponent getComponent() {
-        final JPanel panel = new JPanel(new GridLayout(1, 0));
+        JPanel panel = new JPanel(new GridLayout(1, 0));
         panel.add(optimizeBox);
         return panel;
       }
@@ -81,10 +81,10 @@ public class OptimizeImportsBeforeCheckinHandler extends CheckinHandler implemen
 
   @Override
   public void runCheckinHandlers(final Runnable finishAction) {
-    final VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
-    final Collection<VirtualFile> files = myPanel.getVirtualFiles();
+    VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
+    Collection<VirtualFile> files = myPanel.getVirtualFiles();
 
-    final Runnable performCheckoutAction = new Runnable() {
+    Runnable performCheckoutAction = new Runnable() {
       @Override
       public void run() {
         FileDocumentManager.getInstance().saveAllDocuments();

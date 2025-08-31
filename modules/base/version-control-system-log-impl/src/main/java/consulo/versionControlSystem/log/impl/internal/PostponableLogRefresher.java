@@ -94,7 +94,7 @@ public class PostponableLogRefresher implements VcsLogRefresher {
   }
 
   @Override
-  public void refresh(@Nonnull final VirtualFile root) {
+  public void refresh(@Nonnull VirtualFile root) {
     Application.get().invokeLater(
       () -> {
         if (canRefreshNow()) {

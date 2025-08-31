@@ -26,7 +26,7 @@ import consulo.project.Project;
 public class AbstractUrlFavoriteAdapter extends AbstractUrl {
   private final BookmarkNodeProvider myNodeProvider;
 
-  public AbstractUrlFavoriteAdapter(final String url, final String moduleName, final BookmarkNodeProvider nodeProvider) {
+  public AbstractUrlFavoriteAdapter(String url, String moduleName, BookmarkNodeProvider nodeProvider) {
     super(url, moduleName, nodeProvider.getFavoriteTypeId());
     myNodeProvider = nodeProvider;
   }

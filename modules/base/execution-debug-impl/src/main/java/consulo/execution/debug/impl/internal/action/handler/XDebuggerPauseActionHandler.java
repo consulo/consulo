@@ -28,18 +28,18 @@ import jakarta.annotation.Nonnull;
 */
 public class XDebuggerPauseActionHandler extends XDebuggerActionHandler {
   @Override
-  protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
+  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
     session.pause();
   }
 
   @Override
   public boolean isHidden(@Nonnull Project project, AnActionEvent event) {
-    final XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
+    XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session == null || !((XDebugSessionImpl)session).isPauseActionSupported();
   }
 
   @Override
-  protected boolean isEnabled(@Nonnull final XDebugSession session, final DataContext dataContext) {
+  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
     return !session.isPaused();
   }
 }

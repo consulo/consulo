@@ -54,7 +54,7 @@ public class HackSearch<T,S,Z> {
   };
   }
 
-  public int search(final List<S> list, final T item) {
+  public int search(List<S> list, T item) {
     if (list.isEmpty()) return 0;
     myFake = list.get(0);
     myFakeConverted = myTZConvertor.convert(item);
@@ -62,7 +62,7 @@ public class HackSearch<T,S,Z> {
       return 0;
     }
 
-    final int idx = Collections.binarySearch(list.subList(1, list.size()), myFake, myComparator);
+    int idx = Collections.binarySearch(list.subList(1, list.size()), myFake, myComparator);
     if (idx >= 0) {
       return 1 + idx;
     } else {

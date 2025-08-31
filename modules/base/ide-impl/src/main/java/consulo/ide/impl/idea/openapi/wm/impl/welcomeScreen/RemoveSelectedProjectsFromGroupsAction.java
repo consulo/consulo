@@ -34,7 +34,7 @@ public class RemoveSelectedProjectsFromGroupsAction extends RecentProjectsWelcom
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final List<AnAction> elements = getSelectedElements(e);
+    List<AnAction> elements = getSelectedElements(e);
     for (AnAction element : elements) {
       if (element instanceof ReopenProjectAction) {
         for (ProjectGroup group : RecentProjectsManager.getInstance().getGroups()) {

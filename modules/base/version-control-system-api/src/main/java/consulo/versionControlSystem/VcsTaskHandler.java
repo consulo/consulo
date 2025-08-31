@@ -28,7 +28,7 @@ import java.util.Collection;
 public abstract class VcsTaskHandler {
   private static final String DEFAULT_PROHIBITED_SYMBOLS = " ";
 
-  public static VcsTaskHandler[] getAllHandlers(final Project project) {
+  public static VcsTaskHandler[] getAllHandlers(Project project) {
     return project.getExtensionList(VcsTaskHandler.class).stream().filter(VcsTaskHandler::isEnabled).toArray(VcsTaskHandler[]::new);
   }
 

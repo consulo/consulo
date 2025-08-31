@@ -56,11 +56,11 @@ public abstract class DebuggerSessionTabBase extends RunTab {
             .initFocusContent(DebuggerContentInfo.CONSOLE_CONTENT, LayoutViewOptions.STARTUP, new LayoutAttractionPolicy.FocusOnce(false));
   }
 
-  public static ActionGroup getCustomizedActionGroup(final String id) {
+  public static ActionGroup getCustomizedActionGroup(String id) {
     return (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(id);
   }
 
-  protected void attachNotificationTo(final Content content) {
+  protected void attachNotificationTo(Content content) {
     if (myConsole instanceof ObservableConsoleView) {
       ObservableConsoleView observable = (ObservableConsoleView)myConsole;
       observable.addChangeListener(types -> {

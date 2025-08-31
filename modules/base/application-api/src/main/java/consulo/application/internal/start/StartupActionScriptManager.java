@@ -75,7 +75,7 @@ public class StartupActionScriptManager {
     }
 
     @Override
-    public void execute(final Logger logger) throws IOException {
+    public void execute(Logger logger) throws IOException {
       if (!mySource.exists()) {
         logger.error("Source file " + mySource.getAbsolutePath() + " does not exist for action " + this);
       }

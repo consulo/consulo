@@ -69,18 +69,18 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
                     return;
                 }
 
-                final Project project = holder.getProject();
-                final String projectLineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
+                Project project = holder.getProject();
+                String projectLineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
                 if (projectLineSeparator == null) {
                     return;
                 }
 
-                final VirtualFile virtualFile = file.getVirtualFile();
+                VirtualFile virtualFile = file.getVirtualFile();
                 if (virtualFile == null || !AbstractConvertLineSeparatorsAction.shouldProcess(virtualFile, project)) {
                     return;
                 }
 
-                final String curLineSeparator = LoadTextUtil.detectLineSeparator(virtualFile, true);
+                String curLineSeparator = LoadTextUtil.detectLineSeparator(virtualFile, true);
                 if (curLineSeparator != null && !curLineSeparator.equals(projectLineSeparator)) {
                     holder.registerProblem(
                         file,
@@ -109,17 +109,17 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
 
         @Override
         public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
-            final PsiElement psiElement = descriptor.getPsiElement();
+            PsiElement psiElement = descriptor.getPsiElement();
             if (!(psiElement instanceof PsiFile)) {
                 return;
             }
 
-            final String lineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
+            String lineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
             if (lineSeparator == null) {
                 return;
             }
 
-            final VirtualFile virtualFile = ((PsiFile)psiElement).getVirtualFile();
+            VirtualFile virtualFile = ((PsiFile)psiElement).getVirtualFile();
             if (virtualFile != null) {
                 AbstractConvertLineSeparatorsAction.changeLineSeparators(project, virtualFile, lineSeparator);
             }

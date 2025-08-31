@@ -46,14 +46,14 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
   @RequiredWriteAction
   @Override
   public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-    final Project project = editor.getProject();
+    Project project = editor.getProject();
     assert project != null;
-    final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-    final Document document = editor.getDocument();
+    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+    Document document = editor.getDocument();
     PsiFile file = getRoot(documentManager.getPsiFile(document), editor);
 
     if (file != null) {
-      final MoverWrapper mover = getSuitableMover(editor, file);
+      MoverWrapper mover = getSuitableMover(editor, file);
       if (mover != null && mover.getInfo().toMove2 != null) {
         LineRange range = mover.getInfo().toMove;
         if ((range.startLine > 0 || isDown) && (range.endLine < document.getLineCount() || !isDown)) {
@@ -66,7 +66,7 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
   @Override
   public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     if (editor.isViewer() || editor.isOneLineMode()) return false;
-    final Project project = editor.getProject();
+    Project project = editor.getProject();
     if (project == null || project.isDisposed()) return false;
     return true;
   }
@@ -75,7 +75,7 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
   protected abstract MoverWrapper getSuitableMover(@Nonnull Editor editor, @Nonnull PsiFile file);
 
   @Nullable
-  private static PsiFile getRoot(final PsiFile file, final Editor editor) {
+  private static PsiFile getRoot(PsiFile file, Editor editor) {
     if (file == null) return null;
     int offset = editor.getCaretModel().getOffset();
     if (offset == editor.getDocument().getTextLength()) offset--;

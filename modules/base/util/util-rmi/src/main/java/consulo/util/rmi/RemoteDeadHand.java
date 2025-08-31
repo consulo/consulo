@@ -59,7 +59,7 @@ public interface RemoteDeadHand extends Remote {
     }
 
     public static void startCooking(String host, int port) throws Exception {
-      final Registry registry = LocateRegistry.getRegistry(host, port);
+      Registry registry = LocateRegistry.getRegistry(host, port);
       registry.bind(RemoteDeadHand.BINDING_NAME, ourHand);
     }
   }

@@ -34,11 +34,11 @@ import java.awt.*;
  */
 public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
   @Override
-  public Component getTableCellRendererComponent(final JTable table, Object value, boolean isSelected, boolean hasFocus, final int row, final int column) {
-    final DirDiffTableModel model = (DirDiffTableModel)table.getModel();
+  public Component getTableCellRendererComponent(final JTable table, Object value, boolean isSelected, boolean hasFocus, int row, final int column) {
+    DirDiffTableModel model = (DirDiffTableModel)table.getModel();
     final DirDiffElementImpl element = model.getElementAt(row);
     if (element == null) return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-    final int modelColumn = table.convertColumnIndexToModel(column);
+    int modelColumn = table.convertColumnIndexToModel(column);
 
     if (element.isSeparator()) {
       return new SimpleColoredComponent() {
@@ -50,7 +50,7 @@ public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
         protected void doPaint(Graphics2D g) {
           int offset = 0;
           int i = 0;
-          final TableColumnModel columnModel = table.getColumnModel();
+          TableColumnModel columnModel = table.getColumnModel();
           while (i < column) {
             offset += columnModel.getColumn(i).getWidth();
             i++;
@@ -61,7 +61,7 @@ public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
         }
       };
     }
-    final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     if (c instanceof JLabel label) {
       Border border = label.getBorder();
       if ((hasFocus || isSelected) && border != null) {
@@ -69,7 +69,7 @@ public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
       }
       label.setIcon(null);
 
-      final DirDiffOperation op = element.getOperation();
+      DirDiffOperation op = element.getOperation();
       if (modelColumn == (table.getColumnCount() - 1) / 2) {
         label.setIcon(TargetAWT.to(op.getIcon()));
         label.setHorizontalAlignment(CENTER);
@@ -78,14 +78,14 @@ public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
 
       Color fg = isSelected ? UIUtil.getTableSelectionForeground() : TargetAWT.to(op.getTextColor());
       label.setForeground(fg);
-      final String name = table.getColumnName(column);
+      String name = table.getColumnName(column);
       if (DirDiffTableModel.COLUMN_DATE.equals(name)) {
         label.setHorizontalAlignment(CENTER);
       } else if (DirDiffTableModel.COLUMN_SIZE.equals(name)) {
         label.setHorizontalAlignment(RIGHT);
       } else {
         label.setHorizontalAlignment(LEFT);
-        final String text = label.getText();
+        String text = label.getText();
         label.setText("  " + text);
         if (text != null && text.trim().length() > 0) {
           label.setIcon(TargetAWT.to(modelColumn == 0 ? element.getSourceIcon() : element.getTargetIcon()));

@@ -37,14 +37,14 @@ public interface ContentManager extends Disposable, BusyObject {
 
     void addContent(@Nonnull Content content);
 
-    void addContent(@Nonnull Content content, final int order);
+    void addContent(@Nonnull Content content, int order);
 
     void addContent(@Nonnull Content content, Object constraints);
 
-    boolean removeContent(@Nonnull Content content, final boolean dispose);
+    boolean removeContent(@Nonnull Content content, boolean dispose);
 
     @Nonnull
-    AsyncResult<Void> removeContent(@Nonnull Content content, final boolean dispose, boolean trackFocus, boolean forcedFocus);
+    AsyncResult<Void> removeContent(@Nonnull Content content, boolean dispose, boolean trackFocus, boolean forcedFocus);
 
     void setSelectedContent(@Nonnull Content content);
 
@@ -72,7 +72,7 @@ public interface ContentManager extends Disposable, BusyObject {
     @Nonnull
     Content[] getSelectedContents();
 
-    void removeAllContents(final boolean dispose);
+    void removeAllContents(boolean dispose);
 
     int getContentCount();
 

@@ -37,24 +37,24 @@ public abstract class SearchableOptionsRegistrar {
     }
 
     @Nonnull
-    public abstract ConfigurableHit getConfigurables(final Configurable[] allConfigurables,
-                                                     final boolean changed,
-                                                     final Set<Configurable> configurables,
-                                                     final String option,
-                                                     final Project project);
+    public abstract ConfigurableHit getConfigurables(Configurable[] allConfigurables,
+                                                     boolean changed,
+                                                     Set<Configurable> configurables,
+                                                     String option,
+                                                     Project project);
 
     @Nullable
     public abstract String getInnerPath(SearchableConfigurable configurable, String option);
 
-    public abstract void addOption(String option, String path, String hit, final String configurableId, final String configurableDisplayName);
+    public abstract void addOption(String option, String path, String hit, String configurableId, String configurableDisplayName);
 
     public abstract boolean isStopWord(String word);
 
-    public abstract Set<String> getSynonym(final String option, @Nonnull final SearchableConfigurable configurable);
+    public abstract Set<String> getSynonym(String option, @Nonnull SearchableConfigurable configurable);
 
     public abstract Set<String> replaceSynonyms(Set<String> options, SearchableConfigurable configurable);
 
-    public abstract Map<String, Set<String>> findPossibleExtension(@Nonnull String prefix, final Project project);
+    public abstract Map<String, Set<String>> findPossibleExtension(@Nonnull String prefix, Project project);
 
 
     public abstract Set<String> getProcessedWordsWithoutStemming(@Nonnull String text);

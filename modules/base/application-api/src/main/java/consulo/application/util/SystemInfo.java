@@ -203,12 +203,12 @@ public class SystemInfo {
   }
 
   private static boolean isJetbrainsJvm() {
-    final String vendor = SystemProperties.getJavaVendor();
+    String vendor = SystemProperties.getJavaVendor();
     return vendor != null && StringUtil.containsIgnoreCase(vendor, "jetbrains");
   }
 
   private static boolean isConsuloJvm() {
-    final String vendor = SystemProperties.getJavaVendor();
+    String vendor = SystemProperties.getJavaVendor();
     return vendor != null && StringUtil.containsIgnoreCase(vendor, "consulo");
   }
 }

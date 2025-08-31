@@ -48,7 +48,7 @@ public interface WordCompletionElementFilter extends LanguageExtension {
 
   @RequiredReadAction
   static boolean isEnabledIn(@Nonnull ASTNode astNode) {
-    final PsiElement psi = astNode.getPsi();
+    PsiElement psi = astNode.getPsi();
     if (psi == null) {
       return false;
     }
@@ -56,8 +56,8 @@ public interface WordCompletionElementFilter extends LanguageExtension {
     return forLanguage(psi.getLanguage()).isWordCompletionEnabledIn(elementType, LanguageVersionUtil.findLanguageVersion(elementType.getLanguage(), psi));
   }
 
-  default boolean isWordCompletionEnabledIn(final IElementType element, LanguageVersion languageVersion) {
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(element.getLanguage());
+  default boolean isWordCompletionEnabledIn(IElementType element, LanguageVersion languageVersion) {
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(element.getLanguage());
     return parserDefinition != null && parserDefinition.getCommentTokens(languageVersion).contains(element);
   }
 }

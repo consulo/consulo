@@ -28,7 +28,7 @@ import consulo.ui.ex.action.ToggleAction;
 public final class ShowModulesAction extends ToggleAction {
   private final Runnable myUpdate;
 
-  public ShowModulesAction(final Runnable update) {
+  public ShowModulesAction(Runnable update) {
     super(IdeBundle.message("action.show.modules"),
           IdeBundle.message("action.description.show.modules"), PlatformIconGroup.actionsGroupbymodule());
     myUpdate = update;

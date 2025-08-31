@@ -18,7 +18,7 @@ package consulo.versionControlSystem.util;
 import java.io.File;
 
 public class VcsFilePathUtil {
-  public static boolean caseDiffers(final String s1, final String s2) {
+  public static boolean caseDiffers(String s1, String s2) {
     String s1Trimmed = s1.trim();
     String s2Trimmed = s2.trim();
 

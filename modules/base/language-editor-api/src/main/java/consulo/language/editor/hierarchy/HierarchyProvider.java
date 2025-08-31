@@ -46,7 +46,7 @@ public interface HierarchyProvider extends LanguageExtension {
    * @return the browser instance.
    */
   @Nonnull
-  HierarchyBrowser createHierarchyBrowser(final PsiElement target);
+  HierarchyBrowser createHierarchyBrowser(PsiElement target);
 
   /**
    * Notifies that the toolwindow has been shown and the specified browser is currently being displayed.

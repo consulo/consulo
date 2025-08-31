@@ -59,8 +59,8 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       RichCopySettings settings = RichCopySettings.getInstance();
       List<Caret> carets = editor.getCaretModel().getAllCarets();
       Caret firstCaret = carets.get(0);
-      final int indentSymbolsToStrip;
-      final int firstLineStartOffset;
+      int indentSymbolsToStrip;
+      int firstLineStartOffset;
       if (Registry.is("editor.richcopy.strip.indents") && carets.size() == 1) {
         Pair<Integer, Integer> p = calcIndentSymbolsToStrip(editor.getDocument(), firstCaret.getSelectionStart(), firstCaret.getSelectionEnd());
         firstLineStartOffset = p.first;

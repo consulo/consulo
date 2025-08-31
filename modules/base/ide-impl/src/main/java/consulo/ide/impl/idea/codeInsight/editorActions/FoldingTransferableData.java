@@ -22,7 +22,7 @@ import java.io.Serializable;
 public class FoldingTransferableData implements TextBlockTransferableData, Serializable {
   private final FoldingData[] myFoldingDatas;
 
-  public FoldingTransferableData(final FoldingData[] foldingDatas) {
+  public FoldingTransferableData(FoldingData[] foldingDatas) {
     myFoldingDatas = foldingDatas;
   }
 
@@ -37,7 +37,7 @@ public class FoldingTransferableData implements TextBlockTransferableData, Seria
   }
 
   @Override
-  public int getOffsets(final int[] offsets, int index) {
+  public int getOffsets(int[] offsets, int index) {
     for (FoldingData data : myFoldingDatas) {
       offsets[index++] = data.startOffset;
       offsets[index++] = data.endOffset;
@@ -46,7 +46,7 @@ public class FoldingTransferableData implements TextBlockTransferableData, Seria
   }
 
   @Override
-  public int setOffsets(final int[] offsets, int index) {
+  public int setOffsets(int[] offsets, int index) {
     for (FoldingData data : myFoldingDatas) {
       data.startOffset = offsets[index++];
       data.endOffset = offsets[index++];

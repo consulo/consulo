@@ -8,18 +8,18 @@ import consulo.task.LocalTask;
  */
 public class TaskListenerAdapter implements TaskListener {
   @Override
-  public void taskDeactivated(final LocalTask task) {
+  public void taskDeactivated(LocalTask task) {
   }
 
   @Override
-  public void taskActivated(final LocalTask task) {
+  public void taskActivated(LocalTask task) {
   }
 
   @Override
-  public void taskAdded(final LocalTask task) {
+  public void taskAdded(LocalTask task) {
   }
 
   @Override
-  public void taskRemoved(final LocalTask task) {
+  public void taskRemoved(LocalTask task) {
   }
 }

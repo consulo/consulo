@@ -33,14 +33,14 @@ import java.io.File;
 public class ProjectImporterCheckoutListener implements PreCheckoutListener {
   @Override
   public boolean processCheckedOutDirectory(Project project, File directory) {
-    final File[] files = directory.listFiles();
+    File[] files = directory.listFiles();
     if (files != null) {
-      final LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+      LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
       for (File file : files) {
         if (file.isDirectory()) continue;
-        final VirtualFile virtualFile = localFileSystem.findFileByIoFile(file);
+        VirtualFile virtualFile = localFileSystem.findFileByIoFile(file);
         if (virtualFile != null) {
-          final ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(file);
+          ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(file);
           if (openProcessor != null) {
             int rc = Messages.showYesNoDialog(project, VcsBundle .message("checkout.open.project.prompt", files[0].getPath()),
                                               VcsBundle.message("checkout.title"), Messages.getQuestionIcon());

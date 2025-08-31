@@ -94,13 +94,13 @@ class DocumentFoldingInfo implements CodeFoldingState {
 
   @Override
   @RequiredUIAccess
-  public void setToEditor(@Nonnull final Editor editor) {
+  public void setToEditor(@Nonnull Editor editor) {
     UIAccess.assertIsUIThread();
-    final PsiManager psiManager = PsiManager.getInstance(myProject);
+    PsiManager psiManager = PsiManager.getInstance(myProject);
     if (psiManager.isDisposed()) return;
 
     if (!myFile.isValid()) return;
-    final PsiFile psiFile = psiManager.findFile(myFile);
+    PsiFile psiFile = psiManager.findFile(myFile);
     if (psiFile == null) return;
 
     Map<PsiElement, FoldingDescriptor> ranges = null;
@@ -146,14 +146,14 @@ class DocumentFoldingInfo implements CodeFoldingState {
 
   @Nonnull
   private static Map<PsiElement, FoldingDescriptor> buildRanges(@Nonnull Editor editor, @Nonnull PsiFile psiFile) {
-    final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(psiFile.getLanguage());
-    final ASTNode node = psiFile.getNode();
+    FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(psiFile.getLanguage());
+    ASTNode node = psiFile.getNode();
     if (node == null) return Collections.emptyMap();
-    final FoldingDescriptor[] descriptors = LanguageFolding.buildFoldingDescriptors(foldingBuilder, psiFile, editor.getDocument(), true);
+    FoldingDescriptor[] descriptors = LanguageFolding.buildFoldingDescriptors(foldingBuilder, psiFile, editor.getDocument(), true);
     Map<PsiElement, FoldingDescriptor> ranges = new HashMap<>();
     for (FoldingDescriptor descriptor : descriptors) {
-      final ASTNode ast = descriptor.getElement();
-      final PsiElement psi = ast.getPsi();
+      ASTNode ast = descriptor.getElement();
+      PsiElement psi = ast.getPsi();
       if (psi != null) {
         ranges.put(psi, descriptor);
       }
@@ -206,17 +206,17 @@ class DocumentFoldingInfo implements CodeFoldingState {
     }
   }
 
-  void readExternal(final Element element) {
+  void readExternal(Element element) {
     ApplicationManager.getApplication().runReadAction(() -> {
       clear();
 
       if (!myFile.isValid()) return;
 
-      final Document document = FileDocumentManager.getInstance().getDocument(myFile);
+      Document document = FileDocumentManager.getInstance().getDocument(myFile);
       if (document == null) return;
 
       String date = null;
-      for (final Element e : element.getChildren()) {
+      for (Element e : element.getChildren()) {
         String signature = e.getAttributeValue(SIGNATURE_ATT);
         if (signature == null) {
           continue;

@@ -166,7 +166,7 @@ public class GeometryUtil implements SwingConstants {
   }
 
   public static int getPointPositionOnRectangle(Rectangle aRectangle, Point aPoint, int aEpsilon) {
-    final int ERROR_CODE = Integer.MIN_VALUE;
+    int ERROR_CODE = Integer.MIN_VALUE;
 
     if (pointOnBound(getTopOf(aRectangle), aPoint, aEpsilon)) {
       return TOP;
@@ -212,8 +212,8 @@ public class GeometryUtil implements SwingConstants {
   }
 
   public static Shape getArrowShape(Line2D line, Point2D intersectionPoint) {
-    final double deltaY = line.getP2().getY() - line.getP1().getY();
-    final double length = Math.sqrt(Math.pow(deltaY, 2) + Math.pow(line.getP2().getX() - line.getP1().getX(), 2));
+    double deltaY = line.getP2().getY() - line.getP1().getY();
+    double length = Math.sqrt(Math.pow(deltaY, 2) + Math.pow(line.getP2().getX() - line.getP1().getX(), 2));
 
     double theta = Math.asin(deltaY / length);
 
@@ -274,7 +274,7 @@ public class GeometryUtil implements SwingConstants {
   }
 
   public static double cos(Line2D aLine) {
-    final double length = getLineLength(aLine.getX1(), aLine.getY1(), aLine.getX2(), aLine.getY2());
+    double length = getLineLength(aLine.getX1(), aLine.getY1(), aLine.getX2(), aLine.getY2());
     if (length == 0) {
       throw new IllegalArgumentException(toString(aLine) + " has a zero length");
     }
@@ -284,7 +284,7 @@ public class GeometryUtil implements SwingConstants {
   }
 
   public static double sin(Line2D aLine) {
-    final double length = getLineLength(aLine.getX1(), aLine.getY1(), aLine.getX2(), aLine.getY2());
+    double length = getLineLength(aLine.getX1(), aLine.getY1(), aLine.getX2(), aLine.getY2());
     if (length == 0) {
       throw new IllegalArgumentException(toString(aLine) + " has a zero length");
     }

@@ -22,7 +22,7 @@ public class CompressedIntList implements IntList {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
   @Nonnull
-  public static IntList newInstance(final int[] delegateArray) {
+  public static IntList newInstance(int[] delegateArray) {
     return newInstance(delegateArray, DEFAULT_BLOCK_SIZE);
   }
 
@@ -75,7 +75,7 @@ public class CompressedIntList implements IntList {
   @Nonnull
   private final IntList myCompressedDeltas;
 
-  private CompressedIntList(int blockSize, @Nonnull int[] strongValues, @Nonnull final IntList compressedDeltas) {
+  private CompressedIntList(int blockSize, @Nonnull int[] strongValues, @Nonnull IntList compressedDeltas) {
     myBlockSize = blockSize;
     myStrongValues = strongValues;
     myCompressedDeltas = compressedDeltas;

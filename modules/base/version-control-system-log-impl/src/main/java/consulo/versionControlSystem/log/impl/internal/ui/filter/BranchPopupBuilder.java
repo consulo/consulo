@@ -79,7 +79,7 @@ public abstract class BranchPopupBuilder {
     if (recentItems != null) {
       for (List<String> recentItem : recentItems) {
         if (recentItem.size() == 1) {
-          final String item = ContainerUtil.getFirstItem(recentItem);
+          String item = ContainerUtil.getFirstItem(recentItem);
           if (filteredGroups.singletonGroups.contains(item) ||
               ContainerUtil.find(filteredGroups.expandedGroups.values(), strings -> strings.contains(item)) != null) {
             continue;
@@ -128,7 +128,7 @@ public abstract class BranchPopupBuilder {
   }
 
   private static void putActionsForReferences(List<RefGroup> references, Groups actions) {
-    for (final RefGroup refGroup : references) {
+    for (RefGroup refGroup : references) {
       if (refGroup instanceof SingletonRefGroup) {
         String name = refGroup.getName();
         if (!actions.singletonGroups.contains(name)) {
@@ -144,7 +144,7 @@ public abstract class BranchPopupBuilder {
     }
   }
 
-  private static void addToGroup(final RefGroup refGroup, TreeMap<String, TreeSet<String>> groupToAdd) {
+  private static void addToGroup(RefGroup refGroup, TreeMap<String, TreeSet<String>> groupToAdd) {
     TreeSet<String> existingGroup = groupToAdd.get(refGroup.getName());
 
     TreeSet<String> actions = new TreeSet<>();

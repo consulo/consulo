@@ -28,7 +28,7 @@ import javax.swing.*;
  * @since 2007-09-07
  */
 public class RevealingSpaceComboboxEditor extends StringComboboxEditor {
-  public RevealingSpaceComboboxEditor(final Project project, ComboBox comboBox) {
+  public RevealingSpaceComboboxEditor(Project project, ComboBox comboBox) {
     super(project, PlainTextFileType.INSTANCE, comboBox);
 
     SwingUtilities.invokeLater(new Runnable() {

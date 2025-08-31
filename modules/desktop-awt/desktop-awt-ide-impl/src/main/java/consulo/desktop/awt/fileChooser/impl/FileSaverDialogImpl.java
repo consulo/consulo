@@ -59,17 +59,17 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     setTitle(getChooserTitle(descriptor));
   }
 
-  private static String getChooserTitle(final FileSaverDescriptor descriptor) {
-    final String title = descriptor.getTitle();
+  private static String getChooserTitle(FileSaverDescriptor descriptor) {
+    String title = descriptor.getTitle();
     return title != null ? title : UIBundle.message("file.chooser.save.dialog.default.title");
   }
 
   @jakarta.annotation.Nullable
-  public VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable final String filename) {
+  public VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
     init();
     restoreSelection(baseDir);
     myFileSystemTree.addListener(new FileSystemTree.Listener() {
-      public void selectionChanged(final List<? extends VirtualFile> selection) {
+      public void selectionChanged(List<? extends VirtualFile> selection) {
         updateFileName(selection);
         updateOkButton();
       }
@@ -82,7 +82,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     show();
 
     if (getExitCode() == OK_EXIT_CODE) {
-      final File file = getFile();
+      File file = getFile();
       return file == null ? null : new VirtualFileWrapper(file);
     }
     return null;
@@ -90,13 +90,13 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
 
   @Nullable
   protected File getFile() {
-    final VirtualFile selected = myFileSystemTree.getSelectedFile();
+    VirtualFile selected = myFileSystemTree.getSelectedFile();
     if (selected != null && !selected.isDirectory()) {
       return new File(selected.getPath());
     }
 
     String path = (selected == null) ? myPathTextField.getTextFieldText() : selected.getPath();
-    final File dir = new File(path);
+    File dir = new File(path);
     if (! dir.exists() || path == null) return null;
     if (dir.isDirectory()) {
       path += File.separator + myFileName.getText();
@@ -121,7 +121,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
         myPathTextField.getField().setText(file.getPath());
       } else {
         myFileName.setText(file.getName());
-        final VirtualFile parent = file.getParent();
+        VirtualFile parent = file.getParent();
         if (parent != null) {
           myPathTextField.getField().setText(parent.getPath());
         }
@@ -141,7 +141,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
   }
 
   protected JComponent createFileNamePanel() {
-    final JPanel panel = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
     panel.add(new JLabel(UIBundle.message("file.chooser.save.dialog.file.name")), BorderLayout.WEST);
     myFileName.setText("");
     myFileName.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -165,7 +165,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
 
   private boolean isFileNameExist() {
     if (myPathTextField == null) return false;
-    final String path = myPathTextField.getTextFieldText();
+    String path = myPathTextField.getTextFieldText();
     return path != null && new File(path.trim()).exists() && myFileName.getText().trim().length() > 0;
   }
 
@@ -181,7 +181,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
 
   @Override
   protected void doOKAction() {
-    final File file = getFile();
+    File file = getFile();
     if (file != null && file.exists()) {
       if (Messages.YES != Messages.showYesNoDialog(this.getRootPane(),
                                                    UIBundle.message("file.chooser.save.dialog.confirmation", file.getName()),

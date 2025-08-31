@@ -43,16 +43,16 @@ public class CopyRevisionNumberFromAnnotateAction extends AnAction implements Up
         if (myLineNumber < 0) {
             return;
         }
-        final VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(myLineNumber);
+        VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(myLineNumber);
         if (revisionNumber != null) {
-            final String revision = revisionNumber.asString();
+            String revision = revisionNumber.asString();
             CopyPasteManager.getInstance().setContents(new TextTransferable(revision));
         }
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final boolean enabled = myLineNumber >= 0 && myAnnotation.getLineRevisionNumber(myLineNumber) != null;
+        boolean enabled = myLineNumber >= 0 && myAnnotation.getLineRevisionNumber(myLineNumber) != null;
         e.getPresentation().setEnabledAndVisible(enabled);
     }
 

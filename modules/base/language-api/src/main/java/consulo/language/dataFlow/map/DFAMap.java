@@ -87,7 +87,7 @@ public class DFAMap<V> {
     if (myAll != null) {
       myAll.remove(name);
       if (myAll.size() == 1) {
-        final Map.Entry<String, V> e = myAll.entrySet().iterator().next();
+        Map.Entry<String, V> e = myAll.entrySet().iterator().next();
         myK = e.getKey();
         myV = e.getValue();
         myAll = null;
@@ -113,7 +113,7 @@ public class DFAMap<V> {
     }
     if (myK != null && (names2Include == null || names2Include.contains(myK))) {
       if (names2Include != null && names2Include.size() == 1) return names2Include;
-      final HashSet<String> result = new HashSet<String>();
+      HashSet<String> result = new HashSet<String>();
       result.add(myK);
       return result;
     }

@@ -54,7 +54,7 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
 
   @Override
   @Nullable
-  public abstract NewVirtualFile findChild(@Nonnull @NonNls final String name);
+  public abstract NewVirtualFile findChild(@Nonnull @NonNls String name);
 
   @Nullable
   public abstract NewVirtualFile refreshAndFindChild(@Nonnull String name);
@@ -63,7 +63,7 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract NewVirtualFile findChildIfCached(@Nonnull String name);
 
 
-  public abstract void setTimeStamp(final long time) throws IOException;
+  public abstract void setTimeStamp(long time) throws IOException;
 
   @Override
   @Nonnull
@@ -73,7 +73,7 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract int getId();
 
   @Override
-  public void refresh(final boolean asynchronous, final boolean recursive, final Runnable postRunnable) {
+  public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
     RefreshQueue.getInstance().refresh(asynchronous, recursive, postRunnable, this);
   }
 
@@ -89,7 +89,7 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract void markClean();
 
   @Override
-  public void move(final Object requestor, @Nonnull final VirtualFile newParent) throws IOException {
+  public void move(Object requestor, @Nonnull VirtualFile newParent) throws IOException {
     if (!exists()) {
       throw new IOException("File to move does not exist: " + getPath());
     }
@@ -102,7 +102,7 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
       throw new IOException("Destination is not a folder: " + newParent.getPath());
     }
 
-    final VirtualFile child = newParent.findChild(getName());
+    VirtualFile child = newParent.findChild(getName());
     if (child != null) {
       throw new IOException("Destination already exists: " + newParent.getPath() + "/" + getName());
     }

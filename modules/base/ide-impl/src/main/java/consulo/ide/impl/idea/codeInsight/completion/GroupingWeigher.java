@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class GroupingWeigher extends CompletionWeigher {
   @Override
   public Integer weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
-    final PrioritizedLookupElement prioritized = element.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
+    PrioritizedLookupElement prioritized = element.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
     if (prioritized != null) {
       return prioritized.getGrouping();
     }

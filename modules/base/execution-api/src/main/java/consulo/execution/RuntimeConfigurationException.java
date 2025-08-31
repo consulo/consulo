@@ -32,13 +32,13 @@ public class RuntimeConfigurationException extends ConfigurationException {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public RuntimeConfigurationException(final String message, final String title) {
+    public RuntimeConfigurationException(String message, String title) {
         super(message, title);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public RuntimeConfigurationException(final String message) {
+    public RuntimeConfigurationException(String message) {
         super(LocalizeValue.ofNullable(message), ExecutionLocalize.runConfigurationErrorDialogTitle());
     }
 }

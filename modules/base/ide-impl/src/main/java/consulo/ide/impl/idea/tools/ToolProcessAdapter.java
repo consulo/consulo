@@ -31,7 +31,7 @@ public class ToolProcessAdapter extends ProcessAdapter {
   private final boolean mySynchronizeAfterExecution;
   private final String myName;
 
-  public ToolProcessAdapter(Project project, final boolean synchronizeAfterExecution, final String name) {
+  public ToolProcessAdapter(Project project, boolean synchronizeAfterExecution, String name) {
     myProject = project;
     mySynchronizeAfterExecution = synchronizeAfterExecution;
     myName = name;

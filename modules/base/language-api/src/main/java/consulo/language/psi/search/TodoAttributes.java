@@ -59,7 +59,7 @@ public class TodoAttributes implements Cloneable {
     myTextAttributes.readExternal(element);
 
     // default color setting
-    final String useCustomColors = element.getAttributeValue(USE_CUSTOM_COLORS_ATT);
+    String useCustomColors = element.getAttributeValue(USE_CUSTOM_COLORS_ATT);
     myShouldUseCustomColors = Boolean.parseBoolean(useCustomColors);
 
     if (element.getChild(ELEMENT_OPTION) == null) {
@@ -113,7 +113,7 @@ public class TodoAttributes implements Cloneable {
     if (this == o) return true;
     if (!(o instanceof TodoAttributes)) return false;
 
-    final TodoAttributes attributes = (TodoAttributes)o;
+    TodoAttributes attributes = (TodoAttributes)o;
 
     return myIcon == attributes.myIcon &&
            !(myTextAttributes != null ? !myTextAttributes.equals(attributes.myTextAttributes) : attributes.myTextAttributes != null) &&

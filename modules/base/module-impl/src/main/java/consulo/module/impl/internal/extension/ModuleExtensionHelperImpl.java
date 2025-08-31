@@ -94,7 +94,7 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
     @Nonnull
     @Override
     public String getModuleExtensionName(@Nonnull ModuleExtension<?> moduleExtension) {
-        final ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(moduleExtension.getId());
+        ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(moduleExtension.getId());
         assert provider != null;
         return provider.getName().getValue();
     }

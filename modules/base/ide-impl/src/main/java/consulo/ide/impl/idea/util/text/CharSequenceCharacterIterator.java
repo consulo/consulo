@@ -24,7 +24,7 @@ public class CharSequenceCharacterIterator implements CharacterIterator {
   private final CharSequence myChars;
   private int myCurPosition;
 
-  public CharSequenceCharacterIterator(final CharSequence chars) {
+  public CharSequenceCharacterIterator(CharSequence chars) {
     myChars = chars;
     myCurPosition = 0;
   }
@@ -84,7 +84,7 @@ public class CharSequenceCharacterIterator implements CharacterIterator {
   }
 
   public Object clone() {
-    final CharSequenceCharacterIterator it = new CharSequenceCharacterIterator(myChars);
+    CharSequenceCharacterIterator it = new CharSequenceCharacterIterator(myChars);
     it.myCurPosition = myCurPosition;
     return it;
   }

@@ -90,9 +90,9 @@ public class FoldingModelSupport {
    */
   @RequiredUIAccess
   protected void install(
-    @Nullable final Iterator<int[]> changedLines,
-    @Nonnull final UserDataHolder context,
-    @Nonnull final Settings settings
+    @Nullable Iterator<int[]> changedLines,
+    @Nonnull UserDataHolder context,
+    @Nonnull Settings settings
   ) {
     UIAccess.assertIsUIThread();
 
@@ -127,7 +127,7 @@ public class FoldingModelSupport {
       }
     }
 
-    private void build(@Nonnull final Iterator<int[]> changedLines) {
+    private void build(@Nonnull Iterator<int[]> changedLines) {
       int[] starts = new int[myCount];
       int[] ends = new int[myCount];
 
@@ -207,8 +207,8 @@ public class FoldingModelSupport {
   @Nullable
   private static FoldRegion addFolding(@Nonnull EditorEx editor, int start, int end, boolean expanded) {
     Document document = editor.getDocument();
-    final int startOffset = document.getLineStartOffset(start);
-    final int endOffset = document.getLineEndOffset(end - 1);
+    int startOffset = document.getLineStartOffset(start);
+    int endOffset = document.getLineEndOffset(end - 1);
 
     FoldRegion value = editor.getFoldingModel().addFoldRegion(startOffset, endOffset, PLACEHOLDER);
     if (value != null) {
@@ -222,8 +222,8 @@ public class FoldingModelSupport {
     Runnable lastRunnable = runnable;
 
     for (int i = 0; i < myCount; i++) {
-      final Editor editor = myEditors[i];
-      final Runnable finalRunnable = lastRunnable;
+      Editor editor = myEditors[i];
+      Runnable finalRunnable = lastRunnable;
       lastRunnable = () -> {
           Runnable operation = finalRunnable::run;
           if (AWTDiffUtil.isFocusedComponent(editor.getComponent())) {
@@ -255,8 +255,8 @@ public class FoldingModelSupport {
     myFoldings.clear();
   }
 
-  private void destroyFoldings(final int index) {
-    final FoldingModelEx model = myEditors[index].getFoldingModel();
+  private void destroyFoldings(int index) {
+    FoldingModelEx model = myEditors[index].getFoldingModel();
     model.runBatchFoldingOperation(() -> {
       for (FoldedBlock folding : getFoldedBlocks()) {
         FoldRegion region = folding.getRegion(index);
@@ -281,7 +281,7 @@ public class FoldingModelSupport {
   }
 
   @Nonnull
-  protected IntUnaryOperator getLineConvertor(final int index) {
+  protected IntUnaryOperator getLineConvertor(int index) {
     return value -> {
       updateLineNumbers(false);
       for (FoldedBlock folding : getFoldedBlocks()) { // TODO: avoid full scan - it could slowdown painting
@@ -312,13 +312,13 @@ public class FoldingModelSupport {
   // Synchronized toggling of ranges
   //
 
-  public void expandAll(final boolean expanded) {
+  public void expandAll(boolean expanded) {
     if (myDuringSynchronize) return;
     myDuringSynchronize = true;
     try {
       for (int i = 0; i < myCount; i++) {
-        final int index = i;
-        final FoldingModelEx model = myEditors[index].getFoldingModel();
+        int index = i;
+        FoldingModelEx model = myEditors[index].getFoldingModel();
         model.runBatchFoldingOperation(()-> {
           for (FoldedBlock folding : getFoldedBlocks()) {
             FoldRegion region = folding.getRegion(index);
@@ -354,7 +354,7 @@ public class FoldingModelSupport {
       try {
         for (int i = 0; i < myCount; i++) {
           if (i == myIndex) continue;
-          final int pairedIndex = i;
+          int pairedIndex = i;
           myEditors[pairedIndex].getFoldingModel().runBatchFoldingOperation(()-> {
             for (FoldedBlock folding : getFoldedBlocks()) {
               FoldRegion region = folding.getRegion(myIndex);
@@ -478,13 +478,13 @@ public class FoldingModelSupport {
     }
   }
 
-  public void updateContext(@Nonnull UserDataHolder context, @Nonnull final Settings settings) {
+  public void updateContext(@Nonnull UserDataHolder context, @Nonnull Settings settings) {
     if (myFoldings.isEmpty()) return; // do not rewrite cache by initial state
     context.putUserData(CACHE_KEY, getFoldingCache(settings));
   }
 
   @Nonnull
-  private FoldingCache getFoldingCache(@Nonnull final Settings settings) {
+  private FoldingCache getFoldingCache(@Nonnull Settings settings) {
     return Application.get().runReadAction((Computable<FoldingCache>)()-> {
         List<FoldedRangeState>[] result = new List[myCount];
         for (int i = 0; i < myCount; i++) {
@@ -617,7 +617,7 @@ public class FoldingModelSupport {
       myLines = new int[myCount];
     }
 
-    public void installHighlighter(@Nonnull final FoldedBlock[] block) {
+    public void installHighlighter(@Nonnull FoldedBlock[] block) {
       assert myHighlighters.isEmpty();
 
       for (int i = 0; i < myCount; i++) {
@@ -656,7 +656,7 @@ public class FoldingModelSupport {
     }
 
     @Nonnull
-    private BooleanGetter getHighlighterCondition(@Nonnull final FoldedBlock[] block, final int index) {
+    private BooleanGetter getHighlighterCondition(@Nonnull FoldedBlock[] block, int index) {
       return () -> {
           if (!myEditors[index].getFoldingModel().isFoldingEnabled()) return false;
 
@@ -694,7 +694,7 @@ public class FoldingModelSupport {
 
   @Nullable
   @Contract("null, _ -> null; !null, _ -> !null")
-  protected static <T, V> Iterator<V> map(@Nullable final List<T> list, @Nonnull final Function<T, V> mapping) {
+  protected static <T, V> Iterator<V> map(@Nullable List<T> list, @Nonnull final Function<T, V> mapping) {
     if (list == null) return null;
     final Iterator<T> it = list.iterator();
     return new Iterator<>() {

@@ -60,10 +60,10 @@ public class IndexCacheManagerImpl implements CacheManager {
 
   @Override
   @Nonnull
-  public PsiFile[] getFilesWithWord(@Nonnull final String word,
-                                    final short occurenceMask,
-                                    @Nonnull final GlobalSearchScope scope,
-                                    final boolean caseSensitively) {
+  public PsiFile[] getFilesWithWord(@Nonnull String word,
+                                    short occurenceMask,
+                                    @Nonnull GlobalSearchScope scope,
+                                    boolean caseSensitively) {
     if (myProject.isDefault()) {
       return PsiFile.EMPTY_ARRAY;
     }
@@ -74,15 +74,15 @@ public class IndexCacheManagerImpl implements CacheManager {
 
   @Override
   @Nonnull
-  public VirtualFile[] getVirtualFilesWithWord(@Nonnull final String word,
-                                               final short occurenceMask,
-                                               @Nonnull final GlobalSearchScope scope,
-                                               final boolean caseSensitively) {
+  public VirtualFile[] getVirtualFilesWithWord(@Nonnull String word,
+                                               short occurenceMask,
+                                               @Nonnull GlobalSearchScope scope,
+                                               boolean caseSensitively) {
     if (myProject.isDefault()) {
       return VirtualFile.EMPTY_ARRAY;
     }
 
-    final List<VirtualFile> vFiles = new ArrayList<>(5);
+    List<VirtualFile> vFiles = new ArrayList<>(5);
     collectVirtualFilesWithWord(new CommonProcessors.CollectProcessor<>(vFiles), word, occurenceMask, scope, caseSensitively);
     return vFiles.isEmpty() ? VirtualFile.EMPTY_ARRAY : vFiles.toArray(new VirtualFile[vFiles.size()]);
   }
@@ -92,8 +92,8 @@ public class IndexCacheManagerImpl implements CacheManager {
   // we cannot call it inside FileBasedIndex.processValues() method except in collecting form
   // If we do, deadlocks are possible (IDEADEV-42137). Process the files without not holding indices' read lock.
   private boolean collectVirtualFilesWithWord(@Nonnull final Predicate<VirtualFile> fileProcessor,
-                                              @Nonnull final String word, final short occurrenceMask,
-                                              @Nonnull final GlobalSearchScope scope, final boolean caseSensitively) {
+                                              @Nonnull String word, final short occurrenceMask,
+                                              @Nonnull final GlobalSearchScope scope, boolean caseSensitively) {
     if (myProject.isDefault()) {
       return true;
     }
@@ -105,9 +105,9 @@ public class IndexCacheManagerImpl implements CacheManager {
                                                             final FileIndexFacade index = FileIndexFacade.getInstance(myProject);
 
                                                             @Override
-                                                            public boolean process(final VirtualFile file, final Integer value) {
+                                                            public boolean process(VirtualFile file, Integer value) {
                                                               ProgressIndicatorProvider.checkCanceled();
-                                                              final int mask = value.intValue();
+                                                              int mask = value.intValue();
                                                               if ((mask & occurrenceMask) != 0 && index.shouldBeFound(scope, file)) {
                                                                 if (!fileProcessor.test(file))
                                                                   return false;
@@ -124,20 +124,20 @@ public class IndexCacheManagerImpl implements CacheManager {
 
   @Override
   public boolean processFilesWithWord(@Nonnull final Predicate<PsiFile> psiFileProcessor,
-                                      @Nonnull final String word,
-                                      final short occurrenceMask,
-                                      @Nonnull final GlobalSearchScope scope,
-                                      final boolean caseSensitively) {
-    final List<VirtualFile> vFiles = new ArrayList<>(5);
+                                      @Nonnull String word,
+                                      short occurrenceMask,
+                                      @Nonnull GlobalSearchScope scope,
+                                      boolean caseSensitively) {
+    List<VirtualFile> vFiles = new ArrayList<>(5);
     collectVirtualFilesWithWord(new CommonProcessors.CollectProcessor<>(vFiles), word, occurrenceMask, scope, caseSensitively);
     if (vFiles.isEmpty()) return true;
 
-    final Predicate<VirtualFile> virtualFileProcessor = new ReadActionProcessor<>() {
+    Predicate<VirtualFile> virtualFileProcessor = new ReadActionProcessor<>() {
       @RequiredReadAction
       @Override
       public boolean processInReadAction(VirtualFile virtualFile) {
         if (virtualFile.isValid()) {
-          final PsiFile psiFile = myPsiManager.findFile(virtualFile);
+          PsiFile psiFile = myPsiManager.findFile(virtualFile);
           return psiFile == null || psiFileProcessor.test(psiFile);
         }
         return true;

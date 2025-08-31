@@ -37,7 +37,7 @@ public class TrackRunningTestUtil {
   private TrackRunningTestUtil() {
   }
 
-  public static void installStopListeners(final JTree tree, final Disposable parentDisposable, final Consumer<AbstractTestProxy> setSelection) {
+  public static void installStopListeners(final JTree tree, Disposable parentDisposable, final Consumer<AbstractTestProxy> setSelection) {
     final ClickListener userSelectionListener = new ClickListener() {
       @Override
       public boolean onClick(MouseEvent e, int clickCount) {
@@ -49,7 +49,7 @@ public class TrackRunningTestUtil {
     final KeyAdapter keyAdapter = new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
-        final int keyCode = e.getKeyCode();
+        int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_RIGHT) {
           setSelection.accept(setUserSelection(tree.getSelectionPath()));
         }
@@ -68,9 +68,9 @@ public class TrackRunningTestUtil {
   @Nullable
   private static AbstractTestProxy setUserSelection(TreePath treePath) {
     if (treePath != null) {
-      final Object component = treePath.getLastPathComponent();
+      Object component = treePath.getLastPathComponent();
       if (component instanceof DefaultMutableTreeNode) {
-        final Object userObject = ((DefaultMutableTreeNode)component).getUserObject();
+        Object userObject = ((DefaultMutableTreeNode)component).getUserObject();
         if (userObject instanceof NodeDescriptor) {
           return (AbstractTestProxy)((NodeDescriptor)userObject).getElement();
         }

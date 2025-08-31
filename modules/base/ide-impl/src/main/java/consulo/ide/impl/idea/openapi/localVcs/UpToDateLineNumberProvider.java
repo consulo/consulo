@@ -25,5 +25,5 @@ public interface UpToDateLineNumberProvider {
 
   boolean isLineChanged(int currentNumber);
 
-  boolean isRangeChanged(final int start, final int end);
+  boolean isRangeChanged(int start, int end);
 }

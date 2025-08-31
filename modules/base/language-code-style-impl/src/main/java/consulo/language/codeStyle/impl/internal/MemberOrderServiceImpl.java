@@ -71,8 +71,8 @@ public class MemberOrderServiceImpl implements MemberOrderService {
     List<ArrangementEntry> entriesWithNew = new ArrayList<ArrangementEntry>(nonArranged);
     entriesWithNew.add(memberEntry);
     //TODO: check insert new element
-    final List<? extends ArrangementMatchRule> rulesByPriority = arrangementSettings.getRulesSortedByPriority();
-    final List<ArrangementSectionRule> extendedSectionRules = ArrangementUtil.getExtendedSectionRules(arrangementSettings);
+    List<? extends ArrangementMatchRule> rulesByPriority = arrangementSettings.getRulesSortedByPriority();
+    List<ArrangementSectionRule> extendedSectionRules = ArrangementUtil.getExtendedSectionRules(arrangementSettings);
     List<ArrangementEntry> arranged = ArrangementEngine.arrange(entriesWithNew, extendedSectionRules, rulesByPriority, null);
     int i = arranged.indexOf(memberEntry);
 

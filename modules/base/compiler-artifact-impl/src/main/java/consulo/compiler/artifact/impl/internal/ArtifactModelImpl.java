@@ -52,9 +52,9 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
 
   @Override
   protected List<? extends Artifact> getArtifactsList() {
-    final List<ArtifactImpl> list = new ArrayList<>();
+    List<ArtifactImpl> list = new ArrayList<>();
     for (ArtifactImpl artifact : myOriginalArtifacts) {
-      final ArtifactImpl copy = myArtifact2ModifiableCopy.get(artifact);
+      ArtifactImpl copy = myArtifact2ModifiableCopy.get(artifact);
       if (copy != null) {
         list.add(copy);
       }
@@ -67,7 +67,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
 
   @Override
   @Nonnull
-  public ModifiableArtifact addArtifact(@Nonnull final String name, @Nonnull ArtifactType artifactType) {
+  public ModifiableArtifact addArtifact(@Nonnull String name, @Nonnull ArtifactType artifactType) {
     return addArtifact(name,
                        artifactType,
                        artifactType.createRootElement(PackagingElementFactory.getInstance(myArtifactManager.getProject()), name));
@@ -78,9 +78,9 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   public ModifiableArtifact addArtifact(@Nonnull String name,
                                         @Nonnull ArtifactType artifactType,
                                         CompositePackagingElement<?> rootElement) {
-    final String uniqueName = generateUniqueName(name);
-    final String outputPath = ArtifactUtil.getDefaultArtifactOutputPath(uniqueName, myArtifactManager.getProject());
-    final ArtifactImpl artifact = new ArtifactImpl(uniqueName, artifactType, false, rootElement, outputPath, myDispatcher);
+    String uniqueName = generateUniqueName(name);
+    String outputPath = ArtifactUtil.getDefaultArtifactOutputPath(uniqueName, myArtifactManager.getProject());
+    ArtifactImpl artifact = new ArtifactImpl(uniqueName, artifactType, false, rootElement, outputPath, myDispatcher);
     myOriginalArtifacts.add(artifact);
     myArtifact2ModifiableCopy.put(artifact, artifact);
     myModifiable2Original.put(artifact, artifact);
@@ -113,7 +113,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
 
   @Override
   public void removeArtifact(@Nonnull Artifact artifact) {
-    final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
+    ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     ArtifactImpl original = myModifiable2Original.remove(artifactImpl);
     if (original != null) {
       myOriginalArtifacts.remove(original);
@@ -130,7 +130,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   @Override
   @Nonnull
   public ModifiableArtifact getOrCreateModifiableArtifact(@Nonnull Artifact artifact) {
-    final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
+    ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     if (myModifiable2Original.containsKey(artifactImpl)) {
       return artifactImpl;
     }
@@ -149,15 +149,15 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   @Override
   @Nonnull
   public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
-    final ArtifactImpl original = myModifiable2Original.get(artifact);
+    ArtifactImpl original = myModifiable2Original.get(artifact);
     return original != null ? original : artifact;
   }
 
   @Override
   @Nonnull
   public ArtifactImpl getArtifactByOriginal(@Nonnull Artifact artifact) {
-    final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
-    final ArtifactImpl copy = myArtifact2ModifiableCopy.get(artifactImpl);
+    ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
+    ArtifactImpl copy = myArtifact2ModifiableCopy.get(artifactImpl);
     return copy != null ? copy : artifactImpl;
   }
 

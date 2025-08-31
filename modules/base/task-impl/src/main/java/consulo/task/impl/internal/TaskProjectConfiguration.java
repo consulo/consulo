@@ -85,7 +85,7 @@ public class TaskProjectConfiguration implements PersistentStateComponent<TaskPr
   @Override
   public void loadState(TaskProjectConfiguration state) {
     servers.clear();
-    for (final SharedServer server : state.servers) {
+    for (SharedServer server : state.servers) {
       if (server.url == null || server.type == null) {
         continue;
       }

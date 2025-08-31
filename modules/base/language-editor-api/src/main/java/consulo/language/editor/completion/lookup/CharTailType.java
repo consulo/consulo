@@ -26,7 +26,7 @@ public class CharTailType extends TailType {
   private final char myChar;
   private final boolean myOverwrite;
 
-  public CharTailType(final char aChar) {
+  public CharTailType(char aChar) {
     this(aChar, true);
   }
 
@@ -41,15 +41,15 @@ public class CharTailType extends TailType {
   }
 
   @Override
-  public int processTail(final Editor editor, final int tailOffset) {
+  public int processTail(Editor editor, int tailOffset) {
     return insertChar(editor, tailOffset, myChar, myOverwrite);
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof CharTailType)) return false;
 
-    final CharTailType that = (CharTailType)o;
+    CharTailType that = (CharTailType)o;
 
     if (myChar != that.myChar) return false;
 

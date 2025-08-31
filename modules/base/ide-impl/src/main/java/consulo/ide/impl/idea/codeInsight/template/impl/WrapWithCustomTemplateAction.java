@@ -25,11 +25,11 @@ public class WrapWithCustomTemplateAction extends AnAction {
   private final Runnable myAfterExecutionCallback;
   private final PsiFile myFile;
 
-  public WrapWithCustomTemplateAction(CustomLiveTemplate template, final Editor editor, final PsiFile file, final Set<Character> usedMnemonicsSet) {
+  public WrapWithCustomTemplateAction(CustomLiveTemplate template, Editor editor, PsiFile file, Set<Character> usedMnemonicsSet) {
     this(template, editor, file, usedMnemonicsSet, null);
   }
 
-  public WrapWithCustomTemplateAction(CustomLiveTemplate template, final Editor editor, final PsiFile file, final Set<Character> usedMnemonicsSet, @Nullable Runnable afterExecutionCallback) {
+  public WrapWithCustomTemplateAction(CustomLiveTemplate template, Editor editor, PsiFile file, Set<Character> usedMnemonicsSet, @Nullable Runnable afterExecutionCallback) {
     super(InvokeTemplateAction.extractMnemonic(template.getTitle(), usedMnemonicsSet));
     myTemplate = template;
     myFile = file;
@@ -44,8 +44,8 @@ public class WrapWithCustomTemplateAction extends AnAction {
   }
 
   public void perform() {
-    final Document document = myEditor.getDocument();
-    final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+    Document document = myEditor.getDocument();
+    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file != null) {
       ReadonlyStatusHandler.getInstance(myFile.getProject()).ensureFilesWritable(Collections.singletonList(file));
     }

@@ -106,7 +106,7 @@ public class OptionsPanelImpl implements OptionsPanel {
           catch (BadLocationException e1) {
             return;
           }
-          final SearchableConfigurable page = myOptions.findSubConfigurable(pageName);
+          SearchableConfigurable page = myOptions.findSubConfigurable(pageName);
           if (page != null && settings != null) {
             Runnable runnable = page.enableSearch(attrName);
             AsyncResult<Void> callback = settings.select(page);
@@ -178,7 +178,7 @@ public class OptionsPanelImpl implements OptionsPanel {
   }
 
   @Override
-  public Runnable showOption(final String attributeDisplayName) {
+  public Runnable showOption(String attributeDisplayName) {
     return () -> myOptionsTree.selectOptionByName(attributeDisplayName);
   }
 

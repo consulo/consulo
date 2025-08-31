@@ -61,7 +61,7 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
         myEditorTextField = new EditorTextField(createDocument(myExpression), project, debuggerEditorsProvider.getFileType(), false, !multiline) {
             @Override
             protected EditorEx createEditor() {
-                final EditorEx editor = super.createEditor();
+                EditorEx editor = super.createEditor();
                 editor.setVerticalScrollbarVisible(multiline);
                 editor.getColorsScheme().setEditorFontName(getFont().getFontName());
                 editor.getColorsScheme().setEditorFontSize(getFont().getSize());
@@ -122,7 +122,7 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
     @Override
     @Nullable
     public JComponent getPreferredFocusedComponent() {
-        final Editor editor = myEditorTextField.getEditor();
+        Editor editor = myEditorTextField.getEditor();
         return editor != null ? editor.getContentComponent() : null;
     }
 

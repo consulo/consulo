@@ -60,7 +60,7 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   public abstract Profile loadProfile(@Nonnull String path) throws IOException, JDOMException;
 
   @Override
-  public void addProfileChangeListener(@Nonnull final ProfileChangeAdapter listener) {
+  public void addProfileChangeListener(@Nonnull ProfileChangeAdapter listener) {
     myProfileChangeAdapters.add(listener);
   }
 
@@ -70,12 +70,12 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   }
 
   @Override
-  public void removeProfileChangeListener(@Nonnull final ProfileChangeAdapter listener) {
+  public void removeProfileChangeListener(@Nonnull ProfileChangeAdapter listener) {
     myProfileChangeAdapters.remove(listener);
   }
 
   @Override
-  public void fireProfileChanged(final Profile profile) {
+  public void fireProfileChanged(Profile profile) {
     if (profile instanceof ProfileEx) {
       ((ProfileEx)profile).profileChanged();
     }
@@ -85,14 +85,14 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   }
 
   @Override
-  public void fireProfileChanged(final Profile oldProfile, final Profile profile, final NamedScope scope) {
+  public void fireProfileChanged(Profile oldProfile, Profile profile, NamedScope scope) {
     for (ProfileChangeAdapter adapter : myProfileChangeAdapters) {
       adapter.profileActivated(oldProfile, profile);
     }
   }
 
   @Override
-  public Profile getProfile(@Nonnull final String name) {
+  public Profile getProfile(@Nonnull String name) {
     return getProfile(name, true);
   }
 }

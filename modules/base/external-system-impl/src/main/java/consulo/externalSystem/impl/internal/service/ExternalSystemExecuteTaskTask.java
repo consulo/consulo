@@ -93,22 +93,22 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
   @SuppressWarnings("unchecked")
   @Override
   protected void doExecute() throws Exception {
-    final ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
+    ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
     ExternalSystemExecutionSettings settings =
       ExternalSystemApiUtil.getExecutionSettings(getIdeProject(), getExternalProjectPath(), getExternalSystemId());
     RemoteExternalSystemFacade facade = manager.getFacade(getIdeProject(), getExternalProjectPath(), getExternalSystemId());
     RemoteExternalSystemTaskManager taskManager = facade.getTaskManager();
     List<String> taskNames = ContainerUtil.map2List(myTasksToExecute, MAPPER);
 
-    final List<String> vmOptions = parseCmdParameters(myVmOptions);
-    final List<String> scriptParametersList = parseCmdParameters(myScriptParameters);
+    List<String> vmOptions = parseCmdParameters(myVmOptions);
+    List<String> scriptParametersList = parseCmdParameters(myScriptParameters);
 
     taskManager.executeTasks(getId(), taskNames, getExternalProjectPath(), settings, vmOptions, scriptParametersList, myDebuggerSetup);
   }
 
   @Override
   protected boolean doCancel() throws Exception {
-    final ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
+    ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
     RemoteExternalSystemFacade facade = manager.getFacade(getIdeProject(), getExternalProjectPath(), getExternalSystemId());
     RemoteExternalSystemTaskManager taskManager = facade.getTaskManager();
 

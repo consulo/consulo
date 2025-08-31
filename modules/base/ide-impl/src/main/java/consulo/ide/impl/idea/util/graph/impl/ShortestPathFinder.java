@@ -39,13 +39,13 @@ public class ShortestPathFinder<Node> {
 
     boolean found = false;
     while (!queue.isEmpty()) {
-      final Node node = queue.removeFirst();
+      Node node = queue.removeFirst();
       if (node.equals(start)) {
         found = true;
         break;
       }
 
-      final Iterator<Node> in = myGraph.getIn(node);
+      Iterator<Node> in = myGraph.getIn(node);
       while (in.hasNext()) {
         Node prev = in.next();
         if (!nextNodes.containsKey(prev)) {

@@ -29,7 +29,7 @@ public class ReparseRangeUtil {
 
   public static void reparseRange(@Nonnull PsiFile file, int startOffset, int endOffset, @Nonnull CharSequence newText) throws IncorrectOperationException {
     LOG.assertTrue(file.isValid());
-    final Document document = file.getViewProvider().getDocument();
+    Document document = file.getViewProvider().getDocument();
     assert document != null;
     document.replaceString(startOffset, endOffset, newText);
     PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);

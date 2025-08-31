@@ -135,7 +135,7 @@ public class HtmlTransferableData extends AbstractSyntaxAwareReaderTransferableD
     }
   }
 
-  private static void appendColor(final ColorValue color, final StringBuilder sb) {
+  private static void appendColor(ColorValue color, StringBuilder sb) {
     RGBColor rgb = color.toRGB();
 
     if (rgb.getRed() < 16) sb.append('0');

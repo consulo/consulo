@@ -45,8 +45,8 @@ public class SeverityUtil {
 
   @Nullable
   private static SeverityRegistrarImpl.SeverityBasedTextAttributes getSeverityBasedTextAttributes(@Nonnull SeverityRegistrarImpl registrar, @Nonnull HighlightInfoType type) {
-    final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    final TextAttributes textAttributes = scheme.getAttributes(type.getAttributesKey());
+    EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+    TextAttributes textAttributes = scheme.getAttributes(type.getAttributesKey());
     if (textAttributes != null) {
       return new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes, (HighlightInfoType.HighlightInfoTypeImpl)type);
     }

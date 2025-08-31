@@ -33,12 +33,12 @@ import jakarta.annotation.Nullable;
  */
 public class RootConfigurationAccessor {
   @Nullable
-  public Library getLibrary(final Library library, final String libraryName, final String libraryLevel) {
+  public Library getLibrary(Library library, String libraryName, String libraryLevel) {
     return library;
   }
 
   @Nullable
-  public Sdk getSdk(final Sdk sdk, final String sdkName) {
+  public Sdk getSdk(Sdk sdk, String sdkName) {
     return sdk;
   }
 
@@ -47,7 +47,7 @@ public class RootConfigurationAccessor {
     return SdkPointerManager.getInstance().create(sdkName);
   }
 
-  public Module getModule(final Module module, final String moduleName) {
+  public Module getModule(Module module, String moduleName) {
     return module;
   }
 

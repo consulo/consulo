@@ -52,7 +52,7 @@ public class BinaryFilePatchInProgress extends AbstractFilePatchInProgress<Shelv
 
     if (myNewContentRevision != null) return myNewContentRevision;
     if (myPatch.getAfterFileName() != null) {
-      final FilePath newFilePath = FilePatchStatus.ADDED.equals(myStatus) ? VcsUtil.getFilePath(myIoCurrentBase, false)
+      FilePath newFilePath = FilePatchStatus.ADDED.equals(myStatus) ? VcsUtil.getFilePath(myIoCurrentBase, false)
                                                                           : detectNewFilePathForMovedOrModified();
       myNewContentRevision = new ShelvedBinaryContentRevision(newFilePath, myPatch.getShelvedBinaryFile().SHELVED_PATH);
     }
@@ -61,7 +61,7 @@ public class BinaryFilePatchInProgress extends AbstractFilePatchInProgress<Shelv
 
   @Nonnull
   @Override
-  public DiffRequestProducer getDiffRequestProducers(final Project project, final PatchReader baseContents) {
+  public DiffRequestProducer getDiffRequestProducers(final Project project, PatchReader baseContents) {
     final ShelvedBinaryFile file = getPatch().getShelvedBinaryFile();
     return new DiffRequestProducer() {
       @Nonnull
@@ -75,7 +75,7 @@ public class BinaryFilePatchInProgress extends AbstractFilePatchInProgress<Shelv
       @Nonnull
       @Override
       public String getName() {
-        final File file1 = new File(VfsUtilCore.virtualToIoFile(getBase()), file.AFTER_PATH == null ? file.BEFORE_PATH : file.AFTER_PATH);
+        File file1 = new File(VfsUtilCore.virtualToIoFile(getBase()), file.AFTER_PATH == null ? file.BEFORE_PATH : file.AFTER_PATH);
         return FileUtil.toSystemDependentName(file1.getPath());
       }
     };

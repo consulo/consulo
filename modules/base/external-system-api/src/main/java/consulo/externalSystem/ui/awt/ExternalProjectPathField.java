@@ -150,7 +150,7 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
     }
 
     @Nonnull
-    private static EditorTextField createTextField(@Nonnull final Project project, @Nonnull final ProjectSystemId externalSystemId) {
+    private static EditorTextField createTextField(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
         final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
@@ -189,7 +189,7 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
 
     @Override
     @RequiredUIAccess
-    public void setText(final String text) {
+    public void setText(String text) {
         myEditorTextField.setText(text);
 
         Editor editor = myEditorTextField.getEditor();
@@ -198,13 +198,13 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         }
     }
 
-    private static void collapseIfPossible(@Nonnull final Editor editor,
+    private static void collapseIfPossible(@Nonnull Editor editor,
                                            @Nonnull ProjectSystemId externalSystemId,
                                            @Nonnull Project project) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
-        final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
-        final ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
+        AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
+        ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
 
         String rawText = editor.getDocument().getText();
         for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : settings.getAvailableProjects().entrySet()) {
@@ -250,9 +250,9 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         private final Project myProject;
         private final EditorTextField myPathField;
 
-        MyBrowseListener(@Nonnull final FileChooserDescriptor descriptor,
-                         @Nonnull final String fileChooserTitle,
-                         @Nonnull final Project project,
+        MyBrowseListener(@Nonnull FileChooserDescriptor descriptor,
+                         @Nonnull String fileChooserTitle,
+                         @Nonnull Project project,
                          @Nonnull EditorTextField pathField) {
             super(fileChooserTitle, null, PlatformIconGroup.nodesFolder());
             descriptor.setTitle(fileChooserTitle);

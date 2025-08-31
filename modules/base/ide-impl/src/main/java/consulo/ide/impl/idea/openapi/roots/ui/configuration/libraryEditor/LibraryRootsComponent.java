@@ -106,8 +106,8 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         myProject = project;
         myLibraryEditorComputable = libraryEditorComputable;
 
-        final LibraryEditor editor = getLibraryEditor();
-        final LibraryType type = editor.getType();
+        LibraryEditor editor = getLibraryEditor();
+        LibraryType type = editor.getType();
         if (type != null) {
             myDescriptor = type.createLibraryRootsComponentDescriptor();
         }
@@ -141,8 +141,8 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         }
 
         StringBuilder text = new StringBuilder();
-        final LibraryType<?> type = getLibraryEditor().getType();
-        final Set<LibraryKind> excluded =
+        LibraryType<?> type = getLibraryEditor().getType();
+        Set<LibraryKind> excluded =
             type != null ? Collections.<LibraryKind>singleton(type.getKind()) : Collections.<LibraryKind>emptySet();
         for (String description : LibraryPresentationManager.getInstance()
             .getDescriptions(getLibraryEditor().getFiles(BinariesOrderRootType.getInstance()), excluded)) {
@@ -157,8 +157,8 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     private void init(AbstractTreeStructure treeStructure) {
         myPanel = new BorderLayoutPanel();
 
-        final LibraryEditor editor = getLibraryEditor();
-        final LibraryType type = editor.getType();
+        LibraryEditor editor = getLibraryEditor();
+        LibraryType type = editor.getType();
         if (!(myDescriptor instanceof DefaultLibraryRootsComponentDescriptor)) {
             myPropertiesLabel = new MultiLineLabel();
             JPanel propertiesPanel = new JPanel(new VerticalFlowLayout());
@@ -191,7 +191,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
             toolbarDecorator.setPanelBorder(JBUI.Borders.empty());
         }
 
-        final List<AttachRootButtonDescriptor> popupItems = new ArrayList<>();
+        List<AttachRootButtonDescriptor> popupItems = new ArrayList<>();
         for (AttachRootButtonDescriptor descriptor : myDescriptor.createAttachButtons()) {
             Image icon = descriptor.getToolbarIcon();
             if (icon != null) {
@@ -212,19 +212,19 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
-                final Object[] selectedElements = getSelectedElements();
+                Object[] selectedElements = getSelectedElements();
                 if (selectedElements.length == 0) {
                     return;
                 }
                 ApplicationManager.getApplication().runWriteAction(() -> {
                     for (Object selectedElement : selectedElements) {
                         if (selectedElement instanceof ItemElement) {
-                            final ItemElement itemElement = (ItemElement) selectedElement;
+                            ItemElement itemElement = (ItemElement) selectedElement;
                             getLibraryEditor().removeRoot(itemElement.getUrl(), itemElement.getRootType());
                         }
                         else if (selectedElement instanceof OrderRootTypeElement) {
-                            final OrderRootType rootType = ((OrderRootTypeElement) selectedElement).getOrderRootType();
-                            final String[] urls = getLibraryEditor().getUrls(rootType);
+                            OrderRootType rootType = ((OrderRootTypeElement) selectedElement).getOrderRootType();
+                            String[] urls = getLibraryEditor().getUrls(rootType);
                             for (String url : urls) {
                                 getLibraryEditor().removeRoot(url, rootType);
                             }
@@ -260,7 +260,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
             for (AttachRootButtonDescriptor descriptor : popupItems) {
                 actions.add(new AttachItemAction(descriptor, descriptor.getButtonText(), null));
             }
-            final DefaultActionGroup group = new DefaultActionGroup(actions);
+            DefaultActionGroup group = new DefaultActionGroup(actions);
             JBPopupFactory.getInstance()
                 .createActionGroupPopup(
                     null,
@@ -294,7 +294,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     @Nullable
     public VirtualFile getExistingRootDirectory() {
         for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
-            final VirtualFile[] existingRoots = getLibraryEditor().getFiles(orderRootType);
+            VirtualFile[] existingRoots = getLibraryEditor().getFiles(orderRootType);
             if (existingRoots.length > 0) {
                 VirtualFile existingRoot = existingRoots[0];
                 if (existingRoot.getFileSystem() instanceof ArchiveFileSystem) {
@@ -339,13 +339,13 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         if (myTreeBuilder == null || myTreeBuilder.isDisposed()) {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
-        final TreePath[] selectionPaths = myTreeBuilder.getTree().getSelectionPaths();
+        TreePath[] selectionPaths = myTreeBuilder.getTree().getSelectionPaths();
         if (selectionPaths == null) {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
         List<Object> elements = new ArrayList<>();
         for (TreePath selectionPath : selectionPaths) {
-            final Object pathElement = getPathElement(selectionPath);
+            Object pathElement = getPathElement(selectionPath);
             if (pathElement != null) {
                 elements.add(pathElement);
             }
@@ -354,19 +354,19 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     }
 
     @Nullable
-    private static Object getPathElement(final TreePath selectionPath) {
+    private static Object getPathElement(TreePath selectionPath) {
         if (selectionPath == null) {
             return null;
         }
-        final DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+        DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
         if (lastPathComponent == null) {
             return null;
         }
-        final Object userObject = lastPathComponent.getUserObject();
+        Object userObject = lastPathComponent.getUserObject();
         if (!(userObject instanceof NodeDescriptor)) {
             return null;
         }
-        final Object element = ((NodeDescriptor) userObject).getElement();
+        Object element = ((NodeDescriptor) userObject).getElement();
         if (!(element instanceof LibraryTableTreeContentElement)) {
             return null;
         }
@@ -375,7 +375,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
     @Override
     public void renameLibrary(String newName) {
-        final LibraryEditor libraryEditor = getLibraryEditor();
+        LibraryEditor libraryEditor = getLibraryEditor();
         libraryEditor.setName(newName);
         libraryChanged(false);
     }
@@ -418,7 +418,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
             return myLastChosen;
         }
 
-        final VirtualFile directory = getExistingRootDirectory();
+        VirtualFile directory = getExistingRootDirectory();
         if (directory != null) {
             return directory;
         }
@@ -432,12 +432,12 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
         @Override
         protected List<OrderRoot> selectRoots(@Nullable VirtualFile initialSelection) {
-            final String name = getLibraryEditor().getName();
-            final FileChooserDescriptor chooserDescriptor = myDescriptor.createAttachFilesChooserDescriptor(name);
+            String name = getLibraryEditor().getName();
+            FileChooserDescriptor chooserDescriptor = myDescriptor.createAttachFilesChooserDescriptor(name);
             if (myContextModule != null) {
                 chooserDescriptor.putUserData(LangDataKeys.MODULE_CONTEXT, myContextModule);
             }
-            final VirtualFile[] files = IdeaFileChooser.chooseFiles(chooserDescriptor, myPanel, myProject, initialSelection);
+            VirtualFile[] files = IdeaFileChooser.chooseFiles(chooserDescriptor, myPanel, myProject, initialSelection);
             if (files.length == 0) {
                 return Collections.emptyList();
             }
@@ -460,8 +460,8 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
                 return;
             }
 
-            final List<OrderRoot> attachedRoots = attachFiles(roots);
-            final OrderRoot first = ContainerUtil.getFirstItem(attachedRoots);
+            List<OrderRoot> attachedRoots = attachFiles(roots);
+            OrderRoot first = ContainerUtil.getFirstItem(attachedRoots);
             if (first != null) {
                 myLastChosen = first.getFile();
             }
@@ -475,7 +475,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     private class AttachItemAction extends AttachItemActionBase {
         private final AttachRootButtonDescriptor myDescriptor;
 
-        protected AttachItemAction(AttachRootButtonDescriptor descriptor, String title, final Image icon) {
+        protected AttachItemAction(AttachRootButtonDescriptor descriptor, String title, Image icon) {
             super(title);
             getTemplatePresentation().setIcon(icon);
             myDescriptor = descriptor;
@@ -483,7 +483,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
         @Override
         protected List<OrderRoot> selectRoots(@Nullable VirtualFile initialSelection) {
-            final VirtualFile[] files = myDescriptor.selectFiles(
+            VirtualFile[] files = myDescriptor.selectFiles(
                 myPanel,
                 initialSelection,
                 DataContext.builder().add(Module.KEY, myContextModule).build(),
@@ -502,7 +502,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     }
 
     private List<OrderRoot> attachFiles(List<OrderRoot> roots) {
-        final List<OrderRoot> rootsToAttach = filterAlreadyAdded(roots);
+        List<OrderRoot> rootsToAttach = filterAlreadyAdded(roots);
         if (!rootsToAttach.isEmpty()) {
             ApplicationManager.getApplication().runWriteAction(() -> getLibraryEditor().addRoots(rootsToAttach));
             updatePropertiesLabel();
@@ -515,7 +515,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     private List<OrderRoot> filterAlreadyAdded(@Nonnull List<OrderRoot> roots) {
         List<OrderRoot> result = new ArrayList<>();
         for (OrderRoot root : roots) {
-            final VirtualFile[] libraryFiles = getLibraryEditor().getFiles(root.getType());
+            VirtualFile[] libraryFiles = getLibraryEditor().getFiles(root.getType());
             if (!ArrayUtil.contains(root.getFile(), libraryFiles)) {
                 result.add(root);
             }

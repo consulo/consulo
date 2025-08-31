@@ -59,8 +59,8 @@ public class TableUtil {
     ListSelectionModel selectionModel = table.getSelectionModel();
     int maxSelectionIndex = selectionModel.getMaxSelectionIndex();
     int minSelectionIndex = selectionModel.getMinSelectionIndex();
-    final int maxColumnSelectionIndex = Math.max(0, table.getColumnModel().getSelectionModel().getMinSelectionIndex());
-    final int minColumnSelectionIndex = Math.max(0, table.getColumnModel().getSelectionModel().getMaxSelectionIndex());
+    int maxColumnSelectionIndex = Math.max(0, table.getColumnModel().getSelectionModel().getMinSelectionIndex());
+    int minColumnSelectionIndex = Math.max(0, table.getColumnModel().getSelectionModel().getMaxSelectionIndex());
     if(maxSelectionIndex == -1){
       return;
     }
@@ -196,7 +196,7 @@ public class TableUtil {
 
   public static void editCellAt(@Nonnull JTable table, int row, int column) {
     if (table.editCellAt(row, column)) {
-      final Component component = table.getEditorComponent();
+      Component component = table.getEditorComponent();
       if (component != null) {
         component.requestFocus();
       }
@@ -205,7 +205,7 @@ public class TableUtil {
 
   public static void stopEditing(@Nonnull JTable table) {
     if (table.isEditing()) {
-      final TableCellEditor cellEditor = table.getCellEditor();
+      TableCellEditor cellEditor = table.getCellEditor();
       if (cellEditor != null) {
         cellEditor.stopCellEditing();
       }

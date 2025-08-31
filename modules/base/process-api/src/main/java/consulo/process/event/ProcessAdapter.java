@@ -22,11 +22,11 @@ import consulo.util.dataholder.Key;
 @DeprecationInfo("Use ProcessListener")
 public abstract class ProcessAdapter implements ProcessListener {
   @Override
-  public void startNotified(final ProcessEvent event) {
+  public void startNotified(ProcessEvent event) {
   }
 
   @Override
-  public void processTerminated(final ProcessEvent event) {
+  public void processTerminated(ProcessEvent event) {
   }
 
   @Override
@@ -34,6 +34,6 @@ public abstract class ProcessAdapter implements ProcessListener {
   }
 
   @Override
-  public void onTextAvailable(final ProcessEvent event, final Key outputType) {
+  public void onTextAvailable(ProcessEvent event, Key outputType) {
   }
 }

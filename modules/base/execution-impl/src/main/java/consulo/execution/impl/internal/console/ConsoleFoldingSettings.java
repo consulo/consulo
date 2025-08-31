@@ -88,7 +88,7 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
 
     baseline.addAll(targets);
 
-    final List<String> current = patternList(negated);
+    List<String> current = patternList(negated);
     added.addAll(current);
     added.removeAll(baseline);
 

@@ -40,7 +40,7 @@ public class NamedLibraryUrl extends AbstractUrl {
 
   @Override
   public Object[] createPath(Project project) {
-    final Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
+    Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
     if (module == null) return null;
     for (OrderEntry orderEntry : ModuleRootManager.getInstance(module).getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry || orderEntry instanceof ModuleExtensionWithSdkOrderEntry && orderEntry.getPresentableName().equals(url)) {

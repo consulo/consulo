@@ -55,7 +55,7 @@ public class GroupByPackages {
     return oldRoot;
   }
 
-  private void process(@Nonnull final File file) {
+  private void process(@Nonnull File file) {
     File f;
     File parent = file.getParentFile();
     for (f = file; parent != null; f = parent, parent = parent.getParentFile()) {

@@ -45,7 +45,7 @@ public class DefineMacrosDialog extends DialogWrapper{
     myMacroTable = new String[macroNames.length][2];
 
     for (int idx = 0; idx < macroNames.length; idx++) {
-      final String macroName = macroNames[idx];
+      String macroName = macroNames[idx];
       myMacroTable[idx] = new String[]{macroName, ""};
       myIndex.putInt(macroName, idx);
     }
@@ -89,7 +89,7 @@ public class DefineMacrosDialog extends DialogWrapper{
   }
 
   public String getMacroValue(String macro) {
-    final int index = myIndex.getInt(macro);
+    int index = myIndex.getInt(macro);
     return (index >= 0 && index < myMacroTable.length)? myMacroTable[index][MACRO_VALUE] : null;
   }
 

@@ -48,15 +48,15 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   private boolean myLighterASTShouldBeThreadSafe;
   private final boolean myPhysicalContent;
 
-  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final CharSequence contentAsText, long documentStamp) {
+  public FileContentImpl(@Nonnull VirtualFile file, @Nonnull CharSequence contentAsText, long documentStamp) {
     this(file, contentAsText, null, documentStamp, false);
   }
 
-  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final byte[] content) {
+  public FileContentImpl(@Nonnull VirtualFile file, @Nonnull byte[] content) {
     this(file, null, content, -1, true);
   }
 
-  public FileContentImpl(@Nonnull final VirtualFile file) {
+  public FileContentImpl(@Nonnull VirtualFile file) {
     this(file, null, null, -1, true);
   }
 
@@ -147,7 +147,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   }
 
   public static class IllegalDataException extends RuntimeException {
-    IllegalDataException(final String message) {
+    IllegalDataException(String message) {
       super(message);
     }
   }
@@ -232,7 +232,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     if (myFileType.isBinary()) {
       throw new IllegalDataException("Cannot obtain text for binary file type : " + myFileType.getDescription());
     }
-    final CharSequence content = getUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY);
+    CharSequence content = getUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY);
     if (content != null) {
       return content;
     }

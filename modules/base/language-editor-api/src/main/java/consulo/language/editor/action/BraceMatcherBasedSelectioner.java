@@ -36,19 +36,19 @@ import java.util.List;
 public abstract class BraceMatcherBasedSelectioner extends ExtendWordSelectionHandlerBase {
 
   @Override
-  public List<TextRange> select(final PsiElement e, final CharSequence editorText, final int cursorOffset, final Editor editor) {
-    final VirtualFile file = e.getContainingFile().getVirtualFile();
-    final FileType fileType = file == null? null : file.getFileType();
+  public List<TextRange> select(PsiElement e, CharSequence editorText, int cursorOffset, Editor editor) {
+    VirtualFile file = e.getContainingFile().getVirtualFile();
+    FileType fileType = file == null? null : file.getFileType();
     if (fileType == null) return super.select(e, editorText, cursorOffset, editor);
-    final int textLength = editorText.length();
-    final TextRange totalRange = e.getTextRange();
-    final HighlighterIterator iterator = editor.getHighlighter().createIterator(totalRange.getStartOffset());
-    final BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
+    int textLength = editorText.length();
+    TextRange totalRange = e.getTextRange();
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(totalRange.getStartOffset());
+    BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
 
-    final ArrayList<TextRange> result = new ArrayList<>();
-    final LinkedList<Trinity<Integer, Integer, IElementType>> stack = new LinkedList<>();
+    ArrayList<TextRange> result = new ArrayList<>();
+    LinkedList<Trinity<Integer, Integer, IElementType>> stack = new LinkedList<>();
     while (!iterator.atEnd() && iterator.getStart() < totalRange.getEndOffset()) {
-      final Trinity<Integer, Integer, IElementType> last;
+      Trinity<Integer, Integer, IElementType> last;
       if (braceMatcher.isLBraceToken(iterator, editorText, fileType)) {
         stack.addLast(Trinity.create(iterator.getStart(), iterator.getEnd(), (IElementType) iterator.getTokenType()));
       }

@@ -39,7 +39,7 @@ abstract class GeneralRunner implements ContinuationContext {
   private final List<Consumer<TaskDescriptor>> myTasksPatchers;
   private final Map<Class<? extends Exception>, Consumer<Exception>> myHandlersMap;
 
-  GeneralRunner(final Project project, boolean cancellable) {
+  GeneralRunner(Project project, boolean cancellable) {
     myProject = project;
     myCancellable = cancellable;
     myQueueLock = new Object();
@@ -66,7 +66,7 @@ abstract class GeneralRunner implements ContinuationContext {
     }
   }
 
-  protected void setIndicator(final ProgressIndicator indicator) {
+  protected void setIndicator(ProgressIndicator indicator) {
     synchronized (myQueueLock) {
       myIndicator = indicator;
     }
@@ -94,7 +94,7 @@ abstract class GeneralRunner implements ContinuationContext {
   public boolean handleException(Exception e, boolean cancelEveryThing) {
     synchronized (myQueueLock) {
       try {
-        final Class<? extends Exception> aClass = e.getClass();
+        Class<? extends Exception> aClass = e.getClass();
         Consumer<Exception> consumer = myHandlersMap.get(e.getClass());
         if (consumer != null) {
           consumer.accept(e);
@@ -164,13 +164,13 @@ abstract class GeneralRunner implements ContinuationContext {
   }
 
   @Override
-  public void throwDisaster(@Nonnull Object disaster, @Nonnull final Object cure) {
+  public void throwDisaster(@Nonnull Object disaster, @Nonnull Object cure) {
     synchronized (myQueueLock) {
-      final Iterator<TaskDescriptor> iterator = myQueue.iterator();
+      Iterator<TaskDescriptor> iterator = myQueue.iterator();
       while (iterator.hasNext()) {
-        final TaskDescriptor taskDescriptor = iterator.next();
+        TaskDescriptor taskDescriptor = iterator.next();
         if (taskDescriptor.isHaveMagicCure()) continue;
-        final Object taskCure = taskDescriptor.hasCure(disaster);
+        Object taskCure = taskDescriptor.hasCure(disaster);
         if (! cure.equals(taskCure)) {
           iterator.remove();
         }
@@ -192,13 +192,13 @@ abstract class GeneralRunner implements ContinuationContext {
         ++ i;
       }
       assert idx != -1;
-      final List<TaskDescriptor> asList = Arrays.asList(next);
+      List<TaskDescriptor> asList = Arrays.asList(next);
       patchTasks(asList);
       myQueue.addAll(idx + 1, asList);
     }
   }
 
-  private void patchTasks(final List<TaskDescriptor> next) {
+  private void patchTasks(List<TaskDescriptor> next) {
     for (TaskDescriptor descriptor : next) {
       for (Consumer<TaskDescriptor> tasksPatcher : myTasksPatchers) {
         tasksPatcher.accept(descriptor);
@@ -209,7 +209,7 @@ abstract class GeneralRunner implements ContinuationContext {
   @Override
   public void next(TaskDescriptor... next) {
     synchronized (myQueueLock) {
-      final List<TaskDescriptor> asList = Arrays.asList(next);
+      List<TaskDescriptor> asList = Arrays.asList(next);
       patchTasks(asList);
       myQueue.addAll(0, asList);
     }
@@ -234,7 +234,7 @@ abstract class GeneralRunner implements ContinuationContext {
   @Override
   public void last(TaskDescriptor... next) {
     synchronized (myQueueLock) {
-      final List<TaskDescriptor> asList = Arrays.asList(next);
+      List<TaskDescriptor> asList = Arrays.asList(next);
       patchTasks(asList);
       myQueue.addAll(asList);
     }
@@ -269,9 +269,9 @@ abstract class GeneralRunner implements ContinuationContext {
     // left only "final" tasks
     synchronized (myQueueLock) {
       if (myQueue.isEmpty()) return;
-      final Iterator<TaskDescriptor> iterator = myQueue.iterator();
+      Iterator<TaskDescriptor> iterator = myQueue.iterator();
       while (iterator.hasNext()) {
-        final TaskDescriptor next = iterator.next();
+        TaskDescriptor next = iterator.next();
         if (! next.isHaveMagicCure()) {
           iterator.remove();
         }

@@ -51,7 +51,7 @@ public interface FilterMixin {
     }
 
     @Nullable
-    public TextAttributes getTextAttributes(@Nullable final TextAttributes source) {
+    public TextAttributes getTextAttributes(@Nullable TextAttributes source) {
       return null;
     }
   }

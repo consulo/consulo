@@ -29,7 +29,7 @@ import java.util.Collection;
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class FileContextProvider {
   @Nullable
-  public static FileContextProvider getProvider(final @Nonnull PsiFile file) {
+  public static FileContextProvider getProvider(@Nonnull PsiFile file) {
     for (FileContextProvider provider : file.getProject().getExtensionList(FileContextProvider.class)) {
       if (provider.isAvailable(file)) {
         return provider;
@@ -38,11 +38,11 @@ public abstract class FileContextProvider {
     return null;
   }
 
-  protected abstract boolean isAvailable(final PsiFile file);
+  protected abstract boolean isAvailable(PsiFile file);
 
   @Nonnull
-  public abstract Collection<PsiFileSystemItem> getContextFolders(final PsiFile file);
+  public abstract Collection<PsiFileSystemItem> getContextFolders(PsiFile file);
 
   @Nullable
-  public abstract PsiFile getContextFile(final PsiFile file);
+  public abstract PsiFile getContextFile(PsiFile file);
 }

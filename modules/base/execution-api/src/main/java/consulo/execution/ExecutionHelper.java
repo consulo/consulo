@@ -76,20 +76,20 @@ public class ExecutionHelper {
     }
 
     public static void showErrors(
-        @Nonnull final Project myProject,
-        @Nonnull final List<? extends Exception> errors,
-        @Nonnull final String tabDisplayName,
-        @Nullable final VirtualFile file
+        @Nonnull Project myProject,
+        @Nonnull List<? extends Exception> errors,
+        @Nonnull String tabDisplayName,
+        @Nullable VirtualFile file
     ) {
         showExceptions(myProject, errors, Collections.<Exception>emptyList(), tabDisplayName, file);
     }
 
     public static void showExceptions(
-        @Nonnull final Project myProject,
-        @Nonnull final List<? extends Exception> errors,
-        @Nonnull final List<? extends Exception> warnings,
-        @Nonnull final String tabDisplayName,
-        @Nullable final VirtualFile file
+        @Nonnull Project myProject,
+        @Nonnull List<? extends Exception> errors,
+        @Nonnull List<? extends Exception> warnings,
+        @Nonnull String tabDisplayName,
+        @Nullable VirtualFile file
     ) {
         if (Application.get().isUnitTestMode() && !errors.isEmpty()) {
             throw new RuntimeException(errors.get(0));
@@ -103,7 +103,7 @@ public class ExecutionHelper {
                 return;
             }
 
-            final NewErrorTreeViewPanel errorTreeView = myProject.getApplication()
+            NewErrorTreeViewPanel errorTreeView = myProject.getApplication()
                 .getInstance(NewErrorTreeViewPanelFactory.class)
                 .createPanel(myProject, "reference.toolWindows.messages");
             errorTreeView.setCanHideWarningsOrInfos(false);
@@ -111,14 +111,14 @@ public class ExecutionHelper {
                 openMessagesView(errorTreeView, myProject, tabDisplayName);
             }
             catch (NullPointerException e) {
-                final StringBuilder builder = new StringBuilder();
+                StringBuilder builder = new StringBuilder();
                 builder.append("Exceptions occurred:");
-                for (final Exception exception : errors) {
+                for (Exception exception : errors) {
                     builder.append("\n");
                     builder.append(exception.getMessage());
                 }
                 builder.append("Warnings occurred:");
-                for (final Exception exception : warnings) {
+                for (Exception exception : warnings) {
                     builder.append("\n");
                     builder.append(exception.getMessage());
                 }
@@ -134,13 +134,13 @@ public class ExecutionHelper {
     }
 
     private static void addMessages(
-        final int messageCategory,
-        @Nonnull final List<? extends Exception> exceptions,
+        int messageCategory,
+        @Nonnull List<? extends Exception> exceptions,
         @Nonnull NewErrorTreeViewPanel errorTreeView,
-        @Nullable final VirtualFile file,
-        @Nonnull final String defaultMessage
+        @Nullable VirtualFile file,
+        @Nonnull String defaultMessage
     ) {
-        for (final Exception exception : exceptions) {
+        for (Exception exception : exceptions) {
             String[] messages = StringUtil.splitByLines(exception.getMessage());
             if (messages.length == 0) {
                 messages = new String[]{defaultMessage};
@@ -150,14 +150,14 @@ public class ExecutionHelper {
     }
 
     public static void showOutput(
-        @Nonnull final Project project,
-        @Nonnull final ProcessOutput output,
-        @Nonnull final String tabDisplayName,
-        @Nullable final VirtualFile file,
-        final boolean activateWindow
+        @Nonnull Project project,
+        @Nonnull ProcessOutput output,
+        @Nonnull String tabDisplayName,
+        @Nullable VirtualFile file,
+        boolean activateWindow
     ) {
-        final String stdout = output.getStdout();
-        final String stderr = output.getStderr();
+        String stdout = output.getStdout();
+        String stderr = output.getStderr();
         if (Application.get().isUnitTestMode() && !(stdout.isEmpty() || stderr.isEmpty())) {
             throw new RuntimeException("STDOUT:\n" + stdout + "\nSTDERR:\n" + stderr);
         }
@@ -167,9 +167,9 @@ public class ExecutionHelper {
                 return;
             }
 
-            final String stdOutTitle = "[Stdout]:";
-            final String stderrTitle = "[Stderr]:";
-            final NewErrorTreeViewPanel errorTreeView = project.getApplication()
+            String stdOutTitle = "[Stdout]:";
+            String stderrTitle = "[Stderr]:";
+            NewErrorTreeViewPanel errorTreeView = project.getApplication()
                 .getInstance(NewErrorTreeViewPanelFactory.class)
                 .createPanel(project, "reference.toolWindows.messages");
             errorTreeView.setCanHideWarningsOrInfos(false);
@@ -177,7 +177,7 @@ public class ExecutionHelper {
                 openMessagesView(errorTreeView, project, tabDisplayName);
             }
             catch (NullPointerException e) {
-                final StringBuilder builder = new StringBuilder();
+                StringBuilder builder = new StringBuilder();
                 builder.append(stdOutTitle).append("\n").append(stdout != null ? stdout : "<empty>").append("\n");
                 builder.append(stderrTitle).append("\n").append(stderr != null ? stderr : "<empty>");
                 Messages.showErrorDialog(builder.toString(), "Process Output");
@@ -185,7 +185,7 @@ public class ExecutionHelper {
             }
 
             if (!StringUtil.isEmpty(stdout)) {
-                final String[] stdoutLines = StringUtil.splitByLines(stdout);
+                String[] stdoutLines = StringUtil.splitByLines(stdout);
                 if (stdoutLines.length > 0) {
                     if (StringUtil.isEmpty(stderr)) {
                         // Only stdout available
@@ -213,7 +213,7 @@ public class ExecutionHelper {
                 }
             }
             if (!StringUtil.isEmpty(stderr)) {
-                final String[] stderrLines = StringUtil.splitByLines(stderr);
+                String[] stderrLines = StringUtil.splitByLines(stderr);
                 if (stderrLines.length > 0) {
                     if (file == null) {
                         errorTreeView.addMessage(
@@ -250,17 +250,17 @@ public class ExecutionHelper {
 
     @RequiredUIAccess
     private static void openMessagesView(
-        @Nonnull final NewErrorTreeViewPanel errorTreeView,
-        @Nonnull final Project project,
-        @Nonnull final String tabDisplayName
+        @Nonnull NewErrorTreeViewPanel errorTreeView,
+        @Nonnull Project project,
+        @Nonnull String tabDisplayName
     ) {
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
         commandProcessor.newCommand()
             .project(project)
             .name(ExecutionLocalize.openMessageView())
             .run(() -> {
-                final MessageView messageView = MessageView.getInstance(project);
-                final Content content = ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
+                MessageView messageView = MessageView.getInstance(project);
+                Content content = ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
                 messageView.getContentManager().addContent(content);
                 Disposer.register(content, errorTreeView);
                 messageView.getContentManager().setSelectedContent(content);
@@ -269,9 +269,9 @@ public class ExecutionHelper {
     }
 
     private static void removeContents(
-        @Nullable final Content notToRemove,
-        @Nonnull final Project project,
-        @Nonnull final String tabDisplayName
+        @Nullable Content notToRemove,
+        @Nonnull Project project,
+        @Nonnull String tabDisplayName
     ) {
         MessageView messageView = MessageView.getInstance(project);
         Content[] contents = messageView.getContentManager().getContents();
@@ -292,21 +292,21 @@ public class ExecutionHelper {
     }
 
     public static Collection<RunContentDescriptor> findRunningConsoleByTitle(
-        final Project project,
-        @Nonnull final Function<String, Boolean> titleMatcher
+        Project project,
+        @Nonnull Function<String, Boolean> titleMatcher
     ) {
         return findRunningConsole(project, selectedContent -> titleMatcher.apply(selectedContent.getDisplayName()));
     }
 
     public static Collection<RunContentDescriptor> findRunningConsole(
-        final Project project,
-        @Nonnull final Function<RunContentDescriptor, Boolean> descriptorMatcher
+        Project project,
+        @Nonnull Function<RunContentDescriptor, Boolean> descriptorMatcher
     ) {
-        final ExecutionManager executionManager = ExecutionManager.getInstance(project);
+        ExecutionManager executionManager = ExecutionManager.getInstance(project);
 
-        final RunContentDescriptor selectedContent = executionManager.getContentManager().getSelectedContent();
+        RunContentDescriptor selectedContent = executionManager.getContentManager().getSelectedContent();
         if (selectedContent != null) {
-            final ToolWindow toolWindow =
+            ToolWindow toolWindow =
                 ExecutionManager.getInstance(project).getContentManager().getToolWindowByDescriptor(selectedContent);
             if (toolWindow != null && toolWindow.isVisible()) {
                 if (descriptorMatcher.apply(selectedContent)) {
@@ -325,11 +325,11 @@ public class ExecutionHelper {
     }
 
     public static List<RunContentDescriptor> collectConsolesByDisplayName(
-        final Project project,
+        Project project,
         @Nonnull Function<String, Boolean> titleMatcher
     ) {
         List<RunContentDescriptor> result = new ArrayList<>();
-        final ExecutionManager executionManager = ExecutionManager.getInstance(project);
+        ExecutionManager executionManager = ExecutionManager.getInstance(project);
         for (RunContentDescriptor runContentDescriptor : executionManager.getContentManager().getAllDescriptors()) {
             if (titleMatcher.apply(runContentDescriptor.getDisplayName())) {
                 result.add(runContentDescriptor);
@@ -339,11 +339,11 @@ public class ExecutionHelper {
     }
 
     public static void selectContentDescriptor(
-        final @Nonnull DataContext dataContext,
-        final @Nonnull Project project,
+        @Nonnull DataContext dataContext,
+        @Nonnull Project project,
         @Nonnull Collection<RunContentDescriptor> consoles,
         String selectDialogTitle,
-        final Consumer<RunContentDescriptor> descriptorConsumer
+        Consumer<RunContentDescriptor> descriptorConsumer
     ) {
         if (consoles.size() == 1) {
             RunContentDescriptor descriptor = consoles.iterator().next();
@@ -378,7 +378,7 @@ public class ExecutionHelper {
         }
     }
 
-    private static void descriptorToFront(final Project project, final RunContentDescriptor descriptor) {
+    private static void descriptorToFront(Project project, RunContentDescriptor descriptor) {
         Application.get().invokeLater(
             () -> {
                 RunContentManager manager = ExecutionManager.getInstance(project).getContentManager();
@@ -393,19 +393,19 @@ public class ExecutionHelper {
     }
 
     public static void executeExternalProcess(
-        @Nullable final Project myProject,
-        @Nonnull final ProcessHandler processHandler,
-        @Nonnull final ExecutionMode mode,
-        @Nonnull final GeneralCommandLine cmdline
+        @Nullable Project myProject,
+        @Nonnull ProcessHandler processHandler,
+        @Nonnull ExecutionMode mode,
+        @Nonnull GeneralCommandLine cmdline
     ) {
         executeExternalProcess(myProject, processHandler, mode, cmdline.getCommandLineString());
     }
 
     public static void executeExternalProcess(
         @Nullable final Project myProject,
-        @Nonnull final ProcessHandler processHandler,
+        @Nonnull ProcessHandler processHandler,
         @Nonnull final ExecutionMode mode,
-        @Nonnull final String presentableCmdline
+        @Nonnull String presentableCmdline
     ) {
         final String title = mode.getTitle() != null ? mode.getTitle() : "Please wait...";
         assert title != null;
@@ -427,17 +427,17 @@ public class ExecutionHelper {
                 .runProcessWithProgressSynchronously(process, title, mode.cancelable(), myProject, mode.getProgressParentComponent());
         }
         else if (mode.inBackGround()) {
-            final Task task = new Task.Backgroundable(myProject, title, mode.cancelable()) {
+            Task task = new Task.Backgroundable(myProject, title, mode.cancelable()) {
                 @Override
-                public void run(@Nonnull final ProgressIndicator indicator) {
+                public void run(@Nonnull ProgressIndicator indicator) {
                     process.run();
                 }
             };
             ProgressManager.getInstance().run(task);
         }
         else {
-            final String title2 = mode.getTitle2();
-            final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+            String title2 = mode.getTitle2();
+            ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
             if (indicator != null && title2 != null) {
                 indicator.setText2(title2);
             }
@@ -522,9 +522,9 @@ public class ExecutionHelper {
 
             private final Runnable myProcessThread = () -> {
                 try {
-                    final boolean finished = processHandler.waitFor(1000 * timeout);
+                    boolean finished = processHandler.waitFor(1000 * timeout);
                     if (!finished) {
-                        final String msg = "Timeout (" + timeout + " sec) on executing: " + presentableCmdline;
+                        String msg = "Timeout (" + timeout + " sec) on executing: " + presentableCmdline;
                         LOG.error(msg);
                         processHandler.destroyProcess();
                     }

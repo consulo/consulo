@@ -26,7 +26,7 @@ public class EmptyLexer extends LexerBase {
     private static final IElementType EMPTY_TOKEN_TYPE = new IElementType("empty token", Language.ANY);
 
     @Override
-    public void start(final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
+    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         myBuffer = buffer;
         myStartOffset = startOffset;
         myEndOffset = endOffset;

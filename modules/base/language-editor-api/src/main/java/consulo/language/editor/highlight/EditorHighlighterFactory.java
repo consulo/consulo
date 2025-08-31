@@ -38,23 +38,23 @@ public abstract class EditorHighlighterFactory {
   }
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(final SyntaxHighlighter syntaxHighlighter, @Nonnull EditorColorsScheme colors);
+  public abstract EditorHighlighter createEditorHighlighter(SyntaxHighlighter syntaxHighlighter, @Nonnull EditorColorsScheme colors);
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(@Nonnull FileType fileType, @Nonnull EditorColorsScheme settings, final Project project);
+  public abstract EditorHighlighter createEditorHighlighter(@Nonnull FileType fileType, @Nonnull EditorColorsScheme settings, Project project);
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull FileType fileType);
+  public abstract EditorHighlighter createEditorHighlighter(Project project, @Nonnull FileType fileType);
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(@Nonnull final VirtualFile file, @Nonnull EditorColorsScheme globalScheme, @Nullable final Project project);
+  public abstract EditorHighlighter createEditorHighlighter(@Nonnull VirtualFile file, @Nonnull EditorColorsScheme globalScheme, @Nullable Project project);
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull VirtualFile file);
+  public abstract EditorHighlighter createEditorHighlighter(Project project, @Nonnull VirtualFile file);
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull String fileName);
+  public abstract EditorHighlighter createEditorHighlighter(Project project, @Nonnull String fileName);
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(@Nonnull EditorColorsScheme settings, @Nonnull String fileName, @Nullable final Project project);
+  public abstract EditorHighlighter createEditorHighlighter(@Nonnull EditorColorsScheme settings, @Nonnull String fileName, @Nullable Project project);
 }

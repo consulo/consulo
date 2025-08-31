@@ -22,7 +22,7 @@ public class BinaryFilePatch extends FilePatch {
   private final byte[] myBeforeContent;
   private final byte[] myAfterContent;
 
-  public BinaryFilePatch(final byte[] beforeContent, final byte[] afterContent) {
+  public BinaryFilePatch(byte[] beforeContent, byte[] afterContent) {
     myBeforeContent = beforeContent;
     myAfterContent = afterContent;
   }

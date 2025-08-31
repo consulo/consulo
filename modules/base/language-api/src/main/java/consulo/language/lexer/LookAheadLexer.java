@@ -29,13 +29,13 @@ public abstract class LookAheadLexer extends LexerBase {
     private final MutableRandomAccessQueue<IElementType> myTypeCache;
     private final MutableRandomAccessQueue<Integer> myEndOffsetCache;
 
-    public LookAheadLexer(final Lexer baseLexer, int capacity) {
+    public LookAheadLexer(Lexer baseLexer, int capacity) {
         myBaseLexer = baseLexer;
         myTypeCache = new MutableRandomAccessQueue<>(capacity);
         myEndOffsetCache = new MutableRandomAccessQueue<>(capacity);
     }
 
-    public LookAheadLexer(final Lexer baseLexer) {
+    public LookAheadLexer(Lexer baseLexer) {
         this(baseLexer, 64);
     }
 
@@ -118,11 +118,11 @@ public abstract class LookAheadLexer extends LexerBase {
     }
 
     @Override
-    public final void restore(final LexerPosition _position) {
+    public final void restore(LexerPosition _position) {
         restore((LookAheadLexerPosition)_position);
     }
 
-    protected void restore(final LookAheadLexerPosition position) {
+    protected void restore(LookAheadLexerPosition position) {
         start(myBaseLexer.getBufferSequence(), position.lastOffset, myBaseLexer.getBufferEnd(), position.lastState);
         for (int i = 0; i < position.advanceCount; i++) {
             advance();
@@ -150,7 +150,7 @@ public abstract class LookAheadLexer extends LexerBase {
         final int advanceCount;
         final ImmutableUserMap customMap;
 
-        public LookAheadLexerPosition(final LookAheadLexer lookAheadLexer, final ImmutableUserMap map) {
+        public LookAheadLexerPosition(LookAheadLexer lookAheadLexer, ImmutableUserMap map) {
             customMap = map;
             lastOffset = lookAheadLexer.myLastOffset;
             lastState = lookAheadLexer.myLastState;

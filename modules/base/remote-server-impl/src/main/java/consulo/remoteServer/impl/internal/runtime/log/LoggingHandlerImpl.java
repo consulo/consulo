@@ -24,7 +24,7 @@ public class LoggingHandlerImpl extends LoggingHandlerBase implements LoggingHan
     public LoggingHandlerImpl(String presentableName, @Nonnull Project project, boolean isViewer) {
         super(presentableName);
 
-        final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
+        TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
 
         builder.setViewer(isViewer);
 

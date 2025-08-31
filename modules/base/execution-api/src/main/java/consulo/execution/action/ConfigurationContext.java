@@ -70,8 +70,8 @@ public class ConfigurationContext {
     @Nonnull
     @RequiredUIAccess
     public static ConfigurationContext getFromContext(DataContext dataContext) {
-        final ConfigurationContext context = new ConfigurationContext(dataContext);
-        final DataManager dataManager = DataManager.getInstance();
+        ConfigurationContext context = new ConfigurationContext(dataContext);
+        DataManager dataManager = DataManager.getInstance();
         ConfigurationContext sharedContext = dataManager.loadFromDataContext(dataContext, SHARED_CONTEXT);
         if (sharedContext == null ||
             sharedContext.getLocation() == null ||
@@ -84,34 +84,34 @@ public class ConfigurationContext {
     }
 
     @RequiredUIAccess
-    private ConfigurationContext(final DataContext dataContext) {
+    private ConfigurationContext(DataContext dataContext) {
         myRuntimeConfiguration = dataContext.getData(RunConfiguration.KEY);
         myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         myModule = dataContext.getData(Module.KEY);
-        @SuppressWarnings({"unchecked"}) final Location<PsiElement> location = (Location<PsiElement>) dataContext.getData(Location.DATA_KEY);
+        @SuppressWarnings({"unchecked"}) Location<PsiElement> location = (Location<PsiElement>) dataContext.getData(Location.DATA_KEY);
         if (location != null) {
             myLocation = location;
             Location<?>[] locations = dataContext.getData(Location.DATA_KEYS);
             myMultipleSelection = locations != null && locations.length > 1;
             return;
         }
-        final Project project = dataContext.getData(Project.KEY);
+        Project project = dataContext.getData(Project.KEY);
         if (project == null) {
             myLocation = null;
             return;
         }
-        final PsiElement element = getSelectedPsiElement(dataContext, project);
+        PsiElement element = getSelectedPsiElement(dataContext, project);
         if (element == null) {
             myLocation = null;
             return;
         }
         myLocation = new PsiLocation<>(project, myModule, element);
-        final PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
+        PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
         if (elements != null) {
             myMultipleSelection = elements.length > 1;
         }
         else {
-            final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+            VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
             myMultipleSelection = files != null && files.length > 1;
         }
     }
@@ -144,7 +144,7 @@ public class ConfigurationContext {
 
     private void createConfiguration() {
         LOG.assertTrue(myConfiguration == null);
-        final Location location = getLocation();
+        Location location = getLocation();
         myConfiguration = location != null && !DumbService.isDumb(location.getProject()) ? PreferredProducerFind.createConfiguration(location, this) : null;
         myInitialized = true;
     }
@@ -190,16 +190,16 @@ public class ConfigurationContext {
             return null;
         }
 
-        final PsiElement psiElement = myLocation.getPsiElement();
+        PsiElement psiElement = myLocation.getPsiElement();
         if (!psiElement.isValid()) {
             return null;
         }
 
-        final List<RuntimeConfigurationProducer> producers = findPreferredProducers();
+        List<RuntimeConfigurationProducer> producers = findPreferredProducers();
         if (myRuntimeConfiguration != null) {
             if (producers != null) {
                 for (RuntimeConfigurationProducer producer : producers) {
-                    final RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(myLocation, this);
+                    RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(myLocation, this);
                     if (configuration != null && configuration.getConfiguration() == myRuntimeConfiguration) {
                         myExistingConfiguration.set(configuration);
                     }
@@ -231,13 +231,13 @@ public class ConfigurationContext {
 
     @Nullable
     @RequiredUIAccess
-    private static PsiElement getSelectedPsiElement(final DataContext dataContext, final Project project) {
+    private static PsiElement getSelectedPsiElement(DataContext dataContext, Project project) {
         PsiElement element = null;
-        final Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = dataContext.getData(Editor.KEY);
         if (editor != null) {
-            final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+            PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
             if (psiFile != null) {
-                final int offset = editor.getCaretModel().getOffset();
+                int offset = editor.getCaretModel().getOffset();
                 element = psiFile.findElementAt(offset);
                 if (element == null && offset > 0 && offset == psiFile.getTextLength()) {
                     element = psiFile.findElementAt(offset - 1);
@@ -245,11 +245,11 @@ public class ConfigurationContext {
             }
         }
         if (element == null) {
-            final PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
+            PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
             element = elements != null && elements.length > 0 ? elements[0] : null;
         }
         if (element == null) {
-            final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+            VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
             if (files != null && files.length > 0) {
                 element = PsiManager.getInstance(project).findFile(files[0]);
             }
@@ -329,7 +329,7 @@ public class ConfigurationContext {
     @Deprecated
     @Nullable
     @SuppressWarnings({"deprecation", "unused"})
-    public RunnerAndConfigurationSettings updateConfiguration(final RuntimeConfigurationProducer producer) {
+    public RunnerAndConfigurationSettings updateConfiguration(RuntimeConfigurationProducer producer) {
         myConfiguration = producer.getConfiguration();
         return myConfiguration;
     }

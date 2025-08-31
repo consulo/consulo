@@ -27,9 +27,9 @@ public class InsertionContext {
   private Runnable myLaterRunnable;
   private boolean myAddCompletionChar;
 
-  public InsertionContext(final OffsetMap offsetMap, final char completionChar, final LookupElement[] elements,
-                          @Nonnull final PsiFile file,
-                          @Nonnull final Editor editor, final boolean addCompletionChar) {
+  public InsertionContext(OffsetMap offsetMap, char completionChar, LookupElement[] elements,
+                          @Nonnull PsiFile file,
+                          @Nonnull Editor editor, boolean addCompletionChar) {
     myOffsetMap = offsetMap;
     myCompletionChar = completionChar;
     myElements = elements;
@@ -39,7 +39,7 @@ public class InsertionContext {
     myAddCompletionChar = addCompletionChar;
   }
 
-  public void setTailOffset(final int offset) {
+  public void setTailOffset(int offset) {
     myOffsetMap.addOffset(TAIL_OFFSET, offset);
   }
 
@@ -75,7 +75,7 @@ public class InsertionContext {
   }
 
   public OffsetKey trackOffset(int offset, boolean movableToRight) {
-    final OffsetKey key = OffsetKey.create("tracked", movableToRight);
+    OffsetKey key = OffsetKey.create("tracked", movableToRight);
     getOffsetMap().addOffset(key, offset);
     return key;
   }
@@ -105,14 +105,14 @@ public class InsertionContext {
     return myLaterRunnable;
   }
 
-  public void setLaterRunnable(@Nullable final Runnable laterRunnable) {
+  public void setLaterRunnable(@Nullable Runnable laterRunnable) {
     myLaterRunnable = laterRunnable;
   }
 
   /**
    * @param addCompletionChar Whether completionChar should be added to document at tail offset (see {@link #TAIL_OFFSET}) after insert handler (default: {@code true}).
    */
-  public void setAddCompletionChar(final boolean addCompletionChar) {
+  public void setAddCompletionChar(boolean addCompletionChar) {
     myAddCompletionChar = addCompletionChar;
   }
 

@@ -85,7 +85,7 @@ public class DesktopAwtTextEditorComponentContainer implements TextEditorCompone
   public Editor validateEditor(Editor editor) {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (focusOwner instanceof JComponent) {
-      final JComponent jComponent = (JComponent)focusOwner;
+      JComponent jComponent = (JComponent)focusOwner;
       if (jComponent.getClientProperty("AuxEditorComponent") != null) return null; // Hack for EditorSearchComponent
     }
     return editor;

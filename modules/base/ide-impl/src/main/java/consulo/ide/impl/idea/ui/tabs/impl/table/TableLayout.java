@@ -31,14 +31,14 @@ public class TableLayout extends TabLayout {
 
     public TablePassInfo myLastTableLayout;
 
-    public TableLayout(final JBTabsImpl tabs) {
+    public TableLayout(JBTabsImpl tabs) {
         myTabs = tabs;
     }
 
     private TablePassInfo computeLayoutTable(List<TabInfo> visibleInfos) {
-        final TablePassInfo data = new TablePassInfo(myTabs, visibleInfos);
+        TablePassInfo data = new TablePassInfo(myTabs, visibleInfos);
 
-        final Insets insets = myTabs.getLayoutInsets();
+        Insets insets = myTabs.getLayoutInsets();
         data.toFitRec =
             new Rectangle(insets.left, insets.top, myTabs.getWidth() - insets.left - insets.right, myTabs.getHeight() - insets.top - insets.bottom);
         int eachRow = 0, eachX = data.toFitRec.x;
@@ -47,8 +47,8 @@ public class TableLayout extends TabLayout {
 
         data.requiredRows = 1;
         for (TabInfo eachInfo : data.myVisibleInfos.reversed()) {
-            final TabLabel eachLabel = myTabs.myInfo2Label.get(eachInfo);
-            final Dimension size = eachLabel.getPreferredSize();
+            TabLabel eachLabel = myTabs.myInfo2Label.get(eachInfo);
+            Dimension size = eachLabel.getPreferredSize();
             if (eachX + size.width >= data.toFitRec.getMaxX()) {
                 data.requiredRows++;
                 eachX = data.toFitRec.x;
@@ -63,10 +63,10 @@ public class TableLayout extends TabLayout {
         data.rowToFitMaxX = (int) data.toFitRec.getMaxX();
 
         if (data.requiredRows > 1) {
-            final int rowFit = insets.left + data.requiredWidth / data.requiredRows;
+            int rowFit = insets.left + data.requiredWidth / data.requiredRows;
             for (TabInfo eachInfo : data.myVisibleInfos) {
-                final TabLabel eachLabel = myTabs.myInfo2Label.get(eachInfo);
-                final Rectangle eachBounds = eachLabel.getBounds();
+                TabLabel eachLabel = myTabs.myInfo2Label.get(eachInfo);
+                Rectangle eachBounds = eachLabel.getBounds();
                 if (eachBounds.contains(rowFit, 0)) {
                     data.rowToFitMaxX = (int) eachLabel.getBounds().getMaxX();
                     break;
@@ -75,8 +75,8 @@ public class TableLayout extends TabLayout {
         }
 
         for (TabInfo eachInfo : data.myVisibleInfos) {
-            final TabLabel eachLabel = myTabs.myInfo2Label.get(eachInfo);
-            final Dimension size = eachLabel.getPreferredSize();
+            TabLabel eachLabel = myTabs.myInfo2Label.get(eachInfo);
+            Dimension size = eachLabel.getPreferredSize();
             if (eachX + size.width <= data.rowToFitMaxX) {
                 eachTableRow.add(eachInfo);
                 if (myTabs.getSelectedInfo() == eachInfo) {
@@ -111,8 +111,8 @@ public class TableLayout extends TabLayout {
 
     public LayoutPassInfo layoutTable(List<TabInfo> visibleInfos) {
         myTabs.resetLayout(true);
-        final TablePassInfo data = computeLayoutTable(visibleInfos);
-        final Insets insets = myTabs.getLayoutInsets();
+        TablePassInfo data = computeLayoutTable(visibleInfos);
+        Insets insets = myTabs.getLayoutInsets();
         int eachY = insets.top;
         int eachX;
         int row = 0;
@@ -129,7 +129,7 @@ public class TableLayout extends TabLayout {
 
             for (int i = 0; i < eachRow.myColumns.size(); i++) {
                 TabInfo tabInfo = eachRow.myColumns.get(i);
-                final TabLabel label = myTabs.myInfo2Label.get(tabInfo);
+                TabLabel label = myTabs.myInfo2Label.get(tabInfo);
 
                 label.putClientProperty(JBTabsImpl.STRETCHED_BY_WIDTH, toAjust);
 
@@ -152,7 +152,7 @@ public class TableLayout extends TabLayout {
         }
 
         if (myTabs.getSelectedInfo() != null) {
-            final JBTabsImpl.Toolbar selectedToolbar = myTabs.myInfo2Toolbar.get(myTabs.getSelectedInfo());
+            JBTabsImpl.Toolbar selectedToolbar = myTabs.myInfo2Toolbar.get(myTabs.getSelectedInfo());
 
             int xAddin = 0;
             if (!myTabs.myHorizontalSide && selectedToolbar != null && !selectedToolbar.isEmpty()) {

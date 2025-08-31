@@ -128,7 +128,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    public void moveToOffset(final int offset, final boolean locateBeforeSoftWrap) {
+    public void moveToOffset(int offset, boolean locateBeforeSoftWrap) {
         assertIsDispatchThread();
         validateCallContext();
         if (mySkipChangeRequests) {
@@ -137,13 +137,13 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         myCaretModel.doWithCaretMerging(() -> {
             LogicalPosition logicalPosition = myEditor.offsetToLogicalPosition(offset);
             CaretEvent event = moveToLogicalPosition(logicalPosition, locateBeforeSoftWrap, null, true, false);
-            final LogicalPosition positionByOffsetAfterMove = myEditor.offsetToLogicalPosition(getOffset());
+            LogicalPosition positionByOffsetAfterMove = myEditor.offsetToLogicalPosition(getOffset());
             if (!positionByOffsetAfterMove.equals(logicalPosition)) {
                 StringBuilder debugBuffer = new StringBuilder();
                 moveToLogicalPosition(logicalPosition, locateBeforeSoftWrap, debugBuffer, true, true);
                 int actualOffset = getOffset();
                 int textStart = Math.max(0, Math.min(offset, actualOffset) - 1);
-                final DocumentEx document = myEditor.getDocument();
+                DocumentEx document = myEditor.getDocument();
                 int textEnd = Math.min(document.getTextLength() - 1, Math.max(offset, actualOffset) + 1);
                 CharSequence text = document.getCharsSequence().subSequence(textStart, textEnd);
                 int inverseOffset = myEditor.logicalPositionToOffset(logicalPosition);
@@ -200,7 +200,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    public void moveCaretRelatively(final int _columnShift, final int lineShift, final boolean withSelection, final boolean scrollToCaret) {
+    public void moveCaretRelatively(int _columnShift, int lineShift, boolean withSelection, boolean scrollToCaret) {
         assertIsDispatchThread();
         if (mySkipChangeRequests) {
             return;
@@ -227,8 +227,8 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
                     }
                 }
             }
-            final int leadSelectionOffset = getLeadSelectionOffset();
-            final VisualPosition leadSelectionPosition = getLeadSelectionPosition();
+            int leadSelectionOffset = getLeadSelectionOffset();
+            VisualPosition leadSelectionPosition = getLeadSelectionPosition();
             EditorSettings editorSettings = myEditor.getSettings();
             VisualPosition visualCaret = getVisualPosition();
 
@@ -381,7 +381,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    public void moveToLogicalPosition(@Nonnull final LogicalPosition pos) {
+    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
         myCaretModel.doWithCaretMerging(() -> moveToLogicalPosition(pos, false, null, false, true));
     }
 
@@ -419,7 +419,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
         if (!editorSettings.isVirtualSpace() && line < lineCount) {
             int lineEndOffset = doc.getLineEndOffset(line);
-            final LogicalPosition endLinePosition = myEditor.offsetToLogicalPosition(lineEndOffset);
+            LogicalPosition endLinePosition = myEditor.offsetToLogicalPosition(lineEndOffset);
             int lineEndColumnNumber = endLinePosition.column;
             if (column > lineEndColumnNumber) {
                 int oldColumn = column;
@@ -441,7 +441,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         boolean oldInVirtualSpace = isInVirtualSpace();
 
         LogicalPosition logicalPositionToUse = new LogicalPosition(line, column, leansForward);
-        final int offset = myEditor.logicalPositionToOffset(logicalPositionToUse);
+        int offset = myEditor.logicalPositionToOffset(logicalPositionToUse);
         if (debugBuffer != null) {
             debugBuffer.append("Resulting logical position to use: ").append(logicalPositionToUse).append(". It's mapped to offset ").append(offset).append("\n");
         }
@@ -495,12 +495,12 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         if (locateBeforeSoftWrap && SoftWrapHelper.isCaretAfterSoftWrap(this)) {
             int lineToUse = myVisibleCaret.line - 1;
             if (lineToUse >= 0) {
-                final VisualPosition visualPosition = new VisualPosition(lineToUse, EditorImplUtil.getLastVisualLineColumnNumber(myEditor, lineToUse));
+                VisualPosition visualPosition = new VisualPosition(lineToUse, EditorImplUtil.getLastVisualLineColumnNumber(myEditor, lineToUse));
                 if (debugBuffer != null) {
                     debugBuffer.append("Adjusting caret position by moving it before soft wrap. Moving to visual position ").append(visualPosition).append("\n");
                 }
-                final LogicalPosition logicalPosition = myEditor.visualToLogicalPosition(visualPosition);
-                final int tmpOffset = myEditor.logicalPositionToOffset(logicalPosition);
+                LogicalPosition logicalPosition = myEditor.visualToLogicalPosition(visualPosition);
+                int tmpOffset = myEditor.logicalPositionToOffset(logicalPosition);
                 if (tmpOffset == newOffset) {
                     boolean restore = myReportCaretMoves;
                     myReportCaretMoves = false;
@@ -602,11 +602,11 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    public void moveToVisualPosition(@Nonnull final VisualPosition pos) {
+    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
         moveToVisualPosition(pos, true);
     }
 
-    private void moveToVisualPosition(@Nonnull final VisualPosition pos, boolean fireListeners) {
+    private void moveToVisualPosition(@Nonnull VisualPosition pos, boolean fireListeners) {
         myCaretModel.doWithCaretMerging(() -> doMoveToVisualPosition(pos, fireListeners));
     }
 
@@ -915,14 +915,14 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         if (newLine < 0 || newLine >= myEditor.getDocument().getLineCount()) {
             return null;
         }
-        final CodeEditorCaretBase clone = cloneWithoutSelection();
-        final int newSelectionStartOffset;
-        final int newSelectionEndOffset;
-        final int newSelectionStartColumn;
-        final int newSelectionEndColumn;
-        final VisualPosition newSelectionStartPosition;
-        final VisualPosition newSelectionEndPosition;
-        final boolean hasNewSelection;
+        CodeEditorCaretBase clone = cloneWithoutSelection();
+        int newSelectionStartOffset;
+        int newSelectionEndOffset;
+        int newSelectionStartColumn;
+        int newSelectionEndColumn;
+        VisualPosition newSelectionStartPosition;
+        VisualPosition newSelectionEndPosition;
+        boolean hasNewSelection;
         if (hasSelection() || myDesiredSelectionStartColumn >= 0 || myDesiredSelectionEndColumn >= 0) {
             VisualPosition startPosition = getSelectionStartPosition();
             VisualPosition endPosition = getSelectionEndPosition();
@@ -1153,18 +1153,18 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         doSetSelection(startPositionToUse, startOffset, endPositionToUse, endOffset, true, updateSystemSelection, true);
     }
 
-    void doSetSelection(@Nonnull final VisualPosition startPosition,
-                        final int _startOffset,
-                        @Nonnull final VisualPosition endPosition,
-                        final int _endOffset,
-                        final boolean visualPositionAware,
-                        final boolean updateSystemSelection,
-                        final boolean fireListeners) {
+    void doSetSelection(@Nonnull VisualPosition startPosition,
+                        int _startOffset,
+                        @Nonnull VisualPosition endPosition,
+                        int _endOffset,
+                        boolean visualPositionAware,
+                        boolean updateSystemSelection,
+                        boolean fireListeners) {
         myCaretModel.doWithCaretMerging(() -> {
             int startOffset = DocumentUtil.alignToCodePointBoundary(myEditor.getDocument(), _startOffset);
             int endOffset = DocumentUtil.alignToCodePointBoundary(myEditor.getDocument(), _endOffset);
             myUnknownDirection = false;
-            final Document doc = myEditor.getDocument();
+            Document doc = myEditor.getDocument();
 
             validateContext(true);
 
@@ -1346,14 +1346,14 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    public void selectWordAtCaret(final boolean honorCamelWordsSettings) {
+    public void selectWordAtCaret(boolean honorCamelWordsSettings) {
         validateContext(true);
         myCaretModel.doWithCaretMerging(() -> {
             removeSelection();
-            final EditorSettings settings = myEditor.getSettings();
+            EditorSettings settings = myEditor.getSettings();
             boolean camelTemp = settings.isCamelWords();
 
-            final boolean needOverrideSetting = camelTemp && !honorCamelWordsSettings;
+            boolean needOverrideSetting = camelTemp && !honorCamelWordsSettings;
             if (needOverrideSetting) {
                 settings.setCamelWords(false);
             }
@@ -1671,7 +1671,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
             }
         }
 
-        private static boolean needToShiftWhiteSpaces(final DocumentEvent e) {
+        private static boolean needToShiftWhiteSpaces(DocumentEvent e) {
             return e.getOffset() > 0
                 && Character.isWhitespace(e.getDocument().getImmutableCharSequence().charAt(e.getOffset() - 1))
                 && CharArrayUtil.containsOnlyWhiteSpaces(e.getNewFragment())

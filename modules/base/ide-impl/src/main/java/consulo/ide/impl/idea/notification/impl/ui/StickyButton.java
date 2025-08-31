@@ -24,7 +24,7 @@ import java.awt.*;
  */
 public class StickyButton extends JToggleButton {
 
-  public StickyButton(final String text) {
+  public StickyButton(String text) {
     super(text);
 
     setRolloverEnabled(true);

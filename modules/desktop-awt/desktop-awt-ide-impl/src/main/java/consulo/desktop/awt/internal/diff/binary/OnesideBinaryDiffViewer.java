@@ -42,13 +42,13 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
 
     @Override
     @Nonnull
-    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
         JComponent notification = getSide().select(DiffNotifications.createRemovedContent(), DiffNotifications.createInsertedContent());
         return applyNotification(notification);
     }
 
     @Nonnull
-    private Runnable applyNotification(@Nullable final JComponent notification) {
+    private Runnable applyNotification(@Nullable JComponent notification) {
         return () -> {
             clearDiffPresentation();
             if (notification != null) {

@@ -30,7 +30,7 @@ public class LogicallyLockedHolder implements FileHolder {
   private final Map<VirtualFile, LogicalLock> myMap;
   private final Project myProject;
 
-  public LogicallyLockedHolder(final Project project) {
+  public LogicallyLockedHolder(Project project) {
     myProject = project;
     myMap = new HashMap<VirtualFile, LogicalLock>();
   }
@@ -39,7 +39,7 @@ public class LogicallyLockedHolder implements FileHolder {
     myMap.clear();
   }
 
-  public void add(final VirtualFile file, final LogicalLock lock) {
+  public void add(VirtualFile file, LogicalLock lock) {
     myMap.put(file, lock);
   }
 
@@ -48,7 +48,7 @@ public class LogicallyLockedHolder implements FileHolder {
   }
 
   public FileHolder copy() {
-    final LogicallyLockedHolder result = new LogicallyLockedHolder(myProject);
+    LogicallyLockedHolder result = new LogicallyLockedHolder(myProject);
     result.myMap.putAll(myMap);
     return result;
   }
@@ -61,7 +61,7 @@ public class LogicallyLockedHolder implements FileHolder {
   public void notifyVcsStarted(AbstractVcs vcs) {
   }
 
-  public boolean containsKey(final VirtualFile vf) {
+  public boolean containsKey(VirtualFile vf) {
     return myMap.containsKey(vf);
   }
 

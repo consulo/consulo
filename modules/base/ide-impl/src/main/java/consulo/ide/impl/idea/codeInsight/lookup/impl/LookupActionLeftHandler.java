@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class LookupActionLeftHandler extends LookupActionHandler {
   @Override
-  protected void executeInLookup(final LookupEx lookup, DataContext context, Caret caret) {
+  protected void executeInLookup(LookupEx lookup, DataContext context, Caret caret) {
     if (!lookup.isCompletion()) {
       myOriginalHandler.execute(lookup.getEditor(), caret, context);
       return;

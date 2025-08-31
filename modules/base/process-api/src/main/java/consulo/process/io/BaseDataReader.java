@@ -165,7 +165,7 @@ public abstract class BaseDataReader {
     try {
       boolean stopSignalled = false;
       while (true) {
-        final boolean read = readAvailable();
+        boolean read = readAvailable();
 
         if (stopSignalled || mySleepingPolicy == SleepingPolicy.BLOCKING) {
           break;

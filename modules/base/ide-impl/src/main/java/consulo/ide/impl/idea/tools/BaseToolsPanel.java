@@ -45,30 +45,30 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
     enum Direction {
         UP {
             @Override
-            public boolean isAvailable(final int index, final int childCount) {
+            public boolean isAvailable(int index, int childCount) {
                 return index != 0;
             }
 
             @Override
-            public int newIndex(final int index) {
+            public int newIndex(int index) {
                 return index - 1;
             }
         },
         DOWN {
             @Override
-            public boolean isAvailable(final int index, final int childCount) {
+            public boolean isAvailable(int index, int childCount) {
                 return index < childCount - 1;
             }
 
             @Override
-            public int newIndex(final int index) {
+            public int newIndex(int index) {
                 return index + 1;
             }
         };
 
-        public abstract boolean isAvailable(final int index, final int childCount);
+        public abstract boolean isAvailable(int index, int childCount);
 
-        public abstract int newIndex(final int index);
+        public abstract int newIndex(int index);
     }
 
     private final CheckboxTree myTree;
@@ -86,13 +86,13 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         myTree = new CheckboxTree(new CheckboxTree.CheckboxTreeCellRenderer() {
             @Override
             public void customizeRenderer(
-                final JTree tree,
-                final Object value,
-                final boolean selected,
-                final boolean expanded,
-                final boolean leaf,
-                final int row,
-                final boolean hasFocus
+                JTree tree,
+                Object value,
+                boolean selected,
+                boolean expanded,
+                boolean leaf,
+                int row,
+                boolean hasFocus
             ) {
                 if (!(value instanceof CheckedTreeNode)) {
                     return;
@@ -100,7 +100,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
                 Object object = ((CheckedTreeNode) value).getUserObject();
 
                 if (object instanceof ToolsGroup) {
-                    final String groupName = ((ToolsGroup) object).getName();
+                    String groupName = ((ToolsGroup) object).getName();
                     if (groupName != null) {
                         getTextRenderer().append(groupName, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
                     }
@@ -114,12 +114,12 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
             }
         }, new CheckedTreeNode(null)) {
             @Override
-            protected void onDoubleClick(final CheckedTreeNode node) {
+            protected void onDoubleClick(CheckedTreeNode node) {
                 editSelected();
             }
 
             @Override
-            protected void onNodeStateChanged(final CheckedTreeNode node) {
+            protected void onNodeStateChanged(CheckedTreeNode node) {
                 myIsModified = true;
             }
         };
@@ -237,7 +237,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         return getToolManager().getGroups();
     }
 
-    private CheckedTreeNode insertNewGroup(final ToolsGroup<Tool> groupCopy) {
+    private CheckedTreeNode insertNewGroup(ToolsGroup<Tool> groupCopy) {
         CheckedTreeNode root = getTreeRoot();
         CheckedTreeNode groupNode = new CheckedTreeNode(groupCopy);
         root.add(groupNode);
@@ -248,7 +248,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         return groupNode;
     }
 
-    private CheckedTreeNode insertNewTool(final CheckedTreeNode groupNode, final Tool toolCopy) {
+    private CheckedTreeNode insertNewTool(CheckedTreeNode groupNode, Tool toolCopy) {
         CheckedTreeNode toolNode = new CheckedTreeNode(toolCopy);
         toolNode.setChecked(toolCopy.isEnabled());
         ((ToolsGroup) groupNode.getUserObject()).addElement(toolCopy);
@@ -273,9 +273,9 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         ArrayList<ToolsGroup> result = new ArrayList<ToolsGroup>();
         MutableTreeNode root = (MutableTreeNode) myTree.getModel().getRoot();
         for (int i = 0; i < root.getChildCount(); i++) {
-            final CheckedTreeNode node = (CheckedTreeNode) root.getChildAt(i);
+            CheckedTreeNode node = (CheckedTreeNode) root.getChildAt(i);
             for (int j = 0; j < node.getChildCount(); j++) {
-                final CheckedTreeNode toolNode = (CheckedTreeNode) node.getChildAt(j);
+                CheckedTreeNode toolNode = (CheckedTreeNode) node.getChildAt(j);
                 ((Tool) toolNode.getUserObject()).setEnabled(toolNode.isChecked());
             }
 
@@ -289,7 +289,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         return myIsModified;
     }
 
-    private void moveNode(final Direction direction) {
+    private void moveNode(Direction direction) {
         CheckedTreeNode node = getSelectedNode();
         if (node != null) {
             if (isMovingAvailable(node, direction)) {
@@ -307,7 +307,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         }
     }
 
-    private void moveElementInsideGroup(final Tool tool, final ToolsGroup group, Direction dir) {
+    private void moveElementInsideGroup(Tool tool, ToolsGroup group, Direction dir) {
         if (dir == Direction.UP) {
             group.moveElementUp(tool);
         }
@@ -316,7 +316,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         }
     }
 
-    private void moveNode(final CheckedTreeNode toolNode, Direction dir) {
+    private void moveNode(CheckedTreeNode toolNode, Direction dir) {
         CheckedTreeNode parentNode = (CheckedTreeNode) toolNode.getParent();
         int index = parentNode.getIndex(toolNode);
         removeNodeFromParent(toolNode);
@@ -325,13 +325,13 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         getModel().nodesWereInserted(parentNode, new int[]{newIndex});
     }
 
-    private boolean isMovingAvailable(final CheckedTreeNode toolNode, Direction dir) {
+    private boolean isMovingAvailable(CheckedTreeNode toolNode, Direction dir) {
         TreeNode parent = toolNode.getParent();
         int index = parent.getIndex(toolNode);
         return dir.isAvailable(index, parent.getChildCount());
     }
 
-    private void insertNewTool(final Tool newTool, boolean setSelection) {
+    private void insertNewTool(Tool newTool, boolean setSelection) {
         CheckedTreeNode groupNode = findGroupNode(newTool.getGroup());
         if (groupNode == null) {
             groupNode = insertNewGroup(new ToolsGroup(newTool.getGroup()));
@@ -346,7 +346,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         myIsModified = true;
     }
 
-    private void nodeWasInserted(final CheckedTreeNode groupNode) {
+    private void nodeWasInserted(CheckedTreeNode groupNode) {
         (getModel()).nodesWereInserted(groupNode.getParent(), new int[]{groupNode.getParent().getChildCount() - 1});
     }
 
@@ -354,7 +354,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         return (DefaultTreeModel) myTree.getModel();
     }
 
-    private CheckedTreeNode findGroupNode(final String group) {
+    private CheckedTreeNode findGroupNode(String group) {
         for (int i = 0; i < getTreeRoot().getChildCount(); i++) {
             CheckedTreeNode node = (CheckedTreeNode) getTreeRoot().getChildAt(i);
             ToolsGroup g = (ToolsGroup) node.getUserObject();
@@ -525,7 +525,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
 
     @Nullable
     Tool getSingleSelectedTool() {
-        final TreePath[] selectionPaths = myTree.getSelectionPaths();
+        TreePath[] selectionPaths = myTree.getSelectionPaths();
         if (selectionPaths == null || selectionPaths.length != 1) {
             return null;
         }
@@ -553,7 +553,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
                 }
                 else {
                     for (int i = 0; i < node.getChildCount(); i++) {
-                        final TreeNode child = node.getChildAt(i);
+                        TreeNode child = node.getChildAt(i);
                         if (child instanceof CheckedTreeNode) {
                             collect((CheckedTreeNode) child);
                         }

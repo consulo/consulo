@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  */
 public class GwtLabeledLayoutImpl extends CaptionPanel {
   public GwtLabeledLayoutImpl() {
-    final SimplePanel widget = (SimplePanel)getWidget();
+    SimplePanel widget = (SimplePanel)getWidget();
 
     widget.setStyleName("ui-labeled-layout");
   }

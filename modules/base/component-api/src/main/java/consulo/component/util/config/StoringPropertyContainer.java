@@ -24,11 +24,11 @@ public class StoringPropertyContainer extends AbstractProperty.AbstractPropertyC
   private final HashMap<AbstractProperty<Boolean>, Boolean> myValues = new HashMap<AbstractProperty<Boolean>, Boolean>();
   private final Storage myStorage;
 
-  public StoringPropertyContainer(final String groupName, final PropertiesComponent propertiesComponent) {
+  public StoringPropertyContainer(String groupName, PropertiesComponent propertiesComponent) {
     this(new Storage.PropertiesComponentStorage(groupName, propertiesComponent));
   }
 
-  public StoringPropertyContainer(final Storage storage) {
+  public StoringPropertyContainer(Storage storage) {
     myStorage = storage;
   }
 
@@ -39,36 +39,36 @@ public class StoringPropertyContainer extends AbstractProperty.AbstractPropertyC
   }
 
   @Override
-  protected void setValueOf(final AbstractProperty<Boolean> property, final Object value) {
+  protected void setValueOf(AbstractProperty<Boolean> property, Object value) {
     myValues.put(property, (Boolean)value);
     onPropertyChanged(property, (Boolean)value);
     myStorage.put(property.getName(), stringValue(value));
   }
 
-  private String stringValue(final Object value) {
+  private String stringValue(Object value) {
     return value.toString();
   }
 
   @Override
-  public boolean hasProperty(final AbstractProperty property) {
+  public boolean hasProperty(AbstractProperty property) {
     return myValues.containsKey(property);
   }
 
   @Override
-  protected Object getValueOf(final AbstractProperty<Boolean> property) {
+  protected Object getValueOf(AbstractProperty<Boolean> property) {
     Object value = myValues.get(property);
     if (value == null) {
-      final String stringValue = myStorage.get(property.getName());
+      String stringValue = myStorage.get(property.getName());
       value = stringValue != null ? parseValue(stringValue) : property.getDefault(this);
       myValues.put(property, (Boolean)value);
     }
     return value;
   }
 
-  private Boolean parseValue(final String stringValue) {
+  private Boolean parseValue(String stringValue) {
     return Boolean.valueOf(stringValue);
   }
 
-  protected <T> void onPropertyChanged(final AbstractProperty<T> property, final T value) {
+  protected <T> void onPropertyChanged(AbstractProperty<T> property, T value) {
   }
 }

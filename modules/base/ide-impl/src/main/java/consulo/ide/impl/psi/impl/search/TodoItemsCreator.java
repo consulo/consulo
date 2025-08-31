@@ -23,7 +23,7 @@ public class TodoItemsCreator {
   }
 
   public TodoItem createTodo(IndexPatternOccurrence occurrence) {
-    final TextRange occurrenceRange = occurrence.getTextRange();
+    TextRange occurrenceRange = occurrence.getTextRange();
     return new TodoItemImpl(occurrence.getFile(), occurrenceRange.getStartOffset(), occurrenceRange.getEndOffset(), mapPattern(occurrence.getPattern()), occurrence.getAdditionalTextRanges());
   }
 

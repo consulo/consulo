@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 public abstract class ImmutableUserMap {
     public static final ImmutableUserMap EMPTY = new ImmutableUserMap() {
         @Override
-        public <T> T get(@Nonnull final Key<T> key) {
+        public <T> T get(@Nonnull Key<T> key) {
             return null;
         }
     };
@@ -34,7 +34,7 @@ public abstract class ImmutableUserMap {
 
     public abstract <T> T get(@Nonnull Key<T> key);
 
-    public final <T> ImmutableUserMap put(@Nonnull final Key<T> key, final T value) {
+    public final <T> ImmutableUserMap put(@Nonnull Key<T> key, T value) {
         return new ImmutableUserMapImpl<>(key, value, this);
     }
 
@@ -43,7 +43,7 @@ public abstract class ImmutableUserMap {
         private final V myValue;
         private final ImmutableUserMap myNext;
 
-        private ImmutableUserMapImpl(final Key<V> key, final V value, final ImmutableUserMap next) {
+        private ImmutableUserMapImpl(Key<V> key, V value, ImmutableUserMap next) {
             myKey = key;
             myNext = next;
             myValue = value;
@@ -51,7 +51,7 @@ public abstract class ImmutableUserMap {
 
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T get(@Nonnull final Key<T> key) {
+        public <T> T get(@Nonnull Key<T> key) {
             return key.equals(myKey) ? (T)myValue : myNext.get(key);
         }
     }

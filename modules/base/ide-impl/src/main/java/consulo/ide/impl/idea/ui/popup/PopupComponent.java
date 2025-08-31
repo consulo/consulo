@@ -50,8 +50,8 @@ public interface PopupComponent {
 
             @Override
             public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
-                final PopupFactory factory = PopupFactory.getSharedInstance();
-                final Popup popup = factory.getPopup(owner, content, x, y);
+                PopupFactory factory = PopupFactory.getSharedInstance();
+                Popup popup = factory.getPopup(owner, content, x, y);
 
                 if (content instanceof JComponent jComponent) {
                     myNativeBorder = jComponent.getClientProperty("FlatLaf.internal.FlatPopupFactory.popupUsesNativeBorder") != null;
@@ -77,11 +77,11 @@ public interface PopupComponent {
 
             @Override
             public PopupComponent getPopup(Component owner, Component content, int x, int y, JBPopup jbPopup) {
-                final PopupFactory factory = PopupFactory.getSharedInstance();
+                PopupFactory factory = PopupFactory.getSharedInstance();
 
-                final int oldType = PopupUtil.getPopupType(factory);
+                int oldType = PopupUtil.getPopupType(factory);
                 PopupUtil.setPopupType(factory, 2);
-                final Popup popup = factory.getPopup(owner, content, x, y);
+                Popup popup = factory.getPopup(owner, content, x, y);
                 if (oldType >= 0) {
                     PopupUtil.setPopupType(factory, oldType);
                 }
@@ -142,7 +142,7 @@ public interface PopupComponent {
                 throw new IllegalArgumentException("Popup owner must be showing");
             }
 
-            final Window wnd = owner instanceof Window ? (Window) owner : SwingUtilities.getWindowAncestor(owner);
+            Window wnd = owner instanceof Window ? (Window) owner : SwingUtilities.getWindowAncestor(owner);
             if (wnd instanceof Frame) {
                 myDialog = new JDialog((Frame) wnd);
             }
@@ -201,7 +201,7 @@ public interface PopupComponent {
 
         @Override
         public boolean isPopupWindow(Window window) {
-            final Window wnd = getWindow();
+            Window wnd = getWindow();
             return wnd != null && wnd == window;
         }
 
@@ -230,7 +230,7 @@ public interface PopupComponent {
                 return myResolvedWindow;
             }
 
-            final Component c = PopupHacking.getComponent(myPopup);
+            Component c = PopupHacking.getComponent(myPopup);
             return c instanceof JWindow ? (JWindow) c : null;
         }
 

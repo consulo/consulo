@@ -740,7 +740,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         trimToSize();
     }
 
-    private void assertBounds(final int startOffset, final int endOffset) {
+    private void assertBounds(int startOffset, int endOffset) {
         if (startOffset < 0 || startOffset > getTextLength()) {
             throw new IndexOutOfBoundsException("Wrong startOffset: " + startOffset + "; documentLength: " + getTextLength());
         }
@@ -1070,7 +1070,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    public void addDocumentListener(@Nonnull final DocumentListener listener, @Nonnull Disposable parentDisposable) {
+    public void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
         addDocumentListener(listener);
         Disposer.register(parentDisposable, new DocumentListenerDisposable(myDocumentListeners, listener));
     }
@@ -1102,7 +1102,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    public int getLineNumber(final int offset) {
+    public int getLineNumber(int offset) {
         return getLineSet().findLineIndex(offset);
     }
 
@@ -1113,7 +1113,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
-    public final int getLineStartOffset(final int line) {
+    public final int getLineStartOffset(int line) {
         if (line == 0) {
             return 0; // otherwise it crashed for zero-length document
         }
@@ -1185,7 +1185,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
     @Override
     @RequiredUIAccess
-    public void setText(@Nonnull final CharSequence text) {
+    public void setText(@Nonnull CharSequence text) {
         @RequiredWriteAction
         Runnable runnable = () -> replaceString(0, getTextLength(), 0, text, LocalTimeCounter.currentTime(), true);
         if (CommandProcessor.getInstance().isUndoTransparentActionInProgress() || !myAssertThreading) {

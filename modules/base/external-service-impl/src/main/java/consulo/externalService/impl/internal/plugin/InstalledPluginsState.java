@@ -67,8 +67,8 @@ public class InstalledPluginsState {
 
   public void updateExistingPluginInfo(PluginDescriptor descr, PluginDescriptor existing) {
     int state = StringUtil.compareVersionNumbers(descr.getVersion(), existing.getVersion());
-    final PluginId pluginId = existing.getPluginId();
-    final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
+    PluginId pluginId = existing.getPluginId();
+    Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
     if (!installedPlugins.contains(pluginId) && !existing.isDeleted()) {
       installedPlugins.add(pluginId);
     }

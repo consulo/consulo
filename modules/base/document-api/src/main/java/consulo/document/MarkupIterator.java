@@ -54,9 +54,9 @@ public interface MarkupIterator<T> extends PeekableIterator<T> {
   };
 
   @Nonnull
-  static <T> MarkupIterator<T> mergeIterators(@Nonnull final MarkupIterator<T> iterator1,
-                                              @Nonnull final MarkupIterator<T> iterator2,
-                                              @Nonnull final Comparator<? super T> comparator) {
+  static <T> MarkupIterator<T> mergeIterators(@Nonnull MarkupIterator<T> iterator1,
+                                              @Nonnull MarkupIterator<T> iterator2,
+                                              @Nonnull Comparator<? super T> comparator) {
     return new MarkupIterator<T>() {
       @Override
       public void dispose() {

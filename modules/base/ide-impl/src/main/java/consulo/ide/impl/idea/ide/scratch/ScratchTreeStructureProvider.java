@@ -69,8 +69,8 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       boolean update = JBIterable.from(events).find(e -> {
         ProgressManager.checkCanceled();
 
-        final boolean isDirectory = isDirectory(e);
-        final VirtualFile parent = getNewParent(e);
+        boolean isDirectory = isDirectory(e);
+        VirtualFile parent = getNewParent(e);
         return parent != null && (ScratchUtil.isScratch(parent) || isDirectory && parent.getPath().startsWith(scratchPath));
       }) != null;
 
@@ -304,7 +304,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       @Nonnull ViewSettings settings,
       @Nonnull PsiFileSystemItemFilter filter
     ) {
-      final List<AbstractTreeNode> result = new ArrayList<>();
+      List<AbstractTreeNode> result = new ArrayList<>();
       PsiElementProcessor<PsiFileSystemItem> processor = element -> {
         if (!filter.shouldShow(element)) {
           // skip

@@ -65,7 +65,7 @@ final class DesktopStripePanelImpl extends JPanel {
     static final int DROP_DISTANCE_SENSIVITY = 20;
     private final Disposable myDisposable = Disposable.newDisposable();
 
-    DesktopStripePanelImpl(final int anchor, ToolWindowManagerBase manager) {
+    DesktopStripePanelImpl(int anchor, ToolWindowManagerBase manager) {
         super(new GridBagLayout());
         setOpaque(true);
         myManager = manager;
@@ -177,7 +177,7 @@ final class DesktopStripePanelImpl extends JPanel {
         super.removeNotify();
     }
 
-    void addButton(final DesktopStripeButton button, final Comparator<ToolWindowStripeButton> comparator) {
+    void addButton(DesktopStripeButton button, Comparator<ToolWindowStripeButton> comparator) {
         myPrefSize = null;
         myButtons.add(button);
         Collections.sort(myButtons, comparator);
@@ -185,7 +185,7 @@ final class DesktopStripePanelImpl extends JPanel {
         revalidate();
     }
 
-    void removeButton(final DesktopStripeButton button) {
+    void removeButton(DesktopStripeButton button) {
         myPrefSize = null;
         myButtons.remove(button);
         remove(button);
@@ -214,8 +214,8 @@ final class DesktopStripePanelImpl extends JPanel {
     }
 
     private LayoutData recomputeBounds(boolean setBounds, Dimension toFitWith, boolean noDrop) {
-        final LayoutData data = new LayoutData();
-        final int horizontaloffset = isBottom() ? getHeight() : getHeight() - 2;
+        LayoutData data = new LayoutData();
+        int horizontaloffset = isBottom() ? getHeight() : getHeight() - 2;
 
         data.eachY = 0;
         data.size = new Dimension();
@@ -232,7 +232,7 @@ final class DesktopStripePanelImpl extends JPanel {
 
         data.fitSize = toFitWith != null ? toFitWith : new Dimension();
 
-        final Rectangle stripeSensetiveRec =
+        Rectangle stripeSensetiveRec =
             new Rectangle(-DROP_DISTANCE_SENSIVITY, -DROP_DISTANCE_SENSIVITY, getWidth() + DROP_DISTANCE_SENSIVITY * 2,
                 getHeight() + DROP_DISTANCE_SENSIVITY * 2);
         boolean processDrop = isDroppingButton() && stripeSensetiveRec.intersects(myDropRectangle) && !noDrop;
@@ -242,7 +242,7 @@ final class DesktopStripePanelImpl extends JPanel {
                 if (!isConsideredInLayout(eachButton)) {
                     continue;
                 }
-                final Dimension eachSize = eachButton.getPreferredSize();
+                Dimension eachSize = eachButton.getPreferredSize();
                 data.fitSize.width = Math.max(eachSize.width, data.fitSize.width);
                 data.fitSize.height = Math.max(eachSize.height, data.fitSize.height);
             }
@@ -274,7 +274,7 @@ final class DesktopStripePanelImpl extends JPanel {
 
         for (DesktopStripeButton eachButton : getButtonsToLayOut()) {
             insertOrder = eachButton.getDecorator().getWindowInfo().getOrder();
-            final Dimension eachSize = eachButton.getPreferredSize();
+            Dimension eachSize = eachButton.getPreferredSize();
 
             if (!sidesStarted && eachButton.getWindowInfo().isSplit()) {
                 if (processDrop) {
@@ -321,7 +321,7 @@ final class DesktopStripePanelImpl extends JPanel {
 
 
         if (isDroppingButton()) {
-            final Dimension dragSize = myDragButton.getPreferredSize();
+            Dimension dragSize = myDragButton.getPreferredSize();
             if (getAnchor().isHorizontal() == myDragButton.getWindowInfo().getAnchor().isHorizontal()) {
                 data.size.width = Math.max(data.size.width, dragSize.width);
                 data.size.height = Math.max(data.size.height, dragSize.height);
@@ -341,7 +341,7 @@ final class DesktopStripePanelImpl extends JPanel {
         return data;
     }
 
-    private void tryDroppingOnGap(final LayoutData data, final int gap, final int insertOrder) {
+    private void tryDroppingOnGap(LayoutData data, int gap, int insertOrder) {
         if (data.dragTargetChoosen) {
             return;
         }
@@ -404,21 +404,21 @@ final class DesktopStripePanelImpl extends JPanel {
         return ToolWindowAnchor.get(myAnchor);
     }
 
-    private static void layoutButton(final LayoutData data, final JComponent eachButton, boolean setBounds) {
-        final Dimension eachSize = eachButton.getPreferredSize();
+    private static void layoutButton(LayoutData data, JComponent eachButton, boolean setBounds) {
+        Dimension eachSize = eachButton.getPreferredSize();
         if (setBounds) {
-            final int width = data.horizontal ? eachSize.width : data.fitSize.width;
-            final int height = data.horizontal ? data.fitSize.height : eachSize.height;
+            int width = data.horizontal ? eachSize.width : data.fitSize.width;
+            int height = data.horizontal ? data.fitSize.height : eachSize.height;
             eachButton.setBounds(data.eachX, data.eachY, width, height);
         }
         if (data.horizontal) {
-            final int deltaX = eachSize.width + data.gap;
+            int deltaX = eachSize.width + data.gap;
             data.eachX += deltaX;
             data.size.width += deltaX;
             data.size.height = eachSize.height;
         }
         else {
-            final int deltaY = eachSize.height + data.gap;
+            int deltaY = eachSize.height + data.gap;
             data.eachY += deltaY;
             data.size.width = eachSize.width;
             data.size.height += deltaY;
@@ -436,7 +436,7 @@ final class DesktopStripePanelImpl extends JPanel {
         repaint();
     }
 
-    public DesktopStripeButton getButtonFor(final String toolWindowId) {
+    public DesktopStripeButton getButtonFor(String toolWindowId) {
         for (DesktopStripeButton each : myButtons) {
             if (each.getWindowInfo().getId().equals(toolWindowId)) {
                 return each;
@@ -501,8 +501,8 @@ final class DesktopStripePanelImpl extends JPanel {
         }
     }
 
-    public boolean containsScreen(final Rectangle screenRec) {
-        final Point point = screenRec.getLocation();
+    public boolean containsScreen(Rectangle screenRec) {
+        Point point = screenRec.getLocation();
         SwingUtilities.convertPointFromScreen(point, this);
         return new Rectangle(point, screenRec.getSize()).intersects(
             new Rectangle(-DROP_DISTANCE_SENSIVITY,
@@ -518,7 +518,7 @@ final class DesktopStripePanelImpl extends JPanel {
             return;
         }
 
-        final WindowInfoImpl info = myDragButton.getDecorator().getWindowInfo();
+        WindowInfoImpl info = myDragButton.getDecorator().getWindowInfo();
         myFinishingDrop = true;
         myManager.setSideToolAndAnchor(
             info.getId(),
@@ -539,16 +539,16 @@ final class DesktopStripePanelImpl extends JPanel {
         repaint();
     }
 
-    public void processDropButton(final DesktopStripeButton button, JComponent buttonImage, Point screenPoint) {
+    public void processDropButton(DesktopStripeButton button, JComponent buttonImage, Point screenPoint) {
         if (!isDroppingButton()) {
-            final BufferedImage image = UIUtil.createImage(button.getWidth(), button.getHeight(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage image = UIUtil.createImage(button.getWidth(), button.getHeight(), BufferedImage.TYPE_INT_RGB);
             buttonImage.paint(image.getGraphics());
             myDragButton = button;
             myDragButtonImage = buttonImage;
             myPrefSize = null;
         }
 
-        final Point point = new Point(screenPoint);
+        Point point = new Point(screenPoint);
         SwingUtilities.convertPointFromScreen(point, this);
 
         myDropRectangle = new Rectangle(point, buttonImage.getSize());
@@ -561,14 +561,14 @@ final class DesktopStripePanelImpl extends JPanel {
         return myDragButton != null;
     }
 
-    private boolean isConsideredInLayout(final DesktopStripeButton each) {
+    private boolean isConsideredInLayout(DesktopStripeButton each) {
         return each.isVisible();
     }
 
     private final class MyKeymapManagerListener implements KeymapManagerListener {
         @Override
         @RequiredUIAccess
-        public void activeKeymapChanged(final Keymap keymap) {
+        public void activeKeymapChanged(Keymap keymap) {
             updatePresentation();
         }
     }
@@ -602,7 +602,7 @@ final class DesktopStripePanelImpl extends JPanel {
     }
 
     @Override
-    protected void paintComponent(final Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (!myFinishingDrop && isDroppingButton() && myDragButton.getParent() != this) {
             g.setColor(getBackground().brighter());

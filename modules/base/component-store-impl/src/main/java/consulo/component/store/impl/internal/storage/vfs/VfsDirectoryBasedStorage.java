@@ -332,10 +332,10 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
             storage.myStorageData = copiedStorageData;
         }
 
-        private void saveStates(@Nonnull final VirtualFile dir) {
-            final Element storeElement = new Element(StorageData.COMPONENT);
+        private void saveStates(@Nonnull VirtualFile dir) {
+            Element storeElement = new Element(StorageData.COMPONENT);
 
-            for (final String componentName : copiedStorageData.getComponentNames()) {
+            for (String componentName : copiedStorageData.getComponentNames()) {
                 copiedStorageData.processComponent(componentName, (fileName, state) -> {
                     if (!dirtyFileNames.contains(fileName)) {
                         return;

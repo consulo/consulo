@@ -86,7 +86,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
         myTable.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), REMOVE_KEY);
         myTable.getActionMap().put(REMOVE_KEY, new AbstractAction() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 removeSelected();
             }
         });
@@ -101,7 +101,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     }
 
     public boolean isModified() {
-        final List<SettingsWrapper> list = myTable.getAllSettings();
+        List<SettingsWrapper> list = myTable.getAllSettings();
         for (SettingsWrapper settingsWrapper : list) {
             if (settingsWrapper.hasChanged()) {
                 return true;
@@ -114,7 +114,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     }
 
     public void apply() {
-        final List<SettingsWrapper> list = myTable.getAllSettings();
+        List<SettingsWrapper> list = myTable.getAllSettings();
         for (SettingsWrapper settingsWrapper : list) {
             settingsWrapper.apply();
         }
@@ -125,7 +125,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     }
 
     public void reset() {
-        final List<SettingsWrapper> list = myTable.getAllSettings();
+        List<SettingsWrapper> list = myTable.getAllSettings();
         for (SettingsWrapper settingsWrapper : list) {
             settingsWrapper.reset();
         }
@@ -204,7 +204,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
             setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             getTree().setCellRenderer(new TreeColumnCellRenderer(this));
 
-            final TableColumn idColumn = getColumnModel().getColumn(ID_COLUMN);
+            TableColumn idColumn = getColumnModel().getColumn(ID_COLUMN);
             idColumn.setCellRenderer(new ColoredTableCellRenderer() {
                 @Override
                 protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
@@ -217,7 +217,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
             });
             idColumn.setPreferredWidth(200);
 
-            final TableColumn displayTypeColumn = getColumnModel().getColumn(DISPLAY_TYPE_COLUMN);
+            TableColumn displayTypeColumn = getColumnModel().getColumn(DISPLAY_TYPE_COLUMN);
             displayTypeColumn.setMaxWidth(300);
             displayTypeColumn.setPreferredWidth(250);
             displayTypeColumn.setCellRenderer(new ComboBoxTableRenderer<>(NotificationDisplayType.values()) {
@@ -261,11 +261,11 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
                 }
             });
 
-            final TableColumn logColumn = getColumnModel().getColumn(LOG_COLUMN);
+            TableColumn logColumn = getColumnModel().getColumn(LOG_COLUMN);
             logColumn.setMaxWidth(logColumn.getPreferredWidth());
             logColumn.setCellRenderer(new BooleanTableCellRenderer());
 
-            final TableColumn readAloudColumn = getColumnModel().getColumn(READ_ALOUD_COLUMN);
+            TableColumn readAloudColumn = getColumnModel().getColumn(READ_ALOUD_COLUMN);
             readAloudColumn.setMaxWidth(readAloudColumn.getPreferredWidth());
             readAloudColumn.setCellRenderer(new BooleanTableCellRenderer());
 
@@ -284,10 +284,10 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
             return calcSize(super.getPreferredSize());
         }
 
-        private Dimension calcSize(@Nonnull final Dimension s) {
-            final Container container = getParent();
+        private Dimension calcSize(@Nonnull Dimension s) {
+            Container container = getParent();
             if (container != null) {
-                final Dimension size = container.getSize();
+                Dimension size = container.getSize();
                 return new Dimension(size.width, s.height);
             }
 

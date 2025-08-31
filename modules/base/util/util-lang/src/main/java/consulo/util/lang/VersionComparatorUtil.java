@@ -22,11 +22,11 @@ public class VersionComparatorUtil {
   private VersionComparatorUtil() {
   }
 
-  public static String max(final String v1, final String v2) {
+  public static String max(String v1, String v2) {
     return compare(v1, v2) > 0 ? v1 : v2;
   }
 
-  public static String min(final String v1, final String v2) {
+  public static String min(String v1, String v2) {
     return compare(v1, v2) < 0 ? v1 : v2;
   }
 
@@ -55,7 +55,7 @@ public class VersionComparatorUtil {
 
     private final int myPriority;
 
-    VersionTokenType(final int priority) {
+    VersionTokenType(int priority) {
       myPriority = priority;
     }
 
@@ -71,7 +71,7 @@ public class VersionComparatorUtil {
       }
 
       for (VersionTokenType token : VALUES) {
-        final String name = token.name();
+        String name = token.name();
         if (name.charAt(0) != '_' && name.equalsIgnoreCase(str)) {
           return token;
         }
@@ -93,12 +93,12 @@ public class VersionComparatorUtil {
     }
   }
 
-  static List<String> splitVersionString(final String ver) {
+  static List<String> splitVersionString(String ver) {
     StringTokenizer st = new StringTokenizer(ver.trim(), "()._-;:/, +~");
     List<String> result = new ArrayList<>();
 
     while (st.hasMoreTokens()) {
-      final Matcher matcher = WORDS_SPLITTER.matcher(st.nextToken());
+      Matcher matcher = WORDS_SPLITTER.matcher(st.nextToken());
 
       while (matcher.find()) {
         result.add(matcher.group());
@@ -127,18 +127,18 @@ public class VersionComparatorUtil {
     ver1 = ver1.toLowerCase();
     ver2 = ver2.toLowerCase();
 
-    final List<String> s1 = splitVersionString(ver1);
-    final List<String> s2 = splitVersionString(ver2);
+    List<String> s1 = splitVersionString(ver1);
+    List<String> s2 = splitVersionString(ver2);
 
     padWithNulls(s1, s2);
 
     int res = 0;
     for (int i = 0; i < s1.size(); i++) {
-      final String e1 = s1.get(i);
-      final String e2 = s2.get(i);
+      String e1 = s1.get(i);
+      String e2 = s2.get(i);
 
-      final VersionTokenType t1 = VersionTokenType.lookup(e1);
-      final VersionTokenType t2 = VersionTokenType.lookup(e2);
+      VersionTokenType t1 = VersionTokenType.lookup(e1);
+      VersionTokenType t2 = VersionTokenType.lookup(e2);
 
       if (!t1.equals(t2)) {
         res = comparePriorities(t1, t2);
@@ -159,8 +159,8 @@ public class VersionComparatorUtil {
   }
 
   private static int comparePriorities(VersionTokenType t1, VersionTokenType t2) {
-    final int p1 = t1.getPriority();
-    final int p2 = t2.getPriority();
+    int p1 = t1.getPriority();
+    int p2 = t2.getPriority();
 
     if (p1 == p2) {
       return 0;
@@ -186,8 +186,8 @@ public class VersionComparatorUtil {
     }
 
     // compare as numbers
-    final int n1len = n1.length();
-    final int n2len = n2.length();
+    int n1len = n1.length();
+    int n2len = n2.length();
 
     if (n1len > n2len) {
       n2 = StringUtil.repeatSymbol('0', n1len - n2len) + n2;
@@ -199,7 +199,7 @@ public class VersionComparatorUtil {
     return n1.compareTo(n2);
   }
 
-  private static void padWithNulls(final Collection<String> s1, final Collection<String> s2) {
+  private static void padWithNulls(Collection<String> s1, Collection<String> s2) {
     if (s1.size() != s2.size()) {
       while (s1.size() < s2.size()) {
         s1.add(null);

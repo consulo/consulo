@@ -47,7 +47,7 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
                                                 boolean leaf,
                                                 int row,
                                                 boolean hasFocus) {
-    final SimpleColoredComponent component = new SimpleColoredComponent();
+    SimpleColoredComponent component = new SimpleColoredComponent();
     if (!(value instanceof InspectionConfigTreeNode)) return component;
     InspectionConfigTreeNode node = (InspectionConfigTreeNode)value;
 
@@ -65,9 +65,9 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
       style = SimpleTextAttributes.STYLE_BOLD;
     }
     else {
-      final ToolDescriptors descriptors = node.getDescriptors();
+      ToolDescriptors descriptors = node.getDescriptors();
       assert descriptors != null;
-      final Descriptor defaultDescriptor = descriptors.getDefaultDescriptor();
+      Descriptor defaultDescriptor = descriptors.getDefaultDescriptor();
       text = defaultDescriptor.getText();
       hint = getHint(defaultDescriptor);
     }
@@ -83,8 +83,8 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
   }
 
   @Nullable
-  private static String getHint(final Descriptor descriptor) {
-    final InspectionToolWrapper toolWrapper = descriptor.getToolWrapper();
+  private static String getHint(Descriptor descriptor) {
+    InspectionToolWrapper toolWrapper = descriptor.getToolWrapper();
     if (toolWrapper instanceof LocalInspectionToolWrapper ||
         toolWrapper instanceof GlobalInspectionToolWrapper && !((GlobalInspectionToolWrapper)toolWrapper).worksInBatchModeOnly()) {
       return null;

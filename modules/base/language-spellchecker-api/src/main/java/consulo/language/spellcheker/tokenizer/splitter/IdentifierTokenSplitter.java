@@ -85,7 +85,7 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
     int s = -1;
     int prevType = Character.MATH_SYMBOL;
     while (i < range.getEndOffset()) {
-      final char ch = text.charAt(i);
+      char ch = text.charAt(i);
       if (ch >= '\u3040' && ch <= '\u309f' || // Hiragana
           ch >= '\u30A0' && ch <= '\u30ff' || // Katakana
           ch >= '\u4E00' && ch <= '\u9FFF' || // CJK Unified ideographs
@@ -101,7 +101,7 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
         continue;
       }
 
-      final int type = Character.getType(ch);
+      int type = Character.getType(ch);
       if (type == Character.LOWERCASE_LETTER ||
           type == Character.UPPERCASE_LETTER ||
           type == Character.TITLECASE_LETTER ||
@@ -141,7 +141,7 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
 
   private static void add(String text, List<TextRange> result, int i, int s) {
     if (i - s > 3) {
-      final TextRange textRange = new TextRange(s, i);
+      TextRange textRange = new TextRange(s, i);
       //System.out.println("textRange = " + textRange + " = "+ textRange.substring(text));
       result.add(textRange);
     }

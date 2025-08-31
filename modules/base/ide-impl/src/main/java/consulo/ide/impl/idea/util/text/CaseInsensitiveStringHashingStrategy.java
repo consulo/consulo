@@ -25,11 +25,11 @@ import consulo.util.collection.HashingStrategy;
 public class CaseInsensitiveStringHashingStrategy implements HashingStrategy<String> {
   public static final CaseInsensitiveStringHashingStrategy INSTANCE = new CaseInsensitiveStringHashingStrategy();
   
-  public int hashCode(final String s) {
+  public int hashCode(String s) {
     return StringUtil.stringHashCodeInsensitive(s);
   }
 
-  public boolean equals(final String s1, final String s2) {
+  public boolean equals(String s1, String s2) {
     return s1.equalsIgnoreCase(s2);
   }
 }

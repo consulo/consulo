@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 public class DeleteTypeDescriptionLocation extends ElementDescriptionLocation {
   private final boolean myPlural;
 
-  private DeleteTypeDescriptionLocation(final boolean plural) {
+  private DeleteTypeDescriptionLocation(boolean plural) {
     myPlural = plural;
   }
 
@@ -48,10 +48,10 @@ public class DeleteTypeDescriptionLocation extends ElementDescriptionLocation {
 
   public static class DefaultProvider implements ElementDescriptionProvider {
     @Override
-    public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
+    public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
       if (location instanceof DeleteTypeDescriptionLocation deleteTypeDescriptionLocation) {
-        final boolean plural = deleteTypeDescriptionLocation.isPlural();
-        final int count = plural ? 2 : 1;
+        boolean plural = deleteTypeDescriptionLocation.isPlural();
+        int count = plural ? 2 : 1;
         if (element instanceof PsiFileSystemItem psiFileSystemItem && PsiUtilBase.isSymLink(psiFileSystemItem)) {
           return RefactoringLocalize.promptDeleteSymlink(count).get();
         }

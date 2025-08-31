@@ -36,7 +36,7 @@ import java.util.Comparator;
 public interface CheckoutProvider {
     ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(CheckoutProvider.class);
 
-    void doCheckout(@Nonnull final Project project, @Nullable Listener listener);
+    void doCheckout(@Nonnull Project project, @Nullable Listener listener);
 
     @Nonnull
     @Deprecated
@@ -57,7 +57,7 @@ public interface CheckoutProvider {
 
     class CheckoutProviderComparator implements Comparator<CheckoutProvider> {
         @Override
-        public int compare(final CheckoutProvider o1, final CheckoutProvider o2) {
+        public int compare(CheckoutProvider o1, CheckoutProvider o2) {
             return TextWithMnemonic.parse(o1.getVcsName()).getText().compareTo(TextWithMnemonic.parse(o2.getVcsName()).getText());
         }
     }

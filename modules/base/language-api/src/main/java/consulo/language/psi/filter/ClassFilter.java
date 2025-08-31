@@ -42,7 +42,7 @@ public class ClassFilter implements ElementFilter {
     return myAcceptableFlag ? filterMatches(hintClass) : !filterMatches(hintClass);
   }
 
-  private boolean filterMatches(final Class hintClass) {
+  private boolean filterMatches(Class hintClass) {
     return ReflectionUtil.isAssignable(myFilter, hintClass);
   }
 

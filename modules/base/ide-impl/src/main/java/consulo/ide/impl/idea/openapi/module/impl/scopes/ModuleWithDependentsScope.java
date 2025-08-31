@@ -146,7 +146,7 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
     if (this == o) return true;
     if (!(o instanceof ModuleWithDependentsScope)) return false;
 
-    final ModuleWithDependentsScope moduleWithDependentsScope = (ModuleWithDependentsScope)o;
+    ModuleWithDependentsScope moduleWithDependentsScope = (ModuleWithDependentsScope)o;
 
     return myModule.equals(moduleWithDependentsScope.myModule);
   }

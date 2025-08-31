@@ -70,11 +70,11 @@ public class Enumerator<T> {
      * @return the mapping of an initial array into associated numbers
      */
     @Nonnull
-    public int[] enumerate(@Nonnull T[] objects, final int startShift, final int endCut) {
+    public int[] enumerate(@Nonnull T[] objects, int startShift, int endCut) {
         int[] idx = ArrayUtil.newIntArray(objects.length - startShift - endCut);
         for (int i = startShift; i < objects.length - endCut; i++) {
-            final T object = objects[i];
-            final int number = enumerate(object);
+            T object = objects[i];
+            int number = enumerate(object);
             idx[i - startShift] = number;
         }
         return idx;
@@ -87,7 +87,7 @@ public class Enumerator<T> {
      * @return a number that was associated with an object
      */
     public int enumerate(T object) {
-        final int res = enumerateImpl(object);
+        int res = enumerateImpl(object);
         return Math.abs(res);
     }
 
@@ -98,7 +98,7 @@ public class Enumerator<T> {
      * @return whether a new association was established
      */
     public boolean add(T object) {
-        final int res = enumerateImpl(object);
+        int res = enumerateImpl(object);
         return res < 0;
     }
 
@@ -131,7 +131,7 @@ public class Enumerator<T> {
         if (object == null) {
             return 0;
         }
-        final int res = myNumbers.getInt(object);
+        int res = myNumbers.getInt(object);
 
         if (res == 0) {
             LOG.error("Object " + object + " must be already added to enumerator!");

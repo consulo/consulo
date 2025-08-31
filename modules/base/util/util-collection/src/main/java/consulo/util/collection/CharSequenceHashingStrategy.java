@@ -36,12 +36,12 @@ public final class CharSequenceHashingStrategy implements HashingStrategy<CharSe
   }
 
   @Override
-  public int hashCode(final CharSequence chars) {
+  public int hashCode(CharSequence chars) {
     return myCaseSensitive ? StringUtil.stringHashCode(chars) : StringUtil.stringHashCodeInsensitive(chars);
   }
 
   @Override
-  public boolean equals(final CharSequence s1, final CharSequence s2) {
+  public boolean equals(CharSequence s1, CharSequence s2) {
     return Comparing.equal(s1, s2, myCaseSensitive);
   }
 }

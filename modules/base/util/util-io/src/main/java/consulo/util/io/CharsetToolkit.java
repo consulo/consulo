@@ -279,21 +279,21 @@ public final class CharsetToolkit {
   }
 
   @Nonnull
-  public static String bytesToString(@Nonnull byte[] bytes, final @Nonnull Charset defaultCharset) {
+  public static String bytesToString(@Nonnull byte[] bytes, @Nonnull Charset defaultCharset) {
     Charset charset = new CharsetToolkit(bytes, defaultCharset).guessEncoding(bytes.length);
     if (charset == null) charset = defaultCharset; // binary content. This is silly but method contract says to return something anyway
     return decodeString(bytes, charset);
   }
 
   @Nonnull
-  public static String decodeString(@Nonnull byte[] bytes, final @Nonnull Charset charset) {
+  public static String decodeString(@Nonnull byte[] bytes, @Nonnull Charset charset) {
     int bomLength = getBOMLength(bytes, charset);
-    final CharBuffer charBuffer = charset.decode(ByteBuffer.wrap(bytes, bomLength, bytes.length - bomLength));
+    CharBuffer charBuffer = charset.decode(ByteBuffer.wrap(bytes, bomLength, bytes.length - bomLength));
     return charBuffer.toString();
   }
 
   @Nullable
-  public static String tryDecodeString(@Nonnull byte[] bytes, final @Nonnull Charset charset) {
+  public static String tryDecodeString(@Nonnull byte[] bytes, @Nonnull Charset charset) {
     try {
       int bomLength = getBOMLength(bytes, charset);
       ByteBuffer buffer = ByteBuffer.wrap(bytes, bomLength, bytes.length - bomLength);

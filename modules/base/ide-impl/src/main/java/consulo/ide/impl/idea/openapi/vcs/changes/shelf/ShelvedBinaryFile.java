@@ -46,7 +46,7 @@ public class ShelvedBinaryFile implements JDOMExternalizable {
   public ShelvedBinaryFile() {
   }
 
-  public ShelvedBinaryFile(final String beforePath, final String afterPath, @jakarta.annotation.Nullable final String shelvedPath) {
+  public ShelvedBinaryFile(String beforePath, String afterPath, @jakarta.annotation.Nullable String shelvedPath) {
     assert beforePath != null || afterPath != null;
     BEFORE_PATH = beforePath;
     AFTER_PATH = afterPath;
@@ -71,10 +71,10 @@ public class ShelvedBinaryFile implements JDOMExternalizable {
     return FileStatus.MODIFIED;
   }
 
-  public Change createChange(final Project project) {
+  public Change createChange(Project project) {
     ContentRevision before = null;
     ContentRevision after = null;
-    final File baseDir = new File(project.getBaseDir().getPath());
+    File baseDir = new File(project.getBaseDir().getPath());
     if (BEFORE_PATH != null) {
       final FilePathImpl file = new FilePathImpl(new File(baseDir, BEFORE_PATH), false);
       file.refresh();
@@ -87,7 +87,7 @@ public class ShelvedBinaryFile implements JDOMExternalizable {
       };
     }
     if (AFTER_PATH != null) {
-      final FilePathImpl file = new FilePathImpl(new File(baseDir, AFTER_PATH), false);
+      FilePathImpl file = new FilePathImpl(new File(baseDir, AFTER_PATH), false);
       file.refresh();
       after = new ShelvedBinaryContentRevision(file, SHELVED_PATH);
     }

@@ -105,7 +105,7 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
   }
 
   void deliverMessage(@Nonnull Message message) {
-    final Message messageOnLocalQueue = myPendingMessages.get().poll();
+    Message messageOnLocalQueue = myPendingMessages.get().poll();
     assert messageOnLocalQueue == message;
 
     Class<?> topic = message.getTopicClass();

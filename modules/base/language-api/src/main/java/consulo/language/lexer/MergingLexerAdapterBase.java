@@ -24,14 +24,14 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
     private int myState;
     private int myTokenStart;
 
-    public MergingLexerAdapterBase(final Lexer original) {
+    public MergingLexerAdapterBase(Lexer original) {
         super(original);
     }
 
     public abstract MergeFunction getMergeFunction();
 
     @Override
-    public void start(@Nonnull final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
+    public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
         super.start(buffer, startOffset, endOffset, initialState);
         myTokenType = null;
     }
@@ -114,7 +114,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
         private final LexerPosition myOriginalPosition;
         private final int myOldState;
 
-        public MyLexerPosition(final int offset, final IElementType tokenType, final LexerPosition originalPosition, int oldState) {
+        public MyLexerPosition(int offset, IElementType tokenType, LexerPosition originalPosition, int oldState) {
             myOffset = offset;
             myTokenType = tokenType;
             myOriginalPosition = originalPosition;

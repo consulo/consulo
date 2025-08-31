@@ -52,7 +52,7 @@ public abstract class SdkTable implements BundleHolder {
   public abstract List<Sdk> getSdksOfType(SdkTypeId type);
 
   @Nullable
-  public Sdk findMostRecentSdkOfType(final SdkTypeId type) {
+  public Sdk findMostRecentSdkOfType(SdkTypeId type) {
     return findMostRecentSdk(sdk -> sdk.getSdkType() == type);
   }
 
@@ -99,7 +99,7 @@ public abstract class SdkTable implements BundleHolder {
   @Nonnull
   @Deprecated
   @DeprecationInfo("Prefer createSdk(Platform,String,SdkTypeId)")
-  public abstract Sdk createSdk(final String name, final SdkTypeId sdkType);
+  public abstract Sdk createSdk(String name, SdkTypeId sdkType);
 
   /**
    * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding

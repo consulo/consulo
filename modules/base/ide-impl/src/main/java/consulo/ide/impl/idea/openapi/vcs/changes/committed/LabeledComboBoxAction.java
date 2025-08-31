@@ -34,7 +34,7 @@ public abstract class LabeledComboBoxAction extends AnAction implements CustomCo
   private final JComboBox myComboBox;
 
   protected LabeledComboBoxAction(String label) {
-    final String labelString = label;
+    String labelString = label;
     myComboBox = new JComboBox();
     myLabel = new JLabel(labelString);
   }
@@ -48,7 +48,7 @@ public abstract class LabeledComboBoxAction extends AnAction implements CustomCo
       myPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 4));
       myPanel.add(myLabel, BorderLayout.WEST);
       myComboBox.addActionListener(new ActionListener() {
-        public void actionPerformed(final ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
           selectionChanged(myComboBox.getSelectedItem());
         }
       });
@@ -58,11 +58,11 @@ public abstract class LabeledComboBoxAction extends AnAction implements CustomCo
     return myPanel;
   }
 
-  protected void setModel(final ComboBoxModel model) {
+  protected void setModel(ComboBoxModel model) {
     myComboBox.setModel(model);
   }
 
-  protected void enableSelf(final boolean enable) {
+  protected void enableSelf(boolean enable) {
     myComboBox.setEnabled(enable);
     myLabel.setEnabled(enable);
   }
@@ -79,7 +79,7 @@ public abstract class LabeledComboBoxAction extends AnAction implements CustomCo
     return myComboBox.getModel();
   }
 
-  protected void setRenderer(final ListCellRenderer renderer) {
+  protected void setRenderer(ListCellRenderer renderer) {
     myComboBox.setRenderer(renderer);
   }
 
@@ -87,8 +87,8 @@ public abstract class LabeledComboBoxAction extends AnAction implements CustomCo
 
   protected abstract ComboBoxModel createModel();
   
-  public void setSelected(final int idx) {
-    final ComboBoxModel boxModel = getModel();
+  public void setSelected(int idx) {
+    ComboBoxModel boxModel = getModel();
     if (boxModel.getSize() > 0) {
       boxModel.setSelectedItem(boxModel.getElementAt(idx));
     }

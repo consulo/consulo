@@ -54,7 +54,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
             String text2 = myProgressWindow.getText2();
 
             if (myProgressBar.isShowing()) {
-                final int perc = (int) (fraction * 100);
+                int perc = (int) (fraction * 100);
                 myProgressBar.setIndeterminate(myProgressWindow.isIndeterminate());
                 myProgressBar.setValue(perc);
             }
@@ -194,7 +194,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
     @Override
     public void copyPopupStateToWindow() {
-        final DialogWrapper popup = myPopup;
+        DialogWrapper popup = myPopup;
         if (popup != null) {
             if (popup.isShowing()) {
                 myWasShown = true;
@@ -334,13 +334,13 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
     private class MyDialogWrapper extends DialogWrapper {
         private final boolean myIsCancellable;
 
-        public MyDialogWrapper(Project project, final boolean cancellable) {
+        public MyDialogWrapper(Project project, boolean cancellable) {
             super(project, false);
             init();
             myIsCancellable = cancellable;
         }
 
-        public MyDialogWrapper(Component parent, final boolean cancellable) {
+        public MyDialogWrapper(Component parent, boolean cancellable) {
             super(parent, false);
             init();
             myIsCancellable = cancellable;
@@ -355,7 +355,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
         @Nonnull
         @Override
-        protected DialogWrapperPeer createPeer(@Nonnull final Component parent, final boolean canBeParent) {
+        protected DialogWrapperPeer createPeer(@Nonnull Component parent, boolean canBeParent) {
             if (useLightPopup()) {
                 try {
                     return new GlassPaneDialogWrapperPeer(this, parent, canBeParent);
@@ -371,7 +371,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
         @Nonnull
         @Override
-        protected DialogWrapperPeer createPeer(final ComponentManager project, final boolean canBeParent, final boolean applicationModalIfPossible) {
+        protected DialogWrapperPeer createPeer(ComponentManager project, boolean canBeParent, boolean applicationModalIfPossible) {
             if (useLightPopup()) {
                 try {
                     return new GlassPaneDialogWrapperPeer(this, canBeParent);
@@ -391,7 +391,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
         @Nonnull
         @Override
-        protected DialogWrapperPeer createPeer(final ComponentManager project, final boolean canBeParent) {
+        protected DialogWrapperPeer createPeer(ComponentManager project, boolean canBeParent) {
             if (System.getProperty("vintage.progress") == null) {
                 try {
                     return new GlassPaneDialogWrapperPeer(this, (Project) project, canBeParent);

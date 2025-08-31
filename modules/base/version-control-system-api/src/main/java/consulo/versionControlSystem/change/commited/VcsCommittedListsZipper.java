@@ -22,9 +22,9 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import java.util.List;
 
 public interface VcsCommittedListsZipper {
-  Pair<List<RepositoryLocationGroup>, List<RepositoryLocation>> groupLocations(final List<RepositoryLocation> in);
+  Pair<List<RepositoryLocationGroup>, List<RepositoryLocation>> groupLocations(List<RepositoryLocation> in);
 
-  CommittedChangeList zip(final RepositoryLocationGroup group, final List<CommittedChangeList> lists);
+  CommittedChangeList zip(RepositoryLocationGroup group, List<CommittedChangeList> lists);
 
-  long getNumber(final CommittedChangeList list);
+  long getNumber(CommittedChangeList list);
 }

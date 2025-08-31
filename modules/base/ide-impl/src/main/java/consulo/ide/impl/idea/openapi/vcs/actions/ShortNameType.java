@@ -55,7 +55,7 @@ public enum ShortNameType {
     if (type == NONE) return name;
 
     // Vasya Pupkin <vasya.pupkin@jetbrains.com> -> Vasya Pupkin
-    final int[] ind = {name.indexOf('<'), name.indexOf('@'), name.indexOf('>')};
+    int[] ind = {name.indexOf('<'), name.indexOf('@'), name.indexOf('>')};
     if (0 < ind[0] && ind[0] < ind[1] && ind[1] < ind[2]) {
       name = name.substring(0, ind[0]).trim();
     }
@@ -66,7 +66,7 @@ public enum ShortNameType {
     }
     name = name.replace('.', ' ').replace('_', ' ').replace('-', ' ');
 
-    final List<String> strings = StringUtil.split(name, " ");
+    List<String> strings = StringUtil.split(name, " ");
     if (strings.size() < 2) return name;
 
     String shortName;

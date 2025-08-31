@@ -58,9 +58,9 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
 
   @Override
   @Nullable
-  public Result applyFilter(@Nonnull final String line, final int entireLength) {
+  public Result applyFilter(@Nonnull String line, int entireLength) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    final boolean dumb = myDumbService.isDumb();
+    boolean dumb = myDumbService.isDumb();
     List<Filter> filters = myFilters;
     int count = filters.size();
 
@@ -185,7 +185,7 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
   @Override
   public String getUpdateMessage() {
     List<Filter> filters = myFilters;
-    final List<String> updateMessage = new ArrayList<>();
+    List<String> updateMessage = new ArrayList<>();
     int count = filters.size();
 
     for (int i = 0; i < count; i++) {

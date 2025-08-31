@@ -66,7 +66,7 @@ public class CompletionUtilCore {
 
     Object object = lookupElement.getObject();
     if (object instanceof LookupValueWithPsiElement) {
-      final PsiElement element = ((LookupValueWithPsiElement)object).getElement();
+      PsiElement element = ((LookupValueWithPsiElement)object).getElement();
       if (element != null && element.isValid()) return getOriginalElement(element);
     }
 
@@ -75,13 +75,13 @@ public class CompletionUtilCore {
 
   @Nullable
   public static <T extends PsiElement> T getOriginalElement(@Nonnull T psi) {
-    final PsiFile file = psi.getContainingFile();
+    PsiFile file = psi.getContainingFile();
     return getOriginalElement(psi, file);
   }
 
   @Nonnull
   public static <T extends PsiElement> T getOriginalOrSelf(@Nonnull T psi) {
-    final T element = getOriginalElement(psi);
+    T element = getOriginalElement(psi);
     return element == null ? psi : element;
   }
 
@@ -91,7 +91,7 @@ public class CompletionUtilCore {
       TextRange range = psi.getTextRange();
       Integer start = range.getStartOffset();
       Integer end = range.getEndOffset();
-      final Document document = containingFile.getViewProvider().getDocument();
+      Document document = containingFile.getViewProvider().getDocument();
       if (document != null) {
         Document hostDocument = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
         OffsetTranslator translator = hostDocument.getUserData(OffsetTranslator.RANGE_TRANSLATION);
@@ -159,20 +159,20 @@ public class CompletionUtilCore {
     };
   }
 
-  public static InsertionContext emulateInsertion(InsertionContext oldContext, int newStart, final LookupElement item) {
-    final InsertionContext newContext = newContext(oldContext, item);
+  public static InsertionContext emulateInsertion(InsertionContext oldContext, int newStart, LookupElement item) {
+    InsertionContext newContext = newContext(oldContext, item);
     emulateInsertion(item, newStart, newContext);
     return newContext;
   }
 
   private static InsertionContext newContext(InsertionContext oldContext, LookupElement forElement) {
-    final Editor editor = oldContext.getEditor();
+    Editor editor = oldContext.getEditor();
     return new InsertionContext(new OffsetMap(editor.getDocument()), Lookup.AUTO_INSERT_SELECT_CHAR, new LookupElement[]{forElement}, oldContext.getFile(), editor,
                                 oldContext.shouldAddCompletionChar());
   }
 
   public static InsertionContext newContext(InsertionContext oldContext, LookupElement forElement, int startOffset, int tailOffset) {
-    final InsertionContext context = newContext(oldContext, forElement);
+    InsertionContext context = newContext(oldContext, forElement);
     setOffsets(context, startOffset, tailOffset);
     return context;
   }
@@ -180,9 +180,9 @@ public class CompletionUtilCore {
   public static void emulateInsertion(LookupElement item, int offset, InsertionContext context) {
     setOffsets(context, offset, offset);
 
-    final Editor editor = context.getEditor();
-    final Document document = editor.getDocument();
-    final String lookupString = item.getLookupString();
+    Editor editor = context.getEditor();
+    Document document = editor.getDocument();
+    String lookupString = item.getLookupString();
 
     document.insertString(offset, lookupString);
     editor.getCaretModel().moveToOffset(context.getTailOffset());
@@ -191,15 +191,15 @@ public class CompletionUtilCore {
     PsiDocumentManager.getInstance(context.getProject()).doPostponedOperationsAndUnblockDocument(document);
   }
 
-  private static void setOffsets(InsertionContext context, int offset, final int tailOffset) {
-    final OffsetMap offsetMap = context.getOffsetMap();
+  private static void setOffsets(InsertionContext context, int offset, int tailOffset) {
+    OffsetMap offsetMap = context.getOffsetMap();
     offsetMap.addOffset(CompletionInitializationContext.START_OFFSET, offset);
     offsetMap.addOffset(CompletionInitializationContext.IDENTIFIER_END_OFFSET, tailOffset);
     offsetMap.addOffset(CompletionInitializationContext.SELECTION_END_OFFSET, tailOffset);
     context.setTailOffset(tailOffset);
   }
 
-  public static boolean shouldShowFeature(CompletionParameters parameters, final String id) {
+  public static boolean shouldShowFeature(CompletionParameters parameters, String id) {
     return shouldShowFeature(parameters.getPosition().getProject(), id);
   }
 
@@ -215,7 +215,7 @@ public class CompletionUtilCore {
     return findJavaIdentifierPrefix(parameters.getPosition(), parameters.getOffset());
   }
 
-  public static String findJavaIdentifierPrefix(final PsiElement insertedElement, final int offset) {
+  public static String findJavaIdentifierPrefix(PsiElement insertedElement, int offset) {
     return findIdentifierPrefix(insertedElement, offset, CharPattern.javaIdentifierPartCharacter(), CharPattern.javaIdentifierStartCharacter());
   }
 
@@ -230,15 +230,15 @@ public class CompletionUtilCore {
     PsiElement insertedElement = parameters.getPosition();
     int offsetInFile = parameters.getOffset();
     try {
-      final PsiReference ref = insertedElement.getContainingFile().findReferenceAt(offsetInFile);
+      PsiReference ref = insertedElement.getContainingFile().findReferenceAt(offsetInFile);
       if (ref != null) {
-        final List<TextRange> ranges = ReferenceRange.getRanges(ref);
-        final PsiElement element = ref.getElement();
-        final int elementStart = element.getTextRange().getStartOffset();
+        List<TextRange> ranges = ReferenceRange.getRanges(ref);
+        PsiElement element = ref.getElement();
+        int elementStart = element.getTextRange().getStartOffset();
         for (TextRange refRange : ranges) {
           if (refRange.contains(offsetInFile - elementStart)) {
-            final int endIndex = offsetInFile - elementStart;
-            final int beginIndex = refRange.getStartOffset();
+            int endIndex = offsetInFile - elementStart;
+            int beginIndex = refRange.getStartOffset();
             if (beginIndex > endIndex) {
               LOG.error("Inconsistent reference (found at offset not included in its range): ref=" + ref + " element=" + element + " text=" + element.getText());
             }
@@ -267,13 +267,13 @@ public class CompletionUtilCore {
   }
 
   public static String findIdentifierPrefix(@Nonnull Document document, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
-    final String text = document.getText();
+    String text = document.getText();
     return findInText(offset, 0, idPart, idStart, text);
   }
 
   @Nonnull
   private static String findInText(int offset, int startOffset, ElementPattern<Character> idPart, ElementPattern<Character> idStart, CharSequence text) {
-    final int offsetInElement = offset - startOffset;
+    int offsetInElement = offset - startOffset;
     int start = offsetInElement - 1;
     while (start >= 0) {
       if (!idPart.accepts(text.charAt(start))) break;

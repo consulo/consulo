@@ -40,7 +40,7 @@ import jakarta.inject.Inject;
 @ExtensionImpl
 public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
     @Inject
-    public FavoritesViewSelectInTarget(final Project project) {
+    public FavoritesViewSelectInTarget(Project project) {
         super(project);
     }
 
@@ -70,14 +70,14 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
     }
 
     private static ActionCallback select(@Nonnull Project project, Object toSelect, VirtualFile virtualFile, boolean requestFocus) {
-        final ActionCallback result = new ActionCallback();
+        ActionCallback result = new ActionCallback();
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
-        final ToolWindow favoritesToolWindow = windowManager.getToolWindow(ToolWindowId.BOOKMARKS);
+        ToolWindow favoritesToolWindow = windowManager.getToolWindow(ToolWindowId.BOOKMARKS);
 
         if (favoritesToolWindow != null) {
-            final Runnable runnable = () -> {
-                final FavoritesTreeViewPanel panel = UIUtil.findComponentOfType(favoritesToolWindow.getComponent(), FavoritesTreeViewPanel.class);
+            Runnable runnable = () -> {
+                FavoritesTreeViewPanel panel = UIUtil.findComponentOfType(favoritesToolWindow.getComponent(), FavoritesTreeViewPanel.class);
                 if (panel != null) {
                     panel.selectElement(toSelect, virtualFile, requestFocus);
                     result.setDone();
@@ -96,11 +96,11 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
     }
 
     @Override
-    protected boolean canSelect(final PsiFileSystemItem file) {
+    protected boolean canSelect(PsiFileSystemItem file) {
         return findSuitableFavoritesList(file.getVirtualFile(), myProject, null) != null;
     }
 
-    public static String findSuitableFavoritesList(VirtualFile file, Project project, final String currentSubId) {
+    public static String findSuitableFavoritesList(VirtualFile file, Project project, String currentSubId) {
         return FavoritesManagerImpl.getInstance(project).getFavoriteListName(currentSubId, file);
     }
 

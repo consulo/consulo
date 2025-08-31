@@ -55,7 +55,7 @@ public final class BrowserLauncherImpl extends BrowserLauncherAppless {
     }
 
     @Override
-    protected void doShowError(@Nullable final String error, @Nullable final WebBrowser browser, @Nullable final Project project, final String title, @Nullable final Runnable launchTask) {
+    protected void doShowError(@Nullable String error, @Nullable WebBrowser browser, @Nullable Project project, String title, @Nullable Runnable launchTask) {
         AppUIUtil.invokeOnEdt(() -> {
             if (Messages.showYesNoDialog(project, StringUtil.notNullize(error, "Unknown error"),
                 title == null ? WebBrowserLocalize.browserError().get() : title, Messages.OK_BUTTON,
@@ -74,11 +74,11 @@ public final class BrowserLauncherImpl extends BrowserLauncherAppless {
     @Override
     protected void checkCreatedProcess(@Nullable final WebBrowser browser,
                                        @Nullable final Project project,
-                                       @Nonnull final GeneralCommandLine commandLine,
+                                       @Nonnull GeneralCommandLine commandLine,
                                        @Nonnull final Process process,
                                        @Nullable final Runnable launchTask) {
         if (isOpenCommandUsed(commandLine)) {
-            final Future<?> future = Application.get().executeOnPooledThread(new Runnable() {
+            Future<?> future = Application.get().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
                     try {

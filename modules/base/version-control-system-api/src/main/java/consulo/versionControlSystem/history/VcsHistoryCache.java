@@ -45,11 +45,11 @@ public class VcsHistoryCache {
     //myContentCache = new SLRUMap<HistoryCacheWithRevisionKey, String>(20, 20);
   }
 
-  public <C extends Serializable, T extends VcsAbstractHistorySession> void put(final FilePath filePath,
-                                                                                @Nullable final FilePath correctedPath,
-                                                                                final VcsKey vcsKey,
-                                                                                final T session,
-                                                                                @Nonnull final VcsCacheableHistorySessionFactory<C, T> factory,
+  public <C extends Serializable, T extends VcsAbstractHistorySession> void put(FilePath filePath,
+                                                                                @Nullable FilePath correctedPath,
+                                                                                VcsKey vcsKey,
+                                                                                T session,
+                                                                                @Nonnull VcsCacheableHistorySessionFactory<C, T> factory,
                                                                                 boolean isFull) {
     synchronized (myLock) {
       myHistoryCache.put(new HistoryCacheBaseKey(filePath, vcsKey),
@@ -58,9 +58,9 @@ public class VcsHistoryCache {
     }
   }
 
-  public void editCached(final FilePath filePath, final VcsKey vcsKey, final Consumer<List<VcsFileRevision>> consumer) {
+  public void editCached(FilePath filePath, VcsKey vcsKey, Consumer<List<VcsFileRevision>> consumer) {
     synchronized (myLock) {
-      final CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
+      CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
       if (cachedHistory != null) {
         consumer.accept(cachedHistory.getRevisions());
       }
@@ -68,10 +68,10 @@ public class VcsHistoryCache {
   }
 
   @Nullable
-  public <C extends Serializable, T extends VcsAbstractHistorySession> T getFull(final FilePath filePath, final VcsKey vcsKey,
-                                                                                 @Nonnull final VcsCacheableHistorySessionFactory<C, T> factory) {
+  public <C extends Serializable, T extends VcsAbstractHistorySession> T getFull(FilePath filePath, VcsKey vcsKey,
+                                                                                 @Nonnull VcsCacheableHistorySessionFactory<C, T> factory) {
     synchronized (myLock) {
-      final CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
+      CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
       if (cachedHistory == null || ! cachedHistory.isIsFull()) {
         return null;
       }
@@ -81,10 +81,10 @@ public class VcsHistoryCache {
   }
 
   @Nullable
-  public <C extends Serializable, T extends VcsAbstractHistorySession> T getMaybePartial(final FilePath filePath, final VcsKey vcsKey,
-                                                                                         @Nonnull final VcsCacheableHistorySessionFactory<C, T> factory) {
+  public <C extends Serializable, T extends VcsAbstractHistorySession> T getMaybePartial(FilePath filePath, VcsKey vcsKey,
+                                                                                         @Nonnull VcsCacheableHistorySessionFactory<C, T> factory) {
     synchronized (myLock) {
-      final CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
+      CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
       if (cachedHistory == null) {
         return null;
       }
@@ -95,9 +95,9 @@ public class VcsHistoryCache {
 
   public void clear() {
     synchronized (myLock) {
-      final Iterator<Map.Entry<HistoryCacheBaseKey,CachedHistory>> iterator = myHistoryCache.entrySet().iterator();
+      Iterator<Map.Entry<HistoryCacheBaseKey,CachedHistory>> iterator = myHistoryCache.entrySet().iterator();
       while (iterator.hasNext()) {
-        final Map.Entry<HistoryCacheBaseKey, CachedHistory> next = iterator.next();
+        Map.Entry<HistoryCacheBaseKey, CachedHistory> next = iterator.next();
         if (! next.getKey().getFilePath().isNonLocal()) {
           iterator.remove();
         }
@@ -105,14 +105,14 @@ public class VcsHistoryCache {
     }
   }
 
-  public void put(@Nonnull final FilePath filePath, @Nonnull final VcsKey vcsKey, @Nonnull final VcsRevisionNumber number,
-                  @Nonnull final VcsAnnotation vcsAnnotation) {
+  public void put(@Nonnull FilePath filePath, @Nonnull VcsKey vcsKey, @Nonnull VcsRevisionNumber number,
+                  @Nonnull VcsAnnotation vcsAnnotation) {
     synchronized (myLock) {
       myAnnotationCache.put(new HistoryCacheWithRevisionKey(filePath, vcsKey, number), vcsAnnotation);
     }
   }
 
-  public VcsAnnotation get(@Nonnull final FilePath filePath, @Nonnull final VcsKey vcsKey, @Nonnull final VcsRevisionNumber number) {
+  public VcsAnnotation get(@Nonnull FilePath filePath, @Nonnull VcsKey vcsKey, @Nonnull VcsRevisionNumber number) {
     synchronized (myLock) {
       return myAnnotationCache.get(new HistoryCacheWithRevisionKey(filePath, vcsKey, number));
     }

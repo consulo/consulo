@@ -51,7 +51,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
     }
 
     result = myFunction.apply(h);
-    final long count = getModificationCount(h);
+    long count = getModificationCount(h);
     h.putUserData(this, new SoftReference<Pair<Long, T>>(new Pair<Long, T>(count, result)));
     return result;
   }

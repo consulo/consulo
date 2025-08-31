@@ -162,7 +162,7 @@ public class DefaultJDOMExternalizer {
   public static void readExternal(@Nonnull Object data, Element parentNode) throws InvalidDataException {
     if (parentNode == null) return;
 
-    for (final Element e : parentNode.getChildren("option")) {
+    for (Element e : parentNode.getChildren("option")) {
       String fieldName = e.getAttributeValue("name");
       if (fieldName == null) {
         throw new InvalidDataException();
@@ -177,7 +177,7 @@ public class DefaultJDOMExternalizer {
           // read external contents of final field
           Object value = field.get(data);
           if (JDOMExternalizable.class.isInstance(value)) {
-            final List children = e.getChildren("value");
+            List children = e.getChildren("value");
             for (Object child : children) {
               Element valueTag = (Element)child;
               ((JDOMExternalizable)value).readExternal(valueTag);
@@ -262,11 +262,11 @@ public class DefaultJDOMExternalizer {
           field.set(data, color);
         }
         else if (ReflectionUtil.isAssignable(JDOMExternalizable.class, type)) {
-          final List<Element> children = e.getChildren("value");
+          List<Element> children = e.getChildren("value");
           if (!children.isEmpty()) {
             // compatibility with Selena's serialization which writes an empty tag for a bean which has a default value
             JDOMExternalizable object = null;
-            for (final Element el : children) {
+            for (Element el : children) {
               object = (JDOMExternalizable)type.newInstance();
               object.readExternal(el);
             }

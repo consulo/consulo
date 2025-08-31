@@ -35,7 +35,7 @@ public class RefProjectImpl extends RefEntityImpl implements RefProject {
   }
 
   @Override
-  public Image getIcon(final boolean expanded) {
+  public Image getIcon(boolean expanded) {
     return Application.get().getIcon();
   }
 }

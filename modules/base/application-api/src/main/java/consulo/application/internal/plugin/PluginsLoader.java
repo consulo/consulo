@@ -83,7 +83,7 @@ public class PluginsLoader {
         return !isIncompatible(descriptor);
       }
 
-      private boolean isIncompatible(final PluginDescriptor descriptor) {
+      private boolean isIncompatible(PluginDescriptor descriptor) {
         String platformVersion = descriptor.getPlatformVersion();
         if (StringUtil.isEmpty(platformVersion)) {
           return false;
@@ -125,10 +125,10 @@ public class PluginsLoader {
 
     List<PluginDescriptorImpl> pluginDescriptors = loadPluginDescriptors(progress, isHeadlessMode);
 
-    final ClassLoader parentLoader = Application.class.getClassLoader();
+    ClassLoader parentLoader = Application.class.getClassLoader();
 
-    final List<PluginDescriptorImpl> result = new ArrayList<>();
-    final Map<PluginId, String> disabledPluginNames = new HashMap<>();
+    List<PluginDescriptorImpl> result = new ArrayList<>();
+    Map<PluginId, String> disabledPluginNames = new HashMap<>();
     List<String> brokenPluginsList = new SmartList<>();
 
     for (PluginDescriptorImpl descriptor : pluginDescriptors) {
@@ -160,15 +160,15 @@ public class PluginsLoader {
       problemsWithPlugins.add(badPluginMessage);
     }
 
-    final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new HashMap<>();
+    Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new HashMap<>();
     for (PluginDescriptorImpl descriptor : result) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
     }
 
-    final Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
+    Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
     final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
     if (!builder.isAcyclic()) {
-      final String cyclePresentation;
+      String cyclePresentation;
       if (ApplicationProperties.isInSandbox()) {
         final List<String> cycles = new ArrayList<>();
         builder.getSCCs().forEach(new IntConsumer() {
@@ -189,9 +189,9 @@ public class PluginsLoader {
         cyclePresentation = ": " + StringUtil.join(cycles, ";");
       }
       else {
-        final Couple<PluginId> circularDependency = builder.getCircularDependency();
-        final PluginId id = circularDependency.getFirst();
-        final PluginId parentId = circularDependency.getSecond();
+        Couple<PluginId> circularDependency = builder.getCircularDependency();
+        PluginId id = circularDependency.getFirst();
+        PluginId parentId = circularDependency.getSecond();
         cyclePresentation = id + "->" + parentId + "->...->" + id;
       }
       problemsWithPlugins.add(new CompositeMessage().append(ApplicationLocalize.errorPluginsShouldNotHaveCyclicDependencies(
@@ -200,7 +200,7 @@ public class PluginsLoader {
 
     prepareLoadingPluginsErrorMessage(info, problemsWithPlugins, isHeadlessMode);
 
-    final Comparator<PluginId> idComparator = builder.comparator();
+    Comparator<PluginId> idComparator = builder.comparator();
     // sort descriptors according to plugin dependencies
     Collections.sort(result, (o1, o2) -> idComparator.compare(o1.getPluginId(), o2.getPluginId()));
 
@@ -212,17 +212,17 @@ public class PluginsLoader {
     PluginHolderModificator.setPluginLoadOrder(id2Index);
 
     int i = 0;
-    for (final PluginDescriptorImpl pluginDescriptor : result) {
+    for (PluginDescriptorImpl pluginDescriptor : result) {
       // platform plugin already have classloader
       if (PluginIds.isPlatformPlugin(pluginDescriptor.getPluginId())) {
         continue;
       }
       else {
         try {
-          final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
-          final ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
+          PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
+          ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
 
-          final ClassLoader pluginClassLoader = createPluginClassLoader(idToDescriptorMap.keySet(),
+          ClassLoader pluginClassLoader = createPluginClassLoader(idToDescriptorMap.keySet(),
                                                                         parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader},
                                                                         pluginDescriptor);
 
@@ -253,7 +253,7 @@ public class PluginsLoader {
     return info;
   }
 
-  static void prepareLoadingPluginsErrorMessage(PluginsInitializeInfo info, final List<CompositeMessage> problems, boolean isHeadlessMode) {
+  static void prepareLoadingPluginsErrorMessage(PluginsInitializeInfo info, List<CompositeMessage> problems, boolean isHeadlessMode) {
     if (!isHeadlessMode) {
       info.addPluginErrors(problems);
     }
@@ -275,7 +275,7 @@ public class PluginsLoader {
 
     pluginDescriptors.addAll(loadDescriptorsFromPluginsPath(progress, isHeadlessMode, stat));
 
-    final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new HashMap<>();
+    Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new HashMap<>();
 
     for (PluginDescriptorImpl descriptor : pluginDescriptors) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
@@ -296,7 +296,7 @@ public class PluginsLoader {
   public static List<PluginDescriptorImpl> loadDescriptorsFromPluginsPath(@Nullable StartupProgress progress,
                                                                           boolean isHeadlessMode,
                                                                           StatCollector stat) {
-    final List<PluginDescriptorImpl> result = new ArrayList<>();
+    List<PluginDescriptorImpl> result = new ArrayList<>();
 
     int pluginsCount = 0;
     String[] pluginsPaths = ContainerPathManager.get().getPluginsPaths();
@@ -328,12 +328,12 @@ public class PluginsLoader {
                                      StatCollector stat,
                                      boolean isHeadlessMode,
                                      boolean isPreInstalledPath) {
-    final File[] files = pluginsHome.listFiles();
+    File[] files = pluginsHome.listFiles();
     if (files != null) {
       int i = result.size();
       for (File file : files) {
         Runnable mark = stat.mark(file.getName());
-        final PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, C_LOG);
+        PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, C_LOG);
         if (descriptor == null) {
           mark.run();
           continue;
@@ -344,7 +344,7 @@ public class PluginsLoader {
         }
         int oldIndex = result.indexOf(descriptor);
         if (oldIndex >= 0) {
-          final PluginDescriptorImpl oldDescriptor = result.get(oldIndex);
+          PluginDescriptorImpl oldDescriptor = result.get(oldIndex);
           if (StringUtil.compareVersionNumbers(oldDescriptor.getVersion(), descriptor.getVersion()) < 0) {
             result.set(oldIndex, descriptor);
           }
@@ -371,12 +371,12 @@ public class PluginsLoader {
   @Nullable
   static CompositeMessage filterBadPlugins(PluginsInitializeInfo info,
                                            List<PluginDescriptorImpl> result,
-                                           final Map<PluginId, String> disabledPluginNames) {
-    final Map<PluginId, PluginDescriptor> idToDescriptorMap = new HashMap<>();
-    final CompositeMessage message = new CompositeMessage();
+                                           Map<PluginId, String> disabledPluginNames) {
+    Map<PluginId, PluginDescriptor> idToDescriptorMap = new HashMap<>();
+    CompositeMessage message = new CompositeMessage();
     for (Iterator<? extends PluginDescriptor> it = result.iterator(); it.hasNext(); ) {
-      final PluginDescriptor descriptor = it.next();
-      final PluginId id = descriptor.getPluginId();
+      PluginDescriptor descriptor = it.next();
+      PluginId id = descriptor.getPluginId();
 
       if (idToDescriptorMap.containsKey(id)) {
         message.append("<br>");
@@ -389,8 +389,8 @@ public class PluginsLoader {
       }
     }
 
-    for (final Iterator<PluginDescriptorImpl> it = result.iterator(); it.hasNext(); ) {
-      final PluginDescriptorImpl pluginDescriptor = it.next();
+    for (Iterator<PluginDescriptorImpl> it = result.iterator(); it.hasNext(); ) {
+      PluginDescriptorImpl pluginDescriptor = it.next();
       PluginValidator.checkDependants(pluginDescriptor, idToDescriptorMap::get, pluginId -> {
         if (!idToDescriptorMap.containsKey(pluginId)) {
           pluginDescriptor.setStatus(PluginIds.isPlatformImplementationPlugin(pluginId) ? PluginDescriptorStatus.WRONG_PLATFORM : PluginDescriptorStatus.DEPENDENCY_NOT_LOADED);
@@ -398,8 +398,8 @@ public class PluginsLoader {
           // if dependent plugin is platform - do not show error, just disable it
           if (!PluginIds.isPlatformImplementationPlugin(pluginId)) {
             message.append("<br>");
-            final String name = pluginDescriptor.getName();
-            final PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
+            String name = pluginDescriptor.getName();
+            PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
 
             String pluginName;
             if (descriptor == null) {
@@ -432,15 +432,15 @@ public class PluginsLoader {
   }
 
   static Comparator<PluginDescriptor> getPluginDescriptorComparator(Map<PluginId, PluginDescriptorImpl> idToDescriptorMap) {
-    final Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
-    final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
+    Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
+    DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
     /*
     if (!builder.isAcyclic()) {
       final Pair<String,String> circularDependency = builder.getCircularDependency();
       throw new Exception("Cyclic dependencies between plugins are not allowed: \"" + circularDependency.getFirst() + "\" and \"" + circularDependency.getSecond() + "");
     }
     */
-    final Comparator<PluginId> idComparator = builder.comparator();
+    Comparator<PluginId> idComparator = builder.comparator();
     return (o1, o2) -> idComparator.compare(o1.getPluginId(), o2.getPluginId());
   }
 
@@ -457,7 +457,7 @@ public class PluginsLoader {
 
       @Override
       public Iterator<PluginId> getIn(PluginId pluginId) {
-        final PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
+        PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
         List<PluginId> plugins = new ArrayList<>();
         for (PluginId dependentPluginId : descriptor.getDependentPluginIds()) {
           // check for missing optional dependency
@@ -477,8 +477,8 @@ public class PluginsLoader {
 
   @Nonnull
   static List<ModuleLayer> getParentModuleLayer(Map<PluginId, ? extends PluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
-    final List<ModuleLayer> result = new ArrayList<>();
-    for (final PluginId id : pluginIds) {
+    List<ModuleLayer> result = new ArrayList<>();
+    for (PluginId id : pluginIds) {
       PluginDescriptor pluginDescriptor = idToDescriptorMap.get(id);
       if (pluginDescriptor == null) {
         continue; // Might be an optional dependency
@@ -509,14 +509,14 @@ public class PluginsLoader {
 
   @Nonnull
   static ClassLoader[] getParentLoaders(Map<PluginId, ? extends PluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
-    final List<ClassLoader> classLoaders = new ArrayList<>();
-    for (final PluginId id : pluginIds) {
+    List<ClassLoader> classLoaders = new ArrayList<>();
+    for (PluginId id : pluginIds) {
       PluginDescriptor pluginDescriptor = idToDescriptorMap.get(id);
       if (pluginDescriptor == null || pluginDescriptor.getStatus() != PluginDescriptorStatus.OK) {
         continue; // Might be an optional dependency
       }
 
-      final ClassLoader loader = pluginDescriptor.getPluginClassLoader();
+      ClassLoader loader = pluginDescriptor.getPluginClassLoader();
       classLoaders.add(loader);
     }
     return classLoaders.toArray(new ClassLoader[classLoaders.size()]);
@@ -528,7 +528,7 @@ public class PluginsLoader {
     List<String> loadedCustom = new ArrayList<>();
 
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-      final String version = descriptor.getVersion();
+      String version = descriptor.getVersion();
       String s = descriptor.getName() + (version != null ? " (" + version + ")" : "");
       if (descriptor.isEnabled()) {
         if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {

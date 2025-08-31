@@ -33,11 +33,11 @@ public class ShowSplashAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DesktopSplash splash = new DesktopSplash(true);
+    DesktopSplash splash = new DesktopSplash(true);
 
     Future<?> task = ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {
       for (int i = 0; i <= 100; i++) {
-        final float progress = i / 100f;
+        float progress = i / 100f;
         UIUtil.invokeLaterIfNeeded(() -> splash.showProgress("", progress));
 
         try {
@@ -49,7 +49,7 @@ public class ShowSplashAction extends DumbAwareAction {
       }
     });
 
-    final SplashListener listener = new SplashListener(splash, task);
+    SplashListener listener = new SplashListener(splash, task);
     splash.addFocusListener(listener);
     splash.addKeyListener(listener);
     splash.addMouseListener(listener);

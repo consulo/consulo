@@ -57,7 +57,7 @@ class RecentStringInterner {
 
   public String get(String s) {
     if (s == null) return null;
-    final int stripe = Math.abs(s.hashCode()) & myStripeMask;
+    int stripe = Math.abs(s.hashCode()) & myStripeMask;
     try {
       myStripeLocks[stripe].lock();
       return myInterns[stripe].get(s);

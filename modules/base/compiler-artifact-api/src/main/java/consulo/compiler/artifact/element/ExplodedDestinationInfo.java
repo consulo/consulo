@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public class ExplodedDestinationInfo extends DestinationInfo {
-  public ExplodedDestinationInfo(final String outputPath, @Nullable final VirtualFile outputFile) {
+  public ExplodedDestinationInfo(String outputPath, @Nullable VirtualFile outputFile) {
     super(outputPath, outputFile, outputPath);
   }
 

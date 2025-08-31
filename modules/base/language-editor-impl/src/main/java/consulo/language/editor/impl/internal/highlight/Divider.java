@@ -69,9 +69,9 @@ public class Divider {
                                                     @Nonnull TextRange priorityRange,
                                                     @Nonnull Predicate<PsiFile> rootFilter,
                                                     @Nonnull Consumer<DividedElements> processor) {
-    final FileViewProvider viewProvider = file.getViewProvider();
+    FileViewProvider viewProvider = file.getViewProvider();
     for (Language language : viewProvider.getLanguages()) {
-      final PsiFile root = viewProvider.getPsi(language);
+      PsiFile root = viewProvider.getPsi(language);
       if (!rootFilter.test(root)) {
         continue;
       }
@@ -110,10 +110,10 @@ public class Divider {
     int startOffset = restrictRange.getStartOffset();
     int endOffset = restrictRange.getEndOffset();
 
-    final IntStack starts = new IntStack(STARTING_TREE_HEIGHT);
+    IntStack starts = new IntStack(STARTING_TREE_HEIGHT);
     starts.push(startOffset);
-    final Stack<PsiElement> elements = new Stack<>(STARTING_TREE_HEIGHT);
-    final Stack<PsiElement> children = new Stack<>(STARTING_TREE_HEIGHT);
+    Stack<PsiElement> elements = new Stack<>(STARTING_TREE_HEIGHT);
+    Stack<PsiElement> children = new Stack<>(STARTING_TREE_HEIGHT);
     PsiElement element = root;
 
     PsiElement child = HAVE_TO_GET_CHILDREN;

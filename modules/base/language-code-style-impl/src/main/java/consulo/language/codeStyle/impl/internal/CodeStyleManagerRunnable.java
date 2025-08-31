@@ -54,8 +54,8 @@ abstract class CodeStyleManagerRunnable<T> {
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myCodeStyleManager.getProject());
     Document document = documentManager.getDocument(file);
     if (document instanceof DocumentWindow) {
-      final DocumentWindow documentWindow = (DocumentWindow)document;
-      final PsiFile topLevelFile = InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file);
+      DocumentWindow documentWindow = (DocumentWindow)document;
+      PsiFile topLevelFile = InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file);
       if (!file.equals(topLevelFile)) {
         if (range != null) {
           range = documentWindow.injectedToHost(range);
@@ -67,7 +67,7 @@ abstract class CodeStyleManagerRunnable<T> {
       }
     }
 
-    final PsiFile templateFile = PsiUtilCore.getTemplateLanguageFile(file);
+    PsiFile templateFile = PsiUtilCore.getTemplateLanguageFile(file);
     if (templateFile != null) {
       file = templateFile;
       document = documentManager.getDocument(templateFile);
@@ -84,7 +84,7 @@ abstract class CodeStyleManagerRunnable<T> {
       }
     }
 
-    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
+    FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
     FormattingModelBuilder elementBuilder = element != null ? FormattingModelBuilder.forContext(element) : builder;
     if (builder != null && elementBuilder != null) {
       mySettings = CodeStyle.getSettings(file);
@@ -144,23 +144,23 @@ abstract class CodeStyleManagerRunnable<T> {
     return true;
   }
 
-  private static TextRange getSignificantRange(final PsiFile file, final int offset) {
-    final ASTNode elementAtOffset = SourceTreeToPsiMap.psiElementToTree(CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file,
+  private static TextRange getSignificantRange(PsiFile file, int offset) {
+    ASTNode elementAtOffset = SourceTreeToPsiMap.psiElementToTree(CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file,
                                                                                                                                 offset));
     if (elementAtOffset == null) {
       int significantRangeStart = CharArrayUtil.shiftBackward(file.getText(), offset - 1, "\n\r\t ");
       return new TextRange(Math.max(significantRangeStart, 0), offset);
     }
 
-    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
+    FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
     if (builder != null) {
-      final TextRange textRange = builder.getRangeAffectingIndent(file, offset, elementAtOffset);
+      TextRange textRange = builder.getRangeAffectingIndent(file, offset, elementAtOffset);
       if (textRange != null) {
         return textRange;
       }
     }
 
-    final TextRange elementRange = elementAtOffset.getTextRange();
+    TextRange elementRange = elementAtOffset.getTextRange();
     if (isWhiteSpace(elementAtOffset)) {
       return extendRangeAtStartOffset(file, elementRange);
     }
@@ -173,7 +173,7 @@ abstract class CodeStyleManagerRunnable<T> {
   }
 
   @Nonnull
-  private static TextRange extendRangeAtStartOffset(@Nonnull final PsiFile file, @Nonnull final TextRange range) {
+  private static TextRange extendRangeAtStartOffset(@Nonnull PsiFile file, @Nonnull TextRange range) {
     int startOffset = range.getStartOffset();
     if (startOffset > 0) {
       String text = file.getText();

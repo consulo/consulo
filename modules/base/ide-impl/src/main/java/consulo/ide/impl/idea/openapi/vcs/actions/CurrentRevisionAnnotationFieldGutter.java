@@ -57,7 +57,7 @@ class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter i
 
     @Override
     public String getLineText(int line, Editor editor) {
-        final String value = myAspect.getValue(line);
+        String value = myAspect.getValue(line);
         if (String.valueOf(myAnnotation.getLineRevisionNumber(line)).equals(value)) {
             return "";
         }
@@ -72,12 +72,12 @@ class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter i
         if (aspectTooltip != LocalizeValue.empty()) {
             return aspectTooltip;
         }
-        final String text = getLineText(line, editor);
+        String text = getLineText(line, editor);
         return StringUtil.isEmpty(text) ? LocalizeValue.empty() : VcsLocalize.annotationOriginalRevisionText(text);
     }
 
     @Override
-    public void accept(final AnnotationSource annotationSource) {
+    public void accept(AnnotationSource annotationSource) {
         myTurnedOn = annotationSource.showMerged();
     }
 }

@@ -93,9 +93,9 @@ public class RegistryValue {
   }
 
   public Color asColor(Color defaultValue) {
-    final String s = get(myKey, null);
+    String s = get(myKey, null);
     if (s != null) {
-      final String[] rgb = s.split(",");
+      String[] rgb = s.split(",");
       if (rgb.length == 3) {
         try {
           return new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
@@ -134,7 +134,7 @@ public class RegistryValue {
     resetCache();
   }
 
-  public void addListener(@Nonnull final RegistryValueListener listener, @Nonnull Disposable parent) {
+  public void addListener(@Nonnull RegistryValueListener listener, @Nonnull Disposable parent) {
   }
 
   @Override

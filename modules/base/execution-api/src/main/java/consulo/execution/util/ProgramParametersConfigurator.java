@@ -110,7 +110,7 @@ public class ProgramParametersConfigurator {
   }
 
   public void checkWorkingDirectoryExist(CommonProgramRunConfigurationParameters configuration, Project project, Module module) throws RuntimeConfigurationWarning {
-    final String workingDir = getWorkingDir(configuration, project, module);
+    String workingDir = getWorkingDir(configuration, project, module);
     if (workingDir == null) {
       throw new RuntimeConfigurationWarning("Working directory is null for " +
                                             "project '" +

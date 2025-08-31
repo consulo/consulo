@@ -32,7 +32,7 @@ public class DefaultPsiElementCellRenderer extends PsiElementListCellRenderer<Ps
   }
 
   @Override
-  public String getContainerText(PsiElement element, final String name){
+  public String getContainerText(PsiElement element, String name){
     return SymbolPresentationUtil.getSymbolContainerText(element);
   }
 }

@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class OptimizeOptionsCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
   @Nonnull
-  public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
+  public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
     return new OptimizeImportsBeforeCheckinHandler(panel.getProject(), panel);
   }
 }

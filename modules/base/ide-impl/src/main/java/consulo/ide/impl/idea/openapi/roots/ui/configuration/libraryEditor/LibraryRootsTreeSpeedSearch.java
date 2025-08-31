@@ -27,7 +27,7 @@ import java.util.StringTokenizer;
  * @author nik
  */
 class LibraryRootsTreeSpeedSearch extends TreeSpeedSearch {
-  public LibraryRootsTreeSpeedSearch(final Tree tree) {
+  public LibraryRootsTreeSpeedSearch(Tree tree) {
     super(tree);
   }
 
@@ -45,9 +45,9 @@ class LibraryRootsTreeSpeedSearch extends TreeSpeedSearch {
       if (pattern.contains(File.separator)) {
         return compare(str,pattern);
       }
-      final StringTokenizer tokenizer = new StringTokenizer(str, File.separator);
+      StringTokenizer tokenizer = new StringTokenizer(str, File.separator);
       while (tokenizer.hasMoreTokens()) {
-        final String token = tokenizer.nextToken();
+        String token = tokenizer.nextToken();
         if (compare(token,pattern)) {
           return true;
         }

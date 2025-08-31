@@ -141,13 +141,13 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
   public void add(@Nonnull DockableContent content, RelativePoint dropTarget) {
     FileEditorWindow window = null;
     if (myCurrentOver != null) {
-      final DataProvider provider = myCurrentOver.getDataProvider();
+      DataProvider provider = myCurrentOver.getDataProvider();
       if (provider != null) {
         window = provider.getDataUnchecked(FileEditorWindow.DATA_KEY);
       }
     }
 
-    final DesktopAWTEditorTabbedContainer.DockableEditor dockableEditor = (DesktopAWTEditorTabbedContainer.DockableEditor)content;
+    DesktopAWTEditorTabbedContainer.DockableEditor dockableEditor = (DesktopAWTEditorTabbedContainer.DockableEditor)content;
     VirtualFile file = dockableEditor.getFile();
 
 
@@ -229,7 +229,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
   }
 
   @Override
-  public void addListener(final Listener listener, Disposable parent) {
+  public void addListener(Listener listener, Disposable parent) {
     myListeners.add(listener);
     Disposer.register(parent, () -> myListeners.remove(listener));
   }

@@ -43,7 +43,7 @@ public abstract class DependenciesHandlerBase {
   private final List<AnalysisScope> myScopes;
   private final Set<PsiFile> myExcluded;
 
-  public DependenciesHandlerBase(final Project project, final List<AnalysisScope> scopes, Set<PsiFile> excluded) {
+  public DependenciesHandlerBase(Project project, List<AnalysisScope> scopes, Set<PsiFile> excluded) {
     myScopes = scopes;
     myExcluded = excluded;
     myProject = project;
@@ -52,11 +52,11 @@ public abstract class DependenciesHandlerBase {
   public void analyze() {
     final List<DependenciesBuilder> builders = new ArrayList<DependenciesBuilder>();
 
-    final Task task;
+    Task task;
     if (canStartInBackground()) {
       task = new Task.Backgroundable(myProject, getProgressTitle(), true, new PerformAnalysisInBackgroundOption(myProject)) {
         @Override
-        public void run(@Nonnull final ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           perform(builders);
         }
 
@@ -112,7 +112,7 @@ public abstract class DependenciesHandlerBase {
       @Override
       public void run() {
         if (shouldShowDependenciesPanel(builders)) {
-          final String displayName = getPanelDisplayName(builders.get(0).getScope());
+          String displayName = getPanelDisplayName(builders.get(0).getScope());
           DependenciesPanel panel = new DependenciesPanel(myProject, builders, myExcluded);
           Content content = ContentFactory.getInstance().createContent(panel, displayName, false);
           content.setDisposer(panel);

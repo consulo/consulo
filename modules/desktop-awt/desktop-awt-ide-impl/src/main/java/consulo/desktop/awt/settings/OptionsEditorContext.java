@@ -44,14 +44,14 @@ public class OptionsEditorContext {
     myFilter = filter;
   }
 
-  AsyncResult<Void> fireSelected(@Nullable final Configurable configurable, @Nonnull OptionsEditorColleague requestor) {
-    final Configurable old = myCurrentConfigurable;
+  AsyncResult<Void> fireSelected(@Nullable Configurable configurable, @Nonnull OptionsEditorColleague requestor) {
+    Configurable old = myCurrentConfigurable;
     myCurrentConfigurable = configurable;
 
     return notify(colleague -> colleague.onSelected(configurable, old), requestor);
   }
 
-  AsyncResult<Void> fireModifiedAdded(@Nonnull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+  AsyncResult<Void> fireModifiedAdded(@Nonnull Configurable configurable, @Nullable OptionsEditorColleague requestor) {
     if(myModified.contains(configurable)) {
       return AsyncResult.rejected();
     }
@@ -61,7 +61,7 @@ public class OptionsEditorContext {
     return notify(colleague -> colleague.onModifiedAdded(configurable), requestor);
   }
 
-  AsyncResult<Void> fireModifiedRemoved(@Nonnull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+  AsyncResult<Void> fireModifiedRemoved(@Nonnull Configurable configurable, @Nullable OptionsEditorColleague requestor) {
     if (!myModified.contains(configurable)) return AsyncResult.rejected();
 
     myModified.remove(configurable);
@@ -69,7 +69,7 @@ public class OptionsEditorContext {
     return notify(colleague -> colleague.onModifiedRemoved(configurable), requestor);
   }
 
-  AsyncResult<Void> fireErrorsChanged(final Map<Configurable, ConfigurationException> errors, OptionsEditorColleague requestor) {
+  AsyncResult<Void> fireErrorsChanged(Map<Configurable, ConfigurationException> errors, OptionsEditorColleague requestor) {
     if (myErrors.equals(errors)) return AsyncResult.rejected();
 
     myErrors = errors != null ? errors : new HashMap<>();
@@ -88,23 +88,23 @@ public class OptionsEditorContext {
     return AsyncResult.merge(all);
   }
 
-  public void fireReset(final Configurable configurable) {
+  public void fireReset(Configurable configurable) {
     if (myModified.contains(configurable)) {
       fireModifiedRemoved(configurable, null);
     }
 
     if (myErrors.containsKey(configurable)) {
-      final HashMap<Configurable, ConfigurationException> newErrors = new HashMap<>();
+      HashMap<Configurable, ConfigurationException> newErrors = new HashMap<>();
       newErrors.remove(configurable);
       fireErrorsChanged(newErrors, null);
     }
   }
 
-  public boolean isModified(final Configurable configurable) {
+  public boolean isModified(Configurable configurable) {
     return myModified.contains(configurable);
   }
 
-  public void setHoldingFilter(final boolean holding) {
+  public void setHoldingFilter(boolean holding) {
     myHoldingFilter = holding;
   }
 
@@ -112,16 +112,16 @@ public class OptionsEditorContext {
     return myHoldingFilter;
   }
 
-  public Configurable getParentConfigurable(final Configurable configurable) {
+  public Configurable getParentConfigurable(Configurable configurable) {
     return myConfigurableToParentMap.get(configurable);
   }
 
-  public void registerKid(final Configurable parent, final Configurable kid) {
+  public void registerKid(Configurable parent, Configurable kid) {
     myConfigurableToParentMap.put(kid,parent);
     myParentToChildrenMap.put(parent, kid);
   }
 
-  public Collection<Configurable> getChildren(final Configurable parent) {
+  public Collection<Configurable> getChildren(Configurable parent) {
     Collection<Configurable> result = myParentToChildrenMap.get(parent);
     return result == null ? Collections.<Configurable>emptySet() : result;
   }
@@ -143,7 +143,7 @@ public class OptionsEditorContext {
     return myErrors;
   }
 
-  public void addColleague(final OptionsEditorColleague colleague) {
+  public void addColleague(OptionsEditorColleague colleague) {
     myColleagues.add(colleague);
   }
 }

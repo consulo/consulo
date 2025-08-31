@@ -50,16 +50,16 @@ public class FocusTracesDialog extends DialogWrapper {
     myRequests = requests;
     setTitle("Focus Traces");
     init();
-    final String[][] data = new String[requests.size()][];
+    String[][] data = new String[requests.size()][];
     for (int i = 0; i < data.length; i++) {
-      final FocusRequestInfo r = requests.get(i);
+      FocusRequestInfo r = requests.get(i);
       data[i] = new String[]{r.getDate(), String.valueOf(r.isForced()), String.valueOf(r.getComponent())};
     }
     myRequestsTable.setModel(new DefaultTableModel(data, COLUMNS));
-    final ListSelectionListener selectionListener = new ListSelectionListener() {
+    ListSelectionListener selectionListener = new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        final int index = myRequestsTable.getSelectedRow();
+        int index = myRequestsTable.getSelectedRow();
         if (-1 < index && index < myRequests.size()) {
           myStacktrace.setText(myRequests.get(index).getStackTrace());
         }
@@ -69,7 +69,7 @@ public class FocusTracesDialog extends DialogWrapper {
       }
     };
     myRequestsTable.getSelectionModel().addListSelectionListener(selectionListener);
-    final TableColumnModel columnModel = myRequestsTable.getColumnModel();
+    TableColumnModel columnModel = myRequestsTable.getColumnModel();
     columnModel.getColumn(0).setMaxWidth(120);
     columnModel.getColumn(1).setMaxWidth(60);
     columnModel.getSelectionModel().addListSelectionListener(selectionListener);
@@ -110,7 +110,7 @@ public class FocusTracesDialog extends DialogWrapper {
 
   @Override
   public void show() {
-    final BorderDrawer drawer = new BorderDrawer();
+    BorderDrawer drawer = new BorderDrawer();
     drawer.start();
     super.show();
     drawer.setDone();
@@ -139,17 +139,17 @@ public class FocusTracesDialog extends DialogWrapper {
     }
 
     private void paintBorder() {
-      final int row = FocusTracesDialog.this.myRequestsTable.getSelectedRow();
+      int row = FocusTracesDialog.this.myRequestsTable.getSelectedRow();
       if (row != -1) {
-        final FocusRequestInfo info = FocusTracesDialog.this.myRequests.get(row);
+        FocusRequestInfo info = FocusTracesDialog.this.myRequests.get(row);
         if (prev != null && prev != info.getComponent()) {
           prev.repaint();
         }
         prev = info.getComponent();
         if (prev != null && prev.isDisplayable()) {
-          final Graphics g = prev.getGraphics();
+          Graphics g = prev.getGraphics();
           g.setColor(JBColor.RED);
-          final Dimension sz = prev.getSize();
+          Dimension sz = prev.getSize();
           UIUtil.drawDottedRectangle(g, 1, 1, sz.width - 2, sz.height - 2);
         }
       }

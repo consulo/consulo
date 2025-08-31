@@ -67,7 +67,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
     new TreeSpeedSearch(
       myTree,
       o -> {
-        final Object userObject = ((DefaultMutableTreeNode)o.getLastPathComponent()).getUserObject();
+        Object userObject = ((DefaultMutableTreeNode)o.getLastPathComponent()).getUserObject();
         return userObject instanceof Module module ? module.getName() : userObject == null ? "" : userObject.toString();
       },
       true
@@ -91,7 +91,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
   }
 
   @Override
-  public void onSelectionChange(final Runnable runnable) {
+  public void onSelectionChange(Runnable runnable) {
     myTree.getSelectionModel().addTreeSelectionListener(e -> runnable.run());
   }
 
@@ -111,17 +111,17 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
       myTree.clearSelection();
     }
     else {
-      final DirectoryChooser.ItemWrapper itemWrapper = myItems.get(selectionIndex);
-      final DefaultMutableTreeNode node = myItemNodes.get(itemWrapper);
-      final TreePath treePath = expandNode(node);
+      DirectoryChooser.ItemWrapper itemWrapper = myItems.get(selectionIndex);
+      DefaultMutableTreeNode node = myItemNodes.get(itemWrapper);
+      TreePath treePath = expandNode(node);
       myTree.setSelectionPath(treePath);
       myTree.scrollPathToVisible(treePath);
     }
   }
 
-  private TreePath expandNode(final DefaultMutableTreeNode node) {
-    final TreeNode[] path = node.getPath();
-    final TreePath treePath = new TreePath(path);
+  private TreePath expandNode(DefaultMutableTreeNode node) {
+    TreeNode[] path = node.getPath();
+    TreePath treePath = new TreePath(path);
     TreePath expandPath = treePath;
     if (myTree.getModel().isLeaf(expandPath.getLastPathComponent())) {
       expandPath = expandPath.getParentPath();
@@ -133,37 +133,37 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
   @Override
   public void addItem(DirectoryChooser.ItemWrapper itemWrapper) {
     myItems.add(itemWrapper);
-    final PsiDirectory directory = itemWrapper.getDirectory();
-    final Module module = myFileIndex.getModuleForFile(directory.getVirtualFile());
+    PsiDirectory directory = itemWrapper.getDirectory();
+    Module module = myFileIndex.getModuleForFile(directory.getVirtualFile());
     DefaultMutableTreeNode node = myModuleNodes.get(module);
     if (node == null) {
       node = new DefaultMutableTreeNode(module, true);
-      final String[] groupPath = module != null ? ModuleManager.getInstance(myProject).getModuleGroupPath(module) : null;
+      String[] groupPath = module != null ? ModuleManager.getInstance(myProject).getModuleGroupPath(module) : null;
       if (groupPath == null || groupPath.length == 0) {
         insertNode(node, myRootNode);
       }
       else {
-        final DefaultMutableTreeNode parentNode = ModuleGroupUtil
+        DefaultMutableTreeNode parentNode = ModuleGroupUtil
                 .buildModuleGroupPath(new ModuleGroup(groupPath), myRootNode, myModuleGroupNodes, parentChildRelation -> insertNode(parentChildRelation.getChild(), parentChildRelation.getParent()),
                                       moduleGroup -> new DefaultMutableTreeNode(moduleGroup, true));
         insertNode(node, parentNode);
       }
       myModuleNodes.put(module, node);
     }
-    final DefaultMutableTreeNode itemNode = new DefaultMutableTreeNode(itemWrapper, false);
+    DefaultMutableTreeNode itemNode = new DefaultMutableTreeNode(itemWrapper, false);
     myItemNodes.put(itemWrapper, itemNode);
     insertNode(itemNode, node);
     ((DefaultTreeModel)myTree.getModel()).nodeStructureChanged(node);
   }
 
-  private void insertNode(final DefaultMutableTreeNode nodeToInsert, DefaultMutableTreeNode rootNode) {
-    final Enumeration enumeration = rootNode.children();
+  private void insertNode(DefaultMutableTreeNode nodeToInsert, DefaultMutableTreeNode rootNode) {
+    Enumeration enumeration = rootNode.children();
     ArrayList children = Collections.list(enumeration);
-    final int index = Collections.binarySearch(children, nodeToInsert, new Comparator<DefaultMutableTreeNode>() {
+    int index = Collections.binarySearch(children, nodeToInsert, new Comparator<DefaultMutableTreeNode>() {
       @Override
       public int compare(DefaultMutableTreeNode node1, DefaultMutableTreeNode node2) {
-        final Object o1 = node1.getUserObject();
-        final Object o2 = node2.getUserObject();
+        Object o1 = node1.getUserObject();
+        Object o2 = node2.getUserObject();
         if (o1 instanceof Module module1 && o2 instanceof Module module2) {
           return module1.getName().compareToIgnoreCase(module2.getName());
         }
@@ -174,14 +174,14 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
           return -1;
         }
         if (o1 instanceof DirectoryChooser.ItemWrapper itemWrapper1 && o2 instanceof DirectoryChooser.ItemWrapper itemWrapper2) {
-          final VirtualFile virtualFile1 = itemWrapper1.getDirectory().getVirtualFile();
-          final VirtualFile virtualFile2 = itemWrapper2.getDirectory().getVirtualFile();
+          VirtualFile virtualFile1 = itemWrapper1.getDirectory().getVirtualFile();
+          VirtualFile virtualFile2 = itemWrapper2.getDirectory().getVirtualFile();
           return Comparing.compare(virtualFile1.getPath(), virtualFile2.getPath());
         }
         return 1;
       }
     });
-    final int insertionPoint = -(index + 1);
+    int insertionPoint = -(index + 1);
     if (insertionPoint < 0 || insertionPoint > rootNode.getChildCount()) {
       LOG.error("insertionPoint = " + insertionPoint + "; children=" + children + "; node=" + nodeToInsert);
       return;
@@ -193,9 +193,9 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
   @Override
   public void listFilled() {
     if (myModuleNodes.size() == 1) {
-      final Iterator<DefaultMutableTreeNode> iterator = myItemNodes.values().iterator();
+      Iterator<DefaultMutableTreeNode> iterator = myItemNodes.values().iterator();
       if (iterator.hasNext()) {
-        final DefaultMutableTreeNode node = iterator.next();
+        DefaultMutableTreeNode node = iterator.next();
         expandNode(node);
       }
     }
@@ -209,9 +209,9 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
   @Override
   @Nullable
   public DirectoryChooser.ItemWrapper getSelectedItem() {
-    final TreePath selectionPath = myTree.getSelectionPath();
+    TreePath selectionPath = myTree.getSelectionPath();
     if (selectionPath == null) return null;
-    final DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
+    DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
     return node.getUserObject() instanceof DirectoryChooser.ItemWrapper itemWrapper ? itemWrapper : null;
   }
 
@@ -220,7 +220,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
     @Override
     @RequiredUIAccess
     public void customizeCellRenderer(JTree tree, Object nodeValue, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-      final Object value = ((DefaultMutableTreeNode)nodeValue).getUserObject();
+      Object value = ((DefaultMutableTreeNode)nodeValue).getUserObject();
       if (value instanceof DirectoryChooser.ItemWrapper wrapper) {
         DirectoryChooser.PathFragment[] fragments = wrapper.getFragments();
         for (DirectoryChooser.PathFragment fragment : fragments) {

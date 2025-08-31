@@ -49,11 +49,11 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
 
   @Override
   protected synchronized Collection<Language> getFilterItems() {
-    final Collection<Language> result = super.getFilterItems();
+    Collection<Language> result = super.getFilterItems();
     if (result == null) {
       return null;
     }
-    final Collection<Language> items = new HashSet<>(result);
+    Collection<Language> items = new HashSet<>(result);
     items.add(Language.ANY);
     return items;
   }
@@ -95,7 +95,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   }
 
   @Override
-  public String getFullName(final Object element) {
+  public String getFullName(Object element) {
     if (element instanceof PsiElement && !((PsiElement)element).isValid()) {
       return null;
     }
@@ -120,7 +120,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   }
 
   public static String[] getSeparatorsFromContributors(List<? extends ChooseByNameContributor> contributors) {
-    final Set<String> separators = new HashSet<>();
+    Set<String> separators = new HashSet<>();
     separators.add(".");
     for(ChooseByNameContributor c: contributors) {
       if (c instanceof GotoClassOrTypeContributor) {

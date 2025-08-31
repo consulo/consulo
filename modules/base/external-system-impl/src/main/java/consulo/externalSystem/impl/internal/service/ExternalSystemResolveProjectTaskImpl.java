@@ -41,7 +41,7 @@ public class ExternalSystemResolveProjectTaskImpl extends AbstractExternalSystem
 
   @SuppressWarnings("unchecked")
   protected void doExecute() throws Exception {
-    final ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
+    ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
     Project ideProject = getIdeProject();
     RemoteExternalSystemProjectResolver resolver = manager.getFacade(ideProject, myProjectPath, getExternalSystemId()).getResolver();
     ExternalSystemExecutionSettings settings = ExternalSystemApiUtil.getExecutionSettings(ideProject, myProjectPath, getExternalSystemId());
@@ -55,7 +55,7 @@ public class ExternalSystemResolveProjectTaskImpl extends AbstractExternalSystem
   }
 
   protected boolean doCancel() throws Exception {
-    final ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
+    ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
     Project ideProject = getIdeProject();
     RemoteExternalSystemProjectResolver resolver = manager.getFacade(ideProject, myProjectPath, getExternalSystemId()).getResolver();
 

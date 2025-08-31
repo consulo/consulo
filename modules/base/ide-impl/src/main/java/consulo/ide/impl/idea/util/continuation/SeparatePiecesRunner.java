@@ -46,7 +46,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
   @RequiredUIAccess
   public void ping() {
     clearSuspend();
-    final Application application = ApplicationManager.getApplication();
+    Application application = ApplicationManager.getApplication();
     if (! application.isDispatchThread()) {
       Runnable command = new Runnable() {
         @Override
@@ -67,7 +67,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
       // stop if project is being disposed
       if (!myProject.isDefault() && !myProject.isOpen()) return;
       if (getSuspendFlag()) return;
-      final TaskDescriptor current = getNextMatching();
+      TaskDescriptor current = getNextMatching();
       if (current == null) {
         return;
       }
@@ -82,7 +82,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
         }
       }
       else {
-        final TaskWrapper task = new TaskWrapper(myProject, current.getName(), myCancellable, current);
+        TaskWrapper task = new TaskWrapper(myProject, current.getName(), myCancellable, current);
         myCurrentWrapper.set(task);
         if (ApplicationManager.getApplication().isUnitTestMode()) {
           setIndicator(new EmptyProgressIndicator());
@@ -99,7 +99,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
   @Override
   public void suspend() {
     super.suspend();
-    final TaskWrapper wrapper = myCurrentWrapper.get();
+    TaskWrapper wrapper = myCurrentWrapper.get();
     if (wrapper != null){
       wrapper.mySuspended = true;
     }

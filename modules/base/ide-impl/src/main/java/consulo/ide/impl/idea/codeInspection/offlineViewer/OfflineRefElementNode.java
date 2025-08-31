@@ -38,7 +38,7 @@ public class OfflineRefElementNode extends RefElementNode {
       return (RefEntity)userObject;
     }
     if (userObject == null) return null;
-    final RefEntity refElement = ((OfflineProblemDescriptor)userObject).getRefElement(myToolPresentation.getContext().getRefManager());
+    RefEntity refElement = ((OfflineProblemDescriptor)userObject).getRefElement(myToolPresentation.getContext().getRefManager());
     setUserObject(refElement);
     return refElement;
   }

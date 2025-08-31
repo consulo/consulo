@@ -83,7 +83,7 @@ public class ClipboardSynchronizer implements Disposable {
   }
 
   public void areDataFlavorsAvailableAsync(@Nonnull Consumer<? super Boolean> callback, @Nonnull DataFlavor... flavors) {
-    final Supplier<Boolean> availabilitySupplier = () -> ClipboardUtil.handleClipboardSafely(() -> myClipboardHandler.areDataFlavorsAvailable(flavors), () -> false);
+    Supplier<Boolean> availabilitySupplier = () -> ClipboardUtil.handleClipboardSafely(() -> myClipboardHandler.areDataFlavorsAvailable(flavors), () -> false);
 
     Boolean available = availabilitySupplier.get();
     if (available) {
@@ -106,7 +106,7 @@ public class ClipboardSynchronizer implements Disposable {
   }
 
   public void getContentsAsync(@Nonnull Consumer<? super Transferable> callback) {
-    final Supplier<Transferable> transferableSupplier = () -> ClipboardUtil.handleClipboardSafely(myClipboardHandler::getContents, () -> null);
+    Supplier<Transferable> transferableSupplier = () -> ClipboardUtil.handleClipboardSafely(myClipboardHandler::getContents, () -> null);
 
     Transferable transferable = transferableSupplier.get();
     if (transferable != null) {
@@ -150,7 +150,7 @@ public class ClipboardSynchronizer implements Disposable {
     }, () -> null);
   }
 
-  public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
+  public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
     myClipboardHandler.setContent(content, owner);
   }
 
@@ -205,7 +205,7 @@ public class ClipboardSynchronizer implements Disposable {
       return clipboard == null ? null : clipboard.getData(dataFlavor);
     }
 
-    public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
+    public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
       Clipboard clipboard = getClipboard();
       if (clipboard != null) {
         clipboard.setContents(content, owner);
@@ -259,7 +259,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Override
-    public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
+    public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
       if (Registry.is("ide.mac.useNativeClipboard") && content.isDataFlavorSupported(DataFlavor.stringFlavor)) {
         try {
           String stringData = (String)content.getTransferData(DataFlavor.stringFlavor);
@@ -278,7 +278,7 @@ public class ClipboardSynchronizer implements Disposable {
 
     @Nullable
     private static Transferable getContentsSafe() {
-      final FutureResult<Transferable> result = new FutureResult<>();
+      FutureResult<Transferable> result = new FutureResult<>();
 
       Foundation.executeOnMainThread(true, false, () -> {
         Transferable transferable = getClipboardContentNatively();
@@ -371,7 +371,7 @@ public class ClipboardSynchronizer implements Disposable {
 
     @Override
     public Transferable getContents() throws IllegalStateException {
-      final Transferable currentContent = myCurrentContent;
+      Transferable currentContent = myCurrentContent;
       if (currentContent != null) {
         return currentContent;
       }
@@ -401,7 +401,7 @@ public class ClipboardSynchronizer implements Disposable {
     }
 
     @Override
-    public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
+    public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
       myCurrentContent = content;
       super.setContent(content, owner);
     }
@@ -419,14 +419,14 @@ public class ClipboardSynchronizer implements Disposable {
      */
     @Nullable
     private static Collection<DataFlavor> checkContentsQuick() {
-      final Clipboard clipboard = getClipboard();
+      Clipboard clipboard = getClipboard();
       if (clipboard == null || !XClipboardHacking.isAvailable()) return null;
 
-      final String timeout = System.getProperty(DATA_TRANSFER_TIMEOUT_PROPERTY);
+      String timeout = System.getProperty(DATA_TRANSFER_TIMEOUT_PROPERTY);
       System.setProperty(DATA_TRANSFER_TIMEOUT_PROPERTY, SHORT_TIMEOUT);
 
       try {
-        final long[] formats = XClipboardHacking.getClipboardFormats(clipboard);
+        long[] formats = XClipboardHacking.getClipboardFormats(clipboard);
         if (formats == null || formats.length == 0) {
           return Collections.emptySet();
         }

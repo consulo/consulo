@@ -28,8 +28,8 @@ public class RegExInputVerifier extends InputVerifier {
 
   public boolean shouldYieldFocus(JComponent input) {
     if (input instanceof JFormattedTextField) {
-      final JFormattedTextField ftf = (JFormattedTextField) input;
-      final JFormattedTextField.AbstractFormatter formatter =
+      JFormattedTextField ftf = (JFormattedTextField) input;
+      JFormattedTextField.AbstractFormatter formatter =
           ftf.getFormatter();
       if (formatter != null) {
         try {

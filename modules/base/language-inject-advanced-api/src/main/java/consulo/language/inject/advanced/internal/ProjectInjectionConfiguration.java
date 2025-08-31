@@ -67,7 +67,7 @@ public class ProjectInjectionConfiguration extends Configuration {
 
   @Nonnull
   @Override
-  public List<BaseInjection> getInjections(final String injectorId) {
+  public List<BaseInjection> getInjections(String injectorId) {
     return ContainerUtil.concat(myParentConfiguration.getInjections(injectorId), getOwnInjections(injectorId));
   }
 
@@ -75,7 +75,7 @@ public class ProjectInjectionConfiguration extends Configuration {
     return myParentConfiguration;
   }
 
-  public List<BaseInjection> getOwnInjections(final String injectorId) {
+  public List<BaseInjection> getOwnInjections(String injectorId) {
     return super.getInjections(injectorId);
   }
 

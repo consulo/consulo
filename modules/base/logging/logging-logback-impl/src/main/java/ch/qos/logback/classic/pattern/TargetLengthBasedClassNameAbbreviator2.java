@@ -71,7 +71,7 @@ public class TargetLengthBasedClassNameAbbreviator2 implements Abbreviator {
      * @param dotArray
      * @return the number of dots found
      */
-    static int computeDotIndexes(final String className, int[] dotArray) {
+    static int computeDotIndexes(String className, int[] dotArray) {
         int dotCount = 0;
         int k = 0;
         while (true) {
@@ -89,7 +89,7 @@ public class TargetLengthBasedClassNameAbbreviator2 implements Abbreviator {
         return dotCount;
     }
 
-    void computeLengthArray(final String className, int[] dotArray, int[] lengthArray, int dotCount) {
+    void computeLengthArray(String className, int[] dotArray, int[] lengthArray, int dotCount) {
         int toTrim = className.length() - targetLength;
         // System.out.println("dotCount=" + dotCount);
 

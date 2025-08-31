@@ -78,7 +78,7 @@ public class ConcurrentBitSet {
    * @return new bit value
    * @throws IndexOutOfBoundsException if the specified index is negative
    */
-  public boolean flip(final int bitIndex) {
+  public boolean flip(int bitIndex) {
     long prevWord = changeWord(bitIndex, word -> word ^ (1L << bitIndex));
     return (prevWord & (1L << bitIndex)) == 0;
   }
@@ -90,7 +90,7 @@ public class ConcurrentBitSet {
    * @return previous value
    * @throws IndexOutOfBoundsException if the specified index is negative
    */
-  public boolean set(final int bitIndex) {
+  public boolean set(int bitIndex) {
     long prevWord = changeWord(bitIndex, word -> word | (1L << bitIndex));
     return (prevWord & (1L << bitIndex)) != 0;
   }
@@ -136,7 +136,7 @@ public class ConcurrentBitSet {
    * @throws IndexOutOfBoundsException if the specified index is negative
    * @return previous value
    */
-  public boolean clear(final int bitIndex) {
+  public boolean clear(int bitIndex) {
     long prevWord = changeWord(bitIndex, word -> word & ~(1L << bitIndex));
     return (prevWord & (1L << bitIndex)) != 0;
   }

@@ -80,8 +80,8 @@ public class InvokeTemplateAction extends AnAction {
 
     @RequiredUIAccess
     public void perform() {
-        final Document document = myEditor.getDocument();
-        final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+        Document document = myEditor.getDocument();
+        VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         if (file != null
             && ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(Collections.singletonList(file)).hasReadonlyFiles()) {
             return;

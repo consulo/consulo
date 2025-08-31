@@ -37,7 +37,7 @@ public class PatchFileDropHandler extends CustomFileDropHandler {
   }
 
   @Override
-  public boolean handleDrop(@Nonnull Transferable t, Editor editor, @Nonnull final Project project) {
+  public boolean handleDrop(@Nonnull Transferable t, Editor editor, @Nonnull Project project) {
     List<File> list = FileCopyPasteUtil.getFileList(t);
     if (list == null || list.size() != 1) return false;
     return ApplyPatchAction.showAndGetApplyPatch(project, list.get(0));

@@ -63,7 +63,7 @@ public class PathUtil {
 
   @Nonnull
   public static String getJarPathForClass(@Nonnull Class aClass) {
-    final String pathForClass = PathManager.getJarPathForClass(aClass);
+    String pathForClass = PathManager.getJarPathForClass(aClass);
     assert pathForClass != null : aClass;
     return pathForClass;
   }

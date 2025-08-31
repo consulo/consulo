@@ -242,12 +242,12 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Override
-    public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull final MarkupModelListener listener) {
+    public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
         myListeners.add(listener, parentDisposable);
     }
 
     @Override
-    public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
+    public void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes) {
         ((RangeHighlighterEx) highlighter).setTextAttributes(textAttributes);
     }
 
@@ -295,7 +295,7 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Override
-    public boolean containsHighlighter(@Nonnull final RangeHighlighter highlighter) {
+    public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
         Predicate<RangeHighlighterEx> equalId = h -> h.getId() != highlighter.getId();
         return !treeFor(highlighter).processOverlappingWith(highlighter.getStartOffset(), highlighter.getEndOffset(), equalId);
     }

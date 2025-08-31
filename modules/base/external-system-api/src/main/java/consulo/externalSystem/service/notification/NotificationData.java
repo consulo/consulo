@@ -78,7 +78,7 @@ public class NotificationData {
       protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
         if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
 
-        final NotificationListener notificationListener = myListenerMap.get(event.getDescription());
+        NotificationListener notificationListener = myListenerMap.get(event.getDescription());
         if (notificationListener != null) {
           notificationListener.hyperlinkUpdate(notification, event);
         }

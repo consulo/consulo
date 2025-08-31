@@ -40,7 +40,7 @@ public final class IdePopupManager implements Predicate<AWTEvent> {
   }
 
   @Override
-  public boolean test(@Nonnull final AWTEvent e) {
+  public boolean test(@Nonnull AWTEvent e) {
     LOG.assertTrue(isPopupActive());
 
     if (e.getID() == WindowEvent.WINDOW_LOST_FOCUS || e.getID() == WindowEvent.WINDOW_DEACTIVATED) {
@@ -92,7 +92,7 @@ public final class IdePopupManager implements Predicate<AWTEvent> {
 
     if (e instanceof KeyEvent || e instanceof MouseEvent) {
       for (int i = myDispatchStack.size() - 1; i >= 0 && i < myDispatchStack.size(); i--) {
-        final boolean dispatched = myDispatchStack.get(i).dispatch(e);
+        boolean dispatched = myDispatchStack.get(i).dispatch(e);
         if (dispatched) return true;
       }
     }

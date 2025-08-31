@@ -54,7 +54,7 @@ public class TaskAutoCompletionListProvider extends TextFieldWithAutoCompletionL
 
   @Nonnull
   @Override
-  public List<Task> getItems(final String prefix, final boolean cached, CompletionParameters parameters) {
+  public List<Task> getItems(String prefix, boolean cached, CompletionParameters parameters) {
     return TaskSearchSupport.getItems(TaskManager.getManager(myProject), prefix, cached, parameters.isAutoPopup());
   }
 
@@ -64,7 +64,7 @@ public class TaskAutoCompletionListProvider extends TextFieldWithAutoCompletionL
   }
 
   @Override
-  public LookupElementBuilder createLookupBuilder(@Nonnull final Task task) {
+  public LookupElementBuilder createLookupBuilder(@Nonnull Task task) {
     LookupElementBuilder builder = super.createLookupBuilder(task);
 
     builder = builder.withLookupString(task.getSummary());
@@ -91,33 +91,33 @@ public class TaskAutoCompletionListProvider extends TextFieldWithAutoCompletionL
     };
   }
 
-  protected void handleInsert(@Nonnull final Task task) {
+  protected void handleInsert(@Nonnull Task task) {
     // Override it for autocompletion insert handler
   }
 
   @Override
-  protected Image getIcon(@Nonnull final Task task) {
+  protected Image getIcon(@Nonnull Task task) {
     return task.getIcon();
   }
 
   @Nonnull
   @Override
-  protected String getLookupString(@Nonnull final Task task) {
+  protected String getLookupString(@Nonnull Task task) {
     return task.getId();
   }
 
   @Override
-  protected String getTailText(@Nonnull final Task task) {
+  protected String getTailText(@Nonnull Task task) {
     return " " + task.getSummary();
   }
 
   @Override
-  protected String getTypeText(@Nonnull final Task task) {
+  protected String getTypeText(@Nonnull Task task) {
     return null;
   }
 
   @Override
-  public int compare(@Nonnull final Task task1, @Nonnull final Task task2) {
+  public int compare(@Nonnull Task task1, @Nonnull Task task2) {
     // N/A here
     throw new UnsupportedOperationException();
   }

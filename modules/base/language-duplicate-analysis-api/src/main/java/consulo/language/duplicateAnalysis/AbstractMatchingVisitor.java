@@ -54,7 +54,7 @@ public abstract class AbstractMatchingVisitor {
     return matchSequentially(el1.getFirstChild(), el2.getFirstChild());
   }
 
-  public boolean matchSonsOptionally(final PsiElement element, final PsiElement element2) {
+  public boolean matchSonsOptionally(PsiElement element, PsiElement element2) {
     if (element == null && isLeftLooseMatching()) {
       return true;
     }

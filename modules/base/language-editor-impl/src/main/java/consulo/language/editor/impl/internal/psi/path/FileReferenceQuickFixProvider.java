@@ -54,11 +54,11 @@ public class FileReferenceQuickFixProvider {
 
   @Nonnull
   public static List<? extends LocalQuickFix> registerQuickFix(@Nonnull FileReference reference) {
-    final FileReferenceSet fileReferenceSet = reference.getFileReferenceSet();
+    FileReferenceSet fileReferenceSet = reference.getFileReferenceSet();
     int index = reference.getIndex();
 
     if (index < 0) return Collections.emptyList();
-    final String newFileName = reference.getFileNameToCreate();
+    String newFileName = reference.getFileNameToCreate();
 
     // check if we could create file
     if (newFileName.isEmpty() || newFileName.indexOf('\\') != -1 || newFileName.indexOf('*') != -1 || newFileName.indexOf('?') != -1 || Platform.current().os().isWindows() && newFileName.indexOf(':') != -1) {
@@ -73,7 +73,7 @@ public class FileReferenceQuickFixProvider {
       context = fileReferenceSet.getReference(index - 1).resolve();
     }
     else { // index == 0
-      final Collection<PsiFileSystemItem> defaultContexts = fileReferenceSet.getDefaultContexts();
+      Collection<PsiFileSystemItem> defaultContexts = fileReferenceSet.getDefaultContexts();
       if (defaultContexts.isEmpty()) {
         return Collections.emptyList();
       }
@@ -82,7 +82,7 @@ public class FileReferenceQuickFixProvider {
 
       for (PsiFileSystemItem defaultContext : defaultContexts) {
         if (defaultContext != null) {
-          final VirtualFile virtualFile = defaultContext.getVirtualFile();
+          VirtualFile virtualFile = defaultContext.getVirtualFile();
           if (virtualFile != null && defaultContext.isDirectory() && virtualFile.isInLocalFileSystem()) {
             if (context == null) {
               context = defaultContext;
@@ -102,25 +102,25 @@ public class FileReferenceQuickFixProvider {
     }
     if (context == null) return Collections.emptyList();
 
-    final VirtualFile virtualFile = context.getVirtualFile();
+    VirtualFile virtualFile = context.getVirtualFile();
     if (virtualFile == null || !virtualFile.isValid()) return Collections.emptyList();
 
-    final PsiDirectory directory = context.getManager().findDirectory(virtualFile);
+    PsiDirectory directory = context.getManager().findDirectory(virtualFile);
     if (directory == null) return Collections.emptyList();
 
     if (fileReferenceSet.isCaseSensitive()) {
-      final PsiElement psiElement = containingFile == null ? null : reference.innerSingleResolve(false, containingFile);
+      PsiElement psiElement = containingFile == null ? null : reference.innerSingleResolve(false, containingFile);
 
       if (psiElement != null) {
-        final String existingElementName = ((PsiNamedElement)psiElement).getName();
+        String existingElementName = ((PsiNamedElement)psiElement).getName();
 
-        final RenameFileReferenceIntentionAction renameRefAction = new RenameFileReferenceIntentionAction(existingElementName, reference);
-        final RenameFileFix renameFileFix = new RenameFileFix(newFileName);
+        RenameFileReferenceIntentionAction renameRefAction = new RenameFileReferenceIntentionAction(existingElementName, reference);
+        RenameFileFix renameFileFix = new RenameFileFix(newFileName);
         return Arrays.asList(renameRefAction, renameFileFix);
       }
     }
 
-    final boolean isdirectory;
+    boolean isdirectory;
 
     if (!reference.isLast()) {
       // directory
@@ -146,7 +146,7 @@ public class FileReferenceQuickFixProvider {
       isdirectory = false;
     }
 
-    final CreateFileFix action = new MyCreateFileFix(isdirectory, newFileName, directory, reference);
+    CreateFileFix action = new MyCreateFileFix(isdirectory, newFileName, directory, reference);
     return Collections.singletonList(action);
   }
 
@@ -191,7 +191,7 @@ public class FileReferenceQuickFixProvider {
       if (template == null) template = fileTemplateManager.findInternalTemplate(myNewFileTemplateName);
       if (template == null) {
         for (FileTemplate fileTemplate : fileTemplateManager.getAllJ2eeTemplates()) {
-          final String fileTemplateWithExtension = fileTemplate.getName() + '.' + fileTemplate.getExtension();
+          String fileTemplateWithExtension = fileTemplate.getName() + '.' + fileTemplate.getExtension();
           if (fileTemplateWithExtension.equals(myNewFileTemplateName)) {
             return fileTemplate;
           }

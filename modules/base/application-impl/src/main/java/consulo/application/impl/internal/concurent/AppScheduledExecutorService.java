@@ -36,7 +36,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
 
     @Nonnull
     @Override
-    public Thread newThread(@Nonnull final Runnable r) {
+    public Thread newThread(@Nonnull Runnable r) {
       Thread thread = new Thread(r, POOLED_THREAD_PREFIX + counter.incrementAndGet());
 
       thread.setPriority(Thread.NORM_PRIORITY - 1);
@@ -54,7 +54,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
     }
   }
 
-  AppScheduledExecutorService(@Nonnull final String name, ApplicationConcurrency applicationConcurrency) {
+  AppScheduledExecutorService(@Nonnull String name, ApplicationConcurrency applicationConcurrency) {
     super(new BackendThreadPoolExecutor(new MyThreadFactory()), new AppDelayQueue());
     myName = name;
     myCountingThreadFactory = (MyThreadFactory)((BackendThreadPoolExecutor)backendExecutorService).getThreadFactory();
@@ -216,7 +216,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
       }
       catch (InterruptedException e) {
         String trace = "Thread leaked: " + thread + "; " + thread.getState() + " (" + thread.isAlive() + ")\n--- its stacktrace:\n";
-        for (final StackTraceElement stackTraceElement : thread.getStackTrace()) {
+        for (StackTraceElement stackTraceElement : thread.getStackTrace()) {
           trace += " at " + stackTraceElement + "\n";
         }
         trace += "---\n";

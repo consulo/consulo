@@ -64,7 +64,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     this(project, true);
   }
 
-  public CommitMessage(Project project, final boolean withSeparator) {
+  public CommitMessage(Project project, boolean withSeparator) {
     super(new BorderLayout());
     myEditorField = createEditorField(project);
 
@@ -105,7 +105,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     }
   }
 
-  public void setSeparatorText(final String text) {
+  public void setSeparatorText(String text) {
     if (mySeparator != null) {
       mySeparator.setText(text);
     }
@@ -116,7 +116,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     setText(currentDescription);
   }
 
-  private static EditorTextField createEditorField(final Project project) {
+  private static EditorTextField createEditorField(Project project) {
     EditorTextField editorField = createCommitTextEditor(project, false);
     editorField.getDocument().putUserData(DATA_CONTEXT_KEY, DataManager.getInstance().getDataContext(editorField.getComponent()));
     return editorField;
@@ -130,7 +130,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
    *                          whether or not the editor has spell check enabled
    * @return a commit message editor
    */
-  public static EditorTextField createCommitTextEditor(final Project project, boolean forceSpellCheckOn) {
+  public static EditorTextField createCommitTextEditor(Project project, boolean forceSpellCheckOn) {
     Set<Consumer<EditorEx>> features = new HashSet<>();
 
     VcsConfiguration configuration = VcsConfiguration.getInstance(project);
@@ -156,8 +156,8 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     return myEditorField;
   }
 
-  public void setText(final String initialMessage) {
-    final String text = initialMessage == null ? "" : initialMessage;
+  public void setText(String initialMessage) {
+    String text = initialMessage == null ? "" : initialMessage;
     myEditorField.setText(text);
     if (myMessageConsumer != null) {
       myMessageConsumer.accept(text);
@@ -165,7 +165,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
   }
 
   public String getComment() {
-    final String s = myEditorField.getDocument().getCharsSequence().toString();
+    String s = myEditorField.getDocument().getCharsSequence().toString();
     int end = s.length();
     while(end > 0 && Character.isSpaceChar(s.charAt(end-1))) {
       end--;

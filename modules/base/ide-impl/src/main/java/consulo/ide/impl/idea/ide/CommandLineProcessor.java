@@ -70,7 +70,7 @@ public class CommandLineProcessor {
     if (projectFile != null) {
       return ProjectImplUtil.openAsync(projectFile.getPath(), null, true, uiAccess).doWhenDone(project -> {
         if (!FileUtil.filesEqual(projectFile, targetFile) && !targetFile.isDirectory()) {
-          final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
+          VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
           if (virtualFile != null) {
             openFile(uiAccess, project, virtualFile, line);
           }
@@ -78,7 +78,7 @@ public class CommandLineProcessor {
       });
     }
     else {
-      final VirtualFile targetVFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
+      VirtualFile targetVFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
       if (targetVFile == null) {
         ShowErrorCaller.showErrorDialog("Cannot find file", "Cannot find file '" + file + "'", null);
         return AsyncResult.rejected();

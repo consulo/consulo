@@ -27,15 +27,15 @@ public class BackgroundableActionEnabledHandler {
     myAction = action;
   }
 
-  public void register(final Object path) {
+  public void register(Object path) {
     BackgroundableActionLock.lock(myProject, myAction, path);
   }
 
-  public boolean isInProgress(final Object path) {
+  public boolean isInProgress(Object path) {
     return BackgroundableActionLock.isLocked(myProject, myAction, path);
   }
 
-  public void completed(final Object path) {
+  public void completed(Object path) {
     BackgroundableActionLock.unlock(myProject, myAction, path);
   }
 }

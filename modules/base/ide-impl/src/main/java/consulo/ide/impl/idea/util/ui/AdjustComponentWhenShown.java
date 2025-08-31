@@ -33,7 +33,7 @@ public abstract class AdjustComponentWhenShown {
   protected abstract boolean init();
 
   public void install(final Component component) {
-    final ComponentListener listener = new ComponentListener() {
+    ComponentListener listener = new ComponentListener() {
       @Override
       public void componentResized(ComponentEvent e) {
         impl();

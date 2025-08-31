@@ -109,7 +109,7 @@ public final class Level implements java.io.Serializable {
     }
 
     static public Level convertAnSLF4JLevel(org.slf4j.event.Level slf4jLevel) {
-        final int levelInt = slf4jLevel.toInt();
+        int levelInt = slf4jLevel.toInt();
         return fromLocationAwareLoggerInteger(levelInt);
     }
 
@@ -202,13 +202,13 @@ public final class Level implements java.io.Serializable {
      * Convert the string passed as argument to a Level. If the conversion fails,
      * then this method returns the value of <code>defaultLevel</code>.
      */
-    public static Level toLevel(final String sArg, Level defaultLevel) {
+    public static Level toLevel(String sArg, Level defaultLevel) {
         if (sArg == null) {
             return defaultLevel;
         }
 
         // see LOGBACK-1288
-        final String in = sArg.trim();
+        String in = sArg.trim();
 
         if (in.equalsIgnoreCase("ALL")) {
             return Level.ALL;

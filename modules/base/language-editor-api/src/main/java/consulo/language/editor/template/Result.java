@@ -25,6 +25,6 @@ public interface Result {
 
   String toString();
 
-  void handleFocused(final PsiFile psiFile, final Document document, final int segmentStart, final int segmentEnd);
+  void handleFocused(PsiFile psiFile, Document document, int segmentStart, int segmentEnd);
 }
 

@@ -79,12 +79,12 @@ public abstract class XVariablesViewBase extends XDebugView {
     DnDManager.getInstance().registerSource(myTreePanel, getTree());
   }
 
-  protected void buildTreeAndRestoreState(@Nonnull final XStackFrame stackFrame) {
+  protected void buildTreeAndRestoreState(@Nonnull XStackFrame stackFrame) {
     XSourcePosition position = stackFrame.getSourcePosition();
     XDebuggerTree tree = getTree();
     tree.setSourcePosition(position);
     createNewRootNode(stackFrame);
-    final Project project = tree.getProject();
+    Project project = tree.getProject();
     project.putUserData(XVariablesView.DEBUG_VARIABLES, new XVariablesView.InlineVariablesInfo());
     project.putUserData(XVariablesView.DEBUG_VARIABLES_TIMESTAMPS, new Object2LongOpenHashMap<>());
     clearInlays(tree);
@@ -116,11 +116,11 @@ public abstract class XVariablesViewBase extends XDebugView {
     return root;
   }
 
-  private void registerInlineEvaluator(final XStackFrame stackFrame, final XSourcePosition position, final Project project) {
-    final VirtualFile file = position.getFile();
-    final FileEditor fileEditor = FileEditorManager.getInstance(project).getSelectedEditor(file);
+  private void registerInlineEvaluator(XStackFrame stackFrame, XSourcePosition position, Project project) {
+    VirtualFile file = position.getFile();
+    FileEditor fileEditor = FileEditorManager.getInstance(project).getSelectedEditor(file);
     if (fileEditor instanceof TextEditor) {
-      final Editor editor = ((TextEditor)fileEditor).getEditor();
+      Editor editor = ((TextEditor)fileEditor).getEditor();
       removeSelectionListener();
       mySelectionListener = new MySelectionListener(editor, stackFrame, project);
       editor.getSelectionModel().addSelectionListener(mySelectionListener);
@@ -187,13 +187,13 @@ public abstract class XVariablesViewBase extends XDebugView {
     }
 
     @Override
-    public void selectionChanged(final SelectionEvent e) {
+    public void selectionChanged(SelectionEvent e) {
       if (!XDebuggerSettingsManager.getInstance().getDataViewSettings().isValueTooltipAutoShowOnSelection() || myEditor.getCaretModel().getCaretCount() > 1) {
         return;
       }
-      final String text = myEditor.getDocument().getText(e.getNewRange());
+      String text = myEditor.getDocument().getText(e.getNewRange());
       if (!StringUtil.isEmpty(text) && !(text.contains("exec(") || text.contains("++") || text.contains("--") || text.contains("="))) {
-        final XDebugSession session = XDebugView.getSession(getTree());
+        XDebugSession session = XDebugView.getSession(getTree());
         if (session == null) return;
         XDebuggerEvaluator evaluator = myStackFrame.getEvaluator();
         if (evaluator == null) return;

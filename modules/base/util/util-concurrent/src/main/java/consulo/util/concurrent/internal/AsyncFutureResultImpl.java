@@ -32,7 +32,7 @@ public class AsyncFutureResultImpl<V> implements AsyncFutureResult<V> {
   }
 
   @Override
-  public void addConsumer(Executor executor, final ResultConsumer<V> consumer) {
+  public void addConsumer(Executor executor, ResultConsumer<V> consumer) {
     myFuture.thenAcceptBothAsync(myFuture, (v, throwable) -> {
       if (throwable != null) {
         consumer.onFailure((Throwable)throwable);

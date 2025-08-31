@@ -54,10 +54,10 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler im
 
   @Override
   protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-    final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+    TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
-      final TextRange range = templateState.getCurrentVariableRange();
-      final int caretOffset = editor.getCaretModel().getOffset();
+      TextRange range = templateState.getCurrentVariableRange();
+      int caretOffset = editor.getCaretModel().getOffset();
       if (range != null && shouldStayInsideVariable(range, caretOffset)) {
         int selectionOffset = editor.getSelectionModel().getLeadSelectionOffset();
         int offsetToMove = myIsHomeHandler ? range.getStartOffset() : range.getEndOffset();

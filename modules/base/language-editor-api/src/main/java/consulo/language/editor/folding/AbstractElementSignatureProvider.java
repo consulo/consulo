@@ -83,7 +83,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
     for (PsiElement child : children) {
       if (ReflectionUtil.isAssignable(hisClass, child.getClass())) {
         T namedChild = hisClass.cast(child);
-        final String childName = namedChild.getName();
+        String childName = namedChild.getName();
 
         if (Comparing.equal(name, childName)) {
           if (namedChild.equals(element)) {
@@ -108,7 +108,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
     for (PsiElement child : children) {
       if (ReflectionUtil.isAssignable(hisClass, child.getClass())) {
         T namedChild = hisClass.cast(child);
-        final String childName = namedChild.getName();
+        String childName = namedChild.getName();
 
         if (Comparing.equal(name, childName)) {
           if (index == 0) {

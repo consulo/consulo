@@ -35,7 +35,7 @@ public class BorderListState implements Serializable {
 
     @Override
     public String toString() {
-      final StringBuilder sb = new StringBuilder("BorderState{");
+      StringBuilder sb = new StringBuilder("BorderState{");
       sb.append("myPosition=").append(myPosition);
       sb.append(", myStyle=").append(myStyle);
       sb.append(", myColor=").append(myColor);
@@ -49,7 +49,7 @@ public class BorderListState implements Serializable {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("BorderListState{");
+    StringBuilder sb = new StringBuilder("BorderListState{");
     sb.append("myBorders=").append(myBorders);
     sb.append('}');
     return sb.toString();

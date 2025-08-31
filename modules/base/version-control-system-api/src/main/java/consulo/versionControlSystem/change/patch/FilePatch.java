@@ -46,11 +46,11 @@ public abstract class FilePatch {
     return pathNameComponents [pathNameComponents.length-1];
   }
 
-  public void setBeforeName(final String fileName) {
+  public void setBeforeName(String fileName) {
     myBeforeName = fileName;  
   }
 
-  public void setAfterName(final String fileName) {
+  public void setAfterName(String fileName) {
     myAfterName = fileName;
   }
 
@@ -58,7 +58,7 @@ public abstract class FilePatch {
     return myBeforeVersionId;
   }
 
-  public void setBeforeVersionId(final String beforeVersionId) {
+  public void setBeforeVersionId(String beforeVersionId) {
     myBeforeVersionId = beforeVersionId;
   }
 
@@ -66,7 +66,7 @@ public abstract class FilePatch {
     return myAfterVersionId;
   }
 
-  public void setAfterVersionId(final String afterVersionId) {
+  public void setAfterVersionId(String afterVersionId) {
     myAfterVersionId = afterVersionId;
   }
 

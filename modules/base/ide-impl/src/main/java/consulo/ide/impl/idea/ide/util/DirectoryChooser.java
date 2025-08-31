@@ -83,7 +83,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
     public DirectoryChooser(@Nonnull Project project, @Nonnull DirectoryChooserView view) {
         super(project, true);
         myView = view;
-        final PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
+        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
         myFilterExisting = propertiesComponent.isValueSet(FILTER_NON_EXISTING) && propertiesComponent.isTrueValue(FILTER_NON_EXISTING);
         myTabbedPaneWrapper = new TabbedPaneWrapper(getDisposable());
         myChooseByNamePanel = new ChooseByNamePanel(project, new GotoClassModel2(project) {
@@ -101,7 +101,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
             protected void close(boolean isOk) {
                 super.close(isOk);
                 if (isOk) {
-                    final List<Object> elements = getChosenElements();
+                    List<Object> elements = getChosenElements();
                     if (elements != null && elements.size() > 0) {
                         myActionListener.elementChosen(elements.get(0));
                     }
@@ -122,9 +122,9 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         if (myTabbedPaneWrapper.getSelectedIndex() == 1) {
             setSelection(myChooseByNamePanel.getChosenElement());
         }
-        final ItemWrapper item = myView.getSelectedItem();
+        ItemWrapper item = myView.getSelectedItem();
         if (item != null) {
-            final PsiDirectory directory = item.getDirectory();
+            PsiDirectory directory = item.getDirectory();
             if (directory != null) {
                 PropertiesComponent.getInstance(directory.getProject()).setValue(DEFAULT_SELECTION, directory.getVirtualFile().getPath());
             }
@@ -134,18 +134,18 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
 
     @Override
     protected JComponent createCenterPanel() {
-        final JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
 
-        final DefaultActionGroup actionGroup = new DefaultActionGroup();
+        DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.add(new FilterExistentAction());
-        final JComponent toolbarComponent =
+        JComponent toolbarComponent =
             ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true).getComponent();
         toolbarComponent.setBorder(null);
         panel.add(toolbarComponent, BorderLayout.NORTH);
 
         myView.onSelectionChange(this::enableButtons);
-        final JComponent component = myView.getComponent();
-        final JScrollPane jScrollPane = ScrollPaneFactory.createScrollPane(component);
+        JComponent component = myView.getComponent();
+        JScrollPane jScrollPane = ScrollPaneFactory.createScrollPane(component);
         //noinspection HardCodedStringLiteral
         int prototypeWidth =
             component.getFontMetrics(component.getFont()).stringWidth("X:\\1234567890\\1234567890\\com\\company\\system\\subsystem");
@@ -172,11 +172,11 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         }
     }
 
-    private void installEnterAction(final JComponent component) {
-        final KeyStroke enterKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-        final InputMap inputMap = component.getInputMap();
-        final ActionMap actionMap = component.getActionMap();
-        final Object oldActionKey = inputMap.get(enterKeyStroke);
+    private void installEnterAction(JComponent component) {
+        KeyStroke enterKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        InputMap inputMap = component.getInputMap();
+        ActionMap actionMap = component.getActionMap();
+        Object oldActionKey = inputMap.get(enterKeyStroke);
         final Action oldAction = oldActionKey != null ? actionMap.get(oldActionKey) : null;
         inputMap.put(enterKeyStroke, "clickButton");
         actionMap.put("clickButton", new AbstractAction() {
@@ -381,9 +381,9 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
             String directoryUrl;
             if (myDirectory != null) {
                 directoryUrl = myDirectory.getVirtualFile().getPresentableUrl();
-                final VirtualFile baseDir = myDirectory.getProject().getBaseDir();
+                VirtualFile baseDir = myDirectory.getProject().getBaseDir();
                 if (baseDir != null) {
-                    final String projectHomeUrl = baseDir.getPresentableUrl();
+                    String projectHomeUrl = baseDir.getPresentableUrl();
                     if (directoryUrl.startsWith(projectHomeUrl)) {
                         directoryUrl = "..." + directoryUrl.substring(projectHomeUrl.length());
                     }
@@ -401,8 +401,8 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
 
         public String getRelativeToProjectPath() {
             if (myRelativeToProjectPath == null) {
-                final PsiDirectory directory = getDirectory();
-                final VirtualFile virtualFile = directory != null ? directory.getVirtualFile() : null;
+                PsiDirectory directory = getDirectory();
+                VirtualFile virtualFile = directory != null ? directory.getVirtualFile() : null;
                 myRelativeToProjectPath = virtualFile != null
                     ? ProjectUtil.calcRelativeToProjectPath(virtualFile, directory.getProject(), true, false, true)
                     : getPresentableUrl();
@@ -465,7 +465,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
 
         if (selectionIndex < 0) {
             // find source root corresponding to defaultSelection
-            final PsiManager manager = PsiManager.getInstance(project);
+            PsiManager manager = PsiManager.getInstance(project);
             VirtualFile[] sourceRoots = ProjectRootManager.getInstance(project).getContentSourceRoots();
             for (VirtualFile sourceRoot : sourceRoots) {
                 if (sourceRoot.isDirectory()) {
@@ -481,14 +481,14 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         int existingIdx = 0;
         for (int i = 0; i < directories.length; i++) {
             PsiDirectory directory = directories[i];
-            final String postfixForDirectory;
+            String postfixForDirectory;
             if (postfixes == null) {
                 postfixForDirectory = postfixToShow;
             }
             else {
                 postfixForDirectory = postfixes.get(directory);
             }
-            final ItemWrapper itemWrapper = new ItemWrapper(directory, postfixForDirectory);
+            ItemWrapper itemWrapper = new ItemWrapper(directory, postfixForDirectory);
             myItems.add(itemWrapper);
             if (myFilterExisting) {
                 if (selectionIndex == i) {
@@ -529,11 +529,11 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
     @Nullable
     @RequiredReadAction
     private static PsiDirectory getDefaultSelection(PsiDirectory[] directories, Project project) {
-        final String defaultSelectionPath = PropertiesComponent.getInstance(project).getValue(DEFAULT_SELECTION);
+        String defaultSelectionPath = PropertiesComponent.getInstance(project).getValue(DEFAULT_SELECTION);
         if (defaultSelectionPath != null) {
-            final VirtualFile directoryByDefault = LocalFileSystem.getInstance().findFileByPath(defaultSelectionPath);
+            VirtualFile directoryByDefault = LocalFileSystem.getInstance().findFileByPath(defaultSelectionPath);
             if (directoryByDefault != null) {
-                final PsiDirectory directory = PsiManager.getInstance(project).findDirectory(directoryByDefault);
+                PsiDirectory directory = PsiManager.getInstance(project).findDirectory(directoryByDefault);
                 return directory != null && ArrayUtil.find(directories, directory) > -1 ? directory : null;
             }
         }
@@ -558,7 +558,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
     @Override
     public PsiDirectory getSelectedDirectory() {
         if (mySelection != null) {
-            final PsiFile file = mySelection.getContainingFile();
+            PsiFile file = mySelection.getContainingFile();
             if (file != null) {
                 return file.getContainingDirectory();
             }
@@ -605,7 +605,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         @Override
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myFilterExisting = state;
-            final ItemWrapper selectedItem = myView.getSelectedItem();
+            ItemWrapper selectedItem = myView.getSelectedItem();
             PsiDirectory directory = selectedItem != null ? selectedItem.getDirectory() : null;
             if (directory == null && myDefaultSelection != null) {
                 directory = myDefaultSelection;

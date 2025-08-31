@@ -38,11 +38,11 @@ public class ExecutionMode {
   private final Object CANCEL_FUN_LOCK = new Object();
   private final List<ProcessListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-  public ExecutionMode(final boolean cancelable,
-                       @Nullable final String title,
-                       @Nullable final String title2,
-                       final boolean runInBG,
-                       final boolean runWithModal,
+  public ExecutionMode(boolean cancelable,
+                       @Nullable String title,
+                       @Nullable String title2,
+                       boolean runInBG,
+                       boolean runWithModal,
                        JComponent progressParentComponent) {
     myCancelable = cancelable;
     myTitle = title;
@@ -93,13 +93,13 @@ public class ExecutionMode {
     }
   }
 
-  public void setShouldCancelFun(final Function<Object, Boolean> shouldCancelFun) {
+  public void setShouldCancelFun(Function<Object, Boolean> shouldCancelFun) {
     synchronized (CANCEL_FUN_LOCK) {
       myShouldCancelFun = shouldCancelFun;
     }
   }
 
-  public void addProcessListener(@Nonnull final ProcessListener listener) {
+  public void addProcessListener(@Nonnull ProcessListener listener) {
     myListeners.add(listener);
   }
 

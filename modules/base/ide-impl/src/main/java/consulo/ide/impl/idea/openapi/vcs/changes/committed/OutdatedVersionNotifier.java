@@ -71,7 +71,7 @@ public class OutdatedVersionNotifier {
     MessageBusConnection busConnection = project.getMessageBus().connect();
     busConnection.subscribe(CommittedChangesListener.class, new CommittedChangesAdapter() {
       @Override
-      public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
+      public void incomingChangesUpdated(@Nullable List<CommittedChangeList> receivedChanges) {
         if (myCache.getCachedIncomingChanges() == null) {
           requestLoadIncomingChanges();
         }
@@ -119,12 +119,12 @@ public class OutdatedVersionNotifier {
       return;
     }
     debug("Updating editors");
-    final VirtualFile[] files = myFileEditorManager.get().getOpenFiles();
+    VirtualFile[] files = myFileEditorManager.get().getOpenFiles();
     for (VirtualFile file : files) {
-      final Pair<CommittedChangeList, Change> pair = myCache.getIncomingChangeList(file);
-      final FileEditor[] fileEditors = myFileEditorManager.get().getEditors(file);
+      Pair<CommittedChangeList, Change> pair = myCache.getIncomingChangeList(file);
+      FileEditor[] fileEditors = myFileEditorManager.get().getEditors(file);
       for (FileEditor editor : fileEditors) {
-        final OutdatedRevisionPanel oldPanel = editor.getUserData(PANEL_KEY);
+        OutdatedRevisionPanel oldPanel = editor.getUserData(PANEL_KEY);
         if (pair != null) {
           if (oldPanel != null) {
             oldPanel.setChangeList(pair.first, pair.second);
@@ -141,11 +141,11 @@ public class OutdatedVersionNotifier {
     }
   }
 
-  private void initPanel(final CommittedChangeList list, final Change c, final FileEditor editor) {
+  private void initPanel(CommittedChangeList list, Change c, FileEditor editor) {
     if (!isIncomingChangesSupported(list)) {
       return;
     }
-    final OutdatedRevisionPanel component = new OutdatedRevisionPanel(list, c);
+    OutdatedRevisionPanel component = new OutdatedRevisionPanel(list, c);
     editor.putUserData(PANEL_KEY, component);
     myFileEditorManager.get().addTopComponent(editor, component);
   }
@@ -157,9 +157,9 @@ public class OutdatedVersionNotifier {
         requestLoadIncomingChanges();
       }
       else {
-        final Pair<CommittedChangeList, Change> pair = myCache.getIncomingChangeList(file);
+        Pair<CommittedChangeList, Change> pair = myCache.getIncomingChangeList(file);
         if (pair != null) {
-          final FileEditor[] fileEditors = source.getEditors(file);
+          FileEditor[] fileEditors = source.getEditors(file);
           for (FileEditor editor : fileEditors) {
             initPanel(pair.first, pair.second, editor);
           }
@@ -171,7 +171,7 @@ public class OutdatedVersionNotifier {
   private static class OutdatedRevisionPanel extends EditorNotificationPanel {
     private CommittedChangeList myChangeList;
 
-    public OutdatedRevisionPanel(CommittedChangeList changeList, final Change c) {
+    public OutdatedRevisionPanel(CommittedChangeList changeList, Change c) {
       super();
       createActionLabel(VcsBundle.message("outdated.version.show.diff.action"), "Compare.LastVersion");
       createActionLabel(VcsBundle.message("outdated.version.update.project.action"), "Vcs.UpdateProject");
@@ -179,20 +179,20 @@ public class OutdatedVersionNotifier {
       updateLabelText(c);
     }
 
-    private void updateLabelText(final Change c) {
+    private void updateLabelText(Change c) {
       String comment = myChangeList.getComment();
       int pos = comment.indexOf("\n");
       if (pos >= 0) {
         comment = comment.substring(0, pos).trim() + "...";
       }
-      final String formattedDate = DateFormatUtil.formatPrettyDateTime(myChangeList.getCommitDate());
-      final boolean dateIsPretty = !formattedDate.contains("/");
-      final String key = c.getType() == Change.Type.DELETED ? "outdated.version.text.deleted" :
+      String formattedDate = DateFormatUtil.formatPrettyDateTime(myChangeList.getCommitDate());
+      boolean dateIsPretty = !formattedDate.contains("/");
+      String key = c.getType() == Change.Type.DELETED ? "outdated.version.text.deleted" :
         (dateIsPretty ? "outdated.version.pretty.date.text" : "outdated.version.text");
       myLabel.setText(VcsBundle.message(key, myChangeList.getCommitterName(), formattedDate, comment));
     }
 
-    public void setChangeList(final CommittedChangeList changeList, final Change c) {
+    public void setChangeList(CommittedChangeList changeList, Change c) {
       myChangeList = changeList;
       updateLabelText(c);
     }

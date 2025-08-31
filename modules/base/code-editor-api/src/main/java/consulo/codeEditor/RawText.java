@@ -30,7 +30,7 @@ public class RawText implements Cloneable, Serializable {
   public static DataFlavor ourFlavor;
   public String rawText;
 
-  public RawText(final String rawText) {
+  public RawText(String rawText) {
     this.rawText = rawText;
   }
 
@@ -63,7 +63,7 @@ public class RawText implements Cloneable, Serializable {
   @Nullable
   public static RawText fromTransferable(Transferable content) {
     RawText raw = null;
-    final DataFlavor flavor = getDataFlavor();
+    DataFlavor flavor = getDataFlavor();
     if (flavor != null) {
       try {
         raw = (RawText)content.getTransferData(flavor);

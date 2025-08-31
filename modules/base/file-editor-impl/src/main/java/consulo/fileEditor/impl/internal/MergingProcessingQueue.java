@@ -65,7 +65,7 @@ public abstract class MergingProcessingQueue<K, V> {
 
       K it = null;
       while ((it = myUpdateQeueu.poll()) != null) {
-        final K finalIt = it;
+        K finalIt = it;
 
         calculateValue(myProject, it, v -> collectedValues.add(Pair.pair(finalIt, v)));
       }

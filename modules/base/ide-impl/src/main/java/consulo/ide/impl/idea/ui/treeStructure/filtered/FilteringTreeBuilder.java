@@ -45,7 +45,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
       ((ElementFilter.Active)filter).addListener(new ElementFilter.Listener() {
         @Nonnull
         @Override
-        public Promise<?> update(final Object preferredSelection, final boolean adjustSelection, final boolean now) {
+        public Promise<?> update(Object preferredSelection, boolean adjustSelection, boolean now) {
           return refilter(preferredSelection, adjustSelection, now);
         }
       }, this);
@@ -75,7 +75,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     return true;
   }
 
-  protected final DefaultMutableTreeNode createChildNode(final NodeDescriptor childDescr) {
+  protected final DefaultMutableTreeNode createChildNode(NodeDescriptor childDescr) {
     return new PatchedDefaultMutableTreeNode(childDescr);
   }
 
@@ -120,7 +120,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     }
 
     AsyncPromise<?> result = new AsyncPromise<>();
-    final Runnable afterCancelUpdate = new Runnable() {
+    Runnable afterCancelUpdate = new Runnable() {
       @Override
       public void run() {
         if (myRefilterQueue == null || now) {
@@ -158,17 +158,17 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
 
   @Nonnull
   protected Promise<?> refilterNow(Object preferredSelection, boolean adjustSelection) {
-    final ActionCallback selectionDone = new ActionCallback();
+    ActionCallback selectionDone = new ActionCallback();
 
     getFilteredStructure().refilter();
     getUi().updateSubtree(getRootNode(), false);
-    final Runnable selectionRunnable = () -> {
+    Runnable selectionRunnable = () -> {
       revalidateTree();
 
       Object toSelect = preferredSelection != null ? preferredSelection : myLastSuccessfulSelect;
 
       if (adjustSelection && toSelect != null) {
-        final FilteringTreeStructure.FilteringNode nodeToSelect = getFilteredStructure().getVisibleNodeFor(toSelect);
+        FilteringTreeStructure.FilteringNode nodeToSelect = getFilteredStructure().getVisibleNodeFor(toSelect);
 
         if (nodeToSelect != null) {
           select(nodeToSelect, () -> {
@@ -239,7 +239,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
       return selected != null ? selected.getDelegate() : null;
     }
     else {
-      final Object[] nodes = myTree.getSelectedNodes(Object.class, null);
+      Object[] nodes = myTree.getSelectedNodes(Object.class, null);
       return nodes.length > 0 ? nodes[0] : null;
     }
   }

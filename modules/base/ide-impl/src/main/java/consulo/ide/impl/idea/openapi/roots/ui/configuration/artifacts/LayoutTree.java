@@ -69,8 +69,8 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
 
   @Override
   protected void configureUiHelper(TreeUIHelper helper) {
-    final Convertor<TreePath, String> convertor = path -> {
-      final SimpleNode node = getNodeFor(path);
+    Convertor<TreePath, String> convertor = path -> {
+      SimpleNode node = getNodeFor(path);
       if (node instanceof PackagingElementNode) {
         return ((PackagingElementNode<?>)node).getElementPresentation().getSearchName();
       }
@@ -95,7 +95,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
 
   @Override
   public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
-    final List<PackagingElementNode<?>> nodes = getNodesToDrag();
+    List<PackagingElementNode<?>> nodes = getNodesToDrag();
     if (nodes.size() == 1) {
       return DnDAwareTree.getDragImage(this, getPathFor(nodes.get(0)), dragOrigin);
     }
@@ -127,9 +127,9 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
 
   @Nullable
   public PackagingElement<?> getElementByPath(TreePath path) {
-    final SimpleNode node = getNodeFor(path);
+    SimpleNode node = getNodeFor(path);
     if (node instanceof PackagingElementNode) {
-      final List<? extends PackagingElement<?>> elements = ((PackagingElementNode<?>)node).getPackagingElements();
+      List<? extends PackagingElement<?>> elements = ((PackagingElementNode<?>)node).getPackagingElements();
       if (!elements.isEmpty()) {
         return elements.get(0);
       }
@@ -138,7 +138,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
   }
 
   public PackagingElementNode<?> getRootPackagingNode() {
-    final SimpleNode node = getNodeFor(new TreePath(getRootNode()));
+    SimpleNode node = getNodeFor(new TreePath(getRootNode()));
     return node instanceof PackagingElementNode ? (PackagingElementNode<?>)node : null;
   }
 
@@ -146,13 +146,13 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
     return (DefaultMutableTreeNode)getModel().getRoot();
   }
 
-  public List<PackagingElementNode<?>> findNodes(final Collection<? extends PackagingElement<?>> elements) {
-    final List<PackagingElementNode<?>> nodes = new ArrayList<>();
+  public List<PackagingElementNode<?>> findNodes(Collection<? extends PackagingElement<?>> elements) {
+    List<PackagingElementNode<?>> nodes = new ArrayList<>();
     TreeUtil.traverseDepth(getRootNode(), node -> {
-      final Object userObject = ((DefaultMutableTreeNode)node).getUserObject();
+      Object userObject = ((DefaultMutableTreeNode)node).getUserObject();
       if (userObject instanceof PackagingElementNode) {
-        final PackagingElementNode<?> packagingNode = (PackagingElementNode<?>)userObject;
-        final List<? extends PackagingElement<?>> nodeElements = packagingNode.getPackagingElements();
+        PackagingElementNode<?> packagingNode = (PackagingElementNode<?>)userObject;
+        List<? extends PackagingElement<?>> nodeElements = packagingNode.getPackagingElements();
         if (ContainerUtil.intersects(nodeElements, elements)) {
           nodes.add(packagingNode);
         }
@@ -162,8 +162,8 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
     return nodes;
   }
 
-  public void addSubtreeToUpdate(final PackagingElementNode elementNode) {
-    final DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(getRootNode(), elementNode);
+  public void addSubtreeToUpdate(PackagingElementNode elementNode) {
+    DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(getRootNode(), elementNode);
     if (node != null) {
       addSubtreeToUpdate(node);
     }
@@ -188,11 +188,11 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
 
     @Override
     public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
-      final JTextField field = (JTextField)super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
-      final Object node = ((DefaultMutableTreeNode)value).getUserObject();
-      final PackagingElement<?> element = ((PackagingElementNode)node).getElementIfSingle();
+      JTextField field = (JTextField)super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+      Object node = ((DefaultMutableTreeNode)value).getUserObject();
+      PackagingElement<?> element = ((PackagingElementNode)node).getElementIfSingle();
       LOG.assertTrue(element != null);
-      final String name = ((RenameablePackagingElement)element).getName();
+      String name = ((RenameablePackagingElement)element).getName();
       field.setText(name);
       int i = name.lastIndexOf('.');
       field.setSelectionStart(0);
@@ -202,19 +202,19 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
 
     @Override
     public boolean stopCellEditing() {
-      final String newValue = ((JTextField)editorComponent).getText();
-      final TreePath path = getEditingPath();
-      final Object node = getNodeFor(path);
+      String newValue = ((JTextField)editorComponent).getText();
+      TreePath path = getEditingPath();
+      Object node = getNodeFor(path);
       RenameablePackagingElement currentElement = null;
       if (node instanceof PackagingElementNode) {
-        final PackagingElement<?> element = ((PackagingElementNode)node).getElementIfSingle();
+        PackagingElement<?> element = ((PackagingElementNode)node).getElementIfSingle();
         if (element instanceof RenameablePackagingElement) {
           currentElement = (RenameablePackagingElement)element;
         }
       }
-      final boolean stopped = super.stopCellEditing();
+      boolean stopped = super.stopCellEditing();
       if (stopped && currentElement != null) {
-        final RenameablePackagingElement finalCurrentElement = currentElement;
+        RenameablePackagingElement finalCurrentElement = currentElement;
         myArtifactsEditor.getLayoutTreeComponent().editLayout(() -> finalCurrentElement.rename(newValue));
         myArtifactsEditor.queueValidation();
         myArtifactsEditor.getLayoutTreeComponent().updatePropertiesPanel(true);

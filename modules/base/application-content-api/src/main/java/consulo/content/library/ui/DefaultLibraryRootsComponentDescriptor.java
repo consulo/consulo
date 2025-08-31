@@ -55,7 +55,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
       @Nullable DataContext dataContext,
       @Nonnull LibraryEditor libraryEditor
     ) {
-      final VirtualFile vFile = DocumentationUtil.showSpecifyJavadocUrlDialog(parent);
+      VirtualFile vFile = DocumentationUtil.showSpecifyJavadocUrlDialog(parent);
       if (vFile != null) {
         return new VirtualFile[]{vFile};
       }

@@ -37,12 +37,12 @@ public abstract class SpeedSearchSupply {
   public static final String ENTERED_PREFIX_PROPERTY_NAME = "enteredPrefix";
 
   @Nullable
-  public static SpeedSearchSupply getSupply(@Nonnull final JComponent component) {
+  public static SpeedSearchSupply getSupply(@Nonnull JComponent component) {
     return getSupply(component, false);
   }
 
   @Nullable
-  public static SpeedSearchSupply getSupply(@Nonnull final JComponent component, boolean evenIfInactive) {
+  public static SpeedSearchSupply getSupply(@Nonnull JComponent component, boolean evenIfInactive) {
     SpeedSearchSupply speedSearch = (SpeedSearchSupply)component.getClientProperty(SPEED_SEARCH_COMPONENT_MARKER);
 
     if (evenIfInactive) {
@@ -53,7 +53,7 @@ public abstract class SpeedSearchSupply {
   }
 
   @Nullable
-  public abstract Iterable<MatcherTextRange> matchingFragments(@Nonnull final String text);
+  public abstract Iterable<MatcherTextRange> matchingFragments(@Nonnull String text);
 
   /**
    * Selects element according to search criteria changes
@@ -67,7 +67,7 @@ public abstract class SpeedSearchSupply {
     return null;
   }
 
-  protected void installSupplyTo(final JComponent component) {
+  protected void installSupplyTo(JComponent component) {
     component.putClientProperty(SPEED_SEARCH_COMPONENT_MARKER, this);
     addChangeListener(evt -> component.repaint());
   }

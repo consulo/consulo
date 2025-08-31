@@ -47,7 +47,7 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
   protected String myStatusText;
   protected String myHintText;
 
-  protected HighlightUsagesHandlerBase(final Editor editor, final PsiFile file) {
+  protected HighlightUsagesHandlerBase(Editor editor, PsiFile file) {
     myEditor = editor;
     myFile = file;
   }
@@ -79,7 +79,7 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
   }
 
   public static String getShortcutText() {
-    final Shortcut[] shortcuts = ActionManager.getInstance().getAction(IdeActions.ACTION_HIGHLIGHT_USAGES_IN_FILE).getShortcutSet().getShortcuts();
+    Shortcut[] shortcuts = ActionManager.getInstance().getAction(IdeActions.ACTION_HIGHLIGHT_USAGES_IN_FILE).getShortcutSet().getShortcuts();
     if (shortcuts.length == 0) {
       return "<no key assigned>";
     }

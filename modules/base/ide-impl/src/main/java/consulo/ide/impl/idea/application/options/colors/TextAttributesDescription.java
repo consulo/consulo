@@ -29,7 +29,7 @@ import consulo.ui.image.Image;
 public abstract class TextAttributesDescription extends ColorAndFontDescription {
   private final TextAttributes myAttributes;
 
-  public TextAttributesDescription(LocalizeValue name, LocalizeValue group, TextAttributes attributes, TextAttributesKey type, EditorColorsScheme scheme, Image icon, final String toolTip) {
+  public TextAttributesDescription(LocalizeValue name, LocalizeValue group, TextAttributes attributes, TextAttributesKey type, EditorColorsScheme scheme, Image icon, String toolTip) {
     super(name, group, type == null ? null : type.getExternalName(), scheme, icon, toolTip);
     myAttributes = attributes;
     initCheckedStatus();

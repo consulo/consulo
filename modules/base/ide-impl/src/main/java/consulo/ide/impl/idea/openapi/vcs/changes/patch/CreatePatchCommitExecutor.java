@@ -63,7 +63,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
   private final Project myProject;
 
   @Inject
-  public CreatePatchCommitExecutor(final Project project) {
+  public CreatePatchCommitExecutor(Project project) {
     myProject = project;
   }
 
@@ -106,7 +106,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
     }
 
     @Override
-    public JComponent getAdditionalConfigurationUI(final Collection<Change> changes, final String commitMessage) {
+    public JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
       String patchPath = ProjectPropertiesComponent.getInstance(myProject).getValue(VCS_PATCH_PATH_KEY);
       if (StringUtil.isEmptyOrSpaces(patchPath)) {
         VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
@@ -140,7 +140,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
 
     @Override
     public void execute(Collection<Change> changes, String commitMessage) {
-      final String fileName = myPanel.getFileName();
+      String fileName = myPanel.getFileName();
       final File file = new File(fileName).getAbsoluteFile();
       if (file.exists()) {
         final int[] result = new int[1];
@@ -187,7 +187,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         String patchPath = file.getParent();
         VcsApplicationSettings.getInstance().PATCH_STORAGE_LOCATION = patchPath;
         ProjectPropertiesComponent.getInstance(myProject).setValue(VCS_PATCH_PATH_KEY, patchPath);
-        final boolean reversePatch = myPanel.isReversePatch();
+        boolean reversePatch = myPanel.isReversePatch();
 
         String baseDirName = myPanel.getBaseDirName();
         List<FilePatch> patches = IdeaTextPatchBuilder.buildPatch(myProject, changes, baseDirName, reversePatch);
@@ -203,7 +203,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
           @Override
           public void run() {
-            final VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
+            VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
             if (Boolean.TRUE.equals(configuration.SHOW_PATCH_IN_EXPLORER)) {
               ShowFilePathAction.openFile(file);
             } else if (Boolean.FALSE.equals(configuration.SHOW_PATCH_IN_EXPLORER)) {

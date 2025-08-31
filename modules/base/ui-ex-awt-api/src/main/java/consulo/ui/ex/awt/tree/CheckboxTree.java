@@ -30,7 +30,7 @@ public class CheckboxTree extends CheckboxTreeBase {
     protected CheckboxTreeCellRenderer() {
     }
 
-    protected CheckboxTreeCellRenderer(final boolean opaque) {
+    protected CheckboxTreeCellRenderer(boolean opaque) {
       super(opaque);
     }
 
@@ -39,7 +39,7 @@ public class CheckboxTree extends CheckboxTreeBase {
     }
   }
 
-  public CheckboxTree(final CheckboxTreeCellRenderer cellRenderer, CheckedTreeNode root) {
+  public CheckboxTree(CheckboxTreeCellRenderer cellRenderer, CheckedTreeNode root) {
     super(cellRenderer, root);
 
     installSpeedSearch();
@@ -49,7 +49,7 @@ public class CheckboxTree extends CheckboxTreeBase {
   public CheckboxTree() {
   }
 
-  public CheckboxTree(final CheckboxTreeCellRenderer cellRenderer, CheckedTreeNode root, final CheckPolicy checkPolicy) {
+  public CheckboxTree(CheckboxTreeCellRenderer cellRenderer, CheckedTreeNode root, CheckPolicy checkPolicy) {
     super(cellRenderer, root, checkPolicy);
 
     installSpeedSearch();

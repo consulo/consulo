@@ -36,7 +36,7 @@ public class ScopeBasedTodosTreeStructure extends TodoTreeStructure {
   }
 
   @Override
-  public boolean accept(final PsiFile psiFile) {
+  public boolean accept(PsiFile psiFile) {
     if (!psiFile.isValid()) return false;
 
     SearchScope scope = myScopes.getSelectedScope();

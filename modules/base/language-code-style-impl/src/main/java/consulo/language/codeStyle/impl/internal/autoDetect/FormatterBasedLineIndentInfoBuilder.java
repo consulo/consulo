@@ -69,8 +69,8 @@ public class FormatterBasedLineIndentInfoBuilder {
   }
 
   private static boolean hasNormalIndent(Block block) {
-    final TextRange range = block.getTextRange();
-    final int startOffset = range.getStartOffset();
+    TextRange range = block.getTextRange();
+    int startOffset = range.getStartOffset();
 
     List<Indent.Type> allIndents = getIndentOnStartOffset(block, range, startOffset);
 

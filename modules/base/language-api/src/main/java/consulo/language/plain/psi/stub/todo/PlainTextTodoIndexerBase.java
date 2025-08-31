@@ -33,10 +33,10 @@ import java.util.regex.Pattern;
 public abstract class PlainTextTodoIndexerBase implements TodoIndexer {
   @Override
   @Nonnull
-  public Map<TodoIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
+  public Map<TodoIndexEntry, Integer> map(@Nonnull FileContent inputData) {
     String chars = inputData.getContentAsText().toString(); // matching strings is faster than HeapCharBuffer
 
-    final IndexPattern[] indexPatterns = IndexPatternUtil.getIndexPatterns();
+    IndexPattern[] indexPatterns = IndexPatternUtil.getIndexPatterns();
     if (indexPatterns.length <= 0) {
       return Collections.emptyMap();
     }
@@ -54,7 +54,7 @@ public abstract class PlainTextTodoIndexerBase implements TodoIndexer {
     }
     Map<TodoIndexEntry, Integer> map = new HashMap<>();
     for (IndexPattern indexPattern : indexPatterns) {
-      final int count = occurrenceConsumer.getOccurrenceCount(indexPattern);
+      int count = occurrenceConsumer.getOccurrenceCount(indexPattern);
       if (count > 0) {
         map.put(new TodoIndexEntry(indexPattern.getPatternString(), indexPattern.isCaseSensitive()), count);
       }

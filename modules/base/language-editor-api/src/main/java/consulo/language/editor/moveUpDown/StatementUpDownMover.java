@@ -68,12 +68,12 @@ public abstract class StatementUpDownMover {
     }
   }
 
-  public abstract boolean checkAvailable(@Nonnull final Editor editor, @Nonnull final PsiFile file, @Nonnull final MoveInfo info, final boolean down);
+  public abstract boolean checkAvailable(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull MoveInfo info, boolean down);
 
-  public void beforeMove(@Nonnull final Editor editor, @Nonnull final MoveInfo info, final boolean down) {
+  public void beforeMove(@Nonnull Editor editor, @Nonnull MoveInfo info, boolean down) {
   }
 
-  public void afterMove(@Nonnull final Editor editor, @Nonnull final PsiFile file, @Nonnull final MoveInfo info, final boolean down) {
+  public void afterMove(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull MoveInfo info, boolean down) {
   }
 
   public static int getLineStartSafeOffset(@Nonnull Document document, int line) {
@@ -83,13 +83,13 @@ public abstract class StatementUpDownMover {
 
   @Nonnull
   protected static LineRange getLineRangeFromSelection(@Nonnull Editor editor) {
-    final int startLine;
-    final int endLine;
-    final SelectionModel selectionModel = editor.getSelectionModel();
+    int startLine;
+    int endLine;
+    SelectionModel selectionModel = editor.getSelectionModel();
     LineRange range;
     if (selectionModel.hasSelection()) {
       startLine = editor.offsetToLogicalPosition(selectionModel.getSelectionStart()).line;
-      final LogicalPosition endPos = editor.offsetToLogicalPosition(selectionModel.getSelectionEnd());
+      LogicalPosition endPos = editor.offsetToLogicalPosition(selectionModel.getSelectionEnd());
       endLine = endPos.column == 0 ? endPos.line : endPos.line+1;
       range = new LineRange(startLine, endLine);
     }
@@ -103,10 +103,10 @@ public abstract class StatementUpDownMover {
 
   @Nullable
   protected static Pair<PsiElement, PsiElement> getElementRange(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull LineRange range) {
-    final int startOffset = editor.logicalPositionToOffset(new LogicalPosition(range.startLine, 0));
+    int startOffset = editor.logicalPositionToOffset(new LogicalPosition(range.startLine, 0));
     PsiElement startingElement = firstNonWhiteElement(startOffset, file, true);
     if (startingElement == null) return null;
-    final int endOffset = editor.logicalPositionToOffset(new LogicalPosition(range.endLine, 0)) -1;
+    int endOffset = editor.logicalPositionToOffset(new LogicalPosition(range.endLine, 0)) -1;
 
     PsiElement endingElement = firstNonWhiteElement(endOffset, file, false);
     if (endingElement == null) return null;
@@ -121,13 +121,13 @@ public abstract class StatementUpDownMover {
   }
 
   @Nullable
-  protected static PsiElement firstNonWhiteElement(int offset, @Nonnull PsiFile file, final boolean lookRight) {
-    final ASTNode leafElement = file.getNode().findLeafElementAt(offset);
+  protected static PsiElement firstNonWhiteElement(int offset, @Nonnull PsiFile file, boolean lookRight) {
+    ASTNode leafElement = file.getNode().findLeafElementAt(offset);
     return leafElement == null ? null : firstNonWhiteElement(leafElement.getPsi(), lookRight);
   }
 
   @Nullable
-  protected static PsiElement firstNonWhiteElement(PsiElement element, final boolean lookRight) {
+  protected static PsiElement firstNonWhiteElement(PsiElement element, boolean lookRight) {
     if (element instanceof PsiWhiteSpace) {
       element = lookRight ? element.getNextSibling() : element.getPrevSibling();
     }

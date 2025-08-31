@@ -33,15 +33,15 @@ public final class ServiceViewTreeLinkMouseListener extends RepaintLinkMouseList
   @Nullable
   @Override
   protected Object getTagAt(@Nonnull MouseEvent e) {
-    final TreePath path = myTree.getPathForLocation(e.getX(), e.getY());
+    TreePath path = myTree.getPathForLocation(e.getX(), e.getY());
     if (path == null) return null;
 
-    final Rectangle rectangle = myTree.getPathBounds(path);
+    Rectangle rectangle = myTree.getPathBounds(path);
     if (rectangle == null) return null;
 
     int dx = e.getX() - rectangle.x;
-    final Object treeNode = path.getLastPathComponent();
-    final int row = myTree.getRowForLocation(e.getX(), e.getY());
+    Object treeNode = path.getLastPathComponent();
+    int row = myTree.getRowForLocation(e.getX(), e.getY());
     boolean isLeaf = myTree.getModel().isLeaf(treeNode);
 
     Component component = myTree.getCellRenderer().getTreeCellRendererComponent(myTree, treeNode, true, false, isLeaf, row, true);

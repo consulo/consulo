@@ -39,13 +39,13 @@ public class VcsDirectoryMappingStorage implements PersistentStateComponent<Elem
   private final ProjectLevelVcsManager myVcsManager;
 
   @Inject
-  public VcsDirectoryMappingStorage(final ProjectLevelVcsManager vcsManager) {
+  public VcsDirectoryMappingStorage(ProjectLevelVcsManager vcsManager) {
     myVcsManager = vcsManager;
   }
 
   @Override
   public Element getState() {
-    final Element e = new Element("state");
+    Element e = new Element("state");
     ((ProjectLevelVcsManagerImpl)myVcsManager).writeDirectoryMappings(e);
     return e;
   }

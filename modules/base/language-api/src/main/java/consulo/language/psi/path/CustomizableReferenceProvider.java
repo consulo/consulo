@@ -48,7 +48,7 @@ public interface CustomizableReferenceProvider {
       if (options == null) {
         return false;
       }
-      final Boolean o = (Boolean)options.get(this);
+      Boolean o = (Boolean)options.get(this);
       return o != null && o.booleanValue();
     }
 
@@ -61,5 +61,5 @@ public interface CustomizableReferenceProvider {
   @Nullable Map<CustomizationKey,Object> getOptions();
 
   @Nonnull
-  public abstract PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull final ProcessingContext matchingContext);
+  public abstract PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext matchingContext);
 }

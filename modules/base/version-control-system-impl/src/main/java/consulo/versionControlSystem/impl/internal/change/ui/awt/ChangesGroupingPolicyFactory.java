@@ -30,5 +30,5 @@ public abstract class ChangesGroupingPolicyFactory {
     return project.getInstance(ChangesGroupingPolicyFactory.class);
   }
 
-  public abstract ChangesGroupingPolicy createGroupingPolicy(final DefaultTreeModel model);
+  public abstract ChangesGroupingPolicy createGroupingPolicy(DefaultTreeModel model);
 }

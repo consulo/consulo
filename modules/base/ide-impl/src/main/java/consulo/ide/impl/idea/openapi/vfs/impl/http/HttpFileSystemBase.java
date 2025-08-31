@@ -68,7 +68,7 @@ public abstract class HttpFileSystemBase extends HttpFileSystem {
   }
 
   @Override
-  public boolean isFileDownloaded(@Nonnull final VirtualFile file) {
+  public boolean isFileDownloaded(@Nonnull VirtualFile file) {
     return file instanceof HttpVirtualFile && ((HttpVirtualFile)file).getFileInfo().getState() == RemoteFileState.DOWNLOADED;
   }
 
@@ -94,7 +94,7 @@ public abstract class HttpFileSystemBase extends HttpFileSystem {
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull final String copyName) throws IOException {
+  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException {
     throw new UnsupportedOperationException();
   }
 

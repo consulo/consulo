@@ -27,7 +27,7 @@ public abstract class BaseConfigurable implements Configurable {
     return myModified;
   }
 
-  protected void setModified(final boolean modified) {
+  protected void setModified(boolean modified) {
     myModified = modified;
   }
 }

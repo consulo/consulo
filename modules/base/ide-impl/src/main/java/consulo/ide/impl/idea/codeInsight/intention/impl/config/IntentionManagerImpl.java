@@ -77,7 +77,7 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
   @Override
   @Nonnull
-  public List<IntentionAction> getStandardIntentionOptions(@Nonnull final HighlightDisplayKey displayKey, @Nonnull final PsiElement context) {
+  public List<IntentionAction> getStandardIntentionOptions(@Nonnull HighlightDisplayKey displayKey, @Nonnull PsiElement context) {
     List<IntentionAction> options = new ArrayList<>();
     options.add(new EditInspectionToolsSettingsAction(displayKey));
     options.add(new RunInspectionIntention(displayKey));
@@ -132,8 +132,8 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
       }
 
       @Override
-      public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
-        final PsiFile psiFile = descriptor.getPsiElement().getContainingFile();
+      public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        PsiFile psiFile = descriptor.getPsiElement().getContainingFile();
         try {
           action.invoke(project, new LazyEditor(psiFile), psiFile);
         }

@@ -36,16 +36,16 @@ public class ReferenceEditorWithBrowseButton extends ComponentWithBrowseButton<E
   private final Function<String, Document> myFactory;
   private final List<DocumentListener> myDocumentListeners = Lists.newLockFreeCopyOnWriteList();
 
-  public ReferenceEditorWithBrowseButton(final ActionListener browseActionListener,
-                                         final Project project,
-                                         final Function<String, Document> factory,
+  public ReferenceEditorWithBrowseButton(ActionListener browseActionListener,
+                                         Project project,
+                                         Function<String, Document> factory,
                                          String text) {
     this(browseActionListener, new EditorTextField(factory.apply(text), project, InternalStdFileTypes.JAVA), factory);
   }
 
-  public ReferenceEditorWithBrowseButton(final ActionListener browseActionListener,
-                                         final EditorTextField editorTextField,
-                                         final Function<String, Document> factory) {
+  public ReferenceEditorWithBrowseButton(ActionListener browseActionListener,
+                                         EditorTextField editorTextField,
+                                         Function<String, Document> factory) {
     super(editorTextField, browseActionListener);
     myFactory = factory;
   }
@@ -68,7 +68,7 @@ public class ReferenceEditorWithBrowseButton extends ComponentWithBrowseButton<E
     return getEditorTextField().getText().trim();
   }
 
-  public void setText(final String text) {
+  public void setText(String text) {
     Document oldDocument = getEditorTextField().getDocument();
     String oldText = oldDocument.getText();
     for (DocumentListener listener : myDocumentListeners) {

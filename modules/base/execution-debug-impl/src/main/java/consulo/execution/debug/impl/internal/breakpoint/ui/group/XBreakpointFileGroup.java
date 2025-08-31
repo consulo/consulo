@@ -34,7 +34,7 @@ public class XBreakpointFileGroup extends XBreakpointGroup {
   }
 
   @Nullable
-  public Image getIcon(final boolean isOpen) {
+  public Image getIcon(boolean isOpen) {
     return VirtualFilePresentation.getIcon(myFile);
   }
 

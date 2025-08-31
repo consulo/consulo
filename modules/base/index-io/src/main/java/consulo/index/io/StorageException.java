@@ -20,15 +20,15 @@ package consulo.index.io;
  * @since 2007-12-20
  */
 public class StorageException extends Exception {
-  public StorageException(final String message) {
+  public StorageException(String message) {
     super(message);
   }
 
-  public StorageException(final String message, final Throwable cause) {
+  public StorageException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  public StorageException(final Throwable cause) {
+  public StorageException(Throwable cause) {
     super(cause);
   }
 }

@@ -58,30 +58,30 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
 
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-        final int offset = editor.getCaretModel().getOffset();
-        final PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
+        int offset = editor.getCaretModel().getOffset();
+        PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
         if (psiFile == null) {
             return false;
         }
-        final LanguageInjectionSupport support = psiFile.getUserData(LanguageInjectionSupport.INJECTOR_SUPPORT);
+        LanguageInjectionSupport support = psiFile.getUserData(LanguageInjectionSupport.INJECTOR_SUPPORT);
         return support != null;
     }
 
     @Override
-    public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         ApplicationManager.getApplication().runReadAction(() -> invokeImpl(project, editor, file));
     }
 
     private static void invokeImpl(Project project, Editor editor, PsiFile file) {
-        final PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
+        PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, editor.getCaretModel().getOffset());
         if (psiFile == null) {
             return;
         }
-        final PsiLanguageInjectionHost host = InjectedLanguageManager.getInstance(project).getInjectionHost(psiFile);
+        PsiLanguageInjectionHost host = InjectedLanguageManager.getInstance(project).getInjectionHost(psiFile);
         if (host == null) {
             return;
         }
-        final LanguageInjectionSupport support = psiFile.getUserData(LanguageInjectionSupport.INJECTOR_SUPPORT);
+        LanguageInjectionSupport support = psiFile.getUserData(LanguageInjectionSupport.INJECTOR_SUPPORT);
         if (support == null) {
             return;
         }
@@ -104,9 +104,9 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
         }
     }
 
-    private static boolean defaultFunctionalityWorked(final PsiLanguageInjectionHost host) {
-        final Set<String> languages = new HashSet<String>();
-        final List<Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
+    private static boolean defaultFunctionalityWorked(PsiLanguageInjectionHost host) {
+        Set<String> languages = new HashSet<String>();
+        List<Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
         if (files == null) {
             return false;
         }

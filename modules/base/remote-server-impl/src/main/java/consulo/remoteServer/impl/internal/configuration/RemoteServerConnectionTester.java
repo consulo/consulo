@@ -58,7 +58,7 @@ public class RemoteServerConnectionTester {
                         break;
                     }
                 }
-                final Boolean connected = connectedRef.get();
+                Boolean connected = connectedRef.get();
                 if (connected == null) {
                     return;
                 }

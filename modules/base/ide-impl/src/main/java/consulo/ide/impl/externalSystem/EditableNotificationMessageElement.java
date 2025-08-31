@@ -90,7 +90,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
     disableLink(event, null);
   }
 
-  private static void disableLink(@Nonnull final HyperlinkEvent event, @Nullable final String linkText) {
+  private static void disableLink(@Nonnull HyperlinkEvent event, @Nullable String linkText) {
     if (event.getSource() instanceof MyJEditorPane editorPane) {
       UIUtil.invokeLaterIfNeeded(() -> {
         editorPane.myElement.addDisabledLink(event.getDescription(), linkText);
@@ -103,16 +103,16 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
   protected void updateStyle(@Nonnull JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
     super.updateStyle(editorPane, tree, value, selected, hasFocus);
 
-    final HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
-    final Style linkStyle = htmlDocument.getStyleSheet().getStyle(NotificationMessageElement.LINK_STYLE);
+    HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
+    Style linkStyle = htmlDocument.getStyleSheet().getStyle(NotificationMessageElement.LINK_STYLE);
     StyleConstants.setForeground(linkStyle, IdeTooltipManagerImpl.getInstanceImpl().getLinkForeground(false));
     StyleConstants.setItalic(linkStyle, true);
     HTMLDocument.Iterator iterator = htmlDocument.getIterator(HTML.Tag.A);
     while (iterator.isValid()) {
       boolean disabledLink = false;
-      final AttributeSet attributes = iterator.getAttributes();
+      AttributeSet attributes = iterator.getAttributes();
       if (attributes instanceof SimpleAttributeSet simpleAttributeSet) {
-        final Object attribute = attributes.getAttribute(HTML.Attribute.HREF);
+        Object attribute = attributes.getAttribute(HTML.Attribute.HREF);
         if (attribute instanceof String && disabledLinks.containsKey(attribute)) {
           disabledLink = true;
           //TODO [Vlad] add support for disabled link text update
@@ -157,7 +157,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
         public void invokePopup(Component comp, int x, int y) {
           if (myTree == null) return;
 
-          final TreePath path = myTree.getLeadSelectionPath();
+          TreePath path = myTree.getLeadSelectionPath();
           if (path == null) {
             return;
           }
@@ -188,7 +188,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
       @RequiredUIAccess
       public void hyperlinkUpdate(HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          final NotificationListener notificationListener = myNotification.getListener();
+          NotificationListener notificationListener = myNotification.getListener();
           if (notificationListener != null) {
             notificationListener.hyperlinkUpdate(myNotification, e);
           }

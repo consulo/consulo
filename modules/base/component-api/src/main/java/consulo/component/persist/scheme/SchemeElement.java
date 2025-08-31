@@ -17,7 +17,7 @@ package consulo.component.persist.scheme;
 
 
 public interface SchemeElement {
-  void setGroupName(final String name);
+  void setGroupName(String name);
 
   String getKey();
 

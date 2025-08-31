@@ -102,7 +102,7 @@ class DateFilterPopupComponent extends FilterPopupComponent<VcsLogDateFilter> {
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final DateFilterComponent dateComponent = new DateFilterComponent(false, DateFormatUtil.getDateFormat().toPattern());
+            DateFilterComponent dateComponent = new DateFilterComponent(false, DateFormatUtil.getDateFormat().toPattern());
             VcsLogDateFilter currentFilter = myFilterModel.getFilter();
             if (currentFilter != null) {
                 if (currentFilter.getBefore() != null) {

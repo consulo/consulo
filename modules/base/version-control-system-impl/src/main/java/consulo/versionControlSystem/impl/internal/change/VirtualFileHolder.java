@@ -36,7 +36,7 @@ public class VirtualFileHolder implements FileHolder {
   private final HolderType myType;
   private int myNumDirs;
 
-  public VirtualFileHolder(Project project, final HolderType type) {
+  public VirtualFileHolder(Project project, HolderType type) {
     myProject = project;
     myType = type;
   }
@@ -63,7 +63,7 @@ public class VirtualFileHolder implements FileHolder {
         if (project.isDisposed() || files.isEmpty()) return 0;
 
         if (scope.getRecursivelyDirtyDirectories().size() == 0) {
-          final Set<FilePath> dirtyFiles = scope.getDirtyFiles();
+          Set<FilePath> dirtyFiles = scope.getDirtyFiles();
           boolean cleanDroppedFiles = false;
 
           for (FilePath dirtyFile : dirtyFiles) {
@@ -79,7 +79,7 @@ public class VirtualFileHolder implements FileHolder {
           }
           if (cleanDroppedFiles) {
             for (Iterator<VirtualFile> iterator = files.iterator(); iterator.hasNext(); ) {
-              final VirtualFile file = iterator.next();
+              VirtualFile file = iterator.next();
               if (fileDropped(file)) {
                 iterator.remove();
                 scope.addDirtyFile(new FilePathImpl(file));
@@ -90,8 +90,8 @@ public class VirtualFileHolder implements FileHolder {
         }
         else {
           for (Iterator<VirtualFile> iterator = files.iterator(); iterator.hasNext(); ) {
-            final VirtualFile file = iterator.next();
-            final boolean fileDropped = fileDropped(file);
+            VirtualFile file = iterator.next();
+            boolean fileDropped = fileDropped(file);
             if (fileDropped) {
               scope.addDirtyFile(new FilePathImpl(file));
             }
@@ -106,11 +106,11 @@ public class VirtualFileHolder implements FileHolder {
     });
   }
 
-  public void cleanAndAdjustScope(final VcsModifiableDirtyScope scope) {
+  public void cleanAndAdjustScope(VcsModifiableDirtyScope scope) {
     myNumDirs -= cleanScope(myProject, myFiles, scope);
   }
 
-  private static boolean fileDropped(final VirtualFile file) {
+  private static boolean fileDropped(VirtualFile file) {
     return !file.isValid();
   }
 
@@ -133,21 +133,21 @@ public class VirtualFileHolder implements FileHolder {
   }
 
   public VirtualFileHolder copy() {
-    final VirtualFileHolder copyHolder = new VirtualFileHolder(myProject, myType);
+    VirtualFileHolder copyHolder = new VirtualFileHolder(myProject, myType);
     copyHolder.myFiles.addAll(myFiles);
     copyHolder.myNumDirs = myNumDirs;
     return copyHolder;
   }
 
-  public boolean containsFile(final VirtualFile file) {
+  public boolean containsFile(VirtualFile file) {
     return myFiles.contains(file);
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final VirtualFileHolder that = (VirtualFileHolder)o;
+    VirtualFileHolder that = (VirtualFileHolder)o;
 
     if (!myFiles.equals(that.myFiles)) return false;
 

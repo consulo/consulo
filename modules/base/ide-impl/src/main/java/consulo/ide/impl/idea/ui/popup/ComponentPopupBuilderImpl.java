@@ -114,56 +114,56 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setResizable(final boolean resizable) {
+    public ComponentPopupBuilder setResizable(boolean resizable) {
         myResizable = resizable;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setMovable(final boolean movable) {
+    public ComponentPopupBuilder setMovable(boolean movable) {
         myMovable = movable;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setCancelOnClickOutside(final boolean cancel) {
+    public ComponentPopupBuilder setCancelOnClickOutside(boolean cancel) {
         myCancelOnClickOutside = cancel;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setCancelOnMouseOutCallback(@Nonnull final MouseChecker shouldCancel) {
+    public ComponentPopupBuilder setCancelOnMouseOutCallback(@Nonnull MouseChecker shouldCancel) {
         myCancelOnMouseOutCallback = shouldCancel;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder addListener(@Nonnull final JBPopupListener listener) {
+    public ComponentPopupBuilder addListener(@Nonnull JBPopupListener listener) {
         myListeners.add(listener);
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setRequestFocus(final boolean requestFocus) {
+    public ComponentPopupBuilder setRequestFocus(boolean requestFocus) {
         myRequestFocus = requestFocus;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setFocusable(final boolean focusable) {
+    public ComponentPopupBuilder setFocusable(boolean focusable) {
         myFocusable = focusable;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setDimensionServiceKey(final ComponentManager project, final String key, final boolean useForXYLocation) {
+    public ComponentPopupBuilder setDimensionServiceKey(ComponentManager project, String key, boolean useForXYLocation) {
         myDimensionServiceKey = key;
         myUseDimServiceForXYLocation = useForXYLocation;
         myProject = (Project)project;
@@ -172,7 +172,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setCancelCallback(@Nonnull final Supplier<Boolean> shouldProceed) {
+    public ComponentPopupBuilder setCancelCallback(@Nonnull Supplier<Boolean> shouldProceed) {
         myCallback = shouldProceed;
         return this;
     }
@@ -186,7 +186,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setCouldPin(@Nullable final Predicate<? super JBPopup> callback) {
+    public ComponentPopupBuilder setCouldPin(@Nullable Predicate<? super JBPopup> callback) {
         myPinCallback = callback;
         return this;
     }
@@ -200,7 +200,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setCancelOnOtherWindowOpen(final boolean cancelOnWindow) {
+    public ComponentPopupBuilder setCancelOnOtherWindowOpen(boolean cancelOnWindow) {
         myCancelOnWindow = cancelOnWindow;
         return this;
     }
@@ -292,28 +292,28 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setCancelKeyEnabled(final boolean enabled) {
+    public ComponentPopupBuilder setCancelKeyEnabled(boolean enabled) {
         myCancelKeyEnabled = enabled;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setLocateByContent(final boolean byContent) {
+    public ComponentPopupBuilder setLocateByContent(boolean byContent) {
         myLocateByContent = byContent;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setLocateWithinScreenBounds(final boolean within) {
+    public ComponentPopupBuilder setLocateWithinScreenBounds(boolean within) {
         myPlaceWithinScreen = within;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setMinSize(final Dimension minSize) {
+    public ComponentPopupBuilder setMinSize(Dimension minSize) {
         myMinSize = minSize;
         return this;
     }
@@ -327,21 +327,21 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setAlpha(final float alpha) {
+    public ComponentPopupBuilder setAlpha(float alpha) {
         myAlpha = alpha;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setBelongsToGlobalPopupStack(final boolean isInStack) {
+    public ComponentPopupBuilder setBelongsToGlobalPopupStack(boolean isInStack) {
         myInStack = isInStack;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder addUserData(final Object object) {
+    public ComponentPopupBuilder addUserData(Object object) {
         if (myUserData == null) {
             myUserData = new ArrayList<>();
         }
@@ -351,21 +351,21 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setModalContext(final boolean modal) {
+    public ComponentPopupBuilder setModalContext(boolean modal) {
         myModalContext = modal;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setFocusOwners(@Nonnull final Component[] focusOwners) {
+    public ComponentPopupBuilder setFocusOwners(@Nonnull Component[] focusOwners) {
         myFocusOwners = focusOwners;
         return this;
     }
 
     @Override
     @Nonnull
-    public ComponentPopupBuilder setAdText(@Nullable final String text) {
+    public ComponentPopupBuilder setAdText(@Nullable String text) {
         return setAdText(text, SwingConstants.LEFT);
     }
 

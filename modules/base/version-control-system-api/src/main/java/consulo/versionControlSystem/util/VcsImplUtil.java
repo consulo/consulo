@@ -39,7 +39,7 @@ public class VcsImplUtil {
    * @param message information message
    * @param title   Dialog title
    */
-  public static void showErrorMessage(final Project project, final String message, final String title) {
+  public static void showErrorMessage(Project project, final String message, final String title) {
     Runnable task = new Runnable() {
       public void run() {
         Alerts.okError(LocalizeValue.localizeTODO(message)).title(title).showAsync();

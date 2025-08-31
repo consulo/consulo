@@ -27,11 +27,11 @@ public class AlertIcon implements Icon, Image {
   private int myVShift;
   private int myHShift;
 
-  public AlertIcon(final Icon icon) {
+  public AlertIcon(Icon icon) {
     this(icon, 0, 0);
   }
 
-  public AlertIcon(final Icon icon, final int VShift, final int HShift) {
+  public AlertIcon(Icon icon, int VShift, int HShift) {
     myIcon = icon;
     myVShift = VShift;
     myHShift = HShift;
@@ -50,7 +50,7 @@ public class AlertIcon implements Icon, Image {
   }
 
   @Override
-  public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+  public void paintIcon(Component c, Graphics g, int x, int y) {
     myIcon.paintIcon(c, g, x + myHShift, y + myVShift);
   }
 

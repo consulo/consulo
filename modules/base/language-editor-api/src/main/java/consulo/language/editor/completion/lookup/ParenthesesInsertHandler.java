@@ -31,13 +31,13 @@ import jakarta.annotation.Nullable;
 public abstract class ParenthesesInsertHandler<T extends LookupElement> implements InsertHandler<T> {
   public static final ParenthesesInsertHandler<LookupElement> WITH_PARAMETERS = new ParenthesesInsertHandler<LookupElement>() {
     @Override
-    protected boolean placeCaretInsideParentheses(final InsertionContext context, final LookupElement item) {
+    protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
       return true;
     }
   };
   public static final ParenthesesInsertHandler<LookupElement> NO_PARAMETERS = new ParenthesesInsertHandler<LookupElement>() {
     @Override
-    protected boolean placeCaretInsideParentheses(final InsertionContext context, final LookupElement item) {
+    protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
       return false;
     }
   };
@@ -66,7 +66,7 @@ public abstract class ParenthesesInsertHandler<T extends LookupElement> implemen
   private final char myLeftParenthesis;
   private final char myRightParenthesis;
 
-  protected ParenthesesInsertHandler(final boolean spaceBeforeParentheses, final boolean spaceBetweenParentheses, final boolean mayInsertRightParenthesis) {
+  protected ParenthesesInsertHandler(boolean spaceBeforeParentheses, boolean spaceBetweenParentheses, boolean mayInsertRightParenthesis) {
     this(spaceBeforeParentheses, spaceBetweenParentheses, mayInsertRightParenthesis, false);
   }
 
@@ -95,21 +95,21 @@ public abstract class ParenthesesInsertHandler<T extends LookupElement> implemen
     this(false, false, true);
   }
 
-  private static boolean isToken(@Nullable final PsiElement element, final String text) {
+  private static boolean isToken(@Nullable PsiElement element, String text) {
     return element != null && text.equals(element.getText());
   }
 
-  protected abstract boolean placeCaretInsideParentheses(final InsertionContext context, final T item);
+  protected abstract boolean placeCaretInsideParentheses(InsertionContext context, T item);
 
   @Override
-  public void handleInsert(final InsertionContext context, final T item) {
-    final Editor editor = context.getEditor();
-    final Document document = editor.getDocument();
+  public void handleInsert(InsertionContext context, T item) {
+    Editor editor = context.getEditor();
+    Document document = editor.getDocument();
     context.commitDocument();
     PsiElement lParen = findExistingLeftParenthesis(context);
 
-    final char completionChar = context.getCompletionChar();
-    final boolean putCaretInside = completionChar == myLeftParenthesis || placeCaretInsideParentheses(context, item);
+    char completionChar = context.getCompletionChar();
+    boolean putCaretInside = completionChar == myLeftParenthesis || placeCaretInsideParentheses(context, item);
 
     if (completionChar == myLeftParenthesis) {
       context.setAddCompletionChar(false);
@@ -186,7 +186,7 @@ public abstract class ParenthesesInsertHandler<T extends LookupElement> implemen
 
   @Nullable
   protected PsiElement findNextToken(@Nonnull InsertionContext context) {
-    final PsiFile file = context.getFile();
+    PsiFile file = context.getFile();
     PsiElement element = file.findElementAt(context.getTailOffset());
     if (element instanceof PsiWhiteSpace) {
       if (!myAllowParametersOnNextLine && element.getText().contains("\n")) {

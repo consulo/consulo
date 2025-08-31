@@ -46,7 +46,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
   }
 
   public static JScrollPane install(JTree tree) {
-    final NewErrorTreeRenderer renderer = new NewErrorTreeRenderer();
+    NewErrorTreeRenderer renderer = new NewErrorTreeRenderer();
     //new TreeLinkMouseListener(renderer.myColoredTreeCellRenderer).install(tree);
     new TreeNodePartListener(renderer.myRightCellRenderer).installOn(tree);
     return MultilineTreeCellRenderer.installRenderer(tree, renderer);
@@ -54,10 +54,10 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
 
   @Override
   public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-    final ErrorTreeElement element = getElement(value);
+    ErrorTreeElement element = getElement(value);
     if (element != null) {
-      final CustomizeColoredTreeCellRenderer leftSelfRenderer = element.getLeftSelfRenderer();
-      final CustomizeColoredTreeCellRenderer rightSelfRenderer = element.getRightSelfRenderer();
+      CustomizeColoredTreeCellRenderer leftSelfRenderer = element.getLeftSelfRenderer();
+      CustomizeColoredTreeCellRenderer rightSelfRenderer = element.getRightSelfRenderer();
       if (leftSelfRenderer != null || rightSelfRenderer != null) {
         myColoredTreeCellRenderer.setCurrentCallback(leftSelfRenderer);
         myRightCellRenderer.setCurrentCallback(rightSelfRenderer);
@@ -93,7 +93,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
       return myCurrentCallback == null ? null : myCurrentCallback.getTag();
     }
 
-    public void setCurrentCallback(final CustomizeColoredTreeCellRenderer currentCallback) {
+    public void setCurrentCallback(CustomizeColoredTreeCellRenderer currentCallback) {
       myCurrentCallback = currentCallback;
     }
   }
@@ -111,7 +111,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
       return myRight;
     }
 
-    public MyWrapperRenderer(final TreeCellRenderer left, final TreeCellRenderer right) {
+    public MyWrapperRenderer(TreeCellRenderer left, TreeCellRenderer right) {
       myLeft = left;
       myRight = right;
 
@@ -143,7 +143,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
   }
 
   protected void initComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-    final ErrorTreeElement element = getElement(value);
+    ErrorTreeElement element = getElement(value);
     if (element instanceof GroupingElement) {
       setFont(getFont().deriveFont(Font.BOLD));
     }
@@ -163,7 +163,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
     consulo.ui.image.Image icon = null;
 
     if (element instanceof GroupingElement) {
-      final GroupingElement groupingElement = (GroupingElement)element;
+      GroupingElement groupingElement = (GroupingElement)element;
 
       icon = groupingElement.getFile() != null ? groupingElement.getFile().getFileType().getIcon() : AllIcons.FileTypes.Text;
     }
@@ -187,7 +187,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
     if (!(value instanceof DefaultMutableTreeNode)) {
       return null;
     }
-    final Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
+    Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
     if (!(userObject instanceof ErrorTreeNodeDescriptor)) {
       return null;
     }

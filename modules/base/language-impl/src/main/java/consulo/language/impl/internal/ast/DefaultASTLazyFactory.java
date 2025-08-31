@@ -37,10 +37,10 @@ public class DefaultASTLazyFactory implements ASTLazyFactory {
   @Override
   public LazyParseableElement createLazy(@Nonnull ILazyParseableElementType type, @Nullable CharSequence text) {
     if (type instanceof IFileElementType) {
-      final ASTNode node = type.createNode(text);
+      ASTNode node = type.createNode(text);
       return node instanceof  LazyParseableElement ? (LazyParseableElement) node : new FileElement(type, text);
     }
-    final ASTNode node = type.createNode(text);
+    ASTNode node = type.createNode(text);
     if (node != null) {
       return (LazyParseableElement)node;
     }

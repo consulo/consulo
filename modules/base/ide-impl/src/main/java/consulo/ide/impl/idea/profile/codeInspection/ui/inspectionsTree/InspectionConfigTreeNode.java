@@ -35,7 +35,7 @@ public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
     protected Boolean compute() {
       ToolDescriptors descriptors = getDescriptors();
       if (descriptors != null) {
-        final Descriptor defaultDescriptor = descriptors.getDefaultDescriptor();
+        Descriptor defaultDescriptor = descriptors.getDefaultDescriptor();
         return defaultDescriptor.getInspectionProfile().isProperSetting(defaultDescriptor.getToolWrapper().getShortName());
       }
       for (int i = 0; i < getChildCount(); i++) {
@@ -58,7 +58,7 @@ public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
 
   @Nullable
   public Descriptor getDefaultDescriptor() {
-    final ToolDescriptors descriptors = getDescriptors();
+    ToolDescriptors descriptors = getDescriptors();
     return descriptors == null ? null : descriptors.getDefaultDescriptor();
   }
 
@@ -75,7 +75,7 @@ public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
 
   @Nullable
   public String getScopeName() {
-    final ToolDescriptors descriptors = getDescriptors();
+    ToolDescriptors descriptors = getDescriptors();
     return descriptors != null ? descriptors.getDefaultScopeToolState().getScopeId() : null;
   }
 

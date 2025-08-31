@@ -94,7 +94,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   @Override
   @Nonnull
   public PsiDirectory[] getDirectories() {
-    final Collection<PsiDirectory> collection = getAllDirectories(false);
+    Collection<PsiDirectory> collection = getAllDirectories(false);
     return ContainerUtil.toArray(collection, PsiDirectory.ARRAY_FACTORY);
   }
 
@@ -102,9 +102,9 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   @Nonnull
   public PsiDirectory[] getDirectories(@Nonnull GlobalSearchScope scope) {
     List<PsiDirectory> result = null;
-    final boolean includeLibrarySources = scope.isForceSearchingInLibrarySources();
-    final Collection<PsiDirectory> directories = getAllDirectories(includeLibrarySources);
-    for (final PsiDirectory directory : directories) {
+    boolean includeLibrarySources = scope.isForceSearchingInLibrarySources();
+    Collection<PsiDirectory> directories = getAllDirectories(includeLibrarySources);
+    for (PsiDirectory directory : directories) {
       if (scope.contains(directory.getVirtualFile())) {
         if (result == null) result = new ArrayList<PsiDirectory>();
         result.add(directory);
@@ -182,14 +182,14 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
   @Nonnull
   public PsiPackage[] getSubPackages(@Nonnull PsiPackage psiPackage, @Nonnull GlobalSearchScope scope) {
-    final Map<String, PsiPackage> packagesMap = new HashMap<String, PsiPackage>();
-    final String qualifiedName = psiPackage.getQualifiedName();
+    Map<String, PsiPackage> packagesMap = new HashMap<String, PsiPackage>();
+    String qualifiedName = psiPackage.getQualifiedName();
     for (PsiDirectory dir : psiPackage.getDirectories(scope)) {
       PsiDirectory[] subDirs = dir.getSubdirectories();
       for (PsiDirectory subDir : subDirs) {
-        final PsiPackage aPackage = myPackageManager.findPackage(subDir, myExtensionClass);
+        PsiPackage aPackage = myPackageManager.findPackage(subDir, myExtensionClass);
         if (aPackage != null) {
-          final String subQualifiedName = aPackage.getQualifiedName();
+          String subQualifiedName = aPackage.getQualifiedName();
           if (subQualifiedName.startsWith(qualifiedName) && !packagesMap.containsKey(subQualifiedName)) {
             packagesMap.put(aPackage.getQualifiedName(), aPackage);
           }
@@ -369,7 +369,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   }
 
   @Override
-  public void navigate(final boolean requestFocus) {
+  public void navigate(boolean requestFocus) {
     Collection<PsiDirectory> allDirectories = getAllDirectories(true);
     if(!allDirectories.isEmpty()) {
       allDirectories.iterator().next().navigate(requestFocus);

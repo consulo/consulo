@@ -33,13 +33,13 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
             @Override
             public void layoutContainer(Container target) {
                 super.layoutContainer(target);
-                final Component right = getLayoutComponent(EAST);
-                final Component left = getLayoutComponent(WEST);
+                Component right = getLayoutComponent(EAST);
+                Component left = getLayoutComponent(WEST);
 
                 //IDEA-140824
                 if (right != null && left != null && left.getBounds().x + left.getBounds().width > right.getBounds().x) {
-                    final Rectangle bounds = right.getBounds();
-                    final int newX = left.getBounds().x + left.getBounds().width;
+                    Rectangle bounds = right.getBounds();
+                    int newX = left.getBounds().x + left.getBounds().width;
                     right.setBounds(newX, bounds.y, bounds.width - (newX - bounds.x), bounds.height);
                 }
             }

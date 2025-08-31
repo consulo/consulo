@@ -31,14 +31,14 @@ public class PackageTreeExpansionMonitor {
   public static TreeExpansionMonitor<PackageDependenciesNode> install(final JTree tree, final Project project) {
     return new TreeExpansionMonitor<>(tree) {
       @Override
-      protected TreePath findPathByNode(final PackageDependenciesNode node) {
+      protected TreePath findPathByNode(PackageDependenciesNode node) {
          if (node.getPsiElement() == null){
            return new TreePath(node.getPath());
          }
           PsiManager manager = PsiManager.getInstance(project);
           Enumeration enumeration = ((DefaultMutableTreeNode)tree.getModel().getRoot()).breadthFirstEnumeration();
           while (enumeration.hasMoreElements()) {
-            final Object nextElement = enumeration.nextElement();
+            Object nextElement = enumeration.nextElement();
             if (nextElement instanceof PackageDependenciesNode) { //do not include root
               PackageDependenciesNode child = (PackageDependenciesNode)nextElement;
               if (manager.areElementsEquivalent(child.getPsiElement(), node.getPsiElement())) {

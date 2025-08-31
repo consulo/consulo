@@ -59,7 +59,7 @@ public abstract class UsageContextPanelBase extends JBPanelWithEmptyText impleme
   }
 
   @Override
-  public final void updateLayout(@Nullable final List<? extends UsageInfo> infos) {
+  public final void updateLayout(@Nullable List<? extends UsageInfo> infos) {
     AppUIExecutor.onUiThread().withDocumentsCommitted(myProject).expireWith(this).execute(() -> updateLayoutLater(infos));
   }
 

@@ -27,7 +27,7 @@ import jakarta.annotation.Nullable;
 public final class GotoProjectDirectory extends FileChooserAction {
   @Override
   protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    final VirtualFile projectPath = getProjectDir(e);
+    VirtualFile projectPath = getProjectDir(e);
     if (projectPath != null) {
       fileSystemTree.select(projectPath, () -> fileSystemTree.expand(projectPath, null));
     }
@@ -35,15 +35,15 @@ public final class GotoProjectDirectory extends FileChooserAction {
 
   @Override
   protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
+    Presentation presentation = e.getPresentation();
     presentation.setIcon(Application.get().getIcon());
-    final VirtualFile projectPath = getProjectDir(e);
+    VirtualFile projectPath = getProjectDir(e);
     presentation.setEnabled(projectPath != null && fileSystemTree.isUnderRoots(projectPath));
   }
 
   @Nullable
-  private static VirtualFile getProjectDir(final AnActionEvent e) {
-    final VirtualFile projectFileDir = e.getData(Project.PROJECT_FILE_DIRECTORY);
+  private static VirtualFile getProjectDir(AnActionEvent e) {
+    VirtualFile projectFileDir = e.getData(Project.PROJECT_FILE_DIRECTORY);
     return projectFileDir != null && projectFileDir.isValid() ? projectFileDir : null;
   }
 }

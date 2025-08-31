@@ -78,27 +78,27 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         if (virtualFile == null) {
             line = column = -1;
         }
-        final int guiLine = line < 0 ? -1 : line + 1;
-        final int guiColumn = column < 0 ? 0 : column + 1;
+        int guiLine = line < 0 ? -1 : line + 1;
+        int guiColumn = column < 0 ? 0 : column + 1;
 
-        final Navigatable navigatable = notificationData.getNavigatable() != null
+        Navigatable navigatable = notificationData.getNavigatable() != null
             ? notificationData.getNavigatable()
             : virtualFile != null ? new OpenFileDescriptorImpl(myProject, virtualFile, line, column) : null;
 
-        final ErrorTreeElementKind kind =
+        ErrorTreeElementKind kind =
             ErrorTreeElementKind.convertMessageFromCompilerErrorType(notificationData.getNotificationCategory().getMessageCategory());
-        final String[] message = notificationData.getMessage().split("\n");
-        final String exportPrefix = NewErrorTreeViewPanelImpl.createExportPrefix(guiLine);
-        final String rendererPrefix = NewErrorTreeViewPanelImpl.createRendererPrefix(guiLine, guiColumn);
+        String[] message = notificationData.getMessage().split("\n");
+        String exportPrefix = NewErrorTreeViewPanelImpl.createExportPrefix(guiLine);
+        String rendererPrefix = NewErrorTreeViewPanelImpl.createRendererPrefix(guiLine, guiColumn);
 
         UIUtil.invokeLaterIfNeeded(() -> {
             boolean activate =
                 notificationData.getNotificationCategory() == NotificationCategory.ERROR ||
                     notificationData.getNotificationCategory() == NotificationCategory.WARNING;
-            final NewErrorTreeViewPanelImpl errorTreeView =
+            NewErrorTreeViewPanelImpl errorTreeView =
                 prepareMessagesView(externalSystemId, notificationData.getNotificationSource(), activate);
-            final GroupingElement groupingElement = errorTreeView.getErrorViewStructure().getGroupingElement(groupName, null, virtualFile);
-            final NavigatableMessageElement navigatableMessageElement;
+            GroupingElement groupingElement = errorTreeView.getErrorViewStructure().getGroupingElement(groupName, null, virtualFile);
+            NavigatableMessageElement navigatableMessageElement;
             if (notificationData.hasLinks()) {
                 navigatableMessageElement = new EditableNotificationMessageElement(
                     notification,
@@ -129,18 +129,18 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
     @Nonnull
     @RequiredUIAccess
     public NewErrorTreeViewPanelImpl prepareMessagesView(
-        @Nonnull final ProjectSystemId externalSystemId,
-        @Nonnull final NotificationSource notificationSource,
+        @Nonnull ProjectSystemId externalSystemId,
+        @Nonnull NotificationSource notificationSource,
         boolean activateView
     ) {
         UIAccess.assertIsUIThread();
 
-        final NewErrorTreeViewPanelImpl errorTreeView;
-        final String contentDisplayName = getContentDisplayName(notificationSource, externalSystemId);
-        final Pair<NotificationSource, ProjectSystemId> contentIdPair = Pair.create(notificationSource, externalSystemId);
+        NewErrorTreeViewPanelImpl errorTreeView;
+        String contentDisplayName = getContentDisplayName(notificationSource, externalSystemId);
+        Pair<NotificationSource, ProjectSystemId> contentIdPair = Pair.create(notificationSource, externalSystemId);
         Content targetContent = findContent(contentIdPair, contentDisplayName);
 
-        final MessageView messageView = ServiceManager.getService(myProject, MessageView.class);
+        MessageView messageView = ServiceManager.getService(myProject, MessageView.class);
         if (targetContent == null || !contentIdPair.equals(targetContent.getUserData(CONTENT_ID_KEY))) {
             errorTreeView = new NewEditableErrorTreeViewPanel(myProject, null, true, true, null);
             targetContent = ContentFactory.getInstance().createContent(errorTreeView, contentDisplayName, true);
@@ -155,7 +155,7 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         }
 
         messageView.getContentManager().setSelectedContent(targetContent);
-        final ToolWindow tw = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW);
+        ToolWindow tw = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW);
         if (activateView && tw != null && !tw.isActive()) {
             tw.activate(null, false);
         }
@@ -165,7 +165,7 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
     @Nullable
     private Content findContent(@Nonnull Pair<NotificationSource, ProjectSystemId> contentIdPair, @Nonnull String contentDisplayName) {
         Content targetContent = null;
-        final MessageView messageView = myProject.getInstance(MessageView.class);
+        MessageView messageView = myProject.getInstance(MessageView.class);
         for (Content content : messageView.getContentManager().getContents()) {
             if (contentIdPair.equals(content.getUserData(CONTENT_ID_KEY))
                 && StringUtil.equals(content.getDisplayName(), contentDisplayName) && !content.isPinned()) {
@@ -177,8 +177,8 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
 
     @Nonnull
     public static String getContentDisplayName(
-        @Nonnull final NotificationSource notificationSource,
-        @Nonnull final ProjectSystemId externalSystemId
+        @Nonnull NotificationSource notificationSource,
+        @Nonnull ProjectSystemId externalSystemId
     ) {
         if (notificationSource != NotificationSource.PROJECT_SYNC) {
             throw new AssertionError("unsupported notification source found: " + notificationSource);

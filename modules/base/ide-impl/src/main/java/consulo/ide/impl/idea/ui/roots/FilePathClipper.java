@@ -34,7 +34,7 @@ public class FilePathClipper implements ComponentListener {
   private FilePathClipper(JLabel labelToClip, JComponent componentToWatch) {
     myLabelToClip = labelToClip;
     myComponentToWatch = componentToWatch;
-    final String text = labelToClip.getText(); // newly created JLabel can return null here
+    String text = labelToClip.getText(); // newly created JLabel can return null here
     myFile = new File(text != null? text : "");
   }
 
@@ -43,7 +43,7 @@ public class FilePathClipper implements ComponentListener {
   }
 
   public void componentResized(ComponentEvent e) {
-    final String optimalTextForComponent = FilePathSplittingPolicy.SPLIT_BY_SEPARATOR.getOptimalTextForComponent(myFile, myLabelToClip, myComponentToWatch.getWidth());
+    String optimalTextForComponent = FilePathSplittingPolicy.SPLIT_BY_SEPARATOR.getOptimalTextForComponent(myFile, myLabelToClip, myComponentToWatch.getWidth());
     myLabelToClip.setText(optimalTextForComponent);
   }
 

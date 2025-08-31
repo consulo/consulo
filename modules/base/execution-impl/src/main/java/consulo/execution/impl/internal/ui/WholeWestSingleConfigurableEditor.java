@@ -56,8 +56,8 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     public WholeWestSingleConfigurableEditor(@Nullable Project project,
                                              Configurable configurable,
                                              @NonNls String dimensionKey,
-                                             final boolean showApplyButton,
-                                             final IdeModalityType ideModalityType,
+                                             boolean showApplyButton,
+                                             IdeModalityType ideModalityType,
                                              boolean doNotCallInit) {
         super(project, true, ideModalityType);
         myDimensionKey = dimensionKey;
@@ -71,8 +71,8 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     public WholeWestSingleConfigurableEditor(@Nullable Project project,
                                              Configurable configurable,
                                              @NonNls String dimensionKey,
-                                             final boolean showApplyButton,
-                                             final IdeModalityType ideModalityType) {
+                                             boolean showApplyButton,
+                                             IdeModalityType ideModalityType) {
         super(project, true, ideModalityType);
         myDimensionKey = dimensionKey;
         myShowApplyButton = showApplyButton;
@@ -87,8 +87,8 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     public WholeWestSingleConfigurableEditor(Component parent,
                                              Configurable configurable,
                                              String dimensionServiceKey,
-                                             final boolean showApplyButton,
-                                             final IdeModalityType ideModalityType) {
+                                             boolean showApplyButton,
+                                             IdeModalityType ideModalityType) {
         super(parent, true);
         myDimensionKey = dimensionServiceKey;
         myShowApplyButton = showApplyButton;
@@ -100,11 +100,11 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
         myConfigurable.reset();
     }
 
-    public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, final boolean showApplyButton) {
+    public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, boolean showApplyButton) {
         this(project, configurable, dimensionKey, showApplyButton, IdeModalityType.IDE);
     }
 
-    public WholeWestSingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, final boolean showApplyButton) {
+    public WholeWestSingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, boolean showApplyButton) {
         this(parent, configurable, dimensionServiceKey, showApplyButton, IdeModalityType.IDE);
     }
 
@@ -218,7 +218,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
 
         public ApplyAction() {
             super(CommonLocalize.buttonApply());
-            final Runnable updateRequest = new Runnable() {
+            Runnable updateRequest = new Runnable() {
                 @Override
                 public void run() {
                     if (!WholeWestSingleConfigurableEditor.this.isShowing()) {
@@ -237,7 +237,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
             SwingUtilities.invokeLater(() -> addUpdateRequest(updateRequest));
         }
 
-        private void addUpdateRequest(final Runnable updateRequest) {
+        private void addUpdateRequest(Runnable updateRequest) {
             myUpdateAlarm.addRequest(updateRequest, 500, Application.get().getModalityStateForComponent(getWindow()));
         }
 

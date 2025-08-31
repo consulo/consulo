@@ -69,7 +69,7 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
     }
     String adv = provider.getAdvertisement();
     if (adv == null) {
-      final String shortcut = getActionShortcut(IdeActions.ACTION_QUICK_JAVADOC);
+      String shortcut = getActionShortcut(IdeActions.ACTION_QUICK_JAVADOC);
       if (shortcut != null) {
         adv = provider.getQuickDocHotKeyAdvertisement(shortcut);
       }
@@ -85,7 +85,7 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
     if (parameters.getInvocationCount() == 0 && !file.getUserData(AUTO_POPUP_KEY)) {   // is autopopup
       return;
     }
-    final PrefixMatcher prefixMatcher = provider.createPrefixMatcher(prefix);
+    PrefixMatcher prefixMatcher = provider.createPrefixMatcher(prefix);
     if (prefixMatcher != null) {
       result = result.withPrefixMatcher(prefixMatcher);
     }
@@ -118,10 +118,10 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
     }
   }
 
-  private static <T> void addCompletionElements(final CompletionResultSet result, final TextFieldWithAutoCompletionListProvider<T> listProvider, final Collection<T> items, final int index) {
-    final AutoCompletionPolicy completionPolicy = ApplicationManager.getApplication().isUnitTestMode() ? AutoCompletionPolicy.ALWAYS_AUTOCOMPLETE : AutoCompletionPolicy.NEVER_AUTOCOMPLETE;
+  private static <T> void addCompletionElements(CompletionResultSet result, TextFieldWithAutoCompletionListProvider<T> listProvider, Collection<T> items, int index) {
+    AutoCompletionPolicy completionPolicy = ApplicationManager.getApplication().isUnitTestMode() ? AutoCompletionPolicy.ALWAYS_AUTOCOMPLETE : AutoCompletionPolicy.NEVER_AUTOCOMPLETE;
     int grouping = index;
-    for (final T item : items) {
+    for (T item : items) {
       LookupElementBuilder builder = listProvider.createLookupBuilder(item);
 
       result.addElement(PrioritizedLookupElement.withGrouping(builder.withAutoCompletionPolicy(completionPolicy), grouping--));

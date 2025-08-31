@@ -40,7 +40,7 @@ public class BasicLookAndFeelHacking {
 
   public static void initComponentDefaults(BasicLookAndFeel basicLookAndFeel, UIDefaults uiDefaults) {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initComponentDefaults", UIDefaults.class);
+      Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initComponentDefaults", UIDefaults.class);
       superMethod.setAccessible(true);
       superMethod.invoke(basicLookAndFeel, uiDefaults);
     }
@@ -51,7 +51,7 @@ public class BasicLookAndFeelHacking {
 
   public static void initSystemColorDefaults(BasicLookAndFeel basicLookAndFeel, UIDefaults uiDefaults) {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initSystemColorDefaults", UIDefaults.class);
+      Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initSystemColorDefaults", UIDefaults.class);
       superMethod.setAccessible(true);
       superMethod.invoke(basicLookAndFeel, uiDefaults);
     }
@@ -62,7 +62,7 @@ public class BasicLookAndFeelHacking {
 
   public static void initClassDefaults(BasicLookAndFeel basicLookAndFeel, UIDefaults uiDefaults) {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initClassDefaults", UIDefaults.class);
+      Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initClassDefaults", UIDefaults.class);
       superMethod.setAccessible(true);
       superMethod.invoke(basicLookAndFeel, uiDefaults);
     }
@@ -73,7 +73,7 @@ public class BasicLookAndFeelHacking {
 
   public static void initialize(BasicLookAndFeel basicLookAndFeel) {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initialize");
+      Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initialize");
       superMethod.setAccessible(true);
       superMethod.invoke(basicLookAndFeel);
     }
@@ -84,7 +84,7 @@ public class BasicLookAndFeelHacking {
 
   public static void uninitialize(BasicLookAndFeel basicLookAndFeel) {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("uninitialize");
+      Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("uninitialize");
       superMethod.setAccessible(true);
       superMethod.invoke(basicLookAndFeel);
     }
@@ -95,7 +95,7 @@ public class BasicLookAndFeelHacking {
 
   public static void loadSystemColors(BasicLookAndFeel basicLookAndFeel, UIDefaults defaults, String[] systemColors, boolean useNative) {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("loadSystemColors", UIDefaults.class, String[].class, boolean.class);
+      Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("loadSystemColors", UIDefaults.class, String[].class, boolean.class);
       superMethod.setAccessible(true);
       superMethod.invoke(basicLookAndFeel, defaults, systemColors, useNative);
     }

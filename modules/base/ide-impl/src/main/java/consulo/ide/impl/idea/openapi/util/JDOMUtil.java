@@ -107,7 +107,7 @@ public class JDOMUtil {
     return i;
   }
 
-  private static int addToHash(final int i, @Nonnull final String s) {
+  private static int addToHash(int i, @Nonnull String s) {
     return i * 31 + s.hashCode();
   }
 
@@ -133,11 +133,11 @@ public class JDOMUtil {
   @Deprecated
   @SuppressWarnings("unused")
   @Nonnull
-  public static String concatTextNodesValues(@Nonnull final Object[] nodes) {
+  public static String concatTextNodesValues(@Nonnull Object[] nodes) {
     return consulo.util.jdom.JDOMUtil.concatTextNodesValues(nodes);
   }
 
-  public static void addContent(@Nonnull final Element targetElement, final Object node) {
+  public static void addContent(@Nonnull Element targetElement, Object node) {
     consulo.util.jdom.JDOMUtil.addContent(targetElement, node);
   }
 
@@ -291,7 +291,7 @@ public class JDOMUtil {
   }
 
   @Nonnull
-  public static String writeChildren(@Nullable final Element element, @Nonnull final String lineSeparator) throws IOException {
+  public static String writeChildren(@Nullable Element element, @Nonnull String lineSeparator) throws IOException {
     return consulo.util.jdom.JDOMUtil.writeChildren(element, lineSeparator);
   }
 
@@ -350,7 +350,7 @@ public class JDOMUtil {
   @SuppressWarnings("unused")
   @Deprecated
   @Nonnull
-  public static List<Element> getChildrenFromAllNamespaces(@Nonnull final Element element, @Nonnull @NonNls final String name) {
+  public static List<Element> getChildrenFromAllNamespaces(@Nonnull Element element, @Nonnull @NonNls String name) {
     return consulo.util.jdom.JDOMUtil.getChildrenFromAllNamespaces(element, name);
   }
 
@@ -367,7 +367,7 @@ public class JDOMUtil {
     }
 
     List<Element> children = getChildren(element);
-    for (final Element child : children) {
+    for (Element child : children) {
       printDiagnostics(child, prefix);
     }
   }

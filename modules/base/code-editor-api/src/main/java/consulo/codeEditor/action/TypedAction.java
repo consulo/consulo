@@ -64,7 +64,7 @@ public abstract class TypedAction {
 
     private static class Handler implements TypedActionHandler {
         @Override
-        public void execute(@Nonnull final Editor editor, char charTyped, @Nonnull DataContext dataContext) {
+        public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
             if (editor.isViewer()) {
                 return;
             }
@@ -72,7 +72,7 @@ public abstract class TypedAction {
             Document doc = editor.getDocument();
             doc.startGuardedBlockChecking();
             try {
-                final String str = String.valueOf(charTyped);
+                String str = String.valueOf(charTyped);
                 CommandProcessor.getInstance().setCurrentCommandName(CodeEditorLocalize.typingInEditorCommandName());
                 EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true);
             }
@@ -148,7 +148,7 @@ public abstract class TypedAction {
         }
     }
 
-    public final void actionPerformed(@Nullable final Editor editor, final char charTyped, final DataContext dataContext) {
+    public final void actionPerformed(@Nullable Editor editor, char charTyped, DataContext dataContext) {
         if (editor == null) {
             return;
         }

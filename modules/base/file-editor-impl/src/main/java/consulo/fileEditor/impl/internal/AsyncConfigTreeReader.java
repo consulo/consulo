@@ -39,20 +39,20 @@ public abstract class AsyncConfigTreeReader<T> {
       return CompletableFuture.completedFuture(null);
     }
 
-    final Element splitterElement = element.getChild("splitter");
+    Element splitterElement = element.getChild("splitter");
     if (splitterElement != null) {
-      final Element first = splitterElement.getChild("split-first");
-      final Element second = splitterElement.getChild("split-second");
+      Element first = splitterElement.getChild("split-first");
+      Element second = splitterElement.getChild("split-second");
       return processSplitter(splitterElement, first, second, context, uiAccess);
     }
 
-    final Element leaf = element.getChild("leaf");
+    Element leaf = element.getChild("leaf");
     if (leaf == null) {
       return CompletableFuture.completedFuture(null);
     }
 
     List<Element> fileElements = leaf.getChildren("file");
-    final List<Element> children = new ArrayList<>(fileElements.size());
+    List<Element> children = new ArrayList<>(fileElements.size());
 
     // trim to EDITOR_TAB_LIMIT, ignoring CLOSE_NON_MODIFIED_FILES_FIRST policy
     int toRemove = fileElements.size() - UISettings.getInstance().EDITOR_TAB_LIMIT;

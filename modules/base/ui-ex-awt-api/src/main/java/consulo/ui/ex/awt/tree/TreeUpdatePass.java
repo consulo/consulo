@@ -37,7 +37,7 @@ public class TreeUpdatePass {
   private boolean myUpdateStructure = true;
   private final Set<NodeDescriptor> myUpdatedDescriptors = new HashSet<NodeDescriptor>();
 
-  public TreeUpdatePass(@Nonnull final DefaultMutableTreeNode node) {
+  public TreeUpdatePass(@Nonnull DefaultMutableTreeNode node) {
     myNode = node;
     myAllocation = System.currentTimeMillis();
   }
@@ -56,7 +56,7 @@ public class TreeUpdatePass {
     return myNode;
   }
 
-  public TreeUpdatePass setUpdateStamp(final long updateCount) {
+  public TreeUpdatePass setUpdateStamp(long updateCount) {
     myUpdateStamp = updateCount;
     return this;
   }

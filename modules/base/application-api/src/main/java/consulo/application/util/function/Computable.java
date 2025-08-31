@@ -77,7 +77,7 @@ public interface Computable <T> extends Supplier<T> {
     @Override
     public final T compute() {
       if (myValue == null) {
-        final T value = internalCompute();
+        T value = internalCompute();
         myValue = value != null ? value : NULL_VALUE;
       }
       return myValue != NULL_VALUE ? (T)myValue : null;

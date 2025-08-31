@@ -35,10 +35,10 @@ import java.util.Collection;
 @Deprecated
 public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
   @Nullable
-  public abstract Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, final ViewSettings viewSettings);
+  public abstract Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings);
 
   @Nullable
-  public AbstractTreeNode createNode(final Project project, final Object element, final ViewSettings viewSettings) {
+  public AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
     return null;
   }
 
@@ -50,7 +50,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @param vFile   the file to check.
    * @return true if the file is contained, false if not or if <code>element</code> is not an element supported by this provider.
    */
-  public abstract boolean elementContainsFile(final Object element, final VirtualFile vFile);
+  public abstract boolean elementContainsFile(Object element, VirtualFile vFile);
 
   /**
    * Returns the weight of the specified project view node element to use when sorting the favorites list.
@@ -59,7 +59,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @param isSortByType
    * @return the weight, or -1 if <code>element</code> is not an element supported by this provider.
    */
-  public abstract int getElementWeight(final Object element, final boolean isSortByType);
+  public abstract int getElementWeight(Object element, boolean isSortByType);
 
   /**
    * Returns the location text (grey text in parentheses) to display in the Favorites view for the specified element.
@@ -68,7 +68,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @return the location text, or -1 if <code>element</code> is not an element supported by this provider.
    */
   @Nullable
-  public abstract String getElementLocation(final Object element);
+  public abstract String getElementLocation(Object element);
 
   /**
    * Checks if the specified element is invalid and needs to be removed from the tree.
@@ -76,7 +76,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @param element the element to check.
    * @return true if the element is invalid, false if the element is valid or not supported by this provider.
    */
-  public abstract boolean isInvalidElement(final Object element);
+  public abstract boolean isInvalidElement(Object element);
 
   /**
    * Returns the identifier used to persist favorites for this provider.
@@ -93,7 +93,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @return the URL, or null if the element is not supported by this provider.
    */
   @Nullable
-  public abstract String getElementUrl(final Object element);
+  public abstract String getElementUrl(Object element);
 
   /**
    * Returns the name of the module containing the specified element.
@@ -102,7 +102,7 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * @return the name of the module, or null if the element is not supported by this provider or the module name is unknown.
    */
   @Nullable
-  public abstract String getElementModuleName(final Object element);
+  public abstract String getElementModuleName(Object element);
 
   /**
    * Returns the path of node objects to be added to the favorites tree for the specified persisted URL and module name.
@@ -114,10 +114,10 @@ public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
    * specified URL.
    */
   @Nullable
-  public abstract Object[] createPathFromUrl(final Project project, final String url, final String moduleName);
+  public abstract Object[] createPathFromUrl(Project project, String url, String moduleName);
 
   @Nullable
-  public PsiElement getPsiElement(final Object element) {
+  public PsiElement getPsiElement(Object element) {
     if (element instanceof PsiElement) {
       return (PsiElement)element;
     }

@@ -47,9 +47,9 @@ public class ArtifactPropertiesEditors {
     myMainPanels = new HashMap<String, JPanel>();
     myEditors = new ArrayList<PropertiesEditorInfo>();
     for (ArtifactPropertiesProvider provider : artifact.getPropertiesProviders()) {
-      final PropertiesEditorInfo editorInfo = new PropertiesEditorInfo(provider);
+      PropertiesEditorInfo editorInfo = new PropertiesEditorInfo(provider);
       myEditors.add(editorInfo);
-      final String tabName = editorInfo.myEditor.getTabName();
+      String tabName = editorInfo.myEditor.getTabName();
       JPanel panel = myMainPanels.get(tabName);
       if (panel == null) {
         panel = new JPanel(new VerticalFlowLayout());
@@ -129,7 +129,7 @@ public class ArtifactPropertiesEditors {
     private PropertiesEditorInfo(ArtifactPropertiesProvider provider) {
       myProvider = provider;
       myProperties = provider.createProperties(myOriginalArtifact.getArtifactType());
-      final ArtifactProperties<?> originalProperties = myOriginalArtifact.getProperties(provider);
+      ArtifactProperties<?> originalProperties = myOriginalArtifact.getProperties(provider);
       if (originalProperties != null) {
         ArtifactUtil.copyProperties(originalProperties, myProperties);
       }
@@ -139,7 +139,7 @@ public class ArtifactPropertiesEditors {
 
     public void applyProperties() {
       myEditor.apply();
-      final ModifiableArtifact artifact = myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
+      ModifiableArtifact artifact = myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
       artifact.setProperties(myProvider, myProperties);
     }
 

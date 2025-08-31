@@ -42,21 +42,21 @@ public class ProjectPathMacroManagerImpl extends BasePathMacroManager implements
 
   @Override
   public ExpandMacroToPathMap getExpandMacroMap() {
-    final ExpandMacroToPathMap result = super.getExpandMacroMap();
+    ExpandMacroToPathMap result = super.getExpandMacroMap();
     addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, getProjectDir(myProject));
     return result;
   }
 
   @Override
   public ReplacePathToMacroMap getReplacePathMap() {
-    final ReplacePathToMacroMap result = super.getReplacePathMap();
+    ReplacePathToMacroMap result = super.getReplacePathMap();
     addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, getProjectDir(myProject), null);
     return result;
   }
 
   @Nullable
   private static String getProjectDir(Project project) {
-    final VirtualFile baseDir = project.getBaseDir();
+    VirtualFile baseDir = project.getBaseDir();
     return baseDir != null ? baseDir.getPath() : null;
   }
 }

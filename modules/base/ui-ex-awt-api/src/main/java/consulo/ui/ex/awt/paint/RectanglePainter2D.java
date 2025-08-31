@@ -46,7 +46,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      * @see #paint(Graphics2D, double, double, double, double, Double, StrokeType, double, Object)
      */
     @Override
-    public void paint(@Nonnull final Graphics2D g,
+    public void paint(@Nonnull Graphics2D g,
                       Rectangle2D rect,
                       @Nullable Double arc,
                       @Nonnull StrokeType strokeType,
@@ -83,9 +83,9 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      *                affecting a rounding rectangle only
      */
     @Override
-    public void paint(@Nonnull final Graphics2D g,
+    public void paint(@Nonnull Graphics2D g,
                       double x, double y, double width, double height,
-                      @Nullable final Double arc,
+                      @Nullable Double arc,
                       @Nonnull StrokeType strokeType,
                       double strokeWidth,
                       @Nonnull Object valueAA)
@@ -113,7 +113,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
         double w_out = sw_1 + width + sw_2;
         double h_out = sw_1 + height + sw_2;
 
-        final Path2D path = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+        Path2D path = new Path2D.Double(Path2D.WIND_EVEN_ODD);
         if (arc != null) {
           path.append(new RoundRectangle2D.Double(x_out, y_out, w_out, h_out, arc + a_out, arc + a_out), false);
           path.append(new RoundRectangle2D.Double(x_out + sw, y_out + sw, w_out - dsw, h_out - dsw, arc - dsw, arc - dsw), false);
@@ -148,7 +148,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      * @see #paint(Graphics2D, double, double, double, double, Double, StrokeType, double, Object)
      */
     @Override
-    public void paint(@Nonnull final Graphics2D g,
+    public void paint(@Nonnull Graphics2D g,
                       Rectangle2D rect,
                       @Nullable Double arc,
                       @Nonnull StrokeType strokeType,
@@ -185,7 +185,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      *                affecting a rounding rectangle only
      */
     @Override
-    public void paint(@Nonnull final Graphics2D g,
+    public void paint(@Nonnull Graphics2D g,
                       double x, double y, double width, double height,
                       @Nullable Double arc,
                       @Nonnull StrokeType strokeType,
@@ -213,7 +213,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
       double w_out = sw_1 + width + sw_2;
       double h_out = sw_1 + height + sw_2;
 
-      final Shape rect = arc != null ?
+      Shape rect = arc != null ?
                          new RoundRectangle2D.Double(x_out, y_out, w_out, h_out, arc + dsw, arc + dsw) :
                          new Rectangle2D.Double(x_out, y_out, w_out, h_out);
 
@@ -293,7 +293,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
 
   public abstract void paint(@Nonnull Graphics2D g, double x, double y, double width, double height);
 
-  public abstract void paint(@Nonnull final Graphics2D g,
+  public abstract void paint(@Nonnull Graphics2D g,
                              Rectangle2D rect,
                              @Nullable Double arc,
                              @Nonnull StrokeType strokeType,

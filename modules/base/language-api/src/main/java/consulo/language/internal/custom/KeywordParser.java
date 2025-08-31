@@ -55,7 +55,7 @@ public class KeywordParser {
       return new HashSet<>(keywordSet);
     }
 
-    final Set<String> result = new HashSet<>();
+    Set<String> result = new HashSet<>();
     for (String s : keywordSet) {
       result.add(StringUtil.toUpperCase(s));
     }

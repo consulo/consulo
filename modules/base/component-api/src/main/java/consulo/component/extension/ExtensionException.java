@@ -19,7 +19,7 @@ package consulo.component.extension;
 public class ExtensionException extends RuntimeException {
   private final Class myExtensionClass;
 
-  public ExtensionException(final Class extensionClass) {
+  public ExtensionException(Class extensionClass) {
     super(extensionClass.getCanonicalName());
     myExtensionClass = extensionClass;
   }

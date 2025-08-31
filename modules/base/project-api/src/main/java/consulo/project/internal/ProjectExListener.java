@@ -24,5 +24,5 @@ import jakarta.annotation.Nonnull;
 
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface ProjectExListener {
-  void saved(@Nonnull final Project project);
+  void saved(@Nonnull Project project);
 }

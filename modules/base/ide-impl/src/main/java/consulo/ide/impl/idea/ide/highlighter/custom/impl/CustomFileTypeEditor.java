@@ -221,7 +221,7 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
     return panel;
   }
 
-  private JPanel createKeywordsPanel(final int index) {
+  private JPanel createKeywordsPanel(int index) {
     JPanel panel = ToolbarDecorator.createDecorator(myKeywordsLists[index])
       .setAddAction(button -> {
         ModifyKeywordDialog dialog = new ModifyKeywordDialog(myKeywordsLists[index], "");

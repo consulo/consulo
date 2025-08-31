@@ -36,12 +36,12 @@ public interface ContinuationContext extends ContinuationPause {
 
   void cancelCurrent();
 
-  <T extends Exception> void addExceptionHandler(final Class<T> clazz, final Consumer<T> consumer);
-  boolean handleException(final Exception e, boolean cancelEveryThing);
+  <T extends Exception> void addExceptionHandler(Class<T> clazz, Consumer<T> consumer);
+  boolean handleException(Exception e, boolean cancelEveryThing);
 
-  void keepExisting(final Object disaster, final Object cure);
-  void throwDisaster(final Object disaster, final Object cure);
+  void keepExisting(Object disaster, Object cure);
+  void throwDisaster(Object disaster, Object cure);
 
-  void removeNewTasksPatcher(@Nonnull final Consumer<TaskDescriptor> consumer);
-  void addNewTasksPatcher(@Nonnull final Consumer<TaskDescriptor> consumer);
+  void removeNewTasksPatcher(@Nonnull Consumer<TaskDescriptor> consumer);
+  void addNewTasksPatcher(@Nonnull Consumer<TaskDescriptor> consumer);
 }

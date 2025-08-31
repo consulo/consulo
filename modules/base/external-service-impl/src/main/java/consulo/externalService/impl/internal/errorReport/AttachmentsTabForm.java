@@ -68,7 +68,7 @@ public class AttachmentsTabForm {
             if (e.getValueIsAdjusting()) {
                 return;
             }
-            final Attachment selection = myTable.getSelectedObject();
+            Attachment selection = myTable.getSelectedObject();
             if (selection != null) {
                 LabeledTextComponent.setText(myFileTextArea.getTextComponent(), selection.getDisplayText(), true);
             }
@@ -78,13 +78,13 @@ public class AttachmentsTabForm {
         });
         myTable.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                final int[] selectedRows = myTable.getSelectedRows();
+                int[] selectedRows = myTable.getSelectedRows();
                 boolean aggregateValue = true;
-                for (final int selectedRow : selectedRows) {
+                for (int selectedRow : selectedRows) {
                     if (selectedRow < 0 || !myTable.isCellEditable(selectedRow, 0)) {
                         return;
                     }
-                    final Boolean value = (Boolean) myTable.getValueAt(selectedRow, 0);
+                    Boolean value = (Boolean) myTable.getValueAt(selectedRow, 0);
                     aggregateValue &= value == null || value.booleanValue();
                 }
                 for (int selectedRow : selectedRows) {
@@ -114,7 +114,7 @@ public class AttachmentsTabForm {
     }
 
     public void selectFirstIncludedAttachment() {
-        final List items = ((ListTableModel) myTable.getModel()).getItems();
+        List items = ((ListTableModel) myTable.getModel()).getItems();
         for (Object item : items) {
             if (((Attachment) item).isIncluded()) {
                 myTable.setSelection(Collections.singleton((Attachment) item));

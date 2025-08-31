@@ -42,7 +42,7 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   }
 
   @Override
-  public void processFiles(@Nonnull final ModuleRootModel moduleRootModel, @Nonnull final Predicate<ContentFolderTypeProvider> predicate, @Nonnull final Predicate<VirtualFile> processor) {
+  public void processFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate, @Nonnull Predicate<VirtualFile> processor) {
     moduleRootModel.iterateContentEntries(contentEntry -> {
       VirtualFile file = contentEntry.getFile();
       return file == null || processor.test(file);
@@ -50,7 +50,7 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   }
 
   @Override
-  public void processFileUrls(@Nonnull final ModuleRootModel moduleRootModel, @Nonnull final Predicate<ContentFolderTypeProvider> predicate, @Nonnull final Predicate<String> processor) {
+  public void processFileUrls(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate, @Nonnull Predicate<String> processor) {
     moduleRootModel.iterateContentEntries(contentEntry -> processor.test(contentEntry.getUrl()));
   }
 }

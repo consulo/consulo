@@ -37,7 +37,7 @@ public class LocalHistoryRecordsTable extends AbstractRecordsTable {
 
   private static final byte[] ZEROS = new byte[RECORD_SIZE];
 
-  public LocalHistoryRecordsTable(final File storageFilePath, final PagePool pool) throws IOException {
+  public LocalHistoryRecordsTable(File storageFilePath, PagePool pool) throws IOException {
     super(storageFilePath, pool);
   }
 

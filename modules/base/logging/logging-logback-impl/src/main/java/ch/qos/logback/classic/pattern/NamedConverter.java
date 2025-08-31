@@ -75,7 +75,7 @@ public abstract class NamedConverter extends ClassicConverter {
      * @param event The LoggingEvent to process, cannot not be null.
      * @return name, must not be null.
      */
-    protected abstract String getFullyQualifiedName(final ILoggingEvent event);
+    protected abstract String getFullyQualifiedName(ILoggingEvent event);
 
     public void start() {
 

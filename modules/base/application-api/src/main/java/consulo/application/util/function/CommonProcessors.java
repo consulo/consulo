@@ -76,7 +76,7 @@ public class CommonProcessors {
   }
 
   @Nonnull
-  public static <T> Processor<T> notNullProcessor(@Nonnull final Predicate<T> processor) {
+  public static <T> Processor<T> notNullProcessor(@Nonnull Predicate<T> processor) {
     return processor::test;
   }
 

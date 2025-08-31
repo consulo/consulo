@@ -65,25 +65,25 @@ class StubCumulativeInputDiffBuilder extends InputDataDiffBuilder<Integer, Seria
     updateStubIndices(getAffectedIndices(previousStubIndicesValueMap, newStubIndicesValueMap), myInputId, previousStubIndicesValueMap, newStubIndicesValueMap);
   }
 
-  private static void updateStubIndices(@Nonnull final Collection<StubIndexKey> indexKeys,
-                                        final int inputId,
-                                        @Nonnull final Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
-                                        @Nonnull final Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
-    final StubIndexImpl stubIndex = (StubIndexImpl)StubIndex.getInstance();
+  private static void updateStubIndices(@Nonnull Collection<StubIndexKey> indexKeys,
+                                        int inputId,
+                                        @Nonnull Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
+                                        @Nonnull Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
+    StubIndexImpl stubIndex = (StubIndexImpl)StubIndex.getInstance();
     for (StubIndexKey key : indexKeys) {
-      final Map<Object, StubIdList> oldMap = oldStubTree.get(key);
-      final Map<Object, StubIdList> newMap = newStubTree.get(key);
+      Map<Object, StubIdList> oldMap = oldStubTree.get(key);
+      Map<Object, StubIdList> newMap = newStubTree.get(key);
 
-      final Map<Object, StubIdList> _oldMap = oldMap != null ? oldMap : Collections.emptyMap();
-      final Map<Object, StubIdList> _newMap = newMap != null ? newMap : Collections.emptyMap();
+      Map<Object, StubIdList> _oldMap = oldMap != null ? oldMap : Collections.emptyMap();
+      Map<Object, StubIdList> _newMap = newMap != null ? newMap : Collections.emptyMap();
 
       stubIndex.updateIndex(key, inputId, _oldMap, _newMap);
     }
   }
 
   @Nonnull
-  private static Collection<StubIndexKey> getAffectedIndices(@Nonnull final Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
-                                                             @Nonnull final Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
+  private static Collection<StubIndexKey> getAffectedIndices(@Nonnull Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
+                                                             @Nonnull Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
     Set<StubIndexKey> allIndices = new HashSet<>();
     allIndices.addAll(oldStubTree.keySet());
     allIndices.addAll(newStubTree.keySet());

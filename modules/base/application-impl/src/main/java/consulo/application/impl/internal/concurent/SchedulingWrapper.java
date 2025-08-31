@@ -26,7 +26,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
   protected final ExecutorService backendExecutorService;
   protected final AppDelayQueue delayQueue;
 
-  public SchedulingWrapper(@Nonnull final ExecutorService backendExecutorService, @Nonnull AppDelayQueue delayQueue) {
+  public SchedulingWrapper(@Nonnull ExecutorService backendExecutorService, @Nonnull AppDelayQueue delayQueue) {
     this.delayQueue = delayQueue;
     if (backendExecutorService instanceof ScheduledExecutorService) {
       throw new IllegalArgumentException("backendExecutorService: " + backendExecutorService + " is already ScheduledExecutorService");

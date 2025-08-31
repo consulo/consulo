@@ -56,13 +56,13 @@ public abstract class PerformFixesModalTask implements SequentialTask {
 
   @Override
   public boolean iteration() {
-    final CommonProblemDescriptor descriptor = myDescriptors[myCount++];
+    CommonProblemDescriptor descriptor = myDescriptors[myCount++];
     ProgressIndicator indicator = myTask.getIndicator();
     if (indicator != null) {
       indicator.setFraction((double)myCount / myDescriptors.length);
       String presentableText = "usages";
       if (descriptor instanceof ProblemDescriptor) {
-        final PsiElement psiElement = ((ProblemDescriptor)descriptor).getPsiElement();
+        PsiElement psiElement = ((ProblemDescriptor)descriptor).getPsiElement();
         if (psiElement != null) {
           presentableText = SymbolPresentationUtil.getSymbolPresentableText(psiElement);
         }
@@ -70,8 +70,8 @@ public abstract class PerformFixesModalTask implements SequentialTask {
       indicator.setText("Processing " + presentableText);
     }
 
-    final boolean[] runInReadAction = {false};
-    final QuickFix[] fixes = descriptor.getFixes();
+    boolean[] runInReadAction = {false};
+    QuickFix[] fixes = descriptor.getFixes();
     if (fixes != null) {
       for (QuickFix fix : fixes) {
         if (!fix.startInWriteAction()) {

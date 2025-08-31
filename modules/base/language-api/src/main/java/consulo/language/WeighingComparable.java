@@ -26,7 +26,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   @SuppressWarnings("ComparableType")
   private static final Comparable<Object> NULL = new Comparable<>() {
     @Override
-    public int compareTo(final Object o) {
+    public int compareTo(Object o) {
       throw new UnsupportedOperationException("Method compareTo is not yet implemented in " + getClass().getName());
     }
 
@@ -41,7 +41,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   private final Loc myLocation;
   private final Weigher<T, Loc>[] myWeighers;
 
-  public WeighingComparable(final Supplier<? extends T> element, @Nullable final Loc location, final Weigher<T, Loc>[] weighers) {
+  public WeighingComparable(Supplier<? extends T> element, @Nullable Loc location, Weigher<T, Loc>[] weighers) {
     myElement = element;
     myLocation = location;
     myWeighers = weighers;
@@ -59,18 +59,18 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   }
 
   @Override
-  public int compareTo(@Nonnull final WeighingComparable<T, Loc> comparable) {
+  public int compareTo(@Nonnull WeighingComparable<T, Loc> comparable) {
     if (myComputedWeighs == comparable.myComputedWeighs) return 0;
 
     for (int i = 0; i < myComputedWeighs.length; i++) {
-      final Comparable weight1 = getWeight(i);
-      final Comparable weight2 = comparable.getWeight(i);
+      Comparable weight1 = getWeight(i);
+      Comparable weight2 = comparable.getWeight(i);
       if (weight1 == null ^ weight2 == null) {
         return weight1 == null ? -1 : 1;
       }
 
       if (weight1 != null) {
-        final int result = weight1.compareTo(weight2);
+        int result = weight1.compareTo(weight2);
         if (result != 0) {
           return result;
         }
@@ -81,7 +81,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   }
 
   @Nullable
-  private Comparable getWeight(final int index) {
+  private Comparable getWeight(int index) {
     Comparable weight = myComputedWeighs[index];
     if (weight == null) {
       T element = myElement.get();
@@ -94,7 +94,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
 
   @Override
   public String toString() {
-    final StringBuilder builder = new StringBuilder("[");
+    StringBuilder builder = new StringBuilder("[");
     for (int i = 0; i < myComputedWeighs.length; i++) {
       if (i != 0) builder.append(", ");
       builder.append(myWeighers[i]);

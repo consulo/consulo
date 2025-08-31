@@ -104,7 +104,7 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
   }
 
   @Override
-  public void setIgnoredMacroNames(@Nonnull final Collection<String> names) {
+  public void setIgnoredMacroNames(@Nonnull Collection<String> names) {
     myIgnoredMacros.clear();
     myIgnoredMacros.addAll(names);
   }
@@ -131,9 +131,9 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
 
   @Override
   public Set<String> getAllMacroNames() {
-    final Set<String> userMacroNames = getUserMacroNames();
-    final Set<String> systemMacroNames = getSystemMacroNames();
-    final Set<String> allNames = new HashSet<>(userMacroNames.size() + systemMacroNames.size());
+    Set<String> userMacroNames = getUserMacroNames();
+    Set<String> systemMacroNames = getSystemMacroNames();
+    Set<String> allNames = new HashSet<>(userMacroNames.size() + systemMacroNames.size());
     allNames.addAll(systemMacroNames);
     allNames.addAll(userMacroNames);
     return allNames;
@@ -203,7 +203,7 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
   public void removeMacro(String name) {
     try {
       myLock.writeLock().lock();
-      final String value = myMacros.remove(name);
+      String value = myMacros.remove(name);
       LOG.assertTrue(value != null);
     }
     finally {
@@ -217,9 +217,9 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
     try {
       myLock.writeLock().lock();
 
-      final List<Element> children = state.getChildren(MACRO_ELEMENT);
+      List<Element> children = state.getChildren(MACRO_ELEMENT);
       for (Element aChildren : children) {
-        final String name = aChildren.getAttributeValue(NAME_ATTR);
+        String name = aChildren.getAttributeValue(NAME_ATTR);
         String value = aChildren.getAttributeValue(VALUE_ATTR);
         if (name == null || value == null) {
           throw new InvalidDataException();
@@ -236,9 +236,9 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
         myMacros.put(name, value);
       }
 
-      final List<Element> ignoredChildren = state.getChildren(IGNORED_MACRO_ELEMENT);
-      for (final Element child : ignoredChildren) {
-        final String ignoredName = child.getAttributeValue(NAME_ATTR);
+      List<Element> ignoredChildren = state.getChildren(IGNORED_MACRO_ELEMENT);
+      for (Element child : ignoredChildren) {
+        String ignoredName = child.getAttributeValue(NAME_ATTR);
         if (ignoredName != null && !ignoredName.isEmpty() && !myIgnoredMacros.contains(ignoredName)) {
           myIgnoredMacros.add(ignoredName);
         }
@@ -256,19 +256,19 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
     try {
       myLock.writeLock().lock();
 
-      final Set<Map.Entry<String, String>> entries = myMacros.entrySet();
+      Set<Map.Entry<String, String>> entries = myMacros.entrySet();
       for (Map.Entry<String, String> entry : entries) {
-        final String value = entry.getValue();
+        String value = entry.getValue();
         if (value != null && !value.trim().isEmpty()) {
-          final Element macro = new Element(MACRO_ELEMENT);
+          Element macro = new Element(MACRO_ELEMENT);
           macro.setAttribute(NAME_ATTR, entry.getKey());
           macro.setAttribute(VALUE_ATTR, value);
           state.addContent(macro);
         }
       }
 
-      for (final String macro : myIgnoredMacros) {
-        final Element macroElement = new Element(IGNORED_MACRO_ELEMENT);
+      for (String macro : myIgnoredMacros) {
+        Element macroElement = new Element(IGNORED_MACRO_ELEMENT);
         macroElement.setAttribute(NAME_ATTR, macro);
         state.addContent(macroElement);
       }
@@ -281,8 +281,8 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
 
   @Override
   public void addMacroReplacements(ReplacePathToMacroMap result) {
-    for (final String name : getUserMacroNames()) {
-      final String value = getValue(name);
+    for (String name : getUserMacroNames()) {
+      String value = getValue(name);
       if (value != null && !value.trim().isEmpty()) result.addMacroReplacement(myPathMacroProtocolProviderProvider.get(), value, name);
     }
   }
@@ -290,8 +290,8 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
 
   @Override
   public void addMacroExpands(ExpandMacroToPathMap result) {
-    for (final String name : getUserMacroNames()) {
-      final String value = getValue(name);
+    for (String name : getUserMacroNames()) {
+      String value = getValue(name);
       if (value != null && !value.trim().isEmpty()) result.addMacroExpand(name, value);
     }
 

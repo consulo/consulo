@@ -32,9 +32,9 @@ public class IdeaWideAuthenticator extends NonStaticAuthenticator {
 
     @Override
     public PasswordAuthentication getPasswordAuthentication() {
-        final String host = CommonProxy.getHostNameReliably(getRequestingHost(), getRequestingSite(), getRequestingURL());
-        final boolean isProxy = Authenticator.RequestorType.PROXY.equals(getRequestorType());
-        final String prefix = isProxy ? "Proxy authentication: " : "Server authentication: ";
+        String host = CommonProxy.getHostNameReliably(getRequestingHost(), getRequestingSite(), getRequestingURL());
+        boolean isProxy = Authenticator.RequestorType.PROXY.equals(getRequestorType());
+        String prefix = isProxy ? "Proxy authentication: " : "Server authentication: ";
         Application application = ApplicationManager.getApplication();
         if (isProxy) {
             // according to idea-wide settings
@@ -48,7 +48,7 @@ public class IdeaWideAuthenticator extends NonStaticAuthenticator {
                     return null;
                 }
                 // same but without remembering the results..
-                final PasswordAuthentication password = myHttpConfigurable.getGenericPassword(host, getRequestingPort());
+                PasswordAuthentication password = myHttpConfigurable.getGenericPassword(host, getRequestingPort());
                 if (password != null) {
                     return password;
                 }

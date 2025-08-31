@@ -281,7 +281,7 @@ public abstract class ParameterTableModelBase<P extends ParameterInfo, TableItem
 
     @Override
     public int getWidth(JTable table) {
-      final int headerWidth = table.getFontMetrics(table.getFont()).stringWidth(getName()) + 8;
+      int headerWidth = table.getFontMetrics(table.getFont()).stringWidth(getName()) + 8;
       return Math.max(new JCheckBox().getPreferredSize().width, headerWidth);
     }
   }

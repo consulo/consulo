@@ -40,13 +40,13 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent event) {
-    final VirtualFile vFile = event.getRequiredData(VirtualFile.KEY);
-    final Project project = event.getRequiredData(Project.KEY);
-    final FileEditorWindow window = event.getRequiredData(FileEditorWindow.DATA_KEY);
-    final FileEditorWindow[] siblings = window.findSiblings();
+    VirtualFile vFile = event.getRequiredData(VirtualFile.KEY);
+    Project project = event.getRequiredData(Project.KEY);
+    FileEditorWindow window = event.getRequiredData(FileEditorWindow.DATA_KEY);
+    FileEditorWindow[] siblings = window.findSiblings();
     if (siblings.length == 1) {
-      final FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
-      final HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
+      FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
+      HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
       ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project))
         .openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
       window.closeFile(vFile);
@@ -55,9 +55,9 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    final VirtualFile vFile = e.getData(VirtualFile.KEY);
-    final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
+    Presentation presentation = e.getPresentation();
+    VirtualFile vFile = e.getData(VirtualFile.KEY);
+    FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
     if (ActionPlaces.isPopupPlace(e.getPlace())) {
       presentation.setVisible(isEnabled(vFile, window));
     }
@@ -68,7 +68,7 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
 
   private static boolean isEnabled(VirtualFile vFile, FileEditorWindow window) {
     if (vFile != null && window != null) {
-      final FileEditorWindow[] siblings = window.findSiblings();
+      FileEditorWindow[] siblings = window.findSiblings();
       if (siblings.length == 1) {
         return true;
       }

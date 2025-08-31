@@ -22,11 +22,11 @@ public interface Tab {
 
   boolean isDefault();
 
-  void setDetached(final PlaceInGrid placeInGrid, final boolean detached);
+  void setDetached(PlaceInGrid placeInGrid, boolean detached);
 
   int getIndex();
 
   int getDefaultIndex();
 
-  boolean isDetached(final PlaceInGrid placeInGrid);
+  boolean isDetached(PlaceInGrid placeInGrid);
 }

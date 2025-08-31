@@ -43,13 +43,13 @@ public class RestoreFoldArrangementCallback implements ArrangementCallback {
       myCodeFoldingState = null;
     }
     else {
-      final CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(editor.getProject());
+      CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(editor.getProject());
       myCodeFoldingState = foldingManager.saveFoldingState(editor);
     }
   }
 
   @Override
-  public void afterArrangement(@Nonnull final List<ArrangementMoveInfo> moveInfos) {
+  public void afterArrangement(@Nonnull List<ArrangementMoveInfo> moveInfos) {
     // Restore state for the PSI elements not affected by arrangement.
     Project project = myEditor.getProject();
     if (myCodeFoldingState != null && project != null) {

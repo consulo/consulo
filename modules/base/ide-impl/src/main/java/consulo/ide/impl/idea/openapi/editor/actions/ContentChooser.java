@@ -96,7 +96,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
 
   @Override
   protected JComponent createCenterPanel() {
-    final int selectionMode = myAllowMultipleSelections ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION;
+    int selectionMode = myAllowMultipleSelections ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION;
     myList.setSelectionMode(selectionMode);
     if (myUseIdeaEditor) {
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -142,7 +142,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
           doOKAction();
         }
         else {
-          final char aChar = e.getKeyChar();
+          char aChar = e.getKeyChar();
           if (aChar >= '0' && aChar <= '9') {
             int idx = aChar == '0' ? 9 : aChar - '1';
             if (idx < myAllContents.size()) {
@@ -184,7 +184,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     return mySplitter;
   }
 
-  protected abstract void removeContentAt(final Data content);
+  protected abstract void removeContentAt(Data content);
 
   @Override
   protected String getDimensionServiceKey() {
@@ -212,7 +212,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
       mySplitter.setSecondComponent(component);
     }
     else {
-      final JTextArea textArea = new JTextArea(fullString);
+      JTextArea textArea = new JTextArea(fullString);
       textArea.setRows(3);
       textArea.setWrapStyleWord(true);
       textArea.setLineWrap(true);
@@ -291,7 +291,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     }
   }
 
-  protected abstract String getStringRepresentationFor(final Data content);
+  protected abstract String getStringRepresentationFor(Data content);
 
   protected abstract List<Data> getContents();
 

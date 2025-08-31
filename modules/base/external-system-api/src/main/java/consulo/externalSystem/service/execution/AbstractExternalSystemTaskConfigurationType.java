@@ -51,7 +51,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     return result == null ? PlatformIconGroup.nodesTask() : result;
   });
 
-  protected AbstractExternalSystemTaskConfigurationType(@Nonnull final ProjectSystemId externalSystemId) {
+  protected AbstractExternalSystemTaskConfigurationType(@Nonnull ProjectSystemId externalSystemId) {
     myExternalSystemId = externalSystemId;
     myFactories[0] = new ConfigurationFactory(this) {
       @Override
@@ -132,7 +132,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     for (ExternalProjectSettings projectSettings : s.getLinkedProjectsSettings()) {
       String path = projectSettings.getExternalProjectPath();
       if(path == null) continue;
-      final File rootProjectPathFile = new File(path).getParentFile();
+      File rootProjectPathFile = new File(path).getParentFile();
       if(rootProjectPathFile == null) continue;
       rootProjectPaths.put(rootProjectPathFile.getAbsolutePath(), path);
     }
@@ -154,7 +154,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     
     StringBuilder buffer = new StringBuilder();
     
-    final String projectName;
+    String projectName;
     if (rootProjectPath == null) {
       projectName = null;
     }

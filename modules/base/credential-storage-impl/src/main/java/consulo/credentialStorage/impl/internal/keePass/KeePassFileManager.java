@@ -139,7 +139,7 @@ public class KeePassFileManager {
         Path possibleMainKeyFile = sourceFile.getParent().resolve(MAIN_KEY_FILE_NAME);
         MainKeyFileStorage possibleStorage = new MainKeyFileStorage(possibleMainKeyFile);
         byte[] loadedMainPassword = possibleStorage.load();
-        final AtomicReference<byte[]> mainPasswordRef = new AtomicReference<>(loadedMainPassword);
+        AtomicReference<byte[]> mainPasswordRef = new AtomicReference<>(loadedMainPassword);
 
         if (loadedMainPassword != null) {
             try {

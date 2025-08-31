@@ -40,7 +40,7 @@ public final class IconDescriptorUpdaters {
           LazyValue.notNull(() -> Image.empty(AllIcons.Nodes.C_public.getWidth(), AllIcons.Nodes.C_public.getHeight()));
 
   private static final Function<ElementIconRequest, Image> ourIconCompute = request -> {
-    final PsiElement element = request.myPointer.getElement();
+    PsiElement element = request.myPointer.getElement();
     if (element == null || !element.isValid() || element.getProject().isDisposed()) return null;
 
     Image icon = getIconWithoutCache(element, request.myFlags);
@@ -86,7 +86,7 @@ public final class IconDescriptorUpdaters {
 
   @Nonnull
   @RequiredReadAction
-  public static Image getIcon(@Nonnull final PsiElement element, @Iconable.IconFlags final int flags) {
+  public static Image getIcon(@Nonnull PsiElement element, @Iconable.IconFlags int flags) {
     if (!element.isValid()) return AllIcons.Nodes.NodePlaceholder;
 
     Image baseIcon = Iconable.LastComputedIcon.get(element, flags);

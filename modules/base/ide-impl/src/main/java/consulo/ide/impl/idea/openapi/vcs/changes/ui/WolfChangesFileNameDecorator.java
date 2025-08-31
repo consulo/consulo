@@ -37,12 +37,12 @@ public class WolfChangesFileNameDecorator extends ChangesFileNameDecorator {
   private final WolfTheProblemSolver myProblemSolver;
 
   @Inject
-  public WolfChangesFileNameDecorator(final WolfTheProblemSolver problemSolver) {
+  public WolfChangesFileNameDecorator(WolfTheProblemSolver problemSolver) {
     myProblemSolver = problemSolver;
   }
 
   @Override
-  public void appendFileName(final ChangesBrowserNodeRenderer renderer, final VirtualFile vFile, final String fileName, final Color color, final boolean highlightProblems) {
+  public void appendFileName(ChangesBrowserNodeRenderer renderer, VirtualFile vFile, String fileName, Color color, boolean highlightProblems) {
     int style = SimpleTextAttributes.STYLE_PLAIN;
     Color underlineColor = null;
     if (highlightProblems && vFile != null && !vFile.isDirectory() && myProblemSolver.isProblemFile(vFile)) {

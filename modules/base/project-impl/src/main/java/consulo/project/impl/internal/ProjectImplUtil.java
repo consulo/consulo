@@ -46,7 +46,7 @@ public class ProjectImplUtil {
     private ProjectImplUtil() {
     }
 
-    public static void updateLastProjectLocation(final String projectFilePath) {
+    public static void updateLastProjectLocation(String projectFilePath) {
         File lastProjectLocation = new File(projectFilePath);
         if (lastProjectLocation.isFile()) {
             lastProjectLocation = lastProjectLocation.getParentFile(); // for directory-based project storage
@@ -73,13 +73,13 @@ public class ProjectImplUtil {
      * @param project cannot be null
      */
     @RequiredUIAccess
-    public static boolean closeAndDispose(@Nonnull final Project project) {
+    public static boolean closeAndDispose(@Nonnull Project project) {
         return ProjectManagerEx.getInstanceEx().closeAndDispose(project);
     }
 
     @Nonnull
     private static AsyncResult<Integer> confirmOpenNewProjectAsync(Project projectToClose, UIAccess uiAccess, boolean isNewProject) {
-        final ProjectOpenSetting settings = ProjectOpenSetting.getInstance();
+        ProjectOpenSetting settings = ProjectOpenSetting.getInstance();
         int confirmOpenNewProject = settings.getConfirmOpenNewProject();
         if (confirmOpenNewProject == ProjectOpenSetting.OPEN_PROJECT_ASK) {
             Alert<Integer> alert = Alert.create();
@@ -113,7 +113,7 @@ public class ProjectImplUtil {
 
     @Nonnull
     public static AsyncResult<Project> openAsync(@Nonnull String path,
-                                                 @Nullable final Project projectToCloseFinal,
+                                                 @Nullable Project projectToCloseFinal,
                                                  boolean forceOpenInNewFrame,
                                                  @Nonnull UIAccess uiAccess) {
         return openAsync(path, projectToCloseFinal, forceOpenInNewFrame, uiAccess, new ProjectOpenContext());
@@ -121,11 +121,11 @@ public class ProjectImplUtil {
 
     @Nonnull
     public static AsyncResult<Project> openAsync(@Nonnull String path,
-                                                 @Nullable final Project projectToCloseFinal,
+                                                 @Nullable Project projectToCloseFinal,
                                                  boolean forceOpenInNewFrame,
                                                  @Nonnull UIAccess uiAccess,
                                                  @Nonnull ProjectOpenContext context) {
-        final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
         if (virtualFile == null) {
             return AsyncResult.rejected("file path not find");
@@ -145,7 +145,7 @@ public class ProjectImplUtil {
                         projectToClose = openProjects[openProjects.length - 1];
                     }
 
-                    final Project finalProjectToClose = projectToClose;
+                    Project finalProjectToClose = projectToClose;
                     confirmOpenNewProjectAsync(finalProjectToClose, uiAccess, false).doWhenDone(exitCode -> {
                         if (exitCode == ProjectOpenSetting.OPEN_PROJECT_SAME_WINDOW) {
                             AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);

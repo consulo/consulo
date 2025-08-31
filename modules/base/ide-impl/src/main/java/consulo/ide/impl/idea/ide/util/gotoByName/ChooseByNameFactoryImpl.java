@@ -34,12 +34,12 @@ public class ChooseByNameFactoryImpl extends ChooseByNameFactory {
   private final Project myProject;
 
   @Inject
-  public ChooseByNameFactoryImpl(final Project project) {
+  public ChooseByNameFactoryImpl(Project project) {
     myProject = project;
   }
 
   @Override
-  public ChooseByNamePopup createChooseByNamePopupComponent(@Nonnull final ChooseByNameModel model) {
+  public ChooseByNamePopup createChooseByNamePopupComponent(@Nonnull ChooseByNameModel model) {
     return ChooseByNamePopup.createPopup(myProject, model, GotoActionBase.getPsiContext(myProject));  
   }
 }

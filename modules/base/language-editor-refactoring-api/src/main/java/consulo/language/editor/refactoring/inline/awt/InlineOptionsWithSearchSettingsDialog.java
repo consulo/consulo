@@ -41,8 +41,8 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
 
   @Override
   protected void doAction() {
-    final boolean searchInNonJava = myCbSearchTextOccurences.isSelected();
-    final boolean searchInComments = myCbSearchInComments.isSelected();
+    boolean searchInNonJava = myCbSearchTextOccurences.isSelected();
+    boolean searchInComments = myCbSearchInComments.isSelected();
     if (myCbSearchInComments.isEnabled() ) {
       saveSearchInCommentsAndStrings(searchInComments);
     }
@@ -65,7 +65,7 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
 
   @Override
   protected JComponent createCenterPanel() {
-    final JPanel panel = new JPanel(new GridBagLayout());
+    JPanel panel = new JPanel(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.weightx = 1.0;
@@ -82,7 +82,7 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
     panel.add(myCbSearchInComments, gbc);
     gbc.gridx = 1;
     panel.add(myCbSearchTextOccurences, gbc);
-    final ActionListener actionListener = e -> setEnabledSearchSettngs(myRbInlineAll.isSelected());
+    ActionListener actionListener = e -> setEnabledSearchSettngs(myRbInlineAll.isSelected());
     myRbInlineThisOnly.addActionListener(actionListener);
     myRbInlineAll.addActionListener(actionListener);
     setEnabledSearchSettngs(myRbInlineAll.isSelected());

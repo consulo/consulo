@@ -37,12 +37,12 @@ public class ShowContainerInfoAction extends BaseCodeInsightAction{
 
   @Override
   @Nullable
-  protected Editor getBaseEditor(final DataContext dataContext, final Project project) {
+  protected Editor getBaseEditor(DataContext dataContext, Project project) {
     return dataContext.getData(PlatformDataKeys.EDITOR_EVEN_IF_INACTIVE);
   }
 
   @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
+  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     return PsiStructureViewFactory.createBuilderForFile(file) instanceof TreeBasedStructureViewBuilder;
   }
 }

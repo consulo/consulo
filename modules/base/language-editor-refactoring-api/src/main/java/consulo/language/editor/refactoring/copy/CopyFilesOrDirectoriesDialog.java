@@ -98,9 +98,9 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
             if (elements[0] instanceof PsiFile file) {
                 String url = shortenPath(file.getVirtualFile());
                 text = doClone ? RefactoringLocalize.copyFilesCloneFile0(url) : RefactoringLocalize.copyFilesCopyFile0(url);
-                final String fileName = file.getName();
+                String fileName = file.getName();
                 myNewNameField.setText(fileName);
-                final int dotIdx = fileName.lastIndexOf(".");
+                int dotIdx = fileName.lastIndexOf(".");
                 if (dotIdx > -1) {
                     myNewNameField.select(0, dotIdx);
                     myNewNameField.putClientProperty(DialogWrapperPeer.HAVE_INITIAL_SELECTION, true);
@@ -178,7 +178,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
     @Override
     protected JComponent createNorthPanel() {
         myInformationLabel = JBLabelDecorator.createJBLabelDecorator().setBold(true);
-        final FormBuilder formBuilder = FormBuilder.createFormBuilder().addComponent(myInformationLabel).addVerticalGap(
+        FormBuilder formBuilder = FormBuilder.createFormBuilder().addComponent(myInformationLabel).addVerticalGap(
             UIUtil.LARGE_VGAP - UIUtil.DEFAULT_VGAP);
         DocumentListener documentListener = new DocumentAdapter() {
             @Override
@@ -196,11 +196,11 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
         if (myShowDirectoryField) {
             myTargetDirectoryField = new TextFieldWithHistoryWithBrowseButton();
             myTargetDirectoryField.setTextFieldPreferredWidth(MAX_PATH_LENGTH);
-            final List<String> recentEntries = RecentsManager.getInstance(myProject).getRecentEntries(RECENT_KEYS);
+            List<String> recentEntries = RecentsManager.getInstance(myProject).getRecentEntries(RECENT_KEYS);
             if (recentEntries != null) {
                 myTargetDirectoryField.getChildComponent().setHistory(recentEntries);
             }
-            final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+            FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
             myTargetDirectoryField.addBrowseFolderListener(
                 RefactoringLocalize.selectTargetDirectory().get(),
                 RefactoringLocalize.theFileWillBeCopiedToThisDirectory().get(),
@@ -221,7 +221,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
             formBuilder.addTooltip(RefactoringLocalize.pathCompletionShortcut(shortcutText).get());
         }
 
-        final JPanel wrapper = new JPanel(new BorderLayout());
+        JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.add(myOpenFilesInEditor, BorderLayout.EAST);
         formBuilder.addComponent(wrapper);
         return formBuilder.getPanel();
@@ -258,7 +258,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
 
         saveOpenInEditorState(myOpenFilesInEditor.isSelected());
         if (myShowDirectoryField) {
-            final String targetDirectoryName = myTargetDirectoryField.getChildComponent().getText();
+            String targetDirectoryName = myTargetDirectoryField.getChildComponent().getText();
 
             if (targetDirectoryName.length() == 0) {
                 Messages.showErrorDialog(
@@ -305,7 +305,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
             }
         }
         if (myShowNewNameField) {
-            final String newName = getNewName();
+            String newName = getNewName();
             if (newName.length() == 0 || myFileCopy && !PathUtil.isValidFileName(newName)) {
                 setOKActionEnabled(false);
                 return;

@@ -112,7 +112,7 @@ class ComboContentLayout extends ContentLayout {
 
   @Override
   public void showContentPopup(ListPopup listPopup) {
-    final int width = myComboLabel.getSize().width;
+    int width = myComboLabel.getSize().width;
     listPopup.setMinimumSize(new Dimension(width, 0));
     listPopup.show(new RelativePoint(myComboLabel, new Point(-2, myComboLabel.getHeight())));
   }

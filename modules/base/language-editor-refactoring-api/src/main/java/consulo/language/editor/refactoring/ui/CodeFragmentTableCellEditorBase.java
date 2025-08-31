@@ -42,7 +42,7 @@ public class CodeFragmentTableCellEditorBase extends AbstractCellEditor implemen
   protected EditorTextField myEditorTextField;
   private final List<DocumentListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-  public CodeFragmentTableCellEditorBase(final Project project, FileType fileType) {
+  public CodeFragmentTableCellEditorBase(Project project, FileType fileType) {
     myProject = project;
     myFileType = fileType;
   }

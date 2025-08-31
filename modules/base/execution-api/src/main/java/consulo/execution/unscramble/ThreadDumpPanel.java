@@ -31,7 +31,7 @@ import java.util.List;
  */
 public interface ThreadDumpPanel {
   @Nonnull
-  static ThreadDumpPanel create(Project project, final ConsoleView consoleView, final DefaultActionGroup toolbarActions, final List<ThreadState> threadDump) {
+  static ThreadDumpPanel create(Project project, ConsoleView consoleView, DefaultActionGroup toolbarActions, List<ThreadState> threadDump) {
     return new AWTThreadDumpPanel(project, consoleView, toolbarActions, threadDump);
   }
 

@@ -89,10 +89,10 @@ public class JarHandler extends ZipHandler {
   private File getMirrorFile(@Nonnull File originalFile) {
     if (!myFileSystem.isMakeCopyOfJar(originalFile)) return originalFile;
 
-    final FileAttributes originalAttributes = FileSystemUtil.getAttributes(originalFile);
+    FileAttributes originalAttributes = FileSystemUtil.getAttributes(originalFile);
     if (originalAttributes == null) return originalFile;
 
-    final String folderPath = getJarsDir();
+    String folderPath = getJarsDir();
     if (!new File(folderPath).exists() && !new File(folderPath).mkdirs()) {
       return originalFile;
     }
@@ -101,9 +101,9 @@ public class JarHandler extends ZipHandler {
       return getMirrorWithContentHash(originalFile, originalAttributes);
     }
 
-    final String mirrorName = originalFile.getName() + "." + Integer.toHexString(originalFile.getPath().hashCode());
-    final File mirrorFile = new File(folderPath, mirrorName);
-    final FileAttributes mirrorAttributes = FileSystemUtil.getAttributes(mirrorFile);
+    String mirrorName = originalFile.getName() + "." + Integer.toHexString(originalFile.getPath().hashCode());
+    File mirrorFile = new File(folderPath, mirrorName);
+    FileAttributes mirrorAttributes = FileSystemUtil.getAttributes(mirrorFile);
     return mirrorDiffers(originalAttributes, mirrorAttributes, false) ? copyToMirror(originalFile, mirrorFile) : mirrorFile;
   }
 
@@ -350,8 +350,8 @@ public class JarHandler extends ZipHandler {
         }
       })));
 
-      final List<String> invalidLibraryFilePaths = new ArrayList<>();
-      final List<String> allLibraryFilePaths = new ArrayList<>();
+      List<String> invalidLibraryFilePaths = new ArrayList<>();
+      List<String> allLibraryFilePaths = new ArrayList<>();
       MultiMap<String, String> jarSnapshotFileToLibraryFilePaths = new MultiMap<>();
       Set<String> validLibraryFilePathToJarSnapshotFilePaths = new HashSet<>();
 

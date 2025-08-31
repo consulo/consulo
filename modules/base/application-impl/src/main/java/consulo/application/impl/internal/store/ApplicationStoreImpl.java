@@ -69,7 +69,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
       }
 
       @Override
-      protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
+      protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull String fileSpec) {
         if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.STORE_FILE)) return null;
         return super.getMacroSubstitutor(fileSpec);
       }
@@ -96,7 +96,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   }
 
   @Override
-  public void setConfigPath(@Nonnull final String configPath) {
+  public void setConfigPath(@Nonnull String configPath) {
     myStateStorageManager.addMacro(StoragePathMacros.ROOT_CONFIG, configPath);
     myConfigPath = configPath;
   }

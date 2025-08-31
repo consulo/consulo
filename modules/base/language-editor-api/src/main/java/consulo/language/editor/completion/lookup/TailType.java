@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class TailType {
 
-  public static int insertChar(final Editor editor, final int tailOffset, final char c) {
+  public static int insertChar(Editor editor, int tailOffset, char c) {
     return insertChar(editor, tailOffset, c, true);
   }
 
@@ -44,8 +44,8 @@ public abstract class TailType {
     return moveCaret(editor, tailOffset, 1);
   }
 
-  protected static int moveCaret(final Editor editor, final int tailOffset, final int delta) {
-    final CaretModel model = editor.getCaretModel();
+  protected static int moveCaret(Editor editor, int tailOffset, int delta) {
+    CaretModel model = editor.getCaretModel();
     if (model.getOffset() == tailOffset) {
       model.moveToOffset(tailOffset + delta);
     }
@@ -54,7 +54,7 @@ public abstract class TailType {
 
   public static final TailType UNKNOWN = new TailType() {
     @Override
-    public int processTail(final Editor editor, final int tailOffset) {
+    public int processTail(Editor editor, int tailOffset) {
       return tailOffset;
     }
 
@@ -66,7 +66,7 @@ public abstract class TailType {
 
   public static final TailType NONE = new TailType() {
     @Override
-    public int processTail(final Editor editor, final int tailOffset) {
+    public int processTail(Editor editor, int tailOffset) {
       return tailOffset;
     }
 
@@ -126,7 +126,7 @@ public abstract class TailType {
   public static final TailType CASE_COLON = new CharTailType(':');
   public static final TailType COND_EXPR_COLON = new TailType() {
     @Override
-    public int processTail(final Editor editor, final int tailOffset) {
+    public int processTail(Editor editor, int tailOffset) {
       Document document = editor.getDocument();
       int textLength = document.getTextLength();
       CharSequence chars = document.getCharsSequence();
@@ -148,13 +148,13 @@ public abstract class TailType {
 
   public static final TailType LPARENTH = new CharTailType('(');
 
-  public abstract int processTail(final Editor editor, int tailOffset);
+  public abstract int processTail(Editor editor, int tailOffset);
 
-  public static TailType createSimpleTailType(final char c) {
+  public static TailType createSimpleTailType(char c) {
     return new CharTailType(c);
   }
 
-  public boolean isApplicable(@Nonnull final InsertionContext context) {
+  public boolean isApplicable(@Nonnull InsertionContext context) {
     return true;
   }
 }

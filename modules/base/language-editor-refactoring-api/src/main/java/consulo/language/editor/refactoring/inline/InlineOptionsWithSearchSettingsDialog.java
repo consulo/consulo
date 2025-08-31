@@ -45,8 +45,8 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
 
     @Override
     protected void doAction() {
-        final boolean searchInNonJava = myCbSearchTextOccurences.getValueOrError();
-        final boolean searchInComments = myCbSearchInComments.getValueOrError();
+        boolean searchInNonJava = myCbSearchTextOccurences.getValueOrError();
+        boolean searchInComments = myCbSearchInComments.getValueOrError();
         if (myCbSearchInComments.isEnabled()) {
             saveSearchInCommentsAndStrings(searchInComments);
         }
@@ -77,7 +77,7 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
         myCbSearchInComments = CheckBox.create(RefactoringLocalize.searchInCommentsAndStrings(), isSearchInCommentsAndStrings());
         myCbSearchTextOccurences = CheckBox.create(RefactoringLocalize.searchForTextOccurrences(), isSearchForTextOccurrences());
 
-        final ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> actionListener = e ->
+        ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> actionListener = e ->
             setEnabledSearchSettngs(myRbInlineAll.getValueOrError());
 
         myRbInlineThisOnly.addValueListener(actionListener);

@@ -119,7 +119,7 @@ public class MouseShortcut extends Shortcut {
   }
 
   @Override
-  public boolean startsWith(final Shortcut sc) {
+  public boolean startsWith(Shortcut sc) {
     return equals(sc);
   }
 

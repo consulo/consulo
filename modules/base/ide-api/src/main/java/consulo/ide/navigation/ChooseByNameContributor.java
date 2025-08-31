@@ -50,5 +50,5 @@ public interface ChooseByNameContributor {
    * @return the array of navigation items.
    */
   @Nonnull
-  NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems);
+  NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems);
 }

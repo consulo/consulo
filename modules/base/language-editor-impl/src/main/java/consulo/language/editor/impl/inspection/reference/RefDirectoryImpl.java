@@ -40,9 +40,9 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
   public void initialize() {
     PsiDirectory psiElement = ObjectUtil.tryCast(getPsiElement(), PsiDirectory.class);
     LOG.assertTrue(psiElement != null);
-    final PsiDirectory parentDirectory = psiElement.getParentDirectory();
+    PsiDirectory parentDirectory = psiElement.getParentDirectory();
     if (parentDirectory != null && ProjectFileIndex.getInstance(psiElement.getProject()).isInSourceContent(parentDirectory.getVirtualFile())) {
-      final WritableRefElement refElement = (WritableRefElement)getRefManager().getReference(parentDirectory);
+      WritableRefElement refElement = (WritableRefElement)getRefManager().getReference(parentDirectory);
       if (refElement != null) {
         refElement.add(this);
         return;
@@ -57,7 +57,7 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
   }
 
   @Override
-  public void accept(@Nonnull final RefVisitor visitor) {
+  public void accept(@Nonnull RefVisitor visitor) {
     ApplicationManager.getApplication().runReadAction(() -> visitor.visitDirectory(this));
   }
 
@@ -87,7 +87,7 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
 
   @Override
   public String getExternalName() {
-    final PsiElement element = getPsiElement();
+    PsiElement element = getPsiElement();
     assert element != null;
     return ((PsiDirectory)element).getVirtualFile().getPath();
   }

@@ -42,7 +42,7 @@ class InstanceContainer {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  private <T> ComponentAdapter<T> findLocalAdapter(final Class componentKey) {
+  private <T> ComponentAdapter<T> findLocalAdapter(Class componentKey) {
     return (ComponentAdapter<T>) myInstanceAdapters.get(componentKey);
   }
 

@@ -117,9 +117,9 @@ public abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
   @Override
   public Collection<V> values() {
     List<V> result = new ArrayList<>();
-    final Collection<ValueReference<K, V>> refs = myMap.values();
+    Collection<ValueReference<K, V>> refs = myMap.values();
     for (ValueReference<K, V> ref : refs) {
-      final V value = ref.get();
+      V value = ref.get();
       if (value != null) {
         result.add(value);
       }

@@ -22,25 +22,25 @@ import consulo.ui.ex.action.KeyboardGestureAction;
 import consulo.application.dumb.DumbAware;
 
 public class TestGestureAction extends AnAction implements KeyboardGestureAction, DumbAware {
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     e.accept(new AnActionEventVisitor() {
       @Override
-      public void visitGestureInitEvent(final AnActionEvent e) {
+      public void visitGestureInitEvent(AnActionEvent e) {
         System.out.println("TestGestureAction.visitGestureInitEvent");
       }
 
       @Override
-      public void visitGesturePerformedEvent(final AnActionEvent e) {
+      public void visitGesturePerformedEvent(AnActionEvent e) {
         System.out.println("TestGestureAction.visitGesturePerformedEvent");
       }
 
       @Override
-      public void visitGestureFinishEvent(final AnActionEvent e) {
+      public void visitGestureFinishEvent(AnActionEvent e) {
         System.out.println("TestGestureAction.visitGestureFinishEvent");
       }
 
       @Override
-      public void visitEvent(final AnActionEvent e) {
+      public void visitEvent(AnActionEvent e) {
         System.out.println("TestGestureAction.visitEvent");
       }
     });

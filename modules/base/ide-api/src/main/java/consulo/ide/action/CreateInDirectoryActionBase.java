@@ -66,8 +66,8 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
         return false;
     }
 
-    protected boolean isAvailable(final DataContext dataContext) {
-        final Project project = dataContext.getData(Project.KEY);
+    protected boolean isAvailable(DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
         if (project == null) {
             return false;
         }
@@ -76,7 +76,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
             return false;
         }
 
-        final IdeView view = dataContext.getData(IdeView.KEY);
+        IdeView view = dataContext.getData(IdeView.KEY);
         return view != null && view.getDirectories().length != 0;
     }
 }

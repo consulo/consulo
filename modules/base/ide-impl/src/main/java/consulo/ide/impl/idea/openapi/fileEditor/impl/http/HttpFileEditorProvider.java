@@ -34,22 +34,22 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class HttpFileEditorProvider implements FileEditorProvider, DumbAware {
-  public boolean accept(@Nonnull final Project project, @Nonnull final VirtualFile file) {
+  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
     return file instanceof HttpVirtualFile && !file.isDirectory();
   }
 
   @RequiredUIAccess
   @Nonnull
-  public FileEditor createEditor(@Nonnull final Project project, @Nonnull final VirtualFile file) {
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
     return new HttpFileEditor(project, (HttpVirtualFile)file); 
   }
 
   @Nonnull
-  public FileEditorState readState(@Nonnull final Element sourceElement, @Nonnull final Project project, @Nonnull final VirtualFile file) {
+  public FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
     return new TextEditorState();
   }
 
-  public void writeState(@Nonnull final FileEditorState state, @Nonnull final Project project, @Nonnull final Element targetElement) {
+  public void writeState(@Nonnull FileEditorState state, @Nonnull Project project, @Nonnull Element targetElement) {
   }
 
   @Nonnull

@@ -53,7 +53,7 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
   ParameterOwner findElementForParameterInfo(@Nonnull CreateParameterInfoContext context);
 
   // Usually context.showHint
-  void showParameterInfo(@Nonnull final ParameterOwner element, @Nonnull CreateParameterInfoContext context);
+  void showParameterInfo(@Nonnull ParameterOwner element, @Nonnull CreateParameterInfoContext context);
 
   /**
    * <p>Hint has to be removed if method returns <code>null</code>.</p>
@@ -79,7 +79,7 @@ public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends Lan
    *
    * <p>Note: it is executed on non UI thread.</p>
    */
-  void updateParameterInfo(@Nonnull final ParameterOwner parameterOwner, @Nonnull UpdateParameterInfoContext context);
+  void updateParameterInfo(@Nonnull ParameterOwner parameterOwner, @Nonnull UpdateParameterInfoContext context);
 
   /**
    * <p>This method is executed on UI thread and supposed only to update UI representation using

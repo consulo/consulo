@@ -50,7 +50,7 @@ public class KeyStokeMap {
 
     assert s.length() > 0;
 
-    final String lowerCaseS = s.toLowerCase();
+    String lowerCaseS = s.toLowerCase();
     boolean hasModifiers = lowerCaseS.contains("shift") || lowerCaseS.contains("control") || lowerCaseS.contains("alt") || lowerCaseS.contains("meta");
 
     String symbol = null;
@@ -73,7 +73,7 @@ public class KeyStokeMap {
       }
 
       if (symbol.length() > 1) {
-        final Integer code = (Integer)ReflectionUtil.getField(KeyEvent.class, null, int.class, "VK_" + StringUtil.toUpperCase(symbol));
+        Integer code = (Integer)ReflectionUtil.getField(KeyEvent.class, null, int.class, "VK_" + StringUtil.toUpperCase(symbol));
         if (code == null) {
           return throwUnrecognized(symbol);
         }
@@ -81,7 +81,7 @@ public class KeyStokeMap {
       }
 
       String modifierPlusA = s.substring(0, s.length() - (s.length() - beforeSymbol - 1)) + "A";
-      final KeyStroke modifierPlusAStroke = KeyStroke.getKeyStroke(modifierPlusA);
+      KeyStroke modifierPlusAStroke = KeyStroke.getKeyStroke(modifierPlusA);
 
       if (symbolStroke == null) {
         symbol = String.valueOf(symbol.charAt(0));

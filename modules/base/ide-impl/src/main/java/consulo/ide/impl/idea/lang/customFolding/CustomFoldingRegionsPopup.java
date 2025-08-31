@@ -51,7 +51,7 @@ public class CustomFoldingRegionsPopup {
     myRegionsList.setModel(new MyListModel(orderByPosition(descriptors)));
     myRegionsList.setSelectedIndex(0);
 
-    final PopupChooserBuilder popupBuilder = new PopupChooserBuilder<>(myRegionsList);
+    PopupChooserBuilder popupBuilder = new PopupChooserBuilder<>(myRegionsList);
     myPopup = popupBuilder
             .setTitle(IdeBundle.message("goto.custom.region.command"))
             .setResizable(false)

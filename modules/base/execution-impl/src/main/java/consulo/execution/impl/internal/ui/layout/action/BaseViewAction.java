@@ -59,24 +59,24 @@ public abstract class BaseViewAction extends DumbAwareAction {
 
     @RequiredUIAccess
     @Override
-    public final void actionPerformed(final AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         actionPerformed(e, getViewFacade(e), getContent(e));
     }
 
     protected abstract void actionPerformed(AnActionEvent e, ViewContext context, Content[] content);
 
     @Nullable
-    private ViewContext getViewFacade(final AnActionEvent e) {
+    private ViewContext getViewFacade(AnActionEvent e) {
         return e.getData(ViewContext.CONTEXT_KEY);
     }
 
     @Nullable
-    private Content[] getContent(final AnActionEvent e) {
+    private Content[] getContent(AnActionEvent e) {
         return e.getData(Content.KEY_OF_ARRAY);
     }
 
     @Nullable
-    protected static Tab getTabFor(final ViewContext context, final Content[] content) {
+    protected static Tab getTabFor(ViewContext context, Content[] content) {
         Grid grid = context.findGridFor(content[0]);
         return context.getTabFor(grid);
     }

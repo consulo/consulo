@@ -32,17 +32,17 @@ public abstract class Filter<T extends AbstractTestProxy> {
 
   public abstract boolean shouldAccept(T test);
 
-  public List<T> select(final List<? extends T> tests) {
-    final List<T> result = new ArrayList<T>();
-    for (final T test : tests) {
+  public List<T> select(List<? extends T> tests) {
+    List<T> result = new ArrayList<T>();
+    for (T test : tests) {
       if (shouldAccept(test)) result.add(test);
     }
     return result;
   }
 
   @Nullable
-  public T detectIn(final Collection<? extends T> collection) {
-    for (final T test : collection) {
+  public T detectIn(Collection<? extends T> collection) {
+    for (T test : collection) {
       if (shouldAccept(test)) return test;
     }
     return null;
@@ -52,59 +52,59 @@ public abstract class Filter<T extends AbstractTestProxy> {
     return new NotFilter(this);
   }
 
-  public Filter and(final Filter filter) {
+  public Filter and(Filter filter) {
     return new AndFilter(this, filter);
   }
 
-  public Filter or(final Filter filter) {
+  public Filter or(Filter filter) {
     return new OrFilter(this, filter);
   }
 
   public static final Filter NO_FILTER = new Filter() {
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return true;
     }
   };
 
   public static final Filter DEFECT = new Filter() {
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return test.isDefect();
     }
   };
 
   public static final Filter IGNORED = new Filter() {
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return test.isIgnored();
     }
   };
 
   public static final Filter NOT_PASSED = new Filter() {
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return !test.isPassed();
     }
   };
 
   public static final Filter PASSED = new Filter() {
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return test.isPassed();
     }
   };
 
   public static final Filter FAILED_OR_INTERRUPTED = new Filter() {
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return test.isInterrupted() || test.isDefect();
     }
   };
 
   public static final Filter LEAF = new Filter() {
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return test.isLeaf();
     }
   };
@@ -124,13 +124,13 @@ public abstract class Filter<T extends AbstractTestProxy> {
     private final Filter myFilter1;
     private final Filter myFilter2;
 
-    public AndFilter(final Filter filter1, final Filter filter2) {
+    public AndFilter(Filter filter1, Filter filter2) {
       myFilter1 = filter1;
       myFilter2 = filter2;
     }
 
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return myFilter1.shouldAccept(test) && myFilter2.shouldAccept(test);
     }
   }
@@ -138,12 +138,12 @@ public abstract class Filter<T extends AbstractTestProxy> {
   private static class NotFilter extends Filter {
     private final Filter myFilter;
 
-    public NotFilter(final Filter filter) {
+    public NotFilter(Filter filter) {
       myFilter = filter;
     }
 
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return !myFilter.shouldAccept(test);
     }
   }
@@ -152,13 +152,13 @@ public abstract class Filter<T extends AbstractTestProxy> {
     private final Filter myFilter1;
     private final Filter myFilter2;
 
-    public OrFilter(final Filter filter1, final Filter filter2) {
+    public OrFilter(Filter filter1, Filter filter2) {
       myFilter1 = filter1;
       myFilter2 = filter2;
     }
 
     @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
+    public boolean shouldAccept(AbstractTestProxy test) {
       return myFilter1.shouldAccept(test) || myFilter2.shouldAccept(test);
     }
   }

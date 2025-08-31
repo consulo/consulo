@@ -100,7 +100,7 @@ public final class HighlightsExtractor {
             myIndex = i;
             return "";
         }
-        final String tagName = text.substring(openTag + 1, closeTag);
+        String tagName = text.substring(openTag + 1, closeTag);
 
         if (myIsOpeningTag) {
             myStartOffset = openTag + tagName.length() + 2;

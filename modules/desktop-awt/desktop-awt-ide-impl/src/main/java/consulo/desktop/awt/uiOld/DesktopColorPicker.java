@@ -146,7 +146,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
     setSize(JBUI.size(300, 350));
 
-    final boolean hsb = PropertiesComponent.getInstance().getBoolean(HSB_PROPERTY, false);
+    boolean hsb = PropertiesComponent.getInstance().getBoolean(HSB_PROPERTY, false);
     if (hsb) {
       myFormat.setSelectedIndex(1);
     }
@@ -157,14 +157,14 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
   }
 
   private JTextField createColorField(boolean hex) {
-    final NumberDocument doc = new NumberDocument(hex);
+    NumberDocument doc = new NumberDocument(hex);
     final JTextField field = new JTextField("");
     field.setDocument(doc);
     doc.setSource(field);
     field.getDocument().addDocumentListener(this);
     field.addFocusListener(new FocusAdapter() {
       @Override
-      public void focusGained(final FocusEvent e) {
+      public void focusGained(FocusEvent e) {
         field.selectAll();
       }
     });
@@ -266,9 +266,9 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
   @Nullable
   private Color gatherRGB() {
     try {
-      final int r = Integer.parseInt(myRed.getText());
-      final int g = Integer.parseInt(myGreen.getText());
-      final int b = Integer.parseInt(myBlue.getText());
+      int r = Integer.parseInt(myRed.getText());
+      int g = Integer.parseInt(myGreen.getText());
+      int b = Integer.parseInt(myBlue.getText());
 
       return isRGBMode() ? new Color(r, g, b) : new Color(Color.HSBtoRGB(((float)r) / 360f, ((float)g) / 100f, ((float)b) / 100f));
     }
@@ -277,24 +277,24 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     return null;
   }
 
-  private void applyColorToHEX(final Color c) {
+  private void applyColorToHEX(Color c) {
     myHex.setText(String.format("%06X", (0xFFFFFF & c.getRGB())));
   }
 
-  private void applyColorToRGB(final Color color) {
+  private void applyColorToRGB(Color color) {
     myRed.setText(String.valueOf(color.getRed()));
     myGreen.setText(String.valueOf(color.getGreen()));
     myBlue.setText(String.valueOf(color.getBlue()));
   }
 
-  private void applyColorToHSB(final Color c) {
-    final float[] hbs = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+  private void applyColorToHSB(Color c) {
+    float[] hbs = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
     myRed.setText(String.valueOf(((int)(360f * hbs[0]))));
     myGreen.setText(String.valueOf(((int)(100f * hbs[1]))));
     myBlue.setText(String.valueOf(((int)(100f * hbs[2]))));
   }
 
-  private void applyColor(final Color color) {
+  private void applyColor(Color color) {
     if (isRGBMode()) {
       applyColorToRGB(color);
     }
@@ -309,7 +309,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
                                 boolean enableOpacity,
                                 boolean opacityInPercent,
                                 @Nonnull Consumer<Color> colorConsumer) {
-    final ColorPickerDialog dialog = new ColorPickerDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent);
+    ColorPickerDialog dialog = new ColorPickerDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent);
     SwingUtilities.invokeLater(() -> {
       dialog.show();
 
@@ -323,11 +323,11 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
   }
 
   private JComponent buildTopPanel(boolean enablePipette) throws ParseException {
-    final JPanel result = new JPanel(new BorderLayout());
+    JPanel result = new JPanel(new BorderLayout());
 
-    final JPanel previewPanel = new JPanel(new BorderLayout());
+    JPanel previewPanel = new JPanel(new BorderLayout());
     if (enablePipette && ColorPipette.isAvailable()) {
-      final JButton pipette = new JButton();
+      JButton pipette = new JButton();
       pipette.setUI(new BasicButtonUI());
       pipette.setRolloverEnabled(true);
       pipette.setIcon(TargetAWT.to(AllIcons.Ide.Pipette));
@@ -353,7 +353,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
     result.add(previewPanel, BorderLayout.NORTH);
 
-    final JPanel rgbPanel = new JPanel();
+    JPanel rgbPanel = new JPanel();
     rgbPanel.setLayout(new BoxLayout(rgbPanel, BoxLayout.X_AXIS));
     if (!UIUtil.isUnderAquaLookAndFeel()) {
       myR_after.setPreferredSize(new Dimension(14, -1));
@@ -377,7 +377,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
     result.add(rgbPanel, BorderLayout.WEST);
 
-    final JPanel hexPanel = new JPanel();
+    JPanel hexPanel = new JPanel();
     hexPanel.setLayout(new BoxLayout(hexPanel, BoxLayout.X_AXIS));
     hexPanel.setBorder(JBUI.Borders.empty(10, 0, 0, 0));
     hexPanel.add(new JLabel("#"));
@@ -468,8 +468,8 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       addMouseMotionListener(new MouseAdapter() {
         @Override
         public void mouseDragged(MouseEvent e) {
-          final int x = e.getX();
-          final int y = e.getY();
+          int x = e.getX();
+          int y = e.getY();
           int mx = myWheel.x + myWheel.width / 2;
           int my = myWheel.y + myWheel.height / 2;
           double s;
@@ -486,8 +486,8 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent e) {
-          final int x = e.getX();
-          final int y = e.getY();
+          int x = e.getX();
+          int y = e.getY();
           int mx = myWheel.x + myWheel.width / 2;
           int my = myWheel.y + myWheel.height / 2;
           double s;
@@ -560,7 +560,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     protected void paintComponent(Graphics g) {
       Graphics2D g2d = (Graphics2D)g;
 
-      final Dimension size = getSize();
+      Dimension size = getSize();
       int _size = Math.min(size.width, size.height);
       _size = Math.min(_size, JBUI.scale(600));
 
@@ -592,8 +592,8 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       int arcw = (int)(myWheel.width * mySaturation / 2);
       int arch = (int)(myWheel.height * mySaturation / 2);
       double th = myHue * 2 * Math.PI;
-      final int x = (int)(mx + arcw * Math.cos(th));
-      final int y = (int)(my - arch * Math.sin(th));
+      int x = (int)(mx + arcw * Math.cos(th));
+      int y = (int)(my - arch * Math.sin(th));
       g.fillRect(x - 2, y - 2, 4, 4);
       g.setColor(Color.BLACK);
       g.drawRect(x - 2, y - 2, 4, 4);
@@ -623,11 +623,11 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-      final Insets i = getInsets();
-      final Rectangle r = getBounds();
+      Insets i = getInsets();
+      Rectangle r = getBounds();
 
-      final int width = r.width - i.left - i.right;
-      final int height = r.height - i.top - i.bottom;
+      int width = r.width - i.left - i.right;
+      int height = r.height - i.top - i.bottom;
 
       g.setColor(Color.WHITE);
       g.fillRect(i.left, i.top, width, height);
@@ -658,10 +658,10 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
     @Override
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-      final boolean rgb = isRGBMode();
+      boolean rgb = isRGBMode();
       char[] source = str.toCharArray();
       if (mySrc != null) {
-        final int selected = mySrc.getSelectionEnd() - mySrc.getSelectionStart();
+        int selected = mySrc.getSelectionEnd() - mySrc.getSelectionStart();
         int newLen = mySrc.getText().length() - selected + str.length();
         if (newLen > (myHex ? 6 : 3)) {
           Toolkit.getDefaultToolkit().beep();
@@ -678,11 +678,11 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
           Toolkit.getDefaultToolkit().beep();
         }
       }
-      final String toInsert = StringUtil.toUpperCase(new String(result, 0, j));
-      final String res = new StringBuilder(mySrc.getText()).insert(offs, toInsert).toString();
+      String toInsert = StringUtil.toUpperCase(new String(result, 0, j));
+      String res = new StringBuilder(mySrc.getText()).insert(offs, toInsert).toString();
       try {
         if (!myHex) {
-          final int num = Integer.parseInt(res);
+          int num = Integer.parseInt(res);
           if (rgb) {
             if (num > 255) {
               Toolkit.getDefaultToolkit().beep();
@@ -736,9 +736,9 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     }
 
     private void restoreColors() {
-      final String value = PropertiesComponent.getInstance().getValue(COLOR_CHOOSER_COLORS_KEY);
+      String value = PropertiesComponent.getInstance().getValue(COLOR_CHOOSER_COLORS_KEY);
       if (value != null) {
-        final List<String> colors = StringUtil.split(value, ",,,");
+        List<String> colors = StringUtil.split(value, ",,,");
         for (String color : colors) {
           if (color.contains("-")) {
             List<String> components = StringUtil.split(color, "-");
@@ -784,7 +784,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     }
 
     public void saveColors() {
-      final List<String> values = new ArrayList<String>();
+      List<String> values = new ArrayList<String>();
       for (Color recentColor : myRecentColors) {
         if (recentColor == null) break;
         values.add(String.format("%d-%d-%d-%d",
@@ -812,11 +812,11 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       int x = p.x;
       int y = p.y;
 
-      final Insets i = getInsets();
-      final Dimension d = getSize();
+      Insets i = getInsets();
+      Dimension d = getSize();
 
-      final int left = i.left + (d.width - i.left - i.right - getComponentWidth()) / 2;
-      final int top = i.top + (d.height - i.top - i.bottom - getComponentHeight()) / 2;
+      int left = i.left + (d.width - i.left - i.right - getComponentWidth()) / 2;
+      int top = i.top + (d.height - i.top - i.bottom - getComponentHeight()) / 2;
 
       int col = (x - left - JBUI.scale(2)) / 31;
       col = col > JBUI.scale(9) ? JBUI.scale(9) : col;
@@ -838,12 +838,12 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-      final Insets i = getInsets();
+      Insets i = getInsets();
 
-      final Dimension d = getSize();
+      Dimension d = getSize();
 
-      final int left = i.left + (d.width - i.left - i.right - getComponentWidth()) / 2;
-      final int top = i.top + (d.height - i.top - i.bottom - getComponentHeight()) / 2;
+      int left = i.left + (d.width - i.left - i.right - getComponentWidth()) / 2;
+      int top = i.top + (d.height - i.top - i.bottom - getComponentHeight()) / 2;
 
       g.setColor(Color.WHITE);
       g.fillRect(left, top, getComponentWidth(), getComponentHeight());

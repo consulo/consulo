@@ -67,7 +67,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
       }
 
       @Override
-      public Element writeScheme(@Nonnull final KeymapImpl scheme) {
+      public Element writeScheme(@Nonnull KeymapImpl scheme) {
         return scheme.writeExternal();
       }
 
@@ -203,7 +203,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   @Override
-  public void loadState(final Element state) {
+  public void loadState(Element state) {
     Element child = state.getChild(ACTIVE_KEYMAP);
     if (child != null) {
       myActiveKeymapName = child.getAttributeValue(NAME_ATTRIBUTE);
@@ -227,7 +227,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   @Override
-  public void addKeymapManagerListener(@Nonnull final KeymapManagerListener listener, @Nonnull Disposable parentDisposable) {
+  public void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull Disposable parentDisposable) {
     myListeners.addListener(listener, parentDisposable);
   }
 

@@ -42,7 +42,7 @@ public class StatCollector {
     };
   }
 
-  public void markWith(final String id, Runnable task) {
+  public void markWith(String id, Runnable task) {
     Runnable mark = mark(id);
 
     task.run();

@@ -41,11 +41,11 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
   /**
    * @deprecated use {@link #LogConsoleImpl(Project, java.io.File, java.nio.charset.Charset, long, String, boolean, GlobalSearchScope)}
    */
-  public LogConsoleImpl(Project project, @Nonnull File file, @Nonnull Charset charset, long skippedContents, String title, final boolean buildInActions) {
+  public LogConsoleImpl(Project project, @Nonnull File file, @Nonnull Charset charset, long skippedContents, String title, boolean buildInActions) {
     this(project, file, charset, skippedContents, title, buildInActions, GlobalSearchScope.allScope(project));
   }
 
-  public LogConsoleImpl(Project project, @Nonnull File file, @Nonnull Charset charset, long skippedContents, String title, final boolean buildInActions, final SearchScope searchScope) {
+  public LogConsoleImpl(Project project, @Nonnull File file, @Nonnull Charset charset, long skippedContents, String title, boolean buildInActions, SearchScope searchScope) {
     super(project, getReader(file, charset, skippedContents), title, buildInActions, new DefaultLogFilterModel(project), searchScope);
     myPath = file.getAbsolutePath();
     myFile = file;
@@ -53,11 +53,11 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
   }
 
   @Nullable
-  private static Reader getReader(@Nonnull final File file, @Nonnull final Charset charset, final long skippedContents) {
+  private static Reader getReader(@Nonnull File file, @Nonnull Charset charset, long skippedContents) {
     Reader reader = null;
     try {
       try {
-        final FileInputStream inputStream = new FileInputStream(file);
+        FileInputStream inputStream = new FileInputStream(file);
         reader = new BufferedReader(new InputStreamReader(inputStream, charset));
         if (file.length() >= skippedContents) { //do not skip forward
           //noinspection ResultOfMethodCallIgnored
@@ -93,7 +93,7 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
       return null;
     }
 
-    final long length = myFile.length();
+    long length = myFile.length();
     if (length < myOldLength) {
       reader.close();
       reader = new BufferedReader(new InputStreamReader(new FileInputStream(myFile), myCharset));

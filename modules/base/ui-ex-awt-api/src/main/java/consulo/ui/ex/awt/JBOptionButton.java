@@ -137,17 +137,17 @@ public class JBOptionButton extends JButton {
     //  }
     //}
 
-    public void showPopup(final Action actionToSelect, final boolean ensureSelection) {
+    public void showPopup(Action actionToSelect, boolean ensureSelection) {
         if (myPopupIsShowing) {
             return;
         }
 
         myPopupIsShowing = true;
-        final Point loc = getLocationOnScreen();
-        final Rectangle screen = ScreenUtil.getScreenRectangle(loc);
-        final Dimension popupSize = myUnderPopup.getPreferredSize();
-        final Rectangle intersection = screen.intersection(new Rectangle(new Point(loc.x, loc.y + getHeight()), popupSize));
-        final boolean above = intersection.height < popupSize.height;
+        Point loc = getLocationOnScreen();
+        Rectangle screen = ScreenUtil.getScreenRectangle(loc);
+        Dimension popupSize = myUnderPopup.getPreferredSize();
+        Rectangle intersection = screen.intersection(new Rectangle(new Point(loc.x, loc.y + getHeight()), popupSize));
+        boolean above = intersection.height < popupSize.height;
         int y = above ? getY() - popupSize.height : getY() + getHeight();
 
         final JPopupMenu popup = above ? myAbovePopup : myUnderPopup;
@@ -187,13 +187,13 @@ public class JBOptionButton extends JButton {
                 return;
             }
 
-            final MenuElement[] elements = popup.getSubElements();
+            MenuElement[] elements = popup.getSubElements();
             for (MenuElement eachElement : elements) {
                 if (eachElement instanceof JMenuItem) {
                     JMenuItem eachItem = (JMenuItem) eachElement;
                     if (selection.equals(eachItem.getAction())) {
-                        final MenuSelectionManager mgr = MenuSelectionManager.defaultManager();
-                        final MenuElement[] path = new MenuElement[2];
+                        MenuSelectionManager mgr = MenuSelectionManager.defaultManager();
+                        MenuElement[] path = new MenuElement[2];
                         path[0] = popup;
                         path[1] = eachItem;
                         mgr.setSelectedPath(path);
@@ -210,10 +210,10 @@ public class JBOptionButton extends JButton {
     }
 
     private JPopupMenu fillMenu(boolean under) {
-        final JPopupMenu result = new JBPopupMenu();
+        JPopupMenu result = new JBPopupMenu();
 
         if (under && myOptions.length > 0) {
-            final JMenuItem mainAction = new JBMenuItem(getAction());
+            JMenuItem mainAction = new JBMenuItem(getAction());
             configureItem(getMenuInfo(getAction()), mainAction);
             result.add(mainAction);
             result.addSeparator();
@@ -223,8 +223,8 @@ public class JBOptionButton extends JButton {
             if (getAction() == each) {
                 continue;
             }
-            final OptionInfo info = getMenuInfo(each);
-            final JMenuItem eachItem = new JBMenuItem(each);
+            OptionInfo info = getMenuInfo(each);
+            JMenuItem eachItem = new JBMenuItem(each);
 
             configureItem(info, eachItem);
             result.add(eachItem);
@@ -232,7 +232,7 @@ public class JBOptionButton extends JButton {
 
         if (!under && myOptions.length > 0) {
             result.addSeparator();
-            final JMenuItem mainAction = new JBMenuItem(getAction());
+            JMenuItem mainAction = new JBMenuItem(getAction());
             configureItem(getMenuInfo(getAction()), mainAction);
             result.add(mainAction);
         }
@@ -290,7 +290,7 @@ public class JBOptionButton extends JButton {
     }
 
     private OptionInfo getMenuInfo(Action each) {
-        final String text = (String) each.getValue(Action.NAME);
+        String text = (String) each.getValue(Action.NAME);
         int mnemonic = -1;
         int mnemonicIndex = -1;
         StringBuilder plainText = new StringBuilder();
@@ -298,7 +298,7 @@ public class JBOptionButton extends JButton {
             char ch = text.charAt(i);
             if (ch == '&' || ch == '_') {
                 if (i + 1 < text.length()) {
-                    final char mnemonicsChar = text.charAt(i + 1);
+                    char mnemonicsChar = text.charAt(i + 1);
                     mnemonic = Character.toUpperCase(mnemonicsChar);
                     mnemonicIndex = i;
                 }

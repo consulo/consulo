@@ -31,7 +31,7 @@ public class GroupWrapper extends CachingChildrenTreeNode<Group> {
   }
 
   @Override
-  public void copyFromNewInstance(final CachingChildrenTreeNode newInstance) {
+  public void copyFromNewInstance(CachingChildrenTreeNode newInstance) {
     clearChildren();
     setChildren(newInstance.getChildren());
     synchronizeChildren();

@@ -178,7 +178,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
   }
 
   private void installDefaultCopyAction() {
-    final Action copy = getActionMap().get("copy");
+    Action copy = getActionMap().get("copy");
     if (copy == null || copy instanceof UIResource) {
       Action newCopy = new AbstractAction() {
         @Override
@@ -266,7 +266,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     super.setCellRenderer(new ExpandedItemListCellRendererWrapper<>(cellRenderer, myExpandableItemsHandler));
   }
 
-  public void installCellRenderer(@Nonnull final Function<? super E, ? extends JComponent> fun) {
+  public void installCellRenderer(@Nonnull Function<? super E, ? extends JComponent> fun) {
     setCellRenderer(new SelectionAwareListCellRenderer<>(fun));
   }
 

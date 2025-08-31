@@ -106,19 +106,19 @@ public class UnixProcessManager {
   public static boolean sendSignalToProcessTree(int processId, int signal) {
     checkCLib();
 
-    final int our_pid = C_LIB.getpid();
+    int our_pid = C_LIB.getpid();
     if (LOG.isDebugEnabled()) {
       LOG.debug("Sending signal " + signal + " to process tree with root PID " + processId);
     }
 
-    final Ref<Integer> foundPid = new Ref<Integer>();
-    final ProcessInfo processInfo = new ProcessInfo();
-    final List<Integer> childrenPids = new ArrayList<Integer>();
+    Ref<Integer> foundPid = new Ref<Integer>();
+    ProcessInfo processInfo = new ProcessInfo();
+    List<Integer> childrenPids = new ArrayList<Integer>();
 
     findChildProcesses(our_pid, processId, foundPid, processInfo, childrenPids);
 
     // result is true if signal was sent to at least one process
-    final boolean result;
+    boolean result;
     if (!foundPid.isNull()) {
       processInfo.killProcTree(foundPid.get(), signal);
       result = true;
@@ -235,7 +235,7 @@ public class UnixProcessManager {
       return new String[]{psCommand, "-e", "--format", commandLineOnly ? "%a" : "%P%p%a"};
     }
     else if (Platform.current().os().isMac() || SystemInfo.isFreeBSD) {
-      final String command = isShortenCommand ? "comm" : "command";
+      String command = isShortenCommand ? "comm" : "command";
       return new String[]{psCommand, "-ax", "-o", commandLineOnly ? command : "ppid,pid," + command};
     }
     else {

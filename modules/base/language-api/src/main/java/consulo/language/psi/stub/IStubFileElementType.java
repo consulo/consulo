@@ -32,11 +32,11 @@ import java.util.Arrays;
 public class IStubFileElementType<T extends PsiFileStub> extends StubFileElementType<T> {
   private static volatile int templateStubVersion = -1;
 
-  public IStubFileElementType(final Language language) {
+  public IStubFileElementType(Language language) {
     super(language);
   }
 
-  public IStubFileElementType(final String debugName, final Language language) {
+  public IStubFileElementType(String debugName, Language language) {
     super(debugName, language);
     if (hasNonTrivialExternalId() && !isOutOfOurControl()) {
       IStubElementType.checkNotInstantiatedTooLate(this);
@@ -74,20 +74,20 @@ public class IStubFileElementType<T extends PsiFileStub> extends StubFileElement
   }
 
   @Override
-  public void serialize(@Nonnull final T stub, @Nonnull final StubOutputStream dataStream) throws IOException {
+  public void serialize(@Nonnull T stub, @Nonnull StubOutputStream dataStream) throws IOException {
   }
 
   @Nonnull
   @Override
-  public T deserialize(@Nonnull final StubInputStream dataStream, final StubElement parentStub) throws IOException {
+  public T deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
     return (T)new PsiFileStubImpl(null);
   }
 
   @Override
-  public void indexStub(@Nonnull final PsiFileStub stub, @Nonnull final IndexSink sink) {
+  public void indexStub(@Nonnull PsiFileStub stub, @Nonnull IndexSink sink) {
   }
 
-  public boolean shouldBuildStubFor(final VirtualFile file) {
+  public boolean shouldBuildStubFor(VirtualFile file) {
     return true;
   }
 

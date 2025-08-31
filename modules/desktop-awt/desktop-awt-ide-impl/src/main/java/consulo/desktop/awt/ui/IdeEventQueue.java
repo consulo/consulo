@@ -208,7 +208,7 @@ public class IdeEventQueue extends EventQueue {
 
     KeyboardFocusManager keyboardFocusManager = IdeKeyboardFocusManager.replaceDefault();
     keyboardFocusManager.addPropertyChangeListener("permanentFocusOwner", e -> {
-      final Application application = ApplicationManager.getApplication();
+      Application application = ApplicationManager.getApplication();
       if (application == null) {
         // We can get focus event before application is initialized
         return;
@@ -239,23 +239,23 @@ public class IdeEventQueue extends EventQueue {
     PostEventQueueHacking.replacePostEventQueue(this);
   }
 
-  public void setWindowManager(final WindowManagerEx windowManager) {
+  public void setWindowManager(WindowManagerEx windowManager) {
     myWindowManager = windowManager;
   }
 
-  public void addIdleListener(@Nonnull final Runnable runnable, final int timeoutMillis) {
+  public void addIdleListener(@Nonnull Runnable runnable, int timeoutMillis) {
     myIdleHolder.addIdleListener(runnable, timeoutMillis);
   }
 
-  public void removeIdleListener(@Nonnull final Runnable runnable) {
+  public void removeIdleListener(@Nonnull Runnable runnable) {
     myIdleHolder.removeIdleListener(runnable);
   }
 
-  public void addActivityListener(@Nonnull final Runnable runnable, Disposable parentDisposable) {
+  public void addActivityListener(@Nonnull Runnable runnable, Disposable parentDisposable) {
     DisposerUtil.add(runnable, myActivityListeners, parentDisposable);
   }
 
-  public void removeActivityListener(@Nonnull final Runnable runnable) {
+  public void removeActivityListener(@Nonnull Runnable runnable) {
     myActivityListeners.remove(runnable);
   }
 
@@ -603,7 +603,7 @@ public class IdeEventQueue extends EventQueue {
     myKeyboardBusy = e instanceof KeyEvent || myKeyboardEventsPosted.get() > myKeyboardEventsDispatched.get();
 
     if (e instanceof MouseWheelEvent) {
-      final MenuElement[] selectedPath = MenuSelectionManager.defaultManager().getSelectedPath();
+      MenuElement[] selectedPath = MenuSelectionManager.defaultManager().getSelectedPath();
       if (selectedPath.length > 0 && !(selectedPath[0] instanceof ComboPopup)) {
         ((MouseWheelEvent)e).consume();
         Component component = selectedPath[0].getComponent();
@@ -663,7 +663,7 @@ public class IdeEventQueue extends EventQueue {
         super.dispatchEvent(new MouseEvent(me.getComponent(), MOUSE_MOVED, me.getWhen(), 0, me.getX(), me.getY(), 0, false, 0));
       }
       if (IdeMouseEventDispatcher.patchClickCount(me) && me.getID() == MouseEvent.MOUSE_CLICKED) {
-        final MouseEvent toDispatch = new MouseEvent(me.getComponent(), me.getID(), System.currentTimeMillis(), me.getModifiers(), me.getX(), me.getY(), 1, me.isPopupTrigger(), me.getButton());
+        MouseEvent toDispatch = new MouseEvent(me.getComponent(), me.getID(), System.currentTimeMillis(), me.getModifiers(), me.getX(), me.getY(), 1, me.isPopupTrigger(), me.getButton());
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(() -> dispatchEvent(toDispatch));
       }
@@ -694,7 +694,7 @@ public class IdeEventQueue extends EventQueue {
       }
 
       if (showingWindow == null) {
-        final Frame[] allFrames = Frame.getFrames();
+        Frame[] allFrames = Frame.getFrames();
         for (Frame each : allFrames) {
           if (each.isShowing()) {
             showingWindow = each;
@@ -705,7 +705,7 @@ public class IdeEventQueue extends EventQueue {
 
 
       if (showingWindow != null && showingWindow != wnd) {
-        final Method setActive = ReflectionUtil.findMethod(ReflectionUtil.getClassDeclaredMethods(KeyboardFocusManager.class, false), resetMethod, Window.class);
+        Method setActive = ReflectionUtil.findMethod(ReflectionUtil.getClassDeclaredMethods(KeyboardFocusManager.class, false), resetMethod, Window.class);
         if (setActive != null) {
           try {
             setActive.invoke(mgr, (Window)showingWindow);
@@ -725,7 +725,7 @@ public class IdeEventQueue extends EventQueue {
 
   private static boolean processAppActivationEvents(@Nonnull AWTEvent e) {
     if (e instanceof WindowEvent) {
-      final WindowEvent we = (WindowEvent)e;
+      WindowEvent we = (WindowEvent)e;
 
       ApplicationActivationStateManager.updateState(we);
 
@@ -736,7 +736,7 @@ public class IdeEventQueue extends EventQueue {
   }
 
   private static void storeLastFocusedComponent(@Nonnull WindowEvent we) {
-    final Window eventWindow = we.getWindow();
+    Window eventWindow = we.getWindow();
 
     if (we.getID() == WindowEvent.WINDOW_DEACTIVATED || we.getID() == WindowEvent.WINDOW_LOST_FOCUS) {
       Component frame = UIUtil.findUltimateParent(eventWindow);
@@ -903,7 +903,7 @@ public class IdeEventQueue extends EventQueue {
       boolean dispatch = true;
       if (e instanceof KeyEvent) {
         KeyEvent ke = (KeyEvent)e;
-        final Component component = ke.getComponent();
+        Component component = ke.getComponent();
         boolean pureAlt = ke.getKeyCode() == KeyEvent.VK_ALT && (ke.getModifiers() | InputEvent.ALT_MASK) == InputEvent.ALT_MASK;
         if (!pureAlt) {
           myWaitingForAltRelease = false;
@@ -926,7 +926,7 @@ public class IdeEventQueue extends EventQueue {
               //noinspection SSBasedInspection
               SwingUtilities.invokeLater(() -> {
                 try {
-                  final Window window = UIUtil.getWindow(component);
+                  Window window = UIUtil.getWindow(component);
                   if (window == null || !window.isActive()) {
                     return;
                   }
@@ -955,7 +955,7 @@ public class IdeEventQueue extends EventQueue {
     @Override
     public boolean test(@Nonnull AWTEvent e) {
       if (e instanceof KeyEvent && e.getID() == KeyEvent.KEY_PRESSED && ((KeyEvent)e).getKeyCode() == KeyEvent.VK_ESCAPE) {
-        final Component owner =
+        Component owner =
                 UIUtil.findParentByCondition(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner(), component -> component instanceof JTable || component instanceof JTree);
 
         if (owner instanceof JTable && ((JTable)owner).isEditing()) {

@@ -80,17 +80,17 @@ public class InspectionManagerImpl extends InspectionManagerBase {
 
     @Nullable
     public static SuppressIntentionAction[] getSuppressActions(@Nonnull InspectionToolWrapper toolWrapper) {
-        final InspectionTool tool = toolWrapper.getTool();
+        InspectionTool tool = toolWrapper.getTool();
         if (tool instanceof CustomSuppressableInspectionTool) {
             return ((CustomSuppressableInspectionTool)tool).getSuppressActions(null);
         }
-        final List<LocalQuickFix> actions = new ArrayList<>(Arrays.asList(tool.getBatchSuppressActions(null)));
+        List<LocalQuickFix> actions = new ArrayList<>(Arrays.asList(tool.getBatchSuppressActions(null)));
         if (actions.isEmpty()) {
-            final Language language = toolWrapper.getLanguage();
+            Language language = toolWrapper.getLanguage();
             if (language != null) {
-                final List<InspectionSuppressor> suppressors = InspectionSuppressor.forLanguage(language);
+                List<InspectionSuppressor> suppressors = InspectionSuppressor.forLanguage(language);
                 for (InspectionSuppressor suppressor : suppressors) {
-                    final SuppressQuickFix[] suppressActions = suppressor.getSuppressActions(null, tool.getShortName());
+                    SuppressQuickFix[] suppressActions = suppressor.getSuppressActions(null, tool.getShortName());
                     Collections.addAll(actions, suppressActions);
                 }
             }
@@ -110,7 +110,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         if (ApplicationManager.getApplication().isDisposed()) {
             return;
         }
-        final Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
+        Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
         for (String word : words) {
             myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName(), InspectionToolsConfigurable.ID, "Inspections");
         }
@@ -119,7 +119,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
     @Override
     @Nonnull
     public GlobalInspectionContextImpl createNewGlobalContext(boolean reuse) {
-        final GlobalInspectionContextImpl inspectionContext;
+        GlobalInspectionContextImpl inspectionContext;
         if (reuse) {
             if (myGlobalInspectionContext == null) {
                 myGlobalInspectionContext = inspectionContext = new GlobalInspectionContextImpl(getProject(), myContentManager);
@@ -135,7 +135,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         return inspectionContext;
     }
 
-    public void setProfile(final String name) {
+    public void setProfile(String name) {
         myCurrentProfileName = name;
     }
 
@@ -152,7 +152,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
         if (!myToolsAreInitialized.getAndSet(true)) {
             final SearchableOptionsRegistrar myOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
             final InspectionToolRegistrar toolRegistrar = InspectionToolRegistrar.getInstance();
-            final Application app = ApplicationManager.getApplication();
+            Application app = ApplicationManager.getApplication();
             if (app.isUnitTestMode() || app.isHeadlessEnvironment()) {
                 return;
             }
@@ -164,7 +164,7 @@ public class InspectionManagerImpl extends InspectionManagerBase {
                     for (InspectionToolWrapper toolWrapper : tools) {
                         processText(toolWrapper.getDisplayName().toLowerCase(), toolWrapper, myOptionsRegistrar);
 
-                        final String description = toolWrapper.loadDescription();
+                        String description = toolWrapper.loadDescription();
                         if (description != null) {
                             @NonNls String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
                             processText(descriptionText, toolWrapper, myOptionsRegistrar);

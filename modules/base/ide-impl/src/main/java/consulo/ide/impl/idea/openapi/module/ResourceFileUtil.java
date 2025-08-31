@@ -38,15 +38,15 @@ public class ResourceFileUtil {
   }
 
   @Nullable
-  public static VirtualFile findResourceFile(final String name, final Module inModule) {
-    final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(inModule).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(inModule.getProject()).getFileIndex();
-    for (final VirtualFile sourceRoot : sourceRoots) {
-      final String packagePrefix = fileIndex.getPackageNameByDirectory(sourceRoot);
-      final String prefix = packagePrefix == null || packagePrefix.isEmpty() ? null : packagePrefix.replace('.', '/') + "/";
-      final String relPath = prefix != null && name.startsWith(prefix) && name.length() > prefix.length() ? name.substring(prefix.length()) : name;
-      final String fullPath = sourceRoot.getPath() + "/" + relPath;
-      final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(fullPath);
+  public static VirtualFile findResourceFile(String name, Module inModule) {
+    VirtualFile[] sourceRoots = ModuleRootManager.getInstance(inModule).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
+    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(inModule.getProject()).getFileIndex();
+    for (VirtualFile sourceRoot : sourceRoots) {
+      String packagePrefix = fileIndex.getPackageNameByDirectory(sourceRoot);
+      String prefix = packagePrefix == null || packagePrefix.isEmpty() ? null : packagePrefix.replace('.', '/') + "/";
+      String relPath = prefix != null && name.startsWith(prefix) && name.length() > prefix.length() ? name.substring(prefix.length()) : name;
+      String fullPath = sourceRoot.getPath() + "/" + relPath;
+      VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(fullPath);
       if (fileByPath != null) {
         return fileByPath;
       }
@@ -55,25 +55,25 @@ public class ResourceFileUtil {
   }
 
   @Nullable
-  public static VirtualFile findResourceFileInDependents(final Module searchFromModule, final String fileName) {
+  public static VirtualFile findResourceFileInDependents(Module searchFromModule, String fileName) {
     return findResourceFileInScope(fileName, searchFromModule.getProject(), GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(searchFromModule, true));
   }
 
   @Nullable
-  public static VirtualFile findResourceFileInProject(final Project project, final String resourceName) {
+  public static VirtualFile findResourceFileInProject(Project project, String resourceName) {
     return findResourceFileInScope(resourceName, project, GlobalSearchScope.projectScope(project));
   }
 
   @Nullable
-  public static VirtualFile findResourceFileInScope(final String resourceName,
-                                                    final Project project,
-                                                    final GlobalSearchScope scope) {
+  public static VirtualFile findResourceFileInScope(String resourceName,
+                                                    Project project,
+                                                    GlobalSearchScope scope) {
     int index = resourceName.lastIndexOf('/');
     String packageName = index >= 0 ? resourceName.substring(0, index).replace('/', '.') : "";
-    final String fileName = index >= 0 ? resourceName.substring(index+1) : resourceName;
+    String fileName = index >= 0 ? resourceName.substring(index+1) : resourceName;
     Query<VirtualFile> directoriesByPackageName = DirectoryIndex.getInstance(project).getDirectoriesByPackageName(packageName, true);
     for (VirtualFile virtualFile : directoriesByPackageName) {
-      final VirtualFile child = virtualFile.findChild(fileName);
+      VirtualFile child = virtualFile.findChild(fileName);
       if(child != null && scope.contains(child)) {
         return child;
       }

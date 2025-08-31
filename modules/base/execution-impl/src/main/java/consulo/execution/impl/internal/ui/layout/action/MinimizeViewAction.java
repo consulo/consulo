@@ -25,13 +25,13 @@ import consulo.ui.ex.content.Content;
 public class MinimizeViewAction extends BaseViewAction {
 
   @Override
-  protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
+  protected void update(AnActionEvent e, ViewContext context, Content[] content) {
     setEnabled(e, isEnabled(context, content, e.getPlace()));
     e.getPresentation().setIcon(PlatformIconGroup.actionsMovetobutton());
   }
 
   @Override
-  protected void actionPerformed(final AnActionEvent e, final ViewContext context, final Content[] content) {
+  protected void actionPerformed(AnActionEvent e, ViewContext context, Content[] content) {
     for (Content each : content) {
       context.findCellFor(each).minimize(each);
     }

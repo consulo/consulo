@@ -82,11 +82,11 @@ public class StartMarkAction extends BasicUndoableAction {
   }
 
   public static StartMarkAction start(Document document, Project project, String commandName) throws AlreadyStartedException {
-    final StartMarkAction existingMark = ourCurrentMarks.get(project);
+    StartMarkAction existingMark = ourCurrentMarks.get(project);
     if (existingMark != null) {
       throw new AlreadyStartedException(existingMark.myCommandName, existingMark.myDocument, existingMark.getAffectedDocuments());
     }
-    final StartMarkAction markAction = new StartMarkAction(document, commandName);
+    StartMarkAction markAction = new StartMarkAction(document, commandName);
     ProjectUndoManager.getInstance(project).undoableActionPerformed(markAction);
     ourCurrentMarks.put(project, markAction);
     return markAction;
@@ -97,7 +97,7 @@ public class StartMarkAction extends BasicUndoableAction {
   }
 
   static void markFinished(Project project) {
-    final StartMarkAction existingMark = ourCurrentMarks.remove(project);
+    StartMarkAction existingMark = ourCurrentMarks.remove(project);
     if (existingMark != null) {
       existingMark.myDocument = null;
     }

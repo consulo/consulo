@@ -30,20 +30,20 @@ public class MoveChanges implements ChangeListCommand {
   private MultiMap<LocalChangeList,Change> myMovedFrom;
   private LocalChangeList myListCopy;
 
-  public MoveChanges(final String name, final Change[] changes) {
+  public MoveChanges(String name, Change[] changes) {
     myName = name;
     myChanges = changes;
   }
 
-  public void apply(final ChangeListWorker worker) {
+  public void apply(ChangeListWorker worker) {
     myMovedFrom = worker.moveChangesTo(myName, myChanges);
     myListCopy = worker.getCopyByName(myName);
   }
 
-  public void doNotify(final EventDispatcher<ChangeListListener> dispatcher) {
+  public void doNotify(EventDispatcher<ChangeListListener> dispatcher) {
     if ((myMovedFrom != null) && (myListCopy != null)) {
       for(LocalChangeList fromList: myMovedFrom.keySet()) {
-        final Collection<Change> changesInList = myMovedFrom.get(fromList);
+        Collection<Change> changesInList = myMovedFrom.get(fromList);
         dispatcher.getMulticaster().changesMoved(changesInList, fromList, myListCopy);
       }
     }

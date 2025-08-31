@@ -49,7 +49,7 @@ public class CallerData {
      * Extract caller data information as an array based on a Throwable passed as
      * parameter
      */
-    public static StackTraceElement[] extract(Throwable t, String fqnOfInvokingClass, final int maxDepth,
+    public static StackTraceElement[] extract(Throwable t, String fqnOfInvokingClass, int maxDepth,
             List<String> frameworkPackageList) {
         if (t == null) {
             return null;

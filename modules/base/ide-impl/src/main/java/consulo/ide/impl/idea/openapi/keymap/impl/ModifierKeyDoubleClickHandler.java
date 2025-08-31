@@ -109,7 +109,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
    * @param skipIfActionHasShortcut do not invoke action if a shortcut is already bound to it in keymap
    */
   public void registerAction(@Nonnull String actionId, int modifierKeyCode, int actionKeyCode, boolean skipIfActionHasShortcut) {
-    final MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
+    MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
     IdeEventQueueProxy.getInstance().addDispatcher(dispatcher, dispatcher);
     myActionManager.addAnActionListener(dispatcher, dispatcher);
@@ -159,7 +159,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     @Override
     public boolean test(@Nonnull AWTEvent event) {
       if (event instanceof KeyEvent keyEvent) {
-        final int keyCode = keyEvent.getKeyCode();
+        int keyCode = keyEvent.getKeyCode();
         LOG.debug("", this, event);
         if (keyCode == myModifierKeyCode) {
           if (hasOtherModifiers(keyEvent)) {
@@ -199,7 +199,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     }
 
     private boolean hasOtherModifiers(KeyEvent keyEvent) {
-      final int modifiers = keyEvent.getModifiers();
+      int modifiers = keyEvent.getModifiers();
       return !KEY_CODE_TO_MODIFIER_MAP.forEachEntry(
         (keyCode, modifierMask) -> keyCode == myModifierKeyCode || (modifiers & modifierMask) == 0
       );

@@ -51,7 +51,7 @@ public abstract class LocalTask extends Task {
 
   public abstract void addChangelist(ChangeListInfo info);
 
-  public abstract void removeChangelist(final ChangeListInfo info);
+  public abstract void removeChangelist(ChangeListInfo info);
 
   /**
    * For serialization only.
@@ -63,13 +63,13 @@ public abstract class LocalTask extends Task {
   public abstract List<BranchInfo> getBranches();
 
   @Nonnull
-  public List<BranchInfo> getBranches(final boolean original) {
+  public List<BranchInfo> getBranches(boolean original) {
     return ContainerUtil.filter(getBranches(), info -> info.original == original);
   }
 
   public abstract void addBranch(BranchInfo info);
 
-  public abstract void removeBranch(final BranchInfo info);
+  public abstract void removeBranch(BranchInfo info);
 
   // time tracking interface
 
@@ -77,7 +77,7 @@ public abstract class LocalTask extends Task {
 
   public abstract boolean isRunning();
 
-  public abstract void setRunning(final boolean running);
+  public abstract void setRunning(boolean running);
 
   public abstract void setWorkItems(List<WorkItem> workItems);
 

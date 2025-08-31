@@ -29,17 +29,17 @@ import consulo.execution.test.TestFrameworkRunningModel;
 public class TestFrameworkActions {
   public static void installFilterAction(final TestFrameworkRunningModel model) {
     final TestConsoleProperties properties = model.getProperties();
-    final TestFrameworkPropertyListener<Boolean> hidePropertyListener = new TestFrameworkPropertyListener<Boolean>() {
+    TestFrameworkPropertyListener<Boolean> hidePropertyListener = new TestFrameworkPropertyListener<Boolean>() {
       @Override
-      public void onChanged(final Boolean value) {
+      public void onChanged(Boolean value) {
         model.setFilter(getFilter(properties));
       }
     };
     addPropertyListener(TestConsoleProperties.HIDE_PASSED_TESTS, hidePropertyListener, model, true);
 
-    final TestFrameworkPropertyListener<Boolean> ignorePropertyListener = new TestFrameworkPropertyListener<Boolean>() {
+    TestFrameworkPropertyListener<Boolean> ignorePropertyListener = new TestFrameworkPropertyListener<Boolean>() {
       @Override
-      public void onChanged(final Boolean value) {
+      public void onChanged(Boolean value) {
         model.setFilter(getFilter(properties));
       }
     };
@@ -47,19 +47,19 @@ public class TestFrameworkActions {
   }
 
   private static Filter getFilter(TestConsoleProperties properties) {
-    final boolean shouldFilterPassed = TestConsoleProperties.HIDE_PASSED_TESTS.value(properties);
-    final Filter hidePassedFilter = shouldFilterPassed ? Filter.NOT_PASSED.or(Filter.DEFECT) : Filter.NO_FILTER;
+    boolean shouldFilterPassed = TestConsoleProperties.HIDE_PASSED_TESTS.value(properties);
+    Filter hidePassedFilter = shouldFilterPassed ? Filter.NOT_PASSED.or(Filter.DEFECT) : Filter.NO_FILTER;
 
-    final boolean shouldFilterIgnored = TestConsoleProperties.HIDE_IGNORED_TEST.value(properties);
-    final Filter hideIgnoredFilter = shouldFilterIgnored ? Filter.IGNORED.not() : Filter.NO_FILTER;
+    boolean shouldFilterIgnored = TestConsoleProperties.HIDE_IGNORED_TEST.value(properties);
+    Filter hideIgnoredFilter = shouldFilterIgnored ? Filter.IGNORED.not() : Filter.NO_FILTER;
     return hidePassedFilter.and(hideIgnoredFilter);
   }
 
-  public static void addPropertyListener(final AbstractProperty<Boolean> property,
-                                         final TestFrameworkPropertyListener<Boolean> propertyListener,
-                                         final TestFrameworkRunningModel model,
-                                         final boolean sendValue) {
-    final TestConsoleProperties properties = model.getProperties();
+  public static void addPropertyListener(AbstractProperty<Boolean> property,
+                                         TestFrameworkPropertyListener<Boolean> propertyListener,
+                                         TestFrameworkRunningModel model,
+                                         boolean sendValue) {
+    TestConsoleProperties properties = model.getProperties();
     if (sendValue) {
       properties.addListenerAndSendValue(property, propertyListener);
     }

@@ -41,7 +41,7 @@ public class PathMacroUtil {
   }
 
   public static Map<String, String> getGlobalSystemMacros() {
-    final Map<String, String> map = new HashMap<>();
+    Map<String, String> map = new HashMap<>();
     map.put(APPLICATION_HOME_DIR, getApplicationHomeDirPath());
     map.put(USER_HOME_MACRO_NAME, getUserHomePath());
     return map;

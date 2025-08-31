@@ -72,7 +72,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
     myBuilder = builder;
     myHighlightedRegions = new ArrayList<HighlightedRegion>(2);
     if (element != null && name == null){
-      final PsiPackage aPackage = element.getPackage();
+      PsiPackage aPackage = element.getPackage();
       myPresentationName = aPackage.getName();
     }
     else {
@@ -90,7 +90,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   @RequiredUIAccess
   protected void update(PresentationData data) {
     super.update(data);
-    final PackageElement packageElement = getValue();
+    PackageElement packageElement = getValue();
 
     try {
       if (packageElement == null || !packageElement.getPackage().isValid()) {
@@ -146,14 +146,14 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
     info.put("toDoItemCount", String.valueOf(getTodoItemCount(getValue())));
   }
 
-  private int getFileCount(final PackageElement packageElement) {
+  private int getFileCount(PackageElement packageElement) {
     int count = 0;
     if (getSettings().isFlattenPackages()) {
-      final PsiPackage aPackage = packageElement.getPackage();
-      final Module module = packageElement.getModule();
-      final GlobalSearchScope scope =
+      PsiPackage aPackage = packageElement.getPackage();
+      Module module = packageElement.getModule();
+      GlobalSearchScope scope =
         module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(aPackage.getProject());
-      final PsiDirectory[] directories = aPackage.getDirectories(scope);
+      PsiDirectory[] directories = aPackage.getDirectories(scope);
       for (PsiDirectory directory : directories) {
         Iterator<PsiFile> iterator = myBuilder.getFilesUnderDirectory(directory);
         while (iterator.hasNext()) {
@@ -177,10 +177,10 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   public int getTodoItemCount(PackageElement packageElement) {
     int count = 0;
     if (getSettings().isFlattenPackages()){
-        final PsiPackage aPackage = packageElement.getPackage();
-        final Module module = packageElement.getModule();
+        PsiPackage aPackage = packageElement.getPackage();
+        Module module = packageElement.getModule();
         GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(aPackage.getProject());
-        final PsiDirectory[] directories = aPackage.getDirectories(scope);
+        PsiDirectory[] directories = aPackage.getDirectories(scope);
         for (PsiDirectory directory : directories) {
           Iterator<PsiFile> iterator = myBuilder.getFilesUnderDirectory(directory);
           while(iterator.hasNext()){
@@ -207,21 +207,21 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     ArrayList<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-    final Project project = getProject();
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final PsiPackage psiPackage = getValue().getPackage();
-    final Module module = getValue().getModule();
+    Project project = getProject();
+    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    PsiPackage psiPackage = getValue().getPackage();
+    Module module = getValue().getModule();
     if (!getStructure().getIsFlattenPackages() || psiPackage == null) {
-      final Iterator<PsiFile> iterator = getFiles(getValue());
+      Iterator<PsiFile> iterator = getFiles(getValue());
       while (iterator.hasNext()) {
-        final PsiFile psiFile = iterator.next();
-        final Module psiFileModule = projectFileIndex.getModuleForFile(psiFile.getVirtualFile());
+        PsiFile psiFile = iterator.next();
+        Module psiFileModule = projectFileIndex.getModuleForFile(psiFile.getVirtualFile());
         //group by module
         if (module != null && psiFileModule != null && !module.equals(psiFileModule)){
           continue;
         }
         // Add files
-        final PsiDirectory containingDirectory = psiFile.getContainingDirectory();
+        PsiDirectory containingDirectory = psiFile.getContainingDirectory();
         TodoFileNode todoFileNode = new TodoFileNode(project, psiFile, myBuilder, false);
         if (ArrayUtil.find(psiPackage.getDirectories(), containingDirectory) > -1 && !children.contains(todoFileNode)) {
           children.add(todoFileNode);
@@ -230,13 +230,13 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
         // Add packages
         PsiDirectory _dir = psiFile.getContainingDirectory();
         while (_dir != null) {
-          final PsiDirectory parentDirectory = _dir.getParentDirectory();
+          PsiDirectory parentDirectory = _dir.getParentDirectory();
           if (parentDirectory != null){
             PsiPackage _package = PsiPackageManager.getInstance(_dir.getProject()).findAnyPackage(_dir);
             if (_package != null && _package.getParentPackage() != null && psiPackage.equals(_package.getParentPackage())) {
-              final GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(project);
+              GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(project);
               _package = TodoTreeHelper.findNonEmptyPackage(_package, module, project, myBuilder, scope); //compact empty middle packages
-              final String name = _package.getParentPackage().equals(psiPackage)
+              String name = _package.getParentPackage().equals(psiPackage)
                                   ? null //non compacted
                                   : _package.getQualifiedName().substring(psiPackage.getQualifiedName().length() + 1);
               TodoPackageNode todoPackageNode = new TodoPackageNode(project, new PackageElement(module, _package, false), myBuilder, name);
@@ -251,15 +251,15 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
       }
     }
     else { // flatten packages
-      final Iterator<PsiFile> iterator = getFiles(getValue());
+      Iterator<PsiFile> iterator = getFiles(getValue());
       while (iterator.hasNext()) {
-        final PsiFile psiFile = iterator.next();
+        PsiFile psiFile = iterator.next();
          //group by module
-        final Module psiFileModule = projectFileIndex.getModuleForFile(psiFile.getVirtualFile());
+        Module psiFileModule = projectFileIndex.getModuleForFile(psiFile.getVirtualFile());
         if (module != null && psiFileModule != null && !module.equals(psiFileModule)){
           continue;
         }
-        final PsiDirectory _dir = psiFile.getContainingDirectory();
+        PsiDirectory _dir = psiFile.getContainingDirectory();
         // Add files
         TodoFileNode todoFileNode = new TodoFileNode(getProject(), psiFile, myBuilder, false);
         if (ArrayUtil.find(psiPackage.getDirectories(), _dir) > -1 && !children.contains(todoFileNode)) {
@@ -280,7 +280,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
     ArrayList<PsiFile> psiFileList = new ArrayList<PsiFile>();
     GlobalSearchScope scope = packageElement.getModule() != null ? GlobalSearchScope.moduleScope(packageElement.getModule()) :
                               GlobalSearchScope.projectScope(myProject);
-    final PsiDirectory[] directories = packageElement.getPackage().getDirectories(scope);
+    PsiDirectory[] directories = packageElement.getPackage().getDirectories(scope);
     for (PsiDirectory directory : directories) {
       Iterator<PsiFile> files = myBuilder.getFiles(directory, false);
       for (;files.hasNext();) {

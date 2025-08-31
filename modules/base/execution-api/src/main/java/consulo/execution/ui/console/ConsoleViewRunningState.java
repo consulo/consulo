@@ -38,7 +38,7 @@ public class ConsoleViewRunningState extends ConsoleState {
 
   private final ProcessListener myProcessListener = new ProcessListener() {
     @Override
-    public void onTextAvailable(final ProcessEvent event, final Key outputType) {
+    public void onTextAvailable(ProcessEvent event, Key outputType) {
       BiPredicate<ProcessEvent, Key> processTextFilter = myConsole.getProcessTextFilter();
       if (processTextFilter != null && processTextFilter.test(event, outputType)) {
         return;
@@ -48,11 +48,11 @@ public class ConsoleViewRunningState extends ConsoleState {
     }
   };
 
-  public ConsoleViewRunningState(final ConsoleView console,
-                                 final ProcessHandler processHandler,
-                                 final ConsoleState finishedStated,
-                                 final boolean attachToStdOut,
-                                 final boolean attachToStdIn) {
+  public ConsoleViewRunningState(ConsoleView console,
+                                 ProcessHandler processHandler,
+                                 ConsoleState finishedStated,
+                                 boolean attachToStdOut,
+                                 boolean attachToStdIn) {
     myConsole = console;
     myProcessHandler = processHandler;
     myFinishedStated = finishedStated;
@@ -64,7 +64,7 @@ public class ConsoleViewRunningState extends ConsoleState {
 
     // attach to process stdin
     if (attachToStdIn) {
-      final OutputStream processInput = myProcessHandler.getProcessInput();
+      OutputStream processInput = myProcessHandler.getProcessInput();
       myUserInputWriter = processInput != null ? createOutputStreamWriter(processInput, processHandler) : null;
     }
     else {
@@ -107,7 +107,7 @@ public class ConsoleViewRunningState extends ConsoleState {
   }
 
   @Override
-  public void sendUserInput(final String input) throws IOException {
+  public void sendUserInput(String input) throws IOException {
     if (myUserInputWriter == null) {
       throw new IOException(ExecutionLocalize.noUserProcessInputErrorMessage().get());
     }
@@ -117,7 +117,7 @@ public class ConsoleViewRunningState extends ConsoleState {
 
   @Nonnull
   @Override
-  public ConsoleState attachTo(final ConsoleView console, final ProcessHandler processHandler) {
+  public ConsoleState attachTo(ConsoleView console, ProcessHandler processHandler) {
     return dispose().attachTo(console, processHandler);
   }
 

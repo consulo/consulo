@@ -49,12 +49,12 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
 
   @Override
   public void render(
-    @Nonnull final ChangesBrowserNodeRenderer renderer,
-    final boolean selected,
-    final boolean expanded,
-    final boolean hasFocus
+    @Nonnull ChangesBrowserNodeRenderer renderer,
+    boolean selected,
+    boolean expanded,
+    boolean hasFocus
   ) {
-    final FilePath path = (FilePath)userObject;
+    FilePath path = (FilePath)userObject;
     if (path.isDirectory() || !isLeaf()) {
       renderer.append(getRelativePath(path), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       if (!isLeaf()) {
@@ -116,7 +116,7 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
   }
 
   @Override
-  public int compareUserObjects(final Object o2) {
+  public int compareUserObjects(Object o2) {
     return o2 instanceof FilePath filePath ? getUserObject().getPath().compareToIgnoreCase(filePath.getPath()) : 0;
   }
 }

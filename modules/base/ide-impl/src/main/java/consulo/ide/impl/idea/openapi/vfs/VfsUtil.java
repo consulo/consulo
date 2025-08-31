@@ -140,7 +140,7 @@ public class VfsUtil extends VfsUtilCore {
             }
             VirtualFile[] path = getPathComponents(directory);
             Set<VirtualFile> filesSet;
-            final VirtualFile firstPart = path[0];
+            VirtualFile firstPart = path[0];
             if (map.containsKey(firstPart)) {
                 filesSet = map.get(firstPart);
             }
@@ -277,7 +277,7 @@ public class VfsUtil extends VfsUtilCore {
      */
     @Nullable
     public static String getPath(@Nonnull VirtualFile src, @Nonnull VirtualFile dst, char separatorChar) {
-        final VirtualFile commonAncestor = getCommonAncestor(src, dst);
+        VirtualFile commonAncestor = getCommonAncestor(src, dst);
         if (commonAncestor != null) {
             StringBuilder buffer = new StringBuilder();
             if (!Comparing.equal(src, commonAncestor)) {
@@ -317,7 +317,7 @@ public class VfsUtil extends VfsUtilCore {
         return VirtualFileUtil.isBadName(name);
     }
 
-    public static VirtualFile createDirectories(@Nonnull final String directoryPath) throws IOException {
+    public static VirtualFile createDirectories(@Nonnull String directoryPath) throws IOException {
         return VirtualFileUtil.createDirectories(directoryPath);
     }
 
@@ -337,8 +337,8 @@ public class VfsUtil extends VfsUtilCore {
      * @return descendants
      */
     @Nonnull
-    public static List<VirtualFile> collectChildrenRecursively(@Nonnull final VirtualFile root) {
-        final List<VirtualFile> result = new ArrayList<VirtualFile>();
+    public static List<VirtualFile> collectChildrenRecursively(@Nonnull VirtualFile root) {
+        List<VirtualFile> result = new ArrayList<VirtualFile>();
         processFilesRecursively(root, t -> {
             result.add(t);
             return true;
@@ -347,17 +347,17 @@ public class VfsUtil extends VfsUtilCore {
     }
 
 
-    public static void processFileRecursivelyWithoutIgnored(@Nonnull final VirtualFile root, @Nonnull final Processor<VirtualFile> processor) {
+    public static void processFileRecursivelyWithoutIgnored(@Nonnull VirtualFile root, @Nonnull Processor<VirtualFile> processor) {
         final FileTypeManager ftm = FileTypeManager.getInstance();
         processFilesRecursively(root, processor, new Convertor<VirtualFile, Boolean>() {
-            public Boolean convert(final VirtualFile vf) {
+            public Boolean convert(VirtualFile vf) {
                 return !ftm.isFileIgnored(vf);
             }
         });
     }
 
     @Nullable
-    public static <T> T processInputStream(@Nonnull final VirtualFile file, @Nonnull Function<InputStream, T> function) {
+    public static <T> T processInputStream(@Nonnull VirtualFile file, @Nonnull Function<InputStream, T> function) {
         InputStream stream = null;
         try {
             stream = file.getInputStream();
@@ -380,7 +380,7 @@ public class VfsUtil extends VfsUtilCore {
     }
 
     @Nonnull
-    public static String getReadableUrl(@Nonnull final VirtualFile file) {
+    public static String getReadableUrl(@Nonnull VirtualFile file) {
         String url = null;
         if (file.isInLocalFileSystem()) {
             url = file.getPresentableUrl();
@@ -393,7 +393,7 @@ public class VfsUtil extends VfsUtilCore {
 
     @Nullable
     public static VirtualFile getUserHomeDir() {
-        final String path = Platform.current().user().homePath().toString();
+        String path = Platform.current().user().homePath().toString();
         return LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(path));
     }
 
@@ -413,11 +413,11 @@ public class VfsUtil extends VfsUtilCore {
      * @return url for parent directory of virtual file
      */
     @Nullable
-    public static String getParentDir(@Nullable final String url) {
+    public static String getParentDir(@Nullable String url) {
         if (url == null) {
             return null;
         }
-        final int index = url.lastIndexOf(VfsUtilCore.VFS_SEPARATOR_CHAR);
+        int index = url.lastIndexOf(VfsUtilCore.VFS_SEPARATOR_CHAR);
         return index < 0 ? null : url.substring(0, index);
     }
 
@@ -426,7 +426,7 @@ public class VfsUtil extends VfsUtilCore {
      * @return file name
      */
     @Nullable
-    public static String extractFileName(@Nullable final String urlOrPath) {
+    public static String extractFileName(@Nullable String urlOrPath) {
         return VirtualFileUtil.extractFileName(urlOrPath);
     }
 

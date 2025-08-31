@@ -34,37 +34,37 @@ public class DFAEngine<E> {
     private final DfaInstance<E> myDfa;
     private final Semilattice<E> mySemilattice;
 
-    public DFAEngine(final Instruction[] flow,
-                     final DfaInstance<E> dfa,
-                     final Semilattice<E> semilattice) {
+    public DFAEngine(Instruction[] flow,
+                     DfaInstance<E> dfa,
+                     Semilattice<E> semilattice) {
         myFlow = flow;
         myDfa = dfa;
         mySemilattice = semilattice;
     }
 
     public List<E> performDFA() throws DFALimitExceededException {
-        final ArrayList<E> info = new ArrayList<>(myFlow.length);
+        ArrayList<E> info = new ArrayList<>(myFlow.length);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Performing DFA\n" + "Instance: " + myDfa + " Semilattice: " + mySemilattice + "\nCon");
         }
 
 // initializing dfa
-        final E initial = myDfa.initial();
-        final int length = myFlow.length;
+        E initial = myDfa.initial();
+        int length = myFlow.length;
         for (int i = 0; i < length; i++) {
             info.add(i, initial);
         }
 
 // Count limit for loops
-        final int limit = getIterationLimit();
-        final long startTime = System.nanoTime();
+        int limit = getIterationLimit();
+        long startTime = System.nanoTime();
         DFSTBuilder<Instruction> dfsTBuilder = new DFSTBuilder<>(ControlFlowUtil.createGraph(myFlow));
 
         int[] instructionNumToNNumber = new int[myFlow.length];
         for (int i = 0; i < myFlow.length; ++i) {
             instructionNumToNNumber[dfsTBuilder.getNodeByNNumber(i).num()] = i;
         }
-        final int[] lastUpdate = new int[length];
+        int[] lastUpdate = new int[length];
         int count = 0;
 
         List<Instruction> instructionsWithBackEdges = new ArrayList<>();
@@ -87,7 +87,7 @@ public class DFAEngine<E> {
             int iteration = 0;
             while (true) {
                 ++iteration;
-                final int currentIteration = iteration;
+                int currentIteration = iteration;
                 boolean anyUpdates = false;
                 for (Instruction instruction : instructionsWithBackEdges) {
                     if (applyTransferFunction(info, instruction)) {
@@ -123,10 +123,10 @@ public class DFAEngine<E> {
 
     private boolean applyTransferFunction(List<E> info, Instruction currentInstruction) {
         ProgressManager.checkCanceled();
-        final int currentNumber = currentInstruction.num();
-        final E oldE = info.get(currentNumber);
-        final E joinedE = join(currentInstruction, info);
-        final E newE = myDfa.fun(joinedE, currentInstruction);
+        int currentNumber = currentInstruction.num();
+        E oldE = info.get(currentNumber);
+        E joinedE = join(currentInstruction, info);
+        E newE = myDfa.fun(joinedE, currentInstruction);
         if (!mySemilattice.eq(newE, oldE)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Number: " + currentNumber + " old: " + oldE.toString() + " new: " + newE.toString());
@@ -151,9 +151,9 @@ public class DFAEngine<E> {
         return allPred * 2;
     }
 
-    private E join(final Instruction instruction, final List<? extends E> info) {
-        final Iterable<? extends Instruction> prev = instruction.allPred();
-        final ArrayList<E> prevInfos = new ArrayList<>();
+    private E join(Instruction instruction, List<? extends E> info) {
+        Iterable<? extends Instruction> prev = instruction.allPred();
+        ArrayList<E> prevInfos = new ArrayList<>();
         for (Instruction i : prev) {
             prevInfos.add(info.get(i.num()));
         }

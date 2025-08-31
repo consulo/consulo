@@ -43,7 +43,7 @@ public interface TemplateDataLanguageMappings extends PerFileMappingsEx<Language
   public static List<Language> getTemplateableLanguages() {
     return ContainerUtil.findAll(Language.getRegisteredLanguages(), new Predicate<>() {
       @Override
-      public boolean test(final Language language) {
+      public boolean test(Language language) {
         if (language == Language.ANY) return false;
         if (language instanceof TemplateLanguage || language instanceof DependentLanguage || language instanceof InjectableLanguage) return false;
         if (language.getBaseLanguage() != null) return test(language.getBaseLanguage());

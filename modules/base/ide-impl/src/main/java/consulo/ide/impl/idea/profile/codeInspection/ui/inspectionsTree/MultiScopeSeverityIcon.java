@@ -30,18 +30,18 @@ import java.util.*;
  */
 public class MultiScopeSeverityIcon {
   @Nullable
-  public static Image create(final Map<String, HighlightSeverity> scopeToAverageSeverityMap, final String defaultScopeName, final InspectionProfileImpl inspectionProfile) {
-    final List<String> sortedScopeNames = new ArrayList<String>(scopeToAverageSeverityMap.keySet());
+  public static Image create(Map<String, HighlightSeverity> scopeToAverageSeverityMap, String defaultScopeName, InspectionProfileImpl inspectionProfile) {
+    List<String> sortedScopeNames = new ArrayList<String>(scopeToAverageSeverityMap.keySet());
     LinkedHashMap<String, HighlightDisplayLevel> myScopeToAverageSeverityMap = new LinkedHashMap<>();
     Collections.sort(sortedScopeNames, new ScopeOrderComparator(inspectionProfile));
     sortedScopeNames.remove(defaultScopeName);
     sortedScopeNames.add(defaultScopeName);
-    for (final String scopeName : sortedScopeNames) {
-      final HighlightSeverity severity = scopeToAverageSeverityMap.get(scopeName);
+    for (String scopeName : sortedScopeNames) {
+      HighlightSeverity severity = scopeToAverageSeverityMap.get(scopeName);
       if (severity == null) {
         continue;
       }
-      final HighlightDisplayLevel level = HighlightDisplayLevel.find(severity);
+      HighlightDisplayLevel level = HighlightDisplayLevel.find(severity);
       if (level == null) {
         continue;
       }

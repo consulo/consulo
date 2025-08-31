@@ -25,15 +25,15 @@ import java.util.List;
 public class CompositeLanguage extends Language {
   private final List<LanguageFilter> myFilters = Lists.newLockFreeCopyOnWriteList();
 
-  protected CompositeLanguage(final String id) {
+  protected CompositeLanguage(String id) {
     super(id);
   }
 
-  protected CompositeLanguage(final String ID, final String... mimeTypes) {
+  protected CompositeLanguage(String ID, String... mimeTypes) {
     super(ID, mimeTypes);
   }
 
-  protected CompositeLanguage(Language baseLanguage, final String ID, final String... mimeTypes) {
+  protected CompositeLanguage(Language baseLanguage, String ID, String... mimeTypes) {
     super(baseLanguage, ID, mimeTypes);
   }
 
@@ -45,8 +45,8 @@ public class CompositeLanguage extends Language {
     return myFilters.remove(filter);
   }
 
-  public Language[] getLanguageExtensionsForFile(final PsiFile psi) {
-    final List<Language> extensions = new ArrayList<Language>(1);
+  public Language[] getLanguageExtensionsForFile(PsiFile psi) {
+    List<Language> extensions = new ArrayList<Language>(1);
     for (LanguageFilter filter : myFilters) {
       if (filter.isRelevantForFile(psi)) extensions.add(filter.getLanguage());
     }

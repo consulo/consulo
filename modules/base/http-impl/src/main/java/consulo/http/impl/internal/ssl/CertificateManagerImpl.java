@@ -284,10 +284,10 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
         return myTrustManager.getCustomManager();
     }
 
-    public static boolean showAcceptDialog(final @Nonnull Callable<? extends DialogWrapper> dialogFactory) {
-        final CountDownLatch proceeded = new CountDownLatch(1);
-        final AtomicBoolean accepted = new AtomicBoolean();
-        final AtomicReference<DialogWrapper> dialogRef = new AtomicReference<DialogWrapper>();
+    public static boolean showAcceptDialog(@Nonnull Callable<? extends DialogWrapper> dialogFactory) {
+        CountDownLatch proceeded = new CountDownLatch(1);
+        AtomicBoolean accepted = new AtomicBoolean();
+        AtomicReference<DialogWrapper> dialogRef = new AtomicReference<DialogWrapper>();
         Runnable showDialog = () -> {
             // skip if certificate was already rejected due to timeout or interrupt
             if (proceeded.getCount() == 0) {

@@ -64,7 +64,7 @@ public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
     }
   }
 
-  public void setErrorText(final String errorText) {
+  public void setErrorText(String errorText) {
     myErrorText = errorText;
   }
 

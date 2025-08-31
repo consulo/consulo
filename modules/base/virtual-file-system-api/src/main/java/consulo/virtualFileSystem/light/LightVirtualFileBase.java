@@ -38,13 +38,13 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     private boolean myValid = true;
     private VirtualFile myOriginalFile;
 
-    public LightVirtualFileBase(final String name, final FileType fileType, final long modificationStamp) {
+    public LightVirtualFileBase(String name, FileType fileType, long modificationStamp) {
         myName = name;
         myFileType = fileType;
         myModStamp = modificationStamp;
     }
 
-    public void setFileType(final FileType fileType) {
+    public void setFileType(FileType fileType) {
         myFileType = fileType;
     }
 

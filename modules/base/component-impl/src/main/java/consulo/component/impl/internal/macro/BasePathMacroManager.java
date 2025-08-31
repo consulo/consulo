@@ -95,32 +95,32 @@ public class BasePathMacroManager implements PathMacroManager {
   }
 
   @Override
-  public String expandPath(final String path) {
+  public String expandPath(String path) {
     return getExpandMacroMap().substitute(path, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
-  public String collapsePath(final String path) {
+  public String collapsePath(String path) {
     return getReplacePathMap().substitute(path, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
-  public void collapsePathsRecursively(final Element element) {
+  public void collapsePathsRecursively(Element element) {
     getReplacePathMap().substitute(element, Platform.current().fs().isCaseSensitive(), true);
   }
 
   @Override
-  public String collapsePathsRecursively(final String text) {
+  public String collapsePathsRecursively(String text) {
     return getReplacePathMap().substituteRecursively(text, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
-  public void expandPaths(final Element element) {
+  public void expandPaths(Element element) {
     getExpandMacroMap().substitute(element, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
-  public void collapsePaths(final Element element) {
+  public void collapsePaths(Element element) {
     getReplacePathMap().substitute(element, Platform.current().fs().isCaseSensitive());
   }
 

@@ -369,7 +369,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Nonnull
     @Override
-    public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
+    public Future<?> executeOnPooledThread(@Nonnull Runnable action) {
         return getInstance(ApplicationConcurrency.class).getExecutorService().submit(new RunnableAsCallable(action, LOG));
     }
 
@@ -511,7 +511,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public void runReadAction(@Nonnull final Runnable action) {
+    public void runReadAction(@Nonnull Runnable action) {
         RWLock.ReadToken status = myLock.startRead();
         try {
             action.run();
@@ -524,7 +524,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public <T> T runReadAction(@Nonnull final Supplier<T> computation) {
+    public <T> T runReadAction(@Nonnull Supplier<T> computation) {
         RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
@@ -649,12 +649,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @RequiredUIAccess
     @Override
     public boolean runProcessWithProgressSynchronously(
-        @Nonnull final Runnable process,
-        @Nonnull final String progressTitle,
-        final boolean canBeCanceled,
+        @Nonnull Runnable process,
+        @Nonnull String progressTitle,
+        boolean canBeCanceled,
         boolean shouldShowModalWindow,
-        @Nullable final ComponentManager project,
-        final JComponent parentComponent,
+        @Nullable ComponentManager project,
+        JComponent parentComponent,
         @Nonnull LocalizeValue cancelText
     ) {
         if (isDispatchThread() && isWriteAccessAllowed()
@@ -811,7 +811,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @RequiredUIAccess
     @Override
-    public void runWriteAction(@Nonnull final Runnable action) {
+    public void runWriteAction(@Nonnull Runnable action) {
         Class<? extends Runnable> clazz = action.getClass();
         startWrite(clazz);
         try {
@@ -824,7 +824,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @RequiredUIAccess
     @Override
-    public <T> T runWriteAction(@Nonnull final Supplier<T> computation) {
+    public <T> T runWriteAction(@Nonnull Supplier<T> computation) {
         return runWriteActionWithClass(computation.getClass(), computation::get);
     }
 

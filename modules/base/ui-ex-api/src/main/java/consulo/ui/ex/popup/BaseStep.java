@@ -53,7 +53,7 @@ public abstract class BaseStep<T> implements PopupStep<T>, SpeedSearchFilter<T>,
 
   @Override
   public int getMnemonicPos(T value) {
-    final String text = getTextFor(value);
+    String text = getTextFor(value);
     int i = text.indexOf("&");
     if (i < 0) {
       i = text.indexOf(BundleBase.MNEMONIC);

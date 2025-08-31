@@ -54,7 +54,7 @@ public class CommittedChangesViewFactory implements ChangesViewContentFactory {
 
   @Override
   public boolean isAvailable() {
-    final AbstractVcs[] abstractVcses = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+    AbstractVcs[] abstractVcses = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
     for (AbstractVcs vcs : abstractVcses) {
       if (vcs.getCommittedChangesProvider() != null && VcsType.centralized.equals(vcs.getType())) {
         return true;

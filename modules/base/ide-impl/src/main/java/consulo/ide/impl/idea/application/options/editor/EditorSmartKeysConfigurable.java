@@ -120,11 +120,11 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
     }
 
     private static boolean hasAnyDocAwareCommenters() {
-      final Collection<Language> languages = Language.getRegisteredLanguages();
+      Collection<Language> languages = Language.getRegisteredLanguages();
       for (Language language : languages) {
-        final Commenter commenter = Commenter.forLanguage(language);
+        Commenter commenter = Commenter.forLanguage(language);
         if (commenter instanceof CodeDocumentationAwareCommenter) {
-          final CodeDocumentationAwareCommenter docCommenter = (CodeDocumentationAwareCommenter)commenter;
+          CodeDocumentationAwareCommenter docCommenter = (CodeDocumentationAwareCommenter)commenter;
           if (docCommenter.getDocumentationCommentLinePrefix() != null) {
             return true;
           }

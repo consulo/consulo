@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SharedProcessingContext {
   private final Map<Object, Object> myMap = new ConcurrentHashMap<>();
 
-  public Object get(@Nonnull final String key) {
+  public Object get(@Nonnull String key) {
     return myMap.get(key);
   }
 
-  public void put(@Nonnull final String key, @Nonnull final Object value) {
+  public void put(@Nonnull String key, @Nonnull Object value) {
     myMap.put(key, value);
   }
 

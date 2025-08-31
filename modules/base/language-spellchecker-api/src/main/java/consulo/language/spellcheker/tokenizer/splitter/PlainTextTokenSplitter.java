@@ -66,7 +66,7 @@ public class PlainTextTokenSplitter extends BaseTokenSplitter {
     //  }
     //}
 
-    final TextTokenSplitter ws = TextTokenSplitter.getInstance();
+    TextTokenSplitter ws = TextTokenSplitter.getInstance();
     int from = range.getStartOffset();
     int till;
     Matcher matcher = SPLIT_PATTERN.matcher(range.substring(text));

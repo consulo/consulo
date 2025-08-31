@@ -60,7 +60,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
 
     @Override
     protected JComponent createCenterPanel() {
-        final JPanel mainPanel = new JPanel(new BorderLayout(0, JBUIScale.scale(16)));
+        JPanel mainPanel = new JPanel(new BorderLayout(0, JBUIScale.scale(16)));
         mainPanel.setBorder(JBUI.Borders.emptyTop(8)); // Resulting indent will be 16 = 8 (default) + 8 (set here)
         mainPanel.add(TargetAWT.to(myUseNestingRulesCheckBox), BorderLayout.NORTH);
         mainPanel.add(myRulesPanel, BorderLayout.CENTER);
@@ -68,7 +68,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
     }
 
     private static JPanel createRulesPanel(@Nonnull TableView<CombinedNestingRule> table) {
-        final ToolbarDecorator toolbarDecorator =
+        ToolbarDecorator toolbarDecorator =
             ToolbarDecorator.createDecorator(table,
                     new ElementProducer<>() {
                         @Override
@@ -90,7 +90,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
     private static TableView<CombinedNestingRule> createTable() {
         String childColumn = ProjectUIViewLocalize.childFileSuffixColumnName().get();
         String parentColumn = ProjectUIViewLocalize.parentFileSuffixColumnName().get();
-        final ListTableModel<CombinedNestingRule> model = new ListTableModel<>(
+        ListTableModel<CombinedNestingRule> model = new ListTableModel<>(
             new ColumnInfo<CombinedNestingRule, String>(parentColumn) {
                 @Override
                 public int getWidth(JTable table) {
@@ -130,7 +130,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
             }
         );
 
-        final TableView<CombinedNestingRule> table = new TableView<>(model);
+        TableView<CombinedNestingRule> table = new TableView<>(model);
         table.setRowHeight(new JTextField().getPreferredSize().height + table.getRowMargin());
         return table;
     }
@@ -163,8 +163,8 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
 
         List<CombinedNestingRule> items = myTable.getListTableModel().getItems();
         for (int i = 0; i < items.size(); i++) {
-            final CombinedNestingRule rule = items.get(i);
-            final int row = i + 1;
+            CombinedNestingRule rule = items.get(i);
+            int row = i + 1;
             if (rule.parentSuffix.isEmpty()) {
                 return new ValidationInfo(ProjectUIViewLocalize.dialogMessageParentFileSuffixMustBeEmptySeeRow(row), null);
             }
@@ -190,10 +190,10 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         resetTable(ProjectViewFileNestingService.getInstance().getRules());
     }
 
-    private void resetTable(final @Nonnull List<? extends ProjectViewFileNestingService.NestingRule> rules) {
-        final SortedMap<String, CombinedNestingRule> result = new TreeMap<>();
+    private void resetTable(@Nonnull List<? extends ProjectViewFileNestingService.NestingRule> rules) {
+        SortedMap<String, CombinedNestingRule> result = new TreeMap<>();
         for (ProjectViewFileNestingService.NestingRule rule : ContainerUtil.sorted(rules, RULE_COMPARATOR)) {
-            final CombinedNestingRule r = result.get(rule.getParentFileSuffix());
+            CombinedNestingRule r = result.get(rule.getParentFileSuffix());
             if (r == null) {
                 result.put(rule.getParentFileSuffix(), new CombinedNestingRule(rule.getParentFileSuffix(), rule.getChildFileSuffix()));
             }
@@ -205,11 +205,11 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         myTable.getListTableModel().setItems(new ArrayList<>(result.values()));
     }
 
-    public void apply(final @Nonnull Consumer<? super Boolean> useNestingRulesOptionConsumer) {
+    public void apply(@Nonnull Consumer<? super Boolean> useNestingRulesOptionConsumer) {
         useNestingRulesOptionConsumer.accept(myUseNestingRulesCheckBox.getValue());
 
         if (myUseNestingRulesCheckBox.getValue()) {
-            final SortedSet<ProjectViewFileNestingService.NestingRule> result = new TreeSet<>(RULE_COMPARATOR);
+            SortedSet<ProjectViewFileNestingService.NestingRule> result = new TreeSet<>(RULE_COMPARATOR);
             for (CombinedNestingRule rule : myTable.getListTableModel().getItems()) {
                 for (String childSuffix : StringUtil.split(rule.childSuffixes, ";")) {
                     if (!StringUtil.isEmptyOrSpaces(childSuffix)) {

@@ -195,7 +195,7 @@ public class HintUtil {
     }
 
     @Nonnull
-    public static JLabel createAdComponent(final String bottomText, final Border border, @JdkConstants.HorizontalAlignment int alignment) {
+    public static JLabel createAdComponent(String bottomText, Border border, @JdkConstants.HorizontalAlignment int alignment) {
         JLabel label = new JLabel();
         label.setText(bottomText);
         label.setHorizontalAlignment(alignment);

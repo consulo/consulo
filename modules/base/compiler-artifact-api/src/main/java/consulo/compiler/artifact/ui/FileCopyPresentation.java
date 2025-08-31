@@ -40,7 +40,7 @@ public class FileCopyPresentation extends PackagingElementPresentation {
     String parentPath;
     myFile = LocalFileSystem.getInstance().findFileByPath(filePath);
     if (myFile != null) {
-      final VirtualFile parent = myFile.getParent();
+      VirtualFile parent = myFile.getParent();
       parentPath = parent != null ? FileUtil.toSystemDependentName(parent.getPath()) : "";
     }
     else {
@@ -69,7 +69,7 @@ public class FileCopyPresentation extends PackagingElementPresentation {
     else {
       presentationData.setIcon(AllIcons.FileTypes.Text);
       presentationData.addText(myOutputFileName, SimpleTextAttributes.ERROR_ATTRIBUTES);
-      final VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(mySourcePath));
+      VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(mySourcePath));
       presentationData.addText("(" + mySourcePath + ")",
                       parentFile != null ? commentAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
     }

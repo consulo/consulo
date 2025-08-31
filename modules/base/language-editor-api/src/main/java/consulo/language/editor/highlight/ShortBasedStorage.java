@@ -58,7 +58,7 @@ public class ShortBasedStorage implements DataStorage {
 
   @Override
   public int packData(IElementType tokenType, int state, boolean isRestartableState) {
-    final short idx = tokenType.getIndex();
+    short idx = tokenType.getIndex();
     return isRestartableState ? idx : -idx;
   }
 

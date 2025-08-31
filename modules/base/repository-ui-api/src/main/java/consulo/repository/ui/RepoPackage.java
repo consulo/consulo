@@ -18,11 +18,11 @@ public class RepoPackage implements Comparable<RepoPackage> {
     this(name, repoUrl, null);
   }
 
-  public RepoPackage(String name, @Nullable final String repoUrl, @Nullable String latestVersion) {
+  public RepoPackage(String name, @Nullable String repoUrl, @Nullable String latestVersion) {
     this(name, repoUrl, latestVersion, Collections.emptyList());
   }
 
-  public RepoPackage(String name, @Nullable final String repoUrl, @Nullable String latestVersion, Collection<String> keywords) {
+  public RepoPackage(String name, @Nullable String repoUrl, @Nullable String latestVersion, Collection<String> keywords) {
     myName = name;
     myRepoUrl = repoUrl;
     myLatestVersion = latestVersion;

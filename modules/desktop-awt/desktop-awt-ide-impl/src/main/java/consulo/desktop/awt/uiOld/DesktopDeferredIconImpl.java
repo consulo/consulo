@@ -133,7 +133,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
 
   public DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon,
                                  T param,
-                                 final boolean needReadAction,
+                                 boolean needReadAction,
                                  @Nonnull Function<T, consulo.ui.image.Image> evaluator) {
     this(baseIcon, param, needReadAction, evaluator, null, false);
   }
@@ -167,12 +167,12 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   }
 
   @Nonnull
-  private static consulo.ui.image.Image nonNull(final consulo.ui.image.Image icon) {
+  private static consulo.ui.image.Image nonNull(consulo.ui.image.Image icon) {
     return ObjectUtil.notNull(icon, EMPTY_ICON);
   }
 
   @Override
-  public void paintIcon(final Component c, @Nonnull final Graphics g, final int x, final int y) {
+  public void paintIcon(Component c, @Nonnull Graphics g, int x, int y) {
     if (!(myScaledDelegateIcon instanceof DesktopDeferredIconImpl && ((DesktopDeferredIconImpl)myScaledDelegateIcon).myScaledDelegateIcon instanceof DesktopDeferredIconImpl)) {
       TargetAWT.to(myScaledDelegateIcon).paintIcon(c, g, x, y); //SOE protection
     }
@@ -188,14 +188,14 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   Future<?> scheduleEvaluation(Component c, int x, int y) {
     myIsScheduled = true;
 
-    final Component target = getTarget(c);
-    final Component paintingParent = SwingUtilities.getAncestorOfClass(PaintingParent.class, c);
-    final Rectangle paintingParentRec = paintingParent == null ? null : ((PaintingParent)paintingParent).getChildRec(c);
+    Component target = getTarget(c);
+    Component paintingParent = SwingUtilities.getAncestorOfClass(PaintingParent.class, c);
+    Rectangle paintingParentRec = paintingParent == null ? null : ((PaintingParent)paintingParent).getChildRec(c);
     return ourIconCalculatingExecutor.submit(() -> {
       int oldWidth = myScaledDelegateIcon.getWidth();
-      final SimpleReference<Image> evaluated = SimpleReference.create();
+      SimpleReference<Image> evaluated = SimpleReference.create();
 
-      final long startTime = System.currentTimeMillis();
+      long startTime = System.currentTimeMillis();
       if (myNeedReadAction) {
         boolean result = ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> {
           DesktopIconDeferrerImpl.evaluateDeferred(() -> evaluated.set(evaluateImage()));
@@ -216,11 +216,11 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
           myLastTimeSpent = myLastCalcTime - startTime;
         }
       }
-      final Image result = evaluated.get();
+      Image result = evaluated.get();
       myScaledDelegateIcon = result;
       checkDelegationDepth();
 
-      final boolean shouldRevalidate =
+      boolean shouldRevalidate =
         Registry.is("ide.tree.deferred.icon.invalidates.cache") && myScaledDelegateIcon.getWidth() != oldWidth;
 
       SwingUtilities.invokeLater(() -> {
@@ -239,7 +239,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
         if (shouldRevalidate) {
           // revalidate will not work: JTree caches size of nodes
           if (actualTarget instanceof JTree) {
-            final TreeUI ui = ((JTree)actualTarget).getUI();
+            TreeUI ui = ((JTree)actualTarget).getUI();
             if (ui instanceof BasicTreeUI) {
               // this call is "fake" and only need to reset tree layout cache
               ((BasicTreeUI)ui).setLeftChildIndent(UIUtil.getTreeLeftChildIndent());
@@ -258,29 +258,29 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   }
 
   private static Component getTarget(Component c) {
-    final Component target;
+    Component target;
 
-    final Container list = SwingUtilities.getAncestorOfClass(JList.class, c);
+    Container list = SwingUtilities.getAncestorOfClass(JList.class, c);
     if (list != null) {
       target = list;
     }
     else {
-      final Container tree = SwingUtilities.getAncestorOfClass(JTree.class, c);
+      Container tree = SwingUtilities.getAncestorOfClass(JTree.class, c);
       if (tree != null) {
         target = tree;
       }
       else {
-        final Container table = SwingUtilities.getAncestorOfClass(JTable.class, c);
+        Container table = SwingUtilities.getAncestorOfClass(JTable.class, c);
         if (table != null) {
           target = table;
         }
         else {
-          final Container box = SwingUtilities.getAncestorOfClass(JComboBox.class, c);
+          Container box = SwingUtilities.getAncestorOfClass(JComboBox.class, c);
           if (box != null) {
             target = box;
           }
           else {
-            final Container tabLabel = SwingUtilities.getAncestorOfClass(TabLabel.class, c);
+            Container tabLabel = SwingUtilities.getAncestorOfClass(TabLabel.class, c);
             target = tabLabel == null ? c : tabLabel;
           }
         }
@@ -329,7 +329,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     return result;
   }
 
-  private void checkDoesntReferenceThis(final consulo.ui.image.Image icon) {
+  private void checkDoesntReferenceThis(consulo.ui.image.Image icon) {
     if (icon == this) {
       throw new IllegalStateException("Loop in icons delegation");
     }
@@ -343,8 +343,8 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
       }
     }
     else if (icon instanceof RowIcon) {
-      final RowIcon rowIcon = (RowIcon)icon;
-      final int count = rowIcon.getIconCount();
+      RowIcon rowIcon = (RowIcon)icon;
+      int count = rowIcon.getIconCount();
       for (int i = 0; i < count; i++) {
         checkDoesntReferenceThis(TargetAWT.from(rowIcon.getIcon(i)));
       }
@@ -375,7 +375,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     private final Set<RepaintRequest> myQueue = new LinkedHashSet<>();
 
     @RequiredUIAccess
-    private void pushDirtyComponent(@Nonnull Component c, final Rectangle rec) {
+    private void pushDirtyComponent(@Nonnull Component c, Rectangle rec) {
       // assert myQueue accessed from EDT only
       UIAccess.assertIsUIThread();
       myAlarm.cancelAllRequests();

@@ -27,9 +27,9 @@ public class IdentifierParser extends TokenParser {
 
   public boolean hasToken(int position) {
     if (!Character.isJavaIdentifierStart(myBuffer.charAt(position))) return false;
-    final int start = position;
+    int start = position;
     for (position++; position < myEndOffset; position++) {
-      final char c = myBuffer.charAt(position);
+      char c = myBuffer.charAt(position);
       if (!isIdentifierPart(c)) break;
     }
     IElementType tokenType = CustomHighlighterTokenType.IDENTIFIER;
@@ -37,7 +37,7 @@ public class IdentifierParser extends TokenParser {
     return true;
   }
 
-  protected boolean isIdentifierPart(final char c) {
+  protected boolean isIdentifierPart(char c) {
     return Character.isJavaIdentifierPart(c) || c == '-';
   }
 }

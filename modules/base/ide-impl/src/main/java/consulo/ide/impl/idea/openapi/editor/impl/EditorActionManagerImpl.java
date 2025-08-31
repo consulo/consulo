@@ -67,16 +67,16 @@ public class EditorActionManagerImpl extends EditorActionManager {
   }
 
   @Override
-  public ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@Nonnull final Document document) {
-    final Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
-    final ReadonlyFragmentModificationHandler docHandler =
+  public ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@Nonnull Document document) {
+    Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
+    ReadonlyFragmentModificationHandler docHandler =
             doc instanceof DocumentImpl ? ((DocumentImpl)doc).getReadonlyFragmentModificationHandler() : null;
     return docHandler == null ? myReadonlyFragmentsHandler : docHandler;
   }
 
   @Override
-  public void setReadonlyFragmentModificationHandler(@Nonnull final Document document, final ReadonlyFragmentModificationHandler handler) {
-    final Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
+  public void setReadonlyFragmentModificationHandler(@Nonnull Document document, ReadonlyFragmentModificationHandler handler) {
+    Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
     if (doc instanceof DocumentImpl) {
       ((DocumentImpl)document).setReadonlyFragmentModificationHandler(handler);
     }

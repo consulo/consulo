@@ -23,17 +23,17 @@ import consulo.ui.ex.action.AnActionEvent;
 */
 public class XDebuggerMuteBreakpointsHandler extends XDebuggerToggleActionHandler {
   @Override
-  protected boolean isEnabled(final XDebugSession session, final AnActionEvent event) {
+  protected boolean isEnabled(XDebugSession session, AnActionEvent event) {
     return true;
   }
 
   @Override
-  protected boolean isSelected(final XDebugSession session, final AnActionEvent event) {
+  protected boolean isSelected(XDebugSession session, AnActionEvent event) {
     return session.areBreakpointsMuted();
   }
 
   @Override
-  protected void setSelected(final XDebugSession session, final AnActionEvent event, final boolean state) {
+  protected void setSelected(XDebugSession session, AnActionEvent event, boolean state) {
     session.setBreakpointMuted(state);
   }
 }

@@ -67,7 +67,7 @@ public class SelectionEvent extends EventObject {
     if (starts.length == 0) {
       return Pair.create(TextRange.EMPTY_ARRAY, TextRange.EMPTY_RANGE);
     }
-    final TextRange[] ranges = new TextRange[starts.length];
+    TextRange[] ranges = new TextRange[starts.length];
     int startOffset = Integer.MAX_VALUE;
     int endOffset = Integer.MIN_VALUE;
     for (int i = 0; i < starts.length; ++i) {

@@ -112,7 +112,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
         File saveFile = dialog.getExportFile();
         try {
             if (saveFile.exists()) {
-                final int ret = Messages.showOkCancelDialog(
+                int ret = Messages.showOkCancelDialog(
                     IdeLocalize.promptOverwriteSettingsFile(FileUtil.toSystemDependentName(saveFile.getPath())).get(),
                     IdeLocalize.titleFileAlreadyExists().get(),
                     UIUtil.getWarningIcon()
@@ -122,12 +122,12 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
                 }
             }
             try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
-                final File configPath = new File(ContainerPathManager.get().getConfigPath());
-                final HashSet<String> writtenItemRelativePaths = new HashSet<>();
+                File configPath = new File(ContainerPathManager.get().getConfigPath());
+                HashSet<String> writtenItemRelativePaths = new HashSet<>();
                 for (File file : exportFiles) {
-                    final String rPath = FileUtil.getRelativePath(configPath, file);
+                    String rPath = FileUtil.getRelativePath(configPath, file);
                     assert rPath != null;
-                    final String relativePath = FileUtil.toSystemIndependentName(rPath);
+                    String relativePath = FileUtil.toSystemIndependentName(rPath);
                     if (file.exists()) {
                         ZipUtil.addFileOrDirRecursively(output, saveFile, file, relativePath, null, writtenItemRelativePaths);
                     }
@@ -135,7 +135,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
 
                 exportInstalledPlugins(saveFile, output, writtenItemRelativePaths);
 
-                final File magicFile = new File(FileUtil.getTempDirectory(), ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER);
+                File magicFile = new File(FileUtil.getTempDirectory(), ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER);
                 FileUtil.createIfDoesntExist(magicFile);
                 magicFile.deleteOnExit();
                 ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER, writtenItemRelativePaths, null);
@@ -161,14 +161,14 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
         ZipOutputStream output,
         HashSet<String> writtenItemRelativePaths
     ) throws IOException {
-        final Set<String> oldPlugins = new LinkedHashSet<>();
+        Set<String> oldPlugins = new LinkedHashSet<>();
         for (PluginDescriptor descriptor : consulo.container.plugin.PluginManager.getPlugins()) {
             if (!PluginIds.isPlatformPlugin(descriptor.getPluginId()) && descriptor.isEnabled()) {
                 oldPlugins.add(descriptor.getPluginId().getIdString());
             }
         }
         if (!oldPlugins.isEmpty()) {
-            final File tempFile = File.createTempFile("installed", "plugins");
+            File tempFile = File.createTempFile("installed", "plugins");
             tempFile.deleteOnExit();
             Files.write(tempFile.toPath(), oldPlugins, StandardCharsets.UTF_8);
             ZipUtil.addDirToZipRecursively(
@@ -186,11 +186,11 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     public static MultiMap<File, ExportableItem> getExportableComponentsMap(
         Application application,
         IApplicationStore applicationStore,
-        final boolean onlyExisting
+        boolean onlyExisting
     ) {
-        final MultiMap<File, ExportableItem> result = MultiMap.createLinkedSet();
+        MultiMap<File, ExportableItem> result = MultiMap.createLinkedSet();
 
-        final StateStorageManager storageManager = applicationStore.getStateStorageManager();
+        StateStorageManager storageManager = applicationStore.getStateStorageManager();
         for (InjectingKey<?> key : application.getInjectingContainer().getKeys()) {
             Class<?> targetClass = key.getTargetClass();
             State stateAnnotation = targetClass.getAnnotation(State.class);

@@ -24,12 +24,12 @@ public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
   @Nonnull
-  public static UpdatableIntToIntMap newInstance(@Nonnull final Predicate<Integer> thisIsVisible, final int longSize) {
+  public static UpdatableIntToIntMap newInstance(@Nonnull Predicate<Integer> thisIsVisible, int longSize) {
     return newInstance(thisIsVisible, longSize, DEFAULT_BLOCK_SIZE);
   }
 
   @Nonnull
-  public static UpdatableIntToIntMap newInstance(final Flags visibleNodes) {
+  public static UpdatableIntToIntMap newInstance(Flags visibleNodes) {
     return newInstance(visibleNodes::get, visibleNodes.size());
   }
 
@@ -39,7 +39,7 @@ public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
    *                  getShortIndex access need: blockSize
    */
   @Nonnull
-  public static UpdatableIntToIntMap newInstance(@Nonnull final Predicate<Integer> thisIsVisible, final int longSize, int blockSize) {
+  public static UpdatableIntToIntMap newInstance(@Nonnull Predicate<Integer> thisIsVisible, int longSize, int blockSize) {
     if (longSize < 0) throw new NegativeArraySizeException("size < 0: " + longSize);
 
     if (longSize == 0) return IDIntToIntMap.EMPTY;

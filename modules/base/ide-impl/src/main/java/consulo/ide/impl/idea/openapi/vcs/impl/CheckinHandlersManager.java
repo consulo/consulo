@@ -44,7 +44,7 @@ public abstract class CheckinHandlersManager {
    */
   public abstract List<BaseCheckinHandlerFactory> getRegisteredCheckinHandlerFactories(AbstractVcs[] allActiveVcss);
 
-  public abstract List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull final List<AbstractVcs> keys);
+  public abstract List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull List<AbstractVcs> keys);
   /**
    * Registers a factory which provides callbacks to run before and after VCS checkin operations.
    *

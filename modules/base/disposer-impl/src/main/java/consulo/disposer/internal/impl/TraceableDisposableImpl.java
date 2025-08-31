@@ -59,13 +59,13 @@ public class TraceableDisposableImpl implements TraceableDisposable {
    * Call when object is not disposed while it should
    */
   @Override
-  public void throwObjectNotDisposedError(@Nonnull final String msg) {
+  public void throwObjectNotDisposedError(@Nonnull String msg) {
     throw new ObjectNotDisposedException(msg);
   }
 
   private class ObjectNotDisposedException extends AbstractDisposalException {
 
-    ObjectNotDisposedException(@Nullable final String msg) {
+    ObjectNotDisposedException(@Nullable String msg) {
       super(msg);
     }
 
@@ -73,7 +73,7 @@ public class TraceableDisposableImpl implements TraceableDisposable {
     @SuppressWarnings("HardCodedStringLiteral")
     @Override
     public void printStackTrace(PrintWriter s) {
-      final List<StackTraceElement> stack = new ArrayList<StackTraceElement>(Arrays.asList(CREATE_TRACE.getStackTrace()));
+      List<StackTraceElement> stack = new ArrayList<StackTraceElement>(Arrays.asList(CREATE_TRACE.getStackTrace()));
       stack.remove(0); // this line is useless it stack
       s.write(ObjectNotDisposedException.class.getCanonicalName() + ": See stack trace responsible for creation of unreleased object below \n\tat " + StringUtil.join(stack, "\n\tat "));
     }

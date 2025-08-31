@@ -45,13 +45,13 @@ public class PackageDirectoryCache {
   }
 
   @Nonnull
-  public List<VirtualFile> getDirectoriesByPackageName(@Nonnull final String packageName) {
+  public List<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName) {
     PackageInfo info = getPackageInfo(packageName);
     return info == null ? Collections.emptyList() : info.myPackageDirectories;
   }
 
   @Nullable
-  private PackageInfo getPackageInfo(@Nonnull final String packageName) {
+  private PackageInfo getPackageInfo(@Nonnull String packageName) {
     PackageInfo info = myDirectoriesByPackageNameCache.get(packageName);
     if (info == null) {
       if (myNonExistentPackages.contains(packageName)) return null;
@@ -92,8 +92,8 @@ public class PackageDirectoryCache {
     return info;
   }
 
-  public Set<String> getSubpackageNames(@Nonnull final String packageName) {
-    final PackageInfo info = getPackageInfo(packageName);
+  public Set<String> getSubpackageNames(@Nonnull String packageName) {
+    PackageInfo info = getPackageInfo(packageName);
     return info == null ? Collections.emptySet() : Collections.unmodifiableSet(info.mySubPackages.get().keySet());
   }
 

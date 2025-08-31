@@ -85,13 +85,13 @@ public class MacNativeUIUtil {
 
   @Nonnull
   public static Color colorFromNative(ID color) {
-    final ID colorSpace = Foundation.invoke("NSColorSpace", "genericRGBColorSpace");
-    final ID colorInSpace = Foundation.invoke(color, "colorUsingColorSpace:", colorSpace);
-    final long red = Foundation.invoke(colorInSpace, "redComponent").longValue();
-    final long green = Foundation.invoke(colorInSpace, "greenComponent").longValue();
-    final long blue = Foundation.invoke(colorInSpace, "blueComponent").longValue();
-    final long alpha = Foundation.invoke(colorInSpace, "alphaComponent").longValue();
-    final double realAlpha = alpha != 0 && (int)((alpha >> 52) & 0x7ffL) == 0 ? 1.0 : Double.longBitsToDouble(alpha);
+    ID colorSpace = Foundation.invoke("NSColorSpace", "genericRGBColorSpace");
+    ID colorInSpace = Foundation.invoke(color, "colorUsingColorSpace:", colorSpace);
+    long red = Foundation.invoke(colorInSpace, "redComponent").longValue();
+    long green = Foundation.invoke(colorInSpace, "greenComponent").longValue();
+    long blue = Foundation.invoke(colorInSpace, "blueComponent").longValue();
+    long alpha = Foundation.invoke(colorInSpace, "alphaComponent").longValue();
+    double realAlpha = alpha != 0 && (int)((alpha >> 52) & 0x7ffL) == 0 ? 1.0 : Double.longBitsToDouble(alpha);
     //noinspection UseJBColor
     return new Color((float)Double.longBitsToDouble(red),
                      (float)Double.longBitsToDouble(green),

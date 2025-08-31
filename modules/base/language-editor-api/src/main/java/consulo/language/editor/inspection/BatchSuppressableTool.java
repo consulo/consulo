@@ -38,6 +38,6 @@ public interface BatchSuppressableTool {
    * @return the list of suppression actions.
    */
   @Nonnull
-  SuppressQuickFix[] getBatchSuppressActions(@Nullable final PsiElement element);
+  SuppressQuickFix[] getBatchSuppressActions(@Nullable PsiElement element);
 
 }

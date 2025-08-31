@@ -37,8 +37,8 @@ public class QuotedStringParser extends PrefixedTokenParser {
   protected int getTokenEnd(int position) {
     boolean escaped = false;
     for(; position < myEndOffset; position++) {
-      final char c = myBuffer.charAt(position);
-      final boolean escapedStatus = escaped;
+      char c = myBuffer.charAt(position);
+      boolean escapedStatus = escaped;
 
       if (myAllowEscapes && c == '\\') {
         escaped = !escaped;

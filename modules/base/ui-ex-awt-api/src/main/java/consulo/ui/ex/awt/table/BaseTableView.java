@@ -32,29 +32,29 @@ import java.util.Arrays;
 public class BaseTableView extends JBTable {
   private static final Logger LOG = Logger.getInstance(BaseTableView.class);
 
-  public BaseTableView(final ListTableModel model) {
+  public BaseTableView(ListTableModel model) {
     super(model);
   }
 
   @NonNls
-  private static String orderPropertyName(final int index) {
+  private static String orderPropertyName(int index) {
     return "Order"+index;
   }
 
   @NonNls
-  private static String widthPropertyName(final int index) {
+  private static String widthPropertyName(int index) {
     return "Width" + index;
   }
 
-  public static void store(final Storage storage, final JTable table) {
-    final TableColumnModel model = table.getTableHeader().getColumnModel();
-    final int columnCount = model.getColumnCount();
-    final boolean[] storedColumns = new boolean[columnCount];
+  public static void store(Storage storage, JTable table) {
+    TableColumnModel model = table.getTableHeader().getColumnModel();
+    int columnCount = model.getColumnCount();
+    boolean[] storedColumns = new boolean[columnCount];
     Arrays.fill(storedColumns, false);
     for (int i = 0; i < columnCount; i++) {
-      final TableColumn column = model.getColumn(i);
+      TableColumn column = model.getColumn(i);
       storage.put(widthPropertyName(i), String.valueOf(column.getWidth()));
-      final int modelIndex = column.getModelIndex();
+      int modelIndex = column.getModelIndex();
       storage.put(orderPropertyName(i), String.valueOf(modelIndex));
       if (storedColumns[modelIndex]) {
         LOG.error("columnCount: " + columnCount + " current: " + i + " modelINdex: " + modelIndex);
@@ -63,33 +63,33 @@ public class BaseTableView extends JBTable {
     }
   }
 
-  public static void storeWidth(final Storage storage, final TableColumnModel columns) {
+  public static void storeWidth(Storage storage, TableColumnModel columns) {
     for (int i = 0; i < columns.getColumnCount(); i++) {
       storage.put(widthPropertyName(i), String.valueOf(columns.getColumn(i).getWidth()));
     }
   }
 
-  public static void restore(final Storage storage, final JTable table) {
-    final TableColumnModel columnModel = table.getTableHeader().getColumnModel();
+  public static void restore(Storage storage, JTable table) {
+    TableColumnModel columnModel = table.getTableHeader().getColumnModel();
     int index = 0;
-    final ArrayList<String> columnIndices = new ArrayList<String>();
+    ArrayList<String> columnIndices = new ArrayList<String>();
     while (true) {
-      final String order = storage.get(orderPropertyName(index));
+      String order = storage.get(orderPropertyName(index));
       if (order == null) break;
       columnIndices.add(order);
       index++;
       if (index == table.getColumnCount()) break;
     }
     index = 0;
-    for (final String columnIndex : columnIndices) {
-      final int modelColumnIndex = indexbyModelIndex(columnModel, Integer.parseInt(columnIndex));
+    for (String columnIndex : columnIndices) {
+      int modelColumnIndex = indexbyModelIndex(columnModel, Integer.parseInt(columnIndex));
       if (modelColumnIndex > 0 && modelColumnIndex < columnModel.getColumnCount()) {
         columnModel.moveColumn(modelColumnIndex, index);
       }
       index++;
     }
     for (int i = 0; i < columnIndices.size(); i++) {
-      final String width = storage.get(widthPropertyName(i));
+      String width = storage.get(widthPropertyName(i));
       if (width != null && width.length() > 0) {
         try {
           columnModel.getColumn(i).setPreferredWidth(Integer.parseInt(width));
@@ -102,9 +102,9 @@ public class BaseTableView extends JBTable {
     }
   }
 
-  public static void restoreWidth(final Storage storage, final TableColumnModel columns) {
+  public static void restoreWidth(Storage storage, TableColumnModel columns) {
     for (int index = 0; true; index++) {
-      final String widthValue = storage.get(widthPropertyName(index));
+      String widthValue = storage.get(widthPropertyName(index));
       if (widthValue == null) break;
       try {
         columns.getColumn(index).setPreferredWidth(Integer.parseInt(widthValue));
@@ -114,7 +114,7 @@ public class BaseTableView extends JBTable {
     }
   }
 
-  private static int indexbyModelIndex(final TableColumnModel model, final int index) {
+  private static int indexbyModelIndex(TableColumnModel model, int index) {
     for (int i = 0; i < model.getColumnCount(); i++)
       if (model.getColumn(i).getModelIndex() == index)
         return i;

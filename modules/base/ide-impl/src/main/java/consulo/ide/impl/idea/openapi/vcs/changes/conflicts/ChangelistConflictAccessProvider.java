@@ -86,7 +86,7 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
   }
 
   @Override
-  public boolean isPotentiallyWritable(@Nonnull final VirtualFile file) {
+  public boolean isPotentiallyWritable(@Nonnull VirtualFile file) {
     return true;
   }
 }

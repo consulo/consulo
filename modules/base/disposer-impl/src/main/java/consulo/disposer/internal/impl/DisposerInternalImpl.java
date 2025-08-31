@@ -70,7 +70,7 @@ public class DisposerInternalImpl extends DisposerInternal {
   }
 
   @Override
-  public void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable final String key) {
+  public void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable String key) {
     DisposerChecker.checkRegister(parent, child);
 
     myTree.register(parent, child);

@@ -38,7 +38,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return new LocalChangeListImpl(project, name);
   }
 
-  private LocalChangeListImpl(Project project, final String name) {
+  private LocalChangeListImpl(Project project, String name) {
     myProject = project;
     myId = UUID.randomUUID().toString();
     setNameImpl(name);
@@ -72,7 +72,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return myName;
   }
 
-  public void setName(@Nonnull final String name) {
+  public void setName(@Nonnull String name) {
     if (! myName.equals(name)) {
       setNameImpl(name);
     }
@@ -83,20 +83,20 @@ public class LocalChangeListImpl extends LocalChangeList {
   }
 
   // same as for setName()
-  public void setComment(final String comment) {
+  public void setComment(String comment) {
     if (! Comparing.equal(comment, myComment)) {
       myComment = comment != null ? comment : "";
     }
   }
 
-  void setNameImpl(@Nonnull final String name) {
+  void setNameImpl(@Nonnull String name) {
     if (StringUtil.isEmptyOrSpaces(name) && Registry.is("vcs.log.empty.change.list.creation")) {
       LOG.info("Creating a changelist with empty name");
     }
     myName = name;
   }
 
-  void setCommentImpl(final String comment) {
+  void setCommentImpl(String comment) {
     myComment = comment;
   }
 
@@ -104,7 +104,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return myIsDefault;
   }
 
-  void setDefault(final boolean isDefault) {
+  void setDefault(boolean isDefault) {
     myIsDefault = isDefault;
   }
 
@@ -112,7 +112,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return myIsReadOnly;
   }
 
-  public void setReadOnly(final boolean isReadOnly) {
+  public void setReadOnly(boolean isReadOnly) {
     myIsReadOnly = isReadOnly;
   }
 
@@ -142,15 +142,15 @@ public class LocalChangeListImpl extends LocalChangeList {
     return null;
   }
 
-  Collection<Change> startProcessingChanges(final Project project, @Nullable final VcsDirtyScope scope) {
+  Collection<Change> startProcessingChanges(Project project, @Nullable VcsDirtyScope scope) {
     createReadChangesCache();
-    final Collection<Change> result = new ArrayList<>();
+    Collection<Change> result = new ArrayList<>();
     myChangesBeforeUpdate = new HashMap<>(myChanges.size());
     myChanges.forEach(it -> myChangesBeforeUpdate.put(it, it));
 
     for (Change oldBoy : myChangesBeforeUpdate.values()) {
-      final ContentRevision before = oldBoy.getBeforeRevision();
-      final ContentRevision after = oldBoy.getAfterRevision();
+      ContentRevision before = oldBoy.getBeforeRevision();
+      ContentRevision after = oldBoy.getAfterRevision();
       if (scope == null || before != null && scope.belongsTo(before.getFile()) || after != null && scope.belongsTo(after.getFile())
           || isIgnoredChange(oldBoy, project)) {
         result.add(oldBoy);
@@ -167,7 +167,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return beforeRevIgnored && afterRevIgnored;
   }
 
-  private static boolean isIgnoredRevision(final @Nonnull ContentRevision revision, final @Nonnull Project project) {
+  private static boolean isIgnoredRevision(@Nonnull ContentRevision revision, @Nonnull Project project) {
     return ReadAction.compute(() -> {
       if (project.isDisposed()) {
         return false;
@@ -197,7 +197,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return false;
   }
 
-  boolean doneProcessingChanges(final List<Change> removedChanges, final List<Change> addedChanges) {
+  boolean doneProcessingChanges(List<Change> removedChanges, List<Change> addedChanges) {
     boolean changesDetected = (myChanges.size() != myChangesBeforeUpdate.size());
 
     for (Change newChange : myChanges) {
@@ -207,7 +207,7 @@ public class LocalChangeListImpl extends LocalChangeList {
       }
     }
     changesDetected |= (! addedChanges.isEmpty());
-    final List<Change> removed = new ArrayList<>(myChangesBeforeUpdate.values());
+    List<Change> removed = new ArrayList<>(myChangesBeforeUpdate.values());
     // since there are SAME objects...
     removed.removeAll(myChanges);
     removedChanges.addAll(removed);
@@ -218,7 +218,7 @@ public class LocalChangeListImpl extends LocalChangeList {
   }
 
   @Nullable
-  private Change findOldChange(final Change newChange) {
+  private Change findOldChange(Change newChange) {
     Change oldChange = myChangesBeforeUpdate.get(newChange);
     if (oldChange != null && sameBeforeRevision(oldChange, newChange) &&
         newChange.getFileStatus().equals(oldChange.getFileStatus())) {
@@ -227,23 +227,23 @@ public class LocalChangeListImpl extends LocalChangeList {
     return null;
   }
 
-  private static boolean sameBeforeRevision(final Change change1, final Change change2) {
-    final ContentRevision b1 = change1.getBeforeRevision();
-    final ContentRevision b2 = change2.getBeforeRevision();
+  private static boolean sameBeforeRevision(Change change1, Change change2) {
+    ContentRevision b1 = change1.getBeforeRevision();
+    ContentRevision b2 = change2.getBeforeRevision();
     if (b1 != null && b2 != null) {
-      final VcsRevisionNumber rn1 = b1.getRevisionNumber();
-      final VcsRevisionNumber rn2 = b2.getRevisionNumber();
-      final boolean isBinary1 = (b1 instanceof BinaryContentRevision);
-      final boolean isBinary2 = (b2 instanceof BinaryContentRevision);
+      VcsRevisionNumber rn1 = b1.getRevisionNumber();
+      VcsRevisionNumber rn2 = b2.getRevisionNumber();
+      boolean isBinary1 = (b1 instanceof BinaryContentRevision);
+      boolean isBinary2 = (b2 instanceof BinaryContentRevision);
       return rn1 != VcsRevisionNumber.NULL && rn2 != VcsRevisionNumber.NULL && rn1.compareTo(rn2) == 0 && isBinary1 == isBinary2;
     }
     return b1 == null && b2 == null;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final LocalChangeListImpl list = (LocalChangeListImpl)o;
+    LocalChangeListImpl list = (LocalChangeListImpl)o;
     return myName.equals(list.myName);
   }
 
@@ -257,7 +257,7 @@ public class LocalChangeListImpl extends LocalChangeList {
   }
 
   public LocalChangeList copy() {
-    final LocalChangeListImpl copy = new LocalChangeListImpl(this);
+    LocalChangeListImpl copy = new LocalChangeListImpl(this);
     copy.myComment = myComment;
     copy.myIsDefault = myIsDefault;
     copy.myIsReadOnly = myIsReadOnly;

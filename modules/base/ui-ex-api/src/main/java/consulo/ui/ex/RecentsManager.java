@@ -66,8 +66,8 @@ public class RecentsManager implements PersistentStateComponent<Element> {
     add(recents, recentEntry);
   }
 
-  private void add(final LinkedList<String> recentEntrues, final String newEntry) {
-    final int oldIndex = recentEntrues.indexOf(newEntry);
+  private void add(LinkedList<String> recentEntrues, String newEntry) {
+    int oldIndex = recentEntrues.indexOf(newEntry);
     if (oldIndex >= 0) {
       recentEntrues.remove(oldIndex);
     }
@@ -81,12 +81,12 @@ public class RecentsManager implements PersistentStateComponent<Element> {
   @Override
   public void loadState(Element element) {
     myMap.clear();
-    final List keyElements = element.getChildren(KEY_ELEMENT_NAME);
+    List keyElements = element.getChildren(KEY_ELEMENT_NAME);
     for (Iterator iterator = keyElements.iterator(); iterator.hasNext(); ) {
       Element keyElement = (Element)iterator.next();
-      final String key = keyElement.getAttributeValue(NAME_ATTR);
+      String key = keyElement.getAttributeValue(NAME_ATTR);
       LinkedList<String> recents = new LinkedList<String>();
-      final List children = keyElement.getChildren(RECENT_ELEMENT_NAME);
+      List children = keyElement.getChildren(RECENT_ELEMENT_NAME);
       for (Iterator<Element> iterator1 = children.iterator(); iterator1.hasNext(); ) {
         recents.addLast(iterator1.next().getAttributeValue(NAME_ATTR));
       }
@@ -98,13 +98,13 @@ public class RecentsManager implements PersistentStateComponent<Element> {
   @Override
   public Element getState() {
     Element element = new Element("state");
-    final Set<Map.Entry<String, LinkedList<String>>> entries = myMap.entrySet();
+    Set<Map.Entry<String, LinkedList<String>>> entries = myMap.entrySet();
     for (Map.Entry<String, LinkedList<String>> entry : entries) {
-      final Element keyElement = new Element(KEY_ELEMENT_NAME);
+      Element keyElement = new Element(KEY_ELEMENT_NAME);
       keyElement.setAttribute(NAME_ATTR, entry.getKey());
-      final LinkedList<String> recents = entry.getValue();
+      LinkedList<String> recents = entry.getValue();
       for (String recent : recents) {
-        final Element recentElement = new Element(RECENT_ELEMENT_NAME);
+        Element recentElement = new Element(RECENT_ELEMENT_NAME);
         recentElement.setAttribute(NAME_ATTR, recent);
         keyElement.addContent(recentElement);
       }
@@ -113,7 +113,7 @@ public class RecentsManager implements PersistentStateComponent<Element> {
     return element;
   }
 
-  public void setRecentsNumberToKeep(final int recentsNumberToKeep) {
+  public void setRecentsNumberToKeep(int recentsNumberToKeep) {
     myRecentsNumberToKeep = recentsNumberToKeep;
   }
 }

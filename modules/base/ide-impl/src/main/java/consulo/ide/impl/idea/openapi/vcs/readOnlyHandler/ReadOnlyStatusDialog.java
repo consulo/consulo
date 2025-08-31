@@ -50,7 +50,7 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
   private JComboBox myChangelist;
   private FileInfo[] myFiles;
 
-  public ReadOnlyStatusDialog(Project project, final FileInfo[] files) {
+  public ReadOnlyStatusDialog(Project project, FileInfo[] files) {
     super(project);
     setTitle(VcsLocalize.dialogTitleClearReadOnlyFileStatus());
     myFiles = files;
@@ -83,7 +83,7 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
       }
 
       @Override
-      public Object getElementAt(final int index) {
+      public Object getElementAt(int index) {
         return myFiles[index].getFile();
       }
     });
@@ -180,7 +180,7 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
 
   @Override
   public JComponent getPreferredFocusedComponent() {
-    final JRootPane pane = getRootPane();
+    JRootPane pane = getRootPane();
     return pane != null ? pane.getDefaultButton() : null;
   }
 

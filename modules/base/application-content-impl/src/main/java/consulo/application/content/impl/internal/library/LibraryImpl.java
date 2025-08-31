@@ -66,7 +66,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     readExternal(element);
   }
 
-  public LibraryImpl(String name, @Nullable final PersistentLibraryKind<?> kind, LibraryTable table, @Nonnull LibraryOwner rootModel) {
+  public LibraryImpl(String name, @Nullable PersistentLibraryKind<?> kind, LibraryTable table, @Nonnull LibraryOwner rootModel) {
     this(table, rootModel, null, name, kind);
     if (kind != null) {
       myProperties = kind.createDefaultProperties();
@@ -86,7 +86,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
       }
     }
     for (OrderRootType rootType : getAllRootTypes()) {
-      final VirtualFilePointerContainer thatContainer = from.myRoots.get(rootType);
+      VirtualFilePointerContainer thatContainer = from.myRoots.get(rootType);
       if (thatContainer != null && !thatContainer.isEmpty()) {
         getOrCreateContainer(rootType).addAll(thatContainer);
       }
@@ -191,7 +191,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     if (myDisposed) return Collections.emptyList();
 
     VirtualFilePointerContainer container = myRoots.get(type);
-    final List<VirtualFilePointer> pointers = container == null ? Collections.emptyList() : container.getList();
+    List<VirtualFilePointer> pointers = container == null ? Collections.emptyList() : container.getList();
     List<String> invalidPaths = null;
     for (VirtualFilePointer pointer : pointers) {
       if (!pointer.isValid()) {
@@ -249,12 +249,12 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
    */
   @Deprecated // todo to remove sometime later
   private void readJarDirectories(@Nonnull Element element) {
-    final List<Element> jarDirs = element.getChildren(VirtualFilePointerContainerImpl.JAR_DIRECTORY_ELEMENT);
+    List<Element> jarDirs = element.getChildren(VirtualFilePointerContainerImpl.JAR_DIRECTORY_ELEMENT);
     for (Element jarDir : jarDirs) {
-      final String url = jarDir.getAttributeValue(VirtualFilePointerContainerImpl.URL_ATTR);
+      String url = jarDir.getAttributeValue(VirtualFilePointerContainerImpl.URL_ATTR);
       if (url != null) {
-        final String recursive = jarDir.getAttributeValue(VirtualFilePointerContainerImpl.RECURSIVE_ATTR);
-        final OrderRootType rootType = getJarDirectoryRootType(jarDir.getAttributeValue(ROOT_TYPE_ATTR));
+        String recursive = jarDir.getAttributeValue(VirtualFilePointerContainerImpl.RECURSIVE_ATTR);
+        OrderRootType rootType = getJarDirectoryRootType(jarDir.getAttributeValue(ROOT_TYPE_ATTR));
         VirtualFilePointerContainer roots = getOrCreateContainer(rootType);
         boolean recursively = Boolean.parseBoolean(recursive);
         roots.addJarDirectory(url, recursively);
@@ -273,14 +273,14 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   }
 
   private void readProperties(@Nonnull Element element) {
-    final String typeId = element.getAttributeValue(LIBRARY_TYPE_ATTR);
+    String typeId = element.getAttributeValue(LIBRARY_TYPE_ATTR);
     if (typeId == null) return;
 
     myKind = (PersistentLibraryKind<?>) LibraryKindRegistry.getInstance().findKindById(typeId);
     if (myKind == null) return;
 
     myProperties = myKind.createDefaultProperties();
-    final Element propertiesElement = element.getChild(PROPERTIES_ELEMENT);
+    Element propertiesElement = element.getChild(PROPERTIES_ELEMENT);
     if (propertiesElement != null) {
       ComponentSerializationUtil.loadComponentState(myProperties, propertiesElement);
     }
@@ -292,7 +292,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
 
   private void readRoots(@Nonnull Element element) throws InvalidDataException {
     for (OrderRootType rootType : getAllRootTypes()) {
-      final Element rootChild = element.getChild(rootType.name());
+      Element rootChild = element.getChild(rootType.name());
       if (rootChild == null) {
         continue;
       }
@@ -336,9 +336,9 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     if (myKind != null) {
       element.setAttribute(LIBRARY_TYPE_ATTR, myKind.getKindId());
       LOG.assertTrue(myProperties != null, "Properties is 'null' in library with kind " + myKind);
-      final Object state = myProperties.getState();
+      Object state = myProperties.getState();
       if (state != null) {
-        final Element propertiesElement = XmlSerializer.serialize(state);
+        Element propertiesElement = XmlSerializer.serialize(state);
         if (propertiesElement != null) {
           element.addContent(propertiesElement.setName(PROPERTIES_ELEMENT));
         }
@@ -350,7 +350,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
         continue;
       }
 
-      final Element rootTypeElement = new Element(rootType.name());
+      Element rootTypeElement = new Element(rootType.name());
       roots.writeExternal(rootTypeElement, ROOT_PATH_ELEMENT, false);
       element.addContent(rootTypeElement);
     }
@@ -369,7 +369,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
    */
   @Deprecated // todo to remove sometime later
   private void writeJarDirectories(@Nonnull Element element) {
-    final List<OrderRootType> rootTypes = sortRootTypes(myRoots.keySet());
+    List<OrderRootType> rootTypes = sortRootTypes(myRoots.keySet());
     for (OrderRootType rootType : rootTypes) {
       VirtualFilePointerContainer container = myRoots.get(rootType);
       List<Pair<String, Boolean>> jarDirectories = new ArrayList<>(container.getJarDirectories());
@@ -377,7 +377,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
       for (Pair<String, Boolean> pair : jarDirectories) {
         String url = pair.getFirst();
         boolean isRecursive = pair.getSecond();
-        final Element jarDirElement = new Element(VirtualFilePointerContainerImpl.JAR_DIRECTORY_ELEMENT);
+        Element jarDirElement = new Element(VirtualFilePointerContainerImpl.JAR_DIRECTORY_ELEMENT);
         jarDirElement.setAttribute(VirtualFilePointerContainerImpl.URL_ATTR, url);
         jarDirElement.setAttribute(VirtualFilePointerContainerImpl.RECURSIVE_ATTR, Boolean.toString(isRecursive));
         if (!rootType.equals(DEFAULT_JAR_DIRECTORY_TYPE)) {
@@ -448,7 +448,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     checkDisposed();
     LOG.assertTrue(isWritable());
 
-    final VirtualFilePointerContainer container = getOrCreateContainer(rootType);
+    VirtualFilePointerContainer container = getOrCreateContainer(rootType);
     container.add(url);
   }
 
@@ -457,45 +457,45 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     checkDisposed();
     LOG.assertTrue(isWritable());
 
-    final VirtualFilePointerContainer container = getOrCreateContainer(rootType);
+    VirtualFilePointerContainer container = getOrCreateContainer(rootType);
     container.add(file);
   }
 
   @Override
-  public void addJarDirectory(@Nonnull final String url, final boolean recursive) {
+  public void addJarDirectory(@Nonnull String url, boolean recursive) {
     addJarDirectory(url, recursive, BinariesOrderRootType.getInstance());
   }
 
   @Override
-  public void addJarDirectory(@Nonnull final VirtualFile file, final boolean recursive) {
+  public void addJarDirectory(@Nonnull VirtualFile file, boolean recursive) {
     addJarDirectory(file, recursive, BinariesOrderRootType.getInstance());
   }
 
   @Override
-  public void addJarDirectory(@Nonnull final String url, final boolean recursive, @Nonnull OrderRootType rootType) {
+  public void addJarDirectory(@Nonnull String url, boolean recursive, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
-    final VirtualFilePointerContainer container = getOrCreateContainer(rootType);
+    VirtualFilePointerContainer container = getOrCreateContainer(rootType);
     container.addJarDirectory(url, recursive);
   }
 
   @Override
-  public void addJarDirectory(@Nonnull final VirtualFile file, final boolean recursive, @Nonnull OrderRootType rootType) {
+  public void addJarDirectory(@Nonnull VirtualFile file, boolean recursive, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
-    final VirtualFilePointerContainer container = getOrCreateContainer(rootType);
+    VirtualFilePointerContainer container = getOrCreateContainer(rootType);
     container.addJarDirectory(file.getUrl(), recursive);
   }
 
   @Override
-  public boolean isJarDirectory(@Nonnull final String url) {
+  public boolean isJarDirectory(@Nonnull String url) {
     return isJarDirectory(url, BinariesOrderRootType.getInstance());
   }
 
   @Override
-  public boolean isJarDirectory(@Nonnull final String url, @Nonnull final OrderRootType rootType) {
+  public boolean isJarDirectory(@Nonnull String url, @Nonnull OrderRootType rootType) {
     VirtualFilePointerContainer container = myRoots.get(rootType);
     if (container == null) return false;
     List<Pair<String, Boolean>> jarDirectories = container.getJarDirectories();
@@ -503,9 +503,9 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   }
 
   @Override
-  public boolean isValid(@Nonnull final String url, @Nonnull final OrderRootType rootType) {
-    final VirtualFilePointerContainer container = myRoots.get(rootType);
-    final VirtualFilePointer fp = container == null ? null : container.findByUrl(url);
+  public boolean isValid(@Nonnull String url, @Nonnull OrderRootType rootType) {
+    VirtualFilePointerContainer container = myRoots.get(rootType);
+    VirtualFilePointer fp = container == null ? null : container.findByUrl(url);
     return fp != null && fp.isValid();
   }
 
@@ -514,8 +514,8 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     checkDisposed();
     LOG.assertTrue(isWritable());
 
-    final VirtualFilePointerContainer container = myRoots.get(rootType);
-    final VirtualFilePointer byUrl = container == null ? null : container.findByUrl(url);
+    VirtualFilePointerContainer container = myRoots.get(rootType);
+    VirtualFilePointer byUrl = container == null ? null : container.findByUrl(url);
     if (byUrl != null) {
       container.remove(byUrl);
       if (myExcludedRoots != null) {
@@ -548,7 +548,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     checkDisposed();
     LOG.assertTrue(isWritable());
 
-    final VirtualFilePointerContainer container = myRoots.get(rootType);
+    VirtualFilePointerContainer container = myRoots.get(rootType);
     if (container != null) {
       container.moveUp(url);
     }
@@ -559,7 +559,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     checkDisposed();
     LOG.assertTrue(isWritable());
 
-    final VirtualFilePointerContainer container = myRoots.get(rootType);
+    VirtualFilePointerContainer container = myRoots.get(rootType);
     if (container != null) {
       container.moveDown(url);
     }
@@ -639,11 +639,11 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final LibraryImpl library = (LibraryImpl)o;
+    LibraryImpl library = (LibraryImpl)o;
 
     if (!Objects.equals(myName, library.myName)) return false;
     if (!myRoots.equals(library.myRoots)) return false;

@@ -30,12 +30,12 @@ public class FilesForRefresh {
     myPoints = new ArrayList<File>();
   }
 
-  public void addPoint(final File vf) {
+  public void addPoint(File vf) {
     if (vf == null) return;
     myPoints.add(vf);
   }
 
-  public void addRecursively(final File vf) {
+  public void addRecursively(File vf) {
     if (vf == null) return;
     myRecursively.add(vf);
   }
@@ -44,7 +44,7 @@ public class FilesForRefresh {
     filterEqual(myRecursively);
     filterEqual(myPoints);
     
-    final ParentsFirstVFComparator comparator = new ParentsFirstVFComparator();
+    ParentsFirstVFComparator comparator = new ParentsFirstVFComparator();
     Collections.sort(myRecursively, comparator);
 
     /*final Set<String> superfluous = new HashSet<String>();
@@ -67,7 +67,7 @@ public class FilesForRefresh {
     }*/
 
     for (Iterator<File> iterator = myPoints.iterator(); iterator.hasNext();) {
-      final File f = iterator.next();
+      File f = iterator.next();
       for (File recursive : myRecursively) {
         if (VfsUtil.isAncestor(recursive, f, false)) {
           iterator.remove();
@@ -88,8 +88,8 @@ public class FilesForRefresh {
     */
   }
 
-  private void filterEqual(final List<File> files) {
-    final Set<String> set = new HashSet<String>();
+  private void filterEqual(List<File> files) {
+    Set<String> set = new HashSet<String>();
     for (File file : files) {
       set.add(file.getAbsolutePath());
     }

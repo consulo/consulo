@@ -46,7 +46,7 @@ public class DefaultCompletionContributor extends CompletionContributor {
     if (!includePsiFeatures) return;
 
     if (CompletionUtil.shouldShowFeature(project, CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_SMART_ENTER)) {
-      final String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_COMPLETE_STATEMENT);
+      String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_COMPLETE_STATEMENT);
       if (StringUtil.isNotEmpty(shortcut)) {
         lookup.addAdvertisement(LangBundle.message("completion.smart.enter.ad", shortcut), null);
       }
@@ -54,7 +54,7 @@ public class DefaultCompletionContributor extends CompletionContributor {
 
     if ((CompletionUtil.shouldShowFeature(project, ShowQuickDocInfoAction.CODEASSISTS_QUICKJAVADOC_FEATURE) ||
          CompletionUtil.shouldShowFeature(project, ShowQuickDocInfoAction.CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE))) {
-      final String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_QUICK_JAVADOC);
+      String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_QUICK_JAVADOC);
       if (StringUtil.isNotEmpty(shortcut)) {
         lookup.addAdvertisement(LangBundle.message("completion.quick.javadoc.ad", shortcut), null);
       }
@@ -62,7 +62,7 @@ public class DefaultCompletionContributor extends CompletionContributor {
 
     if (CompletionUtil.shouldShowFeature(project, ShowImplementationsAction.CODEASSISTS_QUICKDEFINITION_FEATURE) ||
         CompletionUtil.shouldShowFeature(project, ShowImplementationsAction.CODEASSISTS_QUICKDEFINITION_LOOKUP_FEATURE)) {
-      final String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_QUICK_IMPLEMENTATIONS);
+      String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_QUICK_IMPLEMENTATIONS);
       if (StringUtil.isNotEmpty(shortcut)) {
         lookup.addAdvertisement(LangBundle.message("completion.quick.implementations.ad", shortcut), null);
       }
@@ -71,9 +71,9 @@ public class DefaultCompletionContributor extends CompletionContributor {
 
   @Override
   public AutoCompletionDecision handleAutoCompletionPossibility(@Nonnull AutoCompletionContext context) {
-    final LookupElement[] items = context.getItems();
+    LookupElement[] items = context.getItems();
     if (items.length == 1) {
-      final LookupElement item = items[0];
+      LookupElement item = items[0];
       if (!StringUtil.isEmpty(context.getLookup().itemPattern(item)) || context.getParameters().getCompletionType() == CompletionType.SMART) {
         return AutoCompletionDecision.insertItem(item);
       }

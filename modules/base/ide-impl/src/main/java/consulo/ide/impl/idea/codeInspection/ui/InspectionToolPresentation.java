@@ -41,7 +41,7 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
                                 @Nonnull InspectionNode node,
                                 @Nonnull InspectionRVContentProvider provider,
                                 @Nonnull InspectionTreeNode parentNode,
-                                final boolean showStructure);
+                                boolean showStructure);
 
   void updateContent();
 
@@ -61,26 +61,26 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
 
   boolean isGraphNeeded();
 
-  boolean isElementIgnored(final RefEntity element);
+  boolean isElementIgnored(RefEntity element);
 
   @Nonnull
-  FileStatus getElementStatus(final RefEntity element);
+  FileStatus getElementStatus(RefEntity element);
 
   @Nonnull
   Collection<RefEntity> getIgnoredRefElements();
 
   @Nullable
-  IntentionAction findQuickFixes(@Nonnull CommonProblemDescriptor descriptor, final String hint);
+  IntentionAction findQuickFixes(@Nonnull CommonProblemDescriptor descriptor, String hint);
 
   @Nonnull
   HTMLComposerBase getComposer();
 
-  void exportResults(@Nonnull final Element parentNode, @Nonnull RefEntity refEntity);
+  void exportResults(@Nonnull Element parentNode, @Nonnull RefEntity refEntity);
 
   Set<RefModule> getModuleProblems();
 
   @Nullable
-  QuickFixAction[] getQuickFixes(@Nonnull final RefEntity[] refElements);
+  QuickFixAction[] getQuickFixes(@Nonnull RefEntity[] refElements);
 
   @Nonnull
   Map<RefEntity, CommonProblemDescriptor[]> getProblemElements();
@@ -112,5 +112,5 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
   @Nullable
   QuickFixAction[] extractActiveFixes(@Nonnull RefEntity[] refElements, @Nonnull Map<RefEntity, Set<QuickFix>> actions);
 
-  void exportResults(@Nonnull final Element parentNode);
+  void exportResults(@Nonnull Element parentNode);
 }

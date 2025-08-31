@@ -56,9 +56,9 @@ public abstract class BeforeAfterActionMetaData {
     myDescriptionDirectoryName = descriptionDirectoryName;
   }
 
-  public BeforeAfterActionMetaData(final TextDescriptor description,
-                                   final TextDescriptor[] exampleUsagesBefore,
-                                   final TextDescriptor[] exampleUsagesAfter) {
+  public BeforeAfterActionMetaData(TextDescriptor description,
+                                   TextDescriptor[] exampleUsagesBefore,
+                                   TextDescriptor[] exampleUsagesAfter) {
     myLoader = null;
     myDescriptionDirectoryName = null;
 
@@ -71,9 +71,9 @@ public abstract class BeforeAfterActionMetaData {
   private static TextDescriptor[] retrieveURLs(@Nonnull URL descriptionDirectory, @Nonnull String prefix, @Nonnull String suffix)
           throws MalformedURLException {
     List<TextDescriptor> urls = new ArrayList<TextDescriptor>();
-    final FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
+    FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
     for (FileType fileType : fileTypes) {
-      final String[] extensions = FileTypeManager.getInstance().getAssociatedExtensions(fileType);
+      String[] extensions = FileTypeManager.getInstance().getAssociatedExtensions(fileType);
       for (String extension : extensions) {
         for (int i = 0; ; i++) {
           URL url = new URL(descriptionDirectory.toExternalForm() + "/" +
@@ -151,7 +151,7 @@ public abstract class BeforeAfterActionMetaData {
   public TextDescriptor getDescription() {
     if (myDescription == null) {
       try {
-        final URL dirURL = getDirURL();
+        URL dirURL = getDirURL();
         URL descriptionURL = new URL(dirURL.toExternalForm() + "/" + DESCRIPTION_FILE_NAME);
         myDescription = new ResourceTextDescriptor(descriptionURL);
       }

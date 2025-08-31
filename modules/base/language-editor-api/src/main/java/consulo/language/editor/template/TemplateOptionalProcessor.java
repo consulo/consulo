@@ -34,7 +34,7 @@ public interface TemplateOptionalProcessor {
     @Nonnull
     KeyWithDefaultValue<Boolean> getKey();
 
-    void processText(final Project project, final Template template, final Document document, final RangeMarker templateRange, final Editor editor);
+    void processText(Project project, Template template, Document document, RangeMarker templateRange, Editor editor);
 
     @Nonnull
     LocalizeValue getOptionText();

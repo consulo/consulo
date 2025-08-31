@@ -30,7 +30,7 @@ public abstract class SingleLazyInstanceSyntaxHighlighterFactory extends SyntaxH
 
   @Override
   @Nonnull
-  public final SyntaxHighlighter getSyntaxHighlighter(final Project project, final VirtualFile virtualFile) {
+  public final SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
     if (myValue == null) {
       myValue = createHighlighter();
     }

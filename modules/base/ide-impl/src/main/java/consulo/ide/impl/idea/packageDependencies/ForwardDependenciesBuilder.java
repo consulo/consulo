@@ -47,11 +47,11 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
     super(project, scope);
   }
 
-  public ForwardDependenciesBuilder(final Project project, final AnalysisScope scope, final AnalysisScope scopeOfInterest) {
+  public ForwardDependenciesBuilder(Project project, AnalysisScope scope, AnalysisScope scopeOfInterest) {
     super(project, scope, scopeOfInterest);
   }
 
-  public ForwardDependenciesBuilder(final Project project, final AnalysisScope scope, final int transitive) {
+  public ForwardDependenciesBuilder(Project project, AnalysisScope scope, int transitive) {
     super(project, scope);
     myTransitive = transitive;
   }
@@ -78,7 +78,7 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(getProject()).getFileIndex();
     try {
       getScope().accept(new PsiRecursiveElementVisitor() {
-        @Override public void visitFile(final PsiFile file) {
+        @Override public void visitFile(PsiFile file) {
           visit(file, fileIndex, psiManager, 0);
         }
       });
@@ -88,7 +88,7 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
     }
   }
 
-  private void visit(final PsiFile file, final ProjectFileIndex fileIndex, final PsiManager psiManager, int depth) {
+  private void visit(PsiFile file, final ProjectFileIndex fileIndex, PsiManager psiManager, int depth) {
 
     final FileViewProvider viewProvider = file.getViewProvider();
     if (viewProvider.getBaseLanguage() != file.getLanguage()) return;
@@ -96,7 +96,7 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
     if (getScopeOfInterest() != null && !getScopeOfInterest().contains(file)) return;
 
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-    final VirtualFile virtualFile = file.getVirtualFile();
+    VirtualFile virtualFile = file.getVirtualFile();
     if (indicator != null) {
       if (indicator.isCanceled()) {
         throw new ProcessCanceledException();
@@ -111,14 +111,14 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
       }
     }
 
-    final boolean isInLibrary =  virtualFile == null || fileIndex.isInLibrarySource(virtualFile) || fileIndex.isInLibraryClasses(virtualFile);
-    final Set<PsiFile> collectedDeps = new HashSet<PsiFile>();
-    final HashSet<PsiFile> processed = new HashSet<PsiFile>();
+    boolean isInLibrary =  virtualFile == null || fileIndex.isInLibrarySource(virtualFile) || fileIndex.isInLibraryClasses(virtualFile);
+    Set<PsiFile> collectedDeps = new HashSet<PsiFile>();
+    HashSet<PsiFile> processed = new HashSet<PsiFile>();
     collectedDeps.add(file);
     do {
       if (depth++ > getTransitiveBorder()) return;
       for (PsiFile psiFile : new HashSet<PsiFile>(collectedDeps)) {
-        final VirtualFile vFile = psiFile.getVirtualFile();
+        VirtualFile vFile = psiFile.getVirtualFile();
         if (vFile != null) {
 
           if (indicator != null) {
@@ -139,7 +139,7 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
               if (dependencyFile != null) {
                 if (viewProvider == dependencyFile.getViewProvider()) return;
                 if (dependencyFile.isPhysical()) {
-                  final VirtualFile virtualFile = dependencyFile.getVirtualFile();
+                  VirtualFile virtualFile = dependencyFile.getVirtualFile();
                   if (virtualFile != null &&
                       (fileIndex.isInContent(virtualFile) ||
                        fileIndex.isInLibraryClasses(virtualFile) ||

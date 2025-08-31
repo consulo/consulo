@@ -20,7 +20,7 @@ import jakarta.annotation.Nonnull;
 public class ModuleWithNameAlreadyExistsException extends Exception {
   private final String myModuleName;
 
-  public ModuleWithNameAlreadyExistsException(final String message, final String moduleName) {
+  public ModuleWithNameAlreadyExistsException(String message, String moduleName) {
     super(message);
     myModuleName = moduleName;
   }

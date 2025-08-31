@@ -62,7 +62,7 @@ public class VcsHandleType extends HandleType {
     }
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       public void run() {
-        for (final VirtualFile file : files) {
+        for (VirtualFile file : files) {
           file.refresh(false, false);
         }
       }

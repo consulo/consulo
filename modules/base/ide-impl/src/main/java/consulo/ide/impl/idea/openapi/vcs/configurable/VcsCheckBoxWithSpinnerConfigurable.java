@@ -35,7 +35,7 @@ public abstract class VcsCheckBoxWithSpinnerConfigurable {
   protected JCheckBox myHighlightRecentlyChanged;
   protected JSpinner myHighlightInterval;
 
-  public VcsCheckBoxWithSpinnerConfigurable(Project project, final String checkboxText, final String measure) {
+  public VcsCheckBoxWithSpinnerConfigurable(Project project, String checkboxText, String measure) {
     myProject = project;
     myCheckboxText = checkboxText;
     myMeasure = measure;
@@ -48,7 +48,7 @@ public abstract class VcsCheckBoxWithSpinnerConfigurable {
     myHighlightInterval = new JSpinner(createSpinnerModel());
     wrapper.add(myHighlightRecentlyChanged);
     wrapper.add(myHighlightInterval);
-    final JLabel days = new JLabel(myMeasure);
+    JLabel days = new JLabel(myMeasure);
     days.setBorder(JBUI.Borders.empty(0, 1));
     wrapper.add(days);
 

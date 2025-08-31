@@ -36,7 +36,7 @@ public class TransparentLayeredPane extends JBLayeredPane {
 
     @Override
     public void addNotify() {
-        final Container container = getParent();
+        Container container = getParent();
         if (container != null) {
             setBounds(0, 0, container.getWidth(), container.getHeight());
         }

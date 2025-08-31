@@ -279,7 +279,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
       return newElement;
     }
 
-    final OuterLanguageElementImpl newLeaf = myTemplateDataElementType.createOuterLanguageElement(charTable.intern(outerElementText), myTemplateDataElementType.myOuterElementType);
+    OuterLanguageElementImpl newLeaf = myTemplateDataElementType.createOuterLanguageElement(charTable.intern(outerElementText), myTemplateDataElementType.myOuterElementType);
     templateTreePatcher.insert(currentLeaf.getTreeParent(), currentLeaf, newLeaf);
     return newLeaf;
   }

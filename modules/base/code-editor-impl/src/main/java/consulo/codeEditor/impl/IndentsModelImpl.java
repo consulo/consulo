@@ -46,9 +46,9 @@ public class IndentsModelImpl implements IndentsModel {
 
   @Override
   public IndentGuideDescriptor getCaretIndentGuide() {
-    final LogicalPosition pos = myEditor.getCaretModel().getLogicalPosition();
-    final int column = pos.column;
-    final int line = pos.line;
+    LogicalPosition pos = myEditor.getCaretModel().getLogicalPosition();
+    int column = pos.column;
+    int line = pos.line;
 
     if (column > 0) {
       for (IndentGuideDescriptor indent : myIndents) {

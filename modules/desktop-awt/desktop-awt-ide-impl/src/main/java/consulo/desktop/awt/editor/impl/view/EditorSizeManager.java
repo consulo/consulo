@@ -122,11 +122,11 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
         myAfterLineEndInlayUpdated = false;
         myDuringDocumentUpdate = true;
         if (myDocument.isInBulkUpdate()) return;
-        final int offset = event.getOffset();
+        int offset = event.getOffset();
         // Although the result of getMoveOffset() can point to invalid offset when used from within beforeDocumentChange(),
         // the actual value is not used until doInvalidateRange() called from documentChanged().
-        final int moveOffset = DocumentEventUtil.isMoveInsertion(event) ? event.getMoveOffset() : offset;
-        final int length = event.getNewLength();
+        int moveOffset = DocumentEventUtil.isMoveInsertion(event) ? event.getMoveOffset() : offset;
+        int length = event.getNewLength();
         myDocumentChangeStartOffset = Math.min(offset, moveOffset);
         myDocumentChangeEndOffset = Math.max(offset, moveOffset) + length;
     }

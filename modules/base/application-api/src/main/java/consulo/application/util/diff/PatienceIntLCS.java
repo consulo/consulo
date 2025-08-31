@@ -134,7 +134,7 @@ class PatienceIntLCS {
   }
 
   private int matchForward(int start1, int count1, int start2, int count2) {
-    final int size = Math.min(count1, count2);
+    int size = Math.min(count1, count2);
     int idx = 0;
     for (int i = 0; i < size; i++) {
       if (!(myFirst[start1 + i] == mySecond[start2 + i])) break;
@@ -144,7 +144,7 @@ class PatienceIntLCS {
   }
 
   private int matchBackward(int start1, int count1, int start2, int count2) {
-    final int size = Math.min(count1, count2);
+    int size = Math.min(count1, count2);
     int idx = 0;
     for (int i = 1; i <= size; i++) {
       if (!(myFirst[start1 + count1 - i] == mySecond[start2 + count2 - i])) break;

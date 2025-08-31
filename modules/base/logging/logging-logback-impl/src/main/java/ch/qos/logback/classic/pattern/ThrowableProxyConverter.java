@@ -65,10 +65,10 @@ public class ThrowableProxyConverter extends ThrowableHandlingConverter {
             }
         }
 
-        final List<String> optionList = getOptionList();
+        List<String> optionList = getOptionList();
 
         if (optionList != null && optionList.size() > 1) {
-            final int optionListSize = optionList.size();
+            int optionListSize = optionList.size();
             for (int i = 1; i < optionListSize; i++) {
                 String evaluatorOrIgnoredStackTraceLine = (String) optionList.get(i);
                 Context context = getContext();

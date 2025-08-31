@@ -81,7 +81,7 @@ public class QuickListsManager {
         }, RoamingType.DEFAULT);
 
         application.getExtensionPoint(BundledQuickListsProvider.class).forEachExtensionSafe(provider -> {
-            for (final String path : provider.getBundledListsRelativePaths()) {
+            for (String path : provider.getBundledListsRelativePaths()) {
                 URL resource = provider.getClass().getResource(path);
                 if (resource == null) {
                     throw new IllegalArgumentException("Can't find resource: " + path);

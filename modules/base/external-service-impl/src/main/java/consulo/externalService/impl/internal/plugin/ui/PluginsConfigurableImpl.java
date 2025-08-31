@@ -131,7 +131,7 @@ public class PluginsConfigurableImpl implements SearchableConfigurable,
 
     @Override
     @Nullable
-    public Runnable enableSearch(final String option) {
+    public Runnable enableSearch(String option) {
         return () -> {
             if (myPanel != null) {
                 myPanel.filter(option);

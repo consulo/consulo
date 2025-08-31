@@ -72,7 +72,7 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
   public abstract void initProfileWrapper(@Nonnull Profile profile);
 
   @Override
-  public Profile getProfile(@Nonnull final String name) {
+  public Profile getProfile(@Nonnull String name) {
     return getProfile(name, true);
   }
 }

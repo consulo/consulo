@@ -30,23 +30,23 @@ import java.util.List;
 public interface RollbackProgressListener {
   RollbackProgressListener EMPTY = new RollbackProgressListener() {
     @Override
-    public void accept(final Change change) {
+    public void accept(Change change) {
     }
 
     @Override
-    public void accept(final FilePath filePath) {
+    public void accept(FilePath filePath) {
     }
 
     @Override
-    public void accept(final List<FilePath> paths) {
+    public void accept(List<FilePath> paths) {
     }
 
     @Override
-    public void accept(final File file) {
+    public void accept(File file) {
     }
 
     @Override
-    public void accept(final VirtualFile file) {
+    public void accept(VirtualFile file) {
     }
 
     @Override
@@ -66,15 +66,15 @@ public interface RollbackProgressListener {
 
   void indeterminate();
 
-  void accept(final Change change);
+  void accept(Change change);
 
-  void accept(final FilePath filePath);
+  void accept(FilePath filePath);
 
-  void accept(final List<FilePath> paths);
+  void accept(List<FilePath> paths);
 
-  void accept(final File file);
+  void accept(File file);
 
-  void accept(final VirtualFile file);
+  void accept(VirtualFile file);
 
   void checkCanceled();
 }

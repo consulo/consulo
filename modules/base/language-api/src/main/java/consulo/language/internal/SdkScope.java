@@ -43,7 +43,7 @@ public class SdkScope extends LibraryScopeBase {
     if (object == null) return false;
     if (object.getClass() != SdkScope.class) return false;
 
-    final SdkScope that = (SdkScope)object;
+    SdkScope that = (SdkScope)object;
     return that.mySdkName.equals(mySdkName);
   }
 }

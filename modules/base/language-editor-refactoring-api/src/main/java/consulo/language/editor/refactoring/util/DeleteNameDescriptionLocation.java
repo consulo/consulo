@@ -39,7 +39,7 @@ public class DeleteNameDescriptionLocation extends ElementDescriptionLocation {
 
   public static class DefaultProvider implements ElementDescriptionProvider {
     @Override
-    public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
+    public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
       if (location instanceof DeleteNameDescriptionLocation) {
         if (element instanceof PsiNamedElement) {
           return ((PsiNamedElement)element).getName();

@@ -41,15 +41,15 @@ public class DirectoryUrl extends AbstractUrl {
   }
   public static DirectoryUrl create(PsiDirectory directory) {
     Project project = directory.getProject();
-    final VirtualFile virtualFile = directory.getVirtualFile();
-    final Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+    VirtualFile virtualFile = directory.getVirtualFile();
+    Module module = ModuleUtil.findModuleForFile(virtualFile, project);
     return new DirectoryUrl(virtualFile.getUrl(), module != null ? module.getName() : null);
   }
 
   @Override
   public Object[] createPath(final Project project) {
     if (moduleName != null) {
-      final Module module = ApplicationManager.getApplication().runReadAction(new Computable<Module>() {
+      Module module = ApplicationManager.getApplication().runReadAction(new Computable<Module>() {
         @Nullable
         @Override
         public Module compute() {
@@ -58,10 +58,10 @@ public class DirectoryUrl extends AbstractUrl {
       });
       if (module == null) return null;
     }
-    final VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+    VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
     final VirtualFile file = virtualFileManager.findFileByUrl(url);
     if (file == null) return null;
-    final PsiDirectory directory = ApplicationManager.getApplication().runReadAction(new Computable<PsiDirectory>() {
+    PsiDirectory directory = ApplicationManager.getApplication().runReadAction(new Computable<PsiDirectory>() {
       @Nullable
       @Override
       public PsiDirectory compute() {

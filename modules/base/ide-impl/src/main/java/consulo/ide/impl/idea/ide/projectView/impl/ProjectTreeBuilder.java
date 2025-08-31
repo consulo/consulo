@@ -56,7 +56,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
                             @Nonnull ProjectAbstractTreeStructureBase treeStructure) {
     super(project, tree, treeModel, treeStructure, comparator);
 
-    final MessageBusConnection connection = project.getMessageBus().connect(this);
+    MessageBusConnection connection = project.getMessageBus().connect(this);
 
     connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
@@ -84,12 +84,12 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
    * @param project Project
    * @return Listener
    */
-  protected ProjectViewPsiTreeChangeListener createPsiTreeChangeListener(final Project project) {
+  protected ProjectViewPsiTreeChangeListener createPsiTreeChangeListener(Project project) {
     return new ProjectTreeBuilderPsiListener(project);
   }
 
   protected class ProjectTreeBuilderPsiListener extends ProjectViewPsiTreeChangeListener {
-    public ProjectTreeBuilderPsiListener(final Project project) {
+    public ProjectTreeBuilderPsiListener(Project project) {
       super(project);
     }
 
@@ -177,7 +177,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
             synchronized (myFilesToRefresh) {
               filesToRefresh = new HashSet<>(myFilesToRefresh);
             }
-            final DefaultMutableTreeNode rootNode = getRootNode();
+            DefaultMutableTreeNode rootNode = getRootNode();
             if (rootNode != null) {
               updateNodesContaining(filesToRefresh, rootNode);
             }

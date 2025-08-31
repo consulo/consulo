@@ -145,15 +145,15 @@ public class URLUtil {
     }
 
     StringBuilder decoded = new StringBuilder();
-    final int len = s.length();
+    int len = s.length();
     int i = 0;
     while (i < len) {
       char c = s.charAt(i);
       if (c == '%') {
         IntList bytes = IntLists.newArrayList();
         while (i + 2 < len && s.charAt(i) == '%') {
-          final int d1 = decode(s.charAt(i + 1));
-          final int d2 = decode(s.charAt(i + 2));
+          int d1 = decode(s.charAt(i + 1));
+          int d2 = decode(s.charAt(i + 2));
           if (d1 != -1 && d2 != -1) {
             bytes.add(((d1 & 0xf) << 4 | d2 & 0xf));
             i += 3;
@@ -163,7 +163,7 @@ public class URLUtil {
           }
         }
         if (!bytes.isEmpty()) {
-          final byte[] bytesArray = new byte[bytes.size()];
+          byte[] bytesArray = new byte[bytes.size()];
           for (int j = 0; j < bytes.size(); j++) {
             bytesArray[j] = (byte)bytes.get(j);
           }
@@ -180,7 +180,7 @@ public class URLUtil {
 
   public static URL internProtocol(@Nonnull URL url) {
     try {
-      final String protocol = url.getProtocol();
+      String protocol = url.getProtocol();
       if ("file".equals(protocol) || "jar".equals(protocol)) {
         return new URL(protocol.intern(), url.getHost(), url.getPort(), url.getFile());
       }

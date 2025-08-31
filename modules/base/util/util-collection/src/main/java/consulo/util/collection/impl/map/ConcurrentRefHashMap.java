@@ -113,7 +113,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     this(initialCapacity, loadFactor, DEFAULT_CONCURRENCY_LEVEL, (HashingStrategy<? super K>)THIS);
   }
 
-  public ConcurrentRefHashMap(@Nonnull final HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentRefHashMap(@Nonnull HashingStrategy<? super K> hashingStrategy) {
     this(DEFAULT_CAPACITY, LOAD_FACTOR, DEFAULT_CONCURRENCY_LEVEL, hashingStrategy);
   }
 
@@ -150,7 +150,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     private K myKey;
     private int myHash;
 
-    void setKey(K key, final int hash) {
+    void setKey(K key, int hash) {
       myKey = key;
       myHash = hash;
     }
@@ -364,33 +364,33 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
   }
 
   @Override
-  public V putIfAbsent(@Nullable final K key, @Nonnull V value) {
+  public V putIfAbsent(@Nullable K key, @Nonnull V value) {
     processQueue();
     return myMap.putIfAbsent(createKeyReference(key), value);
   }
 
   @Override
-  public boolean remove(@Nullable final Object key, @Nonnull Object value) {
+  public boolean remove(@Nullable Object key, @Nonnull Object value) {
     processQueue();
     //noinspection unchecked
     return myMap.remove(createKeyReference((K)key), value);
   }
 
   @Override
-  public boolean replace(@Nullable final K key, @Nonnull final V oldValue, @Nonnull final V newValue) {
+  public boolean replace(@Nullable K key, @Nonnull V oldValue, @Nonnull V newValue) {
     processQueue();
     return myMap.replace(createKeyReference(key), oldValue, newValue);
   }
 
   @Override
-  public V replace(@Nullable final K key, @Nonnull final V value) {
+  public V replace(@Nullable K key, @Nonnull V value) {
     processQueue();
     return myMap.replace(createKeyReference(key), value);
   }
 
   // MAKE SURE IT CONSISTENT WITH consulo.ide.impl.idea.util.containers.ConcurrentHashMap
   @Override
-  public int hashCode(final K object) {
+  public int hashCode(K object) {
     int h = object.hashCode();
     h += ~(h << 9);
     h ^= h >>> 14;
@@ -400,7 +400,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
   }
 
   @Override
-  public boolean equals(final K o1, final K o2) {
+  public boolean equals(K o1, K o2) {
     return o1.equals(o2);
   }
 }

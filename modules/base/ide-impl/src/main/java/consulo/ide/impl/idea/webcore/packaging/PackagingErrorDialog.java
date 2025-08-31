@@ -47,12 +47,12 @@ public class PackagingErrorDialog extends DialogWrapper {
     init();
     setResizable(false);
     setTitle(title);
-    final String command = errorDescription.getCommand();
-    final String output = errorDescription.getOutput();
-    final String message = errorDescription.getMessage();
-    final String solution = errorDescription.getSolution();
+    String command = errorDescription.getCommand();
+    String output = errorDescription.getOutput();
+    String message = errorDescription.getMessage();
+    String solution = errorDescription.getSolution();
 
-    final boolean extendedInfo = command != null || output != null || solution != null;
+    boolean extendedInfo = command != null || output != null || solution != null;
 
     myDetailsPanel.setVisible(!extendedInfo);
     myMessagePanel.setVisible(extendedInfo);

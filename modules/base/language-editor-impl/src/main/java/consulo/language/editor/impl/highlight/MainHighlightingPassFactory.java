@@ -30,6 +30,6 @@ import jakarta.annotation.Nullable;
 public interface MainHighlightingPassFactory extends TextEditorHighlightingPassFactory {
   @Nullable
   TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
-                                                        @Nonnull final Document document,
+                                                        @Nonnull Document document,
                                                         @Nonnull HighlightInfoProcessor highlightInfoProcessor);
 }

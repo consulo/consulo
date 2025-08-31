@@ -43,7 +43,7 @@ public class ChangeListAdapter implements ChangeListListener {
   }
 
   @Override
-  public void changeListCommentChanged(final ChangeList list, final String oldComment) {
+  public void changeListCommentChanged(ChangeList list, String oldComment) {
   }
 
   @Override
@@ -51,7 +51,7 @@ public class ChangeListAdapter implements ChangeListListener {
   }
 
   @Override
-  public void defaultListChanged(final ChangeList oldDefaultList, ChangeList newDefaultList) {
+  public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
   }
 
   @Override
@@ -63,7 +63,7 @@ public class ChangeListAdapter implements ChangeListListener {
   }
 
   @Override
-  public void changesRemoved(final Collection<Change> changes, final ChangeList fromList) {
+  public void changesRemoved(Collection<Change> changes, ChangeList fromList) {
   }
 
   @Override

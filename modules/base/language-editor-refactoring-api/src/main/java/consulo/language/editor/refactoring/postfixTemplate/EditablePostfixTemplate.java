@@ -69,7 +69,7 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
 
     @Override
     @RequiredUIAccess
-    public final void expand(@Nonnull PsiElement context, @Nonnull final Editor editor) {
+    public final void expand(@Nonnull PsiElement context, @Nonnull Editor editor) {
         List<PsiElement> expressions = getExpressions(context, editor.getDocument(), editor.getCaretModel().getOffset());
 
         if (expressions.isEmpty()) {

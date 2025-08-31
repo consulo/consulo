@@ -35,7 +35,7 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
   private boolean myRelativePathsAllowed;
   private final FileType[] mySuitableFileTypes;
 
-  public StaticPathReferenceProvider(@Nullable final FileType[] suitableFileTypes) {
+  public StaticPathReferenceProvider(@Nullable FileType[] suitableFileTypes) {
     mySuitableFileTypes = suitableFileTypes;
   }
 
@@ -43,7 +43,7 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
   public boolean createReferences(@Nonnull final PsiElement psiElement,
                                   final int offset,
                                   final String text,
-                                  final @Nonnull List<PsiReference> references,
+                                  @Nonnull List<PsiReference> references,
                                   final boolean soft) {
 
     FileReferenceSet set = new FileReferenceSet(text, psiElement, offset, null, true, myEndingSlashNotAllowed, mySuitableFileTypes) {
@@ -66,8 +66,8 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
 
   @Override
   @Nullable
-  public PathReference getPathReference(@Nonnull final String path, @Nonnull final PsiElement element) {
-    final List<PsiReference> list = new SmartList<PsiReference>();
+  public PathReference getPathReference(@Nonnull final String path, @Nonnull PsiElement element) {
+    List<PsiReference> list = new SmartList<PsiReference>();
     createReferences(element, list, true);
     if (list.isEmpty()) return null;
 
@@ -83,11 +83,11 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
 
   }
 
-  public void setEndingSlashNotAllowed(final boolean endingSlashNotAllowed) {
+  public void setEndingSlashNotAllowed(boolean endingSlashNotAllowed) {
     myEndingSlashNotAllowed = endingSlashNotAllowed;
   }
 
-  public void setRelativePathsAllowed(final boolean relativePathsAllowed) {
+  public void setRelativePathsAllowed(boolean relativePathsAllowed) {
     myRelativePathsAllowed = relativePathsAllowed;
   }
 }

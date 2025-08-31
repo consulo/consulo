@@ -70,7 +70,7 @@ public class TaskUtil {
 
   @Nullable
   public static String getChangeListComment(Task task) {
-    final TaskRepository repository = task.getRepository();
+    TaskRepository repository = task.getRepository();
     if (repository == null || !repository.isShouldFormatCommitMessage()) {
       return null;
     }

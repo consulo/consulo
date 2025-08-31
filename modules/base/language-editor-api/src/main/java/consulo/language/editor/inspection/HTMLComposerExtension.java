@@ -30,12 +30,12 @@ public interface HTMLComposerExtension<T> {
 
   Language getLanguage();
 
-  void appendShortName(RefEntity entity, final StringBuffer buf);
+  void appendShortName(RefEntity entity, StringBuffer buf);
 
-  void appendLocation(RefEntity entity, final StringBuffer buf);
+  void appendLocation(RefEntity entity, StringBuffer buf);
 
   @Nullable
   String getQualifiedName(RefEntity entity);
 
-  void appendReferencePresentation(RefEntity entity, final StringBuffer buf, final boolean isPackageIncluded);
+  void appendReferencePresentation(RefEntity entity, StringBuffer buf, boolean isPackageIncluded);
 }

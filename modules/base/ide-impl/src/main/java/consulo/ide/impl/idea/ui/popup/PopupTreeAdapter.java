@@ -45,7 +45,7 @@ public class PopupTreeAdapter<T> implements PopupChooserBuilder.PopupComponentAd
   @Override
   public void setItemsChosenCallback(Consumer<? super Set<T>> callback) {
     myBuilder.setItemChoosenCallback(() -> {
-      final Set<T> selection = new HashSet<>();
+      Set<T> selection = new HashSet<>();
       for (TreePath path : myTree.getSelectionModel().getSelectionPaths()) {
         Object component = path.getLastPathComponent();
         if (component != null) {
@@ -84,7 +84,7 @@ public class PopupTreeAdapter<T> implements PopupChooserBuilder.PopupComponentAd
         @Override
         public void mouseMoved(MouseEvent e) {
           if (myIsEngaged) {
-            final Point p = e.getPoint();
+            Point p = e.getPoint();
             int index = myTree.getRowForLocation(p.x, p.y);
             myTree.setSelectionRow(index);
           }

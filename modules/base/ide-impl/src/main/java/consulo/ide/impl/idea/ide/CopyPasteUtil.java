@@ -34,7 +34,7 @@ public class CopyPasteUtil {
   private CopyPasteUtil() { }
 
   public static PsiElement[] getElementsInTransferable(Transferable t) {
-    final PsiElement[] elts = PsiCopyPasteManagerImpl.getElements(t);
+    PsiElement[] elts = PsiCopyPasteManagerImpl.getElements(t);
     return elts != null ? elts : PsiElement.EMPTY_ARRAY;
   }
 
@@ -55,7 +55,7 @@ public class CopyPasteUtil {
     }
 
     @Override
-    public void contentChanged(final Transferable oldTransferable, final Transferable newTransferable) {
+    public void contentChanged(Transferable oldTransferable, Transferable newTransferable) {
       Application application = ApplicationManager.getApplication();
       if (application == null || application.isReadAccessAllowed()) {
         updateByTransferable(oldTransferable);
@@ -69,7 +69,7 @@ public class CopyPasteUtil {
       }
     }
 
-    private void updateByTransferable(final Transferable t) {
+    private void updateByTransferable(Transferable t) {
       PsiElement[] psiElements = getElementsInTransferable(t);
       for (PsiElement psiElement : psiElements) {
         if (!psiElement.getProject().isDisposed()) {

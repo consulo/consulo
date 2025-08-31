@@ -115,14 +115,14 @@ abstract class UndoRedo {
 
     Collection<VirtualFile> readOnlyFiles = collectReadOnlyAffectedFiles();
     if (!readOnlyFiles.isEmpty()) {
-      final Project project = myManager.getProject();
-      final VirtualFile[] files = VfsUtil.toVirtualFileArray(readOnlyFiles);
+      Project project = myManager.getProject();
+      VirtualFile[] files = VfsUtil.toVirtualFileArray(readOnlyFiles);
 
       if (project == null) {
         return false;
       }
 
-      final ReadonlyStatusHandler.OperationStatus operationStatus = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(files);
+      ReadonlyStatusHandler.OperationStatus operationStatus = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(files);
       if (operationStatus.hasReadonlyFiles()) {
         return false;
       }

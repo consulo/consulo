@@ -58,5 +58,5 @@ public interface CommittedChangeList extends ChangeList {
    */
   boolean isModifiable();
 
-  void setDescription(final String newMessage);
+  void setDescription(String newMessage);
 }

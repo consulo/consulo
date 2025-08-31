@@ -113,7 +113,7 @@ public class GridCellImpl implements GridCell {
         }.setDataProvider(new DataProvider() {
             @Override
             @Nullable
-            public Object getData(@Nonnull final Key dataId) {
+            public Object getData(@Nonnull Key dataId) {
                 if (ViewContext.CONTENT_KEY == dataId) {
                     TabInfo target = myTabs.getTargetInfo();
                     if (target != null) {
@@ -132,7 +132,7 @@ public class GridCellImpl implements GridCell {
 
         myTabs.addTabMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(final MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (UIUtil.isCloseClick(e)) {
                     // see RunnerContentUi tabMouseListener as well
                     closeOrMinimize(e);
@@ -150,7 +150,7 @@ public class GridCellImpl implements GridCell {
             }
 
             @Override
-            public void selectionChanged(final TabInfo oldSelection, final TabInfo newSelection) {
+            public void selectionChanged(TabInfo oldSelection, TabInfo newSelection) {
                 updateSelection(myTabs.getComponent().isShowing());
 
                 if (!myTabs.getComponent().isShowing()) {
@@ -172,7 +172,7 @@ public class GridCellImpl implements GridCell {
         return myPlaceInGrid;
     }
 
-    void add(final Content content) {
+    void add(Content content) {
         if (myContents.containsKey(content)) {
             return;
         }
@@ -188,7 +188,7 @@ public class GridCellImpl implements GridCell {
             return;
         }
 
-        final TabInfo info = getTabFor(content);
+        TabInfo info = getTabFor(content);
         myContents.remove(content);
 
         revalidateCell(() -> myTabs.removeTab(info));
@@ -225,7 +225,7 @@ public class GridCellImpl implements GridCell {
     }
 
     private TabInfo createTabInfoFor(Content content) {
-        final TabInfo tabInfo =
+        TabInfo tabInfo =
             updatePresentation(new TabInfo(new ProviderWrapper(content, myContext)), content).setObject(content).setPreferredFocusableComponent(content.getPreferredFocusableComponent())
                 .setActionsContextComponent(content.getActionsContextComponent());
 
@@ -252,12 +252,12 @@ public class GridCellImpl implements GridCell {
             setActions(content.getActions(), content.getPlace());
     }
 
-    public ActionCallback select(final Content content, final boolean requestFocus) {
-        final TabInfo tabInfo = myContents.getValue(content);
+    public ActionCallback select(Content content, boolean requestFocus) {
+        TabInfo tabInfo = myContents.getValue(content);
         return tabInfo != null ? myTabs.select(tabInfo, requestFocus) : ActionCallback.DONE;
     }
 
-    public void processAlert(final Content content, final boolean activate) {
+    public void processAlert(Content content, boolean activate) {
         if (myMinimizedContents.contains(content)) {
             return;
         }
@@ -292,7 +292,7 @@ public class GridCellImpl implements GridCell {
         Content myContent;
         ViewContext myContext;
 
-        private ProviderWrapper(final Content content, final ViewContext context) {
+        private ProviderWrapper(Content content, ViewContext context) {
             super(new BorderLayout());
             myContent = content;
             myContext = context;
@@ -301,7 +301,7 @@ public class GridCellImpl implements GridCell {
 
         @Override
         @Nullable
-        public Object getData(@Nonnull final Key dataId) {
+        public Object getData(@Nonnull Key dataId) {
             if (ViewContext.CONTENT_KEY == dataId) {
                 return new Content[]{myContent};
             }
@@ -322,26 +322,26 @@ public class GridCellImpl implements GridCell {
         return myContents.getKey(tab);
     }
 
-    public void setToolbarHorizontal(final boolean horizontal) {
+    public void setToolbarHorizontal(boolean horizontal) {
         myTabs.getPresentation().setSideComponentVertical(!horizontal);
     }
 
     public ActionCallback restoreLastUiState() {
-        final ActionCallback result = new ActionCallback();
+        ActionCallback result = new ActionCallback();
 
         restoreProportions();
 
         Content[] contents = getContents();
         int window = 0;
         for (Content each : contents) {
-            final View view = myContainer.getStateFor(each);
+            View view = myContainer.getStateFor(each);
             if (view.isMinimizedInGrid()) {
                 minimize(each);
             }
             window = view.getWindow();
         }
-        final Tab tab = myContainer.getTab();
-        final boolean detached = (tab != null && tab.isDetached(myPlaceInGrid)) || window != myContext.getWindow();
+        Tab tab = myContainer.getTab();
+        boolean detached = (tab != null && tab.isDetached(myPlaceInGrid)) || window != myContext.getWindow();
         if (detached && contents.length > 0) {
             if (tab != null) {
                 tab.setDetached(myPlaceInGrid, false);
@@ -375,11 +375,11 @@ public class GridCellImpl implements GridCell {
             saveState(each, true);
         }
 
-        final DimensionService service = DimensionService.getInstance();
-        final Dimension size = myContext.getContentManager().getComponent().getSize();
+        DimensionService service = DimensionService.getInstance();
+        Dimension size = myContext.getContentManager().getComponent().getSize();
         service.setSize(getDimensionKey(), TargetAWT.from(size), myContext.getProject());
         if (myContext.getWindow() != 0) {
-            final Window frame = SwingUtilities.getWindowAncestor(myPlaceholder);
+            Window frame = SwingUtilities.getWindowAncestor(myPlaceholder);
             if (frame != null) {
                 service.setLocation(getDimensionKey(), TargetAWT.from(frame.getLocationOnScreen()));
             }
@@ -402,14 +402,14 @@ public class GridCellImpl implements GridCell {
         myContainer.restoreLastSplitterProportions(myPlaceInGrid);
     }
 
-    public void updateSelection(final boolean isShowing) {
+    public void updateSelection(boolean isShowing) {
         ContentManager contentManager = myContext.getContentManager();
         if (contentManager.isDisposed()) {
             return;
         }
 
         for (Content each : myContents.getKeys()) {
-            final TabInfo eachTab = getTabFor(each);
+            TabInfo eachTab = getTabFor(each);
             boolean isSelected = eachTab != null && myTabs.getSelectedInfo() == eachTab;
             if (isSelected && isShowing) {
                 contentManager.addSelectedContent(each);
@@ -427,7 +427,7 @@ public class GridCellImpl implements GridCell {
     public void minimize(Content[] contents) {
         myContext.saveUiState();
 
-        for (final Content each : contents) {
+        for (Content each : contents) {
             myMinimizedContents.add(each);
             remove(each);
             boolean isShowing = myTabs.getComponent().getRootPane() != null;
@@ -454,7 +454,7 @@ public class GridCellImpl implements GridCell {
         return getContentCount() > 0;
     }
 
-    public void setToolbarBefore(final boolean before) {
+    public void setToolbarBefore(boolean before) {
         myTabs.getPresentation().setSideComponentBefore(before);
     }
 

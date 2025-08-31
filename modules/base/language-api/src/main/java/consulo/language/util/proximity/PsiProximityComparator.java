@@ -50,14 +50,14 @@ public class PsiProximityComparator implements Comparator<Object> {
   }
 
   @Override
-  public int compare(final Object o1, final Object o2) {
+  public int compare(Object o1, Object o2) {
     PsiElement element1 = o1 instanceof PsiElement ? (PsiElement)o1 : null;
     PsiElement element2 = o2 instanceof PsiElement ? (PsiElement)o2 : null;
     if (element1 == null) return element2 == null ? 0 : 1;
     if (element2 == null) return -1;
 
     if (myContext != null && myContextModule != null) {
-      final ProximityLocation location = new ProximityLocation(myContext, myContextModule);
+      ProximityLocation location = new ProximityLocation(myContext, myContextModule);
       StatisticsInfo info1 = StatisticsManager.serialize(STATISTICS_KEY, element1, location);
       StatisticsInfo info2 = StatisticsManager.serialize(STATISTICS_KEY, element2, location);
       if (info1 != null && info2 != null) {
@@ -70,8 +70,8 @@ public class PsiProximityComparator implements Comparator<Object> {
       }
     }
 
-    final WeighingComparable<PsiElement, ProximityLocation> proximity1 = myProximities.get(element1);
-    final WeighingComparable<PsiElement, ProximityLocation> proximity2 = myProximities.get(element2);
+    WeighingComparable<PsiElement, ProximityLocation> proximity1 = myProximities.get(element1);
+    WeighingComparable<PsiElement, ProximityLocation> proximity2 = myProximities.get(element2);
     if (proximity1 == null || proximity2 == null) {
       return 0;
     }
@@ -80,14 +80,14 @@ public class PsiProximityComparator implements Comparator<Object> {
 
 
   @Nullable
-  public static WeighingComparable<PsiElement, ProximityLocation> getProximity(final PsiElement element, final PsiElement context) {
+  public static WeighingComparable<PsiElement, ProximityLocation> getProximity(PsiElement element, PsiElement context) {
     if (element == null) return null;
-    final Module contextModule = context != null ? ModuleUtilCore.findModuleForPsiElement(context) : null;
+    Module contextModule = context != null ? ModuleUtilCore.findModuleForPsiElement(context) : null;
     return WeighingService.weigh(WEIGHER_KEY, element, new ProximityLocation(context, contextModule));
   }
 
   @Nullable
-  public static WeighingComparable<PsiElement, ProximityLocation> getProximity(final Computable<? extends PsiElement> elementComputable, final PsiElement context, ProcessingContext processingContext) {
+  public static WeighingComparable<PsiElement, ProximityLocation> getProximity(Computable<? extends PsiElement> elementComputable, PsiElement context, ProcessingContext processingContext) {
     PsiElement element = elementComputable.compute();
     if (element == null || context == null) return null;
     Module contextModule = processingContext.get(MODULE_BY_LOCATION);

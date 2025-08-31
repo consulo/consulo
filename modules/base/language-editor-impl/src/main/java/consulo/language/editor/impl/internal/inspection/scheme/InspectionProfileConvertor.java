@@ -70,9 +70,9 @@ public class InspectionProfileConvertor {
 
   private boolean retrieveOldSettings(@Nonnull Element element) {
     boolean hasOldSettings = false;
-    for (final Object obj : element.getChildren(OPTION_TAG)) {
+    for (Object obj : element.getChildren(OPTION_TAG)) {
       Element option = (Element)obj;
-      final String name = option.getAttributeValue(NAME_ATT);
+      String name = option.getAttributeValue(NAME_ATT);
       if (name != null) {
         hasOldSettings |= processElement(option, name);
       }
@@ -80,10 +80,10 @@ public class InspectionProfileConvertor {
     return hasOldSettings;
   }
 
-  protected boolean processElement(final Element option, final String name) {
+  protected boolean processElement(Element option, String name) {
     if (name.equals(DISPLAY_LEVEL_MAP_OPTION)) {
-      final Element levelMap = option.getChild(VALUE_ATT);
-      for (final Object o : levelMap.getChildren()) {
+      Element levelMap = option.getChild(VALUE_ATT);
+      for (Object o : levelMap.getChildren()) {
         Element e = (Element)o;
         String key = e.getName();
         String levelName = e.getAttributeValue(LEVEL_ATT);
@@ -100,11 +100,11 @@ public class InspectionProfileConvertor {
   public static Element convertToNewFormat(Element profileFile, InspectionProfile profile) {
     Element rootElement = new Element(INSPECTIONS_TAG);
     rootElement.setAttribute(NAME_ATT, profile.getName());
-    final InspectionToolWrapper[] tools = profile.getInspectionTools(null);
-    for (final Object o : profileFile.getChildren(INSP_TOOL_TAG)) {
+    InspectionToolWrapper[] tools = profile.getInspectionTools(null);
+    for (Object o : profileFile.getChildren(INSP_TOOL_TAG)) {
       Element toolElement = ((Element)o).clone();
       String toolClassName = toolElement.getAttributeValue(CLASS_ATT);
-      final String shortName = convertToShortName(toolClassName, tools);
+      String shortName = convertToShortName(toolClassName, tools);
       if (shortName == null) {
         continue;
       }
@@ -147,11 +147,11 @@ public class InspectionProfileConvertor {
     }
   }
 
-  protected void fillErrorLevels(final ModifiableModel profile) {
+  protected void fillErrorLevels(ModifiableModel profile) {
     InspectionToolWrapper[] toolWrappers = profile.getInspectionTools(null);
     LOG.assertTrue(toolWrappers != null, "Profile was not correctly init");
     //fill error levels
-    for (final String shortName : myDisplayLevelMap.keySet()) {
+    for (String shortName : myDisplayLevelMap.keySet()) {
       //key <-> short name
       HighlightDisplayLevel level = myDisplayLevelMap.get(shortName);
 

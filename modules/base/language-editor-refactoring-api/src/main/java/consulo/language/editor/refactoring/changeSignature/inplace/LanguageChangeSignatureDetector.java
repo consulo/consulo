@@ -46,7 +46,7 @@ public interface LanguageChangeSignatureDetector<C extends ChangeInfo> extends L
   }
 
   @Nonnull
-  C createInitialChangeInfo(final @Nonnull PsiElement element);
+  C createInitialChangeInfo(@Nonnull PsiElement element);
 
   boolean ignoreChanges(PsiElement element);
 
@@ -62,11 +62,11 @@ public interface LanguageChangeSignatureDetector<C extends ChangeInfo> extends L
   default
   @Nonnull
   String extractSignature(@Nonnull C initialChangeInfo) {
-    final TextRange signatureRange = getHighlightingRange(initialChangeInfo);
+    TextRange signatureRange = getHighlightingRange(initialChangeInfo);
     return signatureRange.shiftRight(-signatureRange.getStartOffset()).substring(initialChangeInfo.getMethod().getText());
   }
 
-  default String getMethodSignaturePreview(C info, final List<TextRange> deleteRanges, final List<TextRange> newRanges) {
+  default String getMethodSignaturePreview(C info, List<TextRange> deleteRanges, List<TextRange> newRanges) {
     return extractSignature(info);
   }
 

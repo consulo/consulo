@@ -140,7 +140,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
     private void createAnotherProgress(final Project project) {
         Task.Modal task = new Task.Modal(project, "Test2", true/*, PerformInBackgroundOption.DEAF*/) {
             @Override
-            public void run(@Nonnull final ProgressIndicator indicator) {
+            public void run(@Nonnull ProgressIndicator indicator) {
                 try {
                     countTo(1000, each -> {
                         indicator.setText("Found: " + each / 20 + 1);

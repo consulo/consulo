@@ -26,21 +26,21 @@ public class ReplicatorInputStream extends InputStream {
   private final InputStream mySource;
   private int markedSize;
 
-  public ReplicatorInputStream(final InputStream source, final BufferExposingByteArrayOutputStream target) {
+  public ReplicatorInputStream(InputStream source, BufferExposingByteArrayOutputStream target) {
     mySource = source;
     myTarget = target;
   }
 
   @Override
   public int read() throws IOException {
-    final int b = mySource.read();
+    int b = mySource.read();
     if (b == -1) return -1;
     myTarget.write(b);
     return b;
   }
 
   @Override
-  public synchronized void mark(final int readlimit) {
+  public synchronized void mark(int readlimit) {
     mySource.mark(readlimit);
     markedSize = myTarget.size();
   }
@@ -58,21 +58,21 @@ public class ReplicatorInputStream extends InputStream {
   }
 
   @Override
-  public int read(final byte[] b) throws IOException {
+  public int read(byte[] b) throws IOException {
     return read(b, 0, b.length);
   }
 
   @Override
-  public int read(final byte[] b, final int off, final int len) throws IOException {
-    final int count = mySource.read(b, off, len);
+  public int read(byte[] b, int off, int len) throws IOException {
+    int count = mySource.read(b, off, len);
     if (count < 0) return count;
     myTarget.write(b, off, count);
     return count;
   }
 
   @Override
-  public long skip(final long n) throws IOException {
-    final int skipped = read(new byte[(int)n]);
+  public long skip(long n) throws IOException {
+    int skipped = read(new byte[(int)n]);
     return skipped;
   }
 

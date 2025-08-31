@@ -56,7 +56,7 @@ public class TextOccurrencesUtil {
                                        @Nonnull String stringToSearch,
                                        @Nonnull GlobalSearchScope searchScope,
                                        @Nonnull final Collection<UsageInfo> results,
-                                       @Nonnull final UsageInfoFactory factory) {
+                                       @Nonnull UsageInfoFactory factory) {
     processTextOccurences(element, stringToSearch, searchScope, new Processor<UsageInfo>() {
       @Override
       public boolean process(UsageInfo t) {
@@ -66,7 +66,7 @@ public class TextOccurrencesUtil {
     }, factory);
   }
 
-  public static boolean processTextOccurences(@Nonnull final PsiElement element,
+  public static boolean processTextOccurences(@Nonnull PsiElement element,
                                               @Nonnull String stringToSearch,
                                               @Nonnull GlobalSearchScope searchScope,
                                               @Nonnull final Processor<UsageInfo> processor,
@@ -75,7 +75,7 @@ public class TextOccurrencesUtil {
 
     return helper.processUsagesInNonJavaFiles(element, stringToSearch, new PsiNonJavaFileReferenceProcessor() {
       @Override
-      public boolean process(final PsiFile psiFile, final int startOffset, final int endOffset) {
+      public boolean process(PsiFile psiFile, int startOffset, int endOffset) {
         try {
           UsageInfo usageInfo = ApplicationManager.getApplication()
                                                   .runReadAction((Supplier<UsageInfo>)() -> factory.createUsageInfo(psiFile,
@@ -101,8 +101,8 @@ public class TextOccurrencesUtil {
     TextOccurenceProcessor occurenceProcessor = new TextOccurenceProcessor() {
       @Override
       public boolean execute(PsiElement element, int offsetInElement) {
-        final ParserDefinition definition = ParserDefinition.forLanguage(element.getLanguage());
-        final ASTNode node = element.getNode();
+        ParserDefinition definition = ParserDefinition.forLanguage(element.getLanguage());
+        ASTNode node = element.getNode();
         if (definition != null && node != null && definition.getStringLiteralElements(element.getLanguageVersion())
                                                             .contains(node.getElementType())) {
           return processor.process(element);
@@ -114,7 +114,7 @@ public class TextOccurrencesUtil {
     return helper.processElementsWithWord(occurenceProcessor, searchScope, identifier, UsageSearchContext.IN_STRINGS, true);
   }
 
-  public static boolean processUsagesInStringsAndComments(@Nonnull final PsiElement element,
+  public static boolean processUsagesInStringsAndComments(@Nonnull PsiElement element,
                                                           @Nonnull final String stringToSearch,
                                                           final boolean ignoreReferences,
                                                           @Nonnull final BiPredicate<PsiElement, TextRange> processor) {
@@ -152,13 +152,13 @@ public class TextOccurrencesUtil {
 
   private static boolean processTextIn(PsiElement scope,
                                        String stringToSearch,
-                                       final boolean ignoreReferences,
+                                       boolean ignoreReferences,
                                        BiPredicate<PsiElement, TextRange> processor) {
     String text = scope.getText();
     for (int offset = 0; offset < text.length(); offset++) {
       offset = text.indexOf(stringToSearch, offset);
       if (offset < 0) break;
-      final PsiReference referenceAt = scope.findReferenceAt(offset);
+      PsiReference referenceAt = scope.findReferenceAt(offset);
       if (!ignoreReferences &&
         referenceAt != null &&
         (referenceAt.resolve() != null || referenceAt instanceof PsiPolyVariantReference && ((PsiPolyVariantReference)referenceAt).multiResolve(
@@ -191,7 +191,7 @@ public class TextOccurrencesUtil {
   }
 
   public static boolean isSearchTextOccurencesEnabled(@Nonnull PsiElement element) {
-    final FindUsagesHandler handler = FindManager.getInstance(element.getProject()).getFindUsagesHandler(element, true);
+    FindUsagesHandler handler = FindManager.getInstance(element.getProject()).getFindUsagesHandler(element, true);
     return FindUsagesUtil.isSearchForTextOccurrencesAvailable(element, false, handler);
   }
 

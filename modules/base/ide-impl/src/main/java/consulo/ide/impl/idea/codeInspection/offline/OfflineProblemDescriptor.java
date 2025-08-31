@@ -45,7 +45,7 @@ public class OfflineProblemDescriptor {
     return myType;
   }
 
-  public void setType(final String type) {
+  public void setType(String type) {
     myType = type;
   }
 
@@ -53,7 +53,7 @@ public class OfflineProblemDescriptor {
     return myFQName;
   }
 
-  public void setFQName(final String FQName) {
+  public void setFQName(String FQName) {
     myFQName = FQName;                              
   }
 
@@ -61,7 +61,7 @@ public class OfflineProblemDescriptor {
     return myDescription;
   }
 
-  public void setDescription(final String description) {
+  public void setDescription(String description) {
     myDescription = description;
   }
 
@@ -69,7 +69,7 @@ public class OfflineProblemDescriptor {
     return myHints;
   }
 
-  public void setHints(final List<String> hints) {
+  public void setHints(List<String> hints) {
     myHints = hints;
   }
 
@@ -77,7 +77,7 @@ public class OfflineProblemDescriptor {
     return myProblemIndex;
   }
 
-  public void setProblemIndex(final int problemIndex) {
+  public void setProblemIndex(int problemIndex) {
     myProblemIndex = problemIndex;
   }
 
@@ -85,7 +85,7 @@ public class OfflineProblemDescriptor {
     return myLine;
   }
 
-  public void setLine(final int line) {
+  public void setLine(int line) {
     myLine = line;
   }
 
@@ -93,7 +93,7 @@ public class OfflineProblemDescriptor {
     return myParentType;
   }
 
-  public void setParentType(final String[] parentType) {
+  public void setParentType(String[] parentType) {
     myParentType = parentType;
   }
 
@@ -101,15 +101,15 @@ public class OfflineProblemDescriptor {
     return myParentFQName;
   }
 
-  public void setParentFQName(final String[] parentFQName) {
+  public void setParentFQName(String[] parentFQName) {
     myParentFQName = parentFQName;
   }
 
   @Nullable
-  public RefEntity getRefElement(final RefManager refManager) {
-    final RefEntity refElement = refManager.getReference(myType, myFQName);
+  public RefEntity getRefElement(RefManager refManager) {
+    RefEntity refElement = refManager.getReference(myType, myFQName);
     if (refElement instanceof RefElement) {
-      final PsiElement element = ((RefElement)refElement).getPsiElement();
+      PsiElement element = ((RefElement)refElement).getPsiElement();
       if (element != null && element.isValid()) {
         PsiDocumentManager.getInstance(element.getProject()).commitAllDocuments();
       }
@@ -120,7 +120,7 @@ public class OfflineProblemDescriptor {
   @Nullable
   public OfflineProblemDescriptor getOwner() {
     if (myParentType != null && myParentFQName != null) {
-      final OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
+      OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
       descriptor.setLine(myLine);
       descriptor.setFQName(myParentFQName[0]);
       descriptor.setType(myParentType[0]);
@@ -134,11 +134,11 @@ public class OfflineProblemDescriptor {
   }
 
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final OfflineProblemDescriptor that = (OfflineProblemDescriptor)o;
+    OfflineProblemDescriptor that = (OfflineProblemDescriptor)o;
 
     if (myLine != that.myLine) return false;
     if (myProblemIndex != that.myProblemIndex) return false;
@@ -167,7 +167,7 @@ public class OfflineProblemDescriptor {
     return result;
   }
 
-  public void setModule(final String moduleName) {
+  public void setModule(String moduleName) {
     myModuleName = moduleName;
   }
 

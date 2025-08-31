@@ -70,7 +70,7 @@ class ExecutionCallback {
     }
   }
 
-  final void doWhenExecuted(@Nonnull final Runnable runnable) {
+  final void doWhenExecuted(@Nonnull Runnable runnable) {
     Runnable toRun;
     synchronized (this) {
       if (isExecuted()) {

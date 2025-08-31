@@ -44,7 +44,7 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   private boolean myShareScope = false;
   private final Project myProject;
 
-  public ScopeConfigurable(final NamedScope scope, final boolean shareScope, final Project project, final Runnable updateTree) {
+  public ScopeConfigurable(NamedScope scope, boolean shareScope, Project project, Runnable updateTree) {
     super(true, updateTree);
     myScope = scope;
     myShareScope = shareScope;
@@ -55,11 +55,11 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   }
 
   @Override
-  public void setDisplayName(final String name) {
+  public void setDisplayName(String name) {
     if (Comparing.strEqual(myScope.getName(), name)){
       return;
     }
-    final PackageSet packageSet = myScope.getValue();
+    PackageSet packageSet = myScope.getValue();
     myScope = new NamedScope(name, packageSet != null ? packageSet.createCopy() : null);
   }
 
@@ -90,7 +90,7 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
 
   @Override
   public JComponent createOptionsPanel() {
-    final JPanel wholePanel = new JPanel(new BorderLayout());
+    JPanel wholePanel = new JPanel(new BorderLayout());
     wholePanel.setBorder(new EmptyBorder(0, 8, 0, 8));
     wholePanel.add(myPanel.getPanel(), BorderLayout.CENTER);
     wholePanel.add(mySharedCheckbox, BorderLayout.SOUTH);
@@ -100,7 +100,7 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   @Override
   public boolean isModified() {
     if (mySharedCheckbox.isSelected() != myShareScope) return true;
-    final PackageSet currentScope = myPanel.getCurrentScope();
+    PackageSet currentScope = myPanel.getCurrentScope();
     return !Comparing.strEqual(myPackageSet, currentScope != null ? currentScope.getText() : null);
   }
 
@@ -108,7 +108,7 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   public void apply() throws ConfigurationException {
     try {
       myPanel.apply();
-      final PackageSet packageSet = myPanel.getCurrentScope();
+      PackageSet packageSet = myPanel.getCurrentScope();
       myScope = new NamedScope(myScope.getName(), packageSet);
       myPackageSet = packageSet != null ? packageSet.getText() : null;
       myShareScope = mySharedCheckbox.isSelected();
@@ -122,7 +122,7 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   public void reset() {
     mySharedCheckbox.setSelected(myShareScope);
     myPanel.reset(myScope.getValue(), null);
-    final PackageSet packageSet = myScope.getValue();
+    PackageSet packageSet = myScope.getValue();
     myPackageSet = packageSet != null ? packageSet.getText() : null;
   }
 

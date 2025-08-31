@@ -52,7 +52,7 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
     return new RefreshableOnComponent() {
       @Override
       public JComponent getComponent() {
-        final JPanel panel = new JPanel(new GridLayout(1, 0));
+        JPanel panel = new JPanel(new GridLayout(1, 0));
         panel.add(rearrangeBox);
         return panel;
       }
@@ -79,7 +79,7 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
 
   @Override
   public void runCheckinHandlers(final Runnable finishAction) {
-    final Runnable performCheckoutAction = new Runnable() {
+    Runnable performCheckoutAction = new Runnable() {
       @Override
       public void run() {
         FileDocumentManager.getInstance().saveAllDocuments();

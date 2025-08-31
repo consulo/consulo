@@ -29,8 +29,8 @@ public class DescriptiveNameUtil {
   private static final Logger LOG = Logger.getInstance(DescriptiveNameUtil.class);
 
   @Nonnull
-  public static String getMetaDataName(final PsiMetaData metaData) {
-    final String name = metaData.getName();
+  public static String getMetaDataName(PsiMetaData metaData) {
+    String name = metaData.getName();
     return StringUtil.isEmpty(name) ? "''" : name;
   }
 
@@ -39,13 +39,13 @@ public class DescriptiveNameUtil {
     LOG.assertTrue(psiElement.isValid());
 
     if (psiElement instanceof PsiMetaOwner) {
-      final PsiMetaOwner psiMetaOwner = (PsiMetaOwner)psiElement;
-      final PsiMetaData metaData = psiMetaOwner.getMetaData();
+      PsiMetaOwner psiMetaOwner = (PsiMetaOwner)psiElement;
+      PsiMetaData metaData = psiMetaOwner.getMetaData();
       if (metaData != null) return getMetaDataName(metaData);
     }
 
-    final Language lang = psiElement.getLanguage();
-    final FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
+    Language lang = psiElement.getLanguage();
+    FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
     return provider.getDescriptiveName(psiElement);
   }
 }

@@ -291,7 +291,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
 
     public static URL internProtocol(URL url) {
         try {
-            final String protocol = url.getProtocol();
+            String protocol = url.getProtocol();
             if ("file".equals(protocol) || "jar".equals(protocol)) {
                 return new URL(protocol.intern(), url.getHost(), url.getPort(), url.getFile());
             }
@@ -324,7 +324,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     }
 
     @Override
-    protected Class findClass(final String name) throws ClassNotFoundException {
+    protected Class findClass(String name) throws ClassNotFoundException {
         Class clazz = _findClass(name);
         if (clazz == null) {
             throw new ClassNotFoundException(name);
@@ -392,11 +392,11 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         }
     }
 
-    protected Class _defineClass(final String name, final byte[] b) {
+    protected Class _defineClass(String name, byte[] b) {
         return defineClass(name, b, 0, b.length);
     }
 
-    private Class _defineClass(final String name, final byte[] b, ProtectionDomain protectionDomain) {
+    private Class _defineClass(String name, byte[] b, ProtectionDomain protectionDomain) {
         return defineClass(name, b, 0, b.length, protectionDomain);
     }
 

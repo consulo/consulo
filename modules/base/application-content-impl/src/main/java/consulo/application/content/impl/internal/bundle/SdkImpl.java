@@ -190,15 +190,15 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   public void readExternal(@Nonnull Element element, @Nullable SdkTable sdkTable) throws InvalidDataException {
     Element elementName = assertNotMissing(element, ELEMENT_NAME);
     myName = elementName.getAttributeValue(ATTRIBUTE_VALUE);
-    final Element typeChild = element.getChild(ELEMENT_TYPE);
-    final String sdkTypeName = typeChild != null ? typeChild.getAttributeValue(ATTRIBUTE_VALUE) : null;
+    Element typeChild = element.getChild(ELEMENT_TYPE);
+    String sdkTypeName = typeChild != null ? typeChild.getAttributeValue(ATTRIBUTE_VALUE) : null;
     if (sdkTypeName != null) {
       if (sdkTable == null) {
         sdkTable = mySdkTable;
       }
       mySdkType = sdkTable.getSdkTypeByName(sdkTypeName);
     }
-    final Element version = element.getChild(ELEMENT_VERSION);
+    Element version = element.getChild(ELEMENT_VERSION);
 
     // set version if it was cached (defined)
     // otherwise it will be null && undefined
@@ -213,7 +213,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     Element elementRoots = assertNotMissing(element, ELEMENT_ROOTS);
     myRoots.readExternal(elementRoots);
 
-    final Element additional = element.getChild(ELEMENT_ADDITIONAL);
+    Element additional = element.getChild(ELEMENT_ADDITIONAL);
     if (additional != null) {
       LOG.assertTrue(mySdkType != null);
       myAdditionalData = mySdkType.loadAdditionalData(this, additional);
@@ -231,23 +231,23 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   }
 
   public void writeExternal(@Nonnull Element element) {
-    final Element name = new Element(ELEMENT_NAME);
+    Element name = new Element(ELEMENT_NAME);
     name.setAttribute(ATTRIBUTE_VALUE, myName);
     element.addContent(name);
 
     if (mySdkType != null) {
-      final Element sdkType = new Element(ELEMENT_TYPE);
+      Element sdkType = new Element(ELEMENT_TYPE);
       sdkType.setAttribute(ATTRIBUTE_VALUE, mySdkType.getId());
       element.addContent(sdkType);
     }
 
     if (myVersionString != null) {
-      final Element version = new Element(ELEMENT_VERSION);
+      Element version = new Element(ELEMENT_VERSION);
       version.setAttribute(ATTRIBUTE_VALUE, myVersionString);
       element.addContent(version);
     }
 
-    final Element home = new Element(ELEMENT_HOMEPATH);
+    Element home = new Element(ELEMENT_HOMEPATH);
     home.setAttribute(ATTRIBUTE_VALUE, myHomePath);
     element.addContent(home);
 
@@ -265,7 +265,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
   @Override
   public void setHomePath(String path) {
-    final boolean changes = myHomePath == null ? path != null : !myHomePath.equals(path);
+    boolean changes = myHomePath == null ? path != null : !myHomePath.equals(path);
     myHomePath = path;
     if (changes) {
       resetVersionString(); // clear cached value if home path changed
@@ -297,7 +297,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   }
 
   void copyTo(@Nonnull SdkImpl dest) {
-    final String name = getName();
+    String name = getName();
     dest.setName(name);
     dest.setHomePath(getHomePath());
     dest.setPredefined(myPredefined);
@@ -317,7 +317,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
     @Override
     @Nonnull
-    public VirtualFile[] getFiles(@Nonnull final OrderRootType rootType) {
+    public VirtualFile[] getFiles(@Nonnull OrderRootType rootType) {
       return myRoots.getFiles(rootType);
     }
 

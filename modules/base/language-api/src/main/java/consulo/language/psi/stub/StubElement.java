@@ -35,10 +35,10 @@ public interface StubElement<T extends PsiElement> extends Stub {
   T getPsi();
 
   @Nonnull
-  <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, final E[] array);
+  <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, E[] array);
 
   @Nonnull
-  <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, final E[] array);
+  <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, E[] array);
 
   @Nonnull
   <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, @Nonnull IntFunction<E[]> f);

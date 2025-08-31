@@ -28,12 +28,12 @@ public class VoidDataExternalizer implements DataExternalizer<Void> {
   public static final VoidDataExternalizer INSTANCE = new VoidDataExternalizer();
 
   @Override
-  public void save(@Nonnull final DataOutput out, final Void value) throws IOException {
+  public void save(@Nonnull DataOutput out, Void value) throws IOException {
   }
 
   @Override
   @Nullable
-  public Void read(@Nonnull final DataInput in) throws IOException {
+  public Void read(@Nonnull DataInput in) throws IOException {
     return null;
   }
 }

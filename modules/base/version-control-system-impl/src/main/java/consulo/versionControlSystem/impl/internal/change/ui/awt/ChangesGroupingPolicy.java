@@ -20,7 +20,7 @@ import jakarta.annotation.Nullable;
 
 public interface ChangesGroupingPolicy {
   @Nullable
-  ChangesBrowserNode getParentNodeFor(final StaticFilePath node, final ChangesBrowserNode rootNode);
+  ChangesBrowserNode getParentNodeFor(StaticFilePath node, ChangesBrowserNode rootNode);
 
   void clear();
 }

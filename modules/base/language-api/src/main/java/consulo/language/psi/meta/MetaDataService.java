@@ -30,9 +30,9 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface MetaDataService {
   @Nullable
-  PsiMetaData getMeta(final PsiElement element);
+  PsiMetaData getMeta(PsiElement element);
 
-  void bindDataToElement(final PsiElement element, final PsiMetaData data);
+  void bindDataToElement(PsiElement element, PsiMetaData data);
 
   public static MetaDataService getInstance() {
     return Application.get().getInstance(MetaDataService.class);

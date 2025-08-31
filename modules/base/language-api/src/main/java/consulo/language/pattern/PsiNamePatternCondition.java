@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 */
 public class PsiNamePatternCondition<T extends PsiElement> extends PropertyPatternCondition<T, String> {
 
-  public PsiNamePatternCondition(@NonNls String methodName, final ElementPattern<String> namePattern) {
+  public PsiNamePatternCondition(@NonNls String methodName, ElementPattern<String> namePattern) {
     super(methodName, namePattern);
   }
 
@@ -35,7 +35,7 @@ public class PsiNamePatternCondition<T extends PsiElement> extends PropertyPatte
   }
 
   @Override
-  public String getPropertyValue(@Nonnull final Object o) {
+  public String getPropertyValue(@Nonnull Object o) {
     return o instanceof PsiNamedElement ? ((PsiNamedElement)o).getName() : null;
   }
 

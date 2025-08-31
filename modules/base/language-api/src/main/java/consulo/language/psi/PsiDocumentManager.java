@@ -38,7 +38,7 @@ public abstract class PsiDocumentManager {
     if (!documentManager.hasUncommitedDocuments()) {
       return ActionCallback.DONE;
     }
-    final ActionCallback callback = new ActionCallback();
+    ActionCallback callback = new ActionCallback();
     documentManager.performWhenAllCommitted(callback.createSetDoneRunnable());
     return callback;
   }
@@ -197,7 +197,7 @@ public abstract class PsiDocumentManager {
    * @param files            the files to reparse.
    * @param includeOpenFiles if true, the files opened in editor tabs will also be reparsed.
    */
-  public abstract void reparseFiles(@Nonnull final Collection<? extends VirtualFile> files, final boolean includeOpenFiles);
+  public abstract void reparseFiles(@Nonnull Collection<? extends VirtualFile> files, boolean includeOpenFiles);
 
   /**
    * Listener for receiving notifications about creation of {@link Document} and {@link PsiFile} instances.

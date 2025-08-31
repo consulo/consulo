@@ -28,9 +28,9 @@ final class FNKeyAction extends DumbAwareAction {
 
     @Nullable
     private String  [] getActionsIds(int modifiers) {
-        final KeymapManager manager = KeymapManager.getInstance();
+        KeymapManager manager = KeymapManager.getInstance();
 
-        final @Nonnull Keymap keymap = manager.getActiveKeymap();
+        @Nonnull Keymap keymap = manager.getActiveKeymap();
 
         String[] result = myCache.get(modifiers);
         if (result != null) {
@@ -74,7 +74,7 @@ final class FNKeyAction extends DumbAwareAction {
         myIsActionDisabled = false;
         myAction = null;
 
-        final String[] ids = getActionsIds(TouchBarsManager.getLastModifiersEx());
+        String[] ids = getActionsIds(TouchBarsManager.getLastModifiersEx());
         if (ids == null || ids.length < 1) {
             return;
         }
@@ -94,7 +94,7 @@ final class FNKeyAction extends DumbAwareAction {
         myIsActionDisabled = !e.getPresentation().isEnabled();
         e.getPresentation().setEnabledAndVisible(true); // FN-keys are always enabled and visible
 
-        final String text = e.getPresentation().getText();
+        String text = e.getPresentation().getText();
         if (SHOW_ACTION_TEMPLATE_TEXT || text == null || text.isEmpty()) {
             // replace with template presentation text
             e.getPresentation().setText(myAction.getTemplateText());

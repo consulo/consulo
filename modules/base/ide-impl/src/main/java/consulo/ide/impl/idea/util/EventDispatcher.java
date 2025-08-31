@@ -50,8 +50,8 @@ public class EventDispatcher<T extends EventListener> {
     private static void assertNonVoidMethodReturnValuesAreDeclared(@Nonnull Map<String, Object> methodReturnValues,
                                                                    @Nonnull Class<?> listenerClass) {
         List<Method> declared = new ArrayList<>(ReflectionUtil.getClassPublicMethods(listenerClass));
-        for (final Map.Entry<String, Object> entry : methodReturnValues.entrySet()) {
-            final String methodName = entry.getKey();
+        for (Map.Entry<String, Object> entry : methodReturnValues.entrySet()) {
+            String methodName = entry.getKey();
             Method found = ContainerUtil.find(declared, m -> methodName.equals(m.getName()));
             assert found != null : "Method " + methodName + " must be declared in " + listenerClass;
             assert !found.getReturnType()
@@ -86,7 +86,7 @@ public class EventDispatcher<T extends EventListener> {
         InvocationHandler handler = new InvocationHandler() {
             @Override
             @NonNls
-            public Object invoke(Object proxy, final Method method, final Object[] args) {
+            public Object invoke(Object proxy, Method method, Object[] args) {
                 @NonNls String methodName = method.getName();
                 if (method.getDeclaringClass().getName().equals("java.lang.Object")) {
                     return handleObjectMethod(proxy, args, methodName);
@@ -148,7 +148,7 @@ public class EventDispatcher<T extends EventListener> {
                 throw e;
             }
             catch (Exception e) {
-                final Throwable cause = e.getCause();
+                Throwable cause = e.getCause();
                 ExceptionUtil.rethrowUnchecked(cause);
                 if (!(cause instanceof AbstractMethodError)) { // AbstractMethodError means this listener doesn't implement some new method in interface
                     LOG.error(cause);

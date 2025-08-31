@@ -56,16 +56,16 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
 
   @Override
   public List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType artifactType) {
-    final Artifact artifact = findArtifact(context);
+    Artifact artifact = findArtifact(context);
     if (artifact != null) {
-      final ArtifactType type = artifact.getArtifactType();
+      ArtifactType type = artifact.getArtifactType();
       List<? extends PackagingElement<?>> substitution = type.getSubstitution(artifact, context, artifactType);
       if (substitution != null) {
         return substitution;
       }
 
-      final List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
-      final CompositePackagingElement<?> rootElement = artifact.getRootElement();
+      List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
+      CompositePackagingElement<?> rootElement = artifact.getRootElement();
       if (rootElement instanceof ArtifactRootElement<?>) {
         elements.addAll(rootElement.getChildren());
       }
@@ -110,7 +110,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
 
   @Override
   protected ArtifactType getArtifactTypeForSubstitutedElements(PackagingElementResolvingContext resolvingContext, ArtifactType artifactType) {
-    final Artifact artifact = findArtifact(resolvingContext);
+    Artifact artifact = findArtifact(resolvingContext);
     if (artifact != null) {
       return artifact.getArtifactType();
     }
@@ -124,7 +124,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
 
   @Override
   public ArtifactPackagingElementState getState() {
-    final ArtifactPackagingElementState state = new ArtifactPackagingElementState();
+    ArtifactPackagingElementState state = new ArtifactPackagingElementState();
     if (myArtifactPointer != null) {
       state.setArtifactName(myArtifactPointer.getName());
     }
@@ -133,7 +133,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
 
   @Override
   public void loadState(ArtifactManager artifactManager, ArtifactPackagingElementState state) {
-    final String name = state.getArtifactName();
+    String name = state.getArtifactName();
     myArtifactPointer = name != null ? ((ArtifactPointerManagerEx)myArtifactPointerManager).create(artifactManager, name) : null;
   }
 

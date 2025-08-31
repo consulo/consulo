@@ -94,7 +94,7 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
 
   @Nullable
   private Project findProject() {
-    final Project[] projects = ProjectManager.getInstance().getOpenProjects();
+    Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : projects) {
       if (myProjectLocation.equals(project.getPresentableUrl())) {
         return project;
@@ -106,7 +106,7 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
   @Override
   public boolean isSelected(AnActionEvent e) {
     // show check mark for active and visible project frame
-    final Project project = e.getData(Project.KEY);
+    Project project = e.getData(Project.KEY);
     return project != null && myProjectLocation.equals(project.getPresentableUrl());
   }
 
@@ -116,12 +116,12 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
     if (!selected) {
       return;
     }
-    final Project project = findProject();
+    Project project = findProject();
     if (project == null) {
       return;
     }
-    final JFrame projectFrame = (JFrame)TargetAWT.to(WindowManager.getInstance().getWindow(project));
-    final int frameState = projectFrame.getExtendedState();
+    JFrame projectFrame = (JFrame)TargetAWT.to(WindowManager.getInstance().getWindow(project));
+    int frameState = projectFrame.getExtendedState();
     if ((frameState & Frame.ICONIFIED) == Frame.ICONIFIED) {
       // restore the frame if it is minimized
       projectFrame.setExtendedState(frameState ^ Frame.ICONIFIED);

@@ -143,7 +143,7 @@ public class TextDiffViewerUtil {
 
     private static <T> boolean areEqualDocumentContentProperties(
         @Nonnull List<? extends DiffContent> contents,
-        @Nonnull final Function<DocumentContent, T> propertyGetter
+        @Nonnull Function<DocumentContent, T> propertyGetter
     ) {
         List<T> properties = ContainerUtil.mapNotNull(
             contents,

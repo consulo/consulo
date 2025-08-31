@@ -189,7 +189,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
     myEnforcedBackground = bg;
   }
 
-  protected void setDoNotHighlight(final boolean b) {
+  protected void setDoNotHighlight(boolean b) {
     myDoNotHighlight = b;
   }
 
@@ -246,7 +246,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
       myText = "";
     }
     // center text inside the component:
-    final int yOffset = (getHeight() - defFontMetrics.getMaxAscent() - defFontMetrics.getMaxDescent()) / 2 + defFontMetrics.getMaxAscent() - 1;
+    int yOffset = (getHeight() - defFontMetrics.getMaxAscent() - defFontMetrics.getMaxDescent()) / 2 + defFontMetrics.getMaxAscent() - 1;
     if (myHighlightedRegions.size() == 0) {
       g.setColor(fgColor);
       g.drawString(myText, textOffset, yOffset/*defFontMetrics.getMaxAscent()*/);

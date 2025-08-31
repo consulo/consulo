@@ -44,8 +44,8 @@ public class DefaultWordsScanner implements WordsScanner {
    * @param commentTokenSet    the set of token types which represent comments.
    * @param literalTokenSet    the set of token types which represent literals.
    */
-  public DefaultWordsScanner(final Lexer lexer, final TokenSet identifierTokenSet, final TokenSet commentTokenSet,
-                             final TokenSet literalTokenSet) {
+  public DefaultWordsScanner(Lexer lexer, TokenSet identifierTokenSet, TokenSet commentTokenSet,
+                             TokenSet literalTokenSet) {
     this(lexer, identifierTokenSet, commentTokenSet, literalTokenSet, TokenSet.EMPTY);
   }
 
@@ -58,8 +58,8 @@ public class DefaultWordsScanner implements WordsScanner {
    * @param literalTokenSet    the set of token types which represent literals.
    * @param SkipCodeContextTokenSet the set of token types which should not be considered as code context.
    */
-  public DefaultWordsScanner(final Lexer lexer, final TokenSet identifierTokenSet, final TokenSet commentTokenSet,
-                             final TokenSet literalTokenSet, @Nonnull TokenSet skipCodeContextTokenSet) {
+  public DefaultWordsScanner(Lexer lexer, TokenSet identifierTokenSet, TokenSet commentTokenSet,
+                             TokenSet literalTokenSet, @Nonnull TokenSet skipCodeContextTokenSet) {
     myLexer = lexer;
     myIdentifierTokenSet = identifierTokenSet;
     myCommentTokenSet = commentTokenSet;
@@ -95,13 +95,13 @@ public class DefaultWordsScanner implements WordsScanner {
     }
   }
 
-  protected static boolean stripWords(final Processor<WordOccurrence> processor,
-                                    final CharSequence tokenText,
-                                    int from,
-                                    int to,
-                                    final WordOccurrence.Kind kind,
-                                    WordOccurrence occurence,
-                                    boolean mayHaveFileRefs
+  protected static boolean stripWords(Processor<WordOccurrence> processor,
+                                      CharSequence tokenText,
+                                      int from,
+                                      int to,
+                                      WordOccurrence.Kind kind,
+                                      WordOccurrence occurence,
+                                      boolean mayHaveFileRefs
   ) {
     // This code seems strange but it is more effective as Character.isJavaIdentifier_xxx_ is quite costly operation due to unicode
     int index = from;
@@ -143,7 +143,7 @@ public class DefaultWordsScanner implements WordsScanner {
     return true;
   }
 
-  public void setMayHaveFileRefsInLiterals(final boolean mayHaveFileRefsInLiterals) {
+  public void setMayHaveFileRefsInLiterals(boolean mayHaveFileRefsInLiterals) {
     myMayHaveFileRefsInLiterals = mayHaveFileRefsInLiterals;
   }
 }

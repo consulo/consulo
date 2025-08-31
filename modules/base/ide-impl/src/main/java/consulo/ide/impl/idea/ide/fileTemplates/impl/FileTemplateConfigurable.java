@@ -343,18 +343,18 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     }
 
     // TODO: needs to be generalized someday for other profiles
-    private static boolean isValidFilename(final String filename) {
+    private static boolean isValidFilename(String filename) {
         if (filename.contains("/") || filename.contains("\\") || filename.contains(":")) {
             return false;
         }
-        final File tempFile = new File(FileUtil.getTempDirectory() + File.separator + filename);
+        File tempFile = new File(FileUtil.getTempDirectory() + File.separator + filename);
         return consulo.ide.impl.idea.openapi.util.io.FileUtil.ensureCanCreateFile(tempFile);
     }
 
     @RequiredUIAccess
     @Override
     public void reset() {
-        final String text = (myTemplate == null) ? "" : myTemplate.getText();
+        String text = (myTemplate == null) ? "" : myTemplate.getText();
         String name = (myTemplate == null) ? "" : myTemplate.getName();
         String extension = (myTemplate == null) ? "" : myTemplate.getExtension();
         String description = (myTemplate == null) ? "" : myTemplate.getDescription();
@@ -397,17 +397,17 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     }
 
     @Nullable
-    private PsiFile createFile(final String text, final String name) {
+    private PsiFile createFile(String text, String name) {
         if (myTemplate == null) {
             return null;
         }
 
-        final FileType fileType = myVelocityFileType;
+        FileType fileType = myVelocityFileType;
         if (fileType == UnknownFileType.INSTANCE) {
             return null;
         }
 
-        final PsiFile file = PsiFileFactory.getInstance(myProject)
+        PsiFile file = PsiFileFactory.getInstance(myProject)
             .createFileFromText(name + ".txt.ft", fileType, text, 0, true);
         file.getViewProvider().putUserData(
             FileTemplateManager.DEFAULT_TEMPLATE_PROPERTIES,
@@ -446,7 +446,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
             originalHighlighter = new DefaultSyntaxHighlighter();
         }
 
-        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+        EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         LayeredLexerEditorHighlighter highlighter = new LayeredLexerEditorHighlighter(new TemplateHighlighter(), scheme);
         highlighter.registerLayer(FileTemplateTokenType.TEXT, new LayerDescriptor(originalHighlighter, ""));
         return highlighter;

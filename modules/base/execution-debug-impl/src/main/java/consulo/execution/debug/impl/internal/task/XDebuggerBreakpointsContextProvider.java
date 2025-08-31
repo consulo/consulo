@@ -69,7 +69,7 @@ public class XDebuggerBreakpointsContextProvider extends WorkingContextProvider 
   @Override
   public void clearContext() {
     XBreakpointBase<?, ?, ?>[] breakpoints = myBreakpointManager.getAllBreakpoints();
-    for (final XBreakpointBase<?, ?, ?> breakpoint : breakpoints) {
+    for (XBreakpointBase<?, ?, ?> breakpoint : breakpoints) {
       ApplicationManager.getApplication().runWriteAction(() -> myBreakpointManager.removeBreakpoint(breakpoint));
     }
   }

@@ -27,7 +27,7 @@ public class SerializedStubTreeDataExternalizer implements DataExternalizer<Seri
   }
 
   @Override
-  public final void save(@Nonnull final DataOutput out, @Nonnull final SerializedStubTree tree) throws IOException {
+  public final void save(@Nonnull DataOutput out, @Nonnull SerializedStubTree tree) throws IOException {
     if (PersistentHashMapValueStorage.COMPRESSION_ENABLED) {
       DataInputOutputUtil.writeINT(out, tree.myTreeByteLength);
       out.write(tree.myTreeBytes, 0, tree.myTreeByteLength);
@@ -44,7 +44,7 @@ public class SerializedStubTreeDataExternalizer implements DataExternalizer<Seri
 
   @Nonnull
   @Override
-  public final SerializedStubTree read(@Nonnull final DataInput in) throws IOException {
+  public final SerializedStubTree read(@Nonnull DataInput in) throws IOException {
     if (PersistentHashMapValueStorage.COMPRESSION_ENABLED) {
       int serializedStubsLength = DataInputOutputUtil.readINT(in);
       byte[] bytes = new byte[serializedStubsLength];

@@ -100,9 +100,9 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
       myCache[index].hash_next = myFirstFree;
       myFirstFree = index;
 
-      final CacheEntry cacheEntry = myCache[index];
-      final int deletedKey = cacheEntry.key;
-      final Object deletedValue = cacheEntry.value;
+      CacheEntry cacheEntry = myCache[index];
+      int deletedKey = cacheEntry.key;
+      Object deletedValue = cacheEntry.value;
 
       myCache[index].value = null;
 
@@ -111,7 +111,7 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
   }
 
   public void removeAll() {
-    final IntList keys = IntLists.newArrayList(count());
+    IntList keys = IntLists.newArrayList(count());
     int current = myTop;
     while (current > 0) {
       if (myCache[current].value != null) {
@@ -147,7 +147,7 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
       index = myBack;
       removeEntryFromHashTable(index);
 
-      final CacheEntry cacheEntry = myCache[index];
+      CacheEntry cacheEntry = myCache[index];
       deletedKey = cacheEntry.key;
       deletedValue = cacheEntry.value;
 
@@ -165,16 +165,16 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
 
   final public T tryKey(int key) {
     ++myAttempts;
-    final int index = searchForCacheEntry(key);
+    int index = searchForCacheEntry(key);
     if (index == 0) {
       return null;
     }
     ++myHits;
-    final CacheEntry<T> cacheEntry = myCache[index];
-    final int top = myTop;
+    CacheEntry<T> cacheEntry = myCache[index];
+    int top = myTop;
     if (index != top) {
-      final int prev = cacheEntry.prev;
-      final int next = cacheEntry.next;
+      int prev = cacheEntry.prev;
+      int next = cacheEntry.next;
       if (index == myBack) {
         myBack = prev;
       }
@@ -203,11 +203,11 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
   }
 
   public void resize(int newSize) {
-    final IntObjectCache<T> newCache = new IntObjectCache<T>(newSize);
-    final CacheEntry<T>[] cache = myCache;
+    IntObjectCache<T> newCache = new IntObjectCache<T>(newSize);
+    CacheEntry<T>[] cache = myCache;
     int back = myBack;
     while (back != 0) {
-      final CacheEntry<T> cacheEntry = cache[back];
+      CacheEntry<T> cacheEntry = cache[back];
       newCache.cacheObject(cacheEntry.key, cacheEntry.value);
       back = cacheEntry.prev;
     }
@@ -254,7 +254,7 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
   }
 
   private void removeEntryFromHashTable(int index) {
-    final int hash_index = (myCache[index].key & 0x7fffffff) % myHashTableSize;
+    int hash_index = (myCache[index].key & 0x7fffffff) % myHashTableSize;
     int current = myHashTable[hash_index];
     int previous = 0;
     while (current != 0) {
@@ -278,7 +278,7 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
     myCache[0].key = key;
     int current = myHashTable[((key & 0x7fffffff) % myHashTableSize)];
     while (true) {
-      final CacheEntry<T> cacheEntry = myCache[current];
+      CacheEntry<T> cacheEntry = myCache[current];
       if (key == cacheEntry.key) {
         break;
       }
@@ -352,7 +352,7 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
     }
   }
 
-  private void fireListenersAboutDeletion(final int key, final Object value) {
+  private void fireListenersAboutDeletion(int key, Object value) {
     if (myListeners != null) {
       for (DeletedPairsListener myListener : myListeners) {
         myListener.objectRemoved(key, value);

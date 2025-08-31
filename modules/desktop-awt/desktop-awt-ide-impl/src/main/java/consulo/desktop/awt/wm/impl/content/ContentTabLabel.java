@@ -112,7 +112,7 @@ class ContentTabLabel extends BaseLabel {
 
     BaseButtonBehavior behavior = new BaseButtonBehavior(this) {
         @Override
-        protected void execute(final MouseEvent e) {
+        protected void execute(MouseEvent e) {
 
             Optional<Runnable> first = myAdditionalIcons.stream().filter(icon -> mouseOverIcon(icon)).map(icon -> icon.getAction()).findFirst();
 
@@ -226,7 +226,7 @@ class ContentTabLabel extends BaseLabel {
         behavior.setMouseDeadzone(TimedDeadzone.NULL);
 
         myContent.addPropertyChangeListener(event -> {
-            final String property = event.getPropertyName();
+            String property = event.getPropertyName();
             if (Content.IS_CLOSABLE.equals(property)) {
                 repaint();
             }
@@ -277,7 +277,7 @@ class ContentTabLabel extends BaseLabel {
     }
 
     protected void selectContent() {
-        final ContentManager mgr = contentManager();
+        ContentManager mgr = contentManager();
         if (mgr.getIndexOfContent(myContent) >= 0) {
             mgr.setSelectedContent(myContent, true);
         }
@@ -294,7 +294,7 @@ class ContentTabLabel extends BaseLabel {
 
     @Override
     public Dimension getPreferredSize() {
-        final Dimension size = super.getPreferredSize();
+        Dimension size = super.getPreferredSize();
         int iconWidth = 0;
         Map<Boolean, List<AdditionalIcon>> map = new HashMap<>();
         for (AdditionalIcon myAdditionalIcon : myAdditionalIcons) {
@@ -333,7 +333,7 @@ class ContentTabLabel extends BaseLabel {
         return new Dimension(iconWidth + size.width, size.height);
     }
 
-    private void paintIcons(final Graphics g) {
+    private void paintIcons(Graphics g) {
         for (AdditionalIcon icon : myAdditionalIcons) {
             if (icon.getAvailable()) {
                 icon.paintIcon(this, g);
@@ -343,7 +343,7 @@ class ContentTabLabel extends BaseLabel {
 
     @RequiredUIAccess
     @Override
-    protected void paintComponent(final Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         paintIcons(g);
     }

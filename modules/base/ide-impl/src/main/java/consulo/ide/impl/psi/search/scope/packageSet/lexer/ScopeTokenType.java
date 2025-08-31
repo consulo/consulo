@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public class ScopeTokenType extends IElementType {
-    public ScopeTokenType(@Nonnull @NonNls final String debugName) {
+    public ScopeTokenType(@Nonnull @NonNls String debugName) {
         super(debugName, Language.ANY);
     }
 }

@@ -88,7 +88,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
           myUserPathEntered = true;
 
           if (!myUserNameEntered) {
-            final int lastSeparatorIndex = path.lastIndexOf(File.separator);
+            int lastSeparatorIndex = path.lastIndexOf(File.separator);
             if (lastSeparatorIndex >= 0 && (lastSeparatorIndex + 1) < path.length()) {
               myNameTextBox.setValue(path.substring(lastSeparatorIndex + 1), false);
             }
@@ -103,8 +103,8 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
 
     formBuilder.addLabeled(myContext.isNewProject() ? IdeLocalize.labelProjectFilesLocation() : IdeLocalize.labelModuleContentRoot(), myFileChooserController.getComponent());
 
-    final String projectOrModuleName = myContext.getName();
-    final String projectOrModulePath = myContext.getPath();
+    String projectOrModuleName = myContext.getName();
+    String projectOrModulePath = myContext.getPath();
 
     myNameTextBox.setValue(projectOrModuleName);
     myFileChooserController.setValue(projectOrModulePath, false);
@@ -114,9 +114,9 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
         return;
       }
 
-      final String name = myNameTextBox.getValue();
-      final String path = myFileChooserController.getValue().trim();
-      final int lastSeparatorIndex = path.lastIndexOf(File.separator);
+      String name = myNameTextBox.getValue();
+      String path = myFileChooserController.getValue().trim();
+      int lastSeparatorIndex = path.lastIndexOf(File.separator);
 
       if (lastSeparatorIndex >= 0) {
         String newPath = path.substring(0, lastSeparatorIndex + 1) + name;

@@ -37,19 +37,19 @@ public class RightEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor
       return null;
     }
 
-    final WhiteSpace whiteSpace = offsetResponsibleBlock.getWhiteSpace();
+    WhiteSpace whiteSpace = offsetResponsibleBlock.getWhiteSpace();
     if (whiteSpace.containsLineFeeds()) {
       return new IndentData(whiteSpace.getIndentSpaces() + offsetResponsibleBlock.getSymbolsAtTheLastLine(), whiteSpace.getSpaces());
     }
     else {
-      final int targetIndent = CoreFormatterUtil.getStartColumn(offsetResponsibleBlock)
+      int targetIndent = CoreFormatterUtil.getStartColumn(offsetResponsibleBlock)
                                + offsetResponsibleBlock.getSymbolsAtTheLastLine();
-      final AbstractBlockWrapper prevIndentedBlock = CoreFormatterUtil.getIndentedParentBlock(context.targetBlock);
+      AbstractBlockWrapper prevIndentedBlock = CoreFormatterUtil.getIndentedParentBlock(context.targetBlock);
       if (prevIndentedBlock == null) {
         return new IndentData(0, targetIndent);
       }
       else {
-        final int parentIndent = prevIndentedBlock.getWhiteSpace().getIndentOffset();
+        int parentIndent = prevIndentedBlock.getWhiteSpace().getIndentOffset();
         return new IndentData(parentIndent, targetIndent - parentIndent);
       }
     }

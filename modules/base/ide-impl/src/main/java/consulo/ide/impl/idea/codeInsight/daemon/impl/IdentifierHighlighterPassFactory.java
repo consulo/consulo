@@ -40,7 +40,7 @@ public class IdentifierHighlighterPassFactory implements TextEditorHighlightingP
   }
 
   @Override
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull final PsiFile file, @Nonnull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
     if (editor.isOneLineMode()) return null;
 
     if (CodeInsightSettings.getInstance().HIGHLIGHT_IDENTIFIER_UNDER_CARET && (!ApplicationManager.getApplication().isHeadlessEnvironment() || ourTestingIdentifierHighlighting)) {

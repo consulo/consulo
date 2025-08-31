@@ -87,7 +87,7 @@ public abstract class AbstractCommand implements PlaybackCommand {
     context.code(getText(), getLine());
   }
 
-  public void dumpError(PlaybackContext context, final String text) {
+  public void dumpError(PlaybackContext context, String text) {
     context.error(text, getLine());
   }
 

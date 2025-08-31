@@ -96,7 +96,7 @@ public interface RefManager {
     RefEntity getRefinedElement(@Nonnull RefEntity ref);
 
     @Nullable
-    default Element export(@Nonnull RefEntity entity, @Nonnull Element parent, final int actualLine) {
+    default Element export(@Nonnull RefEntity entity, @Nonnull Element parent, int actualLine) {
         Element element = export(entity, actualLine);
         if (element == null) {
             return null;
@@ -106,7 +106,7 @@ public interface RefManager {
     }
 
     @Nullable
-    default Element export(@Nonnull RefEntity entity, final int actualLine) {
+    default Element export(@Nonnull RefEntity entity, int actualLine) {
         throw new UnsupportedOperationException();
     }
 

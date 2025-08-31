@@ -49,12 +49,12 @@ public abstract class TodoForRanges {
   protected final boolean myOldRevision;
   protected final FileType myFileType;
 
-  protected TodoForRanges(final Project project,
-                       final List<TextRange> ranges,
-                       int additionalOffset,
-                       String name,
-                       String text,
-                       boolean revision, FileType type) {
+  protected TodoForRanges(Project project,
+                          List<TextRange> ranges,
+                          int additionalOffset,
+                          String name,
+                          String text,
+                          boolean revision, FileType type) {
     myProject = project;
     myRanges = ranges;
     myAdditionalOffset = additionalOffset;
@@ -65,9 +65,9 @@ public abstract class TodoForRanges {
   }
 
   public List<Pair<TextRange, TextAttributes>> execute() {
-    final TodoItemData[] todoItems = getTodoItems();
+    TodoItemData[] todoItems = getTodoItems();
     
-    final StepIntersection<TodoItemData, TextRange> stepIntersection =
+    StepIntersection<TodoItemData, TextRange> stepIntersection =
       new StepIntersection<TodoItemData, TextRange>(new Convertor<TodoItemData, TextRange>() {
         @Override
         public TextRange convert(TodoItemData o) {
@@ -80,8 +80,8 @@ public abstract class TodoForRanges {
         }
       }
       );
-    final List<TodoItemData> filtered = stepIntersection.process(Arrays.asList(todoItems));
-    final List<Pair<TextRange, TextAttributes>> result = new ArrayList<Pair<TextRange, TextAttributes>>(filtered.size());
+    List<TodoItemData> filtered = stepIntersection.process(Arrays.asList(todoItems));
+    List<Pair<TextRange, TextAttributes>> result = new ArrayList<Pair<TextRange, TextAttributes>>(filtered.size());
     int offset = 0;
     for (TextRange range : myRanges) {
       Iterator<TodoItemData> iterator = filtered.iterator();
@@ -104,7 +104,7 @@ public abstract class TodoForRanges {
   protected abstract TodoItemData[] getTodoItems();
 
   protected TodoItem[] getTodoForText(PsiTodoSearchHelper helper) {
-    final PsiFile psiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
+    PsiFile psiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
       @Override
       public PsiFile compute() {
         return PsiFileFactory.getInstance(myProject).createFileFromText((myOldRevision ? "old" : "") + myFileName, myFileType, myText);

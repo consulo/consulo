@@ -63,10 +63,10 @@ public class MultiColumnList extends JTable {
 
   @Override
   protected void processKeyEvent(KeyEvent e) {
-    final int key = e.getKeyCode();
-    final int col = getSelectedColumn();
-    final int row = getSelectedRow();
-    final MultiColumnListModel model = getModel();
+    int key = e.getKeyCode();
+    int col = getSelectedColumn();
+    int row = getSelectedRow();
+    MultiColumnListModel model = getModel();
     int r = row;
     int c = col;
     if (key == KeyEvent.VK_RIGHT) {
@@ -88,7 +88,7 @@ public class MultiColumnList extends JTable {
       int index = model.toListIndex(r, c);
       if (index >= model.getSize() || r >= getRowCount() || c >= getColumnCount()) {
         e.consume();
-        final int last = model.getSize() - 1;
+        int last = model.getSize() - 1;
         changeSelection(model.getRow(last), model.getColumn(last), false, false);
       } else {
         changeSelection(r, c, false, false);
@@ -104,7 +104,7 @@ public class MultiColumnList extends JTable {
   }
 
   private static ListModel createListModel(Object...elements) {
-    final DefaultListModel model = new DefaultListModel();
+    DefaultListModel model = new DefaultListModel();
     for (Object element : elements) {
       model.addElement(element);
     }
@@ -122,7 +122,7 @@ public class MultiColumnList extends JTable {
                                                      boolean hasFocus,
                                                      int row,
                                                      int column) {
-        final int index = getModel().toListIndex(row, column);
+        int index = getModel().toListIndex(row, column);
         if (isSelected) {
           myList.addSelectionInterval(index, index);
         } else {
@@ -168,12 +168,12 @@ public class MultiColumnList extends JTable {
       for (int column = 0; column < getColumnCount(); column++) {
         int columnWidth = 0;
         for (int row = 0; row < getRowCount(); row++) {
-          final TableCellRenderer renderer = getCellRenderer(row, column);
+          TableCellRenderer renderer = getCellRenderer(row, column);
           if (renderer != null) {
-            final Object value = getValueAt(row, column);
-            final Component component = renderer.getTableCellRendererComponent(this, value, true, true, row, column);
+            Object value = getValueAt(row, column);
+            Component component = renderer.getTableCellRendererComponent(this, value, true, true, row, column);
             if (component != null) {
-              final Dimension size = component.getPreferredSize();
+              Dimension size = component.getPreferredSize();
               rowHeight = Math.max(size.height, rowHeight);
               columnWidth = Math.max(size.width, columnWidth);
             }
@@ -189,11 +189,11 @@ public class MultiColumnList extends JTable {
   }
 
   public static void main(String[] args) {
-    final JFrame frame = new JFrame("Test");
+    JFrame frame = new JFrame("Test");
     frame.setSize(300, 300);
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-    final MultiColumnList list = new MultiColumnList("1", 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
+    MultiColumnList list = new MultiColumnList("1", 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
     list.setFixedColumnsMode(5);
     frame.getContentPane().add(list);
     frame.setVisible(true);

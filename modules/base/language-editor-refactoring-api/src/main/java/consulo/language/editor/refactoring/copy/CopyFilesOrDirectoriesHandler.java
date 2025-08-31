@@ -85,7 +85,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
 
     @Override
     @RequiredUIAccess
-    public void doCopy(final PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
+    public void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
         if (defaultTargetDirectory == null) {
             defaultTargetDirectory = getCommonParentDirectory(elements);
         }
@@ -175,7 +175,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
 
     @Override
     @RequiredReadAction
-    public void doClone(final PsiElement element) {
+    public void doClone(PsiElement element) {
         doCloneFile(element);
     }
 
@@ -241,11 +241,11 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
      */
     @RequiredUIAccess
     private static void copyImpl(
-        @Nonnull final VirtualFile[] files,
-        @Nullable final String newName,
-        @Nonnull final PsiDirectory targetDirectory,
-        final boolean doClone,
-        final boolean openInEditor
+        @Nonnull VirtualFile[] files,
+        @Nullable String newName,
+        @Nonnull PsiDirectory targetDirectory,
+        boolean doClone,
+        boolean openInEditor
     ) {
         if (doClone && files.length != 1) {
             throw new IllegalArgumentException("invalid number of elements to clone:" + files.length);
@@ -255,7 +255,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
             throw new IllegalArgumentException("no new name should be set; number of elements is: " + files.length);
         }
 
-        final Project project = targetDirectory.getProject();
+        Project project = targetDirectory.getProject();
         if (!CommonRefactoringUtil.checkReadOnlyStatus(project, Collections.singleton(targetDirectory), false)) {
             return;
         }
@@ -265,7 +265,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
             : RefactoringLocalize.copyHandlerCopyFilesDirectories();
         try {
             PsiFile firstFile = null;
-            final int[] choice = files.length > 1 || files[0].isDirectory() ? new int[]{-1} : null;
+            int[] choice = files.length > 1 || files[0].isDirectory() ? new int[]{-1} : null;
             PsiManager manager = PsiManager.getInstance(project);
             for (VirtualFile file : files) {
                 PsiElement psiElement = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
@@ -287,7 +287,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
                 }
             }
         }
-        catch (final IncorrectOperationException | IOException ex) {
+        catch (IncorrectOperationException | IOException ex) {
             Messages.showErrorDialog(project, ex.getMessage(), RefactoringLocalize.errorTitle().get());
         }
     }
@@ -355,8 +355,8 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
             if (newName == null) {
                 newName = directory.getName();
             }
-            final PsiDirectory existing = targetDirectory.findSubdirectory(newName);
-            final PsiDirectory subdirectory;
+            PsiDirectory existing = targetDirectory.findSubdirectory(newName);
+            PsiDirectory subdirectory;
             if (existing == null) {
                 String finalNewName = newName;
                 subdirectory = CommandProcessor.getInstance().<PsiDirectory>newCommand()
@@ -400,11 +400,11 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
 
     @Nullable
     public static PsiDirectory resolveDirectory(@Nonnull PsiDirectory defaultTargetDirectory) {
-        final Project project = defaultTargetDirectory.getProject();
-        final Boolean showDirsChooser =
+        Project project = defaultTargetDirectory.getProject();
+        Boolean showDirsChooser =
             defaultTargetDirectory.getCopyableUserData(RefactoringInternalHelper.COPY_PASTE_DELEGATE_SHOW_CHOOSER_KEY);
         if (showDirsChooser != null && showDirsChooser) {
-            final PsiDirectoryContainer directoryContainer =
+            PsiDirectoryContainer directoryContainer =
                 PsiPackageHelper.getInstance(project).getDirectoryContainer(defaultTargetDirectory);
             if (directoryContainer == null) {
                 return defaultTargetDirectory;

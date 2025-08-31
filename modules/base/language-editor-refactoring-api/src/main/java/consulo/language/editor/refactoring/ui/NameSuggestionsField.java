@@ -56,7 +56,7 @@ public class NameSuggestionsField extends JPanel {
     super(new BorderLayout());
     myProject = project;
     myComboBoxModel = new MyComboBoxModel();
-    final ComboBox comboBox = new ComboBox(myComboBoxModel,-1);
+    ComboBox comboBox = new ComboBox(myComboBoxModel,-1);
     myComponent = comboBox;
     add(myComponent, BorderLayout.CENTER);
     setupComboBox(comboBox, InternalStdFileTypes.JAVA);
@@ -73,7 +73,7 @@ public class NameSuggestionsField extends JPanel {
       myComponent = createTextFieldForName(nameSuggestions, fileType);
     }
     else {
-      final ComboBox combobox = new ComboBox(nameSuggestions);
+      ComboBox combobox = new ComboBox(nameSuggestions);
       combobox.setSelectedIndex(0);
       setupComboBox(combobox, fileType);
       myComponent = combobox;
@@ -82,14 +82,14 @@ public class NameSuggestionsField extends JPanel {
     myComboBoxModel = null;
   }
 
-  public NameSuggestionsField(final String[] suggestedNames, final Project project, final FileType fileType, @Nullable final Editor editor) {
+  public NameSuggestionsField(String[] suggestedNames, Project project, FileType fileType, @Nullable final Editor editor) {
     this(suggestedNames, project, fileType);
     if (editor == null) return;
     // later here because EditorTextField creates Editor during addNotify()
-    final Runnable selectionRunnable = new Runnable() {
+    Runnable selectionRunnable = new Runnable() {
       @Override
       public void run() {
-        final int offset = editor.getCaretModel().getOffset();
+        int offset = editor.getCaretModel().getOffset();
         List<TextRange> ranges = new ArrayList<TextRange>();
         SelectWordUtil.addWordSelection(editor.getSettings().isCamelWords(), editor.getDocument().getCharsSequence(), offset, ranges);
         Editor myEditor = getEditor();
@@ -97,9 +97,9 @@ public class NameSuggestionsField extends JPanel {
         for (TextRange wordRange : ranges) {
           String word = editor.getDocument().getText(wordRange);
           if (!word.equals(getEnteredName())) continue;
-          final SelectionModel selectionModel = editor.getSelectionModel();
+          SelectionModel selectionModel = editor.getSelectionModel();
           myEditor.getSelectionModel().removeSelection();
-          final int wordRangeStartOffset = wordRange.getStartOffset();
+          int wordRangeStartOffset = wordRange.getStartOffset();
           int myOffset = offset - wordRangeStartOffset;
           myEditor.getCaretModel().moveToOffset(myOffset);
           TextRange selected = new TextRange(Math.max(0, selectionModel.getSelectionStart() - wordRangeStartOffset),
@@ -128,7 +128,7 @@ public class NameSuggestionsField extends JPanel {
       public void run() {
         Editor editor = getEditor();
         if (editor == null) return;
-        final int pos = editor.getDocument().getText().lastIndexOf('.');
+        int pos = editor.getDocument().getText().lastIndexOf('.');
         if (pos > 0) {
           editor.getSelectionModel().setSelection(0, pos);
           editor.getCaretModel().moveToOffset(pos);
@@ -151,12 +151,12 @@ public class NameSuggestionsField extends JPanel {
     });
   }
 
-  public void setSuggestions(final String[] suggestions) {
+  public void setSuggestions(String[] suggestions) {
     if(myComboBoxModel == null) return;
     JComboBox comboBox = (JComboBox) myComponent;
-    final String oldSelectedItem = (String)comboBox.getSelectedItem();
-    final String oldItemFromTextField = (String) comboBox.getEditor().getItem();
-    final boolean shouldUpdateTextField =
+    String oldSelectedItem = (String)comboBox.getSelectedItem();
+    String oldItemFromTextField = (String) comboBox.getEditor().getItem();
+    boolean shouldUpdateTextField =
             oldItemFromTextField.equals(oldSelectedItem) || oldItemFromTextField.trim().length() == 0;
     myComboBoxModel.setSuggestions(suggestions);
     if(suggestions.length > 0 && shouldUpdateTextField) {
@@ -192,7 +192,7 @@ public class NameSuggestionsField extends JPanel {
   }
 
   private JComponent createTextFieldForName(String[] nameSuggestions, FileType fileType) {
-    final String text;
+    String text;
     if (nameSuggestions != null && nameSuggestions.length > 0 && nameSuggestions[0] != null) {
       text = nameSuggestions[0];
     }
@@ -233,7 +233,7 @@ public class NameSuggestionsField extends JPanel {
   }
 
   private void setupComboBox(final ComboBox combobox, FileType fileType) {
-    final EditorComboBoxEditor comboEditor = new StringComboboxEditor(myProject, fileType, combobox) {
+    EditorComboBoxEditor comboEditor = new StringComboboxEditor(myProject, fileType, combobox) {
       @Override
       public void setItem(Object anObject) {
         myNonHumanChange = true;

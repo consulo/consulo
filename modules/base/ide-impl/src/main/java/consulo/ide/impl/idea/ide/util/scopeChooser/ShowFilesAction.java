@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 public final class ShowFilesAction extends ToggleAction {
   private final Runnable myUpdate;
 
-  public ShowFilesAction(final Runnable update) {
+  public ShowFilesAction(Runnable update) {
     super(IdeBundle.message("action.show.files"),
           IdeBundle.message("action.description.show.files"), AllIcons.FileTypes.Any_type);
     myUpdate = update;

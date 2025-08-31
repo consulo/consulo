@@ -199,7 +199,7 @@ public class mxGraphHandler extends mxMouseAdapter implements DropTargetListener
   /**
    * @param graphComponent
    */
-  public mxGraphHandler(final mxGraphComponent graphComponent) {
+  public mxGraphHandler(mxGraphComponent graphComponent) {
     this.graphComponent = graphComponent;
     marker = createMarker();
     movePreview = createMovePreview();

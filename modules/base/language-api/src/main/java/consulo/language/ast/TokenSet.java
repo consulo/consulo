@@ -30,12 +30,12 @@ public class TokenSet {
   private TokenSet(short shift, short max) {
     myShift = shift;
     myMax = max;
-    final int size = (max >> 6) + 1 - shift;
+    int size = (max >> 6) + 1 - shift;
     myWords = size > 0 ? new long[size] : ArrayUtil.EMPTY_LONG_ARRAY;
   }
 
   private boolean get(int index) {
-    final int wordIndex = (index >> 6) - myShift;
+    int wordIndex = (index >> 6) - myShift;
     return wordIndex >= 0 && wordIndex < myWords.length && (myWords[wordIndex] & (1L << index)) != 0;
   }
 
@@ -47,7 +47,7 @@ public class TokenSet {
    */
   public boolean contains(@Nullable IElementType t) {
     if (t == null) return false;
-    final short i = t.getIndex();
+    short i = t.getIndex();
     return 0 <= i && i <= myMax && get(i);
   }
 
@@ -107,19 +107,19 @@ public class TokenSet {
     short max = 0;
     for (IElementType type : types) {
       if (type != null) {
-        final short index = type.getIndex();
+        short index = type.getIndex();
         assert index >= 0 : "Unregistered elements are not allowed here: " + ObjectUtil.objectInfo(type);
         if (min > index) min = index;
         if (max < index) max = index;
       }
     }
 
-    final short shift = (short)(min >> 6);
-    final TokenSet set = new TokenSet(shift, max);
+    short shift = (short)(min >> 6);
+    TokenSet set = new TokenSet(shift, max);
     for (IElementType type : types) {
       if (type != null) {
-        final short index = type.getIndex();
-        final int wordIndex = (index >> 6) - shift;
+        short index = type.getIndex();
+        int wordIndex = (index >> 6) - shift;
         set.myWords[wordIndex] |= 1L << index;
       }
     }
@@ -143,9 +143,9 @@ public class TokenSet {
       if (max < sets[i].myMax) max = sets[i].myMax;
     }
 
-    final TokenSet newSet = new TokenSet(shift, max);
+    TokenSet newSet = new TokenSet(shift, max);
     for (TokenSet set : sets) {
-      final int shiftDiff = set.myShift - newSet.myShift;
+      int shiftDiff = set.myShift - newSet.myShift;
       for (int i = 0; i < set.myWords.length; i++) {
         newSet.myWords[i + shiftDiff] |= set.myWords[i];
       }
@@ -162,10 +162,10 @@ public class TokenSet {
    */
   @Nonnull
   public static TokenSet andSet(@Nonnull TokenSet a, @Nonnull TokenSet b) {
-    final TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
+    TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
     for (int i = 0; i < newSet.myWords.length; i++) {
-      final int ai = newSet.myShift - a.myShift + i;
-      final int bi = newSet.myShift - b.myShift + i;
+      int ai = newSet.myShift - a.myShift + i;
+      int bi = newSet.myShift - b.myShift + i;
       newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0L) & (0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0L);
     }
     return newSet;
@@ -180,10 +180,10 @@ public class TokenSet {
    */
   @Nonnull
   public static TokenSet andNot(@Nonnull TokenSet a, @Nonnull TokenSet b) {
-    final TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
+    TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
     for (int i = 0; i < newSet.myWords.length; i++) {
-      final int ai = newSet.myShift - a.myShift + i;
-      final int bi = newSet.myShift - b.myShift + i;
+      int ai = newSet.myShift - a.myShift + i;
+      int bi = newSet.myShift - b.myShift + i;
       newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0L) & ~(0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0L);
     }
     return newSet;

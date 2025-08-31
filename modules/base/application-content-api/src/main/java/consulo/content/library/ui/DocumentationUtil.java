@@ -33,7 +33,7 @@ public class DocumentationUtil {
   }
 
   public static VirtualFile showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
-    final String url = Application.get().getInstance(ContentInternalHelper.class).showSpecifyJavadocUrlDialog(parent, initialValue);
+    String url = Application.get().getInstance(ContentInternalHelper.class).showSpecifyJavadocUrlDialog(parent, initialValue);
     if (url == null) {
       return null;
     }

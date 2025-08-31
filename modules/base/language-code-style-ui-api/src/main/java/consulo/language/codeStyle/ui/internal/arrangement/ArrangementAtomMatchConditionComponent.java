@@ -297,7 +297,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     private String getComponentText() {
         if (myInverted) {
             if (StringUtil.isEmpty(myInvertedText)) {
-                final ArrangementSettingsToken token = myCondition.getType();
+                ArrangementSettingsToken token = myCondition.getType();
                 assert token instanceof InvertibleArrangementSettingsToken;
                 myInvertedText = ((InvertibleArrangementSettingsToken) token).getInvertedRepresentationValue();
             }

@@ -63,7 +63,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public void finish(@Nonnull final TaskInfo task) {
+  public void finish(@Nonnull TaskInfo task) {
     WeakList<TaskInfo> finished = myFinished;
     if (finished == null) {
       synchronized (getLock()) {
@@ -79,7 +79,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public boolean isFinished(@Nonnull final TaskInfo task) {
+  public boolean isFinished(@Nonnull TaskInfo task) {
     Collection<TaskInfo> list = myFinished;
     return list != null && list.contains(task);
   }
@@ -104,21 +104,21 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public void setTextValue(final LocalizeValue text) {
+  public void setTextValue(LocalizeValue text) {
     super.setTextValue(text);
 
     delegateProgressChange(each -> each.setTextValue(text));
   }
 
   @Override
-  public void setText2Value(final LocalizeValue text) {
+  public void setText2Value(LocalizeValue text) {
     super.setText2Value(text);
 
     delegateProgressChange(each -> each.setText2Value(text));
   }
 
   @Override
-  public void setFraction(final double fraction) {
+  public void setFraction(double fraction) {
     super.setFraction(fraction);
 
     delegateProgressChange(each -> each.setFraction(fraction));
@@ -148,7 +148,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public void setIndeterminate(final boolean indeterminate) {
+  public void setIndeterminate(boolean indeterminate) {
     super.setIndeterminate(indeterminate);
 
     delegateProgressChange(each -> each.setIndeterminate(indeterminate));

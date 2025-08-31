@@ -38,18 +38,18 @@ public class DependantSpacingImpl extends SpacingImpl {
   @Nonnull
   private final DependentSpacingRule myRule;
 
-  public DependantSpacingImpl(final int minSpaces, final int maxSpaces, @Nonnull TextRange dependency, final boolean keepLineBreaks, final int keepBlankLines, @Nonnull DependentSpacingRule rule) {
+  public DependantSpacingImpl(int minSpaces, int maxSpaces, @Nonnull TextRange dependency, boolean keepLineBreaks, int keepBlankLines, @Nonnull DependentSpacingRule rule) {
     super(minSpaces, maxSpaces, 0, false, false, keepLineBreaks, keepBlankLines, false, 0);
     myDependentRegionRanges = new ArrayList<>();
     myDependentRegionRanges.add(dependency);
     myRule = rule;
   }
 
-  public DependantSpacingImpl(final int minSpaces,
-                              final int maxSpaces,
+  public DependantSpacingImpl(int minSpaces,
+                              int maxSpaces,
                               @Nonnull List<TextRange> dependencyRanges,
-                              final boolean keepLineBreaks,
-                              final int keepBlankLines,
+                              boolean keepLineBreaks,
+                              int keepBlankLines,
                               @Nonnull DependentSpacingRule rule) {
     super(minSpaces, maxSpaces, 0, false, false, keepLineBreaks, keepBlankLines, false, 0);
     myDependentRegionRanges = dependencyRanges;

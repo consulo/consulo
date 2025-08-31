@@ -210,7 +210,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     @Override
     protected void doOKAction() {
       myEnvVariablesTable.stopEditing();
-      final Map<String, String> envs = new LinkedHashMap<>();
+      Map<String, String> envs = new LinkedHashMap<>();
       for (EnvironmentVariable variable : myEnvVariablesTable.getEnvironmentVariables()) {
         envs.put(variable.getName(), variable.getValue());
       }

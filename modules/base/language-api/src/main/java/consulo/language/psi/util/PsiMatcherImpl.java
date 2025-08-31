@@ -35,7 +35,7 @@ public class PsiMatcherImpl implements PsiMatcher {
 
   @Override
   public PsiMatcher firstChild(PsiMatcherExpression e) {
-    final PsiElement[] children = myElement.getChildren();
+    PsiElement[] children = myElement.getChildren();
     for (PsiElement child : children) {
       myElement = child;
       if (e == null || Objects.equals(e.match(myElement), Boolean.TRUE)) {
@@ -59,15 +59,15 @@ public class PsiMatcherImpl implements PsiMatcher {
 
   @Override
   public PsiMatcher descendant(PsiMatcherExpression e) {
-    final PsiElement[] children = myElement.getChildren();
+    PsiElement[] children = myElement.getChildren();
     for (PsiElement child : children) {
       myElement = child;
-      final Boolean res = e == null ? Boolean.TRUE : e.match(myElement);
+      Boolean res = e == null ? Boolean.TRUE : e.match(myElement);
       if (Objects.equals(res, Boolean.TRUE)) {
         return this;
       }
       else if (Objects.equals(res, Boolean.FALSE)) {
-        final PsiMatcher grandChild = descendant(e);
+        PsiMatcher grandChild = descendant(e);
         if (grandChild != NullPsiMatcherImpl.INSTANCE) return grandChild;
       }
     }

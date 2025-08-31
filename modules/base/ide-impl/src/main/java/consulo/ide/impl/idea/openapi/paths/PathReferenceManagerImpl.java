@@ -102,27 +102,27 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
 
   @Override
   @Nonnull
-  public PathReferenceProvider createStaticPathReferenceProvider(final boolean relativePathsAllowed) {
-    final StaticPathReferenceProvider provider = new StaticPathReferenceProvider(null);
+  public PathReferenceProvider createStaticPathReferenceProvider(boolean relativePathsAllowed) {
+    StaticPathReferenceProvider provider = new StaticPathReferenceProvider(null);
     provider.setRelativePathsAllowed(relativePathsAllowed);
     return provider;
   }
 
   @Override
   @Nonnull
-  public PsiReference[] createReferences(@Nonnull final PsiElement psiElement,
-                                         final boolean soft,
+  public PsiReference[] createReferences(@Nonnull PsiElement psiElement,
+                                         boolean soft,
                                          boolean endingSlashNotAllowed,
-                                         final boolean relativePathsAllowed, PathReferenceProvider... additionalProviders) {
+                                         boolean relativePathsAllowed, PathReferenceProvider... additionalProviders) {
     return createReferences(psiElement, soft, endingSlashNotAllowed, relativePathsAllowed, null, additionalProviders);
   }
 
   @Override
   @Nonnull
-  public PsiReference[] createReferences(@Nonnull final PsiElement psiElement,
-                                         final boolean soft,
+  public PsiReference[] createReferences(@Nonnull PsiElement psiElement,
+                                         boolean soft,
                                          boolean endingSlashNotAllowed,
-                                         final boolean relativePathsAllowed, FileType[] suitableFileTypes, PathReferenceProvider... additionalProviders) {
+                                         boolean relativePathsAllowed, FileType[] suitableFileTypes, PathReferenceProvider... additionalProviders) {
 
     List<PsiReference> mergedReferences = new ArrayList<>();
     processProvider(psiElement, myGlobalPathsProvider, mergedReferences, soft);
@@ -164,7 +164,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
 
   @Override
   @Nonnull
-  public PsiReference[] createReferences(@Nonnull PsiElement psiElement, final boolean soft, PathReferenceProvider... additionalProviders) {
+  public PsiReference[] createReferences(@Nonnull PsiElement psiElement, boolean soft, PathReferenceProvider... additionalProviders) {
     return createReferences(psiElement, soft, false, true, null, additionalProviders);
   }
 
@@ -173,14 +173,14 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
       return references.toArray(new PsiReference[references.size()]);
     }
     Collections.sort(references, START_OFFSET_COMPARATOR);
-    final List<PsiReference> intersecting = new ArrayList<>();
-    final List<PsiReference> notIntersecting = new ArrayList<>();
+    List<PsiReference> intersecting = new ArrayList<>();
+    List<PsiReference> notIntersecting = new ArrayList<>();
     TextRange intersectingRange = references.get(0).getRangeInElement();
     boolean intersected = false;
     for (int i = 1; i < references.size(); i++) {
-      final PsiReference reference = references.get(i);
-      final TextRange range = reference.getRangeInElement();
-      final int offset = range.getStartOffset();
+      PsiReference reference = references.get(i);
+      TextRange range = reference.getRangeInElement();
+      int offset = range.getStartOffset();
       if (intersectingRange.getStartOffset() <= offset && intersectingRange.getEndOffset() >= offset) {
         intersected = true;
         intersecting.add(references.get(i - 1));
@@ -208,7 +208,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
     return result.toArray(new PsiReference[result.size()]);
   }
 
-  private static List<PsiReference> doMerge(final PsiElement element, final List<PsiReference> references) {
+  private static List<PsiReference> doMerge(PsiElement element, List<PsiReference> references) {
     List<PsiReference> resolvingRefs = new ArrayList<>();
     List<PsiReference> nonResolvingRefs = new ArrayList<>();
 
@@ -226,17 +226,17 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
 
     List<PsiReference> result = new ArrayList<>(5);
     while (!resolvingRefs.isEmpty()) {
-      final List<PsiReference> list = new ArrayList<>(5);
-      final TextRange range = getFirstIntersectingReferences(resolvingRefs, list);
-      final TextRange textRange = addIntersectingReferences(nonResolvingRefs, list, range);
+      List<PsiReference> list = new ArrayList<>(5);
+      TextRange range = getFirstIntersectingReferences(resolvingRefs, list);
+      TextRange textRange = addIntersectingReferences(nonResolvingRefs, list, range);
       addToResult(element, result, list, textRange);
     }
 
     while (!nonResolvingRefs.isEmpty()) {
-      final SmartList<PsiReference> list = new SmartList<>();
-      final TextRange range = getFirstIntersectingReferences(nonResolvingRefs, list);
+      SmartList<PsiReference> list = new SmartList<>();
+      TextRange range = getFirstIntersectingReferences(nonResolvingRefs, list);
       int endOffset = range.getEndOffset();
-      for (final PsiReference reference : list) {
+      for (PsiReference reference : list) {
         endOffset = Math.min(endOffset, reference.getRangeInElement().getEndOffset());
       }
       addToResult(element, result, list, new TextRange(range.getStartOffset(), endOffset));
@@ -244,14 +244,14 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
     return result;
   }
 
-  private static void addToResult(final PsiElement element,
-                                  final List<PsiReference> result,
-                                  final List<PsiReference> list,
-                                  final TextRange range) {
+  private static void addToResult(PsiElement element,
+                                  List<PsiReference> result,
+                                  List<PsiReference> list,
+                                  TextRange range) {
     if (list.size() == 1) {
       result.add(list.get(0));
     } else {
-      final PsiDynaReference psiDynaReference = new PsiDynaReference<>(element);
+      PsiDynaReference psiDynaReference = new PsiDynaReference<>(element);
       psiDynaReference.addReferences(list);
       psiDynaReference.setRangeInElement(range);
       result.add(psiDynaReference);
@@ -263,7 +263,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
     int endOffset = range.getStartOffset();
     for (Iterator<PsiReference> iterator = set.iterator(); iterator.hasNext();) {
       PsiReference reference = iterator.next();
-      final TextRange rangeInElement = reference.getRangeInElement();
+      TextRange rangeInElement = reference.getRangeInElement();
       if (intersect(range, rangeInElement)) {
         toAdd.add(reference);
         iterator.remove();
@@ -274,7 +274,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
     return new TextRange(startOffset, endOffset);
   }
 
-  private static boolean intersect(final TextRange range1, final TextRange range2) {
+  private static boolean intersect(TextRange range1, TextRange range2) {
     return range2.intersectsStrict(range1) || range2.intersects(range1) && (range1.isEmpty() || range2.isEmpty());
   }
 
@@ -283,7 +283,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
     int endOffset = -1;
     for (Iterator<PsiReference> it = set.iterator(); it.hasNext();) {
       PsiReference reference = it.next();
-      final TextRange range = reference.getRangeInElement();
+      TextRange range = reference.getRangeInElement();
       if (endOffset == -1 || range.getStartOffset() <= endOffset) {
         startOffset = Math.min(startOffset, range.getStartOffset());
         endOffset = Math.max(range.getEndOffset(), endOffset);

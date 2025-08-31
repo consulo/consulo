@@ -72,8 +72,8 @@ public class TreeTableTree extends Tree {
 
     public void setVisibleRow(int row) {
         myVisibleRow = row;
-        final Rectangle rowBounds = getRowBounds(myVisibleRow);
-        final int indent = rowBounds.x - getVisibleRect().x - getTreeColumnOffsetX();
+        Rectangle rowBounds = getRowBounds(myVisibleRow);
+        int indent = rowBounds.x - getVisibleRect().x - getTreeColumnOffsetX();
         setPreferredSize(new Dimension(getRowBounds(myVisibleRow).width + indent, getPreferredSize().height));
     }
 

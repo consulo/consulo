@@ -33,8 +33,8 @@ import static consulo.diff.DiffType.ERROR;
  */
 public class DTree {
   private static final Comparator<DTree> COMPARATOR = (o1, o2) -> {
-    final boolean b1 = o1.isContainer();
-    final boolean b2 = o2.isContainer();
+    boolean b1 = o1.isContainer();
+    boolean b2 = o2.isContainer();
     return (b1 && b2) || (!b1 && !b2)
       ? o1.getName().compareToIgnoreCase(o2.getName())
       : b1 ? 1 : -1;
@@ -73,8 +73,8 @@ public class DTree {
   public DTree addChild(@Nonnull DiffElement element, boolean source) {
     init();
     myChildrenList = null;
-    final DTree node;
-    final String name = element.getName();
+    DTree node;
+    String name = element.getName();
     if (myChildren.containsKey(name)) {
       node = myChildren.get(name);
     }
@@ -143,8 +143,8 @@ public class DTree {
 
   public void update(DirDiffSettings settings) {
     for (DTree tree : getChildren()) {
-      final DiffElement<?> src = tree.getSource();
-      final DiffElement<?> trg = tree.getTarget();
+      DiffElement<?> src = tree.getSource();
+      DiffElement<?> trg = tree.getTarget();
       if (src instanceof DiffErrorElement || trg instanceof DiffErrorElement) {
         tree.setType(ERROR);
       }
@@ -229,7 +229,7 @@ public class DTree {
 
   public void remove(DTree node) {
     init();
-    final boolean removed = myChildrenList.remove(node);
+    boolean removed = myChildrenList.remove(node);
     if (removed) {
       for (String key : myChildren.keySet()) {
         if (myChildren.get(key) == node) {
@@ -261,7 +261,7 @@ public class DTree {
 
   public String getPath() {
     if (myPath == null) {
-      final DTree parent = getParent();
+      DTree parent = getParent();
       if (parent != null) {
         myPath = parent.getPath() + getName() + (isContainer ? getSeparator() : "");
       }

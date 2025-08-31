@@ -123,8 +123,8 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
     while (element instanceof PsiWhiteSpace || element != null && StringUtil.isEmptyOrSpaces(element.getText())) {
       while (element.getNextSibling() == null) {
         if (element instanceof PsiFile) return null;
-        final PsiElement parent = element.getParent();
-        final PsiElement[] children = parent.getChildren();
+        PsiElement parent = element.getParent();
+        PsiElement[] children = parent.getChildren();
 
         if (children.length > 0 && children[children.length - 1] == element) {
           element = parent;
@@ -156,9 +156,9 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
       }
     }
 
-    final TextRange selectionRange = new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
+    TextRange selectionRange = new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
 
-    final Ref<TextRange> minimumRange = new Ref<>(new TextRange(0, editor.getDocument().getTextLength()));
+    Ref<TextRange> minimumRange = new Ref<>(new TextRange(0, editor.getDocument().getTextLength()));
 
     SelectWordUtil.processRanges(element, editor.getDocument().getCharsSequence(), caretOffset, editor, range -> {
       if (range.contains(selectionRange) && !range.equals(selectionRange)) {
@@ -192,7 +192,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
   }
 
   @Nullable
-  private static PsiElement findElementAt(@Nonnull final PsiFile file, final int caretOffset) {
+  private static PsiElement findElementAt(@Nonnull PsiFile file, int caretOffset) {
     PsiElement elementAt = file.findElementAt(caretOffset);
     if (elementAt != null && isLanguageExtension(file, elementAt)) {
       return file.getViewProvider().findElementAt(caretOffset, file.getLanguage());
@@ -200,11 +200,11 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
     return elementAt;
   }
 
-  private static boolean isLanguageExtension(@Nonnull final PsiFile file, @Nonnull final PsiElement elementAt) {
-    final Language elementLanguage = elementAt.getLanguage();
+  private static boolean isLanguageExtension(@Nonnull PsiFile file, @Nonnull PsiElement elementAt) {
+    Language elementLanguage = elementAt.getLanguage();
     if (file.getLanguage() instanceof CompositeLanguage) {
       CompositeLanguage compositeLanguage = (CompositeLanguage) file.getLanguage();
-      final Language[] extensions = compositeLanguage.getLanguageExtensionsForFile(file);
+      Language[] extensions = compositeLanguage.getLanguageExtensionsForFile(file);
       for(Language extension: extensions) {
         if (extension == elementLanguage) {
           return true;

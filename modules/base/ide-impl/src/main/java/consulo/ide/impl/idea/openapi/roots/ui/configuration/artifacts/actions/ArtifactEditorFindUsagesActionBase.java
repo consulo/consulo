@@ -42,9 +42,9 @@ public abstract class ArtifactEditorFindUsagesActionBase extends FindUsagesInPro
 
     @Override
     protected RelativePoint getPointToShowResults() {
-        final int selectedRow = myTree.getSelectionRows()[0];
-        final Rectangle rowBounds = myTree.getRowBounds(selectedRow);
-        final Point location = rowBounds.getLocation();
+        int selectedRow = myTree.getSelectionRows()[0];
+        Rectangle rowBounds = myTree.getRowBounds(selectedRow);
+        Point location = rowBounds.getLocation();
         location.y += rowBounds.height;
         return new RelativePoint(myTree, location);
     }

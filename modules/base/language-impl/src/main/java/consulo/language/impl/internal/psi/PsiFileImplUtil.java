@@ -33,16 +33,16 @@ public class PsiFileImplUtil {
   }
 
   @RequiredUIAccess
-  public static PsiFile setName(final PsiFile file, String newName) throws IncorrectOperationException {
+  public static PsiFile setName(PsiFile file, String newName) throws IncorrectOperationException {
     VirtualFile vFile = file.getViewProvider().getVirtualFile();
     PsiManagerImpl manager = (PsiManagerImpl)file.getManager();
 
     try{
-      final FileType newFileType = FileTypeRegistry.getInstance().getFileTypeByFileName(newName);
+      FileType newFileType = FileTypeRegistry.getInstance().getFileTypeByFileName(newName);
       if (UnknownFileType.INSTANCE.equals(newFileType) || newFileType.isBinary()) {
         // before the file becomes unknown or a binary (thus, not openable in the editor), save it to prevent data loss
-        final FileDocumentManager fdm = FileDocumentManager.getInstance();
-        final Document doc = fdm.getCachedDocument(vFile);
+        FileDocumentManager fdm = FileDocumentManager.getInstance();
+        Document doc = fdm.getCachedDocument(vFile);
         if (doc != null) {
           fdm.saveDocumentAsIs(doc);
         }
@@ -68,10 +68,10 @@ public class PsiFileImplUtil {
     }
   }
 
-  public static void doDelete(final PsiFile file) throws IncorrectOperationException {
-    final PsiManagerImpl manager = (PsiManagerImpl)file.getManager();
+  public static void doDelete(PsiFile file) throws IncorrectOperationException {
+    PsiManagerImpl manager = (PsiManagerImpl)file.getManager();
 
-    final VirtualFile vFile = file.getVirtualFile();
+    VirtualFile vFile = file.getVirtualFile();
     try{
       vFile.delete(manager);
     }

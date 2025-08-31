@@ -88,7 +88,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         enableEvents(AWTEvent.KEY_EVENT_MASK);
 
         addActionListener(e -> {
-            final Editor editor = myEditorField != null ? myEditorField.getEditor() : null;
+            Editor editor = myEditorField != null ? myEditorField.getEditor() : null;
             if (editor != null) {
                 editor.getSelectionModel().removeSelection();
             }
@@ -167,7 +167,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
     }
 
     @RequiredUIAccess
-    public void setText(final String text) {
+    public void setText(String text) {
         CommandProcessor.getInstance().newCommand()
             .project(getProject())
             .document(myDocument)
@@ -182,7 +182,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
 
     public void removeSelection() {
         if (myEditorField != null) {
-            final Editor editor = myEditorField.getEditor();
+            Editor editor = myEditorField.getEditor();
             if (editor != null) {
                 editor.getSelectionModel().removeSelection();
             }
@@ -193,7 +193,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         return myEditorField.getCaretModel();
     }
 
-    public void setHistory(final String[] history) {
+    public void setHistory(String[] history) {
         setModel(new DefaultComboBoxModel(history));
     }
 
@@ -202,7 +202,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         objects.add(item);
         int count = getItemCount();
         for (int i = 0; i < count; i++) {
-            final Object itemAt = getItemAt(i);
+            Object itemAt = getItemAt(i);
             if (!item.equals(itemAt)) {
                 objects.add(itemAt);
             }
@@ -246,7 +246,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         @Override
         public void selectAll() {
             if (myEditorField != null) {
-                final Editor editor = myEditorField.getEditor();
+                Editor editor = myEditorField.getEditor();
                 if (editor != null) {
                     editor.getSelectionModel().setSelection(0, myDocument.getTextLength());
                 }
@@ -282,7 +282,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
 
     private void setEditor() {
         myEditorField = createEditorTextField(myDocument, myProject, myFileType, myIsViewer);
-        final ComboBoxEditor editor = new MyEditor();
+        ComboBoxEditor editor = new MyEditor();
         setEditor(editor);
         setRenderer(new EditorComboBoxRenderer(editor));
     }
@@ -312,7 +312,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         }
     }
 
-    private void setupEditorFont(final EditorEx editor) {
+    private void setupEditorFont(EditorEx editor) {
         if (myInheritSwingFont) {
             editor.getColorsScheme().setEditorFontName(getFont().getFontName());
             editor.getColorsScheme().setEditorFontSize(getFont().getSize());

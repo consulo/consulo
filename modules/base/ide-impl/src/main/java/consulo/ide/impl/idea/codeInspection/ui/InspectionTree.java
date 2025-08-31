@@ -102,7 +102,7 @@ public class InspectionTree extends Tree {
 
   @Nullable
   public InspectionToolWrapper getSelectedToolWrapper() {
-    final TreePath[] paths = getSelectionPaths();
+    TreePath[] paths = getSelectionPaths();
     if (paths == null) return null;
     InspectionToolWrapper toolWrapper = null;
     for (TreePath path : paths) {
@@ -134,7 +134,7 @@ public class InspectionTree extends Tree {
 
       List<RefEntity> result = new ArrayList<RefEntity>();
       for (TreePath selectionPath : selectionPaths) {
-        final InspectionTreeNode node = (InspectionTreeNode)selectionPath.getLastPathComponent();
+        InspectionTreeNode node = (InspectionTreeNode)selectionPath.getLastPathComponent();
         addElementsInNode(node, result);
       }
       return result.toArray(new RefEntity[result.size()]);
@@ -145,18 +145,18 @@ public class InspectionTree extends Tree {
   private static void addElementsInNode(InspectionTreeNode node, List<RefEntity> out) {
     if (!node.isValid()) return;
     if (node instanceof RefElementNode) {
-      final RefEntity element = ((RefElementNode)node).getElement();
+      RefEntity element = ((RefElementNode)node).getElement();
       if (!out.contains(element)) {
         out.add(0, element);
       }
     }
     if (node instanceof ProblemDescriptionNode) {
-      final RefEntity element = ((ProblemDescriptionNode)node).getElement();
+      RefEntity element = ((ProblemDescriptionNode)node).getElement();
       if (!out.contains(element)) {
         out.add(0, element);
       }
     }
-    final Enumeration children = node.children();
+    Enumeration children = node.children();
     while (children.hasMoreElements()) {
       InspectionTreeNode child = (InspectionTreeNode)children.nextElement();
       addElementsInNode(child, out);
@@ -164,10 +164,10 @@ public class InspectionTree extends Tree {
   }
 
   public CommonProblemDescriptor[] getSelectedDescriptors() {
-    final InspectionToolWrapper toolWrapper = getSelectedToolWrapper();
+    InspectionToolWrapper toolWrapper = getSelectedToolWrapper();
     if (getSelectionCount() == 0) return ProblemDescriptor.EMPTY_ARRAY;
-    final TreePath[] paths = getSelectionPaths();
-    final LinkedHashSet<CommonProblemDescriptor> descriptors = new LinkedHashSet<CommonProblemDescriptor>();
+    TreePath[] paths = getSelectionPaths();
+    LinkedHashSet<CommonProblemDescriptor> descriptors = new LinkedHashSet<CommonProblemDescriptor>();
     for (TreePath path : paths) {
       Object node = path.getLastPathComponent();
       traverseDescriptors((InspectionTreeNode)node, descriptors);
@@ -192,7 +192,7 @@ public class InspectionTree extends Tree {
     @Override
     public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
       final InspectionTreeNode node = (InspectionTreeNode)event.getPath().getLastPathComponent();
-      final Object userObject = node.getUserObject();
+      Object userObject = node.getUserObject();
       //TODO: never re-sort
       if (node.isValid() && !myExpandedUserObjects.contains(userObject)) {
         sortChildren(node);
@@ -290,7 +290,7 @@ public class InspectionTree extends Tree {
         }
 
       }
-      final FileStatus nodeStatus = node.getNodeStatus();
+      FileStatus nodeStatus = node.getNodeStatus();
       if (nodeStatus != FileStatus.NOT_CHANGED){
         foreground = new SimpleTextAttributes(foreground.getBgColor(), TargetAWT.to(nodeStatus.getColor()), foreground.getWaveColor(), foreground.getStyle());
       }
@@ -303,7 +303,7 @@ public class InspectionTree extends Tree {
   }
 
   private void sortChildren(InspectionTreeNode node) {
-    final List<TreeNode> children = TreeUtil.listChildren(node);
+    List<TreeNode> children = TreeUtil.listChildren(node);
     Collections.sort(children, InspectionResultsViewComparator.getInstance());
     node.removeAllChildren();
     TreeUtil.addChildrenTo(node, children);

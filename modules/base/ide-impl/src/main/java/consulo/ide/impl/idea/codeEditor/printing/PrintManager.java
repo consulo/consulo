@@ -57,15 +57,15 @@ class PrintManager {
 
     final PrinterJob printerJob = PrinterJob.getPrinterJob();
 
-    final PsiDirectory[] psiDirectory = new PsiDirectory[1];
+    PsiDirectory[] psiDirectory = new PsiDirectory[1];
     PsiElement psiElement = dataContext.getData(PsiElement.KEY);
     if (psiElement instanceof PsiDirectory) {
       psiDirectory[0] = (PsiDirectory)psiElement;
     }
 
-    final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
-    final String[] shortFileName = new String[1];
-    final String[] directoryName = new String[1];
+    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+    String[] shortFileName = new String[1];
+    String[] directoryName = new String[1];
     if (psiFile != null || psiDirectory[0] != null) {
       if (psiFile != null) {
         shortFileName[0] = psiFile.getVirtualFile().getName();
@@ -183,7 +183,7 @@ class PrintManager {
 
             printerJob.print();
           }
-          catch(final PrinterException e) {
+          catch(PrinterException e) {
             SwingUtilities.invokeLater(() -> Messages.showErrorDialog(project, e.getMessage(), CommonLocalize.titleError().get()));
             LOG.info(e);
           }
@@ -240,12 +240,12 @@ class PrintManager {
     return pageFormat;
   }
 
-  public static TextPainter initTextPainter(final PsiFile psiFile, final Editor editor) {
+  public static TextPainter initTextPainter(PsiFile psiFile, Editor editor) {
     return Application.get().runReadAction((Computable<TextPainter>) () -> doInitTextPainter(psiFile, editor));
   }
 
-  private static TextPainter doInitTextPainter(final PsiFile psiFile, final Editor editor) {
-    final String fileName = psiFile.getVirtualFile().getPresentableUrl();
+  private static TextPainter doInitTextPainter(PsiFile psiFile, Editor editor) {
+    String fileName = psiFile.getVirtualFile().getPresentableUrl();
     DocumentEx doc = (DocumentEx)PsiDocumentManager.getInstance(psiFile.getProject()).getDocument(psiFile);
     if (doc == null) return null;
     EditorHighlighter highlighter = HighlighterFactory.createHighlighter(psiFile.getProject(), psiFile.getVirtualFile());
@@ -253,15 +253,15 @@ class PrintManager {
     return new TextPainter(doc, highlighter, fileName, psiFile, psiFile.getFileType(), editor);
   }
 
-  public static TextPainter initTextPainter(@Nonnull final DocumentEx doc, final Project project) {
-    final TextPainter[] res = new TextPainter[1];
+  public static TextPainter initTextPainter(@Nonnull DocumentEx doc, Project project) {
+    TextPainter[] res = new TextPainter[1];
     Application.get().runReadAction(() -> {
       res[0] = doInitTextPainter(doc, project);
     });
     return res[0];
   }
 
-  private static TextPainter doInitTextPainter(@Nonnull final DocumentEx doc, Project project) {
+  private static TextPainter doInitTextPainter(@Nonnull DocumentEx doc, Project project) {
     EditorHighlighter highlighter = HighlighterFactory.createHighlighter(project, "unknown");
     highlighter.setText(doc.getCharsSequence());
     return new TextPainter(doc, highlighter, "unknown", project, PlainTextFileType.INSTANCE, null);

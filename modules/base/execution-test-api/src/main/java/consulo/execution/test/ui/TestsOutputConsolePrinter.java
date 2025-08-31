@@ -37,12 +37,12 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
   private int myMarkOffset = 0;
 
   private final TestFrameworkPropertyListener<Boolean> myPropertyListener = new TestFrameworkPropertyListener<Boolean>() {
-        public void onChanged(final Boolean value) {
+        public void onChanged(Boolean value) {
           if (!value.booleanValue()) myMarkOffset = 0;
         }
       };
 
-  public TestsOutputConsolePrinter(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView, final TestConsoleProperties properties, final AbstractTestProxy unboundOutputRoot) {
+  public TestsOutputConsolePrinter(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView, TestConsoleProperties properties, AbstractTestProxy unboundOutputRoot) {
     this(testsOutputConsoleView.getConsole(), properties, unboundOutputRoot);
   }
 
@@ -50,7 +50,7 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
    * @deprecated left for JSTestDriver compatibility
    */
   @Deprecated
-  public TestsOutputConsolePrinter(final ConsoleView console, final TestConsoleProperties properties, final AbstractTestProxy unboundOutputRoot) {
+  public TestsOutputConsolePrinter(ConsoleView console, TestConsoleProperties properties, AbstractTestProxy unboundOutputRoot) {
     myConsole = console;
     myProperties = properties;
     myUnboundOutputRoot = unboundOutputRoot;
@@ -65,18 +65,18 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
     return myPaused;
   }
 
-  public void pause(final boolean doPause) {
+  public void pause(boolean doPause) {
     myPaused = doPause;
     if (!doPause) {
       myPausedPrinter.printAndForget(this);
     }
   }
 
-  public void print(final String text, final ConsoleViewContentType contentType) {
+  public void print(String text, ConsoleViewContentType contentType) {
     myConsole.print(text, contentType);
   }
 
-  public void onNewAvailable(@Nonnull final Printable printable) {
+  public void onNewAvailable(@Nonnull Printable printable) {
     if (myPaused) {
       printable.printOn(myPausedPrinter);
     } else {
@@ -90,7 +90,7 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
    * This method must be invoked in Event Dispatch Thread
    * @param test Selected test
    */
-  public void updateOnTestSelected(final AbstractTestProxy test) {
+  public void updateOnTestSelected(AbstractTestProxy test) {
     if (myCurrentTest == test) {
       return;
     }
@@ -98,7 +98,7 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
       myCurrentTest.setPrinter(null);
     }
     myMarkOffset = 0;
-    final Runnable clearRunnable = new Runnable() {
+    Runnable clearRunnable = new Runnable() {
       public void run() {
         myConsole.clear();
       }
@@ -110,13 +110,13 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
     }
     myCurrentTest = test;
     myCurrentTest.setPrinter(this);
-    final Runnable scrollRunnable = new Runnable() {
+    Runnable scrollRunnable = new Runnable() {
       @Override
       public void run() {
         scrollToBeginning();
       }
     };
-    final AbstractTestProxy currentProxyOrRoot = getCurrentProxyOrRoot();
+    AbstractTestProxy currentProxyOrRoot = getCurrentProxyOrRoot();
     CompositePrintable.invokeInAlarm(clearRunnable);
     currentProxyOrRoot.printOn(this);
     CompositePrintable.invokeInAlarm(scrollRunnable);
@@ -134,7 +134,7 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
     return myCurrentTest != null && myCurrentTest.getParent() == myUnboundOutputRoot;
   }
 
-  public void printHyperlink(final String text, final HyperlinkInfo info) {
+  public void printHyperlink(String text, HyperlinkInfo info) {
     myConsole.printHyperlink(text, info);
   }
 
@@ -154,7 +154,7 @@ public class TestsOutputConsolePrinter implements Printer, Disposable {
   protected void scrollToBeginning() {
     myConsole.performWhenNoDeferredOutput(new Runnable() {
       public void run() {
-        final AbstractTestProxy currentProxyOrRoot = getCurrentProxyOrRoot();
+        AbstractTestProxy currentProxyOrRoot = getCurrentProxyOrRoot();
         if (currentProxyOrRoot != null && !currentProxyOrRoot.isInProgress()) {
           //do not scroll to any mark during run
           myConsole.scrollTo(myMarkOffset);

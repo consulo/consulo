@@ -122,8 +122,8 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
         add(myEnvVariablesComponent);
     }
 
-    protected void copyDialogCaption(final LabeledComponent<RawCommandLineEditor> component) {
-        final RawCommandLineEditor rawCommandLineEditor = component.getComponent();
+    protected void copyDialogCaption(LabeledComponent<RawCommandLineEditor> component) {
+        RawCommandLineEditor rawCommandLineEditor = component.getComponent();
         rawCommandLineEditor.setDialogCaption(component.getRawText());
         component.getLabel().setLabelFor(rawCommandLineEditor.getTextField());
     }

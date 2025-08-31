@@ -4,5 +4,5 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.ui.ex.popup.PopupStep;
 
 public interface NextStepHandler {
-  void handleNextStep(final PopupStep nextStep, Object parentValue);
+  void handleNextStep(PopupStep nextStep, Object parentValue);
 }

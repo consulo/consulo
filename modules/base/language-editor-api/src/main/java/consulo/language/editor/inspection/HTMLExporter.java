@@ -54,7 +54,7 @@ public class HTMLExporter {
 
   @RequiredReadAction
   public void createPage(RefEntity element) throws IOException {
-    final String currentFileName = fileNameForElement(element);
+    String currentFileName = fileNameForElement(element);
     StringBuffer buf = new StringBuffer();
     appendNavBar(buf, element);
     myComposer.composeWithExporter(buf, element, this);
@@ -62,7 +62,7 @@ public class HTMLExporter {
     myGeneratedPages.add(element);
   }
 
-  private void appendNavBar(@NonNls final StringBuffer buf, RefEntity element) {
+  private void appendNavBar(@NonNls StringBuffer buf, RefEntity element) {
     buf.append("<a href=\"../index.html\" target=\"_top\">");
     buf.append(InspectionLocalize.inspectionExportInspectionsLinkText());
     buf.append("</a>  ");
@@ -74,7 +74,7 @@ public class HTMLExporter {
 
   public static void writeFileImpl(String folder, @NonNls String fileName, CharSequence buf) throws IOException {
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-    final String fullPath = folder + File.separator + fileName;
+    String fullPath = folder + File.separator + fileName;
 
     if (indicator != null) {
       ProgressManager.checkCanceled();

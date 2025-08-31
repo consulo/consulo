@@ -53,18 +53,18 @@ public abstract class ChangeListTodosPanel extends TodoPanel{
 
   private final class MyChangeListManagerListener extends ChangeListAdapter {
     @Override
-    public void defaultListChanged(final ChangeList oldDefaultList, final ChangeList newDefaultList) {
+    public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
       rebuildWithAlarm(myAlarm);
       AppUIUtil.invokeOnEdt(() -> setDisplayName(IdeBundle.message("changelist.todo.title", newDefaultList.getName())));
     }
 
     @Override
-    public void changeListRenamed(final ChangeList list, final String oldName) {
+    public void changeListRenamed(ChangeList list, String oldName) {
       AppUIUtil.invokeOnEdt(() -> setDisplayName(IdeBundle.message("changelist.todo.title", list.getName())));
     }
 
     @Override
-    public void changesMoved(final Collection<Change> changes, final ChangeList fromList, final ChangeList toList) {
+    public void changesMoved(Collection<Change> changes, ChangeList fromList, ChangeList toList) {
       rebuildWithAlarm(myAlarm);
     }
   }

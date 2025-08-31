@@ -42,12 +42,12 @@ public class ProjectConfigurationProblems {
 
   private void updateErrors(ProjectStructureElement element) {
     removeErrors(myErrors.removeAll(element));
-    final ProjectStructureProblemsHolderImpl problemsHolder = myAnalyzer.getProblemsHolder(element);
+    ProjectStructureProblemsHolderImpl problemsHolder = myAnalyzer.getProblemsHolder(element);
     if (problemsHolder != null) {
-      final List<ProjectStructureProblemDescription> descriptions = problemsHolder.getProblemDescriptions();
+      List<ProjectStructureProblemDescription> descriptions = problemsHolder.getProblemDescriptions();
       if (descriptions != null) {
         for (ProjectStructureProblemDescription description : descriptions) {
-          final ProjectConfigurationProblem error = new ProjectConfigurationProblem(description, myProject);
+          ProjectConfigurationProblem error = new ProjectConfigurationProblem(description, myProject);
           myErrors.put(element, error);
           ConfigurationErrors.Bus.addError(error, myProject);
         }

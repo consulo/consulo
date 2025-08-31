@@ -82,14 +82,14 @@ public abstract class Injectable implements Comparable<Injectable> {
       @Nullable
       @Override
       public String getAdditionalDescription() {
-        final FileType ft = language.getAssociatedFileType();
+        FileType ft = language.getAssociatedFileType();
         return ft != null ? " (" + ft.getDescription() + ")" : null;
       }
 
       @Nonnull
       @Override
       public Image getIcon() {
-        final FileType ft = language.getAssociatedFileType();
+        FileType ft = language.getAssociatedFileType();
         //noinspection ConstantConditions
         return ft != null && ft.getIcon() != null ? ft.getIcon() : Image.empty(Image.DEFAULT_ICON_SIZE);
       }

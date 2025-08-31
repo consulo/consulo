@@ -67,7 +67,7 @@ public class CommonProxy extends ProxySelector {
     }
 
     public static void isInstalledAssertion() {
-        final ProxySelector aDefault = ProxySelector.getDefault();
+        ProxySelector aDefault = ProxySelector.getDefault();
         if (ourInstance != aDefault) {
             // to report only once
             if (ourWrong != aDefault || itsTime()) {
@@ -86,7 +86,7 @@ public class CommonProxy extends ProxySelector {
     }
 
     private static boolean itsTime() {
-        final boolean b = System.currentTimeMillis() - ourErrorTime > ourErrorInterval && ourNotificationCount < 5;
+        boolean b = System.currentTimeMillis() - ourErrorTime > ourErrorInterval && ourNotificationCount < 5;
         if (b) {
             ourErrorTime = System.currentTimeMillis();
             ++ourNotificationCount;
@@ -95,15 +95,15 @@ public class CommonProxy extends ProxySelector {
     }
 
     private static void assertSystemPropertiesSet() {
-        final Map<String, String> props = getOldStyleProperties();
+        Map<String, String> props = getOldStyleProperties();
 
-        final Map<String, String> was = ourProps.get();
+        Map<String, String> was = ourProps.get();
         if (Comparing.equal(was, props) && !itsTime()) {
             return;
         }
         ourProps.set(props);
 
-        final String message = getMessageFromProps(props);
+        String message = getMessageFromProps(props);
         if (message != null) {
             // we only intend to somehow report possible misconfiguration
             // will not show to the user since on Mac OS this setting is typical
@@ -122,7 +122,7 @@ public class CommonProxy extends ProxySelector {
     }
 
     public static Map<String, String> getOldStyleProperties() {
-        final Map<String, String> props = new HashMap<>();
+        Map<String, String> props = new HashMap<>();
         props.put(JavaProxyProperty.HTTP_HOST, System.getProperty(JavaProxyProperty.HTTP_HOST));
         props.put(JavaProxyProperty.HTTPS_HOST, System.getProperty(JavaProxyProperty.HTTPS_HOST));
         props.put(JavaProxyProperty.SOCKS_HOST, System.getProperty(JavaProxyProperty.SOCKS_HOST));
@@ -133,21 +133,21 @@ public class CommonProxy extends ProxySelector {
         Authenticator.setDefault(myAuthenticator);
     }
 
-    public void noProxy(@Nonnull final String protocol, @Nonnull final String host, final int port) {
+    public void noProxy(@Nonnull String protocol, @Nonnull String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy added: " + protocol + "://" + host + ":" + port);
             myNoProxy.add(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
         }
     }
 
-    public void removeNoProxy(@Nonnull final String protocol, @Nonnull final String host, final int port) {
+    public void removeNoProxy(@Nonnull String protocol, @Nonnull String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy removed: " + protocol + "://" + host + ":" + port);
             myNoProxy.remove(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
         }
     }
 
-    public void noAuthentication(@Nonnull final String protocol, @Nonnull final String host, final int port) {
+    public void noAuthentication(@Nonnull String protocol, @Nonnull String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy added: " + protocol + "://" + host + ":" + port);
             myNoProxy.add(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
@@ -155,35 +155,35 @@ public class CommonProxy extends ProxySelector {
     }
 
     @SuppressWarnings("unused")
-    public void removeNoAuthentication(@Nonnull final String protocol, @Nonnull final String host, final int port) {
+    public void removeNoAuthentication(@Nonnull String protocol, @Nonnull String host, int port) {
         synchronized (myLock) {
             LOG.debug("no proxy removed: " + protocol + "://" + host + ":" + port);
             myNoProxy.remove(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
         }
     }
 
-    public void setCustom(@Nonnull final String key, @Nonnull final ProxySelector proxySelector) {
+    public void setCustom(@Nonnull String key, @Nonnull ProxySelector proxySelector) {
         synchronized (myLock) {
             LOG.debug("custom set: " + key + ", " + proxySelector.toString());
             myCustom.put(key, proxySelector);
         }
     }
 
-    public void setCustomAuth(@Nonnull final String key, final NonStaticAuthenticator authenticator) {
+    public void setCustomAuth(@Nonnull String key, NonStaticAuthenticator authenticator) {
         synchronized (myLock) {
             LOG.debug("custom auth set: " + key + ", " + authenticator.toString());
             myCustomAuth.put(key, authenticator);
         }
     }
 
-    public void removeCustomAuth(@Nonnull final String key) {
+    public void removeCustomAuth(@Nonnull String key) {
         synchronized (myLock) {
             LOG.debug("custom auth removed: " + key);
             myCustomAuth.remove(key);
         }
     }
 
-    public void removeCustom(@Nonnull final String key) {
+    public void removeCustom(@Nonnull String key) {
         synchronized (myLock) {
             LOG.debug("custom set: " + key);
             myCustom.remove(key);
@@ -212,8 +212,8 @@ public class CommonProxy extends ProxySelector {
                 return NO_PROXY_LIST;
             }
 
-            final HostInfo info = new HostInfo(uri.getScheme(), host, correctPortByProtocol(uri));
-            final Map<String, ProxySelector> copy;
+            HostInfo info = new HostInfo(uri.getScheme(), host, correctPortByProtocol(uri));
+            Map<String, ProxySelector> copy;
             synchronized (myLock) {
                 if (myNoProxy.contains(Pair.create(info, Thread.currentThread()))) {
                     LOG.debug("CommonProxy.select returns no proxy (in no proxy list) for " + uri.toString());
@@ -222,7 +222,7 @@ public class CommonProxy extends ProxySelector {
                 copy = new HashMap<>(myCustom);
             }
             for (Map.Entry<String, ProxySelector> entry : copy.entrySet()) {
-                final List<Proxy> proxies = entry.getValue().select(uri);
+                List<Proxy> proxies = entry.getValue().select(uri);
                 if (!ContainerUtil.isEmpty(proxies)) {
                     LOG.debug("CommonProxy.select returns custom proxy for " + uri.toString() + ", " + proxies.toString());
                     return proxies;
@@ -251,7 +251,7 @@ public class CommonProxy extends ProxySelector {
     public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
         LOG.info("connect failed to " + uri.toString() + ", sa: " + sa.toString(), ioe);
 
-        final Map<String, ProxySelector> copy;
+        Map<String, ProxySelector> copy;
         synchronized (myLock) {
             copy = new HashMap<>(myCustom);
         }
@@ -263,16 +263,16 @@ public class CommonProxy extends ProxySelector {
     private class CommonAuthenticator extends Authenticator {
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
-            final String siteStr = getRequestingSite() == null ? null : getRequestingSite().toString();
+            String siteStr = getRequestingSite() == null ? null : getRequestingSite().toString();
             LOG.debug("CommonAuthenticator.getPasswordAuthentication called for " + siteStr);
-            final String host = getHostNameReliably(getRequestingHost(), getRequestingSite(), getRequestingURL());
-            final int port = getRequestingPort();
+            String host = getHostNameReliably(getRequestingHost(), getRequestingSite(), getRequestingURL());
+            int port = getRequestingPort();
 
-            final Map<String, NonStaticAuthenticator> copy;
+            Map<String, NonStaticAuthenticator> copy;
             synchronized (myLock) {
                 // for hosts defined as no proxy we will NOT pass authentication to not provoke credentials
-                final HostInfo hostInfo = new HostInfo(getRequestingProtocol(), host, port);
-                final Pair<HostInfo, Thread> pair = Pair.create(hostInfo, Thread.currentThread());
+                HostInfo hostInfo = new HostInfo(getRequestingProtocol(), host, port);
+                Pair<HostInfo, Thread> pair = Pair.create(hostInfo, Thread.currentThread());
                 if (myNoProxy.contains(pair)) {
                     LOG.debug("CommonAuthenticator.getPasswordAuthentication found host in no proxies set (" + siteStr + ")");
                     return null;
@@ -282,9 +282,9 @@ public class CommonProxy extends ProxySelector {
 
             if (!copy.isEmpty()) {
                 for (Map.Entry<String, NonStaticAuthenticator> entry : copy.entrySet()) {
-                    final NonStaticAuthenticator authenticator = entry.getValue();
+                    NonStaticAuthenticator authenticator = entry.getValue();
                     prepareAuthenticator(authenticator);
-                    final PasswordAuthentication authentication = authenticator.getPasswordAuthentication();
+                    PasswordAuthentication authentication = authenticator.getPasswordAuthentication();
                     if (authentication != null) {
                         LOG.debug(
                             "CommonAuthenticator.getPasswordAuthentication found custom authenticator for " +
@@ -322,7 +322,7 @@ public class CommonProxy extends ProxySelector {
         }
     }
 
-    public static String getHostNameReliably(final String requestingHost, final InetAddress site, final URL requestingUrl) {
+    public static String getHostNameReliably(String requestingHost, InetAddress site, URL requestingUrl) {
         String host = requestingHost;
         if (host == null) {
             if (site != null) {
@@ -336,7 +336,7 @@ public class CommonProxy extends ProxySelector {
         return host;
     }
 
-    private static URI createUri(final URL url) {
+    private static URI createUri(URL url) {
         return HttpProxyManagerImpl.toUri(url.toString());
     }
 

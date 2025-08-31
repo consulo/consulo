@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class IFileElementType extends ILazyParseableElementType {
-  public IFileElementType(@Nullable final Language language) {
+  public IFileElementType(@Nullable Language language) {
     super("FILE", language);
   }
 
@@ -36,8 +36,8 @@ public class IFileElementType extends ILazyParseableElementType {
 
   @Nullable
   @Override
-  public ASTNode parseContents(final ASTNode chameleon) {
-    final PsiElement psi = chameleon.getPsi();
+  public ASTNode parseContents(ASTNode chameleon) {
+    PsiElement psi = chameleon.getPsi();
     assert psi != null : "Bad chameleon: " + chameleon;
     return doParseContents(chameleon, psi);
   }

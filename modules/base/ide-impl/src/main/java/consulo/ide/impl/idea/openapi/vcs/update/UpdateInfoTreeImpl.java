@@ -151,14 +151,14 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
     }
 
-    public void setCanGroupByChangeList(final boolean canGroupByChangeList) {
+    public void setCanGroupByChangeList(boolean canGroupByChangeList) {
         myCanGroupByChangeList = canGroupByChangeList;
         if (myCanGroupByChangeList) {
             myLoadingChangeListsLabel = new JLabel(VcsBundle.message("update.info.loading.changelists"));
             add(myLoadingChangeListsLabel, BorderLayout.SOUTH);
             myGroupByChangeList = VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_CHANGELIST;
             if (myGroupByChangeList) {
-                final CardLayout cardLayout = (CardLayout) myCenterPanel.getLayout();
+                CardLayout cardLayout = (CardLayout) myCenterPanel.getLayout();
                 cardLayout.show(myCenterPanel, CARD_CHANGES);
             }
         }
@@ -222,7 +222,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         myTree.addMouseListener(new PopupHandler() {
             @Override
             public void invokePopup(Component comp, int x, int y) {
-                final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("UpdateActionGroup");
+                DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("UpdateActionGroup");
                 if (group != null) { //if no UpdateActionGroup was configured
                     ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UPDATE_POPUP, group);
                     popupMenu.getComponent().show(comp, x, y);
@@ -309,8 +309,8 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
 
         @Override
         public Pair<FilePath, FileStatus> next() {
-            final FilePath result = myNext;
-            final FileStatus status = myStatus;
+            FilePath result = myNext;
+            FileStatus status = myStatus;
             step();
             return Pair.create(result, status);
         }
@@ -318,9 +318,9 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         private void step() {
             myNext = null;
             while (myEnum.hasMoreElements()) {
-                final Object o = myEnum.nextElement();
+                Object o = myEnum.nextElement();
                 if (o instanceof FileTreeNode) {
-                    final FileTreeNode treeNode = (FileTreeNode) o;
+                    FileTreeNode treeNode = (FileTreeNode) o;
                     VirtualFilePointer filePointer = treeNode.getFilePointer();
                     if (!filePointer.isValid()) {
                         continue;
@@ -329,9 +329,9 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
                     myNext = getFilePath(filePointer);
                     myStatus = FileStatus.MODIFIED;
 
-                    final GroupTreeNode parent = findParentGroupTreeNode(treeNode.getParent());
+                    GroupTreeNode parent = findParentGroupTreeNode(treeNode.getParent());
                     if (parent != null) {
-                        final String id = parent.getFileGroupId();
+                        String id = parent.getFileGroupId();
                         if (FileGroup.CREATED_ID.equals(id)) {
                             myStatus = FileStatus.ADDED;
                         }
@@ -416,8 +416,8 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         }
     }
 
-    public void setChangeLists(final List<CommittedChangeList> receivedChanges) {
-        final boolean hasEmptyCaches = CommittedChangesCache.getInstance(myProject).hasEmptyCaches();
+    public void setChangeLists(List<CommittedChangeList> receivedChanges) {
+        boolean hasEmptyCaches = CommittedChangesCache.getInstance(myProject).hasEmptyCaches();
 
         myProject.getApplication().invokeLater(
             () -> {
@@ -428,7 +428,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
                 myCommittedChangeLists = receivedChanges;
                 myTreeBrowser.setItems(myCommittedChangeLists, CommittedChangesBrowserUseCase.UPDATE);
                 if (hasEmptyCaches) {
-                    final StatusText statusText = myTreeBrowser.getEmptyText();
+                    StatusText statusText = myTreeBrowser.getEmptyText();
                     statusText.clear();
                     statusText.appendText("Click ").appendText(
                         "Refresh",
@@ -480,7 +480,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myGroupByChangeList = state;
             VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_CHANGELIST = myGroupByChangeList;
-            final CardLayout cardLayout = (CardLayout) myCenterPanel.getLayout();
+            CardLayout cardLayout = (CardLayout) myCenterPanel.getLayout();
             if (!myGroupByChangeList) {
                 cardLayout.show(myCenterPanel, CARD_STATUS);
             }

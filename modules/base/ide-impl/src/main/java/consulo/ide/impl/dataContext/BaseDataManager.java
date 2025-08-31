@@ -231,7 +231,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
 
     @Nullable
-    public <T> T getDataFromProvider(@Nonnull final DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
+    public <T> T getDataFromProvider(@Nonnull DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
         if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
             return null;
         }
@@ -243,7 +243,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
 
             GetDataRule<T> dataRule = getDataRule(dataId);
             if (dataRule != null) {
-                final Set<Key> ids = alreadyComputedIds == null ? new HashSet<>() : alreadyComputedIds;
+                Set<Key> ids = alreadyComputedIds == null ? new HashSet<>() : alreadyComputedIds;
                 ids.add(dataId);
                 data = dataRule.getData(id -> getDataFromProvider(provider, id, ids));
 
@@ -295,9 +295,9 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
 
     @Nullable
-    protected <T> T getData(@Nonnull Key<T> dataId, final consulo.ui.Component focusedComponent) {
+    protected <T> T getData(@Nonnull Key<T> dataId, consulo.ui.Component focusedComponent) {
         for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
-            final DataProvider dataProvider = c::getUserData;
+            DataProvider dataProvider = c::getUserData;
             T data = getDataFromProvider(dataProvider, dataId, null);
             if (data != null) {
                 return data;

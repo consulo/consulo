@@ -781,7 +781,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      * @param findAll true if the operation is a "Find All", false otherwise.
      * @since 5.1
      */
-    public void setFindAll(final boolean findAll) {
+    public void setFindAll(boolean findAll) {
         boolean changed = isFindAll != findAll;
         isFindAll = findAll;
         if (changed) {
@@ -805,7 +805,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      * @param findAllEnabled true if "Find All" is enabled, false otherwise.
      * @since 5.1
      */
-    public void setFindAllEnabled(final boolean findAllEnabled) {
+    public void setFindAllEnabled(boolean findAllEnabled) {
         boolean changed = isFindAllEnabled != findAllEnabled;
         isFindAllEnabled = findAllEnabled;
         if (changed) {
@@ -829,7 +829,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
         return customScope;
     }
 
-    public void setCustomScope(final SearchScope customScope) {
+    public void setCustomScope(SearchScope customScope) {
         boolean changed = this.customScope != null ? this.customScope.equals(customScope) : customScope != null;
         this.customScope = customScope;
         if (changed) {

@@ -195,8 +195,8 @@ class CustomWalker implements Walker {
      * @param trim How to prepare the Text content
      * @param text The actual Text content.
      */
-    public void appendText(final Trim trim, final String text) {
-      final int tlen = text.length();
+    public void appendText(Trim trim, String text) {
+      int tlen = text.length();
       if (tlen == 0) {
         return;
       }
@@ -225,14 +225,14 @@ class CustomWalker implements Walker {
       }
     }
 
-    private String escapeText(final String text) {
+    private String escapeText(String text) {
       if (escape == null || !fstack.getEscapeOutput()) {
         return text;
       }
       return JDOMUtil.escapeText(text, false, false);
     }
 
-    private String escapeCDATA(final String text) {
+    private String escapeCDATA(String text) {
       if (escape == null) {
         return text;
       }
@@ -246,7 +246,7 @@ class CustomWalker implements Walker {
      * @param trim How to prepare the CDATA content
      * @param text The actual CDATA content.
      */
-    public void appendCDATA(final Trim trim, final String text) {
+    public void appendCDATA(Trim trim, String text) {
       // this resets the mtbuffer too.
       closeText();
       String toadd = null;
@@ -284,7 +284,7 @@ class CustomWalker implements Walker {
      *
      * @param text
      */
-    private void forceAppend(final String text) {
+    private void forceAppend(String text) {
       mtgottext = true;
       mtbuffer.append(text);
     }
@@ -295,7 +295,7 @@ class CustomWalker implements Walker {
      *
      * @param c the content to add.
      */
-    public void appendRaw(final Content c) {
+    public void appendRaw(Content c) {
       closeText();
       ensurespace();
       mttext[mtsize] = null;
@@ -376,7 +376,7 @@ class CustomWalker implements Walker {
    * @param fstack   the current FormatStack
    * @param doescape Whether Text values should be escaped.
    */
-  public CustomWalker(final List<? extends Content> xx, final FormatStack fstack, final boolean doescape) {
+  public CustomWalker(List<? extends Content> xx, FormatStack fstack, boolean doescape) {
     super();
     this.fstack = fstack;
     this.content = xx.isEmpty() ? EMPTYIT : xx.iterator();
@@ -449,7 +449,7 @@ class CustomWalker implements Walker {
       // advance the cursor
       mtpos++;
 
-      final Content ret = mttext[mtpos] == null ? mtdata[mtpos] : null;
+      Content ret = mttext[mtpos] == null ? mtdata[mtpos] : null;
 
 
       // we can calculate the hasnext
@@ -460,7 +460,7 @@ class CustomWalker implements Walker {
     }
 
     // non-text, increment and return content.
-    final Content ret = pending;
+    Content ret = pending;
     pending = content.hasNext() ? content.next() : null;
 
     // OK, we are returning some content.
@@ -533,7 +533,7 @@ class CustomWalker implements Walker {
    */
   protected void analyzeMultiText(MultiText mtext, int offset, int len) {
     while (len > 0) {
-      final Content c = get(offset);
+      Content c = get(offset);
       if (c instanceof Text) {
         // either Text or CDATA
         if (!Verifier.isAllXMLWhitespace(c.getValue())) {
@@ -548,7 +548,7 @@ class CustomWalker implements Walker {
     }
 
     while (len > 0) {
-      final Content c = get(offset + len - 1);
+      Content c = get(offset + len - 1);
       if (c instanceof Text) {
         // either Text or CDATA
         if (!Verifier.isAllXMLWhitespace(c.getValue())) {
@@ -572,7 +572,7 @@ class CustomWalker implements Walker {
       if (len == 1) {
         trim = Trim.BOTH;
       }
-      final Content c = get(offset + i);
+      Content c = get(offset + i);
       switch (c.getCType()) {
         case Text:
           mtext.appendText(trim, c.getValue());
@@ -597,7 +597,7 @@ class CustomWalker implements Walker {
    * @param index the index to get the content at.
    * @return the content at the index.
    */
-  protected final Content get(final int index) {
+  protected final Content get(int index) {
     return mtsource[index];
   }
 
@@ -620,7 +620,7 @@ class CustomWalker implements Walker {
    * @param first
    * @return The updated MultiText containing the correct sequence of Text-like content
    */
-  private final MultiText buildMultiText(final boolean first) {
+  private final MultiText buildMultiText(boolean first) {
     // set up a sequence where the next bunch of stuff is text.
     if (!first && newlineindent != null) {
       mtbuffer.append(newlineindent);
@@ -665,7 +665,7 @@ class CustomWalker implements Walker {
     return allwhite;
   }
 
-  private final boolean isTextLike(final Content c) {
+  private final boolean isTextLike(Content c) {
     switch (c.getCType()) {
       case Text:
       case CDATA:

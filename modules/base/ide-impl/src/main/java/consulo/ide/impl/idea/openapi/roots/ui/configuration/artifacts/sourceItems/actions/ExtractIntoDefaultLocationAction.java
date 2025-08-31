@@ -47,9 +47,9 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
 
     @Override
     public void update(AnActionEvent e) {
-        final String pathForClasses =
+        String pathForClasses =
             myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES);
-        final Presentation presentation = e.getPresentation();
+        Presentation presentation = e.getPresentation();
         if (onlyJarsSelected() && pathForClasses != null) {
             presentation.setText("Extract Into " + getTargetLocationText(Collections.singleton(pathForClasses)));
             presentation.setVisible(true);
@@ -71,13 +71,13 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        final String pathForClasses =
+        String pathForClasses =
             myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES);
         if (pathForClasses != null) {
             final List<PackagingElement<?>> extracted = new ArrayList<PackagingElement<?>>();
             for (PackagingSourceItem item : mySourceItemsTree.getSelectedItems()) {
-                final ArtifactEditorContext context = myArtifactEditor.getContext();
-                final List<? extends PackagingElement<?>> elements = item.createElements(context);
+                ArtifactEditorContext context = myArtifactEditor.getContext();
+                List<? extends PackagingElement<?>> elements = item.createElements(context);
                 ArtifactUtil.processElementsWithSubstitutions(
                     elements,
                     context,
@@ -87,9 +87,9 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
                         @Override
                         public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
                             if (element instanceof FileCopyPackagingElement copyPackagingElement) {
-                                final VirtualFile file = copyPackagingElement.findFile();
+                                VirtualFile file = copyPackagingElement.findFile();
                                 if (file != null) {
-                                    final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
+                                    VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
                                     if (archiveRoot != null) {
                                         extracted.add(PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY))
                                             .createExtractedDirectory(archiveRoot));

@@ -141,7 +141,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
     toAdd.remove(topLevelProject.getPath());
 
-    final Map<Object, Integer> taskWeights = new HashMap<>();
+    Map<Object, Integer> taskWeights = new HashMap<>();
     for (int i = 0; i < topLevelProjectNode.getChildCount(); i++) {
       ExternalSystemNode<?> child = topLevelProjectNode.getChildAt(i);
       Object childElement = child.getDescriptor().getElement();

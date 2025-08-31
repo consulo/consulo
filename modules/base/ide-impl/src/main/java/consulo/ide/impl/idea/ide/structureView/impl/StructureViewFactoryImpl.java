@@ -117,7 +117,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
         myProject.getApplication().getExtensionPoint(StructureViewExtension.class).getOrBuildCache(CACHE_KEY);
       for (Class<? extends PsiElement> registeredType : map.keySet()) {
         if (ReflectionUtil.isAssignable(registeredType, type)) {
-          final Collection<StructureViewExtension> extensions = map.get(registeredType);
+          Collection<StructureViewExtension> extensions = map.get(registeredType);
           for (StructureViewExtension extension : extensions) {
             myImplExtensions.put(type, extension);
           }
@@ -130,7 +130,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   }
 
   @Override
-  public void setActiveAction(final String name, final boolean state) {
+  public void setActiveAction(String name, boolean state) {
     Collection<String> activeActions = collectActiveActions();
 
     if (state) {
@@ -143,17 +143,17 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
     myState.ACTIVE_ACTIONS = toString(activeActions);
   }
 
-  private static String toString(final Collection<String> activeActions) {
+  private static String toString(Collection<String> activeActions) {
     return StringUtil.join(activeActions, ",");
   }
 
   private Collection<String> collectActiveActions() {
-    final String[] strings = myState.ACTIVE_ACTIONS.split(",");
+    String[] strings = myState.ACTIVE_ACTIONS.split(",");
     return new HashSet<>(Arrays.asList(strings));
   }
 
   @Override
-  public boolean isActionActive(final String name) {
+  public boolean isActionActive(String name) {
     return collectActiveActions().contains(name);
   }
 
@@ -168,15 +168,15 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   }
 
   @Override
-  public StructureView createStructureView(final FileEditor fileEditor, final StructureViewModel treeModel, final Project project) {
+  public StructureView createStructureView(FileEditor fileEditor, StructureViewModel treeModel, Project project) {
     return createStructureView(fileEditor, treeModel, project, true);
   }
 
   @Override
-  public StructureView createStructureView(final FileEditor fileEditor,
-                                           final StructureViewModel treeModel,
-                                           final Project project,
-                                           final boolean showRootNode) {
+  public StructureView createStructureView(FileEditor fileEditor,
+                                           StructureViewModel treeModel,
+                                           Project project,
+                                           boolean showRootNode) {
     return new StructureViewComponent(fileEditor, treeModel, project, showRootNode);
   }
 }

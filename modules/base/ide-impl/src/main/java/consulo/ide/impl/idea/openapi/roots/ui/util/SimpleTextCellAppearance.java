@@ -29,28 +29,28 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
   private final SimpleTextAttributes myTextAttributes;
   private final String myText;
 
-  public static SimpleTextCellAppearance regular(@Nonnull final String text, @Nullable final Image icon) {
+  public static SimpleTextCellAppearance regular(@Nonnull String text, @Nullable Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
-  public static SimpleTextCellAppearance invalid(@Nonnull final String text, @Nullable final Image icon) {
+  public static SimpleTextCellAppearance invalid(@Nonnull String text, @Nullable Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
-  public static SimpleTextCellAppearance synthetic(@Nonnull final String text, @Nullable final Image icon) {
+  public static SimpleTextCellAppearance synthetic(@Nonnull String text, @Nullable Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
   }
 
-  public SimpleTextCellAppearance(@Nonnull final String text,
-                                  @Nullable final Image icon,
-                                  @Nonnull final SimpleTextAttributes textAttributes) {
+  public SimpleTextCellAppearance(@Nonnull String text,
+                                  @Nullable Image icon,
+                                  @Nonnull SimpleTextAttributes textAttributes) {
     myIcon = icon;
     myTextAttributes = textAttributes;
     myText = text;
   }
 
   @Override
-  public void customize(@Nonnull final ColoredTextContainer component) {
+  public void customize(@Nonnull ColoredTextContainer component) {
     component.setIcon(myIcon);
     component.append(myText, myTextAttributes);
   }
@@ -73,7 +73,7 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  public void setIcon(@Nullable final Image icon) {
+  public void setIcon(@Nullable Image icon) {
     myIcon = icon;
   }
 }

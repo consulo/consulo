@@ -165,12 +165,12 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   }
 
   @Override
-  public void addProcessListener(final ProcessListener listener) {
+  public void addProcessListener(ProcessListener listener) {
     myListeners.add(listener);
   }
 
   @Override
-  public void removeProcessListener(final ProcessListener listener) {
+  public void removeProcessListener(ProcessListener listener) {
     myListeners.remove(listener);
   }
 
@@ -178,11 +178,11 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
     notifyTerminated(0, false);
   }
 
-  protected void notifyProcessTerminated(final int exitCode) {
+  protected void notifyProcessTerminated(int exitCode) {
     notifyTerminated(exitCode, true);
   }
 
-  private void notifyTerminated(final int exitCode, final boolean willBeDestroyed) {
+  private void notifyTerminated(int exitCode, boolean willBeDestroyed) {
     myAfterStartNotifiedRunner.execute(() -> {
       LOG.assertTrue(isStartNotified(), "Start notify is not called");
 
@@ -215,8 +215,8 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   }
 
   @Override
-  public void notifyTextAvailable(final String text, final Key outputType) {
-    final ProcessEvent event = new ProcessEvent(this, text);
+  public void notifyTextAvailable(String text, Key outputType) {
+    ProcessEvent event = new ProcessEvent(this, text);
     myEventMulticaster.onTextAvailable(event, outputType);
   }
 
@@ -224,7 +224,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   @Nullable
   public abstract OutputStream getProcessInput();
 
-  private void fireProcessWillTerminate(final boolean willBeDestroyed) {
+  private void fireProcessWillTerminate(boolean willBeDestroyed) {
     LOG.assertTrue(isStartNotified(), "All events should be fired after startNotify is called");
     myEventMulticaster.processWillTerminate(new ProcessEvent(this), willBeDestroyed);
   }
@@ -260,7 +260,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   }
 
   private ProcessListener createEventMulticaster() {
-    final Class<ProcessListener> listenerClass = ProcessListener.class;
+    Class<ProcessListener> listenerClass = ProcessListener.class;
     return (ProcessListener)Proxy.newProxyInstance(listenerClass.getClassLoader(), new Class[]{listenerClass}, new InvocationHandler() {
       @Override
       public Object invoke(Object object, Method method, Object[] params) throws Throwable {
@@ -280,7 +280,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   }
 
   private static boolean isCanceledException(Throwable e) {
-    final boolean value = e instanceof InvocationTargetException && e.getCause() instanceof ProcessCanceledException;
+    boolean value = e instanceof InvocationTargetException && e.getCause() instanceof ProcessCanceledException;
     if (value) {
       LOG.info(e);
     }
@@ -312,7 +312,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
     }
 
     private void runPendingTasks() {
-      final Runnable[] tasks;
+      Runnable[] tasks;
       synchronized (myPendingTasks) {
         tasks = myPendingTasks.toArray(new Runnable[myPendingTasks.size()]);
         myPendingTasks.clear();

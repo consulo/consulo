@@ -65,7 +65,7 @@ public class SemKey<T extends SemElement> {
 
   public boolean isKindOf(SemKey<?> another) {
     if (another == this) return true;
-    for (final SemKey<? super T> superKey : mySupers) {
+    for (SemKey<? super T> superKey : mySupers) {
       if (superKey.isKindOf(another)) {
         return true;
       }

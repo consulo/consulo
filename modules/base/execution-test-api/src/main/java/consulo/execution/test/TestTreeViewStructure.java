@@ -24,7 +24,7 @@ public abstract class TestTreeViewStructure<T extends AbstractTestProxy> extends
     return myTestNodesFilter;
   }
 
-  public void setFilter(final Filter<T> nodesFilter) {
+  public void setFilter(Filter<T> nodesFilter) {
     myTestNodesFilter = nodesFilter;
   }
 }

@@ -33,5 +33,5 @@ public interface ITokenTypeRemapper {
      * @param text   text being parsed.
      * @return altered (or not) element type.
      **/
-    IElementType filter(final IElementType source, final int start, final int end, final CharSequence text);
+    IElementType filter(IElementType source, int start, int end, CharSequence text);
 }

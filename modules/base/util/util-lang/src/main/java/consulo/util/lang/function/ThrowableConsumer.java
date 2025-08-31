@@ -16,5 +16,5 @@
 package consulo.util.lang.function;
 
 public interface ThrowableConsumer<S, T extends Throwable> {
-  void consume(final S s) throws T;
+  void consume(S s) throws T;
 }

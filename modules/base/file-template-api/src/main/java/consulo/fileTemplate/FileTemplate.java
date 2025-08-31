@@ -58,7 +58,7 @@ public interface FileTemplate extends Cloneable {
 
   void setName(@Nonnull String name);
 
-  boolean isTemplateOfType(final FileType fType);
+  boolean isTemplateOfType(FileType fType);
 
   boolean isDefault();
 

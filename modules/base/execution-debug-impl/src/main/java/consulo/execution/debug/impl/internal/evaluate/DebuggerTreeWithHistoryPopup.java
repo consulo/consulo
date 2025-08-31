@@ -84,7 +84,7 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
   }
 
   @Override
-  protected void updateContainer(final Tree tree, String title) {
+  protected void updateContainer(Tree tree, String title) {
     if (myPopup != null) {
       myPopup.cancel();
     }
@@ -137,17 +137,17 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
     updateInitialBounds(tree);
   }
 
-  private void resize(final TreePath path, JTree tree) {
+  private void resize(TreePath path, JTree tree) {
     if (myPopup == null || !myPopup.isVisible()) return;
-    final Window popupWindow = SwingUtilities.windowForComponent(myPopup.getContent());
+    Window popupWindow = SwingUtilities.windowForComponent(myPopup.getContent());
     if (popupWindow == null) return;
-    final Dimension size = tree.getPreferredSize();
-    final Point location = popupWindow.getLocation();
-    final Rectangle windowBounds = popupWindow.getBounds();
-    final Rectangle bounds = tree.getPathBounds(path);
+    Dimension size = tree.getPreferredSize();
+    Point location = popupWindow.getLocation();
+    Rectangle windowBounds = popupWindow.getBounds();
+    Rectangle bounds = tree.getPathBounds(path);
     if (bounds == null) return;
 
-    final Rectangle targetBounds = new Rectangle(
+    Rectangle targetBounds = new Rectangle(
       location.x,
       location.y,
       Math.max(Math.max(size.width, bounds.width) + 20, windowBounds.width),
@@ -159,12 +159,12 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
     popupWindow.repaint();
   }
 
-  private void updateInitialBounds(final Tree tree) {
-    final Window popupWindow = SwingUtilities.windowForComponent(myPopup.getContent());
-    final Dimension size = tree.getPreferredSize();
-    final Point location = popupWindow.getLocation();
-    final Rectangle windowBounds = popupWindow.getBounds();
-    final Rectangle targetBounds = new Rectangle(
+  private void updateInitialBounds(Tree tree) {
+    Window popupWindow = SwingUtilities.windowForComponent(myPopup.getContent());
+    Dimension size = tree.getPreferredSize();
+    Point location = popupWindow.getLocation();
+    Rectangle windowBounds = popupWindow.getBounds();
+    Rectangle targetBounds = new Rectangle(
       location.x,
       location.y,
       Math.max(size.width + 250, windowBounds.width),

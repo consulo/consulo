@@ -34,11 +34,11 @@ public abstract class StructureViewFactoryEx extends StructureViewFactory {
 
   public abstract Collection<StructureViewExtension> getAllExtensions(Class<? extends PsiElement> type);
 
-  public abstract void setActiveAction(final String name, final boolean state);
+  public abstract void setActiveAction(String name, boolean state);
 
-  public abstract boolean isActionActive(final String name);
+  public abstract boolean isActionActive(String name);
 
-  public static StructureViewFactoryEx getInstanceEx(final Project project) {
+  public static StructureViewFactoryEx getInstanceEx(Project project) {
     return (StructureViewFactoryEx)getInstance(project);
   }
 

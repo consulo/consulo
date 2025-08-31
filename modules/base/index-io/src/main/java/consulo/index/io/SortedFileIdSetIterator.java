@@ -63,7 +63,7 @@ public class SortedFileIdSetIterator implements IntIdsIterator {
   }
 
   public static IntIdsIterator getTransientIterator(IntIdsIterator intIterator) {
-    final IntIdsIterator intIteratorCloned = intIterator.createCopyInInitialState();
+    IntIdsIterator intIteratorCloned = intIterator.createCopyInInitialState();
     int max = 0, min = Integer.MAX_VALUE;
 
     while(intIterator.hasNext()) {
@@ -74,15 +74,15 @@ public class SortedFileIdSetIterator implements IntIdsIterator {
 
     assert min > 0;
 
-    final int offset = (min >> INT_BITS_SHIFT) << INT_BITS_SHIFT;
-    final int bitsLength = ((max - offset) >> INT_BITS_SHIFT) + 1;
-    final int[] bits = ourSpareBuffer.getBuffer(bitsLength);
+    int offset = (min >> INT_BITS_SHIFT) << INT_BITS_SHIFT;
+    int bitsLength = ((max - offset) >> INT_BITS_SHIFT) + 1;
+    int[] bits = ourSpareBuffer.getBuffer(bitsLength);
     for(int i = 0; i < bitsLength; ++i) bits[i] = 0;
 
     intIterator = intIteratorCloned;
     int size = 0;
     while(intIterator.hasNext()) {
-      final int id = intIterator.next() - offset;
+      int id = intIterator.next() - offset;
       int mask = 1 << id;
       if ((bits[id >> INT_BITS_SHIFT] & mask) == 0) {
         bits[id >> INT_BITS_SHIFT] |= mask;

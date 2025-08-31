@@ -40,14 +40,14 @@ public abstract class XDebuggerTreeNode implements TreeNode {
   private Image myIcon;
   private TreePath myPath;
 
-  protected XDebuggerTreeNode(final XDebuggerTree tree, final @Nullable XDebuggerTreeNode parent, final boolean leaf) {
+  protected XDebuggerTreeNode(XDebuggerTree tree, @Nullable XDebuggerTreeNode parent, boolean leaf) {
     myParent = parent;
     myLeaf = leaf;
     myTree = tree;
   }
 
   @Override
-  public TreeNode getChildAt(final int childIndex) {
+  public TreeNode getChildAt(int childIndex) {
     return isLeaf() ? null : getChildren().get(childIndex);
   }
 
@@ -92,7 +92,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
     myIcon = icon;
   }
 
-  public void setLeaf(final boolean leaf) {
+  public void setLeaf(boolean leaf) {
     myLeaf = leaf;
   }
 
@@ -128,7 +128,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
   }
 
   protected TreeNode[] getChildNodes(int[] indices) {
-    final TreeNode[] children = new TreeNode[indices.length];
+    TreeNode[] children = new TreeNode[indices.length];
     for (int i = 0; i < indices.length; i++) {
       children[i] = getChildAt(indices[i]);
     }
@@ -138,7 +138,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
   protected int[] getNodesIndices(@Nullable Collection<? extends TreeNode> children) {
     if (children == null) return ArrayUtil.EMPTY_INT_ARRAY;
 
-    final int[] ints = new int[children.size()];
+    int[] ints = new int[children.size()];
     int i = 0;
     for (TreeNode node : children) {
       ints[i++] = getIndex(node);
@@ -151,7 +151,7 @@ public abstract class XDebuggerTreeNode implements TreeNode {
     fireNodeStructureChanged(this);
   }
 
-  protected void fireNodeStructureChanged(final TreeNode node) {
+  protected void fireNodeStructureChanged(TreeNode node) {
     myTree.getTreeModel().nodeStructureChanged(node);
   }
 

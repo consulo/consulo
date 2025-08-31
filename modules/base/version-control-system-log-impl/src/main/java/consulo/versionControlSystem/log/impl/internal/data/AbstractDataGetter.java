@@ -144,7 +144,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
     else {
       Task.Backgroundable task = new Task.Backgroundable(null, "Loading Selected Details", true, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
         @Override
-        public void run(@Nonnull final ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           indicator.checkCanceled();
           try {
             TIntObjectHashMap<T> map = preLoadCommitData(toLoad);
@@ -175,7 +175,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
     }
   }
 
-  private void sortCommitsByRow(@Nonnull List<T> result, @Nonnull final TIntIntHashMap rowsForCommits) {
+  private void sortCommitsByRow(@Nonnull List<T> result, @Nonnull TIntIntHashMap rowsForCommits) {
     ContainerUtil.sort(result, (details1, details2) -> {
       int row1 = rowsForCommits.get(myHashMap.getCommitIndex(details1.getId(), details1.getRoot()));
       int row2 = rowsForCommits.get(myHashMap.getCommitIndex(details2.getId(), details2.getRoot()));
@@ -224,7 +224,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
     myLoader.queue(new TaskDescriptor(toLoad));
   }
 
-  private void cacheCommit(final int commitId, long taskNumber) {
+  private void cacheCommit(int commitId, long taskNumber) {
     // fill the cache with temporary "Loading" values to avoid producing queries for each commit that has not been cached yet,
     // even if it will be loaded within a previous query
     if (!myCache.isKeyCached(commitId)) {
@@ -246,7 +246,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   @Nonnull
   public TIntObjectHashMap<T> preLoadCommitData(@Nonnull TIntHashSet commits) throws VcsException {
     TIntObjectHashMap<T> result = new TIntObjectHashMap<>();
-    final MultiMap<VirtualFile, String> rootsAndHashes = MultiMap.create();
+    MultiMap<VirtualFile, String> rootsAndHashes = MultiMap.create();
     commits.forEach(commit -> {
       CommitId commitId = myHashMap.getCommitId(commit);
       if (commitId != null) {

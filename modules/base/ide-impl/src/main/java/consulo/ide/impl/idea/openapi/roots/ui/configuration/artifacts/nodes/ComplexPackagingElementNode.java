@@ -41,8 +41,8 @@ public class ComplexPackagingElementNode extends PackagingElementNode<ComplexPac
   @Override
   public void handleDoubleClickOrEnter(SimpleTree tree, InputEvent inputEvent) {
     mySubstitutionParameters.setShowContent(this);
-    final LayoutTree layoutTree = (LayoutTree)tree;
-    final CompositePackagingElementNode parentNode = getParentNode();
+    LayoutTree layoutTree = (LayoutTree)tree;
+    CompositePackagingElementNode parentNode = getParentNode();
     if (parentNode != null) {
       layoutTree.addSubtreeToUpdate(parentNode);
     }

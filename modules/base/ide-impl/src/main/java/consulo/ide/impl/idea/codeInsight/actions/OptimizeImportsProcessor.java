@@ -82,8 +82,8 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
       return new FutureTask<>(EmptyRunnable.INSTANCE, true);
     }
 
-    final Set<ImportOptimizer> optimizers = ImportOptimizer.forFile(file);
-    final List<Runnable> runnables = new ArrayList<>();
+    Set<ImportOptimizer> optimizers = ImportOptimizer.forFile(file);
+    List<Runnable> runnables = new ArrayList<>();
     List<PsiFile> files = file.getViewProvider().getAllFiles();
     for (ImportOptimizer optimizer : optimizers) {
       for (PsiFile psiFile : files) {

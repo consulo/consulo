@@ -56,7 +56,7 @@ public class ModuleContentUtil {
   public static Sdk getSdk(@Nonnull Module module, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
-    final ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
+    ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
     if (extension == null) {
       return null;
     }
@@ -69,7 +69,7 @@ public class ModuleContentUtil {
   @Nonnull
   public static List<ContentFolder> getContentFolders(@Nonnull Project project) {
     ModuleManager moduleManager = ModuleManager.getInstance(project);
-    final List<ContentFolder> contentFolders = new ArrayList<>();
+    List<ContentFolder> contentFolders = new ArrayList<>();
     for (Module module : moduleManager.getModules()) {
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
       moduleRootManager.iterateContentEntries(contentEntry -> {
@@ -82,7 +82,7 @@ public class ModuleContentUtil {
 
   @Nullable
   public static Module findModuleForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return fileIndex.getModuleForFile(file);
   }
 
@@ -93,16 +93,16 @@ public class ModuleContentUtil {
    * @param result resulted set
    */
   @RequiredReadAction
-  public static void collectModulesDependsOn(@Nonnull final Module module, final Set<Module> result) {
+  public static void collectModulesDependsOn(@Nonnull Module module, Set<Module> result) {
     if (result.contains(module)) return;
     result.add(module);
-    final ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());
-    final List<Module> dependentModules = moduleManager.getModuleDependentModules(module);
-    for (final Module dependentModule : dependentModules) {
-      final OrderEntry[] orderEntries = ModuleRootManager.getInstance(dependentModule).getOrderEntries();
+    ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());
+    List<Module> dependentModules = moduleManager.getModuleDependentModules(module);
+    for (Module dependentModule : dependentModules) {
+      OrderEntry[] orderEntries = ModuleRootManager.getInstance(dependentModule).getOrderEntries();
       for (OrderEntry o : orderEntries) {
         if (o instanceof ModuleOrderEntry) {
-          final ModuleOrderEntry orderEntry = (ModuleOrderEntry)o;
+          ModuleOrderEntry orderEntry = (ModuleOrderEntry)o;
           if (orderEntry.getModule() == module) {
             if (orderEntry.isExported()) {
               collectModulesDependsOn(dependentModule, result);

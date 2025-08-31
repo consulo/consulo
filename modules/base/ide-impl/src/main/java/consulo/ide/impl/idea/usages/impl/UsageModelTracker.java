@@ -41,7 +41,7 @@ class UsageModelTracker implements Disposable {
   private final List<UsageModelTrackerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   UsageModelTracker(@Nonnull Project project) {
-    final PsiTreeChangeListener myPsiListener = new PsiTreeChangeAdapter() {
+    PsiTreeChangeListener myPsiListener = new PsiTreeChangeAdapter() {
       @Override
       public void childAdded(@Nonnull PsiTreeChangeEvent event) {
         doFire(event, false);

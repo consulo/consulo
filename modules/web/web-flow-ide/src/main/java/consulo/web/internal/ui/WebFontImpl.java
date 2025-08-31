@@ -84,7 +84,7 @@ public class WebFontImpl implements Font {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("WebFontImpl{");
+    StringBuilder sb = new StringBuilder("WebFontImpl{");
     sb.append("myFontName='").append(myFontName).append('\'');
     sb.append(", myFontSize=").append(myFontSize);
     sb.append(", myFontStyle=").append(myFontStyle);

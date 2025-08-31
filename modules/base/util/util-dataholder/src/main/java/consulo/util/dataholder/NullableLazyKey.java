@@ -27,7 +27,7 @@ public class NullableLazyKey<T, H extends UserDataHolder> extends Key<T> {
     private final Function<H, T> myFunction;
 
     @SuppressWarnings("deprecation")
-    private NullableLazyKey(String name, final Function<H, T> function) {
+    private NullableLazyKey(String name, Function<H, T> function) {
         super(name);
         myFunction = function;
     }
@@ -43,7 +43,7 @@ public class NullableLazyKey<T, H extends UserDataHolder> extends Key<T> {
         return data == ObjectUtil.NULL ? null : data;
     }
 
-    public static <T, H extends UserDataHolder> NullableLazyKey<T, H> create(String name, final Function<H, T> function) {
+    public static <T, H extends UserDataHolder> NullableLazyKey<T, H> create(String name, Function<H, T> function) {
         return new NullableLazyKey<>(name, function);
     }
 }

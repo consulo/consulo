@@ -82,17 +82,17 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
 
   @Nonnull
   @Override
-  public CellAppearanceEx forLibrary(Project project, @Nonnull final Library library, final boolean hasInvalidRoots) {
-    final LibrariesConfigurator context = ShowSettingsUtil.getInstance().getLibrariesModel(project);
+  public CellAppearanceEx forLibrary(Project project, @Nonnull Library library, boolean hasInvalidRoots) {
+    LibrariesConfigurator context = ShowSettingsUtil.getInstance().getLibrariesModel(project);
 
-    final Image icon = LibraryPresentationManager.getInstance().getCustomIcon(library, context);
+    Image icon = LibraryPresentationManager.getInstance().getCustomIcon(library, context);
 
-    final String name = library.getName();
+    String name = library.getName();
     if (name != null) {
       return normalOrRedWaved(name, (icon != null ? icon : AllIcons.Nodes.PpLib), hasInvalidRoots);
     }
 
-    final String[] files = library.getUrls(BinariesOrderRootType.getInstance());
+    String[] files = library.getUrls(BinariesOrderRootType.getInstance());
     if (files.length == 0) {
       return SimpleTextCellAppearance.invalid(ProjectLocalize.libraryEmptyLibraryItem().get(), AllIcons.Nodes.PpLib);
     }
@@ -100,13 +100,13 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       return forVirtualFilePointer(new LightFilePointer(files[0]));
     }
 
-    final String url = StringUtil.trimEnd(files[0], URLUtil.ARCHIVE_SEPARATOR);
+    String url = StringUtil.trimEnd(files[0], URLUtil.ARCHIVE_SEPARATOR);
     return SimpleTextCellAppearance.regular(PathUtil.getFileName(url), AllIcons.Nodes.PpLib);
   }
 
   @Nonnull
   @Override
-  public CellAppearanceEx forSdk(@Nullable final Sdk jdk, final boolean isInComboBox, final boolean selected, final boolean showVersion) {
+  public CellAppearanceEx forSdk(@Nullable Sdk jdk, boolean isInComboBox, boolean selected, boolean showVersion) {
     if (jdk == null) {
       return SimpleTextCellAppearance.invalid(ProjectLocalize.unknownSdk().get(), AllIcons.Actions.Help);
     }
@@ -132,7 +132,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     return ending.getAppearance();
   }
 
-  private static SimpleTextAttributes getTextAttributes(final boolean valid, final boolean selected) {
+  private static SimpleTextAttributes getTextAttributes(boolean valid, boolean selected) {
     if (!valid) {
       return SimpleTextAttributes.ERROR_ATTRIBUTES;
     }
@@ -143,29 +143,29 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
 
   @Nonnull
   @Override
-  public CellAppearanceEx forContentFolder(@Nonnull final ContentFolder folder) {
+  public CellAppearanceEx forContentFolder(@Nonnull ContentFolder folder) {
     return formatRelativePath(folder, folder.getType().getChildDirectoryIcon(null, null));
   }
 
   @Nonnull
   @Override
-  public CellAppearanceEx forModule(@Nonnull final Module module) {
+  public CellAppearanceEx forModule(@Nonnull Module module) {
     return SimpleTextCellAppearance.regular(module.getName(), AllIcons.Nodes.Module);
   }
 
   @Nonnull
-  private static CellAppearanceEx normalOrRedWaved(@Nonnull final String text, @Nullable final Image icon, final boolean waved) {
+  private static CellAppearanceEx normalOrRedWaved(@Nonnull String text, @Nullable Image icon, boolean waved) {
     return waved ? new SimpleTextCellAppearance(text, icon, new SimpleTextAttributes(SimpleTextAttributes.STYLE_WAVED, null, JBColor.RED)) : SimpleTextCellAppearance.regular(text, icon);
   }
 
   @Nonnull
-  private static CellAppearanceEx forVirtualFilePointer(@Nonnull final LightFilePointer filePointer) {
-    final VirtualFile file = filePointer.getFile();
+  private static CellAppearanceEx forVirtualFilePointer(@Nonnull LightFilePointer filePointer) {
+    VirtualFile file = filePointer.getFile();
     return file != null ? FileAppearanceService.getInstance().forVirtualFile(file) : FileAppearanceService.getInstance().forInvalidUrl(filePointer.getPresentableUrl());
   }
 
   @Nonnull
-  private static CellAppearanceEx formatRelativePath(@Nonnull final ContentFolder folder, @Nonnull final Image icon) {
+  private static CellAppearanceEx formatRelativePath(@Nonnull ContentFolder folder, @Nonnull Image icon) {
     LightFilePointer folderFile = new LightFilePointer(folder.getUrl());
     VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(folder.getContentEntry().getUrl());
     if (file == null) return FileAppearanceService.getInstance().forInvalidUrl(folderFile.getPresentableUrl());

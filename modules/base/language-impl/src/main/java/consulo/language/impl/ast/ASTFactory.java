@@ -33,28 +33,28 @@ public final class ASTFactory {
 
   // factory methods
   @Nonnull
-  public static LazyParseableElement lazy(@Nonnull final ILazyParseableElementType type, final CharSequence text) {
+  public static LazyParseableElement lazy(@Nonnull ILazyParseableElementType type, CharSequence text) {
     return ASTLazyFactory.EP.getValue(type).createLazy(type, text);
   }
 
   @Nonnull
-  public static CompositeElement composite(@Nonnull final IElementType type) {
+  public static CompositeElement composite(@Nonnull IElementType type) {
     return ASTCompositeFactory.EP.getValue(type).createComposite(type);
   }
 
   @Nonnull
-  public static LeafElement leaf(@Nonnull final IElementType type, final CharSequence text) {
+  public static LeafElement leaf(@Nonnull IElementType type, CharSequence text) {
     return leaf(type, LanguageVersionUtil.findDefaultVersion(type.getLanguage()), text);
   }
 
   @Nonnull
-  public static LeafElement leaf(@Nonnull final IElementType type, @Nonnull LanguageVersion languageVersion, final CharSequence text) {
+  public static LeafElement leaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, CharSequence text) {
     return ASTLeafFactory.EP.getValue(type).createLeaf(type, languageVersion, text);
   }
 
   @Nonnull
-  public static LeafElement whitespace(final CharSequence text) {
-    final PsiWhiteSpaceImpl w = new PsiWhiteSpaceImpl(WHITESPACES.intern(text));
+  public static LeafElement whitespace(CharSequence text) {
+    PsiWhiteSpaceImpl w = new PsiWhiteSpaceImpl(WHITESPACES.intern(text));
     CodeEditUtil.setNodeGenerated(w, true);
     return w;
   }

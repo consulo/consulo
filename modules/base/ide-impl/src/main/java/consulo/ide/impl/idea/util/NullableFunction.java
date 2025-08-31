@@ -25,7 +25,7 @@ import java.util.function.Function;
 public interface NullableFunction<Param, Result> extends Function<Param, Result> {
   @Override
   @Nullable
-  Result apply(final Param param);
+  Result apply(Param param);
 
   /**
    * @see FunctionUtil#nullConstant()

@@ -21,7 +21,7 @@ import java.util.Comparator;
 public class DependencyNodeComparator implements Comparator<PackageDependenciesNode>{
   private final boolean mySortByType;
 
-  public DependencyNodeComparator(final boolean sortByType) {
+  public DependencyNodeComparator(boolean sortByType) {
     mySortByType = sortByType;
   }
 
@@ -37,8 +37,8 @@ public class DependencyNodeComparator implements Comparator<PackageDependenciesN
         return ((Comparable)p1).compareTo(p2);
       }
     }
-    final String o1 = p1.toString();
-    final String o2 = p2.toString();
+    String o1 = p1.toString();
+    String o2 = p2.toString();
     if (o1 == null) return o2 == null ? 0 : -1;
     if (o2 == null) return 1;
     return o1.compareToIgnoreCase(o2);

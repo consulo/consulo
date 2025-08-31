@@ -52,7 +52,7 @@ public final class TimedDeadzone {
     return myMouseWithin && System.currentTimeMillis() - myTimeEntered < getLength();
   }
 
-  public void setLength(@Nonnull final Length deadZone) {
+  public void setLength(@Nonnull Length deadZone) {
     myLength = deadZone;
   }
 

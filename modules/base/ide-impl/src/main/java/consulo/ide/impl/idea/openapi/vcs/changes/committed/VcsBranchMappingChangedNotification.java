@@ -22,5 +22,5 @@ import consulo.virtualFileSystem.VirtualFile;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsBranchMappingChangedNotification {
-  void execute(final Project project, final VirtualFile vcsRoot);
+  void execute(Project project, VirtualFile vcsRoot);
 }

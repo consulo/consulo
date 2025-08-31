@@ -32,7 +32,7 @@ public final class RadioUpDownListener {
         ComponentEventListener<Component, KeyPressedEvent> listener = e -> {
             KeyCode code = e.getInputDetails().getKeyCode();
 
-            final int selected = getSelected(radioButtons);
+            int selected = getSelected(radioButtons);
             if (selected != -1) {
                 if (code == KeyCode.UP) {
                     up(radioButtons, selected, selected);
@@ -81,7 +81,7 @@ public final class RadioUpDownListener {
     }
 
     @RequiredUIAccess
-    private static boolean click(final RadioButton button) {
+    private static boolean click(RadioButton button) {
         if (button.isEnabled() && button.isVisible()) {
             button.focus();
             button.setValue(true);

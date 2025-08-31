@@ -92,20 +92,20 @@ public final class HighlightSeverity implements Comparable<HighlightSeverity> {
   }
 
   @Override
-  public int compareTo(@Nonnull final HighlightSeverity highlightSeverity) {
+  public int compareTo(@Nonnull HighlightSeverity highlightSeverity) {
     return myVal - highlightSeverity.myVal;
   }
 
-  public void writeExternal(final Element element) throws WriteExternalException {
+  public void writeExternal(Element element) throws WriteExternalException {
     DefaultJDOMExternalizer.writeExternal(this, element);
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final HighlightSeverity that = (HighlightSeverity)o;
+    HighlightSeverity that = (HighlightSeverity)o;
 
     if (myVal != that.myVal) return false;
     return myName.equals(that.myName);

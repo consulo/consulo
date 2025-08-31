@@ -77,7 +77,7 @@ public abstract class XDebuggerActionBase extends AnAction {
     @Nonnull
     protected abstract DebuggerActionHandler getHandler();
 
-    private boolean isEnabled(final Project project, final AnActionEvent event) {
+    private boolean isEnabled(Project project, AnActionEvent event) {
         return getHandler().isEnabled(project, event);
     }
 
@@ -101,12 +101,12 @@ public abstract class XDebuggerActionBase extends AnAction {
         return false;
     }
 
-    private void perform(final Project project, final AnActionEvent e) {
+    private void perform(Project project, AnActionEvent e) {
         getHandler().perform(project, e);
     }
 
     protected boolean isHidden(AnActionEvent event) {
-        final Project project = event.getData(Project.KEY);
+        Project project = event.getData(Project.KEY);
         if (project != null) {
             if (!getHandler().isHidden(project, event)) {
                 return false;

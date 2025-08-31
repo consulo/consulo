@@ -57,8 +57,8 @@ class DiffPreviewPanel implements PreviewPanel {
     myViewer.init();
 
     for (ThreeSide side : ThreeSide.values()) {
-      final EditorMouseListener motionListener = new EditorMouseListener(side);
-      final EditorClickListener clickListener = new EditorClickListener(side);
+      EditorMouseListener motionListener = new EditorMouseListener(side);
+      EditorClickListener clickListener = new EditorClickListener(side);
       Editor editor = myViewer.getEditor(side);
       editor.addEditorMouseMotionListener(motionListener);
       editor.addEditorMouseListener(clickListener);
@@ -82,7 +82,7 @@ class DiffPreviewPanel implements PreviewPanel {
     myViewer.repaint();
   }
 
-  public void setColorScheme(final EditorColorsScheme highlighterSettings) {
+  public void setColorScheme(EditorColorsScheme highlighterSettings) {
     for (EditorEx editorEx : myViewer.getEditors()) {
       editorEx.setColorsScheme(editorEx.createBoundColorSchemeDelegate(highlighterSettings));
       editorEx.getColorsScheme().setAttributes(EditorColors.FOLDED_TEXT_ATTRIBUTES, null);
@@ -149,7 +149,7 @@ class DiffPreviewPanel implements PreviewPanel {
   }
 
   @Override
-  public void addListener(@Nonnull final ColorAndFontSettingsListener listener) {
+  public void addListener(@Nonnull ColorAndFontSettingsListener listener) {
     myDispatcher.addListener(listener);
   }
 
@@ -230,7 +230,7 @@ class DiffPreviewPanel implements PreviewPanel {
   }
 
   @Override
-  public void blinkSelectedHighlightType(final Object selected) {
+  public void blinkSelectedHighlightType(Object selected) {
   }
 
   @Override

@@ -329,7 +329,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @Nullable
-    private GutterIconRenderer createApplyRenderer(@Nonnull final Side side, final boolean modifier) {
+    private GutterIconRenderer createApplyRenderer(@Nonnull Side side, boolean modifier) {
         if (isResolved(side)) {
             return null;
         }
@@ -345,7 +345,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
 
     @Nullable
-    private GutterIconRenderer createIgnoreRenderer(@Nonnull final Side side, final boolean modifier) {
+    private GutterIconRenderer createIgnoreRenderer(@Nonnull Side side, boolean modifier) {
         if (isResolved(side)) {
             return null;
         }
@@ -377,7 +377,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
 
     @Nonnull
     private GutterIconRenderer createIconRenderer(
-        @Nonnull final String text,
+        @Nonnull String text,
         @Nonnull final Image icon,
         boolean ctrlClickVisible,
         @RequiredUIAccess @Nonnull final Runnable perform

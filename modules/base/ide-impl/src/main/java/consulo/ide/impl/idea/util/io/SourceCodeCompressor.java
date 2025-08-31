@@ -39,7 +39,7 @@ public class SourceCodeCompressor {
   }
 
   static {
-    @NonNls final String preset_buf_string =
+    @NonNls String preset_buf_string =
       "                   ;\r\n\r\n\r\n\r\n\n\n\n { {\r\n }\r\n = == != < > >= <= ? : ++ += -- -= [] [i] () ()) ())) (); ()); ())); () {" +
       "// /* /** */ * opyright (c)package com.import java.utilimport javax.swingimport java.awt" +
       "import com.intellijimport org.import gnu.*;new super(this(public interface extends implements " +
@@ -91,17 +91,17 @@ public class SourceCodeCompressor {
   }
 
   public static synchronized byte[] decompress(byte[] compressed) throws IOException {
-    final int len = compressed.length;
-    final int off = 0;
+    int len = compressed.length;
+    int off = 0;
     return decompress(compressed, len, off);
   }
 
-  public static byte[] decompress(final byte[] compressed, final int len, final int off) throws IOException {
+  public static byte[] decompress(byte[] compressed, int len, int off) throws IOException {
     INFLATER.reset();
     InflaterInputStream input = null;
     try {
       input = new InflaterInputStream(new ByteArrayInputStream(compressed, off, len), INFLATER);
-      final int b = input.read();
+      int b = input.read();
       if (b == -1) {
         INFLATER.setDictionary(PRESET_BUF);
       }

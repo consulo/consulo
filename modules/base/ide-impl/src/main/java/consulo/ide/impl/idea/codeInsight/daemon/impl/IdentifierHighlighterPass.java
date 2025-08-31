@@ -73,17 +73,17 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
 
   @Override
   @RequiredReadAction
-  public void doCollectInformation(@Nonnull final ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(myEditor, myFile);
     if (highlightUsagesHandler != null) {
       List<PsiElement> targets = highlightUsagesHandler.getTargets();
       highlightUsagesHandler.computeUsages(targets);
-      final List<TextRange> readUsages = highlightUsagesHandler.getReadUsages();
+      List<TextRange> readUsages = highlightUsagesHandler.getReadUsages();
       for (TextRange readUsage : readUsages) {
         LOG.assertTrue(readUsage != null, "null text range from " + highlightUsagesHandler);
       }
       myReadAccessRanges.addAll(readUsages);
-      final List<TextRange> writeUsages = highlightUsagesHandler.getWriteUsages();
+      List<TextRange> writeUsages = highlightUsagesHandler.getWriteUsages();
       for (TextRange writeUsage : writeUsages) {
         LOG.assertTrue(writeUsage != null, "null text range from " + highlightUsagesHandler);
       }
@@ -154,10 +154,10 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   private static Couple<Collection<TextRange>> getUsages(@Nonnull PsiElement target, PsiElement psiElement, boolean withDeclarations, boolean detectAccess) {
     List<TextRange> readRanges = new ArrayList<>();
     List<TextRange> writeRanges = new ArrayList<>();
-    final ReadWriteAccessDetector detector = detectAccess ? ReadWriteAccessDetector.findDetector(target) : null;
-    final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(target.getProject())).getFindUsagesManager();
-    final FindUsagesHandler findUsagesHandler = findUsagesManager.getFindUsagesHandler(target, true);
-    final LocalSearchScope scope = new LocalSearchScope(psiElement);
+    ReadWriteAccessDetector detector = detectAccess ? ReadWriteAccessDetector.findDetector(target) : null;
+    FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(target.getProject())).getFindUsagesManager();
+    FindUsagesHandler findUsagesHandler = findUsagesManager.getFindUsagesHandler(target, true);
+    LocalSearchScope scope = new LocalSearchScope(psiElement);
     Collection<PsiReference> refs = findUsagesHandler != null
                                     ? findUsagesHandler.findReferencesToHighlight(target, scope)
                                     : ReferencesSearch.search(target, scope).findAll();
@@ -177,7 +177,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     }
 
     if (withDeclarations) {
-      final TextRange declRange = HighlightUsagesHandler.getNameIdentifierRange(psiElement.getContainingFile(), target);
+      TextRange declRange = HighlightUsagesHandler.getNameIdentifierRange(psiElement.getContainingFile(), target);
       if (declRange != null) {
         if (detector != null && detector.isDeclarationWriteAccess(target)) {
           writeRanges.add(declRange);
@@ -192,15 +192,15 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   }
 
   private void highlightTargetUsages(@Nonnull PsiElement target) {
-    final Couple<Collection<TextRange>> usages = getHighlightUsages(target, myFile, true);
+    Couple<Collection<TextRange>> usages = getHighlightUsages(target, myFile, true);
     myReadAccessRanges.addAll(usages.first);
     myWriteAccessRanges.addAll(usages.second);
   }
 
   @Override
   public void doApplyInformationToEditor() {
-    final boolean virtSpace = TargetElementUtil.inVirtualSpace(myEditor, myEditor.getCaretModel().getOffset());
-    final List<HighlightInfo> infos = virtSpace ? Collections.<HighlightInfo>emptyList() : getHighlights();
+    boolean virtSpace = TargetElementUtil.inVirtualSpace(myEditor, myEditor.getCaretModel().getOffset());
+    List<HighlightInfo> infos = virtSpace ? Collections.<HighlightInfo>emptyList() : getHighlights();
     UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
   }
 

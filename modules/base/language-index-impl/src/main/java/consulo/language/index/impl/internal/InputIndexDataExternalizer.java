@@ -54,8 +54,8 @@ public class InputIndexDataExternalizer<K> implements DataExternalizer<Collectio
   @Override
   public Collection<K> read(@Nonnull DataInput in) throws IOException {
     try {
-      final int size = DataInputOutputUtil.readINT(in);
-      final List<K> list = new ArrayList<>(size);
+      int size = DataInputOutputUtil.readINT(in);
+      List<K> list = new ArrayList<>(size);
       for (int idx = 0; idx < size; idx++) {
         list.add(myKeyDescriptor.read(in));
       }

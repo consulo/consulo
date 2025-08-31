@@ -75,7 +75,7 @@ public class OrderRootType {
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use ExtensionInstance#current()")
-  public static <T extends OrderRootType> T getOrderRootType(final Class<? extends T> orderRootTypeClass) {
+  public static <T extends OrderRootType> T getOrderRootType(Class<? extends T> orderRootTypeClass) {
     return Application.get().getExtensionPoint(OrderRootType.class).findExtensionOrFail(orderRootTypeClass);
   }
 

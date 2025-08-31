@@ -59,8 +59,8 @@ public final class FoldingUtil {
         return regions;
     }
 
-    public static boolean caretInsideRange(final Editor editor, final TextRange range) {
-        final int offset = editor.getCaretModel().getOffset();
+    public static boolean caretInsideRange(Editor editor, TextRange range) {
+        int offset = editor.getCaretModel().getOffset();
         return range.contains(offset) && range.getStartOffset() != offset;
     }
 
@@ -120,11 +120,11 @@ public final class FoldingUtil {
         };
     }
 
-    public static void expandRegionAtOffset(@Nonnull Project project, @Nonnull final Editor editor, final int offset) {
+    public static void expandRegionAtOffset(@Nonnull Project project, @Nonnull Editor editor, int offset) {
         CodeEditorInternalHelper foldingManager = CodeEditorInternalHelper.getInstance();
         foldingManager.updateFoldRegions(project, editor);
 
-        final int line = editor.getDocument().getLineNumber(offset);
+        int line = editor.getDocument().getLineNumber(offset);
         Runnable processor = () -> {
             FoldRegion region = FoldingUtil.findFoldRegionStartingAtLine(editor, line);
             if (region != null && !region.isExpanded()) {

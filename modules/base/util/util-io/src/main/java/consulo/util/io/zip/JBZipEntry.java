@@ -450,7 +450,7 @@ public class JBZipEntry implements Cloneable {
   public byte[] getData() throws IOException {
     if (size == -1) throw new IOException("no data");
 
-    final InputStream stream = getInputStream();
+    InputStream stream = getInputStream();
     try {
       return FileUtil.loadBytes(stream, (int)size);
     }
@@ -502,7 +502,7 @@ public class JBZipEntry implements Cloneable {
         len = (int)remaining;
       }
 
-      final int ret;
+      int ret;
       RandomAccessFile archive = myFile.archive;
       archive.seek(loc);
       ret = archive.read(b, off, len);

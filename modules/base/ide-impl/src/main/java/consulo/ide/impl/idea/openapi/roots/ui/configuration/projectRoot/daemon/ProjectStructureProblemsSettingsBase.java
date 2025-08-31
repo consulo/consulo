@@ -49,7 +49,7 @@ public class ProjectStructureProblemsSettingsBase implements StructureProblemsSe
 
   @Override
   public void setIgnored(@Nonnull ProjectStructureProblemDescription description, boolean ignored) {
-    final String id = description.getId();
+    String id = description.getId();
     if (ignored) {
       myIgnoredProblems.add(id);
     }

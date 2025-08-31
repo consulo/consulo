@@ -42,13 +42,13 @@ public final class GotoModuleDirectory extends FileChooserAction {
 
   @Override
   protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    final VirtualFile moduleDir = getModuleDir(e);
+    Presentation presentation = e.getPresentation();
+    VirtualFile moduleDir = getModuleDir(e);
     presentation.setEnabled(moduleDir != null && fileSystemTree.isUnderRoots(moduleDir));
   }
 
   @Nullable
-  private static VirtualFile getModuleDir(final AnActionEvent e) {
+  private static VirtualFile getModuleDir(AnActionEvent e) {
     Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     if (module == null) {
       module = e.getData(LangDataKeys.MODULE);

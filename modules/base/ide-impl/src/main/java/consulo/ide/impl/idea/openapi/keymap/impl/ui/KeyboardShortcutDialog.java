@@ -47,11 +47,11 @@ public class KeyboardShortcutDialog extends DialogWrapper {
   private final String myActionId;
   private final KeymapGroupImpl myMainGroup;
 
-  public KeyboardShortcutDialog(Component component, String actionId, final QuickList[] quickLists) {
+  public KeyboardShortcutDialog(Component component, String actionId, QuickList[] quickLists) {
     super(component, true);
     setTitle(KeyMapLocalize.keyboardShortcutDialogTitle());
     myActionId = actionId;
-    final Project project = DataManager.getInstance().getDataContext(component).getData(Project.KEY);
+    Project project = DataManager.getInstance().getDataContext(component).getData(Project.KEY);
     myMainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, quickLists, null, false, null); //without current filter
     myEnableSecondKeystroke = new JCheckBox();
     UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myEnableSecondKeystroke);
@@ -124,7 +124,7 @@ public class KeyboardShortcutDialog extends DialogWrapper {
     myConflictInfoArea.setBackground(panel.getBackground());
     myConflictInfoArea.setLineWrap(true);
     myConflictInfoArea.setWrapStyleWord(true);
-    final JScrollPane conflictInfoScroll = ScrollPaneFactory.createScrollPane(myConflictInfoArea);
+    JScrollPane conflictInfoScroll = ScrollPaneFactory.createScrollPane(myConflictInfoArea);
     conflictInfoScroll.setPreferredSize(new Dimension(260, 60));
     conflictInfoScroll.setBorder(null);
     conflictsPanel.add(conflictInfoScroll);

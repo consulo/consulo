@@ -67,7 +67,7 @@ public class GuiUtils {
     return constructFieldWithBrowseButton(aComponent, aActionListener, 0);
   }
 
-  private static JPanel constructFieldWithBrowseButton(final JComponent aComponent, final ActionListener aActionListener, int delta) {
+  private static JPanel constructFieldWithBrowseButton(JComponent aComponent, ActionListener aActionListener, int delta) {
     JPanel result = new JPanel(new GridBagLayout());
     result.add(aComponent, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
     FixedSizeButton browseButton = new FixedSizeButton(aComponent.getPreferredSize().height - delta);//ignore border in case of browse button
@@ -170,7 +170,7 @@ public class GuiUtils {
   }
 
   public static char getDisplayedMnemonic(String text) {
-    final int i = getDisplayedMnemonicIndex(text);
+    int i = getDisplayedMnemonicIndex(text);
     return i == -1 ? (char)-1 : text.charAt(i + 1);
   }
 
@@ -189,17 +189,17 @@ public class GuiUtils {
   }
 
   public static void replaceJSplitPaneWithIDEASplitter(JComponent root) {
-    final Container parent = root.getParent();
+    Container parent = root.getParent();
     if (root instanceof JSplitPane) {
       // we can painlessly replace only splitter which is the only child in container
       if (parent.getComponents().length != 1 && !(parent instanceof Splitter)) {
         return;
       }
-      final JSplitPane pane = (JSplitPane)root;
-      final Component component1 = pane.getTopComponent();
-      final Component component2 = pane.getBottomComponent();
-      final int orientation = pane.getOrientation();
-      final Splitter splitter = new JBSplitter(orientation == JSplitPane.VERTICAL_SPLIT);
+      JSplitPane pane = (JSplitPane)root;
+      Component component1 = pane.getTopComponent();
+      Component component2 = pane.getBottomComponent();
+      int orientation = pane.getOrientation();
+      Splitter splitter = new JBSplitter(orientation == JSplitPane.VERTICAL_SPLIT);
       splitter.setFirstComponent((JComponent)component1);
       splitter.setSecondComponent((JComponent)component2);
       splitter.setShowDividerControls(pane.isOneTouchExpandable());
@@ -222,7 +222,7 @@ public class GuiUtils {
       }
 
       if (parent instanceof Splitter) {
-        final Splitter psplitter = (Splitter)parent;
+        Splitter psplitter = (Splitter)parent;
         if (psplitter.getFirstComponent() == root) {
           psplitter.setFirstComponent(splitter);
         }
@@ -239,7 +239,7 @@ public class GuiUtils {
       replaceJSplitPaneWithIDEASplitter((JComponent)component2);
     }
     else {
-      final Component[] components = root.getComponents();
+      Component[] components = root.getComponents();
       for (Component component : components) {
         if (component instanceof JComponent) {
           replaceJSplitPaneWithIDEASplitter((JComponent)component);
@@ -252,7 +252,7 @@ public class GuiUtils {
     if (excludeComponents != null && ArrayUtil.find(excludeComponents, container) != -1) return;
     consumer.accept(container);
     if (container instanceof Container) {
-      final Component[] components = ((Container)container).getComponents();
+      Component[] components = ((Container)container).getComponents();
       for (Component child : components) {
         iterateChildren(child, consumer, excludeComponents);
       }
@@ -260,24 +260,24 @@ public class GuiUtils {
   }
 
   public static void iterateChildren(Consumer<Component> consumer, Component... components) {
-    for (final Component component : components) {
+    for (Component component : components) {
       iterateChildren(component, consumer);
     }
   }
 
-  public static void enableChildren(final boolean enabled, Component... components) {
-    for (final Component component : components) {
+  public static void enableChildren(boolean enabled, Component... components) {
+    for (Component component : components) {
       enableChildren(component, enabled);
     }
   }
 
-  public static void showComponents(final boolean visible, Component... components) {
-    for (final Component component : components) {
+  public static void showComponents(boolean visible, Component... components) {
+    for (Component component : components) {
       component.setVisible(visible);
     }
   }
 
-  public static void enableChildren(Component container, final boolean enabled, JComponent... excludeComponents) {
+  public static void enableChildren(Component container, boolean enabled, JComponent... excludeComponents) {
     iterateChildren(container, t -> enableComponent(t, enabled), excludeComponents);
   }
 
@@ -285,7 +285,7 @@ public class GuiUtils {
     if (component.isEnabled() == enabled) return;
     component.setEnabled(enabled);
     if (component instanceof JPanel) {
-      final Border border = ((JPanel)component).getBorder();
+      Border border = ((JPanel)component).getBorder();
       if (border instanceof TitledBorder) {
         Color color = enabled ? component.getForeground() : UIUtil.getInactiveTextColor();
         ((TitledBorder)border).setTitleColor(color);
@@ -295,7 +295,7 @@ public class GuiUtils {
       Color color = UIUtil.getInactiveTextColor();
       if (color == null) color = component.getForeground();
       @NonNls String changeColorString = "<font color=#" + colorToHex(color) + ">";
-      final JLabel label = (JLabel)component;
+      JLabel label = (JLabel)component;
       @NonNls String text = label.getText();
       if (text != null && text.startsWith("<html>")) {
         if (StringUtil.startsWithConcatenation(text, "<html>", changeColorString) && enabled) {
@@ -320,7 +320,7 @@ public class GuiUtils {
 
   @Deprecated
   @DeprecationInfo("Use ColorValueUtil#toHex or ColorUtil#toHex")
-  public static String colorToHex(final Color color) {
+  public static String colorToHex(Color color) {
     return to2DigitsHex(color.getRed()) + to2DigitsHex(color.getGreen()) + to2DigitsHex(color.getBlue());
   }
 

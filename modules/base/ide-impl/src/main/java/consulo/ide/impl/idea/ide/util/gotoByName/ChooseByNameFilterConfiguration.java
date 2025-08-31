@@ -43,7 +43,7 @@ public abstract class ChooseByNameFilterConfiguration<T> implements PersistentSt
    * {@inheritDoc}
    */
   @Override
-  public void loadState(final Items state) {
+  public void loadState(Items state) {
     items = state;
   }
 
@@ -97,7 +97,7 @@ public abstract class ChooseByNameFilterConfiguration<T> implements PersistentSt
      *
      * @param a new collection for file type names
      */
-    public void setFilteredOutFileTypeNames(final Set<String> fileTypeNames) {
+    public void setFilteredOutFileTypeNames(Set<String> fileTypeNames) {
       this.filteredOutFileTypeNames = fileTypeNames;
     }
   }

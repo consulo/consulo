@@ -19,14 +19,14 @@ public class ChangeListRemoteState {
   // true -> ok
   private final boolean[] myChangeStates;
 
-  public ChangeListRemoteState(final int size) {
+  public ChangeListRemoteState(int size) {
     myChangeStates = new boolean[size];
     for (int i = 0; i < myChangeStates.length; i++) {
       myChangeStates[i] = true;
     }
   }
 
-  public void report(final int idx, final boolean state) {
+  public void report(int idx, boolean state) {
     myChangeStates[idx] = state;
   }
 
@@ -47,7 +47,7 @@ public class ChangeListRemoteState {
       myState = state;
     }
 
-    public void report(final boolean state) {
+    public void report(boolean state) {
       myState.report(myIdx, state);
     }
   }

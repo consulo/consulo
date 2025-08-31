@@ -185,7 +185,7 @@ public class DiffFragmentBuilder {
     }
     finish();
 
-    final List<DiffFragmentOld> fragments = getFragments();
+    List<DiffFragmentOld> fragments = getFragments();
     return fragments.toArray(new DiffFragmentOld[myData.size()]);
   }
 }

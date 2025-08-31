@@ -41,25 +41,25 @@ public interface ProjectStructureSelector {
 
   @Nonnull
   @RequiredUIAccess
-  AsyncResult<Void> select(@Nonnull Sdk sdk, final boolean requestFocus);
+  AsyncResult<Void> select(@Nonnull Sdk sdk, boolean requestFocus);
 
   @Nonnull
   @RequiredUIAccess
-  default AsyncResult<Void> select(@Nonnull Module module, final boolean requestFocus) {
+  default AsyncResult<Void> select(@Nonnull Module module, boolean requestFocus) {
     return select(module.getName(), null, requestFocus);
   }
 
   @Nonnull
   @RequiredUIAccess
-  AsyncResult<Void> select(@Nullable final String moduleToSelect, @Nullable String tabId, final boolean requestFocus);
+  AsyncResult<Void> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus);
 
   @Nonnull
   @RequiredUIAccess
-  AsyncResult<Void> select(@Nonnull LibraryOrderEntry libraryOrderEntry, final boolean requestFocus);
+  AsyncResult<Void> select(@Nonnull LibraryOrderEntry libraryOrderEntry, boolean requestFocus);
 
   @Nonnull
   @RequiredUIAccess
-  AsyncResult<Void> selectOrderEntry(@Nonnull final Module module, @Nullable final OrderEntry orderEntry);
+  AsyncResult<Void> selectOrderEntry(@Nonnull Module module, @Nullable OrderEntry orderEntry);
 
   @Nonnull
   @RequiredUIAccess
@@ -67,5 +67,5 @@ public interface ProjectStructureSelector {
 
   @Nonnull
   @RequiredUIAccess
-  AsyncResult<Void> selectProjectGeneralSettings(final boolean requestFocus);
+  AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus);
 }

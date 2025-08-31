@@ -51,17 +51,17 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
       }
 
       @Override
-      public Element writeScheme(@Nonnull final CodeStyleSchemeImpl scheme) throws WriteExternalException {
+      public Element writeScheme(@Nonnull CodeStyleSchemeImpl scheme) throws WriteExternalException {
         return scheme.saveToDocument();
       }
 
       @Override
-      public boolean shouldBeSaved(@Nonnull final CodeStyleSchemeImpl scheme) {
+      public boolean shouldBeSaved(@Nonnull CodeStyleSchemeImpl scheme) {
         return !scheme.isDefault();
       }
 
       @Override
-      public void initScheme(@Nonnull final CodeStyleSchemeImpl scheme) {
+      public void initScheme(@Nonnull CodeStyleSchemeImpl scheme) {
         scheme.init(CodeStyleSchemesImpl.this);
       }
 

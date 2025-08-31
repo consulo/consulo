@@ -62,7 +62,7 @@ class UsageNodeTreeBuilder {
   UsageNode appendOrGet(@Nonnull Usage usage, boolean filterDuplicateLines, @Nonnull Consumer<? super Node> edtInsertedUnderQueue) {
     if (!isVisible(usage)) return null;
 
-    final boolean dumb = DumbService.isDumb(myProject);
+    boolean dumb = DumbService.isDumb(myProject);
 
     GroupNode groupNode = myRoot;
     for (int i = 0; i < myGroupingRules.length; i++) {

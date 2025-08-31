@@ -114,7 +114,7 @@ public class XmlSerializer {
     }
   }
 
-  public static void serializeInto(final Object bean, final Element element) {
+  public static void serializeInto(Object bean, Element element) {
     serializeInto(bean, element, null);
   }
 

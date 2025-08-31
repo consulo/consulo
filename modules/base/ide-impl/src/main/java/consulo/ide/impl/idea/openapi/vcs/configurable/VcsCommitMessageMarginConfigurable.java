@@ -89,7 +89,7 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
 
     @Override
     protected SpinnerNumberModel createSpinnerModel() {
-      final int columns = myConfiguration.COMMIT_MESSAGE_MARGIN_SIZE;
+      int columns = myConfiguration.COMMIT_MESSAGE_MARGIN_SIZE;
       return new SpinnerNumberModel(columns, 0, 10000, 1);
     }
 

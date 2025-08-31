@@ -40,7 +40,7 @@ public class ConsoleViewUtil {
   private static final Key<Boolean> REPLACE_ACTION_ENABLED = Key.create("REPLACE_ACTION_ENABLED");
 
   @Nonnull
-  public static EditorEx setupConsoleEditor(Project project, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
+  public static EditorEx setupConsoleEditor(Project project, boolean foldingOutlineShown, boolean lineMarkerAreaShown) {
     EditorFactory editorFactory = EditorFactory.getInstance();
     Document document = ((InternalEditorFactory)editorFactory).createDocument(true);
     UndoUtil.disableUndoFor(document);
@@ -49,10 +49,10 @@ public class ConsoleViewUtil {
     return editor;
   }
 
-  public static void setupConsoleEditor(@Nonnull final EditorEx editor, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
+  public static void setupConsoleEditor(@Nonnull EditorEx editor, boolean foldingOutlineShown, boolean lineMarkerAreaShown) {
     ApplicationManager.getApplication().runReadAction(() -> {
 
-      final EditorSettings editorSettings = editor.getSettings();
+      EditorSettings editorSettings = editor.getSettings();
       editorSettings.setLineMarkerAreaShown(lineMarkerAreaShown);
       editorSettings.setIndentGuidesShown(false);
       editorSettings.setLineNumbersShown(false);
@@ -64,7 +64,7 @@ public class ConsoleViewUtil {
       editorSettings.setCaretRowShown(false);
       editor.getGutterComponentEx().setPaintBackground(false);
 
-      final DelegateColorScheme scheme = updateConsoleColorScheme(editor.getColorsScheme());
+      DelegateColorScheme scheme = updateConsoleColorScheme(editor.getColorsScheme());
       if (UISettings.getInstance().getPresentationMode()) {
         scheme.setEditorFontSize(UISettings.getInstance().getPresentationModeFontSize());
       }
@@ -91,7 +91,7 @@ public class ConsoleViewUtil {
       @Nonnull
       @Override
       public ColorValue getDefaultBackground() {
-        final ColorValue color = getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
+        ColorValue color = getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
         return color == null ? super.getDefaultBackground() : color;
       }
 

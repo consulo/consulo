@@ -126,7 +126,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         final XDebuggerTree watchTree = getTree();
         final Alarm quitePeriod = new Alarm();
         final Alarm editAlarm = new Alarm();
-        final ClickListener mouseListener = new ClickListener() {
+        ClickListener mouseListener = new ClickListener() {
             @Override
             public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
                 if (!SwingUtilities.isLeftMouseButton(event)
@@ -138,10 +138,10 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
                     editAlarm.cancelAllRequests();
                     return false;
                 }
-                final AnAction editWatchAction = ActionManager.getInstance().getAction(XDebuggerActions.XEDIT_WATCH);
+                AnAction editWatchAction = ActionManager.getInstance().getAction(XDebuggerActions.XEDIT_WATCH);
                 Presentation presentation = editWatchAction.getTemplatePresentation().clone();
                 DataContext context = DataManager.getInstance().getDataContext(watchTree);
-                final AnActionEvent actionEvent =
+                AnActionEvent actionEvent =
                     new AnActionEvent(null, context, "WATCH_TREE", presentation, ActionManager.getInstance(), 0);
                 Runnable runnable = () -> editWatchAction.actionPerformed(actionEvent);
                 if (editAlarm.isEmpty() && quitePeriod.isEmpty()) {
@@ -153,7 +153,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
                 return false;
             }
         };
-        final ClickListener mouseEmptySpaceListener = new DoubleClickListener() {
+        ClickListener mouseEmptySpaceListener = new DoubleClickListener() {
             @Override
             protected boolean onDoubleClick(MouseEvent event) {
                 if (!isAboveSelectedItem(event, watchTree)) {
@@ -166,7 +166,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         ListenerUtil.addClickListener(watchTree, mouseListener);
         ListenerUtil.addClickListener(watchTree, mouseEmptySpaceListener);
 
-        final FocusListener focusListener = new FocusListener() {
+        FocusListener focusListener = new FocusListener() {
             @Override
             public void focusGained(@Nonnull FocusEvent e) {
                 quitePeriod.addRequest(EmptyRunnable.getInstance(), UIUtil.getMultiClickInterval());
@@ -179,7 +179,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         };
         ListenerUtil.addFocusListener(watchTree, focusListener);
 
-        final TreeSelectionListener selectionListener =
+        TreeSelectionListener selectionListener =
             e -> quitePeriod.addRequest(EmptyRunnable.getInstance(), UIUtil.getMultiClickInterval());
         watchTree.addTreeSelectionListener(selectionListener);
         myDisposables.add(() -> {
@@ -245,7 +245,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         };
         ComboBoxStyle.makeBorderInline(myEvaluateComboBox.getComboBox());
 
-        final JComponent editorComponent = myEvaluateComboBox.getEditorComponent();
+        JComponent editorComponent = myEvaluateComboBox.getEditorComponent();
         editorComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
             .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enterStroke");
         editorComponent.getActionMap().put("enterStroke", new AbstractAction() {
@@ -312,7 +312,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    public void addWatchExpression(@Nonnull XExpression expression, int index, final boolean navigateToWatchNode) {
+    public void addWatchExpression(@Nonnull XExpression expression, int index, boolean navigateToWatchNode) {
         XDebugSession session = XDebugView.getSession(getTree());
         myRootNode.addWatchExpression(session != null ? session.getCurrentStackFrame() : null, expression, index, navigateToWatchNode);
         updateSessionData();
@@ -432,7 +432,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    public boolean update(final DnDEvent aEvent) {
+    public boolean update(DnDEvent aEvent) {
         Object object = aEvent.getAttachedObject();
         boolean possible = false;
         if (object instanceof XValueNodeImpl[]) {
@@ -462,7 +462,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     public void drop(DnDEvent aEvent) {
         Object object = aEvent.getAttachedObject();
         if (object instanceof XValueNodeImpl[]) {
-            final XValueNodeImpl[] nodes = (XValueNodeImpl[]) object;
+            XValueNodeImpl[] nodes = (XValueNodeImpl[]) object;
             for (XValueNodeImpl node : nodes) {
                 node.getValueContainer().calculateEvaluationExpression().doWhenDone(expression -> {
                     if (expression != null) {
@@ -486,6 +486,6 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    public void updateDraggedImage(final Image image, final Point dropPoint, final Point imageOffset) {
+    public void updateDraggedImage(Image image, Point dropPoint, Point imageOffset) {
     }
 }

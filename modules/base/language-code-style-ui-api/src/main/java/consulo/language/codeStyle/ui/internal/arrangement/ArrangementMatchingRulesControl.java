@@ -149,17 +149,17 @@ public class ArrangementMatchingRulesControl extends JBTable {
   }
 
   private void onMouseClicked(@Nonnull MouseEvent e) {
-    final int count = e.getClickCount();
+    int count = e.getClickCount();
     if (count != 2) {
       return;
     }
 
-    final IntList rows = getSelectedModelRows();
+    IntList rows = getSelectedModelRows();
     if (rows.size() != 1) {
       return;
     }
 
-    final int row = rows.get(0);
+    int row = rows.get(0);
     showEditor(row);
     scrollRowToVisible(row);
   }
@@ -324,7 +324,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
   }
 
   private void onTableChange(@Nonnull TableModelEvent e) {
-    final int signum;
+    int signum;
     switch (e.getType()) {
       case TableModelEvent.INSERT:
         signum = 1;
@@ -353,15 +353,15 @@ public class ArrangementMatchingRulesControl extends JBTable {
   }
 
   public void scrollRowToVisible(int row) {
-    final Rectangle rect = getCellRect(row, 0, false);
+    Rectangle rect = getCellRect(row, 0, false);
     if (row != getEditingRow() - 1) {
       scrollRectToVisible(rect);
     }
     else {
-      final Rectangle editorRect = getCellRect(row + 1, 0, false);
+      Rectangle editorRect = getCellRect(row + 1, 0, false);
       if(!rect.isEmpty() && !editorRect.isEmpty()) {
-        final int height = (int)(rect.getHeight() + editorRect.getHeight());
-        final Rectangle visibleRect = new Rectangle((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), height);
+        int height = (int)(rect.getHeight() + editorRect.getHeight());
+        Rectangle visibleRect = new Rectangle((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), height);
         scrollRectToVisible(visibleRect);
       }
     }
@@ -495,7 +495,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
           return EMPTY_RENDERER;
         }
         StdArrangementMatchRule rule = (StdArrangementMatchRule)value;
-        final boolean allowModifications = allowModifications(rule);
+        boolean allowModifications = allowModifications(rule);
         ArrangementUiComponent ruleComponent = myFactory.getComponent(rule.getMatcher().getCondition(), rule, allowModifications);
         component = new ArrangementListRowDecorator(ruleComponent, ArrangementMatchingRulesControl.this);
         component.setError(getValidator().validate(row));

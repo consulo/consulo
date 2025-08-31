@@ -30,7 +30,7 @@ import java.util.Map;
 public abstract class LexerBasedTodoIndexer implements VersionedTodoIndexer, IdAndToDoScannerBasedOnFilterLexer {
   @Override
   @Nonnull
-  public Map<TodoIndexEntry, Integer> map(final FileContent inputData) {
+  public Map<TodoIndexEntry, Integer> map(FileContent inputData) {
     return BaseFilterLexerUtil.scanContent(inputData, this).todoMap;
   }
 }

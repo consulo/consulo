@@ -78,7 +78,7 @@ public class TracingData {
     PersistentHashMap<Integer, Integer> lkeys = createOrOpenMap();
     List<Integer> mapping = (List<Integer>)lkeys.getAllKeysWithExistingMapping();
     System.out.println(mapping.size());
-    final IntIntMap map = IntMaps.newIntIntHashMap(mapping.size());
+    IntIntMap map = IntMaps.newIntIntHashMap(mapping.size());
     for (Integer i : mapping) map.putInt(i, lkeys.get(i));
 
     Collections.sort(mapping, (o1, o2) -> map.getInt(o2) - map.getInt(o1));

@@ -36,7 +36,7 @@ public abstract class FileModificationService {
 
   public abstract boolean preparePsiElementsForWrite(@Nonnull Collection<? extends PsiElement> elements);
 
-  public abstract boolean prepareFileForWrite(@Nullable final PsiFile psiFile);
+  public abstract boolean prepareFileForWrite(@Nullable PsiFile psiFile);
 
   public boolean preparePsiElementForWrite(@Nullable PsiElement element) {
     PsiFile file = element == null ? null : element.getContainingFile();

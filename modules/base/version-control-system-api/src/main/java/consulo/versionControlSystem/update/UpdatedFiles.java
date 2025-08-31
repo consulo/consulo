@@ -106,7 +106,7 @@ public class UpdatedFiles implements JDOMExternalizable {
     return result;
   }
 
-  public void setRevisions(final String path, final AbstractVcs vcs, final VcsRevisionNumber revision) {
+  public void setRevisions(String path, AbstractVcs vcs, VcsRevisionNumber revision) {
     for(FileGroup group: myGroups) {
       group.setRevisions(path, vcs, revision);      
     }

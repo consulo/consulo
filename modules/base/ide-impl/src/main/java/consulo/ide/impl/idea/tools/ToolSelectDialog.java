@@ -59,7 +59,7 @@ class ToolSelectDialog extends DialogWrapper {
     }
     catch (IOException e) {
       String message = ToolsBundle.message("tools.failed.to.save.changes.0", StringUtil.decapitalize(e.getMessage()));
-      final JLayeredPane pane = myToolsPanel.getRootPane().getLayeredPane();
+      JLayeredPane pane = myToolsPanel.getRootPane().getLayeredPane();
       JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, NotificationType.ERROR, null)
         .setShowCallout(false).setFadeoutTime(3000).setHideOnAction(true).setHideOnClickOutside(true).setHideOnKeyOutside(true).
         createBalloon().show(new RelativePoint(pane, new Point(pane.getWidth(), 0)), Balloon.Position.above);

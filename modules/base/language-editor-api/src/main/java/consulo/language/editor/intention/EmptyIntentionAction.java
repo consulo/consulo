@@ -46,11 +46,11 @@ public final class EmptyIntentionAction extends AbstractEmptyIntentionAction imp
     return true; //edit inspection settings is always enabled
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final EmptyIntentionAction that = (EmptyIntentionAction)o;
+    EmptyIntentionAction that = (EmptyIntentionAction)o;
 
     return myName.equals(that.myName);
   }

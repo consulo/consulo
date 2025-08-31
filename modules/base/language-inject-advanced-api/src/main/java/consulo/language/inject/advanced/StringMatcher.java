@@ -155,11 +155,11 @@ public abstract class StringMatcher<T> {
     }
 
     public synchronized boolean matches(String what) {
-      final Boolean o = myCache.get(what);
+      Boolean o = myCache.get(what);
       if (o != null) {
         return o;
       }
-      final boolean b = myTarget.matches(what);
+      boolean b = myTarget.matches(what);
       myCache.put(what, b);
       return b;
     }
@@ -174,7 +174,7 @@ public abstract class StringMatcher<T> {
     }
 
     public static StringMatcher create(Set<StringMatcher> matchers) {
-      final MatcherSet m = new MatcherSet(matchers);
+      MatcherSet m = new MatcherSet(matchers);
       return matchers.size() > 3 ? new Cache(m) : m;
     }
 
@@ -201,8 +201,8 @@ public abstract class StringMatcher<T> {
     if (target.equals(".*")) return ANY_PATTERN;
     if (target.equals(NONE.getPattern())) return NONE;
 
-    final List<String> branches = StringUtil.split(target,"|");
-    final Set<StringMatcher> matchers = new LinkedHashSet<StringMatcher>();
+    List<String> branches = StringUtil.split(target,"|");
+    Set<StringMatcher> matchers = new LinkedHashSet<StringMatcher>();
 
     for (String branch : branches) {
       boolean startsWith = false;
@@ -223,7 +223,7 @@ public abstract class StringMatcher<T> {
         branch = branch.substring(2);
       }
 
-      final boolean m = analyseBranch(branch);
+      boolean m = analyseBranch(branch);
       if (!m) {
         try {
           return new Cache(new Pattern(target));
@@ -233,7 +233,7 @@ public abstract class StringMatcher<T> {
         }
       }
 
-      final StringMatcher matcher;
+      StringMatcher matcher;
       if (startsWith && endsWith) {
         matcher = new Contains(branch);
       }
@@ -255,7 +255,7 @@ public abstract class StringMatcher<T> {
 
   private static boolean analyseBranch(String target) {
     for (int i = 0; i < target.length(); i++) {
-      final char c = target.charAt(i);
+      char c = target.charAt(i);
       if (c != '_' && c != '-' && !Character.isLetterOrDigit(c)) {
         return false;
       }

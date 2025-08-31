@@ -59,7 +59,7 @@ public class ModuleVcsDetector implements Disposable {
   private MessageBusConnection myConnection;
 
   @Inject
-  public ModuleVcsDetector(final Project project, final Provider<ProjectLevelVcsManager> vcsManager) {
+  public ModuleVcsDetector(Project project, Provider<ProjectLevelVcsManager> vcsManager) {
     myProject = project;
     myMessageBus = project.getMessageBus();
     myVcsManager = vcsManager;
@@ -67,7 +67,7 @@ public class ModuleVcsDetector implements Disposable {
 
   public void startDetecting() {
     myConnection = myMessageBus.connect();
-    final MyModulesListener listener = new MyModulesListener();
+    MyModulesListener listener = new MyModulesListener();
     myConnection.subscribe(ModuleListener.class, listener);
     myConnection.subscribe(ModuleRootListener.class, listener);
   }
@@ -96,13 +96,13 @@ public class ModuleVcsDetector implements Disposable {
     }
 
     @Override
-    public void moduleAdded(final Project project, final Module module) {
+    public void moduleAdded(Project project, Module module) {
       myMappingsForRemovedModules.removeAll(getMappings(module));
       autoDetectModuleVcsMapping(module);
     }
 
     @Override
-    public void beforeModuleRemoved(final Project project, final Module module) {
+    public void beforeModuleRemoved(Project project, Module module) {
       myMappingsForRemovedModules.addAll(getMappings(module));
     }
   }
@@ -114,14 +114,14 @@ public class ModuleVcsDetector implements Disposable {
     }
   }
 
-  private void autoDetectVcsMappings(final boolean tryMapPieces) {
+  private void autoDetectVcsMappings(boolean tryMapPieces) {
     ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)myVcsManager.get();
 
     Set<AbstractVcs> usedVcses = new HashSet<>();
     Map<VirtualFile, AbstractVcs> vcsMap = new HashMap<>();
-    final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
+    ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     for (Module module : moduleManager.getModules()) {
-      final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
+      VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
       for (VirtualFile file : files) {
         AbstractVcs contentRootVcs = vcsManager.findVersioningVcs(file);
         if (contentRootVcs != null) {
@@ -132,20 +132,20 @@ public class ModuleVcsDetector implements Disposable {
     }
     if (usedVcses.size() == 1) {
       // todo I doubt this is correct, see IDEA-50527
-      final AbstractVcs[] abstractVcses = usedVcses.toArray(new AbstractVcs[1]);
-      final Module[] modules = moduleManager.getModules();
-      final Set<String> contentRoots = new HashSet<>();
+      AbstractVcs[] abstractVcses = usedVcses.toArray(new AbstractVcs[1]);
+      Module[] modules = moduleManager.getModules();
+      Set<String> contentRoots = new HashSet<>();
       for (Module module : modules) {
-        final VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
+        VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
         for (VirtualFile root : roots) {
           contentRoots.add(root.getPath());
         }
       }
 
       if (abstractVcses[0] != null) {
-        final List<VcsDirectoryMapping> vcsDirectoryMappings = new ArrayList<>(vcsManager.getDirectoryMappings());
+        List<VcsDirectoryMapping> vcsDirectoryMappings = new ArrayList<>(vcsManager.getDirectoryMappings());
         for (Iterator<VcsDirectoryMapping> iterator = vcsDirectoryMappings.iterator(); iterator.hasNext(); ) {
-          final VcsDirectoryMapping mapping = iterator.next();
+          VcsDirectoryMapping mapping = iterator.next();
           if (!contentRoots.contains(mapping.getDirectory())) {
             iterator.remove();
           }
@@ -165,11 +165,11 @@ public class ModuleVcsDetector implements Disposable {
     }
   }
 
-  private void autoDetectModuleVcsMapping(final Module module) {
+  private void autoDetectModuleVcsMapping(Module module) {
     ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)myVcsManager.get();
 
     boolean mappingsUpdated = false;
-    final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
+    VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
     for (VirtualFile file : files) {
       AbstractVcs vcs = vcsManager.findVersioningVcs(file);
       if (vcs != null && vcs != vcsManager.getVcsFor(file)) {
@@ -182,14 +182,14 @@ public class ModuleVcsDetector implements Disposable {
     }
   }
 
-  private List<Pair<String, VcsDirectoryMapping>> getMappings(final Module module) {
+  private List<Pair<String, VcsDirectoryMapping>> getMappings(Module module) {
     ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)myVcsManager.get();
 
     List<Pair<String, VcsDirectoryMapping>> result = new ArrayList<>();
-    final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
-    final String moduleName = module.getName();
-    for (final VirtualFile file : files) {
-      for (final VcsDirectoryMapping mapping : vcsManager.getDirectoryMappings()) {
+    VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
+    String moduleName = module.getName();
+    for (VirtualFile file : files) {
+      for (VcsDirectoryMapping mapping : vcsManager.getDirectoryMappings()) {
         if (FileUtil.toSystemIndependentName(mapping.getDirectory()).equals(file.getPath())) {
           result.add(new Pair<>(moduleName, mapping));
           break;
@@ -206,7 +206,7 @@ public class ModuleVcsDetector implements Disposable {
       @Override
       public void run() {
         if (myProject.isDisposed()) return;
-        final String msg = VcsBundle.message("vcs.root.remove.prompt", FileUtil.toSystemDependentName(mapping.getDirectory()), moduleName);
+        String msg = VcsBundle.message("vcs.root.remove.prompt", FileUtil.toSystemDependentName(mapping.getDirectory()), moduleName);
         int rc = Messages.showYesNoDialog(myProject, msg, VcsBundle.message("vcs.root.remove.title"), Messages.getQuestionIcon());
         if (rc == Messages.YES) {
           vcsManager.removeDirectoryMapping(mapping);

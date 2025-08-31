@@ -28,7 +28,7 @@ public class LocalInspectionToolSession extends UserDataHolderBase {
   private final int myStartOffset;
   private final int myEndOffset;
 
-  public LocalInspectionToolSession(@Nonnull PsiFile file, final int startOffset, final int endOffset) {
+  public LocalInspectionToolSession(@Nonnull PsiFile file, int startOffset, int endOffset) {
     myFile = file;
     myStartOffset = startOffset;
     myEndOffset = endOffset;

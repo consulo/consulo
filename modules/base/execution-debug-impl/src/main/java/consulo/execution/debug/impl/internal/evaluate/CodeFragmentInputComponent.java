@@ -40,9 +40,9 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
   private final JPanel myMainPanel;
   private final String mySplitterProportionKey;
 
-  public CodeFragmentInputComponent(final @Nonnull Project project,
+  public CodeFragmentInputComponent(@Nonnull Project project,
                                     @Nonnull XDebuggerEditorsProvider editorsProvider,
-                                    final @Nullable XSourcePosition sourcePosition,
+                                    @Nullable XSourcePosition sourcePosition,
                                     @Nullable XExpression statements,
                                     String splitterProportionKey,
                                     Disposable parentDisposable) {
@@ -76,7 +76,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
 
   @Override
   public void addComponent(JPanel contentPanel, JPanel resultPanel) {
-    final JBSplitter splitter = new JBSplitter(true, 0.3f, 0.2f, 0.7f);
+    JBSplitter splitter = new JBSplitter(true, 0.3f, 0.2f, 0.7f);
     splitter.setSplitterProportionKey(mySplitterProportionKey);
     contentPanel.add(splitter, BorderLayout.CENTER);
     splitter.setFirstComponent(myMainPanel);
@@ -88,7 +88,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
 
     public HistoryNavigationAction(boolean forward, String actionId, Disposable parentDisposable) {
       myForward = forward;
-      final AnAction action = ActionManager.getInstance().getAction(actionId);
+      AnAction action = ActionManager.getInstance().getAction(actionId);
       copyFrom(action);
       registerCustomShortcutSet(action.getShortcutSet(), myMainPanel, parentDisposable);
     }

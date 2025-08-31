@@ -43,7 +43,7 @@ public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
     }
 
     @Override
-    public boolean matches(final CharSequence filename) {
+    public boolean matches(CharSequence filename) {
       synchronized (myMatcher) {
         myMatcher.reset(filename);
         return myMatcher.matches();
@@ -54,12 +54,12 @@ public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
   private static final class SuffixMatcher implements MaskMatcher {
     private final String mySuffix;
 
-    private SuffixMatcher(final String suffix) {
+    private SuffixMatcher(String suffix) {
       mySuffix = suffix;
     }
 
     @Override
-    public boolean matches(final CharSequence filename) {
+    public boolean matches(CharSequence filename) {
       return StringUtil.endsWith(filename, mySuffix);
     }
   }
@@ -67,12 +67,12 @@ public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
   private static final class PrefixMatcher implements MaskMatcher {
     private final String myPrefix;
 
-    private PrefixMatcher(final String prefix) {
+    private PrefixMatcher(String prefix) {
       myPrefix = prefix;
     }
 
     @Override
-    public boolean matches(final CharSequence filename) {
+    public boolean matches(CharSequence filename) {
       return StringUtil.startsWith(filename, myPrefix);
     }
   }
@@ -80,12 +80,12 @@ public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
   private static final class InfixMatcher implements MaskMatcher {
     private final String myInfix;
 
-    private InfixMatcher(final String infix) {
+    private InfixMatcher(String infix) {
       myInfix = infix;
     }
 
     @Override
-    public boolean matches(final CharSequence filename) {
+    public boolean matches(CharSequence filename) {
       return StringUtil.contains(filename, myInfix);
     }
   }
@@ -98,7 +98,7 @@ public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
     myMatcher = createMatcher(pattern);
   }
 
-  private static MaskMatcher createMatcher(final String pattern) {
+  private static MaskMatcher createMatcher(String pattern) {
     int len = pattern.length();
     if (len > 1 && pattern.indexOf('?') < 0) {
       if (pattern.charAt(0) == '*' && pattern.indexOf('*', 1) < 0) {
@@ -126,11 +126,11 @@ public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final WildcardFileNameMatcherImpl that = (WildcardFileNameMatcherImpl)o;
+    WildcardFileNameMatcherImpl that = (WildcardFileNameMatcherImpl)o;
 
     return myPattern.equals(that.myPattern);
   }

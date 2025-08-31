@@ -36,13 +36,13 @@ public class ChangeListChooser extends DialogWrapper {
   public ChangeListChooser(@Nonnull Project project,
                            @Nonnull Collection<? extends ChangeList> changelists,
                            @jakarta.annotation.Nullable ChangeList defaultSelection,
-                           final String title,
-                           @jakarta.annotation.Nullable final String suggestedName) {
+                           String title,
+                           @jakarta.annotation.Nullable String suggestedName) {
     super(project, false);
     myProject = project;
 
     myPanel = new ChangeListChooserPanel(myProject, new Consumer<String>() {
-      public void accept(final @jakarta.annotation.Nullable String errorMessage) {
+      public void accept(@jakarta.annotation.Nullable String errorMessage) {
         setOKActionEnabled(errorMessage == null);
         setErrorText(errorMessage);
       }

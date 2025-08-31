@@ -103,7 +103,7 @@ public class FileUtil {
 
     @Nonnull
     public static File createTempFile(@Nonnull String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
-        final File dir = new File(getTempDirectory());
+        File dir = new File(getTempDirectory());
         return createTempFile(dir, prefix, suffix, true, deleteOnExit);
     }
 
@@ -146,9 +146,9 @@ public class FileUtil {
 
     @Nonnull
     private static String calcCanonicalTempPath() {
-        final File file = new File(System.getProperty("java.io.tmpdir"));
+        File file = new File(System.getProperty("java.io.tmpdir"));
         try {
-            final String canonical = file.getCanonicalPath();
+            String canonical = file.getCanonicalPath();
             if (!OSInfo.isWindows || !canonical.contains(" ")) {
                 return canonical;
             }
@@ -223,7 +223,7 @@ public class FileUtil {
 
     @Nonnull
     private static File normalizeFile(@Nonnull File temp) throws IOException {
-        final File canonical = temp.getCanonicalFile();
+        File canonical = temp.getCanonicalFile();
         return OSInfo.isWindows && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
     }
 
@@ -231,11 +231,11 @@ public class FileUtil {
         return processFilesRecursively(root, processor, null);
     }
 
-    public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Predicate<File> processor, @Nullable final Predicate<File> directoryFilter) {
-        final LinkedList<File> queue = new LinkedList<>();
+    public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Predicate<File> processor, @Nullable Predicate<File> directoryFilter) {
+        LinkedList<File> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
-            final File file = queue.removeFirst();
+            File file = queue.removeFirst();
             if (!processor.test(file)) {
                 return false;
             }
@@ -243,7 +243,7 @@ public class FileUtil {
                 continue;
             }
 
-            final File[] children = file.listFiles();
+            File[] children = file.listFiles();
             if (children != null) {
                 ContainerUtil.addAll(queue, children);
             }
@@ -391,7 +391,7 @@ public class FileUtil {
         return relativePath.toString();
     }
 
-    private static String ensureEnds(@Nonnull String s, final char endsWith) {
+    private static String ensureEnds(@Nonnull String s, char endsWith) {
         return StringUtil.endsWithChar(s, endsWith) ? s : s + endsWith;
     }
 
@@ -412,20 +412,20 @@ public class FileUtil {
     @RegExp
     @Nonnull
     public static String convertAntToRegexp(@Nonnull String antPattern, boolean ignoreStartingSlash) {
-        final StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         int asteriskCount = 0;
         boolean recursive = true;
-        final int start = ignoreStartingSlash && (StringUtil.startsWithChar(antPattern, '/') || StringUtil.startsWithChar(antPattern, '\\')) ? 1 : 0;
+        int start = ignoreStartingSlash && (StringUtil.startsWithChar(antPattern, '/') || StringUtil.startsWithChar(antPattern, '\\')) ? 1 : 0;
         for (int idx = start; idx < antPattern.length(); idx++) {
-            final char ch = antPattern.charAt(idx);
+            char ch = antPattern.charAt(idx);
 
             if (ch == '*') {
                 asteriskCount++;
                 continue;
             }
 
-            final boolean foundRecursivePattern = recursive && asteriskCount == 2 && (ch == '/' || ch == '\\');
-            final boolean asterisksFound = asteriskCount > 0;
+            boolean foundRecursivePattern = recursive && asteriskCount == 2 && (ch == '/' || ch == '\\');
+            boolean asterisksFound = asteriskCount > 0;
 
             asteriskCount = 0;
             recursive = ch == '/' || ch == '\\';
@@ -456,7 +456,7 @@ public class FileUtil {
         }
 
         // handle ant shorthand: my_package/test/ is interpreted as if it were my_package/test/**
-        final boolean isTrailingSlash = builder.length() > 0 && builder.charAt(builder.length() - 1) == '/';
+        boolean isTrailingSlash = builder.length() > 0 && builder.charAt(builder.length() - 1) == '/';
         if (asteriskCount == 0 && isTrailingSlash || recursive && asteriskCount == 2) {
             if (isTrailingSlash) {
                 builder.setLength(builder.length() - 1);
@@ -499,12 +499,12 @@ public class FileUtil {
         performCopy(fromFile, toFile, false, permissionCopier);
     }
 
-    private static FileOutputStream openOutputStream(@Nonnull final File file) throws IOException {
+    private static FileOutputStream openOutputStream(@Nonnull File file) throws IOException {
         try {
             return new FileOutputStream(file);
         }
         catch (FileNotFoundException e) {
-            final File parentFile = file.getParentFile();
+            File parentFile = file.getParentFile();
             if (parentFile == null) {
                 throw new IOException("Parent file is null for " + file.getPath(), e);
             }
@@ -514,14 +514,14 @@ public class FileUtil {
     }
 
     @SuppressWarnings("Duplicates")
-    private static void performCopy(@Nonnull File fromFile, @Nonnull File toFile, final boolean syncTimestamp, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    private static void performCopy(@Nonnull File fromFile, @Nonnull File toFile, boolean syncTimestamp, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
         if (filesEqual(fromFile, toFile)) {
             return;
         }
-        final FileOutputStream fos = openOutputStream(toFile);
+        FileOutputStream fos = openOutputStream(toFile);
 
         try {
-            final FileInputStream fis = new FileInputStream(fromFile);
+            FileInputStream fis = new FileInputStream(fromFile);
             try {
                 copy(fis, fos);
             }
@@ -534,7 +534,7 @@ public class FileUtil {
         }
 
         if (syncTimestamp) {
-            final long timeStamp = fromFile.lastModified();
+            long timeStamp = fromFile.lastModified();
             if (timeStamp < 0) {
                 LOG.warn("Invalid timestamp " + timeStamp + " of '" + fromFile + "'");
             }
@@ -566,7 +566,7 @@ public class FileUtil {
         copyDir(fromDir, toDir, copySystemFiles ? null : (FileFilter) file -> !StringUtil.startsWithChar(file.getName(), '.'), permissionCopier);
     }
 
-    public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, @Nullable final FileFilter filter, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, @Nullable FileFilter filter, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
         ensureExists(toDir);
         if (isAncestor(fromDir, toDir, true)) {
             LOG.error(fromDir.getAbsolutePath() + " is ancestor of " + toDir + ". Can't copy to itself.");
@@ -607,7 +607,7 @@ public class FileUtil {
             }
         }
         else {
-            final byte[] buffer = getThreadLocalBuffer();
+            byte[] buffer = getThreadLocalBuffer();
             while (true) {
                 int read = inputStream.read(buffer);
                 if (read < 0) {
@@ -666,7 +666,7 @@ public class FileUtil {
     }
 
     public static void copy(@Nonnull InputStream inputStream, int maxSize, @Nonnull OutputStream outputStream) throws IOException {
-        final byte[] buffer = getThreadLocalBuffer();
+        byte[] buffer = getThreadLocalBuffer();
         int toRead = maxSize;
         while (toRead > 0) {
             int read = inputStream.read(buffer, 0, Math.min(buffer.length, toRead));
@@ -732,8 +732,8 @@ public class FileUtil {
 
     @Nonnull
     private static ThreeState startsWith(@Nonnull String path, @Nonnull String prefix, boolean strict, boolean caseSensitive, boolean checkImmediateParent) {
-        final int pathLength = path.length();
-        final int prefixLength = prefix.length();
+        int pathLength = path.length();
+        int prefixLength = prefix.length();
         if (prefixLength == 0) {
             return pathLength == 0 ? ThreeState.YES : ThreeState.UNSURE;
         }
@@ -1022,7 +1022,7 @@ public class FileUtil {
     }
 
 
-    public static String toSystemDependentName(String fileName, final char separatorChar) {
+    public static String toSystemDependentName(String fileName, char separatorChar) {
         return fileName.replace('/', separatorChar).replace('\\', separatorChar);
     }
 
@@ -1158,7 +1158,7 @@ public class FileUtil {
     };
 
     @Contract("null, _, _, _ -> null")
-    private static String toCanonicalPath(@Nullable String path, final char separatorChar, final boolean removeLastSlash, final boolean resolveSymlinks) {
+    private static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, boolean resolveSymlinks) {
         SymlinkResolver symlinkResolver = resolveSymlinks ? SYMLINK_RESOLVER : null;
         return toCanonicalPath(path, separatorChar, removeLastSlash, symlinkResolver);
     }
@@ -1175,7 +1175,7 @@ public class FileUtil {
     }
 
     @Contract("null, _, _, _ -> null")
-    protected static String toCanonicalPath(@Nullable String path, final char separatorChar, final boolean removeLastSlash, final @Nullable SymlinkResolver resolver) {
+    protected static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, @Nullable SymlinkResolver resolver) {
         if (path == null || path.length() == 0) {
             return path;
         }
@@ -1408,7 +1408,7 @@ public class FileUtil {
     }
 
     @Nonnull
-    public static String join(@Nonnull final String... parts) {
+    public static String join(@Nonnull String... parts) {
         return StringUtil.join(parts, File.separator);
     }
 
@@ -1482,8 +1482,8 @@ public class FileUtil {
 
     @Nonnull
     public static List<File> findFilesByMask(@Nonnull Pattern pattern, @Nonnull File dir) {
-        final ArrayList<File> found = new ArrayList<>();
-        final File[] files = dir.listFiles();
+        ArrayList<File> found = new ArrayList<>();
+        File[] files = dir.listFiles();
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
@@ -1499,8 +1499,8 @@ public class FileUtil {
 
     @Nonnull
     public static List<File> findFilesOrDirsByMask(@Nonnull Pattern pattern, @Nonnull File dir) {
-        final ArrayList<File> found = new ArrayList<>();
-        final File[] files = dir.listFiles();
+        ArrayList<File> found = new ArrayList<>();
+        File[] files = dir.listFiles();
         if (files != null) {
             for (File file : files) {
                 if (pattern.matcher(file.getName()).matches()) {
@@ -1524,7 +1524,7 @@ public class FileUtil {
         }
 
         // do not use getName to avoid extra String creation (File.getName() calls substring)
-        final String path = file.getPath();
+        String path = file.getPath();
         return StringUtil.endsWithIgnoreCase(path, ".jar") || StringUtil.endsWithIgnoreCase(path, ".zip");
     }
 
@@ -1665,7 +1665,7 @@ public class FileUtil {
         }
 
         for (int i = start; i < path.length(); ++i) {
-            final char c = path.charAt(i);
+            char c = path.charAt(i);
             if (c == '/') {
                 if (separator) {
                     return normalizeTail(isWindows, i, path, true);
@@ -1685,7 +1685,7 @@ public class FileUtil {
 
     @Nonnull
     private static String normalizeTail(boolean isWindows, int prefixEnd, @Nonnull String path, boolean separator) {
-        final StringBuilder result = new StringBuilder(path.length());
+        StringBuilder result = new StringBuilder(path.length());
         result.append(path, 0, prefixEnd);
         int start = prefixEnd;
         if (start == 0 && isWindows && (path.startsWith("//") || path.startsWith("\\\\"))) {
@@ -1695,7 +1695,7 @@ public class FileUtil {
         }
 
         for (int i = start; i < path.length(); ++i) {
-            final char c = path.charAt(i);
+            char c = path.charAt(i);
             if (c == '/' || c == '\\') {
                 if (!separator) result.append('/');
                 separator = true;

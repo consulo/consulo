@@ -37,7 +37,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   private volatile String myInvalidationReason;
   private volatile PsiFileStub[] myStubRoots;
 
-  public PsiFileStubImpl(final T file) {
+  public PsiFileStubImpl(T file) {
     super(null, null);
     myFile = file;
   }
@@ -48,7 +48,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   }
 
   @Override
-  public void setPsi(@Nonnull final T psi) {
+  public void setPsi(@Nonnull T psi) {
     myFile = psi;
   }
 
@@ -81,27 +81,27 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   public PsiFileStub[] getStubRoots() {
     if (myStubRoots != null) return myStubRoots;
 
-    final T psi = getPsi();
+    T psi = getPsi();
     if (psi == null) {
       return new PsiFileStub[]{this};
     }
 
-    final FileViewProvider viewProvider = psi.getViewProvider();
-    final PsiFile stubBindingRoot = viewProvider.getStubBindingRoot();
+    FileViewProvider viewProvider = psi.getViewProvider();
+    PsiFile stubBindingRoot = viewProvider.getStubBindingRoot();
 
     StubTree baseTree = getOrCalcStubTree(stubBindingRoot);
     if (baseTree != null) {
-      final List<PsiFileStub> roots = new SmartList<>(baseTree.getRoot());
-      final List<Pair<IStubFileElementType, PsiFile>> stubbedRoots = StubTreeBuilder.getStubbedRoots(viewProvider);
+      List<PsiFileStub> roots = new SmartList<>(baseTree.getRoot());
+      List<Pair<IStubFileElementType, PsiFile>> stubbedRoots = StubTreeBuilder.getStubbedRoots(viewProvider);
       for (Pair<IStubFileElementType, PsiFile> stubbedRoot : stubbedRoots) {
         if (stubbedRoot.second == stubBindingRoot) continue;
-        final StubTree secondaryStubTree = getOrCalcStubTree(stubbedRoot.second);
+        StubTree secondaryStubTree = getOrCalcStubTree(stubbedRoot.second);
         if (secondaryStubTree != null) {
-          final PsiFileStub root = secondaryStubTree.getRoot();
+          PsiFileStub root = secondaryStubTree.getRoot();
           roots.add(root);
         }
       }
-      final PsiFileStub[] rootsArray = roots.toArray(PsiFileStub.EMPTY_ARRAY);
+      PsiFileStub[] rootsArray = roots.toArray(PsiFileStub.EMPTY_ARRAY);
       for (PsiFileStub root : rootsArray) {
         if (root instanceof PsiFileStubImpl) {
           ((PsiFileStubImpl)root).setStubRoots(rootsArray);

@@ -33,7 +33,7 @@ public class PsiBuilderUtil {
      * @param builder PSI builder to operate on.
      * @param count   number of tokens to skip.
      */
-    public static void advance(final PsiBuilder builder, final int count) {
+    public static void advance(PsiBuilder builder, int count) {
         for (int i = 0; i < count && !builder.eof(); i++) {
             builder.getTokenType();
             builder.advanceLexer();
@@ -47,7 +47,7 @@ public class PsiBuilderUtil {
      * @param expectedType expected token.
      * @return true if token matches, false otherwise.
      */
-    public static boolean expect(final PsiBuilder builder, final IElementType expectedType) {
+    public static boolean expect(PsiBuilder builder, IElementType expectedType) {
         if (builder.getTokenType() == expectedType) {
             builder.advanceLexer();
             return true;
@@ -62,7 +62,7 @@ public class PsiBuilderUtil {
      * @param expectedTypes expected token types.
      * @return true if token matches, false otherwise.
      */
-    public static boolean expect(final PsiBuilder builder, final TokenSet expectedTypes) {
+    public static boolean expect(PsiBuilder builder, TokenSet expectedTypes) {
         if (expectedTypes.contains(builder.getTokenType())) {
             builder.advanceLexer();
             return true;
@@ -75,7 +75,7 @@ public class PsiBuilderUtil {
      *
      * @param markers markers to drop.
      */
-    public static void drop(final PsiBuilder.Marker... markers) {
+    public static void drop(PsiBuilder.Marker... markers) {
         for (PsiBuilder.Marker marker : markers) {
             if (marker != null) {
                 marker.drop();

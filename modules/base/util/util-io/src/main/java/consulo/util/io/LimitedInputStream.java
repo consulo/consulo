@@ -26,7 +26,7 @@ public class LimitedInputStream extends FilterInputStream {
   private final int myReadLimit;
   private int myBytesRead;
 
-  public LimitedInputStream(final InputStream in, final int readLimit) {
+  public LimitedInputStream(InputStream in, int readLimit) {
     super(in);
     myReadLimit = readLimit;
     myBytesRead = 0;
@@ -40,7 +40,7 @@ public class LimitedInputStream extends FilterInputStream {
   @Override
   public int read() throws IOException {
     if (myBytesRead == myReadLimit) return -1;
-    final int r = super.read();
+    int r = super.read();
     if (r >= 0) myBytesRead++;
     return r;
   }
@@ -56,7 +56,7 @@ public class LimitedInputStream extends FilterInputStream {
     len = Math.min(len, myReadLimit - myBytesRead);
     if (len <= 0) return -1;
 
-    final int actuallyRead = super.read(b, off, len);
+    int actuallyRead = super.read(b, off, len);
     if (actuallyRead >= 0) myBytesRead += actuallyRead;
 
     return actuallyRead;
@@ -67,7 +67,7 @@ public class LimitedInputStream extends FilterInputStream {
     n = Math.min(n, myReadLimit - myBytesRead);
     if (n <= 0) return 0;
 
-    final long skipped = super.skip(n);
+    long skipped = super.skip(n);
     myBytesRead += skipped;
     return skipped;
   }
@@ -82,7 +82,7 @@ public class LimitedInputStream extends FilterInputStream {
   }
 
   @Override
-  public synchronized void mark(final int readLimit) {
+  public synchronized void mark(int readLimit) {
     throw new UnsupportedOperationException();
   }
 

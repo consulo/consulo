@@ -105,7 +105,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
         }
 
         private void onSpecifyUrlButtonClicked() {
-            final String defaultDocsUrl =
+            String defaultDocsUrl =
                 mySdk == null ? "" : StringUtil.notNullize(((SdkType) mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
             VirtualFile virtualFile = DocumentationUtil.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
             if (virtualFile != null) {

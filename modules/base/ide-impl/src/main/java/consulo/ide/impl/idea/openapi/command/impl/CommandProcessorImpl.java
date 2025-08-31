@@ -30,11 +30,11 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
 
     @RequiredUIAccess
     @Override
-    protected void finishCommand(@Nonnull final CommandToken command, @Nullable final Throwable throwable) {
+    protected void finishCommand(@Nonnull CommandToken command, @Nullable Throwable throwable) {
         if (myCurrentCommand != command) {
             return;
         }
-        final boolean failed;
+        boolean failed;
         try {
             if (throwable != null) {
                 failed = true;
@@ -60,7 +60,7 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
             Project project = command.getProject();
             if (project != null) {
                 FileEditor editor = CurrentEditorProvider.getInstance().getCurrentEditor();
-                final UndoManager undoManager = ProjectUndoManager.getInstance(project);
+                UndoManager undoManager = ProjectUndoManager.getInstance(project);
                 if (undoManager.isUndoAvailable(editor)) {
                     undoManager.undo(editor);
                 }

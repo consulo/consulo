@@ -39,10 +39,10 @@ public class ModuleRootModificationUtil {
   }
 
   public static void addModuleLibrary(Module module, String libName, List<String> classesRoots, List<String> sourceRoots,
-                                      final DependencyScope scope) {
-    final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    final Library library = model.getModuleLibraryTable().createLibrary(libName);
-    final Library.ModifiableModel libraryModel = library.getModifiableModel();
+                                      DependencyScope scope) {
+    ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
+    Library library = model.getModuleLibraryTable().createLibrary(libName);
+    Library.ModifiableModel libraryModel = library.getModifiableModel();
     for (String root : classesRoots) {
       libraryModel.addRoot(root, BinariesOrderRootType.getInstance());
     }
@@ -64,27 +64,27 @@ public class ModuleRootModificationUtil {
     addDependency(module, library, DependencyScope.COMPILE, false);
   }
 
-  public static void addDependency(Module module, Library library, final DependencyScope scope, final boolean exported) {
-    final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    final LibraryOrderEntry entry = model.addLibraryEntry(library);
+  public static void addDependency(Module module, Library library, DependencyScope scope, boolean exported) {
+    ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
+    LibraryOrderEntry entry = model.addLibraryEntry(library);
     entry.setExported(exported);
     entry.setScope(scope);
     doCommit(model);
   }
 
-  public static void addDependency(final Module from, final Module to) {
+  public static void addDependency(Module from, Module to) {
     addDependency(from, to, DependencyScope.COMPILE, false);
   }
 
-  public static void addDependency(final Module from, final Module to, final DependencyScope scope, final boolean exported) {
-    final ModifiableRootModel model = ModuleRootManager.getInstance(from).getModifiableModel();
-    final ModuleOrderEntry entry = model.addModuleOrderEntry(to);
+  public static void addDependency(Module from, Module to, DependencyScope scope, boolean exported) {
+    ModifiableRootModel model = ModuleRootManager.getInstance(from).getModifiableModel();
+    ModuleOrderEntry entry = model.addModuleOrderEntry(to);
     entry.setScope(scope);
     entry.setExported(exported);
     doCommit(model);
   }
 
-  private static void doCommit(final ModifiableRootModel model) {
+  private static void doCommit(ModifiableRootModel model) {
     WriteAction.run(model::commit);
   }
 }

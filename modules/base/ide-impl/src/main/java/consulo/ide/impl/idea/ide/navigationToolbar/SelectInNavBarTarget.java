@@ -42,7 +42,7 @@ public class SelectInNavBarTarget extends SelectInTargetPsiWrapper implements Du
     public static final String NAV_BAR_ID = "NavBar";
 
     @Inject
-    public SelectInNavBarTarget(final Project project) {
+    public SelectInNavBarTarget(Project project) {
         super(project);
     }
 
@@ -52,24 +52,24 @@ public class SelectInNavBarTarget extends SelectInTargetPsiWrapper implements Du
     }
 
     @Override
-    protected boolean canSelect(final PsiFileSystemItem file) {
+    protected boolean canSelect(PsiFileSystemItem file) {
         return UISettings.getInstance().SHOW_NAVIGATION_BAR;
     }
 
     @Override
-    protected void select(final Object selector, final VirtualFile virtualFile, final boolean requestFocus) {
+    protected void select(Object selector, VirtualFile virtualFile, boolean requestFocus) {
         selectInNavBar();
     }
 
     @Override
-    protected void select(final PsiElement element, boolean requestFocus) {
+    protected void select(PsiElement element, boolean requestFocus) {
         selectInNavBar();
     }
 
     private static void selectInNavBar() {
         DataManager.getInstance().getDataContextFromFocus()
             .doWhenDone(context -> {
-                final IdeFrame frame = context.getData(IdeFrame.KEY);
+                IdeFrame frame = context.getData(IdeFrame.KEY);
                 if (frame != null) {
                     NavBarRootPaneExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.class);
                     if (navBarExt != null) {

@@ -34,11 +34,11 @@ public class SameSourceRootWeigher extends ProximityWeigher {
       NullableLazyKey.create("sourceRoot", proximityLocation -> findSourceRoot(proximityLocation.getPosition()));
 
   @Override
-  public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
+  public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
     if (location.getPosition() == null) {
       return null;
     }
-    final VirtualFile sourceRoot = SOURCE_ROOT_KEY.getValue(location);
+    VirtualFile sourceRoot = SOURCE_ROOT_KEY.getValue(location);
     if (sourceRoot == null) {
       return false;
     }
@@ -49,10 +49,10 @@ public class SameSourceRootWeigher extends ProximityWeigher {
   private static VirtualFile findSourceRoot(PsiElement element) {
     if (element == null) return null;
 
-    final PsiFile psiFile = element.getContainingFile();
+    PsiFile psiFile = element.getContainingFile();
     if (psiFile == null) return null;
 
-    final VirtualFile file = psiFile.getOriginalFile().getVirtualFile();
+    VirtualFile file = psiFile.getOriginalFile().getVirtualFile();
     if (file == null) return null;
 
     return ProjectFileIndex.getInstance(element.getProject()).getSourceRootForFile(file);

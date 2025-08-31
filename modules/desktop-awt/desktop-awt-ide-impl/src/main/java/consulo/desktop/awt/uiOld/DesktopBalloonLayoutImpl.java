@@ -302,11 +302,11 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
   }
 
   private void relayout() {
-    final Dimension size = myLayeredPane.getSize();
+    Dimension size = myLayeredPane.getSize();
 
     JBInsets.removeFrom(size, myInsets);
 
-    final Rectangle layoutRec = new Rectangle(new Point(myInsets.left, myInsets.top), size);
+    Rectangle layoutRec = new Rectangle(new Point(myInsets.left, myInsets.top), size);
 
     List<ArrayList<Balloon>> columns = createColumns(layoutRec);
     while (columns.size() > 1) {
@@ -347,7 +347,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
 
     int eachColumnHeight = 0;
     for (Balloon each : myBalloons) {
-      final Dimension eachSize = getSize(each);
+      Dimension eachSize = getSize(each);
       if (eachColumnHeight + eachSize.height > layoutRec.getHeight()) {
         eachColumn = new ArrayList<>();
         columns.add(eachColumn);

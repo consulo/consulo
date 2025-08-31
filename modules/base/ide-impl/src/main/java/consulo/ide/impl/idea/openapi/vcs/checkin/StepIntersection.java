@@ -47,7 +47,7 @@ public class StepIntersection<Data, Area> {
 
   public StepIntersection(Convertor<Data, TextRange> dataConvertor,
                           Convertor<Area, TextRange> areasConvertor,
-                          final List<Area> areas,
+                          List<Area> areas,
                           Getter<String> debugDocumentTextGetter) {
     myAreas = areas;
     myDebugDocumentTextGetter = debugDocumentTextGetter;
@@ -66,7 +66,7 @@ public class StepIntersection<Data, Area> {
     myAreaIndex = 0;
   }
 
-  public List<Data> process(final Iterable<Data> data) {
+  public List<Data> process(Iterable<Data> data) {
     final List<Data> result = new ArrayList<Data>();
     process(data, new PairConsumer<Data, Area>() {
       @Override
@@ -77,14 +77,14 @@ public class StepIntersection<Data, Area> {
     return result;
   }
 
-  public void process(final Iterable<Data> data, final PairConsumer<Data, Area> consumer) {
+  public void process(Iterable<Data> data, PairConsumer<Data, Area> consumer) {
     myDataIterator = data.iterator();
 
     if (! myDataIterator.hasNext() || noMoreAreas()) return;
     dataStep();
     initArea();
     while (! noMoreAreas()) {
-      final boolean intersects = myAreaRange.intersects(myDataRange);
+      boolean intersects = myAreaRange.intersects(myDataRange);
       if (intersects) {
         consumer.consume(myCurData, myCurArea);
       }
@@ -118,7 +118,7 @@ public class StepIntersection<Data, Area> {
 
   private void areaStep() {
     // a hack here
-    final int idx = myHackSearch.search(myAreas.subList(myAreaIndex + 1, myAreas.size()), myCurData);
+    int idx = myHackSearch.search(myAreas.subList(myAreaIndex + 1, myAreas.size()), myCurData);
     myAreaIndex = myAreaIndex + 1 + idx;
     if (myAreaIndex >= myAreas.size()) {
       return;

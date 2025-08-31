@@ -35,7 +35,7 @@ public class HotfixGroupElement extends GroupingElement {
   private final CustomizeColoredTreeCellRenderer myLeftTreeCellRenderer;
   private final CustomizeColoredTreeCellRenderer myRightTreeCellRenderer;
 
-  public HotfixGroupElement(final String name, final Object data, final VirtualFile file, final Consumer<HotfixGate> hotfix, final String fixDescription, final MutableErrorTreeView view) {
+  public HotfixGroupElement(String name, Object data, VirtualFile file, Consumer<HotfixGate> hotfix, String fixDescription, MutableErrorTreeView view) {
     super(name, data, file);
     myHotfix = hotfix;
     myFixDescription = fixDescription;
@@ -45,8 +45,8 @@ public class HotfixGroupElement extends GroupingElement {
       public void customizeCellRenderer(SimpleColoredComponent renderer, JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         renderer.setIcon(AllIcons.General.Error);
 
-        final String[] text = getText();
-        final String errorText = ((text != null) && (text.length > 0)) ? text[0] : "";
+        String[] text = getText();
+        String errorText = ((text != null) && (text.length > 0)) ? text[0] : "";
         renderer.append("Error: " + errorText, SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
     };
@@ -97,7 +97,7 @@ public class HotfixGroupElement extends GroupingElement {
     public void run() {
       myInProgress = true;
       myView.reload();
-      final String name = getName();
+      String name = getName();
       myHotfix.accept(new HotfixGate(name, myView));
     }
   }

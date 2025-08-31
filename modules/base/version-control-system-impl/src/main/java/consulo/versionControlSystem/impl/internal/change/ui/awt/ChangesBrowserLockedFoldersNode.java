@@ -34,27 +34,27 @@ import java.util.Map;
 public class ChangesBrowserLockedFoldersNode extends ChangesBrowserNode implements TreeLinkMouseListener.HaveTooltip {
   private final Project myProject;
 
-  public ChangesBrowserLockedFoldersNode(final Project project, final Object userObject) {
+  public ChangesBrowserLockedFoldersNode(Project project, Object userObject) {
     super(userObject);
     myProject = project;
   }
 
-  public boolean canAcceptDrop(final ChangeListDragBean dragBean) {
+  public boolean canAcceptDrop(ChangeListDragBean dragBean) {
     return false;
   }
 
-  public void acceptDrop(final ChangeListOwner dragOwner, final ChangeListDragBean dragBean) {
+  public void acceptDrop(ChangeListOwner dragOwner, ChangeListDragBean dragBean) {
   }
 
   public String getTooltip() {
     return VcsBundle.message("changes.nodetitle.locked.folders.tooltip");
   }
 
-  public void render(final ChangesBrowserNodeRenderer renderer, final boolean selected, final boolean expanded, final boolean hasFocus) {
+  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     renderer.append(userObject.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     renderer.append(getCountText(), SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
     renderer.append("   ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    final CleanupStarter starter = new CleanupStarter(myProject, this);
+    CleanupStarter starter = new CleanupStarter(myProject, this);
     renderer.append("do cleanup...", new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, Color.red), starter);
   }
 
@@ -62,17 +62,17 @@ public class ChangesBrowserLockedFoldersNode extends ChangesBrowserNode implemen
     private final Project myProject;
     private final ChangesBrowserLockedFoldersNode myParentNode;
 
-    private CleanupStarter(final Project project, final ChangesBrowserLockedFoldersNode parentNode) {
+    private CleanupStarter(Project project, ChangesBrowserLockedFoldersNode parentNode) {
       myProject = project;
       myParentNode = parentNode;
     }
 
     public void run() {
-      final List<VirtualFile> files = myParentNode.getAllFilesUnder();
-      final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(myProject);
-      final Map<String, List<VirtualFile>> byVcs = new HashMap<String, List<VirtualFile>>();
+      List<VirtualFile> files = myParentNode.getAllFilesUnder();
+      ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(myProject);
+      Map<String, List<VirtualFile>> byVcs = new HashMap<String, List<VirtualFile>>();
       for (VirtualFile file : files) {
-        final AbstractVcs vcs = plVcsManager.getVcsFor(file);
+        AbstractVcs vcs = plVcsManager.getVcsFor(file);
         if (vcs != null) {
           List<VirtualFile> list = byVcs.get(vcs.getName());
           if (list == null) {
@@ -83,9 +83,9 @@ public class ChangesBrowserLockedFoldersNode extends ChangesBrowserNode implemen
         }
       }
       for (Map.Entry<String, List<VirtualFile>> entry : byVcs.entrySet()) {
-        final AbstractVcs vcs = plVcsManager.findVcsByName(entry.getKey());
+        AbstractVcs vcs = plVcsManager.findVcsByName(entry.getKey());
         if (vcs != null) {
-          final ChangeProvider changeProvider = vcs.getChangeProvider();
+          ChangeProvider changeProvider = vcs.getChangeProvider();
           if (changeProvider != null) {
             changeProvider.doCleanup(entry.getValue());
           }

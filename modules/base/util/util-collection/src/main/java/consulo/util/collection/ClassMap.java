@@ -44,14 +44,14 @@ public class ClassMap<T> {
     if (t != null) {
       return t;
     }
-    for (final Class aClass1 : aClass.getInterfaces()) {
+    for (Class aClass1 : aClass.getInterfaces()) {
       t = get(aClass1);
       if (t != null) {
         myMap.put(aClass, t);
         return t;
       }
     }
-    final Class superclass = aClass.getSuperclass();
+    Class superclass = aClass.getSuperclass();
     if (superclass != null) {
       t = get(superclass);
       if (t != null) {

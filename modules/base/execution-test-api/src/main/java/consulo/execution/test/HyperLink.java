@@ -21,12 +21,12 @@ public class HyperLink implements Printable {
   private final String myText;
   private final HyperlinkInfo myInfo;
 
-  public HyperLink(final String text, final HyperlinkInfo info) {
+  public HyperLink(String text, HyperlinkInfo info) {
     myText = text;
     myInfo = info;
   }
 
-  public void printOn(final Printer printer) {
+  public void printOn(Printer printer) {
     printer.printHyperlink(myText, myInfo);
   }
 }

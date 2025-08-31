@@ -45,7 +45,7 @@ import java.util.Set;
 @ServiceImpl
 public class CodeInsightUtilBase extends CodeInsightUtilCore {
   @Override
-  public boolean prepareFileForWrite(@Nullable final PsiFile psiFile) {
+  public boolean prepareFileForWrite(@Nullable PsiFile psiFile) {
     if (psiFile == null) return false;
     final VirtualFile file = psiFile.getVirtualFile();
     final Project project = psiFile.getProject();
@@ -56,7 +56,7 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
-        final Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, file), true);
+        Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, file), true);
         if (editor != null && editor.getComponent().isDisplayable()) {
           HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.errorHintFileIsReadonly(file.getPresentableUrl()));
         }

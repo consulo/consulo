@@ -40,7 +40,7 @@ import java.util.Enumeration;
  * @author nik
  */
 public class CheckboxTreeTable extends TreeTableView {
-  public CheckboxTreeTable(CheckedTreeNode root, CheckboxTree.CheckboxTreeCellRenderer renderer, final ColumnInfo[] columns) {
+  public CheckboxTreeTable(CheckedTreeNode root, CheckboxTree.CheckboxTreeCellRenderer renderer, ColumnInfo[] columns) {
     super(new ListTreeTableModelOnColumns(root, columns));
     initTree(getTree(), renderer);
   }
@@ -59,7 +59,7 @@ public class CheckboxTreeTable extends TreeTableView {
       public boolean onClick(MouseEvent e, int clickCount) {
         int row = tree.getRowForLocation(e.getX(), e.getY());
         if (row < 0) return false;
-        final Object o = tree.getPathForRow(row).getLastPathComponent();
+        Object o = tree.getPathForRow(row).getLastPathComponent();
         if (!(o instanceof CheckedTreeNode)) return false;
         Rectangle rowBounds = tree.getRowBounds(row);
         cellRenderer.setBounds(rowBounds);
@@ -68,7 +68,7 @@ public class CheckboxTreeTable extends TreeTableView {
 
         if (checkBounds.height == 0) checkBounds.height = rowBounds.height;
 
-        final CheckedTreeNode node = (CheckedTreeNode)o;
+        CheckedTreeNode node = (CheckedTreeNode)o;
         if (checkBounds.contains(e.getPoint())) {
           if (node.isEnabled()) {
             toggleNode(node);
@@ -87,15 +87,15 @@ public class CheckboxTreeTable extends TreeTableView {
         if (isToggleEvent(e)) {
           TreePath treePath = tree.getLeadSelectionPath();
           if (treePath == null) return;
-          final Object o = treePath.getLastPathComponent();
+          Object o = treePath.getLastPathComponent();
           if (!(o instanceof CheckedTreeNode)) return;
           CheckedTreeNode firstNode = (CheckedTreeNode)o;
           boolean checked = toggleNode(firstNode);
 
           TreePath[] selectionPaths = tree.getSelectionPaths();
           for (int i = 0; selectionPaths != null && i < selectionPaths.length; i++) {
-            final TreePath selectionPath = selectionPaths[i];
-            final Object o1 = selectionPath.getLastPathComponent();
+            TreePath selectionPath = selectionPaths[i];
+            Object o1 = selectionPath.getLastPathComponent();
             if (!(o1 instanceof CheckedTreeNode)) continue;
             CheckedTreeNode node = (CheckedTreeNode)o1;
             checkNode(node, checked);
@@ -119,7 +119,7 @@ public class CheckboxTreeTable extends TreeTableView {
     checkNode(node, checked);
 
     // notify model listeners about model change
-    final TreeModel model = getTree().getModel();
+    TreeModel model = getTree().getModel();
     model.valueForPathChanged(new TreePath(node.getPath()), node.getUserObject());
 
     return checked;
@@ -130,7 +130,7 @@ public class CheckboxTreeTable extends TreeTableView {
     repaint();
   }
 
-  private void adjustParentsAndChildren(final CheckedTreeNode node, final boolean checked) {
+  private void adjustParentsAndChildren(CheckedTreeNode node, boolean checked) {
     changeNodeState(node, checked);
     if (!checked) {
       TreeNode parent = node.getParent();
@@ -148,16 +148,16 @@ public class CheckboxTreeTable extends TreeTableView {
     repaint();
   }
 
-  private static void changeNodeState(final CheckedTreeNode node, final boolean checked) {
+  private static void changeNodeState(CheckedTreeNode node, boolean checked) {
     if (node.isChecked() != checked) {
       node.setChecked(checked);
     }
   }
 
-  private static void uncheckChildren(final CheckedTreeNode node) {
-    final Enumeration children = node.children();
+  private static void uncheckChildren(CheckedTreeNode node) {
+    Enumeration children = node.children();
     while (children.hasMoreElements()) {
-      final Object o = children.nextElement();
+      Object o = children.nextElement();
       if (!(o instanceof CheckedTreeNode)) continue;
       CheckedTreeNode child = (CheckedTreeNode)o;
       changeNodeState(child, false);
@@ -165,10 +165,10 @@ public class CheckboxTreeTable extends TreeTableView {
     }
   }
 
-  private static void checkChildren(final CheckedTreeNode node) {
-    final Enumeration children = node.children();
+  private static void checkChildren(CheckedTreeNode node) {
+    Enumeration children = node.children();
     while (children.hasMoreElements()) {
-      final Object o = children.nextElement();
+      Object o = children.nextElement();
       if (!(o instanceof CheckedTreeNode)) continue;
       CheckedTreeNode child = (CheckedTreeNode)o;
       changeNodeState(child, true);
@@ -179,7 +179,7 @@ public class CheckboxTreeTable extends TreeTableView {
   @SuppressWarnings("unchecked")
   public <T> T[] getCheckedNodes(final Class<T> nodeType) {
     final ArrayList<T> nodes = new ArrayList<T>();
-    final Object root = getTree().getModel().getRoot();
+    Object root = getTree().getModel().getRoot();
     if (!(root instanceof CheckedTreeNode)) {
       throw new IllegalStateException("The root must be instance of the " + CheckedTreeNode.class.getName() + ": " + root.getClass().getName());
     }
@@ -189,13 +189,13 @@ public class CheckboxTreeTable extends TreeTableView {
         if (node.isLeaf()) {
           Object userObject = node.getUserObject();
           if (node.isChecked() && userObject != null && nodeType.isAssignableFrom(userObject.getClass())) {
-            final T value = (T)userObject;
+            T value = (T)userObject;
             nodes.add(value);
           }
         }
         else {
           for (int i = 0; i < node.getChildCount(); i++) {
-            final TreeNode child = node.getChildAt(i);
+            TreeNode child = node.getChildAt(i);
             if (child instanceof CheckedTreeNode) {
               collect((CheckedTreeNode)child);
             }

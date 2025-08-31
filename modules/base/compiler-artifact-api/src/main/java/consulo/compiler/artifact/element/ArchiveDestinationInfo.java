@@ -29,7 +29,7 @@ public class ArchiveDestinationInfo extends DestinationInfo {
   private final String myPathInJar;
   private final ArchivePackageInfo myArchivePackageInfo;
 
-  public ArchiveDestinationInfo(final String pathInJar, final ArchivePackageInfo archivePackageInfo, DestinationInfo jarDestination) {
+  public ArchiveDestinationInfo(String pathInJar, ArchivePackageInfo archivePackageInfo, DestinationInfo jarDestination) {
     super(appendPathInJar(jarDestination.getOutputPath(), pathInJar), jarDestination.getOutputFile(), jarDestination.getOutputFilePath());
     LOG.assertTrue(!pathInJar.startsWith(".."), pathInJar);
     myPathInJar = StringUtil.startsWithChar(pathInJar, '/') ? pathInJar : "/" + pathInJar;

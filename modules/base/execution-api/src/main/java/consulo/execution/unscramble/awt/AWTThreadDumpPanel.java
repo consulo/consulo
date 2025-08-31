@@ -53,9 +53,9 @@ import java.util.List;
 public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
     private final JBList<ThreadState> myThreadList;
 
-    public AWTThreadDumpPanel(Project project, final ConsoleView consoleView, final DefaultActionGroup toolbarActions, final List<ThreadState> threadDump) {
+    public AWTThreadDumpPanel(Project project, ConsoleView consoleView, DefaultActionGroup toolbarActions, List<ThreadState> threadDump) {
         super(new BorderLayout());
-        final ThreadState[] data = threadDump.toArray(new ThreadState[threadDump.size()]);
+        ThreadState[] data = threadDump.toArray(new ThreadState[threadDump.size()]);
         DefaultListModel<ThreadState> model = new DefaultListModel();
         for (ThreadState threadState : data) {
             model.addElement(threadState);
@@ -79,7 +79,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         //toolbarActions.add(new ShowRecentlyChanged());
         add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false).getComponent(), BorderLayout.WEST);
 
-        final Splitter splitter = new Splitter(false, 0.3f);
+        Splitter splitter = new Splitter(false, 0.3f);
         splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myThreadList, SideBorder.LEFT | SideBorder.RIGHT));
         splitter.setSecondComponent(consoleView.getComponent());
 
@@ -88,9 +88,9 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         new ListSpeedSearch(myThreadList).setComparator(new SpeedSearchComparator(false, true));
     }
 
-    private static Image getThreadStateIcon(final ThreadState threadState) {
+    private static Image getThreadStateIcon(ThreadState threadState) {
         Image icon = getThreadIcon(threadState);
-        final boolean daemon = threadState.isDaemon();
+        boolean daemon = threadState.isDaemon();
         if (!daemon) {
             return icon;
         }
@@ -141,7 +141,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         IDLE
     }
 
-    private static StateCode getThreadStateCode(final ThreadState state) {
+    private static StateCode getThreadStateCode(ThreadState state) {
         if (state.isSleeping()) {
             return StateCode.PAUSED;
         }
@@ -160,7 +160,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         return StateCode.RUN;
     }
 
-    private static SimpleTextAttributes getAttributes(final ThreadState threadState) {
+    private static SimpleTextAttributes getAttributes(ThreadState threadState) {
         if (threadState.isSleeping()) {
             return SimpleTextAttributes.GRAY_ATTRIBUTES;
         }
@@ -176,7 +176,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
     private static class ThreadListCellRenderer extends ColoredListCellRenderer<ThreadState> {
 
         @Override
-        protected void customizeCellRenderer(final JList list, final ThreadState threadState, final int index, final boolean selected, final boolean hasFocus) {
+        protected void customizeCellRenderer(JList list, ThreadState threadState, int index, boolean selected, boolean hasFocus) {
             setIcon(getThreadStateIcon(threadState));
             if (!selected) {
                 ThreadState selectedThread = (ThreadState) list.getSelectedValue();
@@ -214,8 +214,8 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
 
     private class SortThreadsAction extends DumbAwareAction {
         private final Comparator<ThreadState> BY_TYPE = (o1, o2) -> {
-            final int s1 = getThreadStateCode(o1).ordinal();
-            final int s2 = getThreadStateCode(o2).ordinal();
+            int s1 = getThreadStateCode(o1).ordinal();
+            int s2 = getThreadStateCode(o2).ordinal();
             if (s1 == s2) {
                 return o1.getName().compareToIgnoreCase(o2.getName());
             }
@@ -236,8 +236,8 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final DefaultListModel model = (DefaultListModel) myThreadList.getModel();
-            final ThreadState selected = (ThreadState) myThreadList.getSelectedValue();
+            DefaultListModel model = (DefaultListModel) myThreadList.getModel();
+            ThreadState selected = (ThreadState) myThreadList.getSelectedValue();
             ArrayList<ThreadState> states = new ArrayList<ThreadState>();
             for (int i = 0; i < model.getSize(); i++) {
                 states.add((ThreadState) model.getElementAt(i));
@@ -245,7 +245,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
             Collections.sort(states, COMPARATOR);
             int selectedIndex = 0;
             for (int i = 0; i < states.size(); i++) {
-                final ThreadState state = states.get(i);
+                ThreadState state = states.get(i);
                 model.setElementAt(state, i);
                 if (state == selected) {
                     selectedIndex = i;
@@ -276,7 +276,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
-            final StringBuilder buf = new StringBuilder();
+            StringBuilder buf = new StringBuilder();
             buf.append("Full thread dump").append("\n\n");
             for (ThreadState state : myThreadDump) {
                 buf.append(state.getStackTrace()).append("\n\n");

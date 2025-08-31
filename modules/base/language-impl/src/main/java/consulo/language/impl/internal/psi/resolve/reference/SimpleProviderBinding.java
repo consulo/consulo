@@ -48,7 +48,7 @@ public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider
         continue;
       }
 
-      final ProcessingContext context = new ProcessingContext();
+      ProcessingContext context = new ProcessingContext();
       if (hints != PsiReferenceService.Hints.NO_HINTS) {
         context.put(PsiReferenceService.HINTS, hints);
       }
@@ -65,8 +65,8 @@ public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider
   }
 
   @Override
-  public void unregisterProvider(@Nonnull final Provider provider) {
-    for (final ProviderInfo<Provider, ElementPattern> trinity : new ArrayList<>(myProviderPairs)) {
+  public void unregisterProvider(@Nonnull Provider provider) {
+    for (ProviderInfo<Provider, ElementPattern> trinity : new ArrayList<>(myProviderPairs)) {
       if (trinity.provider.equals(provider)) {
         myProviderPairs.remove(trinity);
       }

@@ -67,15 +67,15 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
   }
 
   @Nullable
-  protected abstract String getItemText(final @Nonnull Item element);
+  protected abstract String getItemText(@Nonnull Item element);
 
   @Override
-  protected void selectElement(final Object element, final String selectedText) {
-    final List items = getComponent().getItems();
+  protected void selectElement(Object element, String selectedText) {
+    List items = getComponent().getItems();
     for (int i = 0, itemsSize = items.size(); i < itemsSize; i++) {
-      final Object o = items.get(i);
+      Object o = items.get(i);
       if (o == element) {
-        final int viewIndex = myComponent.convertRowIndexToView(i);
+        int viewIndex = myComponent.convertRowIndexToView(i);
         getComponent().getSelectionModel().setSelectionInterval(viewIndex, viewIndex);
         TableUtil.scrollSelectionToVisible(getComponent());
         break;

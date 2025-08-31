@@ -68,7 +68,7 @@ public final class CompletionServiceImpl extends CompletionService {
   }
 
   @Override
-  public void performCompletion(final CompletionParameters parameters, final Consumer<? super CompletionResult> consumer) {
+  public void performCompletion(CompletionParameters parameters, Consumer<? super CompletionResult> consumer) {
     myApiCompletionProcess = parameters.getProcess();
     try {
       super.performCompletion(parameters, consumer);
@@ -84,9 +84,9 @@ public final class CompletionServiceImpl extends CompletionService {
   }
 
   @Override
-  public void setAdvertisementText(@Nullable final String text) {
+  public void setAdvertisementText(@Nullable String text) {
     if (text == null) return;
-    final CompletionProgressIndicator completion = getCurrentCompletionProgressIndicator();
+    CompletionProgressIndicator completion = getCurrentCompletionProgressIndicator();
     if (completion != null) {
       completion.addAdvertisement(text, null);
     }
@@ -94,8 +94,8 @@ public final class CompletionServiceImpl extends CompletionService {
 
   @Override
   protected String suggestPrefix(CompletionParameters parameters) {
-    final PsiElement position = parameters.getPosition();
-    final int offset = parameters.getOffset();
+    PsiElement position = parameters.getPosition();
+    int offset = parameters.getOffset();
     TextRange range = position.getTextRange();
     assert range.containsOffset(offset) : position + "; " + offset + " not in " + range;
     //noinspection deprecation
@@ -152,7 +152,7 @@ public final class CompletionServiceImpl extends CompletionService {
     }
 
     @Override
-    public void addElement(@Nonnull final LookupElement element) {
+    public void addElement(@Nonnull LookupElement element) {
       ProgressManager.checkCanceled();
       if (!element.isValid()) {
         LOG.error("Invalid lookup element: " + element + " of " + element.getClass() + " in " + myParameters.getOriginalFile() + " of " + myParameters.getOriginalFile().getClass());
@@ -167,7 +167,7 @@ public final class CompletionServiceImpl extends CompletionService {
 
     @Override
     @Nonnull
-    public CompletionResultSet withPrefixMatcher(@Nonnull final PrefixMatcher matcher) {
+    public CompletionResultSet withPrefixMatcher(@Nonnull PrefixMatcher matcher) {
       if (matcher.equals(getPrefixMatcher())) {
         return this;
       }
@@ -188,7 +188,7 @@ public final class CompletionServiceImpl extends CompletionService {
 
     @Override
     @Nonnull
-    public CompletionResultSet withPrefixMatcher(@Nonnull final String prefix) {
+    public CompletionResultSet withPrefixMatcher(@Nonnull String prefix) {
       return withPrefixMatcher(getPrefixMatcher().cloneWithPrefix(prefix));
     }
 
@@ -275,7 +275,7 @@ public final class CompletionServiceImpl extends CompletionService {
   }
 
   @Override
-  public CompletionSorterImpl defaultSorter(CompletionParameters parameters, final PrefixMatcher matcher) {
+  public CompletionSorterImpl defaultSorter(CompletionParameters parameters, PrefixMatcher matcher) {
     final CompletionLocation location = new CompletionLocation(parameters);
 
     CompletionSorterImpl sorter = emptySorter();
@@ -308,7 +308,7 @@ public final class CompletionServiceImpl extends CompletionService {
 
     return sorter.withClassifier("priority", true, new ClassifierFactory<LookupElement>("liftShorter") {
       @Override
-      public Classifier<LookupElement> createClassifier(final Classifier<LookupElement> next) {
+      public Classifier<LookupElement> createClassifier(Classifier<LookupElement> next) {
         return new LiftShorterItemsClassifier("liftShorter", next, new LiftShorterItemsClassifier.LiftingCondition(), false);
       }
     });

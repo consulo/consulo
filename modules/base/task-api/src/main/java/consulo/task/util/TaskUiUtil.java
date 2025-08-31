@@ -122,7 +122,7 @@ public class TaskUiUtil {
     protected void updateUI() {
       if (myResult != null) {
         myComboBox.setModel(new DefaultComboBoxModel(ArrayUtil.toObjectArray(myResult)));
-        final T extra = getExtraItem();
+        T extra = getExtraItem();
         if (extra != null) {
           myComboBox.insertItemAt(extra, 0);
         }
@@ -130,7 +130,7 @@ public class TaskUiUtil {
         // is the same as the next selected
         myComboBox.setSelectedItem(null);
 
-        final T selected = getSelectedItem();
+        T selected = getSelectedItem();
         if (selected != null) {
           if (!selected.equals(extra) && !myResult.contains(selected)) {
             if (addSelectedItemIfMissing()) {

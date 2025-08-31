@@ -43,7 +43,7 @@ public class VcsLogBranchFilterImpl implements VcsLogBranchFilter {
   }
 
   @Nullable
-  public static VcsLogBranchFilterImpl fromBranch(@Nonnull final String branchName) {
+  public static VcsLogBranchFilterImpl fromBranch(@Nonnull String branchName) {
     return new VcsLogBranchFilterImpl(Collections.singletonList(branchName), Collections.<Pattern>emptyList(),
                                       Collections.<String>emptyList(), Collections.<Pattern>emptyList());
   }

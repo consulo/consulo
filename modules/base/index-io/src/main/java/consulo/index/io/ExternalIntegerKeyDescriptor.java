@@ -25,21 +25,21 @@ import java.io.IOException;
  * @author max
  */
 public class ExternalIntegerKeyDescriptor implements KeyDescriptor<Integer> {
-  public int getHashCode(final Integer value) {
+  public int getHashCode(Integer value) {
     return value;
   }
 
-  public boolean isEqual(final Integer val1, final Integer val2) {
+  public boolean isEqual(Integer val1, Integer val2) {
     return val1.equals(val2);
   }
 
   @Override
-  public void save(final DataOutput out, final Integer value) throws IOException {
+  public void save(DataOutput out, Integer value) throws IOException {
     DataInputOutputUtil.writeINT(out, value);
   }
 
   @Override
-  public Integer read(final DataInput in) throws IOException {
+  public Integer read(DataInput in) throws IOException {
     return DataInputOutputUtil.readINT(in);
   }
 }

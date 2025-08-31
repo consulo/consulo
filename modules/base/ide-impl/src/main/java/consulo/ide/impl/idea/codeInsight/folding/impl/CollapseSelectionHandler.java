@@ -44,7 +44,7 @@ public class CollapseSelectionHandler implements CodeInsightActionHandler {
             new Runnable() {
               @Override
               public void run() {
-                final EditorFoldingInfoImpl info = EditorFoldingInfoImpl.get(editor);
+                EditorFoldingInfoImpl info = EditorFoldingInfoImpl.get(editor);
                 FoldingModelEx foldingModel = (FoldingModelEx) editor.getFoldingModel();
                 if (editor.getSelectionModel().hasSelection()) {
                   int start = editor.getSelectionModel().getSelectionStart();

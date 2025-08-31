@@ -57,7 +57,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
   private final Project myProject;
   private final List<FilePath> mySelection = new ArrayList<>();
 
-  public StructureFilteringStrategy(final Project project) {
+  public StructureFilteringStrategy(Project project) {
     myProject = project;
   }
 
@@ -108,7 +108,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
     if (mySelection.size() == 0) {
       return changeLists;
     }
-    final ArrayList<CommittedChangeList> result = new ArrayList<>();
+    ArrayList<CommittedChangeList> result = new ArrayList<>();
     for (CommittedChangeList list : changeLists) {
       if (listMatchesSelection(list)) {
         result.add(list);
@@ -117,7 +117,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
     return result;
   }
 
-  private boolean listMatchesSelection(final CommittedChangeList list) {
+  private boolean listMatchesSelection(CommittedChangeList list) {
     for (Change change : list.getChanges()) {
       FilePath path = ChangesUtil.getFilePath(change);
       for (FilePath selPath : mySelection) {
@@ -141,11 +141,11 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
       myStructureTree.setRootVisible(false);
       myStructureTree.setShowsRootHandles(true);
       myStructureTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-        public void valueChanged(final TreeSelectionEvent e) {
-          final List<FilePath> filePaths = new ArrayList<>(mySelection);
+        public void valueChanged(TreeSelectionEvent e) {
+          List<FilePath> filePaths = new ArrayList<>(mySelection);
 
           mySelection.clear();
-          final TreePath[] selectionPaths = myStructureTree.getSelectionPaths();
+          TreePath[] selectionPaths = myStructureTree.getSelectionPaths();
           if (selectionPaths != null) {
             for (TreePath selectionPath : selectionPaths) {
               mySelection.addAll(getFilePathsUnder((ChangesBrowserNode<?>)selectionPath.getLastPathComponent()));
@@ -196,14 +196,14 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
       myStructureTree.setModel(TreeModelBuilder.buildEmpty(myProject));
     }
 
-    public void append(final List<CommittedChangeList> changeLists) {
-      final TreeState localState = myState != null && myFilePaths.isEmpty()
+    public void append(List<CommittedChangeList> changeLists) {
+      TreeState localState = myState != null && myFilePaths.isEmpty()
                                    ? myState
                                    : TreeState.createOn(myStructureTree, (DefaultMutableTreeNode)myStructureTree.getModel().getRoot());
 
       for (CommittedChangeList changeList : changeLists) {
         for (Change change : changeList.getChanges()) {
-          final FilePath path = ChangesUtil.getFilePath(change);
+          FilePath path = ChangesUtil.getFilePath(change);
           if (path.getParentPath() != null) {
             myFilePaths.add(path.getParentPath());
           }

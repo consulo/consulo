@@ -84,13 +84,13 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
       return;
     }
 
-    final PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
+    PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     if (psiFile == null) return;
 
-    final JComponent component = editor.getComponent();
-    final JComponent contentComponent = editor.getContentComponent();
+    JComponent component = editor.getComponent();
+    JComponent contentComponent = editor.getContentComponent();
 
-    final PropertyChangeListener propertyChangeListener = evt -> {
+    PropertyChangeListener propertyChangeListener = evt -> {
       if (evt.getOldValue() == null && evt.getNewValue() != null) {
         registerEditor(editor);
       }
@@ -142,7 +142,7 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
 
       if (editorsList.isEmpty()) {
         myWindowToEditorsMap.remove(oldWindow);
-        final WindowAdapter listener = myWindowToWindowFocusListenerMap.remove(oldWindow);
+        WindowAdapter listener = myWindowToWindowFocusListenerMap.remove(oldWindow);
         if (listener != null) {
           java.awt.Window frame = TargetAWT.to(oldWindow);
 

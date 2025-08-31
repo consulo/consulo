@@ -222,11 +222,11 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
     @Override
     protected JButton createJButtonForAction(Action action) {
-        final JButton button = super.createJButtonForAction(action);
+        JButton button = super.createJButtonForAction(action);
         if (action == mySwitchModeAction) {
             int width1 = new JButton(getSwitchButtonText(EvaluationMode.EXPRESSION)).getPreferredSize().width;
             int width2 = new JButton(getSwitchButtonText(EvaluationMode.CODE_FRAGMENT)).getPreferredSize().width;
-            final Dimension size = new Dimension(Math.max(width1, width2), button.getPreferredSize().height);
+            Dimension size = new Dimension(Math.max(width1, width2), button.getPreferredSize().height);
             button.setMinimumSize(size);
             button.setPreferredSize(size);
         }
@@ -268,7 +268,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     }
 
     private EvaluationInputComponent createInputComponent(EvaluationMode mode, XExpression text) {
-        final Project project = mySession.getProject();
+        Project project = mySession.getProject();
         text = XExpression.changeMode(text, mode);
         if (mode == EvaluationMode.EXPRESSION) {
             return new ExpressionInputComponent(project, myEditorsProvider, mySourcePosition, text, myDisposable);
@@ -280,7 +280,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     }
 
     private void evaluate() {
-        final XDebuggerEditorBase inputEditor = getInputEditor();
+        XDebuggerEditorBase inputEditor = getInputEditor();
         int offset = -1;
 
         //try to save caret position
@@ -289,7 +289,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
             offset = editor.getCaretModel().getOffset();
         }
 
-        final XDebuggerTree tree = myTreePanel.getTree();
+        XDebuggerTree tree = myTreePanel.getTree();
         tree.markNodesObsolete();
         tree.setRoot(new EvaluatingExpressionRootNode(this, tree), false);
 
@@ -325,7 +325,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     }
 
     public void startEvaluation(@Nonnull XDebuggerEvaluator.XEvaluationCallback evaluationCallback) {
-        final XDebuggerEditorBase inputEditor = getInputEditor();
+        XDebuggerEditorBase inputEditor = getInputEditor();
         inputEditor.saveTextInHistory();
         XExpression expression = inputEditor.getExpression();
 

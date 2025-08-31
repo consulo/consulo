@@ -55,8 +55,8 @@ public class PackagingElementPath {
 
   @Nonnull
   public String getPathStringFrom(String separator, @Nullable CompositePackagingElement<?> ancestor) {
-    final StringBuilder builder = new StringBuilder();
-    final List<CompositePackagingElement<?>> parents = getParentsFrom(ancestor);
+    StringBuilder builder = new StringBuilder();
+    List<CompositePackagingElement<?>> parents = getParentsFrom(ancestor);
     for (int i = parents.size() - 1; i >= 0; i--) {
       builder.append(parents.get(i).getName());
       if (i > 0) {
@@ -108,7 +108,7 @@ public class PackagingElementPath {
   public Artifact findLastArtifact(PackagingElementResolvingContext context) {
     PackagingElementPath path = this;
     while (path != EMPTY) {
-      final PackagingElement<?> element = path.myLastElement;
+      PackagingElement<?> element = path.myLastElement;
       if (element instanceof ArtifactPackagingElement) {
         return ((ArtifactPackagingElement)element).findArtifact(context);
       }

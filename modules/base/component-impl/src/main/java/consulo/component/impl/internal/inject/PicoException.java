@@ -41,7 +41,7 @@ abstract class PicoException extends RuntimeException {
    *
    * @param message the message detailing the exception.
    */
-  protected PicoException(final String message) {
+  protected PicoException(String message) {
     super(message);
   }
 
@@ -50,7 +50,7 @@ abstract class PicoException extends RuntimeException {
    *
    * @param cause the exception that caused this one.
    */
-  protected PicoException(final Throwable cause) {
+  protected PicoException(Throwable cause) {
     this.cause = cause;
   }
 
@@ -60,7 +60,7 @@ abstract class PicoException extends RuntimeException {
    * @param message the message detailing the exception.
    * @param cause   the exception that caused this one.
    */
-  protected PicoException(final String message, final Throwable cause) {
+  protected PicoException(String message, Throwable cause) {
     super(message);
     this.cause = cause;
   }

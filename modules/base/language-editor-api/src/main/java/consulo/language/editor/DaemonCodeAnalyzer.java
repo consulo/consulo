@@ -106,13 +106,13 @@ public abstract class DaemonCodeAnalyzer {
     @RequiredReadAction
     public static boolean processHighlights(@Nonnull Document document,
                                             @Nonnull Project project,
-                                            @Nullable final HighlightSeverity minSeverity,
-                                            final int startOffset,
-                                            final int endOffset,
-                                            @Nonnull final Predicate<HighlightInfo> processor) {
+                                            @Nullable HighlightSeverity minSeverity,
+                                            int startOffset,
+                                            int endOffset,
+                                            @Nonnull Predicate<HighlightInfo> processor) {
         Application.get().assertReadAccessAllowed();
 
-        final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
+        SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
         MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
         return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, marker -> {
             Object tt = marker.getErrorStripeTooltip();
@@ -136,13 +136,13 @@ public abstract class DaemonCodeAnalyzer {
     @RequiredReadAction
     public static boolean processHighlightsOverlappingOutside(@Nonnull Document document,
                                                               @Nonnull Project project,
-                                                              @Nullable final HighlightSeverity minSeverity,
-                                                              final int startOffset,
-                                                              final int endOffset,
-                                                              @Nonnull final Predicate<HighlightInfo> processor) {
+                                                              @Nullable HighlightSeverity minSeverity,
+                                                              int startOffset,
+                                                              int endOffset,
+                                                              @Nonnull Predicate<HighlightInfo> processor) {
         Application.get().assertReadAccessAllowed();
 
-        final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
+        SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
         MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
         return model.processRangeHighlightersOutside(startOffset, endOffset, marker -> {
             Object tt = marker.getErrorStripeTooltip();

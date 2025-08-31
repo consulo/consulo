@@ -34,7 +34,7 @@ public class ValidatingTextField extends ValidatingComponent<JTextField> {
     this(new JTextField(25));
   }
 
-  public ValidatingTextField(final JTextField textField) {
+  public ValidatingTextField(JTextField textField) {
     myTextField = textField;
     myTextField.getDocument().addDocumentListener(new DocumentAdapter() {
       protected void textChanged(DocumentEvent e) {

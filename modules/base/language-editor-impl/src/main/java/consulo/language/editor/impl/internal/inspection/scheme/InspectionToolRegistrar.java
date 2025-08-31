@@ -54,7 +54,7 @@ public class InspectionToolRegistrar {
 
   @Nonnull
   public List<InspectionToolWrapper> createTools() {
-    final List<InspectionToolWrapper> tools = new ArrayList<>();
+    List<InspectionToolWrapper> tools = new ArrayList<>();
     walkWrappers(tools::add);
     return tools;
   }

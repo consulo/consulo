@@ -80,7 +80,7 @@ public class KeyboardModifierListener {
   }
 
   private void onKeyEvent(KeyEvent e) {
-    final int keyCode = e.getKeyCode();
+    int keyCode = e.getKeyCode();
     if (keyCode == KeyEvent.VK_SHIFT) {
       myShiftPressed = e.getID() == KeyEvent.KEY_PRESSED;
       onModifiersChanged();

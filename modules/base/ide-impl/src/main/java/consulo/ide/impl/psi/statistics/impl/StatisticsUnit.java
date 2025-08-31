@@ -33,7 +33,7 @@ class StatisticsUnit {
   }
 
   public int getRecency(String key1, String key2) {
-    final List<String> list = myDataMap.get(key1);
+    List<String> list = myDataMap.get(key1);
     if (list == null) return Integer.MAX_VALUE;
 
     int i = list.indexOf(key2);
@@ -41,11 +41,11 @@ class StatisticsUnit {
   }
 
   public int getData(String key1, String key2) {
-    final List<String> list = myDataMap.get(key1);
+    List<String> list = myDataMap.get(key1);
     if (list == null) return 0;
 
     int result = 0;
-    for (final String s : list) {
+    for (String s : list) {
       if (s.equals(key2)) result++;
     }
     return result;
@@ -62,8 +62,8 @@ class StatisticsUnit {
     }
   }
 
-  public String[] getKeys2(final String key1){
-    final List<String> list = myDataMap.get(key1);
+  public String[] getKeys2(String key1){
+    List<String> list = myDataMap.get(key1);
     if (list == null) return ArrayUtil.EMPTY_STRING_ARRAY;
 
     return ArrayUtil.toStringArray(new LinkedHashSet<String>(list));
@@ -74,16 +74,16 @@ class StatisticsUnit {
   }
 
   public void write(OutputStream out) throws IOException{
-    final DataOutputStream dataOut = new DataOutputStream(out);
+    DataOutputStream dataOut = new DataOutputStream(out);
     dataOut.writeInt(FORMAT_VERSION_NUMBER);
 
     dataOut.writeInt(myDataMap.size());
-    for (final String context : myDataMap.keySet()) {
-      final List<String> list = myDataMap.get(context);
+    for (String context : myDataMap.keySet()) {
+      List<String> list = myDataMap.get(context);
       if (list != null && !list.isEmpty()) {
         dataOut.writeUTF(context);
         dataOut.writeInt(list.size());
-        for (final String data : list) {
+        for (String data : list) {
           dataOut.writeUTF(data);
         }
       }

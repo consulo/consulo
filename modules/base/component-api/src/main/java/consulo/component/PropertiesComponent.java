@@ -154,7 +154,7 @@ public interface PropertiesComponent {
                 field.setAccessible(true);
                 PropertyName annotation = field.getAnnotation(PropertyName.class);
                 if (annotation != null) {
-                    final String name = annotation.value();
+                    String name = annotation.value();
                     setValue(name, String.valueOf(field.get(object)));
                 }
             }
@@ -169,9 +169,9 @@ public interface PropertiesComponent {
         try {
             for (Field field : object.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
-                final PropertyName annotation = field.getAnnotation(PropertyName.class);
+                PropertyName annotation = field.getAnnotation(PropertyName.class);
                 if (annotation != null) {
-                    final Class<?> type = field.getType();
+                    Class<?> type = field.getType();
 
                     String defaultValue = annotation.defaultValue();
                     if (PropertyName.NOT_SET.equals(defaultValue)) {
@@ -201,7 +201,7 @@ public interface PropertiesComponent {
                         }
 
                     }
-                    final String stringValue = getValue(annotation.value(), defaultValue);
+                    String stringValue = getValue(annotation.value(), defaultValue);
                     Object value = null;
 
                     if (type.equals(boolean.class)) {

@@ -35,7 +35,7 @@ public class Place implements ComparableObject {
   }
 
   @Override
-  public final boolean equals(final Object obj) {
+  public final boolean equals(Object obj) {
     return ComparableObjectCheck.equals(this, obj);
   }
 
@@ -56,30 +56,30 @@ public class Place implements ComparableObject {
     return myPath.get(name);
   }
 
-  public Place cloneForElement(final String name, Object value) {
-    final Place clone = new Place();
+  public Place cloneForElement(String name, Object value) {
+    Place clone = new Place();
     clone.myPath = (LinkedHashMap<String, Object>)myPath.clone();
     clone.myPath.put(name, value);
     return clone;
   }
 
-  public void copyFrom(final Place from) {
+  public void copyFrom(Place from) {
     myPath = (LinkedHashMap<String, Object>)from.myPath.clone();
   }
 
-  public boolean isMoreGeneralFor(final Place place) {
+  public boolean isMoreGeneralFor(Place place) {
     if (myPath.size() >= place.myPath.size()) return false;
 
-    final Iterator<String> thisIterator = myPath.keySet().iterator();
-    final Iterator<String> otherIterator = place.myPath.keySet().iterator();
+    Iterator<String> thisIterator = myPath.keySet().iterator();
+    Iterator<String> otherIterator = place.myPath.keySet().iterator();
 
     while (thisIterator.hasNext()) {
       String thisKey = thisIterator.next();
       String otherKey = otherIterator.next();
       if (thisKey == null || !thisKey.equals(otherKey)) return false;
 
-      final Object thisValue = myPath.get(thisKey);
-      final Object otherValue = place.myPath.get(otherKey);
+      Object thisValue = myPath.get(thisKey);
+      Object otherValue = place.myPath.get(otherKey);
 
       if (thisValue == null || !thisValue.equals(otherValue)) return false;
 
@@ -92,19 +92,19 @@ public class Place implements ComparableObject {
     default void setHistory(History history) {
     }
 
-    AsyncResult<Void> navigateTo(@Nullable Place place, final boolean requestFocus);
+    AsyncResult<Void> navigateTo(@Nullable Place place, boolean requestFocus);
 
     void queryPlace(@Nonnull Place place);
   }
 
-  public static AsyncResult<Void> goFurther(Object object, Place place, final boolean requestFocus) {
+  public static AsyncResult<Void> goFurther(Object object, Place place, boolean requestFocus) {
     if (object instanceof Navigator) {
       return ((Navigator)object).navigateTo(place, requestFocus);
     }
     return AsyncResult.resolved();
   }
 
-  public static void queryFurther(final Object object, final Place place) {
+  public static void queryFurther(Object object, Place place) {
     if (object instanceof Navigator) {
       ((Navigator)object).queryPlace(place);
     }

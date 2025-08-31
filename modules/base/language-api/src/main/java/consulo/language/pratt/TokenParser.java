@@ -27,7 +27,7 @@ public abstract class TokenParser {
 
   public abstract boolean parseToken(PrattBuilder builder);
 
-  public static TokenParser infix(final int rightPriority, @Nonnull final IElementType compositeType) {
+  public static TokenParser infix(int rightPriority, @Nonnull IElementType compositeType) {
     return infix(rightPriority, compositeType, null);
   }
 
@@ -35,7 +35,7 @@ public abstract class TokenParser {
     return new ReducingParser() {
       @Override
       @Nullable
-      public IElementType parseFurther(final PrattBuilder builder) {
+      public IElementType parseFurther(PrattBuilder builder) {
         builder.createChildBuilder(rightPriority, errorMessage).parse();
         return compositeType;
       }
@@ -46,7 +46,7 @@ public abstract class TokenParser {
     return new ReducingParser() {
       @Override
       @Nullable
-      public IElementType parseFurther(final PrattBuilder builder) {
+      public IElementType parseFurther(PrattBuilder builder) {
         return compositeType;
       }
     };

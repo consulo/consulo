@@ -29,7 +29,7 @@ public class PackagesNotificationPanel {
     myHtmlViewer.addHyperlinkListener(new HyperlinkAdapter() {
       @Override
       protected void hyperlinkActivated(HyperlinkEvent e) {
-        final Runnable handler = myLinkHandlers.get(e.getDescription());
+        Runnable handler = myLinkHandlers.get(e.getDescription());
         if (handler != null) {
           handler.run();
         }
@@ -41,7 +41,7 @@ public class PackagesNotificationPanel {
   }
 
   public static void showError(@Nonnull String title, @Nonnull PackageManagementService.ErrorDescription description) {
-    final PackagingErrorDialog dialog = new PackagingErrorDialog(title, description);
+    PackagingErrorDialog dialog = new PackagingErrorDialog(title, description);
     dialog.showAsync();
   }
 

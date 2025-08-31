@@ -63,7 +63,7 @@ public class PackageNode extends PackageDependenciesNode {
         return myPackageName;
     }
 
-    public void setPackageName(final String packageName) {
+    public void setPackageName(String packageName) {
         myPackageName = packageName;
     }
 
@@ -90,7 +90,7 @@ public class PackageNode extends PackageDependenciesNode {
             return false;
         }
 
-        final PackageNode packageNode = (PackageNode) o;
+        PackageNode packageNode = (PackageNode) o;
 
         if (!myPackageName.equals(packageNode.myPackageName)) {
             return false;
@@ -119,7 +119,7 @@ public class PackageNode extends PackageDependenciesNode {
     }
 
     @Override
-    public boolean canSelectInLeftTree(final Map<PsiFile, Set<PsiFile>> deps) {
+    public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
         Set<PsiFile> files = deps.keySet();
         String packageName = myPackageQName;
         for (PsiFile file : files) {

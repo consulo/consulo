@@ -80,7 +80,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
         return myFileList.getIncludedChanges();
     }
 
-    public void setSelectedFiles(@Nonnull final Collection<VirtualFile> selected) {
+    public void setSelectedFiles(@Nonnull Collection<VirtualFile> selected) {
         myFileList.setIncludedChanges(selected);
     }
 
@@ -120,18 +120,18 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
         }
 
         @Override
-        protected DefaultTreeModel buildTreeModel(final List<VirtualFile> changes, ChangeNodeDecorator changeNodeDecorator) {
+        protected DefaultTreeModel buildTreeModel(List<VirtualFile> changes, ChangeNodeDecorator changeNodeDecorator) {
             return TreeModelBuilder.buildFromVirtualFiles(myProject, isShowFlatten(), changes);
         }
 
         @Override
-        protected List<VirtualFile> getSelectedObjects(final ChangesBrowserNode node) {
+        protected List<VirtualFile> getSelectedObjects(ChangesBrowserNode node) {
             return node.getAllFilesUnder();
         }
 
         @Override
-        protected VirtualFile getLeadSelectedObject(final ChangesBrowserNode node) {
-            final Object o = node.getUserObject();
+        protected VirtualFile getLeadSelectedObject(ChangesBrowserNode node) {
+            Object o = node.getUserObject();
             if (o instanceof VirtualFile) {
                 return (VirtualFile) o;
             }

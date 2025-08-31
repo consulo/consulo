@@ -38,15 +38,15 @@ import jakarta.annotation.Nullable;
 public class RunContextAction extends BaseRunConfigurationAction {
   private final Executor myExecutor;
 
-  public RunContextAction(@Nonnull final Executor executor) {
+  public RunContextAction(@Nonnull Executor executor) {
     super(ExecutionLocalize.performActionWithContextConfigurationActionName(executor.getActionName()), LocalizeValue.of(), executor.getIcon());
     myExecutor = executor;
   }
 
   @Override
-  protected void perform(final ConfigurationContext context) {
+  protected void perform(ConfigurationContext context) {
     RunnerAndConfigurationSettings configuration = context.findExisting();
-    final RunManagerEx runManager = (RunManagerEx)context.getRunManager();
+    RunManagerEx runManager = (RunManagerEx)context.getRunManager();
     if (configuration == null) {
       configuration = context.getConfiguration();
       if (configuration == null) {
@@ -65,12 +65,12 @@ public class RunContextAction extends BaseRunConfigurationAction {
   }
 
   @Nullable
-  private ProgramRunner getRunner(final RunConfiguration configuration) {
+  private ProgramRunner getRunner(RunConfiguration configuration) {
     return RunnerRegistry.getInstance().getRunner(myExecutor.getId(), configuration);
   }
 
   @Override
-  protected void updatePresentation(final Presentation presentation, @Nonnull final String actionText, final ConfigurationContext context) {
+  protected void updatePresentation(Presentation presentation, @Nonnull String actionText, ConfigurationContext context) {
     presentation.setTextValue(ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, actionText));
 
     Pair<Boolean, Boolean> b = isEnabledAndVisible(context);

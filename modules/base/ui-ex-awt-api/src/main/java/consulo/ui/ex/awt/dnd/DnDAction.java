@@ -38,7 +38,7 @@ public enum DnDAction {
   Cursor myRejectCursor;
 
 
-  DnDAction(final @NonNls String name, final int actionId, final Cursor cursor, final Cursor rejectCursor) {
+  DnDAction(@NonNls String name, int actionId, Cursor cursor, Cursor rejectCursor) {
    myName = name;
    myActionId = actionId;
    myCursor = cursor;

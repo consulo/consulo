@@ -80,8 +80,8 @@ public class LibraryScopeCache {
     }
 
     @Nonnull
-    public GlobalSearchScope getScopeForSdk(@Nonnull final ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
-        final String jdkName = sdkOrderEntry.getSdkName();
+    public GlobalSearchScope getScopeForSdk(@Nonnull ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+        String jdkName = sdkOrderEntry.getSdkName();
         if (jdkName == null) {
             return GlobalSearchScope.allScope(myProject);
         }

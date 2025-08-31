@@ -66,7 +66,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
         mySpeedSearch.setEnabled(myStep.isSpeedSearchEnabled());
 
-        final JComponent content = createContent();
+        JComponent content = createContent();
 
         JScrollPane scrollPane = createScrollPane(content);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -162,13 +162,13 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
     }
 
     @Override
-    public void show(@Nonnull final Component owner, final int aScreenX, final int aScreenY, final boolean considerForcedXY) {
+    public void show(@Nonnull Component owner, int aScreenX, int aScreenY, boolean considerForcedXY) {
         LOG.assertTrue(!isDisposed());
 
         Rectangle targetBounds = new Rectangle(new Point(aScreenX, aScreenY), getContent().getPreferredSize());
 
         if (getParent() != null) {
-            final Rectangle parentBounds = getParent().getBounds();
+            Rectangle parentBounds = getParent().getBounds();
             parentBounds.x += STEP_X_PADDING;
             parentBounds.width -= STEP_X_PADDING * 2;
             ScreenUtil.moveToFit(targetBounds, ScreenUtil.getScreenRectangle(parentBounds.x + parentBounds.width / 2, parentBounds.y + parentBounds.height / 2), null);
@@ -213,15 +213,15 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
             return;
         }
 
-        final Point newOwnerPoint = myOwnerWindow.getLocationOnScreen();
+        Point newOwnerPoint = myOwnerWindow.getLocationOnScreen();
 
         int deltaX = myLastOwnerPoint.x - newOwnerPoint.x;
         int deltaY = myLastOwnerPoint.y - newOwnerPoint.y;
 
         myLastOwnerPoint = newOwnerPoint;
 
-        final Window wnd = SwingUtilities.getWindowAncestor(getContent());
-        final Point current = wnd.getLocationOnScreen();
+        Window wnd = SwingUtilities.getWindowAncestor(getContent());
+        Point current = wnd.getLocationOnScreen();
 
         setLocation(new Point(current.x - deltaX, current.y - deltaY));
     }
@@ -255,7 +255,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         myActionMap.put(aActionName, aAction);
     }
 
-    protected String getActionForKeyStroke(final KeyStroke keyStroke) {
+    protected String getActionForKeyStroke(KeyStroke keyStroke) {
         return (String) myInputMap.get(keyStroke);
     }
 
@@ -274,7 +274,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     @Override
     @Nonnull
-    protected MyContentPanel createContentPanel(final boolean resizable, final Border border, final boolean isToDrawMacCorner) {
+    protected MyContentPanel createContentPanel(boolean resizable, Border border, boolean isToDrawMacCorner) {
         return new MyContainer(border);
     }
 
@@ -294,7 +294,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
             if (isPreferredSizeSet()) {
                 return super.getPreferredSize();
             }
-            final Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             Point p = null;
             if (focusOwner != null && focusOwner.isShowing()) {
                 p = focusOwner.getLocationOnScreen();
@@ -303,10 +303,10 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
             return computeNotBiggerDimension(super.getPreferredSize().getSize(), p);
         }
 
-        private Dimension computeNotBiggerDimension(Dimension ofContent, final Point locationOnScreen) {
+        private Dimension computeNotBiggerDimension(Dimension ofContent, Point locationOnScreen) {
             int resultHeight = ofContent.height > MAX_SIZE.height + 50 ? MAX_SIZE.height : ofContent.height;
             if (locationOnScreen != null) {
-                final Rectangle r = ScreenUtil.getScreenRectangle(locationOnScreen);
+                Rectangle r = ScreenUtil.getScreenRectangle(locationOnScreen);
                 resultHeight = ofContent.height > r.height - (r.height / 4) ? r.height - (r.height / 4) : ofContent.height;
             }
 
@@ -336,14 +336,14 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         }
 
         if (event.getID() == KeyEvent.KEY_PRESSED) {
-            final KeyStroke stroke = KeyStroke.getKeyStroke(event.getKeyCode(), event.getModifiers(), false);
+            KeyStroke stroke = KeyStroke.getKeyStroke(event.getKeyCode(), event.getModifiers(), false);
             if (proceedKeyEvent(event, stroke)) {
                 return true;
             }
         }
 
         if (event.getID() == KeyEvent.KEY_RELEASED) {
-            final KeyStroke stroke = KeyStroke.getKeyStroke(event.getKeyCode(), event.getModifiers(), true);
+            KeyStroke stroke = KeyStroke.getKeyStroke(event.getKeyCode(), event.getModifiers(), true);
             return proceedKeyEvent(event, stroke);
         }
 
@@ -359,7 +359,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     private boolean proceedKeyEvent(KeyEvent event, KeyStroke stroke) {
         if (myInputMap.get(stroke) != null) {
-            final Action action = myActionMap.get(myInputMap.get(stroke));
+            Action action = myActionMap.get(myInputMap.get(stroke));
             if (action != null && action.isEnabled()) {
                 action.actionPerformed(new ActionEvent(getContent(), event.getID(), "", event.getWhen(), event.getModifiers()));
                 event.consume();
@@ -456,7 +456,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     private class MyComponentAdapter extends ComponentAdapter {
         @Override
-        public void componentMoved(final ComponentEvent e) {
+        public void componentMoved(ComponentEvent e) {
             processParentWindowMoved();
         }
     }

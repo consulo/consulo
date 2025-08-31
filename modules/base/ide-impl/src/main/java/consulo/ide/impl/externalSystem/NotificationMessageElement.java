@@ -120,8 +120,8 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     myEditorPane.setEditorKit(JBHtmlEditorKit.create());
     myEditorPane.setHighlighter(null);
 
-    final StyleSheet styleSheet = ((HTMLDocument)myEditorPane.getDocument()).getStyleSheet();
-    final Style style = styleSheet.addStyle(MSG_STYLE, null);
+    StyleSheet styleSheet = ((HTMLDocument)myEditorPane.getDocument()).getStyleSheet();
+    Style style = styleSheet.addStyle(MSG_STYLE, null);
     styleSheet.addStyle(LINK_STYLE, style);
     myEditorPane.setText(message);
 
@@ -129,8 +129,8 @@ public class NotificationMessageElement extends NavigatableMessageElement {
   }
 
   protected void updateStyle(@Nonnull JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
-    final HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
-    final Style style = htmlDocument.getStyleSheet().getStyle(MSG_STYLE);
+    HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
+    Style style = htmlDocument.getStyleSheet().getStyle(MSG_STYLE);
     if (value instanceof LoadingNode) {
       StyleConstants.setForeground(style, JBColor.GRAY);
     }

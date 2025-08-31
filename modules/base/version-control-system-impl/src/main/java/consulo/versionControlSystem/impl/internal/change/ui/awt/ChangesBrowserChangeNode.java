@@ -138,7 +138,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
   }
 
   @Override
-  public int compareUserObjects(final Object o2) {
+  public int compareUserObjects(Object o2) {
     return o2 instanceof Change change
       ? ChangesUtil.getFilePath(getUserObject()).getName().compareToIgnoreCase(ChangesUtil.getFilePath(change).getName()) : 0;
   }

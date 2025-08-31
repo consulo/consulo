@@ -46,7 +46,7 @@ public class CommentsTabForm {
     myCommentsArea.getTextComponent().setEnabled(b);
   }
 
-  public void addCommentsListener(final LabeledTextComponent.TextListener l) {
+  public void addCommentsListener(LabeledTextComponent.TextListener l) {
     myCommentsArea.addCommentsListener(l);
   }
 }

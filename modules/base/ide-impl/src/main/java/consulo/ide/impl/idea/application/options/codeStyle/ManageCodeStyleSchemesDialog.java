@@ -73,7 +73,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
   private final CodeStyleSchemesModel myModel;
   private final Component myParent;
 
-  protected ManageCodeStyleSchemesDialog(final Component parent, CodeStyleSchemesModel schemesModel) {
+  protected ManageCodeStyleSchemesDialog(Component parent, CodeStyleSchemesModel schemesModel) {
     super(parent, true);
     myParent = parent;
     myModel = schemesModel;
@@ -124,7 +124,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
       myImportButton.setVisible(true);
       myImportButton.addActionListener(new ActionListener() {
         @Override
-        public void actionPerformed(@Nonnull final ActionEvent e) {
+        public void actionPerformed(@Nonnull ActionEvent e) {
           chooseAndImport();
         }
       });
@@ -163,13 +163,13 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
     }
   }
 
-  private static void showStatus(final Component component, final String message, MessageType messageType) {
+  private static void showStatus(Component component, String message, MessageType messageType) {
     BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, messageType.getDefaultIcon(), messageType.getPopupBackground(), null);
     balloonBuilder.setFadeoutTime(5000);
-    final Balloon balloon = balloonBuilder.createBalloon();
-    final Rectangle rect = component.getBounds();
-    final Point p = new Point(rect.x, rect.y + rect.height);
-    final RelativePoint point = new RelativePoint(component, p);
+    Balloon balloon = balloonBuilder.createBalloon();
+    Rectangle rect = component.getBounds();
+    Point p = new Point(rect.x, rect.y + rect.height);
+    RelativePoint point = new RelativePoint(component, p);
     balloon.show(point, Balloon.Position.below);
     Disposer.register(ProjectManager.getInstance().getDefaultProject(), balloon);
   }

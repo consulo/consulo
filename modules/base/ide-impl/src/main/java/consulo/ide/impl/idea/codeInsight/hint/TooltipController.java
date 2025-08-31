@@ -60,11 +60,11 @@ public class TooltipController {
     }
   }
 
-  public void showTooltipByMouseMove(@Nonnull final Editor editor,
-                                     @Nonnull final RelativePoint point,
-                                     final TooltipRenderer tooltipObject,
-                                     final boolean alignToRight,
-                                     @Nonnull final TooltipGroup group,
+  public void showTooltipByMouseMove(@Nonnull Editor editor,
+                                     @Nonnull RelativePoint point,
+                                     TooltipRenderer tooltipObject,
+                                     boolean alignToRight,
+                                     @Nonnull TooltipGroup group,
                                      @Nonnull HintHint hintHint) {
     LightweightHintImpl currentTooltip = myCurrentTooltip;
     if (currentTooltip == null || !currentTooltip.isVisible()) {
@@ -85,7 +85,7 @@ public class TooltipController {
     hideCurrentTooltip();
 
     if (tooltipObject != null) {
-      final Point p = point.getPointOn(editor.getComponent().getRootPane().getLayeredPane()).getPoint();
+      Point p = point.getPointOn(editor.getComponent().getRootPane().getLayeredPane()).getPoint();
       if (!hintHint.isAwtTooltip()) {
         p.x += alignToRight ? -10 : 10;
       }
@@ -153,7 +153,7 @@ public class TooltipController {
     myCurrentTooltipObject = tooltipRenderer;
   }
 
-  public boolean shouldSurvive(final MouseEvent e) {
+  public boolean shouldSurvive(MouseEvent e) {
     if (myCurrentTooltip != null) {
       if (myCurrentTooltip.canControlAutoHide()) return true;
     }

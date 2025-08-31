@@ -53,7 +53,7 @@ public class ComboBoxTableCellRenderer extends JPanel implements TableCellRender
 
   public JComponent getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     if (value instanceof ListWithSelection) {
-      final ListWithSelection tags = (ListWithSelection)value;
+      ListWithSelection tags = (ListWithSelection)value;
       if (tags.getSelection() == null) {
         tags.selectFirst();
       }

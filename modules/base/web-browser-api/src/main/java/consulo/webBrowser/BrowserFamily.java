@@ -36,9 +36,9 @@ public enum BrowserFamily implements Iconable {
 
     BrowserFamily(
         @Nonnull LocalizeValue name,
-        @Nonnull final String windowsPath,
-        @Nullable final String unixPath,
-        @Nullable final String macPath,
+        @Nonnull String windowsPath,
+        @Nullable String unixPath,
+        @Nullable String macPath,
         @Nonnull Image icon
     ) {
         myName = name;

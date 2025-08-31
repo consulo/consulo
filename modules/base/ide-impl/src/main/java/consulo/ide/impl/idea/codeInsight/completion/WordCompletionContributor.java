@@ -52,7 +52,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(@Nonnull final CompletionParameters parameters, @Nonnull final CompletionResultSet result) {
+  public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
     if (parameters.getCompletionType() == CompletionType.BASIC && shouldPerformWordCompletion(parameters)) {
       addWordCompletionVariants(result, parameters, Collections.emptySet());
     }
@@ -64,8 +64,8 @@ public class WordCompletionContributor extends CompletionContributor implements 
     return Language.ANY;
   }
 
-  public static void addWordCompletionVariants(CompletionResultSet result, final CompletionParameters parameters, Set<String> excludes) {
-    final Set<String> realExcludes = new HashSet<>(excludes);
+  public static void addWordCompletionVariants(CompletionResultSet result, CompletionParameters parameters, Set<String> excludes) {
+    Set<String> realExcludes = new HashSet<>(excludes);
     for (String exclude : excludes) {
       String[] words = exclude.split("[ \\.-]");
       if (words.length > 0 && StringUtil.isNotEmpty(words[0])) {
@@ -74,12 +74,12 @@ public class WordCompletionContributor extends CompletionContributor implements 
     }
 
     int startOffset = parameters.getOffset();
-    final PsiElement position = parameters.getPosition();
-    final CompletionResultSet javaResultSet = result.withPrefixMatcher(CompletionUtil.findJavaIdentifierPrefix(parameters));
-    final CompletionResultSet plainResultSet = result.withPrefixMatcher(CompletionUtil.findAlphanumericPrefix(parameters));
-    for (final String word : getAllWords(position, startOffset)) {
+    PsiElement position = parameters.getPosition();
+    CompletionResultSet javaResultSet = result.withPrefixMatcher(CompletionUtil.findJavaIdentifierPrefix(parameters));
+    CompletionResultSet plainResultSet = result.withPrefixMatcher(CompletionUtil.findAlphanumericPrefix(parameters));
+    for (String word : getAllWords(position, startOffset)) {
       if (!realExcludes.contains(word)) {
-        final LookupElement item = LookupElementBuilder.create(word);
+        LookupElement item = LookupElementBuilder.create(word);
         javaResultSet.addElement(item);
         plainResultSet.addElement(item);
       }
@@ -117,7 +117,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
             public void visitElement(PsiElement each) {
               String valueText = ElementManipulators.getValueText(each);
               if (StringUtil.isNotEmpty(valueText) && !realExcludes.contains(valueText)) {
-                final LookupElement item = LookupElementBuilder.create(valueText);
+                LookupElement item = LookupElementBuilder.create(valueText);
                 fullStringResult.addElement(item);
               }
             }
@@ -131,8 +131,8 @@ public class WordCompletionContributor extends CompletionContributor implements 
 
   @RequiredReadAction
   private static boolean shouldPerformWordCompletion(CompletionParameters parameters) {
-    final PsiElement insertedElement = parameters.getPosition();
-    final boolean dumb = DumbService.getInstance(insertedElement.getProject()).isDumb();
+    PsiElement insertedElement = parameters.getPosition();
+    boolean dumb = DumbService.getInstance(insertedElement.getProject()).isDumb();
     if (dumb) {
       return true;
     }
@@ -141,8 +141,8 @@ public class WordCompletionContributor extends CompletionContributor implements 
       return false;
     }
 
-    final PsiFile file = insertedElement.getContainingFile();
-    final CompletionData data = CompletionUtil.getCompletionDataByElement(insertedElement, file);
+    PsiFile file = insertedElement.getContainingFile();
+    CompletionData data = CompletionUtil.getCompletionDataByElement(insertedElement, file);
     if (data != null) {
       Set<CompletionVariant> toAdd = new HashSet<>();
       data.addKeywordVariants(toAdd, insertedElement, file);
@@ -153,18 +153,18 @@ public class WordCompletionContributor extends CompletionContributor implements 
       }
     }
 
-    final int startOffset = parameters.getOffset();
+    int startOffset = parameters.getOffset();
 
-    final PsiReference reference = file.findReferenceAt(startOffset);
+    PsiReference reference = file.findReferenceAt(startOffset);
     if (reference != null) {
       return false;
     }
 
-    final PsiElement element = file.findElementAt(startOffset - 1);
+    PsiElement element = file.findElementAt(startOffset - 1);
 
     ASTNode textContainer = element != null ? element.getNode() : null;
     while (textContainer != null) {
-      final IElementType elementType = textContainer.getElementType();
+      IElementType elementType = textContainer.getElementType();
       if (WordCompletionElementFilter.isEnabledIn(textContainer) || elementType == PlainTextTokenTypes.PLAIN_TEXT) {
         return true;
       }
@@ -173,13 +173,13 @@ public class WordCompletionContributor extends CompletionContributor implements 
     return false;
   }
 
-  public static Set<String> getAllWords(final PsiElement context, final int offset) {
-    final Set<String> words = new LinkedHashSet<>();
+  public static Set<String> getAllWords(PsiElement context, int offset) {
+    Set<String> words = new LinkedHashSet<>();
     if (StringUtil.isEmpty(CompletionUtil.findJavaIdentifierPrefix(context, offset))) {
       return words;
     }
 
-    final CharSequence chars = context.getContainingFile().getViewProvider().getContents(); // ??
+    CharSequence chars = context.getContainingFile().getViewProvider().getContents(); // ??
     IdTableBuilding.scanWords((chars1, charsArray, start, end) -> {
       if (start > offset || offset > end) {
         words.add(chars1.subSequence(start, end).toString());

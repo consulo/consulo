@@ -48,7 +48,7 @@ public interface LanguageVersionResolver extends LanguageExtension {
     @Nonnull
     @Override
     public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element) {
-      final LanguageVersion[] versions = language.getVersions();
+      LanguageVersion[] versions = language.getVersions();
       for (LanguageVersion version : versions) {
         if (version instanceof LanguageVersionWithDefinition && ((LanguageVersionWithDefinition)version).isMyElement(element)) {
           return version;
@@ -61,7 +61,7 @@ public interface LanguageVersionResolver extends LanguageExtension {
     @Nonnull
     @Override
     public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
-      final LanguageVersion[] versions = language.getVersions();
+      LanguageVersion[] versions = language.getVersions();
       for (LanguageVersion version : versions) {
         if (version instanceof LanguageVersionWithDefinition && ((LanguageVersionWithDefinition)version).isMyFile(project, virtualFile)) {
           return version;

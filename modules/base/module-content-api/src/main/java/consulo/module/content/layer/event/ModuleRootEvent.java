@@ -24,7 +24,7 @@ import java.util.EventObject;
  */
 public abstract class ModuleRootEvent extends EventObject{
 
-  protected ModuleRootEvent(final Project project) {
+  protected ModuleRootEvent(Project project) {
     super(project);
   }
 

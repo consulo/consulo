@@ -48,7 +48,7 @@ public class CheckinHandlerUtil {
     return result;
   }
 
-  public static PsiFile[] getPsiFiles(final Project project, final Collection<VirtualFile> selectedFiles) {
+  public static PsiFile[] getPsiFiles(Project project, Collection<VirtualFile> selectedFiles) {
     ArrayList<PsiFile> result = new ArrayList<PsiFile>();
     PsiManager psiManager = PsiManager.getInstance(project);
 

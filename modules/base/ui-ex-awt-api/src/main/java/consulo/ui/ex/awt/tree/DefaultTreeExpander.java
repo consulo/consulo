@@ -65,7 +65,7 @@ public class DefaultTreeExpander implements TreeExpander {
   }
 
   private void showSelectionCentered(JTree tree) {
-    final int[] rowz = tree.getSelectionRows();
+    int[] rowz = tree.getSelectionRows();
     if (rowz != null && rowz.length > 0) {
       TreeUtil.showRowCentered(tree, rowz[0], false);
     }

@@ -41,7 +41,7 @@ public class EditorModificationUtil {
     consulo.codeEditor.util.EditorModificationUtil.deleteSelectedText(editor);
   }
 
-  public static void zeroWidthBlockSelectionAtCaretColumn(final Editor editor, final int startLine, final int endLine) {
+  public static void zeroWidthBlockSelectionAtCaretColumn(Editor editor, int startLine, int endLine) {
     int caretColumn = editor.getCaretModel().getLogicalPosition().column;
     editor.getSelectionModel().setBlockSelection(new LogicalPosition(startLine, caretColumn), new LogicalPosition(endLine, caretColumn));
   }
@@ -138,23 +138,23 @@ public class EditorModificationUtil {
     return consulo.codeEditor.util.EditorModificationUtil.calcStringToFillVirtualSpace(editor, afterLineEnd);
   }
 
-  public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @Nonnull final String str) {
+  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str) {
     consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, str.length());
   }
 
-  public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @Nonnull final String str, final int caretShift) {
+  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str, int caretShift) {
     consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, caretShift);
   }
 
-  public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @Nonnull final String str, final boolean toProcessOverwriteMode) {
+  public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str, boolean toProcessOverwriteMode) {
     consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, toProcessOverwriteMode, str.length());
   }
 
-  public static void moveAllCaretsRelatively(@Nonnull Editor editor, final int caretShift) {
+  public static void moveAllCaretsRelatively(@Nonnull Editor editor, int caretShift) {
     consulo.codeEditor.util.EditorModificationUtil.moveAllCaretsRelatively(editor, caretShift);
   }
 
-  public static void moveCaretRelatively(@Nonnull Editor editor, final int caretShift) {
+  public static void moveCaretRelatively(@Nonnull Editor editor, int caretShift) {
     consulo.codeEditor.util.EditorModificationUtil.moveCaretRelatively(editor, caretShift);
   }
 

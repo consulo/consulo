@@ -436,9 +436,9 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
         return scrollpane;
     }
 
-    private static void resetHeightCache(final JTree tree,
-                                         final TreeCellRenderer defaultRenderer,
-                                         final MultilineTreeCellRenderer renderer) {
+    private static void resetHeightCache(JTree tree,
+                                         TreeCellRenderer defaultRenderer,
+                                         MultilineTreeCellRenderer renderer) {
         tree.setCellRenderer(defaultRenderer);
         tree.setCellRenderer(renderer);
     }

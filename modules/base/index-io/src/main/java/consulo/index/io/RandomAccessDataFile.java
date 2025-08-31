@@ -46,11 +46,11 @@ public class RandomAccessDataFile implements Forceable, Closeable {
 
   private static final boolean DEBUG = false;
 
-  public RandomAccessDataFile(final File file) throws IOException {
+  public RandomAccessDataFile(File file) throws IOException {
     this(file, PagePool.SHARED);
   }
 
-  public RandomAccessDataFile(final File file, final PagePool pool) throws IOException {
+  public RandomAccessDataFile(File file, PagePool pool) throws IOException {
     myPool = pool;
     myFile = file;
     if (!file.exists()) {
@@ -78,7 +78,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     mySize = Math.max(mySize, addr + len);
 
     while (len > 0) {
-      final Page page = myPool.alloc(this, addr);
+      Page page = myPool.alloc(this, addr);
       int written = page.put(addr, bytes, off, len);
       len -= written;
       addr += written;
@@ -90,7 +90,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     assertNotDisposed();
 
     while (len > 0) {
-      final Page page = myPool.alloc(this, addr);
+      Page page = myPool.alloc(this, addr);
       int read = page.get(addr, bytes, off, len);
       len -= read;
       addr += read;
@@ -121,7 +121,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     put(addr, myTypedIOBuffer, 0, 8);
   }
 
-  public void putByte(final long addr, final byte b) {
+  public void putByte(long addr, byte b) {
     myTypedIOBuffer[0] = b;
     put(addr, myTypedIOBuffer, 0, 1);
   }
@@ -151,7 +151,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
 
   public void putUTF(long addr, String value) {
     try {
-      final byte[] bytes = value.getBytes("UTF-8");
+      byte[] bytes = value.getBytes("UTF-8");
       putInt(addr, bytes.length);
       put(addr + 4, bytes, 0, bytes.length);
     }
@@ -236,14 +236,14 @@ public class RandomAccessDataFile implements Forceable, Closeable {
   public static int totalWrites = 0;
   public static long totalWriteBytes = 0;
 
-  void loadPage(final Page page) {
+  void loadPage(Page page) {
     assertNotDisposed();
     try {
-      final RandomAccessFile file = getRandomAccessFile();
+      RandomAccessFile file = getRandomAccessFile();
       try {
         synchronized (file) {
           seek(file, page.getOffset());
-          final ByteBuffer buf = page.getBuf();
+          ByteBuffer buf = page.getBuf();
 
           totalReads++;
           totalReadBytes += Page.PAGE_SIZE;
@@ -264,7 +264,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     }
   }
 
-  void flushPage(final Page page, int start, int end) {
+  void flushPage(Page page, int start, int end) {
     assertNotDisposed();
     try {
       flush(page.getBuf(), page.getOffset() + start, start, end - start);
@@ -274,12 +274,12 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     }
   }
 
-  private void flush(final ByteBuffer buf, final long fileOffset, final int bufOffset, int length) throws IOException {
+  private void flush(ByteBuffer buf, long fileOffset, int bufOffset, int length) throws IOException {
     if (fileOffset + length > mySize) {
       length = (int)(mySize - fileOffset);
     }
 
-    final RandomAccessFile file = getRandomAccessFile();
+    RandomAccessFile file = getRandomAccessFile();
     try {
       synchronized (file) {
         seek(file, fileOffset);
@@ -299,7 +299,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     }
   }
 
-  private void seek(final RandomAccessFile file, final long fileOffset) throws IOException {
+  private void seek(RandomAccessFile file, long fileOffset) throws IOException {
     if (DEBUG) {
       if (lastSeek != -1L && fileOffset != lastSeek) {
         long delta = fileOffset - lastSeek;

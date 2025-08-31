@@ -58,7 +58,7 @@ public class TitlePanel extends CaptionPanel {
   }
 
   @Override
-  public void setActive(final boolean active) {
+  public void setActive(boolean active) {
     super.setActive(active);
     myLabel.setIcon(TargetAWT.to(active ? myRegular : myInactive));
     myLabel.setForeground(active ? UIUtil.getLabelForeground() : UIUtil.getLabelDisabledForeground());
@@ -76,12 +76,12 @@ public class TitlePanel extends CaptionPanel {
 
   @Override
   public Dimension getPreferredSize() {
-    final String text = myLabel.getText();
+    String text = myLabel.getText();
     if (text == null || text.trim().isEmpty()) {
       return JBUI.emptySize();
     }
 
-    final Dimension preferredSize = super.getPreferredSize();
+    Dimension preferredSize = super.getPreferredSize();
     int maxWidth = JBUIScale.scale(350);
     if (!myHtml && preferredSize.width > maxWidth) { // do not allow caption to extend parent container
       return new Dimension(maxWidth, preferredSize.height);

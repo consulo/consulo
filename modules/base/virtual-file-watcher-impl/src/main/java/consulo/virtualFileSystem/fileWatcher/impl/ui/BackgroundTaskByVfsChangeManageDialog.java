@@ -50,7 +50,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
   private BackgroundTaskByVfsChangeTask myPrevTask;
 
   @RequiredUIAccess
-  public BackgroundTaskByVfsChangeManageDialog(@Nonnull final Project project, final VirtualFile virtualFile) {
+  public BackgroundTaskByVfsChangeManageDialog(@Nonnull Project project, VirtualFile virtualFile) {
     super(project);
     myProject = project;
     myVirtualFile = virtualFile;
@@ -104,7 +104,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
           }
 
           @Override
-          public PopupStep onChosen(final BackgroundTaskByVfsChangeProvider val, boolean finalChoice) {
+          public PopupStep onChosen(BackgroundTaskByVfsChangeProvider val, boolean finalChoice) {
             return doFinalStep(() -> add(val));
           }
         };

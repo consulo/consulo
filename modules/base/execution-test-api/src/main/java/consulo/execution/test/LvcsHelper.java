@@ -31,7 +31,7 @@ public class LvcsHelper {
   private static final Color RED = new JBColor(new Color(250, 220, 220), new Color(104, 67, 67));
   private static final Color GREEN = new JBColor(new Color(220, 250, 220), new Color(44, 66, 60));
 
-  public static void addLabel(final TestFrameworkRunningModel model) {
+  public static void addLabel(TestFrameworkRunningModel model) {
     LocalizeValue label;
     int color;
 
@@ -43,7 +43,7 @@ public class LvcsHelper {
       color = GREEN.getRGB();
       label = ExecutionLocalize.junitRuningInfoTestsPassedLabel();
     }
-    final TestConsoleProperties consoleProperties = model.getProperties();
+    TestConsoleProperties consoleProperties = model.getProperties();
     String name = label + " " + consoleProperties.getConfiguration().getName();
 
     Project project = consoleProperties.getProject();

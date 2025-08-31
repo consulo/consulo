@@ -34,7 +34,7 @@ public class RemovePackagingElementAction extends LayoutTreeActionBase {
 
   @Override
   protected boolean isEnabled() {
-    final LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
+    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
     if (selection.getElements().isEmpty() || myArtifactEditor.getLayoutTreeComponent().isEditing()) {
       return false;
     }

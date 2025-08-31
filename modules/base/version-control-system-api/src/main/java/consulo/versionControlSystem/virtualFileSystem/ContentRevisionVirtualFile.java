@@ -83,7 +83,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     final VcsFileSystem vcsFileSystem = ((VcsFileSystem)getFileSystem());
 
     try {
-      final String content = myContentRevision.getContent();
+      String content = myContentRevision.getContent();
       if (content == null) {
         throw new VcsException("Could not load content");
       }

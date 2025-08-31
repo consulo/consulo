@@ -40,5 +40,5 @@ public abstract class LibraryTypeService {
                                                                  @Nonnull JComponent parentComponent,
                                                                  @Nullable VirtualFile contextDirectory,
                                                                  @Nullable LibraryType<?> type,
-                                                                 final @Nullable Project project);
+                                                                 @Nullable Project project);
 }

@@ -91,7 +91,7 @@ public class DirDiffElementImpl implements DirDiffElement {
   }
 
   private static String getLastModification(DiffElement file) {
-    final long timeStamp = file.getTimeStamp();
+    long timeStamp = file.getTimeStamp();
     return timeStamp < 0 ? "" : DateFormatUtil.formatDateTime(timeStamp);
   }
 
@@ -212,7 +212,7 @@ public class DirDiffElementImpl implements DirDiffElement {
   }
 
   public void setNextOperation() {
-    final DirDiffOperation op = getOperation();
+    DirDiffOperation op = getOperation();
     if (myType == DiffType.SOURCE) {
       myOperation = op == COPY_TO ? DELETE : op == DELETE ? NONE : COPY_TO;
     } else if (myType == DiffType.TARGET) {

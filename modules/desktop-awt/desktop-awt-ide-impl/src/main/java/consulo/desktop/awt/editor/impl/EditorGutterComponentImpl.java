@@ -239,7 +239,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     private void installDnD() {
         DnDSupport.createBuilder(this).setBeanProvider(info -> {
-                final GutterMark renderer = getGutterRenderer(info.getPoint());
+                GutterMark renderer = getGutterRenderer(info.getPoint());
                 if (renderer instanceof GutterIconRenderer gutterIconRenderer && gutterIconRenderer.getDraggableObject() != null
                     && (info.isCopy() || info.isMove())) {
                     myDnDInProgress = true;
@@ -247,11 +247,11 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 }
                 return null;
             }).setDropHandler(e -> {
-                final Object attachedObject = e.getAttachedObject();
+                Object attachedObject = e.getAttachedObject();
                 if (attachedObject instanceof GutterIconRenderer && checkDumbAware(attachedObject)) {
-                    final GutterDraggableObject draggableObject = ((GutterIconRenderer) attachedObject).getDraggableObject();
+                    GutterDraggableObject draggableObject = ((GutterIconRenderer) attachedObject).getDraggableObject();
                     if (draggableObject != null) {
-                        final int line = convertPointToLineNumber(e.getPoint());
+                        int line = convertPointToLineNumber(e.getPoint());
                         if (line != -1) {
                             draggableObject.copy(line, myEditor.getVirtualFile(), e.getAction().getActionId());
                         }
@@ -265,11 +265,11 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 }
                 myDnDInProgress = false;
             }).setTargetChecker(e -> {
-                final Object attachedObject = e.getAttachedObject();
+                Object attachedObject = e.getAttachedObject();
                 if (attachedObject instanceof GutterIconRenderer && checkDumbAware(attachedObject)) {
-                    final GutterDraggableObject draggableObject = ((GutterIconRenderer) attachedObject).getDraggableObject();
+                    GutterDraggableObject draggableObject = ((GutterIconRenderer) attachedObject).getDraggableObject();
                     if (draggableObject != null) {
-                        final int line = convertPointToLineNumber(e.getPoint());
+                        int line = convertPointToLineNumber(e.getPoint());
                         if (line != -1) {
                             e.setDropPossible(true);
                             e.setCursor(draggableObject.getCursor(line, e.getAction().getActionId()));
@@ -279,7 +279,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 else if (attachedObject instanceof DnDNativeTarget.EventInfo && myEditor.getSettings().isDndEnabled()) {
                     Transferable transferable = ((DnDNativeTarget.EventInfo) attachedObject).getTransferable();
                     if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-                        final int line = convertPointToLineNumber(e.getPoint());
+                        int line = convertPointToLineNumber(e.getPoint());
                         if (line != -1) {
                             e.setDropPossible(true);
                             myEditor.getCaretModel().moveToOffset(myEditor.getDocument().getLineStartOffset(line));
@@ -483,8 +483,8 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
     }
 
-    private void processClose(final MouseEvent e) {
-        final IdeEventQueue queue = IdeEventQueue.getInstance();
+    private void processClose(MouseEvent e) {
+        IdeEventQueue queue = IdeEventQueue.getInstance();
 
         // See IDEA-59553 for rationale on why this feature is disabled
         //if (isLineNumbersShown()) {
@@ -617,22 +617,22 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
     }
 
-    private void paintBackground(final Graphics g, final Rectangle clip, final int x, final int width, ColorValue background) {
+    private void paintBackground(Graphics g, Rectangle clip, int x, int width, ColorValue background) {
         g.setColor(TargetAWT.to(background));
         g.fillRect(x, clip.y, width, clip.height);
 
         paintCaretRowBackground(g, x, width);
     }
 
-    private void paintCaretRowBackground(final Graphics g, final int x, final int width) {
+    private void paintCaretRowBackground(Graphics g, int x, int width) {
         if (!myEditor.getSettings().isCaretRowShown()) {
             return;
         }
-        final VisualPosition visCaret = myEditor.getCaretModel().getVisualPosition();
+        VisualPosition visCaret = myEditor.getCaretModel().getVisualPosition();
         Color caretRowColor = TargetAWT.to(myEditor.getColorsScheme().getColor(EditorColors.CARET_ROW_COLOR));
         if (caretRowColor != null) {
             g.setColor(caretRowColor);
-            final Point caretPoint = myEditor.visualPositionToXY(visCaret);
+            Point caretPoint = myEditor.visualPositionToXY(visCaret);
             g.fillRect(x, caretPoint.y, width, myEditor.getLineHeight());
         }
     }
@@ -850,7 +850,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                     return;
                 }
 
-                final RangeHighlighterEx lowerHighlighter;
+                RangeHighlighterEx lowerHighlighter;
                 if (less(lastDocHighlighter, lastEditorHighlighter)) {
                     lowerHighlighter = lastDocHighlighter;
                     lastDocHighlighter = null;
@@ -922,8 +922,8 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     private void calcAnnotationsSize() {
         myTextAnnotationGuttersSize = 0;
         myGapAfterAnnotations = false;
-        final int lineCount = Math.max(myEditor.getDocument().getLineCount(), 1);
-        final int guttersCount = myTextAnnotationGutters.size();
+        int lineCount = Math.max(myEditor.getDocument().getLineCount(), 1);
+        int guttersCount = myTextAnnotationGutters.size();
         for (int j = 0; j < guttersCount; j++) {
             TextAnnotationGutterProvider gutterProvider = myTextAnnotationGutters.get(j);
             int gutterSize = 0;
@@ -1134,7 +1134,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     private void paintGutterRenderers(
-        final Graphics2D g,
+        Graphics2D g,
         int firstVisibleOffset,
         int lastVisibleOffset,
         int firstVisibleLine,
@@ -1164,7 +1164,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         paintIcons(firstVisibleLine, lastVisibleLine, g);
     }
 
-    private void paintIcons(final int firstVisibleLine, final int lastVisibleLine, final Graphics2D g) {
+    private void paintIcons(int firstVisibleLine, int lastVisibleLine, Graphics2D g) {
         VisualLinesIterator visLinesIterator = new VisualLinesIterator(myEditor, firstVisibleLine);
         while (!visLinesIterator.atEnd()) {
             int visualLine = visLinesIterator.getVisualLine();
@@ -1253,7 +1253,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         });
     }
 
-    private void paintIconRow(int line, List<? extends GutterMark> row, final Graphics2D g) {
+    private void paintIconRow(int line, List<? extends GutterMark> row, Graphics2D g) {
         processIconsRow(line, row, (x, y, renderer) -> {
             Icon icon = scaleIcon(renderer.getIcon());
 
@@ -1375,7 +1375,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             if (!checkDumbAware(r)) {
                 continue;
             }
-            final Icon icon = scaleIcon(r.getIcon());
+            Icon icon = scaleIcon(r.getIcon());
             GutterIconRenderer.Alignment alignment = ((GutterIconRenderer) r).getAlignment();
             if (alignment == GutterIconRenderer.Alignment.LINE_NUMBERS && !isLineNumbersShown()) {
                 alignment = GutterIconRenderer.Alignment.LEFT;
@@ -1397,7 +1397,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             }
         }
 
-        final int leftSize = x - getIconAreaOffset();
+        int leftSize = x - getIconAreaOffset();
 
         x = getIconAreaOffset() + myIconsAreaWidth;
         for (GutterMark r : row) {
@@ -1458,7 +1458,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     private void doPaintFoldingTree(@Nonnull Graphics2D g, @Nonnull Rectangle clip, int firstVisibleOffset, int lastVisibleOffset) {
-        final double width = getFoldingAnchorWidth2D();
+        double width = getFoldingAnchorWidth2D();
 
         Collection<DisplayedFoldingAnchor> anchorsToDisplay =
             myAnchorsDisplayStrategy.getAnchorsToDisplay(firstVisibleOffset, lastVisibleOffset, myActiveFoldRegions);
@@ -1833,10 +1833,10 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     @Override
-    public void mouseMoved(final MouseEvent e) {
+    public void mouseMoved(MouseEvent e) {
         updateFreePainters(e);
 
-        final GutterIconRenderer renderer = getGutterRenderer(e);
+        GutterIconRenderer renderer = getGutterRenderer(e);
         if (renderer == null) {
             TextAnnotationGutterProvider provider = getProviderAtPoint(e.getPoint());
             LocalizeValue toolTip = LocalizeValue.empty();
@@ -1847,7 +1847,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 }
             }
             else {
-                final int line = getLineNumAtPoint(e.getPoint());
+                int line = getLineNumAtPoint(e.getPoint());
                 toolTip = provider.getToolTipValue(line, myEditor);
                 if (!Comparing.equal(toolTip, myLastGutterToolTip)) {
                     TooltipController.getInstance().cancelTooltip(GUTTER_TOOLTIP_GROUP, e, true);
@@ -1920,13 +1920,13 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             controller.cancelTooltip(GUTTER_TOOLTIP_GROUP, e, false);
         }
         else {
-            final Ref<Point> t = new Ref<>(e.getPoint());
+            Ref<Point> t = new Ref<>(e.getPoint());
             int line = myEditor.yToVisualLine(e.getY());
             List<GutterMark> row = getGutterRenderers(line);
             Balloon.Position ballPosition = Balloon.Position.atRight;
             if (!row.isEmpty()) {
                 Map<Integer, GutterMark> xPos = new TreeMap<>();
-                final int[] currentPos = {0};
+                int[] currentPos = {0};
                 processIconsRow(line, row, (x, y, r) -> {
                     xPos.put(x, r);
                     if (renderer == r) {
@@ -1958,7 +1958,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     private Point getClickedIconCenter(@Nonnull MouseEvent e) {
         GutterMark renderer = getGutterRenderer(e);
-        final Ref<Point> point = new Ref<>(e.getPoint());
+        Ref<Point> point = new Ref<>(e.getPoint());
         int line = myEditor.yToVisualLine(e.getY());
         List<GutterMark> row = getGutterRenderers(line);
         processIconsRow(
@@ -2032,11 +2032,11 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
     }
 
-    private void fireEventToTextAnnotationListeners(final MouseEvent e) {
+    private void fireEventToTextAnnotationListeners(MouseEvent e) {
         if (myEditor.getMouseEventArea(e) == EditorMouseEventArea.ANNOTATIONS_AREA) {
-            final Point clickPoint = e.getPoint();
+            Point clickPoint = e.getPoint();
 
-            final TextAnnotationGutterProvider provider = getProviderAtPoint(clickPoint);
+            TextAnnotationGutterProvider provider = getProviderAtPoint(clickPoint);
 
             if (provider == null) {
                 return;
@@ -2053,7 +2053,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
     }
 
-    private int getLineNumAtPoint(final Point clickPoint) {
+    private int getLineNumAtPoint(Point clickPoint) {
         return EditorUtil.yPositionToLogicalLine(myEditor, clickPoint);
     }
 
@@ -2062,7 +2062,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     @Nullable
-    private TextAnnotationGutterProvider getProviderAtPoint(final Point clickPoint) {
+    private TextAnnotationGutterProvider getProviderAtPoint(Point clickPoint) {
         int current = getAnnotationsAreaOffset();
         if (clickPoint.x < current) {
             return null;
@@ -2095,7 +2095,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     @Override
     @RequiredUIAccess
-    public void mouseReleased(final MouseEvent e) {
+    public void mouseReleased(MouseEvent e) {
         if (e.isPopupTrigger()) {
             invokePopup(e);
             return;
@@ -2170,15 +2170,15 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     @Nullable
-    private ActiveGutterRenderer getActiveRendererByMouseEvent(final MouseEvent e) {
+    private ActiveGutterRenderer getActiveRendererByMouseEvent(MouseEvent e) {
         if (findFoldingAnchorAt(e.getX(), e.getY()) != null) {
             return null;
         }
         if (e.getX() > getWhitespaceSeparatorOffset()) {
             return null;
         }
-        final ActiveGutterRenderer[] gutterRenderer = {null};
-        final int[] layer = {-1};
+        ActiveGutterRenderer[] gutterRenderer = {null};
+        int[] layer = {-1};
         Rectangle clip = myEditor.getScrollingModel().getVisibleArea();
         int firstVisibleOffset = myEditor.logicalPositionToOffset(
             myEditor.xyToLogicalPosition(new Point(0, clip.y - myEditor.getLineHeight())));
@@ -2254,8 +2254,8 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     @Override
     @Nullable
-    public Point getCenterPoint(final GutterIconRenderer renderer) {
-        final Ref<Point> result = Ref.create();
+    public Point getCenterPoint(GutterIconRenderer renderer) {
+        Ref<Point> result = Ref.create();
         if (!areIconsShown()) {
             processGutterRenderers((line, renderers) -> {
                 if (ContainerUtil.find(renderers, renderer) != null) {
@@ -2349,16 +2349,16 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     private void invokePopup(MouseEvent e) {
         int logicalLineAtCursor = EditorUtil.yPositionToLogicalLine(myEditor, e);
         myLastActionableClick = new ClickInfo(logicalLineAtCursor, getClickedIconCenter(e));
-        final ActionManager actionManager = ActionManager.getInstance();
+        ActionManager actionManager = ActionManager.getInstance();
         if (myEditor.getMouseEventArea(e) == EditorMouseEventArea.ANNOTATIONS_AREA) {
-            final List<AnAction> addActions = new ArrayList<>();
+            List<AnAction> addActions = new ArrayList<>();
             if (myCanCloseAnnotations) {
                 addActions.add(new CloseAnnotationsAction());
             }
             //if (line >= myEditor.getDocument().getLineCount()) return;
 
             for (TextAnnotationGutterProvider gutterProvider : myTextAnnotationGutters) {
-                final List<AnAction> list = gutterProvider.getPopupActions(logicalLineAtCursor, myEditor);
+                List<AnAction> list = gutterProvider.getPopupActions(logicalLineAtCursor, myEditor);
                 if (list != null) {
                     for (AnAction action : list) {
                         if (!addActions.contains(action)) {
@@ -2424,7 +2424,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         updateFreePainters(e);
     }
 
-    private int convertPointToLineNumber(final Point p) {
+    private int convertPointToLineNumber(Point p) {
         DocumentEx document = myEditor.getDocument();
         int line = EditorUtil.yPositionToLogicalLine(myEditor, p);
         if (!isValidLine(document, line)) {
@@ -2432,7 +2432,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
 
         int startOffset = document.getLineStartOffset(line);
-        final FoldRegion region = myEditor.getFoldingModel().getCollapsedRegionAtOffset(startOffset);
+        FoldRegion region = myEditor.getFoldingModel().getCollapsedRegionAtOffset(startOffset);
         if (region != null) {
             return document.getLineNumber(region.getEndOffset());
         }

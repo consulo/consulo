@@ -38,14 +38,14 @@ public class PlainTextLineSelectioner extends ExtendWordSelectionHandlerBase {
     return selectPlainTextLine(e, editorText, cursorOffset);
   }
 
-  public static List<TextRange> selectPlainTextLine(final PsiElement e, final CharSequence editorText, final int cursorOffset) {
+  public static List<TextRange> selectPlainTextLine(PsiElement e, CharSequence editorText, int cursorOffset) {
     int start = cursorOffset;
     while (start > 0 && editorText.charAt(start - 1) != '\n' && editorText.charAt(start - 1) != '\r') start--;
 
     int end = cursorOffset;
     while (end < editorText.length() && editorText.charAt(end) != '\n' && editorText.charAt(end) != '\r') end++;
 
-    final TextRange range = new TextRange(start, end);
+    TextRange range = new TextRange(start, end);
     if (!e.getParent().getTextRange().contains(range)) return null;
     List<TextRange> result = new ArrayList<TextRange>();
     result.add(range);

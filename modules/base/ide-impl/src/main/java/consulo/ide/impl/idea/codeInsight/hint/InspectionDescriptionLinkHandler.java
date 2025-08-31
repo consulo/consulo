@@ -45,20 +45,20 @@ public class InspectionDescriptionLinkHandler extends TooltipLinkHandler {
   }
 
   @Override
-  public String getDescription(@Nonnull final String refSuffix, @Nonnull final Editor editor) {
-    final Project project = editor.getProject();
+  public String getDescription(@Nonnull String refSuffix, @Nonnull Editor editor) {
+    Project project = editor.getProject();
     if (project == null) {
       LOG.error(editor);
       return null;
     }
 
-    final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) {
       return null;
     }
 
-    final InspectionProfile profile = (InspectionProfile)InspectionProfileManager.getInstance().getRootProfile();
-    final InspectionToolWrapper toolWrapper = profile.getInspectionTool(refSuffix, file);
+    InspectionProfile profile = (InspectionProfile)InspectionProfileManager.getInstance().getRootProfile();
+    InspectionToolWrapper toolWrapper = profile.getInspectionTool(refSuffix, file);
     if (toolWrapper == null) return null;
 
     String description = toolWrapper.loadDescription();

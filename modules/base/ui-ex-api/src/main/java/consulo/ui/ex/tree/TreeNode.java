@@ -36,9 +36,9 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
 
   @Override
   public PresentableNodeDescriptor getChildToHighlightAt(int index) {
-    final Collection<? extends TreeNode> kids = getChildren();
+    Collection<? extends TreeNode> kids = getChildren();
     int i = 0;
-    for (final TreeNode kid : kids) {
+    for (TreeNode kid : kids) {
       if (i == index) return kid;
       i++;
     }
@@ -205,7 +205,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
   }
 
 
-  public boolean canRepresent(final Object element) {
+  public boolean canRepresent(Object element) {
     return Comparing.equal(getValue(), element);
   }
 

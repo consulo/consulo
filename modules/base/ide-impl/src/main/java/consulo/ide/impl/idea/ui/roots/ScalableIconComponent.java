@@ -39,7 +39,7 @@ public class ScalableIconComponent extends JComponent {
     myIcon = icon;
     mySelectedIcon = selectedIcon != null? selectedIcon : icon;
     if (icon != null) {
-      final Dimension size = new Dimension(icon.getWidth(), icon.getHeight());
+      Dimension size = new Dimension(icon.getWidth(), icon.getHeight());
       this.setPreferredSize(size);
       this.setMinimumSize(size);
     }
@@ -47,12 +47,12 @@ public class ScalableIconComponent extends JComponent {
 
   @Override
   protected void paintComponent(Graphics g) {
-    final consulo.ui.image.Image icon = myIsSelected? mySelectedIcon : myIcon;
+    consulo.ui.image.Image icon = myIsSelected? mySelectedIcon : myIcon;
     if (icon != null) {
-      final Graphics2D g2 = (Graphics2D)g;
+      Graphics2D g2 = (Graphics2D)g;
 
       g2.setBackground(getBackground());
-      final AffineTransform savedTransform = g2.getTransform();
+      AffineTransform savedTransform = g2.getTransform();
 
       g2.scale(((double)getWidth()) / icon.getWidth(), ((double)getHeight()) / icon.getHeight());
       TargetAWT.to(icon).paintIcon(this, g2, 0, 0);

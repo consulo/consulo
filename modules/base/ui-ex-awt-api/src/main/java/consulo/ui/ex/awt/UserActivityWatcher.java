@@ -45,7 +45,7 @@ public class UserActivityWatcher extends ComponentTreeWatcher {
 
   private final consulo.document.event.DocumentListener myIdeaDocumentListener = new consulo.document.event.DocumentListener() {
     @Override
-    public void documentChanged(final consulo.document.event.DocumentEvent e) {
+    public void documentChanged(consulo.document.event.DocumentEvent e) {
       fireUIChanged();
     }
   };
@@ -73,7 +73,7 @@ public class UserActivityWatcher extends ComponentTreeWatcher {
     }
   };
   private final ChangeListener myChangeListener = new ChangeListener() {
-    public void stateChanged(final ChangeEvent e) {
+    public void stateChanged(ChangeEvent e) {
       fireUIChanged();
     }
   };
@@ -116,19 +116,19 @@ public class UserActivityWatcher extends ComponentTreeWatcher {
   };
 
   private final TreeModelListener myTreeModelListener = new TreeModelListener() {
-    public void treeNodesChanged(final TreeModelEvent e) {
+    public void treeNodesChanged(TreeModelEvent e) {
       fireUIChanged();
     }
 
-    public void treeNodesInserted(final TreeModelEvent e) {
+    public void treeNodesInserted(TreeModelEvent e) {
       fireUIChanged();
     }
 
-    public void treeNodesRemoved(final TreeModelEvent e) {
+    public void treeNodesRemoved(TreeModelEvent e) {
       fireUIChanged();
     }
 
-    public void treeStructureChanged(final TreeModelEvent e) {
+    public void treeStructureChanged(TreeModelEvent e) {
       fireUIChanged();
     }
   };
@@ -143,7 +143,7 @@ public class UserActivityWatcher extends ComponentTreeWatcher {
 
   }
 
-  protected void processComponent(final Component parentComponent) {
+  protected void processComponent(Component parentComponent) {
     if (parentComponent instanceof JTextComponent) {
       ((JTextComponent)parentComponent).getDocument().addDocumentListener(myDocumentListener);
     }
@@ -183,7 +183,7 @@ public class UserActivityWatcher extends ComponentTreeWatcher {
     }
   }
 
-  protected void unprocessComponent(final Component component) {
+  protected void unprocessComponent(Component component) {
     if (component instanceof JTextComponent) {
       ((JTextComponent)component).getDocument().removeDocumentListener(myDocumentListener);
     }

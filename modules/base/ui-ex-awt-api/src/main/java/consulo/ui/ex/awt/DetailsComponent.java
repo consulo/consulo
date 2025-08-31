@@ -186,8 +186,8 @@ public class DetailsComponent {
         myBannerLabel.repaint();
     }
 
-    public DetailsComponent setEmptyContentText(@Nullable final String emptyContentText) {
-        final String s = XmlStringUtil.wrapInHtml("<center>" + (emptyContentText != null ? emptyContentText : "") + "</center>");
+    public DetailsComponent setEmptyContentText(@Nullable String emptyContentText) {
+        String s = XmlStringUtil.wrapInHtml("<center>" + (emptyContentText != null ? emptyContentText : "") + "</center>");
         myEmptyContentLabel.setText(s);
         return this;
     }
@@ -200,7 +200,7 @@ public class DetailsComponent {
         return myContentGutter;
     }
 
-    public DetailsComponent setBannerMinHeight(final int height) {
+    public DetailsComponent setBannerMinHeight(int height) {
         myBannerLabel.setMinHeight(height);
         return this;
     }
@@ -213,7 +213,7 @@ public class DetailsComponent {
         myBannerLabel.updateActions();
     }
 
-    public void setDetailsModeEnabled(final boolean enabled) {
+    public void setDetailsModeEnabled(boolean enabled) {
         if (myDetailsEnabled == enabled) {
             return;
         }
@@ -224,7 +224,7 @@ public class DetailsComponent {
     }
 
     private class MyWrapper extends Wrapper implements NullableComponent {
-        public MyWrapper(final JComponent c) {
+        public MyWrapper(JComponent c) {
             super(c == null || NullableComponent.Check.isNull(c) ? myEmptyContentLabel : c);
         }
 

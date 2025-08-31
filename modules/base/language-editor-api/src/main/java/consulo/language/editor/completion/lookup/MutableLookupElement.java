@@ -44,10 +44,10 @@ public abstract class MutableLookupElement<T> extends LookupElement {
   public abstract MutableLookupElement<T> setPresentableText(@Nonnull String displayText);
 
   @Nonnull
-  public abstract MutableLookupElement<T> setTypeText(final String text);
+  public abstract MutableLookupElement<T> setTypeText(String text);
 
   @Nonnull
-  public abstract MutableLookupElement<T> setTailText(final String text, final boolean grayed);
+  public abstract MutableLookupElement<T> setTailText(String text, boolean grayed);
 
   @Nonnull
   public abstract MutableLookupElement<T> setTailType(@Nonnull TailType type);

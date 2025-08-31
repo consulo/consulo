@@ -22,5 +22,5 @@ import consulo.language.editor.completion.lookup.LookupElementPresentation;
  * @author peter
  */
 public abstract class LookupElementRenderer<T extends LookupElement> {
-  public abstract void renderElement(final T element, LookupElementPresentation presentation);
+  public abstract void renderElement(T element, LookupElementPresentation presentation);
 }

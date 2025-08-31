@@ -56,7 +56,7 @@ public abstract class DocumentationProviderEx implements DocumentationProvider {
   }
 
   @Nullable
-  public PsiElement getCustomDocumentationElement(@Nonnull final Editor editor, @Nonnull final PsiFile file, @Nullable PsiElement contextElement) {
+  public PsiElement getCustomDocumentationElement(@Nonnull Editor editor, @Nonnull PsiFile file, @Nullable PsiElement contextElement) {
     return null;
   }
 

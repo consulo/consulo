@@ -50,7 +50,7 @@ public class OpenSelectedProjectsAction extends RecentProjectsWelcomeScreenActio
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
+    Presentation presentation = e.getPresentation();
     List<AnAction> selectedElements = getSelectedElements(e);
     boolean hasProject = false;
     boolean hasGroup = false;

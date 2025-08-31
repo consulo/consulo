@@ -37,7 +37,7 @@ public class WindowsCredentialStore implements CredentialStore {
     @Nullable
     @Override
     public Credentials get(@Nonnull CredentialAttributes attributes) {
-        final CredAdvapi32.PCREDENTIAL pcredential = new CredAdvapi32.PCREDENTIAL();
+        CredAdvapi32.PCREDENTIAL pcredential = new CredAdvapi32.PCREDENTIAL();
 
         boolean read = false;
         try {
@@ -47,11 +47,11 @@ public class WindowsCredentialStore implements CredentialStore {
             }
 
             if (read) {
-                final CredAdvapi32.CREDENTIAL credential = new CredAdvapi32.CREDENTIAL(pcredential.credential);
+                CredAdvapi32.CREDENTIAL credential = new CredAdvapi32.CREDENTIAL(pcredential.credential);
 
                 byte[] secretBytes = credential.CredentialBlob.getByteArray(0, credential.CredentialBlobSize);
-                final String secret = new String(secretBytes, StandardCharsets.UTF_8);
-                final String username = credential.UserName;
+                String secret = new String(secretBytes, StandardCharsets.UTF_8);
+                String username = credential.UserName;
 
                 return new Credentials(username, secret);
             }
@@ -86,9 +86,9 @@ public class WindowsCredentialStore implements CredentialStore {
         }  else {
             byte[] credBlob = credentials.getPassword().toByteArray(false);
 
-            final String username = credentials.getUserName();
+            String username = credentials.getUserName();
 
-            final CredAdvapi32.CREDENTIAL cred = buildCred(key, username, credBlob);
+            CredAdvapi32.CREDENTIAL cred = buildCred(key, username, credBlob);
 
             try {
                 synchronized (INSTANCE) {
@@ -105,7 +105,7 @@ public class WindowsCredentialStore implements CredentialStore {
     }
 
     private CredAdvapi32.CREDENTIAL buildCred(String key, String username, byte[] credentialBlob) {
-        final CredAdvapi32.CREDENTIAL credential = new CredAdvapi32.CREDENTIAL();
+        CredAdvapi32.CREDENTIAL credential = new CredAdvapi32.CREDENTIAL();
 
         credential.Flags = 0;
         credential.Type = CredAdvapi32.CRED_TYPE_GENERIC;

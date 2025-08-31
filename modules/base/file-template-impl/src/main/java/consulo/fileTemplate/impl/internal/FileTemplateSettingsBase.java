@@ -57,7 +57,7 @@ public class FileTemplateSettingsBase extends FileTemplatesLoader implements Per
         }
         if (!shouldSave) continue;
 
-        final Element templateElement = new Element(ELEMENT_TEMPLATE);
+        Element templateElement = new Element(ELEMENT_TEMPLATE);
         templateElement.setAttribute(ATTRIBUTE_NAME, template.getQualifiedName());
         templateElement.setAttribute(ATTRIBUTE_REFORMAT, Boolean.toString(template.isReformatCode()));
         templateElement.setAttribute(ATTRIBUTE_LIVE_TEMPLATE, Boolean.toString(template.isLiveTemplateEnabled()));
@@ -79,13 +79,13 @@ public class FileTemplateSettingsBase extends FileTemplatesLoader implements Per
 
   @Override
   public void loadState(Element state) {
-    for (final FTManager manager : getAllManagers()) {
-      final Element templatesGroup = state.getChild(getXmlElementGroupName(manager));
+    for (FTManager manager : getAllManagers()) {
+      Element templatesGroup = state.getChild(getXmlElementGroupName(manager));
       if (templatesGroup == null) continue;
 
       for (Element child : templatesGroup.getChildren(ELEMENT_TEMPLATE)) {
-        final String qName = child.getAttributeValue(ATTRIBUTE_NAME);
-        final FileTemplateBase template = manager.getTemplate(qName);
+        String qName = child.getAttributeValue(ATTRIBUTE_NAME);
+        FileTemplateBase template = manager.getTemplate(qName);
         if (template == null) continue;
 
         template.setReformatCode(Boolean.parseBoolean(child.getAttributeValue(ATTRIBUTE_REFORMAT)));

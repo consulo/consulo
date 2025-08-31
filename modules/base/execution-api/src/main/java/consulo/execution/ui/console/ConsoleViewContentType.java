@@ -59,7 +59,7 @@ public class ConsoleViewContentType {
     ourRegisteredTypes.put(ProcessOutputTypes.STDERR, ERROR_OUTPUT);
   }
 
-  public ConsoleViewContentType(final String name, final TextAttributes textAttributes) {
+  public ConsoleViewContentType(String name, TextAttributes textAttributes) {
     myName = name;
     myTextAttributes = textAttributes;
     myTextAttributesKey = null;

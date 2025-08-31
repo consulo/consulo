@@ -89,7 +89,7 @@ class VcsConfirmationDialog extends OptionsDialog {
   @Nonnull
   @Override
   protected Action[] createActions() {
-    final AbstractAction okAction = new AbstractAction(myOkText) {
+    AbstractAction okAction = new AbstractAction(myOkText) {
       {
         putValue(DEFAULT_ACTION, Boolean.TRUE);
       }
@@ -99,7 +99,7 @@ class VcsConfirmationDialog extends OptionsDialog {
         doOKAction();
       }
     };
-    final AbstractAction cancelAction = new AbstractAction(myCancelText) {
+    AbstractAction cancelAction = new AbstractAction(myCancelText) {
       @Override
       public void actionPerformed(ActionEvent e) {
         doCancelAction();

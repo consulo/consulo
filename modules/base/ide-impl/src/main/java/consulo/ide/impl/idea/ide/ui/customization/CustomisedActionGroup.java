@@ -35,7 +35,7 @@ public class CustomisedActionGroup extends ActionGroup {
     public CustomisedActionGroup(
         String shortName,
         boolean popup,
-        final ActionGroup group,
+        ActionGroup group,
         CustomActionsSchemaImpl schema,
         String defaultGroupName
     ) {
@@ -51,7 +51,7 @@ public class CustomisedActionGroup extends ActionGroup {
     }
 
     @Nonnull
-    public AnAction[] getChildren(@Nullable final AnActionEvent e) {
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (myForceUpdate) {
             myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);
             myForceUpdate = false;
@@ -76,7 +76,7 @@ public class CustomisedActionGroup extends ActionGroup {
 
     @Nullable
     public AnAction getFirstAction() {
-        final AnAction[] children = getChildren(null);
+        AnAction[] children = getChildren(null);
         return children.length > 0 ? children[0] : null;
     }
 }

@@ -65,7 +65,7 @@ public class ComboboxEditorTextField extends EditorTextField {
 
     @Override
     protected EditorEx createEditor() {
-        final EditorEx result = super.createEditor();
+        EditorEx result = super.createEditor();
 
         result.addFocusListener(new FocusChangeListener() {
             @Override
@@ -89,7 +89,7 @@ public class ComboboxEditorTextField extends EditorTextField {
 
     private void repaintComboBox() {
         ApplicationIdeFocusManager.getInstance().getInstanceForProject(getProject()).doWhenFocusSettlesDown(() -> {
-            final Container parent = getParent();
+            Container parent = getParent();
             if (parent != null) {
                 parent.repaint();
             }

@@ -87,7 +87,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     private boolean myDisposed;
 
     public ArtifactEditorImpl(
-        final @Nonnull ArtifactsStructureConfigurableContext context,
+        @Nonnull ArtifactsStructureConfigurableContext context,
         @Nonnull Artifact artifact,
         @Nonnull ArtifactEditorSettings settings
     ) {
@@ -104,7 +104,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         Disposer.register(this, myLayoutTreeComponent);
         myTopPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         myBuildOnMakeCheckBox.setSelected(artifact.isBuildOnMake());
-        final String outputPath = artifact.getOutputPath();
+        String outputPath = artifact.getOutputPath();
         myOutputDirectoryField.addBrowseFolderListener(
             CompilerLocalize.dialogTitleOutputDirectoryForArtifact().get(),
             CompilerLocalize.chooserDescriptionSelectOutputDirectoryFor0Artifact(getArtifact().getName()).get(),
@@ -127,7 +127,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     private ActionGroup createShowSpecificContentOptionsGroup() {
-        final DefaultActionGroup group = new DefaultActionGroup();
+        DefaultActionGroup group = new DefaultActionGroup();
         for (ComplexPackagingElementType<?> type : PackagingElementFactory.getInstance(myProject).getComplexElementTypes()) {
             group.add(new ToggleShowElementContentAction(type, this));
         }
@@ -139,7 +139,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     public void apply() {
-        final ModifiableArtifact modifiableArtifact =
+        ModifiableArtifact modifiableArtifact =
             myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
         modifiableArtifact.setBuildOnMake(myBuildOnMakeCheckBox.isSelected());
         modifiableArtifact.setOutputPath(getConfiguredOutputPath());
@@ -194,16 +194,16 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myErrorPanelPlace.add(myValidationManager.getMainErrorPanel(), BorderLayout.CENTER);
 
         Splitter splitter = new OnePixelSplitter(false);
-        final JPanel leftPanel = new JPanel(new BorderLayout());
+        JPanel leftPanel = new JPanel(new BorderLayout());
         JPanel treePanel = myLayoutTreeComponent.getTreePanel();
         leftPanel.add(treePanel, BorderLayout.CENTER);
         leftPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 0));
 
         splitter.setFirstComponent(leftPanel);
 
-        final JPanel rightPanel = new JPanel(new BorderLayout());
-        final JPanel rightTopPanel = new JPanel(new BorderLayout());
-        final JPanel labelPanel = new JPanel();
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        JPanel rightTopPanel = new JPanel(new BorderLayout());
+        JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
         labelPanel.add(new JLabel("Available Elements "));
         final HyperlinkLabel link = new HyperlinkLabel("");
@@ -212,7 +212,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         link.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
             protected void hyperlinkActivated(HyperlinkEvent e) {
-                final JLabel label = new JLabel(ProjectLocalize.artifactSourceItemsTreeTooltip().get());
+                JLabel label = new JLabel(ProjectLocalize.artifactSourceItemsTreeTooltip().get());
                 label.setBorder(HintUtil.createHintBorder());
                 label.setBackground(HintUtil.INFORMATION_COLOR);
                 label.setOpaque(true);
@@ -236,7 +236,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         leftPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
         myShowContentCheckBox.addActionListener(e -> {
-            final ThreeStateCheckBox.State state = myShowContentCheckBox.getState();
+            ThreeStateCheckBox.State state = myShowContentCheckBox.getState();
             if (state == ThreeStateCheckBox.State.SELECTED) {
                 mySubstitutionParameters.setSubstituteAll();
             }
@@ -262,7 +262,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myEditorPanel.add(myTabbedPane.getComponent(), BorderLayout.CENTER);
         myEditorPanel.setBorder(new CustomLineBorder(0, 0, 1, 0));
 
-        final LayoutTree tree = myLayoutTreeComponent.getLayoutTree();
+        LayoutTree tree = myLayoutTreeComponent.getLayoutTree();
         new ShowAddPackagingElementPopupAction(this).registerCustomShortcutSet(CommonShortcuts.getNew(), tree);
         PopupHandler.installPopupHandler(tree, createPopupActionGroup(), ActionPlaces.UNKNOWN, ActionManager.getInstance());
         ToolTipManager.sharedInstance().registerComponent(tree);
@@ -275,7 +275,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     public void updateShowContentCheckbox() {
-        final ThreeStateCheckBox.State state;
+        ThreeStateCheckBox.State state;
         if (mySubstitutionParameters.isAllSubstituted()) {
             state = ThreeStateCheckBox.State.SELECTED;
         }
@@ -295,7 +295,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     private DefaultActionGroup createToolbarActionGroup() {
-        final DefaultActionGroup toolbarActionGroup = new DefaultActionGroup();
+        DefaultActionGroup toolbarActionGroup = new DefaultActionGroup();
 
         toolbarActionGroup.add(createAddGroup());
         toolbarActionGroup.add(new RemovePackagingElementAction(this));
@@ -307,11 +307,11 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     private DefaultActionGroup createPopupActionGroup() {
-        final LayoutTree tree = myLayoutTreeComponent.getLayoutTree();
+        LayoutTree tree = myLayoutTreeComponent.getLayoutTree();
 
         DefaultActionGroup popupActionGroup = new DefaultActionGroup();
         popupActionGroup.add(createAddGroup());
-        final RemovePackagingElementAction removeAction = new RemovePackagingElementAction(this);
+        RemovePackagingElementAction removeAction = new RemovePackagingElementAction(this);
         removeAction.registerCustomShortcutSet(CommonShortcuts.getDelete(), tree);
         popupActionGroup.add(removeAction);
         popupActionGroup.add(new ExtractArtifactAction(this));
@@ -364,24 +364,24 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     @Override
-    public void removePackagingElement(@Nonnull final String pathToParent, @Nonnull final PackagingElement<?> element) {
+    public void removePackagingElement(@Nonnull String pathToParent, @Nonnull PackagingElement<?> element) {
         doReplaceElement(pathToParent, element, null);
     }
 
     @Override
-    public void replacePackagingElement(@Nonnull final String pathToParent,
-                                        @Nonnull final PackagingElement<?> element,
-                                        @Nonnull final PackagingElement<?> replacement) {
+    public void replacePackagingElement(@Nonnull String pathToParent,
+                                        @Nonnull PackagingElement<?> element,
+                                        @Nonnull PackagingElement<?> replacement) {
         doReplaceElement(pathToParent, element, replacement);
     }
 
     private void doReplaceElement(
-        final @Nonnull String pathToParent,
-        final @Nonnull PackagingElement<?> element,
-        final @Nullable PackagingElement replacement
+        @Nonnull String pathToParent,
+        @Nonnull PackagingElement<?> element,
+        @Nullable PackagingElement replacement
     ) {
         myLayoutTreeComponent.editLayout(() -> {
-            final CompositePackagingElement<?> parent = findCompositeElementByPath(pathToParent);
+            CompositePackagingElement<?> parent = findCompositeElementByPath(pathToParent);
             if (parent == null) {
                 return;
             }
@@ -432,16 +432,16 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         return myLayoutTreeComponent;
     }
 
-    public void updateOutputPath(@Nonnull String oldArtifactName, @Nonnull final String newArtifactName) {
-        final String oldDefaultPath = ArtifactUtil.getDefaultArtifactOutputPath(oldArtifactName, myProject);
+    public void updateOutputPath(@Nonnull String oldArtifactName, @Nonnull String newArtifactName) {
+        String oldDefaultPath = ArtifactUtil.getDefaultArtifactOutputPath(oldArtifactName, myProject);
         if (Comparing.equal(oldDefaultPath, getConfiguredOutputPath())) {
             setOutputPath(ArtifactUtil.getDefaultArtifactOutputPath(newArtifactName, myProject));
-            final CompositePackagingElement<?> root = getRootElement();
+            CompositePackagingElement<?> root = getRootElement();
             if (root instanceof ArchivePackagingElement archivePackagingElement) {
                 String oldFileName = ArtifactUtil.suggestArtifactFileName(oldArtifactName);
-                final String name = archivePackagingElement.getArchiveFileName();
-                final String fileName = FileUtil.getNameWithoutExtension(name);
-                final String extension = FileUtil.getExtension(name);
+                String name = archivePackagingElement.getArchiveFileName();
+                String fileName = FileUtil.getNameWithoutExtension(name);
+                String extension = FileUtil.getExtension(name);
                 if (fileName.equals(oldFileName) && extension.length() > 0) {
                     myLayoutTreeComponent.editLayout(
                         () -> archivePackagingElement.setArchiveFileName(
@@ -465,7 +465,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     public void setArtifactType(ArtifactType artifactType) {
-        final ModifiableArtifact modifiableArtifact =
+        ModifiableArtifact modifiableArtifact =
             myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
         modifiableArtifact.setArtifactType(artifactType);
 
@@ -473,8 +473,8 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myPropertiesEditors = new ArtifactPropertiesEditors(myContext, myOriginalArtifact, getArtifact());
         myPropertiesEditors.addTabs(myTabbedPane);
 
-        final CompositePackagingElement<?> oldRootElement = getRootElement();
-        final CompositePackagingElement<?> newRootElement =
+        CompositePackagingElement<?> oldRootElement = getRootElement();
+        CompositePackagingElement<?> newRootElement =
             artifactType.createRootElement(PackagingElementFactory.getInstance(myProject), getArtifact().getName());
         ArtifactUtil.copyChildren(oldRootElement, newRootElement, myProject);
         myLayoutTreeComponent.setRootElement(newRootElement);
@@ -492,7 +492,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     public String getHelpTopic() {
-        final int tab = myTabbedPane.getSelectedIndex();
+        int tab = myTabbedPane.getSelectedIndex();
         if (tab == 0) {
             return "reference.project.structure.artifacts.output";
         }

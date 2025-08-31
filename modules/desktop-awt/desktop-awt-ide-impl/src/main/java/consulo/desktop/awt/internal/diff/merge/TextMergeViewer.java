@@ -112,9 +112,9 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     private static List<DiffContent> getDiffContents(@Nonnull TextMergeRequest mergeRequest) {
         List<DocumentContent> contents = mergeRequest.getContents();
 
-        final DocumentContent left = ThreeSide.LEFT.select(contents);
-        final DocumentContent right = ThreeSide.RIGHT.select(contents);
-        final DocumentContent output = mergeRequest.getOutputContent();
+        DocumentContent left = ThreeSide.LEFT.select(contents);
+        DocumentContent right = ThreeSide.RIGHT.select(contents);
+        DocumentContent output = mergeRequest.getOutputContent();
 
         return Arrays.asList(left, output, right);
     }
@@ -283,7 +283,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
         @Nullable
         @SuppressWarnings("RequiredXAction")
-        public MergeTool.ActionRecord getResolveAction(@Nonnull final MergeResult result) {
+        public MergeTool.ActionRecord getResolveAction(@Nonnull MergeResult result) {
             return new MergeTool.ActionRecord(
                 MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext),
                 () -> {
@@ -328,8 +328,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
         @RequiredUIAccess
         private void setInitialOutputContent() {
-            final Document baseDocument = ThreeSide.BASE.select(myMergeRequest.getContents()).getDocument();
-            final Document outputDocument = myMergeRequest.getOutputContent().getDocument();
+            Document baseDocument = ThreeSide.BASE.select(myMergeRequest.getContents()).getDocument();
+            Document outputDocument = myMergeRequest.getOutputContent().getDocument();
 
             DiffImplUtil.newWriteCommand()
                 .project(getProject())
@@ -448,8 +448,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
         @Nonnull
         private Runnable apply(
-            @Nonnull final List<MergeLineFragment> fragments,
-            @Nonnull final List<MergeConflictType> conflictTypes
+            @Nonnull List<MergeLineFragment> fragments,
+            @Nonnull List<MergeConflictType> conflictTypes
         ) {
             return () -> {
                 //noinspection RequiredXAction
@@ -601,22 +601,22 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 myStatusPanel.setBusy(true);
                 myProgress = new EmptyProgressIndicator();
 
-                final List<TextMergeChange> scheduled = ContainerUtil.newArrayList(myScheduled);
+                List<TextMergeChange> scheduled = ContainerUtil.newArrayList(myScheduled);
                 myScheduled.clear();
 
                 List<Document> documents = ThreeSide.map((side) -> getEditor(side).getDocument());
-                final List<InnerChunkData> data = ContainerUtil.map(scheduled, change -> new InnerChunkData(change, documents));
+                List<InnerChunkData> data = ContainerUtil.map(scheduled, change -> new InnerChunkData(change, documents));
 
-                final ProgressIndicator indicator = myProgress;
+                ProgressIndicator indicator = myProgress;
                 Application.get().executeOnPooledThread(() -> performRediff(scheduled, data, indicator));
             }
 
             private void performRediff(
-                @Nonnull final List<TextMergeChange> scheduled,
-                @Nonnull final List<InnerChunkData> data,
-                @Nonnull final ProgressIndicator indicator
+                @Nonnull List<TextMergeChange> scheduled,
+                @Nonnull List<InnerChunkData> data,
+                @Nonnull ProgressIndicator indicator
             ) {
-                final List<MergeInnerDifferences> result = new ArrayList<>(data.size());
+                List<MergeInnerDifferences> result = new ArrayList<>(data.size());
                 for (InnerChunkData chunkData : data) {
                     result.add(DiffImplUtil.compareThreesideInner(chunkData.text, ComparisonPolicy.DEFAULT, indicator));
                 }
@@ -1097,12 +1097,12 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 Editor editor = e.getData(Editor.KEY);
-                final ThreeSide side = getEditorSide(editor);
+                ThreeSide side = getEditorSide(editor);
                 if (editor == null || side == null) {
                     return;
                 }
 
-                final List<TextMergeChange> selectedChanges = getSelectedChanges(side);
+                List<TextMergeChange> selectedChanges = getSelectedChanges(side);
                 if (selectedChanges.isEmpty()) {
                     return;
                 }
@@ -1144,7 +1144,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             @Nonnull
             @RequiredUIAccess
             private List<TextMergeChange> getSelectedChanges(@Nonnull ThreeSide side) {
-                final BitSet lines = DiffImplUtil.getSelectedLines(getEditor(side));
+                BitSet lines = DiffImplUtil.getSelectedLines(getEditor(side));
                 List<TextMergeChange> changes = getChanges();
 
                 List<TextMergeChange> affectedChanges = new ArrayList<>();

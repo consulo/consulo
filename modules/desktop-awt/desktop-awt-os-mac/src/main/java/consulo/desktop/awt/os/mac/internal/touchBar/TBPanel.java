@@ -59,7 +59,7 @@ public class TBPanel implements NSTLibrary.ItemCreator {
         myStats = ourCollectStats ? TouchBarStats.getStats(touchbarName) : null;
         myItems = new ItemsContainer(touchbarName);
         if (crossEscInfo != null) {
-            final Image ic = MacIconGroup.touchbarPopoverclose();
+            Image ic = MacIconGroup.touchbarPopoverclose();
             myCustomEsc = new TBItemButton(myItemListener, null).setIcon(ic).setWidth(64).setTransparentBg().setAction(() -> {
                 ActivityTracker.getInstance().inc();
                 _closeSelf();
@@ -87,8 +87,8 @@ public class TBPanel implements NSTLibrary.ItemCreator {
 
     @Override
     public ID createItem(@Nonnull String uid) { // called from AppKit (when NSTouchBarDelegate create items)
-        final long startNs = myStats != null ? System.nanoTime() : 0;
-        final ID result = createItemImpl(uid);
+        long startNs = myStats != null ? System.nanoTime() : 0;
+        ID result = createItemImpl(uid);
         if (myStats != null) {
             myStats.incrementCounter(StatsCounters.itemsCreationDurationNs, System.nanoTime() - startNs);
         }
@@ -96,7 +96,7 @@ public class TBPanel implements NSTLibrary.ItemCreator {
     }
 
     private ID createItemImpl(@Nonnull String uid) {
-        final TBItem item;
+        TBItem item;
         if (myCustomEsc != null && uid.equals(myCustomEsc.getUid())) {
             item = myCustomEsc;
         }
@@ -126,7 +126,7 @@ public class TBPanel implements NSTLibrary.ItemCreator {
     }
 
     public void release() {
-        final long startNs = myStats != null ? System.nanoTime() : 0;
+        long startNs = myStats != null ? System.nanoTime() : 0;
         myItems.releaseAll();
 
         synchronized (this) {
@@ -161,7 +161,7 @@ public class TBPanel implements NSTLibrary.ItemCreator {
     }
 
     public @Nonnull TBItemScrubber addScrubber() {
-        final int defaultScrubberWidth = 500;
+        int defaultScrubberWidth = 500;
         @Nonnull TBItemScrubber scrub = new TBItemScrubber(myItemListener, myStats, defaultScrubberWidth);
         myItems.addItem(scrub);
         return scrub;

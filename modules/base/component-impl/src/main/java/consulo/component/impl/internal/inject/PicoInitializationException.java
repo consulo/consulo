@@ -33,7 +33,7 @@ class PicoInitializationException extends PicoException {
    *
    * @param message the message detailing the exception.
    */
-  public PicoInitializationException(final String message) {
+  public PicoInitializationException(String message) {
     super(message);
   }
 
@@ -42,7 +42,7 @@ class PicoInitializationException extends PicoException {
    *
    * @param cause the exception that caused this one.
    */
-  public PicoInitializationException(final Throwable cause) {
+  public PicoInitializationException(Throwable cause) {
     super(cause);
   }
 
@@ -52,7 +52,7 @@ class PicoInitializationException extends PicoException {
    * @param message the message detailing the exception.
    * @param cause   the exception that caused this one.
    */
-  public PicoInitializationException(final String message, final Throwable cause) {
+  public PicoInitializationException(String message, Throwable cause) {
     super(message, cause);
   }
 }

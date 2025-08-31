@@ -43,9 +43,9 @@ public class HighlightLevelUtil {
 
 
   public static boolean shouldHighlight(@Nonnull PsiElement psiRoot) {
-    final HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(psiRoot.getProject());
+    HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(psiRoot.getProject());
 
-    final FileHighlightingSetting settingForRoot = component.getHighlightingSettingForRoot(psiRoot);
+    FileHighlightingSetting settingForRoot = component.getHighlightingSettingForRoot(psiRoot);
     return settingForRoot != FileHighlightingSetting.SKIP_HIGHLIGHTING;
   }
 
@@ -53,25 +53,25 @@ public class HighlightLevelUtil {
     if (ApplicationManager.getApplication().isUnitTestMode()) return true;
 
     if (!shouldHighlight(psiRoot)) return false;
-    final Project project = psiRoot.getProject();
-    final VirtualFile virtualFile = psiRoot.getContainingFile().getVirtualFile();
+    Project project = psiRoot.getProject();
+    VirtualFile virtualFile = psiRoot.getContainingFile().getVirtualFile();
     if (virtualFile == null || !virtualFile.isValid()) return false;
 
     if (ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)) return false;
 
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     if (ProjectScopes.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) return false;
 
     if (RawFileLoaderHelper.isTooLargeForIntelligence(virtualFile)) return false;
 
-    final HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(project);
+    HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(project);
 
-    final FileHighlightingSetting settingForRoot = component.getHighlightingSettingForRoot(psiRoot);
+    FileHighlightingSetting settingForRoot = component.getHighlightingSettingForRoot(psiRoot);
     return settingForRoot != FileHighlightingSetting.SKIP_INSPECTION;
   }
 
   public static void forceRootHighlighting(@Nonnull PsiElement root, @Nonnull FileHighlightingSetting level) {
-    final HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(root.getProject());
+    HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(root.getProject());
 
     component.setHighlightingSettingForRoot(root, level);
   }

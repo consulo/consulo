@@ -60,11 +60,11 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
   private ProjectLevelVcsManager myVcsManager;
   private final Map<String, VcsDescriptor> myVcses;
 
-  public VcsMappingConfigurationDialog(final Project project, final String title) {
+  public VcsMappingConfigurationDialog(Project project, String title) {
     super(project, false);
     myProject = project;
     myVcsManager = ProjectLevelVcsManager.getInstance(myProject);
-    final VcsDescriptor[] vcsDescriptors = myVcsManager.getAllVcss();
+    VcsDescriptor[] vcsDescriptors = myVcsManager.getAllVcss();
     myVcses = new HashMap<>();
     for (VcsDescriptor vcsDescriptor : vcsDescriptors) {
       myVcses.put(vcsDescriptor.getId(), vcsDescriptor);
@@ -122,7 +122,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     }
     VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
     if (wrapper != null && (! wrapper.isNone())) {
-      final AbstractVcs vcs = myVcsManager.findVcsByName(wrapper.getId());
+      AbstractVcs vcs = myVcsManager.findVcsByName(wrapper.getId());
       if (vcs != null) {
         UnnamedConfigurable configurable = vcs.getRootConfigurable(myMappingCopy);
         if (configurable != null) {
@@ -154,7 +154,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     myDirectoryRadioButton = new JRadioButton();
     bg.add(myProjectRadioButton);
     bg.add(myDirectoryRadioButton);
-    final ActionListener al = e -> myDirectoryTextField.setEnabled(myDirectoryRadioButton.isSelected());
+    ActionListener al = e -> myDirectoryTextField.setEnabled(myDirectoryRadioButton.isSelected());
     myProjectRadioButton.addActionListener(al);
     myDirectoryRadioButton.addActionListener(al);
     myDirectoryRadioButton.setSelected(true);
@@ -188,9 +188,9 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     protected void onFileChosen(@Nonnull final VirtualFile chosenFile) {
       String oldText = myDirectoryTextField.getText();
       super.onFileChosen(chosenFile);
-      final VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
+      VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
       if (oldText.length() == 0 && (wrapper == null || wrapper.isNone())) {
-        final ModalityIgnorantBackgroundableTask task =
+        ModalityIgnorantBackgroundableTask task =
                 new ModalityIgnorantBackgroundableTask(myProject, "Looking for VCS administrative area", false) {
                   VcsDescriptor probableVcs = null;
 

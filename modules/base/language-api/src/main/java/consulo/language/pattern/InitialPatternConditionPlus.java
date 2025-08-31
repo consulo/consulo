@@ -22,7 +22,7 @@ import java.util.List;
 */
 public abstract class InitialPatternConditionPlus<T> extends InitialPatternCondition<T> {
 
-  protected InitialPatternConditionPlus(final Class<T> aAcceptedClass) {
+  protected InitialPatternConditionPlus(Class<T> aAcceptedClass) {
     super(aAcceptedClass);
   }
 

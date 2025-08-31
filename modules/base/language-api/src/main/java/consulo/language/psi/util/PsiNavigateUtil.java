@@ -27,15 +27,15 @@ public class PsiNavigateUtil {
   private PsiNavigateUtil() {
   }
 
-  public static void navigate(@Nullable final PsiElement psiElement) {
+  public static void navigate(@Nullable PsiElement psiElement) {
     navigate(psiElement, true);
   }
 
-  public static void navigate(@Nullable final PsiElement psiElement, boolean requestFocus) {
+  public static void navigate(@Nullable PsiElement psiElement, boolean requestFocus) {
     if (psiElement != null && psiElement.isValid()) {
-      final PsiElement navigationElement = psiElement.getNavigationElement();
-      final int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
-      final VirtualFile virtualFile = navigationElement.getContainingFile().getVirtualFile();
+      PsiElement navigationElement = psiElement.getNavigationElement();
+      int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
+      VirtualFile virtualFile = navigationElement.getContainingFile().getVirtualFile();
       if (virtualFile != null && virtualFile.isValid()) {
         OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).builder(virtualFile).offset(offset).build().navigate(requestFocus);
       }

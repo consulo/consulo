@@ -33,7 +33,7 @@ public class ShowStatisticsAction extends AnAction {
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     SMTRunnerTestTreeView sender = e.getRequiredData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW);
-    final TestResultsViewer resultsViewer = sender.getResultsViewer();
+    TestResultsViewer resultsViewer = sender.getResultsViewer();
     assert resultsViewer != null;
 
     resultsViewer.showStatisticsForSelectedProxy();
@@ -41,7 +41,7 @@ public class ShowStatisticsAction extends AnAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
+    Presentation presentation = e.getPresentation();
 
     // visible only in SMTRunnerTestTreeView 
     presentation.setVisible(e.hasData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW));

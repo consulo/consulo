@@ -93,8 +93,8 @@ public class EditorAdapter {
     }
 
     @RequiredUIAccess
-    private void executeWritingCommand(final Collection<Line> lines) {
-        final Document document = myEditor.getDocument();
+    private void executeWritingCommand(Collection<Line> lines) {
+        Document document = myEditor.getDocument();
         CommandProcessor.getInstance().newCommand()
             .project(myProject)
             .document(myEditor.getDocument())

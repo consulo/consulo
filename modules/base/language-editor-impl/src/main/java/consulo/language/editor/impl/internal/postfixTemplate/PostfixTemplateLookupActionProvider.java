@@ -40,7 +40,7 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
             consumer.accept(new LookupElementAction(PlatformIconGroup.actionsEdit(), "Edit postfix templates settings") {
                 @Override
                 public Result performLookupAction() {
-                    final Project project = lookup.getEditor().getProject();
+                    Project project = lookup.getEditor().getProject();
                     assert project != null;
                     project.getUIAccess().give(() -> {
                         if (project.isDisposed()) {

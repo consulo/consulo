@@ -26,17 +26,17 @@ public class IgnoredBeanFactory {
   private IgnoredBeanFactory() {
   }
 
-  public static IgnoredFileBean ignoreUnderDirectory(final @NonNls String path, Project p) {
-    final String correctedPath = (path.endsWith("/") || path.endsWith(File.separator)) ? path : path + "/";
+  public static IgnoredFileBean ignoreUnderDirectory(@NonNls String path, Project p) {
+    String correctedPath = (path.endsWith("/") || path.endsWith(File.separator)) ? path : path + "/";
     return new IgnoredFileBean(correctedPath, IgnoreSettingsType.UNDER_DIR, p);
   }
 
-  public static IgnoredFileBean ignoreFile(final @NonNls String path, Project p) {
+  public static IgnoredFileBean ignoreFile(@NonNls String path, Project p) {
     // todo check??
     return new IgnoredFileBean(path, IgnoreSettingsType.FILE, p);
   }
 
-  public static IgnoredFileBean withMask(final String mask) {
+  public static IgnoredFileBean withMask(String mask) {
     return new IgnoredFileBean(mask);
   }
 }

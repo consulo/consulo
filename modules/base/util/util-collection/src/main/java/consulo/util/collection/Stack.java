@@ -45,13 +45,13 @@ public class Stack<T> extends ArrayList<T> {
   }
 
   public T peek() {
-    final int size = size();
+    int size = size();
     if (size == 0) throw new EmptyStackException();
     return get(size - 1);
   }
 
   public T pop() {
-    final int size = size();
+    int size = size();
     if (size == 0) throw new EmptyStackException();
     return remove(size - 1);
   }

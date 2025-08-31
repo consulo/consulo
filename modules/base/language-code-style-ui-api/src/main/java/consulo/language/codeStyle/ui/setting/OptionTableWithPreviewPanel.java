@@ -90,7 +90,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     };
     myPanel.add(scrollPane, new GridBagConstraints(0, 0, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.emptyInsets(), 0, 0));
 
-    final JPanel previewPanel = createPreviewPanel();
+    JPanel previewPanel = createPreviewPanel();
     myPanel.add(previewPanel, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.emptyInsets(), 0, 0));
 
     installPreviewPanel(previewPanel);
@@ -244,7 +244,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
     treeTable.setRootVisible(false);
 
-    final JTree tree = treeTable.getTree();
+    JTree tree = treeTable.getTree();
     tree.setCellRenderer(myTitleRenderer);
     tree.setShowsRootHandles(true);
     //myTreeTable.setRowHeight(new JComboBox(new String[]{"Sample Text"}).getPreferredSize().height);
@@ -257,7 +257,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     treeTable.getColumnModel().getSelectionModel().setLeadSelectionIndex(1);
 
     int maxWidth = tree.getPreferredScrollableViewportSize().width + 10;
-    final TableColumn titleColumn = treeTable.getColumnModel().getColumn(0);
+    TableColumn titleColumn = treeTable.getColumnModel().getColumn(0);
     titleColumn.setPreferredWidth(maxWidth);
     titleColumn.setMinWidth(maxWidth);
     titleColumn.setMaxWidth(maxWidth);
@@ -271,7 +271,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     //levelColumn.setMinWidth(valueSize.width);
     //levelColumn.setResizable(false);
 
-    final Dimension valueSize = new JLabel(ApplicationBundle.message("option.table.sizing.text")).getPreferredSize();
+    Dimension valueSize = new JLabel(ApplicationBundle.message("option.table.sizing.text")).getPreferredSize();
     treeTable.setPreferredScrollableViewportSize(new Dimension(maxWidth + valueSize.width + 10, 20));
 
     return treeTable;
@@ -294,7 +294,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
   }
 
-  private static void applyNode(TreeNode node, final CodeStyleSettings settings) {
+  private static void applyNode(TreeNode node, CodeStyleSettings settings) {
     if (node instanceof MyTreeNode) {
       ((MyTreeNode)node).apply(settings);
     }
@@ -304,7 +304,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
   }
 
-  private static boolean isModified(TreeNode node, final CodeStyleSettings settings) {
+  private static boolean isModified(TreeNode node, CodeStyleSettings settings) {
     if (node instanceof MyTreeNode) {
       if (((MyTreeNode)node).isModified(settings)) return true;
     }
@@ -667,11 +667,11 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
       setValue(myKey.getValue(settings));
     }
 
-    public boolean isModified(final CodeStyleSettings settings) {
+    public boolean isModified(CodeStyleSettings settings) {
       return myValue != null && !myValue.equals(myKey.getValue(settings));
     }
 
-    public void apply(final CodeStyleSettings settings) {
+    public void apply(CodeStyleSettings settings) {
       myKey.setValue(myValue, settings);
     }
 
@@ -702,7 +702,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
       myRow = row;
       myColumn = column;
       boolean isEnabled = true;
-      final DefaultMutableTreeNode node = (DefaultMutableTreeNode)((TreeTable)table).getTree().
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)((TreeTable)table).getTree().
               getPathForRow(row).getLastPathComponent();
       Option key = null;
       if (node instanceof MyTreeNode) {
@@ -819,7 +819,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     };
 
     public MyValueEditor() {
-      final ActionListener itemChoosen = new ActionListener() {
+      ActionListener itemChoosen = new ActionListener() {
         @Override
         public void actionPerformed(@Nonnull ActionEvent e) {
           if (myCurrentNode != null) {
@@ -856,7 +856,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-      final DefaultMutableTreeNode defaultNode = (DefaultMutableTreeNode)((TreeTable)table).getTree().
+      DefaultMutableTreeNode defaultNode = (DefaultMutableTreeNode)((TreeTable)table).getTree().
               getPathForRow(row).getLastPathComponent();
       myCurrentEditor = null;
       myCurrentNode = null;
@@ -934,7 +934,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
   }
 
   @Override
-  protected void resetImpl(final CodeStyleSettings settings) {
+  protected void resetImpl(CodeStyleSettings settings) {
     TreeModel treeModel = myTreeTable.getTree().getModel();
     TreeNode root = (TreeNode)treeModel.getRoot();
     resetNode(root, settings);
@@ -949,7 +949,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     return options;
   }
 
-  private static void collectOptions(Set<String> optionNames, final List<Option> optionList) {
+  private static void collectOptions(Set<String> optionNames, List<Option> optionList) {
     for (Option option : optionList) {
       if (option.groupName != null) {
         optionNames.add(option.groupName);

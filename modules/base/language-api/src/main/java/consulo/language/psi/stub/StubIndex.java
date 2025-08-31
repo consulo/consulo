@@ -36,7 +36,7 @@ public abstract class StubIndex {
    * @deprecated use {@link #getElements(StubIndexKey, Object, Project, ProjectAwareSearchScope, Class)}
    */
   @Deprecated
-  public <Key, Psi extends PsiElement> Collection<Psi> get(@Nonnull StubIndexKey<Key, Psi> indexKey, @Nonnull Key key, @Nonnull Project project, @Nullable final ProjectAwareSearchScope scope) {
+  public <Key, Psi extends PsiElement> Collection<Psi> get(@Nonnull StubIndexKey<Key, Psi> indexKey, @Nonnull Key key, @Nonnull Project project, @Nullable ProjectAwareSearchScope scope) {
     List<Psi> result = new ArrayList<Psi>();
     processElements(indexKey, key, project, scope, (Class<Psi>)PsiElement.class, Processors.cancelableCollectProcessor(result));
     return result;
@@ -79,7 +79,7 @@ public abstract class StubIndex {
   @Nonnull
   public <Key, Psi extends PsiElement> Collection<Psi> safeGet(@Nonnull StubIndexKey<Key, Psi> indexKey,
                                                                @Nonnull Key key,
-                                                               @Nonnull final Project project,
+                                                               @Nonnull Project project,
                                                                @Nullable ProjectAwareSearchScope scope,
                                                                @Nonnull Class<Psi> requiredClass) {
     return getElements(indexKey, key, project, scope, requiredClass);
@@ -88,8 +88,8 @@ public abstract class StubIndex {
   @Nonnull
   public static <Key, Psi extends PsiElement> Collection<Psi> getElements(@Nonnull StubIndexKey<Key, Psi> indexKey,
                                                                           @Nonnull Key key,
-                                                                          @Nonnull final Project project,
-                                                                          @Nullable final ProjectAwareSearchScope scope,
+                                                                          @Nonnull Project project,
+                                                                          @Nullable ProjectAwareSearchScope scope,
                                                                           @Nonnull Class<Psi> requiredClass) {
     return getElements(indexKey, key, project, scope, null, requiredClass);
   }
@@ -97,18 +97,18 @@ public abstract class StubIndex {
   @Nonnull
   public static <Key, Psi extends PsiElement> Collection<Psi> getElements(@Nonnull StubIndexKey<Key, Psi> indexKey,
                                                                           @Nonnull Key key,
-                                                                          @Nonnull final Project project,
-                                                                          @Nullable final ProjectAwareSearchScope scope,
+                                                                          @Nonnull Project project,
+                                                                          @Nullable ProjectAwareSearchScope scope,
                                                                           @Nullable IdFilter idFilter,
                                                                           @Nonnull Class<Psi> requiredClass) {
-    final List<Psi> result = new ArrayList<Psi>();
+    List<Psi> result = new ArrayList<Psi>();
     Predicate<Psi> processor = Processors.cancelableCollectProcessor(result);
     getInstance().processElements(indexKey, key, project, scope, idFilter, requiredClass, processor);
     return result;
   }
 
   @Nonnull
-  public abstract <Key> IdIterator getContainingIds(@Nonnull StubIndexKey<Key, ?> indexKey, @Nonnull Key dataKey, @Nonnull Project project, @Nonnull final ProjectAwareSearchScope scope);
+  public abstract <Key> IdIterator getContainingIds(@Nonnull StubIndexKey<Key, ?> indexKey, @Nonnull Key dataKey, @Nonnull Project project, @Nonnull ProjectAwareSearchScope scope);
 
   public abstract void forceRebuild(@Nonnull Throwable e);
 }

@@ -30,7 +30,7 @@ import javax.swing.*;
 public class EditSourceInCommitAction extends AnAction {
     private final DialogWrapper myDialogWrapper;
 
-    public EditSourceInCommitAction(final DialogWrapper dialogWrapper) {
+    public EditSourceInCommitAction(DialogWrapper dialogWrapper) {
         super(
             ActionLocalize.actionEditsourceText(),
             ActionLocalize.actionEditsourceDescription(),
@@ -42,7 +42,7 @@ public class EditSourceInCommitAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
+        Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
         if (navigatableArray != null && navigatableArray.length > 0) {
             SwingUtilities.invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));
             myDialogWrapper.doCancelAction();

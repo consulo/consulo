@@ -50,13 +50,13 @@ public class StandardPatterns {
   public static <T> ElementPattern save(final Key<T> key) {
     return new ObjectPattern.Capture<T>(new InitialPatternCondition(Object.class) {
       @Override
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
         context.put(key, (T)o);
         return true;
       }
 
       @Override
-      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
         builder.append("save(").append(key).append(")");
       }
     });
@@ -78,12 +78,12 @@ public class StandardPatterns {
   public static ElementPattern get(@Nonnull @NonNls final String key) {
     return new ObjectPattern.Capture(new InitialPatternCondition(Object.class) {
       @Override
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
         return Comparing.equal(o, context.get(key));
       }
 
       @Override
-      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
         builder.append("get(").append(key).append(")");
       }
     });
@@ -96,17 +96,17 @@ public class StandardPatterns {
   public static <E> ElementPattern<E> or(final ElementPattern<? extends E>... patterns) {
     return new ObjectPattern.Capture<E>(new InitialPatternConditionPlus(Object.class) {
       @Override
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
-        for (final ElementPattern pattern : patterns) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
+        for (ElementPattern pattern : patterns) {
           if (pattern.getCondition().accepts(o, context)) return true;
         }
         return false;
       }
 
       @Override
-      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
         boolean first = true;
-        for (final ElementPattern pattern : patterns) {
+        for (ElementPattern pattern : patterns) {
           if (!first) {
             builder.append("\n").append(indent);
           }
@@ -125,17 +125,17 @@ public class StandardPatterns {
   public static <E> ElementPattern<E> and(final ElementPattern<? extends E>... patterns) {
     return new ObjectPattern.Capture<E>(new InitialPatternConditionPlus(Object.class) {
       @Override
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
-        for (final ElementPattern pattern : patterns) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
+        for (ElementPattern pattern : patterns) {
           if (!pattern.getCondition().accepts(o, context)) return false;
         }
         return true;
       }
 
       @Override
-      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
         boolean first = true;
-        for (final ElementPattern pattern : patterns) {
+        for (ElementPattern pattern : patterns) {
           if (!first) {
             builder.append("\n").append(indent);
           }
@@ -154,12 +154,12 @@ public class StandardPatterns {
   public static <E> ObjectPattern.Capture<E> not(final ElementPattern<E> pattern) {
     return new ObjectPattern.Capture<E>(new InitialPatternConditionPlus(Object.class) {
       @Override
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
         return !pattern.getCondition().accepts(o, context);
       }
 
       @Override
-      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
         pattern.getCondition().append(builder.append("not("), indent + "  ");
         builder.append(")");
       }
@@ -174,7 +174,7 @@ public class StandardPatterns {
   public static <T> ObjectPattern.Capture<T> optional(final ElementPattern<T> pattern) {
     return new ObjectPattern.Capture<T>(new InitialPatternCondition(Object.class) {
       @Override
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
         pattern.getCondition().accepts(o, context);
         return true;
       }
@@ -188,7 +188,7 @@ public class StandardPatterns {
     return psiElement().withElementType(type);
   }
 
-  public static <T extends PsiElement> PsiElementPattern.Capture<T> psiElement(final Class<T> aClass) {
+  public static <T extends PsiElement> PsiElementPattern.Capture<T> psiElement(Class<T> aClass) {
     return new PsiElementPattern.Capture<T>(aClass);
   }
 

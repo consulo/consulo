@@ -44,7 +44,7 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction i
 
   @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
-    final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(element.getLanguage());
+    LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(element.getLanguage());
     if (detector != null) {
       InplaceChangeSignature changeSignature = InplaceChangeSignature.getCurrentRefactoring(editor);
       ChangeInfo currentInfo = changeSignature != null ? changeSignature.getCurrentInfo() : null;
@@ -58,11 +58,11 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction i
   @Override
   public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
     InplaceChangeSignature signatureGestureDetector = InplaceChangeSignature.getCurrentRefactoring(editor);
-    final String initialSignature = signatureGestureDetector.getInitialSignature();
-    final ChangeInfo currentInfo = signatureGestureDetector.getCurrentInfo();
+    String initialSignature = signatureGestureDetector.getInitialSignature();
+    ChangeInfo currentInfo = signatureGestureDetector.getCurrentInfo();
     signatureGestureDetector.detach();
 
-    final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(element.getLanguage());
+    LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(element.getLanguage());
 
     detector.performChange(currentInfo, editor, initialSignature);
   }

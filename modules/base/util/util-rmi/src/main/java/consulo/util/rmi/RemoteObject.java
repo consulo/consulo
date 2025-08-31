@@ -44,7 +44,7 @@ public class RemoteObject implements Remote, Unreferenced {
   @jakarta.annotation.Nullable
   public synchronized <T extends Remote> T export(@jakarta.annotation.Nullable T child) throws RemoteException {
     if (child == null) return null;
-    @SuppressWarnings("unchecked") final T result = (T)UnicastRemoteObject.exportObject(child, 0);
+    @SuppressWarnings("unchecked") T result = (T)UnicastRemoteObject.exportObject(child, 0);
     myChildren.put((RemoteObject)child, result);
     ((RemoteObject)child).myParent = this;
     return result;
@@ -56,7 +56,7 @@ public class RemoteObject implements Remote, Unreferenced {
   }
 
   public synchronized void unexportChildren() throws RemoteException {
-    final ArrayList<RemoteObject> childrenRefs = new ArrayList<RemoteObject>(myChildren.keySet());
+    ArrayList<RemoteObject> childrenRefs = new ArrayList<RemoteObject>(myChildren.keySet());
     myChildren.clear();
     for (RemoteObject child : childrenRefs) {
       child.unreferenced();
@@ -65,7 +65,7 @@ public class RemoteObject implements Remote, Unreferenced {
 
   public synchronized void unexportChildren(@Nonnull Collection<WeakReference<RemoteObject>> children) throws RemoteException {
     if (children.isEmpty()) return;
-    final ArrayList<RemoteObject> list = new ArrayList<RemoteObject>(children.size());
+    ArrayList<RemoteObject> list = new ArrayList<RemoteObject>(children.size());
     for (WeakReference<? extends RemoteObject> child : children) {
       RemoteObject remoteObject = child.get();
       if(remoteObject != null) {
@@ -105,7 +105,7 @@ public class RemoteObject implements Remote, Unreferenced {
     }
 
     if (foreignException) {
-      final RuntimeException wrapper = new RuntimeException(ex.toString());
+      RuntimeException wrapper = new RuntimeException(ex.toString());
       wrapper.setStackTrace(ex.getStackTrace());
       wrapper.initCause(wrapException(ex.getCause()));
       ex = wrapper;

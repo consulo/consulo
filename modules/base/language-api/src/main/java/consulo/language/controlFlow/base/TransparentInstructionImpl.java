@@ -12,8 +12,8 @@ public class TransparentInstructionImpl extends InstructionBaseImpl implements T
     private final @Nonnull String myMarkerName;
     private final int myNum;
 
-    public TransparentInstructionImpl(final @Nonnull ControlFlowBuilder builder,
-                                      final @Nullable PsiElement element,
+    public TransparentInstructionImpl(@Nonnull ControlFlowBuilder builder,
+                                      @Nullable PsiElement element,
                                       @Nonnull String markerName) {
         super(element);
         myMarkerName = markerName;

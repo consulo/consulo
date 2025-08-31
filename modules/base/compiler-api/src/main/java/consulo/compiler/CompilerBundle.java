@@ -44,7 +44,7 @@ public class CompilerBundle extends AbstractBundle {
     return ourInstance.getMessage(key, params);
   }
 
-  public static String jdkHomeNotFoundMessage(final Sdk jdk) {
+  public static String jdkHomeNotFoundMessage(Sdk jdk) {
     return message("javac.error.jdk.home.missing", jdk.getName(), jdk.getHomePath());
   }
 }

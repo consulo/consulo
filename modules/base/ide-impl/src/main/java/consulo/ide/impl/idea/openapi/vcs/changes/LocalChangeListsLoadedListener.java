@@ -23,5 +23,5 @@ import java.util.List;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface LocalChangeListsLoadedListener {
-  void processLoadedLists(final List<LocalChangeList> lists);
+  void processLoadedLists(List<LocalChangeList> lists);
 }

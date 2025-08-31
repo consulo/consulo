@@ -94,7 +94,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         rightBottom.add(myLastUpdated);
         rightBottom.add(myDownloads);
 
-        final Font smallFont = UIUtil.getLabelFont(UIUtil.FontSize.MINI);
+        Font smallFont = UIUtil.getLabelFont(UIUtil.FontSize.MINI);
         myCategory.setFont(smallFont);
         myDownloads.setFont(smallFont);
         myIcon.setText("");
@@ -114,7 +114,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
 
         myName.append(value.getName() + "  ");
 
-        final Color fg = UIUtil.getListForeground(isSelected, cellHasFocus);
+        Color fg = UIUtil.getListForeground(isSelected, cellHasFocus);
         Color backgroundColor = UIUtil.getListBackground(isSelected, cellHasFocus);
 
         if (!isSelected && !cellHasFocus) {
@@ -125,7 +125,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
             }
         }
 
-        final Color grayedFg = isSelected ? fg : new JBColor(Gray._130, Gray._120);
+        Color grayedFg = isSelected ? fg : new JBColor(Gray._130, Gray._120);
         myName.setForeground(fg);
         myIcon.setForeground(grayedFg);
         myIcon.setIcon(PluginIconHolder.get(value));
@@ -139,7 +139,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         myDownloads.setForeground(grayedFg);
         myDownloads.setText("");
 
-        final PluginNode pluginNode = value instanceof PluginNode ? (PluginNode) value : null;
+        PluginNode pluginNode = value instanceof PluginNode ? (PluginNode) value : null;
         if (pluginNode != null) {
             String downloads = pluginNode.getDownloads();
             if (downloads == null) {
@@ -159,7 +159,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
     }
 
     protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode) {
-        final PluginDescriptor installed = PluginManager.findPlugin(pluginNode.getPluginId());
+        PluginDescriptor installed = PluginManager.findPlugin(pluginNode.getPluginId());
         if (PluginsPanel.isDownloaded(pluginNode) || installed != null && InstalledPluginsState.getInstance().wasUpdated(installed.getPluginId())) {
             if (!isSelected) {
                 myName.setForeground(TargetAWT.to(FileStatus.ADDED.getColor()));
@@ -167,7 +167,7 @@ public class PluginsListRender implements ListCellRenderer<PluginDescriptor> {
         }
         else if (pluginNode instanceof PluginNode && ((PluginNode) pluginNode).getInstallStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
             PluginId pluginId = pluginNode.getPluginId();
-            final boolean hasNewerVersion = InstalledPluginsState.getInstance().hasNewerVersion(pluginId);
+            boolean hasNewerVersion = InstalledPluginsState.getInstance().hasNewerVersion(pluginId);
             if (hasNewerVersion) {
                 if (!isSelected) {
                     myName.setForeground(TargetAWT.to(FileStatus.MODIFIED.getColor()));

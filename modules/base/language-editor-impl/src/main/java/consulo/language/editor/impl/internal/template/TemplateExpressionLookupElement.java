@@ -40,7 +40,7 @@ import java.util.List;
 class TemplateExpressionLookupElement extends LookupElementDecorator<LookupElement> {
     private final TemplateStateImpl myState;
 
-    public TemplateExpressionLookupElement(final TemplateStateImpl state, LookupElement element, int index) {
+    public TemplateExpressionLookupElement(TemplateStateImpl state, LookupElement element, int index) {
         super(PrioritizedLookupElement.withPriority(element, Integer.MAX_VALUE - 10 - index));
         myState = state;
     }
@@ -49,10 +49,10 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
         LookupElement item,
         PsiFile psiFile,
         List<? extends LookupElement> elements,
-        Editor editor, final char completionChar
+        Editor editor, char completionChar
     ) {
-        final OffsetMap offsetMap = new OffsetMap(editor.getDocument());
-        final InsertionContext context =
+        OffsetMap offsetMap = new OffsetMap(editor.getDocument());
+        InsertionContext context =
             new InsertionContext(offsetMap, completionChar, elements.toArray(new LookupElement[elements.size()]), psiFile, editor, false);
         context.setTailOffset(editor.getCaretModel().getOffset());
         offsetMap.addOffset(CompletionInitializationContext.START_OFFSET, context.getTailOffset() - item.getLookupString().length());
@@ -62,8 +62,8 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
     }
 
     @RequiredUIAccess
-    void handleTemplateInsert(List<? extends LookupElement> elements, final char completionChar) {
-        final InsertionContext context =
+    void handleTemplateInsert(List<? extends LookupElement> elements, char completionChar) {
+        InsertionContext context =
             createInsertionContext(this, myState.getPsiFile(), elements, myState.getEditor(), completionChar);
         CommandProcessor.getInstance().newCommand()
             .project(context.getProject())
@@ -78,7 +78,7 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
     }
 
     @Override
-    public void handleInsert(final InsertionContext context) {
+    public void handleInsert(InsertionContext context) {
         doHandleInsert(context);
         handleCompletionChar(context);
     }
@@ -88,7 +88,7 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
         PsiDocumentManager.getInstance(context.getProject()).commitAllDocuments();
 
         TextRange range = myState.getCurrentVariableRange();
-        final TemplateLookupSelectionHandler handler = item.getUserData(TemplateLookupSelectionHandler.KEY_IN_LOOKUP_ITEM);
+        TemplateLookupSelectionHandler handler = item.getUserData(TemplateLookupSelectionHandler.KEY_IN_LOOKUP_ITEM);
         if (handler != null && range != null) {
             handler.itemSelected(item, context.getFile(), context.getDocument(), range.getStartOffset(), range.getEndOffset());
         }

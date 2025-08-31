@@ -40,5 +40,5 @@ public interface PsiPolyVariantReference extends PsiReference {
    */
   @Nonnull
   @RequiredReadAction
-  ResolveResult[] multiResolve(final boolean incompleteCode);
+  ResolveResult[] multiResolve(boolean incompleteCode);
 }

@@ -237,7 +237,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     String str = getPresentableUrl();
     if (str == null) str = getName();
 
-    final String prefix = !isDefault() ? "" : getName();
+    String prefix = !isDefault() ? "" : getName();
     return prefix + Integer.toHexString(str.hashCode());
   }
 

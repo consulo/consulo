@@ -44,7 +44,7 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
 
     @Nonnull
     public static <Comp extends JComponent> LabeledComponent<Comp> create(@Nonnull Comp component, @Nonnull String text) {
-        final LabeledComponent<Comp> labeledComponent = new LabeledComponent<>();
+        LabeledComponent<Comp> labeledComponent = new LabeledComponent<>();
         labeledComponent.setComponent(component);
         labeledComponent.setText(text);
         return labeledComponent;
@@ -52,7 +52,7 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
 
     @Nonnull
     public static <Comp extends JComponent> LabeledComponent<Comp> sided(@Nonnull Comp component, @Nonnull String text) {
-        final LabeledComponent<Comp> labeledComponent = new LabeledComponent<>(true);
+        LabeledComponent<Comp> labeledComponent = new LabeledComponent<>(true);
         labeledComponent.setComponent(component);
         labeledComponent.setText(text);
         return labeledComponent;

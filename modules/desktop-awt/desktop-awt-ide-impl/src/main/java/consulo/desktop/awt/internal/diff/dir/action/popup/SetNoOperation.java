@@ -33,8 +33,8 @@ public class SetNoOperation extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DirDiffTableModel model = SetOperationToBase.getModel(e);
-    final JTable table = SetOperationToBase.getTable(e);
+    DirDiffTableModel model = SetOperationToBase.getModel(e);
+    JTable table = SetOperationToBase.getTable(e);
     assert model != null && table != null;
     for (DirDiffElementImpl element : model.getSelectedElements()) {
         element.setOperation(DirDiffOperation.NONE);
@@ -44,8 +44,8 @@ public class SetNoOperation extends AnAction {
 
   @Override
   public final void update(@Nonnull AnActionEvent e) {
-    final DirDiffTableModel model = SetOperationToBase.getModel(e);
-    final JTable table = SetOperationToBase.getTable(e);
+    DirDiffTableModel model = SetOperationToBase.getModel(e);
+    JTable table = SetOperationToBase.getTable(e);
     if (table != null && model != null) {
       for (DirDiffElementImpl element : model.getSelectedElements()) {
         if (element.getOperation() != DirDiffOperation.NONE) {

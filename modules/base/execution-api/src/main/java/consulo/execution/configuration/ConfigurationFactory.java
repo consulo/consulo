@@ -40,7 +40,7 @@ public abstract class ConfigurationFactory {
     myType = (ConfigurationType)this;
   }
 
-  protected ConfigurationFactory(@Nonnull final ConfigurationType type) {
+  protected ConfigurationFactory(@Nonnull ConfigurationType type) {
     myType = type;
   }
 
@@ -97,7 +97,7 @@ public abstract class ConfigurationFactory {
   }
 
   @Nullable
-  public Image getIcon(@Nonnull final RunConfiguration configuration) {
+  public Image getIcon(@Nonnull RunConfiguration configuration) {
     return getIcon();
   }
 

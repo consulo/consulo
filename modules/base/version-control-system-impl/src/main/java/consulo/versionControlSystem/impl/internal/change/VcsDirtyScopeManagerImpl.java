@@ -227,22 +227,22 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
     }
 
     @Override
-    public void fileDirty(@Nonnull final VirtualFile file) {
+    public void fileDirty(@Nonnull VirtualFile file) {
         fileDirty(VcsUtil.getFilePath(file));
     }
 
     @Override
-    public void fileDirty(@Nonnull final FilePath file) {
+    public void fileDirty(@Nonnull FilePath file) {
         filePathsDirty(Collections.singleton(file), null);
     }
 
     @Override
-    public void dirDirtyRecursively(@Nonnull final VirtualFile dir) {
+    public void dirDirtyRecursively(@Nonnull VirtualFile dir) {
         dirDirtyRecursively(VcsUtil.getFilePath(dir));
     }
 
     @Override
-    public void dirDirtyRecursively(@Nonnull final FilePath path) {
+    public void dirDirtyRecursively(@Nonnull FilePath path) {
         filePathsDirty(null, Collections.singleton(path));
     }
 
@@ -295,7 +295,7 @@ public final class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager impleme
 
     @Nonnull
     @Override
-    public Collection<FilePath> whatFilesDirty(@Nonnull final Collection<? extends FilePath> files) {
+    public Collection<FilePath> whatFilesDirty(@Nonnull Collection<? extends FilePath> files) {
         return ReadAction.compute(() -> {
             Collection<FilePath> result = new ArrayList<>();
             synchronized (LOCK) {

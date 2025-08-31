@@ -44,7 +44,7 @@ public abstract class PutIntoDefaultLocationActionBase extends AnAction {
   protected static String getTargetLocationText(Set<String> paths) {
     String target;
     if (paths.size() == 1) {
-      final String path = StringUtil.trimStart(StringUtil.trimEnd(paths.iterator().next(), "/"), "/");
+      String path = StringUtil.trimStart(StringUtil.trimEnd(paths.iterator().next(), "/"), "/");
       if (path.length() > 0) {
         target = "/" + path;
       }

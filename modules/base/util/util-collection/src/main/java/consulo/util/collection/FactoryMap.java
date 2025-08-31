@@ -80,7 +80,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return (T)ObjectUtil.NULL;
   }
 
-  private static <T> T notNull(final Object key) {
+  private static <T> T notNull(Object key) {
     //noinspection unchecked
     return key == null ? FAKE_NULL() : (T)key;
   }
@@ -112,10 +112,10 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   @Nonnull
   @Override
   public Set<K> keySet() {
-    final Set<K> ts = getMap().keySet();
+    Set<K> ts = getMap().keySet();
     K nullKey = FAKE_NULL();
     if (ts.contains(nullKey)) {
-      final java.util.HashSet<K> hashSet = new HashSet<>(ts);
+      java.util.HashSet<K> hashSet = new HashSet<>(ts);
       hashSet.remove(nullKey);
       hashSet.add(null);
       return hashSet;
@@ -146,12 +146,12 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   }
 
   @Override
-  public boolean containsValue(final Object value) {
+  public boolean containsValue(Object value) {
     return getMap().containsValue(value);
   }
 
   @Override
-  public void putAll(@Nonnull final Map<? extends K, ? extends V> m) {
+  public void putAll(@Nonnull Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }

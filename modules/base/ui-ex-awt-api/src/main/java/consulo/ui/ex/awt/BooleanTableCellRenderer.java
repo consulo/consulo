@@ -38,10 +38,10 @@ public class BooleanTableCellRenderer extends JCheckBox implements TableCellRend
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSel, boolean hasFocus, int row, int column) {
-    final Color bg = UIUtil.isUnderNimbusLookAndFeel() && row % 2 == 1 ? UIUtil.TRANSPARENT_COLOR : table.getBackground();
-    final Color fg = table.getForeground();
-    final Color selBg = table.getSelectionBackground();
-    final Color selFg = table.getSelectionForeground();
+    Color bg = UIUtil.isUnderNimbusLookAndFeel() && row % 2 == 1 ? UIUtil.TRANSPARENT_COLOR : table.getBackground();
+    Color fg = table.getForeground();
+    Color selBg = table.getSelectionBackground();
+    Color selFg = table.getSelectionForeground();
 
     if (value == null) {
       myPanel.setBackground(isSel ? selBg : bg);

@@ -47,8 +47,8 @@ public class EventDispatcher<T extends EventListener> {
 
     private static void assertNonVoidMethodReturnValuesAreDeclared(@Nonnull Map<String, Object> methodReturnValues, @Nonnull Class<?> listenerClass) {
         List<Method> declared = new ArrayList<>(ReflectionUtil.getClassPublicMethods(listenerClass));
-        for (final Map.Entry<String, Object> entry : methodReturnValues.entrySet()) {
-            final String methodName = entry.getKey();
+        for (Map.Entry<String, Object> entry : methodReturnValues.entrySet()) {
+            String methodName = entry.getKey();
             Method found = ContainerUtil.find(declared, m -> methodName.equals(m.getName()));
             assert found != null : "Method " + methodName + " must be declared in " + listenerClass;
             assert !found.getReturnType().equals(void.class) : "Method " + methodName + " must be non-void if you want to specify what its proxy should return";
@@ -74,7 +74,7 @@ public class EventDispatcher<T extends EventListener> {
     }
 
     @Nonnull
-    public static <T> T createMulticaster(@Nonnull Class<T> listenerClass, @Nullable final Map<String, Object> methodReturnValues, final Supplier<? extends Iterable<T>> listeners) {
+    public static <T> T createMulticaster(@Nonnull Class<T> listenerClass, @Nullable Map<String, Object> methodReturnValues, Supplier<? extends Iterable<T>> listeners) {
         LOG.assertTrue(listenerClass.isInterface(), "listenerClass must be an interface");
         InvocationHandler handler = (proxy, method, args) -> {
             String methodName = method.getName();
@@ -135,7 +135,7 @@ public class EventDispatcher<T extends EventListener> {
                 throw e;
             }
             catch (Exception e) {
-                final Throwable cause = e.getCause();
+                Throwable cause = e.getCause();
                 ExceptionUtil.rethrowUnchecked(cause);
                 if (!(cause instanceof AbstractMethodError)) { // AbstractMethodError means this listener doesn't implement some new method in interface
                     LOG.error(cause);

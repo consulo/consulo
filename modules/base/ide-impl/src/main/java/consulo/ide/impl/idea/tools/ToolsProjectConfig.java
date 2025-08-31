@@ -38,7 +38,7 @@ import jakarta.inject.Singleton;
 public class ToolsProjectConfig implements PersistentStateComponent<ToolsProjectConfig.State> {
   private String myAfterCommitToolsId;
 
-  public static ToolsProjectConfig getInstance(final Project project) {
+  public static ToolsProjectConfig getInstance(Project project) {
     return ServiceManager.getService(project, ToolsProjectConfig.class);
   }
 

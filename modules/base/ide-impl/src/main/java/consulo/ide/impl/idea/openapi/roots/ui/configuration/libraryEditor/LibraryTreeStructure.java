@@ -65,11 +65,11 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
   @Nonnull
   @Override
   public Object[] getChildElements(@Nonnull Object element) {
-    final LibraryEditor libraryEditor = myParentEditor.getLibraryEditor();
+    LibraryEditor libraryEditor = myParentEditor.getLibraryEditor();
     if (element == myRootElementDescriptor) {
       ArrayList<LibraryTableTreeContentElement> elements = new ArrayList<>(3);
       for (OrderRootType type : myComponentDescriptor.getRootTypes()) {
-        final String[] urls = libraryEditor.getUrls(type);
+        String[] urls = libraryEditor.getUrls(type);
         if (urls.length > 0) {
           OrderRootTypePresentation presentation = myComponentDescriptor.getRootTypePresentation(type);
           if (presentation == null) {
@@ -85,7 +85,7 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
       OrderRootTypeElement rootTypeElement = (OrderRootTypeElement)element;
       OrderRootType orderRootType = rootTypeElement.getOrderRootType();
       ArrayList<ItemElement> items = new ArrayList<>();
-      final String[] urls = libraryEditor.getUrls(orderRootType).clone();
+      String[] urls = libraryEditor.getUrls(orderRootType).clone();
       Arrays.sort(urls, LibraryRootsComponent.ourUrlComparator);
       for (String url : urls) {
         items.add(new ItemElement(rootTypeElement, url, orderRootType, libraryEditor.isJarDirectory(url, orderRootType), libraryEditor.isValid(url, orderRootType)));
@@ -112,7 +112,7 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
   }
 
   private static OrderRootTypePresentation getDefaultPresentation(OrderRootType type) {
-    final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
+    OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
     return new OrderRootTypePresentation(factory.getNodeText(), factory.getIcon());
   }
 

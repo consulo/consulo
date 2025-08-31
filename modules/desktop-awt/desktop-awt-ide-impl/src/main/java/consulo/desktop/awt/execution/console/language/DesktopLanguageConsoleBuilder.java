@@ -184,7 +184,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
 
     @Override
     public void dispose() {
-      final PsiFile file = getFile();
+      PsiFile file = getFile();
       DaemonCodeAnalyzer.getInstance(file.getProject()).setHighlightingEnabled(file, true);
 
       super.dispose();
@@ -335,7 +335,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
   @Override
   @Nonnull
   public LanguageConsoleView build() {
-    final MyHelper helper = new MyHelper(myProject, myLanguage.getDisplayName() + " Console", myLanguage, psiFileFactory);
+    MyHelper helper = new MyHelper(myProject, myLanguage.getDisplayName() + " Console", myLanguage, psiFileFactory);
     GutteredLanguageConsole consoleView = new GutteredLanguageConsole(helper, gutterContentProvider);
     if (oneLineInput) {
       consoleView.getConsoleEditor().setOneLineMode(true);

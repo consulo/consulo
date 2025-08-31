@@ -25,11 +25,11 @@ import jakarta.annotation.Nonnull;
  */
 public class FileDownloadingAdapter implements FileDownloadingListener {
   @Override
-  public void fileDownloaded(final VirtualFile localFile) {
+  public void fileDownloaded(VirtualFile localFile) {
   }
 
   @Override
-  public void errorOccurred(@Nonnull final String errorMessage) {
+  public void errorOccurred(@Nonnull String errorMessage) {
   }
 
   @Override
@@ -41,10 +41,10 @@ public class FileDownloadingAdapter implements FileDownloadingListener {
   }
 
   @Override
-  public void progressMessageChanged(final boolean indeterminate, @Nonnull final String message) {
+  public void progressMessageChanged(boolean indeterminate, @Nonnull String message) {
   }
 
   @Override
-  public void progressFractionChanged(final double fraction) {
+  public void progressFractionChanged(double fraction) {
   }
 }

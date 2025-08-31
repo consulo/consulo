@@ -44,7 +44,7 @@ public class ModuleGroup {
     if (this == o) return true;
     if (!(o instanceof ModuleGroup)) return false;
 
-    final ModuleGroup moduleGroup = (ModuleGroup)o;
+    ModuleGroup moduleGroup = (ModuleGroup)o;
 
     return Arrays.equals(myGroupPath, moduleGroup.myGroupPath);
   }
@@ -60,9 +60,9 @@ public class ModuleGroup {
   @Nonnull
   @RequiredReadAction
   public Collection<Module> modulesInGroup(Project project, boolean recursively) {
-    final Module[] allModules = ModuleManager.getInstance(project).getModules();
+    Module[] allModules = ModuleManager.getInstance(project).getModules();
     List<Module> result = new ArrayList<>();
-    for (final Module module : allModules) {
+    for (Module module : allModules) {
       String[] group = ModuleManager.getInstance(project).getModuleGroupPath(module);
       if (group == null) continue;
       if (Arrays.equals(myGroupPath, group) || (recursively && isChild(myGroupPath, group))) {
@@ -84,7 +84,7 @@ public class ModuleGroup {
 
   @RequiredReadAction
   public Collection<ModuleGroup> childGroups(ModifiableModuleModel model, Project project) {
-    final Module[] allModules;
+    Module[] allModules;
     if ( model != null ) {
       allModules = model.getModules();
     } else {
@@ -100,7 +100,7 @@ public class ModuleGroup {
         group = ModuleManager.getInstance(project).getModuleGroupPath(module);
       }
       if (group == null) continue;
-      final String[] directChild = directChild(myGroupPath, group);
+      String[] directChild = directChild(myGroupPath, group);
       if (directChild != null) {
         result.add(new ModuleGroup(directChild));
       }
@@ -109,7 +109,7 @@ public class ModuleGroup {
     return result;
   }
 
-  private static boolean isChild(final String[] parent, final String[] descendant) {
+  private static boolean isChild(String[] parent, String[] descendant) {
     if (parent.length >= descendant.length) return false;
     for (int i = 0; i < parent.length; i++) {
       String group = parent[i];
@@ -118,7 +118,7 @@ public class ModuleGroup {
     return true;
   }
 
-  private static String[] directChild(final String[] parent, final String[] descendant) {
+  private static String[] directChild(String[] parent, String[] descendant) {
     if (!isChild(parent, descendant)) return null;
     return ArrayUtil.append(parent, descendant[parent.length]);
   }

@@ -28,18 +28,18 @@ public class PersistentEnumeratorDelegate<Data> implements DataEnumeratorEx<Data
   @Nonnull
   protected final PersistentEnumeratorBase<Data> myEnumerator;
 
-  public PersistentEnumeratorDelegate(@Nonnull final File file, @Nonnull KeyDescriptor<Data> dataDescriptor, final int initialSize) throws IOException {
+  public PersistentEnumeratorDelegate(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
     this(file, dataDescriptor, initialSize, null);
   }
 
-  public PersistentEnumeratorDelegate(@Nonnull final File file, @Nonnull KeyDescriptor<Data> dataDescriptor, final int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext)
+  public PersistentEnumeratorDelegate(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext)
           throws IOException {
     myEnumerator = useBtree() ? new PersistentBTreeEnumerator<>(file, dataDescriptor, initialSize, lockContext) : new PersistentEnumerator<>(file, dataDescriptor, initialSize);
   }
 
-  public PersistentEnumeratorDelegate(@Nonnull final File file,
+  public PersistentEnumeratorDelegate(@Nonnull File file,
                                       @Nonnull KeyDescriptor<Data> dataDescriptor,
-                                      final int initialSize,
+                                      int initialSize,
                                       @Nullable PagedFileStorage.StorageLockContext lockContext,
                                       int version) throws IOException {
     myEnumerator = useBtree() ? new PersistentBTreeEnumerator<>(file, dataDescriptor, initialSize, lockContext, version) : new PersistentEnumerator<>(file, dataDescriptor, initialSize, null, version);
@@ -52,7 +52,7 @@ public class PersistentEnumeratorDelegate<Data> implements DataEnumeratorEx<Data
 
   @Override
   public void close() throws IOException {
-    final PersistentEnumeratorBase<Data> enumerator = myEnumerator;
+    PersistentEnumeratorBase<Data> enumerator = myEnumerator;
     //noinspection ConstantConditions
     if (enumerator != null) {
       enumerator.close();
@@ -103,7 +103,7 @@ public class PersistentEnumeratorDelegate<Data> implements DataEnumeratorEx<Data
     return myEnumerator.traverseAllRecords(recordsProcessor);
   }
 
-  public Collection<Data> getAllDataObjects(@Nullable final PersistentEnumeratorBase.DataFilter filter) throws IOException {
+  public Collection<Data> getAllDataObjects(@Nullable PersistentEnumeratorBase.DataFilter filter) throws IOException {
     return myEnumerator.getAllDataObjects(filter);
   }
 }

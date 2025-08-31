@@ -97,7 +97,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
   }
 
   @RequiredUIAccess
-  protected NamedConfigurable(boolean isNameEditable, @Nullable final Runnable updateTree) {
+  protected NamedConfigurable(boolean isNameEditable, @Nullable Runnable updateTree) {
     myNameEditable = isNameEditable;
     myUpdateTree = updateTree;
   }
@@ -140,7 +140,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
     if (myOptionsComponent == null) {
       myOptionsComponent = createOptionsPanel(parentUIDisposable);
-      final Component component = createTopRightComponent(myUIPanel.myNameField, parentUIDisposable);
+      Component component = createTopRightComponent(myUIPanel.myNameField, parentUIDisposable);
       if (component == null) {
         myUIPanel.myTopRightPanel.setVisible(false);
       }

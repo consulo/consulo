@@ -65,7 +65,7 @@ public class ModifiableModelCommitterImpl implements ModifiableModelCommitter {
     });
   }
 
-  private static List<RootModelImpl> getSortedChangedModels(ModifiableRootModel[] _rootModels, final ModifiableModuleModel moduleModel) {
+  private static List<RootModelImpl> getSortedChangedModels(ModifiableRootModel[] _rootModels, ModifiableModuleModel moduleModel) {
     List<RootModelImpl> rootModels = new ArrayList<RootModelImpl>();
     for (ModifiableRootModel _rootModel : _rootModels) {
       RootModelImpl rootModel = (RootModelImpl)_rootModel;
@@ -78,25 +78,25 @@ public class ModifiableModelCommitterImpl implements ModifiableModelCommitter {
     return rootModels;
   }
 
-  private static void sortRootModels(List<RootModelImpl> rootModels, final ModifiableModuleModel moduleModel) {
+  private static void sortRootModels(List<RootModelImpl> rootModels, ModifiableModuleModel moduleModel) {
     DFSTBuilder<RootModelImpl> builder = createDFSTBuilder(rootModels, moduleModel);
 
-    final Comparator<RootModelImpl> comparator = builder.comparator();
+    Comparator<RootModelImpl> comparator = builder.comparator();
     Collections.sort(rootModels, comparator);
   }
 
   private static DFSTBuilder<RootModelImpl> createDFSTBuilder(List<RootModelImpl> rootModels, final ModifiableModuleModel moduleModel) {
     final Map<String, RootModelImpl> nameToModel = new HashMap<String, RootModelImpl>();
-    for (final RootModelImpl rootModel : rootModels) {
-      final String name = rootModel.getModule().getName();
+    for (RootModelImpl rootModel : rootModels) {
+      String name = rootModel.getModule().getName();
       LOG.assertTrue(!nameToModel.containsKey(name), name);
       nameToModel.put(name, rootModel);
     }
-    final Module[] modules = moduleModel.getModules();
-    for (final Module module : modules) {
-      final String name = module.getName();
+    Module[] modules = moduleModel.getModules();
+    for (Module module : modules) {
+      String name = module.getName();
       if (!nameToModel.containsKey(name)) {
-        final RootModelImpl rootModel = ((ModuleRootManagerImpl)ModuleRootManager.getInstance(module)).getRootModel();
+        RootModelImpl rootModel = ((ModuleRootManagerImpl)ModuleRootManager.getInstance(module)).getRootModel();
         nameToModel.put(name, rootModel);
       }
     }
@@ -109,15 +109,15 @@ public class ModifiableModelCommitterImpl implements ModifiableModelCommitter {
 
       @Override
       public Iterator<RootModelImpl> getIn(RootModelImpl rootModel) {
-        final List<String> namesList = rootModel.orderEntries().withoutSdk().withoutLibraries().withoutModuleSourceEntries().process(new RootPolicy<ArrayList<String>>() {
+        List<String> namesList = rootModel.orderEntries().withoutSdk().withoutLibraries().withoutModuleSourceEntries().process(new RootPolicy<ArrayList<String>>() {
           @Override
           public ArrayList<String> visitModuleOrderEntry(ModuleOrderEntry moduleOrderEntry, ArrayList<String> strings) {
-            final Module module = moduleOrderEntry.getModule();
+            Module module = moduleOrderEntry.getModule();
             if (module != null && !module.isDisposed()) {
               strings.add(module.getName());
             }
             else {
-              final Module moduleToBeRenamed = moduleModel.getModuleToBeRenamed(moduleOrderEntry.getModuleName());
+              Module moduleToBeRenamed = moduleModel.getModuleToBeRenamed(moduleOrderEntry.getModuleName());
               if (moduleToBeRenamed != null && !moduleToBeRenamed.isDisposed()) {
                 strings.add(moduleToBeRenamed.getName());
               }
@@ -126,10 +126,10 @@ public class ModifiableModelCommitterImpl implements ModifiableModelCommitter {
           }
         }, new ArrayList<>());
 
-        final String[] names = ArrayUtil.toStringArray(namesList);
+        String[] names = ArrayUtil.toStringArray(namesList);
         List<RootModelImpl> result = new ArrayList<RootModelImpl>();
         for (String name : names) {
-          final RootModelImpl depRootModel = nameToModel.get(name);
+          RootModelImpl depRootModel = nameToModel.get(name);
           if (depRootModel != null) { // it is ok not to find one
             result.add(depRootModel);
           }

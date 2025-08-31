@@ -28,12 +28,12 @@ import consulo.language.editor.template.Template;
 @ExtensionImpl
 public class TemplateLookupRenderer implements ElementLookupRenderer<Template> {
   @Override
-  public boolean handlesItem(final Object element) {
+  public boolean handlesItem(Object element) {
     return element instanceof Template;
   }
 
   @Override
-  public void renderElement(final LookupItem item, final Template element, final LookupElementPresentation presentation) {
+  public void renderElement(LookupItem item, Template element, LookupElementPresentation presentation) {
     presentation.setItemText(element.getKey());
     presentation.setTypeText(element.getDescription());
   }

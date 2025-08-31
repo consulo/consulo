@@ -28,11 +28,11 @@ public class ExecutionModes {
    */
   public static class BackGroundMode extends ExecutionMode {
 
-    public BackGroundMode(final boolean cancelable, @Nullable final String title) {
+    public BackGroundMode(boolean cancelable, @Nullable String title) {
       super(cancelable, title, null, true, false, null);
     }
 
-    public BackGroundMode(@Nullable final String title) {
+    public BackGroundMode(@Nullable String title) {
       this(true, title);
     }
   }
@@ -42,15 +42,15 @@ public class ExecutionModes {
    */
   public static class ModalProgressMode extends ExecutionMode {
 
-    public ModalProgressMode(final boolean cancelable, @Nullable final String title, JComponent progressParentComponent) {
+    public ModalProgressMode(boolean cancelable, @Nullable String title, JComponent progressParentComponent) {
       super(cancelable, title, null, false, true, progressParentComponent);
     }
 
-    public ModalProgressMode(@Nullable final String title) {
+    public ModalProgressMode(@Nullable String title) {
       this(true, title, null);
     }
 
-    public ModalProgressMode(@Nullable final String title, JComponent progressParentComponent) {
+    public ModalProgressMode(@Nullable String title, JComponent progressParentComponent) {
       this(true, title, progressParentComponent);
     }
   }
@@ -61,28 +61,28 @@ public class ExecutionModes {
   public static class SameThreadMode extends ExecutionMode {
     private final int myTimeout;
 
-    public SameThreadMode(final boolean cancelable,
-                          @Nullable final String title2,
-                          final int timeout) {
+    public SameThreadMode(boolean cancelable,
+                          @Nullable String title2,
+                          int timeout) {
       super(cancelable, null, title2, false, false, null);
       myTimeout = timeout;
     }
 
-    public SameThreadMode(@Nullable final String title2) {
+    public SameThreadMode(@Nullable String title2) {
       this(true, title2, -1);
     }
 
     /**
      * @param cancelable
      */
-    public SameThreadMode(final boolean cancelable) {
+    public SameThreadMode(boolean cancelable) {
       this(cancelable, null, -1);
     }
 
     /**
      * @param timeout If less than zero it will be ignored
      */
-    public SameThreadMode(final int timeout) {
+    public SameThreadMode(int timeout) {
       this(false, null, timeout);
     }
 

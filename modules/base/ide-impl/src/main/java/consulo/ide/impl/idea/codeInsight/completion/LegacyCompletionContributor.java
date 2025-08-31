@@ -55,30 +55,30 @@ public class LegacyCompletionContributor extends CompletionContributor {
     CompletionData completionData = getCompletionData(parameters);
     if (completionData == null) return;
 
-    final PsiElement insertedElement = parameters.getPosition();
-    final CompletionResultSet result = _result.withPrefixMatcher(completionData.findPrefix(insertedElement, parameters.getOffset()));
+    PsiElement insertedElement = parameters.getPosition();
+    CompletionResultSet result = _result.withPrefixMatcher(completionData.findPrefix(insertedElement, parameters.getOffset()));
 
     completeReference(parameters, result);
 
-    final Set<LookupElement> lookupSet = new LinkedHashSet<>();
-    final Set<CompletionVariant> keywordVariants = new HashSet<>();
+    Set<LookupElement> lookupSet = new LinkedHashSet<>();
+    Set<CompletionVariant> keywordVariants = new HashSet<>();
     PsiFile file = parameters.getOriginalFile();
     completionData.addKeywordVariants(keywordVariants, insertedElement, file);
     completionData.completeKeywordsBySet(lookupSet, keywordVariants);
     result.addAllElements(lookupSet);
   }
 
-  public static boolean completeReference(final CompletionParameters parameters, final CompletionResultSet result) {
-    final CompletionData completionData = getCompletionData(parameters);
+  public static boolean completeReference(CompletionParameters parameters, CompletionResultSet result) {
+    CompletionData completionData = getCompletionData(parameters);
     if (completionData == null) {
       return false;
     }
 
-    final Ref<Boolean> hasVariants = Ref.create(false);
+    Ref<Boolean> hasVariants = Ref.create(false);
     processReferences(parameters, result, (reference, resultSet) -> {
-      final Set<LookupElement> lookupSet = new LinkedHashSet<>();
+      Set<LookupElement> lookupSet = new LinkedHashSet<>();
       completionData.completeReference(reference, lookupSet, parameters.getPosition(), parameters.getOriginalFile());
-      for (final LookupElement item : lookupSet) {
+      for (LookupElement item : lookupSet) {
         if (resultSet.getPrefixMatcher().prefixMatches(item)) {
           if (!item.isValid()) {
             LOG.error(completionData + " has returned an invalid lookup element " + item + " of " + item.getClass() +
@@ -94,22 +94,22 @@ public class LegacyCompletionContributor extends CompletionContributor {
   }
 
   private static CompletionData getCompletionData(CompletionParameters parameters) {
-    final PsiElement position = parameters.getPosition();
+    PsiElement position = parameters.getPosition();
     return CompletionUtil.getCompletionDataByElement(position, parameters.getOriginalFile());
   }
 
-  public static void processReferences(final CompletionParameters parameters,
-                                       final CompletionResultSet result,
-                                       final PairConsumer<PsiReference, CompletionResultSet> consumer) {
-    final int startOffset = parameters.getOffset();
-    final PsiReference ref = parameters.getPosition().getContainingFile().findReferenceAt(startOffset);
+  public static void processReferences(CompletionParameters parameters,
+                                       CompletionResultSet result,
+                                       PairConsumer<PsiReference, CompletionResultSet> consumer) {
+    int startOffset = parameters.getOffset();
+    PsiReference ref = parameters.getPosition().getContainingFile().findReferenceAt(startOffset);
     if (ref instanceof PsiMultiReference) {
-      for (final PsiReference reference : CompletionData.getReferences((PsiMultiReference)ref)) {
+      for (PsiReference reference : CompletionData.getReferences((PsiMultiReference)ref)) {
         processReference(result, startOffset, consumer, reference);
       }
     }
     else if (ref instanceof PsiDynaReference) {
-      for (final PsiReference reference : ((PsiDynaReference<?>)ref).getReferences()) {
+      for (PsiReference reference : ((PsiDynaReference<?>)ref).getReferences()) {
         processReference(result, startOffset, consumer, reference);
       }
     }
@@ -118,19 +118,19 @@ public class LegacyCompletionContributor extends CompletionContributor {
     }
   }
 
-  private static void processReference(final CompletionResultSet result,
-                                       final int startOffset,
-                                       final PairConsumer<PsiReference, CompletionResultSet> consumer,
-                                       final PsiReference reference) {
+  private static void processReference(CompletionResultSet result,
+                                       int startOffset,
+                                       PairConsumer<PsiReference, CompletionResultSet> consumer,
+                                       PsiReference reference) {
     PsiElement element = reference.getElement();
-    final int offsetInElement = startOffset - element.getTextRange().getStartOffset();
+    int offsetInElement = startOffset - element.getTextRange().getStartOffset();
     if (!ReferenceRange.containsOffsetInElement(reference, offsetInElement)) {
       return;
     }
 
     TextRange range = reference.getRangeInElement();
     try {
-      final String prefix = element.getText().substring(range.getStartOffset(), offsetInElement);
+      String prefix = element.getText().substring(range.getStartOffset(), offsetInElement);
       consumer.consume(reference, result.withPrefixMatcher(prefix));
     }
     catch (StringIndexOutOfBoundsException e) {

@@ -29,7 +29,7 @@ public class DvcsBranchUtil {
 
 
   @Nullable
-  public static <T extends DvcsBranchInfo> T find(@Nullable final Collection<T> branches, @Nullable Repository repository, @Nonnull String sourceBranch) {
+  public static <T extends DvcsBranchInfo> T find(@Nullable Collection<T> branches, @Nullable Repository repository, @Nonnull String sourceBranch) {
     if (branches == null) return null;
     return ContainerUtil.find(branches, targetInfo -> repoAndSourceAreEqual(repository, sourceBranch, targetInfo));
   }

@@ -51,7 +51,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
   }
 
   @Override
-  public void selectScheme(final CodeStyleScheme selected, @Nullable Object source) {
+  public void selectScheme(CodeStyleScheme selected, @Nullable Object source) {
     if (myGlobalSelected != selected && selected != myProjectScheme) {
       myGlobalSelected = selected;
       myDispatcher.getMulticaster().currentSchemeChanged(source);
@@ -59,7 +59,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
   }
 
   @Override
-  public void addScheme(final CodeStyleScheme newScheme, boolean changeSelection) {
+  public void addScheme(CodeStyleScheme newScheme, boolean changeSelection) {
     mySchemes.add(newScheme);
     myDispatcher.getMulticaster().schemeListChanged();
     if (changeSelection) {
@@ -68,7 +68,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
   }
 
   @Override
-  public void removeScheme(final CodeStyleScheme scheme) {
+  public void removeScheme(CodeStyleScheme scheme) {
     mySchemes.remove(scheme);
     myDispatcher.getMulticaster().schemeListChanged();
     if (myGlobalSelected == scheme) {
@@ -76,7 +76,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
     }
   }
 
-  public CodeStyleSettings getCloneSettings(final CodeStyleScheme scheme) {
+  public CodeStyleSettings getCloneSettings(CodeStyleScheme scheme) {
     if (!mySettingsToClone.containsKey(scheme)) {
       mySettingsToClone.put(scheme, scheme.getCodeStyleSettings().clone());
     }
@@ -138,9 +138,9 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
    * @param commit                 flag that defines if current project settings should be applied as well
    */
   @Override
-  public void setUsePerProjectSettings(final boolean usePerProjectSettings, final boolean commit) {
+  public void setUsePerProjectSettings(boolean usePerProjectSettings, boolean commit) {
     if (commit) {
-      final CodeStyleSettingsManager projectSettings = getProjectSettings();
+      CodeStyleSettingsManager projectSettings = getProjectSettings();
       projectSettings.USE_PER_PROJECT_SETTINGS = usePerProjectSettings;
       projectSettings.PER_PROJECT_SETTINGS = myProjectScheme.getCodeStyleSettings();
     }
@@ -174,8 +174,8 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
     projectSettingsManager.PREFERRED_PROJECT_CODE_STYLE =
             myUsePerProjectSettings || myGlobalSelected == null ? null : myGlobalSelected.getName();
     projectSettingsManager.PER_PROJECT_SETTINGS = myProjectScheme.getCodeStyleSettings();
-    final CodeStyleScheme[] savedSchemes = CodeStyleSchemes.getInstance().getSchemes();
-    final Set<CodeStyleScheme> savedSchemesSet = new HashSet<CodeStyleScheme>(Arrays.asList(savedSchemes));
+    CodeStyleScheme[] savedSchemes = CodeStyleSchemes.getInstance().getSchemes();
+    Set<CodeStyleScheme> savedSchemesSet = new HashSet<CodeStyleScheme>(Arrays.asList(savedSchemes));
     List<CodeStyleScheme> configuredSchemes = getSchemes();
 
     for (CodeStyleScheme savedScheme : savedSchemes) {
@@ -204,11 +204,11 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
     return ((CodeStyleSchemesImpl) CodeStyleSchemes.getInstance()).getSchemeManager();
   }
 
-  public static boolean cannotBeModified(final CodeStyleScheme currentScheme) {
+  public static boolean cannotBeModified(CodeStyleScheme currentScheme) {
     return currentScheme.isDefault();
   }
 
-  public static boolean cannotBeDeleted(final CodeStyleScheme currentScheme) {
+  public static boolean cannotBeDeleted(CodeStyleScheme currentScheme) {
     return currentScheme.isDefault();
   }
 
@@ -228,7 +228,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
   }
 
   @Override
-  public void copyToProject(final CodeStyleScheme selectedScheme) {
+  public void copyToProject(CodeStyleScheme selectedScheme) {
     myProjectScheme.getCodeStyleSettings().copyFrom(selectedScheme.getCodeStyleSettings());
     myDispatcher.getMulticaster().schemeChanged(myProjectScheme);
   }
@@ -243,7 +243,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
   }
 
   @Override
-  public CodeStyleScheme createNewScheme(final String preferredName, final CodeStyleScheme parentScheme) {
+  public CodeStyleScheme createNewScheme(String preferredName, CodeStyleScheme parentScheme) {
     String name;
     if (preferredName == null) {
       if (parentScheme == null) throw new IllegalArgumentException("parentScheme must not be null");
@@ -270,7 +270,7 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
   }
 
   @Nullable
-  private CodeStyleScheme findSchemeByName(final String name) {
+  private CodeStyleScheme findSchemeByName(String name) {
     for (CodeStyleScheme scheme : mySchemes) {
       if (name.equals(scheme.getName())) return scheme;
     }

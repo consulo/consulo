@@ -96,7 +96,7 @@ public abstract class FileAnnotation {
      * @return whether annotations should be updated
      */
     public boolean isBaseRevisionChanged(@Nonnull VcsRevisionNumber number) {
-        final VcsRevisionNumber currentRevision = getCurrentRevision();
+        VcsRevisionNumber currentRevision = getCurrentRevision();
         return currentRevision != null && !currentRevision.equals(number);
     }
 

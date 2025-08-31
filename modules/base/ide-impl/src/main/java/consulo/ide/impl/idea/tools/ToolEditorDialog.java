@@ -191,7 +191,7 @@ public class ToolEditorDialog extends DialogWrapper {
   }
 
   private JPanel createCommandPane() {
-    final JPanel pane = new JPanel(new GridBagLayout());
+    JPanel pane = new JPanel(new GridBagLayout());
     pane.setBorder(IdeBorderFactory.createTitledBorder(ToolsBundle.message("tools.tool.group"), true));
     GridBagConstraints constr;
 
@@ -305,7 +305,7 @@ public class ToolEditorDialog extends DialogWrapper {
   }
 
   protected void addWorkingDirectoryBrowseAction(
-    final JPanel pane,
+    JPanel pane,
     FixedSizeButton browseDirectoryButton,
     JTextField tfCommandWorkingDirectory
   ) {
@@ -322,7 +322,7 @@ public class ToolEditorDialog extends DialogWrapper {
     });
   }
 
-  protected void addCommandBrowseAction(final JPanel pane, FixedSizeButton browseCommandButton, JTextField tfCommand) {
+  protected void addCommandBrowseAction(JPanel pane, FixedSizeButton browseCommandButton, JTextField tfCommand) {
     browseCommandButton.addActionListener(e -> {
       FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor();
       PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, myProject, pane);

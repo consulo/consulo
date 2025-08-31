@@ -48,8 +48,8 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
     }
 
     @Override
-    protected boolean isValidForFile(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
-        final PsiElement context = file.findElementAt(editor.getCaretModel().getOffset());
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        PsiElement context = file.findElementAt(editor.getCaretModel().getOffset());
         return context != null && FormattingModelBuilder.forContext(context) != null;
     }
 
@@ -57,7 +57,7 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
     private static class Handler implements CodeInsightActionHandler {
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
+        public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
             if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) {
                 return;
             }
@@ -73,19 +73,19 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
                 return;
             }
 
-            final Document document = editor.getDocument();
-            final int startOffset = editor.getCaretModel().getOffset();
-            final int line = editor.offsetToLogicalPosition(startOffset).line;
-            final int col = editor.getCaretModel().getLogicalPosition().column;
-            final int lineStart = document.getLineStartOffset(line);
-            final int initLineEnd = document.getLineEndOffset(line);
+            Document document = editor.getDocument();
+            int startOffset = editor.getCaretModel().getOffset();
+            int line = editor.offsetToLogicalPosition(startOffset).line;
+            int col = editor.getCaretModel().getLogicalPosition().column;
+            int lineStart = document.getLineStartOffset(line);
+            int initLineEnd = document.getLineEndOffset(line);
             try {
-                final CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
-                final int newPos = codeStyleManager.adjustLineIndent(file, lineStart);
-                final int newCol = newPos - lineStart;
-                final int lineInc = document.getLineEndOffset(line) - initLineEnd;
+                CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
+                int newPos = codeStyleManager.adjustLineIndent(file, lineStart);
+                int newCol = newPos - lineStart;
+                int lineInc = document.getLineEndOffset(line) - initLineEnd;
                 if (newCol >= col + lineInc && newCol >= 0) {
-                    final LogicalPosition pos = new LogicalPosition(line, newCol);
+                    LogicalPosition pos = new LogicalPosition(line, newCol);
                     editor.getCaretModel().moveToLogicalPosition(pos);
                     editor.getSelectionModel().removeSelection();
                     editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);

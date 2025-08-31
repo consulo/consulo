@@ -41,7 +41,7 @@ import java.awt.*;
 public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusManager {
   @Override
   @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
     return AsyncResult.resolved();
   }
 
@@ -52,12 +52,12 @@ public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusMan
   }
 
   @Override
-  public JComponent getFocusTargetFor(@Nonnull final JComponent comp) {
+  public JComponent getFocusTargetFor(@Nonnull JComponent comp) {
     return null;
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull final Runnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
     runnable.run();
   }
 
@@ -74,7 +74,7 @@ public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusMan
   }
 
   @Override
-  public Component getFocusedDescendantFor(final Component c) {
+  public Component getFocusedDescendantFor(Component c) {
     return null;
   }
 

@@ -30,10 +30,10 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class LookupActionRightHandler extends LookupActionHandler {
   @Override
-  protected void executeInLookup(LookupEx lookup, DataContext context, final Caret caret) {
-    final Editor editor = lookup.getEditor();
-    final int offset = editor.getCaretModel().getOffset();
-    final CharSequence seq = editor.getDocument().getCharsSequence();
+  protected void executeInLookup(LookupEx lookup, DataContext context, Caret caret) {
+    Editor editor = lookup.getEditor();
+    int offset = editor.getCaretModel().getOffset();
+    CharSequence seq = editor.getDocument().getCharsSequence();
     if (seq.length() <= offset || !lookup.isCompletion()) {
       myOriginalHandler.execute(editor, caret, context);
       return;
@@ -67,7 +67,7 @@ public class LookupActionRightHandler extends LookupActionHandler {
 
     lookup.fireBeforeAppendPrefix(c);
     lookup.appendPrefix(c);
-    final CompletionProgressIndicator completion = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
+    CompletionProgressIndicator completion = CompletionServiceImpl.getCurrentCompletionProgressIndicator();
     if (completion != null) {
       completion.prefixUpdated();
     }

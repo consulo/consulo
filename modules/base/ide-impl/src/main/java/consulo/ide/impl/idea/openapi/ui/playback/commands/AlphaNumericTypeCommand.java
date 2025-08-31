@@ -64,9 +64,9 @@ public class AlphaNumericTypeCommand extends TypeCommand {
     Runnable typeRunnable = new Runnable() {
       public void run() {
         for (int i = 0; i < text.length(); i++) {
-          final char each = text.charAt(i);
+          char each = text.charAt(i);
           if ('\\' == each && i + 1 < text.length()) {
-            final char next = text.charAt(i + 1);
+            char next = text.charAt(i + 1);
             boolean processed = true;
             switch (next) {
               case 'n':

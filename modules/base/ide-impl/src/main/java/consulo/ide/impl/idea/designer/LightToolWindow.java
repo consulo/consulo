@@ -145,7 +145,7 @@ public class LightToolWindow extends JPanel {
         add(contentWrapper, BorderLayout.CENTER);
 
         addMouseListener(new MouseAdapter() {
-            public void mouseReleased(final MouseEvent e) {
+            public void mouseReleased(MouseEvent e) {
                 ProjectIdeFocusManager.getInstance(myProject).requestFocus(myFocusedComponent, true);
             }
         });
@@ -512,7 +512,7 @@ public class LightToolWindow extends JPanel {
     }
 
     private static BufferedImage drawToBuffer(boolean active, int height) {
-        final int width = 150;
+        int width = 150;
 
         BufferedImage image = UIUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();

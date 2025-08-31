@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 
 public class TreeIntToIntMap extends AbstractIntToIntMap implements UpdatableIntToIntMap {
 
-  public static UpdatableIntToIntMap newInstance(@Nonnull final Predicate<Integer> thisIsVisible, final int longSize) {
+  public static UpdatableIntToIntMap newInstance(@Nonnull Predicate<Integer> thisIsVisible, int longSize) {
     if (longSize < 0) throw new NegativeArraySizeException("size < 0: " + longSize);
 
     if (longSize == 0) return IDIntToIntMap.EMPTY;

@@ -139,7 +139,7 @@ public class LogbackMDCAdapterSimple implements MDCAdapter {
      * <p/>
      */
     public String get(String key) {
-        final Map<String, String> map = threadLocalUnmodifiableMap.get();
+        Map<String, String> map = threadLocalUnmodifiableMap.get();
         if ((map != null) && (key != null)) {
             return map.get(key);
         } else {

@@ -53,13 +53,13 @@ public interface FileSystemInterface {
 
   VirtualFile createChildFile(@Nullable Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException;
 
-  void deleteFile(final Object requestor, @Nonnull VirtualFile file) throws IOException;
+  void deleteFile(Object requestor, @Nonnull VirtualFile file) throws IOException;
 
-  void moveFile(final Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException;
+  void moveFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException;
 
-  void renameFile(final Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException;
+  void renameFile(Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException;
 
-  VirtualFile copyFile(final Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException;
+  VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException;
 
   @Nonnull
   byte[] contentsToByteArray(@Nonnull VirtualFile file) throws IOException;
@@ -74,7 +74,7 @@ public interface FileSystemInterface {
    * Does NOT add the BOM to the beginning of the stream, unlike the {@link VirtualFile#getOutputStream(Object)}
    */
   @Nonnull
-  OutputStream getOutputStream(@Nonnull VirtualFile file, final Object requestor, final long modStamp, final long timeStamp) throws IOException;
+  OutputStream getOutputStream(@Nonnull VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException;
 
   long getLength(@Nonnull VirtualFile file);
 }

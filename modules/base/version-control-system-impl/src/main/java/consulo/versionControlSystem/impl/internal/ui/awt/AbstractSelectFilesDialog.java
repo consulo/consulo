@@ -41,8 +41,8 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
   private final String myPrompt;
   private final boolean myShowDoNotAskOption;
 
-  public AbstractSelectFilesDialog(Project project, boolean canBeParent, final VcsShowConfirmationOption confirmationOption,
-                                   final String prompt, boolean showDoNotAskOption) {
+  public AbstractSelectFilesDialog(Project project, boolean canBeParent, VcsShowConfirmationOption confirmationOption,
+                                   String prompt, boolean showDoNotAskOption) {
     super(project, canBeParent);
     myConfirmationOption = confirmationOption;
     myPrompt = prompt;
@@ -55,7 +55,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
   @Nullable
   private JLabel createPromptLabel() {
     if (myPrompt != null) {
-      final JLabel label = new JLabel(myPrompt);
+      JLabel label = new JLabel(myPrompt);
       label.setUI(new MultiLineLabelUI());
       label.setBorder(new EmptyBorder(5, 1, 5, 1));
       return label;
@@ -112,7 +112,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
   @Nonnull
   protected DefaultActionGroup createToolbarActions() {
     DefaultActionGroup group = new DefaultActionGroup();
-    final AnAction[] actions = getFileList().getTreeActions();
+    AnAction[] actions = getFileList().getTreeActions();
     for(AnAction action: actions) {
       group.add(action);
     }

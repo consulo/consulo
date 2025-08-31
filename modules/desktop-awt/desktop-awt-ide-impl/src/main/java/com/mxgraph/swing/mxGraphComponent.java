@@ -1444,11 +1444,11 @@ public class mxGraphComponent extends JScrollPane implements Printable {
         double scaleY = (page) ? height / pageHeight : scaleX;
 
         // Rounds the new scale to 5% steps
-        final double newScale = (double)((int)(Math.min(scaleX, scaleY) * 20)) / 20;
+        double newScale = (double)((int)(Math.min(scaleX, scaleY) * 20)) / 20;
 
         if (newScale > 0) {
           mxGraphView graphView = graph.getView();
-          final double scale = graphView.getScale();
+          double scale = graphView.getScale();
           mxPoint translate = (centerPage) ? getPageTranslate(newScale) : new mxPoint();
           graphView.scaleAndTranslate(newScale, translate.getX(), translate.getY());
 
@@ -1501,8 +1501,8 @@ public class mxGraphComponent extends JScrollPane implements Printable {
     JScrollBar scrollBar = (horizontal) ? getHorizontalScrollBar() : getVerticalScrollBar();
 
     if (scrollBar != null) {
-      final BoundedRangeModel model = scrollBar.getModel();
-      final int newValue = ((model.getMaximum()) / 2) - model.getExtent() / 2;
+      BoundedRangeModel model = scrollBar.getModel();
+      int newValue = ((model.getMaximum()) / 2) - model.getExtent() / 2;
       model.setValue(newValue);
     }
   }

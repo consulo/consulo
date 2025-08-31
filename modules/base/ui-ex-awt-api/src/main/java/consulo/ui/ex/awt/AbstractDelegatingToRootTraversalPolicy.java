@@ -24,26 +24,26 @@ import java.awt.*;
 public class AbstractDelegatingToRootTraversalPolicy extends FocusTraversalPolicy {
 
   @Override
-  public Component getComponentAfter(final Container aContainer, final Component aComponent) {
-    final Container cycleRootAncestor = aContainer.getFocusCycleRootAncestor();
+  public Component getComponentAfter(Container aContainer, Component aComponent) {
+    Container cycleRootAncestor = aContainer.getFocusCycleRootAncestor();
     return cycleRootAncestor.getFocusTraversalPolicy().getComponentAfter(cycleRootAncestor, aContainer);
   }
 
   @Override
-  public Component getComponentBefore(final Container aContainer, final Component aComponent) {
-    final Container cycleRootAncestor = aContainer.getFocusCycleRootAncestor();
+  public Component getComponentBefore(Container aContainer, Component aComponent) {
+    Container cycleRootAncestor = aContainer.getFocusCycleRootAncestor();
     return cycleRootAncestor.getFocusTraversalPolicy().getComponentBefore(cycleRootAncestor, aContainer);
   }
 
   @Override
-  public Component getFirstComponent(final Container aContainer) {
-    final Container cycleRootAncestor = aContainer.getFocusCycleRootAncestor();
+  public Component getFirstComponent(Container aContainer) {
+    Container cycleRootAncestor = aContainer.getFocusCycleRootAncestor();
     return cycleRootAncestor.getFocusTraversalPolicy().getFirstComponent(cycleRootAncestor);
   }
 
   @Override
-  public Component getLastComponent(final Container aContainer) {
-    final Container cycleRootAncestor = aContainer.getFocusCycleRootAncestor();
+  public Component getLastComponent(Container aContainer) {
+    Container cycleRootAncestor = aContainer.getFocusCycleRootAncestor();
     return cycleRootAncestor.getFocusTraversalPolicy().getLastComponent(cycleRootAncestor);
   }
 

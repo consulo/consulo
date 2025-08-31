@@ -53,8 +53,8 @@ public class ActionMacroManagerState implements JDOMExternalizable {
     @Override
     public void readExternal(Element element) throws InvalidDataException {
         myMacros = new ArrayList<>();
-        final List macros = element.getChildren(ELEMENT_MACRO);
-        for (final Object o : macros) {
+        List macros = element.getChildren(ELEMENT_MACRO);
+        for (Object o : macros) {
             Element macroElement = (Element) o;
             ActionMacro macro = new ActionMacro();
             macro.readExternal(macroElement);

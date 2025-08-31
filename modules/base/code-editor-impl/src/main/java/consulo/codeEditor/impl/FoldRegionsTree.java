@@ -209,8 +209,8 @@ public abstract class FoldRegionsTree {
         }
         CachedData cachedData = ensureAvailableData();
 
-        final int[] starts = cachedData.topStartOffsets;
-        final int[] ends = cachedData.topEndOffsets;
+        int[] starts = cachedData.topStartOffsets;
+        int[] ends = cachedData.topEndOffsets;
         if (starts == null || ends == null) {
             return null;
         }

@@ -37,5 +37,5 @@ public interface JoinRawLinesHandlerDelegate extends JoinLinesHandlerDelegate {
    * @return the position to place the caret after the operation, or -1 if this handler was not able
    *         to perform the operation.
    */
-  int tryJoinRawLines(Document document, PsiFile file, int start, final int end);
+  int tryJoinRawLines(Document document, PsiFile file, int start, int end);
 }

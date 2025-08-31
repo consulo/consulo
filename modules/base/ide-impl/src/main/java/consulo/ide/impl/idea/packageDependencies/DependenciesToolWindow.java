@@ -52,7 +52,7 @@ public class DependenciesToolWindow {
     startupManager.runWhenProjectIsInitialized(new Runnable() {
       @Override
       public void run() {
-        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
         if (toolWindowManager == null) return;
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.DEPENDENCIES, true, ToolWindowAnchor.BOTTOM, project);
         myContentManager = toolWindow.getContentManager();

@@ -28,10 +28,10 @@ import jakarta.annotation.Nullable;
 public interface ModifiableArtifactModel extends ArtifactModel {
 
   @Nonnull
-  ModifiableArtifact addArtifact(final @Nonnull String name, @Nonnull ArtifactType artifactType);
+  ModifiableArtifact addArtifact(@Nonnull String name, @Nonnull ArtifactType artifactType);
 
   @Nonnull
-  ModifiableArtifact addArtifact(final @Nonnull String name, @Nonnull ArtifactType artifactType, CompositePackagingElement<?> rootElement);
+  ModifiableArtifact addArtifact(@Nonnull String name, @Nonnull ArtifactType artifactType, CompositePackagingElement<?> rootElement);
 
   void removeArtifact(@Nonnull Artifact artifact);
 

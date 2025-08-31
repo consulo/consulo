@@ -56,14 +56,14 @@ public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends Clas
 
   @Override
   public void doEdit(ClasspathPanel panel) {
-    final Library library = getEntry().getLibrary();
+    Library library = getEntry().getLibrary();
     if (library == null) {
       return;
     }
-    final LibraryTable table = library.getTable();
-    final String tableLevel = table != null ? table.getTableLevel() : LibraryTableImplUtil.MODULE_LEVEL;
-    final LibraryTablePresentation presentation = LibraryEditingUtil.getLibraryTablePresentation(myProject, tableLevel);
-    final LibraryTableModifiableModelProvider provider = panel.getModifiableModelProvider(tableLevel);
+    LibraryTable table = library.getTable();
+    String tableLevel = table != null ? table.getTableLevel() : LibraryTableImplUtil.MODULE_LEVEL;
+    LibraryTablePresentation presentation = LibraryEditingUtil.getLibraryTablePresentation(myProject, tableLevel);
+    LibraryTableModifiableModelProvider provider = panel.getModifiableModelProvider(tableLevel);
     EditExistingLibraryDialog dialog = EditExistingLibraryDialog.createDialog(panel.getComponent(), provider, library, myProject, presentation, myLibrariesConfigurator);
     dialog.setContextModule(getEntry().getOwnerModule());
     dialog.show();
@@ -71,18 +71,18 @@ public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends Clas
 
   @Override
   public String getTooltipText() {
-    final Library library = myEntry.getLibrary();
+    Library library = myEntry.getLibrary();
     if (library == null) return null;
 
-    final String name = library.getName();
+    String name = library.getName();
     if (name != null) {
-      final List<String> invalidUrls = library.getInvalidRootUrls(BinariesOrderRootType.getInstance());
+      List<String> invalidUrls = library.getInvalidRootUrls(BinariesOrderRootType.getInstance());
       if (!invalidUrls.isEmpty()) {
         return ProjectLocalize.projectRootsTooltipLibraryHasBrokenPaths(name, invalidUrls.size()).get();
       }
     }
 
-    final List<String> descriptions = LibraryPresentationManager.getInstance().getDescriptions(library, myLibrariesConfigurator);
+    List<String> descriptions = LibraryPresentationManager.getInstance().getDescriptions(library, myLibrariesConfigurator);
     if (descriptions.isEmpty()) return null;
 
     return XmlStringUtil.wrapInHtml(StringUtil.join(descriptions, "<br>"));

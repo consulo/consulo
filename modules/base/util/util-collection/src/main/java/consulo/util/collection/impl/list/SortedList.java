@@ -27,7 +27,7 @@ public class SortedList<T> extends AbstractList<T>{
   private final Comparator<T> myComparator;
   private List<T> myDelegate = null;
 
-  public SortedList(final Comparator<T> comparator) {
+  public SortedList(Comparator<T> comparator) {
     myComparator = comparator;
     myMap = new TreeMap<>(comparator);
   }
@@ -37,7 +37,7 @@ public class SortedList<T> extends AbstractList<T>{
   }
 
   @Override
-  public void add(final int index, final T element) {
+  public void add(int index, T element) {
     _addToMap(element);
   }
 
@@ -57,15 +57,15 @@ public class SortedList<T> extends AbstractList<T>{
   }
 
   @Override
-  public T remove(final int index) {
-    final T value = get(index);
+  public T remove(int index) {
+    T value = get(index);
     remove(value);
     return value;
   }
 
   @Override
   public boolean remove(Object value) {
-    final List<T> group = myMap.remove(value);
+    List<T> group = myMap.remove(value);
     if (group == null) return false;
 
     group.remove(value);
@@ -76,7 +76,7 @@ public class SortedList<T> extends AbstractList<T>{
     return true;
   }
 
-  public T get(final int index) {
+  public T get(int index) {
     ensureLinearized();
     return myDelegate.get(index);
   }

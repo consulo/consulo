@@ -40,7 +40,7 @@ public interface FileEditorComposite extends Disposable {
   @Nonnull
   FileEditor getSelectedEditor();
 
-  void setSelectedEditor(final int index);
+  void setSelectedEditor(int index);
 
   List<JComponent> getTopComponents(@Nonnull FileEditor editor);
 

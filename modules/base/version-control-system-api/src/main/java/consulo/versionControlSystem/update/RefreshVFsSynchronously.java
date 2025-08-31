@@ -33,7 +33,7 @@ public class RefreshVFsSynchronously {
   private RefreshVFsSynchronously() {
   }
 
-  public static void updateAllChanged(@Nonnull final UpdatedFiles updatedFiles) {
+  public static void updateAllChanged(@Nonnull UpdatedFiles updatedFiles) {
     FilesToRefreshCollector callback = new FilesToRefreshCollector();
     UpdateFilesHelper.iterateFileGroupFilesDeletedOnServerFirst(updatedFiles, callback);
 
@@ -77,15 +77,15 @@ public class RefreshVFsSynchronously {
     return vf == null || !vf.isValid() ? null : vf;
   }
 
-  public static void updateChangesForRollback(final List<Change> changes) {
+  public static void updateChangesForRollback(List<Change> changes) {
     updateChangesImpl(changes, RollbackChangeWrapper.ourInstance);
   }
 
-  public static void updateChanges(final Collection<Change> changes) {
+  public static void updateChanges(Collection<Change> changes) {
     updateChangesImpl(changes, DirectChangeWrapper.ourInstance);
   }
 
-  private static void updateChangesImpl(final Collection<Change> changes, final ChangeWrapper wrapper) {
+  private static void updateChangesImpl(Collection<Change> changes, ChangeWrapper wrapper) {
     Collection<File> deletedOrReplaced = new HashSet<>();
     Collection<File> toRefresh = new HashSet<>();
     for (Change change : changes) {
@@ -166,13 +166,13 @@ public class RefreshVFsSynchronously {
   }
 
   private interface ChangeWrapper {
-    boolean beforeNull(final Change change);
-    boolean afterNull(final Change change);
+    boolean beforeNull(Change change);
+    boolean afterNull(Change change);
     @Nullable
-    File getBeforeFile(final Change change);
+    File getBeforeFile(Change change);
     @Nullable
-    File getAfterFile(final Change change);
-    boolean movedOrRenamedOrReplaced(final Change change);
+    File getAfterFile(Change change);
+    boolean movedOrRenamedOrReplaced(Change change);
   }
 
   private static class FilesToRefreshCollector implements UpdateFilesHelper.Callback {
@@ -181,7 +181,7 @@ public class RefreshVFsSynchronously {
 
     @Override
     public void onFile(String filePath, String groupId) {
-      final File file = new File(filePath);
+      File file = new File(filePath);
       if (FileGroup.REMOVED_FROM_REPOSITORY_ID.equals(groupId) || FileGroup.MERGED_WITH_TREE_CONFLICT.endsWith(groupId)) {
         myToRefreshDeletedOrReplaced.add(file);
       }

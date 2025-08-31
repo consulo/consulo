@@ -289,7 +289,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   private void calcSubscribers(@Nonnull Class<?> topicClass, @Nonnull List<? super MessageBusConnectionImpl> result) {
-    final List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topicClass);
+    List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topicClass);
     if (topicSubscribers != null) {
       result.addAll(topicSubscribers);
     }
@@ -466,9 +466,9 @@ public class MessageBusImpl implements MessageBus, Disposable {
     if (myDisposed) return;
     myRootBus.clearSubscriberCache();
 
-    final Iterator<DeliveryJob> i = myMessageQueue.get().iterator();
+    Iterator<DeliveryJob> i = myMessageQueue.get().iterator();
     while (i.hasNext()) {
-      final DeliveryJob job = i.next();
+      DeliveryJob job = i.next();
       if (job.connection == connection) {
         i.remove();
         notifyPendingJobChange(-1);
@@ -478,7 +478,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
 
   void deliverSingleMessage() {
     checkNotDisposed();
-    final DeliveryJob job = myMessageQueue.get().poll();
+    DeliveryJob job = myMessageQueue.get().poll();
     if (job == null) return;
     notifyPendingJobChange(-1);
     job.connection.deliverMessage(job.message);

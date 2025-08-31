@@ -35,7 +35,7 @@ public class ToolProgramRunner extends DefaultProgramRunner {
   }
 
   @Override
-  public boolean canRun(@Nonnull final String executorId, @Nonnull final RunProfile profile) {
+  public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
     return DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && profile instanceof ToolRunProfile;
   }
 

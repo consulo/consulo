@@ -94,7 +94,7 @@ public class HighlightManagerImpl extends HighlightManager {
 
         project.getMessageBus().connect().subscribe(AnActionListener.class, new AnActionListener() {
             @Override
-            public void beforeActionPerformed(AnAction action, final DataContext dataContext, AnActionEvent event) {
+            public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
                 requestHideHighlights(dataContext);
             }
 
@@ -103,8 +103,8 @@ public class HighlightManagerImpl extends HighlightManager {
                 requestHideHighlights(dataContext);
             }
 
-            private void requestHideHighlights(final DataContext dataContext) {
-                final Editor editor = dataContext.getData(Editor.KEY);
+            private void requestHideHighlights(DataContext dataContext) {
+                Editor editor = dataContext.getData(Editor.KEY);
                 if (editor == null) {
                     return;
                 }

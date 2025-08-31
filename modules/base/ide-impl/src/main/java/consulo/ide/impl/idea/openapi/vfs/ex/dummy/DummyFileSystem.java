@@ -49,13 +49,13 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   }
 
   @Nullable
-  private static VirtualFile findById(final int id, final VirtualFileImpl r) {
+  private static VirtualFile findById(int id, VirtualFileImpl r) {
     if (r == null) return null;
     if (r.getId() == id) return r;
-    @SuppressWarnings("UnsafeVfsRecursion") final VirtualFile[] children = r.getChildren();
+    @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = r.getChildren();
     if (children != null) {
       for (VirtualFile f : children) {
-        final VirtualFile child = findById(id, (VirtualFileImpl)f);
+        VirtualFile child = findById(id, (VirtualFileImpl)f);
         if (child != null) return child;
       }
     }
@@ -92,7 +92,7 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   @Override
   public void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException {
     fireBeforeFileDeletion(requestor, vFile);
-    final VirtualFileDirectoryImpl parent = (VirtualFileDirectoryImpl)vFile.getParent();
+    VirtualFileDirectoryImpl parent = (VirtualFileDirectoryImpl)vFile.getParent();
     if (parent == null) {
       throw new IOException(VirtualFileSystemLocalize.fileDeleteRootError(vFile.getPresentableUrl()).get());
     }
@@ -111,14 +111,14 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
     Object requestor,
     @Nonnull VirtualFile vFile,
     @Nonnull VirtualFile newParent,
-    @Nonnull final String copyName
+    @Nonnull String copyName
   ) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
   public void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException {
-    final String oldName = vFile.getName();
+    String oldName = vFile.getName();
     fireBeforePropertyChange(requestor, vFile, VirtualFile.PROP_NAME, oldName, newName);
     ((VirtualFileImpl)vFile).setName(newName);
     firePropertyChanged(requestor, vFile, VirtualFile.PROP_NAME, oldName, newName);
@@ -126,7 +126,7 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
 
   @Override
   public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException {
-    final VirtualFileDirectoryImpl dir = ((VirtualFileDirectoryImpl)vDir);
+    VirtualFileDirectoryImpl dir = ((VirtualFileDirectoryImpl)vDir);
     VirtualFileImpl child = new VirtualFileDataImpl(this, dir, fileName);
     dir.addChild(child);
     fireFileCreated(requestor, child);
@@ -134,19 +134,19 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   }
 
   @Override
-  public void fireBeforeContentsChange(final Object requestor, @Nonnull final VirtualFile file) {
+  public void fireBeforeContentsChange(Object requestor, @Nonnull VirtualFile file) {
     super.fireBeforeContentsChange(requestor, file);
   }
 
   @Override
-  public void fireContentsChanged(final Object requestor, @Nonnull final VirtualFile file, final long oldModificationStamp) {
+  public void fireContentsChanged(Object requestor, @Nonnull VirtualFile file, long oldModificationStamp) {
     super.fireContentsChanged(requestor, file, oldModificationStamp);
   }
 
   @Override
   @Nonnull
   public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException {
-    final VirtualFileDirectoryImpl dir = ((VirtualFileDirectoryImpl)vDir);
+    VirtualFileDirectoryImpl dir = ((VirtualFileDirectoryImpl)vDir);
     VirtualFileImpl child = new VirtualFileDirectoryImpl(this, dir, dirName);
     dir.addChild(child);
     fireFileCreated(requestor, child);

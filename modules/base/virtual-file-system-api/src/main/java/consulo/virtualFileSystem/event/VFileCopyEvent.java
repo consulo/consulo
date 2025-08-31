@@ -28,7 +28,7 @@ public class VFileCopyEvent extends VFileEvent {
   private final VirtualFile myNewParent;
   private final String myNewChildName;
 
-  public VFileCopyEvent(final Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String newChildName) {
+  public VFileCopyEvent(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String newChildName) {
     super(requestor, false);
     myFile = file;
     myNewParent = newParent;
@@ -74,11 +74,11 @@ public class VFileCopyEvent extends VFileEvent {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final VFileCopyEvent event = (VFileCopyEvent)o;
+    VFileCopyEvent event = (VFileCopyEvent)o;
 
     if (!myFile.equals(event.myFile)) return false;
     if (!myNewChildName.equals(event.myNewChildName)) return false;

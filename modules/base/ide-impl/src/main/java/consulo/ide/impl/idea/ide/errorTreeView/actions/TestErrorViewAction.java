@@ -93,12 +93,12 @@ public abstract class TestErrorViewAction extends AnAction{
     myMessageCount++;
   }
 
-  private void addMessage(final ErrorTreeView view, final String[] message, final int type) {
+  private void addMessage(ErrorTreeView view, String[] message, int type) {
     Application.get().invokeLater(
       () -> {
-        final long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         view.addMessage(type, message, null, -1, -1, null);
-        final long duration = System.currentTimeMillis() - start;
+        long duration = System.currentTimeMillis() - start;
         myMillis += duration;
         incMessageCount();
       },
@@ -111,8 +111,8 @@ public abstract class TestErrorViewAction extends AnAction{
 
   @RequiredUIAccess
   protected void openView(Project project, JComponent component) {
-    final MessageView messageView = MessageView.getInstance(project);
-    final Content content = ContentFactory.getInstance().createContent(component, getContentName(), true);
+    MessageView messageView = MessageView.getInstance(project);
+    Content content = ContentFactory.getInstance().createContent(component, getContentName(), true);
     messageView.getContentManager().addContent(content);
     messageView.getContentManager().setSelectedContent(content);
     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.MESSAGES_WINDOW);

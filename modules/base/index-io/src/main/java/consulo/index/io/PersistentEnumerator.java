@@ -70,7 +70,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
     lockStorage();
     try {
       for (int slotIdx = 0; slotIdx < slotsCount; slotIdx++) {
-        final int vector = myStorage.getInt(vectorStart + slotIdx * 4L);
+        int vector = myStorage.getInt(vectorStart + slotIdx * 4L);
         if (vector < 0) {
           for (int record = -vector; record != 0; record = nextCandidate(record)) {
             if (!p.process(record)) return false;
@@ -88,11 +88,11 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
   }
 
   @Override
-  protected synchronized int enumerateImpl(final Data value, final boolean onlyCheckForExisting, boolean saveNewValue) throws IOException {
+  protected synchronized int enumerateImpl(Data value, boolean onlyCheckForExisting, boolean saveNewValue) throws IOException {
     lockStorage();
     try {
       int depth = 0;
-      final int valueHC = myDataDescriptor.hashCode(value);
+      int valueHC = myDataDescriptor.hashCode(value);
       int hc = valueHC;
       int vector = FIRST_VECTOR_OFFSET;
       int pos;
@@ -117,7 +117,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
         if (onlyCheckForExisting) {
           return NULL_ID;
         }
-        final int newId = writeData(value, valueHC);
+        int newId = writeData(value, valueHC);
         myStorage.putInt(pos, -newId);
         return newId;
       }
@@ -145,13 +145,13 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
           return NULL_ID;
         }
 
-        final int newId = writeData(value, valueHC);
+        int newId = writeData(value, valueHC);
 
         if (splitVector) {
           depth--;                                                              
           do {
-            final int valueHCByte = hcByte(valueHC, depth);
-            final int oldHCByte = hcByte(candidateHC, depth);
+            int valueHCByte = hcByte(valueHC, depth);
+            int oldHCByte = hcByte(candidateHC, depth);
             if (valueHCByte == oldHCByte) {
               int newVector = allocVector(EMPTY_VECTOR);
               myStorage.putInt(lastVector + oldHCByte * 4L, newVector);
@@ -180,7 +180,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
   }
 
   @Override
-  protected int writeData(final Data value, int hashCode) {
+  protected int writeData(Data value, int hashCode) {
     int id = super.writeData(value, hashCode);
     ++valuesCount;
 
@@ -201,13 +201,13 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
     return (hashcode >>> (byteN * BITS_PER_LEVEL)) & LEVEL_MASK;
   }
 
-  private int allocVector(@Nonnull final byte[] empty) throws IOException {
-    final int pos = (int)myStorage.length();
+  private int allocVector(@Nonnull byte[] empty) throws IOException {
+    int pos = (int)myStorage.length();
     myStorage.put(pos, empty, 0, empty.length);
     return pos;
   }
 
-  private int nextCandidate(final int idx) throws IOException {
+  private int nextCandidate(int idx) throws IOException {
     return -myStorage.getInt(idx);
   }
 

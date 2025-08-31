@@ -30,7 +30,7 @@ public final class TextViewer extends EditorTextField {
   }
 
   private static Document createDocument(@Nonnull String initialText) {
-    final Document document = EditorFactory.getInstance().createDocument(initialText);
+    Document document = EditorFactory.getInstance().createDocument(initialText);
     if (document instanceof DocumentEx) {
       ((DocumentEx)document).setAcceptSlashR(true);
     }
@@ -39,7 +39,7 @@ public final class TextViewer extends EditorTextField {
 
   @Override
   protected EditorEx createEditor() {
-    final EditorEx editor = super.createEditor();
+    EditorEx editor = super.createEditor();
     editor.setHorizontalScrollbarVisible(true);
     editor.setCaretEnabled(true);
     editor.setVerticalScrollbarVisible(true);

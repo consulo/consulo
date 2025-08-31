@@ -68,7 +68,7 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
     }
   }
 
-  public static TodoScanningState advanceTodoItemsCount(final CharSequence input, final OccurrenceConsumer consumer, TodoScanningState todoScanningState) {
+  public static TodoScanningState advanceTodoItemsCount(CharSequence input, OccurrenceConsumer consumer, TodoScanningState todoScanningState) {
     if (todoScanningState == null) {
       IndexPattern[] patterns = IndexPatternUtil.getIndexPatterns();
 
@@ -109,14 +109,14 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
     myOccurrenceConsumer.addOccurrence(chars, charsArray, start, end, myOccurenceMask);
   }
 
-  protected final void addOccurrenceInToken(final int occurrenceMask) {
+  protected final void addOccurrenceInToken(int occurrenceMask) {
     myOccurrenceConsumer.addOccurrence(myCachedBufferSequence, myCachedArraySequence, getTokenStart(), getTokenEnd(), occurrenceMask);
   }
 
-  protected final void scanWordsInToken(final int occurrenceMask, boolean mayHaveFileRefs, final boolean mayHaveEscapes) {
+  protected final void scanWordsInToken(int occurrenceMask, boolean mayHaveFileRefs, boolean mayHaveEscapes) {
     myOccurenceMask = occurrenceMask;
-    final int start = getTokenStart();
-    final int end = getTokenEnd();
+    int start = getTokenStart();
+    int end = getTokenEnd();
     IdTableBuilding.scanWords(this, myCachedBufferSequence, myCachedArraySequence, start, end, mayHaveEscapes);
 
     if (mayHaveFileRefs) {
@@ -138,7 +138,7 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
     }
   }
 
-  private static int findCharsWithinRange(final CharSequence chars, int startOffset, int endOffset, String charsToFind) {
+  private static int findCharsWithinRange(CharSequence chars, int startOffset, int endOffset, String charsToFind) {
     while (startOffset < endOffset) {
       if (charsToFind.indexOf(chars.charAt(startOffset)) != -1) {
         return startOffset;

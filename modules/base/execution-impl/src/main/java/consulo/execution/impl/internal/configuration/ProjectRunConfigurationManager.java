@@ -93,9 +93,9 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
 
     myManager.removeNotExistingSharedConfigurations(existing);
     if (myManager.getSelectedConfiguration() == null) {
-      final List<RunConfiguration> allConfigurations = myManager.getAllConfigurationsList();
-      for (final RunConfiguration configuration : allConfigurations) {
-        final RunnerAndConfigurationSettings settings = myManager.getSettings(allConfigurations.get(0));
+      List<RunConfiguration> allConfigurations = myManager.getAllConfigurationsList();
+      for (RunConfiguration configuration : allConfigurations) {
+        RunnerAndConfigurationSettings settings = myManager.getSettings(allConfigurations.get(0));
         if (!(configuration instanceof UnknownRunConfiguration)) {
           AccessRule.read(() -> myManager.setSelectedConfiguration(settings));
           break;

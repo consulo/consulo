@@ -50,7 +50,7 @@ public class VerticalStackLayout implements LayoutManager2 {
    * @param parent the container to be laid out
    */
   @Override
-  public void layoutContainer(final Container parent) {
+  public void layoutContainer(Container parent) {
     withAllVisibleDo(parent,
                      new ComponentOperation.InlineLayout(parent, myDefaultHeight, SizeProperty.PREFERED_SIZE,
                                                          Orientation.VERTICAL));

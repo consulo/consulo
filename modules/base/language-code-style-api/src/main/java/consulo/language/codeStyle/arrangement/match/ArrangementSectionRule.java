@@ -59,7 +59,7 @@ public class ArrangementSectionRule implements Cloneable {
   }
 
   public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
-    final List<StdArrangementMatchRule> matchRules = ContainerUtil.newArrayList();
+    List<StdArrangementMatchRule> matchRules = ContainerUtil.newArrayList();
     if (StringUtil.isNotEmpty(start)) {
       matchRules.add(createSectionRule(start, START_SECTION));
     }
@@ -75,9 +75,9 @@ public class ArrangementSectionRule implements Cloneable {
     if (StringUtil.isEmpty(comment)) {
       return null;
     }
-    final ArrangementAtomMatchCondition type = new ArrangementAtomMatchCondition(token);
-    final ArrangementAtomMatchCondition text = new ArrangementAtomMatchCondition(StdArrangementTokens.Regexp.TEXT, comment);
-    final ArrangementMatchCondition condition = ArrangementUtil.combine(type, text);
+    ArrangementAtomMatchCondition type = new ArrangementAtomMatchCondition(token);
+    ArrangementAtomMatchCondition text = new ArrangementAtomMatchCondition(StdArrangementTokens.Regexp.TEXT, comment);
+    ArrangementMatchCondition condition = ArrangementUtil.combine(type, text);
     return new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition));
   }
 
@@ -111,15 +111,15 @@ public class ArrangementSectionRule implements Cloneable {
       return false;
     }
 
-    final ArrangementSectionRule section = (ArrangementSectionRule)o;
+    ArrangementSectionRule section = (ArrangementSectionRule)o;
     if (!StringUtil.equals(myStartComment, section.myStartComment) || !StringUtil.equals(myEndComment, section.myEndComment) || myMatchRules.size() != section.getMatchRules().size()) {
       return false;
     }
 
-    final List<StdArrangementMatchRule> matchRules = section.getMatchRules();
+    List<StdArrangementMatchRule> matchRules = section.getMatchRules();
     for (int i = 0; i < myMatchRules.size(); i++) {
-      final StdArrangementMatchRule rule1 = myMatchRules.get(i);
-      final StdArrangementMatchRule rule2 = matchRules.get(i);
+      StdArrangementMatchRule rule1 = myMatchRules.get(i);
+      StdArrangementMatchRule rule2 = matchRules.get(i);
       if (!rule1.equals(rule2)) {
         return false;
       }
@@ -138,7 +138,7 @@ public class ArrangementSectionRule implements Cloneable {
 
   @Override
   public ArrangementSectionRule clone() {
-    final List<StdArrangementMatchRule> rules = ContainerUtil.newArrayList();
+    List<StdArrangementMatchRule> rules = ContainerUtil.newArrayList();
     for (StdArrangementMatchRule myMatchRule : myMatchRules) {
       rules.add(myMatchRule.clone());
     }

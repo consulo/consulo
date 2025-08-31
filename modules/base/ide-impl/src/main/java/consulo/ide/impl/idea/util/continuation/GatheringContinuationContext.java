@@ -55,7 +55,7 @@ public class GatheringContinuationContext implements ContinuationContext {
   }
 
   @Override
-  public void throwDisaster(Object disaster, final Object cure) {
+  public void throwDisaster(Object disaster, Object cure) {
   }
 
   @Override
@@ -86,7 +86,7 @@ public class GatheringContinuationContext implements ContinuationContext {
   public void after(@Nonnull TaskDescriptor inQueue, TaskDescriptor... next) {
     int idx = -1;
     for (int i = 0; i < myList.size(); i++) {
-      final TaskDescriptor descriptor = myList.get(i);
+      TaskDescriptor descriptor = myList.get(i);
       if (inQueue == descriptor) {
         idx = i;
         break;

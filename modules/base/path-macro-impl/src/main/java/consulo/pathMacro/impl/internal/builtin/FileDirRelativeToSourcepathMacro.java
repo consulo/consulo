@@ -36,8 +36,8 @@ public class FileDirRelativeToSourcepathMacro extends Macro {
   }
 
   @Override
-  public String expand(final DataContext dataContext) {
-    final Project project = dataContext.getData(Project.KEY);
+  public String expand(DataContext dataContext) {
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return null;
     }
@@ -51,7 +51,7 @@ public class FileDirRelativeToSourcepathMacro extends Macro {
         return null;
       }
     }
-    final VirtualFile sourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(file);
+    VirtualFile sourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(file);
     if (sourceRoot == null) return null;
     return FileUtil.getRelativePath(getIOFile(sourceRoot), getIOFile(file));
   }

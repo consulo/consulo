@@ -51,7 +51,7 @@ public class BaseRevisionTextPatchEP implements PatchEP {
   private final String myBaseDir;
 
   @Inject
-  public BaseRevisionTextPatchEP(final Project project) {
+  public BaseRevisionTextPatchEP(Project project) {
     myProject = project;
     myBaseDir = myProject.getBaseDir().getPath();
     myChangeListManager = ChangeListManager.getInstance(myProject);
@@ -67,23 +67,23 @@ public class BaseRevisionTextPatchEP implements PatchEP {
   public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
     if (commitContext == null) return null;
     if (Boolean.TRUE.equals(commitContext.getUserData(ourPutBaseRevisionTextKey))) {
-      final File file = new File(myBaseDir, path);
+      File file = new File(myBaseDir, path);
       FilePath filePathOn = VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
-      final Change change = myChangeListManager.getChange(filePathOn);
+      Change change = myChangeListManager.getChange(filePathOn);
       List<FilePath> paths = commitContext.getUserData(ourBaseRevisionPaths);
       if (change == null || change.getBeforeRevision() == null || paths == null || ! paths.contains(filePathOn)) return null;
 
       try {
-        final String content = change.getBeforeRevision().getContent();
+        String content = change.getBeforeRevision().getContent();
         return content;
       }
       catch (VcsException e) {
         LOG.info(e);
       }
     } else {
-      final Map<String, String> map = commitContext.getUserData(ourStoredTexts);
+      Map<String, String> map = commitContext.getUserData(ourStoredTexts);
       if (map != null) {
-        final File file = new File(myBaseDir, path);
+        File file = new File(myBaseDir, path);
         return map.get(file.getPath());
       }
     }
@@ -104,7 +104,7 @@ public class BaseRevisionTextPatchEP implements PatchEP {
       map = new HashMap<String, String>();
       commitContext.putUserData(ourStoredTexts, map);
     }
-    final File file = new File(myBaseDir, path);
+    File file = new File(myBaseDir, path);
     map.put(file.getPath(), content.toString());
   }
 }

@@ -35,7 +35,7 @@ public class PlainFileManipulator extends AbstractElementManipulator<PsiPlainTex
   @Override
   public PsiPlainTextFile handleContentChange(@Nonnull PsiPlainTextFile file, @Nonnull TextRange range, String newContent)
           throws IncorrectOperationException {
-    final Document document = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
+    Document document = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
     document.replaceString(range.getStartOffset(), range.getEndOffset(), newContent);
     PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
 

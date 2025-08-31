@@ -49,7 +49,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
   @Override
   @Nullable
   @RequiredReadAction
-  public Object getData(@Nonnull final Key<?> dataId, @Nonnull final Editor e, @Nonnull final Caret caret) {
+  public Object getData(@Nonnull Key<?> dataId, @Nonnull Editor e, @Nonnull Caret caret) {
     if (!(e instanceof EditorEx)) {
       return null;
     }
@@ -93,7 +93,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
       return getLanguageAtCurrentPositionInEditor(injectedCaret, psiFile);
     }
     if (Language.KEY == dataId) {
-      final PsiFile psiFile = getPsiFile(e, file);
+      PsiFile psiFile = getPsiFile(e, file);
       if (psiFile == null) return null;
       return getLanguageAtCurrentPositionInEditor(caret, psiFile);
     }
@@ -116,13 +116,13 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
       return getPsiFile(e, file);
     }
     if (IdeView.KEY == dataId) {
-      final PsiFile psiFile = project == null ? null : PsiManager.getInstance(project).findFile(file);
+      PsiFile psiFile = project == null ? null : PsiManager.getInstance(project).findFile(file);
       final PsiDirectory psiDirectory = psiFile != null ? psiFile.getParent() : null;
       if (psiDirectory != null && psiDirectory.isPhysical()) {
         return new IdeView() {
 
           @Override
-          public void selectElement(final PsiElement element) {
+          public void selectElement(PsiElement element) {
             Editor editor = EditorHelper.openInEditor(element);
             if (editor != null) {
               ToolWindowManager.getInstance(element.getProject()).activateEditorComponent();
@@ -162,7 +162,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
   }
 
   @RequiredReadAction
-  private static Language getLanguageAtCurrentPositionInEditor(Caret caret, final PsiFile psiFile) {
+  private static Language getLanguageAtCurrentPositionInEditor(Caret caret, PsiFile psiFile) {
     int caretOffset = caret.getOffset();
     int mostProbablyCorrectLanguageOffset =
       caretOffset == caret.getSelectionStart() || caretOffset == caret.getSelectionEnd() ? caret.getSelectionStart() : caretOffset;
@@ -175,10 +175,10 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
 
   @RequiredReadAction
   private static Language getLanguageAtOffset(PsiFile psiFile, int mostProbablyCorrectLanguageOffset, int end) {
-    final PsiElement elt = psiFile.findElementAt(mostProbablyCorrectLanguageOffset);
+    PsiElement elt = psiFile.findElementAt(mostProbablyCorrectLanguageOffset);
     if (elt == null) return psiFile.getLanguage();
     if (elt instanceof PsiWhiteSpace) {
-      final int incremented = elt.getTextRange().getEndOffset() + 1;
+      int incremented = elt.getTextRange().getEndOffset() + 1;
       if (incremented <= end) {
         return getLanguageAtOffset(psiFile, incremented, end);
       }
@@ -189,7 +189,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
   @Nullable
   @RequiredReadAction
   private static PsiElement getPsiElementIn(@Nonnull Editor editor, @Nonnull Caret caret, @Nonnull VirtualFile file) {
-    final PsiFile psiFile = getPsiFile(editor, file);
+    PsiFile psiFile = getPsiFile(editor, file);
     if (psiFile == null) return null;
 
     try {
@@ -206,7 +206,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
     if (!file.isValid()) {
       return null; // fix for SCR 40329
     }
-    final Project project = e.getProject();
+    Project project = e.getProject();
     if (project == null) {
       return null;
     }

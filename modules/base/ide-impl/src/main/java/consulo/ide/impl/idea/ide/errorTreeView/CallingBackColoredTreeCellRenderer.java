@@ -29,7 +29,7 @@ public class CallingBackColoredTreeCellRenderer extends ColoredTreeCellRenderer 
     }
   }
 
-  public void setCurrentCallback(final CustomizeColoredTreeCellRenderer currentCallback) {
+  public void setCurrentCallback(CustomizeColoredTreeCellRenderer currentCallback) {
     myCurrentCallback = currentCallback;
   }
 }

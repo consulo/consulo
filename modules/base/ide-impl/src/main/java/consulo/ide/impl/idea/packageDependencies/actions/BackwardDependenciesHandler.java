@@ -36,11 +36,11 @@ import java.util.Set;
 public class BackwardDependenciesHandler extends DependenciesHandlerBase {
   private final AnalysisScope myScopeOfInterest;
 
-  public BackwardDependenciesHandler(Project project, AnalysisScope scope, final AnalysisScope selectedScope) {
+  public BackwardDependenciesHandler(Project project, AnalysisScope scope, AnalysisScope selectedScope) {
     this(project, Collections.singletonList(scope), selectedScope, new HashSet<>());
   }
 
-  public BackwardDependenciesHandler(final Project project, final List<AnalysisScope> scopes, final @Nullable AnalysisScope scopeOfInterest, Set<PsiFile> excluded) {
+  public BackwardDependenciesHandler(Project project, List<AnalysisScope> scopes, @Nullable AnalysisScope scopeOfInterest, Set<PsiFile> excluded) {
     super(project, scopes, excluded);
     myScopeOfInterest = scopeOfInterest;
   }
@@ -51,7 +51,7 @@ public class BackwardDependenciesHandler extends DependenciesHandlerBase {
   }
 
   @Override
-  protected String getPanelDisplayName(final AnalysisScope scope) {
+  protected String getPanelDisplayName(AnalysisScope scope) {
     return AnalysisScopeLocalize.backwardDependenciesToolwindowTitle(scope.getDisplayName()).get();
   }
 

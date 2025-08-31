@@ -58,7 +58,7 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
 
   private final MultiMap<VirtualFile, FileAnnotation> myFileAnnotationMap;
 
-  public VcsAnnotationLocalChangesListenerImpl(Project project, final ProjectLevelVcsManager vcsManager) {
+  public VcsAnnotationLocalChangesListenerImpl(Project project, ProjectLevelVcsManager vcsManager) {
     myLock = new Object();
     myUpdateStuff = createUpdateStuff();
     myUpdater = new ZipperUpdater(ApplicationManager.getApplication().isUnitTestMode() ? 10 : 300, Alarm.ThreadToUse.POOLED_THREAD, project);
@@ -79,9 +79,9 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
     return new Runnable() {
       @Override
       public void run() {
-        final Set<String> paths = new HashSet<>();
-        final Map<String, VcsRevisionNumber> changes = new HashMap<>();
-        final Set<VirtualFile> files = new HashSet<>();
+        Set<String> paths = new HashSet<>();
+        Map<String, VcsRevisionNumber> changes = new HashMap<>();
+        Set<VirtualFile> files = new HashSet<>();
         Set<VcsKey> vcsToRefresh;
         synchronized (myLock) {
           vcsToRefresh = new HashSet<>(myVcsKeySet);
@@ -114,11 +114,11 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
   }
 
   private void processUnderFile(VirtualFile file) {
-    final MultiMap<VirtualFile, FileAnnotation> annotations = new MultiMap<>();
+    MultiMap<VirtualFile, FileAnnotation> annotations = new MultiMap<>();
     synchronized (myLock) {
       for (VirtualFile virtualFile : myFileAnnotationMap.keySet()) {
         if (VfsUtilCore.isAncestor(file, virtualFile, true)) {
-          final Collection<FileAnnotation> values = myFileAnnotationMap.get(virtualFile);
+          Collection<FileAnnotation> values = myFileAnnotationMap.get(virtualFile);
           for (FileAnnotation value : values) {
             annotations.putValue(virtualFile, value);
           }
@@ -127,10 +127,10 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
     }
     if (! annotations.isEmpty()) {
       for (Map.Entry<VirtualFile, Collection<FileAnnotation>> entry : annotations.entrySet()) {
-        final VirtualFile key = entry.getKey();
-        final VcsRevisionNumber number = fromDiffProvider(key);
+        VirtualFile key = entry.getKey();
+        VcsRevisionNumber number = fromDiffProvider(key);
         if (number == null) continue;
-        final Collection<FileAnnotation> fileAnnotations = entry.getValue();
+        Collection<FileAnnotation> fileAnnotations = entry.getValue();
         for (FileAnnotation annotation : fileAnnotations) {
           if (annotation.isBaseRevisionChanged(number)) {
             annotation.close();
@@ -141,7 +141,7 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
   }
 
   private void refreshForPath(String path, VcsRevisionNumber number) {
-    final File file = new File(path);
+    File file = new File(path);
     VirtualFile vf = myLocalFileSystem.findFileByIoFile(file);
     if (vf == null) {
       vf = myLocalFileSystem.refreshAndFindFileByIoFile(file);
@@ -151,7 +151,7 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
   }
 
   private void processFile(VcsRevisionNumber number, VirtualFile vf) {
-    final Collection<FileAnnotation> annotations;
+    Collection<FileAnnotation> annotations;
     synchronized (myLock) {
       annotations = myFileAnnotationMap.get(vf);
     }
@@ -169,8 +169,8 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
     }
   }
 
-  private VcsRevisionNumber fromDiffProvider(final VirtualFile vf) {
-    final VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(vf);
+  private VcsRevisionNumber fromDiffProvider(VirtualFile vf) {
+    VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(vf);
     DiffProvider diffProvider;
     if (vcsRoot != null && vcsRoot.getVcs() != null && (diffProvider = vcsRoot.getVcs().getDiffProvider()) != null) {
       return diffProvider.getCurrentRevision(vf);
@@ -178,12 +178,12 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
     return null;
   }
 
-  private void closeForVcs(final Set<VcsKey> refresh) {
+  private void closeForVcs(Set<VcsKey> refresh) {
     if (refresh.isEmpty()) return;
-    final Set<FileAnnotation> copy = new HashSet<>();
+    Set<FileAnnotation> copy = new HashSet<>();
     synchronized (myLock) {
       for (FileAnnotation annotation : myFileAnnotationMap.values()) {
-        final VcsKey key = annotation.getVcsKey();
+        VcsKey key = annotation.getVcsKey();
         if (key != null && refresh.contains(key)) {
           copy.add(annotation);
         }
@@ -196,16 +196,16 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
 
   // annotations for already committed revisions should not register with this method - they are not subject to refresh
   @Override
-  public void registerAnnotation(final VirtualFile file, final FileAnnotation annotation) {
+  public void registerAnnotation(VirtualFile file, FileAnnotation annotation) {
     synchronized (myLock) {
       myFileAnnotationMap.putValue(file, annotation);
     }
   }
 
   @Override
-  public void unregisterAnnotation(final VirtualFile file, final FileAnnotation annotation) {
+  public void unregisterAnnotation(VirtualFile file, FileAnnotation annotation) {
     synchronized (myLock) {
-      final Collection<FileAnnotation> annotations = myFileAnnotationMap.get(file);
+      Collection<FileAnnotation> annotations = myFileAnnotationMap.get(file);
       if (!annotations.isEmpty()) {
         annotations.remove(annotation);
       }

@@ -34,7 +34,7 @@ public class StringsPool {
             return EMPTY;
         }
 
-        final long hash = StringHash.calc(value);
+        long hash = StringHash.calc(value);
         String reused = myReusableStrings.get(hash);
         if (reused != null) {
             return reused;

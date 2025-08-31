@@ -51,7 +51,7 @@ public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
   @Nonnull
   @Override
   public JComponent getComponent(@Nonnull final DiffContext context) {
-    final SimpleColoredComponent label = new SimpleColoredComponent();
+    SimpleColoredComponent label = new SimpleColoredComponent();
     label.setTextAlign(SwingConstants.CENTER);
     label.append("Can't show diff for unknown file type. ",
                  new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getInactiveTextColor()));

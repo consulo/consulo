@@ -37,7 +37,7 @@ public class AllScopeHolderImpl implements AllScopeHolder {
   @Nonnull
   public static final NamedScope ALL = new NamedScope("All", LocalizeValue.localizeTODO("All"), new AbstractPackageSet(TEXT, 0) {
     @Override
-    public boolean contains(final VirtualFile file, Project project, NamedScopesHolder scopesHolder) {
+    public boolean contains(VirtualFile file, Project project, NamedScopesHolder scopesHolder) {
       return true;
     }
   });

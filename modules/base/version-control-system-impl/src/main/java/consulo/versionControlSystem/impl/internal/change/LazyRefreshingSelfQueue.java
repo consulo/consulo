@@ -49,7 +49,7 @@ public class LazyRefreshingSelfQueue<T> {
   private final Consumer<T> myUpdater;
   private final Object myLock;
 
-  public LazyRefreshingSelfQueue(final Supplier<Long> updateInterval, final Supplier<Boolean> shouldUpdateOldChecker, final Consumer<T> updater) {
+  public LazyRefreshingSelfQueue(Supplier<Long> updateInterval, Supplier<Boolean> shouldUpdateOldChecker, Consumer<T> updater) {
     myUpdateInterval = updateInterval;
     myShouldUpdateOldChecker = shouldUpdateOldChecker;
     myUpdater = updater;
@@ -59,17 +59,17 @@ public class LazyRefreshingSelfQueue<T> {
   }
 
   // adds item that should be updated at next updateStep() call
-  public void addRequest(@Nonnull final T t) {
+  public void addRequest(@Nonnull T t) {
     synchronized (myLock) {
       myQueue.addFirst(new Pair<>(null, t));
     }
   }
 
   // unschedules item from update at next updateStep() call
-  public void forceRemove(@Nonnull final T t) {
+  public void forceRemove(@Nonnull T t) {
     synchronized (myLock) {
       for (Iterator<Pair<Long, T>> iterator = myQueue.iterator(); iterator.hasNext();) {
-        final Pair<Long, T> pair = iterator.next();
+        Pair<Long, T> pair = iterator.next();
         if (t.equals(pair.getSecond())) {
           iterator.remove();
         }
@@ -80,7 +80,7 @@ public class LazyRefreshingSelfQueue<T> {
 
   // called by outside timer or something
   public void updateStep() {
-    final long startTime = System.currentTimeMillis() - myUpdateInterval.get();
+    long startTime = System.currentTimeMillis() - myUpdateInterval.get();
     boolean onlyAbsolute = true;
     // TODO: Actually we could store items with pair.First == null in separate list.
     // checks item that has smallest update time - i.e. was not updated by the most time
@@ -95,13 +95,13 @@ public class LazyRefreshingSelfQueue<T> {
     }
 
     // do not ask under lock
-    final Boolean shouldUpdateOld = onlyAbsolute ? false : myShouldUpdateOldChecker.get();
-    final List<T> dirty = new LinkedList<>();
+    Boolean shouldUpdateOld = onlyAbsolute ? false : myShouldUpdateOldChecker.get();
+    List<T> dirty = new LinkedList<>();
 
     synchronized (myLock) {
       // adds all pairs with pair.First == null to dirty
       while (! myQueue.isEmpty()) {
-        final Pair<Long, T> pair = myQueue.get(0);
+        Pair<Long, T> pair = myQueue.get(0);
         if (pair.getFirst() == null) {
           dirty.add(myQueue.removeFirst().getSecond());
         } else {
@@ -111,7 +111,7 @@ public class LazyRefreshingSelfQueue<T> {
       if (Boolean.TRUE.equals(shouldUpdateOld) && (! myQueue.isEmpty())) {
         // adds all pairs with update time (pair.First) < current - interval to dirty
         while (! myQueue.isEmpty()) {
-          final Pair<Long, T> pair = myQueue.get(0);
+          Pair<Long, T> pair = myQueue.get(0);
           if (pair.getFirst() < startTime) {
             myQueue.removeFirst();
             dirty.add(pair.getSecond());

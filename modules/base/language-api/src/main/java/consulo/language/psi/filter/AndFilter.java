@@ -56,7 +56,7 @@ public class AndFilter implements ElementFilter {
   @Override
   public boolean isClassAcceptable(Class elementClass){
     for (Object myFilter : myFilters) {
-      final ElementFilter elementFilter = (ElementFilter)myFilter;
+      ElementFilter elementFilter = (ElementFilter)myFilter;
       if (!elementFilter.isClassAcceptable(elementClass)) {
         return false;
       }

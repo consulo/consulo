@@ -57,7 +57,7 @@ public class SequentialLimitedLifoExecutor<Task> implements Disposable {
 
   private class DetailsLoadingTask implements Consumer<Task> {
     @Override
-    public void accept(final Task task) {
+    public void accept(Task task) {
       try {
         myLoader.dismissLastTasks(myMaxTasks);
         myLoadProcess.consume(task);

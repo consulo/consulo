@@ -38,7 +38,7 @@ public abstract class XExecutionStack {
   /**
    * @param displayName presentable name of the thread to be shown in the combobox in 'Frames' tab
    */
-  protected XExecutionStack(final String displayName) {
+  protected XExecutionStack(String displayName) {
     this(displayName, ExecutionDebugIconGroup.threadThreadsuspended());
   }
 
@@ -46,7 +46,7 @@ public abstract class XExecutionStack {
    * @param displayName presentable name of the thread to be shown in the combobox in 'Frames' tab
    * @param icon icon to be shown in the combobox in 'Frames' tab
    */
-  protected XExecutionStack(final @Nonnull String displayName, final @Nullable Image icon) {
+  protected XExecutionStack(@Nonnull String displayName, @Nullable Image icon) {
     myDisplayName = displayName;
     myIcon = icon;
   }
@@ -91,6 +91,6 @@ public abstract class XExecutionStack {
      * @param stackFrames stack frames to add
      * @param last <code>true</code> if all frames are added
      */
-    void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, final boolean last);
+    void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, boolean last);
   }
 }

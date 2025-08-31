@@ -51,11 +51,11 @@ public class ResizeableMappedFile implements Forceable {
     myLastWrittenLogicalSize = myLogicalSize = readLength();
   }
 
-  public ResizeableMappedFile(final File file, int initialSize, PagedFileStorage.StorageLock lock, int pageSize, boolean valuesAreBufferAligned) throws IOException {
+  public ResizeableMappedFile(File file, int initialSize, PagedFileStorage.StorageLock lock, int pageSize, boolean valuesAreBufferAligned) throws IOException {
     this(file, initialSize, lock.myDefaultStorageLockContext, pageSize, valuesAreBufferAligned);
   }
 
-  public ResizeableMappedFile(final File file, int initialSize, PagedFileStorage.StorageLock lock) throws IOException {
+  public ResizeableMappedFile(File file, int initialSize, PagedFileStorage.StorageLock lock) throws IOException {
     this(file, initialSize, lock, -1, false);
   }
 
@@ -67,7 +67,7 @@ public class ResizeableMappedFile implements Forceable {
     return myStorage.length();
   }
 
-  void ensureSize(final long pos) {
+  void ensureSize(long pos) {
     myLogicalSize = Math.max(pos, myLogicalSize);
     expand(pos);
   }
@@ -76,7 +76,7 @@ public class ResizeableMappedFile implements Forceable {
     myRoundFactor = roundFactor;
   }
 
-  private void expand(final long max) {
+  private void expand(long max) {
     long realSize = realSize();
     if (max <= realSize) return;
     long suggestedSize;
@@ -120,7 +120,7 @@ public class ResizeableMappedFile implements Forceable {
     return new File(myStorage.getFile().getPath() + ".len");
   }
 
-  private void writeLength(final long len) {
+  private void writeLength(long len) {
     final File lengthFile = getLengthFile();
     DataOutputStream stream = null;
     try {
@@ -134,7 +134,7 @@ public class ResizeableMappedFile implements Forceable {
             return new DataOutputStream(new FileOutputStream(lengthFile));
           }
           catch (FileNotFoundException ex) {
-            final File parentFile = lengthFile.getParentFile();
+            File parentFile = lengthFile.getParentFile();
 
             if (!parentFile.exists()) {
               if (!parentWasCreated) {

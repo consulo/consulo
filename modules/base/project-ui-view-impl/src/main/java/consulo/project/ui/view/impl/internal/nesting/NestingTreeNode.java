@@ -53,11 +53,11 @@ public final class NestingTreeNode extends PsiFileNode implements FileNodeWithNe
     }
 
     @Override
-    public boolean contains(final @Nonnull VirtualFile file) {
+    public boolean contains(@Nonnull VirtualFile file) {
         if (super.contains(file)) return true;
 
         for (PsiFileNode node : myNestedFileNodes) {
-            final PsiFile psiFile = node.getValue();
+            PsiFile psiFile = node.getValue();
             if (psiFile != null && file.equals(psiFile.getVirtualFile())) {
                 return true;
             }

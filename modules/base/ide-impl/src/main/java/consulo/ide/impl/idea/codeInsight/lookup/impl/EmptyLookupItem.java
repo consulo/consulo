@@ -23,7 +23,7 @@ import consulo.language.editor.completion.lookup.LookupItem;
 public class EmptyLookupItem extends LookupItem<String> {
   private final boolean myLoading;
 
-  public EmptyLookupItem(final String s, boolean loading) {
+  public EmptyLookupItem(String s, boolean loading) {
     super(s, "           ");
     myLoading = loading;
   }

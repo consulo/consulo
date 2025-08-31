@@ -95,11 +95,11 @@ public class CompletionAssertions {
         return !(editor instanceof EditorWindow) || ((EditorWindow) editor).isValid();
     }
 
-    private static Attachment createAstAttachment(PsiFile fileCopy, final PsiFile originalFile) {
+    private static Attachment createAstAttachment(PsiFile fileCopy, PsiFile originalFile) {
         return AttachmentFactory.get().create(originalFile.getViewProvider().getVirtualFile().getPath() + " syntactic tree.txt", DebugUtil.psiToString(fileCopy, false, true));
     }
 
-    private static Attachment createFileTextAttachment(PsiFile fileCopy, final PsiFile originalFile) {
+    private static Attachment createFileTextAttachment(PsiFile fileCopy, PsiFile originalFile) {
         return AttachmentFactory.get().create(originalFile.getViewProvider().getVirtualFile().getPath(), fileCopy.getText());
     }
 
@@ -128,7 +128,7 @@ public class CompletionAssertions {
             throw new RuntimeExceptionWithAttachments("No element at insertion offset", "offset=" + offset, createFileTextAttachment(fileCopy, originalFile), createAstAttachment(fileCopy, originalFile));
         }
 
-        final TextRange range = insertedElement.getTextRange();
+        TextRange range = insertedElement.getTextRange();
         CharSequence fileCopyText = fileCopy.getViewProvider().getContents();
         if ((range.getEndOffset() > fileCopyText.length()) || !isEquals(fileCopyText.subSequence(range.getStartOffset(), range.getEndOffset()), insertedElement.getNode().getChars())) {
             throw new RuntimeExceptionWithAttachments("Inconsistent completion tree", "range=" + range, createFileTextAttachment(fileCopy, originalFile), createAstAttachment(fileCopy, originalFile),

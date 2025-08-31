@@ -29,9 +29,9 @@ import java.util.EventObject;
 public class JTableCellEditorHelper {
   private JTableCellEditorHelper() {}
 
-  public static void typeAhead(final JTable table, final EventObject e, final int row, final int column) {
+  public static void typeAhead(JTable table, EventObject e, int row, int column) {
     if (e instanceof KeyEvent) {
-      final Runnable r = () -> {
+      Runnable r = () -> {
         if (table.getEditingColumn() != column && table.getEditingRow() != row) return;
 
         Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

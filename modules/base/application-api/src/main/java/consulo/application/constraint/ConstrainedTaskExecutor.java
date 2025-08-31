@@ -32,7 +32,7 @@ public class ConstrainedTaskExecutor implements Executor {
 
   @Override
   public void execute(@Nonnull Runnable command) {
-    final BooleanSupplier condition = ((myExpiration == null) && (myCancellationCondition == null)) ? null : () -> {
+    BooleanSupplier condition = ((myExpiration == null) && (myCancellationCondition == null)) ? null : () -> {
       if (myExpiration != null && myExpiration.isExpired()) return false;
       if (myCancellationCondition != null && myCancellationCondition.getAsBoolean()) return false;
       return true;
@@ -48,13 +48,13 @@ public class ConstrainedTaskExecutor implements Executor {
   }
 
   public <T> CancellablePromise<T> submit(@Nonnull Callable<? extends T> task) {
-    final AsyncPromise<T> promise = new AsyncPromise<>();
+    AsyncPromise<T> promise = new AsyncPromise<>();
     if (myExpiration != null) {
-      final Expiration.Handle expirationHandle = myExpiration.invokeOnExpiration(promise::cancel);
+      Expiration.Handle expirationHandle = myExpiration.invokeOnExpiration(promise::cancel);
       promise.onProcessed(value -> expirationHandle.unregisterHandler());
     }
 
-    final BooleanSupplier condition = () -> {
+    BooleanSupplier condition = () -> {
       if (promise.isCancelled()) return false;
       if (myExpiration != null && myExpiration.isExpired()) return false;
       if (myCancellationCondition != null && myCancellationCondition.getAsBoolean()) {
@@ -65,7 +65,7 @@ public class ConstrainedTaskExecutor implements Executor {
     };
     myExecutionScheduler.scheduleWithinConstraints(() -> {
       try {
-        final T result = task.call();
+        T result = task.call();
         promise.setResult(result);
       }
       catch (Throwable e) {

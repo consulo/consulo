@@ -43,14 +43,14 @@ public class ChangesModuleGroupingPolicy implements ChangesGroupingPolicy {
 
   public static final String PROJECT_ROOT_TAG = "<Project Root>";
 
-  public ChangesModuleGroupingPolicy(final Project project, final DefaultTreeModel model) {
+  public ChangesModuleGroupingPolicy(Project project, DefaultTreeModel model) {
     myProject = project;
     myModel = model;
   }
 
   @Override
   @Nullable
-  public ChangesBrowserNode getParentNodeFor(final StaticFilePath node, final ChangesBrowserNode rootNode) {
+  public ChangesBrowserNode getParentNodeFor(StaticFilePath node, ChangesBrowserNode rootNode) {
     if (myProject.isDefault()) return null;
 
     ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();

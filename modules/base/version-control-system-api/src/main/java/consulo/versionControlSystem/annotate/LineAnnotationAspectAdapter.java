@@ -58,7 +58,7 @@ public abstract class LineAnnotationAspectAdapter implements LineAnnotationAspec
     }
 
     @Override
-    public Cursor getCursor(final int lineNum) {
+    public Cursor getCursor(int lineNum) {
         return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
     }
 

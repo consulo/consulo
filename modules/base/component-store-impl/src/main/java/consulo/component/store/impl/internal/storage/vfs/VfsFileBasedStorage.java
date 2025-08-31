@@ -91,7 +91,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
                 }
 
                 @Override
-                public void contentsChanged(@Nonnull final VirtualFileEvent event) {
+                public void contentsChanged(@Nonnull VirtualFileEvent event) {
                     listener.storageFileChanged(event, VfsFileBasedStorage.this);
                 }
             }, false, parentDisposable);

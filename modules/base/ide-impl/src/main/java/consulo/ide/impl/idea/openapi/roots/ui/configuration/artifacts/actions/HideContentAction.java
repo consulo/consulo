@@ -39,10 +39,10 @@ public class HideContentAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    final PackagingElementNode<?> node = selection.getNodeIfSingle();
+    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
+    PackagingElementNode<?> node = selection.getNodeIfSingle();
     if (node != null) {
-      final Collection<PackagingNodeSource> sources = node.getNodeSources();
+      Collection<PackagingNodeSource> sources = node.getNodeSources();
       if (!sources.isEmpty()) {
         String description;
         if (sources.size() == 1) {
@@ -62,11 +62,11 @@ public class HideContentAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    final PackagingElementNode<?> node = selection.getNodeIfSingle();
+    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
+    PackagingElementNode<?> node = selection.getNodeIfSingle();
     if (node == null) return;
 
-    final Collection<PackagingNodeSource> sources = node.getNodeSources();
+    Collection<PackagingNodeSource> sources = node.getNodeSources();
     for (PackagingNodeSource source : sources) {
       myArtifactEditor.getSubstitutionParameters().doNotSubstitute(source.getSourceElement());
       myArtifactEditor.getLayoutTreeComponent().getLayoutTree().addSubtreeToUpdate(source.getSourceParentNode());

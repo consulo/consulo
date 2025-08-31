@@ -44,7 +44,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     myPendingFlush = false;
   }
 
-  public void consumeOne(final T t) {
+  public void consumeOne(T t) {
     synchronized (myFlushLock) {
       ++ myCnt;
       myBuffer.add(t);
@@ -62,7 +62,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
   }
 
   private void flushCheck() {
-    final long ts = System.currentTimeMillis();
+    long ts = System.currentTimeMillis();
     if ((myBuffer.size() >= mySize) || (myInterval > 0) && ((ts - myInterval) > myTs)) {
       flushImpl(ts);
     }
@@ -71,7 +71,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
   // we need to 1) pass information to consumer in another thread since consumer potentially has heavy consume() - with info linking (git log)
   // 2) requests passed to background thread can come in wrong order -> solution: initiate pooled thread requests which would take what we have currently
   // 3) time is updated at the moment of flush -> buffer is empty at that moment
-  private void flushImpl(final long ts) {
+  private void flushImpl(long ts) {
     synchronized (myFlushLock) {
       if (myPendingFlush || myBuffer.isEmpty()) return;
       myPendingFlush = true;
@@ -89,7 +89,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
       @Override
       public void run() {
         myTs = ts;
-        final List<T> list;
+        List<T> list;
         synchronized (myFlushLock) {
           myPendingFlush = false;
           if (myBuffer.isEmpty()) return;

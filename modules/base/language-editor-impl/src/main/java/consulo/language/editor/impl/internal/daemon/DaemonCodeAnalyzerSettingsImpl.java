@@ -87,7 +87,7 @@ public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings i
   }
 
   @Override
-  public void loadState(final Element state) {
+  public void loadState(Element state) {
     try {
       readExternal(state);
     }

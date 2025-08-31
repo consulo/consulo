@@ -54,7 +54,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         EditorModificationUtil.fillVirtualSpaceUntilCaret(editor);
 
         PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
@@ -148,9 +148,9 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     }
 
     private static void showTemplatesLookup(
-        final Project project,
-        final Editor editor,
-        final PsiFile file,
+        Project project,
+        Editor editor,
+        PsiFile file,
         @Nonnull Map<Template, String> matchingTemplates,
         @Nonnull MultiMap<String, CustomLiveTemplateLookupElement> customTemplatesLookupElements
     ) {
@@ -175,7 +175,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         @Nonnull PsiFile file,
         int offset
     ) {
-        final MultiMap<String, CustomLiveTemplateLookupElement> result = MultiMap.create();
+        MultiMap<String, CustomLiveTemplateLookupElement> result = MultiMap.create();
         CustomTemplateCallback customTemplateCallback = new CustomTemplateCallback(editor, file);
         TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
         for (CustomLiveTemplate customLiveTemplate : TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext)) {
@@ -217,8 +217,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         return key + argument;
     }
 
-    public static void showTemplatesLookup(final Project project, final Editor editor, Map<Template, String> template2Argument) {
-        final LookupEx lookup = (LookupEx)LookupManager.getInstance(project)
+    public static void showTemplatesLookup(Project project, Editor editor, Map<Template, String> template2Argument) {
+        LookupEx lookup = (LookupEx)LookupManager.getInstance(project)
             .createLookup(editor, LookupElement.EMPTY_ARRAY, "", new LookupArranger.DefaultArranger());
         for (Template template : template2Argument.keySet()) {
             String prefix = computePrefix(template, template2Argument.get(template));
@@ -287,12 +287,12 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
         @Override
         @RequiredUIAccess
-        public void itemSelected(final LookupEvent event) {
+        public void itemSelected(LookupEvent event) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.liveTemplates");
-            final LookupElement item = event.getItem();
+            LookupElement item = event.getItem();
             if (item instanceof LiveTemplateLookupElementImpl liveTemplateLookupElement) {
-                final Template template = liveTemplateLookupElement.getTemplate();
-                final String argument = myTemplate2Argument != null ? myTemplate2Argument.get(template) : null;
+                Template template = liveTemplateLookupElement.getTemplate();
+                String argument = myTemplate2Argument != null ? myTemplate2Argument.get(template) : null;
                 CommandProcessor.getInstance().newCommand()
                     .project(myProject)
                     .inWriteAction()

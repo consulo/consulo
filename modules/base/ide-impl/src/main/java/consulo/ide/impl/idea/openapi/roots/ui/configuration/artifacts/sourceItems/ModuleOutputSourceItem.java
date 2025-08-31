@@ -73,7 +73,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   @Override
   @Nonnull
   public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
-    final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
+    NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
 
     return Collections.singletonList(myModuleOutputType.createElement(context.getProject(), modulePointer));
   }

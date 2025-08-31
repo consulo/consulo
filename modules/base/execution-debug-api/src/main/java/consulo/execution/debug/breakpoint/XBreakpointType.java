@@ -62,7 +62,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      * @param id    an unique id of breakpoint type
      * @param title title of tab in the breakpoints dialog
      */
-    protected XBreakpointType(@Nonnull final String id, @Nls @Nonnull final String title) {
+    protected XBreakpointType(@Nonnull String id, @Nls @Nonnull String title) {
         this(id, title, false);
     }
 
@@ -71,7 +71,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      * @param title                  title of tab in the breakpoints dialog
      * @param suspendThreadSupported <code>true</code> if suspending only one thread is supported for this type of breakpoints
      */
-    protected XBreakpointType(@Nonnull final String id, @Nls @Nonnull final String title, boolean suspendThreadSupported) {
+    protected XBreakpointType(@Nonnull String id, @Nls @Nonnull String title, boolean suspendThreadSupported) {
         myId = id;
         myTitle = title;
         mySuspendThreadSupported = suspendThreadSupported;
@@ -196,7 +196,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      * @return the created breakpoint or <code>null</code> if breakpoint wasn't created
      */
     @Nullable
-    public B addBreakpoint(final Project project, JComponent parentComponent) {
+    public B addBreakpoint(Project project, JComponent parentComponent) {
         return null;
     }
 

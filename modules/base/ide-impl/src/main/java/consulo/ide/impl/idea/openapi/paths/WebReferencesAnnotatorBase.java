@@ -72,7 +72,7 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
         return (WebReference)reference;
       }
       else if (reference instanceof PsiDynaReference) {
-        final WebReference webReference = lookForWebReference(((PsiDynaReference)reference).getReferences());
+        WebReference webReference = lookForWebReference(((PsiDynaReference)reference).getReferences());
         if (webReference != null) {
           return webReference;
         }
@@ -83,11 +83,11 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
 
   @Override
   public MyInfo[] collectInformation(@Nonnull PsiFile file) {
-    final WebReference[] references = collectWebReferences(file);
-    final MyInfo[] infos = new MyInfo[references.length];
+    WebReference[] references = collectWebReferences(file);
+    MyInfo[] infos = new MyInfo[references.length];
 
     for (int i = 0; i < infos.length; i++) {
-      final WebReference reference = references[i];
+      WebReference reference = references[i];
       infos[i] = new MyInfo(PsiAnchor.create(reference.getElement()), reference.getRangeInElement(), reference.getValue());
     }
     return infos;
@@ -95,7 +95,7 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
 
   @Override
   public MyInfo[] doAnnotate(MyInfo[] infos) {
-    final MyFetchResult[] fetchResults = new MyFetchResult[infos.length];
+    MyFetchResult[] fetchResults = new MyFetchResult[infos.length];
     for (int i = 0; i < fetchResults.length; i++) {
       fetchResults[i] = checkUrl(infos[i].myUrl);
     }
@@ -109,7 +109,7 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
     }
 
     for (int i = 0; i < fetchResults.length; i++) {
-      final MyFetchResult result = fetchResults[i];
+      MyFetchResult result = fetchResults[i];
 
       // if all hosts are not available, internet connection may be disabled, so it's better to not report warnings for unknown hosts
       if (result == MyFetchResult.OK || (!containsAvailableHosts && result == MyFetchResult.UNKNOWN_HOST)) {
@@ -126,17 +126,17 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
       return;
     }
 
-    final HighlightDisplayLevel displayLevel = getHighlightDisplayLevel(file);
+    HighlightDisplayLevel displayLevel = getHighlightDisplayLevel(file);
 
     for (MyInfo info : infos) {
       if (!info.myResult) {
-        final PsiElement element = info.myAnchor.retrieve();
+        PsiElement element = info.myAnchor.retrieve();
         if (element != null) {
-          final int start = element.getTextRange().getStartOffset();
-          final TextRange range = new TextRange(start + info.myRangeInElement.getStartOffset(), start + info.myRangeInElement.getEndOffset());
-          final String message = getErrorMessage(info.myUrl);
+          int start = element.getTextRange().getStartOffset();
+          TextRange range = new TextRange(start + info.myRangeInElement.getStartOffset(), start + info.myRangeInElement.getEndOffset());
+          String message = getErrorMessage(info.myUrl);
 
-          final Annotation annotation;
+          Annotation annotation;
 
           if (displayLevel == HighlightDisplayLevel.ERROR) {
             annotation = holder.createErrorAnnotation(range, message);
@@ -173,14 +173,14 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
   @Nonnull
   private MyFetchResult checkUrl(String url) {
     synchronized (myFetchCacheLock) {
-      final MyFetchCacheEntry entry = myFetchCache.get(url);
-      final long currentTime = System.currentTimeMillis();
+      MyFetchCacheEntry entry = myFetchCache.get(url);
+      long currentTime = System.currentTimeMillis();
 
       if (entry != null && currentTime - entry.getTime() < FETCH_CACHE_TIMEOUT) {
         return entry.getFetchResult();
       }
 
-      final MyFetchResult fetchResult = doCheckUrl(url);
+      MyFetchResult fetchResult = doCheckUrl(url);
       myFetchCache.put(url, new MyFetchCacheEntry(currentTime, fetchResult));
       return fetchResult;
     }

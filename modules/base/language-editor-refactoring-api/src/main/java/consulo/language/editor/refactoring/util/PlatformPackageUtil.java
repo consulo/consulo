@@ -48,8 +48,8 @@ public class PlatformPackageUtil {
   }
 
 
-  private static PsiDirectory[] getPackageDirectories(Project project, String rootPackage, final GlobalSearchScope scope) {
-    final PsiManager manager = PsiManager.getInstance(project);
+  private static PsiDirectory[] getPackageDirectories(Project project, String rootPackage, GlobalSearchScope scope) {
+    PsiManager manager = PsiManager.getInstance(project);
 
     Query<VirtualFile> query = DirectoryIndex.getInstance(scope.getProject()).getDirectoriesByPackageName(rootPackage, true);
     query = new FilteredQuery<>(query, scope::contains);

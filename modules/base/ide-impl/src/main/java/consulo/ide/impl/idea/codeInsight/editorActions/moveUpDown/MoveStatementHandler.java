@@ -31,10 +31,10 @@ class MoveStatementHandler extends BaseMoveHandler {
 
   @Override
   @Nullable
-  protected MoverWrapper getSuitableMover(final Editor editor, final PsiFile file) {
+  protected MoverWrapper getSuitableMover(Editor editor, PsiFile file) {
     // order is important!
-    final StatementUpDownMover.MoveInfo info = new StatementUpDownMover.MoveInfo();
-    for (final StatementUpDownMover mover : StatementUpDownMover.STATEMENT_UP_DOWN_MOVER_EP.getExtensionList()) {
+    StatementUpDownMover.MoveInfo info = new StatementUpDownMover.MoveInfo();
+    for (StatementUpDownMover mover : StatementUpDownMover.STATEMENT_UP_DOWN_MOVER_EP.getExtensionList()) {
       if (mover.checkAvailable(editor, file, info, isDown)) {
         return new MoverWrapper(mover, info, isDown);
       }

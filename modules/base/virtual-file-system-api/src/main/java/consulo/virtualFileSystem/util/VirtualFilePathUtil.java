@@ -51,7 +51,7 @@ public class VirtualFilePathUtil {
       return file;
     }
     if (file.getFileSystem() instanceof LocalFileProvider) {
-      final VirtualFile localFile = ((LocalFileProvider)file.getFileSystem()).getLocalVirtualFileFor(file);
+      VirtualFile localFile = ((LocalFileProvider)file.getFileSystem()).getLocalVirtualFileFor(file);
       if (localFile != null) {
         return localFile;
       }

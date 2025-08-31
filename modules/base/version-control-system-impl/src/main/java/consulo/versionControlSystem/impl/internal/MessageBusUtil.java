@@ -28,9 +28,9 @@ import java.util.function.Consumer;
  */
 @Deprecated
 public class MessageBusUtil {
-  public static <T> void runOnSyncPublisher(final Project project, final Class<T> topic, final Consumer<T> listener) {
-    final Application application = ApplicationManager.getApplication();
-    final Runnable runnable = createPublisherRunnable(project, topic, listener);
+  public static <T> void runOnSyncPublisher(Project project, Class<T> topic, Consumer<T> listener) {
+    Application application = ApplicationManager.getApplication();
+    Runnable runnable = createPublisherRunnable(project, topic, listener);
     if (application.isDispatchThread()) {
       runnable.run();
     }
@@ -49,9 +49,9 @@ public class MessageBusUtil {
     };
   }
 
-  public static <T> void invokeLaterIfNeededOnSyncPublisher(final Project project, final Class<T> topic, final Consumer<T> listener) {
-    final Application application = ApplicationManager.getApplication();
-    final Runnable runnable = createPublisherRunnable(project, topic, listener);
+  public static <T> void invokeLaterIfNeededOnSyncPublisher(Project project, Class<T> topic, Consumer<T> listener) {
+    Application application = ApplicationManager.getApplication();
+    Runnable runnable = createPublisherRunnable(project, topic, listener);
     if (application.isDispatchThread()) {
       runnable.run();
     }

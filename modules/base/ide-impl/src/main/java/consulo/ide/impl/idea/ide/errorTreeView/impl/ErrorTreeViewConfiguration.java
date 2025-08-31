@@ -55,7 +55,7 @@ public class ErrorTreeViewConfiguration implements PersistentStateComponent<Erro
   }
 
   @Override
-  public void loadState(final ErrorTreeViewConfiguration state) {
+  public void loadState(ErrorTreeViewConfiguration state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 }

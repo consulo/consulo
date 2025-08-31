@@ -72,7 +72,7 @@ class AnchorElementInfo extends SelfElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@Nonnull final SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
+  public boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
     if (other instanceof AnchorElementInfo) {
       if (!getVirtualFile().equals(other.getVirtualFile())) return false;
 

@@ -57,9 +57,9 @@ public abstract class ValueContainer<Value> {
   }
 
   public final boolean forEach(@Nonnull ContainerAction<? super Value> action) {
-    for (final ValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext(); ) {
-      final Value value = valueIterator.next();
-      for (final IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext(); ) {
+    for (ValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext(); ) {
+      Value value = valueIterator.next();
+      for (IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext(); ) {
         if (!action.perform(intIterator.next(), value)) return false;
       }
     }

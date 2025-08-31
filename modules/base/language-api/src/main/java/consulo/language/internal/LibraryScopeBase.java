@@ -61,8 +61,8 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
 
   @Override
   public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
-    final VirtualFile r1 = getFileRoot(file1);
-    final VirtualFile r2 = getFileRoot(file2);
+    VirtualFile r1 = getFileRoot(file1);
+    VirtualFile r2 = getFileRoot(file2);
     for (VirtualFile root : myEntries) {
       if (Comparing.equal(r1, root)) return 1;
       if (Comparing.equal(r2, root)) return -1;

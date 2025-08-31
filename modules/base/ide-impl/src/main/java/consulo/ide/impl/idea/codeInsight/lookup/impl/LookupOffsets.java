@@ -68,7 +68,7 @@ public class LookupOffsets implements DocumentListener {
   }
 
   public boolean truncatePrefix() {
-    final int len = myAdditionalPrefix.length();
+    int len = myAdditionalPrefix.length();
     if (len == 0) {
       myRemovedPrefix++;
       return false;
@@ -88,7 +88,7 @@ public class LookupOffsets implements DocumentListener {
     }
 
     int minPrefixLength = items.isEmpty() ? 0 : Integer.MAX_VALUE;
-    for (final LookupElement item : items) {
+    for (LookupElement item : items) {
       if (!(item instanceof EmptyLookupItem)) {
         minPrefixLength = Math.min(lookup.itemMatcher(item).getPrefix().length(), minPrefixLength);
       }

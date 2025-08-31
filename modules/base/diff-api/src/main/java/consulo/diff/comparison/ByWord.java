@@ -506,8 +506,8 @@ public class ByWord {
 
   @Nonnull
   private static Couple<List<Range>> splitIterable2Side(@Nonnull FairDiffIterable changes, int offset) {
-    final List<Range> ranges1 = new ArrayList<>();
-    final List<Range> ranges2 = new ArrayList<>();
+    List<Range> ranges1 = new ArrayList<>();
+    List<Range> ranges2 = new ArrayList<>();
     for (Range ch : changes.iterateUnchanged()) {
       if (ch.end2 <= offset) {
         ranges1.add(new Range(ch.start1, ch.end1, ch.start2, ch.end2));
@@ -894,10 +894,10 @@ public class ByWord {
   }
 
   @Nonnull
-  public static List<InlineChunk> getInlineChunks(@Nonnull final CharSequence text) {
-    final List<InlineChunk> chunks = new ArrayList<>();
+  public static List<InlineChunk> getInlineChunks(@Nonnull CharSequence text) {
+    List<InlineChunk> chunks = new ArrayList<>();
 
-    final int len = text.length();
+    int len = text.length();
 
     int offset = 0;
     while (offset < len) {

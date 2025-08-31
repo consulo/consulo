@@ -139,7 +139,7 @@ public final class ComponentUtil {
   private static <T extends JComponent> void findComponentsOfType(JComponent parent, @Nonnull Class<T> cls, @Nonnull List<? super T> result) {
     if (parent == null) return;
     if (cls.isAssignableFrom(parent.getClass())) {
-      @SuppressWarnings("unchecked") final T t = (T)parent;
+      @SuppressWarnings("unchecked") T t = (T)parent;
       result.add(t);
     }
     for (Component c : parent.getComponents()) {

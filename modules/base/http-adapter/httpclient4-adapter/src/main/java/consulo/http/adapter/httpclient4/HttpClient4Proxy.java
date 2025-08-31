@@ -54,7 +54,7 @@ public class HttpClient4Proxy {
      */
     public static void setProxyCredentialsIfEnabled(@Nonnull CredentialsProvider provider) {
         if (IdeHttpClientHelpers.isHttpProxyEnabled() && IdeHttpClientHelpers.isProxyAuthenticationEnabled()) {
-            final String ntlmUserPassword = IdeHttpClientHelpers.getProxyLogin().replace('\\', '/') + ":" + IdeHttpClientHelpers.getProxyPassword();
+            String ntlmUserPassword = IdeHttpClientHelpers.getProxyLogin().replace('\\', '/') + ":" + IdeHttpClientHelpers.getProxyPassword();
             provider.setCredentials(new AuthScope(IdeHttpClientHelpers.getProxyHost(), IdeHttpClientHelpers.getProxyPort(), AuthScope.ANY_REALM, AuthSchemes.NTLM),
                 new NTCredentials(ntlmUserPassword));
             provider.setCredentials(new AuthScope(IdeHttpClientHelpers.getProxyHost(), IdeHttpClientHelpers.getProxyPort()),

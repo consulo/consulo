@@ -47,7 +47,7 @@ public class LanguageModuleUtilInternal {
 
     Project project = element.getProject();
     if (project.isDefault()) return null;
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
 
     if (element instanceof PsiFileSystemItem && (!(element instanceof PsiFile) || element.getContext() == null)) {
       VirtualFile vFile = ((PsiFileSystemItem)element).getVirtualFile();
@@ -59,7 +59,7 @@ public class LanguageModuleUtilInternal {
         }
       }
       if (fileIndex.isInLibrarySource(vFile) || fileIndex.isInLibraryClasses(vFile)) {
-        final List<OrderEntry> orderEntries = fileIndex.getOrderEntriesForFile(vFile);
+        List<OrderEntry> orderEntries = fileIndex.getOrderEntriesForFile(vFile);
         if (orderEntries.isEmpty()) {
           return null;
         }
@@ -70,7 +70,7 @@ public class LanguageModuleUtilInternal {
         for (OrderEntry orderEntry : orderEntries) {
           modules.add(orderEntry.getOwnerModule());
         }
-        final Module[] candidates = modules.toArray(new Module[modules.size()]);
+        Module[] candidates = modules.toArray(new Module[modules.size()]);
         Arrays.sort(candidates, ModuleManager.getInstance(project).moduleDependencyComparator());
         return candidates[0];
       }
@@ -80,7 +80,7 @@ public class LanguageModuleUtilInternal {
     if (containingFile != null) {
       PsiElement context;
       while ((context = containingFile.getContext()) != null) {
-        final PsiFile file = context.getContainingFile();
+        PsiFile file = context.getContainingFile();
         if (file == null) break;
         containingFile = file;
       }
@@ -89,12 +89,12 @@ public class LanguageModuleUtilInternal {
         return containingFile.getUserData(ModuleUtilCore.KEY_MODULE);
       }
 
-      final PsiFile originalFile = containingFile.getOriginalFile();
+      PsiFile originalFile = containingFile.getOriginalFile();
       if (originalFile.getUserData(ModuleUtilCore.KEY_MODULE) != null) {
         return originalFile.getUserData(ModuleUtilCore.KEY_MODULE);
       }
 
-      final VirtualFile virtualFile = originalFile.getVirtualFile();
+      VirtualFile virtualFile = originalFile.getVirtualFile();
       if (virtualFile != null) {
         return fileIndex.getModuleForFile(virtualFile);
       }

@@ -77,7 +77,7 @@ public class FinishMarkAction extends BasicUndoableAction {
     }
 
     @RequiredUIAccess
-    public static void finish(final Project project, final Document document, @Nullable final StartMarkAction startAction) {
+    public static void finish(Project project, Document document, @Nullable StartMarkAction startAction) {
         if (startAction == null) {
             return;
         }

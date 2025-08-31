@@ -64,7 +64,7 @@ public class JBComboBoxTableCellEditorComponent extends JBLabel {
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      final JLabel label = (JLabel)super.getListCellRendererComponent(list, myToString.apply(value), index, isSelected, cellHasFocus);
+      JLabel label = (JLabel)super.getListCellRendererComponent(list, myToString.apply(value), index, isSelected, cellHasFocus);
       if (value == myValue) {
         label.setIcon(TargetAWT.to(getIcon(isSelected)));
       } else {
@@ -126,8 +126,8 @@ public class JBComboBoxTableCellEditorComponent extends JBLabel {
 
   private void initAndShowPopup() {
     myList.removeAll();
-    final Rectangle rect = myTable.getCellRect(myRow, myColumn, true);
-    final Point point = new Point(rect.x, rect.y);
+    Rectangle rect = myTable.getCellRect(myRow, myColumn, true);
+    Point point = new Point(rect.x, rect.y);
     myList.setModel(JBList.createDefaultListModel(myOptions));
     if (myRenderer != null) {
       myList.setCellRenderer(myRenderer);
@@ -138,7 +138,7 @@ public class JBComboBoxTableCellEditorComponent extends JBLabel {
       .setItemChoosenCallback(new Runnable() {
         @Override
         public void run() {
-          final ActionEvent event = new ActionEvent(myList, ActionEvent.ACTION_PERFORMED, "elementChosen");
+          ActionEvent event = new ActionEvent(myList, ActionEvent.ACTION_PERFORMED, "elementChosen");
           for (ActionListener listener : myListeners) {
             listener.actionPerformed(event);
           }

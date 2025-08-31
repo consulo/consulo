@@ -19,5 +19,5 @@ package consulo.ui.ex.awt.dnd;
  * @author Konstantin Bulenkov
  */
 public interface DnDDropActionHandler {
-  void dropActionChanged(final int gestureModifiers);
+  void dropActionChanged(int gestureModifiers);
 }

@@ -89,7 +89,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
     final JBList<AnAction> list = new MyList(size, recentProjectActions) {
       @Override
       protected void onActionClick(int index, MouseEvent e) {
-        final ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP);
+        ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP);
         if (group != null) {
           ActionManager.getInstance().createActionPopupMenu(ActionPlaces.WELCOME_SCREEN, group).getComponent().show(this, e.getX(), e.getY());
         }
@@ -100,7 +100,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
       @Override
       public void keyPressed(KeyEvent e) {
         Object selected = list.getSelectedValue();
-        final ProjectGroup group;
+        ProjectGroup group;
         if (selected instanceof PopupProjectGroupActionGroup) {
           group = ((PopupProjectGroupActionGroup)selected).getGroup();
         }
@@ -146,11 +146,11 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
     list.addMouseListener(new PopupHandler() {
       @Override
       public void invokePopup(Component comp, int x, int y) {
-        final int index = list.locationToIndex(new Point(x, y));
+        int index = list.locationToIndex(new Point(x, y));
         if (index != -1 && Arrays.binarySearch(list.getSelectedIndices(), index) < 0) {
           list.setSelectedIndex(index);
         }
-        final ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP);
+        ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP);
         if (group != null) {
           ActionManager.getInstance().createActionPopupMenu(ActionPlaces.WELCOME_SCREEN, group).getComponent().show(comp, x, y);
         }
@@ -177,7 +177,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
 
       @Override
       public Component getListCellRendererComponent(JList list, final AnAction value, int index, final boolean isSelected, boolean cellHasFocus) {
-        final Color fore = UIUtil.getListForeground(isSelected);
+        Color fore = UIUtil.getListForeground(isSelected);
         final Color back = UIUtil.getListBackground(isSelected);
         final JLabel name = new JLabel();
         final JLabel path = new JLabel();
@@ -193,9 +193,9 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             boolean isGroup = value instanceof PopupProjectGroupActionGroup;
             boolean isInsideGroup = false;
             if (value instanceof ReopenProjectAction) {
-              final String path = ((ReopenProjectAction)value).getProjectPath();
+              String path = ((ReopenProjectAction)value).getProjectPath();
               for (ProjectGroup group : RecentProjectsManager.getInstance().getGroups()) {
-                final List<String> projects = group.getProjects();
+                List<String> projects = group.getProjects();
                 if (projects.contains(path)) {
                   isInsideGroup = true;
                   break;
@@ -225,7 +225,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               add(spacer, BorderLayout.WEST);
             }
             if (isGroup) {
-              final ProjectGroup group = ((PopupProjectGroupActionGroup)value).getGroup();
+              ProjectGroup group = ((PopupProjectGroupActionGroup)value).getGroup();
               name.setText(" " + group.getName());
               name.setIcon(TargetAWT.to(group.isExpanded() ? PlatformIconGroup.nodesFolderopened() : PlatformIconGroup.nodesFolder()));
               name.setFont(name.getFont().deriveFont(Font.BOLD));
@@ -234,7 +234,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               add(moreActionLabel, BorderLayout.EAST);
             }
             else if (value instanceof ReopenProjectAction) {
-              final NonOpaquePanel p = new NonOpaquePanel(new BorderLayout());
+              NonOpaquePanel p = new NonOpaquePanel(new BorderLayout());
               name.setText(getTitle2Text(((ReopenProjectAction)value).getTemplatePresentation().getText(), name, JBUI.scale(55)));
               path.setText(getTitle2Text(((ReopenProjectAction)value).getProjectPath(), path, JBUI.scale(isInsideGroup ? 80 : 60)));
 
@@ -246,7 +246,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               p.add(path, BorderLayout.SOUTH);
 
               Image moduleMainIcon = ((ReopenProjectAction)value).getExtensionIcon();
-              final JLabel projectIcon = new JLabel("", TargetAWT.to(moduleMainIcon), SwingConstants.LEFT) {
+              JLabel projectIcon = new JLabel("", TargetAWT.to(moduleMainIcon), SwingConstants.LEFT) {
                 @Override
                 protected void paintComponent(Graphics g) {
                   getIcon().paintIcon(this, g, 0, (getHeight() - getIcon().getIconHeight()) / 2);
@@ -254,7 +254,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               };
               projectIcon.setBorder(JBUI.Borders.emptyRight(8));
               projectIcon.setVerticalAlignment(SwingConstants.CENTER);
-              final NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
+              NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
               panel.add(p);
               panel.add(projectIcon, BorderLayout.WEST);
 

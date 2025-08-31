@@ -105,21 +105,21 @@ public class DependencyConfigurable implements Configurable {
     stopTableEditing();
     DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
     validationManager.removeAllRules();
-    final HashMap<String, PackageSet> unUsed = new HashMap<String, PackageSet>(validationManager.getUnnamedScopes());
+    HashMap<String, PackageSet> unUsed = new HashMap<String, PackageSet>(validationManager.getUnnamedScopes());
     List<DependencyRule> modelItems = new ArrayList<DependencyRule>();
     modelItems.addAll(myDenyRulesModel.getItems());
     modelItems.addAll(myAllowRulesModel.getItems());
     for (DependencyRule rule : modelItems) {
       validationManager.addRule(rule);
-      final NamedScope fromScope = rule.getFromScope();
+      NamedScope fromScope = rule.getFromScope();
       if (fromScope instanceof NamedScope.UnnamedScope) {
-        final PackageSet fromPackageSet = fromScope.getValue();
+        PackageSet fromPackageSet = fromScope.getValue();
         LOG.assertTrue(fromPackageSet != null);
         unUsed.remove(fromPackageSet.getText());
       }
-      final NamedScope toScope = rule.getToScope();
+      NamedScope toScope = rule.getToScope();
       if (toScope instanceof NamedScope.UnnamedScope) {
-        final PackageSet toPackageSet = toScope.getValue();
+        PackageSet toPackageSet = toScope.getValue();
         LOG.assertTrue(toPackageSet != null);
         unUsed.remove(toPackageSet.getText());
       }
@@ -140,10 +140,10 @@ public class DependencyConfigurable implements Configurable {
 
   @Override
   public void reset() {
-    final DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
+    DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
     DependencyRule[] rules = validationManager.getAllRules();
-    final ArrayList<DependencyRule> denyList = new ArrayList<DependencyRule>();
-    final ArrayList<DependencyRule> allowList = new ArrayList<DependencyRule>();
+    ArrayList<DependencyRule> denyList = new ArrayList<DependencyRule>();
+    ArrayList<DependencyRule> allowList = new ArrayList<DependencyRule>();
     for (DependencyRule rule : rules) {
       if (rule.isDenyRule()) {
         denyList.add(rule.createCopy());
@@ -159,9 +159,9 @@ public class DependencyConfigurable implements Configurable {
 
   @Override
   public boolean isModified() {
-    final DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
+    DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
     if (validationManager.skipImportStatements() != mySkipImports.isSelected()) return true;
-    final List<DependencyRule> rules = new ArrayList<DependencyRule>();
+    List<DependencyRule> rules = new ArrayList<DependencyRule>();
     rules.addAll(myDenyRulesModel.getItems());
     rules.addAll(myAllowRulesModel.getItems());
     return !Arrays.asList(validationManager.getAllRules()).equals(rules);
@@ -225,7 +225,7 @@ public class DependencyConfigurable implements Configurable {
 
 
   private class RightColumn extends MyColumnInfo {
-    public RightColumn(final String name) {
+    public RightColumn(String name) {
       super(name);
     }
 
@@ -241,7 +241,7 @@ public class DependencyConfigurable implements Configurable {
   }
 
   private class LeftColumn extends MyColumnInfo {
-    public LeftColumn(final String name) {
+    public LeftColumn(String name) {
       super(name);
     }
 
@@ -260,7 +260,7 @@ public class DependencyConfigurable implements Configurable {
     private final Project myProject;
     private final boolean myDenyRule;
 
-    public MyTableModel(final Project project, final ColumnInfo[] columnInfos, final boolean isDenyRule) {
+    public MyTableModel(Project project, ColumnInfo[] columnInfos, boolean isDenyRule) {
       super(columnInfos);
       myProject = project;
       myDenyRule = isDenyRule;
@@ -269,7 +269,7 @@ public class DependencyConfigurable implements Configurable {
     @Override
     public void addRow() {
       ArrayList<DependencyRule> newList = new ArrayList<DependencyRule>(getItems());
-      final NamedScope scope = DefaultScopesProvider.getAllScope();
+      NamedScope scope = DefaultScopesProvider.getAllScope();
       newList.add(new DependencyRule(scope, scope, myDenyRule));
       setItems(newList);
     }

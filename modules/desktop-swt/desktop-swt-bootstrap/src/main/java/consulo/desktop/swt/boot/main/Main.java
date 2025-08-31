@@ -35,7 +35,7 @@ import java.util.Map;
  * @since 27/04/2021
  */
 public class Main {
-  public static void main(final String[] args) {
+  public static void main(String[] args) {
     ShowError.INSTANCE = new ShowError() {
       @Override
       public void showErrorDialogImpl(String title, String message, Throwable t) {

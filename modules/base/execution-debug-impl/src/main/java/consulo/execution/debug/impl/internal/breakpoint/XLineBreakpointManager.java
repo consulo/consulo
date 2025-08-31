@@ -96,14 +96,14 @@ public class XLineBreakpointManager {
 
       MessageBusConnection busConnection = project.getMessageBus().connect();
 
-      final MyDependentBreakpointListener myDependentBreakpointListener = new MyDependentBreakpointListener();
+      MyDependentBreakpointListener myDependentBreakpointListener = new MyDependentBreakpointListener();
       myDependentBreakpointManager.addListener(myDependentBreakpointListener);
       Disposer.register(project, () -> myDependentBreakpointManager.removeListener(myDependentBreakpointListener));
       busConnection.subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileUrlChangeAdapter() {
         @Override
         protected void fileUrlChanged(String oldUrl, String newUrl) {
           for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
-            final String url = breakpoint.getFileUrl();
+            String url = breakpoint.getFileUrl();
             if (FileUtil.startsWith(url, oldUrl)) {
               breakpoint.setFileUrl(newUrl + url.substring(oldUrl.length()));
             }
@@ -138,7 +138,7 @@ public class XLineBreakpointManager {
     });
   }
 
-  public void registerBreakpoint(XLineBreakpointImpl breakpoint, final boolean initUI) {
+  public void registerBreakpoint(XLineBreakpointImpl breakpoint, boolean initUI) {
     if (initUI) {
       breakpoint.updateUI();
     }
@@ -148,7 +148,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  public void unregisterBreakpoint(final XLineBreakpointImpl breakpoint) {
+  public void unregisterBreakpoint(XLineBreakpointImpl breakpoint) {
     RangeHighlighter highlighter = breakpoint.getHighlighter();
     if (highlighter != null) {
       myBreakpoints.remove(breakpoint);
@@ -182,7 +182,7 @@ public class XLineBreakpointManager {
     removeBreakpoints(toRemove);
   }
 
-  private void removeBreakpoints(final List<? extends XBreakpoint<?>> toRemove) {
+  private void removeBreakpoints(List<? extends XBreakpoint<?>> toRemove) {
     if (toRemove.isEmpty()) {
       return;
     }
@@ -194,7 +194,7 @@ public class XLineBreakpointManager {
     });
   }
 
-  public void breakpointChanged(final XLineBreakpointImpl breakpoint) {
+  public void breakpointChanged(XLineBreakpointImpl breakpoint) {
     if (UIAccess.isUIThread()) {
       breakpoint.updateUI();
     }
@@ -203,13 +203,13 @@ public class XLineBreakpointManager {
     }
   }
 
-  public void queueBreakpointUpdate(final XBreakpoint<?> slave) {
+  public void queueBreakpointUpdate(XBreakpoint<?> slave) {
     if (slave instanceof XLineBreakpointImpl<?>) {
       queueBreakpointUpdate((XLineBreakpointImpl<?>)slave);
     }
   }
 
-  public void queueBreakpointUpdate(@Nonnull final XLineBreakpointImpl<?> breakpoint) {
+  public void queueBreakpointUpdate(@Nonnull XLineBreakpointImpl<?> breakpoint) {
     myBreakpointsUpdateQueue.queue(() -> breakpoint.updateUI());
   }
 
@@ -223,8 +223,8 @@ public class XLineBreakpointManager {
 
   private class MyDocumentListener extends DocumentAdapter {
     @Override
-    public void documentChanged(final DocumentEvent e) {
-      final Document document = e.getDocument();
+    public void documentChanged(DocumentEvent e) {
+      Document document = e.getDocument();
       Collection<XLineBreakpointImpl> breakpoints = myBreakpoints.getKeysByValue(document);
       if (breakpoints != null && !breakpoints.isEmpty()) {
         myBreakpointsUpdateQueue.queue(() -> updateBreakpoints(document));
@@ -248,9 +248,9 @@ public class XLineBreakpointManager {
     }
 
     @Override
-    public void mouseClicked(final EditorMouseEvent e) {
-      final Editor editor = e.getEditor();
-      final MouseEvent mouseEvent = e.getMouseEvent();
+    public void mouseClicked(EditorMouseEvent e) {
+      Editor editor = e.getEditor();
+      MouseEvent mouseEvent = e.getMouseEvent();
       if (mouseEvent.isPopupTrigger() ||
         mouseEvent.isMetaDown() ||
         mouseEvent.isControlDown() ||
@@ -264,13 +264,13 @@ public class XLineBreakpointManager {
       }
 
       PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-      final int line = AWTEditorUtil.yPositionToLogicalLine(editor, mouseEvent);
-      final Document document = editor.getDocument();
-      final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+      int line = AWTEditorUtil.yPositionToLogicalLine(editor, mouseEvent);
+      Document document = editor.getDocument();
+      VirtualFile file = FileDocumentManager.getInstance().getFile(document);
       if (line >= 0 && line < document.getLineCount() && file != null) {
         ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT, e.getMouseEvent());
 
-        final AsyncResult<XLineBreakpoint> lineBreakpoint =
+        AsyncResult<XLineBreakpoint> lineBreakpoint =
           XBreakpointUtil.toggleLineBreakpoint(myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
         lineBreakpoint.doWhenDone(breakpoint -> {
           if (!mouseEvent.isAltDown() && mouseEvent.isShiftDown() && breakpoint != null) {
@@ -317,12 +317,12 @@ public class XLineBreakpointManager {
 
   private class MyDependentBreakpointListener implements XDependentBreakpointListener {
     @Override
-    public void dependencySet(final XBreakpoint<?> slave, final XBreakpoint<?> master) {
+    public void dependencySet(XBreakpoint<?> slave, XBreakpoint<?> master) {
       queueBreakpointUpdate(slave);
     }
 
     @Override
-    public void dependencyCleared(final XBreakpoint<?> breakpoint) {
+    public void dependencyCleared(XBreakpoint<?> breakpoint) {
       queueBreakpointUpdate(breakpoint);
     }
   }

@@ -74,11 +74,11 @@ public class NewLayerAction extends AnAction {
   }
 
   @Nonnull
-  private static String createUniqueSdkName(String suggestedName, final ModifiableRootModel modifiableRootModel) {
+  private static String createUniqueSdkName(String suggestedName, ModifiableRootModel modifiableRootModel) {
     if (suggestedName == null) {
       suggestedName = ModifiableRootModel.DEFAULT_LAYER_NAME;
     }
-    final Set<String> names = modifiableRootModel.getLayers().keySet();
+    Set<String> names = modifiableRootModel.getLayers().keySet();
     String newSdkName = suggestedName;
     int i = 0;
     while (names.contains(newSdkName)) {

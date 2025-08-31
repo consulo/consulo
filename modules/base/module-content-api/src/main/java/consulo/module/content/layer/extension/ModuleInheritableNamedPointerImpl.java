@@ -59,7 +59,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     @Override
     public T get() {
         if (myModulePointer != null) {
-            final Module module = myModulePointer.get();
+            Module module = myModulePointer.get();
             if (module == null) {
                 return getDefaultValue();
             }
@@ -72,7 +72,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     @Override
     public String getName() {
         if (myModulePointer != null) {
-            final Module module = myModulePointer.get();
+            Module module = myModulePointer.get();
             if (module == null) {
                 return null;
             }
@@ -84,7 +84,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ModuleInheritableNamedPointerImpl) {
-            final ModuleInheritableNamedPointerImpl another = (ModuleInheritableNamedPointerImpl) obj;
+            ModuleInheritableNamedPointerImpl another = (ModuleInheritableNamedPointerImpl) obj;
             return Comparing.equal(myModulePointer, another.myModulePointer) && Comparing.equal(myTargetPointer, another.myTargetPointer);
         }
         else {
@@ -105,11 +105,11 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
             myTargetPointer = null;
         }
         else {
-            final String moduleName = anotherItem.getModuleName();
+            String moduleName = anotherItem.getModuleName();
             myModulePointer = moduleName == null ? null : createModulePointer(moduleName);
 
             if (myModulePointer == null) {
-                final String targetName = anotherItem.getName();
+                String targetName = anotherItem.getName();
                 myTargetPointer = getPointer(myRootLayer, targetName);
             }
         }
@@ -160,11 +160,11 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
 
     @RequiredReadAction
     public void fromXml(Element element) {
-        final String moduleName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-module-name"));
+        String moduleName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-module-name"));
         if (moduleName != null) {
             myModulePointer = createModulePointer(moduleName);
         }
-        final String itemName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-name"));
+        String itemName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-name"));
         if (itemName != null) {
             myTargetPointer = getPointer(myRootLayer, itemName);
         }

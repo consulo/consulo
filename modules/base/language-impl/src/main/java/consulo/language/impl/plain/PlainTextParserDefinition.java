@@ -41,7 +41,7 @@ public class PlainTextParserDefinition implements ParserDefinition {
   public static final IFileElementType PLAIN_FILE_ELEMENT_TYPE = new IFileElementType(PlainTextLanguage.INSTANCE) {
     @Override
     public ASTNode parseContents(ASTNode chameleon) {
-      final CharSequence chars = chameleon.getChars();
+      CharSequence chars = chameleon.getChars();
       return ASTFactory.leaf(PlainTextTokenTypes.PLAIN_TEXT, chars);
     }
   };

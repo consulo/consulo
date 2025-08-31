@@ -40,7 +40,7 @@ public class OptionsAndConfirmations {
     myConfirmations = new LinkedHashMap<String, VcsShowConfirmationOptionImpl>();
   }
 
-  public void init(final Convertor<String, VcsShowConfirmationOption.Value> initOptions) {
+  public void init(Convertor<String, VcsShowConfirmationOption.Value> initOptions) {
     createSettingFor(VcsConfiguration.StandardOption.ADD);
     createSettingFor(VcsConfiguration.StandardOption.REMOVE);
     createSettingFor(VcsConfiguration.StandardOption.CHECKOUT);
@@ -74,9 +74,9 @@ public class OptionsAndConfirmations {
     restoreReadConfirm(VcsConfiguration.StandardConfirmation.REMOVE, initOptions);
   }
 
-  private void restoreReadConfirm(final VcsConfiguration.StandardConfirmation confirm,
-                                  final Convertor<String, VcsShowConfirmationOption.Value> initOptions) {
-    final VcsShowConfirmationOption.Value initValue = initOptions.convert(confirm.getId());
+  private void restoreReadConfirm(VcsConfiguration.StandardConfirmation confirm,
+                                  Convertor<String, VcsShowConfirmationOption.Value> initOptions) {
+    VcsShowConfirmationOption.Value initValue = initOptions.convert(confirm.getId());
     if (initValue != null) {
       getConfirmation(confirm).setValue(initValue);
     }
@@ -87,7 +87,7 @@ public class OptionsAndConfirmations {
     return myConfirmations.get(option.getId());
   }
 
-  private void createSettingFor(final VcsConfiguration.StandardOption option) {
+  private void createSettingFor(VcsConfiguration.StandardOption option) {
     if (!myOptions.containsKey(option.getId())) {
       myOptions.put(option.getId(), new VcsShowOptionsSettingImpl(option));
     }
@@ -108,7 +108,7 @@ public class OptionsAndConfirmations {
 
   @Nonnull
   public VcsShowSettingOption getOrCreateCustomOption(@Nonnull String vcsActionName, @Nonnull AbstractVcs vcs) {
-    final VcsShowOptionsSettingImpl option = getOrCreateOption(vcsActionName);
+    VcsShowOptionsSettingImpl option = getOrCreateOption(vcsActionName);
     option.addApplicableVcs(vcs);
     return option;
   }

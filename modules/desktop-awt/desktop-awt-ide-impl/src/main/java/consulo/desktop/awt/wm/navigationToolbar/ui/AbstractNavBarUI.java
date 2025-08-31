@@ -74,9 +74,9 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public void doPaintNavBarItem(Graphics2D g, NavBarItem item, NavBarPanel navbar) {
-    final boolean floating = navbar.isInFloatingMode();
+    boolean floating = navbar.isInFloatingMode();
     boolean toolbarVisible = UISettings.getInstance().getShowMainToolbar();
-    final boolean selected = item.isSelected() && item.isFocused();
+    boolean selected = item.isSelected() && item.isFocused();
     boolean nextSelected = item.isNextSelected() && navbar.isFocused();
 
 
@@ -101,7 +101,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
     UIUtil.drawImage(g, image, 0, 0, null);
 
-    final int offset = item.isFirstElement() ? getFirstElementLeftOffset() : 0;
+    int offset = item.isFirstElement() ? getFirstElementLeftOffset() : 0;
     int textOffset = getElementPadding().width() + offset;
     if (item.needPaintIcon()) {
       Image icon = item.getIcon();
@@ -124,8 +124,8 @@ public abstract class AbstractNavBarUI implements NavBarUI {
     BufferedImage result = UIUtil.createImage(ctx, w, h, BufferedImage.TYPE_INT_ARGB, PaintUtil.RoundingMode.FLOOR);
 
     Color defaultBg = StyleManager.get().getCurrentStyle().isDark() ? Gray._100 : JBColor.WHITE;
-    final Paint bg = floating ? defaultBg : null;
-    final Color selection = UIUtil.getListSelectionBackground(true);
+    Paint bg = floating ? defaultBg : null;
+    Color selection = UIUtil.getListSelectionBackground(true);
 
     Graphics2D g2 = result.createGraphics();
     g2.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
@@ -206,7 +206,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public Dimension getOffsets(NavBarItem item) {
-    final Dimension size = new Dimension();
+    Dimension size = new Dimension();
     if (!item.isPopupElement()) {
       size.width += getDecorationOffset() + getElementPadding().width() + (item.isFirstElement() ? getFirstElementLeftOffset() : 0);
       size.height += getElementPadding().height();
@@ -216,7 +216,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
   @Override
   public Insets getWrapperPanelInsets(Insets insets) {
-    final JBInsets result = JBUI.insets(insets);
+    JBInsets result = JBUI.insets(insets);
     if (shouldPaintWrapperPanel()) {
       result.top += JBUIScale.scale(1);
     }

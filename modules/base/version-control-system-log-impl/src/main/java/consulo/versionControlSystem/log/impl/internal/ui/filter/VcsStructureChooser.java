@@ -102,7 +102,7 @@ public class VcsStructureChooser extends DialogWrapper {
     private Map<VirtualFile, String> calculateModules(@Nonnull List<VirtualFile> roots) {
         Map<VirtualFile, String> result = new HashMap<>();
 
-        final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
+        ModuleManager moduleManager = ModuleManager.getInstance(myProject);
         // assertion for read access inside
         Module[] modules = myProject.getApplication().runReadAction((Supplier<Module[]>) () -> moduleManager.getModules());
 

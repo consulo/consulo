@@ -38,7 +38,7 @@ public final class StreamUtil {
    * @throws IOException
    */
   public static int copyStreamContent(InputStream inputStream, OutputStream outputStream) throws IOException {
-    final byte[] buffer = new byte[10 * 1024];
+    byte[] buffer = new byte[10 * 1024];
     int count;
     int total = 0;
     while ((count = inputStream.read(buffer)) > 0) {
@@ -49,7 +49,7 @@ public final class StreamUtil {
   }
 
   public static byte[] loadFromStream(InputStream inputStream) throws IOException {
-    final UnsyncByteArrayOutputStream outputStream = new UnsyncByteArrayOutputStream();
+    UnsyncByteArrayOutputStream outputStream = new UnsyncByteArrayOutputStream();
     try {
       copyStreamContent(inputStream, outputStream);
     }
@@ -63,17 +63,17 @@ public final class StreamUtil {
    * @deprecated depends on the default encoding, use StreamUtil#readText(java.io.InputStream, String) instead
    */
   public static String readText(InputStream inputStream) throws IOException {
-    final byte[] data = loadFromStream(inputStream);
+    byte[] data = loadFromStream(inputStream);
     return new String(data);
   }
 
   public static String readText(InputStream inputStream, @Nonnull String encoding) throws IOException {
-    final byte[] data = loadFromStream(inputStream);
+    byte[] data = loadFromStream(inputStream);
     return new String(data, encoding);
   }
 
   public static String readText(InputStream inputStream, @Nonnull Charset encoding) throws IOException {
-    final byte[] data = loadFromStream(inputStream);
+    byte[] data = loadFromStream(inputStream);
     return new String(data, encoding);
   }
 

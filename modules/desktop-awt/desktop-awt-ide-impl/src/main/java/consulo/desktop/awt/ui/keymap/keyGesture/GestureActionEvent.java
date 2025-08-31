@@ -30,34 +30,34 @@ public class GestureActionEvent extends AnActionEvent {
   }
 
   public static class Init extends GestureActionEvent {
-    public Init(final KeyboardGestureProcessor processor) {
+    public Init(KeyboardGestureProcessor processor) {
       super(processor);
     }
 
     @Override
-    public void accept(@Nonnull final AnActionEventVisitor visitor) {
+    public void accept(@Nonnull AnActionEventVisitor visitor) {
       visitor.visitGestureInitEvent(this);
     }
   }
 
   public static class PerformAction extends GestureActionEvent {
-    public PerformAction(final KeyboardGestureProcessor processor) {
+    public PerformAction(KeyboardGestureProcessor processor) {
       super(processor);
     }
 
     @Override
-    public void accept(@Nonnull final AnActionEventVisitor visitor) {
+    public void accept(@Nonnull AnActionEventVisitor visitor) {
       visitor.visitGesturePerformedEvent(this);
     }
   }
 
   public static class Finish extends GestureActionEvent {
-    public Finish(final KeyboardGestureProcessor processor) {
+    public Finish(KeyboardGestureProcessor processor) {
       super(processor);
     }
 
     @Override
-    public void accept(@Nonnull final AnActionEventVisitor visitor) {
+    public void accept(@Nonnull AnActionEventVisitor visitor) {
       visitor.visitGestureFinishEvent(this);
     }
   }

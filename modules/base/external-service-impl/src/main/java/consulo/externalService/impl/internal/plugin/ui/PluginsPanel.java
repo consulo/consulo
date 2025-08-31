@@ -115,7 +115,7 @@ public class PluginsPanel implements Disposable {
         if (node instanceof PluginNode && ((PluginNode) node).getInstallStatus() == PluginNode.STATUS_DOWNLOADED) {
             return true;
         }
-        final PluginId pluginId = node.getPluginId();
+        PluginId pluginId = node.getPluginId();
         if (PluginManager.findPlugin(pluginId) != null) {
             return false;
         }
@@ -190,7 +190,7 @@ public class PluginsPanel implements Disposable {
     }
 
     public boolean hasProblematicDependencies(PluginId pluginId) {
-        final Set<PluginId> ids = myDependentToRequiredListMap.get(pluginId);
+        Set<PluginId> ids = myDependentToRequiredListMap.get(pluginId);
         return ids != null && !ids.isEmpty();
     }
 
@@ -201,9 +201,9 @@ public class PluginsPanel implements Disposable {
 
     @RequiredUIAccess
     public void checkInstalledPluginDependencies(PluginDescriptor pluginDescriptor) {
-        final Set<PluginId> notInstalled = new HashSet<>();
-        final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
-        final PluginId[] optionalDependentPluginIds = pluginDescriptor.getOptionalDependentPluginIds();
+        Set<PluginId> notInstalled = new HashSet<>();
+        PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
+        PluginId[] optionalDependentPluginIds = pluginDescriptor.getOptionalDependentPluginIds();
         for (PluginId id : dependentPluginIds) {
             if (ArrayUtil.find(optionalDependentPluginIds, id) > -1) {
                 continue;
@@ -224,8 +224,8 @@ public class PluginsPanel implements Disposable {
     }
 
     public boolean appendOrUpdateDescriptor(PluginDescriptor descriptor) {
-        final PluginId descrId = descriptor.getPluginId();
-        final PluginDescriptor installed = PluginManager.findPlugin(descrId);
+        PluginId descrId = descriptor.getPluginId();
+        PluginDescriptor installed = PluginManager.findPlugin(descrId);
         InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
 
         if (installed != null) {
@@ -258,7 +258,7 @@ public class PluginsPanel implements Disposable {
         }
 
         if (myInstalledTab.isRequireShutdown()) {
-            final Application app = Application.get();
+            Application app = Application.get();
 
             int response = app.isRestartCapable() ? PluginInstallUtil.showRestartIDEADialog() : PluginInstallUtil.showShutDownIDEADialog();
             if (response == Messages.YES) {

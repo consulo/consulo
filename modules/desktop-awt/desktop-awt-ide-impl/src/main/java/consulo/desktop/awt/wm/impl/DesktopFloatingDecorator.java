@@ -73,13 +73,13 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
   private float myEndRatio; // start and end alpha ratio for transparency animation
 
 
-  DesktopFloatingDecorator(final DesktopIdeFrameImpl owner, final WindowInfoImpl info, final DesktopInternalDecorator internalDecorator) {
+  DesktopFloatingDecorator(DesktopIdeFrameImpl owner, WindowInfoImpl info, DesktopInternalDecorator internalDecorator) {
     super(owner.getWindow(), internalDecorator.getToolWindow().getId());
     MnemonicHelper.init(getContentPane());
     myInternalDecorator = internalDecorator;
 
     setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-    final JComponent cp = (JComponent)getContentPane();
+    JComponent cp = (JComponent)getContentPane();
     cp.setLayout(new BorderLayout());
 
     if (Platform.current().os().isWindows()) {
@@ -130,9 +130,9 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     setFocusableWindowState(myInfo.isActive());
 
     super.show();
-    final UISettings uiSettings = UISettings.getInstance();
+    UISettings uiSettings = UISettings.getInstance();
     if (uiSettings.ENABLE_ALPHA_MODE) {
-      final WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
+      WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
       windowManager.setAlphaModeEnabled(this, true);
       if (myInfo.isActive()) {
         windowManager.setAlphaModeRatio(this, 0.0f);
@@ -167,7 +167,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     super.dispose();
   }
 
-  final void apply(final WindowInfoImpl info) {
+  final void apply(WindowInfoImpl info) {
     LOG.assertTrue(info.isFloating());
     myInfo = info;
     // Set alpha mode
@@ -205,7 +205,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     if (myStartRatio > myEndRatio) { // dialog is becoming non transparent quicker
       delta *= 2;
     }
-    final float ratio = myStartRatio + (float)myCurrentFrame * delta;
+    float ratio = myStartRatio + (float)myCurrentFrame * delta;
     return Math.min(1.0f, Math.max(.0f, ratio));
   }
 
@@ -223,31 +223,31 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     private Point myLastPoint;
     private boolean myDragging;
 
-    public BorderItem(final int anchor) {
+    public BorderItem(int anchor) {
       myAnchor = anchor;
       enableEvents(MouseEvent.MOUSE_EVENT_MASK | MouseEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
     @Override
-    protected final void processMouseMotionEvent(final MouseEvent e) {
+    protected final void processMouseMotionEvent(MouseEvent e) {
       super.processMouseMotionEvent(e);
       if (MouseEvent.MOUSE_DRAGGED == e.getID() && myLastPoint != null) {
-        final Point newPoint = e.getPoint();
+        Point newPoint = e.getPoint();
         SwingUtilities.convertPointToScreen(newPoint, this);
-        final Rectangle screenBounds = WindowManagerEx.getInstanceEx().getScreenBounds();
+        Rectangle screenBounds = WindowManagerEx.getInstanceEx().getScreenBounds();
 
         newPoint.x = Math.min(Math.max(newPoint.x, screenBounds.x), screenBounds.width);
         newPoint.y = Math.min(Math.max(newPoint.y, screenBounds.y), screenBounds.height);
 
-        final Rectangle oldBounds = DesktopFloatingDecorator.this.getBounds();
-        final Rectangle newBounds = new Rectangle(oldBounds);
+        Rectangle oldBounds = DesktopFloatingDecorator.this.getBounds();
+        Rectangle newBounds = new Rectangle(oldBounds);
 
         if ((myMotionMask & ANCHOR_TOP) > 0) {
           newPoint.y = Math.min(newPoint.y, oldBounds.y + oldBounds.height - 2 * DIVIDER_WIDTH);
           if (newPoint.y < screenBounds.y + DIVIDER_WIDTH) {
             newPoint.y = screenBounds.y;
           }
-          final Point offset = new Point(newPoint.x - myLastPoint.x, newPoint.y - myLastPoint.y);
+          Point offset = new Point(newPoint.x - myLastPoint.x, newPoint.y - myLastPoint.y);
           newBounds.y = oldBounds.y + offset.y;
           newBounds.height = oldBounds.height - offset.y;
         }
@@ -256,7 +256,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
           if (newPoint.x < screenBounds.x + DIVIDER_WIDTH) {
             newPoint.x = screenBounds.x;
           }
-          final Point offset = new Point(newPoint.x - myLastPoint.x, newPoint.y - myLastPoint.y);
+          Point offset = new Point(newPoint.x - myLastPoint.x, newPoint.y - myLastPoint.y);
           newBounds.x = oldBounds.x + offset.x;
           newBounds.width = oldBounds.width - offset.x;
         }
@@ -265,7 +265,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
           if (newPoint.y > screenBounds.height - DIVIDER_WIDTH) {
             newPoint.y = screenBounds.height;
           }
-          final Point offset = new Point(newPoint.x - myLastPoint.x, newPoint.y - myLastPoint.y);
+          Point offset = new Point(newPoint.x - myLastPoint.x, newPoint.y - myLastPoint.y);
           newBounds.height = oldBounds.height + offset.y;
         }
         if ((myMotionMask & ANCHOR_RIGHT) > 0) {
@@ -273,7 +273,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
           if (newPoint.x > screenBounds.width - DIVIDER_WIDTH) {
             newPoint.x = screenBounds.width;
           }
-          final Point offset = new Point(newPoint.x - myLastPoint.x, newPoint.y - myLastPoint.y);
+          Point offset = new Point(newPoint.x - myLastPoint.x, newPoint.y - myLastPoint.y);
           newBounds.width = oldBounds.width + offset.x;
         }
         // It's much better to resize frame this way then via Component.setBounds() method.
@@ -291,7 +291,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     }
 
     @Override
-    protected final void processMouseEvent(final MouseEvent e) {
+    protected final void processMouseEvent(MouseEvent e) {
       super.processMouseEvent(e);
       switch (e.getID()) {
         case MouseEvent.MOUSE_PRESSED: {
@@ -315,7 +315,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
       }
     }
 
-    private void setMotionMask(final Point p) {
+    private void setMotionMask(Point p) {
       myMotionMask = myAnchor;
       if (ANCHOR_TOP == myAnchor || ANCHOR_BOTTOM == myAnchor) {
         if (p.getX() < RESIZER_WIDTH) {
@@ -361,7 +361,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
 
     @Override
     public final Dimension getPreferredSize() {
-      final Dimension d = super.getPreferredSize();
+      Dimension d = super.getPreferredSize();
       if (ANCHOR_TOP == myAnchor || ANCHOR_BOTTOM == myAnchor) {
         d.height = DIVIDER_WIDTH;
       }
@@ -372,10 +372,10 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     }
 
     @Override
-    public final void paint(final Graphics g) {
+    public final void paint(Graphics g) {
       super.paint(g);
-      final JBColor lightGray = new JBColor(Color.lightGray, Gray._95);
-      final JBColor gray = new JBColor(Color.gray, Gray._95);
+      JBColor lightGray = new JBColor(Color.lightGray, Gray._95);
+      JBColor gray = new JBColor(Color.gray, Gray._95);
       if (ANCHOR_TOP == myAnchor) {
         g.setColor(lightGray);
         UIUtil.drawLine(g, 0, 0, getWidth() - 1, 0);
@@ -405,7 +405,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
 
   private final class MyWindowListener extends WindowAdapter {
     @Override
-    public void windowClosing(final WindowEvent e) {
+    public void windowClosing(WindowEvent e) {
       myInternalDecorator.fireResized();
       myInternalDecorator.fireHidden();
     }
@@ -414,7 +414,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
   private final class MyAnimator implements Runnable {
     @Override
     public final void run() {
-      final WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
+      WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
       if (isDisplayable() && isShowing()) {
         windowManager.setAlphaModeRatio(DesktopFloatingDecorator.this, getCurrentAlphaRatio());
       }
@@ -430,10 +430,10 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
 
   private final class MyUISettingsListener implements UISettingsListener {
     @Override
-    public void uiSettingsChanged(final UISettings uiSettings) {
+    public void uiSettingsChanged(UISettings uiSettings) {
       LOG.assertTrue(isDisplayable());
       LOG.assertTrue(isShowing());
-      final WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
+      WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
       myDelayAlarm.cancelAllRequests();
       if (uiSettings.ENABLE_ALPHA_MODE) {
         if (!myInfo.isActive()) {

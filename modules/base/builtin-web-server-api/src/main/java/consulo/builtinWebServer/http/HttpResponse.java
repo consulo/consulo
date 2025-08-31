@@ -76,7 +76,7 @@ public final class HttpResponse {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("HttpResponse{");
+    StringBuilder sb = new StringBuilder("HttpResponse{");
     sb.append("myCode=").append(myCode);
     sb.append('}');
     return sb.toString();

@@ -23,7 +23,7 @@ public class Range<T extends Comparable<T>> {
   private final T myFrom;
   private final T myTo;
 
-  public Range(@Nonnull final T from, @Nonnull final T to) {
+  public Range(@Nonnull T from, @Nonnull T to) {
     myFrom = from;
     myTo = to;
   }

@@ -28,7 +28,7 @@ public class FileTemplateGroupDescriptor extends FileTemplateDescriptor {
 
   public FileTemplateGroupDescriptor(String title, Image icon, FileTemplateDescriptor... children) {
     this(title, icon);
-    for (final FileTemplateDescriptor child : children) {
+    for (FileTemplateDescriptor child : children) {
       addTemplate(child);
     }
   }

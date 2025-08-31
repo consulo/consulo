@@ -179,8 +179,8 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
       return -1;
     }
 
-    final double[] resultingWeight = new double[1];
-    final int[] resultingOffset = new int[1];
+    double[] resultingWeight = new double[1];
+    int[] resultingOffset = new int[1];
     for (int i = myOffset2weight.end - 1; i >= 0; i--) {
       if (myOffset2weight.data[i] == 0) {
         continue;

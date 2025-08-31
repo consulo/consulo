@@ -25,13 +25,13 @@ import consulo.annotation.access.RequiredReadAction;
 public class PsiReferenceProcessorAdapter extends ReadActionProcessor<PsiReference> {
     private final PsiReferenceProcessor myProcessor;
 
-    public PsiReferenceProcessorAdapter(final PsiReferenceProcessor processor) {
+    public PsiReferenceProcessorAdapter(PsiReferenceProcessor processor) {
         myProcessor = processor;
     }
 
     @RequiredReadAction
     @Override
-    public boolean processInReadAction(final PsiReference psiReference) {
+    public boolean processInReadAction(PsiReference psiReference) {
         return myProcessor.execute(psiReference);
     }
 }

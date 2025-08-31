@@ -134,9 +134,9 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         myIgnoreSuppressed = ignoreSuppressed;
         setId(Pass.LOCAL_INSPECTIONS);
 
-        final KeymapManager keymapManager = KeymapManager.getInstance();
+        KeymapManager keymapManager = KeymapManager.getInstance();
 
-        final Keymap keymap = keymapManager.getActiveKeymap();
+        Keymap keymap = keymapManager.getActiveKeymap();
         myShortcutText =
             keymap == null ? "" : "(" + KeymapUtil.getShortcutsText(keymap.getShortcuts(IdeActions.ACTION_SHOW_ERROR_DESCRIPTION)) + ")";
 
@@ -180,11 +180,11 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
     @RequiredReadAction
     public void doInspectInBatch(
-        @Nonnull final GlobalInspectionContextImpl context,
-        @Nonnull final InspectionManager iManager,
-        @Nonnull final List<LocalInspectionToolWrapper> toolWrappers
+        @Nonnull GlobalInspectionContextImpl context,
+        @Nonnull InspectionManager iManager,
+        @Nonnull List<LocalInspectionToolWrapper> toolWrappers
     ) {
-        final ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
+        ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
         inspect(new ArrayList<>(toolWrappers), iManager, false, false, progress);
         addDescriptorsFromInjectedResults(iManager, context);
         List<InspectionResult> resultList = result.get(getFile());
@@ -266,11 +266,11 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
     @RequiredReadAction
     private void inspect(
-        @Nonnull final List<LocalInspectionToolWrapper> toolWrappers,
-        @Nonnull final InspectionManager iManager,
-        final boolean isOnTheFly,
+        @Nonnull List<LocalInspectionToolWrapper> toolWrappers,
+        @Nonnull InspectionManager iManager,
+        boolean isOnTheFly,
         boolean failFastOnAcquireReadAction,
-        @Nonnull final ProgressIndicator progress
+        @Nonnull ProgressIndicator progress
     ) {
         myFailFastOnAcquireReadAction = failFastOnAcquireReadAction;
         if (toolWrappers.isEmpty()) {
@@ -294,7 +294,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             InspectionEngine.getToolsToSpecifiedLanguages(toolWrappers);
 
         setProgressLimit(toolToSpecifiedLanguageIds.size() * 2L);
-        final LocalInspectionToolSession session =
+        LocalInspectionToolSession session =
             new LocalInspectionToolSession(getFile(), myRestrictRange.getStartOffset(), myRestrictRange.getEndOffset());
 
         List<InspectionContext> init = visitPriorityElementsAndInit(
@@ -320,15 +320,15 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     @Nonnull
     private List<InspectionContext> visitPriorityElementsAndInit(
         @Nonnull Map<LocalInspectionToolWrapper, Set<String>> toolToSpecifiedLanguageIds,
-        @Nonnull final InspectionManager iManager,
-        final boolean isOnTheFly,
-        @Nonnull final ProgressIndicator indicator,
-        @Nonnull final List<PsiElement> elements,
-        @Nonnull final LocalInspectionToolSession session,
+        @Nonnull InspectionManager iManager,
+        boolean isOnTheFly,
+        @Nonnull ProgressIndicator indicator,
+        @Nonnull List<PsiElement> elements,
+        @Nonnull LocalInspectionToolSession session,
         @Nonnull List<LocalInspectionToolWrapper> wrappers,
-        @Nonnull final Set<String> elementDialectIds
+        @Nonnull Set<String> elementDialectIds
     ) {
-        final List<InspectionContext> init = new ArrayList<>();
+        List<InspectionContext> init = new ArrayList<>();
         List<Map.Entry<LocalInspectionToolWrapper, Set<String>>> entries = new ArrayList<>(toolToSpecifiedLanguageIds.entrySet());
 
         Processor<Map.Entry<LocalInspectionToolWrapper, Set<String>>> processor = pair -> {
@@ -362,15 +362,15 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         @Nonnull final InspectionManager iManager,
         final boolean isOnTheFly,
         @Nonnull final ProgressIndicator indicator,
-        @Nonnull final List<PsiElement> elements,
-        @Nonnull final LocalInspectionToolSession session,
+        @Nonnull List<PsiElement> elements,
+        @Nonnull LocalInspectionToolSession session,
         @Nonnull List<InspectionContext> init,
         @Nonnull Set<String> elementDialectIds
     ) {
         indicator.checkCanceled();
 
         Application.get().assertReadAccessAllowed();
-        final LocalInspectionTool tool = toolWrapper.getTool();
+        LocalInspectionTool tool = toolWrapper.getTool();
         final boolean[] applyIncrementally = {isOnTheFly};
         ProblemsHolder holder = new ProblemsHolderImpl(iManager, getFile(), isOnTheFly) {
             @Override
@@ -408,11 +408,11 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     }
 
     private void visitRestElementsAndCleanup(
-        @Nonnull final ProgressIndicator indicator,
-        @Nonnull final List<PsiElement> elements,
-        @Nonnull final LocalInspectionToolSession session,
+        @Nonnull ProgressIndicator indicator,
+        @Nonnull List<PsiElement> elements,
+        @Nonnull LocalInspectionToolSession session,
         @Nonnull List<InspectionContext> init,
-        @Nonnull final Set<String> elementDialectIds
+        @Nonnull Set<String> elementDialectIds
     ) {
         @RequiredReadAction
         Predicate<InspectionContext> processor = context -> {
@@ -439,14 +439,14 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     }
 
     void inspectInjectedPsi(
-        @Nonnull final List<PsiElement> elements,
-        final boolean onTheFly,
-        @Nonnull final ProgressIndicator indicator,
-        @Nonnull final InspectionManager iManager,
-        final boolean inVisibleRange,
-        @Nonnull final List<LocalInspectionToolWrapper> wrappers
+        @Nonnull List<PsiElement> elements,
+        boolean onTheFly,
+        @Nonnull ProgressIndicator indicator,
+        @Nonnull InspectionManager iManager,
+        boolean inVisibleRange,
+        @Nonnull List<LocalInspectionToolWrapper> wrappers
     ) {
-        final Set<PsiFile> injected = new HashSet<>();
+        Set<PsiFile> injected = new HashSet<>();
         for (PsiElement element : elements) {
             InjectedLanguageUtil.enumerate(element, getFile(), false, (injectedPsi, places) -> injected.add(injectedPsi));
         }
@@ -483,7 +483,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
         boolean isFileLevel = psiElement instanceof PsiFile && textRange.equals(psiElement.getTextRange());
 
-        final HighlightSeverity severity = highlightInfoType.getSeverity(psiElement);
+        HighlightSeverity severity = highlightInfoType.getSeverity(psiElement);
         TextAttributes attributes = mySeverityRegistrar.getTextAttributesBySeverity(severity);
         HighlightInfoImpl.Builder b = HighlightInfoImpl.newHighlightInfo(highlightInfoType)
             .range(psiElement, textRange.getStartOffset(), textRange.getEndOffset())
@@ -552,7 +552,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                         psiElement
                     );
                     for (HighlightInfo info : infos) {
-                        final EditorColorsScheme colorsScheme = getColorsScheme();
+                        EditorColorsScheme colorsScheme = getColorsScheme();
                         UpdateHighlightersUtilImpl.addHighlighterToEditorIncrementally(
                             myProject,
                             myDocument,
@@ -577,9 +577,9 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
     @RequiredReadAction
     private void addDescriptorIncrementally(
-        @Nonnull final ProblemDescriptor descriptor,
-        @Nonnull final LocalInspectionToolWrapper tool,
-        @Nonnull final ProgressIndicator indicator
+        @Nonnull ProblemDescriptor descriptor,
+        @Nonnull LocalInspectionToolWrapper tool,
+        @Nonnull ProgressIndicator indicator
     ) {
         if (myIgnoreSuppressed && SuppressionUtil.inspectionResultSuppressed(descriptor.getPsiElement(), tool.getTool())) {
             return;
@@ -754,8 +754,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     ) {
         String message = ProblemDescriptorUtil.renderDescriptionMessage(descriptor, element);
 
-        final HighlightDisplayKey key = HighlightDisplayKey.find(tool.getShortName());
-        final InspectionProfile inspectionProfile = myProfileWrapper.getInspectionProfile();
+        HighlightDisplayKey key = HighlightDisplayKey.find(tool.getShortName());
+        InspectionProfile inspectionProfile = myProfileWrapper.getInspectionProfile();
         if (!inspectionProfile.isToolEnabled(key, getFile())) {
             return null;
         }
@@ -790,9 +790,9 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         @Nonnull HighlightInfoImpl highlightInfo,
         @Nonnull Set<Pair<TextRange, String>> emptyActionRegistered
     ) {
-        final HighlightDisplayKey key = HighlightDisplayKey.find(tool.getShortName());
+        HighlightDisplayKey key = HighlightDisplayKey.find(tool.getShortName());
         boolean needEmptyAction = true;
-        final QuickFix[] fixes = descriptor.getFixes();
+        QuickFix[] fixes = descriptor.getFixes();
         if (fixes != null && fixes.length > 0) {
             for (int k = 0; k < fixes.length; k++) {
                 if (fixes[k] != null) { // prevent null fixes from var args
@@ -817,9 +817,9 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
     @Nonnull
     private static List<PsiElement> getElementsFrom(@Nonnull PsiFile file) {
-        final FileViewProvider viewProvider = file.getViewProvider();
+        FileViewProvider viewProvider = file.getViewProvider();
         final Set<PsiElement> result = new LinkedHashSet<>();
-        final PsiElementVisitor visitor = new PsiRecursiveElementVisitor() {
+        PsiElementVisitor visitor = new PsiRecursiveElementVisitor() {
             @Override
             @RequiredReadAction
             public void visitElement(PsiElement element) {
@@ -840,7 +840,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             }
         };
         for (Language language : viewProvider.getLanguages()) {
-            final PsiFile psiRoot = viewProvider.getPsi(language);
+            PsiFile psiRoot = viewProvider.getPsi(language);
             if (psiRoot == null || !HighlightingLevelManager.getInstance(file.getProject()).shouldInspect(psiRoot)) {
                 continue;
             }
@@ -853,7 +853,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
     @Nonnull
     List<LocalInspectionToolWrapper> getInspectionTools(@Nonnull InspectionProfileWrapper profile) {
-        final InspectionToolWrapper[] toolWrappers = profile.getInspectionProfile().getInspectionTools(getFile());
+        InspectionToolWrapper[] toolWrappers = profile.getInspectionProfile().getInspectionTools(getFile());
         InspectionProfileWrapper.checkInspectionsDuplicates(toolWrappers);
         List<LocalInspectionToolWrapper> enabled = new ArrayList<>();
         for (InspectionToolWrapper toolWrapper : toolWrappers) {
@@ -889,18 +889,18 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         final boolean inVisibleRange,
         @Nonnull List<LocalInspectionToolWrapper> wrappers
     ) {
-        final PsiElement host = InjectedLanguageManager.getInstance(injectedPsi.getProject()).getInjectionHost(injectedPsi);
+        PsiElement host = InjectedLanguageManager.getInstance(injectedPsi.getProject()).getInjectionHost(injectedPsi);
 
-        final List<PsiElement> elements = getElementsFrom(injectedPsi);
+        List<PsiElement> elements = getElementsFrom(injectedPsi);
         if (elements.isEmpty()) {
             return;
         }
         Set<String> elementDialectIds = InspectionEngine.calcElementDialectIds(elements);
         Map<LocalInspectionToolWrapper, Set<String>> toolToSpecifiedLanguageIds = InspectionEngine.getToolsToSpecifiedLanguages(wrappers);
-        for (final Map.Entry<LocalInspectionToolWrapper, Set<String>> pair : toolToSpecifiedLanguageIds.entrySet()) {
+        for (Map.Entry<LocalInspectionToolWrapper, Set<String>> pair : toolToSpecifiedLanguageIds.entrySet()) {
             indicator.checkCanceled();
             final LocalInspectionToolWrapper wrapper = pair.getKey();
-            final LocalInspectionTool tool = wrapper.getTool();
+            LocalInspectionTool tool = wrapper.getTool();
             Object state = wrapper.getToolState().getState();
             if (host != null && myIgnoreSuppressed && SuppressionUtil.inspectionResultSuppressed(host, tool)) {
                 continue;

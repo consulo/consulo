@@ -85,7 +85,7 @@ public class InplaceChangeSignature implements DocumentListener {
             myMarkAction = StartMarkAction.start(editor.getDocument(), project, ChangeSignatureHandler.REFACTORING_NAME.get());
         }
         catch (StartMarkAction.AlreadyStartedException e) {
-            final int exitCode = Messages.showYesNoDialog(
+            int exitCode = Messages.showYesNoDialog(
                 myProject,
                 e.getMessage(),
                 ChangeSignatureHandler.REFACTORING_NAME.get(),
@@ -254,7 +254,7 @@ public class InplaceChangeSignature implements DocumentListener {
         content.add(myPreview.getComponent(), BorderLayout.CENTER);
         updateMethodSignature(myStableChange);
         content.add(checkBox, BorderLayout.SOUTH);
-        final BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createDialogBalloonBuilder(content, null).setSmallVariant(true);
+        BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createDialogBalloonBuilder(content, null).setSmallVariant(true);
         myBalloon = balloonBuilder.createBalloon();
         myEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         myBalloon.show(
@@ -294,9 +294,9 @@ public class InplaceChangeSignature implements DocumentListener {
 
     @RequiredUIAccess
     public static void temporallyRevertChanges(
-        final TextRange signatureRange,
-        final Document document,
-        final String initialSignature,
+        TextRange signatureRange,
+        Document document,
+        String initialSignature,
         Project project
     ) {
         CommandProcessor.getInstance().newCommand()

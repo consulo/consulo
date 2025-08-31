@@ -725,8 +725,8 @@ public class mxGraphOutline extends JComponent {
           double dx = e.getX() - start.getX();
           double w = finderBounds.getWidth();
 
-          final JScrollBar hs = graphComponent.getHorizontalScrollBar();
-          final double sx;
+          JScrollBar hs = graphComponent.getHorizontalScrollBar();
+          double sx;
 
           if (hs != null) {
             sx = (double)hs.getValue() / hs.getMaximum();
@@ -735,8 +735,8 @@ public class mxGraphOutline extends JComponent {
             sx = 0;
           }
 
-          final JScrollBar vs = graphComponent.getVerticalScrollBar();
-          final double sy;
+          JScrollBar vs = graphComponent.getVerticalScrollBar();
+          double sy;
 
           if (vs != null) {
             sy = (double)vs.getValue() / vs.getMaximum();

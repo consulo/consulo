@@ -30,7 +30,7 @@ public class PatchLine {
   private final String myText;
   private boolean mySuppressNewLine;
 
-  public PatchLine(final Type type, final String text) {
+  public PatchLine(Type type, String text) {
     myType = type;
     myText = text;
   }
@@ -47,7 +47,7 @@ public class PatchLine {
     return mySuppressNewLine;
   }
 
-  public void setSuppressNewLine(final boolean suppressNewLine) {
+  public void setSuppressNewLine(boolean suppressNewLine) {
     mySuppressNewLine = suppressNewLine;
   }
 

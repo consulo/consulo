@@ -26,31 +26,31 @@ public class SourceTreeToPsiMap {
   private SourceTreeToPsiMap() { }
 
   @Nullable
-  public static PsiElement treeElementToPsi(@Nullable final ASTNode element) {
+  public static PsiElement treeElementToPsi(@Nullable ASTNode element) {
     return element == null ? null : element.getPsi();
   }
 
   @Nonnull
-  public static <T extends PsiElement> T treeToPsiNotNull(@Nonnull final ASTNode element) {
-    final PsiElement psi = element.getPsi();
+  public static <T extends PsiElement> T treeToPsiNotNull(@Nonnull ASTNode element) {
+    PsiElement psi = element.getPsi();
     assert psi != null : element;
     //noinspection unchecked
     return (T)psi;
   }
 
   @Nullable
-  public static ASTNode psiElementToTree(@Nullable final PsiElement psiElement) {
+  public static ASTNode psiElementToTree(@Nullable PsiElement psiElement) {
     return psiElement == null ? null : psiElement.getNode();
   }
 
   @Nonnull
-  public static TreeElement psiToTreeNotNull(@Nonnull final PsiElement psiElement) {
-    final ASTNode node = psiElement.getNode();
+  public static TreeElement psiToTreeNotNull(@Nonnull PsiElement psiElement) {
+    ASTNode node = psiElement.getNode();
     assert node instanceof TreeElement : psiElement + ", " + node;
     return (TreeElement)node;
   }
 
-  public static boolean hasTreeElement(@Nullable final PsiElement psiElement) {
+  public static boolean hasTreeElement(@Nullable PsiElement psiElement) {
     return psiElement instanceof TreeElement || psiElement instanceof ASTDelegatePsiElement || psiElement instanceof PsiFileImpl;
   }
 }

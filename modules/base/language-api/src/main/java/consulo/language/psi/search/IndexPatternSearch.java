@@ -101,7 +101,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    */
   @Nonnull
   public static Query<IndexPatternOccurrence> search(@Nonnull PsiFile file, @Nonnull IndexPattern pattern) {
-    final SearchParameters parameters = new SearchParameters(file, pattern);
+    SearchParameters parameters = new SearchParameters(file, pattern);
     return getInstance().createQuery(parameters);
   }
 
@@ -117,7 +117,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    */
   @Nonnull
   public static Query<IndexPatternOccurrence> search(@Nonnull PsiFile file, @Nonnull IndexPattern pattern, int startOffset, int endOffset) {
-    final SearchParameters parameters = new SearchParameters(file, pattern, new TextRange(startOffset, endOffset));
+    SearchParameters parameters = new SearchParameters(file, pattern, new TextRange(startOffset, endOffset));
     return getInstance().createQuery(parameters);
   }
 
@@ -132,7 +132,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    */
   @Nonnull
   public static Query<IndexPatternOccurrence> search(@Nonnull PsiFile file, @Nonnull IndexPatternProvider patternProvider) {
-    final SearchParameters parameters = new SearchParameters(file, patternProvider);
+    SearchParameters parameters = new SearchParameters(file, patternProvider);
     return getInstance().createQuery(parameters);
   }
 
@@ -149,7 +149,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    */
   @Nonnull
   public static Query<IndexPatternOccurrence> search(@Nonnull PsiFile file, @Nonnull IndexPatternProvider patternProvider, boolean multiLineOccurrences) {
-    final SearchParameters parameters = new SearchParameters(file, patternProvider, multiLineOccurrences);
+    SearchParameters parameters = new SearchParameters(file, patternProvider, multiLineOccurrences);
     return getInstance().createQuery(parameters);
   }
 
@@ -166,7 +166,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    */
   @Nonnull
   public static Query<IndexPatternOccurrence> search(@Nonnull PsiFile file, @Nonnull IndexPatternProvider patternProvider, int startOffset, int endOffset) {
-    final SearchParameters parameters = new SearchParameters(file, patternProvider, new TextRange(startOffset, endOffset));
+    SearchParameters parameters = new SearchParameters(file, patternProvider, new TextRange(startOffset, endOffset));
     return getInstance().createQuery(parameters);
   }
 

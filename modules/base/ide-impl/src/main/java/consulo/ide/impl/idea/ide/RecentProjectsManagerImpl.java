@@ -147,7 +147,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
     }
 
     @Override
-    public void loadState(final State state) {
+    public void loadState(State state) {
         removeDuplicates(state);
         if (state.lastPath != null && !new File(state.lastPath).exists()) {
             state.lastPath = null;
@@ -175,7 +175,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
     private static void removePathFrom(List<String> items, String path) {
         for (Iterator<String> iterator = items.iterator(); iterator.hasNext(); ) {
-            final String next = iterator.next();
+            String next = iterator.next();
             if (Platform.current().fs().isCaseSensitive() ? path.equals(next) : path.equalsIgnoreCase(next)) {
                 iterator.remove();
             }
@@ -247,7 +247,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
     @Override
     public void updateLastProjectPath() {
-        final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         synchronized (myStateLock) {
             myState.openPaths.clear();
             if (openProjects.length == 0) {
@@ -280,7 +280,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
             isDuplicatesCacheUpdating = true; //assuming that this check happens only on EDT. So, no synchronised block or double-checked locking needed
             Application.get().executeOnPooledThread((Runnable) () -> {
                 Set<String> names = new HashSet<>();
-                final HashSet<String> duplicates = new HashSet<>();
+                HashSet<String> duplicates = new HashSet<>();
                 for (String path : List.copyOf(recentPaths)) {
                     if (!names.add(RecentProjectsManagerImpl.this.getProjectName(path))) {
                         duplicates.add(path);
@@ -326,7 +326,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                 private int getGroupIndex(ProjectGroup group) {
                     int index = -1;
                     for (String path : group.getProjects()) {
-                        final int i = projectPaths.indexOf(path);
+                        int i = projectPaths.indexOf(path);
                         if (index >= 0 && index > i) {
                             index = i;
                         }
@@ -371,7 +371,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
             }
         }
 
-        for (final String path : paths) {
+        for (String path : paths) {
             AnAction action = createOpenAction(path, duplicates, openedPaths);
             actions.add(action);
         }
@@ -443,12 +443,12 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
     @Nullable
     private String getProjectPath(@Nonnull Project project) {
-        final VirtualFile baseDirVFile = project.getBaseDir();
+        VirtualFile baseDirVFile = project.getBaseDir();
         return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
     }
 
     public static boolean isValidProjectPath(String projectPath) {
-        final File file = new File(projectPath);
+        File file = new File(projectPath);
         return file.exists() && (!file.isDirectory() || new File(file, Project.DIRECTORY_STORE_FOLDER).exists());
     }
 
@@ -490,7 +490,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
         @Override
         @RequiredReadAction
-        public void projectClosed(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+        public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
             Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
             if (openProjects.length > 0) {
                 String path = getProjectPath(openProjects[openProjects.length - 1]);

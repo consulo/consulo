@@ -117,7 +117,7 @@ public interface VcsContextFactory {
   FilePath createFilePath(@Nonnull VirtualFile parent, @Nonnull String fileName, boolean isDirectory);
 
   @Nonnull
-  LocalChangeList createLocalChangeList(@Nonnull Project project, @Nonnull final String name);
+  LocalChangeList createLocalChangeList(@Nonnull Project project, @Nonnull String name);
 
   @Nonnull
   FilePath createFilePath(@Nonnull String path, boolean isDirectory);

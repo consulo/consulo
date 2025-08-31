@@ -200,7 +200,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   protected <T extends PsiElement> T findLastChildByType(IElementType type) {
     PsiElement child = getLastChild();
     while (child != null) {
-      final ASTNode node = child.getNode();
+      ASTNode node = child.getNode();
       if (node != null && node.getElementType() == type) return (T)child;
       child = child.getPrevSibling();
     }
@@ -256,7 +256,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     List<T> result = List.of();
     ASTNode child = getNode().getFirstChildNode();
     while (child != null) {
-      final IElementType tt = child.getElementType();
+      IElementType tt = child.getElementType();
       if (elementType.contains(tt)) {
         if (result == List.<T>of()) {
           result = new ArrayList<>();
@@ -309,7 +309,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     return addInnerBefore(element, anchor);
   }
 
-  private PsiElement addInnerBefore(final PsiElement element, final PsiElement anchor) throws IncorrectOperationException {
+  private PsiElement addInnerBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     ASTNode treeElement = addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
@@ -334,7 +334,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public void checkAdd(@Nonnull final PsiElement element) throws IncorrectOperationException {
+  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
   }
 
@@ -344,17 +344,17 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public PsiElement addRange(final PsiElement first, final PsiElement last) throws IncorrectOperationException {
+  public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, null, null);
   }
 
   @Override
-  public PsiElement addRangeBefore(@Nonnull final PsiElement first, @Nonnull final PsiElement last, final PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
 
   @Override
-  public PsiElement addRangeAfter(final PsiElement first, final PsiElement last, final PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
   }
 
@@ -388,7 +388,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public void deleteChildRange(final PsiElement first, final PsiElement last) throws IncorrectOperationException {
+  public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     ASTNode firstElement = SourceTreeToPsiMap.psiElementToTree(first);
     ASTNode lastElement = SourceTreeToPsiMap.psiElementToTree(last);
@@ -399,11 +399,11 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public PsiElement replace(@Nonnull final PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(newElement);
     if (getParent() instanceof ASTDelegatePsiElement) {
-      final ASTDelegatePsiElement parentElement = (ASTDelegatePsiElement)getParent();
+      ASTDelegatePsiElement parentElement = (ASTDelegatePsiElement)getParent();
       parentElement.replaceChildInternal(this, elementCopy);
     }
     else {
@@ -413,11 +413,11 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     return SourceTreeToPsiMap.treeElementToPsi(elementCopy);
   }
 
-  public void replaceChildInternal(final PsiElement child, final TreeElement newElement) {
+  public void replaceChildInternal(PsiElement child, TreeElement newElement) {
     CodeEditUtil.replaceChild(getNode(), child.getNode(), newElement);
   }
 
-  private ASTNode getAnchorNode(final ASTNode anchor, final Boolean before) {
+  private ASTNode getAnchorNode(ASTNode anchor, Boolean before) {
     ASTNode anchorBefore;
     if (anchor != null) {
       anchorBefore = before ? anchor : anchor.getTreeNext();

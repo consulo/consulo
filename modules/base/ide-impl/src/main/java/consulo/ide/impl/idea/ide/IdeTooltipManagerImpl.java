@@ -241,7 +241,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
     }
 
 
-    private void showTooltipForEvent(final JComponent c, final MouseEvent me, final boolean toCenter, final int shift, final int posChangeX, final int posChangeY, final boolean now) {
+    private void showTooltipForEvent(final JComponent c, final MouseEvent me, boolean toCenter, int shift, int posChangeX, int posChangeY, boolean now) {
         IdeTooltip tooltip = getCustomTooltip(c);
         if (tooltip == null) {
             if (myHelpTooltipManager != null) {
@@ -273,8 +273,8 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
                     JLayeredPane layeredPane = ComponentUtil.getParentOfType((Class<? extends JLayeredPane>) JLayeredPane.class, (Component) c);
 
-                    final JEditorPane pane = initPane(text, new HintHint(me).setAwtTooltip(true), layeredPane);
-                    final Wrapper wrapper = new Wrapper(pane);
+                    JEditorPane pane = initPane(text, new HintHint(me).setAwtTooltip(true), layeredPane);
+                    Wrapper wrapper = new Wrapper(pane);
                     setTipComponent(wrapper);
                     return true;
                 }
@@ -344,11 +344,11 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return UIUtil.getClientProperty(component, CUSTOM_TOOLTIP);
     }
 
-    public IdeTooltip show(final IdeTooltip tooltip, boolean now) {
+    public IdeTooltip show(IdeTooltip tooltip, boolean now) {
         return show(tooltip, now, true);
     }
 
-    public IdeTooltip show(final IdeTooltip tooltip, boolean now, final boolean animationEnabled) {
+    public IdeTooltip show(IdeTooltip tooltip, boolean now, boolean animationEnabled) {
         myAlarm.cancelAllRequests();
 
         hideCurrent(null, tooltip, null, null);
@@ -384,7 +384,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return tooltip;
     }
 
-    private void show(final IdeTooltip tooltip, @Nullable Runnable beforeShow, boolean animationEnabled) {
+    private void show(IdeTooltip tooltip, @Nullable Runnable beforeShow, boolean animationEnabled) {
         boolean toCenterX;
         boolean toCenterY;
 
@@ -532,7 +532,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return hideCurrent(me, tooltipToShow, action, event, myCurrentTipUi != null && myCurrentTipUi.isAnimationEnabled());
     }
 
-    private boolean hideCurrent(@Nullable MouseEvent me, @Nullable IdeTooltip tooltipToShow, @Nullable AnAction action, @Nullable AnActionEvent event, final boolean animationEnabled) {
+    private boolean hideCurrent(@Nullable MouseEvent me, @Nullable IdeTooltip tooltipToShow, @Nullable AnAction action, @Nullable AnActionEvent event, boolean animationEnabled) {
         if (myHelpTooltipManager != null && myHideHelpTooltip) {
             hideCurrentNow(false);
             return true;
@@ -656,11 +656,11 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         return initPane(text, hintHint, layeredPane);
     }
 
-    public static JEditorPane initPane(@NonNls String text, final HintHint hintHint, @Nullable final JLayeredPane layeredPane) {
+    public static JEditorPane initPane(@NonNls String text, HintHint hintHint, @Nullable JLayeredPane layeredPane) {
         return initPane(new Html(text), hintHint, layeredPane);
     }
 
-    public static JEditorPane initPane(@NonNls Html html, final HintHint hintHint, @Nullable final JLayeredPane layeredPane) {
+    public static JEditorPane initPane(@NonNls Html html, HintHint hintHint, @Nullable JLayeredPane layeredPane) {
         return initPane(html, hintHint, layeredPane, true);
     }
 
@@ -668,7 +668,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         String text = HintUtil.prepareHintText(html, hintHint);
 
         final boolean[] prefSizeWasComputed = {false};
-        final JEditorPane pane = limitWidthToScreen ? new JEditorPane() {
+        JEditorPane pane = limitWidthToScreen ? new JEditorPane() {
             private Dimension prefSize = null;
 
             @Override
@@ -737,7 +737,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
             prefSizeWasComputed[0] = true;
         }
 
-        final boolean opaque = hintHint.isOpaqueAllowed();
+        boolean opaque = hintHint.isOpaqueAllowed();
         pane.setOpaque(opaque);
         pane.setBackground(hintHint.getTextBackground());
 

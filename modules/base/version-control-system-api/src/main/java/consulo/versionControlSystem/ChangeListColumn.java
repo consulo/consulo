@@ -43,13 +43,13 @@ public abstract class ChangeListColumn<T extends ChangeList> {
       return VcsBundle.message("column.name.revision.list.date");
     }
 
-    public Object getValue(final CommittedChangeList changeList) {
+    public Object getValue(CommittedChangeList changeList) {
       return DateFormatUtil.formatPrettyDateTime(changeList.getCommitDate());
     }
 
     public Comparator<CommittedChangeList> getComparator() {
       return new Comparator<CommittedChangeList>() {
-        public int compare(final CommittedChangeList o1, final CommittedChangeList o2) {
+        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
           return o1.getCommitDate().compareTo(o2.getCommitDate());
         }
       };
@@ -61,13 +61,13 @@ public abstract class ChangeListColumn<T extends ChangeList> {
       return VcsBundle.message("column.name.revision.list.committer");
     }
 
-    public Object getValue(final CommittedChangeList changeList) {
+    public Object getValue(CommittedChangeList changeList) {
       return changeList.getCommitterName();
     }
 
     public Comparator<CommittedChangeList> getComparator() {
       return new Comparator<CommittedChangeList>() {
-        public int compare(final CommittedChangeList o1, final CommittedChangeList o2) {
+        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
           return Comparing.compare((String) getValue(o1), (String) getValue(o2));
         }
       };
@@ -81,20 +81,20 @@ public abstract class ChangeListColumn<T extends ChangeList> {
       return VcsBundle.message("column.name.revision.list.description");
     }
 
-    public Object getValue(final CommittedChangeList changeList) {
+    public Object getValue(CommittedChangeList changeList) {
       return changeList.getName();
     }
 
     public Comparator<CommittedChangeList> getComparator() {
       return new Comparator<CommittedChangeList>() {
-        public int compare(final CommittedChangeList o1, final CommittedChangeList o2) {
+        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
           return o1.getName().compareTo(o2.getName());
         }
       };
     }
   };
 
-  public static boolean isCustom(final ChangeListColumn column) {
+  public static boolean isCustom(ChangeListColumn column) {
     return column != DATE && column != DESCRIPTION &&
         column != NAME && !(column instanceof ChangeListNumberColumn);
   }
@@ -102,7 +102,7 @@ public abstract class ChangeListColumn<T extends ChangeList> {
   public static class ChangeListNumberColumn extends ChangeListColumn<CommittedChangeList> {
     private final String myTitle;
 
-    public ChangeListNumberColumn(final String title) {
+    public ChangeListNumberColumn(String title) {
       myTitle = title;
     }
 
@@ -110,13 +110,13 @@ public abstract class ChangeListColumn<T extends ChangeList> {
       return myTitle;
     }
 
-    public Object getValue(final CommittedChangeList changeList) {
+    public Object getValue(CommittedChangeList changeList) {
       return changeList.getNumber();
     }
 
     public Comparator<CommittedChangeList> getComparator() {
       return new Comparator<CommittedChangeList>() {
-        public int compare(final CommittedChangeList o1, final CommittedChangeList o2) {
+        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
           return (int)(o1.getNumber() - o2.getNumber());
         }
       };

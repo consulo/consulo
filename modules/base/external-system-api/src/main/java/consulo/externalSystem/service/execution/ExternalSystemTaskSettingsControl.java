@@ -79,7 +79,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   }
 
   @Override
-  public void fillUi(@Nonnull Disposable uiDisposable, @Nonnull final PaintAwarePanel canvas, int indentLevel) {
+  public void fillUi(@Nonnull Disposable uiDisposable, @Nonnull PaintAwarePanel canvas, int indentLevel) {
     myProjectPathLabel = new JBLabel(ExternalSystemBundle.message(
       "run.configuration.settings.label.project", myExternalSystemId.getDisplayName().get()));
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);

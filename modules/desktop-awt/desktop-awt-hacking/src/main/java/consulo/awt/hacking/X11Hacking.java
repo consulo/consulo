@@ -346,11 +346,11 @@ public final class X11Hacking {
 
   public static void updateFrameClass(String frameClass) {
     try {
-      final Toolkit toolkit = Toolkit.getDefaultToolkit();
-      final Class<? extends Toolkit> aClass = toolkit.getClass();
+      Toolkit toolkit = Toolkit.getDefaultToolkit();
+      Class<? extends Toolkit> aClass = toolkit.getClass();
 
       if ("sun.awt.X11.XToolkit".equals(aClass.getName())) {
-        final Field awtAppClassName = aClass.getDeclaredField("awtAppClassName");
+        Field awtAppClassName = aClass.getDeclaredField("awtAppClassName");
         awtAppClassName.setAccessible(true);
         awtAppClassName.set(toolkit, frameClass);
       }

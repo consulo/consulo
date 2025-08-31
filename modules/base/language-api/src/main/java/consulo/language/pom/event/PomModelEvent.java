@@ -52,7 +52,7 @@ public class PomModelEvent extends EventObject {
   }
 
   public <T extends PomChangeSet> T registerChangeSetIfAbsent(PomModelAspect aspect, @Nonnull T set) {
-    final PomChangeSet oldSet = getChangeSet(aspect);
+    PomChangeSet oldSet = getChangeSet(aspect);
     if (oldSet != null) return (T)oldSet;
 
     registerChangeSet(aspect, set);
@@ -72,9 +72,9 @@ public class PomModelEvent extends EventObject {
       myChangeSets = new HashMap<>(event.myChangeSets);
       return;
     }
-    for (final Map.Entry<PomModelAspect, PomChangeSet> entry : event.myChangeSets.entrySet()) {
-      final PomModelAspect aspect = entry.getKey();
-      final PomChangeSet pomChangeSet = myChangeSets.get(aspect);
+    for (Map.Entry<PomModelAspect, PomChangeSet> entry : event.myChangeSets.entrySet()) {
+      PomModelAspect aspect = entry.getKey();
+      PomChangeSet pomChangeSet = myChangeSets.get(aspect);
       if (pomChangeSet != null) {
         pomChangeSet.merge(entry.getValue());
       }

@@ -35,9 +35,9 @@ public abstract class VirtualFileUrlChangeAdapter extends VirtualFileAdapter {
   @Override
   public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
     if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
-      final VirtualFile parent = event.getFile().getParent();
+      VirtualFile parent = event.getFile().getParent();
       if (parent != null) {
-        final String parentUrl = parent.getUrl();
+        String parentUrl = parent.getUrl();
         fileUrlChanged(parentUrl + "/" + event.getOldValue(), parentUrl + "/" + event.getNewValue());
       }
     }

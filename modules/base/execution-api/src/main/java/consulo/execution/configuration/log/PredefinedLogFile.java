@@ -42,7 +42,7 @@ public class PredefinedLogFile implements JDOMExternalizable {
     myId = logFile.myId;
   }
 
-  public PredefinedLogFile(final @Nonnull @NonNls String id, final boolean enabled) {
+  public PredefinedLogFile(@Nonnull @NonNls String id, boolean enabled) {
     myEnabled = enabled;
     myId = id;
   }
@@ -51,7 +51,7 @@ public class PredefinedLogFile implements JDOMExternalizable {
     return myEnabled;
   }
 
-  public void setEnabled(final boolean enabled) {
+  public void setEnabled(boolean enabled) {
     myEnabled = enabled;
   }
 
@@ -59,11 +59,11 @@ public class PredefinedLogFile implements JDOMExternalizable {
     return myId;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final PredefinedLogFile that = (PredefinedLogFile)o;
+    PredefinedLogFile that = (PredefinedLogFile)o;
     return myId.equals(that.myId);
   }
 

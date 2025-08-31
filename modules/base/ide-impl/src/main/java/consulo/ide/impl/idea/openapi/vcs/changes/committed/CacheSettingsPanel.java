@@ -39,13 +39,13 @@ public class CacheSettingsPanel {
     myRefreshCheckbox.addActionListener(e -> updateControls());
   }
 
-  public void initPanel(final Project project) {
+  public void initPanel(Project project) {
     myCache = CommittedChangesCache.getInstance(project);
   }
 
   @RequiredUIAccess
   public void apply() throws ConfigurationException {
-    final CommittedChangesCache.State state = new CommittedChangesCache.State();
+    CommittedChangesCache.State state = new CommittedChangesCache.State();
     state.setInitialCount(((SpinnerNumberModel)myCountSpinner.getModel()).getNumber().intValue());
     state.setInitialDays(((SpinnerNumberModel)myDaysSpinner.getModel()).getNumber().intValue());
     state.setRefreshInterval(((SpinnerNumberModel)myRefreshSpinner.getModel()).getNumber().intValue());
@@ -67,7 +67,7 @@ public class CacheSettingsPanel {
 
   @RequiredUIAccess
   public void reset() {
-    final CommittedChangesCache.State state = myCache.getState();
+    CommittedChangesCache.State state = myCache.getState();
 
     myCountSpinner.setModel(new SpinnerNumberModel(state.getInitialCount(), 1, 100000, 10));
     myDaysSpinner.setModel(new SpinnerNumberModel(state.getInitialDays(), 1, 720, 10));
@@ -93,7 +93,7 @@ public class CacheSettingsPanel {
     return myTopPanel;
   }
 
-  public void setEnabled(final boolean value) {
+  public void setEnabled(boolean value) {
     myRefreshCheckbox.setEnabled(value);
   }
 }

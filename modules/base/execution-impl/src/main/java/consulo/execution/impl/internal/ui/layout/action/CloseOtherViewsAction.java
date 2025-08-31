@@ -22,13 +22,13 @@ import consulo.ui.ex.content.ContentManager;
 
 public class CloseOtherViewsAction extends BaseViewAction {
     @Override
-    protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
+    protected void update(AnActionEvent e, ViewContext context, Content[] content) {
         setEnabled(e, isEnabled(context, content, e.getPlace()));
     }
 
     @Override
-    protected void actionPerformed(final AnActionEvent e, final ViewContext context, final Content[] content) {
-        final ContentManager manager = context.getContentManager();
+    protected void actionPerformed(AnActionEvent e, ViewContext context, Content[] content) {
+        ContentManager manager = context.getContentManager();
         for (Content c : manager.getContents()) {
             if (c != content[0] && c.isCloseable()) {
                 manager.removeContent(c, context.isToDisposeRemovedContent());

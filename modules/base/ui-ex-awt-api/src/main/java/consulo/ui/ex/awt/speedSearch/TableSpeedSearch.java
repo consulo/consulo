@@ -43,11 +43,11 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     this(table, TO_STRING);
   }
 
-  public TableSpeedSearch(JTable table, final Function<Object, String> toStringConvertor) {
+  public TableSpeedSearch(JTable table, Function<Object, String> toStringConvertor) {
     this(table, (o, c) -> toStringConvertor.apply(o));
   }
 
-  public TableSpeedSearch(JTable table, final BiFunction<Object, ? super Cell, String> toStringConvertor) {
+  public TableSpeedSearch(JTable table, BiFunction<Object, ? super Cell, String> toStringConvertor) {
     super(table);
 
     myToStringConvertor = toStringConvertor;
@@ -77,9 +77,9 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
   @Override
   protected void selectElement(Object element, String selectedText) {
     if (element instanceof Integer) {
-      final int index = ((Integer)element).intValue();
-      final int row = index / myComponent.getColumnCount();
-      final int col = index % myComponent.getColumnCount();
+      int index = ((Integer)element).intValue();
+      int row = index / myComponent.getColumnCount();
+      int col = index % myComponent.getColumnCount();
       myComponent.getSelectionModel().setSelectionInterval(row, row);
       myComponent.getColumnModel().getSelectionModel().setSelectionInterval(col, col);
       TableUtil.scrollSelectionToVisible(myComponent);
@@ -92,8 +92,8 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
 
   @Override
   protected int getSelectedIndex() {
-    final int row = myComponent.getSelectedRow();
-    final int col = myComponent.getSelectedColumn();
+    int row = myComponent.getSelectedRow();
+    int col = myComponent.getSelectedColumn();
     // selected row is not enough as we want to select specific cell in a large multi-column table
     return row > -1 && col > -1 ? row * myComponent.getColumnCount() + col : -1;
   }
@@ -106,7 +106,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
 
   @Override
   protected String getElementText(Object element) {
-    final int index = ((Integer)element).intValue();
+    int index = ((Integer)element).intValue();
     int row = index / myComponent.getColumnCount();
     int col = index % myComponent.getColumnCount();
     Object value = myComponent.getValueAt(row, col);
@@ -118,7 +118,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     private int myCursor;
 
     MyListIterator(int startingIndex) {
-      final int total = getElementCount();
+      int total = getElementCount();
       myCursor = startingIndex < 0 ? total : startingIndex;
     }
 

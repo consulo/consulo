@@ -35,7 +35,7 @@ class SortMembersAlphabeticallyAction extends RuleAction {
   }
 
   @Override
-  protected void setOptionValue(final boolean value) {
+  protected void setOptionValue(boolean value) {
     UsageViewSettings.getInstance().IS_SORT_MEMBERS_ALPHABETICALLY = value;
   }
 }

@@ -70,11 +70,11 @@ public class PackagingDataCalculator {
     void populateFrames(StackTraceElementProxy[] stepArray) {
         // in the initial part of this method we populate package information for
         // common stack frames
-        final Throwable t = new Throwable("local stack reference");
-        final StackTraceElement[] localSTEArray = t.getStackTrace();
-        final int commonFrames = STEUtil.findNumberOfCommonFrames(localSTEArray, stepArray);
-        final int localFirstCommon = localSTEArray.length - commonFrames;
-        final int stepFirstCommon = stepArray.length - commonFrames;
+        Throwable t = new Throwable("local stack reference");
+        StackTraceElement[] localSTEArray = t.getStackTrace();
+        int commonFrames = STEUtil.findNumberOfCommonFrames(localSTEArray, stepArray);
+        int localFirstCommon = localSTEArray.length - commonFrames;
+        int stepFirstCommon = stepArray.length - commonFrames;
 
         ClassLoader lastExactClassLoader = null;
         ClassLoader firsExactClassLoader = null;

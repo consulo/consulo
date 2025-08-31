@@ -28,18 +28,18 @@ import jakarta.annotation.Nonnull;
  */
 public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Self>> extends PsiElementPattern<T, Self> {
 
-  protected PsiFilePattern(@Nonnull final InitialPatternCondition<T> condition) {
+  protected PsiFilePattern(@Nonnull InitialPatternCondition<T> condition) {
     super(condition);
   }
 
-  protected PsiFilePattern(final Class<T> aClass) {
+  protected PsiFilePattern(Class<T> aClass) {
     super(aClass);
   }
 
   public Self withParentDirectoryName(final StringPattern namePattern) {
     return with(new PatternCondition<T>("withParentDirectoryName") {
       @Override
-      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull T t, ProcessingContext context) {
         PsiDirectory directory = t.getContainingDirectory();
         return directory != null && namePattern.getCondition().accepts(directory.getName(), context);
       }
@@ -75,11 +75,11 @@ public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Se
 
   public static class Capture<T extends PsiFile> extends PsiFilePattern<T,Capture<T>> {
 
-    protected Capture(final Class<T> aClass) {
+    protected Capture(Class<T> aClass) {
       super(aClass);
     }
 
-    public Capture(@Nonnull final InitialPatternCondition<T> condition) {
+    public Capture(@Nonnull InitialPatternCondition<T> condition) {
       super(condition);
     }
   }

@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  */
 public abstract class ReadActionProcessor<T> implements Processor<T> {
     @Override
-    public boolean process(final T t) {
+    public boolean process(T t) {
         return Application.get().runReadAction((Supplier<Boolean>)() -> processInReadAction(t));
     }
 

@@ -123,12 +123,12 @@ public class NetUtil {
   }
 
   public static int[] findAvailableSocketPorts(int capacity) throws IOException {
-    final int[] ports = new int[capacity];
-    final ServerSocket[] sockets = new ServerSocket[capacity];
+    int[] ports = new int[capacity];
+    ServerSocket[] sockets = new ServerSocket[capacity];
 
     for (int i = 0; i < capacity; i++) {
       //noinspection SocketOpenedButNotSafelyClosed
-      final ServerSocket serverSocket = new ServerSocket(0);
+      ServerSocket serverSocket = new ServerSocket(0);
       sockets[i] = serverSocket;
       ports[i] = serverSocket.getLocalPort();
     }
@@ -155,7 +155,7 @@ public class NetUtil {
     // HACK for Windows with ipv6
     String localHostString = "localhost";
     try {
-      final InetAddress localHost = InetAddress.getByName(localHostString);
+      InetAddress localHost = InetAddress.getByName(localHostString);
       if ((localHost.getAddress().length != 4 && OSInfo.isWindows) || (localHost.getAddress().length == 4 && OSInfo.isMac)) {
         localHostString = "127.0.0.1";
       }

@@ -163,8 +163,8 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
     //}
 
     // ! containing self
-    public static List<AbstractTreeNode> getPathToUsualNode(final AbstractTreeNode treeNode) {
-        final List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+    public static List<AbstractTreeNode> getPathToUsualNode(AbstractTreeNode treeNode) {
+        List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
         AbstractTreeNode current = treeNode;
         while (current != null && (!(current instanceof FavoritesRootNode))) {
             result.add(current);
@@ -174,10 +174,10 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
         return result;
     }
 
-    public static List<AbstractTreeNode> getPathToUsualNode(final AbstractTreeNode treeNode, final Tree tree) {
-        final AbstractTreeNode parent = (AbstractTreeNode) treeNode.getParent();
+    public static List<AbstractTreeNode> getPathToUsualNode(AbstractTreeNode treeNode, Tree tree) {
+        AbstractTreeNode parent = (AbstractTreeNode) treeNode.getParent();
         if (parent instanceof ProjectViewNodeWithChildrenList) {
-            final List<AbstractTreeNode> pathToSelected = FavoritesTreeUtil.getLogicalPathToSelected(tree);
+            List<AbstractTreeNode> pathToSelected = FavoritesTreeUtil.getLogicalPathToSelected(tree);
             if (pathToSelected.isEmpty()) {
                 return pathToSelected;
             }
@@ -191,13 +191,13 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
     private void showNotePopup(
         Project project,
         final DnDAwareTree tree,
-        final Consumer<String> after, final String initText
+        final Consumer<String> after, String initText
     ) {
         final JTextArea textArea = new JTextArea(3, 50);
         textArea.setFont(UIUtil.getTreeFont());
         textArea.setText(initText);
-        final JBScrollPane pane = new JBScrollPane(textArea);
-        final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(pane, textArea)
+        JBScrollPane pane = new JBScrollPane(textArea);
+        ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(pane, textArea)
             .setCancelOnClickOutside(true)
             .setAdText(KeymapUtil.getShortcutsText(CommonShortcuts.CTRL_ENTER.getShortcuts()) + " to finish")
             .setTitle("Comment")
@@ -205,7 +205,7 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
             .setRequestFocus(true).setResizable(true).setMayBeParent(true);
         final JBPopup popup = builder.createPopup();
         final JComponent content = popup.getContent();
-        final AnAction action = new AnAction() {
+        AnAction action = new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 popup.closeOk(e.getInputEvent());

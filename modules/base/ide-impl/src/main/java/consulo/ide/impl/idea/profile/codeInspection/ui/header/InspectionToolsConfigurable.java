@@ -93,7 +93,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   private JPanel myPanel;
   private JPanel myWholePanel;
 
-  public InspectionToolsConfigurable(@Nonnull final InspectionProjectProfileManager projectProfileManager,
+  public InspectionToolsConfigurable(@Nonnull InspectionProjectProfileManager projectProfileManager,
                                      InspectionProfileManager profileManager) {
 
     ((InspectionManagerImpl)InspectionManager.getInstance(projectProfileManager.getProject())).buildInspectionSearchIndexIfNecessary();
@@ -113,7 +113,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     }
     while (hasName(profileDefaultName, myPanels.get(selectedProfile).isProfileShared()));
 
-    final ProfileManager profileManager = selectedProfile.getProfileManager();
+    ProfileManager profileManager = selectedProfile.getProfileManager();
     InspectionProfileImpl inspectionProfile =
       new InspectionProfileImpl(profileDefaultName, InspectionToolRegistrar.getInstance(), profileManager);
 
@@ -125,8 +125,8 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   private void addProfile(InspectionProfileImpl model) {
-    final String modelName = model.getName();
-    final SingleInspectionProfilePanel panel = createPanel(model, modelName);
+    String modelName = model.getName();
+    SingleInspectionProfilePanel panel = createPanel(model, modelName);
     myPanel.add(getCardName(model), panel);
 
     myProfiles.getModel().addElement(model);
@@ -142,7 +142,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     myWholePanel = new JPanel(new BorderLayout());
     myLayout = new CardLayout();
 
-    final JPanel toolbar = new JPanel(new GridBagLayout());
+    JPanel toolbar = new JPanel(new GridBagLayout());
     toolbar.setBorder(BorderFactory.createEmptyBorder(0, 0, 7, 0));
 
     myPanel = new JPanel();
@@ -157,7 +157,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
                                            int index,
                                            boolean selected,
                                            boolean hasFocus) {
-        final SingleInspectionProfilePanel singleInspectionProfilePanel = myPanels.get(value);
+        SingleInspectionProfilePanel singleInspectionProfilePanel = myPanels.get(value);
         setIcon(PlatformIconGroup.generalGearplain());
         append(singleInspectionProfilePanel.getCurrentProfileName());
       }
@@ -181,13 +181,13 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
       @Override
       public void setShareToTeamMembers(boolean shared) {
-        final SingleInspectionProfilePanel selectedPanel = getSelectedPanel();
+        SingleInspectionProfilePanel selectedPanel = getSelectedPanel();
         LOG.assertTrue(selectedPanel != null, "No settings selectedPanel for: " + getSelectedObject());
 
-        final String name = getSelectedPanel().getCurrentProfileName();
+        String name = getSelectedPanel().getCurrentProfileName();
         for (SingleInspectionProfilePanel p : myPanels.values()) {
           if (p != selectedPanel && Comparing.equal(p.getCurrentProfileName(), name)) {
-            final boolean curShared = p.isProfileShared();
+            boolean curShared = p.isProfileShared();
             if (curShared == shared) {
               Messages.showErrorDialog((shared ? "Shared" : "Application level") + " profile with same name exists.",
                                        "Inspections Settings");
@@ -202,9 +202,9 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
       @Override
       public void copy() {
-        final InspectionProfileImpl newProfile = copyToNewProfile(getSelectedObject(), getProject());
+        InspectionProfileImpl newProfile = copyToNewProfile(getSelectedObject(), getProject());
         if (newProfile != null) {
-          final InspectionProfileImpl modifiableModel = (InspectionProfileImpl)newProfile.getModifiableModel();
+          InspectionProfileImpl modifiableModel = (InspectionProfileImpl)newProfile.getModifiableModel();
           modifiableModel.setModified(true);
           modifiableModel.setProjectLevel(false);
           addProfile(modifiableModel);
@@ -214,7 +214,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
       @Override
       public boolean canRename() {
-        final InspectionProfileImpl profile = getSelectedObject();
+        InspectionProfileImpl profile = getSelectedObject();
         return !profile.isProfileLocked();
       }
 
@@ -235,11 +235,11 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
           @Override
           public boolean checkValid(@Nonnull String text) {
-            final SingleInspectionProfilePanel singleInspectionProfilePanel = myPanels.get(inspectionProfile);
+            SingleInspectionProfilePanel singleInspectionProfilePanel = myPanels.get(inspectionProfile);
             if (singleInspectionProfilePanel == null) {
               return false;
             }
-            final boolean isValid = text.equals(initialName) || !hasName(text, singleInspectionProfilePanel.isProfileShared());
+            boolean isValid = text.equals(initialName) || !hasName(text, singleInspectionProfilePanel.isProfileShared());
             if (isValid) {
               myDescriptionLabel.setText(getSelectedObject().getDescription());
             }
@@ -263,7 +263,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
       @Override
       public void delete() {
-        final InspectionProfileImpl selectedProfile = myProfiles.getSelectedProfile();
+        InspectionProfileImpl selectedProfile = myProfiles.getSelectedProfile();
         myProfiles.getModel().removeElement(selectedProfile);
         myDeletedProfiles.add(selectedProfile);
       }
@@ -288,7 +288,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
           return;
         }
 
-        final InspectionProfileImpl inspectionProfile = getSelectedObject();
+        InspectionProfileImpl inspectionProfile = getSelectedObject();
         if (!Comparing.strEqual(description, inspectionProfile.getDescription())) {
           inspectionProfile.setDescription(description);
           inspectionProfile.setModified(true);
@@ -303,20 +303,20 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
       @Override
       public void export() {
-        final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setDescription("Choose directory to store profile file");
         IdeaFileChooser.chooseFile(descriptor, getProject(), myWholePanel, null, new Consumer<VirtualFile>() {
           @RequiredUIAccess
           @Override
           public void accept(VirtualFile file) {
-            final Element element = new Element("inspections");
+            Element element = new Element("inspections");
             try {
-              final SingleInspectionProfilePanel panel = getSelectedPanel();
+              SingleInspectionProfilePanel panel = getSelectedPanel();
               LOG.assertTrue(panel != null);
-              final InspectionProfileImpl profile = getSelectedObject();
+              InspectionProfileImpl profile = getSelectedObject();
               LOG.assertTrue(true);
               profile.writeExternal(element);
-              final String filePath =
+              String filePath =
                 FileUtil.toSystemDependentName(file.getPath()) + File.separator + FileUtil.sanitizeFileName(profile.getName()) + ".xml";
               if (new File(filePath).isFile()) {
                 int buttonPressed = Messages.showOkCancelDialog(
@@ -340,7 +340,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
       @Override
       public void doImport() {
-        final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, false, false, false, false) {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, false, false, false, false) {
           @RequiredUIAccess
           @Override
           public boolean isFileSelectable(VirtualFile file) {
@@ -357,9 +357,9 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
             if (Comparing.strEqual(rootElement.getName(), "component")) {//import right from .idea/inspectProfiles/xxx.xml
               rootElement = rootElement.getChildren().get(0);
             }
-            final Set<String> levels = new HashSet<>();
+            Set<String> levels = new HashSet<>();
             for (Object o : rootElement.getChildren("inspection_tool")) {
-              final Element inspectElement = (Element)o;
+              Element inspectElement = (Element)o;
               levels.add(inspectElement.getAttributeValue("level"));
               for (Object s : inspectElement.getChildren("scope")) {
                 levels.add(((Element)s).getAttributeValue("level"));
@@ -381,7 +381,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
               );
               if (buttonPressed == Messages.YES) {
                 for (String level : levels) {
-                  final TextAttributes textAttributes = CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes();
+                  TextAttributes textAttributes = CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes();
                   HighlightInfoType.HighlightInfoTypeImpl info =
                     new HighlightInfoType.HighlightInfoTypeImpl(new HighlightSeverity(level, 50),
                                                                 TextAttributesKey.createTextAttributesKey(level));
@@ -405,7 +405,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
                 return;
               }
             }
-            final ModifiableModel model = profile.getModifiableModel();
+            ModifiableModel model = profile.getModifiableModel();
             model.setModified(true);
             addProfile((InspectionProfileImpl)model);
 
@@ -468,7 +468,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   @Override
-  public Runnable enableSearch(final String option) {
+  public Runnable enableSearch(String option) {
     return () -> {
       SingleInspectionProfilePanel panel = getSelectedPanel();
       if (panel != null) {
@@ -493,8 +493,8 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   public boolean isModified() {
     buildUI();
 
-    final InspectionProfileImpl selectedProfile = getSelectedObject();
-    final InspectionProfileImpl currentProfile = getCurrentProfile();
+    InspectionProfileImpl selectedProfile = getSelectedObject();
+    InspectionProfileImpl currentProfile = getCurrentProfile();
     if (!Comparing.equal(selectedProfile, currentProfile)) {
       return true;
     }
@@ -509,13 +509,13 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   public void apply() throws ConfigurationException {
     buildUI();
 
-    final SingleInspectionProfilePanel selectedPanel = getSelectedPanel();
-    for (final Profile inspectionProfile : myPanels.keySet()) {
+    SingleInspectionProfilePanel selectedPanel = getSelectedPanel();
+    for (Profile inspectionProfile : myPanels.keySet()) {
       if (myDeletedProfiles.remove(inspectionProfile)) {
         deleteProfile(getProfilePanel(inspectionProfile).getSelectedProfile());
       }
       else {
-        final SingleInspectionProfilePanel panel = getProfilePanel(inspectionProfile);
+        SingleInspectionProfilePanel panel = getProfilePanel(inspectionProfile);
         panel.apply();
         if (panel == selectedPanel) {
           applyRootProfile(panel.getCurrentProfileName(), panel.isProfileShared());
@@ -525,7 +525,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     doReset();
   }
 
-  protected abstract void applyRootProfile(final String name, final boolean isShared);
+  protected abstract void applyRootProfile(String name, boolean isShared);
 
   private SingleInspectionProfilePanel getProfilePanel(Profile inspectionProfile) {
     return myPanels.get(inspectionProfile);
@@ -536,7 +536,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   protected void deleteProfile(Profile profile) {
-    final String name = profile.getName();
+    String name = profile.getName();
     if (profile.getProfileManager() == myProfileManager) {
       if (myProfileManager.getProfile(name, false) != null) {
         myProfileManager.deleteProfile(name);
@@ -565,24 +565,24 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   private void doReset() {
     myDeletedProfiles.clear();
     myPanels.clear();
-    final Collection<InspectionProfile> profiles = getProfiles();
-    final List<InspectionProfile> modifiableProfiles = new ArrayList<>(profiles.size());
+    Collection<InspectionProfile> profiles = getProfiles();
+    List<InspectionProfile> modifiableProfiles = new ArrayList<>(profiles.size());
     for (InspectionProfile profile : profiles) {
-      final String profileName = profile.getName();
-      final ModifiableModel modifiableProfile = profile.getModifiableModel();
+      String profileName = profile.getName();
+      ModifiableModel modifiableProfile = profile.getModifiableModel();
       modifiableProfiles.add((InspectionProfile)modifiableProfile);
-      final InspectionProfileImpl inspectionProfile = (InspectionProfileImpl)modifiableProfile;
-      final SingleInspectionProfilePanel panel = createPanel(inspectionProfile, profileName);
+      InspectionProfileImpl inspectionProfile = (InspectionProfileImpl)modifiableProfile;
+      SingleInspectionProfilePanel panel = createPanel(inspectionProfile, profileName);
       putProfile(modifiableProfile, panel);
       myPanel.add(getCardName(inspectionProfile), panel);
     }
     myProfiles.reset(modifiableProfiles);
     myDescriptionLabel.setText(getSelectedObject().getDescription());
 
-    final InspectionProfileImpl inspectionProfile = getCurrentProfile();
+    InspectionProfileImpl inspectionProfile = getCurrentProfile();
     myProfiles.selectProfile(inspectionProfile);
     myLayout.show(myPanel, getCardName(inspectionProfile));
-    final SingleInspectionProfilePanel panel = getSelectedPanel();
+    SingleInspectionProfilePanel panel = getSelectedPanel();
     if (panel != null) {
       panel.setVisible(true);//make sure that UI was initialized
       mySelectionAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
@@ -594,7 +594,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     }
   }
 
-  private static String getCardName(final InspectionProfileImpl inspectionProfile) {
+  private static String getCardName(InspectionProfileImpl inspectionProfile) {
     return (inspectionProfile.isProjectLevel() ? "s" : "a") + inspectionProfile.getName();
   }
 
@@ -612,16 +612,16 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   private boolean isDeleteEnabled(@Nonnull InspectionProfileImpl inspectionProfile) {
-    final ProfileManager profileManager = inspectionProfile.getProfileManager();
+    ProfileManager profileManager = inspectionProfile.getProfileManager();
 
     boolean projectProfileFound = false;
     boolean ideProfileFound = false;
 
-    final ComboBoxModel<InspectionProfile> model = myProfiles.getModel();
+    ComboBoxModel<InspectionProfile> model = myProfiles.getModel();
     for (int i = 0; i < model.getSize(); i++) {
       InspectionProfile profile = model.getElementAt(i);
       if (inspectionProfile == profile) continue;
-      final boolean isProjectProfile = profile.getProfileManager() == myProjectProfileManager;
+      boolean isProjectProfile = profile.getProfileManager() == myProjectProfileManager;
       projectProfileFound |= isProjectProfile;
       ideProfileFound |= !isProjectProfile;
 
@@ -632,7 +632,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   protected Collection<InspectionProfile> getProfiles() {
-    final Collection<InspectionProfile> result = new ArrayList<>();
+    Collection<InspectionProfile> result = new ArrayList<>();
     result.addAll(new TreeSet<>(myProfileManager.getProfiles()));
     result.addAll(myProjectProfileManager.getProfiles());
     return result;
@@ -666,14 +666,14 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
   @Override
   public void selectInspectionTool(String selectedToolShortName) {
-    final InspectionProfileImpl inspectionProfile = getSelectedObject();
-    final SingleInspectionProfilePanel panel = getProfilePanel(inspectionProfile);
+    InspectionProfileImpl inspectionProfile = getSelectedObject();
+    SingleInspectionProfilePanel panel = getProfilePanel(inspectionProfile);
     LOG.assertTrue(panel != null, "No settings panel for: " + inspectionProfile + "; " + configuredProfiles());
     panel.selectInspectionTool(selectedToolShortName);
   }
 
   protected SingleInspectionProfilePanel getSelectedPanel() {
-    final InspectionProfileImpl inspectionProfile = getSelectedObject();
+    InspectionProfileImpl inspectionProfile = getSelectedObject();
     return getProfilePanel(inspectionProfile);
   }
 
@@ -681,7 +681,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return "configured profiles: " + StringUtil.join(myPanels.keySet(), ", ");
   }
 
-  private boolean hasName(final @Nonnull String name, boolean shared) {
+  private boolean hasName(@Nonnull String name, boolean shared) {
     for (SingleInspectionProfilePanel p : myPanels.values()) {
       if (name.equals(p.getCurrentProfileName()) && shared == p.isProfileShared()) {
         return true;
@@ -699,7 +699,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
-    final InspectionProfileImpl inspectionProfile = getSelectedObject();
+    InspectionProfileImpl inspectionProfile = getSelectedObject();
     return getProfilePanel(inspectionProfile).getPreferredFocusedComponent();
   }
 }

@@ -61,7 +61,7 @@ public class PsiTreeDebugBuilder {
         for (int i = 0; i < indent; i++) {
             myBuffer.append(' ');
         }
-        final String rootStr = root.toString();
+        String rootStr = root.toString();
         myBuffer.append(rootStr);
         PsiElement child = root.getFirstChild();
         if (child == null) {

@@ -130,7 +130,7 @@ public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme,
   }
 
   @Override
-  public void setName(@Nonnull final String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 

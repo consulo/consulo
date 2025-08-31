@@ -33,13 +33,13 @@ public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference
         @Nonnull ReferencesSearch.SearchParameters queryParameters,
         @Nonnull Predicate<? super PsiReference> consumer
     ) {
-        final SearchScope scope = queryParameters.getScopeDeterminedByUser();
-        final PsiElement element = queryParameters.getElementToSearch();
-        final PsiFile containingFile = element.getContainingFile();
+        SearchScope scope = queryParameters.getScopeDeterminedByUser();
+        PsiElement element = queryParameters.getElementToSearch();
+        PsiFile containingFile = element.getContainingFile();
         if (!(scope instanceof GlobalSearchScope) && !isApplicableTo(containingFile)) {
             return;
         }
-        final LocalSearchScope currentScope;
+        LocalSearchScope currentScope;
         if (scope instanceof LocalSearchScope) {
             if (queryParameters.isIgnoreAccessScope()) {
                 return;
@@ -53,7 +53,7 @@ public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference
         if (!project.isInitialized()) {
             return; // skip default and other projects that look weird
         }
-        final PsiManager psiManager = PsiManager.getInstance(project);
+        PsiManager psiManager = PsiManager.getInstance(project);
         for (VirtualFile virtualFile : FileEditorManager.getInstance(project).getOpenFiles()) {
             if (!virtualFile.isValid()) {
                 continue;
@@ -63,8 +63,8 @@ public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference
             }
             PsiFile file = psiManager.findFile(virtualFile);
             if (isApplicableTo(file)) {
-                final LocalSearchScope fileScope = new LocalSearchScope(file);
-                final LocalSearchScope searchScope = currentScope == null ? fileScope : fileScope.intersectWith(currentScope);
+                LocalSearchScope fileScope = new LocalSearchScope(file);
+                LocalSearchScope searchScope = currentScope == null ? fileScope : fileScope.intersectWith(currentScope);
                 ReferencesSearch.searchOptimized(element, searchScope, true, queryParameters.getOptimizer(), consumer);
             }
         }

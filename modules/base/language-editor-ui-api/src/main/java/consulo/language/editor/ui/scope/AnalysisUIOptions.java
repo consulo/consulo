@@ -78,7 +78,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
     }
 
     public AnalysisUIOptions copy() {
-        final AnalysisUIOptions result = new AnalysisUIOptions();
+        AnalysisUIOptions result = new AnalysisUIOptions();
         XmlSerializerUtil.copyBean(this, result);
         return result;
     }

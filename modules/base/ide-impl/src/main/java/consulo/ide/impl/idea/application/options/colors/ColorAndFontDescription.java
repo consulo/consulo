@@ -42,7 +42,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
   private boolean isErrorStripeChecked;
   private boolean isInherited;
 
-  public ColorAndFontDescription(LocalizeValue name, LocalizeValue group, String type, EditorColorsScheme scheme, final Image icon, final String toolTip) {
+  public ColorAndFontDescription(LocalizeValue name, LocalizeValue group, String type, EditorColorsScheme scheme, Image icon, String toolTip) {
     myName = name;
     myGroup = group;
     myType = type;

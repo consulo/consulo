@@ -52,7 +52,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final UIDefaults defaults = UIManager.getDefaults();
+    UIDefaults defaults = UIManager.getDefaults();
     Enumeration keys = defaults.keys();
     final Object[][] data = new Object[defaults.size()][2];
     int i = 0;
@@ -89,7 +89,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
 
       @Override
       protected JComponent createCenterPanel() {
-        final JBTable table = new JBTable(new DefaultTableModel(data, new Object[]{"Name", "Value"}) {
+        JBTable table = new JBTable(new DefaultTableModel(data, new Object[]{"Name", "Value"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return column == 1 && getValueAt(row, column) instanceof Color;
@@ -98,12 +98,12 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
           @Override
           public boolean editCellAt(int row, int column, EventObject e) {
             if (isCellEditable(row, column) && e instanceof MouseEvent) {
-              final Object color = getValueAt(row, column);
+              Object color = getValueAt(row, column);
 
               ColorChooser.chooseColor(this, "Choose Color", (Color)color, true, true, newColor -> {
                 if (newColor != null) {
-                  final ColorUIResource colorUIResource = new ColorUIResource(newColor);
-                  final Object key = getValueAt(row, 0);
+                  ColorUIResource colorUIResource = new ColorUIResource(newColor);
+                  Object key = getValueAt(row, 0);
                   UIManager.put(key, colorUIResource);
                   setValueAt(colorUIResource, row, column);
                 }
@@ -116,11 +116,11 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
           @Override
           public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            final JPanel panel = new JPanel(new BorderLayout());
-            final JLabel label = new JLabel(value == null ? "" : value.toString());
+            JPanel panel = new JPanel(new BorderLayout());
+            JLabel label = new JLabel(value == null ? "" : value.toString());
             panel.add(label, BorderLayout.CENTER);
             if (value instanceof Color) {
-              final Color c = (Color)value;
+              Color c = (Color)value;
               label.setText(String.format("[r=%d,g=%d,b=%d] hex=0x%s", c.getRed(), c.getGreen(), c.getBlue(), ColorUtil.toHex(c)));
               label.setForeground(ColorUtil.isDark(c) ? Color.white : Color.black);
               panel.setBackground(c);
@@ -128,7 +128,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
             }
             else if (value instanceof Icon) {
               try {
-                final Icon icon = new IconWrap((Icon)value);
+                Icon icon = new IconWrap((Icon)value);
                 if (icon.getIconHeight() <= 20) {
                   label.setIcon(icon);
                 }
@@ -140,7 +140,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
             }
             else if (value instanceof Border) {
               try {
-                final Insets i = ((Border)value).getBorderInsets(null);
+                Insets i = ((Border)value).getBorderInsets(null);
                 label.setText(String.format("[%d, %d, %d, %d] %s", i.top, i.left, i.bottom, i.right, label.getText()));
                 return panel;
               }
@@ -150,7 +150,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
           }
         });
-        final JBScrollPane pane = new JBScrollPane(table);
+        JBScrollPane pane = new JBScrollPane(table);
         new TableSpeedSearch(table, new PairFunction<>() {
           @Nullable
           @Override
@@ -159,7 +159,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
           }
         });
         table.setShowGrid(false);
-        final JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
         panel.add(pane, BorderLayout.CENTER);
         myTable = table;
         TableUtil.ensureSelectionExists(myTable);

@@ -35,7 +35,7 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
     if (!file.getManager().isInProject(file)) return false;
 
     useElementToTheLeft = false;
-    final PsiElement elementToTheRight = getElementToTheRight(editor, file);
+    PsiElement elementToTheRight = getElementToTheRight(editor, file);
     if (elementToTheRight == null) {
       return false;
     }
@@ -44,7 +44,7 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
       return true;
     }
 
-    final PsiElement elementToTheLeft = getElementToTheLeft(editor, file);
+    PsiElement elementToTheLeft = getElementToTheLeft(editor, file);
     if (elementToTheLeft != null && isAvailable(project, editor, elementToTheLeft)) {
       useElementToTheLeft = true;
       return true;
@@ -66,7 +66,7 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
 
   @Override
   public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-    final PsiElement element = useElementToTheLeft ? getElementToTheLeft(editor, file) : getElementToTheRight(editor,file);
+    PsiElement element = useElementToTheLeft ? getElementToTheLeft(editor, file) : getElementToTheRight(editor,file);
     if (element == null){
       return;
     }

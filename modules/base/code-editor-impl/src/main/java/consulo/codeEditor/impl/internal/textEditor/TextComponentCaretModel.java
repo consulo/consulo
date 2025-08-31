@@ -32,7 +32,7 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void moveCaretRelatively(final int columnShift, final int lineShift, final boolean withSelection, final boolean blockSelection, final boolean scrollToCaret) {
+    public void moveCaretRelatively(int columnShift, int lineShift, boolean withSelection, boolean blockSelection, boolean scrollToCaret) {
         if (lineShift == 0 && !withSelection && !blockSelection && !scrollToCaret) {
             moveToOffset(getOffset() + columnShift);
             return;
@@ -41,12 +41,12 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void moveToLogicalPosition(@Nonnull final LogicalPosition pos) {
+    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
         moveToOffset(myEditor.logicalPositionToOffset(pos), false);
     }
 
     @Override
-    public void moveToVisualPosition(@Nonnull final VisualPosition pos) {
+    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
         moveToLogicalPosition(myEditor.visualToLogicalPosition(pos));
     }
 
@@ -56,7 +56,7 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void moveToOffset(final int offset, boolean locateBeforeSoftWrap) {
+    public void moveToOffset(int offset, boolean locateBeforeSoftWrap) {
         int targetOffset = Math.min(offset, myTextComponent.getText().length());
         int currentPosition = myTextComponent.getCaretPosition();
         // We try to preserve selection, to match EditorImpl behaviour.
@@ -84,7 +84,7 @@ public class TextComponentCaretModel implements CaretModel {
         int line;
         int lineStart;
         if (myTextComponent instanceof JTextArea) {
-            final JTextArea textArea = (JTextArea) myTextComponent;
+            JTextArea textArea = (JTextArea) myTextComponent;
             try {
                 line = textArea.getLineOfOffset(caretPos);
                 lineStart = textArea.getLineStartOffset(line);
@@ -113,12 +113,12 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void addCaretListener(@Nonnull final CaretListener listener) {
+    public void addCaretListener(@Nonnull CaretListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void removeCaretListener(@Nonnull final CaretListener listener) {
+    public void removeCaretListener(@Nonnull CaretListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 

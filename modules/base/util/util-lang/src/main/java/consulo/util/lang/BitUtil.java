@@ -71,7 +71,7 @@ public class BitUtil {
   }
 
   @Deprecated
-  public static boolean notSet(final int value, final int mask) {
+  public static boolean notSet(int value, int mask) {
     return (value & mask) != mask;
   }
 }

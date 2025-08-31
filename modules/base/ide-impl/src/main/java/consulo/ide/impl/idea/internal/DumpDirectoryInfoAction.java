@@ -42,15 +42,15 @@ public class DumpDirectoryInfoAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
-        final DirectoryIndex index = DirectoryIndex.getInstance(project);
-        final VirtualFile root = e.getData(VirtualFile.KEY);
+        Project project = e.getRequiredData(Project.KEY);
+        DirectoryIndex index = DirectoryIndex.getInstance(project);
+        VirtualFile root = e.getData(VirtualFile.KEY);
         ProgressManager.getInstance().runProcessWithProgressSynchronously(
             () -> {
-                final ContentIterator contentIterator = fileOrDir -> {
+                ContentIterator contentIterator = fileOrDir -> {
                     LOG.info(fileOrDir.getPath());
 
-                    final DirectoryInfo directoryInfo = index.getInfoForDirectory(fileOrDir);
+                    DirectoryInfo directoryInfo = index.getInfoForDirectory(fileOrDir);
                     if (directoryInfo != null) {
                         LOG.info(directoryInfo.toString());
                     }

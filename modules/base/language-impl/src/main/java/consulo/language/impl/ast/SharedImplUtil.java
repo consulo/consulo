@@ -99,7 +99,7 @@ public class SharedImplUtil {
 
   public static CharTable findCharTableByTree(ASTNode tree) {
     while (tree != null) {
-      final CharTable userData = tree.getUserData(CharTable.CHAR_TABLE_KEY);
+      CharTable userData = tree.getUserData(CharTable.CHAR_TABLE_KEY);
       if (userData != null) return userData;
       if (tree instanceof FileElement) return ((FileElement)tree).getCharTable();
       tree = tree.getTreeParent();
@@ -114,7 +114,7 @@ public class SharedImplUtil {
                                     ASTNode anchor,
                                     Boolean before) throws IncorrectOperationException {
     CheckUtil.checkWritable(thisElement);
-    final CharTable table = findCharTableByTree(SourceTreeToPsiMap.psiElementToTree(thisElement));
+    CharTable table = findCharTableByTree(SourceTreeToPsiMap.psiElementToTree(thisElement));
 
     TreeElement copyFirst = null;
     ASTNode copyLast = null;
@@ -148,7 +148,7 @@ public class SharedImplUtil {
     return SourceTreeToPsiMap.treeElementToPsi(copyFirst);
   }
 
-  public static PsiManager getManagerByTree(final ASTNode node) {
+  public static PsiManager getManagerByTree(ASTNode node) {
     if(node instanceof FileElement) return node.getPsi().getManager();
     return node.getTreeParent().getPsi().getManager();
   }
@@ -158,7 +158,7 @@ public class SharedImplUtil {
     if (count == 0) {
       return ASTNode.EMPTY_ARRAY;
     }
-    final ASTNode[] result = new ASTNode[count];
+    ASTNode[] result = new ASTNode[count];
     count = 0;
     for (ASTNode child = node.getFirstChildNode(); child != null; child = child.getTreeNext()) {
       if (child.getElementType() == elementType) {
@@ -184,7 +184,7 @@ public class SharedImplUtil {
     ASTNode childNode = root.getFirstChildNode();
 
     while (childNode != null) {
-      final PsiElement psi;
+      PsiElement psi;
       if (childNode instanceof PsiElement) {
         psi = (PsiElement)childNode;
       }
@@ -204,7 +204,7 @@ public class SharedImplUtil {
     TreeElement elementCopy = ChangeUtil.copyToElement(newElement);
     treeParent.replaceChildInternal(treeElement, elementCopy);
     elementCopy = ChangeUtil.decodeInformation(elementCopy);
-    final PsiElement result = SourceTreeToPsiMap.treeElementToPsi(elementCopy);
+    PsiElement result = SourceTreeToPsiMap.treeElementToPsi(elementCopy);
     treeElement.invalidate();
     return result;
   }

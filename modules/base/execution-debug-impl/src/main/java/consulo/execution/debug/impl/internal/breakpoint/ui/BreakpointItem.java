@@ -66,13 +66,13 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
             // FIXME [VISTALL] softer is not supported softerAttributes.setBackgroundColor(ColorUtil.softer(backgroundColor));
         }
 
-        final Editor editor = panel.getEditor();
-        final MarkupModel editorModel = editor.getMarkupModel();
-        final MarkupModel documentModel = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
+        Editor editor = panel.getEditor();
+        MarkupModel editorModel = editor.getMarkupModel();
+        MarkupModel documentModel = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
 
         for (RangeHighlighter highlighter : documentModel.getAllHighlighters()) {
             if (Objects.equals(highlighter.getUserData(DebuggerColors.BREAKPOINT_HIGHLIGHTER_KEY), Boolean.TRUE)) {
-                final int line1 = editor.offsetToLogicalPosition(highlighter.getStartOffset()).line;
+                int line1 = editor.offsetToLogicalPosition(highlighter.getStartOffset()).line;
                 if (line1 != line) {
                     editorModel.addLineHighlighter(line1, DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
                 }
@@ -82,7 +82,7 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
 
     @Override
     public void updateAccessoryView(JComponent component) {
-        final JCheckBox checkBox = (JCheckBox) component;
+        JCheckBox checkBox = (JCheckBox) component;
         checkBox.setSelected(isEnabled());
     }
 

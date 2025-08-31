@@ -380,7 +380,7 @@ public class RegExHelpPopup extends JPanel {
     }
 
     public static JBPopup createRegExHelpPopup() throws BadLocationException {
-        final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(new RegExHelpPopup(), null);
+        ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(new RegExHelpPopup(), null);
         return builder.setCancelOnClickOutside(false)
             .setBelongsToGlobalPopupStack(true)
             .setFocusable(true)

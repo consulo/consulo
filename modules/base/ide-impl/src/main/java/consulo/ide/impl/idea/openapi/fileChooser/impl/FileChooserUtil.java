@@ -35,9 +35,9 @@ public final class FileChooserUtil {
   private static final String LAST_OPENED_FILE_PATH = "last_opened_file_path";
 
   @Nullable
-  public static VirtualFile getLastOpenedFile(@Nullable final Project project) {
+  public static VirtualFile getLastOpenedFile(@Nullable Project project) {
     if (project != null) {
-      final String path = PropertiesComponent.getInstance(project).getValue(LAST_OPENED_FILE_PATH);
+      String path = PropertiesComponent.getInstance(project).getValue(LAST_OPENED_FILE_PATH);
       if (path != null) {
         return LocalFileSystem.getInstance().findFileByPath(path);
       }
@@ -45,7 +45,7 @@ public final class FileChooserUtil {
     return null;
   }
 
-  public static void setLastOpenedFile(@Nullable final Project project, @Nullable final VirtualFile file) {
+  public static void setLastOpenedFile(@Nullable Project project, @Nullable VirtualFile file) {
     if (project != null && !project.isDisposed() && file != null) {
       PropertiesComponent.getInstance(project).setValue(LAST_OPENED_FILE_PATH, file.getPath());
     }
@@ -88,8 +88,8 @@ public final class FileChooserUtil {
   }
 
   @Nonnull
-  public static List<VirtualFile> getChosenFiles(@Nonnull final FileChooserDescriptor descriptor,
-                                                 @Nonnull final Collection<VirtualFile> selectedFiles) {
+  public static List<VirtualFile> getChosenFiles(@Nonnull FileChooserDescriptor descriptor,
+                                                 @Nonnull Collection<VirtualFile> selectedFiles) {
     return ContainerUtil.mapNotNull(selectedFiles, file -> file != null && file.isValid() ? descriptor.getFileToSelect(file) : null);
   }
 }

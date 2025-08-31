@@ -19,21 +19,21 @@ package consulo.ide.impl.idea.application.options.colors;
 import java.util.EventListener;
 
 public interface ColorAndFontSettingsListener extends EventListener {
-  void selectedOptionChanged(final Object selected);
-  void schemeChanged(final Object source);
+  void selectedOptionChanged(Object selected);
+  void schemeChanged(Object source);
   void settingsChanged();
-  void selectionInPreviewChanged(final String typeToSelect);
+  void selectionInPreviewChanged(String typeToSelect);
 
   void fontChanged();
 
   abstract class Abstract implements ColorAndFontSettingsListener {
     @Override
-    public void selectedOptionChanged(final Object selected) {
+    public void selectedOptionChanged(Object selected) {
 
     }
 
     @Override
-    public void schemeChanged(final Object source) {
+    public void schemeChanged(Object source) {
     }
 
     @Override
@@ -41,7 +41,7 @@ public interface ColorAndFontSettingsListener extends EventListener {
     }
 
     @Override
-    public void selectionInPreviewChanged(final String typeToSelect) {
+    public void selectionInPreviewChanged(String typeToSelect) {
     }
 
     @Override

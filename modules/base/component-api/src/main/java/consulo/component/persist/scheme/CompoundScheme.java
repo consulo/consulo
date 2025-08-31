@@ -32,7 +32,7 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
   private final List<T> myElements = new ArrayList<T>();
   private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-  public CompoundScheme(final String name) {
+  public CompoundScheme(String name) {
     myName = name;
   }
 
@@ -42,7 +42,7 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
     }
   }
 
-  public void insertElement(T element, final int i) {
+  public void insertElement(T element, int i) {
     if (!contains(element)) {
       myElements.add(i, element);
     }
@@ -58,14 +58,14 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
   }
 
   @Override
-  public void setName(final String name) {
+  public void setName(String name) {
     myName = name;
     for (T template : myElements) {
       template.setGroupName(name);
     }
   }
 
-  public void removeElement(final T template) {
+  public void removeElement(T template) {
     for (Iterator templateIterator = myElements.iterator(); templateIterator.hasNext();) {
       T t = (T)templateIterator.next();
       if (t.getKey() != null && t.getKey().equals(template.getKey())) {
@@ -94,7 +94,7 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
   }
 
   @Nonnull
-  protected CompoundScheme<T> createNewInstance(final String name) {
+  protected CompoundScheme<T> createNewInstance(String name) {
       return new CompoundScheme<T>(name);
   }
 
@@ -103,7 +103,7 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
     return getName();
   }
 
-  public boolean contains(final T element) {
+  public boolean contains(T element) {
     for (T t : myElements) {
       if (t.getKey() != null && t.getKey().equals(element.getKey())) {
         return true;

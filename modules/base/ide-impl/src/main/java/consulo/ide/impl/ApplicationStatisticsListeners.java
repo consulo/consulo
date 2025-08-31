@@ -46,7 +46,7 @@ public class ApplicationStatisticsListeners {
 
   @Inject
   public ApplicationStatisticsListeners(@Nonnull Application application) {
-    final MessageBus messageBus = application.getMessageBus();
+    MessageBus messageBus = application.getMessageBus();
 
     MessageBusConnection connection = messageBus.connect();
     connection.subscribe(AppLifecycleListener.class, new AppLifecycleListener() {

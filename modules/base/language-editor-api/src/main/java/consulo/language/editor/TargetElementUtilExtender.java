@@ -54,12 +54,12 @@ public interface TargetElementUtilExtender {
     return false;
   }
 
-  default boolean isAcceptableReferencedElement(final PsiElement element, @Nonnull final PsiElement referenceOrReferencedElement) {
+  default boolean isAcceptableReferencedElement(PsiElement element, @Nonnull PsiElement referenceOrReferencedElement) {
     return true;
   }
 
   @Nullable
-  default PsiElement adjustElement(final Editor editor, final Set<String> flags, final PsiElement element, final PsiElement contextElement) {
+  default PsiElement adjustElement(Editor editor, Set<String> flags, PsiElement element, PsiElement contextElement) {
     return null;
   }
 
@@ -87,7 +87,7 @@ public interface TargetElementUtilExtender {
   }
 
   @Nullable
-  default PsiElement getGotoDeclarationTarget(final PsiElement element, final PsiElement navElement) {
+  default PsiElement getGotoDeclarationTarget(PsiElement element, PsiElement navElement) {
     return null;
   }
 
@@ -97,7 +97,7 @@ public interface TargetElementUtilExtender {
   }
 
   @Nullable
-  default PsiElement getNamedElement(@Nonnull final PsiElement element) {
+  default PsiElement getNamedElement(@Nonnull PsiElement element) {
     return null;
   }
 

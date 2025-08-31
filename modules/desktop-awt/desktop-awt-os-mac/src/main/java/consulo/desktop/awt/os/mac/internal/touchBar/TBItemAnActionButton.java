@@ -47,14 +47,14 @@ final class TBItemAnActionButton extends TBItemButton {
     }
 
     private void _performAction() {
-        final ActionManager actionManagerEx = ActionManager.getInstance();
-        final Component src = myComponent != null ? myComponent : Helpers.getCurrentFocusComponent();
+        ActionManager actionManagerEx = ActionManager.getInstance();
+        Component src = myComponent != null ? myComponent : Helpers.getCurrentFocusComponent();
         if (src == null) // KeyEvent can't have null source object
         {
             return;
         }
 
-        final InputEvent ie = new KeyEvent(src, COMPONENT_FIRST, System.currentTimeMillis(), 0, 0, '\0');
+        InputEvent ie = new KeyEvent(src, COMPONENT_FIRST, System.currentTimeMillis(), 0, 0, '\0');
         actionManagerEx.tryToExecute(myAnAction, ie, src, ActionPlaces.TOUCHBAR_GENERAL, true);
 
         // to update 'selected'-state after action has been performed

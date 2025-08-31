@@ -123,7 +123,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     if (fragments == null) return Integer.MIN_VALUE;
     if (fragments.isEmpty()) return 0;
 
-    final MatcherTextRange first = fragments.getHead();
+    MatcherTextRange first = fragments.getHead();
     boolean startMatch = first.getStartOffset() == 0;
     boolean valuedStartMatch = startMatch && valueStartCaseMatch;
 
@@ -782,7 +782,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return pattern;
     }
 
-    public boolean affects(final int index) {
+    public boolean affects(int index) {
       return !processErrors(0, index + 1, error -> {
         if (error.first == index) return false;
         if (error.first == index - 1 && error.second == SwapError.instance) return false;
@@ -809,7 +809,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
 
     public int length(char[] pattern) {
-      final Ref<Integer> ref = new Ref<>(pattern.length);
+      Ref<Integer> ref = new Ref<>(pattern.length);
       processErrors(0, Integer.MAX_VALUE, error -> {
         if (error.second instanceof MissError) {
           ref.set(ref.get() + 1);

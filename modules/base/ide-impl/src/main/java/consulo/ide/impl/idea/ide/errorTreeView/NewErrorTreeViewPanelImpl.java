@@ -192,9 +192,9 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
   @Override
   public void performCopy(@Nonnull DataContext dataContext) {
-    final ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
+    ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
     if (descriptor != null) {
-      final String[] lines = descriptor.getElement().getText();
+      String[] lines = descriptor.getElement().getText();
       CopyPasteManager.getInstance().setContents(new StringSelection(StringUtil.join(lines, "\n")));
     }
   }
@@ -215,7 +215,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
       return this;
     }
     if (Navigatable.KEY == dataId) {
-      final NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
+      NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
       return selectedMessageElement != null ? selectedMessageElement.getNavigatable() : null;
     }
     else if (HelpManager.HELP_ID == dataId) {
@@ -235,7 +235,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
   }
 
   public void selectFirstMessage() {
-    final ErrorTreeElement firstError = myErrorViewStructure.getFirstMessage(ErrorTreeElementKind.ERROR);
+    ErrorTreeElement firstError = myErrorViewStructure.getFirstMessage(ErrorTreeElementKind.ERROR);
     if (firstError != null) {
       selectElement(firstError, () -> {
         if (shouldShowFirstErrorInEditor()) {
@@ -260,7 +260,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     return myErrorViewStructure.getFirstMessage(ErrorTreeElementKind.ERROR) != null;
   }
 
-  private void selectElement(final ErrorTreeElement element, final Runnable onDone) {
+  private void selectElement(ErrorTreeElement element, Runnable onDone) {
     myBuilder.select(element, onDone);
   }
 
@@ -318,9 +318,9 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     if (file == null && navigatable instanceof OpenFileDescriptorImpl openFileDescriptor) {
       file = openFileDescriptor.getFile();
     }
-    final String exportPrefix = exportTextPrefix == null ? "" : exportTextPrefix;
-    final String renderPrefix = rendererTextPrefix == null ? "" : rendererTextPrefix;
-    final ErrorTreeElementKind kind = ErrorTreeElementKind.convertMessageFromCompilerErrorType(type);
+    String exportPrefix = exportTextPrefix == null ? "" : exportTextPrefix;
+    String renderPrefix = rendererTextPrefix == null ? "" : rendererTextPrefix;
+    ErrorTreeElementKind kind = ErrorTreeElementKind.convertMessageFromCompilerErrorType(type);
     myErrorViewStructure.addNavigatableMessage(groupName, navigatable, kind, text, data, exportPrefix, renderPrefix, file);
     myBuilder.updateTree();
   }
@@ -347,13 +347,13 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
   @Nullable
   private NavigatableMessageElement getSelectedMessageElement() {
-    final ErrorTreeElement selectedElement = getSelectedErrorTreeElement();
+    ErrorTreeElement selectedElement = getSelectedErrorTreeElement();
     return selectedElement instanceof NavigatableMessageElement ? (NavigatableMessageElement)selectedElement : null;
   }
 
   @Nullable
   public ErrorTreeElement getSelectedErrorTreeElement() {
-    final ErrorTreeNodeDescriptor treeNodeDescriptor = getSelectedNodeDescriptor();
+    ErrorTreeNodeDescriptor treeNodeDescriptor = getSelectedNodeDescriptor();
     return treeNodeDescriptor == null ? null : treeNodeDescriptor.getElement();
   }
 
@@ -371,23 +371,23 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     return (ErrorTreeNodeDescriptor)userObject;
   }
 
-  private void navigateToSource(final boolean focusEditor) {
+  private void navigateToSource(boolean focusEditor) {
     NavigatableMessageElement element = getSelectedMessageElement();
     if (element == null) {
       return;
     }
-    final Navigatable navigatable = element.getNavigatable();
+    Navigatable navigatable = element.getNavigatable();
     if (navigatable.canNavigate()) {
       navigatable.navigate(focusEditor);
     }
   }
 
-  public static String getQualifiedName(final VirtualFile file) {
+  public static String getQualifiedName(VirtualFile file) {
     return file.getPresentableUrl();
   }
 
   private void popupInvoked(Component component, int x, int y) {
-    final TreePath path = myTree.getLeadSelectionPath();
+    TreePath path = myTree.getLeadSelectionPath();
     if (path == null) {
       return;
     }
@@ -433,20 +433,20 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
   }
 
-  public void setProgress(final String s, float fraction) {
+  public void setProgress(String s, float fraction) {
     initProgressPanel();
     myProgressText = s;
     myFraction = fraction;
     updateProgress();
   }
 
-  public void setProgressText(final String s) {
+  public void setProgressText(String s) {
     initProgressPanel();
     myProgressText = s;
     updateProgress();
   }
 
-  public void setFraction(final float fraction) {
+  public void setFraction(float fraction) {
     initProgressPanel();
     myFraction = fraction;
     updateProgress();
@@ -467,8 +467,8 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     myUpdateAlarm.cancelAllRequests();
     myUpdateAlarm.addRequest(
       () -> {
-        final float fraction = myFraction;
-        final String text = myProgressText;
+        float fraction = myFraction;
+        String text = myProgressText;
         if (fraction > 0.0f) {
           myProgressLabel.setText((int)(fraction * 100 + 0.5) + "%  " + text);
         }
@@ -606,7 +606,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent event) {
-      final Presentation presentation = event.getPresentation();
+      Presentation presentation = event.getPresentation();
       presentation.setEnabled(canControlProcess() && isProcessStopped());
     }
   }
@@ -718,7 +718,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
   }
 
   private static class MyOccurenceNavigatorSupport extends OccurenceNavigatorSupport {
-    public MyOccurenceNavigatorSupport(final Tree tree) {
+    public MyOccurenceNavigatorSupport(Tree tree) {
       super(tree);
     }
 
@@ -728,8 +728,8 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
       if (!(userObject instanceof ErrorTreeNodeDescriptor)) {
         return null;
       }
-      final ErrorTreeNodeDescriptor descriptor = (ErrorTreeNodeDescriptor)userObject;
-      final ErrorTreeElement element = descriptor.getElement();
+      ErrorTreeNodeDescriptor descriptor = (ErrorTreeNodeDescriptor)userObject;
+      ErrorTreeElement element = descriptor.getElement();
       if (element instanceof NavigatableMessageElement) {
         return ((NavigatableMessageElement)element).getNavigatable();
       }
@@ -748,12 +748,12 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
   }
 
   @Override
-  public List<Object> getGroupChildrenData(final String groupName) {
+  public List<Object> getGroupChildrenData(String groupName) {
     return myErrorViewStructure.getGroupChildrenData(groupName);
   }
 
   @Override
-  public void removeGroup(final String name) {
+  public void removeGroup(String name) {
     myErrorViewStructure.removeGroup(name);
   }
 

@@ -43,7 +43,7 @@ public class BraceMatchingUtil {
   }
 
   public static boolean isPairedBracesAllowedBeforeTypeInFileType(@Nonnull IElementType lbraceType,
-                                                                  final IElementType tokenType,
+                                                                  IElementType tokenType,
                                                                   @Nonnull FileType fileType) {
     try {
       return getBraceMatcher(fileType, lbraceType).isPairedBracesAllowedBeforeType(lbraceType, tokenType);
@@ -141,7 +141,7 @@ public class BraceMatchingUtil {
           }
 
           if (!isStrict) {
-            final IElementType baseType = myMatcher.getOppositeBraceTokenType(tokenType);
+            IElementType baseType = myMatcher.getOppositeBraceTokenType(tokenType);
             if (myBraceStack.contains(baseType)) {
               while (!isPairBraces(topTokenType, tokenType, fileType) && !myBraceStack.empty()) {
                 topTokenType = myBraceStack.pop();
@@ -188,8 +188,8 @@ public class BraceMatchingUtil {
   }
 
   public static boolean findStructuralLeftBrace(@Nonnull FileType fileType, @Nonnull HighlighterIterator iterator, @Nonnull CharSequence fileText) {
-    final Stack<IElementType> braceStack = new Stack<>();
-    final Stack<String> tagNameStack = new Stack<>();
+    Stack<IElementType> braceStack = new Stack<>();
+    Stack<String> tagNameStack = new Stack<>();
 
     BraceMatcher matcher = getBraceMatcher(fileType, iterator);
 
@@ -202,10 +202,10 @@ public class BraceMatchingUtil {
         if (isLBraceToken(iterator, fileText, fileType)) {
           if (braceStack.isEmpty()) return true;
 
-          final int group = matcher.getBraceTokenGroupId((IElementType)iterator.getTokenType());
+          int group = matcher.getBraceTokenGroupId((IElementType)iterator.getTokenType());
 
-          final IElementType topTokenType = braceStack.pop();
-          final IElementType tokenType = (IElementType)iterator.getTokenType();
+          IElementType topTokenType = braceStack.pop();
+          IElementType tokenType = (IElementType)iterator.getTokenType();
 
           boolean isStrict = isStrictTagMatching(matcher, fileType, group);
           boolean isCaseSensitive = areTagsCaseSensitive(matcher, fileType, group);
@@ -236,13 +236,13 @@ public class BraceMatchingUtil {
   }
 
   public static boolean isLBraceToken(@Nonnull HighlighterIterator iterator, @Nonnull CharSequence fileText, @Nonnull FileType fileType) {
-    final BraceMatcher braceMatcher = getBraceMatcher(fileType, iterator);
+    BraceMatcher braceMatcher = getBraceMatcher(fileType, iterator);
 
     return braceMatcher.isLBraceToken(iterator, fileText, fileType);
   }
 
   public static boolean isRBraceToken(@Nonnull HighlighterIterator iterator, @Nonnull CharSequence fileText, @Nonnull FileType fileType) {
-    final BraceMatcher braceMatcher = getBraceMatcher(fileType, iterator);
+    BraceMatcher braceMatcher = getBraceMatcher(fileType, iterator);
 
     return braceMatcher.isRBraceToken(iterator, fileText, fileType);
   }
@@ -266,7 +266,7 @@ public class BraceMatchingUtil {
 
     Stack<IElementType> braceStack = new Stack<>();
     for (; !iterator.atEnd(); iterator.retreat()) {
-      final IElementType tokenType = (IElementType)iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
 
       if (isLBraceToken(iterator, fileText, fileType)) {
         if (!braceStack.isEmpty()) {
@@ -300,7 +300,7 @@ public class BraceMatchingUtil {
 
     Stack<IElementType> braceStack = new Stack<>();
     for (; !iterator.atEnd(); iterator.retreat()) {
-      final IElementType tokenType = (IElementType)iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
 
       if (isLBraceToken(iterator, fileText, fileType)) {
         if (!braceStack.isEmpty()) {
@@ -335,7 +335,7 @@ public class BraceMatchingUtil {
 
     Stack<IElementType> braceStack = new Stack<>();
     for (; !iterator.atEnd(); iterator.advance()) {
-      final IElementType tokenType = (IElementType)iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
 
       if (isRBraceToken(iterator, fileText, fileType)) {
         if (!braceStack.isEmpty()) {
@@ -382,15 +382,15 @@ public class BraceMatchingUtil {
      return matcher;
     }
 
-    final BraceMatcher byFileType = getBraceMatcherByFileType(fileType);
+    BraceMatcher byFileType = getBraceMatcherByFileType(fileType);
     if (byFileType != null) return byFileType;
 
     if (fileType instanceof LanguageFileType) {
-      final Language language = ((LanguageFileType)fileType).getLanguage();
+      Language language = ((LanguageFileType)fileType).getLanguage();
       if (lang != language) {
-        final FileType type1 = lang.getAssociatedFileType();
+        FileType type1 = lang.getAssociatedFileType();
         if (type1 != null) {
-          final BraceMatcher braceMatcher = getBraceMatcherByFileType(type1);
+          BraceMatcher braceMatcher = getBraceMatcherByFileType(type1);
           if (braceMatcher != null) {
             return braceMatcher;
           }
@@ -418,11 +418,11 @@ public class BraceMatchingUtil {
     return null;
   }
 
-  private static boolean isStrictTagMatching(@Nonnull BraceMatcher matcher, @Nonnull FileType fileType, final int group) {
+  private static boolean isStrictTagMatching(@Nonnull BraceMatcher matcher, @Nonnull FileType fileType, int group) {
     return matcher instanceof XmlAwareBraceMatcher && ((XmlAwareBraceMatcher)matcher).isStrictTagMatching(fileType, group);
   }
 
-  private static boolean areTagsCaseSensitive(@Nonnull BraceMatcher matcher, @Nonnull FileType fileType, final int tokenGroup) {
+  private static boolean areTagsCaseSensitive(@Nonnull BraceMatcher matcher, @Nonnull FileType fileType, int tokenGroup) {
     return matcher instanceof XmlAwareBraceMatcher && ((XmlAwareBraceMatcher)matcher).areTagsCaseSensitive(fileType, tokenGroup);
   }
 
@@ -434,42 +434,42 @@ public class BraceMatchingUtil {
 
   private static class DefaultBraceMatcher implements BraceMatcher {
     @Override
-    public int getBraceTokenGroupId(final IElementType tokenType) {
+    public int getBraceTokenGroupId(IElementType tokenType) {
       return UNDEFINED_TOKEN_GROUP;
     }
 
     @Override
-    public boolean isLBraceToken(final HighlighterIterator iterator, final CharSequence fileText, final FileType fileType) {
+    public boolean isLBraceToken(HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
       return false;
     }
 
     @Override
-    public boolean isRBraceToken(final HighlighterIterator iterator, final CharSequence fileText, final FileType fileType) {
+    public boolean isRBraceToken(HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
       return false;
     }
 
     @Override
-    public boolean isPairBraces(final IElementType tokenType, final IElementType tokenType2) {
+    public boolean isPairBraces(IElementType tokenType, IElementType tokenType2) {
       return false;
     }
 
     @Override
-    public boolean isStructuralBrace(final HighlighterIterator iterator, final CharSequence text, final FileType fileType) {
+    public boolean isStructuralBrace(HighlighterIterator iterator, CharSequence text, FileType fileType) {
       return false;
     }
 
     @Override
-    public IElementType getOppositeBraceTokenType(@Nonnull final IElementType type) {
+    public IElementType getOppositeBraceTokenType(@Nonnull IElementType type) {
       return null;
     }
 
     @Override
-    public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType contextType) {
+    public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType) {
       return true;
     }
 
     @Override
-    public int getCodeConstructStart(final PsiFile file, final int openingBraceOffset) {
+    public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
       return openingBraceOffset;
     }
   }

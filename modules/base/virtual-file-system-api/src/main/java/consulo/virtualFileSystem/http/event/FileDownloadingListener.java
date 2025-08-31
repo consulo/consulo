@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 */
 public interface FileDownloadingListener {
 
-  void fileDownloaded(final VirtualFile localFile);
+  void fileDownloaded(VirtualFile localFile);
 
   void errorOccurred(@Nonnull String errorMessage);
 
@@ -32,7 +32,7 @@ public interface FileDownloadingListener {
 
   void downloadingCancelled();
 
-  void progressMessageChanged(final boolean indeterminate, @Nonnull String message);
+  void progressMessageChanged(boolean indeterminate, @Nonnull String message);
 
   void progressFractionChanged(double fraction);
 }

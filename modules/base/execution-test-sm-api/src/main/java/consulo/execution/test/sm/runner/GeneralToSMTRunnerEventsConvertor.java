@@ -463,7 +463,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
 
     }
 
-    protected String getFullTestName(final String testName) {
+    protected String getFullTestName(String testName) {
         // Test name should be unique
         return testName;
     }
@@ -473,7 +473,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
     }
 
     @Nullable
-    protected SMTestProxy getProxyByFullTestName(final String fullTestName) {
+    protected SMTestProxy getProxyByFullTestName(String fullTestName) {
         return myRunningTestsFullNameToProxy.get(fullTestName);
     }
 

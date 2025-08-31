@@ -101,7 +101,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
 
   @Override
   public void setTabPlacement(int tabPlacement) {
-    final JBTabsPresentation presentation = myTabs.getPresentation();
+    JBTabsPresentation presentation = myTabs.getPresentation();
     switch (tabPlacement) {
       case TOP:
         presentation.setTabsPosition(JBTabsPosition.top);
@@ -132,7 +132,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
 
   @Override
   public Component getSelectedComponent() {
-    final TabInfo selected = myTabs.getSelectedInfo();
+    TabInfo selected = myTabs.getSelectedInfo();
     return selected != null ? selected.getComponent() : null;
   }
 

@@ -98,7 +98,7 @@ public class VcsOpenTaskPanel extends TaskDialogPanel {
           myBranchFrom.setModel(new DefaultComboBoxModel(tasks));
           myBranchFrom.setEnabled(true);
           myUseBranchCombo.setModel(new DefaultComboBoxModel(tasks));
-          final String startFrom = ProjectPropertiesComponent.getInstance(project).getValue(START_FROM_BRANCH);
+          String startFrom = ProjectPropertiesComponent.getInstance(project).getValue(START_FROM_BRANCH);
           VcsTaskHandler.TaskInfo info = null;
           if (startFrom != null) {
             info = ContainerUtil.find(tasks, taskInfo -> startFrom.equals(taskInfo.getName()));

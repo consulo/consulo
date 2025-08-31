@@ -28,5 +28,5 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AuthenticationDialog {
   @Nullable
-  AuthenticationData showNoSafe(String title, String description, final String login, final String password, final boolean rememberPassword);
+  AuthenticationData showNoSafe(String title, String description, String login, String password, boolean rememberPassword);
 }

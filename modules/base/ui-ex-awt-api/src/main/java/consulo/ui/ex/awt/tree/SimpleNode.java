@@ -197,7 +197,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
   }
 
   public int getIndex(SimpleNode child) {
-    final SimpleNode[] kids = getChildren();
+    SimpleNode[] kids = getChildren();
     for (int i = 0; i < kids.length; i++) {
       SimpleNode each = kids[i];
       if (each.equals(child)) return i;
@@ -246,7 +246,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
    * @deprecated never called by Tree classes
    */
   public final ColoredFragment[] getColoredText() {
-    final List<ColoredFragment> list = getTemplatePresentation().getColoredText();
+    List<ColoredFragment> list = getTemplatePresentation().getColoredText();
     return list.toArray(new ColoredFragment[list.size()]);
   }
 
@@ -260,7 +260,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
     return getChildren().length;
   }
 
-  public SimpleNode getChildAt(final int i) {
+  public SimpleNode getChildAt(int i) {
     return getChildren()[i];
   }
 

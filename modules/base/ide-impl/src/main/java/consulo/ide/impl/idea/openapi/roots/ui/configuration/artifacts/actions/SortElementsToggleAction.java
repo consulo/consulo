@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTree
 public class SortElementsToggleAction extends ToggleAction implements DumbAware {
   private final LayoutTreeComponent myLayoutTreeComponent;
 
-  public SortElementsToggleAction(final LayoutTreeComponent layoutTreeComponent) {
+  public SortElementsToggleAction(LayoutTreeComponent layoutTreeComponent) {
     super("Sort Elements by Names and Types", "Sort Elements by Names and Types", AllIcons.ObjectBrowser.Sorted);
     myLayoutTreeComponent = layoutTreeComponent;
   }

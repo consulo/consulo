@@ -78,13 +78,13 @@ public class SerializedStubTree {
   }
 
   public SerializedStubTree(@Nonnull Stub rootStub, @Nonnull SerializationManagerEx serializationManager, @Nonnull StubForwardIndexExternalizer<?> forwardIndexExternalizer) throws IOException {
-    final BufferExposingByteArrayOutputStream bytes = new BufferExposingByteArrayOutputStream();
+    BufferExposingByteArrayOutputStream bytes = new BufferExposingByteArrayOutputStream();
     serializationManager.serialize(rootStub, bytes);
     myTreeBytes = bytes.getInternalBuffer();
     myTreeByteLength = bytes.size();
     ObjectStubBase root = (ObjectStubBase)rootStub;
     myIndexedStubs = indexTree(root);
-    final BufferExposingByteArrayOutputStream indexBytes = new BufferExposingByteArrayOutputStream();
+    BufferExposingByteArrayOutputStream indexBytes = new BufferExposingByteArrayOutputStream();
     forwardIndexExternalizer.save(new DataOutputStream(indexBytes), myIndexedStubs);
     myIndexedStubBytes = indexBytes.getInternalBuffer();
     myIndexedStubByteLength = indexBytes.size();
@@ -171,22 +171,22 @@ public class SerializedStubTree {
   }
 
   @Override
-  public boolean equals(final Object that) {
+  public boolean equals(Object that) {
     if (this == that) {
       return true;
     }
     if (!(that instanceof SerializedStubTree)) {
       return false;
     }
-    final SerializedStubTree thatTree = (SerializedStubTree)that;
+    SerializedStubTree thatTree = (SerializedStubTree)that;
 
-    final int length = myTreeByteLength;
+    int length = myTreeByteLength;
     if (length != thatTree.myTreeByteLength) {
       return false;
     }
 
-    final byte[] thisBytes = myTreeBytes;
-    final byte[] thatBytes = thatTree.myTreeBytes;
+    byte[] thisBytes = myTreeBytes;
+    byte[] thatBytes = thatTree.myTreeBytes;
     for (int i = 0; i < length; i++) {
       if (thisBytes[i] != thatBytes[i]) {
         return false;

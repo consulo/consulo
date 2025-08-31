@@ -43,7 +43,7 @@ public final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V
     private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
     private final HashingStrategy<? super K> myStrategy;
 
-    private SoftKey(@Nonnull K k, final int hash, @Nonnull HashingStrategy<? super K> strategy, @Nonnull ReferenceQueue<K> q) {
+    private SoftKey(@Nonnull K k, int hash, @Nonnull HashingStrategy<? super K> strategy, @Nonnull ReferenceQueue<K> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = hash;

@@ -36,11 +36,11 @@ public class DefaultExecutionResult implements ExecutionResult {
     myActions = AnAction.EMPTY_ARRAY;
   }
 
-  public DefaultExecutionResult(final ExecutionConsole console, @Nonnull final ProcessHandler processHandler) {
+  public DefaultExecutionResult(ExecutionConsole console, @Nonnull ProcessHandler processHandler) {
     this(console, processHandler, AnAction.EMPTY_ARRAY);
   }
 
-  public DefaultExecutionResult(final ExecutionConsole console, @Nonnull final ProcessHandler processHandler, final AnAction... actions) {
+  public DefaultExecutionResult(ExecutionConsole console, @Nonnull ProcessHandler processHandler, AnAction... actions) {
     myConsole = console;
     myProcessHandler = processHandler;
     myActions = actions;
@@ -56,7 +56,7 @@ public class DefaultExecutionResult implements ExecutionResult {
     return myActions;
   }
 
-  public void setActions(@Nonnull final AnAction... actions) {
+  public void setActions(@Nonnull AnAction... actions) {
     myActions = actions;
   }
 

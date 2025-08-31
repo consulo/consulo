@@ -44,7 +44,7 @@ public interface JBTabsPresentation {
 
   @Deprecated
   @DeprecationInfo("Doing nothing")
-  default JBTabsPresentation setAlwaysPaintSelectedTab(final boolean paintSelected) {
+  default JBTabsPresentation setAlwaysPaintSelectedTab(boolean paintSelected) {
     return this;
   }
 
@@ -64,7 +64,7 @@ public interface JBTabsPresentation {
 
   JBTabsPresentation setRequestFocusOnLastFocusedComponent(boolean request);
 
-  void setPaintBlocked(boolean blocked, final boolean takeSnapshot);
+  void setPaintBlocked(boolean blocked, boolean takeSnapshot);
 
   JBTabsPresentation setInnerInsets(Insets innerInsets);
 
@@ -74,7 +74,7 @@ public interface JBTabsPresentation {
     return this;
   }
 
-  JBTabsPresentation setFocusCycle(final boolean root);
+  JBTabsPresentation setFocusCycle(boolean root);
 
   @Nonnull
   JBTabsPresentation setToDrawBorderIfTabsHidden(boolean draw);

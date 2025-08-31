@@ -84,7 +84,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
 
   @SuppressWarnings({"unchecked", "IOResourceOpenedButNotSafelyClosed", "UseOfSystemOutOrSystemErr"})
   private <I extends RemoteExternalSystemService<S>, C extends I> I getService(@Nonnull Class<I> interfaceClass,
-                                                                               @Nonnull final C impl)
+                                                                               @Nonnull C impl)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException
   {
     Object cachedResult = myRemotes.get(interfaceClass);
@@ -134,7 +134,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
    */
   @SuppressWarnings({"unchecked", "IOResourceOpenedButNotSafelyClosed", "UseOfSystemOutOrSystemErr"})
   protected abstract  <I extends RemoteExternalSystemService<S>, C extends I> I createService(@Nonnull Class<I> interfaceClass,
-                                                                                              @Nonnull final C impl)
+                                                                                              @Nonnull C impl)
   throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException;
 
   @Override
@@ -152,7 +152,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
   public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
     Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> result = null;
     for (RemoteExternalSystemService service : myRemotes.values()) {
-      final Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> tasks = service.getTasksInProgress();
+      Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> tasks = service.getTasksInProgress();
       if (tasks.isEmpty()) {
         continue;
       }

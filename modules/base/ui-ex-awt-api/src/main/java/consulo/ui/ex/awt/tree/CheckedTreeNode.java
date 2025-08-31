@@ -37,7 +37,7 @@ public class CheckedTreeNode extends DefaultMutableTreeNode {
     isChecked = checked;
   }
 
-  public void setEnabled(final boolean enabled) {
+  public void setEnabled(boolean enabled) {
     isEnabled = enabled;
   }
 

@@ -28,30 +28,30 @@ public class StickyButtonUI<B extends AbstractButton> extends BasicToggleButtonU
   public static final float FONT_SIZE = 11.0f;
 
   @Override
-  protected void installDefaults(final AbstractButton b) {
+  protected void installDefaults(AbstractButton b) {
     super.installDefaults(b);
     b.setFont(UIManager.getFont("Button.font").deriveFont(Font.BOLD, FONT_SIZE));
   }
 
   @Override
-  public void paint(final Graphics g, final JComponent c) {
+  public void paint(Graphics g, JComponent c) {
     B button = (B) c;
 
-    final int width = button.getWidth();
-    final int height = button.getHeight();
+    int width = button.getWidth();
+    int height = button.getHeight();
 
-    final Graphics2D g2 = (Graphics2D) g.create();
+    Graphics2D g2 = (Graphics2D) g.create();
 
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    final int arcSize = getArcSize();
+    int arcSize = getArcSize();
 
     if (c.isOpaque()) {
       g2.setColor(c.getBackground());
       g2.fillRoundRect(0, 0, width - 1, height - 1, arcSize, arcSize);
     }
 
-    final ButtonModel model = button.getModel();
+    ButtonModel model = button.getModel();
     if (model.isSelected()) {
       g2.setColor(getSelectionColor(button));
       g2.fillRoundRect(0, 0, width - 1, height - 1, getArcSize(), getArcSize());
@@ -59,7 +59,7 @@ public class StickyButtonUI<B extends AbstractButton> extends BasicToggleButtonU
       g2.setColor(getRolloverColor(button));
       g2.fillRoundRect(0, 0, width - 1, height - 1, arcSize, arcSize);
     } else {
-      final Color bg = getBackgroundColor(button);
+      Color bg = getBackgroundColor(button);
       if (bg != null) {
         g2.setColor(bg);
         g2.fillRoundRect(0, 0, width - 1, height - 1, arcSize, arcSize);
@@ -79,15 +79,15 @@ public class StickyButtonUI<B extends AbstractButton> extends BasicToggleButtonU
     return Gray._100;
   }
 
-  protected Color getSelectionColor(final B button) {
+  protected Color getSelectionColor(B button) {
     return Color.GRAY;
   }
 
-  protected Color getRolloverColor(final B button) {
+  protected Color getRolloverColor(B button) {
     return Color.LIGHT_GRAY;
   }
 
-  protected Color getBackgroundColor(final B button) {
+  protected Color getBackgroundColor(B button) {
     return null;
   }
 

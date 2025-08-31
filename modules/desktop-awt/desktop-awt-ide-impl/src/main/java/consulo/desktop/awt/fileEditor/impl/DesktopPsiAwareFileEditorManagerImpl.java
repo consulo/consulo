@@ -85,7 +85,7 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
     if (myPanels == null) {
       synchronized (myInitLock) {
         if (myPanels == null) {
-          final JPanel panel = new JPanel(new BorderLayout());
+          JPanel panel = new JPanel(new BorderLayout());
           panel.setOpaque(false);
           panel.setBorder(JBUI.Borders.empty());
           DesktopFileEditorsSplitters splitters =

@@ -116,7 +116,7 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
     }
 
     for (DesktopSwtTreeNode<E> node : list) {
-      final TreeItem item;
+      TreeItem item;
       if (parent instanceof org.eclipse.swt.widgets.Tree) {
         item = new TreeItem((org.eclipse.swt.widgets.Tree)parent, SWT.NONE);
       }

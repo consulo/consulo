@@ -34,7 +34,7 @@ public class SuppressByCommentFix extends AbstractBatchSuppressByNoInspectionCom
     mySuppressionHolderClass = suppressionHolderClass;
   }
 
-  private SuppressByCommentFix(final String ID) {
+  private SuppressByCommentFix(String ID) {
     super(ID, false);
   }
 

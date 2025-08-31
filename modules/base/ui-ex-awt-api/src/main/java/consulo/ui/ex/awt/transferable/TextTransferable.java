@@ -73,7 +73,7 @@ public class TextTransferable implements Transferable {
   }
 
   @Override
-  public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+  public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
     if (flavor.equals(html)) {
       return myHtmlContent;
     }

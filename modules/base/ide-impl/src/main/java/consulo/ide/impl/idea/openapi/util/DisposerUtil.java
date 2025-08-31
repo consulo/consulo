@@ -29,7 +29,7 @@ import java.util.Collection;
 @Deprecated
 @DeprecationInfo("Use consulo.disposer.util.DisposerUtil")
 public class DisposerUtil {
-  public static <T> void add(final T element, @Nonnull final Collection<T> result, @Nonnull final Disposable parentDisposable) {
+  public static <T> void add(T element, @Nonnull Collection<T> result, @Nonnull Disposable parentDisposable) {
     if (result.add(element)) {
       Disposer.register(parentDisposable, () -> result.remove(element));
     }

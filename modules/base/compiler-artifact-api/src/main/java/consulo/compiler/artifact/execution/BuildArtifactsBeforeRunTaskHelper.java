@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface BuildArtifactsBeforeRunTaskHelper {
-  void setBuildArtifactBeforeRunOption(@Nonnull DataContext dataContext, @Nonnull Artifact artifact, final boolean enable);
+  void setBuildArtifactBeforeRunOption(@Nonnull DataContext dataContext, @Nonnull Artifact artifact, boolean enable);
 
   void setBuildArtifactBeforeRun(@Nonnull RunConfiguration configuration, @Nonnull Artifact artifact);
 }

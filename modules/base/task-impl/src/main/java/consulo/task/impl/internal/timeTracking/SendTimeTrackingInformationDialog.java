@@ -50,7 +50,7 @@ public class SendTimeTrackingInformationDialog extends DialogWrapper {
   private JPanel myPanel;
   private JLabel myTaskNameLabel;
 
-  protected SendTimeTrackingInformationDialog(@Nullable final Project project, final LocalTask localTask) {
+  protected SendTimeTrackingInformationDialog(@Nullable Project project, LocalTask localTask) {
     super(project);
     myProject = project;
     myTask = localTask;
@@ -75,15 +75,15 @@ public class SendTimeTrackingInformationDialog extends DialogWrapper {
     return myPanel;
   }
 
-  private static String formatDuration(final long milliseconds) {
-    final int second = 1000;
-    final int minute = 60 * second;
-    final int hour = 60 * minute;
-    final int day = 24 * hour;
+  private static String formatDuration(long milliseconds) {
+    int second = 1000;
+    int minute = 60 * second;
+    int hour = 60 * minute;
+    int day = 24 * hour;
 
-    final int days = (int)(milliseconds / day);
-    final int hours = (int)(milliseconds % day / hour);
-    final int minutes = (int)(milliseconds % hour / minute);
+    int days = (int)(milliseconds / day);
+    int hours = (int)(milliseconds % day / hour);
+    int minutes = (int)(milliseconds % hour / minute);
 
     String daysString = days + "d ";
     String hoursString = hours + "h ";
@@ -96,12 +96,12 @@ public class SendTimeTrackingInformationDialog extends DialogWrapper {
   protected void doOKAction() {
     String timeSpentText = myFromPreviousPostRadioButton.isSelected() ? myFromPreviousPostTextField.getText()
                            : myTotallyRadioButton.isSelected() ? myTotallyTextField.getText() : myCustomTextField.getText();
-    final Matcher matcher = PATTERN.matcher(timeSpentText);
+    Matcher matcher = PATTERN.matcher(timeSpentText);
     if (matcher.matches()) {
-      final int timeSpent = Integer.valueOf(matcher.group(1)) * 24 * 60 + Integer.valueOf(matcher.group(2)) * 60 + Integer.valueOf(
+      int timeSpent = Integer.valueOf(matcher.group(1)) * 24 * 60 + Integer.valueOf(matcher.group(2)) * 60 + Integer.valueOf(
         matcher.group(3));
 
-      final TaskRepository repository = myTask.getRepository();
+      TaskRepository repository = myTask.getRepository();
       if (repository != null &&
           repository.isSupported(TaskRepository.TIME_MANAGEMENT)) {
         try {

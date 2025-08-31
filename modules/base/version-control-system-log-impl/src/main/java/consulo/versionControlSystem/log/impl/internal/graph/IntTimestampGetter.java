@@ -80,7 +80,7 @@ public class IntTimestampGetter implements TimestampGetter {
   // saved 0, blockSize, 2 * blockSize, etc.
   private final long[] mySaveTimestamps;
 
-  public IntTimestampGetter(final int[] deltas, int blockSize, long[] saveTimestamps, @Nonnull Map<Integer, Long> brokenDeltas) {
+  public IntTimestampGetter(int[] deltas, int blockSize, long[] saveTimestamps, @Nonnull Map<Integer, Long> brokenDeltas) {
     myDeltas = SmartDeltaCompressor.newInstance(new FullIntList(deltas));
     myBlockSize = blockSize;
     mySaveTimestamps = saveTimestamps;

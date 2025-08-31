@@ -57,7 +57,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   }
 
   @Nonnull
-  public static <E> JBIterator<E> from(@Nonnull final Iterator<E> it) {
+  public static <E> JBIterator<E> from(@Nonnull Iterator<E> it) {
     return it instanceof JBIterator ? (JBIterator<E>)it : wrap(it);
   }
 
@@ -191,7 +191,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   }
 
   @Nonnull
-  public final JBIterator<E> skipWhile(@Nonnull final Predicate<? super E> condition) {
+  public final JBIterator<E> skipWhile(@Nonnull Predicate<? super E> condition) {
     return addOp(true, new SkipOp<E>(condition));
   }
 

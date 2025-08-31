@@ -154,7 +154,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         String directory = info.mapping.getDirectory();
         VirtualFile baseDir = myProject.getBaseDir();
         if (baseDir != null) {
-          final File directoryFile = new File(StringUtil.trimEnd(UriUtil.trimTrailingSlashes(directory), "\\") + "/");
+          File directoryFile = new File(StringUtil.trimEnd(UriUtil.trimTrailingSlashes(directory), "\\") + "/");
           File ioBase = new File(baseDir.getPath());
           if (directoryFile.isAbsolute() && !FileUtil.isAncestor(ioBase, directoryFile, false)) {
             append(new File(directory).getPath(), getAttributes(info));
@@ -196,7 +196,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
 
   private final ColumnInfo<MapInfo, String> VCS_SETTING = new ColumnInfo<>(VcsBundle.message("column.name.configure.vcses.vcs")) {
     @Override
-    public String valueOf(final MapInfo object) {
+    public String valueOf(MapInfo object) {
       return object.mapping.getVcs();
     }
 
@@ -206,7 +206,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     }
 
     @Override
-    public void setValue(final MapInfo o, final String aValue) {
+    public void setValue(MapInfo o, String aValue) {
       Collection<AbstractVcs> activeVcses = getActiveVcses();
       o.mapping.setVcs(aValue);
       checkNotifyListeners(activeVcses);
@@ -228,13 +228,13 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
             setBackground(getUnregisteredRootBackground());
           }
 
-          final String vcsName = info.mapping.getVcs();
+          String vcsName = info.mapping.getVcs();
           LocalizeValue text;
           if (vcsName.length() == 0) {
             text = VcsLocalize.noneVcsPresentation();
           }
           else {
-            final VcsDescriptor vcs = myAllVcss.get(vcsName);
+            VcsDescriptor vcs = myAllVcss.get(vcsName);
             if (vcs != null) {
               text = vcs.getDisplayName();
             }
@@ -248,11 +248,11 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     }
 
     @Override
-    public TableCellEditor getEditor(final MapInfo o) {
+    public TableCellEditor getEditor(MapInfo o) {
       return new AbstractTableCellEditor() {
         @Override
         public Object getCellEditorValue() {
-          final VcsDescriptor selectedVcs = (VcsDescriptor)myVcsComboBox.getSelectedItem();
+          VcsDescriptor selectedVcs = (VcsDescriptor)myVcsComboBox.getSelectedItem();
           return ((selectedVcs == null) || selectedVcs.isNone()) ? "" : selectedVcs.getId();
         }
 
@@ -283,14 +283,14 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     }
   };
 
-  public VcsDirectoryConfigurationPanel(final Project project, Disposable uiDisposable) {
+  public VcsDirectoryConfigurationPanel(Project project, Disposable uiDisposable) {
     myProject = project;
     myVcsConfiguration = getInstance(myProject);
     myProjectMessage = XmlStringUtil
             .wrapInHtml(StringUtil.escapeXml(VcsDirectoryMapping.PROJECT_CONSTANT) + " - " + DefaultVcsRootPolicy.getInstance(myProject).getProjectConfigurationMessage(myProject).replace('\n', ' '));
     myIsDisabled = myProject.isDefault();
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
-    final VcsDescriptor[] vcsDescriptors = myVcsManager.getAllVcss();
+    VcsDescriptor[] vcsDescriptors = myVcsManager.getAllVcss();
     myAllVcss = new HashMap<>();
     for (VcsDescriptor vcsDescriptor : vcsDescriptors) {
       myAllVcss.put(vcsDescriptor.getId(), vcsDescriptor);
@@ -312,7 +312,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     myDirectoryRenderer = new MyDirectoryRenderer(myProject);
     DIRECTORY = new ColumnInfo<>(VcsBundle.message("column.info.configure.vcses.directory")) {
       @Override
-      public MapInfo valueOf(final MapInfo mapping) {
+      public MapInfo valueOf(MapInfo mapping) {
         return mapping;
       }
 
@@ -388,9 +388,9 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     return checker == null || (mapping.isDefaultMapping() ? checker.isRoot(myProject.getBasePath()) : checker.isRoot(mapping.getDirectory()));
   }
 
-  public static DefaultComboBoxModel buildVcsWrappersModel(final Project project) {
-    final VcsDescriptor[] vcsDescriptors = ProjectLevelVcsManager.getInstance(project).getAllVcss();
-    final VcsDescriptor[] result = new VcsDescriptor[vcsDescriptors.length + 1];
+  public static DefaultComboBoxModel buildVcsWrappersModel(Project project) {
+    VcsDescriptor[] vcsDescriptors = ProjectLevelVcsManager.getInstance(project).getAllVcss();
+    VcsDescriptor[] result = new VcsDescriptor[vcsDescriptors.length + 1];
     result[0] = VcsDescriptor.createFictive();
     System.arraycopy(vcsDescriptors, 0, result, 1, vcsDescriptors.length);
     return new DefaultComboBoxModel(result);
@@ -556,7 +556,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
   }
 
   private JComponent createProjectMappingDescription() {
-    final JBLabel label = new JBLabel(myProjectMessage);
+    JBLabel label = new JBLabel(myProjectMessage);
     label.setComponentStyle(UIUtil.ComponentStyle.SMALL);
     label.setFontColor(UIUtil.FontColor.BRIGHTER);
     label.setBorder(JBUI.Borders.empty(2, 5, 2, 0));
@@ -564,12 +564,12 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
   }
 
   private JComponent createStoreBaseRevisionOption() {
-    final JBLabel noteLabel = new JBLabel("File texts bigger than " + ourMaximumFileForBaseRevisionSize / 1000 + "K are not stored");
+    JBLabel noteLabel = new JBLabel("File texts bigger than " + ourMaximumFileForBaseRevisionSize / 1000 + "K are not stored");
     noteLabel.setComponentStyle(UIUtil.ComponentStyle.SMALL);
     noteLabel.setFontColor(UIUtil.FontColor.BRIGHTER);
     noteLabel.setBorder(JBUI.Borders.empty(2, 25, 5, 0));
 
-    final JPanel panel = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
     panel.add(myBaseRevisionTexts, BorderLayout.NORTH);
     panel.add(noteLabel, BorderLayout.SOUTH);
     return panel;
@@ -648,11 +648,11 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     return ContainerUtil.mapNotNull(myModel.getItems(), info -> info == MapInfo.SEPARATOR || info.type == MapInfo.Type.UNREGISTERED ? null : info.mapping);
   }
 
-  public void addVcsListener(final ModuleVcsListener moduleVcsListener) {
+  public void addVcsListener(ModuleVcsListener moduleVcsListener) {
     myListeners.add(moduleVcsListener);
   }
 
-  public void removeVcsListener(final ModuleVcsListener moduleVcsListener) {
+  public void removeVcsListener(ModuleVcsListener moduleVcsListener) {
     myListeners.remove(moduleVcsListener);
   }
 

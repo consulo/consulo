@@ -67,10 +67,10 @@ public class FormatChangedTextUtil {
    * @return <code>true</code> if given file has changes; <code>false</code> otherwise
    */
   public static boolean hasChanges(@Nonnull PsiFile file) {
-    final Project project = file.getProject();
-    final VirtualFile virtualFile = file.getVirtualFile();
+    Project project = file.getProject();
+    VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile != null) {
-      final Change change = ChangeListManager.getInstance(project).getChange(virtualFile);
+      Change change = ChangeListManager.getInstance(project).getChange(virtualFile);
       return change != null;
     }
     return false;
@@ -96,7 +96,7 @@ public class FormatChangedTextUtil {
    * <code>false</code> otherwise
    */
   public static boolean hasChanges(@Nonnull VirtualFile file, @Nonnull Project project) {
-    final Collection<Change> changes = ChangeListManager.getInstance(project).getChangesIn(file);
+    Collection<Change> changes = ChangeListManager.getInstance(project).getChangesIn(file);
     for (Change change : changes) {
       if (change.getType() == Change.Type.NEW || change.getType() == Change.Type.MODIFICATION) {
         return true;
@@ -120,7 +120,7 @@ public class FormatChangedTextUtil {
    * <code>false</code> otherwise
    */
   public static boolean hasChanges(@Nonnull Module module) {
-    final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+    ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
     for (VirtualFile root : rootManager.getSourceRoots()) {
       if (hasChanges(root, module.getProject())) {
         return true;
@@ -137,9 +137,9 @@ public class FormatChangedTextUtil {
    * <code>false</code> otherwise
    */
   @RequiredWriteAction
-  public static boolean hasChanges(@Nonnull final Project project) {
+  public static boolean hasChanges(@Nonnull Project project) {
     ThrowableComputable<ModifiableModuleModel,RuntimeException> action = () -> ModuleManager.getInstance(project).getModifiableModel();
-    final ModifiableModuleModel moduleModel = AccessRule.read(action);
+    ModifiableModuleModel moduleModel = AccessRule.read(action);
 
     try {
       for (Module module : moduleModel.getModules()) {

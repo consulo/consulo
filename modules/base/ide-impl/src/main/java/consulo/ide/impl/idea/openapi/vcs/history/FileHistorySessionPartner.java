@@ -127,7 +127,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
     }
 
     ApplicationManager.getApplication().invokeAndWait(() -> {
-      final VcsHistorySession copy = mySession.copyWithCachedRevision();
+      VcsHistorySession copy = mySession.copyWithCachedRevision();
       if (myFileHistoryPanel == null) {
         myFileHistoryPanel = createFileHistoryPanel(copy);
         createOrSelectContentIfNeeded();

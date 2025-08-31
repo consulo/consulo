@@ -33,16 +33,16 @@ import java.util.Collection;
  */
 public interface LibrariesConfigurator extends LibraryEditorListener, Disposable {
   @Nonnull
-  VirtualFile[] getLibraryFiles(Library library, final OrderRootType type);
+  VirtualFile[] getLibraryFiles(Library library, OrderRootType type);
 
   @Nonnull
   LibraryTable.ModifiableModel getModifiableLibraryTable(@Nonnull LibraryTable table);
 
   @Nullable
-  Library getLibrary(final String libraryName, final String libraryLevel);
+  Library getLibrary(String libraryName, String libraryLevel);
 
   @Nonnull
-  LibraryTableModifiableModelProvider createModifiableModelProvider(final String level);
+  LibraryTableModifiableModelProvider createModifiableModelProvider(String level);
 
   @Nonnull
   LibraryTableModifiableModelProvider getProjectLibrariesProvider();

@@ -85,7 +85,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
 
     myPanel.add(scroll, new GridBagConstraints(0, 0, 1, 1, 0, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, JBUI.emptyInsets(), 0, 0));
 
-    final JPanel previewPanel = createPreviewPanel();
+    JPanel previewPanel = createPreviewPanel();
     myPanel.add(previewPanel, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, JBUI.emptyInsets(), 0, 0));
 
     installPreviewPanel(previewPanel);
@@ -135,7 +135,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
   }
 
   @Override
-  protected void resetImpl(final CodeStyleSettings settings) {
+  protected void resetImpl(CodeStyleSettings settings) {
     for (IntOption option : myOptions) {
       option.setValue(option.getFieldValue(settings));
     }

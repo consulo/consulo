@@ -53,7 +53,7 @@ class UndoApplyPatchDialog extends DialogWrapper {
   @jakarta.annotation.Nullable
   @Override
   protected JComponent createCenterPanel() {
-    final JPanel panel = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
     int numFiles = myFailedFilePaths.size();
     JPanel labelsPanel = new JPanel(new BorderLayout());
     String detailedText = numFiles == 0 ? "" : String.format("Failed to apply %s below.<br>", StringUtil.pluralize("file", numFiles));

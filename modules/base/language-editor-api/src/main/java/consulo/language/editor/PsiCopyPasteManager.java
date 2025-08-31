@@ -50,15 +50,15 @@ public interface PsiCopyPasteManager {
   public boolean isCutElement(Object element);
 
   @Nullable
-  public static List<File> asFileList(final PsiElement[] elements) {
-    final List<File> result = new ArrayList<>();
+  public static List<File> asFileList(PsiElement[] elements) {
+    List<File> result = new ArrayList<>();
     for (PsiElement element : elements) {
-      final PsiFileSystemItem psiFile;
+      PsiFileSystemItem psiFile;
       if (element instanceof PsiFileSystemItem) {
         psiFile = (PsiFileSystemItem)element;
       }
       else if (element instanceof PsiDirectoryContainer) {
-        final PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
+        PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
         psiFile = directories[0];
       }
       else {

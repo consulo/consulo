@@ -38,7 +38,7 @@ public class BooleanEditor extends PropertyEditor {
   public BooleanEditor() {
     myCheckBox = new JCheckBox();
     myCheckBox.addActionListener(new ActionListener() {
-      public void actionPerformed(final ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         if (!myInsideChange) {
           fireValueCommitted(true, false);
         }

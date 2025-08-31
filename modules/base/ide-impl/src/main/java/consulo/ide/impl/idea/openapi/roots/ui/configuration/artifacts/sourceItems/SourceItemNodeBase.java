@@ -40,7 +40,7 @@ public abstract class SourceItemNodeBase extends ArtifactsTreeNode {
   private Artifact myArtifact;
   private final ArtifactEditorEx myArtifactEditor;
 
-  public SourceItemNodeBase(ArtifactEditorContext context, NodeDescriptor parentDescriptor, final TreeNodePresentation presentation,
+  public SourceItemNodeBase(ArtifactEditorContext context, NodeDescriptor parentDescriptor, TreeNodePresentation presentation,
                             ArtifactEditorEx artifactEditor) {
     super(context, parentDescriptor, presentation);
     myArtifact = artifactEditor.getArtifact();
@@ -53,7 +53,7 @@ public abstract class SourceItemNodeBase extends ArtifactsTreeNode {
 
   @Override
   protected void update(PresentationData presentation) {
-    final Artifact artifact = myArtifactEditor.getArtifact();
+    Artifact artifact = myArtifactEditor.getArtifact();
     if (!myArtifact.equals(artifact)) {
       myArtifact = artifact;
     }
@@ -64,7 +64,7 @@ public abstract class SourceItemNodeBase extends ArtifactsTreeNode {
   protected SimpleNode[] buildChildren() {
     List<SimpleNode> children = new ArrayList<>();
     Application.get().getExtensionPoint(PackagingSourceItemsProvider.class).forEachExtensionSafe(provider -> {
-      final Collection<? extends PackagingSourceItem> items = provider.getSourceItems(myContext, myArtifact, getSourceItem());
+      Collection<? extends PackagingSourceItem> items = provider.getSourceItems(myContext, myArtifact, getSourceItem());
       for (PackagingSourceItem item : items) {
         if (myArtifact.getArtifactType().isSuitableItem(item)) {
           children.add(new SourceItemNode(myContext, this, item, myArtifactEditor));

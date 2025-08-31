@@ -94,7 +94,7 @@ final class FileTree {
   }
 
   boolean isDirectoryEmpty(VirtualFile dir) {
-    final List<VirtualFile> files = myStrictDirectory2Children.get(dir);
+    List<VirtualFile> files = myStrictDirectory2Children.get(dir);
     return files == null || files.isEmpty();
   }
 

@@ -126,7 +126,7 @@ final class PassExecutorService implements Disposable {
       }
 
       int prevId = 0;
-      for (final HighlightingPass pass : passes) {
+      for (HighlightingPass pass : passes) {
         if (pass instanceof EditorBoundHighlightingPass) {
           EditorBoundHighlightingPass editorPass = (EditorBoundHighlightingPass)pass;
           editorPass.setId(nextPassId.incrementAndGet()); // have to make ids unique for this document
@@ -152,7 +152,7 @@ final class PassExecutorService implements Disposable {
     // (fileEditor, passId) -> created pass
     Map<Pair<FileEditor, Integer>, ScheduledPass> toBeSubmitted = new HashMap<>(passesMap.size());
 
-    final AtomicInteger threadsToStartCountdown = new AtomicInteger(0);
+    AtomicInteger threadsToStartCountdown = new AtomicInteger(0);
     for (Map.Entry<Document, Collection<FileEditor>> entry : documentToEditors.entrySet()) {
       Collection<FileEditor> fileEditors = entry.getValue();
       Document document = entry.getKey();
@@ -268,9 +268,9 @@ final class PassExecutorService implements Disposable {
   private FileEditor getPreferredFileEditor(Document document, @Nonnull Collection<? extends FileEditor> fileEditors) {
     assert !fileEditors.isEmpty();
     if (document != null) {
-      final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+      VirtualFile file = FileDocumentManager.getInstance().getFile(document);
       if (file != null) {
-        final FileEditor selected = FileEditorManager.getInstance(myProject).getSelectedEditor(file);
+        FileEditor selected = FileEditorManager.getInstance(myProject).getSelectedEditor(file);
         if (selected != null && fileEditors.contains(selected)) {
           return selected;
         }
@@ -335,7 +335,7 @@ final class PassExecutorService implements Disposable {
                                                     @Nonnull List<ScheduledPass> dependentPasses,
                                                     @Nonnull DaemonProgressIndicator updateProgress,
                                                     @Nonnull AtomicInteger myThreadsToStartCountdown,
-                                                    final int predecessorId) {
+                                                    int predecessorId) {
     Pair<FileEditor, Integer> predKey = Pair.create(fileEditor, predecessorId);
     ScheduledPass predecessor = toBeSubmitted.get(predKey);
     if (predecessor == null) {
@@ -347,7 +347,7 @@ final class PassExecutorService implements Disposable {
     return predecessor;
   }
 
-  private static TextEditorHighlightingPass findPassById(final int id, @Nonnull List<? extends TextEditorHighlightingPass> textEditorHighlightingPasses) {
+  private static TextEditorHighlightingPass findPassById(int id, @Nonnull List<? extends TextEditorHighlightingPass> textEditorHighlightingPasses) {
     return ContainerUtil.find(textEditorHighlightingPasses, pass -> pass.getId() == id);
   }
 
@@ -478,10 +478,10 @@ final class PassExecutorService implements Disposable {
     }
   }
 
-  private void applyInformationToEditorsLater(@Nonnull final FileEditor fileEditor,
-                                              @Nonnull final TextEditorHighlightingPass pass,
-                                              @Nonnull final DaemonProgressIndicator updateProgress,
-                                              @Nonnull final AtomicInteger threadsToStartCountdown,
+  private void applyInformationToEditorsLater(@Nonnull FileEditor fileEditor,
+                                              @Nonnull TextEditorHighlightingPass pass,
+                                              @Nonnull DaemonProgressIndicator updateProgress,
+                                              @Nonnull AtomicInteger threadsToStartCountdown,
                                               @Nonnull Runnable callbackOnApplied) {
     Application.get().invokeLater(() -> {
       if (isDisposed() || !fileEditor.isValid()) {

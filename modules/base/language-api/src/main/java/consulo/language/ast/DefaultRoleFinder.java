@@ -29,7 +29,7 @@ public class DefaultRoleFinder implements RoleFinder {
   public ASTNode findChild(@Nonnull ASTNode parent) {
     ASTNode current = parent.getFirstChildNode();
     while (current != null) {
-      for (final IElementType elementType : myElementTypes) {
+      for (IElementType elementType : myElementTypes) {
         if (current.getElementType() == elementType) return current;
       }
       current = current.getTreeNext();

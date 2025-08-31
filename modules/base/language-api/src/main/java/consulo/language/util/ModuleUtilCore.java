@@ -64,7 +64,7 @@ public class ModuleUtilCore {
     return CachedValueProvider.Result.createSingleDependency(hasTestRoots, ProjectRootManager.getInstance(project));
   };
 
-  public static boolean projectContainsFile(final Project project, VirtualFile file, boolean isLibraryElement) {
+  public static boolean projectContainsFile(Project project, VirtualFile file, boolean isLibraryElement) {
     ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
     if (isLibraryElement) {
       List<OrderEntry> orders = projectRootManager.getFileIndex().getOrderEntriesForFile(file);
@@ -80,18 +80,18 @@ public class ModuleUtilCore {
     }
   }
 
-  public static String getModuleNameInReadAction(@Nonnull final Module module) {
+  public static String getModuleNameInReadAction(@Nonnull Module module) {
     return AccessRule.read(module::getName);
   }
 
   public static boolean isModuleDisposed(PsiElement element) {
     if (!element.isValid()) return true;
-    final Project project = element.getProject();
+    Project project = element.getProject();
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final PsiFile file = element.getContainingFile();
+    PsiFile file = element.getContainingFile();
     if (file == null) return true;
     VirtualFile vFile = file.getVirtualFile();
-    final Module module = vFile == null ? null : projectFileIndex.getModuleForFile(vFile);
+    Module module = vFile == null ? null : projectFileIndex.getModuleForFile(vFile);
     // element may be in library
     return module == null ? !projectFileIndex.isInLibraryClasses(vFile) : module.isDisposed();
   }
@@ -133,15 +133,15 @@ public class ModuleUtilCore {
    */
   @RequiredReadAction
   @Deprecated
-  public static void collectModulesDependsOn(@Nonnull final Module module, final Set<Module> result) {
+  public static void collectModulesDependsOn(@Nonnull Module module, Set<Module> result) {
     ModuleContentUtil.collectModulesDependsOn(module, result);
   }
 
   @Nonnull
   @RequiredReadAction
   public static List<Module> getAllDependentModules(@Nonnull Module module) {
-    final ArrayList<Module> list = new ArrayList<Module>();
-    final Graph<Module> graph = ModuleManager.getInstance(module.getProject()).moduleGraph();
+    ArrayList<Module> list = new ArrayList<Module>();
+    Graph<Module> graph = ModuleManager.getInstance(module.getProject()).moduleGraph();
     for (Iterator<Module> i = graph.getOut(module); i.hasNext(); ) {
       list.add(i.next());
     }
@@ -149,11 +149,11 @@ public class ModuleUtilCore {
   }
 
   @RequiredReadAction
-  public static boolean visitMeAndDependentModules(@Nonnull final Module module, final Processor<Module> visitor) {
+  public static boolean visitMeAndDependentModules(@Nonnull Module module, Processor<Module> visitor) {
     if (!visitor.process(module)) {
       return false;
     }
-    final List<Module> list = getAllDependentModules(module);
+    List<Module> list = getAllDependentModules(module);
     for (Module dependentModule : list) {
       if (!visitor.process(dependentModule)) {
         return false;
@@ -162,7 +162,7 @@ public class ModuleUtilCore {
     return true;
   }
 
-  public static boolean moduleContainsFile(@Nonnull final Module module, VirtualFile file, boolean isLibraryElement) {
+  public static boolean moduleContainsFile(@Nonnull Module module, VirtualFile file, boolean isLibraryElement) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     if (isLibraryElement) {
       OrderEntry orderEntry = moduleRootManager.getFileIndex().getOrderEntryForFile(file);

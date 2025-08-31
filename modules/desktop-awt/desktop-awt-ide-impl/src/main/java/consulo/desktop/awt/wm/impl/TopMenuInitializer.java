@@ -60,8 +60,8 @@ public class TopMenuInitializer {
 
     if (desktop.isSupported(Desktop.Action.APP_PREFERENCES)) {
       desktop.setPreferencesHandler(e -> {
-        final Project project = getNotNullProject();
-        final ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
+        Project project = getNotNullProject();
+        ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
         if (!showSettingsUtil.isAlreadyShown(project)) {
           showSettingsUtil.showSettingsDialog(project);
         }

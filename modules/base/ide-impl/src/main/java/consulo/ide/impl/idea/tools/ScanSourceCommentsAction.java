@@ -49,8 +49,8 @@ public class ScanSourceCommentsAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project p = e.getData(Project.KEY);
-    final String file = Messages.showInputDialog(
+    Project p = e.getData(Project.KEY);
+    String file = Messages.showInputDialog(
       p,
       "Enter path to the file comments will be extracted to",
       "Comments File Path",
@@ -58,11 +58,11 @@ public class ScanSourceCommentsAction extends AnAction {
     );
 
     try {
-      final PrintStream stream = new PrintStream(file);
+      PrintStream stream = new PrintStream(file);
       stream.println("Comments in " + p.getName());
 
       ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
-        final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         ProjectRootManager.getInstance(p).getFileIndex().iterateContent(fileOrDir -> {
           if (fileOrDir.isDirectory()) {
             indicator.setText("Extracting comments");

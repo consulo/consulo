@@ -37,7 +37,7 @@ public abstract class DebuggerFramesList extends JBList implements OccurenceNavi
     setCellRenderer(createListRenderer());
     getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
-      public void valueChanged(final ListSelectionEvent e) {
+      public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
           onFrameChanged(getSelectedValue());
         }
@@ -103,5 +103,5 @@ public abstract class DebuggerFramesList extends JBList implements OccurenceNavi
 
   protected abstract ListCellRenderer createListRenderer();
 
-  protected abstract void onFrameChanged(final Object selectedValue);
+  protected abstract void onFrameChanged(Object selectedValue);
 }

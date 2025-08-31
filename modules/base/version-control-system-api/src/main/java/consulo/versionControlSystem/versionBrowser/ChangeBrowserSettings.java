@@ -64,7 +64,7 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
     DefaultJDOMExternalizer.writeExternal(this, element);
   }
 
-  private static Date parseDate(final String dateStr) {
+  private static Date parseDate(String dateStr) {
     if (dateStr == null) return null;
     try {
       return DATE_FORMAT.parse(dateStr);
@@ -74,7 +74,7 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
     }
   }
 
-  public void setDateBefore(final Date value) {
+  public void setDateBefore(Date value) {
     if (value == null) {
       DATE_BEFORE = null;
     }
@@ -124,7 +124,7 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
     return parseDate(DATE_AFTER);
   }
 
-  public void setDateAfter(final Date value) {
+  public void setDateAfter(Date value) {
     if (value == null) {
       DATE_AFTER = null;
 
@@ -135,7 +135,7 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
   }
 
   protected List<Filter> createFilters() {
-    final ArrayList<Filter> result = new ArrayList<Filter>();
+    ArrayList<Filter> result = new ArrayList<Filter>();
     addDateFilter(USE_DATE_BEFORE_FILTER, getDateBefore(), result, true);
     addDateFilter(USE_DATE_AFTER_FILTER, getDateAfter(), result, false);
 
@@ -178,12 +178,12 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
     return result;
   }
 
-  private static void addDateFilter(final boolean useFilter, final Date date, final ArrayList<Filter> result, final boolean before) {
+  private static void addDateFilter(boolean useFilter, final Date date, ArrayList<Filter> result, final boolean before) {
     if (useFilter) {
       assert date != null;
       result.add(new Filter() {
         public boolean accepts(CommittedChangeList change) {
-          final Date changeDate = change.getCommitDate();
+          Date changeDate = change.getCommitDate();
           if (changeDate == null) return false;
 
           return before ? changeDate.before(date) : changeDate.after(date);
@@ -204,7 +204,7 @@ public class ChangeBrowserSettings implements JDOMExternalizable {
     };
   }
 
-  public void filterChanges(final List<? extends CommittedChangeList> changeListInfos) {
+  public void filterChanges(List<? extends CommittedChangeList> changeListInfos) {
     Filter filter = createFilter();
     for (Iterator<? extends CommittedChangeList> iterator = changeListInfos.iterator(); iterator.hasNext(); ) {
       CommittedChangeList changeListInfo = iterator.next();

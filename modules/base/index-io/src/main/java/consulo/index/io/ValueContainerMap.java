@@ -30,7 +30,7 @@ class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValu
   private final DataExternalizer<Value> myValueExternalizer;
   private final boolean myKeyIsUniqueForIndexedFile;
 
-  ValueContainerMap(@Nonnull final File file,
+  ValueContainerMap(@Nonnull File file,
                     @Nonnull KeyDescriptor<Key> keyKeyDescriptor,
                     @Nonnull DataExternalizer<Value> valueExternalizer,
                     boolean keyIsUniqueForIndexedFile,
@@ -48,7 +48,7 @@ class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValu
   @Override
   protected void doPut(Key key, UpdatableValueContainer<Value> container) throws IOException {
     synchronized (myEnumerator) {
-      final ChangeTrackingValueContainer<Value> valueContainer = (ChangeTrackingValueContainer<Value>)container;
+      ChangeTrackingValueContainer<Value> valueContainer = (ChangeTrackingValueContainer<Value>)container;
 
       // try to accumulate index value calculated for particular key to avoid fragmentation: usually keys are scattered across many files
       // note that keys unique for indexed file have their value calculated at once (e.g. key is file id, index calculates something for particular
@@ -75,14 +75,14 @@ class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValu
     }
 
     @Override
-    public void save(@Nonnull final DataOutput out, @Nonnull final UpdatableValueContainer<T> container) throws IOException {
+    public void save(@Nonnull DataOutput out, @Nonnull UpdatableValueContainer<T> container) throws IOException {
       container.saveTo(out, myValueExternalizer);
     }
 
     @Nonnull
     @Override
-    public UpdatableValueContainer<T> read(@Nonnull final DataInput in) throws IOException {
-      final ValueContainerImpl<T> valueContainer = new ValueContainerImpl<>();
+    public UpdatableValueContainer<T> read(@Nonnull DataInput in) throws IOException {
+      ValueContainerImpl<T> valueContainer = new ValueContainerImpl<>();
 
       valueContainer.readFrom((DataInputStream)in, myValueExternalizer, myInputRemapping);
       return valueContainer;

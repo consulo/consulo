@@ -29,7 +29,7 @@ import java.util.Map;
 public abstract class DelegateColorScheme implements EditorColorsScheme {
     private EditorColorsScheme myDelegate;
 
-    public DelegateColorScheme(@Nonnull final EditorColorsScheme delegate) {
+    public DelegateColorScheme(@Nonnull EditorColorsScheme delegate) {
         myDelegate = delegate;
     }
 

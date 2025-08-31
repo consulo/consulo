@@ -62,11 +62,11 @@ public class ShelvedChangeList implements JDOMExternalizable, ExternalizableSche
   public ShelvedChangeList() {
   }
 
-  public ShelvedChangeList(final String path, final String description, final List<ShelvedBinaryFile> binaryFiles) {
+  public ShelvedChangeList(String path, String description, List<ShelvedBinaryFile> binaryFiles) {
     this(path, description, binaryFiles, System.currentTimeMillis());
   }
 
-  public ShelvedChangeList(final String path, final String description, final List<ShelvedBinaryFile> binaryFiles, final long time) {
+  public ShelvedChangeList(String path, String description, List<ShelvedBinaryFile> binaryFiles, long time) {
     PATH = FileUtil.toSystemIndependentName(path);
     DESCRIPTION = description;
     DATE = new Date(time);
@@ -78,7 +78,7 @@ public class ShelvedChangeList implements JDOMExternalizable, ExternalizableSche
     return myRecycled;
   }
 
-  public void setRecycled(final boolean recycled) {
+  public void setRecycled(boolean recycled) {
     myRecycled = recycled;
   }
 
@@ -91,7 +91,7 @@ public class ShelvedChangeList implements JDOMExternalizable, ExternalizableSche
     myRecycled = Boolean.parseBoolean(element.getAttributeValue(ATTRIBUTE_RECYCLED_CHANGELIST));
     myToDelete = Boolean.parseBoolean(element.getAttributeValue(ATTRIBUTE_TOBE_DELETED_CHANGELIST));
     //noinspection unchecked
-    final List<Element> children = element.getChildren(ELEMENT_BINARY);
+    List<Element> children = element.getChildren(ELEMENT_BINARY);
     myBinaryFiles = new ArrayList<>(children.size());
     for (Element child : children) {
       ShelvedBinaryFile binaryFile = new ShelvedBinaryFile();
@@ -129,7 +129,7 @@ public class ShelvedChangeList implements JDOMExternalizable, ExternalizableSche
     if (myChanges == null) {
       try {
         myChanges = new ArrayList<>();
-        final List<? extends FilePatch> list = ShelveChangesManager.loadPatchesWithoutContent(project, PATH, null);
+        List<? extends FilePatch> list = ShelveChangesManager.loadPatchesWithoutContent(project, PATH, null);
         for (FilePatch patch : list) {
           FileStatus status;
           if (patch.isNewFile()) {

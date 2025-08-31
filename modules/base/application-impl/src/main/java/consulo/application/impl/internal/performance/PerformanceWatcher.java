@@ -157,9 +157,9 @@ public class PerformanceWatcher implements Disposable {
   private void deleteOldThreadDumps() {
     File allLogsDir = myContainerPathManager.getLogPath();
     if (allLogsDir.isDirectory()) {
-      final String[] dirs = allLogsDir.list(new FilenameFilter() {
+      String[] dirs = allLogsDir.list(new FilenameFilter() {
         @Override
-        public boolean accept(@Nonnull final File dir, @Nonnull final String name) {
+        public boolean accept(@Nonnull File dir, @Nonnull String name) {
           return name.startsWith("threadDumps-");
         }
       });
@@ -240,7 +240,7 @@ public class PerformanceWatcher implements Disposable {
     StringBuilder name = new StringBuilder("freeze-" + myCurHangLogDir.getName());
     name.append("-").append(unresponsiveDuration);
     if (myStacktraceCommonPart != null && !myStacktraceCommonPart.isEmpty()) {
-      final StackTraceElement element = myStacktraceCommonPart.get(0);
+      StackTraceElement element = myStacktraceCommonPart.get(0);
       name.append("-").append(StringUtil.getShortName(element.getClassName())).append(".").append(element.getMethodName());
     }
     return name.toString();
@@ -297,7 +297,7 @@ public class PerformanceWatcher implements Disposable {
     System.err.println(ThreadDumper.dumpThreadsToString());
   }
 
-  private void updateStacktraceCommonPart(final StackTraceElement[] stackTraceElements) {
+  private void updateStacktraceCommonPart(StackTraceElement[] stackTraceElements) {
     for (int i = 0; i < myStacktraceCommonPart.size() && i < stackTraceElements.length; i++) {
       StackTraceElement el1 = myStacktraceCommonPart.get(myStacktraceCommonPart.size() - i - 1);
       StackTraceElement el2 = stackTraceElements[stackTraceElements.length - i - 1];

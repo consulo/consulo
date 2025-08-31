@@ -34,7 +34,7 @@ public class OffsetMap implements Disposable {
   private final Set<OffsetKey> myModified = new HashSet<>();
   private volatile boolean myDisposed;
 
-  public OffsetMap(final Document document) {
+  public OffsetMap(Document document) {
     myDocument = document;
   }
 
@@ -45,14 +45,14 @@ public class OffsetMap implements Disposable {
    */
   public int getOffset(OffsetKey key) {
     synchronized (myMap) {
-      final RangeMarker marker = myMap.get(key);
+      RangeMarker marker = myMap.get(key);
       if (marker == null) throw new IllegalArgumentException("Offset " + key + " is not registered");
       if (!marker.isValid()) {
         removeOffset(key);
         throw new IllegalStateException("Offset " + key + " is invalid: " + marker);
       }
 
-      final int endOffset = marker.getEndOffset();
+      int endOffset = marker.getEndOffset();
       if (marker.getStartOffset() != endOffset) {
         saveOffset(key, endOffset, false);
       }
@@ -61,7 +61,7 @@ public class OffsetMap implements Disposable {
   }
 
   public boolean containsOffset(OffsetKey key) {
-    final RangeMarker marker = myMap.get(key);
+    RangeMarker marker = myMap.get(key);
     return marker != null && marker.isValid();
   }
 
@@ -91,7 +91,7 @@ public class OffsetMap implements Disposable {
 
     RangeMarker old = myMap.get(key);
     if (old != null) old.dispose();
-    final RangeMarker marker = myDocument.createRangeMarker(offset, offset);
+    RangeMarker marker = myDocument.createRangeMarker(offset, offset);
     marker.setGreedyToRight(key.isMovableToRight());
     myMap.put(key, marker);
   }
@@ -119,8 +119,8 @@ public class OffsetMap implements Disposable {
   @Override
   public String toString() {
     synchronized (myMap) {
-      final StringBuilder builder = new StringBuilder("OffsetMap:");
-      for (final OffsetKey key : myMap.keySet()) {
+      StringBuilder builder = new StringBuilder("OffsetMap:");
+      for (OffsetKey key : myMap.keySet()) {
         builder.append(key).append("->").append(myMap.get(key)).append(";");
       }
       return builder.toString();

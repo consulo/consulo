@@ -47,16 +47,16 @@ public final class LanguageSubstitutors {
     return lang;
   }
 
-  private static void processLanguageSubstitution(@Nonnull final VirtualFile file,
+  private static void processLanguageSubstitution(@Nonnull VirtualFile file,
                                                   @Nonnull Language originalLang,
-                                                  @Nonnull final Language substitutedLang) {
+                                                  @Nonnull Language substitutedLang) {
     if (file instanceof VirtualFileWindow) {
       // Injected files are created with substituted language, no need to reparse:
       //   com.intellij.psi.impl.source.tree.injected.MultiHostRegistrarImpl#doneInjecting
       return;
     }
     Language prevSubstitutedLang = SUBSTITUTED_LANG_KEY.get(file);
-    final Language prevLang = ObjectUtil.notNull(prevSubstitutedLang, originalLang);
+    Language prevLang = ObjectUtil.notNull(prevSubstitutedLang, originalLang);
     if (!prevLang.is(substitutedLang)) {
       if (file.replace(SUBSTITUTED_LANG_KEY, prevSubstitutedLang, substitutedLang)) {
         if (prevSubstitutedLang == null) {

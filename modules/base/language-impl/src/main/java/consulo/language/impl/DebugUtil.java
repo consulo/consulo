@@ -61,19 +61,19 @@ public class DebugUtil {
     }
 
     @Override
-    public Appendable append(final CharSequence csq) {
+    public Appendable append(CharSequence csq) {
       myLength += csq.length();
       return this;
     }
 
     @Override
-    public Appendable append(final CharSequence csq, final int start, final int end) {
+    public Appendable append(CharSequence csq, int start, int end) {
       myLength += csq.subSequence(start, end).length();
       return this;
     }
 
     @Override
-    public Appendable append(final char c) {
+    public Appendable append(char c) {
       myLength++;
       return this;
     }
@@ -89,69 +89,69 @@ public class DebugUtil {
 
   public static final boolean CHECK_INSIDE_ATOMIC_ACTION_ENABLED = DO_EXPENSIVE_CHECKS;
 
-  public static String psiTreeToString(@Nonnull final PsiElement element, final boolean skipWhitespaces) {
-    final ASTNode node = SourceTreeToPsiMap.psiElementToTree(element);
+  public static String psiTreeToString(@Nonnull PsiElement element, boolean skipWhitespaces) {
+    ASTNode node = SourceTreeToPsiMap.psiElementToTree(element);
     assert node != null : element;
     return treeToString(node, skipWhitespaces);
   }
 
-  public static String treeToString(@Nonnull final ASTNode root, final boolean skipWhitespaces) {
-    final LengthBuilder ruler = new LengthBuilder();
+  public static String treeToString(@Nonnull ASTNode root, boolean skipWhitespaces) {
+    LengthBuilder ruler = new LengthBuilder();
     treeToBuffer(ruler, root, 0, skipWhitespaces, false, false, true);
-    final StringBuilder buffer = new StringBuilder(ruler.getLength());
+    StringBuilder buffer = new StringBuilder(ruler.getLength());
     treeToBuffer(buffer, root, 0, skipWhitespaces, false, false, true);
     return buffer.toString();
   }
 
-  public static String nodeTreeToString(@Nonnull final ASTNode root, final boolean skipWhitespaces) {
-    final LengthBuilder ruler = new LengthBuilder();
+  public static String nodeTreeToString(@Nonnull ASTNode root, boolean skipWhitespaces) {
+    LengthBuilder ruler = new LengthBuilder();
     treeToBuffer(ruler, root, 0, skipWhitespaces, false, false, false);
-    final StringBuilder buffer = new StringBuilder(ruler.getLength());
+    StringBuilder buffer = new StringBuilder(ruler.getLength());
     treeToBuffer(buffer, root, 0, skipWhitespaces, false, false, false);
     return buffer.toString();
   }
 
   public static String treeToString(@Nonnull ASTNode root, boolean skipWhitespaces, boolean showRanges) {
-    final LengthBuilder ruler = new LengthBuilder();
+    LengthBuilder ruler = new LengthBuilder();
     treeToBuffer(ruler, root, 0, skipWhitespaces, showRanges, false, true);
-    final StringBuilder buffer = new StringBuilder(ruler.getLength());
+    StringBuilder buffer = new StringBuilder(ruler.getLength());
     treeToBuffer(buffer, root, 0, skipWhitespaces, showRanges, false, true);
     return buffer.toString();
   }
 
   public static String treeToStringWithUserData(TreeElement root, boolean skipWhitespaces) {
-    final LengthBuilder ruler = new LengthBuilder();
+    LengthBuilder ruler = new LengthBuilder();
     treeToBufferWithUserData(ruler, root, 0, skipWhitespaces);
-    final StringBuilder buffer = new StringBuilder(ruler.getLength());
+    StringBuilder buffer = new StringBuilder(ruler.getLength());
     treeToBufferWithUserData(buffer, root, 0, skipWhitespaces);
     return buffer.toString();
   }
 
   public static String treeToStringWithUserData(PsiElement root, boolean skipWhitespaces) {
-    final LengthBuilder ruler = new LengthBuilder();
+    LengthBuilder ruler = new LengthBuilder();
     treeToBufferWithUserData(ruler, root, 0, skipWhitespaces);
-    final StringBuilder buffer = new StringBuilder(ruler.getLength());
+    StringBuilder buffer = new StringBuilder(ruler.getLength());
     treeToBufferWithUserData(buffer, root, 0, skipWhitespaces);
     return buffer.toString();
   }
 
-  public static void treeToBuffer(@Nonnull final Appendable buffer,
-                                  @Nonnull final ASTNode root,
-                                  final int indent,
-                                  final boolean skipWhiteSpaces,
-                                  final boolean showRanges,
-                                  final boolean showChildrenRanges,
-                                  final boolean usePsi) {
+  public static void treeToBuffer(@Nonnull Appendable buffer,
+                                  @Nonnull ASTNode root,
+                                  int indent,
+                                  boolean skipWhiteSpaces,
+                                  boolean showRanges,
+                                  boolean showChildrenRanges,
+                                  boolean usePsi) {
     treeToBuffer(buffer, root, indent, skipWhiteSpaces, showRanges, showChildrenRanges, usePsi, null);
   }
 
-  public static void treeToBuffer(@Nonnull final Appendable buffer,
-                                  @Nonnull final ASTNode root,
-                                  final int indent,
-                                  final boolean skipWhiteSpaces,
-                                  final boolean showRanges,
-                                  final boolean showChildrenRanges,
-                                  final boolean usePsi,
+  public static void treeToBuffer(@Nonnull Appendable buffer,
+                                  @Nonnull ASTNode root,
+                                  int indent,
+                                  boolean skipWhiteSpaces,
+                                  boolean showRanges,
+                                  boolean showChildrenRanges,
+                                  boolean usePsi,
                                   BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
     if (skipWhiteSpaces && root.getElementType() == TokenType.WHITE_SPACE) return;
 
@@ -173,7 +173,7 @@ public class DebugUtil {
         }
       }
       else {
-        final String text = fixWhiteSpaces(root.getText());
+        String text = fixWhiteSpaces(root.getText());
         buffer.append(root.toString()).append("('").append(text).append("')");
       }
       if (showRanges) buffer.append(root.getTextRange().toString());
@@ -201,23 +201,23 @@ public class DebugUtil {
     }
   }
 
-  public static String lightTreeToString(@Nonnull final FlyweightCapableTreeStructure<LighterASTNode> tree, final boolean skipWhitespaces) {
-    final LengthBuilder ruler = new LengthBuilder();
+  public static String lightTreeToString(@Nonnull FlyweightCapableTreeStructure<LighterASTNode> tree, boolean skipWhitespaces) {
+    LengthBuilder ruler = new LengthBuilder();
     lightTreeToBuffer(tree, tree.getRoot(), ruler, 0, skipWhitespaces);
-    final StringBuilder buffer = new StringBuilder(ruler.getLength());
+    StringBuilder buffer = new StringBuilder(ruler.getLength());
     lightTreeToBuffer(tree, tree.getRoot(), buffer, 0, skipWhitespaces);
     return buffer.toString();
   }
 
-  public static void lightTreeToBuffer(@Nonnull final FlyweightCapableTreeStructure<LighterASTNode> tree,
-                                       @Nonnull final LighterASTNode node,
-                                       @Nonnull final Appendable buffer,
-                                       final int indent,
-                                       final boolean skipWhiteSpaces) {
-    final IElementType tokenType = node.getTokenType();
+  public static void lightTreeToBuffer(@Nonnull FlyweightCapableTreeStructure<LighterASTNode> tree,
+                                       @Nonnull LighterASTNode node,
+                                       @Nonnull Appendable buffer,
+                                       int indent,
+                                       boolean skipWhiteSpaces) {
+    IElementType tokenType = node.getTokenType();
     if (skipWhiteSpaces && tokenType == TokenType.WHITE_SPACE) return;
 
-    final boolean isLeaf = (node instanceof LighterASTTokenNode);
+    boolean isLeaf = (node instanceof LighterASTTokenNode);
 
     StringUtil.repeatSymbol(buffer, ' ', indent);
     try {
@@ -232,14 +232,14 @@ public class DebugUtil {
       }
 
       if (isLeaf) {
-        final String text = ((LighterASTTokenNode)node).getText().toString();
+        String text = ((LighterASTTokenNode)node).getText().toString();
         buffer.append("('").append(fixWhiteSpaces(text)).append("')");
       }
       buffer.append('\n');
 
       if (!isLeaf) {
-        final Ref<LighterASTNode[]> kids = new Ref<LighterASTNode[]>();
-        final int numKids = tree.getChildren(tree.prepareForGetChildren(node), kids);
+        Ref<LighterASTNode[]> kids = new Ref<LighterASTNode[]>();
+        int numKids = tree.getChildren(tree.prepareForGetChildren(node), kids);
         if (numKids == 0) {
           StringUtil.repeatSymbol(buffer, ' ', indent + 2);
           buffer.append("<empty list>\n");
@@ -256,25 +256,25 @@ public class DebugUtil {
     }
   }
 
-  public static String stubTreeToString(final Stub root) {
-    final LengthBuilder ruler = new LengthBuilder();
+  public static String stubTreeToString(Stub root) {
+    LengthBuilder ruler = new LengthBuilder();
     stubTreeToBuffer(root, ruler, 0);
-    final StringBuilder builder = new StringBuilder(ruler.getLength());
+    StringBuilder builder = new StringBuilder(ruler.getLength());
     stubTreeToBuffer(root, builder, 0);
     return builder.toString();
   }
 
-  public static void stubTreeToBuffer(final Stub node, final Appendable buffer, final int indent) {
+  public static void stubTreeToBuffer(Stub node, Appendable buffer, int indent) {
     StringUtil.repeatSymbol(buffer, ' ', indent);
     try {
-      final ObjectStubSerializer stubType = node.getStubType();
+      ObjectStubSerializer stubType = node.getStubType();
       if (stubType != null) {
         buffer.append(stubType.toString()).append(':');
       }
       buffer.append(node.toString()).append('\n');
 
-      @SuppressWarnings({"unchecked"}) final List<? extends Stub> children = node.getChildrenStubs();
-      for (final Stub child : children) {
+      @SuppressWarnings({"unchecked"}) List<? extends Stub> children = node.getChildrenStubs();
+      for (Stub child : children) {
         stubTreeToBuffer(child, buffer, indent + 2);
       }
     }
@@ -288,13 +288,13 @@ public class DebugUtil {
 
     StringUtil.repeatSymbol(buffer, ' ', indent);
     try {
-      final PsiElement psi = SourceTreeToPsiMap.treeElementToPsi(root);
+      PsiElement psi = SourceTreeToPsiMap.treeElementToPsi(root);
       assert psi != null : root;
       if (root instanceof CompositeElement) {
         buffer.append(psi.toString());
       }
       else {
-        final String text = fixWhiteSpaces(root.getText());
+        String text = fixWhiteSpaces(root.getText());
         buffer.append(root.toString()).append("('").append(text).append("')");
       }
       buffer.append(root.getUserDataString());
@@ -326,7 +326,7 @@ public class DebugUtil {
         buffer.append(root.toString());
       }
       else {
-        final String text = fixWhiteSpaces(root.getText());
+        String text = fixWhiteSpaces(root.getText());
         buffer.append(root.toString()).append("('").append(text).append("')");
       }
       buffer.append(((UserDataHolderBase)root).getUserDataString());
@@ -406,29 +406,29 @@ public class DebugUtil {
   }
 
   public static void checkSameCharTabs(@Nonnull ASTNode element1, @Nonnull ASTNode element2) {
-    final CharTable fromCharTab = SharedImplUtil.findCharTableByTree(element1);
-    final CharTable toCharTab = SharedImplUtil.findCharTableByTree(element2);
+    CharTable fromCharTab = SharedImplUtil.findCharTableByTree(element1);
+    CharTable toCharTab = SharedImplUtil.findCharTableByTree(element2);
     LOG.assertTrue(fromCharTab == toCharTab);
   }
 
-  public static String psiToString(@Nonnull PsiElement element, final boolean skipWhitespaces) {
+  public static String psiToString(@Nonnull PsiElement element, boolean skipWhitespaces) {
     return psiToString(element, skipWhitespaces, false);
   }
 
-  public static String psiToString(@Nonnull final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges) {
+  public static String psiToString(@Nonnull PsiElement root, boolean skipWhiteSpaces, boolean showRanges) {
     return psiToString(root, skipWhiteSpaces, showRanges, null);
   }
 
-  public static String psiToString(@Nonnull final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges, BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
-    final LengthBuilder ruler = new LengthBuilder();
+  public static String psiToString(@Nonnull PsiElement root, boolean skipWhiteSpaces, boolean showRanges, BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
+    LengthBuilder ruler = new LengthBuilder();
     psiToBuffer(ruler, root, skipWhiteSpaces, showRanges, extra);
-    final StringBuilder buffer = new StringBuilder(ruler.getLength());
+    StringBuilder buffer = new StringBuilder(ruler.getLength());
     psiToBuffer(buffer, root, skipWhiteSpaces, showRanges, extra);
     return buffer.toString();
   }
 
-  private static void psiToBuffer(final Appendable buffer, final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges, BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
-    final ASTNode node = root.getNode();
+  private static void psiToBuffer(Appendable buffer, PsiElement root, boolean skipWhiteSpaces, boolean showRanges, BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
+    ASTNode node = root.getNode();
     if (node == null) {
       psiToBuffer(buffer, root, 0, skipWhiteSpaces, showRanges, showRanges, extra);
     }
@@ -437,16 +437,16 @@ public class DebugUtil {
     }
   }
 
-  public static void psiToBuffer(@Nonnull final Appendable buffer, @Nonnull final PsiElement root, int indent, boolean skipWhiteSpaces, boolean showRanges, boolean showChildrenRanges) {
+  public static void psiToBuffer(@Nonnull Appendable buffer, @Nonnull PsiElement root, int indent, boolean skipWhiteSpaces, boolean showRanges, boolean showChildrenRanges) {
     psiToBuffer(buffer, root, indent, skipWhiteSpaces, showRanges, showChildrenRanges, null);
   }
 
-  public static void psiToBuffer(@Nonnull final Appendable buffer,
-                                 @Nonnull final PsiElement root,
-                                 final int indent,
-                                 final boolean skipWhiteSpaces,
+  public static void psiToBuffer(@Nonnull Appendable buffer,
+                                 @Nonnull PsiElement root,
+                                 int indent,
+                                 boolean skipWhiteSpaces,
                                  boolean showRanges,
-                                 final boolean showChildrenRanges,
+                                 boolean showChildrenRanges,
                                  BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
     if (skipWhiteSpaces && root instanceof PsiWhiteSpace) return;
 
@@ -455,7 +455,7 @@ public class DebugUtil {
       buffer.append(root.toString());
       PsiElement child = root.getFirstChild();
       if (child == null) {
-        final String text = root.getText();
+        String text = root.getText();
         assert text != null : "text is null for <" + root + ">";
         buffer.append("('").append(fixWhiteSpaces(text)).append("')");
       }

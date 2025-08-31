@@ -48,9 +48,9 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
   }
 
   @Override
-  public void check(Project project, final ProjectStructureProblemsHolder problemsHolder) {
-    final Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
-    final ArtifactProblemsHolderImpl artifactProblemsHolder = new ArtifactProblemsHolderImpl(myArtifactsStructureContext, myOriginalArtifact, problemsHolder);
+  public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
+    Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
+    ArtifactProblemsHolderImpl artifactProblemsHolder = new ArtifactProblemsHolderImpl(myArtifactsStructureContext, myOriginalArtifact, problemsHolder);
     artifact.getArtifactType().checkRootElement(myArtifactsStructureContext.getRootElement(myOriginalArtifact), artifact, artifactProblemsHolder);
   }
 
@@ -60,7 +60,7 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
 
   @Override
   public List<ProjectStructureElementUsage> getUsagesInElement() {
-    final Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
+    Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
     final List<ProjectStructureElementUsage> usages = new ArrayList<ProjectStructureElementUsage>();
     final CompositePackagingElement<?> rootElement = myArtifactsStructureContext.getRootElement(artifact);
     ArtifactUtil.processPackagingElements(rootElement, null, new PackagingElementProcessor<>() {
@@ -77,21 +77,21 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
   }
 
   @Nullable
-  public static ProjectStructureElement getProjectStructureElementFor(PackagingElement<?> packagingElement, final ArtifactsStructureConfigurableContext artifactsStructureContext) {
+  public static ProjectStructureElement getProjectStructureElementFor(PackagingElement<?> packagingElement, ArtifactsStructureConfigurableContext artifactsStructureContext) {
     if (packagingElement instanceof ModuleOutputPackagingElement) {
-      final Module module = ((ModuleOutputPackagingElement)packagingElement).findModule(artifactsStructureContext);
+      Module module = ((ModuleOutputPackagingElement)packagingElement).findModule(artifactsStructureContext);
       if (module != null) {
         return new ModuleProjectStructureElement((ModulesConfigurator)artifactsStructureContext.getModulesProvider(), module);
       }
     }
     else if (packagingElement instanceof LibraryPackagingElement) {
-      final Library library = ((LibraryPackagingElement)packagingElement).findLibrary(artifactsStructureContext);
+      Library library = ((LibraryPackagingElement)packagingElement).findLibrary(artifactsStructureContext);
       if (library != null) {
         return new LibraryProjectStructureElement(library);
       }
     }
     else if (packagingElement instanceof ArtifactPackagingElement) {
-      final Artifact usedArtifact = ((ArtifactPackagingElement)packagingElement).findArtifact(artifactsStructureContext);
+      Artifact usedArtifact = ((ArtifactPackagingElement)packagingElement).findArtifact(artifactsStructureContext);
       if (usedArtifact != null) {
         return artifactsStructureContext.getOrCreateArtifactElement(usedArtifact);
       }
@@ -99,7 +99,7 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
     return null;
   }
 
-  private UsageInArtifact createUsage(PackagingElement<?> packagingElement, final ProjectStructureElement element, final String parentPath) {
+  private UsageInArtifact createUsage(PackagingElement<?> packagingElement, ProjectStructureElement element, String parentPath) {
     return new UsageInArtifact(myOriginalArtifact, myArtifactsStructureContext, element, this, parentPath, packagingElement);
   }
 

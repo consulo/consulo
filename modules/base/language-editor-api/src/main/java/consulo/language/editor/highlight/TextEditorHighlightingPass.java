@@ -37,7 +37,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   private volatile boolean myDumb;
   private EditorColorsScheme myColorsScheme;
 
-  protected TextEditorHighlightingPass(@Nonnull final Project project, @Nullable final Document document, boolean runIntentionPassAfter) {
+  protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document, boolean runIntentionPassAfter) {
     myDocument = document;
     myProject = project;
     myRunIntentionPassAfter = runIntentionPassAfter;
@@ -45,7 +45,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     myInitialPsiStamp = PsiModificationTracker.getInstance(myProject).getModificationCount();
   }
 
-  protected TextEditorHighlightingPass(@Nonnull final Project project, @Nullable final Document document) {
+  protected TextEditorHighlightingPass(@Nonnull Project project, @Nullable Document document) {
     this(project, document, true);
   }
 
@@ -113,7 +113,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     return myId;
   }
 
-  public final void setId(final int id) {
+  public final void setId(int id) {
     myId = id;
   }
 
@@ -141,7 +141,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     return myStartingPredecessorIds;
   }
 
-  public final void setStartingPredecessorIds(@Nonnull final int[] startingPredecessorIds) {
+  public final void setStartingPredecessorIds(@Nonnull int[] startingPredecessorIds) {
     myStartingPredecessorIds = startingPredecessorIds;
   }
 

@@ -32,7 +32,7 @@ import java.util.Objects;
 public class PatternPackageSetParserExtension implements PackageSetParserExtension {
 
     @Override
-    public PackageSet parsePackageSet(final Lexer lexer, final String scope, final String modulePattern) throws ParsingException {
+    public PackageSet parsePackageSet(Lexer lexer, String scope, String modulePattern) throws ParsingException {
     /*if (scope == PatternPackageSet.SCOPE_ANY && modulePattern == null) {
       error(AnalysisScopeBundle.message("error.packageset.common.expectations"), lexer);
     }*/
@@ -47,7 +47,7 @@ public class PatternPackageSetParserExtension implements PackageSetParserExtensi
     }
 
     @Override
-    public String parseScope(final Lexer lexer) {
+    public String parseScope(Lexer lexer) {
         if (lexer.getTokenType() != ScopeTokenTypes.IDENTIFIER) return PatternPackageSet.SCOPE_ANY;
         String id = getTokenText(lexer);
         String scope = PatternPackageSet.SCOPE_ANY;
@@ -66,7 +66,7 @@ public class PatternPackageSetParserExtension implements PackageSetParserExtensi
         else if (id.trim().length() > 0) {
             scope = null;
         }
-        final CharSequence buf = lexer.getBufferSequence();
+        CharSequence buf = lexer.getBufferSequence();
         int end = lexer.getTokenEnd();
         int bufferEnd = lexer.getBufferEnd();
 

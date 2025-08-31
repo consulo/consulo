@@ -60,7 +60,7 @@ public class AlignmentImpl extends Alignment {
     myOffsetRespBlocksCalculator.reset();
   }
 
-  public void setParent(final Alignment base) {
+  public void setParent(Alignment base) {
     myParentAlignment = (AlignmentImpl)base;
   }
 
@@ -97,13 +97,13 @@ public class AlignmentImpl extends Alignment {
    * {@link #setParent(Alignment) its parent} using the algorithm above if any; {@code null} otherwise
    */
   @Nullable
-  public LeafBlockWrapper getOffsetRespBlockBefore(@Nullable final AbstractBlockWrapper block) {
+  public LeafBlockWrapper getOffsetRespBlockBefore(@Nullable AbstractBlockWrapper block) {
     if (!continueOffsetResponsibleBlockRetrieval(block)) {
       return null;
     }
 
     LeafBlockWrapper result = null;
-    final List<LeafBlockWrapper> leftBlocks = myOffsetRespBlocksCalculator.getLeftSubList(block);
+    List<LeafBlockWrapper> leftBlocks = myOffsetRespBlocksCalculator.getLeftSubList(block);
     if (!leftBlocks.isEmpty()) {
       result = leftBlocks.get(0);
     }
@@ -122,7 +122,7 @@ public class AlignmentImpl extends Alignment {
    *
    * @param block wrapped block to register within the current alignment object
    */
-  public void setOffsetRespBlock(final LeafBlockWrapper block) {
+  public void setOffsetRespBlock(LeafBlockWrapper block) {
     if (block == null) {
       return;
     }

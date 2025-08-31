@@ -97,13 +97,13 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
 
   @Override
   protected void update(PresentationData presentation) {
-    final Collection<ArtifactProblemDescription> problems = ((ArtifactEditorImpl)myContext.getThisArtifactEditor()).getValidationManager().getProblems(this);
+    Collection<ArtifactProblemDescription> problems = ((ArtifactEditorImpl)myContext.getThisArtifactEditor()).getValidationManager().getProblems(this);
     if (problems == null || problems.isEmpty()) {
       super.update(presentation);
       return;
     }
     StringBuilder buffer = new StringBuilder();
-    final String tooltip;
+    String tooltip;
     boolean isError = false;
     for (ArtifactProblemDescription problem : problems) {
       isError |= problem.getSeverity() == ProjectStructureProblemType.Severity.ERROR;
@@ -117,7 +117,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
   }
 
   private static SimpleTextAttributes addErrorHighlighting(boolean error, SimpleTextAttributes attributes) {
-    final TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(attributes);
+    TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(attributes);
     textAttributes.setEffectType(EffectType.WAVE_UNDERSCORE);
     textAttributes.setEffectColor(error ? StandardColors.RED : StandardColors.GRAY);
     return TextAttributesUtil.fromTextAttributes(textAttributes);
@@ -136,7 +136,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
 
   @Nonnull
   public Collection<PackagingNodeSource> getNodeSource(@Nonnull PackagingElement<?> element) {
-    final Collection<PackagingNodeSource> nodeSources = myNodeSources.get(element);
+    Collection<PackagingNodeSource> nodeSources = myNodeSources.get(element);
     return nodeSources != null ? nodeSources : Collections.<PackagingNodeSource>emptyList();
   }
 
@@ -146,10 +146,10 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
 
   @Nullable
   public CompositePackagingElementNode findCompositeChild(@Nonnull String name) {
-    final SimpleNode[] children = getChildren();
+    SimpleNode[] children = getChildren();
     for (SimpleNode child : children) {
       if (child instanceof CompositePackagingElementNode) {
-        final CompositePackagingElementNode composite = (CompositePackagingElementNode)child;
+        CompositePackagingElementNode composite = (CompositePackagingElementNode)child;
         if (name.equals(composite.getFirstElement().getName())) {
           return composite;
         }
@@ -165,13 +165,13 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
     int i = 0;
     result.add(current);
     while (current != null && i < pathToPlace.size()) {
-      final SimpleNode[] children = current.getCached();
+      SimpleNode[] children = current.getCached();
       if (children == null) {
         break;
       }
 
       PackagingElementNode<?> next = null;
-      final PackagingElement<?> element = pathToPlace.get(i);
+      PackagingElement<?> element = pathToPlace.get(i);
 
       search:
       for (SimpleNode child : children) {

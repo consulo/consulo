@@ -41,12 +41,12 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
 
     @Override
     public void execute(Editor editor, DataContext dataContext) {
-        final SelectionModel selectionModel = editor.getSelectionModel();
+        SelectionModel selectionModel = editor.getSelectionModel();
         Project project;
         if (selectionModel.hasSelection() && (project = editor.getProject()) != null) {
-            final TemplateState state = TemplateManager.getInstance(project).getTemplateState(editor);
+            TemplateState state = TemplateManager.getInstance(project).getTemplateState(editor);
             if (state != null && editor.getUserData(InplaceRefactoring.INPLACE_RENAMER) != null) {
-                final LookupEx lookup = LookupManager.getActiveLookup(editor);
+                LookupEx lookup = LookupManager.getActiveLookup(editor);
                 if (lookup != null) {
                     selectionModel.removeSelection();
                     lookup.hide();
@@ -62,7 +62,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     public boolean isEnabled(Editor editor, DataContext dataContext) {
         Project project = editor.getProject();
         if (project != null) {
-            final TemplateState templateState = TemplateManager.getInstance(project).getTemplateState(editor);
+            TemplateState templateState = TemplateManager.getInstance(project).getTemplateState(editor);
 
             if (templateState != null && !templateState.isFinished()) {
                 return true;

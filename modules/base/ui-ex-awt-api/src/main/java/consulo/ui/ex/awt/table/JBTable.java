@@ -78,7 +78,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     this(model, null);
   }
 
-  public JBTable(final TableModel model, final TableColumnModel columnModel) {
+  public JBTable(TableModel model, TableColumnModel columnModel) {
     super(model, columnModel);
 
     setSurrendersFocusOnKeystroke(true);
@@ -98,7 +98,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
 
     final TableModelListener modelListener = new TableModelListener() {
       @Override
-      public void tableChanged(@Nonnull final TableModelEvent e) {
+      public void tableChanged(@Nonnull TableModelEvent e) {
         onTableChanged(e);
       }
     };
@@ -160,12 +160,12 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
 
     for (int row = 0; row < Math.min(getRowCount(), myMaxItemsForSizeCalculation); row++) {
       for (int column = 0; column < Math.min(getColumnCount(), myMaxItemsForSizeCalculation); column++) {
-        final TableCellRenderer renderer = getCellRenderer(row, column);
+        TableCellRenderer renderer = getCellRenderer(row, column);
         if (renderer != null) {
-          final Object value = getValueAt(row, column);
-          final Component component = renderer.getTableCellRendererComponent(this, value, true, true, row, column);
+          Object value = getValueAt(row, column);
+          Component component = renderer.getTableCellRendererComponent(this, value, true, true, row, column);
           if (component != null) {
-            final Dimension size = component.getPreferredSize();
+            Dimension size = component.getPreferredSize();
             result = Math.max(size.height, result);
           }
         }
@@ -227,12 +227,12 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     super.setModel(model);
 
     if (model instanceof SortableColumnModel) {
-      final SortableColumnModel sortableModel = (SortableColumnModel)model;
+      SortableColumnModel sortableModel = (SortableColumnModel)model;
       if (sortableModel.isSortable()) {
-        final TableRowSorter<TableModel> rowSorter = createRowSorter(model);
+        TableRowSorter<TableModel> rowSorter = createRowSorter(model);
         rowSorter.setSortsOnUpdates(isSortOnUpdates());
         setRowSorter(rowSorter);
-        final RowSorter.SortKey sortKey = sortableModel.getDefaultSortKey();
+        RowSorter.SortKey sortKey = sortableModel.getDefaultSortKey();
         if (sortKey != null && sortKey.getColumn() >= 0 && sortKey.getColumn() < model.getColumnCount()) {
           if (sortableModel.getColumnInfos()[sortKey.getColumn()].isSortable()) {
             rowSorter.setSortKeys(Collections.singletonList(sortKey));
@@ -240,7 +240,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
         }
       }
       else {
-        final RowSorter<? extends TableModel> rowSorter = getRowSorter();
+        RowSorter<? extends TableModel> rowSorter = getRowSorter();
         if (rowSorter instanceof DefaultColumnInfoBasedRowSorter) {
           setRowSorter(null);
         }
@@ -412,7 +412,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   }
 
   @Override
-  public boolean editCellAt(final int row, final int column, final EventObject e) {
+  public boolean editCellAt(int row, int column, EventObject e) {
     if (cellEditor != null && !cellEditor.stopCellEditing()) {
       return false;
     }
@@ -435,7 +435,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
       }
     }
 
-    final TableCellEditor editor = getCellEditor(row, column);
+    TableCellEditor editor = getCellEditor(row, column);
     if (editor != null && editor.isCellEditable(e)) {
       editorComp = prepareEditor(editor, row, column);
       //((JComponent)editorComp).setBorder(null);
@@ -516,7 +516,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
 
     @Override
-    public void propertyChange(@Nonnull final PropertyChangeEvent e) {
+    public void propertyChange(@Nonnull PropertyChangeEvent e) {
       if ("tableCellEditor".equals(e.getPropertyName())) {
         tableCellEditorChanged(e.getOldValue(), e.getNewValue());
       }
@@ -586,11 +586,11 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
 
   private final class MyMouseListener extends MouseAdapter {
     @Override
-    public void mousePressed(@Nonnull final MouseEvent e) {
+    public void mousePressed(@Nonnull MouseEvent e) {
       if (JBSwingUtilities.isRightMouseButton(e)) {
-        final int[] selectedRows = getSelectedRows();
+        int[] selectedRows = getSelectedRows();
         if (selectedRows.length < 2) {
-          final int row = rowAtPoint(e.getPoint());
+          int row = rowAtPoint(e.getPoint());
           if (row != -1) {
             getSelectionModel().setSelectionInterval(row, row);
           }
@@ -600,24 +600,24 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   }
 
   @SuppressWarnings({"MethodMayBeStatic", "unchecked"})
-  protected TableRowSorter<TableModel> createRowSorter(final TableModel model) {
+  protected TableRowSorter<TableModel> createRowSorter(TableModel model) {
     return new DefaultColumnInfoBasedRowSorter(model);
   }
 
   protected static class DefaultColumnInfoBasedRowSorter extends TableRowSorter<TableModel> {
-    public DefaultColumnInfoBasedRowSorter(final TableModel model) {
+    public DefaultColumnInfoBasedRowSorter(TableModel model) {
       super(model);
       setModelWrapper(new TableRowSorterModelWrapper(model));
       setMaxSortKeys(1);
     }
 
     @Override
-    public Comparator<?> getComparator(final int column) {
-      final TableModel model = getModel();
+    public Comparator<?> getComparator(int column) {
+      TableModel model = getModel();
       if (model instanceof SortableColumnModel) {
-        final ColumnInfo[] columnInfos = ((SortableColumnModel)model).getColumnInfos();
+        ColumnInfo[] columnInfos = ((SortableColumnModel)model).getColumnInfos();
         if (column >= 0 && column < columnInfos.length) {
-          final Comparator comparator = columnInfos[column].getComparator();
+          Comparator comparator = columnInfos[column].getComparator();
           if (comparator != null) return comparator;
         }
       }
@@ -631,10 +631,10 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
 
     @Override
-    public boolean isSortable(final int column) {
-      final TableModel model = getModel();
+    public boolean isSortable(int column) {
+      TableModel model = getModel();
       if (model instanceof SortableColumnModel) {
-        final ColumnInfo[] columnInfos = ((SortableColumnModel)model).getColumnInfos();
+        ColumnInfo[] columnInfos = ((SortableColumnModel)model).getColumnInfos();
         if (column >= 0 && column < columnInfos.length) {
           return columnInfos[column].isSortable() && columnInfos[column].getComparator() != null;
         }
@@ -732,13 +732,13 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
 
     @Override
-    public String getToolTipText(@Nonnull final MouseEvent event) {
-      final TableModel model = getModel();
+    public String getToolTipText(@Nonnull MouseEvent event) {
+      TableModel model = getModel();
       if (model instanceof SortableColumnModel) {
-        final int i = columnAtPoint(event.getPoint());
-        final int infoIndex = i >= 0 ? convertColumnIndexToModel(i) : -1;
-        final ColumnInfo[] columnInfos = ((SortableColumnModel)model).getColumnInfos();
-        final String tooltipText = infoIndex >= 0 && infoIndex < columnInfos.length ? columnInfos[infoIndex].getTooltipText() : null;
+        int i = columnAtPoint(event.getPoint());
+        int infoIndex = i >= 0 ? convertColumnIndexToModel(i) : -1;
+        ColumnInfo[] columnInfos = ((SortableColumnModel)model).getColumnInfos();
+        String tooltipText = infoIndex >= 0 && infoIndex < columnInfos.length ? columnInfos[infoIndex].getTooltipText() : null;
         if (tooltipText != null) {
           return tooltipText;
         }

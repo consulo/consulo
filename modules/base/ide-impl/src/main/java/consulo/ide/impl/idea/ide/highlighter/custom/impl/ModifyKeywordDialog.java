@@ -69,7 +69,7 @@ public class ModifyKeywordDialog extends DialogWrapper {
   }
 
   protected void doOKAction() {
-    final String keywordName = myKeywordName.getText().trim();
+    String keywordName = myKeywordName.getText().trim();
     if (keywordName.length() == 0) {
       Messages.showMessageDialog(getContentPane(), IdeBundle.message("error.keyword.cannot.be.empty"),
                                  CommonBundle.getErrorTitle(), Messages.getErrorIcon());

@@ -37,7 +37,7 @@ class BlockUtil {
   private BlockUtil() {
   }
 
-  public static List<DataLanguageBlockWrapper> buildChildWrappers(@Nonnull final Block parent) {
+  public static List<DataLanguageBlockWrapper> buildChildWrappers(@Nonnull Block parent) {
     assert !(parent instanceof DataLanguageBlockWrapper) : parent.getClass();
     List<Block> children = parent.getSubBlocks();
     if (children.size() == 0) return Collections.emptyList();
@@ -55,10 +55,10 @@ class BlockUtil {
   }
 
   public static Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>> splitBlocksByRightBound(@Nonnull Block parent, @Nonnull TextRange bounds) {
-    final List<Block> subBlocks = parent.getSubBlocks();
+    List<Block> subBlocks = parent.getSubBlocks();
     if (subBlocks.size() == 0) return new Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>>(Collections.<DataLanguageBlockWrapper>emptyList(), Collections.<DataLanguageBlockWrapper>emptyList());
-    final ArrayList<DataLanguageBlockWrapper> before = new ArrayList<DataLanguageBlockWrapper>(subBlocks.size() / 2);
-    final ArrayList<DataLanguageBlockWrapper> after = new ArrayList<DataLanguageBlockWrapper>(subBlocks.size() / 2);
+    ArrayList<DataLanguageBlockWrapper> before = new ArrayList<DataLanguageBlockWrapper>(subBlocks.size() / 2);
+    ArrayList<DataLanguageBlockWrapper> after = new ArrayList<DataLanguageBlockWrapper>(subBlocks.size() / 2);
     splitByRightBoundAndCollectBlocks(subBlocks, before, after, bounds);
     return new Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>>(before, after);
   }
@@ -68,7 +68,7 @@ class BlockUtil {
                                                         @Nonnull List<DataLanguageBlockWrapper> after,
                                                         @Nonnull TextRange bounds) {
     for (Block block : blocks) {
-      final TextRange textRange = block.getTextRange();
+      TextRange textRange = block.getTextRange();
       if (bounds.contains(textRange)) {
         createAndAddBlock(before, block, null);
       }
@@ -83,7 +83,7 @@ class BlockUtil {
   }
 
   @Nullable
-  private static DataLanguageBlockWrapper createAndAddBlock(List<DataLanguageBlockWrapper> list, Block block, @Nullable final Indent indent) {
+  private static DataLanguageBlockWrapper createAndAddBlock(List<DataLanguageBlockWrapper> list, Block block, @Nullable Indent indent) {
     DataLanguageBlockWrapper wrapper = DataLanguageBlockWrapper.create(block, indent);
     if (wrapper != null) {
       list.add(wrapper);
@@ -97,10 +97,10 @@ class BlockUtil {
     int vInd = 0;
     int fInd = 0;
     while (vInd < tlBlocks.size() && fInd < foreignBlocks.size()) {
-      final TemplateLanguageBlock v = tlBlocks.get(vInd);
-      final DataLanguageBlockWrapper f = foreignBlocks.get(fInd);
-      final TextRange vRange = v.getTextRange();
-      final TextRange fRange = f.getTextRange();
+      TemplateLanguageBlock v = tlBlocks.get(vInd);
+      DataLanguageBlockWrapper f = foreignBlocks.get(fInd);
+      TextRange vRange = v.getTextRange();
+      TextRange fRange = f.getTextRange();
       if (vRange.getStartOffset() >= fRange.getEndOffset()) {
         // add leading foreign blocks
         result.add(f);
@@ -119,7 +119,7 @@ class BlockUtil {
           v.addForeignChild(foreignBlocks.get(fInd++));
         }
         if (fInd < foreignBlocks.size()) {
-          final DataLanguageBlockWrapper notContainedF = foreignBlocks.get(fInd);
+          DataLanguageBlockWrapper notContainedF = foreignBlocks.get(fInd);
           if (vRange.intersectsStrict(notContainedF.getTextRange())) {
             Pair<List<DataLanguageBlockWrapper>, List<DataLanguageBlockWrapper>> splitBlocks = splitBlocksByRightBound(notContainedF.getOriginal(), vRange);
             v.addForeignChildren(splitBlocks.getFirst());
@@ -164,8 +164,8 @@ class BlockUtil {
   public static List<DataLanguageBlockWrapper> filterBlocksByRange(@Nonnull List<DataLanguageBlockWrapper> list, @Nonnull TextRange textRange) {
     int i = 0;
     while (i < list.size()) {
-      final DataLanguageBlockWrapper wrapper = list.get(i);
-      final TextRange range = wrapper.getTextRange();
+      DataLanguageBlockWrapper wrapper = list.get(i);
+      TextRange range = wrapper.getTextRange();
       if (textRange.contains(range)) {
         i++;
       }
@@ -181,12 +181,12 @@ class BlockUtil {
   }
 
   static List<Block> splitBlockIntoFragments(@Nonnull Block block, @Nonnull List<TemplateLanguageBlock> subBlocks) {
-    final List<Block> children = new ArrayList<Block>(5);
-    final TextRange range = block.getTextRange();
+    List<Block> children = new ArrayList<Block>(5);
+    TextRange range = block.getTextRange();
     int childStartOffset = range.getStartOffset();
     TemplateLanguageBlock lastTLBlock = null;
     for (TemplateLanguageBlock tlBlock : subBlocks) {
-      final TextRange tlTextRange = tlBlock.getTextRange();
+      TextRange tlTextRange = tlBlock.getTextRange();
       if (tlTextRange.getStartOffset() > childStartOffset) {
         TextRange dataBlockTextRange = new TextRange(childStartOffset, tlTextRange.getStartOffset());
         if (tlBlock.isRequiredRange(dataBlockTextRange)) {

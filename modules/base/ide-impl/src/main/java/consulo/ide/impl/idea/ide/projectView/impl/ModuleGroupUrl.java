@@ -31,7 +31,7 @@ public class ModuleGroupUrl extends AbstractUrl {
 
   @Override
   public Object[] createPath(Project project) {
-    final String[] groupPath = url.split(";");
+    String[] groupPath = url.split(";");
     return new Object[]{new ModuleGroup(groupPath)};
   }
 
@@ -44,7 +44,7 @@ public class ModuleGroupUrl extends AbstractUrl {
   public AbstractUrl createUrlByElement(Object element) {
     if (element instanceof ModuleGroup) {
       ModuleGroup group = (ModuleGroup)element;
-      final String[] groupPath = group.getGroupPath();
+      String[] groupPath = group.getGroupPath();
       StringBuffer sb = new StringBuffer();
       for (int i = 0; i < groupPath.length; i++) {
         String s = groupPath[i];

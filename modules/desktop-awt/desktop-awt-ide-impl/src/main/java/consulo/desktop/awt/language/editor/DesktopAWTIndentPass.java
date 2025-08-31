@@ -53,15 +53,15 @@ public class DesktopAWTIndentPass extends IndentsPass {
     }
 
     int startOffset = highlighter.getStartOffset();
-    final Document doc = highlighter.getDocument();
+    Document doc = highlighter.getDocument();
     if (startOffset >= doc.getTextLength()) return;
 
-    final int endOffset = highlighter.getEndOffset();
+    int endOffset = highlighter.getEndOffset();
 
     int off;
     int startLine = doc.getLineNumber(startOffset);
 
-    final CharSequence chars = doc.getCharsSequence();
+    CharSequence chars = doc.getCharsSequence();
     do {
       int start = doc.getLineStartOffset(startLine);
       int end = doc.getLineEndOffset(startLine);
@@ -70,23 +70,23 @@ public class DesktopAWTIndentPass extends IndentsPass {
     }
     while (startLine > 1 && off < doc.getTextLength() && chars.charAt(off) == '\n');
 
-    final VisualPosition startPosition = editor.offsetToVisualPosition(off);
+    VisualPosition startPosition = editor.offsetToVisualPosition(off);
     int indentColumn = startPosition.column;
     if (indentColumn <= 0) return;
 
-    final FoldingModel foldingModel = editor.getFoldingModel();
+    FoldingModel foldingModel = editor.getFoldingModel();
     if (foldingModel.isOffsetCollapsed(off)) return;
 
-    final FoldRegion headerRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineEndOffset(doc.getLineNumber(off)));
-    final FoldRegion tailRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineStartOffset(doc.getLineNumber(endOffset)));
+    FoldRegion headerRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineEndOffset(doc.getLineNumber(off)));
+    FoldRegion tailRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineStartOffset(doc.getLineNumber(endOffset)));
 
     if (tailRegion != null && tailRegion == headerRegion) return;
 
-    final boolean selected;
-    final IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
+    boolean selected;
+    IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
     if (guide != null) {
-      final CaretModel caretModel = editor.getCaretModel();
-      final int caretOffset = caretModel.getOffset();
+      CaretModel caretModel = editor.getCaretModel();
+      int caretOffset = caretModel.getOffset();
       selected = caretOffset >= off && caretOffset < endOffset && caretModel.getLogicalPosition().column == indentColumn;
     }
     else {
@@ -96,7 +96,7 @@ public class DesktopAWTIndentPass extends IndentsPass {
     int lineHeight = editor.getLineHeight();
     Point start = editor.visualPositionToXY(startPosition);
     start.y += lineHeight;
-    final VisualPosition endPosition = editor.offsetToVisualPosition(endOffset);
+    VisualPosition endPosition = editor.offsetToVisualPosition(endOffset);
     Point end = editor.visualPositionToXY(endPosition);
     int maxY = end.y;
     if (endPosition.line == editor.offsetToVisualPosition(doc.getTextLength()).line) {
@@ -191,7 +191,7 @@ public class DesktopAWTIndentPass extends IndentsPass {
   @Override
   @Nonnull
   protected RangeHighlighter createHighlighter(MarkupModel mm, TextRange range) {
-    final RangeHighlighter highlighter = mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
+    RangeHighlighter highlighter = mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
     highlighter.setCustomRenderer(RENDERER);
     return highlighter;
   }

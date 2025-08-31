@@ -117,11 +117,11 @@ public class CodeDocumentationUtil {
   }
 
   public static CommentContext tryParseCommentContext(@Nullable Commenter langCommenter, @Nonnull CharSequence chars, int lineStartOffset) {
-    final boolean isInsideCommentLikeCode = langCommenter instanceof CodeDocumentationAwareCommenter;
+    boolean isInsideCommentLikeCode = langCommenter instanceof CodeDocumentationAwareCommenter;
     if (!isInsideCommentLikeCode) {
       return new CommentContext();
     }
-    final CodeDocumentationAwareCommenter commenter = (CodeDocumentationAwareCommenter)langCommenter;
+    CodeDocumentationAwareCommenter commenter = (CodeDocumentationAwareCommenter)langCommenter;
     int commentStartOffset = CharArrayUtil.shiftForward(chars, lineStartOffset, " \t");
 
     boolean docStart = commenter.getDocumentationCommentPrefix() != null && CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getDocumentationCommentPrefix());

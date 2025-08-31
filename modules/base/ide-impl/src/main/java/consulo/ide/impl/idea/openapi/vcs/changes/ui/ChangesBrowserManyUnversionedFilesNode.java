@@ -37,17 +37,17 @@ public class ChangesBrowserManyUnversionedFilesNode extends ChangesBrowserNode {
     myShower = new MyUnversionedShower(myProject);
   }
 
-  public boolean canAcceptDrop(final ChangeListDragBean dragBean) {
+  public boolean canAcceptDrop(ChangeListDragBean dragBean) {
     return false;
   }
 
-  public void acceptDrop(final ChangeListOwner dragOwner, final ChangeListDragBean dragBean) {
+  public void acceptDrop(ChangeListOwner dragOwner, ChangeListDragBean dragBean) {
   }
 
   @Override
   public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     renderer.append(userObject.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    final String s = " (" + (myDirsSize > 0 ? myDirsSize + " directories and " : "") + (myUnversionedSize - myDirsSize) + " files) ";
+    String s = " (" + (myDirsSize > 0 ? myDirsSize + " directories and " : "") + (myUnversionedSize - myDirsSize) + " files) ";
     renderer.append(s, SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
     renderer.append("Click to browse", SimpleTextAttributes.LINK_ATTRIBUTES, myShower);
   }
@@ -60,7 +60,7 @@ public class ChangesBrowserManyUnversionedFilesNode extends ChangesBrowserNode {
     }
 
     public void run() {
-      final UnversionedViewDialog dialog = new UnversionedViewDialog(myProject);
+      UnversionedViewDialog dialog = new UnversionedViewDialog(myProject);
       dialog.show();
     }
   }

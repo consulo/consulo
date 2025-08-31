@@ -221,7 +221,7 @@ public class LinkLabel<T> extends JLabel {
     private void updateLayoutRectangles() {
         iconR.clear();
         textR.clear();
-        final Insets insets = getInsets(null);
+        Insets insets = getInsets(null);
         viewR.x = insets.left;
         viewR.y = insets.top;
         viewR.width = getWidth() - (insets.left + insets.right);

@@ -119,19 +119,19 @@ public class TreeTableModelAdapter extends AbstractTableModel {
 
   @Override
   public Object getValueAt(int row, int column) {
-    final Object o = nodeForRow(row);
+    Object o = nodeForRow(row);
     return o == null? null : treeTableModel.getValueAt(o, column);
   }
 
   @Override
   public boolean isCellEditable(int row, int column) {
-    final Object o = nodeForRow(row);
+    Object o = nodeForRow(row);
     return o != null && treeTableModel.isCellEditable(o, column);
   }
 
   @Override
   public void setValueAt(Object value, int row, int column) {
-    final Object o = nodeForRow(row);
+    Object o = nodeForRow(row);
     if (o != null) treeTableModel.setValueAt(value, o, column);
   }
 
@@ -151,11 +151,11 @@ public class TreeTableModelAdapter extends AbstractTableModel {
   @Override
   public void fireTableDataChanged() {
     // have to restore table selection since AbstractDataModel.fireTableDataChanged() clears all selection
-    final TreePath[] treePaths = tree.getSelectionPaths();
+    TreePath[] treePaths = tree.getSelectionPaths();
     super.fireTableDataChanged();
     if (treePaths != null) {
       for (TreePath treePath : treePaths) {
-        final int row = tree.getRowForPath(treePath);
+        int row = tree.getRowForPath(treePath);
         table.getSelectionModel().addSelectionInterval(row, row);
       }
     }

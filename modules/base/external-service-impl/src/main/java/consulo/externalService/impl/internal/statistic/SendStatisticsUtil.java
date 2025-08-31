@@ -37,7 +37,7 @@ public class SendStatisticsUtil {
   public static StatisticsBean getBean(UsageStatisticsPersistenceComponent component) {
     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
 
-    final Map<String, Set<PatchedUsage>> map = getPatchedUsages(Collections.emptySet(), openProjects);
+    Map<String, Set<PatchedUsage>> map = getPatchedUsages(Collections.emptySet(), openProjects);
 
     List<StatisticsBean.UsageGroup> groups = new ArrayList<>();
     for (Map.Entry<String, Set<PatchedUsage>> entry : map.entrySet()) {
@@ -66,7 +66,7 @@ public class SendStatisticsUtil {
     Map<String, Set<PatchedUsage>> usages = new LinkedHashMap<>();
 
     for (Project project : projects) {
-      final Map<String, Set<UsageDescriptor>> allUsages = StatisticsUploadAssistant.getAllUsages(project, disabledGroups);
+      Map<String, Set<UsageDescriptor>> allUsages = StatisticsUploadAssistant.getAllUsages(project, disabledGroups);
 
       usages.putAll(StatisticsUploadAssistant.getPatchedUsages(allUsages, Collections.emptyMap()));
     }

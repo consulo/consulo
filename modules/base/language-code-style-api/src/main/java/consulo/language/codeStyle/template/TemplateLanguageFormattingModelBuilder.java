@@ -41,7 +41,7 @@ public abstract class TemplateLanguageFormattingModelBuilder implements Delegati
   @Override
   @Nonnull
   public FormattingModel createModel(FormattingContext context) {
-    final PsiFile file = context.getContainingFile();
+    PsiFile file = context.getContainingFile();
     CodeStyleSettings settings = context.getCodeStyleSettings();
     Block rootBlock = getRootBlock(file, file.getViewProvider(), settings);
     return new DocumentBasedFormattingModel(rootBlock, file.getProject(), settings, file.getFileType(), file);
@@ -53,13 +53,13 @@ public abstract class TemplateLanguageFormattingModelBuilder implements Delegati
       return createDummyBlock(node);
     }
     if (viewProvider instanceof TemplateLanguageFileViewProvider) {
-      final Language dataLanguage = ((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage();
-      final FormattingModelBuilder builder = ContainerUtil.getFirstItem(FormattingModelBuilder.forLanguage(dataLanguage));
+      Language dataLanguage = ((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage();
+      FormattingModelBuilder builder = ContainerUtil.getFirstItem(FormattingModelBuilder.forLanguage(dataLanguage));
       if (builder instanceof DelegatingFormattingModelBuilder delegate && delegate.dontFormatMyModel(element)) {
         return createDummyBlock(node);
       }
       if (builder != null) {
-        final FormattingModel model = builder.createModel(FormattingContext.create(viewProvider.getPsi(dataLanguage), settings));
+        FormattingModel model = builder.createModel(FormattingContext.create(viewProvider.getPsi(dataLanguage), settings));
         List<DataLanguageBlockWrapper> childWrappers = buildChildWrappers(model.getRootBlock());
         if (childWrappers.size() == 1) {
           childWrappers = buildChildWrappers(childWrappers.get(0).getOriginal());
@@ -79,7 +79,7 @@ public abstract class TemplateLanguageFormattingModelBuilder implements Delegati
       }
 
       @Override
-      public Spacing getSpacing(final Block child1, @Nonnull final Block child2) {
+      public Spacing getSpacing(Block child1, @Nonnull Block child2) {
         return Spacing.getReadOnlySpacing();
       }
 

@@ -72,12 +72,12 @@ public class AppleBoldDottedPainter {
   public void paint(Graphics2D g, int xStart, int xEnd, int y) {
     Shape oldClip = g.getClip();
 
-    final int startPosCorrection = xStart % WIDTH == WIDTH - 1 ? 1 : 0;
-    final int dotX0 = (xStart / WIDTH + startPosCorrection) * WIDTH; // draw lines in common phase
-    final int width = ((xEnd - dotX0 - 1) / WIDTH + 1) * WIDTH; // always paint whole dot
+    int startPosCorrection = xStart % WIDTH == WIDTH - 1 ? 1 : 0;
+    int dotX0 = (xStart / WIDTH + startPosCorrection) * WIDTH; // draw lines in common phase
+    int width = ((xEnd - dotX0 - 1) / WIDTH + 1) * WIDTH; // always paint whole dot
 
-    final Rectangle rectangle = new Rectangle(dotX0, y, width, HEIGHT);
-    final Rectangle lineClip = oldClip != null ? oldClip.getBounds().intersection(rectangle) : rectangle;
+    Rectangle rectangle = new Rectangle(dotX0, y, width, HEIGHT);
+    Rectangle lineClip = oldClip != null ? oldClip.getBounds().intersection(rectangle) : rectangle;
     if (lineClip.isEmpty()) return;
 
     Composite oldComposite = g.getComposite();

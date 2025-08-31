@@ -29,11 +29,11 @@ public class ApplyBinaryFilePatch extends ApplyFilePatchBase<BinaryFilePatch> {
     super(patch);
   }
 
-  protected void applyCreate(Project project, final VirtualFile newFile, CommitContext commitContext) throws IOException {
+  protected void applyCreate(Project project, VirtualFile newFile, CommitContext commitContext) throws IOException {
     newFile.setBinaryContent(myPatch.getAfterContent());
   }
 
-  protected Result applyChange(Project project, final VirtualFile fileToPatch, FilePath pathBeforeRename, Getter<CharSequence> baseContents) throws IOException {
+  protected Result applyChange(Project project, VirtualFile fileToPatch, FilePath pathBeforeRename, Getter<CharSequence> baseContents) throws IOException {
     fileToPatch.setBinaryContent(myPatch.getAfterContent());
     return SUCCESS;
   }

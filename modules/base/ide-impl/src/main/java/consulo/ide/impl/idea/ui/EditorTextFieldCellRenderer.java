@@ -77,7 +77,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
   }
 
   @Nonnull
-  protected EditorColorsScheme getColorScheme(final JTable table) {
+  protected EditorColorsScheme getColorScheme(JTable table) {
     return getEditorPanel(table).getEditor().getColorsScheme();
   }
 

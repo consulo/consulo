@@ -36,7 +36,7 @@ public class ElementLocationUtil {
   private ElementLocationUtil() {
   }
 
-  public static void customizeElementLabel(final PsiElement element, final JLabel label) {
+  public static void customizeElementLabel(PsiElement element, JLabel label) {
     if (element != null) {
       PsiFile file = element.getContainingFile();
       VirtualFile vfile = file == null ? null : file.getVirtualFile();
@@ -48,15 +48,15 @@ public class ElementLocationUtil {
         return;
       }
 
-      final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
-      final Module module = fileIndex.getModuleForFile(vfile);
+      ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
+      Module module = fileIndex.getModuleForFile(vfile);
 
       if (module != null) {
         label.setText(module.getName());
         label.setIcon(TargetAWT.to(AllIcons.Nodes.Module));
       }
       else {
-        final List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(vfile);
+        List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(vfile);
 
         OrderEntry entry = null;
 

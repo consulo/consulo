@@ -74,17 +74,17 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
         OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
     }
 
-    private static String getChooserTitle(final FileChooserDescriptor descriptor) {
-        final String title = descriptor.getTitle();
+    private static String getChooserTitle(FileChooserDescriptor descriptor) {
+        String title = descriptor.getTitle();
         return title != null ? title : UILocalize.fileChooserDefaultTitle().get();
     }
 
     @Nonnull
-    private List<VirtualFile> getChosenFiles(final Stream<File> streamOfFiles) {
-        final List<VirtualFile> virtualFiles = new ArrayList<>();
+    private List<VirtualFile> getChosenFiles(Stream<File> streamOfFiles) {
+        List<VirtualFile> virtualFiles = new ArrayList<>();
 
         streamOfFiles.forEach(file -> {
-            final VirtualFile virtualFile = fileToVirtualFile(file);
+            VirtualFile virtualFile = fileToVirtualFile(file);
             if (virtualFile != null && virtualFile.isValid()) {
                 virtualFiles.add(virtualFile);
             }
@@ -93,8 +93,8 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
     }
 
     private VirtualFile fileToVirtualFile(File file) {
-        final LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-        final String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
+        LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+        String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
         return localFileSystem.refreshAndFindFileByPath(vfsPath);
     }
 
@@ -123,9 +123,9 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
         myFileDialog.setMultipleMode(myFileChooserDescriptor.isChooseMultiple());
 
-        final CommandProcessorEx commandProcessor =
+        CommandProcessorEx commandProcessor =
             ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
-        final boolean appStarted = commandProcessor != null;
+        boolean appStarted = commandProcessor != null;
 
         if (appStarted) {
             commandProcessor.enterModal();
@@ -206,9 +206,9 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
         AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
         SwingUtilities.invokeLater(() -> {
-            final CommandProcessorEx commandProcessor =
+            CommandProcessorEx commandProcessor =
                 Application.get() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
-            final boolean appStarted = commandProcessor != null;
+            boolean appStarted = commandProcessor != null;
 
             if (appStarted) {
                 commandProcessor.enterModal();

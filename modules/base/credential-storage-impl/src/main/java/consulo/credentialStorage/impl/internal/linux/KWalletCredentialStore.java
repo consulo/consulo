@@ -96,8 +96,8 @@ public class KWalletCredentialStore implements CredentialStore, Closeable {
     }
 
     @Override
-    public Credentials get(final CredentialAttributes attributes) {
-        final Credentials[] resultHolder = new Credentials[1];
+    public Credentials get(CredentialAttributes attributes) {
+        Credentials[] resultHolder = new Credentials[1];
         handleError(() -> {
             int walletId = getWalletId();
             if (walletId == -1) {
@@ -121,7 +121,7 @@ public class KWalletCredentialStore implements CredentialStore, Closeable {
     }
 
     @Override
-    public void set(final CredentialAttributes attributes, final Credentials credentials) {
+    public void set(CredentialAttributes attributes, Credentials credentials) {
         handleError(() -> {
             int walletId = getWalletId();
             if (walletId == -1) return;

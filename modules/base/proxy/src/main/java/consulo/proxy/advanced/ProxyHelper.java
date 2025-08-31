@@ -38,10 +38,10 @@ public final class ProxyHelper {
     ClassLoader bestLoader = null;
     ClassLoader nonPluginLoader = null;
     if (interfaces != null && interfaces.length > 0) {
-      for (final Class anInterface : interfaces) {
-        final ClassLoader loader = anInterface.getClassLoader();
+      for (Class anInterface : interfaces) {
+        ClassLoader loader = anInterface.getClassLoader();
         if (loader instanceof PluginClassLoader) {
-          final int order = PluginHolderModificator.getPluginLoadOrder(((PluginClassLoader)loader).getPluginId());
+          int order = PluginHolderModificator.getPluginLoadOrder(((PluginClassLoader)loader).getPluginId());
           if (maxIndex < order) {
             maxIndex = order;
             bestLoader = loader;
@@ -69,16 +69,16 @@ public final class ProxyHelper {
   }
 
   @Nonnull
-  public static Class[] getConstructorParameterTypes(final Class aClass, final Object... constructorArgs) {
+  public static Class[] getConstructorParameterTypes(Class aClass, Object... constructorArgs) {
     if (constructorArgs.length == 0) return ArrayUtil.EMPTY_CLASS_ARRAY;
 
     loop:
-    for (final Constructor constructor : aClass.getDeclaredConstructors()) {
-      final Class[] parameterTypes = constructor.getParameterTypes();
+    for (Constructor constructor : aClass.getDeclaredConstructors()) {
+      Class[] parameterTypes = constructor.getParameterTypes();
       if (parameterTypes.length == constructorArgs.length) {
         for (int i = 0; i < parameterTypes.length; i++) {
           Class parameterType = parameterTypes[i];
-          final Object constructorArg = constructorArgs[i];
+          Object constructorArg = constructorArgs[i];
           if (!parameterType.isInstance(constructorArg) && constructorArg != null) {
             continue loop;
           }

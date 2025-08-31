@@ -131,8 +131,8 @@ public abstract class DumbService {
      *
      * @throws ProcessCanceledException if the project is closed during dumb mode
      */
-    public <T> T runReadActionInSmartMode(@Nonnull final Supplier<T> r) {
-        final SimpleReference<T> result = SimpleReference.create();
+    public <T> T runReadActionInSmartMode(@Nonnull Supplier<T> r) {
+        SimpleReference<T> result = SimpleReference.create();
         runReadActionInSmartMode(() -> result.set(r.get()));
         return result.get();
     }
@@ -194,7 +194,7 @@ public abstract class DumbService {
      * @deprecated This method provides no guarantees and should be avoided, please use {@link #runReadActionInSmartMode} instead.
      */
     @Deprecated
-    public void repeatUntilPassesInSmartMode(@Nonnull final Runnable r) {
+    public void repeatUntilPassesInSmartMode(@Nonnull Runnable r) {
         while (true) {
             waitForSmartMode();
             try {
@@ -243,7 +243,7 @@ public abstract class DumbService {
     @SuppressWarnings("unchecked")
     public <T> List<T> filterByDumbAwareness(@Nonnull Collection<? extends T> collection) {
         if (isDumb()) {
-            final ArrayList<T> result = new ArrayList<>(collection.size());
+            ArrayList<T> result = new ArrayList<>(collection.size());
             for (T element : collection) {
                 if (isDumbAware(element)) {
                     result.add(element);

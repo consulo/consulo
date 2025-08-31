@@ -118,7 +118,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
     /**
      * @param b {@code true} if popup should request focus.
      */
-    void setRequestFocus(final boolean b);
+    void setRequestFocus(boolean b);
 
     /**
      * Cancels the popup as a response to some mouse action. All the subsequent mouse events originated from the event's point
@@ -196,7 +196,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
 
     void pack(boolean width, boolean height);
 
-    default void setAdText(@Nonnull final String s) {
+    default void setAdText(@Nonnull String s) {
         setAdText(s, SwingConstants.LEFT);
     }
 

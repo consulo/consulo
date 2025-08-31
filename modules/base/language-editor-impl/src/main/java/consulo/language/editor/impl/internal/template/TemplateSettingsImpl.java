@@ -195,13 +195,13 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         mySchemeManager = schemeManagerFactory.createSchemeManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup, TemplateGroup>() {
             @Override
             @Nullable
-            public TemplateGroup readScheme(@Nonnull final Document schemeContent) throws InvalidDataException {
+            public TemplateGroup readScheme(@Nonnull Document schemeContent) throws InvalidDataException {
                 return readTemplateFile(schemeContent, schemeContent.getRootElement().getAttributeValue("group"), false, false, getClass().getClassLoader());
             }
 
 
             @Override
-            public boolean shouldBeSaved(@Nonnull final TemplateGroup template) {
+            public boolean shouldBeSaved(@Nonnull TemplateGroup template) {
                 for (TemplateImpl t : template.getElements()) {
                     if (differsFromDefault(t)) {
                         return true;
@@ -225,21 +225,21 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             }
 
             @Override
-            public void initScheme(@Nonnull final TemplateGroup scheme) {
+            public void initScheme(@Nonnull TemplateGroup scheme) {
                 for (TemplateImpl template : scheme.getElements()) {
                     addTemplateImpl(template);
                 }
             }
 
             @Override
-            public void onSchemeAdded(@Nonnull final TemplateGroup scheme) {
+            public void onSchemeAdded(@Nonnull TemplateGroup scheme) {
                 for (TemplateImpl template : scheme.getElements()) {
                     addTemplateImpl(template);
                 }
             }
 
             @Override
-            public void onSchemeDeleted(@Nonnull final TemplateGroup scheme) {
+            public void onSchemeDeleted(@Nonnull TemplateGroup scheme) {
                 for (TemplateImpl template : scheme.getElements()) {
                     removeTemplate(template);
                 }
@@ -341,7 +341,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     @Override
     @Nullable
     public TemplateImpl getTemplate(String key, String group) {
-        final Collection<TemplateImpl> templates = myTemplates.get(key);
+        Collection<TemplateImpl> templates = myTemplates.get(key);
         for (TemplateImpl template : templates) {
             if (template.getGroupName().equals(group)) {
                 return template;
@@ -373,7 +373,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         group.addElement(templateImpl);
     }
 
-    private void clearPreviouslyRegistered(final Template template) {
+    private void clearPreviouslyRegistered(Template template) {
         TemplateImpl existing = getTemplate(template.getKey(), ((TemplateImpl) template).getGroupName());
         if (existing != null) {
             LOG.info("Template with key " + template.getKey() + " and id " + template.getId() + " already registered");
@@ -400,7 +400,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
 
     private void addTemplateById(Template template) {
         if (!myTemplatesById.containsKey(template.getId())) {
-            final String id = template.getId();
+            String id = template.getId();
             if (id != null) {
                 myTemplatesById.put(id, template);
             }
@@ -425,7 +425,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
                                      String description,
                                      @Nullable String shortcut,
                                      boolean isDefault,
-                                     final String id) {
+                                     String id) {
         TemplateImpl template = new TemplateImpl(key, string, group);
         template.setId(id);
         template.setDescription(description);
@@ -575,7 +575,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
 
         Map<String, TemplateImpl> created = new LinkedHashMap<>();
 
-        for (final Element element : root.getChildren(TEMPLATE)) {
+        for (Element element : root.getChildren(TEMPLATE)) {
             TemplateImpl template = readTemplateFromElement(isDefault, groupName, element, classLoader);
             TemplateImpl existing = getTemplate(template.getKey(), template.getGroupName());
             boolean defaultTemplateModified = isDefault && (myState.deletedKeys.contains(TemplateKey.keyOf(template)) || myTemplatesById.containsKey(template.getId()) || existing != null);
@@ -616,7 +616,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
 
     }
 
-    private TemplateImpl readTemplateFromElement(final boolean isDefault, final String groupName, final Element element, ClassLoader classLoader) throws InvalidDataException {
+    private TemplateImpl readTemplateFromElement(boolean isDefault, String groupName, Element element, ClassLoader classLoader) throws InvalidDataException {
         String name = element.getAttributeValue(NAME);
         String value = element.getAttributeValue(VALUE);
         String description;
@@ -647,7 +647,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
 
         JavaLegacy.read(template, element);
 
-        for (final Element e : element.getChildren(VARIABLE)) {
+        for (Element e : element.getChildren(VARIABLE)) {
             String variableName = e.getAttributeValue(NAME);
             String expression = e.getAttributeValue(EXPRESSION);
             String defaultValue = e.getAttributeValue(DEFAULT_VALUE);
@@ -675,7 +675,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
 
     private void saveTemplate(TemplateImpl template, Element templateSetElement) {
         Element element = new Element(TEMPLATE);
-        final String id = template.getId();
+        String id = template.getId();
         if (id != null) {
             element.setAttribute(ID, id);
         }
@@ -761,7 +761,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
 
     public List<TemplateImpl> collectMatchingCandidates(String key, @Nullable Character shortcutChar, boolean hasArgument) {
-        final Collection<TemplateImpl> templates = getTemplates(key);
+        Collection<TemplateImpl> templates = getTemplates(key);
         List<TemplateImpl> candidates = new ArrayList<>();
         for (TemplateImpl template : templates) {
             if (template.isDeactivated()) {

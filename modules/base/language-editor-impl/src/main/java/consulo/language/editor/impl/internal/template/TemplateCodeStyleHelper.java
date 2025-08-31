@@ -61,7 +61,7 @@ public class TemplateCodeStyleHelper {
       return new Pair<>(null, null);
     }
     PsiElement elementAt = InjectedLanguageManager.getInstance(file.getProject()).findInjectedElementAt(file, offset);
-    final CharTable charTable = ((FileElement)astNode).getCharTable();
+    CharTable charTable = ((FileElement)astNode).getCharTable();
     if (elementAt == null) {
       elementAt = CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file, offset);
     }

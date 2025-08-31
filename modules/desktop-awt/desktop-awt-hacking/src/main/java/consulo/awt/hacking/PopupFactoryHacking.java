@@ -25,9 +25,9 @@ import java.lang.reflect.Method;
  */
 public class PopupFactoryHacking {
 
-  public static void setPopupType(@Nonnull final PopupFactory factory, final int type) {
+  public static void setPopupType(@Nonnull PopupFactory factory, int type) {
     try {
-      final Method method = PopupFactory.class.getDeclaredMethod("setPopupType", int.class);
+      Method method = PopupFactory.class.getDeclaredMethod("setPopupType", int.class);
       method.setAccessible(true);
       method.invoke(factory, type);
     }
@@ -35,11 +35,11 @@ public class PopupFactoryHacking {
     }
   }
 
-  public static int getPopupType(@Nonnull final PopupFactory factory) {
+  public static int getPopupType(@Nonnull PopupFactory factory) {
     try {
-      final Method method = PopupFactory.class.getDeclaredMethod("getPopupType");
+      Method method = PopupFactory.class.getDeclaredMethod("getPopupType");
       method.setAccessible(true);
-      final Object result = method.invoke(factory);
+      Object result = method.invoke(factory);
       return result instanceof Integer ? (Integer)result : -1;
     }
     catch (Throwable ignored) {

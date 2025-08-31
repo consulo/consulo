@@ -30,7 +30,7 @@ public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
   private final int myWidth;
   private final boolean myRequestFocus;
 
-  public ShowErrorDescriptionHandler(final int width, boolean requestFocus) {
+  public ShowErrorDescriptionHandler(int width, boolean requestFocus) {
     myWidth = width;
     myRequestFocus = requestFocus;
   }

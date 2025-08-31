@@ -67,7 +67,7 @@ public class ZoomingDelegate {
       if (magnificator != null) {
         Point inContent = convertToContentCoordinates(myMagnificationPoint);
 
-        final Point inContentScaled = magnificator.magnify(magnificationToScale(magnification), inContent);
+        Point inContentScaled = magnificator.magnify(magnificationToScale(magnification), inContent);
 
         int voffset = inContentScaled.y - myMagnificationPoint.y;
         int hoffset = inContentScaled.x - myMagnificationPoint.x;

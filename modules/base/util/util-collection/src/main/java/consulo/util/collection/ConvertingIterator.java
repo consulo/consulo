@@ -45,8 +45,8 @@ public class ConvertingIterator <Domain, Range> implements Iterator<Range> {
     myBaseIterator.remove();
   }
 
-  public static <Domain, Intermediate, Range> Function<Domain, Range> composition(final Function<Domain, Intermediate> convertor1,
-                                                                                   final Function<Intermediate, Range> convertor2) {
+  public static <Domain, Intermediate, Range> Function<Domain, Range> composition(Function<Domain, Intermediate> convertor1,
+                                                                                  Function<Intermediate, Range> convertor2) {
     return domain -> convertor2.apply(convertor1.apply(domain));
   }
 

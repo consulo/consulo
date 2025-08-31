@@ -47,9 +47,9 @@ public interface ComponentWithActions {
     private JComponent mySearchComponent;
     private JComponent myComponent;
 
-    public Impl(final ActionGroup toolbar, final String toolbarPlace, final JComponent toolbarContext,
-                final JComponent searchComponent,
-                final JComponent component) {
+    public Impl(ActionGroup toolbar, String toolbarPlace, JComponent toolbarContext,
+                JComponent searchComponent,
+                JComponent component) {
       myToolbar = toolbar;
       myToolbarPlace = toolbarPlace;
       myToolbarContext = toolbarContext;
@@ -61,7 +61,7 @@ public interface ComponentWithActions {
       return false;
     }
 
-    public Impl(final JComponent component) {
+    public Impl(JComponent component) {
       this(null, null, null, null, component);
     }
 

@@ -80,16 +80,16 @@ class ActionMacroWidget implements CustomStatusBarWidget, Consumer<MouseEvent> {
 
     myBalloonComponent = new NonOpaquePanel(new BorderLayout());
 
-    final AnAction stopAction = ActionManager.getInstance().getAction("StartStopMacroRecording");
-    final DefaultActionGroup group = new DefaultActionGroup();
+    AnAction stopAction = ActionManager.getInstance().getAction("StartStopMacroRecording");
+    DefaultActionGroup group = new DefaultActionGroup();
     group.add(stopAction);
-    final ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.STATUS_BAR_PLACE, group, true);
+    ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.STATUS_BAR_PLACE, group, true);
     tb.setMiniMode(true);
 
-    final NonOpaquePanel top = new NonOpaquePanel(new BorderLayout());
+    NonOpaquePanel top = new NonOpaquePanel(new BorderLayout());
     top.add(tb.getComponent(), BorderLayout.WEST);
     myText = new JLabel(RECORDED + "..." + TYPING_SAMPLE, SwingConstants.LEFT);
-    final Dimension preferredSize = myText.getPreferredSize();
+    Dimension preferredSize = myText.getPreferredSize();
     myText.setPreferredSize(preferredSize);
     myText.setText("Macro recording started...");
     myLastTyping = "";

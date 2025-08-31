@@ -31,13 +31,13 @@ public class TreeCopyProvider implements CopyProvider {
   private static final Logger LOG = Logger.getInstance(TreeCopyProvider.class);
   private final JTree myTree;
 
-  public TreeCopyProvider(final JTree tree) {
+  public TreeCopyProvider(JTree tree) {
     myTree = tree;
   }
 
   public void performCopy(@Nonnull DataContext dataContext) {
     try {
-      final Clipboard clipboard = myTree.getToolkit().getSystemClipboard();
+      Clipboard clipboard = myTree.getToolkit().getSystemClipboard();
       myTree.getTransferHandler().exportToClipboard(myTree, clipboard, TransferHandler.COPY);
     }
     catch(Exception ex) {

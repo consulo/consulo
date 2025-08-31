@@ -50,13 +50,13 @@ public class FavoritesAutoscrollFromSourceHandler extends ProjectViewAutoScrollF
 
   @Override
   protected void selectElementFromEditor(@Nonnull FileEditor editor) {
-    final VirtualFile file = FileEditorManagerEx.getInstanceEx(myProject).getFile(editor);
+    VirtualFile file = FileEditorManagerEx.getInstanceEx(myProject).getFile(editor);
     if (file != null) {
-      final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
+      PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
       if (psiFile != null) {
-        final SelectInTarget target = mySelectInTarget;
+        SelectInTarget target = mySelectInTarget;
         if (target != null) {
-          final SelectInContext selectInContext = SelectInContextImpl.createEditorContext(myProject, editor);
+          SelectInContext selectInContext = SelectInContextImpl.createEditorContext(myProject, editor);
 
           if (target.canSelect(selectInContext)) {
             target.selectIn(selectInContext, false);

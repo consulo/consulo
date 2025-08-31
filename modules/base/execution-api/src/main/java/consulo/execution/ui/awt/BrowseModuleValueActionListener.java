@@ -29,19 +29,19 @@ public abstract class BrowseModuleValueActionListener<T extends JComponent> impl
   private ComponentWithBrowseButton<T> myField;
   private final Project myProject;
 
-  protected BrowseModuleValueActionListener(final Project project) {
+  protected BrowseModuleValueActionListener(Project project) {
     myProject = project;
   }
 
-  public void setField(final ComponentWithBrowseButton<T> field) {
+  public void setField(ComponentWithBrowseButton<T> field) {
     myField = field;
     myField.addActionListener(this);
     myField.setButtonEnabled(!myProject.isDefault());
   }
 
   @Override
-  public void actionPerformed(final ActionEvent e) {
-    final String text = showDialog();
+  public void actionPerformed(ActionEvent e) {
+    String text = showDialog();
     if (text != null) ((TextAccessor)myField).setText(text);
   }
 

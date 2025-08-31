@@ -124,7 +124,7 @@ public class EditorLastActionTrackerImpl implements EditorLastActionTracker, Dis
         myLastEditor = null;
     }
 
-    private void registerDisposeHandler(final Editor editor) {
+    private void registerDisposeHandler(Editor editor) {
         if (!(editor instanceof CodeEditorBase)) {
             return;
         }

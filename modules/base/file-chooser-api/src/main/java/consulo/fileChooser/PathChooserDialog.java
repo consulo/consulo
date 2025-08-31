@@ -33,7 +33,7 @@ public interface PathChooserDialog {
   Key<Boolean> PREFER_LAST_OVER_EXPLICIT = Key.create("prefer.last.over.explicit");
 
   @Deprecated
-  default void choose(@Nullable VirtualFile toSelect, @Nonnull final Consumer<List<VirtualFile>> callback) {
+  default void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     throw new UnsupportedOperationException("use async method");
   }
 

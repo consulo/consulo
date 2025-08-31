@@ -195,7 +195,7 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
     }
   }
 
-  public Item getItem(final int rowIndex) {
+  public Item getItem(int rowIndex) {
     return myItems.get(rowIndex);
   }
 }

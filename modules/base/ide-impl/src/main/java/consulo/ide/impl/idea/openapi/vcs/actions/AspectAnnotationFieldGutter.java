@@ -58,7 +58,7 @@ public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
 
     @Override
     public String getLineText(int line, Editor editor) {
-        final String value = isAvailable() ? myAspect.getValue(line) : "";
+        String value = isAvailable() ? myAspect.getValue(line) : "";
         return myAspect.getId() == LineAnnotationAspect.AUTHOR ? ShortNameType.shorten(value, ShowShortenNames.getType()) : value;
     }
 
@@ -78,7 +78,7 @@ public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
     }
 
     @Override
-    public Cursor getCursor(final int line) {
+    public Cursor getCursor(int line) {
         return myIsGutterAction ? ((EditorGutterAction)myAspect).getCursor(line) : super.getCursor(line);
     }
 

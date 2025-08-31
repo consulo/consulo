@@ -75,7 +75,7 @@ public abstract class InlineOptionsDialog extends RefactoringDialog implements I
     new RadioUpDownListener(myRbInlineAll, myRbInlineThisOnly);
 
     myRbInlineThisOnly.setEnabled(myInvokedOnReference);
-    final boolean writable = myElement.isWritable();
+    boolean writable = myElement.isWritable();
     myRbInlineAll.setEnabled(writable);
     if(myInvokedOnReference) {
       if (canInlineThisOnly()) {
@@ -84,7 +84,7 @@ public abstract class InlineOptionsDialog extends RefactoringDialog implements I
         myRbInlineThisOnly.setSelected(true);
       } else {
         if (writable) {
-          final boolean inlineThis = isInlineThis();
+          boolean inlineThis = isInlineThis();
           myRbInlineThisOnly.setSelected(inlineThis);
           myRbInlineAll.setSelected(!inlineThis);
         }
@@ -127,11 +127,11 @@ public abstract class InlineOptionsDialog extends RefactoringDialog implements I
   }
 
   protected static int initOccurrencesNumber(PsiNameIdentifierOwner nameIdentifierOwner) {
-    final ProgressManager progressManager = ProgressManager.getInstance();
-    final PsiSearchHelper searchHelper = PsiSearchHelper.getInstance(nameIdentifierOwner.getProject());
-    final GlobalSearchScope scope = GlobalSearchScope.projectScope(nameIdentifierOwner.getProject());
-    final String name = nameIdentifierOwner.getName();
-    final boolean isCheapToSearch =
+    ProgressManager progressManager = ProgressManager.getInstance();
+    PsiSearchHelper searchHelper = PsiSearchHelper.getInstance(nameIdentifierOwner.getProject());
+    GlobalSearchScope scope = GlobalSearchScope.projectScope(nameIdentifierOwner.getProject());
+    String name = nameIdentifierOwner.getName();
+    boolean isCheapToSearch =
      name != null && searchHelper.isCheapEnoughToSearch(name, scope, null, progressManager.getProgressIndicator()) != PsiSearchHelper.SearchCostResult.TOO_MANY_OCCURRENCES;
     return isCheapToSearch ? ReferencesSearch.search(nameIdentifierOwner).findAll().size() : - 1;
   }

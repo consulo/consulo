@@ -26,7 +26,7 @@ public class TemplateDataHighlighterWrapper implements SyntaxHighlighter {
 
   @Override
   @Nonnull
-  public TextAttributesKey[] getTokenHighlights(final IElementType tokenType) {
+  public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     if (tokenType == BAD_CHARACTER) {
       return new TextAttributesKey[0];
     }

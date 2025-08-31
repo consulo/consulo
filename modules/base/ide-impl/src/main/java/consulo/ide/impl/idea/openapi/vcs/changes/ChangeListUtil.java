@@ -30,14 +30,14 @@ public class ChangeListUtil {
 
   @jakarta.annotation.Nullable
   public static LocalChangeList getPredefinedChangeList(@Nonnull String defaultName, @Nonnull ChangeListManager changeListManager) {
-    final LocalChangeList sameNamedList = changeListManager.findChangeList(defaultName);
+    LocalChangeList sameNamedList = changeListManager.findChangeList(defaultName);
     if (sameNamedList != null) return sameNamedList;
     return tryToMatchWithExistingChangelist(changeListManager, defaultName);
   }
 
   @Nullable
   private static LocalChangeList tryToMatchWithExistingChangelist(@Nonnull ChangeListManager changeListManager,
-                                                                  @Nonnull final String defaultName) {
+                                                                  @Nonnull String defaultName) {
     List<LocalChangeList> matched = ContainerUtil.findAll(changeListManager.getChangeListsCopy(),
                                                           list -> defaultName.contains(list.getName().trim()));
 

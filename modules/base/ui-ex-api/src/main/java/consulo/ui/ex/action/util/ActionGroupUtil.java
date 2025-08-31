@@ -86,7 +86,7 @@ public class ActionGroupUtil {
     return result;
   }
 
-  private static boolean isActionEnabledAndVisible(@Nonnull final AnActionEvent e, @Nonnull final Map<AnAction, Presentation> action2presentation, @Nonnull final AnAction action) {
+  private static boolean isActionEnabledAndVisible(@Nonnull AnActionEvent e, @Nonnull Map<AnAction, Presentation> action2presentation, @Nonnull AnAction action) {
     Presentation presentation = getPresentation(action, action2presentation);
     AnActionEvent event = new AnActionEvent(e.getInputEvent(), e.getDataContext(), ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), e.getModifiers());
     event.setInjectedContext(action.isInInjectedContext());

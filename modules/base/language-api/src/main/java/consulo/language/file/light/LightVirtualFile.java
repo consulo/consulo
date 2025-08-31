@@ -44,7 +44,7 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
     this(name, null, content, LocalTimeCounter.currentTime());
   }
 
-  public LightVirtualFile(@Nonnull String name, final FileType fileType, @Nonnull CharSequence text) {
+  public LightVirtualFile(@Nonnull String name, FileType fileType, @Nonnull CharSequence text) {
     this(name, fileType, text, LocalTimeCounter.currentTime());
   }
 
@@ -53,21 +53,21 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
     setCharset(original.getCharset());
   }
 
-  public LightVirtualFile(@Nonnull String name, final FileType fileType, @Nonnull CharSequence text, final long modificationStamp) {
+  public LightVirtualFile(@Nonnull String name, FileType fileType, @Nonnull CharSequence text, long modificationStamp) {
     this(name, fileType, text, fileType == null ? null : fileType.extractCharsetFromFileContent(null, null, text), modificationStamp);
   }
 
   public LightVirtualFile(@Nonnull String name,
-                          final FileType fileType,
+                          FileType fileType,
                           @Nonnull CharSequence text,
                           Charset charset,
-                          final long modificationStamp) {
+                          long modificationStamp) {
     super(name, fileType, modificationStamp);
     setContent(text);
     setCharset(charset);
   }
 
-  public LightVirtualFile(@Nonnull String name, final Language language, @Nonnull CharSequence text) {
+  public LightVirtualFile(@Nonnull String name, Language language, @Nonnull CharSequence text) {
     super(name, null, LocalTimeCounter.currentTime());
     setContent(text);
     setLanguage(language);

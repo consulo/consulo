@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class XDebuggerSuspendedActionHandler extends XDebuggerActionHandler {
 
-  protected boolean isEnabled(final @Nonnull XDebugSession session, final DataContext dataContext) {
+  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
     return session.isSuspended();
   }
 }

@@ -41,9 +41,9 @@ public class ControlFlowBuilder {
         transparentInstructionCount = 0;
     }
 
-    public @Nullable Instruction findInstructionByElement(final PsiElement element) {
+    public @Nullable Instruction findInstructionByElement(PsiElement element) {
         for (int i = instructions.size() - 1; i >= 0; i--) {
-            final Instruction instruction = instructions.get(i);
+            Instruction instruction = instructions.get(i);
             if (element.equals(instruction.getElement())) {
                 return instruction;
             }
@@ -107,7 +107,7 @@ public class ControlFlowBuilder {
      * @param beginInstruction Begin of new edge
      * @param endInstruction   End of new edge
      */
-    public void addEdge(final @Nullable Instruction beginInstruction, final @Nullable Instruction endInstruction) {
+    public void addEdge(@Nullable Instruction beginInstruction, @Nullable Instruction endInstruction) {
         if (beginInstruction == null || endInstruction == null) {
             return;
         }
@@ -120,7 +120,7 @@ public class ControlFlowBuilder {
      *
      * @param instruction new instruction
      */
-    public final void addNode(final @Nonnull Instruction instruction) {
+    public final void addNode(@Nonnull Instruction instruction) {
         instructions.add(instruction);
         if (prevInstruction != null) {
             addEdge(prevInstruction, instruction);
@@ -133,7 +133,7 @@ public class ControlFlowBuilder {
      *
      * @param instruction new instruction
      */
-    public final void addNodeAndCheckPending(final Instruction instruction) {
+    public final void addNodeAndCheckPending(Instruction instruction) {
         addNode(instruction);
         checkPending(instruction);
     }
@@ -156,7 +156,7 @@ public class ControlFlowBuilder {
      * @param pendingScope Scope for instruction / null if expected scope = exit point
      * @param instruction  "Last" pending instruction
      */
-    public void addPendingEdge(final @Nullable PsiElement pendingScope, final @Nullable Instruction instruction) {
+    public void addPendingEdge(@Nullable PsiElement pendingScope, @Nullable Instruction instruction) {
         if (instruction == null) {
             return;
         }
@@ -166,8 +166,8 @@ public class ControlFlowBuilder {
         // the same logic is used in checkPending
         if (pendingScope != null) {
             for (; i < pending.size(); i++) {
-                final Pair<PsiElement, Instruction> pair = pending.get(i);
-                final PsiElement scope = pair.getFirst();
+                Pair<PsiElement, Instruction> pair = pending.get(i);
+                PsiElement scope = pair.getFirst();
                 if (scope == null) {
                     continue;
                 }
@@ -184,8 +184,8 @@ public class ControlFlowBuilder {
      *
      * @param instruction target instruction for pending edges
      */
-    public final void checkPending(final @Nonnull Instruction instruction) {
-        final PsiElement element = instruction.getElement();
+    public final void checkPending(@Nonnull Instruction instruction) {
+        PsiElement element = instruction.getElement();
         if (element == null) {
             // if element is null (fake element, we just process all pending)
             for (Pair<PsiElement, Instruction> pair : pending) {
@@ -197,8 +197,8 @@ public class ControlFlowBuilder {
             // else we just process all the pending with scope containing in element
             // reverse order is just an optimization
             for (int i = pending.size() - 1; i >= 0; i--) {
-                final Pair<PsiElement, Instruction> pair = pending.get(i);
-                final PsiElement scopeWhenToAdd = pair.getFirst();
+                Pair<PsiElement, Instruction> pair = pending.get(i);
+                PsiElement scopeWhenToAdd = pair.getFirst();
                 if (scopeWhenToAdd == null) {
                     continue;
                 }
@@ -219,8 +219,8 @@ public class ControlFlowBuilder {
      * @param element Element to create instruction for
      * @return new instruction
      */
-    public @Nonnull Instruction startNode(final @Nullable PsiElement element) {
-        final Instruction instruction = new InstructionImpl(this, element);
+    public @Nonnull Instruction startNode(@Nullable PsiElement element) {
+        Instruction instruction = new InstructionImpl(this, element);
         addNodeAndCheckPending(instruction);
         return instruction;
     }
@@ -233,8 +233,8 @@ public class ControlFlowBuilder {
      * @param markerName name for debug information
      * @return new transparent instruction
      */
-    public final @Nonnull TransparentInstruction startTransparentNode(final @Nullable PsiElement element, String markerName) {
-        final TransparentInstruction instruction = new TransparentInstructionImpl(this, element, markerName);
+    public final @Nonnull TransparentInstruction startTransparentNode(@Nullable PsiElement element, String markerName) {
+        TransparentInstruction instruction = new TransparentInstructionImpl(this, element, markerName);
         addNodeAndCheckPending(instruction);
         return instruction;
     }
@@ -246,8 +246,8 @@ public class ControlFlowBuilder {
      * @return new instruction
      */
     @SuppressWarnings("UnusedReturnValue")
-    public final Instruction startConditionalNode(final PsiElement element, final PsiElement condition, final boolean result) {
-        final ConditionalInstruction instruction = new ConditionalInstructionImpl(this, element, condition, result);
+    public final Instruction startConditionalNode(PsiElement element, PsiElement condition, boolean result) {
+        ConditionalInstruction instruction = new ConditionalInstructionImpl(this, element, condition, result);
         addNodeAndCheckPending(instruction);
         return instruction;
     }
@@ -267,7 +267,7 @@ public class ControlFlowBuilder {
         checkPending(exitInstruction);
     }
 
-    protected void addEntryPointNode(final PsiElement startElement) {
+    protected void addEntryPointNode(PsiElement startElement) {
         // create start pseudo node
         startNode(null);
     }
@@ -291,7 +291,7 @@ public class ControlFlowBuilder {
     }
 
     public void processPending(@Nonnull PendingProcessor processor) {
-        final List<Pair<PsiElement, Instruction>> pending = this.pending;
+        List<Pair<PsiElement, Instruction>> pending = this.pending;
         this.pending = new ArrayList<>();
         for (Pair<PsiElement, Instruction> pair : pending) {
             processor.process(pair.getFirst(), pair.getSecond());

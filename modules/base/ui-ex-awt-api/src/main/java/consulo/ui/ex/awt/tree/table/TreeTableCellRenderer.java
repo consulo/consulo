@@ -71,9 +71,9 @@ public class TreeTableCellRenderer implements TableCellRenderer, ClientPropertyH
     //myTree.setTreeTableTreeBorder(hasFocus && model.getColumnClass(column).equals(TreeTableModel.class) ? myDefaultBorder : null);
     myTree.setVisibleRow(modelRow);
 
-    final Object treeObject = myTree.getPathForRow(modelRow).getLastPathComponent();
+    Object treeObject = myTree.getPathForRow(modelRow).getLastPathComponent();
     boolean leaf = myTree.getModel().isLeaf(treeObject);
-    final boolean expanded = myTree.isExpanded(modelRow);
+    boolean expanded = myTree.isExpanded(modelRow);
     Component component = myTree.getCellRenderer().getTreeCellRendererComponent(myTree, treeObject, isSelected, expanded, leaf, modelRow, hasFocus);
     if (component instanceof JComponent) {
       table.setToolTipText(((JComponent)component).getToolTipText());

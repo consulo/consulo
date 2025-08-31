@@ -55,7 +55,7 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
     }
 
     @Override
-    public boolean isEnabled(@Nonnull final Project project) {
+    public boolean isEnabled(@Nonnull Project project) {
         XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
         return session != null && session.getDebugProcess().getEvaluator() != null;
     }
@@ -94,11 +94,11 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
     }
 
     @Nullable
-    private static ExpressionInfo getExpressionInfo(final XDebuggerEvaluator evaluator,
-                                                    final Project project,
-                                                    final ValueHintType type,
-                                                    final Editor editor,
-                                                    final int offset) {
+    private static ExpressionInfo getExpressionInfo(XDebuggerEvaluator evaluator,
+                                                    Project project,
+                                                    ValueHintType type,
+                                                    Editor editor,
+                                                    int offset) {
         SelectionModel selectionModel = editor.getSelectionModel();
         int selectionStart = selectionModel.getSelectionStart();
         int selectionEnd = selectionModel.getSelectionEnd();
@@ -113,12 +113,12 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
     }
 
     @Override
-    public boolean canShowHint(@Nonnull final Project project) {
+    public boolean canShowHint(@Nonnull Project project) {
         return isEnabled(project);
     }
 
     @Override
-    public int getValueLookupDelay(final Project project) {
+    public int getValueLookupDelay(Project project) {
         return XDebuggerSettingsManager.getInstance().getDataViewSettings().getValueLookupDelay();
     }
 }

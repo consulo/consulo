@@ -68,16 +68,16 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
 
   private void readExternal(Element element) {
     clearCopyrights();
-    final Element module2copyright = element.getChild(MODULE2COPYRIGHT);
+    Element module2copyright = element.getChild(MODULE2COPYRIGHT);
     if (module2copyright != null) {
       for (Element o : module2copyright.getChildren(ELEMENT)) {
-        final String moduleName = o.getAttributeValue(MODULE);
-        final String copyrightName = o.getAttributeValue(COPYRIGHT);
+        String moduleName = o.getAttributeValue(MODULE);
+        String copyrightName = o.getAttributeValue(COPYRIGHT);
         myModule2Copyrights.put(moduleName, copyrightName);
       }
     }
     for (Element o : element.getChildren(COPYRIGHT)) {
-      final CopyrightProfile copyrightProfile = new CopyrightProfile();
+      CopyrightProfile copyrightProfile = new CopyrightProfile();
       copyrightProfile.readExternal(o);
       myCopyrights.put(copyrightProfile.getName(), copyrightProfile);
     }
@@ -87,13 +87,13 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
 
   private void writeExternal(Element element) {
     for (CopyrightProfile copyright : myCopyrights.values()) {
-      final Element copyrightElement = new Element(COPYRIGHT);
+      Element copyrightElement = new Element(COPYRIGHT);
       copyright.writeExternal(copyrightElement);
       element.addContent(copyrightElement);
     }
-    final Element map = new Element(MODULE2COPYRIGHT);
+    Element map = new Element(MODULE2COPYRIGHT);
     for (String moduleName : myModule2Copyrights.keySet()) {
-      final Element setting = new Element(ELEMENT);
+      Element setting = new Element(ELEMENT);
       setting.setAttribute(MODULE, moduleName);
       setting.setAttribute(COPYRIGHT, myModule2Copyrights.get(moduleName));
       map.addContent(setting);
@@ -105,7 +105,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
 
   @Override
   public Element getState() {
-    final Element e = new Element("settings");
+    Element e = new Element("settings");
     writeExternal(e);
     return e;
   }
@@ -135,7 +135,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
   public void removeCopyright(CopyrightProfile copyrightProfile) {
     myCopyrights.values().remove(copyrightProfile);
     for (Iterator<String> it = myModule2Copyrights.keySet().iterator(); it.hasNext(); ) {
-      final String profileName = myModule2Copyrights.get(it.next());
+      String profileName = myModule2Copyrights.get(it.next());
       if (profileName.equals(copyrightProfile.getName())) {
         it.remove();
       }
@@ -166,17 +166,17 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
 
   @Nullable
   public CopyrightProfile getCopyrightOptions(@Nonnull PsiFile file) {
-    final VirtualFile virtualFile = file.getVirtualFile();
+    VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null || myCopyrightFileConfigManager.getOptions(virtualFile.getFileType()).getFileTypeOverride() == CopyrightFileConfig.NO_COPYRIGHT) {
       return null;
     }
     for (String scopeName : myModule2Copyrights.keySet()) {
       Pair<NamedScopesHolder, NamedScope> scopeWithHolder = NamedScopesHolder.getScopeWithHolder(myProject, scopeName);
       if (scopeWithHolder != null) {
-        final PackageSet packageSet = scopeWithHolder.getSecond().getValue();
+        PackageSet packageSet = scopeWithHolder.getSecond().getValue();
         if (packageSet != null) {
           if (packageSet.contains(file.getVirtualFile(), file.getProject(), scopeWithHolder.getFirst())) {
-            final CopyrightProfile profile = myCopyrights.get(myModule2Copyrights.get(scopeName));
+            CopyrightProfile profile = myCopyrights.get(myModule2Copyrights.get(scopeName));
             if (profile != null) {
               return profile;
             }

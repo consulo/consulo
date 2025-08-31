@@ -52,20 +52,20 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     private static final Logger LOG = Logger.getInstance(SuppressActionWrapper.class);
 
     public SuppressActionWrapper(
-        @Nonnull final Project project,
-        @Nonnull final InspectionToolWrapper toolWrapper,
-        @Nonnull final TreePath[] paths
+        @Nonnull Project project,
+        @Nonnull InspectionToolWrapper toolWrapper,
+        @Nonnull TreePath[] paths
     ) {
         super(InspectionLocalize.suppressInspectionProblem(), false);
         myProject = project;
         myManager = (InspectionManagerImpl)InspectionManager.getInstance(myProject);
         for (TreePath path : paths) {
-            final Object node = path.getLastPathComponent();
+            Object node = path.getLastPathComponent();
             if (!(node instanceof TreeNode)) {
                 continue;
             }
             TreeUtil.traverse((TreeNode)node, node1 -> {    //fetch leaves
-                final InspectionTreeNode n = (InspectionTreeNode)node1;
+                InspectionTreeNode n = (InspectionTreeNode)node1;
                 if (n.isLeaf()) {
                     myNodesToSuppress.add(n);
                 }
@@ -77,14 +77,14 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
 
     @Override
     @Nonnull
-    public SuppressTreeAction[] getChildren(@Nullable final AnActionEvent e) {
-        final SuppressIntentionAction[] suppressActions = InspectionManagerImpl.getSuppressActions(myToolWrapper);
+    public SuppressTreeAction[] getChildren(@Nullable AnActionEvent e) {
+        SuppressIntentionAction[] suppressActions = InspectionManagerImpl.getSuppressActions(myToolWrapper);
         if (suppressActions == null || suppressActions.length == 0) {
             return new SuppressTreeAction[0];
         }
-        final SuppressTreeAction[] actions = new SuppressTreeAction[suppressActions.length];
+        SuppressTreeAction[] actions = new SuppressTreeAction[suppressActions.length];
         for (int i = 0; i < suppressActions.length; i++) {
-            final SuppressIntentionAction suppressAction = suppressActions[i];
+            SuppressIntentionAction suppressAction = suppressActions[i];
             actions[i] = new SuppressTreeAction(suppressAction);
         }
         return actions;
@@ -92,16 +92,16 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
 
     @RequiredUIAccess
     private boolean suppress(
-        final PsiElement element,
-        final CommonProblemDescriptor descriptor,
-        final SuppressIntentionAction action,
-        final RefEntity refEntity
+        PsiElement element,
+        CommonProblemDescriptor descriptor,
+        SuppressIntentionAction action,
+        RefEntity refEntity
     ) {
-        final PsiModificationTracker tracker = PsiManager.getInstance(myProject).getModificationTracker();
+        PsiModificationTracker tracker = PsiManager.getInstance(myProject).getModificationTracker();
         Application.get().runWriteAction(() -> {
             PsiDocumentManager.getInstance(myProject).commitAllDocuments();
             try {
-                final long startModificationCount = tracker.getModificationCount();
+                long startModificationCount = tracker.getModificationCount();
 
                 PsiElement container = null;
                 if (action instanceof SuppressIntentionActionFromFix suppressIntentionActionFromFix) {
@@ -115,7 +115,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
                     action.invoke(myProject, null, element);
                 }
                 if (startModificationCount != tracker.getModificationCount()) {
-                    final Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
+                    Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
                     for (GlobalInspectionContextImpl context : globalInspectionContexts) {
                         context.ignoreElement(myToolWrapper.getTool(), container);
                         if (descriptor != null) {
@@ -142,12 +142,12 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         RefElement refElement = null;
         CommonProblemDescriptor descriptor = null;
         if (node instanceof RefElementNode elementNode) {
-            final RefEntity element = elementNode.getElement();
+            RefEntity element = elementNode.getElement();
             refElement = element instanceof RefElement refElement1 ? refElement1 : null;
             descriptor = elementNode.getProblem();
         }
         else if (node instanceof ProblemDescriptionNode descriptionNode) {
-            final RefEntity element = descriptionNode.getElement();
+            RefEntity element = descriptionNode.getElement();
             refElement = element instanceof RefElement refElement1 ? refElement1 : null;
             descriptor = descriptionNode.getDescriptor();
         }
@@ -162,7 +162,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     public class SuppressTreeAction extends AnAction {
         private final SuppressIntentionAction mySuppressAction;
 
-        public SuppressTreeAction(final SuppressIntentionAction suppressAction) {
+        public SuppressTreeAction(SuppressIntentionAction suppressAction) {
             super(suppressAction.getText());
             mySuppressAction = suppressAction;
         }
@@ -176,11 +176,11 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
                 .inLater()
                 .run(() -> {
                     for (InspectionTreeNode node : myNodesToSuppress) {
-                        final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
+                        Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
                         if (content.first == null) {
                             break;
                         }
-                        final PsiElement element = content.first;
+                        PsiElement element = content.first;
                         RefEntity refEntity = null;
                         if (node instanceof RefElementNode refElementNode) {
                             refEntity = refElementNode.getElement();
@@ -192,7 +192,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
                             break;
                         }
                     }
-                    final Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
+                    Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
                     for (GlobalInspectionContextImpl context : globalInspectionContexts) {
                         context.refreshViews();
                     }
@@ -211,11 +211,11 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         @RequiredReadAction
         public boolean isAvailable() {
             for (InspectionTreeNode node : myNodesToSuppress) {
-                final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
+                Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
                 if (content.first == null) {
                     continue;
                 }
-                final PsiElement element = content.first;
+                PsiElement element = content.first;
                 if (mySuppressAction.isAvailable(myProject, null, element)) {
                     return true;
                 }

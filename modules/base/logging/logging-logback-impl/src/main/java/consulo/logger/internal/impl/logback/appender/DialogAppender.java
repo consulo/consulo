@@ -59,7 +59,7 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
         else {
             IdeaLoggingEvent ideaEvent = null;
-            final String message = loggingEvent.getMessage();
+            String message = loggingEvent.getMessage();
             if (loggingEvent instanceof LoggingEventWithIdeaEvent likeEvent) {
                 ideaEvent = likeEvent.getIdeaLoggingEvent();
             }
@@ -74,7 +74,7 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
             }
 
             // Note, we MUST avoid SYNCHRONOUS invokeAndWait to prevent deadlocks
-            final IdeaLoggingEvent finalIdeaEvent = ideaEvent;
+            IdeaLoggingEvent finalIdeaEvent = ideaEvent;
             Application.get().invokeLater(() -> {
                 try {
                     appendToLoggers(finalIdeaEvent);
@@ -91,7 +91,7 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
             return;
         }
 
-        final FatalErrorReporter logger = FatalErrorReporter.INSTANCE;
+        FatalErrorReporter logger = FatalErrorReporter.INSTANCE;
         if (!logger.canHandle(e)) {
             return;
         }
@@ -104,7 +104,7 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
             }
         };
 
-        final Application app = ApplicationManager.getApplication();
+        Application app = ApplicationManager.getApplication();
         if (app == null) {
             new Thread(myDialogRunnable).start();
         }

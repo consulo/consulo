@@ -85,11 +85,11 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     private boolean hasSyntaxErrors;
 
     @Override
-    public boolean equals(@Nullable final Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      final ProblemFileInfo that = (ProblemFileInfo)o;
+      ProblemFileInfo that = (ProblemFileInfo)o;
 
       return hasSyntaxErrors == that.hasSyntaxErrors && problems.equals(that.problems);
     }
@@ -190,7 +190,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     }
   }
 
-  private void clearSyntaxErrorFlag(@Nonnull final PsiTreeChangeEvent event) {
+  private void clearSyntaxErrorFlag(@Nonnull PsiTreeChangeEvent event) {
     PsiFile file = event.getFile();
     if (file == null) return;
     VirtualFile virtualFile = file.getVirtualFile();
@@ -213,7 +213,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     // (rough approx number of PSI elements = file length/2) * (visitor count = 2 usually)
     long progressLimit = files.stream().filter(VirtualFile::isValid).mapToLong(VirtualFile::getLength).sum();
     pass.setProgressLimit(progressLimit);
-    for (final VirtualFile virtualFile : files) {
+    for (VirtualFile virtualFile : files) {
       progress.checkCanceled();
       if (virtualFile == null) break;
       if (!virtualFile.isValid() || orderVincentToCleanTheCar(virtualFile, progress)) {
@@ -226,7 +226,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   // returns true if car has been cleaned
-  private boolean orderVincentToCleanTheCar(@Nonnull final VirtualFile file, @Nonnull final ProgressIndicator progressIndicator) throws ProcessCanceledException {
+  private boolean orderVincentToCleanTheCar(@Nonnull VirtualFile file, @Nonnull ProgressIndicator progressIndicator) throws ProcessCanceledException {
     if (!isToBeHighlighted(file)) {
       clearProblems(file);
       return true; // file is going to be red waved no more
@@ -276,14 +276,14 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   @Override
-  public boolean hasSyntaxErrors(final VirtualFile file) {
+  public boolean hasSyntaxErrors(VirtualFile file) {
     synchronized (myProblems) {
       ProblemFileInfo info = myProblems.get(file);
       return info != null && info.hasSyntaxErrors;
     }
   }
 
-  private boolean willBeHighlightedAnyway(final VirtualFile file) {
+  private boolean willBeHighlightedAnyway(VirtualFile file) {
     // opened in some editor, and hence will be highlighted automatically sometime later
     FileEditor[] selectedEditors = FileEditorManager.getInstance(myProject).getSelectedEditors();
     for (FileEditor editor : selectedEditors) {
@@ -310,7 +310,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   @Override
-  public boolean hasProblemFilesBeneath(@Nonnull final Module scope) {
+  public boolean hasProblemFilesBeneath(@Nonnull Module scope) {
     return hasProblemFilesBeneath(virtualFile -> ModuleUtilCore.moduleContainsFile(scope, virtualFile, false));
   }
 
@@ -341,7 +341,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   private boolean isToBeHighlighted(@Nullable VirtualFile virtualFile) {
     if (virtualFile == null) return false;
 
-    for (final WolfFileProblemFilter filter : myProject.getExtensionPoint(WolfFileProblemFilter.class).getExtensionList()) {
+    for (WolfFileProblemFilter filter : myProject.getExtensionPoint(WolfFileProblemFilter.class).getExtensionList()) {
       ProgressManager.checkCanceled();
       if (filter.isToBeHighlighted(virtualFile)) {
         return true;
@@ -352,7 +352,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   @Override
-  public void weHaveGotProblems(@Nonnull final VirtualFile virtualFile, @Nonnull List<Problem> problems) {
+  public void weHaveGotProblems(@Nonnull VirtualFile virtualFile, @Nonnull List<Problem> problems) {
     if (problems.isEmpty()) return;
     if (!isToBeHighlighted(virtualFile)) return;
     weHaveGotNonIgnorableProblems(virtualFile, problems);
@@ -384,7 +384,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   @Override
-  public Problem convertToProblem(@Nullable final VirtualFile virtualFile, final int line, final int column, @Nonnull final String[] message) {
+  public Problem convertToProblem(@Nullable VirtualFile virtualFile, int line, int column, @Nonnull String[] message) {
     if (virtualFile == null || virtualFile.isDirectory() || virtualFile.getFileType().isBinary()) return null;
     HighlightInfo info = ReadAction.compute(() -> {
       TextRange textRange = getTextRange(virtualFile, line, column);
@@ -396,7 +396,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   @Override
-  public void reportProblems(@Nonnull final VirtualFile file, @Nonnull Collection<Problem> problems) {
+  public void reportProblems(@Nonnull VirtualFile file, @Nonnull Collection<Problem> problems) {
     if (problems.isEmpty()) {
       clearProblems(file);
       return;
@@ -405,7 +405,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     boolean hasProblemsBefore;
     boolean fireChanged;
     synchronized (myProblems) {
-      final ProblemFileInfo oldInfo = myProblems.remove(file);
+      ProblemFileInfo oldInfo = myProblems.remove(file);
       hasProblemsBefore = oldInfo != null;
       ProblemFileInfo newInfo = new ProblemFileInfo();
       myProblems.put(file, newInfo);
@@ -425,7 +425,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   @Nonnull
-  private static TextRange getTextRange(@Nonnull final VirtualFile virtualFile, int line, final int column) {
+  private static TextRange getTextRange(@Nonnull VirtualFile virtualFile, int line, int column) {
     Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
     if (line > document.getLineCount()) line = document.getLineCount();
     line = line <= 0 ? 0 : line - 1;

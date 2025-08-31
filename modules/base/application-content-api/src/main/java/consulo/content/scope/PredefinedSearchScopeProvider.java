@@ -42,8 +42,8 @@ public abstract class PredefinedSearchScopeProvider {
      * @param showEmptyScopes     add <i>Current File</i> and <i>Open Files</i> scopes even if there are no files open
      */
     public abstract List<SearchScope> getPredefinedScopes(
-        @Nonnull final Project project,
-        @Nullable final DataContext dataContext,
+        @Nonnull Project project,
+        @Nullable DataContext dataContext,
         boolean suggestSearchInLibs,
         boolean prevSearchFiles,
         boolean currentSelection,
@@ -52,8 +52,8 @@ public abstract class PredefinedSearchScopeProvider {
     );
 
     public final List<SearchScope> getPredefinedScopes(
-        @Nonnull final Project project,
-        @Nullable final DataContext dataContext,
+        @Nonnull Project project,
+        @Nullable DataContext dataContext,
         boolean suggestSearchInLibs,
         boolean prevSearchFiles,
         boolean currentSelection,

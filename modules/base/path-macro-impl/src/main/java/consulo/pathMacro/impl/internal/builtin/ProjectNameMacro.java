@@ -34,7 +34,7 @@ public final class ProjectNameMacro extends Macro {
 
   @Override
   public String expand(DataContext dataContext) {
-    final Project project = dataContext.getData(Project.KEY);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return null;
     }

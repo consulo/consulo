@@ -33,9 +33,9 @@ public class RunConfigurationPathMacroFilter extends PathMacroFilter {
 
   @Override
   public boolean recursePathMacros(Attribute attribute) {
-    final Element parent = attribute.getParent();
+    Element parent = attribute.getParent();
     if (parent != null && Constants.OPTION.equals(parent.getName())) {
-      final Element grandParent = parent.getParentElement();
+      Element grandParent = parent.getParentElement();
       return grandParent != null && "configuration".equals(grandParent.getName());
     }
     return false;

@@ -118,7 +118,7 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
     @Override
     @RequiredUIAccess
     public void applyResult(@Nonnull MergeResult result) {
-        final byte[] applyContent = switch (result) {
+        byte[] applyContent = switch (result) {
             case CANCEL -> myOriginalContent;
             case LEFT -> ThreeSide.LEFT.select(myByteContents);
             case RIGHT -> ThreeSide.RIGHT.select(myByteContents);

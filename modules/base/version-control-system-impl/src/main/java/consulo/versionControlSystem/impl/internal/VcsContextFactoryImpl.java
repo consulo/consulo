@@ -63,7 +63,7 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
 
   @Override
   @Nonnull
-  public FilePath createFilePathOn(@Nonnull final File file, @Nonnull final Function<File, Boolean> detector) {
+  public FilePath createFilePathOn(@Nonnull File file, @Nonnull Function<File, Boolean> detector) {
     VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
     if (virtualFile != null) {
       return createFilePathOn(virtualFile);
@@ -73,25 +73,25 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
 
   @Override
   @Nonnull
-  public FilePath createFilePathOn(@Nonnull final File file, final boolean isDirectory) {
+  public FilePath createFilePathOn(@Nonnull File file, boolean isDirectory) {
     return createFilePath(file.getPath(), isDirectory);
   }
 
   @Override
   @Nonnull
-  public FilePath createFilePathOnNonLocal(@Nonnull final String path, final boolean isDirectory) {
+  public FilePath createFilePathOnNonLocal(@Nonnull String path, boolean isDirectory) {
     return new RemoteFilePath(path, isDirectory);
   }
 
   @Override
   @Nonnull
-  public FilePath createFilePathOnDeleted(@Nonnull final File file, final boolean isDirectory) {
+  public FilePath createFilePathOnDeleted(@Nonnull File file, boolean isDirectory) {
     return createFilePathOn(file, isDirectory);
   }
 
   @Override
   @Nonnull
-  public FilePath createFilePathOn(@Nonnull final VirtualFile parent, @Nonnull final String name) {
+  public FilePath createFilePathOn(@Nonnull VirtualFile parent, @Nonnull String name) {
     return createFilePath(parent, name, false);
   }
 
@@ -103,7 +103,7 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
 
   @Override
   @Nonnull
-  public LocalChangeList createLocalChangeList(@Nonnull Project project, @Nonnull final String name) {
+  public LocalChangeList createLocalChangeList(@Nonnull Project project, @Nonnull String name) {
     return LocalChangeListImpl.createEmptyChangeListImpl(project, name);
   }
 

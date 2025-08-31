@@ -37,13 +37,13 @@ public class NavigatableRule implements GetDataRule<Navigatable> {
 
   @Override
   public Navigatable getData(@Nonnull DataProvider dataProvider) {
-    final Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
+    Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
     if (navigatable != null && navigatable instanceof OpenFileDescriptor openFileDescriptor) {
       if (openFileDescriptor.getFile().isValid()) {
         return openFileDescriptor;
       }
     }
-    final PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
+    PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
     if (element instanceof Navigatable navElem) {
       return navElem;
     }
@@ -51,7 +51,7 @@ public class NavigatableRule implements GetDataRule<Navigatable> {
       return EditSourceUtil.getDescriptor(element);
     }
 
-    final Object selection = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
+    Object selection = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
     return selection instanceof Navigatable navSel ? navSel : null;
   }
 }

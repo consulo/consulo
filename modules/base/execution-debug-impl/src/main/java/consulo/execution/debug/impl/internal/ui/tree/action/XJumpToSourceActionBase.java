@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public abstract class XJumpToSourceActionBase extends XDebuggerTreeActionBase {
-  protected void perform(final XValueNodeImpl node, @Nonnull final String nodeName, final AnActionEvent e) {
+  protected void perform(final XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
     XValue value = node.getValueContainer();
     XNavigatable navigatable = new XNavigatable() {
       public void setSourcePosition(@Nullable final XSourcePosition sourcePosition) {

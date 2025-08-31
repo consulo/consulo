@@ -39,7 +39,7 @@ public class ObjectStubTree<T extends Stub> {
   private String myDebugInfo;
   private final List<T> myPlainList;
 
-  public ObjectStubTree(@Nonnull final ObjectStubBase root, final boolean withBackReference) {
+  public ObjectStubTree(@Nonnull ObjectStubBase root, boolean withBackReference) {
     myRoot = root;
     myPlainList = enumerateStubs(root);
     if (withBackReference) {
@@ -72,9 +72,9 @@ public class ObjectStubTree<T extends Stub> {
   @SuppressWarnings("unchecked")
   public Map<StubIndexKey, Map<Object, int[]>> indexStubTree(@Nonnull Function<StubIndexKey<?, ?>, HashingStrategy<?>> keyHashingStrategyFunction) {
     StubIndexSink sink = new StubIndexSink(keyHashingStrategyFunction);
-    final List<T> plainList = getPlainListFromAllRoots();
+    List<T> plainList = getPlainListFromAllRoots();
     for (int i = 0, plainListSize = plainList.size(); i < plainListSize; i++) {
-      final Stub stub = plainList.get(i);
+      Stub stub = plainList.get(i);
       sink.myStubIdx = i;
       StubSerializationUtil.getSerializer(stub).indexStub(stub, sink);
     }
@@ -136,7 +136,7 @@ public class ObjectStubTree<T extends Stub> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void occurrence(@Nonnull final StubIndexKey indexKey, @Nonnull final Object value) {
+    public void occurrence(@Nonnull StubIndexKey indexKey, @Nonnull Object value) {
       Map<Object, int[]> map = myResult.get(indexKey);
       if (map == null) {
         map = Maps.newHashMap((HashingStrategy<Object>)myHashingStrategyFunction.apply(indexKey));

@@ -35,7 +35,7 @@ public interface ProjectView {
   }
 
   default void select(Object element, VirtualFile file, boolean requestFocus) {
-    final ProjectViewPane viewPane = getCurrentProjectViewPane();
+    ProjectViewPane viewPane = getCurrentProjectViewPane();
     if (viewPane != null) {
       viewPane.select(element, file, requestFocus);
     }
@@ -43,7 +43,7 @@ public interface ProjectView {
 
   @Nonnull
   default AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
-    final ProjectViewPane viewPane = getCurrentProjectViewPane();
+    ProjectViewPane viewPane = getCurrentProjectViewPane();
     if (viewPane != null) {
       return viewPane.selectCB(element, file, requestFocus);
     }
@@ -84,7 +84,7 @@ public interface ProjectView {
 
   void setShowModules(boolean showModules, String paneId);
 
-  void addProjectPane(final ProjectViewPane pane);
+  void addProjectPane(ProjectViewPane pane);
 
   void removeProjectPane(ProjectViewPane instance);
 
@@ -105,13 +105,13 @@ public interface ProjectView {
 
   boolean isManualOrder(String paneId);
 
-  void setManualOrder(@Nonnull String paneId, final boolean enabled);
+  void setManualOrder(@Nonnull String paneId, boolean enabled);
 
   void selectPsiElement(PsiElement element, boolean requestFocus);
 
   boolean isSortByType(String paneId);
 
-  void setSortByType(String paneId, final boolean sortByType);
+  void setSortByType(String paneId, boolean sortByType);
 
   ProjectViewPane getCurrentProjectViewPane();
 

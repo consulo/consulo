@@ -137,7 +137,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     @Override
     @SuppressWarnings({"unchecked", "RequiredXAction"})
     protected JComponent createRightComponent() {
-        final JPanel panel = new JPanel(new VerticalFlowLayout());
+        JPanel panel = new JPanel(new VerticalFlowLayout());
 
         JPanel rightPanel = new JPanel(new BorderLayout());
 
@@ -147,7 +147,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
         rightPanel.add(rightContentPanel, BorderLayout.CENTER);
 
-        final JPanel nullPanel = new JPanel(new BorderLayout());
+        JPanel nullPanel = new JPanel(new BorderLayout());
         JBLabel nodeLabel = new JBLabel(
             myModuleHome == null ? "Please select project type" : "Please select module type",
             UIUtil.ComponentStyle.SMALL,

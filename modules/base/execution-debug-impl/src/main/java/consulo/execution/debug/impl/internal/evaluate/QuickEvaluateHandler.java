@@ -34,5 +34,5 @@ public abstract class QuickEvaluateHandler {
 
   public abstract boolean canShowHint(@Nonnull Project project);
 
-  public abstract int getValueLookupDelay(final Project project);
+  public abstract int getValueLookupDelay(Project project);
 }

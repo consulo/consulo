@@ -128,7 +128,7 @@ public class NotificationsConfigurationImpl implements NotificationsConfiguratio
     }
   }
 
-  public synchronized boolean isRegistered(@Nonnull final String id) {
+  public synchronized boolean isRegistered(@Nonnull String id) {
     return myIdToSettingsMap.containsKey(id) || NotificationGroupRegistrator.last().get(id) != null;
   }
 
@@ -156,12 +156,12 @@ public class NotificationsConfigurationImpl implements NotificationsConfiguratio
   }
 
   @Override
-  public synchronized void loadState(final Element state) {
+  public synchronized void loadState(Element state) {
     myIdToSettingsMap.clear();
     for (Element child : state.getChildren("notification")) {
-      final NotificationSettings settings = NotificationSettings.load(child);
+      NotificationSettings settings = NotificationSettings.load(child);
       if (settings != null) {
-        final String id = settings.getGroupId();
+        String id = settings.getGroupId();
         LOG.assertTrue(!myIdToSettingsMap.containsKey(id), String.format("Settings for '%s' already loaded!", id));
         myIdToSettingsMap.put(id, settings);
       }

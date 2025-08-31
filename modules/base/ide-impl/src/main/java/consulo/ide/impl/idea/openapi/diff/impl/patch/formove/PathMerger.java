@@ -34,42 +34,42 @@ public class PathMerger {
   }
 
   @Nullable
-  public static VirtualFile getFile(final VirtualFile base, final String path) {
+  public static VirtualFile getFile(VirtualFile base, String path) {
     return getFile(new VirtualFilePathMerger(base), path);
   }
 
   @jakarta.annotation.Nullable
-  public static VirtualFile getFile(final VirtualFile base, final String path, final List<String> tail) {
+  public static VirtualFile getFile(VirtualFile base, String path, List<String> tail) {
     return getFile(new VirtualFilePathMerger(base), path, tail);
   }
 
   @jakarta.annotation.Nullable
-  public static File getFile(final File base, final String path) {
+  public static File getFile(File base, String path) {
     return getFile(new IoFilePathMerger(base), path);
   }
 
   @Nullable
-  public static File getFile(final File base, final String path, final List<String> tail) {
+  public static File getFile(File base, String path, List<String> tail) {
     return getFile(new IoFilePathMerger(base), path, tail);
   }
   
   @Nullable
-  public static FilePath getFile(final FilePath base, final String path) {
+  public static FilePath getFile(FilePath base, String path) {
     return getFile(new FilePathPathMerger(base), path);
   }
 
   @Nullable
-  public static FilePath getFile(final FilePath base, final String path, final List<String> tail) {
+  public static FilePath getFile(FilePath base, String path, List<String> tail) {
     return getFile(new FilePathPathMerger(base), path, tail);
   }
 
   @Nullable
-  public static <T> T getFile(final FilePathMerger<T> merger, final String path) {
+  public static <T> T getFile(FilePathMerger<T> merger, String path) {
     if (path == null) {
       return null;
     }
-    final List<String> tail = new ArrayList<String>();
-    final T file = getFile(merger, path, tail);
+    List<String> tail = new ArrayList<String>();
+    T file = getFile(merger, path, tail);
     if (tail.isEmpty()) {
       return file;
     }
@@ -77,25 +77,25 @@ public class PathMerger {
   }
 
   @Nullable
-  public static <T> T getFile(final FilePathMerger<T> merger, final String path, final List<String> tail) {
-    final String[] pieces = RelativePathCalculator.split(path);
+  public static <T> T getFile(FilePathMerger<T> merger, String path, List<String> tail) {
+    String[] pieces = RelativePathCalculator.split(path);
 
     for (int i = 0; i < pieces.length; i++) {
-      final String piece = pieces[i];
+      String piece = pieces[i];
       if ("".equals(piece) || ".".equals(piece)) {
         continue;
       }
       if ("..".equals(piece)) {
-        final boolean upResult = merger.up();
+        boolean upResult = merger.up();
         if (! upResult) return null;
         continue;
       }
 
-      final boolean downResult = merger.down(piece);
+      boolean downResult = merger.down(piece);
       if (! downResult) {
         if (tail != null) {
           for (int j = i; j < pieces.length; j++) {
-            final String pieceInner = pieces[j];
+            String pieceInner = pieces[j];
             tail.add(pieceInner);
           }
         }
@@ -107,23 +107,23 @@ public class PathMerger {
   }
 
   @jakarta.annotation.Nullable
-  public static VirtualFile getBase(final VirtualFile base, final String path) {
+  public static VirtualFile getBase(VirtualFile base, String path) {
     return getBase(new VirtualFilePathMerger(base), path);
   }
 
   @Nullable
-  public static <T> T getBase(final FilePathMerger<T> merger, final String path) {
-    final boolean caseSensitive = Platform.current().fs().isCaseSensitive();
-    final String[] parts = path.replace("\\", "/").split("/");
+  public static <T> T getBase(FilePathMerger<T> merger, String path) {
+    boolean caseSensitive = Platform.current().fs().isCaseSensitive();
+    String[] parts = path.replace("\\", "/").split("/");
     for (int i = parts.length - 1; i >=0; --i) {
-      final String part = parts[i];
+      String part = parts[i];
       if ("".equals(part) || ".".equals(part)) {
         continue;
       } else if ("..".equals(part)) {
         if (! merger.up()) return null;
         continue;
       }
-      final String vfName = merger.getCurrentName();
+      String vfName = merger.getCurrentName();
       if (vfName == null) return null;
       if ((caseSensitive && vfName.equals(part)) || ((! caseSensitive) && vfName.equalsIgnoreCase(part))) {
         if (! merger.up()) return null;
@@ -137,7 +137,7 @@ public class PathMerger {
   public static class VirtualFilePathMerger implements FilePathMerger<VirtualFile> {
     private VirtualFile myCurrent;
 
-    public VirtualFilePathMerger(final VirtualFile current) {
+    public VirtualFilePathMerger(VirtualFile current) {
       myCurrent = current;
     }
 
@@ -148,7 +148,7 @@ public class PathMerger {
     }
 
     @Override
-    public boolean down(final String name) {
+    public boolean down(String name) {
       VirtualFile nextChild = myCurrent.findChild(name);
       if (nextChild == null) {
         nextChild = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(myCurrent.getPath(), name));
@@ -174,7 +174,7 @@ public class PathMerger {
     private File myBase;
     private final List<String> myChildPathElements;
 
-    public IoFilePathMerger(final File base) {
+    public IoFilePathMerger(File base) {
       myBase = base;
       myChildPathElements = new LinkedList<String>();
     }
@@ -194,7 +194,7 @@ public class PathMerger {
     }
 
     public File getResult() {
-      final StringBuilder sb = new StringBuilder();
+      StringBuilder sb = new StringBuilder();
       for (String element : myChildPathElements) {
         if (sb.length() > 0) {
           sb.append(File.separatorChar);
@@ -217,7 +217,7 @@ public class PathMerger {
     private final IoFilePathMerger myIoDelegate;
     private boolean myIsDirectory;
 
-    public FilePathPathMerger(final FilePath base) {
+    public FilePathPathMerger(FilePath base) {
       myIoDelegate = new IoFilePathMerger(base.getIOFile());
     }
 
@@ -254,7 +254,7 @@ public class PathMerger {
      * @param name
      * @return
      */
-    boolean down(final String name);
+    boolean down(String name);
     T getResult();
     @Nullable
     String getCurrentName();

@@ -168,7 +168,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
   @Nonnull
   @Override
   public PsiManager getManager() {
-    final PsiElement parent = getParent();
+    PsiElement parent = getParent();
     if(parent != null) {
       return parent.getManager();
     }

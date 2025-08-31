@@ -47,12 +47,12 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
   private final ContentAnnotationCache myContentAnnotationCache;
   private static final Logger LOG = Logger.getInstance(VcsContentAnnotationImpl.class);
 
-  public static VcsContentAnnotation getInstance(final Project project) {
+  public static VcsContentAnnotation getInstance(Project project) {
     return ServiceManager.getService(project, VcsContentAnnotation.class);
   }
 
   @Inject
-  public VcsContentAnnotationImpl(Project project, VcsContentAnnotationSettings settings, final ContentAnnotationCache contentAnnotationCache) {
+  public VcsContentAnnotationImpl(Project project, VcsContentAnnotationSettings settings, ContentAnnotationCache contentAnnotationCache) {
     myProject = project;
     mySettings = settings;
     myContentAnnotationCache = contentAnnotationCache;
@@ -61,8 +61,8 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
   @Nullable
   @Override
   public VcsRevisionNumber fileRecentlyChanged(VirtualFile vf) {
-    final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
-    final AbstractVcs vcs = vcsManager.getVcsFor(vf);
+    ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
+    AbstractVcs vcs = vcsManager.getVcsFor(vf);
     if (vcs == null) return null;
 
     DiffProvider diffProvider = vcs.getDiffProvider();
@@ -70,8 +70,8 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
       return null;
     }
 
-    final VcsRevisionDescription description = diffProvider.getCurrentRevisionDescription(vf);
-    final Date date = description.getRevisionDate();
+    VcsRevisionDescription description = diffProvider.getCurrentRevisionDescription(vf);
+    Date date = description.getRevisionDate();
     return isRecent(date) ? description.getRevisionNumber() : null;
   }
 
@@ -81,18 +81,18 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
 
   @Override
   public boolean intervalRecentlyChanged(VirtualFile file, TextRange lineInterval, VcsRevisionNumber currentRevisionNumber) {
-    final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
-    final AbstractVcs vcs = vcsManager.getVcsFor(file);
+    ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
+    AbstractVcs vcs = vcsManager.getVcsFor(file);
     if (vcs == null || vcs.getDiffProvider() == null) return false;
     if (currentRevisionNumber == null) {
       currentRevisionNumber = vcs.getDiffProvider().getCurrentRevision(file);
       assert currentRevisionNumber != null;
     }
-    final ThreeState isRecent = myContentAnnotationCache.isRecent(file, vcs.getKeyInstanceMethod(), currentRevisionNumber, lineInterval,
+    ThreeState isRecent = myContentAnnotationCache.isRecent(file, vcs.getKeyInstanceMethod(), currentRevisionNumber, lineInterval,
                                                                   System.currentTimeMillis() - mySettings.getLimit());
     if (! ThreeState.UNSURE.equals(isRecent)) return ThreeState.YES.equals(isRecent);
 
-    final FileAnnotation fileAnnotation;
+    FileAnnotation fileAnnotation;
     try {
       fileAnnotation = vcs.getAnnotationProvider().annotate(file);
     }

@@ -40,12 +40,12 @@ public final class OtherScopeItemPresenter implements ModelScopeItemPresenter {
 
   private static int getSelectedScopeMnemonic(String name) {
 
-    final int fileIdx = StringUtil.indexOfIgnoreCase(name, "file", 0);
+    int fileIdx = StringUtil.indexOfIgnoreCase(name, "file", 0);
     if (fileIdx > -1) {
       return fileIdx;
     }
 
-    final int dirIdx = StringUtil.indexOfIgnoreCase(name, "directory", 0);
+    int dirIdx = StringUtil.indexOfIgnoreCase(name, "directory", 0);
     if (dirIdx > -1) {
       return dirIdx;
     }

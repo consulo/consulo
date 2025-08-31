@@ -79,7 +79,7 @@ public interface TestStateInfo {
      * @param sortWeight Weight for sort comparator
      * @param title Title
      */
-    Magnitude(final int value, final int sortWeight, final LocalizeValue title) {
+    Magnitude(int value, int sortWeight, LocalizeValue title) {
       myValue = value;
       myTitle = title;
       mySortWeight = sortWeight;

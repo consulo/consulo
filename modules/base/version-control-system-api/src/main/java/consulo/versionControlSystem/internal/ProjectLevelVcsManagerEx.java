@@ -44,5 +44,5 @@ public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
 
   public abstract String haveDefaultMapping();
 
-  public abstract void addInitializationRequest(final VcsInitObject vcsInitObject, final Runnable runnable);
+  public abstract void addInitializationRequest(VcsInitObject vcsInitObject, Runnable runnable);
 }

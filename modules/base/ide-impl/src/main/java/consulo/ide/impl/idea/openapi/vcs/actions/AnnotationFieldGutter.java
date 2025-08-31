@@ -106,7 +106,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
         if (colorMap == null || type == ColorMode.NONE) {
             return null;
         }
-        final VcsRevisionNumber number = myAnnotation.getLineRevisionNumber(line);
+        VcsRevisionNumber number = myAnnotation.getLineRevisionNumber(line);
         if (number == null) {
             return null;
         }

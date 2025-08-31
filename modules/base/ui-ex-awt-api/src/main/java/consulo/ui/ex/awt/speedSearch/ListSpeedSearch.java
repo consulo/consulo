@@ -29,7 +29,7 @@ public class ListSpeedSearch extends SpeedSearchBase<JList> {
     myToStringConvertor = null;
   }
 
-  public ListSpeedSearch(final JList component, final Function<Object, String> convertor) {
+  public ListSpeedSearch(JList component, Function<Object, String> convertor) {
     super(component);
     myToStringConvertor = convertor;
   }
@@ -50,7 +50,7 @@ public class ListSpeedSearch extends SpeedSearchBase<JList> {
     return getAllListElements(myComponent);
   }
 
-  public static Object[] getAllListElements(final JList list) {
+  public static Object[] getAllListElements(JList list) {
     ListModel model = list.getModel();
     if (model instanceof DefaultListModel) { // optimization
       return ((DefaultListModel)model).toArray();

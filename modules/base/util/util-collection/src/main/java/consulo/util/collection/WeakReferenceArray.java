@@ -179,7 +179,7 @@ public class WeakReferenceArray<T> {
   }
 
   private T getImpl(int index) {
-    final MyWeakReference<T> reference = MyWeakReference.getFrom(myReferences, index);
+    MyWeakReference<T> reference = MyWeakReference.getFrom(myReferences, index);
     return reference == null ? null : reference.get();
   }
 
@@ -226,9 +226,9 @@ public class WeakReferenceArray<T> {
     return reference != null && reference.removeFrom(myReferences);
   }
 
-  public void toStrongCollection(final List<T> result) {
+  public void toStrongCollection(List<T> result) {
     for (MyWeakReference reference : myReferences) {
-      final T deref = reference != null ? (T)reference.get() : null;
+      T deref = reference != null ? (T)reference.get() : null;
       if (deref != null) {
         result.add(deref);
       }

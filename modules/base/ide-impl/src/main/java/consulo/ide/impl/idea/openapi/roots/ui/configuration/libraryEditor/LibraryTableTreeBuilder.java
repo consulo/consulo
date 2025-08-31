@@ -36,8 +36,8 @@ class LibraryTableTreeBuilder extends AbstractTreeBuilder {
 
   @Override
   protected boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
-    final Object element = nodeDescriptor.getElement();
-    final Object rootElement = getTreeStructure().getRootElement();
+    Object element = nodeDescriptor.getElement();
+    Object rootElement = getTreeStructure().getRootElement();
     return rootElement.equals(element) || element instanceof OrderRootTypeElement;
   }
 

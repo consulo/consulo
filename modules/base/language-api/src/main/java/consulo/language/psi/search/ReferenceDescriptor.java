@@ -11,8 +11,8 @@ import java.util.function.Function;
  */
 public class ReferenceDescriptor {
   public static final Function<PsiReference, ReferenceDescriptor> MAPPER = psiReference -> {
-    final PsiElement element = psiReference.getElement();
-    final PsiFile file = element.getContainingFile();
+    PsiElement element = psiReference.getElement();
+    PsiFile file = element.getContainingFile();
     return new ReferenceDescriptor(file, element.getTextRange().getStartOffset() + psiReference.getRangeInElement().getStartOffset());
   };
 

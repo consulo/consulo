@@ -70,7 +70,7 @@ public abstract class XDebuggerEvaluator {
    * @return text range of expression
    */
   @Nullable
-  public TextRange getExpressionRangeAtOffset(final Project project, final Document document, int offset, boolean sideEffectsAllowed) {
+  public TextRange getExpressionRangeAtOffset(Project project, Document document, int offset, boolean sideEffectsAllowed) {
     return null;
   }
 

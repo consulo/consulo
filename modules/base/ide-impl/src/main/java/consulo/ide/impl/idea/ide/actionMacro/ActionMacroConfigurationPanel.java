@@ -56,7 +56,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
 
     myMacrosList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent e) {
-        final int selIndex = myMacrosList.getSelectedIndex();
+        int selIndex = myMacrosList.getSelectedIndex();
         if (selIndex == -1) {
           ((DefaultListModel)myMacroActionsList.getModel()).removeAllElements();
         }
@@ -68,7 +68,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
   }
 
   public void reset() {
-    final ActionMacro[] allMacros = ActionMacroManager.getInstance().getAllMacros();
+    ActionMacro[] allMacros = ActionMacroManager.getInstance().getAllMacros();
     for (ActionMacro macro : allMacros) {
       myMacrosModel.addElement(macro.clone());
     }
@@ -90,7 +90,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
       }
     }
 
-    final ActionMacroManager manager = ActionMacroManager.getInstance();
+    ActionMacroManager manager = ActionMacroManager.getInstance();
     ActionMacro[] macros = manager.getAllMacros();
     HashSet<String> removedIds = new HashSet<String>();
     for (ActionMacro macro1 : macros) {
@@ -99,7 +99,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
 
     manager.removeAllMacros();
 
-    final Enumeration newMacros = myMacrosModel.elements();
+    Enumeration newMacros = myMacrosModel.elements();
     while (newMacros.hasMoreElements()) {
       ActionMacro macro = (ActionMacro)newMacros.nextElement();
       manager.addMacro(macro);
@@ -116,7 +116,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
   }
 
   public boolean isModified() {
-    final ActionMacro[] allMacros = ActionMacroManager.getInstance().getAllMacros();
+    ActionMacro[] allMacros = ActionMacroManager.getInstance().getAllMacros();
     if (allMacros.length != myMacrosModel.getSize()) return true;
     for (int i = 0; i < allMacros.length; i++) {
       ActionMacro macro = allMacros[i];
@@ -128,7 +128,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
 
   private void initActionList(ActionMacro macro) {
     DefaultListModel actionModel = new DefaultListModel();
-    final ActionMacro.ActionDescriptor[] actions = macro.getActions();
+    ActionMacro.ActionDescriptor[] actions = macro.getActions();
     for (ActionMacro.ActionDescriptor action : actions) {
       actionModel.addElement(action);
     }
@@ -139,7 +139,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
   public JPanel getPanel() {
     if (mySplitter == null) {
       mySplitter = new Splitter(false, 0.5f);
-      final String value = PropertiesComponent.getInstance().getValue(SPLITTER_PROPORTION);
+      String value = PropertiesComponent.getInstance().getValue(SPLITTER_PROPORTION);
       if (value != null) {
         mySplitter.setProportion(Float.parseFloat(value));
       }
@@ -149,9 +149,9 @@ public class ActionMacroConfigurationPanel implements Disposable {
           .setEditAction(new AnActionButtonRunnable() {
             @Override
             public void run(AnActionButton button) {
-              final int selIndex = myMacrosList.getSelectedIndex();
+              int selIndex = myMacrosList.getSelectedIndex();
               if (selIndex == -1) return;
-              final ActionMacro macro = (ActionMacro)myMacrosModel.getElementAt(selIndex);
+              ActionMacro macro = (ActionMacro)myMacrosModel.getElementAt(selIndex);
               String newName;
               do {
                 newName = Messages.showInputDialog(mySplitter, IdeBundle.message("prompt.enter.new.name"),
@@ -167,10 +167,10 @@ public class ActionMacroConfigurationPanel implements Disposable {
               myMacrosList.repaint();
             }
 
-            private boolean canRenameMacro(final String name) {
-              final Enumeration elements = myMacrosModel.elements();
+            private boolean canRenameMacro(String name) {
+              Enumeration elements = myMacrosModel.elements();
               while (elements.hasMoreElements()) {
-                final ActionMacro macro = (ActionMacro)elements.nextElement();
+                ActionMacro macro = (ActionMacro)elements.nextElement();
                 if (macro.getName().equals(name)) {
                   if (Messages.showYesNoDialog(IdeBundle.message("message.macro.exists", name),
                                                IdeBundle.message("title.macro.name.already.used"),
@@ -190,9 +190,9 @@ public class ActionMacroConfigurationPanel implements Disposable {
           .setRemoveAction(new AnActionButtonRunnable() {
             @Override
             public void run(AnActionButton button) {
-              final int macrosSelectedIndex = myMacrosList.getSelectedIndex();
+              int macrosSelectedIndex = myMacrosList.getSelectedIndex();
               if (macrosSelectedIndex != -1) {
-                final ActionMacro macro = (ActionMacro)myMacrosModel.getElementAt(macrosSelectedIndex);
+                ActionMacro macro = (ActionMacro)myMacrosModel.getElementAt(macrosSelectedIndex);
                 macro.deleteAction(myMacroActionsList.getSelectedIndex());
               }
               ListUtil.removeSelectedItems(myMacroActionsList);

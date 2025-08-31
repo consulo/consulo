@@ -19,15 +19,15 @@ public class StateStorageException extends RuntimeException {
   public StateStorageException() {
   }
 
-  public StateStorageException(final String message) {
+  public StateStorageException(String message) {
     super(message);
   }
 
-  public StateStorageException(final String message, final Throwable cause) {
+  public StateStorageException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  public StateStorageException(final Throwable cause) {
+  public StateStorageException(Throwable cause) {
     super(cause);
   }
 }

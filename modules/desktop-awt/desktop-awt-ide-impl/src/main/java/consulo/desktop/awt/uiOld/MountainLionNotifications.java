@@ -42,7 +42,7 @@ class MountainLionNotifications implements SystemNotificationsImpl.Notifier {
   }
 
   private MountainLionNotifications() {
-    final MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
+    MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
     connection.subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
       @Override
       public void applicationActivated(IdeFrame ideFrame) {
@@ -59,15 +59,15 @@ class MountainLionNotifications implements SystemNotificationsImpl.Notifier {
 
   @Override
   public void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description) {
-    final ID notification = invoke(Foundation.getObjcClass("NSUserNotification"), "new");
+    ID notification = invoke(Foundation.getObjcClass("NSUserNotification"), "new");
     invoke(notification, "setTitle:", nsString(StringUtil.stripHtml(title, true).replace("%", "%%")));
     invoke(notification, "setInformativeText:", nsString(StringUtil.stripHtml(description, true).replace("%", "%%")));
-    final ID center = invoke(Foundation.getObjcClass("NSUserNotificationCenter"), "defaultUserNotificationCenter");
+    ID center = invoke(Foundation.getObjcClass("NSUserNotificationCenter"), "defaultUserNotificationCenter");
     invoke(center, "deliverNotification:", notification);
   }
 
   private static void cleanupDeliveredNotifications() {
-    final ID center = invoke(Foundation.getObjcClass("NSUserNotificationCenter"), "defaultUserNotificationCenter");
+    ID center = invoke(Foundation.getObjcClass("NSUserNotificationCenter"), "defaultUserNotificationCenter");
     invoke(center, "removeAllDeliveredNotifications");
   }
 }

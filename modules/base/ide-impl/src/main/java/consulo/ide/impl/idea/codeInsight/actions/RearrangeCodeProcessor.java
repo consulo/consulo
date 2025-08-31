@@ -74,7 +74,7 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
 
     @Nonnull
     @Override
-    protected FutureTask<Boolean> prepareTask(@Nonnull final PsiFile file, final boolean processChangedTextOnly) {
+    protected FutureTask<Boolean> prepareTask(@Nonnull PsiFile file, boolean processChangedTextOnly) {
         return new FutureTask<>(() -> {
             try {
                 Collection<TextRange> ranges = getRangesToFormat(file, processChangedTextOnly);
@@ -104,8 +104,8 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
     }
 
     @Nonnull
-    private Runnable prepareRearrangeCommand(@Nonnull final PsiFile file, @Nonnull final Collection<TextRange> ranges) {
-        final ArrangementEngine engine = ServiceManager.getService(myProject, ArrangementEngine.class);
+    private Runnable prepareRearrangeCommand(@Nonnull PsiFile file, @Nonnull Collection<TextRange> ranges) {
+        ArrangementEngine engine = ServiceManager.getService(myProject, ArrangementEngine.class);
         return () -> {
             engine.arrange(file, ranges);
             if (getInfoCollector() != null) {

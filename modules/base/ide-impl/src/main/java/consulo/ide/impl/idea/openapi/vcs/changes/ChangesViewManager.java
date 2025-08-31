@@ -164,7 +164,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
   }
 
   public void projectOpened() {
-    final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
+    ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
     changeListManager.addChangeListListener(myListener);
     Disposer.register(myProject, () -> changeListManager.removeChangeListListener(myListener));
 
@@ -211,7 +211,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     toolbarPanel.add(toolbarComponent, BorderLayout.WEST);
 
     DefaultActionGroup visualActionsGroup = new DefaultActionGroup();
-    final Expander expander = new Expander();
+    Expander expander = new Expander();
     visualActionsGroup.add(CommonActionsManager.getInstance().createExpandAllAction(expander, panel));
     visualActionsGroup.add(CommonActionsManager.getInstance().createCollapseAllAction(expander, panel));
 
@@ -237,11 +237,11 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
 
     panel.setToolbar(toolbarPanel);
 
-    final JPanel content = new JPanel(new BorderLayout());
+    JPanel content = new JPanel(new BorderLayout());
     mySplitter = new JBSplitter(false, "ChangesViewManager.DETAILS_SPLITTER_PROPORTION", 0.5f);
     mySplitter.setHonorComponentsMinimumSize(false);
-    final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myView);
-    final JPanel wrapper = new JPanel(new BorderLayout());
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myView);
+    JPanel wrapper = new JPanel(new BorderLayout());
     wrapper.add(scrollPane, BorderLayout.CENTER);
     mySplitter.setFirstComponent(wrapper);
     content.add(mySplitter, BorderLayout.CENTER);
@@ -284,7 +284,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     return Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
   }
 
-  private void updateProgressComponent(@Nonnull final Supplier<JComponent> progress) {
+  private void updateProgressComponent(@Nonnull Supplier<JComponent> progress) {
     //noinspection SSBasedInspection
     SwingUtilities.invokeLater(() -> {
       if (myProgressLabel != null) {
@@ -442,7 +442,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
       scheduleRefresh();
     }
 
-    public void defaultListChanged(final ChangeList oldDefaultList, ChangeList newDefaultList) {
+    public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
       scheduleRefresh();
     }
 

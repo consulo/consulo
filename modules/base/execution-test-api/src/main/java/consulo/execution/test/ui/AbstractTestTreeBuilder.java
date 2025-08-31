@@ -35,10 +35,10 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public abstract class AbstractTestTreeBuilder extends AbstractTreeBuilder {
   public AbstractTestTreeBuilder(
-    final JTree tree,
-    final DefaultTreeModel defaultTreeModel,
-    final AbstractTreeStructure structure,
-    final IndexComparator instance
+    JTree tree,
+    DefaultTreeModel defaultTreeModel,
+    AbstractTreeStructure structure,
+    IndexComparator instance
   ) {
     super(tree, defaultTreeModel, structure, instance);
   }
@@ -47,7 +47,7 @@ public abstract class AbstractTestTreeBuilder extends AbstractTreeBuilder {
     super();
   }
 
-  public void repaintWithParents(final AbstractTestProxy testProxy) {
+  public void repaintWithParents(AbstractTestProxy testProxy) {
     AbstractTestProxy current = testProxy;
     do {
       DefaultMutableTreeNode node = getNodeForElement(current);
@@ -61,7 +61,7 @@ public abstract class AbstractTestTreeBuilder extends AbstractTreeBuilder {
   }
 
   @Override
-  protected boolean isAlwaysShowPlus(final NodeDescriptor descriptor) {
+  protected boolean isAlwaysShowPlus(NodeDescriptor descriptor) {
     return false;
   }
 
@@ -84,8 +84,8 @@ public abstract class AbstractTestTreeBuilder extends AbstractTreeBuilder {
         if (o1.getParentDescriptor() == o2.getParentDescriptor()
           && o1 instanceof BaseTestProxyNodeDescriptor nodeDescriptor1
           && o2 instanceof BaseTestProxyNodeDescriptor nodeDescriptor2) {
-          final Long d1 = nodeDescriptor1.getElement().getDuration();
-          final Long d2 = nodeDescriptor2.getElement().getDuration();
+          Long d1 = nodeDescriptor1.getElement().getDuration();
+          Long d2 = nodeDescriptor2.getElement().getDuration();
           return Comparing.compare(d2, d1);
         }
         return 0;

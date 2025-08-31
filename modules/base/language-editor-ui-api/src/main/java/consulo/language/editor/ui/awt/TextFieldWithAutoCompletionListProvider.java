@@ -37,26 +37,26 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   private String myCompletionAdvertisement;
 
   @Nullable
-  protected abstract Image getIcon(@Nonnull final T item);
+  protected abstract Image getIcon(@Nonnull T item);
 
   @Nonnull
-  protected abstract String getLookupString(@Nonnull final T item);
+  protected abstract String getLookupString(@Nonnull T item);
 
   @Nullable
-  protected abstract String getTailText(@Nonnull final T item);
+  protected abstract String getTailText(@Nonnull T item);
 
   @Nullable
-  protected abstract String getTypeText(@Nonnull final T item);
+  protected abstract String getTypeText(@Nonnull T item);
 
   @Override
   public abstract int compare(T item1, T item2);
 
-  protected TextFieldWithAutoCompletionListProvider(@Nullable final Collection<T> variants) {
+  protected TextFieldWithAutoCompletionListProvider(@Nullable Collection<T> variants) {
     setItems(variants);
     myCompletionAdvertisement = null;
   }
 
-  public void setItems(@Nullable final Collection<T> variants) {
+  public void setItems(@Nullable Collection<T> variants) {
     myVariants = (variants != null) ? variants : Collections.<T>emptyList();
   }
 
@@ -66,7 +66,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
       return Collections.emptyList();
     }
 
-    final List<T> items = new ArrayList<T>(myVariants);
+    List<T> items = new ArrayList<T>(myVariants);
 
     Collections.sort(items, this);
     return items;
@@ -79,8 +79,8 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
    * @return text
    */
   @Nullable
-  public String getQuickDocHotKeyAdvertisement(@Nonnull final String shortcut) {
-    final String advertisementTail = getQuickDocHotKeyAdvertisementTail(shortcut);
+  public String getQuickDocHotKeyAdvertisement(@Nonnull String shortcut) {
+    String advertisementTail = getQuickDocHotKeyAdvertisementTail(shortcut);
     if (advertisementTail == null) {
       return null;
     }
@@ -98,30 +98,30 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
     return myCompletionAdvertisement;
   }
 
-  public void setAdvertisement(@Nullable final String completionAdvertisement) {
+  public void setAdvertisement(@Nullable String completionAdvertisement) {
     myCompletionAdvertisement = completionAdvertisement;
   }
 
   @Nullable
-  public PrefixMatcher createPrefixMatcher(@Nonnull final String prefix) {
+  public PrefixMatcher createPrefixMatcher(@Nonnull String prefix) {
     return new PlainPrefixMatcher(prefix);
   }
 
-  public LookupElementBuilder createLookupBuilder(@Nonnull final T item) {
+  public LookupElementBuilder createLookupBuilder(@Nonnull T item) {
     LookupElementBuilder builder = LookupElementBuilder.create(item, getLookupString(item))
       .withIcon(getIcon(item));
 
-    final InsertHandler<LookupElement> handler = createInsertHandler(item);
+    InsertHandler<LookupElement> handler = createInsertHandler(item);
     if (handler != null) {
       builder = builder.withInsertHandler(handler);
     }
 
-    final String tailText = getTailText(item);
+    String tailText = getTailText(item);
     if (tailText != null) {
       builder = builder.withTailText(tailText, true);
     }
 
-    final String typeText = getTypeText(item);
+    String typeText = getTypeText(item);
     if (typeText != null) {
       builder = builder.withTypeText(typeText);
     }
@@ -129,7 +129,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   }
 
   @Nullable
-  public String getPrefix(@Nonnull final CompletionParameters parameters) {
+  public String getPrefix(@Nonnull CompletionParameters parameters) {
     return getCompletionPrefix(parameters);
   }
 
@@ -140,12 +140,12 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   }
 
   @Nullable
-  protected String getQuickDocHotKeyAdvertisementTail(@Nonnull final String shortcut) {
+  protected String getQuickDocHotKeyAdvertisementTail(@Nonnull String shortcut) {
     return null;
   }
 
   @Nullable
-  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull final T item) {
+  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull T item) {
     return null;
   }
 }

@@ -49,7 +49,7 @@ public abstract class PrattBuilder {
 
   protected abstract PrattBuilder createChildBuilder();
 
-  public boolean assertToken(final PrattTokenType type) {
+  public boolean assertToken(PrattTokenType type) {
     if (checkToken(type)) {
       return true;
     }
@@ -94,7 +94,7 @@ public abstract class PrattBuilder {
   public abstract void reduce(@Nonnull IElementType type);
 
   public ListIterator<IElementType> getBackResultIterator() {
-    final List<IElementType> resultTypes = getResultTypes();
+    List<IElementType> resultTypes = getResultTypes();
     return resultTypes.listIterator(resultTypes.size());
   }
 

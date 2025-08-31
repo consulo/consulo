@@ -32,8 +32,8 @@ public abstract class FileBasedIndexScanRunnableCollector {
     }
 
     // Returns true if file should be indexed
-    public abstract boolean shouldCollect(@Nonnull final VirtualFile file);
+    public abstract boolean shouldCollect(@Nonnull VirtualFile file);
 
     // Collect all roots for indexing
-    public abstract List<Runnable> collectScanRootRunnables(@Nonnull final ContentIterator processor, final ProgressIndicator indicator);
+    public abstract List<Runnable> collectScanRootRunnables(@Nonnull ContentIterator processor, ProgressIndicator indicator);
 }

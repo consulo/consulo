@@ -90,7 +90,7 @@ class EditorSizeAdjustmentStrategy {
     boolean increaseWidth = newPreferredSize.width > oldPreferredSize.width;
     Dimension result;
     if (increaseWidth) {
-      final int spaceWidth = EditorUtil.getSpaceWidth(Font.PLAIN, editor);
+      int spaceWidth = EditorUtil.getSpaceWidth(Font.PLAIN, editor);
       newPreferredSize.width += myReserveColumns * spaceWidth;
       myReserveColumns += 3;
       result = newPreferredSize;

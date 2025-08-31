@@ -32,12 +32,12 @@ public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Res
   }
 
   @Override
-  public void registerExecutor(@Nonnull final QueryExecutor<Result, Parameters> queryExecutor) {
+  public void registerExecutor(@Nonnull QueryExecutor<Result, Parameters> queryExecutor) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void unregisterExecutor(@Nonnull final QueryExecutor<Result, Parameters> queryExecutor) {
+  public void unregisterExecutor(@Nonnull QueryExecutor<Result, Parameters> queryExecutor) {
     throw new UnsupportedOperationException();
   }
 

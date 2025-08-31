@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 public abstract class RunManager {
   public static final String UNNAMED = "Unnamed";
 
-  public static RunManager getInstance(final Project project) {
+  public static RunManager getInstance(Project project) {
     return project.getInstance(RunManager.class);
   }
 
@@ -224,7 +224,7 @@ public abstract class RunManager {
    *
    * @param settings the run configuration settings.
    */
-  public void addConfiguration(final RunnerAndConfigurationSettings settings) {
+  public void addConfiguration(RunnerAndConfigurationSettings settings) {
     addConfiguration(settings, false);
   }
 
@@ -235,7 +235,7 @@ public abstract class RunManager {
    * @param isShared true if the configuration is marked as shared (stored in the versioned part of the project files), false if it's local
    *                 (stored in the workspace file).
    */
-  public abstract void addConfiguration(final RunnerAndConfigurationSettings settings, final boolean isShared);
+  public abstract void addConfiguration(RunnerAndConfigurationSettings settings, boolean isShared);
 
   /**
    * Marks the specified run configuration as recently used (the temporary run configurations are deleted in LRU order).
@@ -250,11 +250,11 @@ public abstract class RunManager {
   public static String suggestUniqueName(@Nonnull String str, @Nonnull Collection<String> currentNames) {
     if (!currentNames.contains(str)) return str;
 
-    final Matcher matcher = Pattern.compile("(.*?)\\s*\\(\\d+\\)").matcher(str);
-    final String originalName = (matcher.matches()) ? matcher.group(1) : str;
+    Matcher matcher = Pattern.compile("(.*?)\\s*\\(\\d+\\)").matcher(str);
+    String originalName = (matcher.matches()) ? matcher.group(1) : str;
     int i = 1;
     while (true) {
-      final String newName = String.format("%s (%d)", originalName, i);
+      String newName = String.format("%s (%d)", originalName, i);
       if (!currentNames.contains(newName)) return newName;
       i++;
     }
@@ -303,7 +303,7 @@ public abstract class RunManager {
   @Nonnull
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
 
-  public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable final String name);
+  public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable String name);
 
   @Nonnull
   public abstract Collection<RunnerAndConfigurationSettings> getSortedConfigurations();

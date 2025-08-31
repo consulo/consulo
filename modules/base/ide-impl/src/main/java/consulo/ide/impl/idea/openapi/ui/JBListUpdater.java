@@ -18,8 +18,8 @@ public class JBListUpdater<T> implements ListComponentUpdater<T> {
   }
 
   @Override
-  public void paintBusy(final boolean paintBusy) {
-    final Runnable runnable = () -> myComponent.setPaintBusy(paintBusy);
+  public void paintBusy(boolean paintBusy) {
+    Runnable runnable = () -> myComponent.setPaintBusy(paintBusy);
     //ensure start/end order
     SwingUtilities.invokeLater(runnable);
   }
@@ -30,8 +30,8 @@ public class JBListUpdater<T> implements ListComponentUpdater<T> {
 
   @Override
   public void replaceModel(@Nonnull List<? extends T> data) {
-    final Object selectedValue = myComponent.getSelectedValue();
-    final int index = myComponent.getSelectedIndex();
+    Object selectedValue = myComponent.getSelectedValue();
+    int index = myComponent.getSelectedIndex();
     ListModel model = myComponent.getModel();
     if (model instanceof NameFilteringListModel) {
       ((NameFilteringListModel)model).replaceAll(data);

@@ -75,7 +75,7 @@ public abstract class DiffWindowBase {
         Disposer.register(myWrapper, myProcessor);
 
         new DumbAwareAction() {
-            public void actionPerformed(final AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 myWrapper.close();
             }
         }.registerCustomShortcutSet(CommonShortcuts.getCloseActiveWindow(), myProcessor.getComponent());

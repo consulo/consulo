@@ -74,7 +74,7 @@ public interface PairedBraceMatcher extends LanguageExtension {
    * @param openingBraceOffset the offset of an opening structural brace.
    * @return the offset of corresponding code construct, or the same offset if not defined.
    */
-  default int getCodeConstructStart(final PsiFile file, int openingBraceOffset) {
+  default int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
     return openingBraceOffset;
   }
 }

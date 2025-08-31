@@ -29,7 +29,7 @@ public interface VcsLineAnnotationData {
   int getNumLines();
 
   @Nullable
-  VcsRevisionNumber getRevision(final int lineNumber);
+  VcsRevisionNumber getRevision(int lineNumber);
 
-  void put(final int lineNumber, final VcsRevisionNumber revisionNumber);
+  void put(int lineNumber, VcsRevisionNumber revisionNumber);
 }

@@ -124,23 +124,23 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     rightComponent.setBorder(createContentPaneBorder());
     splitter.setSecondComponent(rightComponent);
 
-    final JComponent second = splitterComponents.getSecond();
+    JComponent second = splitterComponents.getSecond();
     assert second != null;
     rightComponent.add(myTitlelessDecorator.modifyRightComponent(rootPanel, second), BorderLayout.CENTER);
     myErrorPane = second;
 
-    final JPanel southSection = new JPanel(new BorderLayout());
+    JPanel southSection = new JPanel(new BorderLayout());
     rightComponent.add(southSection, BorderLayout.SOUTH);
 
     southSection.add(myErrorText, BorderLayout.CENTER);
-    final JComponent south = createSouthPanel();
+    JComponent south = createSouthPanel();
     if (south != null) {
       southSection.add(south, BorderLayout.SOUTH);
     }
 
     String dimensionKey = getDimensionKey();
     if (dimensionKey != null) {
-      final Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(Project.KEY);
+      Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(Project.KEY);
       WindowStateService stateService = projectGuess == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(projectGuess);
       Size2D size = stateService.getSize(dimensionKey);
       if (size == null) {

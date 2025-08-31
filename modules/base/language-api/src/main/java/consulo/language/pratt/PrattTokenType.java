@@ -29,12 +29,12 @@ import jakarta.annotation.Nullable;
 public class PrattTokenType extends IElementType {
 
 
-  public PrattTokenType(@Nonnull @NonNls final String debugName,
-                        @Nullable final Language language) {
+  public PrattTokenType(@Nonnull @NonNls String debugName,
+                        @Nullable Language language) {
     super(debugName, language);
   }
 
-  public String getExpectedText(final PrattBuilder builder) {
+  public String getExpectedText(PrattBuilder builder) {
     return PsiBundle.message("0.expected", toString());
   }
 

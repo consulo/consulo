@@ -36,7 +36,7 @@ public interface ChangeListGroupingStrategy {
       return VcsBundle.message("user.group.title");
     }
 
-    public String getGroupName(final CommittedChangeList changeList) {
+    public String getGroupName(CommittedChangeList changeList) {
       return changeList.getCommitterName();
     }
 
@@ -49,7 +49,7 @@ public interface ChangeListGroupingStrategy {
 
     public Comparator<CommittedChangeList> getComparator() {
       return new Comparator<CommittedChangeList>() {
-        public int compare(final CommittedChangeList o1, final CommittedChangeList o2) {
+        public int compare(CommittedChangeList o1, CommittedChangeList o2) {
           int rc = o1.getCommitterName().compareToIgnoreCase(o2.getCommitterName());
           if (rc == 0) {
             return -o1.getCommitDate().compareTo(o2.getCommitDate());

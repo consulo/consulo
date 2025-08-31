@@ -24,13 +24,13 @@ import jakarta.annotation.Nullable;
 public class ShelvedBinaryFilePatch extends FilePatch {
   private final ShelvedBinaryFile myShelvedBinaryFile;
 
-  public ShelvedBinaryFilePatch(@Nonnull final ShelvedBinaryFile shelvedBinaryFile) {
+  public ShelvedBinaryFilePatch(@Nonnull ShelvedBinaryFile shelvedBinaryFile) {
     myShelvedBinaryFile = shelvedBinaryFile;
     setBeforeName(myShelvedBinaryFile.BEFORE_PATH);
     setAfterName(myShelvedBinaryFile.AFTER_PATH);
   }
 
-  public static ShelvedBinaryFilePatch patchCopy(@Nonnull final ShelvedBinaryFilePatch patch) {
+  public static ShelvedBinaryFilePatch patchCopy(@Nonnull ShelvedBinaryFilePatch patch) {
     return new ShelvedBinaryFilePatch(patch.getShelvedBinaryFile());
   }
 

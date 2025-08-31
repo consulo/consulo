@@ -199,7 +199,7 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
   @Override
   @Nonnull
   public List<DiffFragment> convertIntoDiffFragments(@Nonnull DiffIterable changes) {
-    final List<DiffFragment> fragments = new ArrayList<>();
+    List<DiffFragment> fragments = new ArrayList<>();
     for (Range ch : changes.iterateChanges()) {
       fragments.add(new DiffFragmentImpl(ch.start1, ch.end1, ch.start2, ch.end2));
     }
@@ -260,7 +260,7 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
   public List<LineFragment> squash(@Nonnull List<LineFragment> oldFragments) {
     if (oldFragments.isEmpty()) return oldFragments;
 
-    final List<LineFragment> newFragments = new ArrayList<>();
+    List<LineFragment> newFragments = new ArrayList<>();
     processAdjoining(oldFragments, fragments -> newFragments.add(doSquash(fragments)));
     return newFragments;
   }
@@ -268,13 +268,13 @@ public class ComparisonManagerImpl implements ComparisonManagerEx {
   @Nonnull
   @Override
   public List<LineFragment> processBlocks(@Nonnull List<LineFragment> oldFragments,
-                                          @Nonnull final CharSequence text1, @Nonnull final CharSequence text2,
-                                          @Nonnull final ComparisonPolicy policy,
-                                          final boolean squash, final boolean trim) {
+                                          @Nonnull CharSequence text1, @Nonnull CharSequence text2,
+                                          @Nonnull ComparisonPolicy policy,
+                                          boolean squash, boolean trim) {
     if (!squash && !trim) return oldFragments;
     if (oldFragments.isEmpty()) return oldFragments;
 
-    final List<LineFragment> newFragments = new ArrayList<>();
+    List<LineFragment> newFragments = new ArrayList<>();
     processAdjoining(oldFragments, fragments -> newFragments.addAll(processAdjoining(fragments, text1, text2, policy, squash, trim)));
     return newFragments;
   }

@@ -211,7 +211,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
 
     @Override
-    public final void uiSettingsChanged(final UISettings uiSettings) {
+    public final void uiSettingsChanged(UISettings uiSettings) {
         updateToolStripesVisibility();
         updateLayout();
     }
@@ -226,13 +226,13 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      */
     @RequiredUIAccess
     @Override
-    public final void addButton(final ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
-        final WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
+    public final void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
+        WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
         myId2Button.put(copiedInfo.getId(), (DesktopStripeButton) button);
         myButton2Info.put((DesktopStripeButton) button, copiedInfo);
 
 
-        final ToolWindowAnchor anchor = copiedInfo.getAnchor();
+        ToolWindowAnchor anchor = copiedInfo.getAnchor();
         if (ToolWindowAnchor.TOP == anchor) {
             myTopStripe.addButton((DesktopStripeButton) button, comparator);
         }
@@ -261,9 +261,9 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      */
     @Override
     @RequiredUIAccess
-    public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, final boolean dirtyMode) {
-        final WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
-        final String id = copiedInfo.getId();
+    public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode) {
+        WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
+        String id = copiedInfo.getId();
 
         myDecorator2Info.put((DesktopInternalDecorator) decorator, copiedInfo);
         myId2Decorator.put(id, (DesktopInternalDecorator) decorator);
@@ -293,15 +293,15 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     @Override
     @RequiredUIAccess
     public void removeButton(@Nonnull String id) {
-        final DesktopStripeButton button = getButtonById(id);
+        DesktopStripeButton button = getButtonById(id);
         if (button == null) {
             return;
         }
-        final WindowInfoImpl info = getButtonInfoById(id);
+        WindowInfoImpl info = getButtonInfoById(id);
 
         myButton2Info.remove(button);
         myId2Button.remove(id);
-        final ToolWindowAnchor anchor = info.getAnchor();
+        ToolWindowAnchor anchor = info.getAnchor();
         if (ToolWindowAnchor.TOP == anchor) {
             myTopStripe.removeButton(button);
         }
@@ -330,9 +330,9 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      */
     @RequiredUIAccess
     @Nonnull
-    public void removeDecorator(@Nonnull String id, final boolean dirtyMode) {
-        final Component decorator = getDecoratorById(id);
-        final WindowInfoImpl info = getDecoratorInfoById(id);
+    public void removeDecorator(@Nonnull String id, boolean dirtyMode) {
+        Component decorator = getDecoratorById(id);
+        WindowInfoImpl info = getDecoratorInfoById(id);
 
         myDecorator2Info.remove(decorator);
         myId2Decorator.remove(id);
@@ -362,7 +362,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      */
     @Override
     @RequiredUIAccess
-    public void setEditorComponent(final Object component) {
+    public void setEditorComponent(Object component) {
         setDocumentComponent((JComponent) component);
 
         myLayeredPane.validate();
@@ -404,11 +404,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
 
     @Nullable
-    private DesktopStripeButton getButtonById(final String id) {
+    private DesktopStripeButton getButtonById(String id) {
         return myId2Button.get(id);
     }
 
-    private Component getDecoratorById(final String id) {
+    private Component getDecoratorById(String id) {
         return myId2Decorator.get(id);
     }
 
@@ -416,7 +416,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      * @param id <code>ID</code> of tool stripe butoon.
      * @return <code>WindowInfo</code> associated with specified tool stripe button.
      */
-    private WindowInfoImpl getButtonInfoById(final String id) {
+    private WindowInfoImpl getButtonInfoById(String id) {
         return myButton2Info.get(myId2Button.get(id));
     }
 
@@ -424,14 +424,14 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
      * @param id <code>ID</code> of decorator.
      * @return <code>WindowInfo</code> associated with specified window decorator.
      */
-    private WindowInfoImpl getDecoratorInfoById(final String id) {
+    private WindowInfoImpl getDecoratorInfoById(String id) {
         return myDecorator2Info.get(myId2Decorator.get(id));
     }
 
     /**
      * Sets (docks) specified component to the specified anchor.
      */
-    private void setComponent(final JComponent component, @Nonnull ToolWindowAnchor anchor, final float weight) {
+    private void setComponent(JComponent component, @Nonnull ToolWindowAnchor anchor, float weight) {
         if (ToolWindowAnchor.TOP == anchor) {
             myVerticalSplitter.setFirstComponent(component);
             myVerticalSplitter.setFirstSize((int) (myLayeredPane.getHeight() * weight));
@@ -487,14 +487,14 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         return null;
     }
 
-    private void setDocumentComponent(final JComponent component) {
+    private void setDocumentComponent(JComponent component) {
         (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setInnerComponent(component);
     }
 
     private void updateToolStripesVisibility() {
         boolean oldVisible = myLeftStripe.isVisible();
 
-        final boolean showButtons = !UISettings.getInstance().getHideToolStripes() && !UISettings.getInstance().getPresentationMode();
+        boolean showButtons = !UISettings.getInstance().getHideToolStripes() && !UISettings.getInstance().getPresentationMode();
         boolean visible = showButtons || myStripesOverlayed;
         myLeftStripe.setVisible(visible);
         myRightStripe.setVisible(visible);
@@ -532,7 +532,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             return null;
         }
 
-        final ToolWindowAnchor anchor = myManager.getToolWindow(id).getAnchor();
+        ToolWindowAnchor anchor = myManager.getToolWindow(id).getAnchor();
         if (ToolWindowAnchor.TOP == anchor) {
             return myTopStripe;
         }
@@ -834,7 +834,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public AddDockedComponentCmd(@Nonnull JComponent component, @Nonnull WindowInfoImpl info, final boolean dirtyMode) {
+        public AddDockedComponentCmd(@Nonnull JComponent component, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
             myComponent = component;
             myInfo = info;
             myDirtyMode = dirtyMode;
@@ -842,7 +842,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
         @Override
         public final void run() {
-            final ToolWindowAnchor anchor = myInfo.getAnchor();
+            ToolWindowAnchor anchor = myInfo.getAnchor();
             setComponent(myComponent, anchor, WindowInfoImpl.normalizeWeigh(myInfo.getWeight()));
             if (!myDirtyMode) {
                 myLayeredPane.validate();
@@ -856,7 +856,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        private AddAndSplitDockedComponentCmd(@Nonnull JComponent newComponent, @Nonnull WindowInfoImpl info, final boolean dirtyMode) {
+        private AddAndSplitDockedComponentCmd(@Nonnull JComponent newComponent, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
             myNewComponent = newComponent;
             myInfo = info;
             myDirtyMode = dirtyMode;
@@ -946,7 +946,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public AddSlidingComponentCmd(@Nonnull Component component, @Nonnull WindowInfoImpl info, final boolean dirtyMode) {
+        public AddSlidingComponentCmd(@Nonnull Component component, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
             myComponent = component;
             myInfo = info;
             myDirtyMode = dirtyMode;
@@ -957,8 +957,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             // Show component.
             if (!myDirtyMode && UISettings.getInstance().getAnimateWindows() && !RemoteDesktopService.isRemoteSession()) {
                 // Prepare top image. This image is scrolling over bottom image.
-                final Image topImage = myLayeredPane.getTopImage();
-                final Graphics topGraphics = topImage.getGraphics();
+                Image topImage = myLayeredPane.getTopImage();
+                Graphics topGraphics = topImage.getGraphics();
 
                 Rectangle bounds;
 
@@ -974,8 +974,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                     topGraphics.dispose();
                 }
                 // Prepare bottom image.
-                final Image bottomImage = myLayeredPane.getBottomImage();
-                final Graphics bottomGraphics = bottomImage.getGraphics();
+                Image bottomImage = myLayeredPane.getBottomImage();
+                Graphics bottomGraphics = bottomImage.getGraphics();
                 try {
                     bottomGraphics.setClip(0, 0, bounds.width, bounds.height);
                     bottomGraphics.translate(-bounds.x, -bounds.y);
@@ -985,7 +985,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                     bottomGraphics.dispose();
                 }
                 // Start animation.
-                final Surface surface = new Surface(topImage, bottomImage, 1, myInfo.getAnchor(), UISettings.ANIMATION_DURATION);
+                Surface surface = new Surface(topImage, bottomImage, 1, myInfo.getAnchor(), UISettings.ANIMATION_DURATION);
                 myLayeredPane.add(surface, JLayeredPane.PALETTE_LAYER);
                 surface.setBounds(bounds);
                 myLayeredPane.validate();
@@ -1010,7 +1010,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, final boolean dirtyMode) {
+        public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, boolean dirtyMode) {
             myInfo = info;
             myDirtyMode = dirtyMode;
         }
@@ -1040,7 +1040,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             JComponent c = getComponentAt(anchor);
             if (c instanceof Splitter) {
                 Splitter splitter = (Splitter) c;
-                final DesktopInternalDecorator component = myInfo.isSplit() ? (DesktopInternalDecorator) splitter.getFirstComponent() : (DesktopInternalDecorator) splitter.getSecondComponent();
+                DesktopInternalDecorator component = myInfo.isSplit() ? (DesktopInternalDecorator) splitter.getFirstComponent() : (DesktopInternalDecorator) splitter.getSecondComponent();
                 if (myInfo.isSplit() && component != null) {
                     myId2SplitProportion.put(component.getWindowInfo().getId(), splitter.getProportion());
                 }
@@ -1069,13 +1069,13 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
         @Override
         public final void run() {
-            final UISettings uiSettings = UISettings.getInstance();
+            UISettings uiSettings = UISettings.getInstance();
             if (!myDirtyMode && uiSettings.getAnimateWindows() && !RemoteDesktopService.isRemoteSession()) {
-                final Rectangle bounds = myComponent.getBounds();
+                Rectangle bounds = myComponent.getBounds();
                 // Prepare top image. This image is scrolling over bottom image. It contains
                 // picture of component is being removed.
-                final Image topImage = myLayeredPane.getTopImage();
-                final Graphics topGraphics = topImage.getGraphics();
+                Image topImage = myLayeredPane.getTopImage();
+                Graphics topGraphics = topImage.getGraphics();
                 try {
                     myComponent.paint(topGraphics);
                 }
@@ -1084,8 +1084,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                 }
                 // Prepare bottom image. This image contains picture of component that is located
                 // under the component to is being removed.
-                final Image bottomImage = myLayeredPane.getBottomImage();
-                final Graphics bottomGraphics = bottomImage.getGraphics();
+                Image bottomImage = myLayeredPane.getBottomImage();
+                Graphics bottomGraphics = bottomImage.getGraphics();
                 try {
                     myLayeredPane.remove(myComponent);
                     bottomGraphics.clipRect(0, 0, bounds.width, bounds.height);
@@ -1096,7 +1096,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                     bottomGraphics.dispose();
                 }
                 // Remove component from the layered pane and start animation.
-                final Surface surface = new Surface(topImage, bottomImage, -1, myInfo.getAnchor(), UISettings.ANIMATION_DURATION);
+                Surface surface = new Surface(topImage, bottomImage, -1, myInfo.getAnchor(), UISettings.ANIMATION_DURATION);
                 myLayeredPane.add(surface, JLayeredPane.PALETTE_LAYER);
                 surface.setBounds(bounds);
                 myLayeredPane.validate();
@@ -1146,8 +1146,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             Window awtWindow = TargetAWT.to(myIdeFrame.getWindow());
             BufferedImage image = SoftReference.dereference(imageRef);
             if (image == null || image.getWidth(null) < getWidth() || image.getHeight(null) < getHeight()) {
-                final int width = Math.max(Math.max(1, getWidth()), awtWindow.getWidth());
-                final int height = Math.max(Math.max(1, getHeight()), awtWindow.getHeight());
+                int width = Math.max(Math.max(1, getWidth()), awtWindow.getWidth());
+                int height = Math.max(Math.max(1, getHeight()), awtWindow.getHeight());
                 if (Platform.current().os().isWindows()) {
                     image = awtWindow.getGraphicsConfiguration().createCompatibleImage(width, height);
                 }
@@ -1169,31 +1169,31 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
          */
         @Override
         public void doLayout() {
-            final int width = getWidth();
-            final int height = getHeight();
+            int width = getWidth();
+            int height = getHeight();
             if (width < 0 || height < 0) {
                 return;
             }
             // Resize component at the DEFAULT layer. It should be only on component in that layer
             Component[] components = getComponentsInLayer(JLayeredPane.DEFAULT_LAYER.intValue());
             LOG.assertTrue(components.length <= 1);
-            for (final Component component : components) {
+            for (Component component : components) {
                 component.setBounds(0, 0, getWidth(), getHeight());
             }
             // Resize components at the PALETTE layer
             components = getComponentsInLayer(JLayeredPane.PALETTE_LAYER.intValue());
-            for (final Component component : components) {
+            for (Component component : components) {
                 if (!(component instanceof DesktopInternalDecorator)) {
                     continue;
                 }
-                final WindowInfoImpl info = myDecorator2Info.get(component);
+                WindowInfoImpl info = myDecorator2Info.get(component);
                 // In normal situation info is not null. But sometimes Swing sends resize
                 // event to removed component. See SCR #19566.
                 if (info == null) {
                     continue;
                 }
 
-                final float weight;
+                float weight;
                 if (info.getAnchor().isHorizontal()) {
                     weight = (float) component.getHeight() / (float) getHeight();
                 }
@@ -1218,11 +1218,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                 component.setBounds(0, 0, (int) (getWidth() * weight + .5f), getHeight());
             }
             else if (ToolWindowAnchor.BOTTOM == anchor) {
-                final int height = (int) (getHeight() * weight + .5f);
+                int height = (int) (getHeight() * weight + .5f);
                 component.setBounds(0, getHeight() - height, getWidth(), height);
             }
             else if (ToolWindowAnchor.RIGHT == anchor) {
-                final int width = (int) (getWidth() * weight + .5f);
+                int width = (int) (getWidth() * weight + .5f);
                 component.setBounds(getWidth() - width, 0, width, getHeight());
             }
             else {

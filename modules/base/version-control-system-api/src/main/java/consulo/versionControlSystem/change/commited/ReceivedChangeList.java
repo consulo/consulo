@@ -47,7 +47,7 @@ public class ReceivedChangeList extends CommittedChangeListImpl {
     return myForcePartial || myChanges.size() < myBaseCount;
   }
 
-  public void setForcePartial(final boolean forcePartial) {
+  public void setForcePartial(boolean forcePartial) {
     myForcePartial = forcePartial;
   }
 
@@ -66,11 +66,11 @@ public class ReceivedChangeList extends CommittedChangeListImpl {
     myBaseList.setDescription(newMessage);
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final ReceivedChangeList that = (ReceivedChangeList)o;
+    ReceivedChangeList that = (ReceivedChangeList)o;
 
     if (!myBaseList.equals(that.myBaseList)) return false;
 

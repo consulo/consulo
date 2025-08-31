@@ -63,7 +63,7 @@ public class ProjectData implements CoverageData, Serializable {
 
     private static Object ourProjectDataObject;
 
-    public ClassData getClassData(final String name) {
+    public ClassData getClassData(String name) {
         return myClasses.get(name);
     }
 
@@ -97,21 +97,21 @@ public class ProjectData implements CoverageData, Serializable {
     }
 
     public static ProjectData createProjectData() throws IOException {
-        final ProjectData projectData = createProjectData(null, null, false, true);
+        ProjectData projectData = createProjectData(null, null, false, true);
         projectData.myDiscovery = true;
         return projectData;
     }
 
 
     public static ProjectData createProjectData(
-        final File dataFile,
-        final ProjectData initialData,
+        File dataFile,
+        ProjectData initialData,
         boolean traceLines,
         boolean isSampling
     ) throws IOException {
         ourProjectData = initialData == null ? new ProjectData() : initialData;
         if (dataFile != null && !dataFile.exists()) {
-            final File parentDir = dataFile.getParentFile();
+            File parentDir = dataFile.getParentFile();
             if (parentDir != null && !parentDir.exists()) {
                 parentDir.mkdirs();
             }
@@ -123,11 +123,11 @@ public class ProjectData implements CoverageData, Serializable {
         return ourProjectData;
     }
 
-    public void merge(final CoverageData data) {
-        final ProjectData projectData = (ProjectData)data;
+    public void merge(CoverageData data) {
+        ProjectData projectData = (ProjectData)data;
         for (Iterator iter = projectData.myClasses.names().iterator(); iter.hasNext(); ) {
-            final String key = (String)iter.next();
-            final ClassData mergedData = projectData.myClasses.get(key);
+            String key = (String)iter.next();
+            ClassData mergedData = projectData.myClasses.get(key);
             ClassData classData = myClasses.get(key);
             if (classData == null) {
                 classData = new ClassData(mergedData.getName());
@@ -140,18 +140,18 @@ public class ProjectData implements CoverageData, Serializable {
     public void checkLineMappings() {
         if (myLinesMap != null) {
             for (Iterator iterator = myLinesMap.keySet().iterator(); iterator.hasNext(); ) {
-                final String className = (String)iterator.next();
-                final ClassData classData = getClassData(className);
-                final FileMapData[] fileData = (FileMapData[])myLinesMap.get(className);
+                String className = (String)iterator.next();
+                ClassData classData = getClassData(className);
+                FileMapData[] fileData = (FileMapData[])myLinesMap.get(className);
                 //postpone process main file because its lines would be reset and next files won't be processed correctly
                 FileMapData mainData = null;
                 for (int i = 0; i < fileData.length; i++) {
-                    final String fileName = fileData[i].getClassName();
+                    String fileName = fileData[i].getClassName();
                     if (fileName.equals(className)) {
                         mainData = fileData[i];
                         continue;
                     }
-                    final ClassData classInfo = getOrCreateClassData(fileName);
+                    ClassData classInfo = getOrCreateClassData(fileName);
                     classInfo.checkLineMappings(fileData[i].getLines(), classData);
                 }
 
@@ -173,11 +173,11 @@ public class ProjectData implements CoverageData, Serializable {
     }
 
     // --------------- used from listeners --------------------- //
-    public void testEnded(final String name) {
+    public void testEnded(String name) {
         if (myTrace == null) {
             return;
         }
-        final File traceFile = new File(getTracesDir(), name + ".tr");
+        File traceFile = new File(getTracesDir(), name + ".tr");
         try {
             if (!traceFile.exists()) {
                 traceFile.createNewFile();
@@ -187,9 +187,9 @@ public class ProjectData implements CoverageData, Serializable {
                 os = new DataOutputStream(new FileOutputStream(traceFile));
                 os.writeInt(myTrace.size());
                 for (Iterator it = myTrace.keySet().iterator(); it.hasNext(); ) {
-                    final Object classData = it.next();
+                    Object classData = it.next();
                     os.writeUTF(classData.toString());
-                    final boolean[] lines = (boolean[])myTrace.get(classData);
+                    boolean[] lines = (boolean[])myTrace.get(classData);
                     int numberOfTraces = 0;
                     for (int idx = 0; idx < lines.length; idx++) {
                         if (lines[idx]) {
@@ -198,7 +198,7 @@ public class ProjectData implements CoverageData, Serializable {
                     }
                     os.writeInt(numberOfTraces);
                     for (int idx = 0; idx < lines.length; idx++) {
-                        final boolean incl = lines[idx];
+                        boolean incl = lines[idx];
                         if (incl) {
                             os.writeInt(idx);
                         }
@@ -219,7 +219,7 @@ public class ProjectData implements CoverageData, Serializable {
         }
     }
 
-    public void testStarted(final String name) {
+    public void testStarted(String name) {
         myCurrentTestName = name;
         if (myTraceLines) {
             myTrace = new ConcurrentHashMap();
@@ -230,9 +230,9 @@ public class ProjectData implements CoverageData, Serializable {
 
     private File getTracesDir() {
         if (myTracesDir == null) {
-            final String fileName = myDataFile.getName();
-            final int i = fileName.lastIndexOf('.');
-            final String dirName = i != -1 ? fileName.substring(0, i) : fileName;
+            String fileName = myDataFile.getName();
+            int i = fileName.lastIndexOf('.');
+            String dirName = i != -1 ? fileName.substring(0, i) : fileName;
             myTracesDir = new File(myDataFile.getParent(), dirName);
             if (!myTracesDir.exists()) {
                 myTracesDir.mkdirs();
@@ -243,7 +243,7 @@ public class ProjectData implements CoverageData, Serializable {
 
     public static String getCurrentTestName() {
         try {
-            final Object projectDataObject = getProjectDataObject();
+            Object projectDataObject = getProjectDataObject();
             return (String)projectDataObject.getClass().getDeclaredField("myCurrentTestName").get(projectDataObject);
         }
         catch (Exception e) {
@@ -301,7 +301,7 @@ public class ProjectData implements CoverageData, Serializable {
 
         touch(TOUCH_METHOD, classData, new Object[]{Integer.valueOf(line)});
         try {
-            final Object projectData = getProjectDataObject();
+            Object projectData = getProjectDataObject();
             TRACE_LINE_METHOD.invoke(projectData, new Object[]{classData, Integer.valueOf(line)});
         }
         catch (Exception e) {
@@ -309,7 +309,7 @@ public class ProjectData implements CoverageData, Serializable {
         }
     }
 
-    private static Object touch(final MethodCaller methodCaller, Object classData, final Object[] paramValues) {
+    private static Object touch(MethodCaller methodCaller, Object classData, Object[] paramValues) {
         try {
             return methodCaller.invoke(classData, paramValues);
         }
@@ -324,7 +324,7 @@ public class ProjectData implements CoverageData, Serializable {
             return ourProjectData.getClassData(className).touchLines(lines);
         }
         try {
-            final Object projectDataObject = getProjectDataObject();
+            Object projectDataObject = getProjectDataObject();
             Object classData = GET_CLASS_DATA_METHOD.invoke(projectDataObject, new Object[]{className});
             return (int[])touch(TOUCH_LINES_METHOD, classData, new Object[]{lines});
         }
@@ -339,7 +339,7 @@ public class ProjectData implements CoverageData, Serializable {
             return ourProjectData.getClassData(className);
         }
         try {
-            final Object projectDataObject = getProjectDataObject();
+            Object projectDataObject = getProjectDataObject();
             return GET_CLASS_DATA_METHOD.invoke(projectDataObject, new Object[]{className});
         }
         catch (Exception e) {
@@ -350,7 +350,7 @@ public class ProjectData implements CoverageData, Serializable {
 
     private static Object getProjectDataObject() throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException {
         if (ourProjectDataObject == null) {
-            final Class projectDataClass = Class.forName(ProjectData.class.getName(), false, null);
+            Class projectDataClass = Class.forName(ProjectData.class.getName(), false, null);
             ourProjectDataObject = projectDataClass.getDeclaredField("ourProjectData").get(null);
         }
         return ourProjectDataObject;
@@ -381,12 +381,12 @@ public class ProjectData implements CoverageData, Serializable {
         private String myMethodName;
         private Class[] myParamTypes;
 
-        private MethodCaller(final String methodName, final Class[] paramTypes) {
+        private MethodCaller(String methodName, Class[] paramTypes) {
             myMethodName = methodName;
             myParamTypes = paramTypes;
         }
 
-        public Object invoke(Object thisObj, final Object[] paramValues)
+        public Object invoke(Object thisObj, Object[] paramValues)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
             if (myMethod == null) {
                 myMethod = findMethod(thisObj.getClass(), myMethodName, myParamTypes);
@@ -394,7 +394,7 @@ public class ProjectData implements CoverageData, Serializable {
             return myMethod.invoke(thisObj, paramValues);
         }
 
-        private static Method findMethod(final Class clazz, String name, Class[] paramTypes) throws NoSuchMethodException {
+        private static Method findMethod(Class clazz, String name, Class[] paramTypes) throws NoSuchMethodException {
             Method m = clazz.getDeclaredMethod(name, paramTypes);
             // speedup method invocation by calling setAccessible(true)
             m.setAccessible(true);
@@ -415,15 +415,15 @@ public class ProjectData implements CoverageData, Serializable {
 
         public ClassData get(String name) {
             int idx = Math.abs(name.hashCode() % POOL_SIZE);
-            final IdentityClassData lastClassData = myIdentityArray[idx];
+            IdentityClassData lastClassData = myIdentityArray[idx];
             if (lastClassData != null) {
-                final ClassData data = lastClassData.getClassData(name);
+                ClassData data = lastClassData.getClassData(name);
                 if (data != null) {
                     return data;
                 }
             }
 
-            final ClassData data = (ClassData)myClasses.get(name);
+            ClassData data = (ClassData)myClasses.get(name);
             myIdentityArray[idx] = new IdentityClassData(name, data);
             return data;
         }
@@ -479,11 +479,11 @@ public class ProjectData implements CoverageData, Serializable {
     private synchronized boolean[] traceLines(String className, boolean[] methodFlags, String[] methodNames) {
         //System.out.println("Registering " + className);
         //assert methodFlags.length == methodNames.length;
-        final boolean[] previousMethodFlags = (boolean[])myTrace2.putIfAbsent(className, methodFlags);
+        boolean[] previousMethodFlags = (boolean[])myTrace2.putIfAbsent(className, methodFlags);
 
         if (previousMethodFlags != null) {
             //  assert previousMethodFlags.length == methodFlags.length;
-            final String[] previousMethodNames = (String[])myTrace3.get(className);
+            String[] previousMethodNames = (String[])myTrace3.get(className);
             //assert previousMethodNames != null && previousMethodNames.length == methodNames.length;
         }
         else {
@@ -492,9 +492,9 @@ public class ProjectData implements CoverageData, Serializable {
         return previousMethodFlags != null ? previousMethodFlags : methodFlags;
     }
 
-    public synchronized void testDiscoveryEnded(final String name) {
+    public synchronized void testDiscoveryEnded(String name) {
         new File(myTraceDir).mkdirs();
-        final File traceFile = new File(myTraceDir, name + ".tr");
+        File traceFile = new File(myTraceDir, name + ".tr");
         try {
             if (!traceFile.exists()) {
                 traceFile.createNewFile();
@@ -526,8 +526,8 @@ public class ProjectData implements CoverageData, Serializable {
                 CoverageIOUtil.writeINT(os, classToUsedMethods.size());
                 for (Iterator iterator = myTrace2.entrySet().iterator(); iterator.hasNext(); ) {
                     Map.Entry e = (Map.Entry)iterator.next();
-                    final boolean[] used = (boolean[])e.getValue();
-                    final String className = (String)e.getKey();
+                    boolean[] used = (boolean[])e.getValue();
+                    String className = (String)e.getKey();
 
                     Integer integer = (Integer)classToUsedMethods.get(className);
                     if (integer == null) {
@@ -559,7 +559,7 @@ public class ProjectData implements CoverageData, Serializable {
         }
     }
 
-    public synchronized void testDiscoveryStarted(final String name) {
+    public synchronized void testDiscoveryStarted(String name) {
         //clearOldTrace();
         for (Iterator iterator = myTrace2.entrySet().iterator(); iterator.hasNext(); ) {
             Object e = iterator.next();

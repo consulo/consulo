@@ -85,11 +85,11 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
   private final boolean myIsShowMembers;
   private final boolean myIsShowLibraryContents;
 
-  public AbstractTreeClassChooserDialog(String title, Project project, final Class<T> elementClass) {
+  public AbstractTreeClassChooserDialog(String title, Project project, Class<T> elementClass) {
     this(title, project, elementClass, null);
   }
 
-  public AbstractTreeClassChooserDialog(String title, Project project, final Class<T> elementClass, @Nullable T initialClass) {
+  public AbstractTreeClassChooserDialog(String title, Project project, Class<T> elementClass, @Nullable T initialClass) {
     this(title, project, ProjectScopes.getProjectScope(project), elementClass, null, initialClass);
   }
 
@@ -140,7 +140,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
 
   @Override
   protected JComponent createCenterPanel() {
-    final DefaultTreeModel model = new DefaultTreeModel(new DefaultMutableTreeNode());
+    DefaultTreeModel model = new DefaultTreeModel(new DefaultMutableTreeNode());
     myTree = new Tree(model);
 
     ProjectAbstractTreeStructureBase treeStructure = new AbstractProjectTreeStructure(myProject) {
@@ -344,7 +344,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
 
   @Override
   @RequiredUIAccess
-  public void select(@Nonnull final T aClass) {
+  public void select(@Nonnull T aClass) {
     selectElementInTree(aClass);
   }
 
@@ -374,10 +374,10 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
   }
 
 
-  protected void selectElementInTree(@Nonnull final PsiElement element) {
+  protected void selectElementInTree(@Nonnull PsiElement element) {
     element.getApplication().invokeLater(() -> {
       if (myBuilder == null) return;
-      final VirtualFile vFile = PsiUtilBase.getVirtualFile(element);
+      VirtualFile vFile = PsiUtilBase.getVirtualFile(element);
       myBuilder.select(element, vFile, false);
     }, getModalityState());
   }
@@ -500,14 +500,14 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
   }
 
   @Nonnull
-  protected abstract Collection<T> getClassesByName(final String name, final boolean searchInLibraries, final String pattern, final ProjectAwareSearchScope searchScope);
+  protected abstract Collection<T> getClassesByName(String name, boolean searchInLibraries, String pattern, ProjectAwareSearchScope searchScope);
 
   private static class SubclassGotoClassModel<T extends PsiNamedElement> extends MyGotoClassModel<T> {
     private final TreeClassInheritorsProvider<T> myInheritorsProvider;
 
     private boolean myFastMode = true;
 
-    public SubclassGotoClassModel(@Nonnull final Project project, @Nonnull final AbstractTreeClassChooserDialog<T> treeClassChooserDialog, @Nonnull TreeClassInheritorsProvider<T> inheritorsProvider) {
+    public SubclassGotoClassModel(@Nonnull Project project, @Nonnull AbstractTreeClassChooserDialog<T> treeClassChooserDialog, @Nonnull TreeClassInheritorsProvider<T> inheritorsProvider) {
       super(project, treeClassChooserDialog);
       myInheritorsProvider = inheritorsProvider;
       assert myInheritorsProvider.getBaseClass() != null;

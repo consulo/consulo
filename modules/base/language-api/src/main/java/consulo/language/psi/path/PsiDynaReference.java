@@ -36,7 +36,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   private int myChosenOne = -1;
   private ResolveResult[] myCachedResult;
 
-  public PsiDynaReference(final T psiElement) {
+  public PsiDynaReference(T psiElement) {
     super(psiElement, true);
   }
 
@@ -66,12 +66,12 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
       resolved = reference;
     }
 
-    final TextRange range = reference.getRangeInElement();
+    TextRange range = reference.getRangeInElement();
     int start = range.getStartOffset();
     int end = range.getEndOffset();
     for (int i = 1; i < myReferences.size(); i++) {
       reference = myReferences.get(i);
-      final TextRange textRange = getRange(reference);
+      TextRange textRange = getRange(reference);
       start = Math.min(start, textRange.getStartOffset());
       if (resolved == null) {
         end = Math.max(end, textRange.getEndOffset());
@@ -93,20 +93,20 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
 
   @Override
   public PsiElement resolve() {
-    final ResolveResult[] resolveResults = multiResolve(false);
+    ResolveResult[] resolveResults = multiResolve(false);
     return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
   }
 
   @Override
   @Nonnull
   public String getCanonicalText() {
-    final PsiReference reference = chooseReference();
+    PsiReference reference = chooseReference();
     return reference == null ? myReferences.get(0).getCanonicalText() : reference.getCanonicalText();
   }
 
   @Override
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-    final PsiReference reference = chooseReference();
+    PsiReference reference = chooseReference();
     if (reference != null) {
       return reference.handleElementRename(newElementName);
     }
@@ -140,14 +140,14 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
 
   @Override
   @Nonnull
-  public ResolveResult[] multiResolve(final boolean incompleteCode) {
+  public ResolveResult[] multiResolve(boolean incompleteCode) {
     if (myCachedResult == null) {
       myCachedResult = innerResolve(incompleteCode);
     }
     return myCachedResult;
   }
 
-  protected ResolveResult[] innerResolve(final boolean incompleteCode) {
+  protected ResolveResult[] innerResolve(boolean incompleteCode) {
     List<ResolveResult> result = new ArrayList<ResolveResult>();
     for (PsiReference reference : myReferences) {
       if (reference instanceof PsiPolyVariantReference) {
@@ -158,7 +158,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
         }
       }
       else {
-        final PsiElement resolved = reference.resolve();
+        PsiElement resolved = reference.resolve();
         if (resolved != null) {
           result.add(new PsiElementResolveResult(resolved));
         }
@@ -175,7 +175,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     }
     boolean flag = false;
     for (int i = 0; i < myReferences.size(); i++) {
-      final PsiReference reference = myReferences.get(i);
+      PsiReference reference = myReferences.get(i);
       if (reference.isSoft() && flag) continue;
       if (!reference.isSoft() && !flag) {
         myChosenOne = i;
@@ -192,7 +192,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   @Nonnull
   @Override
   public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
-    final PsiReference reference = chooseReference();
+    PsiReference reference = chooseReference();
 
     if (reference instanceof EmptyResolveMessageProvider emptyResolveMessageProvider) {
       return emptyResolveMessageProvider.buildUnresolvedMessage(referenceText);

@@ -169,7 +169,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
             throw new IllegalStateException();
         }
 
-        final RunResult<T> result = new RunResult<>(this);
+        RunResult<T> result = new RunResult<>(this);
         performWriteCommandAction(result);
         return result;
     }
@@ -181,7 +181,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         }
 
         // this is needed to prevent memory leak, since the command is put into undo queue
-        final RunResult[] results = {result};
+        RunResult[] results = {result};
 
         doExecuteCommand(() -> {
             results[0].run();
@@ -208,8 +208,8 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     public void performCommand() throws Throwable {
         //this is needed to prevent memory leak, since command
         // is put into undo queue
-        final RunResult[] results = {new RunResult<>(this)};
-        final SimpleReference<Throwable> exception = new SimpleReference<>();
+        RunResult[] results = {new RunResult<>(this)};
+        SimpleReference<Throwable> exception = new SimpleReference<>();
 
         doExecuteCommand(() -> {
             exception.set(results[0].run().getThrowable());
@@ -223,7 +223,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     }
 
     @RequiredUIAccess
-    private void doExecuteCommand(final Runnable runnable) {
+    private void doExecuteCommand(Runnable runnable) {
         CommandProcessor.getInstance().newCommand()
             .project(getProject())
             .name(LocalizeValue.ofNullable(getCommandName()))

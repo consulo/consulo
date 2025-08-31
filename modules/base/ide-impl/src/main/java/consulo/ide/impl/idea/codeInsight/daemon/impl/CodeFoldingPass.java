@@ -40,7 +40,7 @@ class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDum
   @RequiredReadAction
   @Override
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
-    final boolean firstTime = isFirstTime(myFile, myEditor, THE_FIRST_TIME);
+    boolean firstTime = isFirstTime(myFile, myEditor, THE_FIRST_TIME);
     myRunnable = CodeFoldingManager.getInstance(myProject).updateFoldRegionsAsync(myEditor, firstTime);
   }
 

@@ -132,7 +132,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
 
   @Nonnull
   public Iterable<V> get(@Nonnull K name) {
-    final Object value = myMap.get(name);
+    Object value = myMap.get(name);
     return rawValueToCollection(value);
   }
 

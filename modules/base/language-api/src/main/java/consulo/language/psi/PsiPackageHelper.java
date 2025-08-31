@@ -33,7 +33,7 @@ public abstract class PsiPackageHelper {
   }
 
   @Nonnull
-  public abstract String getQualifiedName(@Nonnull PsiDirectory directory, final boolean presentable);
+  public abstract String getQualifiedName(@Nonnull PsiDirectory directory, boolean presentable);
 
   @Nullable
   public abstract PsiDirectoryContainer getDirectoryContainer(@Nonnull PsiDirectory directory);

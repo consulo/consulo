@@ -22,7 +22,7 @@ class FinalizationRequest {
   public final Page page;
   public final long finalizationId;
 
-  public FinalizationRequest(final Page page, final long finalizationId) {
+  public FinalizationRequest(Page page, long finalizationId) {
     this.page = page;
     this.finalizationId = finalizationId;
   }

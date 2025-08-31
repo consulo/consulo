@@ -102,7 +102,7 @@ public abstract class RootModelBase implements ModuleRootModel {
 
   @Override
   @Nonnull
-  public VirtualFile[] getSourceRoots(final boolean includingTests) {
+  public VirtualFile[] getSourceRoots(boolean includingTests) {
     return getCurrentLayer().getSourceRoots(includingTests);
   }
 

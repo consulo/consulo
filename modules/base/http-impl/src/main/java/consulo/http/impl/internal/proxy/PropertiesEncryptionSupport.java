@@ -46,15 +46,15 @@ public class PropertiesEncryptionSupport {
     }
 
     public static Key generateKey() {
-        final byte[] bytes = new byte[16];
+        byte[] bytes = new byte[16];
         new SecureRandom().nextBytes(bytes);
         return new SecretKeySpec(bytes, "AES");
     }
 
     @Nonnull
     public Properties load(@Nonnull File file) throws Exception {
-        final byte[] bytes = decrypt(Files.readAllBytes(file.toPath()));
-        final Properties props = new Properties();
+        byte[] bytes = decrypt(Files.readAllBytes(file.toPath()));
+        Properties props = new Properties();
         props.load(new ByteArrayInputStream(bytes));
         return props;
     }
@@ -65,7 +65,7 @@ public class PropertiesEncryptionSupport {
             return;
         }
 
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
         props.store(out, comments);
         out.close();
         FileUtil.writeToFile(file, encrypt(out.toByteArray()));
@@ -80,14 +80,14 @@ public class PropertiesEncryptionSupport {
     }
 
     private static byte[] encrypt(byte[] msgBytes, Key key) throws Exception {
-        final Cipher ciph = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher ciph = Cipher.getInstance("AES/CBC/PKCS5Padding");
         ciph.init(Cipher.ENCRYPT_MODE, key);
-        final byte[] body = ciph.doFinal(msgBytes);
-        final byte[] iv = ciph.getIV();
+        byte[] body = ciph.doFinal(msgBytes);
+        byte[] iv = ciph.getIV();
 
-        final byte[] data = new byte[4 + iv.length + body.length];
+        byte[] data = new byte[4 + iv.length + body.length];
 
-        final int length = body.length;
+        int length = body.length;
         data[0] = (byte)((length >> 24) & 0xFF);
         data[1] = (byte)((length >> 16) & 0xFF);
         data[2] = (byte)((length >> 8) & 0xFF);
@@ -99,14 +99,14 @@ public class PropertiesEncryptionSupport {
     }
 
     private static byte[] decrypt(byte[] data, Key key) throws Exception {
-        final int bodyLength = (data[0] & 0xFF) << 24
+        int bodyLength = (data[0] & 0xFF) << 24
             | ((data[1] & 0xFF) << 16)
             | ((data[2] & 0xFF) << 8)
             | (data[3] & 0xFF);
 
-        final int ivlength = data.length - 4 - bodyLength;
+        int ivlength = data.length - 4 - bodyLength;
 
-        final Cipher ciph = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher ciph = Cipher.getInstance("AES/CBC/PKCS5Padding");
         ciph.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(data, 4, ivlength));
         return ciph.doFinal(data, 4 + ivlength, bodyLength);
     }

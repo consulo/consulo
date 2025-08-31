@@ -163,7 +163,7 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
     }
 
     @Override
-    public void setSelectedIndex(final int anIndex) {
+    public void setSelectedIndex(int anIndex) {
         Object item = getItemAt(anIndex);
         if (!(item instanceof SeparatorItem)) {
             super.setSelectedIndex(anIndex);

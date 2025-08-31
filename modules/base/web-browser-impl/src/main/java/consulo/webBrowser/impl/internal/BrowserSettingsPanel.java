@@ -368,7 +368,7 @@ final class BrowserSettingsPanel {
 
     @RequiredUIAccess
     public void reset() {
-        final WebBrowserManagerImpl browserManager = WebBrowserManagerImpl.getInstance();
+        WebBrowserManagerImpl browserManager = WebBrowserManagerImpl.getInstance();
         DefaultBrowserPolicy effectiveDefaultBrowserPolicy = getDefaultBrowserPolicy(browserManager);
         myDefaultBrowserPolicyComboBox.setValue(effectiveDefaultBrowserPolicy);
 

@@ -32,9 +32,9 @@ public abstract class ChangesFileNameDecorator {
     return project.getInstance(ChangesFileNameDecorator.class);
   }
 
-  public abstract void appendFileName(final ChangesBrowserNodeRenderer renderer,
-                                      final VirtualFile vFile,
-                                      final String fileName,
-                                      final Color color,
+  public abstract void appendFileName(ChangesBrowserNodeRenderer renderer,
+                                      VirtualFile vFile,
+                                      String fileName,
+                                      Color color,
                                       boolean highlightProblems);
 }

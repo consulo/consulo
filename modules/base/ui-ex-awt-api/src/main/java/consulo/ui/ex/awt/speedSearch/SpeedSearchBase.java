@@ -102,11 +102,11 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
-                final String prefix = getEnteredPrefix();
+                String prefix = getEnteredPrefix();
                 assert prefix != null;
-                final String[] strings = NameUtilCore.splitNameIntoWords(prefix);
-                final String last = strings[strings.length - 1];
-                final int i = prefix.lastIndexOf(last);
+                String[] strings = NameUtilCore.splitNameIntoWords(prefix);
+                String last = strings[strings.length - 1];
+                int i = prefix.lastIndexOf(last);
                 mySearchPopup.mySearchField.setText(prefix.substring(0, i).trim());
             }
 
@@ -148,8 +148,8 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         if (!isPopupActive()) {
             return null;
         }
-        final SpeedSearchComparator comparator = getComparator();
-        final String recentSearchText = comparator.getRecentSearchText();
+        SpeedSearchComparator comparator = getComparator();
+        String recentSearchText = comparator.getRecentSearchText();
         if (StringUtil.isNotEmpty(recentSearchText)) {
             return comparator.matchingFragments(recentSearchText, text);
         }
@@ -176,7 +176,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     /**
      * Should convert given view index to model index
      */
-    protected int convertIndexToModel(final int viewIndex) {
+    protected int convertIndexToModel(int viewIndex) {
         return viewIndex;
     }
 
@@ -220,15 +220,15 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         return myComparator;
     }
 
-    public void setComparator(final SpeedSearchComparator comparator) {
+    public void setComparator(SpeedSearchComparator comparator) {
         myComparator = comparator;
     }
 
     @Nullable
     private Object findNextElement(String s) {
-        final int selectedIndex = getSelectedIndex();
-        final ListIterator<?> it = getElementIterator(selectedIndex + 1);
-        final Object current;
+        int selectedIndex = getSelectedIndex();
+        ListIterator<?> it = getElementIterator(selectedIndex + 1);
+        Object current;
         if (it.hasPrevious()) {
             current = it.previous();
             it.next();
@@ -236,18 +236,18 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         else {
             current = null;
         }
-        final String _s = s.trim();
+        String _s = s.trim();
         while (it.hasNext()) {
-            final Object element = it.next();
+            Object element = it.next();
             if (isMatchingElement(element, _s)) {
                 return element;
             }
         }
 
         if (UISettings.getInstance().getCycleScrolling()) {
-            final ListIterator<Object> i = getElementIterator(0);
+            ListIterator<Object> i = getElementIterator(0);
             while (i.hasNext()) {
-                final Object element = i.next();
+                Object element = i.next();
                 if (isMatchingElement(element, _s)) {
                     return element;
                 }
@@ -259,12 +259,12 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
     @Nullable
     private Object findPreviousElement(String s) {
-        final int selectedIndex = getSelectedIndex();
+        int selectedIndex = getSelectedIndex();
         if (selectedIndex < 0) {
             return null;
         }
-        final ListIterator<?> it = getElementIterator(selectedIndex);
-        final Object current;
+        ListIterator<?> it = getElementIterator(selectedIndex);
+        Object current;
         if (it.hasNext()) {
             current = it.next();
             it.previous();
@@ -272,18 +272,18 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         else {
             current = null;
         }
-        final String _s = s.trim();
+        String _s = s.trim();
         while (it.hasPrevious()) {
-            final Object element = it.previous();
+            Object element = it.previous();
             if (isMatchingElement(element, _s)) {
                 return element;
             }
         }
 
         if (UISettings.getInstance().getCycleScrolling()) {
-            final ListIterator<Object> i = getElementIterator(getElementCount());
+            ListIterator<Object> i = getElementIterator(getElementCount());
             while (i.hasPrevious()) {
-                final Object element = i.previous();
+                Object element = i.previous();
                 if (isMatchingElement(element, _s)) {
                     return element;
                 }
@@ -299,10 +299,10 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         if (selectedIndex < 0) {
             selectedIndex = 0;
         }
-        final ListIterator<Object> it = getElementIterator(selectedIndex);
-        final String _s = s.trim();
+        ListIterator<Object> it = getElementIterator(selectedIndex);
+        String _s = s.trim();
         while (it.hasNext()) {
-            final Object element = it.next();
+            Object element = it.next();
             if (isMatchingElement(element, _s)) {
                 return element;
             }
@@ -310,7 +310,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         if (selectedIndex > 0) {
             while (it.hasPrevious()) it.previous();
             while (it.hasNext() && it.nextIndex() != selectedIndex) {
-                final Object element = it.next();
+                Object element = it.next();
                 if (isMatchingElement(element, _s)) {
                     return element;
                 }
@@ -321,9 +321,9 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
     @Nullable
     private Object findFirstElement(String s) {
-        final String _s = s.trim();
+        String _s = s.trim();
         for (ListIterator<?> it = getElementIterator(0); it.hasNext(); ) {
-            final Object element = it.next();
+            Object element = it.next();
             if (isMatchingElement(element, _s)) {
                 return element;
             }
@@ -333,9 +333,9 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
     @Nullable
     private Object findLastElement(String s) {
-        final String _s = s.trim();
+        String _s = s.trim();
         for (ListIterator<?> it = getElementIterator(-1); it.hasPrevious(); ) {
-            final Object element = it.previous();
+            Object element = it.previous();
             if (isMatchingElement(element, _s)) {
                 return element;
             }
@@ -441,7 +441,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
         SearchPopup(String initialString) {
             mySearchField = new SearchField();
-            final JLabel searchLabel = new JBLabel(AllIcons.Actions.Search);
+            JLabel searchLabel = new JBLabel(AllIcons.Actions.Search);
             searchLabel.setBorder(JBUI.Borders.empty(0, 2));
             searchLabel.setFont(searchLabel.getFont().deriveFont(Font.BOLD));
             searchLabel.setForeground(FOREGROUND_COLOR);
@@ -687,7 +687,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         private int myCurrentIndex;
         private final Object[] myElements;
 
-        ViewIterator(@Nonnull final SpeedSearchBase speedSearch, final int startIndex) {
+        ViewIterator(@Nonnull SpeedSearchBase speedSearch, int startIndex) {
             mySpeedSearch = speedSearch;
             myCurrentIndex = startIndex;
             myElements = speedSearch.getAllElements();
@@ -704,11 +704,11 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
         @Override
         public Object previous() {
-            final int i = myCurrentIndex - 1;
+            int i = myCurrentIndex - 1;
             if (i < 0) {
                 throw new NoSuchElementException();
             }
-            final Object previous = myElements[mySpeedSearch.convertIndexToModel(i)];
+            Object previous = myElements[mySpeedSearch.convertIndexToModel(i)];
             myCurrentIndex = i;
             return previous;
         }

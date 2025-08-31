@@ -59,7 +59,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
   }
 
   @Override
-  public boolean processChildren(final PsiElementProcessor<PsiFileSystemItem> processor) {
+  public boolean processChildren(PsiElementProcessor<PsiFileSystemItem> processor) {
     return true;
   }
 
@@ -97,8 +97,8 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
   @Override
   @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})
   protected LightPsiFileImpl clone() {
-    final FileViewProvider provider = getViewProvider().clone();
-    final LightPsiFileImpl clone = (LightPsiFileImpl)provider.getPsi(getLanguage());
+    FileViewProvider provider = getViewProvider().clone();
+    LightPsiFileImpl clone = (LightPsiFileImpl)provider.getPsi(getLanguage());
 
     copyCopyableDataTo(clone);
 
@@ -139,7 +139,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
   @Override
   public PsiDirectory getContainingDirectory() {
-    final VirtualFile parentFile = getViewProvider().getVirtualFile().getParent();
+    VirtualFile parentFile = getViewProvider().getVirtualFile().getParent();
     if (parentFile == null) return null;
     return getManager().findDirectory(parentFile);
   }
@@ -174,7 +174,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     return myOriginalFile == null ? this : myOriginalFile;
   }
 
-  public void setOriginalFile(final PsiFile originalFile) {
+  public void setOriginalFile(PsiFile originalFile) {
     myOriginalFile = originalFile.getOriginalFile();
   }
 
@@ -217,7 +217,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
   public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
     PsiElement child = getFirstChild();
     while (child != null) {
-      final PsiElement nextSibling = child.getNextSibling();
+      PsiElement nextSibling = child.getNextSibling();
       child.accept(visitor);
       child = nextSibling;
     }
@@ -291,14 +291,14 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
   @RequiredReadAction
   @Override
   public PsiElement getFirstChild() {
-    final PsiElement[] children = getChildren();
+    PsiElement[] children = getChildren();
     return children.length == 0 ? null : children[0];
   }
 
   @RequiredReadAction
   @Override
   public PsiElement getLastChild() {
-    final PsiElement[] children = getChildren();
+    PsiElement[] children = getChildren();
     return children.length == 0 ? null : children[children.length - 1];
   }
 
@@ -395,7 +395,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     return null;
   }
 
-  public abstract LightPsiFileImpl copyLight(final FileViewProvider viewProvider);
+  public abstract LightPsiFileImpl copyLight(FileViewProvider viewProvider);
 
   @Override
   public PsiElement getContext() {

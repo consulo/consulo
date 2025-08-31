@@ -35,15 +35,15 @@ public final class NumberParser extends TokenParser {
   }
 
   public boolean hasToken(int position) {
-    final int start = position;
-    final char startChar = myBuffer.charAt(start);
+    int start = position;
+    char startChar = myBuffer.charAt(start);
     if(!isDigit(startChar)) return false;
     for (position++; position < myEndOffset; position++) {
       if (!isDigit(myBuffer.charAt(position))) break;
     }
 
     if (position < myEndOffset && myBuffer.charAt(position) == '.') {
-      final int dotPosition = position;
+      int dotPosition = position;
       position++;
 
       if (position < myEndOffset && !isDigit(myBuffer.charAt(position))) {
@@ -54,7 +54,7 @@ public final class NumberParser extends TokenParser {
           if (!isDigit(myBuffer.charAt(position))) break;
         }
         if (position < myEndOffset) {
-          final char finalChar = myBuffer.charAt(position);
+          char finalChar = myBuffer.charAt(position);
           if (!isNumberTail(finalChar) && !isDelimiter(finalChar)) {
             position = dotPosition;
           }

@@ -21,7 +21,7 @@ public class RemoteAgentThreadProxyCreator {
   }
 
   public <T> T createProxy(Class<T> agentInterface, T agentInstance) {
-    final SequentialTaskExecutor taskExecutor = new SequentialTaskExecutor();
+    SequentialTaskExecutor taskExecutor = new SequentialTaskExecutor();
 
     ClassLoader callerClassLoader = myCallerClassLoaderProvider.getCallerClassLoader(agentInterface);
 

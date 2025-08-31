@@ -308,7 +308,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         indicator.pushState();
         ((CoreProgressManager) ProgressManager.getInstance()).suppressPrioritizing();
         try {
-            final ProgressIndicator finalIndicator = indicator;
+            ProgressIndicator finalIndicator = indicator;
             HeavyProcessLatch.INSTANCE.performOperation(
                 HeavyProcessLatch.Type.Indexing,
                 IdeLocalize.progressPerformingIndexingTasks().get(),
@@ -420,7 +420,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
             // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
             while (!isDumb()) {
-                final Runnable runnable;
+                Runnable runnable;
                 synchronized (myRunWhenSmartQueue) {
                     if (myRunWhenSmartQueue.isEmpty()) {
                         break;
@@ -446,9 +446,9 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    public void showDumbModeNotification(@Nonnull final LocalizeValue message) {
+    public void showDumbModeNotification(@Nonnull LocalizeValue message) {
         myProject.getUIAccess().giveIfNeed(() -> {
-            final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
+            IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
             if (ideFrame != null) {
                 ideFrame.getStatusBar().notifyProgressByBalloon(NotificationType.WARNING, message.get());
             }
@@ -489,12 +489,12 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    public void smartInvokeLater(@Nonnull final Runnable runnable) {
+    public void smartInvokeLater(@Nonnull Runnable runnable) {
         smartInvokeLater(runnable, Application.get().getDefaultModalityState());
     }
 
     @Override
-    public void smartInvokeLater(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
+    public void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
         myApplication.invokeLater(
             () -> {
                 if (isDumb()) {
@@ -568,7 +568,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         try {
             ProgressManager.getInstance().run(new Task.Backgroundable(myProject, IdeLocalize.progressIndexing(), false) {
                 @Override
-                public void run(@Nonnull final ProgressIndicator visibleIndicator) {
+                public void run(@Nonnull ProgressIndicator visibleIndicator) {
                     runBackgroundProcess(visibleIndicator, startTrace);
                 }
             });
@@ -593,8 +593,8 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             suspendIfRequested(suspender);
 
             //IdeActivity activity = IdeActivity.started(myProject, "indexing");
-            final ShutDownTracker shutdownTracker = ShutDownTracker.getInstance();
-            final Thread self = Thread.currentThread();
+            ShutDownTracker shutdownTracker = ShutDownTracker.getInstance();
+            Thread self = Thread.currentThread();
             try {
                 shutdownTracker.registerStopperThread(self);
 
@@ -619,7 +619,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                         }
                     });
 
-                    final DumbModeTask finalTask = task;
+                    DumbModeTask finalTask = task;
                     HeavyProcessLatch.INSTANCE.performOperation(
                         HeavyProcessLatch.Type.Indexing,
                         IdeLocalize.progressPerformingIndexingTasks().get(),
@@ -737,7 +737,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         private double lastFraction;
 
         @Override
-        public void setFraction(final double fraction) {
+        public void setFraction(double fraction) {
             if (fraction - lastFraction < 0.01d) {
                 return;
             }

@@ -10,7 +10,7 @@ public class InstructionImpl extends InstructionBaseImpl {
 
     private final int myNumber;
 
-    public InstructionImpl(final @Nonnull ControlFlowBuilder builder, final @Nullable PsiElement element) {
+    public InstructionImpl(@Nonnull ControlFlowBuilder builder, @Nullable PsiElement element) {
         super(element);
         myNumber = builder.instructionCount++;
     }

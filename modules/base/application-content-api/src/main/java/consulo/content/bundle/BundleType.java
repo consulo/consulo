@@ -68,11 +68,11 @@ public abstract class BundleType extends SdkType {
 
   @Nonnull
   public FileChooserDescriptor getHomeChooserDescriptor(@Nonnull Platform platform) {
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
+    FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
       public void validateSelectedFiles(VirtualFile[] files) throws Exception {
         if (files.length != 0) {
-          final Path selectedPath = files[0].toNioPath();
+          Path selectedPath = files[0].toNioPath();
           boolean valid = isValidSdkHome(platform, selectedPath);
           if (!valid) {
             valid = isValidSdkHome(platform, adjustSelectedSdkHome(platform, selectedPath));

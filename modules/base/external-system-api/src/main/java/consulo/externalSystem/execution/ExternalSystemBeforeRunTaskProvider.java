@@ -102,9 +102,9 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
 
     @Override
     public boolean canExecuteTask(RunConfiguration configuration, ExternalSystemBeforeRunTask beforeRunTask) {
-        final ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
+        ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
 
-        final List<ExternalTaskPojo> tasks = ContainerUtilRt.newArrayList();
+        List<ExternalTaskPojo> tasks = ContainerUtilRt.newArrayList();
         for (String taskName : executionSettings.getTaskNames()) {
             tasks.add(new ExternalTaskPojo(taskName, executionSettings.getExternalProjectPath(), null));
         }
@@ -112,15 +112,15 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
             return true;
         }
 
-        final Pair<ProgramRunner, ExecutionEnvironment> pair =
+        Pair<ProgramRunner, ExecutionEnvironment> pair =
             ExternalSystemApiUtil.createRunner(executionSettings, DefaultRunExecutor.EXECUTOR_ID, myProject, mySystemId);
 
         if (pair == null) {
             return false;
         }
 
-        final ProgramRunner runner = pair.first;
-        final ExecutionEnvironment environment = pair.second;
+        ProgramRunner runner = pair.first;
+        ExecutionEnvironment environment = pair.second;
 
         return runner.canRun(DefaultRunExecutor.EXECUTOR_ID, environment.getRunProfile());
     }
@@ -132,9 +132,9 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
                                               RunConfiguration configuration,
                                               ExecutionEnvironment env,
                                               ExternalSystemBeforeRunTask beforeRunTask) {
-        final ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
+        ExternalSystemTaskExecutionSettings executionSettings = beforeRunTask.getTaskExecutionSettings();
 
-        final List<ExternalTaskPojo> tasks = ContainerUtilRt.newArrayList();
+        List<ExternalTaskPojo> tasks = ContainerUtilRt.newArrayList();
         for (String taskName : executionSettings.getTaskNames()) {
             tasks.add(new ExternalTaskPojo(taskName, executionSettings.getExternalProjectPath(), null));
         }
@@ -142,20 +142,20 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
             return AsyncResult.resolved();
         }
 
-        final Pair<ProgramRunner, ExecutionEnvironment> pair =
+        Pair<ProgramRunner, ExecutionEnvironment> pair =
             ExternalSystemApiUtil.createRunner(executionSettings, DefaultRunExecutor.EXECUTOR_ID, myProject, mySystemId);
 
         if (pair == null) {
             return AsyncResult.rejected();
         }
 
-        final ProgramRunner runner = pair.first;
+        ProgramRunner runner = pair.first;
         final ExecutionEnvironment environment = pair.second;
         environment.setExecutionId(env.getExecutionId());
 
-        final Disposable disposable = Disposable.newDisposable();
+        Disposable disposable = Disposable.newDisposable();
 
-        final Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+        Executor executor = DefaultRunExecutor.getRunExecutorInstance();
         final String executorId = executor.getId();
 
         AsyncResult<Void> result = AsyncResult.undefined();
@@ -163,22 +163,22 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
 
         myProject.getMessageBus().connect(disposable).subscribe(ExecutionListener.class, new ExecutionListener() {
             @Override
-            public void processStartScheduled(@Nonnull final String executorIdLocal, @Nonnull final ExecutionEnvironment environmentLocal) {
+            public void processStartScheduled(@Nonnull String executorIdLocal, @Nonnull ExecutionEnvironment environmentLocal) {
                 if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
                 }
             }
 
             @Override
-            public void processNotStarted(@Nonnull final String executorIdLocal, @Nonnull final ExecutionEnvironment environmentLocal) {
+            public void processNotStarted(@Nonnull String executorIdLocal, @Nonnull ExecutionEnvironment environmentLocal) {
                 if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
                     result.setRejected();
                 }
             }
 
             @Override
-            public void processStarted(@Nonnull final String executorIdLocal,
+            public void processStarted(@Nonnull String executorIdLocal,
                                        @Nonnull final ExecutionEnvironment environmentLocal,
-                                       @Nonnull final ProcessHandler handler) {
+                                       @Nonnull ProcessHandler handler) {
                 if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
                     handler.addProcessListener(new ProcessListener() {
                         @Override
@@ -215,7 +215,7 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
     @RequiredReadAction
     @SuppressWarnings("unchecked")
     public String getDescription(ExternalSystemBeforeRunTask task) {
-        final String externalProjectPath = task.getTaskExecutionSettings().getExternalProjectPath();
+        String externalProjectPath = task.getTaskExecutionSettings().getExternalProjectPath();
 
         if (task.getTaskExecutionSettings().getTaskNames().isEmpty()) {
             return ExternalSystemLocalize.tasksBeforeRunEmpty(mySystemId.getDisplayName()).get();

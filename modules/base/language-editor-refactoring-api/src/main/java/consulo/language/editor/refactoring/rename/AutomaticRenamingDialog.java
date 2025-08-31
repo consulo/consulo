@@ -87,18 +87,18 @@ public class AutomaticRenamingDialog extends DialogWrapper {
   }
 
   private void populateData() {
-    final Map<PsiNamedElement, String> renames = myRenamer.getRenames();
+    Map<PsiNamedElement, String> renames = myRenamer.getRenames();
 
     List<PsiNamedElement> temp = new ArrayList<PsiNamedElement>();
-    for (final PsiNamedElement namedElement : renames.keySet()) {
-      final String newName = renames.get(namedElement);
+    for (PsiNamedElement namedElement : renames.keySet()) {
+      String newName = renames.get(namedElement);
       if (newName != null) temp.add(namedElement);
     }
 
     myRenames = temp.toArray(new PsiNamedElement[temp.size()]);
     Arrays.sort(myRenames, new Comparator<PsiNamedElement>() {
       @Override
-      public int compare(final PsiNamedElement e1, final PsiNamedElement e2) {
+      public int compare(PsiNamedElement e1, PsiNamedElement e2) {
         return Comparing.compare(e1.getName(), e2.getName());
       }
     });
@@ -123,7 +123,7 @@ public class AutomaticRenamingDialog extends DialogWrapper {
 
   @Override
   protected JComponent createNorthPanel() {
-    final Box box = Box.createHorizontalBox();
+    Box box = Box.createHorizontalBox();
     box.add(new JLabel(myRenamer.getDialogDescription()));
     box.add(Box.createHorizontalGlue());
     return box;
@@ -136,9 +136,9 @@ public class AutomaticRenamingDialog extends DialogWrapper {
   }
 
   protected void handleChanges() {
-    final int selectedRow = myTable.getSelectedRow();
+    int selectedRow = myTable.getSelectedRow();
     if (selectedRow > -1) {
-      final boolean validName = RenameUtil.isValidName(myProject, myRenames[selectedRow], myNewNames[selectedRow]);
+      boolean validName = RenameUtil.isValidName(myProject, myRenames[selectedRow], myNewNames[selectedRow]);
       getOKAction().setEnabled(validName);
       setErrorText(validName ? null : "Identifier \'" + myNewNames[selectedRow] + "\' is invalid");
     }
@@ -156,7 +156,7 @@ public class AutomaticRenamingDialog extends DialogWrapper {
       }
     });
 
-    final TableColumnModel columnModel = myTable.getColumnModel();
+    TableColumnModel columnModel = myTable.getColumnModel();
     columnModel.getColumn(CHECK_COLUMN).setCellRenderer(new BooleanTableCellRenderer());
     TableUtil.setupCheckboxColumn(myTable, CHECK_COLUMN);
 
@@ -182,16 +182,16 @@ public class AutomaticRenamingDialog extends DialogWrapper {
     });
     myListSelectionListener = new ListSelectionListener() {
       @Override
-      public void valueChanged(final ListSelectionEvent e) {
+      public void valueChanged(ListSelectionEvent e) {
         myUsageFileLabel.setText("");
         int index = myTable.getSelectionModel().getLeadSelectionIndex();
         if (index != -1) {
           PsiNamedElement element = myRenames[index];
           UsageInfo usageInfo = new UsageInfo(element);
           myUsagePreviewPanel.updateLayout(Collections.singletonList(usageInfo));
-          final PsiFile containingFile = element.getContainingFile();
+          PsiFile containingFile = element.getContainingFile();
           if (containingFile != null) {
-            final VirtualFile virtualFile = containingFile.getVirtualFile();
+            VirtualFile virtualFile = containingFile.getVirtualFile();
             if (virtualFile != null) {
               myUsageFileLabel.setText(virtualFile.getName());
             }
@@ -348,7 +348,7 @@ public class AutomaticRenamingDialog extends DialogWrapper {
 
       @Override
       protected void applyValue(int[] rows, boolean valueToBeSet) {
-        for (final int row : rows) {
+        for (int row : rows) {
           myShouldRename[row] = valueToBeSet;
         }
         fireDataChanged();

@@ -101,7 +101,7 @@ class DragHelper extends MouseDragHelper {
     if (isDragJustStarted()) {
       if (myPressedTabLabel == null) return;
 
-      final Rectangle labelBounds = myPressedTabLabel.getBounds();
+      Rectangle labelBounds = myPressedTabLabel.getBounds();
 
       myHoldDelta = new Dimension(startPointScreen.x - labelBounds.x, startPointScreen.y - labelBounds.y);
       myDragSource = myPressedTabLabel.getInfo();
@@ -114,7 +114,7 @@ class DragHelper extends MouseDragHelper {
     else {
       if (myDragRec == null) return;
 
-      final Point toPoint = SwingUtilities.convertPoint(event.getComponent(), event.getPoint(), myTabs);
+      Point toPoint = SwingUtilities.convertPoint(event.getComponent(), event.getPoint(), myTabs);
 
       myDragRec.x = toPoint.x;
       myDragRec.y = toPoint.y;
@@ -123,16 +123,16 @@ class DragHelper extends MouseDragHelper {
     myDragRec.x -= myHoldDelta.width;
     myDragRec.y -= myHoldDelta.height;
 
-    final Rectangle headerRec = myTabs.getLastLayoutPass().getHeaderRectangle();
+    Rectangle headerRec = myTabs.getLastLayoutPass().getHeaderRectangle();
     ScreenUtil.moveToFit(myDragRec, headerRec, null);
 
     int deadZoneX = 0;
     int deadZoneY = 0;
 
-    final TabLabel top = findLabel(new Point(myDragRec.x + myDragRec.width / 2, myDragRec.y + deadZoneY));
-    final TabLabel bottom = findLabel(new Point(myDragRec.x + myDragRec.width / 2, myDragRec.y + myDragRec.height - deadZoneY));
-    final TabLabel left = findLabel(new Point(myDragRec.x + deadZoneX, myDragRec.y + myDragRec.height / 2));
-    final TabLabel right = findLabel(new Point(myDragRec.x + myDragRec.width - deadZoneX, myDragRec.y + myDragRec.height / 2));
+    TabLabel top = findLabel(new Point(myDragRec.x + myDragRec.width / 2, myDragRec.y + deadZoneY));
+    TabLabel bottom = findLabel(new Point(myDragRec.x + myDragRec.width / 2, myDragRec.y + myDragRec.height - deadZoneY));
+    TabLabel left = findLabel(new Point(myDragRec.x + deadZoneX, myDragRec.y + myDragRec.height / 2));
+    TabLabel right = findLabel(new Point(myDragRec.x + myDragRec.width - deadZoneX, myDragRec.y + myDragRec.height / 2));
 
 
     TabLabel targetLabel;
@@ -157,7 +157,7 @@ class DragHelper extends MouseDragHelper {
       myTabs.moveDraggedTabLabel();
     } else {
       myTabs.moveDraggedTabLabel();
-      final int border = myTabs.getTabBorderSize();
+      int border = myTabs.getTabBorderSize();
       headerRec.x -= border;
       headerRec.y -= border;
       headerRec.width += border * 2;
@@ -168,7 +168,7 @@ class DragHelper extends MouseDragHelper {
   }
 
   private boolean isDragSource(MouseEvent event) {
-    final Object source = event.getSource();
+    Object source = event.getSource();
     if (source instanceof Component) {
       return SwingUtilities.windowForComponent(myTabs) == SwingUtilities.windowForComponent((Component)source);
     }
@@ -190,7 +190,7 @@ class DragHelper extends MouseDragHelper {
     for (TabLabel each : labels) {
       if (each == null) continue;
 
-      final Rectangle eachBounds = each.getBounds();
+      Rectangle eachBounds = each.getBounds();
       if (measurer.getSize(eachBounds) > freeSpace + freeSpace *0.3) continue;
 
       Rectangle intersection = myDragRec.intersection(eachBounds);
@@ -207,9 +207,9 @@ class DragHelper extends MouseDragHelper {
 
   @Nullable
   private TabLabel findLabel(Point dragPoint) {
-    final Component at = myTabs.findComponentAt(dragPoint);
+    Component at = myTabs.findComponentAt(dragPoint);
     if (at instanceof ActionButtonComponent) return null;
-    final TabLabel label = findLabel(at);
+    TabLabel label = findLabel(at);
 
     return label != null && label.getParent() == myTabs && label.getInfo() != myDragSource ? label : null;
 
@@ -238,13 +238,13 @@ class DragHelper extends MouseDragHelper {
 
     endDrag(willDragOutStart);
 
-    final JBTabsPosition position = myTabs.getTabsPosition();
+    JBTabsPosition position = myTabs.getTabsPosition();
 
     if (!willDragOutStart && myTabs.isAlphabeticalMode() && position != JBTabsPosition.top && position != JBTabsPosition.bottom) {
       Point p = new Point(event.getPoint());
       p = SwingUtilities.convertPoint(event.getComponent(), p, myTabs);
       if (myTabs.getVisibleRect().contains(p) && myPressedOnScreenPoint.distance(new RelativePoint(event).getScreenPoint()) > 15) {
-        final int answer = Messages.showOkCancelDialog(
+        int answer = Messages.showOkCancelDialog(
           myTabs,
           IdeLocalize.alphabeticalModeIsOnWarning().get(),
           IdeLocalize.titleWarning().get(),

@@ -28,7 +28,7 @@ public class CollapsedController extends CascadeController {
   private CollapsedGraph myCollapsedGraph;
 
   public CollapsedController(@Nonnull CascadeController delegateLinearGraphController,
-                             @Nonnull final PermanentGraphInfo<?> permanentGraphInfo,
+                             @Nonnull PermanentGraphInfo<?> permanentGraphInfo,
                              @Nullable Set<Integer> idsOfVisibleBranches) {
     super(delegateLinearGraphController, permanentGraphInfo);
     UnsignedBitSet initVisibility =

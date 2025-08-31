@@ -30,7 +30,7 @@ import java.lang.ref.WeakReference;
  * Use {@link ContainerUtil#createConcurrentWeakKeyWeakValueMap()} to create this
  */
 public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySoftValueHashMap<K, V> {
-  public ConcurrentWeakKeyWeakValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentWeakKeyWeakValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
@@ -45,7 +45,7 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
     // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
     // otherwise it's just canonical equals on referents for replace(K,V,V) to work
     @Override
-    public final boolean equals(final Object o) {
+    public final boolean equals(Object o) {
       if (this == o) return true;
       if (o == null) return false;
 
@@ -63,8 +63,8 @@ public class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySo
 
   @Override
   @Nonnull
-  public KeyReference<K, V> createKeyReference(@Nonnull K k, @Nonnull final V v) {
-    final ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
+  public KeyReference<K, V> createKeyReference(@Nonnull K k, @Nonnull V v) {
+    ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
     WeakKey<K, V> keyReference = new WeakKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
     if (valueReference instanceof WeakValue) {
       ((WeakValue)valueReference).myKeyReference = keyReference;

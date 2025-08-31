@@ -92,12 +92,12 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
     }
 
     @Override
-    public void checkServerTrusted(final X509Certificate[] certificates, String s) throws CertificateException {
+    public void checkServerTrusted(X509Certificate[] certificates, String s) throws CertificateException {
         checkServerTrusted(certificates, s, true, true);
     }
 
     @Override
-    public void checkServerTrusted(final X509Certificate[] certificates, String s, boolean addToKeyStore, boolean askUser)
+    public void checkServerTrusted(X509Certificate[] certificates, String s, boolean addToKeyStore, boolean askUser)
         throws CertificateException {
         try {
             mySystemManager.checkServerTrusted(certificates, s);
@@ -117,8 +117,8 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
         }
     }
 
-    private boolean confirmAndUpdate(final X509Certificate[] chain, boolean addToKeyStore, boolean askUser) {
-        final X509Certificate endPoint = chain[0];
+    private boolean confirmAndUpdate(X509Certificate[] chain, boolean addToKeyStore, boolean askUser) {
+        X509Certificate endPoint = chain[0];
         // IDEA-123467 and IDEA-123335 workaround
         String threadClassName = StringUtil.notNullize(Thread.currentThread().getClass().getCanonicalName());
         if (threadClassName.equals("sun.awt.image.ImageFetcher")) {

@@ -87,13 +87,13 @@ public class ProjectUtil {
     }
 
     @Nullable
-    public static String getProjectLocationString(@Nonnull final Project project) {
+    public static String getProjectLocationString(@Nonnull Project project) {
         return UserHomeFileUtil.getLocationRelativeToUserHome(project.getBasePath());
     }
 
     @Nonnull
     public static Path getProjectsDirectory() {
-        final String lastProjectLocation = RecentProjectsManager.getInstance().getLastProjectCreationLocation();
+        String lastProjectLocation = RecentProjectsManager.getInstance().getLastProjectCreationLocation();
         if (lastProjectLocation != null) {
             return Paths.get(lastProjectLocation);
         }

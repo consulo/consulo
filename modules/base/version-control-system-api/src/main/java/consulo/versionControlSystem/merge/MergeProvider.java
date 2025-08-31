@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 
 public interface MergeProvider extends VcsProviderMarker {
   @Nonnull
-  MergeData loadRevisions(final VirtualFile file) throws VcsException;
+  MergeData loadRevisions(VirtualFile file) throws VcsException;
 
   /**
    * called for text conflict

@@ -34,44 +34,44 @@ public class OpenTHashSet<T> extends THashSet<T> {
     super();
   }
 
-  public OpenTHashSet(final TObjectHashingStrategy<T> strategy) {
+  public OpenTHashSet(TObjectHashingStrategy<T> strategy) {
     super(strategy);
   }
 
-  public OpenTHashSet(final int initialCapacity) {
+  public OpenTHashSet(int initialCapacity) {
     super(initialCapacity);
   }
 
-  public OpenTHashSet(final int initialCapacity, final TObjectHashingStrategy<T> strategy) {
+  public OpenTHashSet(int initialCapacity, TObjectHashingStrategy<T> strategy) {
     super(initialCapacity, strategy);
   }
 
-  public OpenTHashSet(final int initialCapacity, final float loadFactor) {
+  public OpenTHashSet(int initialCapacity, float loadFactor) {
     super(initialCapacity, loadFactor);
   }
 
-  public OpenTHashSet(final int initialCapacity, final float loadFactor, final TObjectHashingStrategy<T> strategy) {
+  public OpenTHashSet(int initialCapacity, float loadFactor, TObjectHashingStrategy<T> strategy) {
     super(initialCapacity, loadFactor, strategy);
   }
 
-  public OpenTHashSet(final Collection<? extends T> ts) {
+  public OpenTHashSet(Collection<? extends T> ts) {
     super(ts);
   }
 
-  public OpenTHashSet(final Collection<? extends T> ts, final TObjectHashingStrategy<T> strategy) {
+  public OpenTHashSet(Collection<? extends T> ts, TObjectHashingStrategy<T> strategy) {
     super(ts, strategy);
   }
 
-  public OpenTHashSet(final TObjectHashingStrategy<T> strategy, final T... ts) {
+  public OpenTHashSet(TObjectHashingStrategy<T> strategy, T... ts) {
     super(Arrays.asList(ts), strategy);
   }
 
   @Override
-  public int index(final T obj) {
+  public int index(T obj) {
     return super.index(obj);
   }
 
-  public T get(final int index) {
+  public T get(int index) {
     @SuppressWarnings("unchecked") T t = (T)_set[index];
     return t;
   }
@@ -80,8 +80,8 @@ public class OpenTHashSet<T> extends THashSet<T> {
    * Returns an element of this set equal to the given one. Can be used for interning objects to save memory.
    */
   @Nullable
-  public T get(final T obj) {
-    final int index = index(obj);
+  public T get(T obj) {
+    int index = index(obj);
     return index < 0 ? null : get(index);
   }
 }

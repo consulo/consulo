@@ -84,7 +84,7 @@ public class ArtifactErrorPanel {
 
   public void showError(@Nonnull String message, @Nonnull List<? extends ConfigurationErrorQuickFix> quickFixes) {
     myErrorLabel.setVisible(true);
-    final String errorText = XmlStringUtil.wrapInHtml(message);
+    String errorText = XmlStringUtil.wrapInHtml(message);
     if (myErrorLabel.isShowing()) {
       myErrorLabel.setText(errorText);
     }

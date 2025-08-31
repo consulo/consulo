@@ -38,9 +38,9 @@ public class FoldingAnchorsOverlayStrategy {
     if (visibleFoldRegions != null) {
       for (FoldRegion region : visibleFoldRegions) {
         if (!region.isValid()) continue;
-        final int startOffset = region.getStartOffset();
+        int startOffset = region.getStartOffset();
         if (startOffset > lastVisibleOffset) continue;
-        final int endOffset = region.getEndOffset();
+        int endOffset = region.getEndOffset();
         if (endOffset < firstVisibleOffset) continue;
 
         boolean singleLine = false;

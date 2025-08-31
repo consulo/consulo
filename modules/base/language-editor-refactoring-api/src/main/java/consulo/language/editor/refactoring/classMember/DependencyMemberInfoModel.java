@@ -56,7 +56,7 @@ public abstract class DependencyMemberInfoModel<T extends PsiElement, M extends 
   @Override
   public int checkForProblems(@Nonnull M memberInfo) {
     if (memberInfo.isChecked()) return OK;
-    final T member = memberInfo.getMember();
+    T member = memberInfo.getMember();
 
     if (myMemberDependencyGraph.getDependent().contains(member)) {
       return myProblemLevel;
@@ -73,7 +73,7 @@ public abstract class DependencyMemberInfoModel<T extends PsiElement, M extends 
     memberInfoChanged(event.getChangedMembers());
   }
 
-  public void memberInfoChanged(final Collection<M> changedMembers) {
+  public void memberInfoChanged(Collection<M> changedMembers) {
     if (myTooltipManager != null) myTooltipManager.invalidate();
     for (M changedMember : changedMembers) {
       myMemberDependencyGraph.memberChanged(changedMember);

@@ -65,7 +65,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
   protected void initPanel() {
     setLayout(new BorderLayout());
 
-    final JPanel panel = ToolbarDecorator.createDecorator(myTable)
+    JPanel panel = ToolbarDecorator.createDecorator(myTable)
       .setAddAction(new AnActionButtonRunnable() {
         @Override
         public void run(AnActionButton button) {
@@ -92,7 +92,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
       .disableDownAction()
       .createPanel();
     add(panel, BorderLayout.CENTER);
-    final String label = getLabelText();
+    String label = getLabelText();
     if (label != null) {
       UIUtil.addBorder(panel, IdeBorderFactory.createTitledBorder(label, false));
     }
@@ -203,7 +203,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
       myTable.getCellEditor().stopCellEditing();
     }
 
-    final int[] selected = myTable.getSelectedRows();
+    int[] selected = myTable.getSelectedRows();
     if (selected == null || selected.length == 0) return;
 
     Arrays.sort(selected);

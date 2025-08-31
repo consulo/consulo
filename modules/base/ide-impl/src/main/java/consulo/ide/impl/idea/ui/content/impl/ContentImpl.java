@@ -87,12 +87,12 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   }
 
   @Override
-  public void setPreferredFocusableComponent(final JComponent c) {
+  public void setPreferredFocusableComponent(JComponent c) {
     setPreferredFocusedComponent(() -> c);
   }
 
   @Override
-  public void setPreferredFocusedComponent(final Supplier<JComponent> computable) {
+  public void setPreferredFocusedComponent(Supplier<JComponent> computable) {
     myFocusRequest = computable;
   }
 
@@ -239,7 +239,7 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   }
 
   @Override
-  public void setCloseable(final boolean closeable) {
+  public void setCloseable(boolean closeable) {
     if (closeable == myCloseable) return;
 
     boolean old = myCloseable;
@@ -248,8 +248,8 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   }
 
   @Override
-  public void setActions(final ActionGroup actions, String place, @Nullable JComponent contextComponent) {
-    final ActionGroup oldActions = myActions;
+  public void setActions(ActionGroup actions, String place, @Nullable JComponent contextComponent) {
+    ActionGroup oldActions = myActions;
     myActions = actions;
     myPlace = place;
     myActionsContextComponent = contextComponent;
@@ -305,7 +305,7 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   }
 
   @Override
-  public void setAlertIcon(@Nullable final AlertIcon icon) {
+  public void setAlertIcon(@Nullable AlertIcon icon) {
     myAlertIcon = icon;
   }
 
@@ -345,7 +345,7 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   }
 
   @Override
-  public void setSearchComponent(@Nullable final JComponent comp) {
+  public void setSearchComponent(@Nullable JComponent comp) {
     mySearchComponent = comp;
   }
 

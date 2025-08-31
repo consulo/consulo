@@ -33,7 +33,7 @@ public class LexerEditorHighlighterLexer extends LexerBase {
   private final EditorHighlighter myHighlighter;
   private final boolean myAlreadyInitializedHighlighter;
 
-  public LexerEditorHighlighterLexer(final EditorHighlighter highlighter, boolean alreadyInitializedHighlighter) {
+  public LexerEditorHighlighterLexer(EditorHighlighter highlighter, boolean alreadyInitializedHighlighter) {
     myHighlighter = highlighter;
     myAlreadyInitializedHighlighter = alreadyInitializedHighlighter;
   }

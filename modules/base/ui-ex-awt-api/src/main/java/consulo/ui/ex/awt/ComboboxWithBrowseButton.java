@@ -36,9 +36,9 @@ public class ComboboxWithBrowseButton extends ComponentWithBrowseButton<JComboBo
   }
 
   @Override
-  public void setTextFieldPreferredWidth(final int charCount) {
+  public void setTextFieldPreferredWidth(int charCount) {
     super.setTextFieldPreferredWidth(charCount);
-    final Component comp = getChildComponent().getEditor().getEditorComponent();
+    Component comp = getChildComponent().getEditor().getEditorComponent();
     Dimension size = comp.getPreferredSize();
     FontMetrics fontMetrics = comp.getFontMetrics(comp.getFont());
     size.width = fontMetrics.charWidth('a') * charCount;

@@ -56,7 +56,7 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
     private final ConfigurationSettingsEditor myEditor;
     private final HideableDecorator myDecorator;
 
-    public ConfigurationSettingsEditorWrapper(final RunnerAndConfigurationSettings settings) {
+    public ConfigurationSettingsEditorWrapper(RunnerAndConfigurationSettings settings) {
         myEditor = new ConfigurationSettingsEditor(settings);
         Disposer.register(this, myEditor);
         myBeforeRunStepsPanel = new BeforeRunStepsPanel(this);
@@ -85,7 +85,7 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
     }
 
     private void doReset(RunnerAndConfigurationSettings settings) {
-        final RunConfiguration runConfiguration = settings.getConfiguration();
+        RunConfiguration runConfiguration = settings.getConfiguration();
         myBeforeRunStepsPanel.doReset(settings);
         myBeforeLaunchContainer.setVisible(!(runConfiguration instanceof UnknownRunConfiguration));
     }
@@ -107,13 +107,13 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
     }
 
     @Override
-    public void resetEditorFrom(final RunnerAndConfigurationSettings settings) {
+    public void resetEditorFrom(RunnerAndConfigurationSettings settings) {
         myEditor.resetEditorFrom(settings);
         doReset(settings);
     }
 
     @Override
-    public void applyEditorTo(final RunnerAndConfigurationSettings settings) throws ConfigurationException {
+    public void applyEditorTo(RunnerAndConfigurationSettings settings) throws ConfigurationException {
         myEditor.applyEditorTo(settings);
         doApply(settings);
     }
@@ -125,9 +125,9 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
         return result;
     }
 
-    private void doApply(final RunnerAndConfigurationSettings settings) {
-        final RunConfiguration runConfiguration = settings.getConfiguration();
-        final RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
+    private void doApply(RunnerAndConfigurationSettings settings) {
+        RunConfiguration runConfiguration = settings.getConfiguration();
+        RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
         runManager.setBeforeRunTasks(runConfiguration, myBeforeRunStepsPanel.getTasks(true), false);
         RunnerAndConfigurationSettings runManagerSettings = runManager.getSettings(runConfiguration);
         if (runManagerSettings != null) {

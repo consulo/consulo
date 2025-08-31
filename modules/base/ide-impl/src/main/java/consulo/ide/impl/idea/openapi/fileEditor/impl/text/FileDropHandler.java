@@ -49,15 +49,15 @@ public class FileDropHandler implements EditorDropHandler {
   }
 
   @Override
-  public boolean canHandleDrop(final DataFlavor[] transferFlavors) {
+  public boolean canHandleDrop(DataFlavor[] transferFlavors) {
     return transferFlavors != null && FileCopyPasteUtil.isFileListFlavorAvailable(transferFlavors);
   }
 
   @RequiredUIAccess
   @Override
-  public void handleDrop(@Nonnull final Transferable t, @Nullable final Project project, Object editorWindow) {
+  public void handleDrop(@Nonnull Transferable t, @Nullable Project project, Object editorWindow) {
     if (project != null) {
-      final List<File> fileList = FileCopyPasteUtil.getFileList(t);
+      List<File> fileList = FileCopyPasteUtil.getFileList(t);
       if (fileList != null) {
         boolean dropResult = ContainerUtil.process(CustomFileDropHandler.CUSTOM_DROP_HANDLER_EP.getExtensionList(project),
                                                    handler -> !(handler.canHandle(t, myEditor) && handler.handleDrop(t, myEditor, project)));
@@ -69,14 +69,14 @@ public class FileDropHandler implements EditorDropHandler {
   }
 
   @RequiredUIAccess
-  private void openFiles(final Project project, final List<File> fileList, Object editorWindow) {
+  private void openFiles(Project project, List<File> fileList, Object editorWindow) {
     if (editorWindow == null && myEditor != null) {
       editorWindow = findEditorWindow(project);
     }
-    final LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+    LocalFileSystem fileSystem = LocalFileSystem.getInstance();
     for (File file : fileList) {
-      final VirtualFile vFile = fileSystem.refreshAndFindFileByIoFile(file);
-      final FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
+      VirtualFile vFile = fileSystem.refreshAndFindFileByIoFile(file);
+      FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
       if (vFile != null) {
         NonProjectFileWritingAccessProvider.allowWriting(vFile);
 
@@ -92,13 +92,13 @@ public class FileDropHandler implements EditorDropHandler {
 
   @Nullable
   private FileEditorWindow findEditorWindow(Project project) {
-    final Document document = myEditor.getDocument();
-    final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+    Document document = myEditor.getDocument();
+    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file != null) {
-      final FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
-      final FileEditorWindow[] windows = fileEditorManager.getWindows();
+      FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
+      FileEditorWindow[] windows = fileEditorManager.getWindows();
       for (FileEditorWindow window : windows) {
-        final FileEditorWithProviderComposite composite = window.findFileComposite(file);
+        FileEditorWithProviderComposite composite = window.findFileComposite(file);
         if (composite == null) {
           continue;
         }

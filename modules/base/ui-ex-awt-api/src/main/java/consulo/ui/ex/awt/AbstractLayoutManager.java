@@ -20,38 +20,38 @@ import java.awt.*;
 
 public abstract class AbstractLayoutManager implements LayoutManager2 {
   @Override
-  public void addLayoutComponent(final Component comp, final Object constraints) {
+  public void addLayoutComponent(Component comp, Object constraints) {
   }
 
   @Override
-  public Dimension maximumLayoutSize(final Container target) {
+  public Dimension maximumLayoutSize(Container target) {
     return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
   }
 
   @Override
-  public float getLayoutAlignmentX(final Container target) {
+  public float getLayoutAlignmentX(Container target) {
     return 0;
   }
 
   @Override
-  public float getLayoutAlignmentY(final Container target) {
+  public float getLayoutAlignmentY(Container target) {
     return 0;
   }
 
   @Override
-  public void invalidateLayout(final Container target) {
+  public void invalidateLayout(Container target) {
   }
 
   @Override
-  public void addLayoutComponent(final String name, final Component comp) {
+  public void addLayoutComponent(String name, Component comp) {
   }
 
   @Override
-  public void removeLayoutComponent(final Component comp) {
+  public void removeLayoutComponent(Component comp) {
   }
 
   @Override
-  public Dimension minimumLayoutSize(final Container parent) {
+  public Dimension minimumLayoutSize(Container parent) {
     return new Dimension(0, 0);
   }
 }

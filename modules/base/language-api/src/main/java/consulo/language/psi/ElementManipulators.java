@@ -33,28 +33,28 @@ public class ElementManipulators {
     return ElementManipulator.getManipulator(element);
   }
 
-  public static int getOffsetInElement(final PsiElement element) {
-    final ElementManipulator<PsiElement> manipulator = getNotNullManipulator(element);
+  public static int getOffsetInElement(PsiElement element) {
+    ElementManipulator<PsiElement> manipulator = getNotNullManipulator(element);
     return manipulator.getRangeInElement(element).getStartOffset();
   }
 
   public static <T extends PsiElement> ElementManipulator<T> getNotNullManipulator(T element) {
-    final ElementManipulator<T> manipulator = getManipulator(element);
+    ElementManipulator<T> manipulator = getManipulator(element);
     LOG.assertTrue(manipulator != null, element.getClass().getName());
     return manipulator;
   }
 
-  public static TextRange getValueTextRange(final PsiElement element) {
-    final ElementManipulator<PsiElement> manipulator = getManipulator(element);
+  public static TextRange getValueTextRange(PsiElement element) {
+    ElementManipulator<PsiElement> manipulator = getManipulator(element);
     return manipulator == null ? TextRange.from(0, element.getTextLength()) : manipulator.getRangeInElement(element);
   }
 
   @Nonnull
-  public static String getValueText(final PsiElement element) {
-    final TextRange valueTextRange = getValueTextRange(element);
+  public static String getValueText(PsiElement element) {
+    TextRange valueTextRange = getValueTextRange(element);
     if (valueTextRange.isEmpty()) return "";
 
-    final String text = element.getText();
+    String text = element.getText();
     if (valueTextRange.getEndOffset() > text.length()) {
       LOG.error("Wrong range for " + element + " text: " + text + " range " + valueTextRange);
     }
@@ -63,7 +63,7 @@ public class ElementManipulators {
   }
 
   public static <T extends PsiElement> T handleContentChange(T element, String text) {
-    final ElementManipulator<T> manipulator = getNotNullManipulator(element);
+    ElementManipulator<T> manipulator = getNotNullManipulator(element);
     return manipulator.handleContentChange(element, text);
   }
 }

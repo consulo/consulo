@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
 public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
   protected final Project myProject;
 
-  protected SelectInTargetPsiWrapper(@Nonnull final Project project) {
+  protected SelectInTargetPsiWrapper(@Nonnull Project project) {
     myProject = project;
   }
 

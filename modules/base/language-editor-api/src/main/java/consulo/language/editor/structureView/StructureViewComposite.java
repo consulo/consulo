@@ -82,7 +82,7 @@ public class StructureViewComposite implements StructureView {
   }
 
   @Override
-  public boolean navigateToSelectedElement(final boolean requestFocus) {
+  public boolean navigateToSelectedElement(boolean requestFocus) {
     StructureView view = getSelectedStructureView();
     return view != null && view.navigateToSelectedElement(requestFocus);
   }

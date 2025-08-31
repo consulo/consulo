@@ -93,10 +93,10 @@ public class PsiVFSListener implements BulkFileListener {
   }
 
   private void beforeFileDeletion(@Nonnull VFileDeleteEvent event) {
-    final VirtualFile vFile = event.getFile();
+    VirtualFile vFile = event.getFile();
 
     VirtualFile parent = vFile.getParent();
-    final PsiDirectory parentDir = getCachedDirectory(parent);
+    PsiDirectory parentDir = getCachedDirectory(parent);
     if (parentDir == null) return; // do not notify listeners if parent directory was never accessed via PSI
 
     runExternalAction(() -> {
@@ -118,14 +118,14 @@ public class PsiVFSListener implements BulkFileListener {
       VirtualFile vFile = de.getFile();
       VirtualFile parent = vFile.getParent();
 
-      final PsiFile psiFile = myFileManager.getCachedPsiFileInner(vFile);
+      PsiFile psiFile = myFileManager.getCachedPsiFileInner(vFile);
       PsiElement element;
       if (psiFile != null) {
         clearViewProvider(vFile, "PSI fileDeleted");
         element = psiFile;
       }
       else {
-        final PsiDirectory psiDir = myFileManager.getCachedDirectory(vFile);
+        PsiDirectory psiDir = myFileManager.getCachedDirectory(vFile);
         if (psiDir != null) {
           needToRemoveInvalidFilesAndDirs = true;
           element = psiDir;
@@ -138,7 +138,7 @@ public class PsiVFSListener implements BulkFileListener {
           element = null;
         }
       }
-      final PsiDirectory parentDir = getCachedDirectory(parent);
+      PsiDirectory parentDir = getCachedDirectory(parent);
       if (element != null && parentDir != null) {
         runExternalAction(() -> {
           PsiTreeChangeEventImpl treeEvent = new PsiTreeChangeEventImpl(myManager);
@@ -157,14 +157,14 @@ public class PsiVFSListener implements BulkFileListener {
     DebugUtil.performPsiModification(why, () -> myFileManager.setViewProvider(vFile, null));
   }
 
-  private void beforePropertyChange(@Nonnull final VFilePropertyChangeEvent event) {
-    final VirtualFile vFile = event.getFile();
-    final String propertyName = event.getPropertyName();
+  private void beforePropertyChange(@Nonnull VFilePropertyChangeEvent event) {
+    VirtualFile vFile = event.getFile();
+    String propertyName = event.getPropertyName();
 
-    final FileViewProvider viewProvider = myFileManager.findCachedViewProvider(vFile);
+    FileViewProvider viewProvider = myFileManager.findCachedViewProvider(vFile);
 
     VirtualFile parent = vFile.getParent();
-    final PsiDirectory parentDir = viewProvider != null && parent != null ? myFileManager.findDirectory(parent) : getCachedDirectory(parent);
+    PsiDirectory parentDir = viewProvider != null && parent != null ? myFileManager.findDirectory(parent) : getCachedDirectory(parent);
     if (parent != null && parentDir == null) return; // do not notifyListeners event if parent directory was never accessed via PSI
 
     runExternalAction(() -> {
@@ -172,7 +172,7 @@ public class PsiVFSListener implements BulkFileListener {
       treeEvent.setParent(parentDir);
 
       if (VirtualFile.PROP_NAME.equals(propertyName)) {
-        final String newName = (String)event.getNewValue();
+        String newName = (String)event.getNewValue();
 
         if (parentDir == null) return;
 
@@ -198,7 +198,7 @@ public class PsiVFSListener implements BulkFileListener {
           }
         }
         else {
-          final FileViewProvider viewProvider1 = myFileManager.findViewProvider(vFile);
+          FileViewProvider viewProvider1 = myFileManager.findViewProvider(vFile);
           PsiFile psiFile = viewProvider1.getPsi(viewProvider1.getBaseLanguage());
           PsiFile psiFile1 = createFileCopyWithNewName(vFile, newName);
 
@@ -252,15 +252,15 @@ public class PsiVFSListener implements BulkFileListener {
     return false;
   }
 
-  private void propertyChanged(@Nonnull final VFilePropertyChangeEvent event) {
-    final String propertyName = event.getPropertyName();
-    final VirtualFile vFile = event.getFile();
+  private void propertyChanged(@Nonnull VFilePropertyChangeEvent event) {
+    String propertyName = event.getPropertyName();
+    VirtualFile vFile = event.getFile();
 
     FileViewProvider oldFileViewProvider = myFileManager.findCachedViewProvider(vFile);
     PsiFile oldPsiFile = myFileManager.getCachedPsiFile(vFile);
 
     VirtualFile parent = vFile.getParent();
-    final PsiDirectory parentDir = oldPsiFile != null && parent != null ? myFileManager.findDirectory(parent) : getCachedDirectory(parent);
+    PsiDirectory parentDir = oldPsiFile != null && parent != null ? myFileManager.findDirectory(parent) : getCachedDirectory(parent);
 
     if (oldFileViewProvider != null // there is no need to rebuild if there were no PSI in the first place
         && FileContentUtilCore.FORCE_RELOAD_REQUESTOR.equals(event.getRequestor())) {
@@ -313,8 +313,8 @@ public class PsiVFSListener implements BulkFileListener {
             }
           }
           else {
-            final FileViewProvider fileViewProvider = myFileManager.createFileViewProvider(vFile, true);
-            final PsiFile newPsiFile = fileViewProvider.getPsi(fileViewProvider.getBaseLanguage());
+            FileViewProvider fileViewProvider = myFileManager.createFileViewProvider(vFile, true);
+            PsiFile newPsiFile = fileViewProvider.getPsi(fileViewProvider.getBaseLanguage());
             if (oldPsiFile != null) {
               if (newPsiFile == null) {
                 clearViewProvider(vFile, "PSI renamed");
@@ -371,10 +371,10 @@ public class PsiVFSListener implements BulkFileListener {
   }
 
   private void beforeFileMovement(@Nonnull VFileMoveEvent event) {
-    final VirtualFile vFile = event.getFile();
+    VirtualFile vFile = event.getFile();
 
-    final PsiDirectory oldParentDir = myFileManager.findDirectory(event.getOldParent());
-    final PsiDirectory newParentDir = myFileManager.findDirectory(event.getNewParent());
+    PsiDirectory oldParentDir = myFileManager.findDirectory(event.getOldParent());
+    PsiDirectory newParentDir = myFileManager.findDirectory(event.getNewParent());
     if (oldParentDir == null && newParentDir == null) return;
     if (myFileTypeManager.isFileIgnored(vFile)) return;
 
@@ -413,12 +413,12 @@ public class PsiVFSListener implements BulkFileListener {
     for (VFileEvent e : events) {
       VFileMoveEvent event = (VFileMoveEvent)e;
 
-      final VirtualFile vFile = event.getFile();
+      VirtualFile vFile = event.getFile();
 
-      final PsiDirectory oldParentDir = myFileManager.findDirectory(event.getOldParent());
-      final PsiDirectory newParentDir = myFileManager.findDirectory(event.getNewParent());
+      PsiDirectory oldParentDir = myFileManager.findDirectory(event.getOldParent());
+      PsiDirectory newParentDir = myFileManager.findDirectory(event.getNewParent());
 
-      final PsiElement oldElement = vFile.isDirectory() ? myFileManager.getCachedDirectory(vFile) : myFileManager.getCachedPsiFileInner(vFile);
+      PsiElement oldElement = vFile.isDirectory() ? myFileManager.getCachedDirectory(vFile) : myFileManager.getCachedPsiFileInner(vFile);
       oldElements.add(oldElement);
       oldParentDirs.add(oldParentDir);
       newParentDirs.add(newParentDir);
@@ -428,15 +428,15 @@ public class PsiVFSListener implements BulkFileListener {
     for (int i = 0; i < events.size(); i++) {
       VFileMoveEvent event = (VFileMoveEvent)events.get(i);
 
-      final VirtualFile vFile = event.getFile();
+      VirtualFile vFile = event.getFile();
 
-      final PsiDirectory oldParentDir = oldParentDirs.get(i);
-      final PsiDirectory newParentDir = newParentDirs.get(i);
+      PsiDirectory oldParentDir = oldParentDirs.get(i);
+      PsiDirectory newParentDir = newParentDirs.get(i);
       if (oldParentDir == null && newParentDir == null) continue;
 
-      final PsiElement oldElement = oldElements.get(i);
-      final PsiElement newElement;
-      final FileViewProvider newViewProvider;
+      PsiElement oldElement = oldElements.get(i);
+      PsiElement newElement;
+      FileViewProvider newViewProvider;
       if (vFile.isDirectory()) {
         newElement = myFileManager.findDirectory(vFile);
         newViewProvider = null;
@@ -491,10 +491,10 @@ public class PsiVFSListener implements BulkFileListener {
   private PsiFile createFileCopyWithNewName(VirtualFile vFile, String name) {
     // TODO[ik] remove this. Event handling and generation must be in view providers mechanism since we
     // need to track changes in _all_ psi views (e.g. namespace changes in XML)
-    final FileTypeManager instance = FileTypeManager.getInstance();
+    FileTypeManager instance = FileTypeManager.getInstance();
     if (instance.isFileIgnored(name)) return null;
-    final FileType fileTypeByFileName = instance.getFileTypeByFileName(name);
-    final Document document = FileDocumentManager.getInstance().getDocument(vFile);
+    FileType fileTypeByFileName = instance.getFileTypeByFileName(name);
+    Document document = FileDocumentManager.getInstance().getDocument(vFile);
     return PsiFileFactory.getInstance(myManager.getProject())
             .createFileFromText(name, fileTypeByFileName, document != null ? document.getCharsSequence() : "", vFile.getModificationStamp(), true, false);
   }
@@ -503,7 +503,7 @@ public class PsiVFSListener implements BulkFileListener {
     private int depthCounter; // accessed from within write action only
 
     @Override
-    public void beforeRootsChange(@Nonnull final ModuleRootEvent event) {
+    public void beforeRootsChange(@Nonnull ModuleRootEvent event) {
       if (event.isCausedByFileTypesChange()) return;
       runExternalAction(() -> {
         depthCounter++;
@@ -516,7 +516,7 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @Override
-    public void rootsChanged(@Nonnull final ModuleRootEvent event) {
+    public void rootsChanged(@Nonnull ModuleRootEvent event) {
       myFileManager.dispatchPendingEvents();
 
       if (event.isCausedByFileTypesChange()) return;
@@ -536,7 +536,7 @@ public class PsiVFSListener implements BulkFileListener {
 
   class MyFileDocumentManagerAdapter implements FileDocumentManagerListener {
     @Override
-    public void fileWithNoDocumentChanged(@Nonnull final VirtualFile file) {
+    public void fileWithNoDocumentChanged(@Nonnull VirtualFile file) {
       FileViewProvider viewProvider = myFileManager.findCachedViewProvider(file);
       if (viewProvider != null) {
         runExternalAction(() -> {
@@ -622,7 +622,7 @@ public class PsiVFSListener implements BulkFileListener {
       assert subList.size() == 1;
       if (event instanceof VFileCopyEvent) {
         VFileCopyEvent ce = (VFileCopyEvent)event;
-        final VirtualFile copy = ce.getNewParent().findChild(ce.getNewChildName());
+        VirtualFile copy = ce.getNewParent().findChild(ce.getNewChildName());
         if (copy != null) {
           fileCreated(copy); // no need to group creation
         }

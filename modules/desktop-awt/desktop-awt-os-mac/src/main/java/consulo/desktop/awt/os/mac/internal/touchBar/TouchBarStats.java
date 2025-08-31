@@ -74,7 +74,7 @@ final class TouchBarStats {
 
     @Nonnull
     AnActionStats getActionStats(@Nonnull AnAction action) {
-        final String actId = Helpers.getActionId(action);
+        String actId = Helpers.getActionId(action);
         return actionStats.computeIfAbsent(actId, s -> new AnActionStats(s));
     }
 

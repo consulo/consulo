@@ -31,7 +31,7 @@ public class UpToDateLineNumberProviderImpl implements UpToDateLineNumberProvide
   }
 
   @Override
-  public boolean isRangeChanged(final int start, final int end) {
+  public boolean isRangeChanged(int start, int end) {
     LineStatusTracker tracker = getTracker();
     if (tracker == null) {
       return false;

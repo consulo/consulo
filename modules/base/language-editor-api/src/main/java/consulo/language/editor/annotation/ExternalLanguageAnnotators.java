@@ -27,9 +27,9 @@ import java.util.List;
  */
 public class ExternalLanguageAnnotators {
   @Nonnull
-  public static List<ExternalAnnotator> allForFile(Language language, final PsiFile file) {
+  public static List<ExternalAnnotator> allForFile(Language language, PsiFile file) {
     List<ExternalAnnotator> annotators = ExternalAnnotator.forLanguage(language);
-    final List<ExternalAnnotatorsFilter> filters = ExternalAnnotatorsFilter.EXTENSION_POINT_NAME.getExtensionList();
+    List<ExternalAnnotatorsFilter> filters = ExternalAnnotatorsFilter.EXTENSION_POINT_NAME.getExtensionList();
     return ContainerUtil.findAll(annotators, annotator -> {
       for (ExternalAnnotatorsFilter filter : filters) {
         if (filter.isProhibited(annotator, file)) {

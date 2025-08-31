@@ -144,7 +144,7 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
         for (TreePath treePath : paths) {
           applyCollapseState(treePath);
         }
-        final TreePath rootPath = new TreePath(getModel().getRoot());
+        TreePath rootPath = new TreePath(getModel().getRoot());
         if (isCollapsed(rootPath)) {
           expandPath(rootPath);
         }
@@ -158,8 +158,8 @@ public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTa
    * @param path  target path
    */
   private void applyCollapseState(@Nonnull TreePath path) {
-    final String key = getPath(path);
-    final Boolean expanded = myExpandedStateHolder.get(key);
+    String key = getPath(path);
+    Boolean expanded = myExpandedStateHolder.get(key);
     if (expanded == null) {
       return;
     }

@@ -41,22 +41,22 @@ public class JumpData implements CoverageData {
         return myFalseHits;
     }
 
-    public void save(final DataOutputStream os) throws IOException {
+    public void save(DataOutputStream os) throws IOException {
         CoverageIOUtil.writeINT(os, myTrueHits);
         CoverageIOUtil.writeINT(os, myFalseHits);
     }
 
-    public void merge(final CoverageData data) {
-        final JumpData jumpData = (JumpData)data;
+    public void merge(CoverageData data) {
+        JumpData jumpData = (JumpData)data;
         myTrueHits += jumpData.myTrueHits;
         myFalseHits += jumpData.myFalseHits;
     }
 
-    public void setTrueHits(final int trueHits) {
+    public void setTrueHits(int trueHits) {
         myTrueHits = trueHits;
     }
 
-    public void setFalseHits(final int falseHits) {
+    public void setFalseHits(int falseHits) {
         myFalseHits = falseHits;
     }
 }

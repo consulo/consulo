@@ -33,14 +33,14 @@ import java.util.function.BiPredicate;
 public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> implements Cloneable, ElementPattern<T> {
   private ElementPatternCondition<T> myCondition;
 
-  protected ObjectPattern(@Nonnull final InitialPatternCondition<T> condition) {
+  protected ObjectPattern(@Nonnull InitialPatternCondition<T> condition) {
     myCondition = new ElementPatternCondition<T>(condition);
   }
 
   protected ObjectPattern(final Class<T> aClass) {
     this(new InitialPatternCondition<T>(aClass) {
       @Override
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
         return aClass.isInstance(o);
       }
     });
@@ -50,7 +50,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
     return myCondition.accepts(t, new ProcessingContext());
   }
 
-  public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+  public boolean accepts(@Nullable Object o, ProcessingContext context) {
     return myCondition.accepts(o, context);
   }
 
@@ -58,11 +58,11 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
     return myCondition;
   }
 
-  public Self andNot(final ElementPattern pattern) {
+  public Self andNot(ElementPattern pattern) {
     return and(StandardPatterns.<Self>not(pattern));
   }
 
-  public Self andOr(final ElementPattern... patterns) {
+  public Self andOr(ElementPattern... patterns) {
     return and(StandardPatterns.<Self>or(patterns));
   }
 
@@ -77,7 +77,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self equalTo(@Nonnull final T o) {
     return with(new ValuePatternCondition<T>("equalTo") {
-      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull T t, ProcessingContext context) {
         return t.equals(o);
       }
 
@@ -89,7 +89,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
   }
 
   @Nonnull
-  public Self oneOf(final T... values) {
+  public Self oneOf(T... values) {
     final Collection<T> list;
 
     if (values.length >= 11) {
@@ -131,7 +131,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self isNull() {
     return adapt(new ElementPatternCondition<T>(new InitialPatternCondition(Object.class) {
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
         return o == null;
       }
     }));
@@ -139,7 +139,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self notNull() {
     return adapt(new ElementPatternCondition<T>(new InitialPatternCondition(Object.class) {
-      public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
         return o != null;
       }
     }));
@@ -147,7 +147,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self save(final Key<? super T> key) {
     return with(new PatternCondition<T>("save") {
-      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull T t, ProcessingContext context) {
         context.put((Key)key, t);
         return true;
       }
@@ -156,21 +156,21 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self save(@NonNls final String key) {
     return with(new PatternCondition<T>("save") {
-      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull T t, ProcessingContext context) {
         context.put(key, t);
         return true;
       }
     });
   }
 
-  public Self with(final PatternCondition<? super T> pattern) {
-    final ElementPatternCondition<T> condition = myCondition.append(pattern);
+  public Self with(PatternCondition<? super T> pattern) {
+    ElementPatternCondition<T> condition = myCondition.append(pattern);
     return adapt(condition);
   }
 
-  private Self adapt(final ElementPatternCondition<T> condition) {
+  private Self adapt(ElementPatternCondition<T> condition) {
     try {
-      final ObjectPattern s = (ObjectPattern)clone();
+      ObjectPattern s = (ObjectPattern)clone();
       s.myCondition = condition;
       return (Self)s;
     }
@@ -181,7 +181,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self without(final PatternCondition<? super T> pattern) {
     return with(new PatternCondition<T>("without") {
-      public boolean accepts(@Nonnull final T o, final ProcessingContext context) {
+      public boolean accepts(@Nonnull T o, ProcessingContext context) {
         return !pattern.accepts(o, context);
       }
     });
@@ -193,11 +193,11 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public static class Capture<T> extends ObjectPattern<T, Capture<T>> {
 
-    public Capture(final Class<T> aClass) {
+    public Capture(Class<T> aClass) {
       super(aClass);
     }
 
-    public Capture(@Nonnull final InitialPatternCondition<T> condition) {
+    public Capture(@Nonnull InitialPatternCondition<T> condition) {
       super(condition);
     }
   }

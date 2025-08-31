@@ -34,12 +34,12 @@ public final class ClasspathEntryMacro extends Macro {
     return PathMacroBundle.message("macro.classpath.entry");
   }
 
-  public String expand(final DataContext dataContext) {
-    final Project project = dataContext.getData(Project.KEY);
+  public String expand(DataContext dataContext) {
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) return null;
-    final VirtualFile file = dataContext.getData(VirtualFile.KEY);
+    VirtualFile file = dataContext.getData(VirtualFile.KEY);
     if (file == null) return null;
-    final VirtualFile classRoot = ProjectRootManager.getInstance(project).getFileIndex().getClassRootForFile(file);
+    VirtualFile classRoot = ProjectRootManager.getInstance(project).getFileIndex().getClassRootForFile(file);
     if (classRoot == null) return null;
     return getPath(classRoot);
   }

@@ -73,7 +73,7 @@ public class LoggerModel extends Model {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+        int prime = 31;
         int result = super.hashCode();
         result = prime * result + Objects.hash(additivity, level, name);
         return result;

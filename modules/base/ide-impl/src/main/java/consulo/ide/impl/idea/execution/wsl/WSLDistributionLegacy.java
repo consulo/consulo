@@ -36,10 +36,10 @@ public class WSLDistributionLegacy extends WSLDistribution {
    */
   @Nullable
   public static WSLDistributionLegacy getInstance() {
-    final Path executableRoot = getExecutableRootPath();
+    Path executableRoot = getExecutableRootPath();
     if (executableRoot == null) return null;
 
-    final Path executablePath = executableRoot.resolve(LEGACY_WSL.getExecutablePath());
+    Path executablePath = executableRoot.resolve(LEGACY_WSL.getExecutablePath());
     if (Files.exists(executablePath, LinkOption.NOFOLLOW_LINKS)) {
       return new WSLDistributionLegacy(executablePath);
     }

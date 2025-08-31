@@ -41,9 +41,9 @@ public class FeaturesUsageCollector extends UsagesCollector {
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
     Set<UsageDescriptor> usages = new HashSet<UsageDescriptor>();
 
-    final ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
+    ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
     for (String featureId : registry.getFeatureIds()) {
-      final FeatureDescriptor featureDescriptor = registry.getFeatureDescriptor(featureId);
+      FeatureDescriptor featureDescriptor = registry.getFeatureDescriptor(featureId);
       if (featureDescriptor != null) {
         usages.add(new UsageDescriptor(featureId, featureDescriptor.getUsageCount()));
       }

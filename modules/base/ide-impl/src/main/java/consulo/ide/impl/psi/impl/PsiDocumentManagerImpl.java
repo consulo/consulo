@@ -62,7 +62,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     MessageBusConnection connection = project.getMessageBus().connect(this);
     connection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
       @Override
-      public void fileContentLoaded(@Nonnull final VirtualFile virtualFile, @Nonnull Document document) {
+      public void fileContentLoaded(@Nonnull VirtualFile virtualFile, @Nonnull Document document) {
         PsiFile psiFile = ReadAction.compute(() -> myProject.isDisposed() || !virtualFile.isValid() ? null : getCachedPsiFile(virtualFile));
         fireDocumentCreated(document, psiFile);
       }
@@ -72,9 +72,9 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
   @Nullable
   @Override
   public PsiFile getPsiFile(@Nonnull Document document) {
-    final PsiFile psiFile = super.getPsiFile(document);
+    PsiFile psiFile = super.getPsiFile(document);
     if (myUnitTestMode) {
-      final VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
+      VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
       if (virtualFile != null && virtualFile.isValid()) {
         Collection<Project> projects = ProjectLocator.getInstance().getProjectsForFile(virtualFile);
         if (!projects.isEmpty() && !projects.contains(myProject)) {
@@ -123,7 +123,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
   }
 
   @Override
-  protected void beforeDocumentChangeOnUnlockedDocument(@Nonnull final FileViewProvider viewProvider) {
+  protected void beforeDocumentChangeOnUnlockedDocument(@Nonnull FileViewProvider viewProvider) {
     PostprocessReformattingAspect.getInstance(myProject).assertDocumentChangeIsAllowed(viewProvider);
     super.beforeDocumentChangeOnUnlockedDocument(viewProvider);
   }
@@ -142,15 +142,15 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
 
   @Override
   public boolean isDocumentBlockedByPsi(@Nonnull Document doc) {
-    final FileViewProvider viewProvider = getCachedViewProvider(doc);
+    FileViewProvider viewProvider = getCachedViewProvider(doc);
     return viewProvider != null && PostprocessReformattingAspect.getInstance(myProject).isViewProviderLocked(viewProvider);
   }
 
   @Override
   public void doPostponedOperationsAndUnblockDocument(@Nonnull Document doc) {
     if (doc instanceof DocumentWindow) doc = ((DocumentWindow)doc).getDelegate();
-    final PostprocessReformattingAspect component = PostprocessReformattingAspect.getInstance(myProject);
-    final FileViewProvider viewProvider = getCachedViewProvider(doc);
+    PostprocessReformattingAspect component = PostprocessReformattingAspect.getInstance(myProject);
+    FileViewProvider viewProvider = getCachedViewProvider(doc);
     if (viewProvider != null && component != null) component.doPostponedFormatting(viewProvider);
   }
 

@@ -53,8 +53,8 @@ public final class Diff {
     }
 
     public static @Nullable Change buildChanges(@Nonnull int[] array1, @Nonnull int[] array2) throws FilesTooBigForDiffException {
-        final int startShift = getStartShift(array1, array2);
-        final int endCut = getEndCut(array1, array2, startShift);
+        int startShift = getStartShift(array1, array2);
+        int endCut = getEndCut(array1, array2, startShift);
 
         Ref<Change> changeRef = doBuildChangesFast(array1.length, array2.length, startShift, endCut);
         if (changeRef != null) {
@@ -140,7 +140,7 @@ public final class Diff {
     }
 
     private static int getStartShift(@Nonnull int[] o1, @Nonnull int[] o2) {
-        final int size = Math.min(o1.length, o2.length);
+        int size = Math.min(o1.length, o2.length);
         int idx = 0;
         for (int i = 0; i < size; i++) {
             if (o1[i] != o2[i]) {
@@ -151,8 +151,8 @@ public final class Diff {
         return idx;
     }
 
-    private static int getEndCut(@Nonnull int[] o1, @Nonnull int[] o2, final int startShift) {
-        final int size = Math.min(o1.length, o2.length) - startShift;
+    private static int getEndCut(@Nonnull int[] o1, @Nonnull int[] o2, int startShift) {
+        int size = Math.min(o1.length, o2.length) - startShift;
         int idx = 0;
 
         for (int i = 0; i < size; i++) {
@@ -280,7 +280,7 @@ public final class Diff {
         private Change myFirstChange;
         private Change myLastChange;
 
-        public ChangeBuilder(final int startShift) {
+        public ChangeBuilder(int startShift) {
             skip(startShift, startShift);
         }
 

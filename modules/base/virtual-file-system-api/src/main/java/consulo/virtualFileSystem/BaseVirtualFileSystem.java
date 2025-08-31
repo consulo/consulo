@@ -88,7 +88,7 @@ public abstract class BaseVirtualFileSystem implements VirtualFileSystem {
     myEventDispatcher.getMulticaster().fileMoved(event);
   }
 
-  protected void fireFileCopied(@Nullable Object requestor, @Nonnull VirtualFile originalFile, @Nonnull final VirtualFile createdFile) {
+  protected void fireFileCopied(@Nullable Object requestor, @Nonnull VirtualFile originalFile, @Nonnull VirtualFile createdFile) {
     assertWriteAccessAllowed();
     VirtualFileCopyEvent event = new VirtualFileCopyEvent(requestor, originalFile, createdFile);
     try {

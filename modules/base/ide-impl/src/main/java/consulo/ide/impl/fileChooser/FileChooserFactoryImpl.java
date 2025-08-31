@@ -79,9 +79,9 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
   }
 
   public static Map<String, String> getMacroMap() {
-    final PathMacros macros = PathMacros.getInstance();
-    final Set<String> allNames = macros.getAllMacroNames();
-    final Map<String, String> map = new HashMap<>(allNames.size());
+    PathMacros macros = PathMacros.getInstance();
+    Set<String> allNames = macros.getAllMacroNames();
+    Map<String, String> map = new HashMap<>(allNames.size());
     for (String eachMacroName : allNames) {
       map.put("$" + eachMacroName + "$", macros.getValue(eachMacroName));
     }

@@ -67,7 +67,7 @@ public class ProjectUtilCore {
   public static String displayUrlRelativeToProject(@Nonnull VirtualFile file, @Nonnull String result, @Nonnull Project project, boolean includeFilePath, boolean moduleOnTheLeft) {
     if (includeFilePath) {
       //noinspection ConstantConditions
-      final String projectHomeUrl = FileUtil.toSystemDependentName(project.getBasePath());
+      String projectHomeUrl = FileUtil.toSystemDependentName(project.getBasePath());
       if (result.startsWith(projectHomeUrl)) {
         result = "..." + result.substring(projectHomeUrl.length());
       }

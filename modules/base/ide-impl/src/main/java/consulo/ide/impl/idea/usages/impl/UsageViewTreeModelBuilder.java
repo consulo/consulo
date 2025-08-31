@@ -101,14 +101,14 @@ public class UsageViewTreeModelBuilder extends DefaultTreeModel {
     return (UsageNode)getFirstChildOfType(myRootNode, UsageNode.class);
   }
 
-  private static TreeNode getFirstChildOfType(TreeNode parent, final Class type) {
-    final int childCount = parent.getChildCount();
+  private static TreeNode getFirstChildOfType(TreeNode parent, Class type) {
+    int childCount = parent.getChildCount();
     for (int idx = 0; idx < childCount; idx++) {
-      final TreeNode child = parent.getChildAt(idx);
+      TreeNode child = parent.getChildAt(idx);
       if (type.isAssignableFrom(child.getClass())) {
         return child;
       }
-      final TreeNode firstChildOfType = getFirstChildOfType(child, type);
+      TreeNode firstChildOfType = getFirstChildOfType(child, type);
       if (firstChildOfType != null) {
         return firstChildOfType;
       }

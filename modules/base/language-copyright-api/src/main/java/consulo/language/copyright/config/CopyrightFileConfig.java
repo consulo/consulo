@@ -112,7 +112,7 @@ public class CopyrightFileConfig implements JDOMExternalizable, Cloneable {
       return false;
     }
 
-    final CopyrightFileConfig that = (CopyrightFileConfig)o;
+    CopyrightFileConfig that = (CopyrightFileConfig)o;
 
     if (addBlankAfter != that.addBlankAfter) {
       return false;
@@ -171,7 +171,7 @@ public class CopyrightFileConfig implements JDOMExternalizable, Cloneable {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     sb.append("LanguageOptions");
 
     sb.append(", fileTypeOverride=").append(fileTypeOverride);

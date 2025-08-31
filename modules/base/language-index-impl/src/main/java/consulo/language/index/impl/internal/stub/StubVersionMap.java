@@ -48,7 +48,7 @@ class StubVersionMap {
   private long myStubIndexStamp;
 
   StubVersionMap() throws IOException {
-    for (final FileType fileType : FileTypeRegistry.getInstance().getRegisteredFileTypes()) {
+    for (FileType fileType : FileTypeRegistry.getInstance().getRegisteredFileTypes()) {
       Object owner = getVersionOwner(fileType);
       if (owner != null) {
         fileTypeToVersionOwner.put(fileType, owner);
@@ -59,7 +59,7 @@ class StubVersionMap {
   }
 
   private void updateState() throws IOException {
-    final long currentStubIndexStamp = IndexingStamp.getIndexCreationStamp(StubUpdatingIndex.INDEX_ID);
+    long currentStubIndexStamp = IndexingStamp.getIndexCreationStamp(StubUpdatingIndex.INDEX_ID);
     File allIndexedFiles = allIndexedFilesRegistryFile();
 
     List<String> removedFileTypes = new ArrayList<>();
@@ -164,7 +164,7 @@ class StubVersionMap {
       Language l = ((LanguageFileType)fileType).getLanguage();
       ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
       if (parserDefinition != null) {
-        final IFileElementType type = parserDefinition.getFileNodeType();
+        IFileElementType type = parserDefinition.getFileNodeType();
         if (type instanceof IStubFileElementType) {
           owner = type;
         }

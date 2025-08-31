@@ -38,7 +38,7 @@ public class MyDiffContainer extends JBLayeredPane implements Disposable {
   private final JComponent myLoadingPanel;
   private final JLabel myJLabel;
 
-  public MyDiffContainer(JComponent content, final String text) {
+  public MyDiffContainer(JComponent content, String text) {
     setLayout(new MyOverlayLayout());
     myContent = content;
     myLoadingPanel = new JPanel(new MyPanelLayout());

@@ -20,17 +20,17 @@ import consulo.component.persist.scheme.CompoundScheme;
 import jakarta.annotation.Nonnull;
 
 public class ToolsGroup<T extends Tool> extends CompoundScheme<T> {
-    public ToolsGroup(final String name) {
+    public ToolsGroup(String name) {
         super(name);
     }
 
-    public void moveElementUp(final T tool) {
+    public void moveElementUp(T tool) {
         int index = getElements().indexOf(tool);
         removeElement(tool);
         insertElement(tool, index - 1);
     }
 
-    public void moveElementDown(final T tool) {
+    public void moveElementDown(T tool) {
         int index = getElements().indexOf(tool);
         removeElement(tool);
         insertElement(tool, index + 1);

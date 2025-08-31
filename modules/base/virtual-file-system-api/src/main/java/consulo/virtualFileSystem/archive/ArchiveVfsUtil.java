@@ -35,7 +35,7 @@ public class ArchiveVfsUtil {
     if (virtualFile == null || !virtualFile.isValid()) {
       return null;
     }
-    final FileType fileType = virtualFile.getFileType();
+    FileType fileType = virtualFile.getFileType();
     if (fileType instanceof ArchiveFileType) {
       return ((ArchiveFileType)fileType).getFileSystem().findLocalVirtualFileByPath(virtualFile.getPath());
     }

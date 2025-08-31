@@ -218,7 +218,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     return info != null;
   }
 
-  private EntryPoint acquire(final RunningInfo port) throws Exception {
+  private EntryPoint acquire(RunningInfo port) throws Exception {
     EntryPoint result = RemoteUtil.executeWithClassLoader(() -> {
       Registry registry = LocateRegistry.getRegistry("localhost", port.port);
       Remote remote = registry.lookup(port.name);

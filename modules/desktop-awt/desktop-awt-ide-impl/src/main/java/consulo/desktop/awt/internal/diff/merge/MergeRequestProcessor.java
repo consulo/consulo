@@ -503,7 +503,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     private class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
         @Override
-        public final Component getDefaultComponent(final Container focusCycleRoot) {
+        public final Component getDefaultComponent(Container focusCycleRoot) {
             JComponent component = MergeRequestProcessor.this.getPreferredFocusedComponent();
             if (component == null) {
                 return null;

@@ -20,7 +20,7 @@ package consulo.module;
  * @since 02.04.2015
  */
 public class ModuleDirIsNotExistsException extends Exception {
-  public ModuleDirIsNotExistsException(final String message) {
+  public ModuleDirIsNotExistsException(String message) {
     super(message);
   }
 }

@@ -65,15 +65,15 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
   @Override
   @Nonnull
   public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
-    final Set<Module> modules = new LinkedHashSet<>();
+    Set<Module> modules = new LinkedHashSet<>();
     collectDependentModules(myModule, modules, context);
 
-    final Artifact artifact = context.getArtifact();
-    final ArtifactType artifactType = artifact.getArtifactType();
+    Artifact artifact = context.getArtifact();
+    ArtifactType artifactType = artifact.getArtifactType();
     Set<PackagingSourceItem> items = new LinkedHashSet<>();
     for (Module module : modules) {
       Application.get().getExtensionPoint(PackagingSourceItemsProvider.class).forEachExtensionSafe(provider -> {
-        final ModuleSourceItemGroup parent = new ModuleSourceItemGroup(module);
+        ModuleSourceItemGroup parent = new ModuleSourceItemGroup(module);
         for (PackagingSourceItem sourceItem : provider.getSourceItems(context, artifact, parent)) {
           if (artifactType.isSuitableItem(sourceItem) && sourceItem.isProvideElements()) {
             items.add(sourceItem);
@@ -83,9 +83,9 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
     }
 
     List<PackagingElement<?>> result = new ArrayList<>();
-    final PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
+    PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
     for (PackagingSourceItem item : items) {
-      final String path = artifactType.getDefaultPathFor(item.getKindOfProducedElements());
+      String path = artifactType.getDefaultPathFor(item.getKindOfProducedElements());
       if (path != null) {
         result.addAll(factory.createParentDirectories(path, item.createElements(context)));
       }
@@ -93,14 +93,14 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
     return result;
   }
 
-  private static void collectDependentModules(final Module module, Set<Module> modules, ArtifactEditorContext context) {
+  private static void collectDependentModules(Module module, Set<Module> modules, ArtifactEditorContext context) {
     if (!modules.add(module)) return;
     
     for (OrderEntry entry : context.getModulesProvider().getRootModel(module).getOrderEntries()) {
       if (entry instanceof ModuleOrderEntry) {
-        final ModuleOrderEntry moduleEntry = (ModuleOrderEntry)entry;
-        final Module dependency = moduleEntry.getModule();
-        final DependencyScope scope = moduleEntry.getScope();
+        ModuleOrderEntry moduleEntry = (ModuleOrderEntry)entry;
+        Module dependency = moduleEntry.getModule();
+        DependencyScope scope = moduleEntry.getScope();
         if (dependency != null && scope.isForProductionRuntime()) {
           collectDependentModules(dependency, modules, context);
         }

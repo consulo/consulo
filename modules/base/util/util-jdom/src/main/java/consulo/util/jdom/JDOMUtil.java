@@ -127,7 +127,7 @@ public class JDOMUtil {
     return i;
   }
 
-  private static int addToHash(final int i, @Nonnull final String s) {
+  private static int addToHash(int i, @Nonnull String s) {
     return i * 31 + s.hashCode();
   }
 
@@ -158,7 +158,7 @@ public class JDOMUtil {
   @Deprecated
   @SuppressWarnings("unused")
   @Nonnull
-  public static String concatTextNodesValues(@Nonnull final Object[] nodes) {
+  public static String concatTextNodesValues(@Nonnull Object[] nodes) {
     StringBuilder result = new StringBuilder();
     for (Object node : nodes) {
       result.append(((Content)node).getValue());
@@ -166,7 +166,7 @@ public class JDOMUtil {
     return result.toString();
   }
 
-  public static void addContent(@Nonnull final Element targetElement, final Object node) {
+  public static void addContent(@Nonnull Element targetElement, Object node) {
     if (node instanceof Content) {
       Content content = (Content)node;
       targetElement.addContent(content);
@@ -251,7 +251,7 @@ public class JDOMUtil {
     }
   }
 
-  private static boolean contentListsEqual(final List c1, final List c2) {
+  private static boolean contentListsEqual(List c1, List c2) {
     if (c1 == null && c2 == null) return true;
     if (c1 == null || c2 == null) return false;
 
@@ -437,7 +437,7 @@ public class JDOMUtil {
   @Nonnull
   public static String writeDocument(@Nonnull Document document, String lineSeparator) {
     try {
-      final StringWriter writer = new StringWriter();
+      StringWriter writer = new StringWriter();
       writeDocument(document, writer, lineSeparator);
       return writer.toString();
     }
@@ -450,7 +450,7 @@ public class JDOMUtil {
   @Nonnull
   public static String writeParent(Parent element, String lineSeparator) {
     try {
-      final StringWriter writer = new StringWriter();
+      StringWriter writer = new StringWriter();
       writeParent(element, writer, lineSeparator);
       return writer.toString();
     }
@@ -487,7 +487,7 @@ public class JDOMUtil {
   @Nonnull
   public static String writeElement(@Nonnull Element element, String lineSeparator) {
     try {
-      final StringWriter writer = new StringWriter();
+      StringWriter writer = new StringWriter();
       writeElement(element, writer, lineSeparator);
       return writer.toString();
     }
@@ -497,8 +497,8 @@ public class JDOMUtil {
   }
 
   @Nonnull
-  public static String writeChildren(@Nullable final Element element, @Nonnull final String lineSeparator) throws IOException {
-    final StringWriter writer = new StringWriter();
+  public static String writeChildren(@Nullable Element element, @Nonnull String lineSeparator) throws IOException {
+    StringWriter writer = new StringWriter();
     for (Element child : getChildren(element)) {
       writeElement(child, writer, lineSeparator);
       writer.append(lineSeparator);
@@ -573,8 +573,8 @@ public class JDOMUtil {
   public static String escapeText(@Nonnull String text, boolean escapeApostrophes, boolean escapeSpaces, boolean escapeLineEnds) {
     StringBuilder buffer = null;
     for (int i = 0; i < text.length(); i++) {
-      final char ch = text.charAt(i);
-      final String quotation = escapeChar(ch, escapeApostrophes, escapeSpaces, escapeLineEnds);
+      char ch = text.charAt(i);
+      String quotation = escapeChar(ch, escapeApostrophes, escapeSpaces, escapeLineEnds);
       if (buffer == null) {
         if (quotation != null) {
           // An quotation occurred, so we'll have to use StringBuffer
@@ -602,7 +602,7 @@ public class JDOMUtil {
   @SuppressWarnings("unused")
   @Deprecated
   @Nonnull
-  public static List<Element> getChildrenFromAllNamespaces(@Nonnull final Element element, @Nonnull final String name) {
+  public static List<Element> getChildrenFromAllNamespaces(@Nonnull Element element, @Nonnull String name) {
     List<Element> result = new ArrayList<>();
     for (Element child : element.getChildren()) {
       if (name.equals(child.getName())) {
@@ -646,7 +646,7 @@ public class JDOMUtil {
     }
 
     List<Element> children = getChildren(element);
-    for (final Element child : children) {
+    for (Element child : children) {
       printDiagnostics(child, prefix);
     }
   }
@@ -711,7 +711,7 @@ public class JDOMUtil {
     outer:
     for (File oldFile : oldFiles) {
       String oldFilePath = oldFile.getAbsolutePath();
-      for (final String writtenFilesPath : writtenFilesPaths) {
+      for (String writtenFilesPath : writtenFilesPaths) {
         if (oldFilePath.equals(writtenFilesPath)) {
           continue outer;
         }
@@ -733,9 +733,9 @@ public class JDOMUtil {
   @Deprecated
   public static org.w3c.dom.Element convertToDOM(@Nonnull Element e) {
     try {
-      final Document d = new Document();
-      final Element newRoot = new Element(e.getName());
-      final List attributes = e.getAttributes();
+      Document d = new Document();
+      Element newRoot = new Element(e.getName());
+      List attributes = e.getAttributes();
 
       for (Object o : attributes) {
         Attribute attr = (Attribute)o;

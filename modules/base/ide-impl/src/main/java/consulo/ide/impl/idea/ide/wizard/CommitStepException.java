@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.wizard;
  * @author Vladimir Kondratyev
  */
 public class CommitStepException extends Exception {
-  public CommitStepException(final String message) {
+  public CommitStepException(String message) {
     super(message);
   }
 }

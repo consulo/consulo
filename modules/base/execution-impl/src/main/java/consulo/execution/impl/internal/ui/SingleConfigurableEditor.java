@@ -59,7 +59,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     private boolean myChangesWereApplied;
 
     @RequiredUIAccess
-    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, final boolean showApplyButton, final IdeModalityType ideModalityType) {
+    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, boolean showApplyButton, IdeModalityType ideModalityType) {
         this(project, configurable, null, dimensionKey, showApplyButton, ideModalityType);
     }
 
@@ -68,8 +68,8 @@ public class SingleConfigurableEditor extends DialogWrapper {
                                     Configurable configurable,
                                     @Nullable String title,
                                     @NonNls String dimensionKey,
-                                    final boolean showApplyButton,
-                                    final IdeModalityType ideModalityType) {
+                                    boolean showApplyButton,
+                                    IdeModalityType ideModalityType) {
         super(project, true, ideModalityType);
         myDimensionKey = dimensionKey;
         myShowApplyButton = showApplyButton;
@@ -82,7 +82,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     @RequiredUIAccess
-    public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, final boolean showApplyButton, final IdeModalityType ideModalityType) {
+    public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, boolean showApplyButton, IdeModalityType ideModalityType) {
         this(parent, configurable, null, dimensionServiceKey, showApplyButton, ideModalityType);
 
     }
@@ -92,8 +92,8 @@ public class SingleConfigurableEditor extends DialogWrapper {
                                     Configurable configurable,
                                     @Nullable String title,
                                     String dimensionServiceKey,
-                                    final boolean showApplyButton,
-                                    final IdeModalityType ideModalityType) {
+                                    boolean showApplyButton,
+                                    IdeModalityType ideModalityType) {
         super(parent, true);
         myDimensionKey = dimensionServiceKey;
         myShowApplyButton = showApplyButton;
@@ -106,11 +106,11 @@ public class SingleConfigurableEditor extends DialogWrapper {
         myConfigurable.reset();
     }
 
-    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, final boolean showApplyButton) {
+    public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, boolean showApplyButton) {
         this(project, configurable, dimensionKey, showApplyButton, IdeModalityType.IDE);
     }
 
-    public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, final boolean showApplyButton) {
+    public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, boolean showApplyButton) {
         this(parent, configurable, dimensionServiceKey, showApplyButton, IdeModalityType.IDE);
     }
 
@@ -245,7 +245,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
 
         public ApplyAction() {
             super(CommonLocalize.buttonApply().get());
-            final Runnable updateRequest = new Runnable() {
+            Runnable updateRequest = new Runnable() {
                 @Override
                 public void run() {
                     if (!SingleConfigurableEditor.this.isShowing()) return;
@@ -262,7 +262,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
             SwingUtilities.invokeLater(() -> addUpdateRequest(updateRequest));
         }
 
-        private void addUpdateRequest(final Runnable updateRequest) {
+        private void addUpdateRequest(Runnable updateRequest) {
             myUpdateAlarm.addRequest(updateRequest, 500, Application.get().getModalityStateForComponent(getWindow()));
         }
 

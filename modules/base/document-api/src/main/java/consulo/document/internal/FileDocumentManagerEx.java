@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
  * @since 23-Mar-22
  */
 public interface FileDocumentManagerEx extends FileDocumentManager {
-  void registerDocument(@Nonnull final Document document, @Nonnull VirtualFile virtualFile);
+  void registerDocument(@Nonnull Document document, @Nonnull VirtualFile virtualFile);
 
   @Override
   @RequiredUIAccess

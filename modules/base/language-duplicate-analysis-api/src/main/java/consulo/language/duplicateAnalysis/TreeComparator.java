@@ -10,8 +10,8 @@ public class TreeComparator {
   }
 
   public static boolean areEqual(@Nonnull PsiElement x, @Nonnull PsiElement y, NodeSpecificHasher hasher, int discardCost) {
-    final int costX = hasher.getNodeCost(x);
-    final int costY = hasher.getNodeCost(y);
+    int costX = hasher.getNodeCost(x);
+    int costY = hasher.getNodeCost(y);
     if (costX == -1 || costY == -1) return false;
     if (costX < discardCost || costY < discardCost) {
       return true;

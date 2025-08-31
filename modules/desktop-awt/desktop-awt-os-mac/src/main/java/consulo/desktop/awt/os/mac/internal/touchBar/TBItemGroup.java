@@ -32,7 +32,7 @@ final class TBItemGroup extends TBItem {
         if (myGroupItems.isEmpty())
             return ID.NIL;
 
-        final ID[] ids = myGroupItems.getNativePeers();
+        ID[] ids = myGroupItems.getNativePeers();
         return NST.createGroupItem(getUid(), ids);
     }
 

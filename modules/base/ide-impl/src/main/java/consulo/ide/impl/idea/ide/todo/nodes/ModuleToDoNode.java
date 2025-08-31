@@ -55,12 +55,12 @@ public class ModuleToDoNode extends BaseToDoNode<Module> {
     }
     else {
       for (Iterator i = myBuilder.getAllFiles(); i.hasNext(); ) {
-        final PsiFile psiFile = (PsiFile)i.next();
+        PsiFile psiFile = (PsiFile)i.next();
         if (psiFile == null) { // skip invalid PSI files
           continue;
         }
-        final VirtualFile virtualFile = psiFile.getVirtualFile();
-        final boolean isInContent = ModuleRootManager.getInstance(getValue()).getFileIndex().isInContent(virtualFile);
+        VirtualFile virtualFile = psiFile.getVirtualFile();
+        boolean isInContent = ModuleRootManager.getInstance(getValue()).getFileIndex().isInContent(virtualFile);
         if (!isInContent) continue;
         TodoFileNode fileNode = new TodoFileNode(getProject(), psiFile, myBuilder, false);
         if (getTreeStructure().accept(psiFile) && !children.contains(fileNode)) {
@@ -119,11 +119,11 @@ public class ModuleToDoNode extends BaseToDoNode<Module> {
   }
 
   @Override
-  public int getTodoItemCount(final Module val) {
+  public int getTodoItemCount(Module val) {
     Iterator<PsiFile> iterator = myBuilder.getFiles(val);
     int count = 0;
     while (iterator.hasNext()) {
-      final PsiFile psiFile = iterator.next();
+      PsiFile psiFile = iterator.next();
       count += ReadAction.compute(() -> getTreeStructure().getTodoItemCount(psiFile));
     }
     return count;

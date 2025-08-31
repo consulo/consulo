@@ -47,7 +47,7 @@ public class PagePool {
   public PagePool(final int protectedPagesLimit, final int probationalPagesLimit) {
     myProbationalQueue = new LinkedHashMap<>(probationalPagesLimit * 2, 1, true) {
       @Override
-      protected boolean removeEldestEntry(final Map.Entry<PoolPageKey, Page> eldest) {
+      protected boolean removeEldestEntry(Map.Entry<PoolPageKey, Page> eldest) {
         if (size() > probationalPagesLimit) {
           scheduleFinalization(eldest.getValue());
           return true;
@@ -58,7 +58,7 @@ public class PagePool {
 
     myProtectedQueue = new LinkedHashMap<>(protectedPagesLimit, 1, true) {
       @Override
-      protected boolean removeEldestEntry(final Map.Entry<PoolPageKey, Page> eldest) {
+      protected boolean removeEldestEntry(Map.Entry<PoolPageKey, Page> eldest) {
         if (size() > protectedPagesLimit) {
           myProbationalQueue.put(eldest.getKey(), eldest.getValue());
           return true;
@@ -106,7 +106,7 @@ public class PagePool {
     }
   }
 
-  private Page hitQueues(final RandomAccessDataFile owner, final long offset) {
+  private Page hitQueues(RandomAccessDataFile owner, long offset) {
     PoolPageKey key = setupKey(owner, offset);
 
     Page page = myProtectedQueue.get(key);
@@ -122,7 +122,7 @@ public class PagePool {
       return page;
     }
 
-    final FinalizationRequest request = myFinalizationQueue.remove(key);
+    FinalizationRequest request = myFinalizationQueue.remove(key);
     if (request != null) {
       page = request.page;
       finalization_queue_hits++;
@@ -157,11 +157,11 @@ public class PagePool {
     System.out.println("Total writes: " + RandomAccessDataFile.totalWrites + ". Bytes written: " + RandomAccessDataFile.totalWriteBytes);
   }
 
-  private static PoolPageKey keyForPage(final Page page) {
+  private static PoolPageKey keyForPage(Page page) {
     return page.getKey();
   }
 
-  private void toProtectedQueue(final Page page) {
+  private void toProtectedQueue(Page page) {
     myProtectedQueue.put(keyForPage(page), page);
   }
 
@@ -170,7 +170,7 @@ public class PagePool {
     return keyInstance;
   }
 
-  public void flushPages(final RandomAccessDataFile owner) {
+  public void flushPages(RandomAccessDataFile owner) {
     flushPages(owner, Integer.MAX_VALUE);
   }
 
@@ -180,7 +180,7 @@ public class PagePool {
    * @param maxPagesToFlush
    * @return true if all the dirty pages where flushed.
    */
-  public boolean flushPages(final RandomAccessDataFile owner, final int maxPagesToFlush) {
+  public boolean flushPages(RandomAccessDataFile owner, int maxPagesToFlush) {
     boolean hasFlushes;
     synchronized (lock) {
       if (lastOwner == owner) {
@@ -196,7 +196,7 @@ public class PagePool {
     return !hasFlushes || flushFinalizationQueue(maxPagesToFlush);
   }
 
-  private boolean flushFinalizationQueue(final int maxPagesToFlush) {
+  private boolean flushFinalizationQueue(int maxPagesToFlush) {
     int count = 0;
 
     while (count < maxPagesToFlush) {
@@ -212,7 +212,7 @@ public class PagePool {
     return false;
   }
 
-  private boolean scanQueue(final RandomAccessDataFile owner, final Map<?, Page> queue) {
+  private boolean scanQueue(RandomAccessDataFile owner, Map<?, Page> queue) {
     Iterator<Page> iterator = queue.values().iterator();
     boolean hasFlushes = false;
     while (iterator.hasNext()) {
@@ -227,13 +227,13 @@ public class PagePool {
     return hasFlushes;
   }
 
-  private boolean scheduleFinalization(final Page page) {
-    final int curFinalizationId;
+  private boolean scheduleFinalization(Page page) {
+    int curFinalizationId;
     synchronized (lock) {
       curFinalizationId = ++finalizationId;
     }
 
-    final FinalizationRequest request = page.prepareForFinalization(curFinalizationId);
+    FinalizationRequest request = page.prepareForFinalization(curFinalizationId);
     if (request == null) return false;
 
     synchronized (lock) {
@@ -257,8 +257,8 @@ public class PagePool {
     return false;
   }
 
-  private void processFinalizationRequest(final FinalizationRequest request) {
-    final Page page = request.page;
+  private void processFinalizationRequest(FinalizationRequest request) {
+    Page page = request.page;
     try {
       page.flushIfFinalizationIdIsEqualTo(request.finalizationId);
     }
@@ -275,7 +275,7 @@ public class PagePool {
     FinalizationRequest request = null;
     synchronized (lock) {
       if (!myFinalizationQueue.isEmpty()) {
-        final PoolPageKey key;
+        PoolPageKey key;
         if (lastFinalizedKey == null) {
           key = myFinalizationQueue.firstKey();
         }

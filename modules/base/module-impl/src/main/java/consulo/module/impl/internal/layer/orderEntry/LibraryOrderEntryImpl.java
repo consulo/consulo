@@ -93,8 +93,8 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
 
   private void searchForLibrary(@Nonnull String name, @Nonnull String level) {
     if (myLibrary != null) return;
-    final LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, getRootModel().getModule().getProject());
-    final Library library = libraryTable != null ? libraryTable.getLibraryByName(name) : null;
+    LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, getRootModel().getModule().getProject());
+    Library library = libraryTable != null ? libraryTable.getLibraryByName(name) : null;
     if (library == null) {
       myLibraryName = name;
       myLibraryLevel = level;
@@ -184,7 +184,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   @Nullable
   public String getLibraryLevel() {
     if (myLibrary != null) {
-      final LibraryTable table = myLibrary.getTable();
+      LibraryTable table = myLibrary.getTable();
       return table.getTableLevel();
     }
     else {
@@ -205,15 +205,15 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   @Override
   public void dispose() {
     super.dispose();
-    final LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(getLibraryLevel(), getRootModel().getProject());
+    LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(getLibraryLevel(), getRootModel().getProject());
     if (libraryTable != null) {
       myProjectRootManagerImpl.removeListenerForTable(myLibraryListener, libraryTable);
     }
   }
 
   private void addListeners() {
-    final String libraryLevel = getLibraryLevel();
-    final LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(libraryLevel, getRootModel().getProject());
+    String libraryLevel = getLibraryLevel();
+    LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(libraryLevel, getRootModel().getProject());
     if (libraryTable != null) {
       myProjectRootManagerImpl.addListenerForTable(myLibraryListener, libraryTable);
     }

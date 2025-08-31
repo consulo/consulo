@@ -43,7 +43,7 @@ public class AWTIdleHolder {
     private final int myTimeout;
 
 
-    MyFireIdleRequest(@Nonnull Runnable runnable, final int timeout) {
+    MyFireIdleRequest(@Nonnull Runnable runnable, int timeout) {
       myTimeout = timeout;
       myRunnable = runnable;
     }
@@ -107,27 +107,27 @@ public class AWTIdleHolder {
     myIdleTimeCounterAlarm.cancel(false);
   }
 
-  public void addIdleListener(@Nonnull final Runnable runnable, final int timeoutMillis) {
+  public void addIdleListener(@Nonnull Runnable runnable, int timeoutMillis) {
     if (timeoutMillis <= 0 || TimeUnit.MILLISECONDS.toHours(timeoutMillis) >= 24) {
       throw new IllegalArgumentException("This timeout value is unsupported: " + timeoutMillis);
     }
     synchronized (myLock) {
       myIdleListeners.add(runnable);
-      final MyFireIdleRequest request = new MyFireIdleRequest(runnable, timeoutMillis);
+      MyFireIdleRequest request = new MyFireIdleRequest(runnable, timeoutMillis);
       myListener2Request.put(runnable, request);
 
       addRequest(request);
     }
   }
 
-  public void removeIdleListener(@Nonnull final Runnable runnable) {
+  public void removeIdleListener(@Nonnull Runnable runnable) {
     synchronized (myLock) {
-      final boolean wasRemoved = myIdleListeners.remove(runnable);
+      boolean wasRemoved = myIdleListeners.remove(runnable);
       if (!wasRemoved) {
         LOG.error("unknown runnable: " + runnable);
       }
 
-      final MyFireIdleRequest request = myListener2Request.remove(runnable);
+      MyFireIdleRequest request = myListener2Request.remove(runnable);
       LOG.assertTrue(request != null);
       cancelRequest(request);
     }
@@ -141,7 +141,7 @@ public class AWTIdleHolder {
       myIdleRequestFutures.clear();
 
       for (Runnable idleListener : myIdleListeners) {
-        final MyFireIdleRequest request = myListener2Request.get(idleListener);
+        MyFireIdleRequest request = myListener2Request.get(idleListener);
         if (request == null) {
           LOG.error("There is no request for " + idleListener);
         }

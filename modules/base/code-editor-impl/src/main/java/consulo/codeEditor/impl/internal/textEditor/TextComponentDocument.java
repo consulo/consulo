@@ -35,7 +35,7 @@ import javax.swing.text.JTextComponent;
 public class TextComponentDocument extends UserDataHolderBase implements Document {
     private final JTextComponent myTextComponent;
 
-    public TextComponentDocument(final JTextComponent textComponent) {
+    public TextComponentDocument(JTextComponent textComponent) {
         myTextComponent = textComponent;
     }
 
@@ -43,7 +43,7 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     @Override
     public String getText() {
         try {
-            final javax.swing.text.Document document = myTextComponent.getDocument();
+            javax.swing.text.Document document = myTextComponent.getDocument();
             return document.getText(0, document.getLength());
         }
         catch (BadLocationException e) {
@@ -55,7 +55,7 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     @Override
     public String getText(@Nonnull TextRange range) {
         try {
-            final javax.swing.text.Document document = myTextComponent.getDocument();
+            javax.swing.text.Document document = myTextComponent.getDocument();
             return document.getText(range.getStartOffset(), range.getLength());
         }
         catch (BadLocationException e) {

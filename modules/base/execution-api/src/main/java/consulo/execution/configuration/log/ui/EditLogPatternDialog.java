@@ -73,7 +73,7 @@ public class EditLogPatternDialog extends DialogWrapper {
   }
 
   public String getName(){
-    final String name = myNameField.getText();
+    String name = myNameField.getText();
     if (name != null && name.length() > 0){
       return name;
     }

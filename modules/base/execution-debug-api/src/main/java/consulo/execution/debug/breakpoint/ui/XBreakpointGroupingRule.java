@@ -29,7 +29,7 @@ import java.util.Comparator;
  */
 public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
   public static final Comparator<XBreakpointGroupingRule> PRIORITY_COMPARATOR = (o1, o2) -> {
-    final int res = o2.getPriority() - o1.getPriority();
+    int res = o2.getPriority() - o1.getPriority();
     return res != 0 ? res : (o1.getId().compareTo(o2.getId()));
   };
 
@@ -40,7 +40,7 @@ public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
     return false;
   }
 
-  protected XBreakpointGroupingRule(final @Nonnull @NonNls String id, final @NonNls @Nls String presentableName) {
+  protected XBreakpointGroupingRule(@Nonnull @NonNls String id, @NonNls @Nls String presentableName) {
     myId = id;
     myPresentableName = presentableName;
   }

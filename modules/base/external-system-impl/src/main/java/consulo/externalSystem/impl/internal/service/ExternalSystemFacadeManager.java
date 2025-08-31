@@ -76,7 +76,7 @@ public class ExternalSystemFacadeManager {
 
     @Nonnull
     private static Project findProject(@Nonnull IntegrationKey key) {
-        final ProjectManager projectManager = ProjectManager.getInstance();
+        ProjectManager projectManager = ProjectManager.getInstance();
         for (Project project : projectManager.getOpenProjects()) {
             if (key.getIdeProjectName().equals(project.getName()) && key.getIdeProjectLocationHash().equals(project.getLocationHash())) {
                 return project;
@@ -124,9 +124,9 @@ public class ExternalSystemFacadeManager {
             project = ProjectManager.getInstance().getDefaultProject();
         }
         IntegrationKey key = new IntegrationKey(project, externalSystemId, externalProjectPath);
-        final RemoteExternalSystemFacade facade = myFacadeWrappers.get(key);
+        RemoteExternalSystemFacade facade = myFacadeWrappers.get(key);
         if (facade == null) {
-            final RemoteExternalSystemFacade newFacade = (RemoteExternalSystemFacade) Proxy.newProxyInstance(
+            RemoteExternalSystemFacade newFacade = (RemoteExternalSystemFacade) Proxy.newProxyInstance(
                 ExternalSystemFacadeManager.class.getClassLoader(), new Class[]{RemoteExternalSystemFacade.class, Consumer.class},
                 new MyHandler(key)
             );
@@ -163,7 +163,7 @@ public class ExternalSystemFacadeManager {
     @SuppressWarnings("ConstantConditions")
     @Nonnull
     private RemoteExternalSystemFacade doGetFacade(@Nonnull IntegrationKey key, @Nonnull Project project) throws Exception {
-        final ExternalSystemCommunicationManager myCommunicationManager = myInProcessCommunicationManager;
+        ExternalSystemCommunicationManager myCommunicationManager = myInProcessCommunicationManager;
 
         ExternalSystemManager manager = ExternalSystemApiUtil.getManager(key.getExternalSystemId());
         if (project.isDisposed() || manager == null) {
@@ -195,7 +195,7 @@ public class ExternalSystemFacadeManager {
     @Nonnull
     private RemoteExternalSystemFacade doCreateFacade(@Nonnull IntegrationKey key, @Nonnull Project project,
                                                       @Nonnull ExternalSystemCommunicationManager communicationManager) throws Exception {
-        final RemoteExternalSystemFacade facade = communicationManager.acquire(project.getName(), key.getExternalSystemId());
+        RemoteExternalSystemFacade facade = communicationManager.acquire(project.getName(), key.getExternalSystemId());
         if (facade == null) {
             throw new IllegalStateException("Can't obtain facade to working with external api at the remote process. Project: " + project);
         }
@@ -206,7 +206,7 @@ public class ExternalSystemFacadeManager {
                 myRemoteFacades.clear();
             }
         });
-        final RemoteExternalSystemFacade result = new ExternalSystemFacadeWrapper(facade, myProgressManager);
+        RemoteExternalSystemFacade result = new ExternalSystemFacadeWrapper(facade, myProgressManager);
         ExternalSystemExecutionSettings settings
             = ExternalSystemApiUtil.getExecutionSettings(project, key.getExternalProjectConfigPath(), key.getExternalSystemId());
         Pair<RemoteExternalSystemFacade, ExternalSystemExecutionSettings> newPair = Pair.create(result, settings);

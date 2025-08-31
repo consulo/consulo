@@ -117,9 +117,9 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
 
     @Override
     public void navigateInPreviewEditor(PreviewEditorState editorState) {
-        final VirtualFile file = editorState.getFile();
-        final LogicalPosition positionToNavigate = editorState.getNavigate();
-        final TextAttributes lineAttributes = editorState.getAttributes();
+        VirtualFile file = editorState.getFile();
+        LogicalPosition positionToNavigate = editorState.getNavigate();
+        TextAttributes lineAttributes = editorState.getAttributes();
         Document document = FileDocumentManager.getInstance().getDocument(file);
 
         clearEditor();
@@ -158,7 +158,7 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
     protected Editor createEditor(@Nullable Project project, Document document, VirtualFile file) {
         EditorEx editor = (EditorEx) EditorFactory.getInstance().createViewer(document, project);
 
-        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+        EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(file, scheme, project);
 
         editor.setFile(file);
@@ -188,7 +188,7 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
     }
 
     @Override
-    public void setPropertiesPanel(@Nullable final JPanel panel) {
+    public void setPropertiesPanel(@Nullable JPanel panel) {
         if (panel == null) {
             if (myDetailPanelWrapper != null) {
                 myDetailPanelWrapper.removeAll();

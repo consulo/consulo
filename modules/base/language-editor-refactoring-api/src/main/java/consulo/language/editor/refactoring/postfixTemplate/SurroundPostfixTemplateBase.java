@@ -43,7 +43,7 @@ public abstract class SurroundPostfixTemplateBase extends PostfixTemplateWithExp
   }
 
   @Override
-  public final void expandForChooseExpression(@Nonnull PsiElement expression, @Nonnull final Editor editor) {
+  public final void expandForChooseExpression(@Nonnull PsiElement expression, @Nonnull Editor editor) {
     PsiElement replace = getReplacedExpression(expression);
     TextRange range = PostfixTemplatesUtils.surround(getSurrounder(), editor, replace);
 

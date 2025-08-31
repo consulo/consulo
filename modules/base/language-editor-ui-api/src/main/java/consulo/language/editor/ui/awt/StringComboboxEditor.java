@@ -44,16 +44,16 @@ public class StringComboboxEditor extends EditorComboBoxEditor {
     private static final Logger LOG = Logger.getInstance(StringComboboxEditor.class);
     private final Project myProject;
 
-    public StringComboboxEditor(final Project project, final FileType fileType, ComboBox comboBox) {
+    public StringComboboxEditor(Project project, FileType fileType, ComboBox comboBox) {
         this(project, fileType, comboBox, false);
     }
 
-    public StringComboboxEditor(final Project project, final FileType fileType, ComboBox comboBox, boolean usePlainMatcher) {
+    public StringComboboxEditor(Project project, FileType fileType, ComboBox comboBox, boolean usePlainMatcher) {
         super(project, fileType);
         myProject = project;
-        final PsiFile file =
+        PsiFile file =
             PsiFileFactory.getInstance(project).createFileFromText("a.dummy", PlainTextFileType.INSTANCE, "", 0, true);
-        final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
+        Document document = PsiDocumentManager.getInstance(project).getDocument(file);
         assert document != null;
         document.putUserData(COMBO_BOX_KEY, comboBox);
         if (usePlainMatcher) {
@@ -65,7 +65,7 @@ public class StringComboboxEditor extends EditorComboBoxEditor {
 
     @Override
     public Object getItem() {
-        final String text = ((Document)super.getItem()).getText();
+        String text = ((Document)super.getItem()).getText();
         LOG.assertTrue(text != null);
         return text;
     }
@@ -79,13 +79,13 @@ public class StringComboboxEditor extends EditorComboBoxEditor {
         if (anObject.equals(getItem())) {
             return;
         }
-        final String s = (String)anObject;
+        String s = (String)anObject;
         CommandProcessor.getInstance().newCommand()
             .project(myProject)
             .inWriteAction()
             .run(() -> getDocument().setText(s));
 
-        final Editor editor = getEditor();
+        Editor editor = getEditor();
         if (editor != null) {
             editor.getCaretModel().moveToOffset(s.length());
         }

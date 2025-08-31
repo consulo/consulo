@@ -29,5 +29,5 @@ public interface VcsBaseRevisionAdviser {
   /**
    * @return true if base revision was found by this provider
    */
-  boolean getBaseVersionContent(final FilePath filePath, Predicate<CharSequence> processor, String beforeVersionId, List<String> warnings) throws VcsException;
+  boolean getBaseVersionContent(FilePath filePath, Predicate<CharSequence> processor, String beforeVersionId, List<String> warnings) throws VcsException;
 }

@@ -25,7 +25,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 public class ScrollToTestSourceAction extends ToggleBooleanProperty.Disablable {
   private TestFrameworkRunningModel myModel;
 
-  public ScrollToTestSourceAction(final TestConsoleProperties properties) {
+  public ScrollToTestSourceAction(TestConsoleProperties properties) {
     super(
       ExecutionLocalize.junitAutoScrollToSourceActionName(),
       ExecutionLocalize.junitOpenTextInEditorActionName(),
@@ -36,8 +36,8 @@ public class ScrollToTestSourceAction extends ToggleBooleanProperty.Disablable {
   }
 
   protected boolean isEnabled() {
-    final AbstractProperty.AbstractPropertyContainer properties = getProperties();
-    final TestFrameworkRunningModel model = myModel;
+    AbstractProperty.AbstractPropertyContainer properties = getProperties();
+    TestFrameworkRunningModel model = myModel;
     return isEnabled(properties, model);
   }
 
@@ -46,17 +46,17 @@ public class ScrollToTestSourceAction extends ToggleBooleanProperty.Disablable {
     return true;
   }
 
-  private static boolean isEnabled(final AbstractProperty.AbstractPropertyContainer properties, final TestFrameworkRunningModel model) {
+  private static boolean isEnabled(AbstractProperty.AbstractPropertyContainer properties, TestFrameworkRunningModel model) {
     if (!TestConsoleProperties.TRACK_RUNNING_TEST.value(properties)) return true;
     return model != null && !model.isRunning();
   }
 
-  public static boolean isScrollEnabled(final TestFrameworkRunningModel model) {
-    final TestConsoleProperties properties = model.getProperties();
+  public static boolean isScrollEnabled(TestFrameworkRunningModel model) {
+    TestConsoleProperties properties = model.getProperties();
     return isEnabled(properties, model) && TestConsoleProperties.SCROLL_TO_SOURCE.value(properties);
   }
 
-  public void setModel(final TestFrameworkRunningModel model) {
+  public void setModel(TestFrameworkRunningModel model) {
     myModel = model;
   }
 }

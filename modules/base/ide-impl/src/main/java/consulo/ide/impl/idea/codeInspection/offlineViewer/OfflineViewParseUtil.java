@@ -52,12 +52,12 @@ public class OfflineViewParseUtil {
   }
 
   public static Map<String, Set<OfflineProblemDescriptor>> parse(VirtualFile file) {
-    final TObjectIntHashMap<String> fqName2IdxMap = new TObjectIntHashMap<>();
-    final Map<String, Set<OfflineProblemDescriptor>> package2Result = new HashMap<>();
+    TObjectIntHashMap<String> fqName2IdxMap = new TObjectIntHashMap<>();
+    Map<String, Set<OfflineProblemDescriptor>> package2Result = new HashMap<>();
     try {
       Element rootElement = JDOMUtil.load(VfsUtil.virtualToIoFile(file));
       for (Element problemElement : rootElement.getChildren()) {
-        final OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
+        OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
         boolean added = false;
 
         for (Element childElement : problemElement.getChildren()) {
@@ -66,7 +66,7 @@ public class OfflineViewParseUtil {
           switch (chilName) {
             case SmartRefElementPointerImpl.ENTRY_POINT:
               descriptor.setType(childElement.getAttributeValue(SmartRefElementPointerImpl.TYPE_ATTR));
-              final String fqName = childElement.getAttributeValue(SmartRefElementPointerImpl.FQNAME_ATTR);
+              String fqName = childElement.getAttributeValue(SmartRefElementPointerImpl.FQNAME_ATTR);
               descriptor.setFQName(fqName);
 
               if (!fqName2IdxMap.containsKey(fqName)) {
@@ -76,8 +76,8 @@ public class OfflineViewParseUtil {
               descriptor.setProblemIndex(idx);
               fqName2IdxMap.put(fqName, idx + 1);
 
-              final List<String> parentTypes = new ArrayList<>();
-              final List<String> parentNames = new ArrayList<>();
+              List<String> parentTypes = new ArrayList<>();
+              List<String> parentNames = new ArrayList<>();
 
               for (Element element : childElement.getChildren()) {
                 parentTypes.add(element.getAttributeValue(SmartRefElementPointerImpl.TYPE_ATTR));
@@ -132,7 +132,7 @@ public class OfflineViewParseUtil {
     return package2Result;
   }
 
-  private static void appendDescriptor(final Map<String, Set<OfflineProblemDescriptor>> package2Result, final String packageName, final OfflineProblemDescriptor descriptor) {
+  private static void appendDescriptor(Map<String, Set<OfflineProblemDescriptor>> package2Result, String packageName, OfflineProblemDescriptor descriptor) {
     Set<OfflineProblemDescriptor> descriptors = package2Result.get(packageName);
     if (descriptors == null) {
       descriptors = new HashSet<>();

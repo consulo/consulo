@@ -93,14 +93,14 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
     return PackagingElementWeights.LIBRARY;
   }
 
-  public static String getLibraryTableDisplayName(final Library library) {
+  public static String getLibraryTableDisplayName(Library library) {
     LibraryTable table = library.getTable();
     LibraryTablePresentation presentation = table != null
       ? table.getPresentation() : ModuleLibraryTablePresentation.INSTANCE;
     return presentation.getDisplayName(false);
   }
 
-  public static String getLibraryTableComment(final Library library) {
+  public static String getLibraryTableComment(Library library) {
     LibraryTable libraryTable = library.getTable();
     String displayName;
     if (libraryTable != null) {
@@ -114,7 +114,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
     return " (" + displayName + ")";
   }
 
-  public static String getLibraryItemText(final @Nonnull Library library, final boolean includeTableName) {
+  public static String getLibraryItemText(@Nonnull Library library, boolean includeTableName) {
     String name = library.getName();
     VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
     if (name != null) {

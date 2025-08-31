@@ -58,8 +58,8 @@ public class ArtifactSourceItem extends PackagingSourceItem {
   @Override
   @Nonnull
   public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
-    final Project project = context.getProject();
-    final ArtifactPointer pointer = ArtifactPointerManager.getInstance(project).create(myArtifact, context.getArtifactModel());
+    Project project = context.getProject();
+    ArtifactPointer pointer = ArtifactPointerManager.getInstance(project).create(myArtifact, context.getArtifactModel());
     return Collections.singletonList(PackagingElementFactory.getInstance(context.getProject()).createArtifactElement(pointer, project));
   }
 

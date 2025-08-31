@@ -74,7 +74,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     private boolean myDragCancelled = false;
     private final MyKeymapListener myKeymapListener;
 
-    DesktopStripeButton(@Nonnull final DesktopInternalDecorator decorator, DesktopToolWindowPanelImpl pane) {
+    DesktopStripeButton(@Nonnull DesktopInternalDecorator decorator, DesktopToolWindowPanelImpl pane) {
         myDecorator = decorator;
         myKeymapListener = new MyKeymapListener();
         myPane = pane;
@@ -92,7 +92,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
 
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
-            public void mouseDragged(final MouseEvent e) {
+            public void mouseDragged(MouseEvent e) {
                 processDrag(e);
             }
         });
@@ -125,11 +125,11 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
      * doesn't work via standard Swing rules (processing of Alt keystrokes).
      */
     @Override
-    public void setMnemonic(final int mnemonic) {
+    public void setMnemonic(int mnemonic) {
         throw new UnsupportedOperationException("use setMnemonic2(int)");
     }
 
-    private void setMnemonic2(final int mnemonic) {
+    private void setMnemonic2(int mnemonic) {
         myMnemonic = mnemonic;
         updateHelpTooltip();
         revalidate();
@@ -203,7 +203,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         return myDecorator;
     }
 
-    private void processDrag(final MouseEvent e) {
+    private void processDrag(MouseEvent e) {
         if (myDragCancelled || !MouseDragHelper.checkModifiers(e)) {
             return;
         }
@@ -263,7 +263,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
 
         SwingUtilities.convertPointToScreen(xy, myDragPane);
 
-        final DesktopStripePanelImpl stripe = myPane.getStripeFor(new Rectangle(xy, myDragButtonImage.getSize()), (DesktopStripePanelImpl) getParent());
+        DesktopStripePanelImpl stripe = myPane.getStripeFor(new Rectangle(xy, myDragButtonImage.getSize()), (DesktopStripePanelImpl) getParent());
         if (stripe == null) {
             if (myLastStripe != null) {
                 myLastStripe.resetDrop();
@@ -291,7 +291,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         }
     }
 
-    private boolean isWithinDeadZone(final MouseEvent e) {
+    private boolean isWithinDeadZone(MouseEvent e) {
         return Math.abs(myPressedPoint.x - e.getPoint().x) < MouseDragHelper.DRAG_START_DEADZONE && Math.abs(myPressedPoint.y - e.getPoint().y) < MouseDragHelper
             .DRAG_START_DEADZONE;
     }
@@ -301,12 +301,12 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         if (!(e.getComponent() instanceof JComponent)) {
             return null;
         }
-        final JRootPane root = ((JComponent) e.getComponent()).getRootPane();
+        JRootPane root = ((JComponent) e.getComponent()).getRootPane();
         return root.getLayeredPane();
     }
 
     @Override
-    protected void processMouseEvent(final MouseEvent e) {
+    protected void processMouseEvent(MouseEvent e) {
         if (e.isPopupTrigger() && e.getComponent().isShowing()) {
             super.processMouseEvent(e);
             return;
@@ -334,7 +334,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     }
 
     @Override
-    public void actionPerformed(final ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (myPressedWhenSelected) {
             myDecorator.fireHidden();
         }
@@ -355,9 +355,9 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     public void dispose() {
     }
 
-    private void showPopup(final Component component, final int x, final int y) {
-        final ActionGroup group = myDecorator.createPopupGroup();
-        final ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group);
+    private void showPopup(Component component, int x, int y) {
+        ActionGroup group = myDecorator.createPopupGroup();
+        ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group);
         popupMenu.getComponent().show(component, x, y);
     }
 
@@ -421,7 +421,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
 
     private final class MyPopupHandler extends PopupHandler {
         @Override
-        public void invokePopup(final Component component, final int x, final int y) {
+        public void invokePopup(Component component, int x, int y) {
             showPopup(component, x, y);
         }
     }

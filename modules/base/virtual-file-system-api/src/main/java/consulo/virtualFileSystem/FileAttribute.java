@@ -72,7 +72,7 @@ public class FileAttribute {
 
   @Nullable
   public byte[] readAttributeBytes(VirtualFile file) throws IOException {
-    final DataInputStream stream = readAttribute(file);
+    DataInputStream stream = readAttribute(file);
     if (stream == null) return null;
 
     try {

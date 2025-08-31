@@ -35,11 +35,11 @@ public abstract class DefaultRollbackEnvironment implements RollbackEnvironment 
     return ROLLBACK_OPERATION_NAME;
   }
 
-  public void rollbackModifiedWithoutCheckout(final List<VirtualFile> files, final List<VcsException> exceptions,
-                                                            final RollbackProgressListener listener) {
+  public void rollbackModifiedWithoutCheckout(List<VirtualFile> files, List<VcsException> exceptions,
+                                              RollbackProgressListener listener) {
     throw new UnsupportedOperationException();
   }
 
-  public void rollbackIfUnchanged(final VirtualFile file) {
+  public void rollbackIfUnchanged(VirtualFile file) {
   }
 }

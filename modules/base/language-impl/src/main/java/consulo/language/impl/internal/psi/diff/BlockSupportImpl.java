@@ -47,11 +47,11 @@ public class BlockSupportImpl extends BlockSupport {
 
     @Override
     @Nonnull
-    public DiffLog reparseRange(@Nonnull final PsiFile file,
+    public DiffLog reparseRange(@Nonnull PsiFile file,
                                 @Nonnull FileASTNode oldFileNode,
                                 @Nonnull TextRange changedPsiRange,
-                                @Nonnull final CharSequence newFileText,
-                                @Nonnull final ProgressIndicator indicator,
+                                @Nonnull CharSequence newFileText,
+                                @Nonnull ProgressIndicator indicator,
                                 @Nonnull CharSequence lastCommittedText) {
         try (ReparseResult result = reparse(file, oldFileNode, changedPsiRange, newFileText, indicator, lastCommittedText)) {
             return result.log;
@@ -77,11 +77,11 @@ public class BlockSupportImpl extends BlockSupport {
     // return diff log, old node to replace, new node (in dummy file)
     // MUST call .close() on the returned result
     @Nonnull
-    public static ReparseResult reparse(@Nonnull final PsiFile file,
+    public static ReparseResult reparse(@Nonnull PsiFile file,
                                         @Nonnull FileASTNode oldFileNode,
                                         @Nonnull TextRange changedPsiRange,
-                                        @Nonnull final CharSequence newFileText,
-                                        @Nonnull final ProgressIndicator indicator,
+                                        @Nonnull CharSequence newFileText,
+                                        @Nonnull ProgressIndicator indicator,
                                         @Nonnull CharSequence lastCommittedText) {
         PsiFileImpl fileImpl = (PsiFileImpl) file;
 
@@ -369,9 +369,9 @@ public class BlockSupportImpl extends BlockSupport {
     }
 
     @Nonnull
-    public static DiffLog mergeTrees(@Nonnull final PsiFileImpl fileImpl,
-                                     @Nonnull final ASTNode oldRoot,
-                                     @Nonnull final ASTNode newRoot,
+    public static DiffLog mergeTrees(@Nonnull PsiFileImpl fileImpl,
+                                     @Nonnull ASTNode oldRoot,
+                                     @Nonnull ASTNode newRoot,
                                      @Nonnull ProgressIndicator indicator,
                                      @Nonnull CharSequence lastCommittedText) {
         PsiUtilCore.ensureValid(fileImpl);
@@ -400,18 +400,18 @@ public class BlockSupportImpl extends BlockSupport {
             newRoot.putUserData(TREE_TO_BE_REPARSED, null);
         }
 
-        final ASTShallowComparator comparator = new ASTShallowComparator(indicator);
-        final ASTStructure treeStructure = createInterruptibleASTStructure(newRoot, indicator);
+        ASTShallowComparator comparator = new ASTShallowComparator(indicator);
+        ASTStructure treeStructure = createInterruptibleASTStructure(newRoot, indicator);
 
         DiffLog diffLog = new DiffLog();
         diffTrees(oldRoot, diffLog, comparator, treeStructure, indicator, lastCommittedText);
         return diffLog;
     }
 
-    public static <T> void diffTrees(@Nonnull final ASTNode oldRoot,
-                                     @Nonnull final DiffTreeChangeBuilder<ASTNode, T> builder,
-                                     @Nonnull final ShallowNodeComparator<ASTNode, T> comparator,
-                                     @Nonnull final FlyweightCapableTreeStructure<T> newTreeStructure,
+    public static <T> void diffTrees(@Nonnull ASTNode oldRoot,
+                                     @Nonnull DiffTreeChangeBuilder<ASTNode, T> builder,
+                                     @Nonnull ShallowNodeComparator<ASTNode, T> comparator,
+                                     @Nonnull FlyweightCapableTreeStructure<T> newTreeStructure,
                                      @Nonnull ProgressIndicator indicator,
                                      @Nonnull CharSequence lastCommittedText) {
         DiffTree.diff(createInterruptibleASTStructure(oldRoot, indicator), newTreeStructure, comparator, builder, lastCommittedText);
@@ -428,7 +428,7 @@ public class BlockSupportImpl extends BlockSupport {
     }
 
     private static boolean isReplaceWholeNode(@Nonnull PsiFileImpl fileImpl, @Nonnull ASTNode newRoot) throws ReparsedSuccessfullyException {
-        final Boolean data = fileImpl.getUserData(DO_NOT_REPARSE_INCREMENTALLY);
+        Boolean data = fileImpl.getUserData(DO_NOT_REPARSE_INCREMENTALLY);
         if (data != null) {
             fileImpl.putUserData(DO_NOT_REPARSE_INCREMENTALLY, null);
         }
@@ -439,7 +439,7 @@ public class BlockSupportImpl extends BlockSupport {
             return true;
         }
 
-        final ASTNode childNode = newRoot.getFirstChildNode();  // maybe reparsed in PsiBuilderImpl and have thrown exception here
+        ASTNode childNode = newRoot.getFirstChildNode();  // maybe reparsed in PsiBuilderImpl and have thrown exception here
         boolean childTooDeep = isTooDeep(childNode);
         if (childTooDeep) {
             childNode.putUserData(TREE_DEPTH_LIMIT_EXCEEDED, null);

@@ -34,7 +34,7 @@ public final class DocumentUtil {
      *                      {@code false} to force given document to be <b>not</b> in bulk mode when given task is executed
      * @param task          task to execute
      */
-    public static void executeInBulk(@Nonnull Document document, final boolean executeInBulk, @Nonnull Runnable task) {
+    public static void executeInBulk(@Nonnull Document document, boolean executeInBulk, @Nonnull Runnable task) {
         if (!(document instanceof DocumentEx)) {
             task.run();
             return;
@@ -129,8 +129,8 @@ public final class DocumentUtil {
         return offset + (isSurrogatePair(document, offset) ? 2 : 1);
     }
 
-    public static boolean isLineEmpty(@Nonnull Document document, final int line) {
-        final CharSequence chars = document.getCharsSequence();
+    public static boolean isLineEmpty(@Nonnull Document document, int line) {
+        CharSequence chars = document.getCharsSequence();
         int start = document.getLineStartOffset(line);
         int end = Math.min(document.getLineEndOffset(line), document.getTextLength() - 1);
         for (int i = start; i <= end; i++) {
@@ -186,9 +186,9 @@ public final class DocumentUtil {
     public static int calculateOffset(@Nonnull Document document, int line, int column, int tabSize) {
         int offset;
         if (0 <= line && line < document.getLineCount()) {
-            final int lineStart = document.getLineStartOffset(line);
-            final int lineEnd = document.getLineEndOffset(line);
-            final CharSequence docText = document.getCharsSequence();
+            int lineStart = document.getLineStartOffset(line);
+            int lineEnd = document.getLineEndOffset(line);
+            CharSequence docText = document.getCharsSequence();
 
             offset = lineStart;
             int col = 0;

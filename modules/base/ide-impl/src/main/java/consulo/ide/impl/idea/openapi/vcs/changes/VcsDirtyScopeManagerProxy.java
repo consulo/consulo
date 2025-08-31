@@ -57,22 +57,22 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
   }
 
   @Override
-  public void fileDirty(@Nonnull final VirtualFile file) {
+  public void fileDirty(@Nonnull VirtualFile file) {
     myVFiles.add(file);
   }
 
   @Override
-  public void fileDirty(@Nonnull final FilePath file) {
+  public void fileDirty(@Nonnull FilePath file) {
     myFiles.add(file);
   }
 
   @Override
-  public void dirDirtyRecursively(final VirtualFile dir) {
+  public void dirDirtyRecursively(VirtualFile dir) {
     myVDirs.add(dir);
   }
 
   @Override
-  public void dirDirtyRecursively(final FilePath path) {
+  public void dirDirtyRecursively(FilePath path) {
     myDirs.add(path);
   }
 
@@ -83,7 +83,7 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
   }
 
   @Override
-  public void filePathsDirty(@Nullable final Collection<? extends FilePath> filesDirty, @Nullable final Collection<? extends FilePath> dirsRecursivelyDirty) {
+  public void filePathsDirty(@Nullable Collection<? extends FilePath> filesDirty, @Nullable Collection<? extends FilePath> dirsRecursivelyDirty) {
     if (filesDirty != null) {
       myFiles.addAll(filesDirty);
     }
@@ -93,7 +93,7 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
   }
 
   @Override
-  public void filesDirty(@Nullable final Collection<? extends VirtualFile> filesDirty, @Nullable final Collection<? extends VirtualFile> dirsRecursivelyDirty) {
+  public void filesDirty(@Nullable Collection<? extends VirtualFile> filesDirty, @Nullable Collection<? extends VirtualFile> dirsRecursivelyDirty) {
     if (filesDirty != null) {
       myVFiles.addAll(filesDirty);
     }
@@ -102,7 +102,7 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     }
   }
 
-  public void callRealManager(final VcsDirtyScopeManager manager) {
+  public void callRealManager(VcsDirtyScopeManager manager) {
     if (myEverythingDirty) {
       manager.markEverythingDirty();
       return;

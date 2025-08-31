@@ -34,24 +34,24 @@ public final class CustomFileTypeLexer extends AbstractCustomLexer {
   }
 
   private static List<TokenParser> buildTokenParsers(SyntaxTable table, boolean forHighlighting) {
-    final LineCommentParser lineCommentParser = StringUtil.isEmpty(table.getLineComment()) ? null : new LineCommentParser(table.getLineComment(), table.lineCommentOnlyAtStart);
-    final MultilineCommentParser multilineCommentParser = MultilineCommentParser.create(table.getStartComment(), table.getEndComment());
-    final NumberParser numberParser = new NumberParser(table.getNumPostfixChars(), table.isIgnoreCase());
-    final HexNumberParser hexNumberParser = HexNumberParser.create(table.getHexPrefix());
+    LineCommentParser lineCommentParser = StringUtil.isEmpty(table.getLineComment()) ? null : new LineCommentParser(table.getLineComment(), table.lineCommentOnlyAtStart);
+    MultilineCommentParser multilineCommentParser = MultilineCommentParser.create(table.getStartComment(), table.getEndComment());
+    NumberParser numberParser = new NumberParser(table.getNumPostfixChars(), table.isIgnoreCase());
+    HexNumberParser hexNumberParser = HexNumberParser.create(table.getHexPrefix());
 
     final KeywordParser parser = table.getKeywordParser();
-    final TokenParser keywordParser = new TokenParser() {
+    TokenParser keywordParser = new TokenParser() {
       @Override
       public boolean hasToken(int position) {
         return parser.hasToken(position, myBuffer, myTokenInfo);
       }
     };
 
-    final IdentifierParser identifierParser = new IdentifierParser();
+    IdentifierParser identifierParser = new IdentifierParser();
 
-    final QuotedStringParser quotedStringParser = new QuotedStringParser("\"", CustomHighlighterTokenType.STRING, table.isHasStringEscapes());
+    QuotedStringParser quotedStringParser = new QuotedStringParser("\"", CustomHighlighterTokenType.STRING, table.isHasStringEscapes());
 
-    final QuotedStringParser quotedStringParser2 =
+    QuotedStringParser quotedStringParser2 =
             new QuotedStringParser("\'", forHighlighting ? CustomHighlighterTokenType.SINGLE_QUOTED_STRING : CustomHighlighterTokenType.STRING, table.isHasStringEscapes());
 
     ArrayList<TokenParser> tokenParsers = new ArrayList<TokenParser>();

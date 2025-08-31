@@ -56,11 +56,11 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
   }
 
   @Override
-  public void render(final ChangesBrowserNodeRenderer renderer, final boolean selected, final boolean expanded, final boolean hasFocus) {
-    final VirtualFile file = getUserObject();
+  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+    VirtualFile file = getUserObject();
     renderer.appendFileName(file, file.getName(), TargetAWT.to(ChangeListManager.getInstance(myProject).getStatus(file).getColor()));
     if (renderer.isShowFlatten() && file.isValid()) {
-      final VirtualFile parentFile = file.getParent();
+      VirtualFile parentFile = file.getParent();
       assert parentFile != null;
       renderer.append(spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentFile.getPresentableUrl()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }
@@ -94,7 +94,7 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
     return myName.compareTo(o.myName);
   }
 
-  public int compareUserObjects(final Object o2) {
+  public int compareUserObjects(Object o2) {
     if (o2 instanceof VirtualFile) {
       return getUserObject().getName().compareToIgnoreCase(((VirtualFile)o2).getName());
     }

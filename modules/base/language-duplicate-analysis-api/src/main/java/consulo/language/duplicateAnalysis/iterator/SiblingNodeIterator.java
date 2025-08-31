@@ -10,7 +10,7 @@ public final class SiblingNodeIterator extends NodeIterator {
   private PsiElement current;
   private PsiElement previous;
 
-  public SiblingNodeIterator(final PsiElement element) {
+  public SiblingNodeIterator(PsiElement element) {
     previous = current = start = element;
   }
 

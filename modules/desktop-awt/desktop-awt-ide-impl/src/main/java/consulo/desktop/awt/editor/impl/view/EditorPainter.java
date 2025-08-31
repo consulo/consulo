@@ -1417,8 +1417,8 @@ public final class EditorPainter implements TextDrawingCallback {
 
         private static void paintCaretBox(@Nonnull Graphics2D g, float x, float y, float w, float h) {
             if (w > 2) {
-                final float outlineWidth = (float) PaintUtil.alignToInt(1, g);
-                final Area area = new Area(new Rectangle2D.Float(x, y, w, h));
+                float outlineWidth = (float) PaintUtil.alignToInt(1, g);
+                Area area = new Area(new Rectangle2D.Float(x, y, w, h));
                 area.subtract(new Area(new Rectangle2D.Float(x + outlineWidth, y + outlineWidth, w - (2 * outlineWidth), h - (2 * outlineWidth))));
                 g.fill(area);
             }

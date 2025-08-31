@@ -25,23 +25,23 @@ public class CommittedChangesFilterKey implements Comparable<CommittedChangesFil
   @Nonnull
   private final String myId;
 
-  public CommittedChangesFilterKey(@Nonnull final String id, final CommittedChangesFilterPriority priority) {
+  public CommittedChangesFilterKey(@Nonnull String id, CommittedChangesFilterPriority priority) {
     myId = id;
     myPriority = priority;
   }
 
   @Override
-  public int compareTo(final CommittedChangesFilterKey o) {
-    final int comp = myPriority.getPriority() - o.myPriority.getPriority();
+  public int compareTo(CommittedChangesFilterKey o) {
+    int comp = myPriority.getPriority() - o.myPriority.getPriority();
     return comp < 0 ? -1 : (comp == 0 ? 0 : 1);
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final CommittedChangesFilterKey key = (CommittedChangesFilterKey)o;
+    CommittedChangesFilterKey key = (CommittedChangesFilterKey)o;
 
     if (myPriority.getPriority() != key.myPriority.getPriority()) return false;
     if (!myId.equals(key.myId)) return false;

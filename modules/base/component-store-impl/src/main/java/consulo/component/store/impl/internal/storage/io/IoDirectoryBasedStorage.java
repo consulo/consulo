@@ -55,7 +55,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
                                  @Nonnull String dir,
                                  @Nonnull StateSplitterEx splitter,
                                  @Nonnull Disposable parentDisposable,
-                                 @Nullable final StateStorageListener listener,
+                                 @Nullable StateStorageListener listener,
                                  @Nonnull PathMacrosService pathMacrosService) {
     super(pathMacroSubstitutor, pathMacrosService);
 
@@ -252,10 +252,10 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
       storage.myStorageData = copiedStorageData;
     }
 
-    private void saveStates(@Nonnull final File dir) {
-      final Element storeElement = new Element(StorageData.COMPONENT);
+    private void saveStates(@Nonnull File dir) {
+      Element storeElement = new Element(StorageData.COMPONENT);
 
-      for (final String componentName : copiedStorageData.getComponentNames()) {
+      for (String componentName : copiedStorageData.getComponentNames()) {
         copiedStorageData.processComponent(componentName, (fileName, state) -> {
           if (!dirtyFileNames.contains(fileName)) {
             return;

@@ -23,5 +23,5 @@ import jakarta.annotation.Nonnull;
 public interface SuppressQuickFix extends LocalQuickFix {
   SuppressQuickFix[] EMPTY_ARRAY = new SuppressQuickFix[0];
 
-  boolean isAvailable(@Nonnull final Project project, @Nonnull final PsiElement context);
+  boolean isAvailable(@Nonnull Project project, @Nonnull PsiElement context);
 }

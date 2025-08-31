@@ -41,7 +41,7 @@ public class TextFieldWithHistory extends ComboBox<String> {
     getTextEditor().getDocument().removeDocumentListener(listener);
   }
 
-  public void addKeyboardListener(final KeyListener listener) {
+  public void addKeyboardListener(KeyListener listener) {
     getTextEditor().addKeyListener(listener);
   }
 
@@ -57,7 +57,7 @@ public class TextFieldWithHistory extends ComboBox<String> {
   }
 
   public List<String> getHistory() {
-    final int itemsCount = myModel.getSize();
+    int itemsCount = myModel.getSize();
     List<String> history = new ArrayList<String>(itemsCount);
     for (int i = 0; i < itemsCount; i++) {
       history.add((String)myModel.getElementAt(i));
@@ -79,7 +79,7 @@ public class TextFieldWithHistory extends ComboBox<String> {
   }
 
   public void addCurrentTextToHistory() {
-    final String item = getText();
+    String item = getText();
     myModel.addElement(item);
   }
 
@@ -94,7 +94,7 @@ public class TextFieldWithHistory extends ComboBox<String> {
   @Override
   public void setPopupVisible(boolean v) {
     if (v) {
-      final FileTextField fileTextField = (FileTextField)getTextEditor().getClientProperty(FileTextField.KEY);
+      FileTextField fileTextField = (FileTextField)getTextEditor().getClientProperty(FileTextField.KEY);
       // don't allow showing combobox popup when file completion popup is displayed (IDEA-68711)
       if (fileTextField != null && fileTextField.isPopupDisplayed()) {
         return;

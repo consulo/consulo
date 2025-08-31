@@ -103,13 +103,13 @@ public class NewLibraryEditor extends LibraryEditorBase {
   public VirtualFile[] getFiles(@Nonnull OrderRootType rootType) {
     List<VirtualFile> result = new ArrayList<>();
     for (LightFilePointer pointer : myRoots.get(rootType)) {
-      final VirtualFile file = pointer.getFile();
+      VirtualFile file = pointer.getFile();
       if (file == null) {
         continue;
       }
 
       if (file.isDirectory()) {
-        final String url = file.getUrl();
+        String url = file.getUrl();
         if (isJarDirectory(url, rootType)) {
           boolean recursive = myJarDirectoryRecursiveUrls.get(rootType).contains(url);
           collectJarFiles(file, result, recursive);
@@ -158,7 +158,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
   }
 
   @Override
-  public void addJarDirectory(@Nonnull final String url, boolean recursive, @Nonnull OrderRootType rootType) {
+  public void addJarDirectory(@Nonnull String url, boolean recursive, @Nonnull OrderRootType rootType) {
     addRoot(url, rootType);
     (recursive ? myJarDirectoryRecursiveUrls : myJarDirectoryUrls).putValue(rootType, url);
   }
@@ -192,7 +192,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
 
   @Override
   public boolean isValid(@Nonnull String url, @Nonnull OrderRootType orderRootType) {
-    final Collection<LightFilePointer> pointers = myRoots.get(orderRootType);
+    Collection<LightFilePointer> pointers = myRoots.get(orderRootType);
     for (LightFilePointer pointer : pointers) {
       if (pointer.getUrl().equals(url)) {
         return pointer.isValid();
@@ -212,12 +212,12 @@ public class NewLibraryEditor extends LibraryEditorBase {
     exportRoots(editor::getUrls, editor::isValid, editor::removeRoot, editor::addRoot, editor::addJarDirectory, editor::addExcludedRoot);
   }
 
-  private void exportRoots(final Function<? super OrderRootType, String[]> getUrls,
-                           final BiPredicate<? super String, ? super OrderRootType> isValid,
-                           final BiConsumer<? super String, ? super OrderRootType> removeRoot,
-                           final BiConsumer<? super String, ? super OrderRootType> addRoot,
-                           final TriConsumer<? super String, ? super Boolean, ? super OrderRootType> addJarDir,
-                           final Consumer<? super String> addExcludedRoot) {
+  private void exportRoots(Function<? super OrderRootType, String[]> getUrls,
+                           BiPredicate<? super String, ? super OrderRootType> isValid,
+                           BiConsumer<? super String, ? super OrderRootType> removeRoot,
+                           BiConsumer<? super String, ? super OrderRootType> addRoot,
+                           TriConsumer<? super String, ? super Boolean, ? super OrderRootType> addJarDir,
+                           Consumer<? super String> addExcludedRoot) {
 
     // first, clean the target container optionally preserving invalid paths
     for (OrderRootType type : OrderRootType.getAllTypes()) {

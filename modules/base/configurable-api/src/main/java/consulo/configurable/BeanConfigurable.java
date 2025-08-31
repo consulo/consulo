@@ -44,7 +44,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     String myFieldName;
     T myComponent;
 
-    private BeanField(final String fieldName) {
+    private BeanField(String fieldName) {
       myFieldName = fieldName;
     }
 
@@ -58,8 +58,8 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     abstract T createComponent();
 
     boolean isModified(Object instance) {
-      final Object componentValue = getComponentValue();
-      final Object beanValue = getBeanValue(instance);
+      Object componentValue = getComponentValue();
+      Object beanValue = getBeanValue(instance);
       return !Objects.equals(componentValue, beanValue);
     }
 
@@ -82,7 +82,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
       }
       catch (NoSuchFieldException e) {
         try {
-          final Method method = instance.getClass().getMethod(getterName());
+          Method method = instance.getClass().getMethod(getterName());
           return method.invoke(instance);
         }
         catch (Exception e1) {
@@ -106,7 +106,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
       }
       catch (NoSuchFieldException e) {
         try {
-          final Method method = instance.getClass().getMethod("set" + StringUtil.capitalize(myFieldName), getValueClass());
+          Method method = instance.getClass().getMethod("set" + StringUtil.capitalize(myFieldName), getValueClass());
           method.invoke(instance, value);
         }
         catch (Exception e1) {
@@ -124,7 +124,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
   private static class CheckboxField extends BeanField<CheckBox> {
     private final String myTitle;
 
-    private CheckboxField(final String fieldName, final String title) {
+    private CheckboxField(String fieldName, String title) {
       super(fieldName);
       myTitle = title;
     }
@@ -140,7 +140,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     }
 
     @Override
-    void setComponentValue(final Object instance) {
+    void setComponentValue(Object instance) {
       getComponent().setValue(((Boolean)instance).booleanValue());
     }
 
@@ -168,7 +168,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
   @RequiredUIAccess
   @Override
   public Component createUIComponent(@Nonnull Disposable uiDisposable) {
-    final VerticalLayout panel = VerticalLayout.create();
+    VerticalLayout panel = VerticalLayout.create();
     for (BeanField field : myFields) {
       panel.add(field.getComponent());
     }

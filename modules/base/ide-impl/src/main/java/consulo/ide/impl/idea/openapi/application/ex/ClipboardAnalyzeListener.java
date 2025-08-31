@@ -17,12 +17,12 @@ public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivati
   private String myCachedClipboardValue;
 
   @Override
-  public void applicationActivated(@Nonnull final IdeFrame ideFrame) {
-    final Runnable processClipboard = () -> {
-      final String clipboard = ClipboardUtil.getTextInClipboard();
+  public void applicationActivated(@Nonnull IdeFrame ideFrame) {
+    Runnable processClipboard = () -> {
+      String clipboard = ClipboardUtil.getTextInClipboard();
       if (clipboard != null && clipboard.length() < MAX_SIZE && !clipboard.equals(myCachedClipboardValue)) {
         myCachedClipboardValue = clipboard;
-        final Project project = ideFrame.getProject();
+        Project project = ideFrame.getProject();
         if (project != null && !project.isDefault()) {
           T handleValue = canHandle(clipboard);
           if (handleValue != null) {

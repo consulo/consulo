@@ -138,8 +138,8 @@ public class DiffDrawUtil {
                                    @Nullable Color fillColor,
                                    @Nullable Color borderColor) {
     if (fillColor != null) {
-      final int[] xPoints = new int[]{x1, x2, x2, x1};
-      final int[] yPoints = new int[]{start1, start2, end2 + 1, end1 + 1};
+      int[] xPoints = new int[]{x1, x2, x2, x1};
+      int[] yPoints = new int[]{start1, start2, end2 + 1, end1 + 1};
 
       g.setColor(fillColor);
       g.fillPolygon(xPoints, yPoints, xPoints.length);
@@ -337,16 +337,16 @@ public class DiffDrawUtil {
   }
 
   @Nonnull
-  public static List<RangeHighlighter> createLineMarker(@Nonnull final Editor editor, int line, @Nonnull final TextDiffType type) {
+  public static List<RangeHighlighter> createLineMarker(@Nonnull Editor editor, int line, @Nonnull TextDiffType type) {
     if (line == 0) return Collections.emptyList();
     return createLineMarker(editor, line - 1, type, SeparatorPlacement.BOTTOM, false, false, true);
   }
 
   @Nonnull
-  private static List<RangeHighlighter> createLineMarker(@Nonnull final Editor editor,
+  private static List<RangeHighlighter> createLineMarker(@Nonnull Editor editor,
                                                          int line,
-                                                         @Nonnull final TextDiffType type,
-                                                         @Nonnull final SeparatorPlacement placement,
+                                                         @Nonnull TextDiffType type,
+                                                         @Nonnull SeparatorPlacement placement,
                                                          boolean doubleLine,
                                                          boolean resolved,
                                                          boolean paintFoldingOutline) {
@@ -357,9 +357,9 @@ public class DiffDrawUtil {
   }
 
   @Nonnull
-  public static List<RangeHighlighter> createBorderLineMarker(@Nonnull final Editor editor,
+  public static List<RangeHighlighter> createBorderLineMarker(@Nonnull Editor editor,
                                                               int line,
-                                                              @Nonnull final SeparatorPlacement placement) {
+                                                              @Nonnull SeparatorPlacement placement) {
     return new LineMarkerBuilder(editor, line, placement).withRenderer(BORDER_LINE_RENDERER).done();
   }
 

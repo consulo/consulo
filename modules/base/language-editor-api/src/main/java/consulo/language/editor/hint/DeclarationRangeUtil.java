@@ -28,13 +28,13 @@ public class DeclarationRangeUtil {
 
   @Nonnull
   public static TextRange getDeclarationRange(PsiElement container) {
-    final TextRange textRange = getPossibleDeclarationAtRange(container);
+    TextRange textRange = getPossibleDeclarationAtRange(container);
     assert textRange != null : "Declaration range is invalid for " + container.getClass();
     return textRange;
   }
 
   @Nullable
-  public static TextRange getPossibleDeclarationAtRange(final PsiElement container) {
+  public static TextRange getPossibleDeclarationAtRange(PsiElement container) {
     DeclarationRangeHandler<PsiElement> rangeHandler = DeclarationRangeHandler.findDeclarationHandler(container);
     if (rangeHandler != null) {
       return rangeHandler.getDeclarationRange(container);

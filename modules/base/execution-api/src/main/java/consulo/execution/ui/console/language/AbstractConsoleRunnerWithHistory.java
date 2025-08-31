@@ -107,25 +107,25 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
   }
 
   protected void createContentDescriptorAndActions() {
-    final Executor defaultExecutor = getExecutor();
-    final DefaultActionGroup toolbarActions = new DefaultActionGroup();
-    final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false);
+    Executor defaultExecutor = getExecutor();
+    DefaultActionGroup toolbarActions = new DefaultActionGroup();
+    ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false);
 
     // Runner creating
-    final JPanel panel = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
     panel.add(actionToolbar.getComponent(), BorderLayout.WEST);
     panel.add(myConsoleView.getComponent(), BorderLayout.CENTER);
 
     actionToolbar.setTargetComponent(panel);
 
-    final RunContentDescriptor contentDescriptor = new RunContentDescriptor(myConsoleView, myProcessHandler, panel, constructConsoleTitle(myConsoleTitle), getConsoleIcon());
+    RunContentDescriptor contentDescriptor = new RunContentDescriptor(myConsoleView, myProcessHandler, panel, constructConsoleTitle(myConsoleTitle), getConsoleIcon());
 
     contentDescriptor.setFocusComputable(() -> getConsoleView().getConsoleEditor().getContentComponent());
     contentDescriptor.setAutoFocusContent(isAutoFocusContent());
 
 
     // tool bar actions
-    final List<AnAction> actions = fillToolBarActions(toolbarActions, defaultExecutor, contentDescriptor);
+    List<AnAction> actions = fillToolBarActions(toolbarActions, defaultExecutor, contentDescriptor);
     registerActionShortcuts(actions, getConsoleView().getConsoleEditor().getComponent());
     registerActionShortcuts(actions, panel);
 
@@ -137,7 +137,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     return null;
   }
 
-  protected String constructConsoleTitle(final @Nonnull String consoleTitle) {
+  protected String constructConsoleTitle(@Nonnull String consoleTitle) {
     return new ConsoleTitleGen(myProject, consoleTitle, shouldAddNumberToTitle()).makeTitle();
   }
 
@@ -163,7 +163,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
   @Nonnull
   protected abstract ProcessHandler createProcessHandler() throws ExecutionException;
 
-  public static void registerActionShortcuts(final List<AnAction> actions, final JComponent component) {
+  public static void registerActionShortcuts(List<AnAction> actions, JComponent component) {
     for (AnAction action : actions) {
       if (action.getShortcutSet() != null) {
         action.registerCustomShortcutSet(action.getShortcutSet(), component);
@@ -171,7 +171,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     }
   }
 
-  protected List<AnAction> fillToolBarActions(final DefaultActionGroup toolbarActions, final Executor defaultExecutor, final RunContentDescriptor contentDescriptor) {
+  protected List<AnAction> fillToolBarActions(DefaultActionGroup toolbarActions, Executor defaultExecutor, RunContentDescriptor contentDescriptor) {
 
     List<AnAction> actionList = new ArrayList<>();
 
@@ -192,7 +192,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     return actionList;
   }
 
-  protected AnAction createCloseAction(final Executor defaultExecutor, final RunContentDescriptor myDescriptor) {
+  protected AnAction createCloseAction(Executor defaultExecutor, RunContentDescriptor myDescriptor) {
     return new CloseAction(defaultExecutor, myDescriptor, myProject);
   }
 

@@ -341,7 +341,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     }
 
     @Override
-    public <T extends OrderEntry> void replaceEntryOfType(@Nonnull Class<T> entryClass, @Nullable final T entry) {
+    public <T extends OrderEntry> void replaceEntryOfType(@Nonnull Class<T> entryClass, @Nullable T entry) {
         assertWritable();
         getCurrentLayer().replaceEntryOfType(entryClass, entry);
     }
@@ -350,10 +350,10 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         LOG.assertTrue(myWritable);
     }
 
-    public boolean isDependsOn(final Module module) {
+    public boolean isDependsOn(Module module) {
         for (OrderEntry entry : getOrderEntries()) {
             if (entry instanceof ModuleOrderEntry) {
-                final Module module1 = ((ModuleOrderEntry) entry).getModule();
+                Module module1 = ((ModuleOrderEntry) entry).getModule();
                 if (module1 == module) {
                     return true;
                 }

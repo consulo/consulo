@@ -39,7 +39,7 @@ public abstract class PositionElementFilter implements ElementFilter {
     return true;
   }
 
-  protected static PsiElement getOwnerChild(final PsiElement scope, PsiElement element){
+  protected static PsiElement getOwnerChild(PsiElement scope, PsiElement element){
     while(element != null && element.getParent() != scope){
       element = element.getParent();
     }

@@ -160,8 +160,8 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
         }
 
         Project project = target.getProject();
-        final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
-        final FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(target, true);
+        FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
+        FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(target, true);
 
         // in case of injected file, use host file to highlight all occurrences of the target in each injected file
         PsiFile context = InjectedLanguageManager.getInstance(project).getTopLevelFile(file);
@@ -192,12 +192,12 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
             return null;
         }
 
-        final PsiFile psiFile = getElement().getContainingFile();
+        PsiFile psiFile = getElement().getContainingFile();
         if (psiFile == null) {
             return null;
         }
 
-        final VirtualFile virtualFile = psiFile.getVirtualFile();
+        VirtualFile virtualFile = psiFile.getVirtualFile();
         return virtualFile == null ? null : new VirtualFile[]{virtualFile};
     }
 
@@ -225,7 +225,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
 
     @Override
     @RequiredReadAction
-    public void calcData(final Key<?> key, final DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
         if (key == UsageView.USAGE_INFO_KEY) {
             PsiElement element = getElement();
             if (element != null && element.getTextRange() != null) {
@@ -277,7 +277,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
 
     private void update(PsiElement element) {
         if (element != null && element.isValid()) {
-            final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+            ItemPresentation presentation = ((NavigationItem)element).getPresentation();
             myIcon = presentation == null ? null : presentation.getIcon();
             myPresentableText = presentation == null ? UsageViewUtil.createNodeText(element) : presentation.getPresentableText();
             if (myIcon == null) {
@@ -289,7 +289,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
                     }
                 }
                 else if (element instanceof PsiFile file) {
-                    final VirtualFile virtualFile = file.getVirtualFile();
+                    VirtualFile virtualFile = file.getVirtualFile();
                     if (virtualFile != null) {
                         myIcon = VirtualFilePresentation.getIcon(virtualFile);
                     }

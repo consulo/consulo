@@ -67,7 +67,7 @@ public class FavoritesPanel {
 
   private void setupDnD() {
     DnDSupport.createBuilder(myTree).setBeanProvider(info -> {
-      final TreePath path = myTree.getPathForLocation(info.getPoint().x, info.getPoint().y);
+      TreePath path = myTree.getPathForLocation(info.getPoint().x, info.getPoint().y);
       if (path != null) {
         return new DnDDragStartBean(path);
       }
@@ -77,7 +77,7 @@ public class FavoritesPanel {
             .setTargetChecker(new DnDTargetChecker() {
               @Override
               public boolean update(DnDEvent event) {
-                final Object obj = event.getAttachedObject();
+                Object obj = event.getAttachedObject();
                 if ("".equals(obj)) {
                   event.setDropPossible(false);
                   return false;
@@ -98,20 +98,20 @@ public class FavoritesPanel {
             }).setDropHandler(new DnDDropHandler() {
       @Override
       public void drop(DnDEvent event) {
-        final FavoritesListNode node = myViewPanel.findFavoritesListNode(event.getPoint());
-        final FavoritesManagerImpl mgr = FavoritesManagerImpl.getInstance(myProject);
+        FavoritesListNode node = myViewPanel.findFavoritesListNode(event.getPoint());
+        FavoritesManagerImpl mgr = FavoritesManagerImpl.getInstance(myProject);
 
         if (node == null) return;
 
-        final String listTo = node.getValue();
-        final Object obj = event.getAttachedObject();
+        String listTo = node.getValue();
+        Object obj = event.getAttachedObject();
 
         if (obj instanceof TreePath) {
-          final TreePath path = (TreePath)obj;
-          final String listFrom = FavoritesTreeViewPanel.getListNodeFromPath(path).getValue();
+          TreePath path = (TreePath)obj;
+          String listFrom = FavoritesTreeViewPanel.getListNodeFromPath(path).getValue();
           if (listTo.equals(listFrom)) return;
           if (path.getPathCount() == 3) {
-            final AbstractTreeNode abstractTreeNode = ((FavoritesTreeNodeDescriptor)((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject()).getElement();
+            AbstractTreeNode abstractTreeNode = ((FavoritesTreeNodeDescriptor)((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject()).getElement();
             Object element = abstractTreeNode.getValue();
             mgr.removeRoot(listFrom, Collections.singletonList(abstractTreeNode));
             if (element instanceof SmartPsiElementPointer) {
@@ -134,9 +134,9 @@ public class FavoritesPanel {
     if (node != null) {
       TreePath pathToList = myTree.getPath(node);
       while (pathToList != null) {
-        final Object pathObj = pathToList.getLastPathComponent();
+        Object pathObj = pathToList.getLastPathComponent();
         if (pathObj instanceof DefaultMutableTreeNode) {
-          final Object userObject = ((DefaultMutableTreeNode)pathObj).getUserObject();
+          Object userObject = ((DefaultMutableTreeNode)pathObj).getUserObject();
           if (userObject instanceof FavoritesTreeNodeDescriptor) {
             if (((FavoritesTreeNodeDescriptor)userObject).getElement() == node) {
               break;
@@ -162,9 +162,9 @@ public class FavoritesPanel {
     if (fileList == null) return null;
     List<PsiFileSystemItem> sourceFiles = new ArrayList<PsiFileSystemItem>();
     for (File file : fileList) {
-      final VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+      VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
       if (vFile != null) {
-        final PsiFileSystemItem psiFile = vFile.isDirectory() ? PsiManager.getInstance(myProject).findDirectory(vFile) : PsiManager.getInstance(myProject).findFile(vFile);
+        PsiFileSystemItem psiFile = vFile.isDirectory() ? PsiManager.getInstance(myProject).findDirectory(vFile) : PsiManager.getInstance(myProject).findFile(vFile);
         if (psiFile != null) {
           sourceFiles.add(psiFile);
         }

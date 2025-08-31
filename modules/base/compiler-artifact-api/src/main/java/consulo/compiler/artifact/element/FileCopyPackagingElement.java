@@ -67,7 +67,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
                                                      @Nonnull PackagingElementResolvingContext resolvingContext,
                                                      @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
-    final VirtualFile file = findFile();
+    VirtualFile file = findFile();
     if (file != null && file.isValid() && !file.isDirectory()) {
       creator.addFileCopyInstruction(file, getOutputFileName());
     }
@@ -127,7 +127,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
 
   @Nullable
   public VirtualFile getLibraryRoot() {
-    final String url = VirtualFileUtil.getUrlForLibraryRoot(new File(FileUtil.toSystemDependentName(getFilePath())));
+    String url = VirtualFileUtil.getUrlForLibraryRoot(new File(FileUtil.toSystemDependentName(getFilePath())));
     return VirtualFileManager.getInstance().findFileByUrl(url);
   }
 }

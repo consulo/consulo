@@ -31,14 +31,14 @@ import java.util.zip.ZipFile;
 public class PluginDescriptorLoader {
   public static final String PLUGIN_XML = "plugin.xml";
 
-  public static PluginDescriptorImpl loadDescriptor(final File pluginPath,
+  public static PluginDescriptorImpl loadDescriptor(File pluginPath,
                                                     boolean isPreInstalledPath,
                                                     ContainerLogger containerLogger) {
     return loadDescriptor(pluginPath, PLUGIN_XML, isPreInstalledPath, containerLogger);
   }
 
-  public static PluginDescriptorImpl loadDescriptor(final File pluginPath,
-                                                    final String fileName,
+  public static PluginDescriptorImpl loadDescriptor(File pluginPath,
+                                                    String fileName,
                                                     boolean isPreInstalledPath,
                                                     ContainerLogger containerLogger) {
     if (!pluginPath.isDirectory()) {
@@ -100,12 +100,12 @@ public class PluginDescriptorLoader {
       return loadDescriptorFromJar(jarFile, pluginPath, fileName, isPreInstalledPath, containerLogger);
     }
 
-    final File[] files = libDir.listFiles();
+    File[] files = libDir.listFiles();
     if (files == null || files.length == 0) {
       return null;
     }
 
-    for (final File f : files) {
+    for (File f : files) {
       if (FileUtilRt.isJarOrZip(f)) {
         PluginDescriptorImpl descriptor = loadDescriptorFromJar(f, pluginPath, fileName, isPreInstalledPath, containerLogger);
         if (descriptor != null) {
@@ -163,7 +163,7 @@ public class PluginDescriptorLoader {
   }
 
   private static byte[] loadFromStream(InputStream inputStream) throws IOException {
-    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     try {
       copyStreamContent(inputStream, outputStream);
     }
@@ -174,7 +174,7 @@ public class PluginDescriptorLoader {
   }
 
   private static int copyStreamContent(InputStream inputStream, OutputStream outputStream) throws IOException {
-    final byte[] buffer = new byte[10 * 1024];
+    byte[] buffer = new byte[10 * 1024];
     int count;
     int total = 0;
     while ((count = inputStream.read(buffer)) > 0) {

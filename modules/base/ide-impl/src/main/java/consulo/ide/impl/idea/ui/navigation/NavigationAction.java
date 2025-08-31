@@ -29,8 +29,8 @@ abstract class NavigationAction extends AnAction implements DumbAware {
 
   private final ShadowAction myShadow;
 
-  protected NavigationAction(JComponent c, final String originalActionID) {
-    final AnAction original = ActionManager.getInstance().getAction(originalActionID);
+  protected NavigationAction(JComponent c, String originalActionID) {
+    AnAction original = ActionManager.getInstance().getAction(originalActionID);
     myShadow = new ShadowAction(this, original, c);
     getTemplatePresentation().setIcon(original.getTemplatePresentation().getIcon());
   }
@@ -43,10 +43,10 @@ abstract class NavigationAction extends AnAction implements DumbAware {
     }
   }
 
-  protected abstract void doUpdate(final AnActionEvent e);
+  protected abstract void doUpdate(AnActionEvent e);
 
   @Nullable
-  protected static History getHistory(final AnActionEvent e) {
+  protected static History getHistory(AnActionEvent e) {
     return e.getData(History.KEY);
   }
 

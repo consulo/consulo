@@ -197,7 +197,7 @@ public class PersistentHashMapValueStorage {
     if (!allowedToCompactChunks()) throw new AssertionError();
     if (prevChunkAddress != 0 && myOptions.myHasNoChunks) throw new AssertionError();
     long result = mySize; // volatile read
-    final FileAccessorCache.Handle<DataOutputStream> appender = myCompressedAppendableFile != null ? null : ourAppendersCache.get(myPath);
+    FileAccessorCache.Handle<DataOutputStream> appender = myCompressedAppendableFile != null ? null : ourAppendersCache.get(myPath);
 
     try {
       if (myCompressedAppendableFile != null) {
@@ -244,8 +244,8 @@ public class PersistentHashMapValueStorage {
     //infos = new ArrayList<PersistentHashMap.CompactionRecordInfo>(infos);
     infos.sort((Comparator<PersistentHashMap.CompactionRecordInfo>)(info, info2) -> Comparing.compare(info.valueAddress, info2.valueAddress));
 
-    final int fileBufferLength = 256 * 1024;
-    final byte[] buffer = new byte[fileBufferLength];
+    int fileBufferLength = 256 * 1024;
+    byte[] buffer = new byte[fileBufferLength];
 
     int fragments = 0;
     int newFragments = 0;
@@ -312,9 +312,9 @@ public class PersistentHashMapValueStorage {
 
     records.addAll(infos);
 
-    final int fileBufferLength = 256 * 1024;
-    final int maxRecordHeader = 5 /* max length - variable int */ + 10 /* max long offset*/;
-    final byte[] buffer = new byte[fileBufferLength + maxRecordHeader];
+    int fileBufferLength = 256 * 1024;
+    int maxRecordHeader = 5 /* max length - variable int */ + 10 /* max long offset*/;
+    byte[] buffer = new byte[fileBufferLength + maxRecordHeader];
     byte[] reusedAccumulatedChunksBuffer = {};
 
     long lastReadOffset = mySize;
@@ -329,18 +329,18 @@ public class PersistentHashMapValueStorage {
     long retained = 0;
 
     while (lastReadOffset != 0) {
-      final long readStartOffset = lastReadOffset - bytesRead;
+      long readStartOffset = lastReadOffset - bytesRead;
       myCompactionModeReader.get(readStartOffset, buffer, 0, bytesRead); // buffer contains [readStartOffset, readStartOffset + bytesRead)
 
       while (!records.isEmpty()) {
-        final PersistentHashMap.CompactionRecordInfo info = records.peek();
+        PersistentHashMap.CompactionRecordInfo info = records.peek();
         if (info.valueAddress >= readStartOffset) {
           if (info.valueAddress >= lastReadOffset) {
             throw new IOException("Value storage is corrupted: value file size:" + mySize + ", readStartOffset:" + readStartOffset + ", record address:" + info.valueAddress + "; file: " + myPath);
           }
           // record start is inside our buffer
 
-          final int recordStartInBuffer = (int)(info.valueAddress - readStartOffset);
+          int recordStartInBuffer = (int)(info.valueAddress - readStartOffset);
           myBufferStreamWrapper.init(buffer, recordStartInBuffer, buffer.length);
 
           if (stuffFromPreviousRecord != null && fileBufferLength - recordStartInBuffer < maxRecordHeader) {
@@ -349,7 +349,7 @@ public class PersistentHashMapValueStorage {
               myCompactionModeReader.get(allRecordsStart, buffer, bytesRead, maxRecordHeader);
             }
             else {
-              final int maxAdditionalBytes = Math.min(stuffFromPreviousRecord.length, maxRecordHeader);
+              int maxAdditionalBytes = Math.min(stuffFromPreviousRecord.length, maxRecordHeader);
               for (int i = 0; i < maxAdditionalBytes; ++i) {
                 buffer[bytesRead + i] = stuffFromPreviousRecord[i];
               }
@@ -358,8 +358,8 @@ public class PersistentHashMapValueStorage {
 
           int available = myBufferStreamWrapper.available();
           int chunkSize = DataInputOutputUtil.readINT(myBufferDataStreamWrapper);
-          final long prevChunkAddress = readPrevChunkAddress(info.valueAddress);
-          final int dataOffset = available - myBufferStreamWrapper.available();
+          long prevChunkAddress = readPrevChunkAddress(info.valueAddress);
+          int dataOffset = available - myBufferStreamWrapper.available();
 
           byte[] accumulatedChunksBuffer;
           if (info.value != null) {
@@ -387,7 +387,7 @@ public class PersistentHashMapValueStorage {
             }
           }
 
-          final int chunkSizeOutOfBuffer = Math.min(chunkSize, Math.max((int)(info.valueAddress + dataOffset + chunkSize - lastReadOffset), 0));
+          int chunkSizeOutOfBuffer = Math.min(chunkSize, Math.max((int)(info.valueAddress + dataOffset + chunkSize - lastReadOffset), 0));
           if (chunkSizeOutOfBuffer > 0) {
             if (allRecordsStart != 0) {
               myCompactionModeReader.get(allRecordsStart, accumulatedChunksBuffer, chunkSize - chunkSizeOutOfBuffer, chunkSizeOutOfBuffer);
@@ -521,12 +521,12 @@ public class PersistentHashMapValueStorage {
         }
         myBufferStreamWrapper.init(buffer, 0, len);
 
-        final int chunkSize = DataInputOutputUtil.readINT(myBufferDataStreamWrapper);
+        int chunkSize = DataInputOutputUtil.readINT(myBufferDataStreamWrapper);
         if (chunkSize < 0) {
           throw new IOException("Value storage corrupted: negative chunk size: " + chunkSize);
         }
-        final long prevChunkAddress = readPrevChunkAddress(chunk);
-        final int headerOffset = len - myBufferStreamWrapper.available();
+        long prevChunkAddress = readPrevChunkAddress(chunk);
+        int headerOffset = len - myBufferStreamWrapper.available();
 
         byte[] b = new byte[(result != null ? result.length : 0) + chunkSize];
         if (result != null) System.arraycopy(result, 0, b, b.length - result.length, result.length);
@@ -595,7 +595,7 @@ public class PersistentHashMapValueStorage {
     long newValueOffset;
 
     if (myOptions.myCompactChunksWithValueDeserialization) {
-      final BufferExposingByteArrayOutputStream stream = new BufferExposingByteArrayOutputStream(result.buffer.length);
+      BufferExposingByteArrayOutputStream stream = new BufferExposingByteArrayOutputStream(result.buffer.length);
       DataOutputStream testStream = new DataOutputStream(stream);
       appender.append(testStream);
       newValueOffset = appendBytes(stream.toByteArraySequence(), 0);
@@ -637,7 +637,7 @@ public class PersistentHashMapValueStorage {
 
   private long readPrevChunkAddress(long chunk) throws IOException {
     if (myOptions.myHasNoChunks) return 0;
-    final long prevOffsetDiff = DataInputOutputUtil.readLONG(myBufferDataStreamWrapper);
+    long prevOffsetDiff = DataInputOutputUtil.readLONG(myBufferDataStreamWrapper);
     if (prevOffsetDiff >= chunk) {
       throw new IOException("readPrevChunkAddress:" + chunk + "," + prevOffsetDiff + "," + mySize + "," + myFile);
     }
@@ -648,7 +648,7 @@ public class PersistentHashMapValueStorage {
     return mySize;
   }
 
-  private static void checkPreconditions(final byte[] result, final int chunkSize, final int off) throws IOException {
+  private static void checkPreconditions(byte[] result, int chunkSize, int off) throws IOException {
     if (chunkSize < 0) {
       throw new IOException("Value storage corrupted: negative chunk size");
     }
@@ -670,7 +670,7 @@ public class PersistentHashMapValueStorage {
   }
 
   private static void forceAppender(String path) {
-    final FileAccessorCache.Handle<DataOutputStream> cached = ourAppendersCache.getIfCached(path);
+    FileAccessorCache.Handle<DataOutputStream> cached = ourAppendersCache.getIfCached(path);
     if (cached != null) {
       try {
         cached.get().flush();
@@ -728,7 +728,7 @@ public class PersistentHashMapValueStorage {
     myCompactionMode = true;
   }
 
-  public static PersistentHashMapValueStorage create(final String path, boolean readOnly) {
+  public static PersistentHashMapValueStorage create(String path, boolean readOnly) {
     if (readOnly) CreationTimeOptions.READONLY.set(Boolean.TRUE);
     try {
       return new PersistentHashMapValueStorage(path);
@@ -756,7 +756,7 @@ public class PersistentHashMapValueStorage {
     }
 
     @Override
-    public void get(final long addr, final byte[] dst, final int off, final int len) throws IOException {
+    public void get(long addr, byte[] dst, int off, int len) throws IOException {
       FileAccessorCache.Handle<RandomAccessFileWithLengthAndSizeTracking> fileAccessor = ourRandomAccessFileCache.get(myPath);
 
       try {
@@ -787,7 +787,7 @@ public class PersistentHashMapValueStorage {
     }
 
     @Override
-    public void get(final long addr, final byte[] dst, final int off, final int len) throws IOException {
+    public void get(long addr, byte[] dst, int off, int len) throws IOException {
       myFile.seek(addr);
       myFile.read(dst, off, len);
     }

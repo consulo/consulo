@@ -49,15 +49,15 @@ public class DiffHyperlink implements Printable {
   private String myTestProxyName;
 
 
-  public DiffHyperlink(final String expected, final String actual, final String filePath) {
+  public DiffHyperlink(String expected, String actual, String filePath) {
     this(expected, actual, filePath, true);
   }
 
-  public DiffHyperlink(final String expected, final String actual, final String filePath, boolean printOneLine) {
+  public DiffHyperlink(String expected, String actual, String filePath, boolean printOneLine) {
     this(expected, actual, filePath, null, printOneLine);
   }
 
-  public DiffHyperlink(final String expected, final String actual, final String expectedFilePath, final String actualFilePath, boolean printOneLine) {
+  public DiffHyperlink(String expected, String actual, String expectedFilePath, String actualFilePath, boolean printOneLine) {
     myExpected = expected;
     myActual = actual;
     myFilePath = normalizeSeparators(expectedFilePath);
@@ -102,7 +102,7 @@ public class DiffHyperlink implements Printable {
     return myActualFilePath;
   }
 
-  public void printOn(final Printer printer) {
+  public void printOn(Printer printer) {
     if (!hasMoreThanOneLine(myActual.trim()) && !hasMoreThanOneLine(myExpected.trim()) && myPrintOneLine) {
       printer.print(NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
       printer.print(ExecutionLocalize.diffContentExpectedForFileTitle().get(), ConsoleViewContentType.SYSTEM_OUTPUT);
@@ -115,7 +115,7 @@ public class DiffHyperlink implements Printable {
     printer.print(NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
   }
 
-  private static boolean hasMoreThanOneLine(final String string) {
+  private static boolean hasMoreThanOneLine(String string) {
     return string.indexOf('\n') != -1 || string.indexOf('\r') != -1;
   }
 
@@ -146,8 +146,8 @@ public class DiffHyperlink implements Printable {
   public class DiffHyperlinkInfo extends HyperlinkInfoBase {
     @Override
     public void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
-      final DataManager dataManager = DataManager.getInstance();
-      final DataContext dataContext = hyperlinkLocationPoint != null ? dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent()) : dataManager.getDataContext();
+      DataManager dataManager = DataManager.getInstance();
+      DataContext dataContext = hyperlinkLocationPoint != null ? dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent()) : dataManager.getDataContext();
       ViewAssertEqualsDiffAction.openDiff(dataContext, DiffHyperlink.this);
     }
 

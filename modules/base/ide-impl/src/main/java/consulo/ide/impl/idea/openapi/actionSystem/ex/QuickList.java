@@ -137,7 +137,7 @@ public class QuickList implements ExternalizableScheme {
 
 
 
-    final QuickList quickList = (QuickList)o;
+    QuickList quickList = (QuickList)o;
 
 
 
@@ -221,7 +221,7 @@ public class QuickList implements ExternalizableScheme {
 
 
 
-  public void setDisplayName(final String name) {
+  public void setDisplayName(String name) {
 
     myDisplayName = name;
 
@@ -239,7 +239,7 @@ public class QuickList implements ExternalizableScheme {
 
 
 
-  public void setName(final String newName) {
+  public void setName(String newName) {
 
     setDisplayName(newName);
 

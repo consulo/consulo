@@ -65,7 +65,7 @@ public final class ExternalInfo {
     return myPreviouslySavedName;
   }
 
-  public void setPreviouslySavedName(final String previouslySavedName) {
+  public void setPreviouslySavedName(String previouslySavedName) {
     myPreviouslySavedName = previouslySavedName;
   }
 

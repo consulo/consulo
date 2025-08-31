@@ -51,7 +51,7 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
   }
 
   @Override
-  public VirtualFile[] getData(@Nonnull final DataProvider dataProvider) {
+  public VirtualFile[] getData(@Nonnull DataProvider dataProvider) {
     // Try to detect multiselection.
 
     Project project = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_CONTEXT);

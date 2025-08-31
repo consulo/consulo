@@ -87,7 +87,7 @@ public class CleanUnshelvedFilterDialog extends DialogWrapper {
     JPanel panel = new JPanel(new BorderLayout());
     JLabel questLabel = new JLabel("Delete already unshelved changelists: \n");
     String panelConstraints = "flowx, ins 0";
-    final MigLayout migLayout = new MigLayout(panelConstraints);
+    MigLayout migLayout = new MigLayout(panelConstraints);
     JPanel buttonsPanel = new JPanel(migLayout);
     ButtonGroup gr = new ButtonGroup();
     gr.add(mySystemUnshelvedButton);

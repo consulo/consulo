@@ -13,28 +13,28 @@ public abstract class FormatterEx implements Formatter {
   public abstract void format(FormattingModel model, CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions indentOptions, FormatTextRanges affectedRanges)
           throws IncorrectOperationException;
 
-  public abstract int adjustLineIndent(final FormattingModel psiBasedFormattingModel,
-                                       final CodeStyleSettings settings,
-                                       final CommonCodeStyleSettings.IndentOptions indentOptions,
-                                       final int offset,
-                                       final TextRange affectedRange) throws IncorrectOperationException;
+  public abstract int adjustLineIndent(FormattingModel psiBasedFormattingModel,
+                                       CodeStyleSettings settings,
+                                       CommonCodeStyleSettings.IndentOptions indentOptions,
+                                       int offset,
+                                       TextRange affectedRange) throws IncorrectOperationException;
 
   @Nullable
-  public abstract String getLineIndent(final FormattingModel psiBasedFormattingModel,
-                                       final CodeStyleSettings settings,
-                                       final CommonCodeStyleSettings.IndentOptions indentOptions,
-                                       final int offset,
-                                       final TextRange affectedRange);
+  public abstract String getLineIndent(FormattingModel psiBasedFormattingModel,
+                                       CodeStyleSettings settings,
+                                       CommonCodeStyleSettings.IndentOptions indentOptions,
+                                       int offset,
+                                       TextRange affectedRange);
 
   public abstract boolean isDisabled();
 
 
-  public abstract void adjustLineIndentsForRange(final FormattingModel model,
-                                                 final CodeStyleSettings settings,
-                                                 final CommonCodeStyleSettings.IndentOptions indentOptions,
-                                                 final TextRange rangeToAdjust);
+  public abstract void adjustLineIndentsForRange(FormattingModel model,
+                                                 CodeStyleSettings settings,
+                                                 CommonCodeStyleSettings.IndentOptions indentOptions,
+                                                 TextRange rangeToAdjust);
 
-  public abstract void formatAroundRange(final FormattingModel model, final CodeStyleSettings settings, final PsiFile file, final TextRange textRange);
+  public abstract void formatAroundRange(FormattingModel model, CodeStyleSettings settings, PsiFile file, TextRange textRange);
 
   public abstract void setProgressTask(@Nonnull FormattingProgressCallback progressIndicator);
 

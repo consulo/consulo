@@ -96,7 +96,7 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
     return myTab.getDisplayName();
   }
 
-  public void setModel(final CodeStyleSchemesModel model) {
+  public void setModel(CodeStyleSchemesModel model) {
     if (myTab instanceof CodeStyleAbstractConfigurable) {
       ((CodeStyleAbstractConfigurable)myTab).setModel(model);
     }

@@ -42,16 +42,16 @@ public class ChangesComparator implements Comparator<Change> {
   }
 
   @Override
-  public int compare(final Change o1, final Change o2) {
-    final FilePath filePath1 = ChangesUtil.getFilePath(o1);
-    final FilePath filePath2 = ChangesUtil.getFilePath(o2);
+  public int compare(Change o1, Change o2) {
+    FilePath filePath1 = ChangesUtil.getFilePath(o1);
+    FilePath filePath2 = ChangesUtil.getFilePath(o2);
     if (myTreeCompare) {
-      final String path1 = FileUtil.toSystemIndependentName(filePath1.getPath());
-      final String path2 = FileUtil.toSystemIndependentName(filePath2.getPath());
-      final int lastSlash1 = path1.lastIndexOf('/');
-      final String parentPath1 = lastSlash1 >= 0 && !filePath1.isDirectory() ? path1.substring(0, lastSlash1) : path1;
-      final int lastSlash2 = path2.lastIndexOf('/');
-      final String parentPath2 = lastSlash2 >= 0 && !filePath2.isDirectory() ? path2.substring(0, lastSlash2) : path2;
+      String path1 = FileUtil.toSystemIndependentName(filePath1.getPath());
+      String path2 = FileUtil.toSystemIndependentName(filePath2.getPath());
+      int lastSlash1 = path1.lastIndexOf('/');
+      String parentPath1 = lastSlash1 >= 0 && !filePath1.isDirectory() ? path1.substring(0, lastSlash1) : path1;
+      int lastSlash2 = path2.lastIndexOf('/');
+      String parentPath2 = lastSlash2 >= 0 && !filePath2.isDirectory() ? path2.substring(0, lastSlash2) : path2;
       // subdirs precede files
       if (FileUtil.isAncestor(parentPath2, parentPath1, true)) {
         return -1;
@@ -59,7 +59,7 @@ public class ChangesComparator implements Comparator<Change> {
       else if (FileUtil.isAncestor(parentPath1, parentPath2, true)) {
         return 1;
       }
-      final int compare = StringUtil.compare(parentPath1, parentPath2, !Platform.current().fs().isCaseSensitive());
+      int compare = StringUtil.compare(parentPath1, parentPath2, !Platform.current().fs().isCaseSensitive());
       if (compare != 0) {
         return compare;
       }

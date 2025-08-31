@@ -44,18 +44,18 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Editor editor = e.getData(Editor.KEY);
+        Editor editor = e.getData(Editor.KEY);
         dumpLookupElementWeights(LookupManager.getActiveLookup(editor));
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final Presentation presentation = e.getPresentation();
-        final Editor editor = e.getData(Editor.KEY);
+        Presentation presentation = e.getPresentation();
+        Editor editor = e.getData(Editor.KEY);
         presentation.setEnabled(editor != null && LookupManager.getActiveLookup(editor) != null);
     }
 
-    public static void dumpLookupElementWeights(final LookupEx lookup) {
+    public static void dumpLookupElementWeights(LookupEx lookup) {
         LookupElement selected = lookup.getCurrentItem();
         String sb = "selected: " + selected;
         if (selected != null) {
@@ -72,7 +72,7 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
     }
 
     public static List<String> getLookupElementWeights(LookupEx lookup, boolean hideSingleValued) {
-        final Map<LookupElement, List<Pair<String, Object>>> weights = lookup.getRelevanceObjects(lookup.getItems(), hideSingleValued);
+        Map<LookupElement, List<Pair<String, Object>>> weights = lookup.getRelevanceObjects(lookup.getItems(), hideSingleValued);
         return ContainerUtil.map(
             weights.entrySet(),
             entry -> entry.getKey().getLookupString() + "\t" + StringUtil.join(

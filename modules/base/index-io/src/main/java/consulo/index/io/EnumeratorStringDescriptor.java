@@ -31,12 +31,12 @@ public class EnumeratorStringDescriptor implements KeyDescriptor<String> {
   public static final EnumeratorStringDescriptor INSTANCE = new EnumeratorStringDescriptor();
 
   @Override
-  public void save(@Nonnull final DataOutput storage, @Nonnull final String value) throws IOException {
+  public void save(@Nonnull DataOutput storage, @Nonnull String value) throws IOException {
     IOUtil.writeUTF(storage, value);
   }
 
   @Override
-  public String read(@Nonnull final DataInput storage) throws IOException {
+  public String read(@Nonnull DataInput storage) throws IOException {
     return IOUtil.readUTF(storage);
   }
 }

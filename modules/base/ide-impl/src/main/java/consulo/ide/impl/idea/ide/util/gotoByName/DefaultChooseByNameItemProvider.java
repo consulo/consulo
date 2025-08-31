@@ -225,7 +225,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
     ) {
         List<MatchResult> namesList = new ArrayList<>();
 
-        final CollectConsumer<MatchResult> collect = new SynchronizedCollectConsumer<>(namesList);
+        CollectConsumer<MatchResult> collect = new SynchronizedCollectConsumer<>(namesList);
 
         ChooseByNameModel model = base.getModel();
         if (model instanceof ChooseByNameModelEx) {
@@ -305,7 +305,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
                 : model.getElementsByName(name, everywhere, getNamePattern(base, parameters.getCompletePattern()));
             if (elements.length > 1) {
                 sameNameElements.clear();
-                for (final Object element : elements) {
+                for (Object element : elements) {
                     indicator.checkCanceled();
                     if (matchQualifiedName(model, fullMatcher, element) != null) {
                         sameNameElements.add(Pair.create(element, result));
@@ -358,7 +358,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
     }
 
     private static String getNamePattern(ChooseByNameModel model, String pattern) {
-        final String[] separators = model.getSeparators();
+        String[] separators = model.getSeparators();
         int lastSeparatorOccurrence = 0;
         for (String separator : separators) {
             int idx = pattern.lastIndexOf(separator);
@@ -392,7 +392,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
             return Collections.emptyList();
         }
 
-        final List<String> filtered = new ArrayList<>();
+        List<String> filtered = new ArrayList<>();
         processNamesByPattern(base, names, pattern, ProgressIndicatorProvider.getGlobalProgressIndicator(), result -> {
             synchronized (filtered) {
                 filtered.add(result.elementName);
@@ -404,11 +404,11 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
     }
 
     private static void processNamesByPattern(
-        @Nonnull final ChooseByNameViewModel base,
-        @Nonnull final String[] names,
-        @Nonnull final String pattern,
-        final ProgressIndicator indicator,
-        @Nonnull final Consumer<? super MatchResult> consumer
+        @Nonnull ChooseByNameViewModel base,
+        @Nonnull String[] names,
+        @Nonnull String pattern,
+        ProgressIndicator indicator,
+        @Nonnull Consumer<? super MatchResult> consumer
     ) {
         MinusculeMatcher matcher = buildPatternMatcher(pattern);
         Predicate<String> processor = name -> {
@@ -487,7 +487,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         @Nonnull
         private final PsiProximityComparator myProximityComparator;
 
-        private PathProximityComparator(@Nullable final PsiElement context) {
+        private PathProximityComparator(@Nullable PsiElement context) {
             myProximityComparator = new PsiProximityComparator(context);
         }
 
@@ -496,7 +496,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         }
 
         @Override
-        public int compare(final Object o1, final Object o2) {
+        public int compare(Object o1, Object o2) {
             int rc = myProximityComparator.compare(o1, o2);
             if (rc != 0) {
                 return rc;

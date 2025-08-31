@@ -50,12 +50,12 @@ public abstract class PsiReferenceService {
    * @return the references
    */
   @RequiredReadAction
-  public abstract List<PsiReference> getReferences(@Nonnull final PsiElement element, @Nonnull final Hints hints);
+  public abstract List<PsiReference> getReferences(@Nonnull PsiElement element, @Nonnull Hints hints);
 
   @Nonnull
   @RequiredReadAction
-  public PsiReference[] getContributedReferences(@Nonnull final PsiElement element) {
-    final List<PsiReference> list = getReferences(element, Hints.NO_HINTS);
+  public PsiReference[] getContributedReferences(@Nonnull PsiElement element) {
+    List<PsiReference> list = getReferences(element, Hints.NO_HINTS);
     return ContainerUtil.toArray(list, PsiReference.ARRAY_FACTORY);
   }
 

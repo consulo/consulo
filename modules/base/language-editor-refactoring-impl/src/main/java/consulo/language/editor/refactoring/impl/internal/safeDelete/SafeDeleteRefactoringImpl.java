@@ -36,7 +36,7 @@ public class SafeDeleteRefactoringImpl extends RefactoringImpl<SafeDeleteProcess
 
   @Override
   public List<PsiElement> getElements() {
-    final PsiElement[] elements = myProcessor.getElements();
+    PsiElement[] elements = myProcessor.getElements();
     return Collections.unmodifiableList(Arrays.asList(elements));
   }
 

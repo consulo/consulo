@@ -34,12 +34,12 @@ public class ColorUtil {
 
   public static Color softer(@Nonnull Color color) {
     if (color.getBlue() > 220 && color.getRed() > 220 && color.getGreen() > 220) return color;
-    final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+    float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     return Color.getHSBColor(hsb[0], 0.6f * hsb[1], hsb[2]);
   }
 
   public static Color darker(@Nonnull Color color, int tones) {
-    final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+    float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float brightness = hsb[2];
     for (int i = 0; i < tones; i++) {
       brightness = Math.max(0, brightness / 1.1F);
@@ -49,7 +49,7 @@ public class ColorUtil {
   }
 
   public static Color brighter(@Nonnull Color color, int tones) {
-    final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+    float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float brightness = hsb[2];
     for (int i = 0; i < tones; i++) {
       brightness = Math.min(1, brightness * 1.1F);
@@ -60,7 +60,7 @@ public class ColorUtil {
 
   @Nonnull
   public static Color saturate(@Nonnull Color color, int tones) {
-    final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+    float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float saturation = hsb[1];
     for (int i = 0; i < tones; i++) {
       saturation = Math.min(1, saturation * 1.1F);
@@ -71,7 +71,7 @@ public class ColorUtil {
 
   @Nonnull
   public static Color desaturate(@Nonnull Color color, int tones) {
-    final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+    float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float saturation = hsb[1];
     for (int i = 0; i < tones; i++) {
       saturation = Math.max(0, saturation / 1.1F);
@@ -89,7 +89,7 @@ public class ColorUtil {
   }
 
   private static int shift(int colorComponent, double d) {
-    final int n = (int)(colorComponent * d);
+    int n = (int)(colorComponent * d);
     return n > 255 ? 255 : n < 0 ? 0 : n;
   }
 
@@ -119,14 +119,14 @@ public class ColorUtil {
   }
 
   @Nonnull
-  public static String toHtmlColor(@Nonnull final Color c) {
+  public static String toHtmlColor(@Nonnull Color c) {
     return "#" + toHex(c);
   }
 
-  public static String toHex(@Nonnull final Color c) {
-    final String R = Integer.toHexString(c.getRed());
-    final String G = Integer.toHexString(c.getGreen());
-    final String B = Integer.toHexString(c.getBlue());
+  public static String toHex(@Nonnull Color c) {
+    String R = Integer.toHexString(c.getRed());
+    String G = Integer.toHexString(c.getGreen());
+    String B = Integer.toHexString(c.getBlue());
     return (R.length() < 2 ? "0" : "") + R + (G.length() < 2 ? "0" : "") + G + (B.length() < 2 ? "0" : "") + B;
   }
 
@@ -173,7 +173,7 @@ public class ColorUtil {
    * @param c color to check
    * @return dark or not
    */
-  public static boolean isDark(@Nonnull final Color c) {
+  public static boolean isDark(@Nonnull Color c) {
     // based on perceptional luminosity, see
     return (1 - (0.299 * c.getRed() + 0.587 * c.getGreen() + 0.114 * c.getBlue()) / 255) >= 0.5;
   }

@@ -31,7 +31,7 @@ public abstract class PrefixedTokenParser extends TokenParser {
   }
 
   public boolean hasToken(int position) {
-    final int start = position;
+    int start = position;
     int i;
     for (i = 0; i < myPrefix.length && position < myEndOffset; i++, position++) {
       if (myPrefix[i] != myBuffer.charAt(position)) break;

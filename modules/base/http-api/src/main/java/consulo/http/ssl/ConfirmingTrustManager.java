@@ -23,7 +23,7 @@ import java.security.cert.X509Certificate;
  * @since 02/06/2023
  */
 public interface ConfirmingTrustManager extends ClientOnlyTrustManager {
-  void checkServerTrusted(final X509Certificate[] certificates,
+  void checkServerTrusted(X509Certificate[] certificates,
                           String s,
                           boolean addToKeyStore,
                           boolean askUser) throws CertificateException;

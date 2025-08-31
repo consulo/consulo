@@ -114,9 +114,9 @@ public abstract class InspectionManager {
 
     @Nonnull
     public abstract ProblemDescriptor createProblemDescriptor(
-        @Nonnull final PsiElement psiElement,
+        @Nonnull PsiElement psiElement,
         @Nullable TextRange rangeInElement,
-        @Nonnull final String descriptionTemplate,
+        @Nonnull String descriptionTemplate,
         @Nonnull ProblemHighlightType highlightType,
         boolean onTheFly,
         LocalQuickFix... fixes
@@ -124,12 +124,12 @@ public abstract class InspectionManager {
 
     @Nonnull
     public abstract ProblemDescriptor createProblemDescriptor(
-        @Nonnull final PsiElement psiElement,
-        @Nonnull final String descriptionTemplate,
-        final boolean showTooltip,
+        @Nonnull PsiElement psiElement,
+        @Nonnull String descriptionTemplate,
+        boolean showTooltip,
         @Nonnull ProblemHighlightType highlightType,
         boolean onTheFly,
-        final LocalQuickFix... fixes
+        LocalQuickFix... fixes
     );
 
     @Deprecated
@@ -189,11 +189,11 @@ public abstract class InspectionManager {
      * use {@link #createProblemDescriptor(PsiElement, TextRange, String, ProblemHighlightType, boolean, LocalQuickFix...)} instead
      */
     public abstract ProblemDescriptor createProblemDescriptor(
-        @Nonnull final PsiElement psiElement,
-        final TextRange rangeInElement,
-        @Nonnull final String descriptionTemplate,
+        @Nonnull PsiElement psiElement,
+        TextRange rangeInElement,
+        @Nonnull String descriptionTemplate,
         @Nonnull ProblemHighlightType highlightType,
-        final LocalQuickFix... fixes
+        LocalQuickFix... fixes
     );
 
     @Deprecated
@@ -201,11 +201,11 @@ public abstract class InspectionManager {
     /**
      * use {@link #createProblemDescriptor(PsiElement, String, boolean, ProblemHighlightType, boolean, LocalQuickFix...)} instead
      */ public abstract ProblemDescriptor createProblemDescriptor(
-        @Nonnull final PsiElement psiElement,
-        @Nonnull final String descriptionTemplate,
-        final boolean showTooltip,
+        @Nonnull PsiElement psiElement,
+        @Nonnull String descriptionTemplate,
+        boolean showTooltip,
         @Nonnull ProblemHighlightType highlightType,
-        final LocalQuickFix... fixes
+        LocalQuickFix... fixes
     );
 
     @Nonnull

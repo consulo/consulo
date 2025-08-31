@@ -76,20 +76,20 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
   }
 
   private boolean fileMatcher(VirtualFile virtualFile, ProjectFileIndex fileIndex, VirtualFile projectBaseDir){
-    final String relativePath = getRelativePath(virtualFile, fileIndex, true, projectBaseDir);
+    String relativePath = getRelativePath(virtualFile, fileIndex, true, projectBaseDir);
     LOG.assertTrue(relativePath != null, "vFile: " + virtualFile + "; projectBaseDir: " + projectBaseDir + "; content File: "+fileIndex.getContentRootForFile(virtualFile));
     return myFilePattern.matcher(relativePath).matches();
   }
 
-  public static boolean matchesModule(final Pattern moduleGroupPattern,
-                                      final Pattern modulePattern,
-                                      final VirtualFile file,
-                                      final ProjectFileIndex fileIndex) {
-    final Module module = fileIndex.getModuleForFile(file);
+  public static boolean matchesModule(Pattern moduleGroupPattern,
+                                      Pattern modulePattern,
+                                      VirtualFile file,
+                                      ProjectFileIndex fileIndex) {
+    Module module = fileIndex.getModuleForFile(file);
     if (module != null) {
       if (modulePattern != null && modulePattern.matcher(module.getName()).matches()) return true;
       if (moduleGroupPattern != null) {
-        final String[] groupPath = ModuleManager.getInstance(module.getProject()).getModuleGroupPath(module);
+        String[] groupPath = ModuleManager.getInstance(module.getProject()).getModuleGroupPath(module);
         if (groupPath != null) {
           for (String node : groupPath) {
             if (moduleGroupPattern.matcher(node).matches()) return true;
@@ -194,17 +194,17 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
   @jakarta.annotation.Nullable
   public static String getRelativePath(@Nonnull VirtualFile virtualFile,
                                        @Nonnull ProjectFileIndex index,
-                                       final boolean useFQName,
+                                       boolean useFQName,
                                        VirtualFile projectBaseDir) {
-    final VirtualFile contentRootForFile = index.getContentRootForFile(virtualFile);
+    VirtualFile contentRootForFile = index.getContentRootForFile(virtualFile);
     if (contentRootForFile != null) {
       return VfsUtilCore.getRelativePath(virtualFile, contentRootForFile, '/');
     }
-    final Module module = index.getModuleForFile(virtualFile);
+    Module module = index.getModuleForFile(virtualFile);
     if (module != null) {
       if (projectBaseDir != null) {
         if (VfsUtilCore.isAncestor(projectBaseDir, virtualFile, false)){
-          final String projectRelativePath = VfsUtilCore.getRelativePath(virtualFile, projectBaseDir, '/');
+          String projectRelativePath = VfsUtilCore.getRelativePath(virtualFile, projectBaseDir, '/');
           return useFQName ? projectRelativePath : projectRelativePath.substring(projectRelativePath.indexOf('/') + 1);
         }
       }
@@ -214,7 +214,7 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
     }
   }
 
-  public static String getLibRelativePath(final VirtualFile virtualFile, final ProjectFileIndex index) {
+  public static String getLibRelativePath(VirtualFile virtualFile, ProjectFileIndex index) {
     StringBuilder relativePath = new StringBuilder(100);
     VirtualFile directory = virtualFile;
     while (directory != null && index.isInLibraryClasses(directory)) {

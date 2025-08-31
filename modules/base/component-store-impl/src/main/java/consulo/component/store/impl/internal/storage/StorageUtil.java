@@ -63,7 +63,7 @@ public class StorageUtil {
     return event.getRequestor() instanceof StateStorage.SaveSession || event.getRequestor() instanceof StateStorage;
   }
 
-  public static void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor, @Nonnull final ComponentManager project, @Nullable final String componentName) {
+  public static void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor, @Nonnull ComponentManager project, @Nullable String componentName) {
     StorageNotificationService.getInstance().notifyUnknownMacros(substitutor, project, componentName);
   }
 
@@ -138,7 +138,7 @@ public class StorageUtil {
   @Nonnull
   public static CompletableFuture<VirtualFile> writeFileAsync(@Nullable File file,
                                                               @Nonnull Object requestor,
-                                                              @Nullable final VirtualFile fileRef,
+                                                              @Nullable VirtualFile fileRef,
                                                               @Nonnull byte[] content,
                                                               @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
     return AccessRule.writeAsync(() -> {

@@ -40,7 +40,7 @@ public interface Condition<T> extends Predicate<T> {
 
     Condition<Object> NOT_NULL = new Condition<>() {
         @Override
-        public boolean value(final Object object) {
+        public boolean value(Object object) {
             return object != null;
         }
 
@@ -56,7 +56,7 @@ public interface Condition<T> extends Predicate<T> {
      */
     Condition TRUE = new Condition() {
         @Override
-        public boolean value(final Object object) {
+        public boolean value(Object object) {
             return true;
         }
 
@@ -71,7 +71,7 @@ public interface Condition<T> extends Predicate<T> {
      */
     Condition FALSE = new Condition() {
         @Override
-        public boolean value(final Object object) {
+        public boolean value(Object object) {
             return false;
         }
 

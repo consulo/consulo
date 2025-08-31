@@ -50,7 +50,7 @@ public class UrlConnectionUtil {
 
   public static InputStream getConnectionInputStreamWithException(URLConnection connection, ProgressIndicator pi) throws IOException {
     InputStreamGetter getter = new InputStreamGetter(connection);
-    final Future<?> getterFuture = Application.get().executeOnPooledThread(getter);
+    Future<?> getterFuture = Application.get().executeOnPooledThread(getter);
 
     while (true) {
       pi.checkCanceled();

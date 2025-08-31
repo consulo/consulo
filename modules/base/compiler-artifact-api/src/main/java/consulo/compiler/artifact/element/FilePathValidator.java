@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class FilePathValidator implements InputValidator {
   public boolean checkInput(String inputString) {
-    final List<String> fileNames = StringUtil.split(FileUtil.toSystemIndependentName(inputString), "/");
+    List<String> fileNames = StringUtil.split(FileUtil.toSystemIndependentName(inputString), "/");
     if (fileNames.isEmpty()) {
       return false;
     }

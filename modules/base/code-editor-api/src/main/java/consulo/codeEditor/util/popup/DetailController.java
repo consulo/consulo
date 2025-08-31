@@ -72,7 +72,7 @@ public class DetailController {
 
     @RequiredUIAccess
     public void doUpdateDetailView(boolean now) {
-        final Object[] values = myMasterController.getSelectedItems();
+        Object[] values = myMasterController.getSelectedItems();
         ItemWrapper wrapper = null;
         if (values != null && values.length == 1) {
             wrapper = (ItemWrapper) values[0];
@@ -99,8 +99,8 @@ public class DetailController {
         doUpdateDetailView(false);
     }
 
-    public void setList(final JList list) {
-        final ListSelectionModel listSelectionModel = list.getSelectionModel();
+    public void setList(JList list) {
+        ListSelectionModel listSelectionModel = list.getSelectionModel();
         listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         if (list.getModel().getSize() == 0) {

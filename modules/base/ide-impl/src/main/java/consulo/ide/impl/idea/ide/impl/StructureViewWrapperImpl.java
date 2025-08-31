@@ -97,7 +97,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     myUpdateQueue = new MergingUpdateQueue("StructureView", Registry.intValue("structureView.coalesceTime"), false, myToolWindow.getComponent(), this, myToolWindow.getComponent(), true);
     myUpdateQueue.setRestartTimerOnAdd(true);
 
-    final TimerListener timerListener = new TimerListener() {
+    TimerListener timerListener = new TimerListener() {
       @Override
       public IdeaModalityState getModalityState() {
         return IdeaModalityState.stateForComponent(myToolWindow.getComponent());
@@ -136,17 +136,17 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
   private void checkUpdate() {
     if (myProject.isDisposed()) return;
 
-    final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-    final boolean insideToolwindow = SwingUtilities.isDescendingFrom(myToolWindow.getComponent(), owner);
+    Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    boolean insideToolwindow = SwingUtilities.isDescendingFrom(myToolWindow.getComponent(), owner);
     if (!myFirstRun && (insideToolwindow || JBPopupFactory.getInstance().isPopupActive())) {
       return;
     }
 
-    final DataContext dataContext = DataManager.getInstance().getDataContext(owner);
+    DataContext dataContext = DataManager.getInstance().getDataContext(owner);
     if (dataContext.getData(ourDataSelectorKey) == this) return;
     if (dataContext.getData(Project.KEY) != myProject) return;
 
-    final VirtualFile[] files = hasFocus() ? null : dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+    VirtualFile[] files = hasFocus() ? null : dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     if (!myToolWindow.isVisible()) {
       if (files != null && files.length > 0) {
         myFile = files[0];
@@ -160,8 +160,8 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     else if (files != null && files.length > 1) {
       setFile(null);
     } else if (myFirstRun) {
-      final FileEditorManagerImpl editorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(myProject);
-      final List<Pair<VirtualFile, FileEditorWindow>> history = editorManager.getSelectionHistory();
+      FileEditorManagerImpl editorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(myProject);
+      List<Pair<VirtualFile, FileEditorWindow>> history = editorManager.getSelectionHistory();
       if (! history.isEmpty()) {
         setFile(history.get(0).getFirst());
       }
@@ -171,7 +171,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
   }
 
   private boolean hasFocus() {
-    final JComponent tw = myToolWindow.getComponent();
+    JComponent tw = myToolWindow.getComponent();
     Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     while (owner != null) {
       if (owner == tw) return true;
@@ -208,7 +208,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
   }
 
   @Override
-  public boolean selectCurrentElement(final FileEditor fileEditor, final VirtualFile file, final boolean requestFocus) {
+  public boolean selectCurrentElement(FileEditor fileEditor, VirtualFile file, boolean requestFocus) {
     //todo [kirillk]
     // this is dirty hack since some bright minds decided to used different TreeUi every time, so selection may be followed
     // by rebuild on completely different instance of TreeUi
@@ -267,7 +267,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
       myModuleStructureComponent = null;
     }
 
-    final ContentManager contentManager = myToolWindow.getContentManager();
+    ContentManager contentManager = myToolWindow.getContentManager();
     contentManager.removeAllContents(true);
     if (!isStructureViewShowing()) {
       return;
@@ -275,7 +275,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
 
     VirtualFile file = myFile;
     if (file == null) {
-      final VirtualFile[] selectedFiles = FileEditorManager.getInstance(myProject).getSelectedFiles();
+      VirtualFile[] selectedFiles = FileEditorManager.getInstance(myProject).getSelectedFiles();
       if (selectedFiles.length > 0) {
         file = selectedFiles[0];
       }
@@ -301,7 +301,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
           needDisposeEditor = true;
         }
         if (editor != null && editor.isValid()) {
-          final StructureViewBuilder structureViewBuilder = editor.getStructureViewBuilder();
+          StructureViewBuilder structureViewBuilder = editor.getStructureViewBuilder();
           if (structureViewBuilder != null) {
             myStructureView = structureViewBuilder.createStructureView(editor, myProject);
             myFileEditor = editor;
@@ -313,8 +313,8 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
             }
 
             if (myStructureView instanceof StructureViewComposite) {
-              final StructureViewComposite composite = (StructureViewComposite)myStructureView;
-              final StructureViewComposite.StructureViewDescriptor[] views = composite.getStructureViews();
+              StructureViewComposite composite = (StructureViewComposite)myStructureView;
+              StructureViewComposite.StructureViewDescriptor[] views = composite.getStructureViews();
               myPanels = new JPanel[views.length];
               names = new String[views.length];
               for (int i = 0; i < myPanels.length; i++) {
@@ -341,7 +341,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
 
     for (int i = 0; i < myPanels.length; i++) {
-      final Content content = ContentFactory.getInstance().createContent(myPanels[i], names[i], false);
+      Content content = ContentFactory.getInstance().createContent(myPanels[i], names[i], false);
       contentManager.addContent(content);
       if (i == 0 && myStructureView != null) {
         Disposer.register(content, myStructureView);
@@ -367,13 +367,13 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     myToolWindow.setTitleActions(titleActions);
   }
 
-  private void createSinglePanel(final JComponent component) {
+  private void createSinglePanel(JComponent component) {
     myPanels = new JPanel[1];
     myPanels[0] = createContentPanel(component);
   }
 
   private ContentPanel createContentPanel(JComponent component) {
-    final ContentPanel panel = new ContentPanel();
+    ContentPanel panel = new ContentPanel();
     panel.setBackground(UIUtil.getTreeTextBackground());
     panel.add(component, BorderLayout.CENTER);
     return panel;
@@ -384,7 +384,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     if (file.getLength() > RawFileLoader.getInstance().getMaxIntellisenseFileSize()) return null;
 
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
-    final FileEditorProvider[] providers = editorProviderManager.getProviders(myProject, file);
+    FileEditorProvider[] providers = editorProviderManager.getProviders(myProject, file);
     return providers.length == 0 ? null : providers[0].createEditor(myProject, file);
   }
 

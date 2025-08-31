@@ -153,16 +153,16 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     return mySubstrateRef.getNode();
   }
 
-  private ASTNode failedToBindStubToAst(@Nonnull PsiFileImpl file, @Nonnull final FileElement fileElement) {
+  private ASTNode failedToBindStubToAst(@Nonnull PsiFileImpl file, @Nonnull FileElement fileElement) {
     VirtualFile vFile = file.getVirtualFile();
     StubTree stubTree = file.getStubTree();
-    final String stubString = stubTree != null ? ((PsiFileStubImpl)stubTree.getRoot()).printTree() : null;
-    final String astString = RecursionManager.doPreventingRecursion("failedToBindStubToAst", true, () -> DebugUtil.treeToString(fileElement, true));
+    String stubString = stubTree != null ? ((PsiFileStubImpl)stubTree.getRoot()).printTree() : null;
+    String astString = RecursionManager.doPreventingRecursion("failedToBindStubToAst", true, () -> DebugUtil.treeToString(fileElement, true));
 
-    @NonNls final String message =
+    @NonNls String message =
             "Failed to bind stub to AST for element " + getClass() + " in " + (vFile == null ? "<unknown file>" : vFile.getPath()) + "\nFile:\n" + file + "@" + System.identityHashCode(file);
 
-    final String creationTraces = ourTraceStubAstBinding ? dumpCreationTraces(fileElement) : null;
+    String creationTraces = ourTraceStubAstBinding ? dumpCreationTraces(fileElement) : null;
 
     List<Attachment> attachments = new ArrayList<>();
     if (stubString != null) {
@@ -318,7 +318,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
    * @return a PSI element taken from parent stub (if present) or parent AST node.
    */
   protected final PsiElement getParentByStub() {
-    final StubElement<?> stub = getStub();
+    StubElement<?> stub = getStub();
     if (stub != null) {
       return stub.getParentStub().getPsi();
     }
@@ -391,13 +391,13 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     T stub = getGreenStub();
     if (stub != null) {
       //noinspection unchecked
-      final StubElement<Psi> element = stub.findChildStubByType(elementType);
+      StubElement<Psi> element = stub.findChildStubByType(elementType);
       if (element != null) {
         return element.getPsi();
       }
     }
     else {
-      final ASTNode childNode = getNode().findChildByType(elementType);
+      ASTNode childNode = getNode().findChildByType(elementType);
       if (childNode != null) {
         //noinspection unchecked
         return (Psi)childNode.getPsi();
@@ -429,7 +429,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
       return (Psi[])stub.getChildrenByType(elementType, array);
     }
     else {
-      final ASTNode[] nodes = SharedImplUtil.getChildrenOfType(getNode(), elementType);
+      ASTNode[] nodes = SharedImplUtil.getChildrenOfType(getNode(), elementType);
       Psi[] psiElements = ArrayUtil.newArray(ArrayUtil.getComponentType(array), nodes.length);
       for (int i = 0; i < nodes.length; i++) {
         //noinspection unchecked
@@ -450,7 +450,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
       return (Psi[])stub.getChildrenByType(elementType, f);
     }
     else {
-      final ASTNode[] nodes = SharedImplUtil.getChildrenOfType(getNode(), elementType);
+      ASTNode[] nodes = SharedImplUtil.getChildrenOfType(getNode(), elementType);
       Psi[] psiElements = f.create(nodes.length);
       for (int i = 0; i < nodes.length; i++) {
         //noinspection unchecked
@@ -471,7 +471,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
       return (Psi[])stub.getChildrenByType(filter, array);
     }
     else {
-      final ASTNode[] nodes = getNode().getChildren(filter);
+      ASTNode[] nodes = getNode().getChildren(filter);
       Psi[] psiElements = ArrayUtil.newArray(ArrayUtil.getComponentType(array), nodes.length);
       for (int i = 0; i < nodes.length; i++) {
         //noinspection unchecked
@@ -492,7 +492,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
       return (Psi[])stub.getChildrenByType(filter, f);
     }
     else {
-      final ASTNode[] nodes = getNode().getChildren(filter);
+      ASTNode[] nodes = getNode().getChildren(filter);
       Psi[] psiElements = f.create(nodes.length);
       for (int i = 0; i < nodes.length; i++) {
         //noinspection unchecked
@@ -517,7 +517,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
 
   @Override
   protected Object clone() {
-    final StubBasedPsiElementBase<?> copy = (StubBasedPsiElementBase<?>)super.clone();
+    StubBasedPsiElementBase<?> copy = (StubBasedPsiElementBase<?>)super.clone();
     copy.setSubstrateRef(SubstrateRef.createAstStrongRef(getNode()));
     return copy;
   }

@@ -104,7 +104,7 @@ public final class ObjectTree {
 
   @Nonnull
   private ObjectNode createNodeFor(@Nonnull Disposable object, @Nullable ObjectNode parentNode) {
-    final ObjectNode newNode = new ObjectNode(this, parentNode, object);
+    ObjectNode newNode = new ObjectNode(this, parentNode, object);
     if (parentNode == null) {
       myRootObjects.add(object);
     }
@@ -221,7 +221,7 @@ public final class ObjectTree {
         while (objectNode.getParent() != null) {
           objectNode = objectNode.getParent();
         }
-        final Throwable trace = objectNode.getTrace();
+        Throwable trace = objectNode.getTrace();
         RuntimeException exception =
                 new RuntimeException("Memory leak detected: '" + object + "' of " + object.getClass() + "\nSee the cause for the corresponding Disposer.register() stacktrace:\n", trace);
         if (throwError) {

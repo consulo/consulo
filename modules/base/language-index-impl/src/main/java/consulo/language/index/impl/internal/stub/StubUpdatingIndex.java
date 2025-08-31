@@ -75,13 +75,13 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
   public static boolean canHaveStub(@Nonnull ProjectLocator projectLocator, @Nullable Project project, @Nonnull VirtualFile file) {
     FileType fileType = SubstitutedFileType.substituteFileType(file, file.getFileType(), project == null ? projectLocator.guessProjectForFile(file) : project);
     if (fileType instanceof LanguageFileType) {
-      final Language l = ((LanguageFileType)fileType).getLanguage();
-      final ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
+      Language l = ((LanguageFileType)fileType).getLanguage();
+      ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
       if (parserDefinition == null) {
         return false;
       }
 
-      final IFileElementType elementType = parserDefinition.getFileNodeType();
+      IFileElementType elementType = parserDefinition.getFileNodeType();
       if (elementType instanceof IStubFileElementType) {
         if (((IStubFileElementType)elementType).shouldBuildStubFor(file)) {
           return true;
@@ -94,7 +94,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
         }
       }
     }
-    final BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
+    BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
     return builder != null && builder.acceptsFile(file);
   }
 
@@ -119,7 +119,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
     return new SingleEntryIndexer<SerializedStubTree>(false) {
       @Override
       @Nullable
-      public SerializedStubTree computeValue(@Nonnull final FileContent inputData) {
+      public SerializedStubTree computeValue(@Nonnull FileContent inputData) {
         return ReadAction.compute(() -> {
           SerializedStubTree serializedStubTree = null;
 
@@ -264,13 +264,13 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
 
   @Nonnull
   @Override
-  public UpdatableIndex<Integer, SerializedStubTree, FileContent> createIndexImplementation(@Nonnull final FileBasedIndexExtension<Integer, SerializedStubTree> extension,
+  public UpdatableIndex<Integer, SerializedStubTree, FileContent> createIndexImplementation(@Nonnull FileBasedIndexExtension<Integer, SerializedStubTree> extension,
                                                                                             @Nonnull IndexStorage<Integer, SerializedStubTree> storage) throws StorageException, IOException {
     if (storage instanceof MemoryIndexStorage) {
-      final MemoryIndexStorage<Integer, SerializedStubTree> memStorage = (MemoryIndexStorage<Integer, SerializedStubTree>)storage;
+      MemoryIndexStorage<Integer, SerializedStubTree> memStorage = (MemoryIndexStorage<Integer, SerializedStubTree>)storage;
       memStorage.addBufferingStateListener(new MemoryIndexStorage.BufferingStateListener() {
         @Override
-        public void bufferingStateChanged(final boolean newState) {
+        public void bufferingStateChanged(boolean newState) {
           ((StubIndexImpl)StubIndex.getInstance()).setDataBufferingEnabled(newState);
         }
 
@@ -295,7 +295,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
 
     @Override
     protected void doFlush() throws IOException, StorageException {
-      final StubIndexImpl stubIndex = getStubIndex();
+      StubIndexImpl stubIndex = getStubIndex();
       try {
         stubIndex.flush();
       }
@@ -314,7 +314,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
     }
 
     private static void checkNameStorage() throws StorageException {
-      final SerializationManagerEx serializationManager = SerializationManagerEx.getInstanceEx();
+      SerializationManagerEx serializationManager = SerializationManagerEx.getInstanceEx();
       if (serializationManager.isNameStorageCorrupted()) {
         serializationManager.repairNameStorage();
         throw new StorageException("NameStorage for stubs serialization has been corrupted");
@@ -343,7 +343,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
     }
 
     private static void removeStubIndexKeys(int inputId, @Nonnull Map<StubIndexKey, Map<Object, StubIdList>> indexedStubs) {
-      final StubIndexImpl stubIndex = (StubIndexImpl)StubIndex.getInstance();
+      StubIndexImpl stubIndex = (StubIndexImpl)StubIndex.getInstance();
       for (StubIndexKey key : indexedStubs.keySet()) {
         stubIndex.removeTransientDataForFile(key, inputId, indexedStubs.get(key).keySet());
       }
@@ -358,7 +358,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
 
     @Override
     protected void doClear() throws StorageException, IOException {
-      final StubIndexImpl stubIndex = StubIndexImpl.getInstanceOrInvalidate();
+      StubIndexImpl stubIndex = StubIndexImpl.getInstanceOrInvalidate();
       if (stubIndex != null) {
         stubIndex.clearAllIndices();
       }

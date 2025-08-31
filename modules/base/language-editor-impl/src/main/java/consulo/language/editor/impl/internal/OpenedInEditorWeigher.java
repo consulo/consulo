@@ -42,14 +42,14 @@ public class OpenedInEditorWeigher extends ProximityWeigher {
   });
 
   @Override
-  public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
+  public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
     if (location.getProject() == null){
       return null;
     }
-    final PsiFile psiFile = element.getContainingFile();
+    PsiFile psiFile = element.getContainingFile();
     if (psiFile == null) return false;
 
-    final VirtualFile virtualFile = psiFile.getOriginalFile().getVirtualFile();
+    VirtualFile virtualFile = psiFile.getOriginalFile().getVirtualFile();
     return virtualFile != null && ArrayUtil.find(OPENED_EDITORS.getValue(location), virtualFile) != -1;
   }
 }

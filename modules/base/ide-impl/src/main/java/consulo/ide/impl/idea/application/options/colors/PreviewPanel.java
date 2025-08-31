@@ -36,12 +36,12 @@ public interface PreviewPanel {
     }
 
     @Override
-    public void addListener(@Nonnull final ColorAndFontSettingsListener listener) {
+    public void addListener(@Nonnull ColorAndFontSettingsListener listener) {
 
     }
 
     @Override
-    public void blinkSelectedHighlightType(final Object selected) {
+    public void blinkSelectedHighlightType(Object selected) {
 
     }
 

@@ -39,7 +39,7 @@ public abstract class IdFilter {
   private static final Key<CachedValue<IdFilter>> OUTSIDE_PROJECT = Key.create("OUTSIDE_PROJECT");
 
   @Nonnull
-  public static IdFilter getProjectIdFilter(@Nonnull Project project, final boolean includeNonProjectItems) {
+  public static IdFilter getProjectIdFilter(@Nonnull Project project, boolean includeNonProjectItems) {
     Key<CachedValue<IdFilter>> key = includeNonProjectItems ? OUTSIDE_PROJECT : INSIDE_PROJECT;
     CachedValueProvider<IdFilter> provider =
             () -> CachedValueProvider.Result.create(buildProjectIdFilter(project, includeNonProjectItems), ProjectRootManager.getInstance(project), VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS);

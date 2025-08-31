@@ -31,7 +31,7 @@ public class DefaultCreateFromTemplateHandler implements CreateFromTemplateHandl
   }
 
   @Override
-  public boolean handlesTemplate(final FileTemplate template) {
+  public boolean handlesTemplate(FileTemplate template) {
     return true;
   }
 }

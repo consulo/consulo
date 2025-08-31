@@ -26,18 +26,18 @@ public class AnyIconKey<T> {
   private final Project myProject;
   private final int myFlags;
 
-  public AnyIconKey(@Nonnull T object, final Project project, int flags) {
+  public AnyIconKey(@Nonnull T object, Project project, int flags) {
     myObject = object;
     myProject = project;
     myFlags = flags;
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof AnyIconKey)) return false;
 
-    final AnyIconKey that = (AnyIconKey)o;
+    AnyIconKey that = (AnyIconKey)o;
 
     if (myFlags != that.myFlags) return false;
     if (!myObject.equals(that.myObject)) return false;

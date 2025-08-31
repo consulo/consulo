@@ -57,9 +57,9 @@ class VirtualFileDataImpl extends VirtualFileImpl {
     return VfsUtilCore.outputStreamAddingBOM(new ByteArrayOutputStream() {
       @Override
       public void close() {
-        final DummyFileSystem fs = (DummyFileSystem)getFileSystem();
+        DummyFileSystem fs = (DummyFileSystem)getFileSystem();
         fs.fireBeforeContentsChange(requestor, VirtualFileDataImpl.this);
-        final long oldModStamp = myModificationStamp;
+        long oldModStamp = myModificationStamp;
         myContents = toByteArray();
         myModificationStamp = newModificationStamp >= 0 ? newModificationStamp : LocalTimeCounter.currentTime();
         fs.fireContentsChanged(requestor, VirtualFileDataImpl.this, oldModStamp);

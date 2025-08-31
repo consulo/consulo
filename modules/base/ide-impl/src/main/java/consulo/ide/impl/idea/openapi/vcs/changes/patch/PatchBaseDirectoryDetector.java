@@ -42,7 +42,7 @@ public abstract class PatchBaseDirectoryDetector {
     public String baseDir;
     public int stripDirs;
 
-    public Result(final String baseDir, final int stripDirs) {
+    public Result(String baseDir, int stripDirs) {
       this.baseDir = baseDir;
       this.stripDirs = stripDirs;
     }

@@ -100,7 +100,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
    */
   private WeakReference<TabInfo> myPreviousSelection = new WeakReference<>(null);
 
-  public TabInfo(final JComponent component) {
+  public TabInfo(JComponent component) {
     myComponent = component;
     myPreferredFocusableComponent = component;
   }
@@ -131,8 +131,8 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return attributes;
   }
 
-  public TabInfo clearText(final boolean invalidate) {
-    final String old = myText.toString();
+  public TabInfo clearText(boolean invalidate) {
+    String old = myText.toString();
     myText.clear();
     if (invalidate) {
       myChangeSupport.firePropertyChange(TEXT, old, myText.toString());
@@ -141,7 +141,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
   }
 
   public TabInfo append(String fragment, SimpleTextAttributes attributes) {
-    final String old = myText.toString();
+    String old = myText.toString();
     myText.append(fragment, attributes);
     myChangeSupport.firePropertyChange(TEXT, old, myText.toString());
     return this;
@@ -217,7 +217,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return myActionsContextComponent;
   }
 
-  public TabInfo setObject(final Object object) {
+  public TabInfo setObject(Object object) {
     myObject = object;
     return this;
   }
@@ -230,12 +230,12 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return myPreferredFocusableComponent != null ? myPreferredFocusableComponent : myComponent;
   }
 
-  public TabInfo setPreferredFocusableComponent(final JComponent component) {
+  public TabInfo setPreferredFocusableComponent(JComponent component) {
     myPreferredFocusableComponent = component;
     return this;
   }
 
-  public void setLastFocusOwner(final JComponent owner) {
+  public void setLastFocusOwner(JComponent owner) {
     myLastFocusOwner = new WeakReference<JComponent>(owner);
   }
 
@@ -247,7 +247,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return myTabActionPlace;
   }
 
-  public TabInfo setTabLabelActions(final ActionGroup tabActions, String place) {
+  public TabInfo setTabLabelActions(ActionGroup tabActions, String place) {
     ActionGroup old = myTabLabelActions;
     myTabLabelActions = tabActions;
     myTabActionPlace = place;
@@ -260,7 +260,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return SoftReference.dereference(myLastFocusOwner);
   }
 
-  public TabInfo setAlertIcon(final Image alertIcon) {
+  public TabInfo setAlertIcon(Image alertIcon) {
     Image old = myAlertIcon;
     myAlertIcon = alertIcon;
     myChangeSupport.firePropertyChange(ALERT_ICON, old, myAlertIcon);
@@ -281,7 +281,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return myBlinkCount;
   }
 
-  public void setBlinkCount(final int blinkCount) {
+  public void setBlinkCount(int blinkCount) {
     myBlinkCount = blinkCount;
   }
 
@@ -328,7 +328,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return this;
   }
 
-  public TabInfo setDefaultForeground(final Color fg) {
+  public TabInfo setDefaultForeground(Color fg) {
     myDefaultForeground = fg;
     myDefaultAttributes = null;
     update();
@@ -339,7 +339,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return myDefaultForeground;
   }
 
-  public TabInfo setDefaultWaveColor(final Color waveColor) {
+  public TabInfo setDefaultWaveColor(Color waveColor) {
     myDefaultWaveColor = waveColor;
     myDefaultAttributes = null;
     update();
@@ -356,7 +356,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     update();
   }
 
-  public TabInfo setTooltipText(final String text) {
+  public TabInfo setTooltipText(String text) {
     String old = myTooltipText;
     if (!Comparing.equal(old, text)) {
       myTooltipText = text;

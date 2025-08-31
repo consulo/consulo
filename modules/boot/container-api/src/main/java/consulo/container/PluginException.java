@@ -39,7 +39,7 @@ public class PluginException extends RuntimeException {
     myPluginId = pluginId;
   }
 
-  public PluginException(final String message, final PluginId pluginId) {
+  public PluginException(String message, PluginId pluginId) {
     super(message);
     myPluginId = pluginId;
   }

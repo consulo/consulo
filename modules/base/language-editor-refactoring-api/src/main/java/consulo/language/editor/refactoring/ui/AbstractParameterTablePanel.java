@@ -86,9 +86,9 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
     myTable.setPreferredScrollableViewportSize(new Dimension(250, myTable.getRowHeight() * 5));
     myTable.setShowGrid(false);
     myTable.setIntercellSpacing(new Dimension(0, 0));
-    @NonNls final InputMap inputMap = myTable.getInputMap();
+    @NonNls InputMap inputMap = myTable.getInputMap();
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "enable_disable");
-    @NonNls final ActionMap actionMap = myTable.getActionMap();
+    @NonNls ActionMap actionMap = myTable.getActionMap();
     actionMap.put("enable_disable", new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         if (myTable.isEditing()) return;
@@ -230,7 +230,7 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
       if (row < 0 || row >= getVariableData().length) return;
       if (targetRow < 0 || targetRow >= getVariableData().length) return;
 
-      final P currentItem = getVariableData()[row];
+      P currentItem = getVariableData()[row];
       AbstractParameterTablePanel.this.exchangeRows(row, targetRow, currentItem);
 
       myTableModel.fireTableRowsUpdated(Math.min(targetRow, row), Math.max(targetRow, row));

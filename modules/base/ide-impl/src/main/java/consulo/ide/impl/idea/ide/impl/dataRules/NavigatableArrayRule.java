@@ -32,7 +32,7 @@ public class NavigatableArrayRule implements GetDataRule<Navigatable[]> {
 
   @Override
   public Navigatable[] getData(@Nonnull DataProvider dataProvider) {
-    final Navigatable element = dataProvider.getDataUnchecked(Navigatable.KEY);
+    Navigatable element = dataProvider.getDataUnchecked(Navigatable.KEY);
     return element == null ? null : new Navigatable[]{element};
   }
 }

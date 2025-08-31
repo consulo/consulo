@@ -42,16 +42,16 @@ public abstract class Animator implements Disposable {
   private boolean myInitialStep;
   private volatile boolean myDisposed;
 
-  public Animator(@NonNls final String name,
-                  final int totalFrames,
-                  final int cycleDuration,
+  public Animator(@NonNls String name,
+                  int totalFrames,
+                  int cycleDuration,
                   boolean repeatable) {
     this(name, totalFrames, cycleDuration, repeatable, true);
   }
 
-  public Animator(@NonNls final String name,
-                  final int totalFrames,
-                  final int cycleDuration,
+  public Animator(@NonNls String name,
+                  int totalFrames,
+                  int cycleDuration,
                   boolean repeatable,
                   boolean forward) {
     myName = name;

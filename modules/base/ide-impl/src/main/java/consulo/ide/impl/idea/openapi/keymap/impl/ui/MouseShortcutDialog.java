@@ -224,7 +224,7 @@ class MouseShortcutDialog extends DialogWrapper{
 
     // Detect conflicts
 
-    final MouseShortcut mouseShortcut=new MouseShortcut(myButton,myModifiers,getClickCount());
+    MouseShortcut mouseShortcut=new MouseShortcut(myButton,myModifiers,getClickCount());
 
     if (myButton > 3 && getClickCount() == 2) {
       myTarConflicts.setForeground(JBColor.RED);

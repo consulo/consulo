@@ -46,13 +46,13 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
 
   @Override
   @RequiredUIAccess
-  public boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
+  public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
     XLineBreakpointType<?>[] breakpointTypes = XDebuggerUtil.getInstance().getLineBreakpointTypes();
-    final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+    XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
     for (XSourcePosition position : XDebuggerUtilImpl.getAllCaretsPositions(project, event.getDataContext())) {
       for (XLineBreakpointType<?> breakpointType : breakpointTypes) {
-        final VirtualFile file = position.getFile();
-        final int line = position.getLine();
+        VirtualFile file = position.getFile();
+        int line = position.getLine();
         if (XLineBreakpointTypeResolver.forFile(project, file, line) != null || breakpointManager.findBreakpointAtLine(breakpointType, file, line) != null) {
           return true;
         }
@@ -62,7 +62,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
   }
 
   @Override
-  public void perform(@Nonnull final Project project, final AnActionEvent event) {
+  public void perform(@Nonnull Project project, AnActionEvent event) {
     Editor editor = event.getData(Editor.KEY);
     // do not toggle more than once on the same line
     Set<Integer> processedLines = new HashSet<>();

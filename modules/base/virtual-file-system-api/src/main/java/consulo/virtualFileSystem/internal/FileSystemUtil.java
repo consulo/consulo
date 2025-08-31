@@ -82,7 +82,7 @@ public final class FileSystemUtil {
    */
   public static boolean isSymLink(@Nonnull String path) {
     if (Platform.current().fs().areSymLinksSupported()) {
-      final FileAttributes attributes = getAttributes(path);
+      FileAttributes attributes = getAttributes(path);
       return attributes != null && attributes.isSymLink();
     }
     return false;
@@ -98,7 +98,7 @@ public final class FileSystemUtil {
   @Nullable
   public static String resolveSymLink(@Nonnull String path) {
     try {
-      final String realPath = ourMediator.resolveSymLink(path);
+      String realPath = ourMediator.resolveSymLink(path);
       if (realPath != null && new File(realPath).exists()) {
         return realPath;
       }

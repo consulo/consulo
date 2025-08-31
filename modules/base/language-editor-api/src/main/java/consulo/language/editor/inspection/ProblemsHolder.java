@@ -126,7 +126,7 @@ public interface ProblemsHolder {
     @Deprecated
     @RequiredReadAction
     default void registerProblem(
-        @Nonnull final PsiElement psiElement,
+        @Nonnull PsiElement psiElement,
         @Nullable TextRange rangeInElement,
         @Nonnull String descriptionTemplate,
         @Nullable LocalQuickFix... fixes
@@ -142,7 +142,7 @@ public interface ProblemsHolder {
 
     @Nonnull
     default ProblemDescriptor[] getResultsArray() {
-        final List<ProblemDescriptor> problems = getResults();
+        List<ProblemDescriptor> problems = getResults();
         return problems.toArray(new ProblemDescriptor[problems.size()]);
     }
 

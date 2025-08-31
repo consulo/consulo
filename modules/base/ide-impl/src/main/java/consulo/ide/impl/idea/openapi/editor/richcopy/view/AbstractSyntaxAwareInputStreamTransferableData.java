@@ -99,7 +99,7 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
     }
 
     int maxLength = Registry.intValue("editor.richcopy.max.size.megabytes") * FileUtil.MEGABYTE;
-    final StringBuilder buffer = StringBuilderSpinAllocator.alloc();
+    StringBuilder buffer = StringBuilderSpinAllocator.alloc();
     try {
       try {
         build(buffer, maxLength);

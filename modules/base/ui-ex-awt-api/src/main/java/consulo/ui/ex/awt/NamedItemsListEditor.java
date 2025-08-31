@@ -215,7 +215,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
     @Nullable
     protected UnnamedConfigurable getItemConfigurable(T item) {
-        final SimpleReference<UnnamedConfigurable> result = new SimpleReference<>();
+        SimpleReference<UnnamedConfigurable> result = new SimpleReference<>();
         TreeUtil.traverse(
             (TreeNode)myTree.getModel().getRoot(),
             node -> {

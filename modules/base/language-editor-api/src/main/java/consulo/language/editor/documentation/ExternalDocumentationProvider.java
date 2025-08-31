@@ -27,7 +27,7 @@ import java.util.List;
  */
 public interface ExternalDocumentationProvider {
   @Nullable
-  String fetchExternalDocumentation(final Project project, PsiElement element, final List<String> docUrls);
+  String fetchExternalDocumentation(Project project, PsiElement element, List<String> docUrls);
 
   /**
    * Quick check for existence of external documentation for specified element. Called from action update, so must be fast.

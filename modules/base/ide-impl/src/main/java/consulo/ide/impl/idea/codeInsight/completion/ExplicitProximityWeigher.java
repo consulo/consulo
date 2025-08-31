@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
 public class ExplicitProximityWeigher extends CompletionWeigher {
 
   @Override
-  public Integer weigh(@Nonnull final LookupElement item, @Nonnull final CompletionLocation location) {
+  public Integer weigh(@Nonnull LookupElement item, @Nonnull CompletionLocation location) {
     PrioritizedLookupElement prioritized = item.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
     return prioritized != null ? prioritized.getExplicitProximity() : 0;
   }

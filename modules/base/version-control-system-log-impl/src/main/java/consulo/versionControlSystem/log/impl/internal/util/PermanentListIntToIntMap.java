@@ -26,7 +26,7 @@ public class PermanentListIntToIntMap extends AbstractIntToIntMap implements Int
   }
 
   @Nonnull
-  public static IntToIntMap newInstance(@Nonnull final Flags visibleIndexes, int shortSize, int blockSize) {
+  public static IntToIntMap newInstance(@Nonnull Flags visibleIndexes, int shortSize, int blockSize) {
     if (shortSize < 0) throw new NegativeArraySizeException("shortSize < 0: " + shortSize);
     if (shortSize == 0) return createEmptyIntToIntMap(visibleIndexes);
 

@@ -47,7 +47,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
     }
   }
 
-  protected abstract void perform(final XValueNodeImpl node, @Nonnull String nodeName, final AnActionEvent e);
+  protected abstract void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e);
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
@@ -55,7 +55,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
     e.getPresentation().setEnabled(node != null && isEnabled(node, e));
   }
 
-  protected boolean isEnabled(final @Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
     return node.getName() != null;
   }
 
@@ -79,7 +79,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
   }
 
   @Nullable
-  public static XValueNodeImpl getSelectedNode(final DataContext dataContext) {
+  public static XValueNodeImpl getSelectedNode(DataContext dataContext) {
     XDebuggerTree tree = XDebuggerTree.getTree(dataContext);
     if (tree == null) return null;
 

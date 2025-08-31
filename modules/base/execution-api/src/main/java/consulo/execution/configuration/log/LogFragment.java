@@ -25,7 +25,7 @@ public class LogFragment {
   private final String myText;
   private final Key myOutputType;
 
-  public LogFragment(final String text, final Key outputType) {
+  public LogFragment(String text, Key outputType) {
     myText = text;
     myOutputType = outputType;
   }

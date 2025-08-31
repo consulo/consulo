@@ -114,7 +114,7 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
   }
 
   @Override
-  public boolean shouldEnterElement(final Object element) {
+  public boolean shouldEnterElement(Object element) {
     return false;
   }
 

@@ -43,7 +43,7 @@ public class NullableDataExternalizer<T> implements DataExternalizer<T> {
 
   @Nullable
   public T read(DataInput in) throws IOException {
-    final boolean isDefined = in.readBoolean();
+    boolean isDefined = in.readBoolean();
     if (isDefined) {
       return myNotNullExternalizer.read(in);
     }

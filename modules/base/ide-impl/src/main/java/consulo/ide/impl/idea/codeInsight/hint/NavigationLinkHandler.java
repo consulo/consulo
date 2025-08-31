@@ -40,21 +40,21 @@ public class NavigationLinkHandler extends TooltipLinkHandler {
   }
 
   @Override
-  public boolean handleLink(@Nonnull final String refSuffix, @Nonnull final Editor editor) {
-    final int pos = refSuffix.lastIndexOf(':');
+  public boolean handleLink(@Nonnull String refSuffix, @Nonnull Editor editor) {
+    int pos = refSuffix.lastIndexOf(':');
     if (pos <= 0 || pos == refSuffix.length() - 1) {
       LOG.error("Malformed suffix: " + refSuffix);
       return true;
     }
 
-    final String path = refSuffix.substring(0, pos);
-    final VirtualFile vFile = LocalFileSystem.getInstance().findFileByPath(path);
+    String path = refSuffix.substring(0, pos);
+    VirtualFile vFile = LocalFileSystem.getInstance().findFileByPath(path);
     if (vFile == null) {
       LOG.error("Unknown file: " + path);
       return true;
     }
 
-    final int offset;
+    int offset;
     try {
       offset = Integer.parseInt(refSuffix.substring(pos + 1));
     }

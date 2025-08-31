@@ -33,7 +33,7 @@ public class LineData implements CoverageData {
 
     private JumpsAndSwitches myJumpsAndSwitches;
 
-    public LineData(final int line, final String desc) {
+    public LineData(int line, String desc) {
         myLineNumber = line;
         myMethodSignature = desc;
     }
@@ -67,7 +67,7 @@ public class LineData implements CoverageData {
             JumpData[] jumps = getOrCreateJumpsAndSwitches().getJumps();
             if (jumps != null) {
                 for (int i = 0; i < jumps.length; i++) {
-                    final JumpData jumpData = jumps[i];
+                    JumpData jumpData = jumps[i];
                     if ((jumpData.getFalseHits() > 0 ? 1 : 0) + (jumpData.getTrueHits() > 0 ? 1 : 0) < 2) {
                         myStatus = LineCoverage.PARTIAL;
                         return myStatus;
@@ -78,7 +78,7 @@ public class LineData implements CoverageData {
             SwitchData[] switches = getOrCreateJumpsAndSwitches().getSwitches();
             if (switches != null) {
                 for (int s = 0; s < switches.length; s++) {
-                    final SwitchData switchData = switches[s];
+                    SwitchData switchData = switches[s];
                     if (switchData.getDefaultHits() == 0) {
                         myStatus = LineCoverage.PARTIAL;
                         return myStatus;
@@ -98,7 +98,7 @@ public class LineData implements CoverageData {
         return myStatus;
     }
 
-    public void save(final DataOutputStream os) throws IOException {
+    public void save(DataOutputStream os) throws IOException {
         CoverageIOUtil.writeINT(os, myLineNumber);
         CoverageIOUtil.writeUTF(os, myUniqueTestName != null ? myUniqueTestName : "");
         CoverageIOUtil.writeINT(os, myHits);
@@ -112,7 +112,7 @@ public class LineData implements CoverageData {
         }
     }
 
-    public void merge(final CoverageData data) {
+    public void merge(CoverageData data) {
         LineData lineData = (LineData)data;
         myHits += lineData.myHits;
         if (myJumpsAndSwitches != null || lineData.myJumpsAndSwitches != null) {
@@ -129,7 +129,7 @@ public class LineData implements CoverageData {
         }
     }
 
-    public JumpData addJump(final int jump) {
+    public JumpData addJump(int jump) {
         return getOrCreateJumpsAndSwitches().addJump(jump);
     }
 
@@ -137,8 +137,8 @@ public class LineData implements CoverageData {
         return getOrCreateJumpsAndSwitches().getJumpData(jump);
     }
 
-    public void touchBranch(final int jump, final boolean hit) {
-        final JumpData jumpData = getJumpData(jump);
+    public void touchBranch(int jump, boolean hit) {
+        JumpData jumpData = getJumpData(jump);
         if (jumpData != null) {
             if (hit) {
                 jumpData.touchTrueHit();
@@ -149,7 +149,7 @@ public class LineData implements CoverageData {
         }
     }
 
-    public SwitchData addSwitch(final int switchNumber, final int[] keys) {
+    public SwitchData addSwitch(int switchNumber, int[] keys) {
         return getOrCreateJumpsAndSwitches().addSwitch(switchNumber, keys);
     }
 
@@ -157,7 +157,7 @@ public class LineData implements CoverageData {
         return getOrCreateJumpsAndSwitches().getSwitchData(switchNumber);
     }
 
-    public SwitchData addSwitch(final int switchNumber, final int min, final int max) {
+    public SwitchData addSwitch(int switchNumber, int min, int max) {
         int[] keys = new int[max - min + 1];
         for (int i = min; i <= max; i++) {
             keys[i - min] = i;
@@ -165,8 +165,8 @@ public class LineData implements CoverageData {
         return addSwitch(switchNumber, keys);
     }
 
-    public void touchBranch(final int switchNumber, final int key) {
-        final SwitchData switchData = getSwitchData(switchNumber);
+    public void touchBranch(int switchNumber, int key) {
+        SwitchData switchData = getSwitchData(switchNumber);
         if (switchData != null) {
             switchData.touch(key);
         }
@@ -180,23 +180,23 @@ public class LineData implements CoverageData {
         return myMethodSignature;
     }
 
-    public void setStatus(final byte status) {
+    public void setStatus(byte status) {
         myStatus = status;
     }
 
-    public void setTrueHits(final int jumpNumber, final int trueHits) {
+    public void setTrueHits(int jumpNumber, int trueHits) {
         addJump(jumpNumber).setTrueHits(trueHits);
     }
 
-    public void setFalseHits(final int jumpNumber, final int falseHits) {
+    public void setFalseHits(int jumpNumber, int falseHits) {
         addJump(jumpNumber).setFalseHits(falseHits);
     }
 
-    public void setDefaultHits(final int switchNumber, final int[] keys, final int defaultHit) {
+    public void setDefaultHits(int switchNumber, int[] keys, int defaultHit) {
         addSwitch(switchNumber, keys).setDefaultHits(defaultHit);
     }
 
-    public void setSwitchHits(final int switchNumber, final int[] keys, final int[] hits) {
+    public void setSwitchHits(int switchNumber, int[] keys, int[] hits) {
         addSwitch(switchNumber, keys).setKeysAndHits(keys, hits);
     }
 
@@ -214,7 +214,7 @@ public class LineData implements CoverageData {
         return getOrCreateJumpsAndSwitches().getSwitches();
     }
 
-    public void setHits(final int hits) {
+    public void setHits(int hits) {
         myHits = hits;
     }
 
@@ -236,7 +236,7 @@ public class LineData implements CoverageData {
         return myUniqueTestName != null && myUniqueTestName.length() > 0;
     }
 
-    public void removeJump(final int jump) {
+    public void removeJump(int jump) {
         if (myJumpsAndSwitches == null) {
             return;
         }

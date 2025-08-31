@@ -171,7 +171,7 @@ public class BeanBinding extends Binding {
         return weights;
     }
 
-    public void sortBindings(@Nonnull final Map<String, Float> weights) {
+    public void sortBindings(@Nonnull Map<String, Float> weights) {
         Arrays.sort(myBindings, (o1, o2) -> {
             String n1 = o1.getAccessor().getName();
             String n2 = o2.getAccessor().getName();
@@ -302,7 +302,7 @@ public class BeanBinding extends Binding {
     }
 
     private static void collectPropertyAccessors(@Nonnull Class<?> aClass, @Nonnull List<MutableAccessor> accessors) {
-        final Map<String, Couple<Method>> candidates = new TreeMap<>(); // (name,(getter,setter))
+        Map<String, Couple<Method>> candidates = new TreeMap<>(); // (name,(getter,setter))
         for (Method method : aClass.getMethods()) {
             if (!Modifier.isPublic(method.getModifiers())) {
                 continue;

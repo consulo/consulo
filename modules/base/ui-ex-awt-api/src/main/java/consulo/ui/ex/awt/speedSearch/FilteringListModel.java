@@ -76,7 +76,7 @@ public class FilteringListModel<T> extends AbstractListModel<T> {
     removeAllElements();
     int count = 0;
     for (int i = 0; i < myOriginalModel.getSize(); i++) {
-      final T elt = myOriginalModel.getElementAt(i);
+      T elt = myOriginalModel.getElementAt(i);
       if (passElement(elt)) {
         addToFiltered(elt);
         count++;

@@ -59,11 +59,11 @@ public class LogFileOptions implements JDOMExternalizable {
   public LogFileOptions() {
   }
 
-  public LogFileOptions(String name, String path, boolean enabled, boolean skipContent, final boolean showAll) {
+  public LogFileOptions(String name, String path, boolean enabled, boolean skipContent, boolean showAll) {
     this(name, path, null, enabled, skipContent, showAll);
   }
 
-  public LogFileOptions(String name, String path, @Nullable final Charset charset, boolean enabled, boolean skipContent, final boolean showAll) {
+  public LogFileOptions(String name, String path, @Nullable Charset charset, boolean enabled, boolean skipContent, boolean showAll) {
     myName = name;
     myPathPattern = path;
     myEnabled = enabled;
@@ -82,16 +82,16 @@ public class LogFileOptions implements JDOMExternalizable {
 
   public Set<String> getPaths(){
     Set<String> result = new HashSet<String>();
-    final File logFile = new File(myPathPattern);
+    File logFile = new File(myPathPattern);
     if (logFile.exists()){
       result.add(myPathPattern);
       return result;
     }
-    final int dirIndex = myPathPattern.lastIndexOf(File.separator);
+    int dirIndex = myPathPattern.lastIndexOf(File.separator);
     if (dirIndex != -1) {
-      final ArrayList<File> files = new ArrayList<File>();
-      final String basePath = myPathPattern.substring(0, dirIndex);
-      final String pattern = myPathPattern.substring(dirIndex + File.separator.length());
+      ArrayList<File> files = new ArrayList<File>();
+      String basePath = myPathPattern.substring(0, dirIndex);
+      String pattern = myPathPattern.substring(dirIndex + File.separator.length());
       collectMatchedFiles(new File(basePath), Pattern.compile(FileUtil.convertAntToRegexp(pattern)), files);
       if (!files.isEmpty()) {
         if (myShowAll) {
@@ -119,12 +119,12 @@ public class LogFileOptions implements JDOMExternalizable {
     return result;
   }
 
-  public static void collectMatchedFiles(final File root, final Pattern pattern, final List<File> files) {
-    final File[] dirs = root.listFiles();
+  public static void collectMatchedFiles(File root, Pattern pattern, List<File> files) {
+    File[] dirs = root.listFiles();
     if (dirs == null) return;
     for (File dir : dirs) {
       if (dir.isFile()) {
-        final String path = FileUtil.toSystemIndependentName(FileUtil.getRelativePath(root, dir));
+        String path = FileUtil.toSystemIndependentName(FileUtil.getRelativePath(root, dir));
         if (pattern.matcher(path).matches()) {
           files.add(dir);
         }
@@ -145,23 +145,23 @@ public class LogFileOptions implements JDOMExternalizable {
   }
 
 
-  public void setName(final String name) {
+  public void setName(String name) {
     myName = name;
   }
 
-  public void setPathPattern(final String pathPattern) {
+  public void setPathPattern(String pathPattern) {
     myPathPattern = pathPattern;
   }
 
-  public void setSkipContent(final boolean skipContent) {
+  public void setSkipContent(boolean skipContent) {
     mySkipContent = skipContent;
   }
 
-  public void setShowAll(final boolean showAll) {
+  public void setShowAll(boolean showAll) {
     myShowAll = showAll;
   }
 
-  public void setLast(final boolean last) {
+  public void setLast(boolean last) {
     myShowAll = !last;
   }
 
@@ -188,17 +188,17 @@ public class LogFileOptions implements JDOMExternalizable {
     Boolean checked = Boolean.valueOf(element.getAttributeValue(CHECKED));
     setEnable(checked.booleanValue());
 
-    final String skipped = element.getAttributeValue(SKIPPED);
+    String skipped = element.getAttributeValue(SKIPPED);
     Boolean skip = skipped != null ? Boolean.valueOf(skipped) : Boolean.TRUE;
     setSkipContent(skip.booleanValue());
 
-    final String all = element.getAttributeValue(SHOW_ALL);
+    String all = element.getAttributeValue(SHOW_ALL);
     Boolean showAll = skipped != null ? Boolean.valueOf(all) : Boolean.TRUE;
     setShowAll(showAll.booleanValue());
 
     setName(element.getAttributeValue(ALIAS));
 
-    final String charsetStr = element.getAttributeValue(CHARSET);
+    String charsetStr = element.getAttributeValue(CHARSET);
     try {
       setCharset(Charset.forName(charsetStr));
     }

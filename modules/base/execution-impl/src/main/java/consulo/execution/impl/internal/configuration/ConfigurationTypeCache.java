@@ -55,12 +55,12 @@ public class ConfigurationTypeCache {
   }
 
   @Nullable
-  public ConfigurationType getConfigurationType(final String typeName) {
+  public ConfigurationType getConfigurationType(String typeName) {
     return myTypesById.get(typeName);
   }
 
   @Nullable
-  public ConfigurationFactory findFactoryOfTypeNameId(final String typeId, final String factoryName) {
+  public ConfigurationFactory findFactoryOfTypeNameId(String typeId, String factoryName) {
     ConfigurationType type = myTypesById.get(typeId);
     if (type == null) {
       type = myTypesById.get(UnknownConfigurationType.NAME);
@@ -70,15 +70,15 @@ public class ConfigurationTypeCache {
   }
 
   @Nullable
-  private static ConfigurationFactory findFactoryOfTypeById(final ConfigurationType type, final String facotryId) {
+  private static ConfigurationFactory findFactoryOfTypeById(ConfigurationType type, String facotryId) {
     if (facotryId == null) return null;
 
     if (type instanceof UnknownConfigurationType) {
       return type.getConfigurationFactories()[0];
     }
 
-    final ConfigurationFactory[] factories = type.getConfigurationFactories();
-    for (final ConfigurationFactory factory : factories) {
+    ConfigurationFactory[] factories = type.getConfigurationFactories();
+    for (ConfigurationFactory factory : factories) {
       if (facotryId.equals(factory.getId())) return factory;
     }
 

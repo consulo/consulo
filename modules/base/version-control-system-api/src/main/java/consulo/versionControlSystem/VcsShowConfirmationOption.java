@@ -23,7 +23,7 @@ public interface VcsShowConfirmationOption {
 
     private final int myId;
 
-    Value(final int id) {
+    Value(int id) {
       myId = id;
     }
 

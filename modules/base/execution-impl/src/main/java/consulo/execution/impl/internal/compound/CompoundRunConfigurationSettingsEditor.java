@@ -76,7 +76,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
         myList.setVisibleRowCount(15);
     }
 
-    private boolean canBeAdded(@Nonnull RunConfiguration candidate, @Nonnull final CompoundRunConfiguration root) {
+    private boolean canBeAdded(@Nonnull RunConfiguration candidate, @Nonnull CompoundRunConfiguration root) {
         if (candidate.getType() == root.getType() && candidate.getName().equals(root.getName())) {
             return false;
         }
@@ -129,9 +129,9 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
     @Nonnull
     @Override
     protected JComponent createEditor() {
-        final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList);
+        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList);
         return decorator.disableUpDownActions().setAddAction(button -> {
-            final List<RunConfiguration> all = new ArrayList<>();
+            List<RunConfiguration> all = new ArrayList<>();
             for (ConfigurationType type : myRunManager.getConfigurationFactories()) {
                 if (!(type instanceof UnknownConfigurationType)) {
                     for (RunnerAndConfigurationSettings settings : myRunManager.getConfigurationSettingsList(type)) {

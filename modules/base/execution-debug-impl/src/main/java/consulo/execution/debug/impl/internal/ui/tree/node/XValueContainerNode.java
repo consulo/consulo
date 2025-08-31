@@ -51,7 +51,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   private volatile boolean myObsolete;
   private volatile boolean myAlreadySorted;
 
-  protected XValueContainerNode(XDebuggerTree tree, final XDebuggerTreeNode parent, @Nonnull ValueContainer valueContainer) {
+  protected XValueContainerNode(XDebuggerTree tree, XDebuggerTreeNode parent, @Nonnull ValueContainer valueContainer) {
     super(tree, parent, true);
     myValueContainer = valueContainer;
   }
@@ -77,7 +77,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Override
-  public void addChildren(@Nonnull final XValueChildrenList children, final boolean last) {
+  public void addChildren(@Nonnull XValueChildrenList children, boolean last) {
     if (myObsolete) return;
     invokeNodeUpdate(() -> {
       if (myObsolete) return;
@@ -116,8 +116,8 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
       myCachedAllChildren = null;
       fireNodesInserted(newChildren);
       if (last && myTemporaryMessageChildren != null) {
-        final int[] ints = getNodesIndices(myTemporaryMessageChildren);
-        final TreeNode[] removed = myTemporaryMessageChildren.toArray(new TreeNode[myTemporaryMessageChildren.size()]);
+        int[] ints = getNodesIndices(myTemporaryMessageChildren);
+        TreeNode[] removed = myTemporaryMessageChildren.toArray(new TreeNode[myTemporaryMessageChildren.size()]);
         myCachedAllChildren = null;
         myTemporaryMessageChildren = null;
         fireNodesRemoved(ints, removed);
@@ -148,7 +148,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Override
-  public void tooManyChildren(final int remaining) {
+  public void tooManyChildren(int remaining) {
     invokeNodeUpdate(() -> setTemporaryMessageNode(MessageTreeNode.createEllipsisNode(myTree, this, remaining)));
   }
 
@@ -170,12 +170,12 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Override
-  public void setErrorMessage(final @Nonnull String errorMessage) {
+  public void setErrorMessage(@Nonnull String errorMessage) {
     setErrorMessage(errorMessage, null);
   }
 
   @Override
-  public void setErrorMessage(@Nonnull final String errorMessage, @Nullable final XDebuggerTreeNodeHyperlink link) {
+  public void setErrorMessage(@Nonnull String errorMessage, @Nullable XDebuggerTreeNodeHyperlink link) {
     setMessage(
       errorMessage,
       XDebuggerUIConstants.ERROR_MESSAGE_ICON,
@@ -187,10 +187,10 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
 
   @Override
   public void setMessage(
-    @Nonnull final String message,
-    final Image icon,
-    @Nonnull final SimpleTextAttributes attributes,
-    @Nullable final XDebuggerTreeNodeHyperlink link
+    @Nonnull String message,
+    Image icon,
+    @Nonnull SimpleTextAttributes attributes,
+    @Nullable XDebuggerTreeNodeHyperlink link
   ) {
     invokeNodeUpdate(
       () -> setMessageNodes(
@@ -208,11 +208,11 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     );
   }
 
-  private void setTemporaryMessageNode(final MessageTreeNode messageNode) {
+  private void setTemporaryMessageNode(MessageTreeNode messageNode) {
     setMessageNodes(Collections.singletonList(messageNode), true);
   }
 
-  private void setMessageNodes(final List<MessageTreeNode> messages, boolean temporary) {
+  private void setMessageNodes(List<MessageTreeNode> messages, boolean temporary) {
     myCachedAllChildren = null;
     List<MessageTreeNode> toDelete = temporary ? myTemporaryMessageChildren : myMessageChildren;
     if (toDelete != null) {

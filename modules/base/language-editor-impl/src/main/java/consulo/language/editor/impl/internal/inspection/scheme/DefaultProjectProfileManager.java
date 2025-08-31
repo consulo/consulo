@@ -78,7 +78,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
 
   private static final String PROJECT_DEFAULT_PROFILE_NAME = "Project Default";
 
-  public DefaultProjectProfileManager(@Nonnull final Project project, @Nonnull ApplicationProfileManager applicationProfileManager, @Nonnull DependencyValidationManager holder) {
+  public DefaultProjectProfileManager(@Nonnull Project project, @Nonnull ApplicationProfileManager applicationProfileManager, @Nonnull DependencyValidationManager holder) {
     myProject = project;
     myHolder = holder;
     myApplicationProfileManager = applicationProfileManager;
@@ -110,7 +110,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     String[] sortedProfiles = myProfiles.keySet().toArray(new String[myProfiles.size()]);
     Arrays.sort(sortedProfiles);
     for (String profile : sortedProfiles) {
-      final Profile projectProfile = myProfiles.get(profile);
+      Profile projectProfile = myProfiles.get(profile);
       if (projectProfile != null) {
         Element profileElement = new Element(PROFILE);
         try {
@@ -231,7 +231,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     }
     if (myProjectProfile == null || myProfiles.isEmpty()) {
       setProjectProfile(PROJECT_DEFAULT_PROFILE_NAME);
-      final Profile projectProfile = myApplicationProfileManager.createProfile();
+      Profile projectProfile = myApplicationProfileManager.createProfile();
       projectProfile.copyFrom(myApplicationProfileManager.getRootProfile());
       projectProfile.setProjectLevel(true);
       projectProfile.setName(PROJECT_DEFAULT_PROFILE_NAME);
@@ -240,7 +240,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     else if (!myProfiles.containsKey(myProjectProfile)) {
       setProjectProfile(myProfiles.keySet().iterator().next());
     }
-    final Profile profile = myProfiles.get(myProjectProfile);
+    Profile profile = myProfiles.get(myProjectProfile);
     profile.setProfileManager(this);
     return profile;
   }

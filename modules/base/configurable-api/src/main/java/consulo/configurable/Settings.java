@@ -42,7 +42,7 @@ public interface Settings {
 
   @Deprecated
   @DeprecationInfo("Use #select(Class)")
-  AsyncResult<Void> select(Configurable configurable, final String text);
+  AsyncResult<Void> select(Configurable configurable, String text);
 
   @Deprecated
   @DeprecationInfo("Use #select(Class)")

@@ -27,11 +27,11 @@ public class VcsShowConfirmationOptionImpl extends VcsAbstractSetting implements
   private final String myShowConfirmationCaption;
   private final String myDoActionSilentlyCaption;
 
-  public VcsShowConfirmationOptionImpl(final String displayName,
-                                       final String caption,
-                                       final String doNothingCaption,
-                                       final String showConfirmationCaption,
-                                       final String doActionSilentlyCaption) {
+  public VcsShowConfirmationOptionImpl(String displayName,
+                                       String caption,
+                                       String doNothingCaption,
+                                       String showConfirmationCaption,
+                                       String doActionSilentlyCaption) {
     super(displayName);
     myCaption = caption;
     myDoNothingCaption = doNothingCaption;

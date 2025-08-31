@@ -46,8 +46,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
   public VirtualFileTrackerImpl(VirtualFileManager virtualFileManager) {
     virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
       @Override
-      public void propertyChanged(final VirtualFilePropertyEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void propertyChanged(VirtualFilePropertyEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -56,8 +56,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void contentsChanged(final VirtualFileEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void contentsChanged(VirtualFileEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -66,8 +66,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void fileCreated(final VirtualFileEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void fileCreated(VirtualFileEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
                                              
         for (VirtualFileListener listener : listeners) {
@@ -76,8 +76,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void fileDeleted(final VirtualFileEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void fileDeleted(VirtualFileEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -86,8 +86,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void fileMoved(final VirtualFileMoveEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void fileMoved(VirtualFileMoveEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -96,8 +96,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void fileCopied(final VirtualFileCopyEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void fileCopied(VirtualFileCopyEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -106,8 +106,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void beforePropertyChange(final VirtualFilePropertyEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void beforePropertyChange(VirtualFilePropertyEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -116,8 +116,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void beforeContentsChange(final VirtualFileEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void beforeContentsChange(VirtualFileEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -126,8 +126,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void beforeFileDeletion(final VirtualFileEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void beforeFileDeletion(VirtualFileEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -136,8 +136,8 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
       }
 
       @Override
-      public void beforeFileMovement(final VirtualFileMoveEvent event) {
-        final Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
+      public void beforeFileMovement(VirtualFileMoveEvent event) {
+        Collection<VirtualFileListener> listeners = getListeners(event.getFile(), event.isFromRefresh());
         if (listeners == null) return;
 
         for (VirtualFileListener listener : listeners) {
@@ -182,7 +182,7 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
     }
   }
 
-  private static Set<VirtualFileListener> getSet(final String fileUrl, final Map<String, Set<VirtualFileListener>> map) {
+  private static Set<VirtualFileListener> getSet(String fileUrl, Map<String, Set<VirtualFileListener>> map) {
     Set<VirtualFileListener> listeners = map.get(fileUrl);
 
     if (listeners == null) {
@@ -197,7 +197,7 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
     Set<VirtualFileListener> listeners = null;
 
     while (virtualFile != null) {
-      final String url = virtualFile.getUrl();
+      String url = virtualFile.getUrl();
 
 
       if (!fromRefresh) {
@@ -215,7 +215,7 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
     return listeners;
   }
 
-  private static <T> Set<T> addToSet(Set<T> to, final Set<T> what) {
+  private static <T> Set<T> addToSet(Set<T> to, Set<T> what) {
     if (what == null || what.size() == 0) return to;
 
     if (to == null) to = new HashSet<T>();

@@ -21,15 +21,15 @@ import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nullable;
 
 public interface OptionsEditorColleague {
-  default AsyncResult<Void> onSelected(@Nullable Configurable configurable, final Configurable oldConfigurable) {
+  default AsyncResult<Void> onSelected(@Nullable Configurable configurable, Configurable oldConfigurable) {
     return AsyncResult.resolved();
   }
 
-  default AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
+  default AsyncResult<Void> onModifiedAdded(Configurable configurable) {
     return AsyncResult.resolved();
   }
 
-  default AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
+  default AsyncResult<Void> onModifiedRemoved(Configurable configurable) {
     return AsyncResult.resolved();
   }
 

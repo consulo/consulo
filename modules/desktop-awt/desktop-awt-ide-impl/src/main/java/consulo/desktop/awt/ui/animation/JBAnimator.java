@@ -230,7 +230,7 @@ public final class JBAnimator implements Disposable {
         if (currentFrame >= totalFrames && cycle) {
           frameCounter = null;
         }
-        final var expired = new LinkedList<Animation>();
+        var expired = new LinkedList<Animation>();
         for (Animation animation : scheduledAnimations) {
           double start = (double)(animation.getDelay() - delay) / duration;
           double end = start + (double)animation.getDuration() / duration;

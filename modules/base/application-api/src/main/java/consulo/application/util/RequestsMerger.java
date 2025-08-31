@@ -47,7 +47,7 @@ public class RequestsMerger {
   private final List<Runnable> myWaitingStartListeners = new ArrayList<>();
   private final List<Runnable> myWaitingFinishListeners = new ArrayList<>();
 
-  public RequestsMerger(final Runnable runnable, final Consumer<? super Runnable> alarm) {
+  public RequestsMerger(Runnable runnable, Consumer<? super Runnable> alarm) {
     myAlarm = alarm;
     myWorker = new MyWorker(runnable);
 
@@ -65,7 +65,7 @@ public class RequestsMerger {
     }
   }
 
-  public void waitRefresh(final Runnable runnable) {
+  public void waitRefresh(Runnable runnable) {
     LOG.debug("ext: wait refresh");
     synchronized (myLock) {
       myWaitingStartListeners.add(runnable);
@@ -99,12 +99,12 @@ public class RequestsMerger {
     }
   }
 
-  private void doAction(final MyAction action) {
+  private void doAction(MyAction action) {
     LOG.debug("doAction: START " + action.name());
-    final MyExitAction[] exitActions;
+    MyExitAction[] exitActions;
     List<Runnable> toBeCalled = null;
     synchronized (myLock) {
-      final MyState oldState = myState;
+      MyState oldState = myState;
       myState = myState.transition(action);
       if (oldState.equals(myState)) return;
       exitActions = MyTransitionAction.getExit(oldState, myState);
@@ -112,7 +112,7 @@ public class RequestsMerger {
       LOG.debug("doAction: oldState: " + oldState.name() + ", newState: " + myState.name());
 
       if (LOG.isDebugEnabled() && exitActions != null) {
-        final String debugExitActions = StringUtil.join(exitActions, exitAction -> exitAction.name(), " ");
+        String debugExitActions = StringUtil.join(exitActions, exitAction -> exitAction.name(), " ");
         LOG.debug("exit actions: " + debugExitActions);
       }
       if (exitActions != null) {
@@ -202,9 +202,9 @@ public class RequestsMerger {
 
     // under lock
     @Nonnull
-    public abstract MyState transition(final MyAction action);
+    public abstract MyState transition(MyAction action);
 
-    private static void logWrongAction(final MyState state, final MyAction action) {
+    private static void logWrongAction(MyState state, MyAction action) {
       LOG.info("Wrong action: state=" + state.name() + ", action=" + action.name());
     }
   }
@@ -223,12 +223,12 @@ public class RequestsMerger {
       add(MyState.inProgress, MyState.requestSubmitted, MyExitAction.markEnd);
     }
 
-    private static void add(final MyState from, final MyState to, final MyExitAction... action) {
+    private static void add(MyState from, MyState to, MyExitAction... action) {
       myMap.put(Couple.of(from, to), action);
     }
 
     @Nullable
-    public static MyExitAction[] getExit(final MyState from, final MyState to) {
+    public static MyExitAction[] getExit(MyState from, MyState to) {
       return myMap.get(Couple.of(from, to));
     }
   }

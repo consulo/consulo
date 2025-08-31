@@ -56,11 +56,11 @@ public final class SimpleJavaParameters extends SimpleProgramParameters {
     return myJdkHome;
   }
 
-  public void setJdkHome(final String jdkHome) {
+  public void setJdkHome(String jdkHome) {
     myJdkHome = jdkHome;
   }
 
-  public void setMainClass(final String mainClass) {
+  public void setMainClass(String mainClass) {
     myMainClass = mainClass;
   }
 
@@ -77,15 +77,15 @@ public final class SimpleJavaParameters extends SimpleProgramParameters {
     return myCharset;
   }
 
-  public void setCharset(@Nullable final Charset charset) {
+  public void setCharset(@Nullable Charset charset) {
     myCharset = charset;
   }
 
   @Nonnull
   public ProcessHandler createProcessHandler() throws ExecutionException {
-    final String sdk = getJdkHome();
+    String sdk = getJdkHome();
     assert sdk != null : "SDK should be defined";
-    final GeneralCommandLine commandLine = JdkUtil.setupJVMCommandLine(sdk, this);
+    GeneralCommandLine commandLine = JdkUtil.setupJVMCommandLine(sdk, this);
     return ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
   }
 }

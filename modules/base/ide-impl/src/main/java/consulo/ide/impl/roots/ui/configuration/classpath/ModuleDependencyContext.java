@@ -42,13 +42,13 @@ public class ModuleDependencyContext extends AddModuleDependencyContext<List<Mod
   }
 
   private List<Module> calcNotAddedModules() {
-    final ModifiableRootModel rootModel = myClasspathPanel.getRootModel();
+    ModifiableRootModel rootModel = myClasspathPanel.getRootModel();
     Set<Module> addedModules = new HashSet<>(Arrays.asList(rootModel.getModuleDependencies(true)));
     addedModules.add(rootModel.getModule());
 
-    final Module[] modules = myClasspathPanel.getModuleConfigurationState().getModulesConfigurator().getModules();
-    final List<Module> elements = new ArrayList<>();
-    for (final Module module : modules) {
+    Module[] modules = myClasspathPanel.getModuleConfigurationState().getModulesConfigurator().getModules();
+    List<Module> elements = new ArrayList<>();
+    for (Module module : modules) {
       if (!addedModules.contains(module)) {
         elements.add(module);
       }

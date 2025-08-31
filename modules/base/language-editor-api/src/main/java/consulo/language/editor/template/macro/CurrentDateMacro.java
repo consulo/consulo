@@ -39,7 +39,7 @@ public class CurrentDateMacro extends SimpleMacro {
   }
 
   @Override
-  protected String evaluateSimpleMacro(Expression[] params, final ExpressionContext context) {
+  protected String evaluateSimpleMacro(Expression[] params, ExpressionContext context) {
     return formatUserDefined(params, context, true);
   }
 

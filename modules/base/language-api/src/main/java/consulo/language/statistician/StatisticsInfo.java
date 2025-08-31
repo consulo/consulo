@@ -33,7 +33,7 @@ public class StatisticsInfo {
   private final String myValue;
   private final List<StatisticsInfo> myConjuncts;
 
-  public StatisticsInfo(@NonNls @Nonnull final String context, @NonNls @Nonnull final String value) {
+  public StatisticsInfo(@NonNls @Nonnull String context, @NonNls @Nonnull String value) {
     myContext = context;
     myValue = value;
     myConjuncts = Collections.singletonList(this);

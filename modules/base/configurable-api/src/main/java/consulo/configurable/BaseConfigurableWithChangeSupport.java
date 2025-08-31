@@ -25,18 +25,18 @@ public abstract class BaseConfigurableWithChangeSupport extends BaseConfigurable
   private final List<ChangeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
   @Override
-  public void setModified(final boolean modified) {
+  public void setModified(boolean modified) {
     fireStateChanged();
     super.setModified(modified);
   }
 
-  public void addChangeListener(final ChangeListener listener) {
+  public void addChangeListener(ChangeListener listener) {
     myListeners.add(listener);
   }
 
   public void fireStateChanged() {
-    final ChangeEvent event = new ChangeEvent(this);
-    for (final ChangeListener listener : myListeners) {
+    ChangeEvent event = new ChangeEvent(this);
+    for (ChangeListener listener : myListeners) {
       listener.stateChanged(event);
     }
   }

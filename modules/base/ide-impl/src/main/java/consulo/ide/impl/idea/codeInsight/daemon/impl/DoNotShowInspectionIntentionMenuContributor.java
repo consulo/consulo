@@ -59,12 +59,12 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
         int offset
     ) {
         Project project = hostFile.getProject();
-        final PsiElement psiElement = hostFile.findElementAt(offset);
+        PsiElement psiElement = hostFile.findElementAt(offset);
         if (HighlightingLevelManager.getInstance(project).shouldInspect(hostFile)) {
             PsiElement intentionElement = psiElement;
             int intentionOffset = offset;
             if (psiElement instanceof PsiWhiteSpace && offset == psiElement.getTextRange().getStartOffset() && offset > 0) {
-                final PsiElement prev = hostFile.findElementAt(offset - 1);
+                PsiElement prev = hostFile.findElementAt(offset - 1);
                 if (prev != null && prev.isValid()) {
                     intentionElement = prev;
                     intentionOffset = offset - 1;
@@ -136,14 +136,14 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
             elements.addAll(parentsOnTheLeft);
         }
 
-        final Set<String> dialectIds = InspectionEngine.calcElementDialectIds(elements);
-        final LocalInspectionToolSession session = new LocalInspectionToolSession(hostFile, 0, hostFile.getTextLength());
-        final Predicate<LocalInspectionToolWrapper> processor = toolWrapper -> {
-            final LocalInspectionTool localInspectionTool = toolWrapper.getTool();
-            final Object toolState = toolWrapper.getToolState().getState();
+        Set<String> dialectIds = InspectionEngine.calcElementDialectIds(elements);
+        LocalInspectionToolSession session = new LocalInspectionToolSession(hostFile, 0, hostFile.getTextLength());
+        Predicate<LocalInspectionToolWrapper> processor = toolWrapper -> {
+            LocalInspectionTool localInspectionTool = toolWrapper.getTool();
+            Object toolState = toolWrapper.getToolState().getState();
             final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
             final String displayName = toolWrapper.getDisplayName();
-            final ProblemsHolder holder = new ProblemsHolderImpl(InspectionManager.getInstance(project), hostFile, true) {
+            ProblemsHolder holder = new ProblemsHolderImpl(InspectionManager.getInstance(project), hostFile, true) {
                 @Override
                 @RequiredReadAction
                 public void registerProblem(@Nonnull ProblemDescriptor problemDescriptor) {

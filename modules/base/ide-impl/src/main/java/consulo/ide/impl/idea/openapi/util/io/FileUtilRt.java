@@ -54,7 +54,7 @@ public class FileUtilRt {
     }
 
     // do not use getName to avoid extra String creation (File.getName() calls substring)
-    final String path = file.getPath();
+    String path = file.getPath();
     return StringUtilRt.endsWithIgnoreCase(path, ".jar") || StringUtilRt.endsWithIgnoreCase(path, ".zip");
   }
 
@@ -77,7 +77,7 @@ public class FileUtilRt {
   }
 
   @Contract("null, _, _, _ -> null")
-  protected static String toCanonicalPath(@Nullable String path, final char separatorChar, final boolean removeLastSlash, final @Nullable SymlinkResolver resolver) {
+  protected static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash, @Nullable SymlinkResolver resolver) {
     if (path == null || path.length() == 0) {
       return path;
     }
@@ -276,7 +276,7 @@ public class FileUtilRt {
   }
 
   @Nonnull
-  public static String toSystemDependentName(@Nonnull String fileName, final char separatorChar) {
+  public static String toSystemDependentName(@Nonnull String fileName, char separatorChar) {
     return fileName.replace('/', separatorChar).replace('\\', separatorChar);
   }
 
@@ -343,7 +343,7 @@ public class FileUtilRt {
     return relativePath.toString();
   }
 
-  private static String ensureEnds(@Nonnull String s, final char endsWith) {
+  private static String ensureEnds(@Nonnull String s, char endsWith) {
     return StringUtilRt.endsWithChar(s, endsWith) ? s : s + endsWith;
   }
 
@@ -365,7 +365,7 @@ public class FileUtilRt {
 
   @Nonnull
   public static File createTempDirectory(@Nonnull String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
-    final File dir = new File(getTempDirectory());
+    File dir = new File(getTempDirectory());
     return createTempDirectory(dir, prefix, suffix, deleteOnExit);
   }
 
@@ -412,7 +412,7 @@ public class FileUtilRt {
 
   @Nonnull
   public static File createTempFile(@Nonnull String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
-    final File dir = new File(getTempDirectory());
+    File dir = new File(getTempDirectory());
     return createTempFile(dir, prefix, suffix, true, deleteOnExit);
   }
 
@@ -508,7 +508,7 @@ public class FileUtilRt {
 
   @Nonnull
   private static File normalizeFile(@Nonnull File temp) throws IOException {
-    final File canonical = temp.getCanonicalFile();
+    File canonical = temp.getCanonicalFile();
     return SystemInfoRt.isWindows && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
   }
 
@@ -522,9 +522,9 @@ public class FileUtilRt {
 
   @Nonnull
   private static String calcCanonicalTempPath() {
-    final File file = new File(System.getProperty("java.io.tmpdir"));
+    File file = new File(System.getProperty("java.io.tmpdir"));
     try {
-      final String canonical = file.getCanonicalPath();
+      String canonical = file.getCanonicalPath();
       if (!SystemInfoRt.isWindows || !canonical.contains(" ")) {
         return canonical;
       }
@@ -535,7 +535,7 @@ public class FileUtilRt {
   }
 
   @TestOnly
-  static void resetCanonicalTempPathCache(final String tempPath) {
+  static void resetCanonicalTempPathCache(String tempPath) {
     ourCanonicalTempPathCache = tempPath;
   }
 
@@ -587,7 +587,7 @@ public class FileUtilRt {
 
   @Nonnull
   public static String loadFile(@Nonnull File file, @Nullable String encoding, boolean convertLineSeparators) throws IOException {
-    final String s = new String(loadFileText(file, encoding));
+    String s = new String(loadFileText(file, encoding));
     return convertLineSeparators ? StringUtilRt.convertLineSeparators(s) : s;
   }
 
@@ -841,7 +841,7 @@ public class FileUtilRt {
     return null;
   }
 
-  protected static boolean deleteFile(@Nonnull final File file) {
+  protected static boolean deleteFile(@Nonnull File file) {
     Boolean result = doIOOperation(lastAttempt -> {
       if (file.delete() || !file.exists()) {
         return Boolean.TRUE;
@@ -915,7 +915,7 @@ public class FileUtilRt {
       }
     }
     else {
-      final byte[] buffer = getThreadLocalBuffer();
+      byte[] buffer = getThreadLocalBuffer();
       while (true) {
         int read = inputStream.read(buffer);
         if (read < 0) break;

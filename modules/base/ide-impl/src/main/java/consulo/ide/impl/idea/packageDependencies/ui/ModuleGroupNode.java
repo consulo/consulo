@@ -74,7 +74,7 @@ public class ModuleGroupNode extends PackageDependenciesNode {
     if (this == o) return true;
     if (!(o instanceof ModuleGroupNode)) return false;
 
-    final ModuleGroupNode moduleNode = (ModuleGroupNode)o;
+    ModuleGroupNode moduleNode = (ModuleGroupNode)o;
 
     return Comparing.equal(myModuleGroup, moduleNode.myModuleGroup);
   }

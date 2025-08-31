@@ -57,14 +57,14 @@ public class PathMacroTable extends JBTable {
     this(null);
   }
 
-  public PathMacroTable(final Collection<String> undefinedMacroNames) {
+  public PathMacroTable(Collection<String> undefinedMacroNames) {
     myUndefinedMacroNames = undefinedMacroNames;
     setModel(myTableModel);
     TableColumn column = getColumnModel().getColumn(NAME_COLUMN);
     column.setCellRenderer(new DefaultTableCellRenderer() {
       public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        final Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        final String macroValue = getMacroValueAt(row);
+        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        String macroValue = getMacroValueAt(row);
         component.setForeground(macroValue.length() == 0
                                 ? JBColor.RED
                                 : isSelected ? table.getSelectionForeground() : table.getForeground());
@@ -86,14 +86,14 @@ public class PathMacroTable extends JBTable {
   }
 
   public void addMacro() {
-    final String title = ApplicationBundle.message("title.add.variable");
-    final PathMacroEditor macroEditor = new PathMacroEditor(title, "", "", new AddValidator(title));
+    String title = ApplicationBundle.message("title.add.variable");
+    PathMacroEditor macroEditor = new PathMacroEditor(title, "", "", new AddValidator(title));
     macroEditor.show();
     if (macroEditor.isOK()) {
-      final String name = macroEditor.getName();
+      String name = macroEditor.getName();
       myMacros.add(new Pair<String, String>(name, macroEditor.getValue()));
       Collections.sort(myMacros, MACRO_COMPARATOR);
-      final int index = indexOfMacroWithName(name);
+      int index = indexOfMacroWithName(name);
       LOG.assertTrue(index >= 0);
       myTableModel.fireTableDataChanged();
       setRowSelectionInterval(index, index);
@@ -105,12 +105,12 @@ public class PathMacroTable extends JBTable {
   }
 
   public void removeSelectedMacros() {
-    final int[] selectedRows = getSelectedRows();
+    int[] selectedRows = getSelectedRows();
     if(selectedRows.length == 0) return;
     Arrays.sort(selectedRows);
-    final int originalRow = selectedRows[0];
+    int originalRow = selectedRows[0];
     for (int i = selectedRows.length - 1; i >= 0; i--) {
-      final int selectedRow = selectedRows[i];
+      int selectedRow = selectedRows[i];
       if (isValidRow(selectedRow)) {
         myMacros.remove(selectedRow);
       }
@@ -119,7 +119,7 @@ public class PathMacroTable extends JBTable {
     if (originalRow < getRowCount()) {
       setRowSelectionInterval(originalRow, originalRow);
     } else if (getRowCount() > 0) {
-      final int index = getRowCount() - 1;
+      int index = getRowCount() - 1;
       setRowSelectionInterval(index, index);
     }
   }
@@ -127,7 +127,7 @@ public class PathMacroTable extends JBTable {
   public void commit() {
     myPathMacros.removeAllMacros();
     for (Pair<String, String> pair : myMacros) {
-      final String value = pair.getSecond();
+      String value = pair.getSecond();
       if (value != null && value.trim().length() > 0) {
         String path = value.replace(File.separatorChar, '/');
         if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
@@ -155,7 +155,7 @@ public class PathMacroTable extends JBTable {
 
   private int indexOfMacroWithName(String name) {
     for (int i = 0; i < myMacros.size(); i++) {
-      final Pair<String, String> pair = myMacros.get(i);
+      Pair<String, String> pair = myMacros.get(i);
       if (name.equals(pair.getFirst())) {
         return i;
       }
@@ -168,9 +168,9 @@ public class PathMacroTable extends JBTable {
     myTableModel.fireTableDataChanged();
   }
 
-  private void obtainMacroPairs(final List<Pair<String, String>> macros) {
+  private void obtainMacroPairs(List<Pair<String, String>> macros) {
     macros.clear();
-    final Set<String> macroNames = myPathMacros.getUserMacroNames();
+    Set<String> macroNames = myPathMacros.getUserMacroNames();
     for (String name : macroNames) {
       macros.add(Pair.create(name, myPathMacros.getValue(name).replace('/', File.separatorChar)));
     }
@@ -187,11 +187,11 @@ public class PathMacroTable extends JBTable {
     if (getSelectedRowCount() != 1) {
       return;
     }
-    final int selectedRow = getSelectedRow();
-    final Pair<String, String> pair = myMacros.get(selectedRow);
-    final String title = ApplicationBundle.message("title.edit.variable");
-    final String macroName = pair.getFirst();
-    final PathMacroEditor macroEditor = new PathMacroEditor(title, macroName, pair.getSecond(), new EditValidator());
+    int selectedRow = getSelectedRow();
+    Pair<String, String> pair = myMacros.get(selectedRow);
+    String title = ApplicationBundle.message("title.edit.variable");
+    String macroName = pair.getFirst();
+    PathMacroEditor macroEditor = new PathMacroEditor(title, macroName, pair.getSecond(), new EditValidator());
     macroEditor.show();
     if (macroEditor.isOK()) {
       myMacros.remove(selectedRow);
@@ -202,7 +202,7 @@ public class PathMacroTable extends JBTable {
   }
 
   public boolean isModified() {
-    final ArrayList<Pair<String, String>> macros = new ArrayList<Pair<String, String>>();
+    ArrayList<Pair<String, String>> macros = new ArrayList<Pair<String, String>>();
     obtainMacroPairs(macros);
     return !macros.equals(myMacros);
   }
@@ -221,7 +221,7 @@ public class PathMacroTable extends JBTable {
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-      final Pair<String, String> pair = myMacros.get(rowIndex);
+      Pair<String, String> pair = myMacros.get(rowIndex);
       switch (columnIndex) {
         case NAME_COLUMN: return pair.getFirst();
         case VALUE_COLUMN: return pair.getSecond();

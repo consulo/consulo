@@ -101,7 +101,7 @@ public class FirefoxUtil {
             BufferedReader reader;
             reader = new BufferedReader(new FileReader(profilesFile));
             try {
-                final List<FirefoxProfile> profiles = new SmartList<>();
+                List<FirefoxProfile> profiles = new SmartList<>();
                 boolean insideProfile = false;
                 String currentName = null;
                 String currentPath = null;
@@ -130,7 +130,7 @@ public class FirefoxUtil {
                         continue;
                     }
 
-                    final int i = line.indexOf('=');
+                    int i = line.indexOf('=');
                     if (i != -1 && insideProfile) {
                         String name = line.substring(0, i).trim();
                         String value = line.substring(i + 1).trim();

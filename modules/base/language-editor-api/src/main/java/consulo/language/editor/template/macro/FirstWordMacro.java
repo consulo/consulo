@@ -37,9 +37,9 @@ public class FirstWordMacro extends MacroBase {
 
   @Override
   protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
-    final String text = getTextResult(params, context);
+    String text = getTextResult(params, context);
     if (text != null) {
-      final int index = text.indexOf(' ');
+      int index = text.indexOf(' ');
       return index >= 0 ? new TextResult(text.substring(0, index)) : new TextResult(text);
     }
     return null;

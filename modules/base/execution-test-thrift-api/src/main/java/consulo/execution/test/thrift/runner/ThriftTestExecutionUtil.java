@@ -48,20 +48,20 @@ import java.net.InetSocketAddress;
  * @since 18.05.14
  */
 public class ThriftTestExecutionUtil {
-  public static BaseTestsOutputConsoleView createConsoleWithCustomLocator(@Nonnull final String testFrameworkName,
-                                                                          @Nonnull final TestConsoleProperties consoleProperties,
+  public static BaseTestsOutputConsoleView createConsoleWithCustomLocator(@Nonnull String testFrameworkName,
+                                                                          @Nonnull TestConsoleProperties consoleProperties,
                                                                           @Nonnull ExecutionEnvironment environment,
                                                                           @Nonnull ThriftTestHandlerFactory factory,
-                                                                          @Nullable final TestLocationProvider locator) {
+                                                                          @Nullable TestLocationProvider locator) {
     return createConsoleWithCustomLocator(testFrameworkName, consoleProperties, environment, locator, factory, null);
   }
 
-  public static SMTRunnerConsoleView createConsoleWithCustomLocator(@Nonnull final String testFrameworkName,
-                                                                    @Nonnull final TestConsoleProperties consoleProperties,
+  public static SMTRunnerConsoleView createConsoleWithCustomLocator(@Nonnull String testFrameworkName,
+                                                                    @Nonnull TestConsoleProperties consoleProperties,
                                                                     ExecutionEnvironment environment,
-                                                                    @Nullable final TestLocationProvider locator,
-                                                                    final ThriftTestHandlerFactory factory,
-                                                                    @Nullable final TestProxyFilterProvider filterProvider) {
+                                                                    @Nullable TestLocationProvider locator,
+                                                                    ThriftTestHandlerFactory factory,
+                                                                    @Nullable TestProxyFilterProvider filterProvider) {
     String splitterPropertyName = SMTestRunnerConnectionUtil.getSplitterPropertyName(testFrameworkName);
     SMTRunnerConsoleView consoleView = new SMTRunnerConsoleView(consoleProperties, splitterPropertyName);
     initConsoleView(consoleView, testFrameworkName, locator, factory, filterProvider);
@@ -89,12 +89,12 @@ public class ThriftTestExecutionUtil {
     consoleView.initUI();
   }
 
-  private static void attachEventsProcessors(@Nonnull final TestConsoleProperties consoleProperties,
-                                             final SMTestRunnerResultsForm resultsViewer,
-                                             final StatisticsPanel statisticsPane,
-                                             final ProcessHandler processHandler,
-                                             @Nonnull final String testFrameworkName,
-                                             @Nullable final TestLocationProvider locator,
+  private static void attachEventsProcessors(@Nonnull TestConsoleProperties consoleProperties,
+                                             SMTestRunnerResultsForm resultsViewer,
+                                             StatisticsPanel statisticsPane,
+                                             ProcessHandler processHandler,
+                                             @Nonnull String testFrameworkName,
+                                             @Nullable TestLocationProvider locator,
                                              ThriftTestHandlerFactory factory,
                                              @Nullable TestProxyPrinterProvider printerProvider) {
     //build messages consumer
@@ -115,7 +115,7 @@ public class ThriftTestExecutionUtil {
     }
 
     // ui actions
-    final SMTRunnerUIActionsHandler uiActionsHandler = new SMTRunnerUIActionsHandler(consoleProperties);
+    SMTRunnerUIActionsHandler uiActionsHandler = new SMTRunnerUIActionsHandler(consoleProperties);
 
     // subscribe on events
 
@@ -131,7 +131,7 @@ public class ThriftTestExecutionUtil {
 
     processHandler.addProcessListener(new ProcessAdapter() {
       @Override
-      public void processTerminated(final ProcessEvent event) {
+      public void processTerminated(ProcessEvent event) {
         outputConsumer.flushBufferOnProcessTermination(event.getExitCode());
         try {
           open.stop();
@@ -145,7 +145,7 @@ public class ThriftTestExecutionUtil {
       }
 
       @Override
-      public void onTextAvailable(final ProcessEvent event, final Key outputType) {
+      public void onTextAvailable(ProcessEvent event, Key outputType) {
         outputConsumer.process(event.getText(), outputType);
       }
     });

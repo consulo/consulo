@@ -74,7 +74,7 @@ public class CompletionVariant {
   }
 
   private boolean isScopeClassFinal(Class scopeClass) {
-    for (final Object myScopeClass : myScopeClasses) {
+    for (Object myScopeClass : myScopeClasses) {
       Scope scope = (Scope)myScopeClass;
       if (ReflectionUtil.isAssignable(scope.myClass, scopeClass) && scope.myIsFinalScope) {
         return true;
@@ -86,8 +86,8 @@ public class CompletionVariant {
   private boolean isScopeClassAcceptable(Class scopeClass) {
     boolean ret = false;
 
-    for (final Object myScopeClass : myScopeClasses) {
-      final Class aClass = ((Scope)myScopeClass).myClass;
+    for (Object myScopeClass : myScopeClasses) {
+      Class aClass = ((Scope)myScopeClass).myClass;
       if (ReflectionUtil.isAssignable(aClass, scopeClass)) {
         ret = true;
         break;
@@ -129,23 +129,23 @@ public class CompletionVariant {
     return isScopeAcceptable(scope) && myPosition.isAcceptable(position, scope);
   }
 
-  void addReferenceCompletions(PsiReference reference, PsiElement position, Set<LookupElement> set, final PsiFile file, final CompletionData completionData) {
-    for (final CompletionVariantItem ce : myCompletionsList) {
+  void addReferenceCompletions(PsiReference reference, PsiElement position, Set<LookupElement> set, PsiFile file, CompletionData completionData) {
+    for (CompletionVariantItem ce : myCompletionsList) {
       if (ce.myCompletion instanceof ElementFilter) {
-        final ElementFilter filter = (ElementFilter)ce.myCompletion;
+        ElementFilter filter = (ElementFilter)ce.myCompletion;
         completionData.completeReference(reference, position, set, ce.myTailType, filter, this);
       }
     }
   }
 
-  void addKeywords(Set<LookupElement> set, final CompletionData completionData) {
-    for (final CompletionVariantItem ce : myCompletionsList) {
+  void addKeywords(Set<LookupElement> set, CompletionData completionData) {
+    for (CompletionVariantItem ce : myCompletionsList) {
       completionData.addKeywords(set, this, ce.myCompletion, ce.myTailType);
     }
   }
 
   boolean hasReferenceFilter() {
-    for (final CompletionVariantItem item : myCompletionsList) {
+    for (CompletionVariantItem item : myCompletionsList) {
       if (item.myCompletion instanceof ElementFilter) {
         return true;
       }
@@ -154,7 +154,7 @@ public class CompletionVariant {
   }
 
   public boolean hasKeywordCompletions() {
-    for (final CompletionVariantItem item : myCompletionsList) {
+    for (CompletionVariantItem item : myCompletionsList) {
       if (!(item.myCompletion instanceof ElementFilter)) {
         return true;
       }

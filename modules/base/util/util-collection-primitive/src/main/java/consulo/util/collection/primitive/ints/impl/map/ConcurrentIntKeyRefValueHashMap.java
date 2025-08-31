@@ -182,11 +182,11 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
       private void nextAliveEntry() {
         while (entryIterator.hasNext()) {
           IntObjectEntry<IntReference<V>> entry = entryIterator.next();
-          final V v = entry.getValue().get();
+          V v = entry.getValue().get();
           if (v == null) {
             continue;
           }
-          final int key = entry.getKey();
+          int key = entry.getKey();
           nextVEntry = new SimpleIntObjectEntry<>(key, v);
           nextReferenceEntry = entry;
           return;

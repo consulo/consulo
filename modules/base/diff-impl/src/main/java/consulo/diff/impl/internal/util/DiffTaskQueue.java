@@ -34,17 +34,17 @@ public class DiffTaskQueue {
   }
 
   @RequiredUIAccess
-  public void executeAndTryWait(@Nonnull final Function<ProgressIndicator, Runnable> backgroundTask,
-                                @Nullable final Runnable onSlowAction,
-                                final int waitMillis) {
+  public void executeAndTryWait(@Nonnull Function<ProgressIndicator, Runnable> backgroundTask,
+                                @Nullable Runnable onSlowAction,
+                                int waitMillis) {
     executeAndTryWait(backgroundTask, onSlowAction, waitMillis, false);
   }
 
   @RequiredUIAccess
-  public void executeAndTryWait(@Nonnull final Function<ProgressIndicator, Runnable> backgroundTask,
-                                @Nullable final Runnable onSlowAction,
-                                final int waitMillis,
-                                final boolean forceEDT) {
+  public void executeAndTryWait(@Nonnull Function<ProgressIndicator, Runnable> backgroundTask,
+                                @Nullable Runnable onSlowAction,
+                                int waitMillis,
+                                boolean forceEDT) {
     abort();
     myProgressIndicator = BackgroundTaskUtil.executeAndTryWait(backgroundTask, onSlowAction, waitMillis, forceEDT);
   }

@@ -135,7 +135,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
       if (this == o) return true;
       if (!(o instanceof ModuleUsageGroup)) return false;
 
-      final ModuleUsageGroup moduleUsageGroup = (ModuleUsageGroup)o;
+      ModuleUsageGroup moduleUsageGroup = (ModuleUsageGroup)o;
 
       return myModule.equals(moduleUsageGroup.myModule);
     }
@@ -190,7 +190,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void calcData(final Key<?> key, final DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
       if (!isValid()) return;
       if (LangDataKeys.MODULE_CONTEXT == key) {
         sink.put(LangDataKeys.MODULE_CONTEXT, myModule);

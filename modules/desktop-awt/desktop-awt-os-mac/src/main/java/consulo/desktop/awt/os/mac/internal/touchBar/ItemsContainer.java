@@ -67,7 +67,7 @@ final class ItemsContainer {
     }
 
     synchronized void addItem(@Nonnull TBItem item, @Nullable TBItem positionAnchor) {
-        final int index = positionAnchor != null ? myItems.indexOf(positionAnchor) : -1;
+        int index = positionAnchor != null ? myItems.indexOf(positionAnchor) : -1;
         addItem(item, index);
     }
 
@@ -76,7 +76,7 @@ final class ItemsContainer {
     }
 
     synchronized void addSpacing(boolean large, int index) {
-        final SpacingItem spacing = new SpacingItem();
+        SpacingItem spacing = new SpacingItem();
         spacing.setUid(large ? "static_touchbar_item_large_space" : "static_touchbar_item_small_space");
         if (index >= 0 && index < myItems.size()) {
             myItems.add(index, spacing);
@@ -91,7 +91,7 @@ final class ItemsContainer {
     }
 
     synchronized void addFlexibleSpacing(int index) {
-        final SpacingItem spacing = new SpacingItem();
+        SpacingItem spacing = new SpacingItem();
         spacing.setUid("static_touchbar_item_flexible_space");
         if (index >= 0 && index < myItems.size()) {
             myItems.add(index, spacing);
@@ -119,10 +119,10 @@ final class ItemsContainer {
 
     @Nonnull
     synchronized ID[] getNativePeers() {
-        final ID[] ids = new ID[myItems.size()];
+        ID[] ids = new ID[myItems.size()];
         int c = 0;
         for (TBItem item : myItems) {
-            final ID nativePeer = item.createNativePeer();
+            ID nativePeer = item.createNativePeer();
             if (!ID.NIL.equals(nativePeer)) {
                 ids[c++] = nativePeer;
             }
@@ -150,7 +150,7 @@ final class ItemsContainer {
 
     synchronized @Nullable TBItem findItem(String uid) {
         for (TBItem item : myItems) {
-            final String itemUid = item.getUid();
+            String itemUid = item.getUid();
             if (itemUid != null && itemUid.equals(uid)) {
                 return item;
             }

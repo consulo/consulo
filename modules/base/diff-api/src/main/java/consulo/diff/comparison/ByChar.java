@@ -91,12 +91,12 @@ public class ByChar {
   //
 
   @Nonnull
-  private static FairDiffIterable transfer(@Nonnull final CharOffsets chars1,
-                                           @Nonnull final CharOffsets chars2,
-                                           @Nonnull final CharSequence text1,
-                                           @Nonnull final CharSequence text2,
-                                           @Nonnull final FairDiffIterable changes,
-                                           @Nonnull final ProgressIndicator indicator) {
+  private static FairDiffIterable transfer(@Nonnull CharOffsets chars1,
+                                           @Nonnull CharOffsets chars2,
+                                           @Nonnull CharSequence text1,
+                                           @Nonnull CharSequence text2,
+                                           @Nonnull FairDiffIterable changes,
+                                           @Nonnull ProgressIndicator indicator) {
     ChangeBuilder builder = new ChangeBuilder(text1.length(), text2.length());
 
     for (Range range : changes.iterateUnchanged()) {
@@ -118,12 +118,12 @@ public class ByChar {
    * (inside these pairs could met non-space characters, but they will be unique and can't be matched)
    */
   @Nonnull
-  private static FairDiffIterable matchAdjustmentSpaces(@Nonnull final CharOffsets chars1,
-                                                        @Nonnull final CharOffsets chars2,
-                                                        @Nonnull final CharSequence text1,
-                                                        @Nonnull final CharSequence text2,
-                                                        @Nonnull final FairDiffIterable changes,
-                                                        @Nonnull final ProgressIndicator indicator) {
+  private static FairDiffIterable matchAdjustmentSpaces(@Nonnull CharOffsets chars1,
+                                                        @Nonnull CharOffsets chars2,
+                                                        @Nonnull CharSequence text1,
+                                                        @Nonnull CharSequence text2,
+                                                        @Nonnull FairDiffIterable changes,
+                                                        @Nonnull ProgressIndicator indicator) {
     return new ChangeCorrector.DefaultCharChangeCorrector(chars1, chars2, text1, text2, changes, indicator).build();
   }
 
@@ -138,7 +138,7 @@ public class ByChar {
                                                       @Nonnull CharSequence text1,
                                                       @Nonnull CharSequence text2,
                                                       @Nonnull FairDiffIterable changes) {
-    final List<Range> ranges = new ArrayList<Range>();
+    List<Range> ranges = new ArrayList<Range>();
 
     for (Range ch : changes.iterateChanges()) {
       int startOffset1;

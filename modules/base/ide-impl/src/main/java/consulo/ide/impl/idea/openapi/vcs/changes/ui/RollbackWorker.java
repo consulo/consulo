@@ -54,11 +54,11 @@ public class RollbackWorker {
   private final boolean myInvokedFromModalContext;
   private final List<VcsException> myExceptions;
 
-  public RollbackWorker(final Project project) {
+  public RollbackWorker(Project project) {
     this(project, DefaultRollbackEnvironment.ROLLBACK_OPERATION_NAME, false);
   }
 
-  public RollbackWorker(final Project project, final String operationName, boolean invokedFromModalContext) {
+  public RollbackWorker(Project project, String operationName, boolean invokedFromModalContext) {
     myProject = project;
     myOperationName = operationName;
     myInvokedFromModalContext = invokedFromModalContext;
@@ -66,14 +66,14 @@ public class RollbackWorker {
   }
 
   public void doRollback(
-    final Collection<Change> changes,
-    final boolean deleteLocallyAddedFiles,
-    @Nullable final Runnable afterVcsRefreshInAwt,
-    @Nullable final String localHistoryActionName
+    Collection<Change> changes,
+    boolean deleteLocallyAddedFiles,
+    @Nullable Runnable afterVcsRefreshInAwt,
+    @Nullable String localHistoryActionName
   ) {
-    final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
-    final Runnable notifier = changeListManager.prepareForChangeDeletion(changes);
-    final Runnable afterRefresh = () -> {
+    ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
+    Runnable notifier = changeListManager.prepareForChangeDeletion(changes);
+    Runnable afterRefresh = () -> {
       InvokeAfterUpdateMode updateMode = myInvokedFromModalContext
         ? InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE : InvokeAfterUpdateMode.SILENT;
       changeListManager.invokeAfterUpdate(
@@ -136,10 +136,10 @@ public class RollbackWorker {
     private ProgressIndicator myIndicator;
 
     private MyRollbackRunnable(
-      final Collection<Change> changes,
-      final boolean deleteLocallyAddedFiles,
-      final Runnable afterRefresh,
-      final String localHistoryActionName
+      Collection<Change> changes,
+      boolean deleteLocallyAddedFiles,
+      Runnable afterRefresh,
+      String localHistoryActionName
     ) {
       myChanges = changes;
       myDeleteLocallyAddedFiles = deleteLocallyAddedFiles;
@@ -161,10 +161,10 @@ public class RollbackWorker {
     private void doRun() {
       myIndicator = ProgressManager.getInstance().getProgressIndicator();
 
-      final List<Change> changesToRefresh = new ArrayList<>();
+      List<Change> changesToRefresh = new ArrayList<>();
       try {
         ChangesUtil.processChangesByVcs(myProject, myChanges, (vcs, changes) -> {
-          final RollbackEnvironment environment = vcs.getRollbackEnvironment();
+          RollbackEnvironment environment = vcs.getRollbackEnvironment();
           if (environment != null) {
             changesToRefresh.addAll(changes);
 
@@ -202,22 +202,22 @@ public class RollbackWorker {
       AbstractVcsHelper.getInstance(myProject).showErrors(myExceptions, myOperationName);
     }
 
-    private void doRefresh(final Project project, final List<Change> changesToRefresh) {
-      final LocalHistoryAction action = LocalHistory.getInstance().startAction(myOperationName);
+    private void doRefresh(Project project, List<Change> changesToRefresh) {
+      LocalHistoryAction action = LocalHistory.getInstance().startAction(myOperationName);
 
-      final Runnable forAwtThread = () -> {
+      Runnable forAwtThread = () -> {
         action.finish();
         LocalHistory.getInstance().putSystemLabel(
           myProject,
           LocalizeValue.localizeTODO(myLocalHistoryActionName == null ? myOperationName : myLocalHistoryActionName),
           -1
         );
-        final VcsDirtyScopeManager manager = project.getComponent(VcsDirtyScopeManager.class);
+        VcsDirtyScopeManager manager = project.getComponent(VcsDirtyScopeManager.class);
         VcsGuess vcsGuess = new VcsGuess(myProject);
 
         for (Change change : changesToRefresh) {
-          final ContentRevision beforeRevision = change.getBeforeRevision();
-          final ContentRevision afterRevision = change.getAfterRevision();
+          ContentRevision beforeRevision = change.getBeforeRevision();
+          ContentRevision afterRevision = change.getAfterRevision();
           if ((!change.isIsReplaced()) && beforeRevision != null && Comparing.equal(beforeRevision, afterRevision)) {
             manager.fileDirty(beforeRevision.getFile());
           }
@@ -251,18 +251,18 @@ public class RollbackWorker {
       return vcsGuess.getVcsForDirty(path) != null;
     }
 
-    private void deleteAddedFilesLocally(final List<Change> changes) {
+    private void deleteAddedFilesLocally(List<Change> changes) {
       if (myIndicator != null) {
         myIndicator.setText("Deleting added files locally...");
         myIndicator.setFraction(0);
       }
-      final int changesSize = changes.size();
+      int changesSize = changes.size();
       for (int i = 0; i < changesSize; i++) {
-        final Change c = changes.get(i);
+        Change c = changes.get(i);
         if (c.getType() == Change.Type.NEW) {
           ContentRevision rev = c.getAfterRevision();
           assert rev != null;
-          final File ioFile = rev.getFile().getIOFile();
+          File ioFile = rev.getFile().getIOFile();
           if (myIndicator != null) {
             myIndicator.setText2(ioFile.getAbsolutePath());
             myIndicator.setFraction(((double)i) / changesSize);

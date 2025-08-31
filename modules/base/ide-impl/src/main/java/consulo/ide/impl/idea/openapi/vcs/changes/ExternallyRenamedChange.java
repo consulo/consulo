@@ -29,20 +29,20 @@ public class ExternallyRenamedChange extends Change {
   private boolean myCopied;
   private final String myOriginUrl;
 
-  public ExternallyRenamedChange(final ContentRevision beforeRevision, final ContentRevision afterRevision, final String originUrl) {
+  public ExternallyRenamedChange(ContentRevision beforeRevision, ContentRevision afterRevision, String originUrl) {
     super(beforeRevision, afterRevision);
     myOriginUrl = originUrl;
     myCopied = true;
   }
 
-  public void setRenamedOrMovedTarget(final FilePath target) {
+  public void setRenamedOrMovedTarget(FilePath target) {
     myMoved = myRenamed = false;
 
     if ((getBeforeRevision() != null) || (getAfterRevision() == null)) {
       // not external rename or move
       return;
     }
-    final FilePath localPath = ChangesUtil.getFilePath(this);
+    FilePath localPath = ChangesUtil.getFilePath(this);
     if (localPath.getIOFile().getAbsolutePath().equals(target.getIOFile().getAbsolutePath())) {
       // not rename or move
       return;
@@ -60,7 +60,7 @@ public class ExternallyRenamedChange extends Change {
   }
 
   @Override
-  public String getOriginText(final Project project) {
+  public String getOriginText(Project project) {
     if (myCopied) {
       return VcsLocalize.changeFileCopiedFromText(myOriginUrl).get();
     }
@@ -78,7 +78,7 @@ public class ExternallyRenamedChange extends Change {
   }
 
   @Nullable
-  protected String getMovedText(final Project project) {
+  protected String getMovedText(Project project) {
     if (myRenamedTargetName != null) {
       return (getBeforeRevision() != null)
         ? VcsLocalize.changeFileMovedToText(myRenamedTargetName).get()
@@ -91,7 +91,7 @@ public class ExternallyRenamedChange extends Change {
     return myCopied;
   }
 
-  public void setCopied(final boolean copied) {
+  public void setCopied(boolean copied) {
     myCopied = copied;
   }
 

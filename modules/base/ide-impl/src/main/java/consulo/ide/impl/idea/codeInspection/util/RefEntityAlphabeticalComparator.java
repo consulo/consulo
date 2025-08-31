@@ -27,7 +27,7 @@ import java.util.Comparator;
 public class RefEntityAlphabeticalComparator implements Comparator<RefEntity> {
 
   @Override
-  public int compare(@Nonnull final RefEntity o1, @Nonnull final RefEntity o2) {
+  public int compare(@Nonnull RefEntity o1, @Nonnull RefEntity o2) {
     if (o1 == o2) return 0;
     return o1.getQualifiedName().compareToIgnoreCase(o2.getQualifiedName());
   }

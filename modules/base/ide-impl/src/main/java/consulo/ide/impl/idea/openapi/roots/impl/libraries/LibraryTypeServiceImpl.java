@@ -47,15 +47,15 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
                                                         @Nonnull JComponent parentComponent,
                                                         @Nullable VirtualFile contextDirectory,
                                                         LibraryType<?> type,
-                                                        final Project project) {
-    final FileChooserDescriptor chooserDescriptor = descriptor.createAttachFilesChooserDescriptor(null);
+                                                        Project project) {
+    FileChooserDescriptor chooserDescriptor = descriptor.createAttachFilesChooserDescriptor(null);
     chooserDescriptor.setTitle("Select Library Files");
-    final VirtualFile[] rootCandidates = IdeaFileChooser.chooseFiles(chooserDescriptor, parentComponent, project, contextDirectory);
+    VirtualFile[] rootCandidates = IdeaFileChooser.chooseFiles(chooserDescriptor, parentComponent, project, contextDirectory);
     if (rootCandidates.length == 0) {
       return null;
     }
 
-    final List<OrderRoot> roots = RootDetectionUtil.detectRoots(Arrays.asList(rootCandidates), parentComponent, project, descriptor);
+    List<OrderRoot> roots = RootDetectionUtil.detectRoots(Arrays.asList(rootCandidates), parentComponent, project, descriptor);
     if (roots.isEmpty()) return null;
     String name = suggestLibraryName(roots);
     return doCreate(type, name, roots);

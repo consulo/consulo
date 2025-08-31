@@ -51,7 +51,7 @@ class PatternDialog extends DialogWrapper{
   public PatternDialog(Component parent, TodoPattern pattern){
     super(parent, true);
 
-    final TodoAttributes attrs = pattern.getAttributes();
+    TodoAttributes attrs = pattern.getAttributes();
     myPattern=pattern;
     myIconComboBox=new JComboBox<>(
       new Image[]{AllIcons.General.TodoDefault, AllIcons.General.TodoQuestion, AllIcons.General.TodoImportant}
@@ -97,7 +97,7 @@ class PatternDialog extends DialogWrapper{
   }
 
   private void updateCustomColorsPanel() {
-    final boolean useCustomColors = useCustomTodoColor();
+    boolean useCustomColors = useCustomTodoColor();
 
     if (useCustomColors) {
       // restore controls
@@ -118,7 +118,7 @@ class PatternDialog extends DialogWrapper{
     myPattern.setPatternString(myPatternStringField.getText().trim());
     myPattern.setCaseSensitive(myCaseSensitiveCheckBox.isSelected());
 
-    final TodoAttributes attrs = myPattern.getAttributes();
+    TodoAttributes attrs = myPattern.getAttributes();
     attrs.setIcon((Image)myIconComboBox.getSelectedItem());
     attrs.setUseCustomTodoColor(useCustomTodoColor(), TodoAttributesUtil.getDefaultColorSchemeTextAttributes());
 

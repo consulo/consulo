@@ -29,7 +29,7 @@ public interface TestSearchScope {
   SourceScope getSourceScope(ModuleBasedConfiguration configuration);
 
   TestSearchScope WHOLE_PROJECT = new TestSearchScope() {
-    public SourceScope getSourceScope(final ModuleBasedConfiguration configuration) {
+    public SourceScope getSourceScope(ModuleBasedConfiguration configuration) {
       return SourceScope.wholeProject(configuration.getProject());
     }
 
@@ -40,7 +40,7 @@ public interface TestSearchScope {
   };
 
   TestSearchScope SINGLE_MODULE = new TestSearchScope() {
-    public SourceScope getSourceScope(final ModuleBasedConfiguration configuration) {
+    public SourceScope getSourceScope(ModuleBasedConfiguration configuration) {
       return SourceScope.modules(configuration.getModules());
     }
 
@@ -51,7 +51,7 @@ public interface TestSearchScope {
   };
 
   TestSearchScope MODULE_WITH_DEPENDENCIES = new TestSearchScope() {
-    public SourceScope getSourceScope(final ModuleBasedConfiguration configuration) {
+    public SourceScope getSourceScope(ModuleBasedConfiguration configuration) {
       return SourceScope.modulesWithDependencies(configuration.getModules());
     }
 
@@ -70,14 +70,14 @@ public interface TestSearchScope {
     @NonNls private static final String SINGLE_MODULE_NAME = "singleModule";
     @NonNls private static final String MODULE_WITH_DEPENDENCIES_NAME = "moduleWithDependencies";
 
-    public void readExternal(final Element element) throws InvalidDataException {
-      final String value = element.getAttributeValue(DEFAULT_NAME);
+    public void readExternal(Element element) throws InvalidDataException {
+      String value = element.getAttributeValue(DEFAULT_NAME);
       if (SINGLE_MODULE_NAME.equals(value)) myScope = SINGLE_MODULE;
       else if (MODULE_WITH_DEPENDENCIES_NAME.equals(value)) myScope = MODULE_WITH_DEPENDENCIES;
       else myScope = WHOLE_PROJECT;
     }
 
-    public void writeExternal(final Element element) throws WriteExternalException {
+    public void writeExternal(Element element) throws WriteExternalException {
       String name = WHOLE_PROJECT_NAE;
       if (myScope == SINGLE_MODULE) name = SINGLE_MODULE_NAME;
       else if (myScope == MODULE_WITH_DEPENDENCIES) name = MODULE_WITH_DEPENDENCIES_NAME;
@@ -88,7 +88,7 @@ public interface TestSearchScope {
       return myScope;
     }
 
-    public void setScope(final TestSearchScope scope) {
+    public void setScope(TestSearchScope scope) {
       myScope = scope;
     }
   }

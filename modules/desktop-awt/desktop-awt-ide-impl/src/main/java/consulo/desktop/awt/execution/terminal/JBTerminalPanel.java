@@ -162,7 +162,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
 
     private static boolean skipAction(KeyEvent e, List<AnAction> actionsToSkip) {
         if (actionsToSkip != null) {
-            final KeyboardShortcut eventShortcut = new KeyboardShortcut(KeyStroke.getKeyStrokeForEvent(e), null);
+            KeyboardShortcut eventShortcut = new KeyboardShortcut(KeyStroke.getKeyStrokeForEvent(e), null);
             for (AnAction action : actionsToSkip) {
                 for (Shortcut sc : action.getShortcutSet().getShortcuts()) {
                     if (sc.isKeyboard() && sc.startsWith(eventShortcut)) {
@@ -221,7 +221,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
         ImageObserver observer
     ) {
         if (image instanceof JBHiDPIScaledImage) {
-            final Graphics2D newG = (Graphics2D) g.create(0, 0, image.getWidth(observer), image.getHeight(observer));
+            Graphics2D newG = (Graphics2D) g.create(0, 0, image.getWidth(observer), image.getHeight(observer));
             newG.scale(0.5, 0.5);
             Image img = ((JBHiDPIScaledImage) image).getDelegate();
             if (img == null) {
@@ -299,7 +299,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
         return fontInfo.getFont();
     }
 
-    public FontInfo fontForChar(final char c, @JdkConstants.FontStyle int style) {
+    public FontInfo fontForChar(char c, @JdkConstants.FontStyle int style) {
         return ComplementaryFontsRegistry.getFontAbleToDisplay(
             c,
             style,

@@ -87,7 +87,7 @@ public class NaturalLanguageTextSelectioner extends ExtendWordSelectionHandlerBa
     return new TextRange(sentenceStart, sentenceEnd);
   }
 
-  private static boolean isSentenceEnd(String text, final int i) {
+  private static boolean isSentenceEnd(String text, int i) {
     return SENTENCE_END.contains(text.charAt(i)) && (i + 1 == text.length() || Character.isWhitespace(text.charAt(i + 1)));
   }
 
@@ -100,7 +100,7 @@ public class NaturalLanguageTextSelectioner extends ExtendWordSelectionHandlerBa
     }
 
     while (end < editorText.length()) {
-      final char c = editorText.charAt(end);
+      char c = editorText.charAt(end);
       if (!isNatural(c)) {
         break;
       }

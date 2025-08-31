@@ -138,7 +138,7 @@ public class ReconfigureOnChangeFilter extends TurboFilter {
     // update the mask so as to execute change detection code about once every 100
     // to 8000 milliseconds.
     private void updateMaskIfNecessary(long now) {
-        final long timeElapsedSinceLastMaskUpdateCheck = now - lastMaskCheck;
+        long timeElapsedSinceLastMaskUpdateCheck = now - lastMaskCheck;
         lastMaskCheck = now;
         if (timeElapsedSinceLastMaskUpdateCheck < MASK_INCREASE_THRESHOLD && (mask < MAX_MASK)) {
             mask = (mask << 1) | 1;

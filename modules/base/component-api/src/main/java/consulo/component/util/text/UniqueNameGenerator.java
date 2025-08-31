@@ -28,8 +28,8 @@ import java.util.function.Predicate;
 public class UniqueNameGenerator implements Predicate<String> {
   private final Set<String> myExistingNames = new HashSet<>();
 
-  public <T> UniqueNameGenerator(final Collection<T> elements, @Nullable Function<T, String> namer) {
-    for (final T t : elements) {
+  public <T> UniqueNameGenerator(Collection<T> elements, @Nullable Function<T, String> namer) {
+    for (T t : elements) {
       addExistingName(namer != null ? namer.apply(t) : t.toString());
     }
   }
@@ -38,51 +38,51 @@ public class UniqueNameGenerator implements Predicate<String> {
   }
 
   @Override
-  public final boolean test(final String candidate) {
+  public final boolean test(String candidate) {
     return !myExistingNames.contains(candidate);
   }
 
-  public final boolean isUnique(final String name, String prefix, String suffix) {
+  public final boolean isUnique(String name, String prefix, String suffix) {
     return test(prefix + name + suffix);
   }
 
-  public static String generateUniqueName(final String defaultName, final Collection<String> existingNames) {
+  public static String generateUniqueName(String defaultName, Collection<String> existingNames) {
     return generateUniqueName(defaultName, "", "", existingNames);
   }
 
-  public static String generateUniqueName(final String defaultName, final String prefix, final String suffix, final Collection<String> existingNames) {
+  public static String generateUniqueName(String defaultName, String prefix, String suffix, Collection<String> existingNames) {
     return generateUniqueName(defaultName, prefix, suffix, s -> !existingNames.contains(s));
   }
   
-  public static String generateUniqueName(final String defaultName, final Predicate<String> validator) {
+  public static String generateUniqueName(String defaultName, Predicate<String> validator) {
     return generateUniqueName(defaultName, "", "", validator);
   }
 
-  public static String generateUniqueName(final String defaultName, final String prefix, final String suffix, final Predicate<String> validator) {
+  public static String generateUniqueName(String defaultName, String prefix, String suffix, Predicate<String> validator) {
     return generateUniqueName(defaultName, prefix, suffix, "", "", validator);
   }
 
-  public static String generateUniqueName(final String defaultName, final String prefix, final String suffix,
-                                          final String beforeNumber, final String afterNumber, final Predicate<String> validator) {
-    final String defaultFullName = prefix + defaultName + suffix;
+  public static String generateUniqueName(String defaultName, String prefix, String suffix,
+                                          String beforeNumber, String afterNumber, Predicate<String> validator) {
+    String defaultFullName = prefix + defaultName + suffix;
     if (validator.test(defaultFullName)) {
       return defaultFullName;
     }
 
     for (int i = 2; ; i++) {
-      final String fullName = prefix + defaultName + beforeNumber + i + afterNumber + suffix;
+      String fullName = prefix + defaultName + beforeNumber + i + afterNumber + suffix;
       if (validator.test(fullName)) {
         return fullName;
       }
     }
   }
 
-  public String generateUniqueName(final String defaultName, final String prefix, final String suffix) {
+  public String generateUniqueName(String defaultName, String prefix, String suffix) {
     return generateUniqueName(defaultName, prefix, suffix, "", "");
   }
 
-  public String generateUniqueName(final String defaultName, final String prefix, final String suffix, final String beforeNumber, final String afterNumber) {
-    final String result = generateUniqueName(defaultName, prefix, suffix, beforeNumber, afterNumber, this);
+  public String generateUniqueName(String defaultName, String prefix, String suffix, String beforeNumber, String afterNumber) {
+    String result = generateUniqueName(defaultName, prefix, suffix, beforeNumber, afterNumber, this);
     addExistingName(result);
     return result;
   }
@@ -91,7 +91,7 @@ public class UniqueNameGenerator implements Predicate<String> {
     myExistingNames.add(result);
   }
 
-  public String generateUniqueName(final String defaultName) {
+  public String generateUniqueName(String defaultName) {
     return generateUniqueName(defaultName, "", "");
   }
 

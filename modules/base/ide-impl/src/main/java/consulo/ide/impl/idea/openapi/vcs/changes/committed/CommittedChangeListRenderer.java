@@ -49,7 +49,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
   private int myDateWidth;
   private int myFontSize;
 
-  public CommittedChangeListRenderer(final Project project, final List<CommittedChangeListDecorator> decorators) {
+  public CommittedChangeListRenderer(Project project, List<CommittedChangeListDecorator> decorators) {
     myProject = project;
     myRenderer = new IssueLinkRenderer(project, this);
     myDecorators = decorators;
@@ -57,15 +57,15 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     myFontSize = -1;
   }
 
-  public static String getDateOfChangeList(final Date date) {
+  public static String getDateOfChangeList(Date date) {
     return DateFormatUtil.formatPrettyDateTime(date);
   }
 
-  public static Pair<String, Boolean> getDescriptionOfChangeList(final String text) {
+  public static Pair<String, Boolean> getDescriptionOfChangeList(String text) {
     return new Pair<String, Boolean>(text.replaceAll("\n", " // "), text.contains("\n"));
   }
 
-  public static String truncateDescription(final String initDescription, final FontMetrics fontMetrics, int maxWidth) {
+  public static String truncateDescription(String initDescription, FontMetrics fontMetrics, int maxWidth) {
     String description = initDescription;
     int descWidth = fontMetrics.stringWidth(description);
     while(description.length() > 0 && (descWidth > maxWidth)) {
@@ -93,13 +93,13 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
 
   @NonNls
   public void renderChangeList(JComponent tree, CommittedChangeList changeList) {
-    final Container parent = tree.getParent();
-    final int rowX = getRowX(myTree, 2);
+    Container parent = tree.getParent();
+    int rowX = getRowX(myTree, 2);
     int availableWidth = parent == null ? 100 : parent.getWidth() - rowX;
     String date = ", " + getDateOfChangeList(changeList.getCommitDate());
-    final FontMetrics fontMetrics = tree.getFontMetrics(tree.getFont());
-    final FontMetrics boldMetrics = tree.getFontMetrics(tree.getFont().deriveFont(Font.BOLD));
-    final FontMetrics italicMetrics = tree.getFontMetrics(tree.getFont().deriveFont(Font.ITALIC));
+    FontMetrics fontMetrics = tree.getFontMetrics(tree.getFont());
+    FontMetrics boldMetrics = tree.getFontMetrics(tree.getFont().deriveFont(Font.BOLD));
+    FontMetrics italicMetrics = tree.getFontMetrics(tree.getFont().deriveFont(Font.ITALIC));
     if (myDateWidth <= 0 || (fontMetrics.getFont().getSize() != myFontSize)) {
       myDateWidth = Math.max(fontMetrics.stringWidth(", Yesterday 00:00 PM "), fontMetrics.stringWidth(", 00/00/00 00:00 PM "));
       myDateWidth = Math.max(myDateWidth, fontMetrics.stringWidth(getDateOfChangeList(new Date(2000, 11, 31))));
@@ -107,12 +107,12 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     }
     int dateCommitterSize = myDateWidth + boldMetrics.stringWidth(changeList.getCommitterName());
 
-    final Pair<String, Boolean> descriptionInfo = getDescriptionOfChangeList(changeList.getName().trim());
+    Pair<String, Boolean> descriptionInfo = getDescriptionOfChangeList(changeList.getName().trim());
     boolean truncated = descriptionInfo.getSecond().booleanValue();
     String description = descriptionInfo.getFirst();
 
     for (CommittedChangeListDecorator decorator : myDecorators) {
-      final Image icon = decorator.decorate(changeList);
+      Image icon = decorator.decorate(changeList);
       if (icon != null) {
         setIcon(icon);
       }
@@ -122,7 +122,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     boolean partial = (changeList instanceof ReceivedChangeList) && ((ReceivedChangeList)changeList).isPartial();
     int descWidth = 0;
     if (partial) {
-      final String partialMarker = VcsLocalize.committedChangesPartialList().get() + " ";
+      String partialMarker = VcsLocalize.committedChangesPartialList().get() + " ";
       append(partialMarker, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
       descWidth += boldMetrics.stringWidth(partialMarker);
     }
@@ -130,9 +130,9 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     descWidth += fontMetrics.stringWidth(description);
 
     int numberWidth = 0;
-    final AbstractVcs vcs = changeList.getVcs();
+    AbstractVcs vcs = changeList.getVcs();
     if (vcs != null) {
-      final CachingCommittedChangesProvider provider = vcs.getCachingCommittedChangesProvider();
+      CachingCommittedChangesProvider provider = vcs.getCachingCommittedChangesProvider();
       if (provider != null && provider.getChangelistTitle() != null) {
         String number = "#" + changeList.getNumber() + "  ";
         numberWidth = fontMetrics.stringWidth(number);
@@ -162,7 +162,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
       appendFixedTextFragmentWidth(descMaxWidth);
     }
     else {
-      final LocalizeValue moreMarker = VcsLocalize.changesBrowserDetailsMarker();
+      LocalizeValue moreMarker = VcsLocalize.changesBrowserDetailsMarker();
       int moreWidth = fontMetrics.stringWidth(moreMarker.get());
       int remainingWidth = descMaxWidth - moreWidth - numberWidth - branchWidth;
       description = truncateDescription(description, fontMetrics, remainingWidth);
@@ -181,7 +181,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     append(date, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
-  private static String trimLastWord(final String description) {
+  private static String trimLastWord(String description) {
     int pos = description.trim().lastIndexOf(' ');
     if (pos >= 0) {
       return description.substring(0, pos).trim();
@@ -196,14 +196,14 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
 
   public static int getRowX(JTree tree, int depth) {
     if (tree == null) return 0;
-    final TreeUI ui = tree.getUI();
+    TreeUI ui = tree.getUI();
     if (ui instanceof BasicTreeUI) {
-      final BasicTreeUI treeUI = ((BasicTreeUI)ui);
+      BasicTreeUI treeUI = ((BasicTreeUI)ui);
       return (treeUI.getLeftChildIndent() + treeUI.getRightChildIndent()) * depth;
     }
 
-    final int leftIndent = UIUtil.getTreeLeftChildIndent();
-    final int rightIndent = UIUtil.getTreeRightChildIndent();
+    int leftIndent = UIUtil.getTreeLeftChildIndent();
+    int rightIndent = UIUtil.getTreeRightChildIndent();
 
     return (leftIndent + rightIndent) * depth;
   }

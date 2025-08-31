@@ -34,7 +34,7 @@ public class SourceItemsDraggingObject extends PackagingElementDraggingObject {
 
   @Override
   public List<PackagingElement<?>> createPackagingElements(ArtifactEditorContext context) {
-    final List<PackagingElement<?>> result = new ArrayList<PackagingElement<?>>();
+    List<PackagingElement<?>> result = new ArrayList<PackagingElement<?>>();
     for (PackagingSourceItem item : mySourceItems) {
       result.addAll(item.createElements(context));
     }

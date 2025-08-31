@@ -55,7 +55,7 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
 
   public VcsLogFullDetailsIndex(@Nonnull String logId,
                                 @Nonnull String name,
-                                final int version,
+                                int version,
                                 @Nonnull DataIndexer<Integer, T, VcsFullCommitDetails> indexer,
                                 @Nonnull DataExternalizer<T> externalizer,
                                 @Nonnull FatalErrorHandler fatalErrorHandler,

@@ -38,24 +38,24 @@ public class GlassPanel extends JComponent {
     paintSpotlight(g, this);
   }
 
-  public void paintSpotlight(final Graphics g, final JComponent surfaceComponent) {
+  public void paintSpotlight(Graphics g, JComponent surfaceComponent) {
     Dimension size = surfaceComponent.getSize();
     if (myLightComponents.size() > 0) {
       int stroke = 2;
 
-      final Rectangle visibleRect = myPanel.getVisibleRect();
-      final Point leftPoint = SwingUtilities.convertPoint(myPanel, new Point(visibleRect.x, visibleRect.y), surfaceComponent);
+      Rectangle visibleRect = myPanel.getVisibleRect();
+      Point leftPoint = SwingUtilities.convertPoint(myPanel, new Point(visibleRect.x, visibleRect.y), surfaceComponent);
       Area innerPanel = new Area(new Rectangle2D.Double(leftPoint.x, leftPoint.y, visibleRect.width, visibleRect.height));
       Area mask = new Area(new Rectangle(-stroke, -stroke, 2 * stroke + size.width, 2 * stroke + size.height));
       for (JComponent lightComponent : myLightComponents) {
-        final Area area = getComponentArea(surfaceComponent, lightComponent, 1);
+        Area area = getComponentArea(surfaceComponent, lightComponent, 1);
         if (area == null) continue;
 
         if (lightComponent instanceof JLabel) {
-          final JLabel label = (JLabel)lightComponent;
-          final Component labelFor = label.getLabelFor();
+          JLabel label = (JLabel)lightComponent;
+          Component labelFor = label.getLabelFor();
           if (labelFor instanceof JComponent) {
-            final Area labelForArea = getComponentArea(surfaceComponent, (JComponent)labelFor, 1);
+            Area labelForArea = getComponentArea(surfaceComponent, (JComponent)labelFor, 1);
             if (labelForArea != null) {
               area.add(labelForArea);
             }
@@ -86,16 +86,16 @@ public class GlassPanel extends JComponent {
   }
 
   @Nullable
-  private Area getComponentArea(final JComponent surfaceComponent, final JComponent lightComponent, int offset) {
+  private Area getComponentArea(JComponent surfaceComponent, JComponent lightComponent, int offset) {
     if (!lightComponent.isShowing()) return null;
 
-    final Point panelPoint = SwingUtilities.convertPoint(lightComponent, new Point(0, 0), surfaceComponent);
-    final int x = panelPoint.x;
-    final int y = panelPoint.y;
+    Point panelPoint = SwingUtilities.convertPoint(lightComponent, new Point(0, 0), surfaceComponent);
+    int x = panelPoint.x;
+    int y = panelPoint.y;
 
     Insets insetsToIgnore = lightComponent.getInsets();
-    final boolean isWithBorder = Boolean.TRUE.equals(lightComponent.getClientProperty(SearchUtil.HIGHLIGHT_WITH_BORDER));
-    final boolean isLabelFromTabbedPane = Boolean.TRUE.equals(lightComponent.getClientProperty(JBTabbedPane.LABEL_FROM_TABBED_PANE));
+    boolean isWithBorder = Boolean.TRUE.equals(lightComponent.getClientProperty(SearchUtil.HIGHLIGHT_WITH_BORDER));
+    boolean isLabelFromTabbedPane = Boolean.TRUE.equals(lightComponent.getClientProperty(JBTabbedPane.LABEL_FROM_TABBED_PANE));
 
     if (insetsToIgnore == null || isWithBorder) {
       insetsToIgnore = EMPTY_INSETS;
@@ -139,12 +139,12 @@ public class GlassPanel extends JComponent {
     return Math.PI * component.getWidth() * component.getHeight() / 4.0;
   }
 
-  public void addSpotlight(final JComponent component) {
+  public void addSpotlight(JComponent component) {
     myLightComponents.add(component);
     setVisible(true);
   }
 
-  public void removeSpotlight(final JComponent component) {
+  public void removeSpotlight(JComponent component) {
     myLightComponents.remove(component);
     if (myLightComponents.isEmpty()) {
       setVisible(false);

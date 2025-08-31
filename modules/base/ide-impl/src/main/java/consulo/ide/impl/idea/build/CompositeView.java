@@ -107,7 +107,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
 
   @Nonnull
   public AnAction[] getSwitchActions() {
-    final DefaultActionGroup actionGroup = new DefaultActionGroup();
+    DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.addSeparator();
     actionGroup.add(mySwitchViewAction);
     return new AnAction[]{actionGroup};
@@ -166,7 +166,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      final Presentation presentation = e.getPresentation();
+      Presentation presentation = e.getPresentation();
       if (myViewMap.size() <= 1) {
         presentation.setEnabledAndVisible(false);
       }
@@ -177,7 +177,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     }
 
     @Override
-    public boolean isSelected(final @Nonnull AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       String visibleViewName = myVisibleViewRef.get();
       if (visibleViewName == null) return true;
       Set<String> viewNames = myViewMap.keySet();
@@ -185,7 +185,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     }
 
     @Override
-    public void setSelected(final @Nonnull AnActionEvent event, final boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       if (myViewMap.size() > 1) {
         List<String> names = new ArrayList<>(myViewMap.keySet());
         String viewName = flag ? names.get(0) : names.get(1);

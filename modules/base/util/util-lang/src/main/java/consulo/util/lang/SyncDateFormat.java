@@ -44,7 +44,7 @@ public class SyncDateFormat {
     return myDelegate.format(time);
   }
 
-  public synchronized void setTimeZone(final TimeZone timeZone) {
+  public synchronized void setTimeZone(TimeZone timeZone) {
     myDelegate.setTimeZone(timeZone);
   }
 

@@ -35,5 +35,5 @@ public interface StorageNotificationService {
 
   void notify(@Nonnull NotificationType notificationType, @Nonnull String title, @Nonnull String text, @Nullable ComponentManager project);
 
-  void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor, @Nonnull final ComponentManager project, @Nullable final String componentName);
+  void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor, @Nonnull ComponentManager project, @Nullable String componentName);
 }

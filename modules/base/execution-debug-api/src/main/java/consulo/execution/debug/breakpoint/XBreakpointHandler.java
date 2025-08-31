@@ -46,6 +46,6 @@ public abstract class XBreakpointHandler<B extends XBreakpoint<?>> {
    * be used for performance purposes. For example the breakpoint may be disabled rather than removed in the debugging engine if
    * <code>temporary</code> is <code>true</code>
    */
-  public abstract void unregisterBreakpoint(@Nonnull B breakpoint, final boolean temporary);
+  public abstract void unregisterBreakpoint(@Nonnull B breakpoint, boolean temporary);
 
 }

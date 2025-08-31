@@ -36,7 +36,7 @@ public abstract class SemService {
 
   @Nullable
   public <T extends SemElement> T getSemElement(SemKey<T> key, @Nonnull PsiElement psi) {
-    final List<T> list = getSemElements(key, psi);
+    List<T> list = getSemElements(key, psi);
     if (list.isEmpty()) return null;
     return list.get(0);
   }

@@ -48,7 +48,7 @@ public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBu
   }
 
   @Override
-  public Block createBlockBeforeInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, final TextRange range) {
+  public Block createBlockBeforeInjection(ASTNode node, Wrap wrap, Alignment alignment, Indent indent, TextRange range) {
     return new GlueBlock(node, wrap, alignment, indent, range);
   }
 

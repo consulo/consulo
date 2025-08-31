@@ -22,7 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
  * @since 2012-07-06
  */
 public class ActionUpdateHelper extends AbstractActionStateConsumer {
-  public void apply(final AnActionEvent e) {
+  public void apply(AnActionEvent e) {
     e.getPresentation().setVisible(myVisible);
     e.getPresentation().setEnabled(myEnabled);
   }

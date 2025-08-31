@@ -35,8 +35,8 @@ public class FileNameCache {
   private static final IntSLRUCache<CharSequence>[] ourNameCache = new IntSLRUCache[16];
 
   static {
-    final int protectedSize = 40000 / ourNameCache.length;
-    final int probationalSize = 20000 / ourNameCache.length;
+    int protectedSize = 40000 / ourNameCache.length;
+    int probationalSize = 20000 / ourNameCache.length;
     for (int i = 0; i < ourNameCache.length; ++i) {
       ourNameCache[i] = new IntSLRUCache<>(protectedSize, probationalSize);
     }
@@ -46,7 +46,7 @@ public class FileNameCache {
 
   public static int storeName(@Nonnull String name) {
     assertShortFileName(name);
-    final int idx = FSRecords.getNameId(name);
+    int idx = FSRecords.getNameId(name);
     cacheData(name, idx, calcStripeIdFromNameId(idx));
     return idx;
   }
@@ -55,7 +55,7 @@ public class FileNameCache {
     if (name.length() <= 1) return;
     int start = 0;
     if (Platform.current().os().isWindows() && name.startsWith("//")) {  // Windows UNC: //Network/Ubuntu
-      final int idx = name.indexOf('/', 2);
+      int idx = name.indexOf('/', 2);
       start = idx == -1 ? 2 : idx + 1;
     }
     if (StringUtil.containsAnyChar(name, FS_SEPARATORS, start, name.length())) {
@@ -128,7 +128,7 @@ public class FileNameCache {
       ourMisses.incrementAndGet();
     }
 
-    final int stripe = calcStripeIdFromNameId(nameId);
+    int stripe = calcStripeIdFromNameId(nameId);
     IntSLRUCache<CharSequence> cache = ourNameCache[stripe];
     //noinspection SynchronizationOnLocalVariableOrMethodParameter
     synchronized (cache) {

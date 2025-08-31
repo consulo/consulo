@@ -95,9 +95,9 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     addThreadToInterrupt();
     try {
       while (!isStopping()) {
-        final Request request = myRequests.take();
+        Request request = myRequests.take();
         LOG.debug("sending request: " + request);
-        final TimeoutInfo timeoutInfo = myTimeouts.remove(request.getId());
+        TimeoutInfo timeoutInfo = myTimeouts.remove(request.getId());
         if (timeoutInfo != null) {
           myResponseProcessor.registerTimeoutHandler(request.getId(), timeoutInfo.myTimeout, timeoutInfo.myOnTimeout);
         }
@@ -180,8 +180,8 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     setStatus(ConnectionStatus.CONNECTED, null);
     LOG.debug("connected");
 
-    final OutputStream outputStream = socket.getOutputStream();
-    final InputStream inputStream = socket.getInputStream();
+    OutputStream outputStream = socket.getOutputStream();
+    InputStream inputStream = socket.getInputStream();
     myResponseProcessor.startReading(myExternalizerFactory.createResponseReader(inputStream));
     processRequests(myExternalizerFactory.createRequestWriter(outputStream));
   }

@@ -40,7 +40,7 @@ class VirtualFileImpl extends HttpVirtualFile {
   private final String myParentPath;
   private final String myName;
 
-  VirtualFileImpl(HttpFileSystemBase fileSystem, String path, final @Nullable RemoteFileInfoImpl fileInfo) {
+  VirtualFileImpl(HttpFileSystemBase fileSystem, String path, @Nullable RemoteFileInfoImpl fileInfo) {
     myFileSystem = fileSystem;
     myPath = path;
     myFileInfo = fileInfo;
@@ -224,7 +224,7 @@ class VirtualFileImpl extends HttpVirtualFile {
   }
 
   @Override
-  public void refresh(final boolean asynchronous, final boolean recursive, final Runnable postRunnable) {
+  public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
     if (myFileInfo != null) {
       myFileInfo.refresh(postRunnable);
     }

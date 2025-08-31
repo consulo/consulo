@@ -54,17 +54,17 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
         }
 
         @Override
-        public void setText2Value(final LocalizeValue text) {
+        public void setText2Value(LocalizeValue text) {
             UIUtil.invokeLaterIfNeeded(() -> myLabel.setText(text.get()));
         }
 
         @Override
-        public void setFraction(final double fraction) {
+        public void setFraction(double fraction) {
             UIUtil.invokeLaterIfNeeded(() -> myProgressBar.setValue((int)(fraction * 100d)));
         }
 
         @Override
-        public void setIndeterminate(final boolean indeterminate) {
+        public void setIndeterminate(boolean indeterminate) {
             UIUtil.invokeLaterIfNeeded(() -> myProgressBar.setIndeterminate(indeterminate));
         }
     }
@@ -95,7 +95,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
     @Override
     @RequiredUIAccess
     public boolean beforeShown(boolean forward) {
-        final Set<PluginDescriptor> pluginsForDownload =
+        Set<PluginDescriptor> pluginsForDownload =
             myPluginsStepPanel == null ? Collections.<PluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
         if (pluginsForDownload.isEmpty()) {
             add(createStartButton());
@@ -110,7 +110,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
 
             UIAccess uiAccess = UIAccess.current();
 
-            final ProgressIndicator indicator = new MyProgressIndicator(infoLabel, progressBar);
+            ProgressIndicator indicator = new MyProgressIndicator(infoLabel, progressBar);
             Application.get().executeOnPooledThread(() -> {
                 for (PluginDescriptor pluginDescriptor : pluginsForDownload) {
                     try {

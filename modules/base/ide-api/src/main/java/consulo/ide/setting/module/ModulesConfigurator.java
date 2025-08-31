@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
  */
 public interface ModulesConfigurator extends ModulesProvider {
   @Nonnull
-  String getRealName(final Module module);
+  String getRealName(Module module);
 
   boolean isModuleModelCommitted();
 

@@ -62,7 +62,7 @@ public class FakeVisiblePackBuilder {
     @Nonnull VisibleGraphImpl<Integer> oldGraph,
     @Nonnull VcsLogFilterCollection filters
   ) {
-    final PermanentGraphInfo<Integer> info = oldGraph.buildSimpleGraphInfo();
+    PermanentGraphInfo<Integer> info = oldGraph.buildSimpleGraphInfo();
     Set<Integer> heads = ContainerUtil.map2Set(
       info.getPermanentGraphLayout().getHeadNodeIndex(),
       integer -> info.getPermanentCommitsInfo().getCommitId(integer)

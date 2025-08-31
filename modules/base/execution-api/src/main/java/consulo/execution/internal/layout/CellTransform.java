@@ -38,7 +38,7 @@ public interface CellTransform {
       public ActionCallback restoreInGrid() {
         myRestoringNow = true;
         if (myActions.size() == 0) return new ActionCallback.Done();
-        final ActionCallback topCallback = restore(0);
+        ActionCallback topCallback = restore(0);
         return topCallback.doWhenDone(new Runnable() {
           @Override
           public void run() {
@@ -50,8 +50,8 @@ public interface CellTransform {
 
       private ActionCallback restore(final int index) {
         final ActionCallback result = new ActionCallback();
-        final Restore action = myActions.get(index);
-        final ActionCallback actionCalback = action.restoreInGrid();
+        Restore action = myActions.get(index);
+        ActionCallback actionCalback = action.restoreInGrid();
         actionCalback.doWhenDone(new Runnable() {
           @Override
           public void run() {

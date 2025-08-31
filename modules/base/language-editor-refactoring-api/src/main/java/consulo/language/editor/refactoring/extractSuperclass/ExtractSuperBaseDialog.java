@@ -133,7 +133,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
 
     protected JComponent createActionComponent() {
         Box box = Box.createHorizontalBox();
-        final String s = StringUtil.decapitalize(getEntityName());
+        String s = StringUtil.decapitalize(getEntityName());
         myRbExtractSuperclass = new JRadioButton();
         myRbExtractSuperclass.setText(RefactoringLocalize.extractsuperExtract(s).get());
         myRbExtractSubclass = new JRadioButton();
@@ -141,7 +141,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
         box.add(myRbExtractSuperclass);
         box.add(myRbExtractSubclass);
         box.add(Box.createHorizontalGlue());
-        final ButtonGroup buttonGroup = new ButtonGroup();
+        ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(myRbExtractSuperclass);
         buttonGroup.add(myRbExtractSubclass);
         customizeRadiobuttons(box, buttonGroup);
@@ -229,9 +229,9 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
     @Override
     @RequiredUIAccess
     protected void doAction() {
-        final String[] errorString = new String[]{null};
-        final String extractedSuperName = getExtractedSuperName();
-        final String packageName = getTargetPackageName();
+        String[] errorString = new String[]{null};
+        String extractedSuperName = getExtractedSuperName();
+        String packageName = getTargetPackageName();
         RecentsManager.getInstance(myProject).registerRecentEntry(getDestinationPackageRecentKey(), packageName);
 
         if ("".equals(extractedSuperName)) {

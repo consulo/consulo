@@ -71,7 +71,7 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
     List<Module> suitableModules = getSuitableModules(context);
     List<Module> selected = context.chooseModules(suitableModules, ProjectLocalize.dialogTitlePackagingChooseModule().get());
 
-    final List<PackagingElement<?>> elements = new ArrayList<>();
+    List<PackagingElement<?>> elements = new ArrayList<>();
     for (Module module : selected) {
       elements.add(createElement(context.getProject(), ModuleUtilCore.createPointer(module)));
     }

@@ -54,7 +54,7 @@ public class UpdateRootNode extends GroupTreeNode {
                                             fileGroup.getInvalidAttributes(), myProject, fileGroup.getErrorsMap(), fileGroup.getId());
     Disposer.register(this, group);
     parent.add(group);
-    for (final String s : fileGroup.getFiles()) {
+    for (String s : fileGroup.getFiles()) {
       group.addFilePath(s);
     }
     return group;

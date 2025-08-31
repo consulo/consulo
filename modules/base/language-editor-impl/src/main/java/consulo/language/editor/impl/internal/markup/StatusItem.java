@@ -71,7 +71,7 @@ public final class StatusItem {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("StatusItem{");
+    StringBuilder sb = new StringBuilder("StatusItem{");
     sb.append("myText='").append(myText).append('\'');
     sb.append(", myIcon=").append(myIcon);
     sb.append(", myType='").append(myType).append('\'');

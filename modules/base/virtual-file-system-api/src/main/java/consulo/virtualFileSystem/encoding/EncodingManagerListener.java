@@ -16,5 +16,5 @@ public interface EncodingManagerListener {
    * @param oldValue
    * @param newValue
    */
-  void propertyChanged(@Nullable Object document, @Nonnull String propertyName, final Object oldValue, final Object newValue);
+  void propertyChanged(@Nullable Object document, @Nonnull String propertyName, Object oldValue, Object newValue);
 }

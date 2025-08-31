@@ -47,9 +47,9 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
     private final Consumer<TodoFilter> myTodoFilterConsumer;
 
     public SetTodoFilterAction(
-        final Project project,
-        final TodoPanelSettings toDoSettings,
-        final Consumer<TodoFilter> todoFilterConsumer
+        Project project,
+        TodoPanelSettings toDoSettings,
+        Consumer<TodoFilter> todoFilterConsumer
     ) {
         super(IdeLocalize.actionFilterTodoItems(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
         setPopup(true);

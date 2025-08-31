@@ -32,13 +32,13 @@ public class DefaultNonCodeSearchElementDescriptionProvider implements ElementDe
   public static final DefaultNonCodeSearchElementDescriptionProvider INSTANCE = new DefaultNonCodeSearchElementDescriptionProvider();
 
   @Override
-  public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
+  public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
     if (!(location instanceof NonCodeSearchDescriptionLocation)) return null;
-    final NonCodeSearchDescriptionLocation ncdLocation = (NonCodeSearchDescriptionLocation)location;
+    NonCodeSearchDescriptionLocation ncdLocation = (NonCodeSearchDescriptionLocation)location;
 
     if (element instanceof PsiDirectory) {
       if (ncdLocation.isNonJava()) {
-        final String qName = PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, false);
+        String qName = PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, false);
         if (qName.length() > 0) return qName;
         return null;
       }
@@ -46,8 +46,8 @@ public class DefaultNonCodeSearchElementDescriptionProvider implements ElementDe
     }
 
     if (element instanceof PsiMetaOwner) {
-      final PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
-      final PsiMetaData metaData = psiMetaOwner.getMetaData();
+      PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
+      PsiMetaData metaData = psiMetaOwner.getMetaData();
       if (metaData != null) {
         return metaData.getName();
       }

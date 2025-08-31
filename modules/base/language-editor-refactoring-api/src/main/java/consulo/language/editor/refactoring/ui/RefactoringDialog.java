@@ -179,7 +179,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
     }
 
     protected void invokeRefactoring(BaseRefactoringProcessor processor) {
-        final Runnable prepareSuccessfulCallback = () -> close(DialogWrapper.OK_EXIT_CODE);
+        Runnable prepareSuccessfulCallback = () -> close(DialogWrapper.OK_EXIT_CODE);
         processor.setPrepareSuccessfulSwingThreadCallback(prepareSuccessfulCallback);
         processor.setPreviewUsages(isPreviewUsages());
         processor.run();

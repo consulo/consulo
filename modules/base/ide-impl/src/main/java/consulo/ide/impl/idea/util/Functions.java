@@ -32,7 +32,7 @@ public class Functions {
     return Function.identity();
   }
 
-  public static <A, B> Function<A, B> constant(final B b) {
+  public static <A, B> Function<A, B> constant(B b) {
     return a -> b;
   }
 
@@ -40,7 +40,7 @@ public class Functions {
     return a -> ObjectUtil.tryCast(a, clazz);
   }
 
-  public static <A, B, C> Function<A, C> compose(final Function<A, B> f1, final Function<B, ? extends C> f2) {
+  public static <A, B, C> Function<A, C> compose(Function<A, B> f1, Function<B, ? extends C> f2) {
     return a -> f2.apply(f1.apply(a));
   }
 
@@ -48,7 +48,7 @@ public class Functions {
     return Object::toString;
   }
 
-  public static <A, B> Function<A, B> fromMap(final Map<A, B> map) {
+  public static <A, B> Function<A, B> fromMap(Map<A, B> map) {
     return map::get;
   }
 

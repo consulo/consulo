@@ -158,17 +158,17 @@ public class AbstractRerunFailedTestsAction extends AnAction {
             return;
         }
 
-        final ExecutionEnvironmentBuilder environmentBuilder = new ExecutionEnvironmentBuilder(environment).runProfile(profile);
+        ExecutionEnvironmentBuilder environmentBuilder = new ExecutionEnvironmentBuilder(environment).runProfile(profile);
 
-        final InputEvent event = e.getInputEvent();
+        InputEvent event = e.getInputEvent();
         if (!(event instanceof MouseEvent) || !event.isShiftDown()) {
             performAction(environmentBuilder);
             return;
         }
 
-        final LinkedHashMap<Executor, ProgramRunner> availableRunners = new LinkedHashMap<>();
+        LinkedHashMap<Executor, ProgramRunner> availableRunners = new LinkedHashMap<>();
         for (Executor ex : new Executor[]{DefaultRunExecutor.getRunExecutorInstance(), DefaultDebugExecutor.getDebugExecutorInstance()}) {
-            final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(ex.getId(), profile);
+            ProgramRunner runner = RunnerRegistry.getInstance().getRunner(ex.getId(), profile);
             if (runner != null) {
                 availableRunners.put(ex, runner);
             }
@@ -274,12 +274,12 @@ public class AbstractRerunFailedTestsAction extends AnAction {
 
         ///////////////////////////////////Delegates
         @Override
-        public void readExternal(final Element element) throws InvalidDataException {
+        public void readExternal(Element element) throws InvalidDataException {
             myConfiguration.readExternal(element);
         }
 
         @Override
-        public void writeExternal(final Element element) throws WriteExternalException {
+        public void writeExternal(Element element) throws WriteExternalException {
             myConfiguration.writeExternal(element);
         }
 
@@ -296,12 +296,12 @@ public class AbstractRerunFailedTestsAction extends AnAction {
         }
 
         @Override
-        public ConfigurationPerRunnerSettings createRunnerSettings(final ConfigurationInfoProvider provider) {
+        public ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider) {
             return myConfiguration.createRunnerSettings(provider);
         }
 
         @Override
-        public SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(final ProgramRunner runner) {
+        public SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner) {
             return myConfiguration.getRunnerSettingsEditor(runner);
         }
 

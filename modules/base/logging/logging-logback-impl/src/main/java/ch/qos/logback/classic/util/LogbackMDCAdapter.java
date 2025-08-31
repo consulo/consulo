@@ -138,7 +138,7 @@ public class LogbackMDCAdapter implements MDCAdapter  {
         if (readOnlyMap == null) {
             Map<String, String> current = readWriteThreadLocalMap.get();
             if (current != null) {
-                final Map<String, String> tempMap = new HashMap<String, String>(current);
+                Map<String, String> tempMap = new HashMap<String, String>(current);
                 readOnlyMap = Collections.unmodifiableMap(tempMap);
                 readOnlyThreadLocalMap.set(readOnlyMap);
             }

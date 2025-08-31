@@ -20,7 +20,7 @@ public class ConsoleTerminalHandlerImpl extends TerminalHandlerBase {
 
     public ConsoleTerminalHandlerImpl(String presentableName,
                                       Project project,
-                                      final InputStream terminalOutput,
+                                      InputStream terminalOutput,
                                       final OutputStream terminalInput) {
         super(presentableName);
 

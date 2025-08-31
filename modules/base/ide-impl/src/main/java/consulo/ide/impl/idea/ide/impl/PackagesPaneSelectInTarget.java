@@ -40,14 +40,14 @@ public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
   @Override
   public boolean canSelect(PsiFileSystemItem file) {
     if (!super.canSelect(file)) return false;
-    final VirtualFile vFile = PsiUtilBase.getVirtualFile(file);
+    VirtualFile vFile = PsiUtilBase.getVirtualFile(file);
 
     return canSelect(vFile);
   }
 
-  private boolean canSelect(final VirtualFile vFile) {
+  private boolean canSelect(VirtualFile vFile) {
     if (vFile != null && vFile.isValid()) {
-      final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+      ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
       return fileIndex.isInSourceContent(vFile) || isInLibraryContentOnly(vFile);
     }
     else {
@@ -60,7 +60,7 @@ public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
     return canSelect(context);
   }
 
-  private boolean isInLibraryContentOnly(final VirtualFile vFile) {
+  private boolean isInLibraryContentOnly(VirtualFile vFile) {
     if (vFile == null) {
       return false;
     }

@@ -47,7 +47,7 @@ public class CenteredIcon implements Icon {
     int offsetY;
 
     if (myCenteredInComponent) {
-      final Dimension size = c.getSize();
+      Dimension size = c.getSize();
       offsetX = size.width / 2 - myIcon.getIconWidth() / 2;
       offsetY = size.height / 2 - myIcon.getIconHeight() / 2;
     }

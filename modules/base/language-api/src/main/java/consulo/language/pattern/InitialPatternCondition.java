@@ -35,7 +35,7 @@ public abstract class InitialPatternCondition<T> {
     return myAcceptedClass;
   }
 
-  public boolean accepts(@Nullable Object o, final ProcessingContext context) {
+  public boolean accepts(@Nullable Object o, ProcessingContext context) {
     return myAcceptedClass.isInstance(o);
   }
 
@@ -46,7 +46,7 @@ public abstract class InitialPatternCondition<T> {
     return builder.toString();
   }
 
-  public void append(@Nonnull StringBuilder builder, final String indent) {
+  public void append(@Nonnull StringBuilder builder, String indent) {
     builder.append("instanceOf(").append(myAcceptedClass.getSimpleName()).append(")");
   }
 }

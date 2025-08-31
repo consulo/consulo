@@ -28,7 +28,7 @@ public class TestDialogWithValidationAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       new ValidationTest(project).show();
     }

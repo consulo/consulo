@@ -43,14 +43,14 @@ public class ProjectFileIndexFacade extends FileIndexFacade {
   private final Provider<DirectoryIndex> myDirectoryIndexProvider;
 
   @Inject
-  public ProjectFileIndexFacade(final Project project, final ProjectRootManager rootManager, final Provider<DirectoryIndex> directoryIndex) {
+  public ProjectFileIndexFacade(Project project, ProjectRootManager rootManager, Provider<DirectoryIndex> directoryIndex) {
     super(project);
     myDirectoryIndexProvider = directoryIndex;
     myFileIndex = rootManager.getFileIndex();
   }
 
   @Override
-  public boolean isInContent(@Nonnull final VirtualFile file) {
+  public boolean isInContent(@Nonnull VirtualFile file) {
     return myFileIndex.isInContent(file);
   }
 
@@ -75,7 +75,7 @@ public class ProjectFileIndexFacade extends FileIndexFacade {
   }
 
   @Override
-  public boolean isExcludedFile(@Nonnull final VirtualFile file) {
+  public boolean isExcludedFile(@Nonnull VirtualFile file) {
     return myFileIndex.isExcluded(file);
   }
 
@@ -97,7 +97,7 @@ public class ProjectFileIndexFacade extends FileIndexFacade {
   }
 
   @Override
-  public boolean isValidAncestor(@Nonnull final VirtualFile baseDir, @Nonnull VirtualFile childDir) {
+  public boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile childDir) {
     if (!childDir.isDirectory()) {
       childDir = childDir.getParent();
     }

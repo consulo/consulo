@@ -39,7 +39,7 @@ public class RefModuleImpl extends RefEntityImpl implements RefModule {
   }
 
   @Override
-  public synchronized void add(@Nonnull final RefEntity child) {
+  public synchronized void add(@Nonnull RefEntity child) {
     if (myChildren == null) {
       myChildren = new ArrayList<>();
     }
@@ -51,14 +51,14 @@ public class RefModuleImpl extends RefEntityImpl implements RefModule {
   }
 
   @Override
-  public synchronized void removeChild(@Nonnull final RefEntity child) {
+  public synchronized void removeChild(@Nonnull RefEntity child) {
     if (myChildren != null) {
       myChildren.remove(child);
     }
   }
 
   @Override
-  public void accept(@Nonnull final RefVisitor refVisitor) {
+  public void accept(@Nonnull RefVisitor refVisitor) {
     ApplicationManager.getApplication().runReadAction(() -> refVisitor.visitModule(this));
   }
 
@@ -74,12 +74,12 @@ public class RefModuleImpl extends RefEntityImpl implements RefModule {
   }
 
   @Override
-  public Image getIcon(final boolean expanded) {
+  public Image getIcon(boolean expanded) {
     return AllIcons.Nodes.Module;
   }
 
   @Nullable
-  static RefEntity moduleFromName(final RefManager manager, final String name) {
+  static RefEntity moduleFromName(RefManager manager, String name) {
     return manager.getRefModule(ModuleManager.getInstance(manager.getProject()).findModuleByName(name));
   }
 }

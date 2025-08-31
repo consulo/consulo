@@ -89,7 +89,7 @@ class EditVariableDialog extends DialogWrapper {
     }
 
     private JComponent createVariablesTable() {
-        final String[] names = {
+        String[] names = {
             CodeInsightLocalize.templatesDialogEditVariablesTableColumnName().get(),
             CodeInsightLocalize.templatesDialogEditVariablesTableColumnExpression().get(),
             CodeInsightLocalize.templatesDialogEditVariablesTableColumnDefaultValue().get(),
@@ -143,7 +143,7 @@ class EditVariableDialog extends DialogWrapper {
         cellEditor.setClickCountToStart(1);
         myTable.setDefaultEditor(String.class, cellEditor);
 
-        final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myTable).disableAddAction().disableRemoveAction();
+        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myTable).disableAddAction().disableRemoveAction();
         return decorator.createPanel();
     }
 
@@ -180,8 +180,8 @@ class EditVariableDialog extends DialogWrapper {
     }*/
 
     @RequiredUIAccess
-    private void updateTemplateTextByVarNameChange(final Variable oldVar, final Variable newVar) {
-        final Document document = myEditor.getDocument();
+    private void updateTemplateTextByVarNameChange(Variable oldVar, Variable newVar) {
+        Document document = myEditor.getDocument();
         CommandProcessor.getInstance().newCommand()
             .document(document)
             .inWriteAction()

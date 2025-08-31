@@ -54,28 +54,28 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   @RequiredWriteAction
   @Override
   public void commit() {
-    for (final LibrariesModifiableModel provider : myLevel2Providers.values()) {
+    for (LibrariesModifiableModel provider : myLevel2Providers.values()) {
       provider.deferredCommit();
     }
   }
 
   @Override
   public void dispose() {
-    for (final LibrariesModifiableModel provider : myLevel2Providers.values()) {
+    for (LibrariesModifiableModel provider : myLevel2Providers.values()) {
       provider.disposeUncommittedLibraries();
     }
   }
 
   @Override
   public void reset() {
-    final LibraryTablesRegistrar tablesRegistrar = LibraryTablesRegistrar.getInstance();
+    LibraryTablesRegistrar tablesRegistrar = LibraryTablesRegistrar.getInstance();
 
     myLevel2Providers.clear();
     myLevel2Providers.put(LibraryTablesRegistrar.PROJECT_LEVEL, new LibrariesModifiableModel(tablesRegistrar.getLibraryTable(myProject), myProject, this));
   }
 
   @Override
-  public LibraryTableModifiableModelProvider createModifiableModelProvider(final String level) {
+  public LibraryTableModifiableModelProvider createModifiableModelProvider(String level) {
     return new StructureLibraryTableModifiableModelProvider(level, this);
   }
 
@@ -102,11 +102,11 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   @Nonnull
   @Override
   public VirtualFile[] getLibraryFiles(Library library, OrderRootType type) {
-    final LibraryTable table = library.getTable();
+    LibraryTable table = library.getTable();
     if (table != null) {
-      final LibraryTable.ModifiableModel modifiableModel = getModifiableLibraryTable(table);
+      LibraryTable.ModifiableModel modifiableModel = getModifiableLibraryTable(table);
       if (modifiableModel instanceof LibrariesModifiableModel) {
-        final LibrariesModifiableModel librariesModel = (LibrariesModifiableModel)modifiableModel;
+        LibrariesModifiableModel librariesModel = (LibrariesModifiableModel)modifiableModel;
         if (librariesModel.hasLibraryEditor(library)) {
           return librariesModel.getLibraryEditor(library).getFiles(type);
         }
@@ -118,7 +118,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   @Nonnull
   @Override
   public LibraryTable.ModifiableModel getModifiableLibraryTable(@Nonnull LibraryTable table) {
-    final String tableLevel = table.getTableLevel();
+    String tableLevel = table.getTableLevel();
     if (tableLevel.equals(LibraryTableImplUtil.MODULE_LEVEL)) {
       return table.getModifiableModel();
     }
@@ -127,9 +127,9 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
 
   @Override
   @Nullable
-  public Library getLibrary(final String libraryName, final String libraryLevel) {
+  public Library getLibrary(String libraryName, String libraryLevel) {
     /* the null check is added only to prevent NPE when called from getLibrary */
-    final LibrariesModifiableModel model = myLevel2Providers.get(libraryLevel);
+    LibrariesModifiableModel model = myLevel2Providers.get(libraryLevel);
     return model == null ? null : findLibraryModel(libraryName, model);
   }
 
@@ -151,7 +151,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   @Override
   @Nullable
   public Library getLibraryModel(@Nonnull Library library) {
-    final LibraryTable libraryTable = library.getTable();
+    LibraryTable libraryTable = library.getTable();
     if (libraryTable != null) {
       return findLibraryModel(library, myLevel2Providers.get(libraryTable.getTableLevel()));
     }
@@ -159,9 +159,9 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   }
 
   @Nullable
-  private static Library findLibraryModel(final @Nonnull String libraryName, @Nonnull LibrariesModifiableModel model) {
+  private static Library findLibraryModel(@Nonnull String libraryName, @Nonnull LibrariesModifiableModel model) {
     for (Library library : model.getLibraries()) {
-      final Library libraryModel = findLibraryModel(library, model);
+      Library libraryModel = findLibraryModel(library, model);
       if (libraryModel != null && libraryName.equals(libraryModel.getName())) {
         return libraryModel;
       }
@@ -170,7 +170,7 @@ public class DefaultLibrariesConfigurator implements LibrariesConfigurator {
   }
 
   @Nullable
-  private static Library findLibraryModel(final Library library, LibrariesModifiableModel tableModel) {
+  private static Library findLibraryModel(Library library, LibrariesModifiableModel tableModel) {
     if (tableModel == null) return library;
     if (tableModel.wasLibraryRemoved(library)) return null;
     return tableModel.hasLibraryEditor(library) ? (Library)tableModel.getLibraryEditor(library).getModel() : library;

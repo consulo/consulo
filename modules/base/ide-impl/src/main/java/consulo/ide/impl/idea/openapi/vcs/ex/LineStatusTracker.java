@@ -59,10 +59,10 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   @Nonnull
   private Mode myMode;
 
-  private LineStatusTracker(@Nonnull final Project project,
-                            @Nonnull final Document document,
-                            @Nonnull final VirtualFile virtualFile,
-                            @Nonnull final Mode mode) {
+  private LineStatusTracker(@Nonnull Project project,
+                            @Nonnull Document document,
+                            @Nonnull VirtualFile virtualFile,
+                            @Nonnull Mode mode) {
     super(project, document);
     myVirtualFile = virtualFile;
     myMode = mode;
@@ -118,11 +118,11 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   @Override
   @RequiredUIAccess
   protected void installNotification(@Nonnull String text) {
-    final FileEditor[] editors = myFileEditorManager.getAllEditors(myVirtualFile);
+    FileEditor[] editors = myFileEditorManager.getAllEditors(myVirtualFile);
     for (FileEditor editor : editors) {
       JPanel panel = editor.getUserData(PANEL_KEY);
       if (panel == null) {
-        final JPanel newPanel = new EditorNotificationPanel().text(text);
+        JPanel newPanel = new EditorNotificationPanel().text(text);
         editor.putUserData(PANEL_KEY, newPanel);
         myFileEditorManager.addTopComponent(editor, newPanel);
       }
@@ -132,9 +132,9 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   @Override
   @RequiredUIAccess
   protected void destroyNotification() {
-    final FileEditor[] editors = myFileEditorManager.getEditors(myVirtualFile);
+    FileEditor[] editors = myFileEditorManager.getEditors(myVirtualFile);
     for (FileEditor editor : editors) {
-      final JPanel panel = editor.getUserData(PANEL_KEY);
+      JPanel panel = editor.getUserData(PANEL_KEY);
       if (panel != null) {
         myFileEditorManager.removeTopComponent(editor, panel);
         editor.putUserData(PANEL_KEY, null);

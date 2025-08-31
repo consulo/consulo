@@ -43,7 +43,7 @@ public class ArrangementSectionRulesValidator extends ArrangementMatchingRulesVa
     }
 
     if (mySectionRuleManager != null) {
-      final ArrangementSectionRuleManager.ArrangementSectionRuleData data = extractSectionText(index);
+      ArrangementSectionRuleManager.ArrangementSectionRuleData data = extractSectionText(index);
       if (data != null) {
         return validateSectionRule(data, index);
       }
@@ -54,9 +54,9 @@ public class ArrangementSectionRulesValidator extends ArrangementMatchingRulesVa
   @Nullable
   private String validateSectionRule(@Nonnull ArrangementSectionRuleManager.ArrangementSectionRuleData data, int index) {
     int startSectionIndex = -1;
-    final Set<String> sectionRules = new HashSet<>();
+    Set<String> sectionRules = new HashSet<>();
     for (int i = 0; i < index; i++) {
-      final ArrangementSectionRuleManager.ArrangementSectionRuleData section = extractSectionText(i);
+      ArrangementSectionRuleManager.ArrangementSectionRuleData section = extractSectionText(i);
       if (section != null) {
         startSectionIndex = section.isSectionStart() ? i : -1;
         if (StringUtil.isNotEmpty(section.getText())) {

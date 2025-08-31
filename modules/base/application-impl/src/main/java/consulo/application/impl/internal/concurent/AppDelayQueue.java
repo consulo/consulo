@@ -42,7 +42,7 @@ public class AppDelayQueue extends DelayQueue<SchedulingWrapper.MyScheduledFutur
     scheduledToPooledTransferrer = new Thread(() -> {
       while (!shutdown.get()) {
         try {
-          final SchedulingWrapper.MyScheduledFutureTask task = take();
+          SchedulingWrapper.MyScheduledFutureTask task = take();
           if (LOG.isTraceEnabled()) {
             LOG.trace("Took " + info(task));
           }

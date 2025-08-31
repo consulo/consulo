@@ -33,7 +33,7 @@ public class XBreakpointCustomGroup extends XBreakpointGroup {
 
   @Override
   @Nullable
-  public Image getIcon(final boolean isOpen) {
+  public Image getIcon(boolean isOpen) {
     return PlatformIconGroup.actionsNewfolder();
   }
 

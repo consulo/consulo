@@ -64,7 +64,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     private MasterController myMasterController = new MasterController() {
         @Override
         public ItemWrapper[] getSelectedItems() {
-            final List<BreakpointItem> res = myTreeController.getSelectedBreakpoints(false);
+            List<BreakpointItem> res = myTreeController.getSelectedBreakpoints(false);
             return res.toArray(new ItemWrapper[res.size()]);
         }
 
@@ -211,7 +211,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
                 myDetailController.updateDetailView();
             }
         };
-        final JTree tree = new BreakpointsCheckboxTree(myProject, myTreeController) {
+        JTree tree = new BreakpointsCheckboxTree(myProject, myTreeController) {
             @Override
             protected void onDoubleClick(CheckedTreeNode node) {
                 navigate(false);
@@ -265,7 +265,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
             }
         }.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE).getShortcutSet(), tree);
 
-        final DefaultActionGroup breakpointTypes = new DefaultActionGroup();
+        DefaultActionGroup breakpointTypes = new DefaultActionGroup();
         for (XBreakpointType<?, ?> type : XBreakpointUtil.getBreakpointTypes()) {
             if (type.isAddBreakpointButtonVisible()) {
                 breakpointTypes.addAll(new AddXBreakpointAction(type));
@@ -283,7 +283,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
             setRemoveAction(button -> myTreeController.removeSelectedBreakpoints(myProject)).
             setRemoveActionUpdater(e -> {
                 boolean enabled = false;
-                final ItemWrapper[] items = myMasterController.getSelectedItems();
+                ItemWrapper[] items = myMasterController.getSelectedItems();
                 for (ItemWrapper item : items) {
                     if (item.allowedToRemove()) {
                         enabled = true;
@@ -310,7 +310,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
 
         initSelection(myBreakpointItems);
 
-        final BreakpointPanelProvider.BreakpointsListener listener = () -> {
+        BreakpointPanelProvider.BreakpointsListener listener = () -> {
             collectItems();
             myTreeController.rebuildTree(myBreakpointItems);
             myDetailController.doUpdateDetailView(true);
@@ -323,7 +323,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         return panel;
     }
 
-    private void navigate(final boolean requestFocus) {
+    private void navigate(boolean requestFocus) {
         List<BreakpointItem> breakpoints = myTreeController.getSelectedBreakpoints(false);
         if (!breakpoints.isEmpty()) {
             breakpoints.get(0).navigate(requestFocus);
@@ -359,8 +359,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     }
 
     private void saveBreakpointsDialogState() {
-        final XBreakpointsDialogState dialogState = new XBreakpointsDialogState();
-        final List<XBreakpointGroupingRule> rulesEnabled = ContainerUtil.filter(myRulesEnabled, rule -> !rule.isAlwaysEnabled());
+        XBreakpointsDialogState dialogState = new XBreakpointsDialogState();
+        List<XBreakpointGroupingRule> rulesEnabled = ContainerUtil.filter(myRulesEnabled, rule -> !rule.isAlwaysEnabled());
 
         dialogState.setSelectedGroupingRules(new HashSet<>(ContainerUtil.map(rulesEnabled, rule -> rule.getId())));
         getBreakpointManager().setBreakpointsDialogSettings(dialogState);

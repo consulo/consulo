@@ -27,7 +27,7 @@ public class CompletionContext {
   public final PsiFile file;
   private final OffsetMap myOffsetMap;
 
-  public CompletionContext(PsiFile file, final OffsetMap offsetMap){
+  public CompletionContext(PsiFile file, OffsetMap offsetMap){
     this.file = file;
     myOffsetMap = offsetMap;
   }

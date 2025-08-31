@@ -43,19 +43,19 @@ public abstract class ValueMarkerPresentationDialogBase extends DialogWrapper {
   private FixedSizeButton myChooseColorButton;
   private JPanel mySamplePanel;
 
-  public ValueMarkerPresentationDialogBase(final @Nullable String defaultText) {
+  public ValueMarkerPresentationDialogBase(@Nullable String defaultText) {
     super(true);
     setTitle("Select Object Label");
     setModal(true);
     myLabelField.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
-      protected void textChanged(final DocumentEvent e) {
+      protected void textChanged(DocumentEvent e) {
         updateLabelSample();
       }
     });
     myChooseColorButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(final ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         ColorChooser.chooseColor(myColorSample, "Choose Label Color", myColor, color -> {
           if (color != null) {
             myColor = color;
@@ -89,7 +89,7 @@ public abstract class ValueMarkerPresentationDialogBase extends DialogWrapper {
 
   @Nullable
   public ValueMarkup getConfiguredMarkup() {
-    final String text = myLabelField.getText().trim();
+    String text = myLabelField.getText().trim();
     return text.isEmpty() ? null : new ValueMarkup(text, myColor, null);
   }
 

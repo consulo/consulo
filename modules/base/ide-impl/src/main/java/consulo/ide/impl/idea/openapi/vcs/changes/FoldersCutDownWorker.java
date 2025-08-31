@@ -28,7 +28,7 @@ public class FoldersCutDownWorker {
     myPaths = new HashSet<>();
   }
 
-  public boolean addCurrent(final VirtualFile file) {
+  public boolean addCurrent(VirtualFile file) {
     for (String path : myPaths) {
       if (FileUtil.startsWith(file.getPath(), path)) {
         return false;

@@ -41,7 +41,7 @@ public class RawCommandLineEditor extends Wrapper implements TextAccessor {
     this(ParametersListUtil.DEFAULT_LINE_PARSER, ParametersListUtil.DEFAULT_LINE_JOINER);
   }
 
-  public RawCommandLineEditor(final Function<String, List<String>> lineParser, final Function<List<String>, String> lineJoiner) {
+  public RawCommandLineEditor(Function<String, List<String>> lineParser, Function<List<String>, String> lineJoiner) {
     super(new BorderLayout());
     myTextBoxWithExpandAction = TextBoxWithExpandAction.create(AllIcons.Actions.ShowViewer, "", lineParser, lineJoiner);
     setContent((JComponent)TargetAWT.to(myTextBoxWithExpandAction));

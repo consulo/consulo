@@ -81,7 +81,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
             return null;
         }
 
-        final Content content = myToolWindow.getContentManager().getSelectedContent();
+        Content content = myToolWindow.getContentManager().getSelectedContent();
         if (content == null || !myToolWindow.isVisible()) {
             restorePopupBehavior();
             createToolWindow(element, originalElement);
@@ -90,13 +90,13 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
         return content;
     }
 
-    public void createToolWindow(final PsiElement element, PsiElement originalElement) {
+    public void createToolWindow(PsiElement element, PsiElement originalElement) {
         assert myToolWindow == null;
 
-        final T component = createComponent();
+        T component = createComponent();
 
-        final ToolWindowManagerEx toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(myProject);
-        final ToolWindow toolWindow = toolWindowManagerEx.getToolWindow(getToolwindowId());
+        ToolWindowManagerEx toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(myProject);
+        ToolWindow toolWindow = toolWindowManagerEx.getToolWindow(getToolwindowId());
         myToolWindow =
             toolWindow == null ? toolWindowManagerEx.registerToolWindow(
                 getToolwindowId(),
@@ -113,9 +113,9 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
 
         installComponentActions(myToolWindow, component);
 
-        final ContentManager contentManager = myToolWindow.getContentManager();
-        final ContentFactory contentFactory = ContentFactory.getInstance();
-        final Content content = contentFactory.createContent(component, getTitle(element), false);
+        ContentManager contentManager = myToolWindow.getContentManager();
+        ContentFactory contentFactory = ContentFactory.getInstance();
+        Content content = contentFactory.createContent(component, getTitle(element), false);
         contentManager.addContent(content);
 
         contentManager.addContentManagerListener(new ContentManagerAdapter() {
@@ -148,7 +148,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
     }
 
     protected void setToolwindowDefaultState() {
-        final Rectangle2D rectangle = WindowManager.getInstance().getIdeFrame(myProject).suggestChildFrameBounds();
+        Rectangle2D rectangle = WindowManager.getInstance().getIdeFrame(myProject).suggestChildFrameBounds();
         myToolWindow.setDefaultState(ToolWindowAnchor.RIGHT, ToolWindowType.FLOATING, rectangle);
     }
 
@@ -179,7 +179,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
         };
     }
 
-    public void restartAutoUpdate(final boolean state) {
+    public void restartAutoUpdate(boolean state) {
         if (state && myToolWindow != null) {
             if (myAutoUpdateRequest == null) {
                 myAutoUpdateRequest = this::updateComponent;
@@ -217,7 +217,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
             return;
         }
 
-        final Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = dataContext.getData(Editor.KEY);
         if (editor == null) {
             PsiElement element = dataContext.getData(PsiElement.KEY);
             if (element != null) {

@@ -53,8 +53,8 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
         @Override
         public void updateButton(@Nonnull AnActionEvent e) {
             myAction.update(e);
-            final boolean enabled = e.getPresentation().isEnabled();
-            final boolean visible = e.getPresentation().isVisible();
+            boolean enabled = e.getPresentation().isEnabled();
+            boolean visible = e.getPresentation().isVisible();
             if (enabled && visible) {
                 super.updateButton(e);
             }
@@ -132,8 +132,8 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     public AnActionButton() {
     }
 
-    public static AnActionButton fromAction(final AnAction action) {
-        final Presentation presentation = action.getTemplatePresentation();
+    public static AnActionButton fromAction(AnAction action) {
+        Presentation presentation = action.getTemplatePresentation();
         return action instanceof CheckedActionGroup ? new CheckedAnActionButton(presentation, action) : new AnActionButtonWrapper(
             presentation,
             action
@@ -190,7 +190,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     }
 
     public void updateButton(AnActionEvent e) {
-        final JComponent component = getContextComponent();
+        JComponent component = getContextComponent();
         e.getPresentation().setEnabled(component != null && component.isShowing() && component.isEnabled());
     }
 

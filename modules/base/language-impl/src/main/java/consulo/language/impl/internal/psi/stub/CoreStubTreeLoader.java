@@ -42,9 +42,9 @@ public class CoreStubTreeLoader extends StubTreeLoader {
     }
 
     try {
-      final FileContentImpl fc = new FileContentImpl(vFile, vFile.contentsToByteArray());
+      FileContentImpl fc = new FileContentImpl(vFile, vFile.contentsToByteArray());
       fc.setProject(project);
-      final Stub element = StubTreeBuilder.buildStubTree(fc);
+      Stub element = StubTreeBuilder.buildStubTree(fc);
       if (element instanceof PsiFileStub) {
         return new StubTree((PsiFileStub)element);
       }
@@ -68,16 +68,16 @@ public class CoreStubTreeLoader extends StubTreeLoader {
 
   @Override
   public boolean canHaveStub(VirtualFile file) {
-    final FileType fileType = file.getFileType();
+    FileType fileType = file.getFileType();
     if (fileType instanceof LanguageFileType) {
       Language l = ((LanguageFileType)fileType).getLanguage();
       ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
       if (parserDefinition == null) return false;
-      final IFileElementType elementType = parserDefinition.getFileNodeType();
+      IFileElementType elementType = parserDefinition.getFileNodeType();
       return elementType instanceof IStubFileElementType && ((IStubFileElementType)elementType).shouldBuildStubFor(file);
     }
     else if (fileType.isBinary()) {
-      final BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
+      BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
       return builder != null && builder.acceptsFile(file);
     }
     return false;

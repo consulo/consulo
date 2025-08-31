@@ -63,10 +63,10 @@ public class PlaceInArtifact extends PlaceInProjectStructure {
   @Override
   @RequiredUIAccess
   public AsyncResult<Void> navigate(@Nonnull Project project) {
-    final Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myArtifact);
+    Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myArtifact);
     return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
       projectStructureSelector.select(artifact, true).doWhenDone(() -> {
-        final ArtifactEditorEx artifactEditor = (ArtifactEditorEx)myContext.getOrCreateEditor(artifact);
+        ArtifactEditorEx artifactEditor = (ArtifactEditorEx)myContext.getOrCreateEditor(artifact);
         if (myParentPath != null && myPackagingElement != null) {
           artifactEditor.getLayoutTreeComponent().selectNode(myParentPath, myPackagingElement);
         }

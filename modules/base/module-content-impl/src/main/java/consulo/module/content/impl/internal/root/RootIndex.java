@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
  */
 public interface RootIndex {
     @Nonnull
-    Query<VirtualFile> getDirectoriesByPackageName(@Nonnull final String packageName, final boolean includeLibrarySources);
+    Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources);
 
     @Nonnull
     DirectoryInfo getInfoForFile(@Nonnull VirtualFile file);
@@ -39,7 +39,7 @@ public interface RootIndex {
     ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo directoryInfo);
 
     @Nullable
-    String getPackageName(@Nonnull final VirtualFile dir);
+    String getPackageName(@Nonnull VirtualFile dir);
 
     @Nonnull
     @RequiredReadAction

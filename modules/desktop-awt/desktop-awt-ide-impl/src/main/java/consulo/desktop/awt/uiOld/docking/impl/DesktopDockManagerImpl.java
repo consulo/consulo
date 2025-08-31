@@ -350,7 +350,7 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
         DockContainer container = findFactory(content.getDockContainerType()).createContainer(this, content);
         register(container);
 
-        final DockWindow window = createWindowFor(null, container);
+        DockWindow window = createWindowFor(null, container);
 
         Dimension size = content.getPreferredSize();
         Point showPoint = point.getScreenPoint();
@@ -380,11 +380,11 @@ public class DesktopDockManagerImpl extends BaseDockManager implements FileEdito
         DockContainer container = findFactory(DockableEditorContainerFactory.TYPE).createContainer(this, null);
         register(container);
 
-        final DockWindow window = createWindowFor(null, container);
+        DockWindow window = createWindowFor(null, container);
 
         window.show(true);
-        final FileEditorWindow editorWindow = ((DockableEditorTabbedContainer) container).getSplitters().getOrCreateCurrentWindow(file);
-        final Pair<FileEditor[], FileEditorProvider[]> result =
+        FileEditorWindow editorWindow = ((DockableEditorTabbedContainer) container).getSplitters().getOrCreateCurrentWindow(file);
+        Pair<FileEditor[], FileEditorProvider[]> result =
             ((FileEditorManagerImpl) fileEditorManager).openFileImpl2(UIAccess.current(), editorWindow, file, true);
 
         container.add(DesktopAWTEditorTabbedContainer.createDockableEditor(myProject,

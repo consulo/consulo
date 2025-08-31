@@ -28,7 +28,7 @@ public class AlienLocalChangeList extends LocalChangeList {
   private String myName;
   private String myComment;
 
-  public AlienLocalChangeList(final List<Change> changes, final String name) {
+  public AlienLocalChangeList(List<Change> changes, String name) {
     myChanges = changes;
     myName = name;
     myComment = "";
@@ -43,7 +43,7 @@ public class AlienLocalChangeList extends LocalChangeList {
     return myName;
   }
 
-  public void setName(@Nonnull final String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
@@ -51,7 +51,7 @@ public class AlienLocalChangeList extends LocalChangeList {
     return myComment;
   }
 
-  public void setComment(final String comment) {
+  public void setComment(String comment) {
     myComment = comment;
   }
 
@@ -63,7 +63,7 @@ public class AlienLocalChangeList extends LocalChangeList {
     return false;
   }
 
-  public void setReadOnly(final boolean isReadOnly) {
+  public void setReadOnly(boolean isReadOnly) {
     throw new UnsupportedOperationException();
   }
 

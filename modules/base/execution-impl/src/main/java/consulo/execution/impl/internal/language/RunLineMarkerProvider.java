@@ -55,7 +55,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
     List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.forLanguage(element.getLanguage());
     ActionGroup.Builder builder = null;
     Image icon = null;
-    final List<RunLineMarkerContributor.Info> infos = new ArrayList<>();
+    List<RunLineMarkerContributor.Info> infos = new ArrayList<>();
     for (RunLineMarkerContributor contributor : contributors) {
       RunLineMarkerContributor.Info info = contributor.getInfo(element);
       if (info == null) {
@@ -77,7 +77,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
 
     final ActionGroup finalActionGroup = builder == null ? null : builder.build();
     Function<PsiElement, String> tooltipProvider = element1 -> {
-      final StringBuilder tooltip = new StringBuilder();
+      StringBuilder tooltip = new StringBuilder();
       for (RunLineMarkerContributor.Info info : infos) {
         if (info.tooltipProvider != null) {
           String string = info.tooltipProvider.apply(element1);

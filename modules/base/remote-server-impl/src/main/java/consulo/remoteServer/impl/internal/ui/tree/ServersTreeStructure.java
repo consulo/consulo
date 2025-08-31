@@ -92,12 +92,12 @@ public final class ServersTreeStructure {
 
         @Override
         public @Nonnull Collection<? extends AbstractTreeNode<?>> getChildren() {
-            final ServerConnection<?> connection = getConnection();
+            ServerConnection<?> connection = getConnection();
             if (connection == null) {
                 return Collections.emptyList();
             }
 
-            final List<AbstractTreeNode<?>> children = new ArrayList<>();
+            List<AbstractTreeNode<?>> children = new ArrayList<>();
             for (Deployment deployment : connection.getDeployments()) {
                 if (deployment.getParentRuntime() == null) {
                     children.add(myNodeProducer.createDeploymentNode(connection, this, deployment));
@@ -141,12 +141,12 @@ public final class ServersTreeStructure {
         }
 
         public void doDeploy(@Nonnull AnActionEvent e, final Executor executor, String popupTitle, boolean canCreate) {
-            final RemoteServer<?> server = getServer();
+            RemoteServer<?> server = getServer();
             final ServerType<? extends ServerConfiguration> serverType = server.getType();
             final DeploymentConfigurationManager configurationManager = DeploymentConfigurationManager.getInstance(myProject);
 
             final List<Object> runConfigsAndTypes = new LinkedList<>();
-            final List<RunnerAndConfigurationSettings> runConfigs =
+            List<RunnerAndConfigurationSettings> runConfigs =
                 ContainerUtil.filter(configurationManager.getDeploymentConfigurations(serverType), settings -> {
                     DeployToServerRunConfiguration<?, ?> configuration = (DeployToServerRunConfiguration<?, ?>) settings.getConfiguration();
                     return StringUtil.equals(server.getName(), configuration.getServerName());
@@ -211,7 +211,7 @@ public final class ServersTreeStructure {
         }
 
         @Nullable
-        private static Image getStatusIcon(final ConnectionStatus status) {
+        private static Image getStatusIcon(ConnectionStatus status) {
             return switch (status) {
                 case CONNECTED -> PlatformIconGroup.remoteserversResumescaled();
                 case DISCONNECTED -> PlatformIconGroup.remoteserversSuspendscaled();

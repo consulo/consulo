@@ -37,7 +37,7 @@ public interface TreeClassChooserFactory {
   @FunctionalInterface
   interface ClassProvider<T extends PsiNamedElement> {
     @Nonnull
-    Collection<T> getClassesByName(@Nonnull Project project, String name, final boolean searchInLibraries, final String pattern, final ProjectAwareSearchScope searchScope);
+    Collection<T> getClassesByName(@Nonnull Project project, String name, boolean searchInLibraries, String pattern, ProjectAwareSearchScope searchScope);
   }
 
   @FunctionalInterface

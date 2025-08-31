@@ -58,12 +58,12 @@ public final class TodoItemNode extends BaseToDoNode<SmartTodoItemPointer> imple
   }
 
   @Override
-  public int getFileCount(final SmartTodoItemPointer val) {
+  public int getFileCount(SmartTodoItemPointer val) {
     return 1;
   }
 
   @Override
-  public int getTodoItemCount(final SmartTodoItemPointer val) {
+  public int getTodoItemCount(SmartTodoItemPointer val) {
     return 1;
   }
 

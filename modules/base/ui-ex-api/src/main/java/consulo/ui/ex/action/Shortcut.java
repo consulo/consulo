@@ -28,5 +28,5 @@ public abstract class Shortcut {
 
   public abstract boolean isKeyboard();
 
-  public abstract boolean startsWith(final Shortcut sc);
+  public abstract boolean startsWith(Shortcut sc);
 }

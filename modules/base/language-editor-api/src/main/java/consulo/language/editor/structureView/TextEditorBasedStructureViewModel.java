@@ -68,7 +68,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
    *
    * @param editor the editor for which the structure view model is requested.
    */
-  protected TextEditorBasedStructureViewModel(final Editor editor) {
+  protected TextEditorBasedStructureViewModel(Editor editor) {
     this(editor, null);
   }
 
@@ -121,15 +121,15 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  public boolean shouldEnterElement(final Object element) {
+  public boolean shouldEnterElement(Object element) {
     return false;
   }
 
   @Override
   public Object getCurrentEditorElement() {
     if (myEditor == null) return null;
-    final int offset = myEditor.getCaretModel().getOffset();
-    final PsiFile file = getPsiFile();
+    int offset = myEditor.getCaretModel().getOffset();
+    PsiFile file = getPsiFile();
 
     return findAcceptableElement(file.getViewProvider().findElementAt(offset, file.getLanguage()));
   }
@@ -147,9 +147,9 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
     return myPsiFile;
   }
 
-  protected boolean isSuitable(final PsiElement element) {
+  protected boolean isSuitable(PsiElement element) {
     if (element == null) return false;
-    final Class[] suitableClasses = getSuitableClasses();
+    Class[] suitableClasses = getSuitableClasses();
     for (Class suitableClass : suitableClasses) {
       if (ReflectionUtil.isAssignable(suitableClass, element.getClass())) return true;
     }

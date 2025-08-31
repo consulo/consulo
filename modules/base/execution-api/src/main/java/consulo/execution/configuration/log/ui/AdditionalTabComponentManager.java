@@ -20,7 +20,7 @@ package consulo.execution.configuration.log.ui;
  * @since 2006-09-04
  */
 public interface AdditionalTabComponentManager {
-  void addAdditionalTabComponent(AdditionalTabComponent component, final String id);
+  void addAdditionalTabComponent(AdditionalTabComponent component, String id);
 
   void removeAdditionalTabComponent(AdditionalTabComponent component);
 }

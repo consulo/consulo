@@ -51,12 +51,12 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
    * @param range    range of code inside injected document which is really placed in the main document
    * @param indent
    */
-  public InjectedLanguageBlockWrapper(@Nonnull final Block original, final int offset, @Nullable TextRange range, @Nullable Indent indent) {
+  public InjectedLanguageBlockWrapper(@Nonnull Block original, int offset, @Nullable TextRange range, @Nullable Indent indent) {
     this(original, offset, range, indent, null);
   }
 
-  public InjectedLanguageBlockWrapper(@Nonnull final Block original,
-                                      final int offset,
+  public InjectedLanguageBlockWrapper(@Nonnull Block original,
+                                      int offset,
                                       @Nullable TextRange range,
                                       @Nullable Indent indent,
                                       @Nullable Language language) {
@@ -106,11 +106,11 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   }
 
   private List<Block> buildBlocks() {
-    final List<Block> list = myOriginal.getSubBlocks();
+    List<Block> list = myOriginal.getSubBlocks();
     if (list.isEmpty()) return AbstractBlock.EMPTY;
     if (myOffset == 0 && myRange == null) return list;
 
-    final ArrayList<Block> result = new ArrayList<>(list.size());
+    ArrayList<Block> result = new ArrayList<>(list.size());
     if (myRange == null) {
       for (Block block : list) {
         result.add(new InjectedLanguageBlockWrapper(block, myOffset, myRange, null, myLanguage));
@@ -122,9 +122,9 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
     return result;
   }
 
-  private void collectBlocksIntersectingRange(final List<Block> list, final List<Block> result, @Nonnull final TextRange range) {
+  private void collectBlocksIntersectingRange(List<Block> list, List<Block> result, @Nonnull TextRange range) {
     for (Block block : list) {
-      final TextRange textRange = block.getTextRange();
+      TextRange textRange = block.getTextRange();
       if (block instanceof InjectedLanguageBlockWrapper && block.getTextRange().equals(range)) {
         continue;
       }
@@ -145,7 +145,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
 
   @Override
   @Nullable
-  public Spacing getSpacing(final Block child1, @Nonnull final Block child2) {
+  public Spacing getSpacing(Block child1, @Nonnull Block child2) {
     int shift = 0;
     Block child1ToUse = child1;
     Block child2ToUse = child2;
@@ -157,7 +157,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
     Spacing spacing = myOriginal.getSpacing(child1ToUse, child2ToUse);
     if (spacing instanceof DependantSpacingImpl && shift != 0) {
       DependantSpacingImpl hostSpacing = (DependantSpacingImpl)spacing;
-      final int finalShift = shift;
+      int finalShift = shift;
       List<TextRange> shiftedRanges = ContainerUtil.map(hostSpacing.getDependentRegionRanges(), range -> range.shiftRight(finalShift));
       return new DependantSpacingImpl(hostSpacing.getMinSpaces(),
                                       hostSpacing.getMaxSpaces(),
@@ -171,7 +171,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
 
   @Override
   @Nonnull
-  public ChildAttributes getChildAttributes(final int newChildIndex) {
+  public ChildAttributes getChildAttributes(int newChildIndex) {
     return myOriginal.getChildAttributes(newChildIndex);
   }
 

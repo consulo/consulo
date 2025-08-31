@@ -59,32 +59,32 @@ public class RollbackChangesDialog extends DialogWrapper {
   private String myOperationName;
 
   @RequiredUIAccess
-  public static void rollbackChanges(final Project project, final Collection<Change> changes) {
+  public static void rollbackChanges(Project project, Collection<Change> changes) {
     rollbackChanges(project, changes, true, null);
   }
 
   @RequiredUIAccess
   public static void rollbackChanges(
-    final Project project, final Collection<Change> changes,
+    Project project, Collection<Change> changes,
     boolean refreshSynchronously,
-    final Runnable afterVcsRefreshInAwt
+    Runnable afterVcsRefreshInAwt
   ) {
-    final ChangeListManagerEx manager = (ChangeListManagerEx) ChangeListManager.getInstance(project);
+    ChangeListManagerEx manager = (ChangeListManagerEx) ChangeListManager.getInstance(project);
 
     if (changes.isEmpty()) {
       showNoChangesDialog(project);
       return;
     }
 
-    final ArrayList<Change> validChanges = new ArrayList<>();
-    final Set<LocalChangeList> lists = new HashSet<>();
+    ArrayList<Change> validChanges = new ArrayList<>();
+    Set<LocalChangeList> lists = new HashSet<>();
     lists.addAll(manager.getInvolvedListsFilterChanges(changes, validChanges));
 
     new RollbackChangesDialog(project, new ArrayList<>(lists), validChanges, refreshSynchronously, afterVcsRefreshInAwt).show();
   }
 
   @RequiredUIAccess
-  public static void rollbackChanges(final Project project, final LocalChangeList changeList) {
+  public static void rollbackChanges(Project project, LocalChangeList changeList) {
     List<Change> changes = new ArrayList<>(changeList.getChanges());
 
     if (changes.isEmpty()) {
@@ -110,8 +110,8 @@ public class RollbackChangesDialog extends DialogWrapper {
     final Project project,
     final List<LocalChangeList> changeLists,
     final List<Change> changes,
-    final boolean refreshSynchronously,
-    final Runnable afterVcsRefreshInAwt
+    boolean refreshSynchronously,
+    Runnable afterVcsRefreshInAwt
   ) {
     super(project, true);
 
@@ -199,7 +199,7 @@ public class RollbackChangesDialog extends DialogWrapper {
   @Nullable
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
-    final GridBagConstraints gb = new GridBagConstraints(
+    GridBagConstraints gb = new GridBagConstraints(
       0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
       JBUI.insets(1), 0, 0
     );
@@ -207,7 +207,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     gb.fill = GridBagConstraints.HORIZONTAL;
     gb.weightx = 1;
 
-    final JPanel border = new JPanel(new BorderLayout());
+    JPanel border = new JPanel(new BorderLayout());
     border.setBorder(JBUI.Borders.emptyTop(2));
     border.add(myBrowser, BorderLayout.CENTER);
     gb.fill = GridBagConstraints.BOTH;
@@ -215,7 +215,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     ++gb.gridy;
     panel.add(border, gb);
 
-    final JComponent commitLegendPanel = myCommitLegendPanel.getComponent();
+    JComponent commitLegendPanel = myCommitLegendPanel.getComponent();
     commitLegendPanel.setBorder(JBUI.Borders.emptyLeft(4));
     gb.fill = GridBagConstraints.NONE;
     gb.weightx = 0;

@@ -47,7 +47,7 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
   }
 
   @Override
-  public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType contextType) {
+  public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType) {
     return contextType == PUNCTUATION ||
            contextType == WHITESPACE ||
            isRBraceToken(contextType);

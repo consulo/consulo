@@ -63,7 +63,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
                                                    ArtifactManager artifactManager,
                                                    ArtifactPointerManager artifactPointerManager,
                                                    ArtifactEditorSettings defaultSettings,
-                                                   final ArtifactListener modifiableModelListener) {
+                                                   ArtifactListener modifiableModelListener) {
     myArtifactPointerManager = artifactPointerManager;
     myDefaultSettings = defaultSettings;
     myModifiableModelListener = modifiableModelListener;
@@ -126,7 +126,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   public CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact) {
     artifact = getOriginalArtifact(artifact);
     if (myModifiableModel != null) {
-      final Artifact modifiableArtifact = myModifiableModel.getModifiableCopy(artifact);
+      Artifact modifiableArtifact = myModifiableModel.getModifiableCopy(artifact);
       if (modifiableArtifact != null) {
         myModifiableRoots.put(artifact, modifiableArtifact.getRootElement());
       }
@@ -144,10 +144,10 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  public void editLayout(@Nonnull final Artifact artifact, final Runnable action) {
-    final Artifact originalArtifact = getOriginalArtifact(artifact);
+  public void editLayout(@Nonnull Artifact artifact, Runnable action) {
+    Artifact originalArtifact = getOriginalArtifact(artifact);
     WriteAction.run(() -> {
-      final ModifiableArtifact modifiableArtifact = getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(originalArtifact);
+      ModifiableArtifact modifiableArtifact = getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(originalArtifact);
       if (modifiableArtifact.getRootElement() == originalArtifact.getRootElement()) {
         modifiableArtifact.setRootElement(getOrCreateModifiableRootElement(originalArtifact));
       }
@@ -168,7 +168,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     artifact = getOriginalArtifact(artifact);
     ArtifactEditorImpl artifactEditor = myArtifactEditors.get(artifact);
     if (artifactEditor == null) {
-      final ArtifactEditorSettings settings = myEditorSettings.get(myArtifactPointerManager.create(artifact, getArtifactModel()));
+      ArtifactEditorSettings settings = myEditorSettings.get(myArtifactPointerManager.create(artifact, getArtifactModel()));
       artifactEditor = new ArtifactEditorImpl(this, artifact, settings != null ? settings : myDefaultSettings);
       myArtifactEditors.put(artifact, artifactEditor);
     }
@@ -203,7 +203,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
 
   @Override
   public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
-    final Library library = DefaultPackagingElementResolvingContext.findLibrary(myProject, level, libraryName);
+    Library library = DefaultPackagingElementResolvingContext.findLibrary(myProject, level, libraryName);
     return library != null ? myLibrariesConfigurator.getLibraryModel(library) : myLibrariesConfigurator.getLibrary(libraryName, level);
   }
 
@@ -231,7 +231,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   public void saveEditorSettings() {
     myEditorSettings.clear();
     for (ArtifactEditorImpl artifactEditor : myArtifactEditors.values()) {
-      final ArtifactPointer pointer = myArtifactPointerManager.create(artifactEditor.getArtifact(), getArtifactModel());
+      ArtifactPointer pointer = myArtifactPointerManager.create(artifactEditor.getArtifact(), getArtifactModel());
       myEditorSettings.put(pointer, artifactEditor.createSettings());
     }
   }
@@ -249,7 +249,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
 
   @Override
   public ModifiableRootModel getOrCreateModifiableRootModel(Module module) {
-    final ModuleEditor editor = myModulesConfigurator.getOrCreateModuleEditor(module);
+    ModuleEditor editor = myModulesConfigurator.getOrCreateModuleEditor(module);
     return editor.getModifiableRootModelProxy();
   }
 }

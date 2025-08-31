@@ -6,7 +6,7 @@ public class GroupNodeDescription {
   private final String myComment;
 
 
-  public GroupNodeDescription(final int filesCount, final String title, final String comment) {
+  public GroupNodeDescription(int filesCount, String title, String comment) {
     myFilesCount = filesCount;
     myTitle = title;
     myComment = comment;

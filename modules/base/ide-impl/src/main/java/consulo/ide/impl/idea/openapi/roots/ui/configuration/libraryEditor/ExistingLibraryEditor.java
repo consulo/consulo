@@ -60,7 +60,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
 
   @Override
   public LibraryType<?> getType() {
-    final LibraryKind kind = myLibrary.getKind();
+    LibraryKind kind = myLibrary.getKind();
     if (kind != null) {
       return LibraryKindRegistry.getInstance().findLibraryTypeByKindId(kind.getKindId());
     }
@@ -74,7 +74,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
 
   private LibraryType detectType() {
     if (!myDetectedTypeComputed) {
-      final Pair<LibraryType<?>,LibraryProperties<?>> pair = LibraryDetectionManager.getInstance().detectType(Arrays.asList(getFiles(
+      Pair<LibraryType<?>,LibraryProperties<?>> pair = LibraryDetectionManager.getInstance().detectType(Arrays.asList(getFiles(
               BinariesOrderRootType.getInstance())));
       if (pair != null) {
         myDetectedType = pair.getFirst();
@@ -87,7 +87,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
 
   @Override
   public LibraryProperties getProperties() {
-    final LibraryType type = getType();
+    LibraryType type = getType();
     if (type == null) return null;
 
     if (myDetectedType != null) {
@@ -228,7 +228,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public boolean isValid(final String url, final OrderRootType orderRootType) {
+  public boolean isValid(String url, OrderRootType orderRootType) {
     if (myModel != null) {
       return myModel.isValid(url, orderRootType);
     }

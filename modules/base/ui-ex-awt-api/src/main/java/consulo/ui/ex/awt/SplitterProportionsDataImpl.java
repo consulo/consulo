@@ -161,7 +161,7 @@ public class SplitterProportionsDataImpl implements SplitterProportionsData {
         return proportions;
     }
 
-    public void setProportions(final List<Float> proportions) {
+    public void setProportions(List<Float> proportions) {
         this.proportions = proportions;
     }
 

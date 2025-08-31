@@ -37,8 +37,8 @@ public class ProjectStructureHelper {
   }
 
   @Nullable
-  public static Library findIdeLibrary(@Nonnull final LibraryData libraryData, @Nonnull Project ideProject) {
-    final LibraryTable libraryTable = ProjectLibraryTable.getInstance(ideProject);
+  public static Library findIdeLibrary(@Nonnull LibraryData libraryData, @Nonnull Project ideProject) {
+    LibraryTable libraryTable = ProjectLibraryTable.getInstance(ideProject);
     for (Library ideLibrary : libraryTable.getLibraries()) {
       if (ExternalSystemApiUtil.isRelated(ideLibrary, libraryData)) return ideLibrary;
     }
@@ -46,7 +46,7 @@ public class ProjectStructureHelper {
   }
 
   public static boolean isOrphanProjectLibrary(@Nonnull final Library library,
-                                               @Nonnull final Module[] ideModules) {
+                                               @Nonnull Module[] ideModules) {
     RootPolicy<Boolean> visitor = new RootPolicy<Boolean>() {
       @Override
       public Boolean visitLibraryOrderEntry(LibraryOrderEntry ideDependency, Boolean value) {

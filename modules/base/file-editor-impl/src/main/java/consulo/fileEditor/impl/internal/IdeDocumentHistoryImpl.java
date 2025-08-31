@@ -149,7 +149,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
             @Override
             public void documentChanged(@Nonnull DocumentEvent e) {
                 Document document = e.getDocument();
-                final VirtualFile file = getFileDocumentManager().getFile(document);
+                VirtualFile file = getFileDocumentManager().getFile(document);
                 if (file != null && !(file instanceof LightVirtualFile) && !application.hasWriteAction(ExternalChangeAction.class)) {
                     if (!application.isDispatchThread()) {
                         LOG.error("Document update for physical file not in EDT: " + file);
@@ -233,14 +233,14 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         public List<String> CHANGED_PATHS = new ArrayList<>();
 
         public void register(VirtualFile file) {
-            final String path = file.getPath();
+            String path = file.getPath();
             CHANGED_PATHS.remove(path);
             CHANGED_PATHS.add(path);
             trimToSize();
         }
 
         private void trimToSize() {
-            final int limit = UISettings.getInstance().getRecentFilesLimit() + 1;
+            int limit = UISettings.getInstance().getRecentFilesLimit() + 1;
             while (CHANGED_PATHS.size() > limit) {
                 CHANGED_PATHS.remove(0);
             }
@@ -366,10 +366,10 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     public VirtualFile[] getChangedFiles() {
         List<VirtualFile> files = new ArrayList<>();
 
-        final LocalFileSystem lfs = LocalFileSystem.getInstance();
-        final List<String> paths = myRecentlyChangedFiles.CHANGED_PATHS;
+        LocalFileSystem lfs = LocalFileSystem.getInstance();
+        List<String> paths = myRecentlyChangedFiles.CHANGED_PATHS;
         for (String path : paths) {
-            final VirtualFile file = lfs.findFileByPath(path);
+            VirtualFile file = lfs.findFileByPath(path);
             if (file != null) {
                 files.add(file);
             }
@@ -405,7 +405,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         if (myBackPlaces.isEmpty()) {
             return;
         }
-        final PlaceInfo info = myBackPlaces.removeLast();
+        PlaceInfo info = myBackPlaces.removeLast();
         myProject.getMessageBus().syncPublisher(RecentPlacesListener.class).recentPlaceRemoved(info, false);
 
         PlaceInfo current = getCurrentPlaceInfo();
@@ -427,7 +427,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     public final void forward() {
         removeInvalidFilesFromStacks();
 
-        final PlaceInfo target = getTargetForwardInfo();
+        PlaceInfo target = getTargetForwardInfo();
         if (target == null) {
             return;
         }
@@ -560,17 +560,17 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     @Override
     @RequiredUIAccess
     public void gotoPlaceInfo(@Nonnull PlaceInfo info) {
-        final boolean wasActive = ToolWindowManager.getInstance(myProject).isEditorComponentActive();
+        boolean wasActive = ToolWindowManager.getInstance(myProject).isEditorComponentActive();
         FileEditorWindow wnd = info.getWindow();
         FileEditorManagerEx editorManager = myFileEditorManager;
-        final Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders = wnd != null && wnd.isValid()
+        Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders = wnd != null && wnd.isValid()
             ? editorManager.openFileWithProviders(info.getFile(), wasActive, wnd)
             : editorManager.openFileWithProviders(info.getFile(), wasActive, false);
 
         editorManager.setSelectedEditor(info.getFile(), info.getEditorTypeId());
 
-        final FileEditor[] editors = editorsWithProviders.getFirst();
-        final FileEditorProvider[] providers = editorsWithProviders.getSecond();
+        FileEditor[] editors = editorsWithProviders.getFirst();
+        FileEditorProvider[] providers = editorsWithProviders.getSecond();
         for (int i = 0; i < editors.length; i++) {
             String typeId = providers[i].getEditorTypeId();
             if (typeId.equals(info.getEditorTypeId())) {
@@ -589,13 +589,13 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         return file == null ? null : editorManager.getSelectedEditorWithProvider(file);
     }
 
-    protected PlaceInfo createPlaceInfo(@Nonnull final FileEditor fileEditor, final FileEditorProvider fileProvider) {
+    protected PlaceInfo createPlaceInfo(@Nonnull FileEditor fileEditor, FileEditorProvider fileProvider) {
         if (!fileEditor.isValid()) {
             return null;
         }
 
         FileEditorManagerEx editorManager = myFileEditorManager;
-        final VirtualFile file = editorManager.getFile(fileEditor);
+        VirtualFile file = editorManager.getFile(fileEditor);
         LOG.assertTrue(file != null);
         FileEditorState state = fileEditor.getState(FileEditorStateLevel.NAVIGATION);
 

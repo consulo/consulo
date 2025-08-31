@@ -23,5 +23,5 @@ import consulo.language.psi.PsiFile;
  * @author yole
  */
 public interface RecalculatableResult extends Result {
-  void handleRecalc(final PsiFile psiFile, final Document document, final int segmentStart, final int segmentEnd);
+  void handleRecalc(PsiFile psiFile, Document document, int segmentStart, int segmentEnd);
 }

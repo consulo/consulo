@@ -97,10 +97,10 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode, ASTNode> {
       CompositeElement parent = myOldChild.getTreeParent();
       assert parent != null : "old:" + myOldChild + " new:" + myNewChild;
 
-      final PsiElement psiParent = parent.getPsi();
-      final PsiElement psiOldChild = file.isPhysical() ? myOldChild.getPsi() : null;
+      PsiElement psiParent = parent.getPsi();
+      PsiElement psiOldChild = file.isPhysical() ? myOldChild.getPsi() : null;
       if (psiParent != null && psiOldChild != null) {
-        final PsiTreeChangeEventImpl event = new PsiTreeChangeEventImpl(file.getManager());
+        PsiTreeChangeEventImpl event = new PsiTreeChangeEventImpl(file.getManager());
         event.setParent(psiParent);
         event.setFile(file);
         event.setOldChild(psiOldChild);
@@ -233,11 +233,11 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode, ASTNode> {
     @Override
     void doActualPsiChange(@Nonnull PsiFile file, @Nonnull TreeChangeEventImpl event) {
       PsiFileImpl fileImpl = (PsiFileImpl)file;
-      final int oldLength = myOldNode.getTextLength();
+      int oldLength = myOldNode.getTextLength();
       PsiManagerImpl manager = (PsiManagerImpl)fileImpl.getManager();
       BlockSupportImpl.sendBeforeChildrenChangeEvent(manager, fileImpl, false);
       if (myOldNode.getFirstChildNode() != null) myOldNode.rawRemoveAllChildren();
-      final TreeElement firstChildNode = myNewNode.getFirstChildNode();
+      TreeElement firstChildNode = myNewNode.getFirstChildNode();
       if (firstChildNode != null) myOldNode.rawAddChildren(firstChildNode);
       fileImpl.calcTreeElement().setCharTable(myNewNode.getCharTable());
       myOldNode.subtreeChanged();
@@ -271,7 +271,7 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode, ASTNode> {
       synchronized (((AbstractFileViewProvider)viewProvider).getFilePsiLock()) {
         viewProvider.beforeContentsSynchronized();
 
-        final Document document = viewProvider.getDocument();
+        Document document = viewProvider.getDocument();
         PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(file.getProject());
         PsiToDocumentSynchronizer.DocumentChangeTransaction transaction = documentManager.getSynchronizer().getTransaction(document);
 

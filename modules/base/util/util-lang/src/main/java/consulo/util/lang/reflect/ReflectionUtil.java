@@ -36,8 +36,8 @@ public class ReflectionUtil {
   @Nullable
   public static Class<?> substituteGenericType(@Nonnull Type genericType, @Nonnull Type classType) {
     if (genericType instanceof TypeVariable) {
-      final Class<?> aClass = getRawType(classType);
-      final Type type = resolveVariable((TypeVariable)genericType, aClass);
+      Class<?> aClass = getRawType(classType);
+      Type type = resolveVariable((TypeVariable)genericType, aClass);
       if (type instanceof Class) {
         return (Class)type;
       }
@@ -45,7 +45,7 @@ public class ReflectionUtil {
         return (Class<?>)((ParameterizedType)type).getRawType();
       }
       if (type instanceof TypeVariable && classType instanceof ParameterizedType) {
-        final int index = find(aClass.getTypeParameters(), type);
+        int index = find(aClass.getTypeParameters(), type);
         if (index >= 0) {
           return getRawType(getActualTypeArguments((ParameterizedType)classType)[index]);
         }
@@ -65,9 +65,9 @@ public class ReflectionUtil {
    * <code>equals</code> of arrays elements to compare <code>obj</code> with
    * these elements.
    */
-  private static <T> int find(@Nonnull final T[] src, final T obj) {
+  private static <T> int find(@Nonnull T[] src, T obj) {
     for (int i = 0; i < src.length; i++) {
-      final T o = src[i];
+      T o = src[i];
       if (o == null) {
         if (obj == null) {
           return i;
@@ -112,14 +112,14 @@ public class ReflectionUtil {
 
   @Nullable
   public static Type resolveVariable(@Nonnull TypeVariable variable, @Nonnull Class classType, boolean resolveInInterfacesOnly) {
-    final Class aClass = getRawType(classType);
+    Class aClass = getRawType(classType);
     int index = indexOf(aClass.getTypeParameters(), variable);
     if (index >= 0) {
       return variable;
     }
 
-    final Class[] classes = aClass.getInterfaces();
-    final Type[] genericInterfaces = aClass.getGenericInterfaces();
+    Class[] classes = aClass.getInterfaces();
+    Type[] genericInterfaces = aClass.getGenericInterfaces();
     for (int i = 0; i <= classes.length; i++) {
       Class anInterface;
       if (i < classes.length) {
@@ -131,12 +131,12 @@ public class ReflectionUtil {
           continue;
         }
       }
-      final Type resolved = resolveVariable(variable, anInterface);
+      Type resolved = resolveVariable(variable, anInterface);
       if (resolved instanceof Class || resolved instanceof ParameterizedType) {
         return resolved;
       }
       if (resolved instanceof TypeVariable) {
-        final TypeVariable typeVariable = (TypeVariable)resolved;
+        TypeVariable typeVariable = (TypeVariable)resolved;
         index = indexOf(anInterface.getTypeParameters(), typeVariable);
         if (index < 0) {
           LOG.error("Cannot resolve type variable:\n" +
@@ -149,7 +149,7 @@ public class ReflectionUtil {
                     "searching in " +
                     declarationToString(anInterface));
         }
-        final Type type = i < genericInterfaces.length ? genericInterfaces[i] : aClass.getGenericSuperclass();
+        Type type = i < genericInterfaces.length ? genericInterfaces[i] : aClass.getGenericSuperclass();
         if (type instanceof Class) {
           return Object.class;
         }
@@ -239,11 +239,11 @@ public class ReflectionUtil {
     return true;
   }
 
-  private static boolean isPublic(final Member field) {
+  private static boolean isPublic(Member field) {
     return Modifier.isPublic(field.getModifiers());
   }
 
-  private static boolean isFinal(final Member field) {
+  private static boolean isFinal(Member field) {
     return Modifier.isFinal(field.getModifiers());
   }
 
@@ -271,7 +271,7 @@ public class ReflectionUtil {
   }
 
   @Nullable
-  public static Field getDeclaredField(@Nonnull Class aClass, @NonNls @Nonnull final String name) {
+  public static Field getDeclaredField(@Nonnull Class aClass, @NonNls @Nonnull String name) {
     return processFields(aClass, field -> name.equals(field.getName()));
   }
 
@@ -282,7 +282,7 @@ public class ReflectionUtil {
 
   public static <T> T getField(@Nonnull Class objectClass, @Nullable Object object, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName) {
     try {
-      final Field field = findAssignableField(objectClass, fieldType, fieldName);
+      Field field = findAssignableField(objectClass, fieldType, fieldName);
       return (T)field.get(object);
     }
     catch (NoSuchFieldException e) {
@@ -297,7 +297,7 @@ public class ReflectionUtil {
 
   public static <T> T getStaticFieldValue(@Nonnull Class objectClass, @Nullable Class<T> fieldType, @Nonnull String fieldName) {
     try {
-      final Field field = findAssignableField(objectClass, fieldType, fieldName);
+      Field field = findAssignableField(objectClass, fieldType, fieldName);
       if (!Modifier.isStatic(field.getModifiers())) {
         throw new IllegalArgumentException("Field " + objectClass + "." + fieldName + " is not static");
       }
@@ -322,7 +322,7 @@ public class ReflectionUtil {
   }
 
   @Nonnull
-  public static Field findAssignableField(@Nonnull Class<?> clazz, @Nullable final Class<?> fieldType, @Nonnull final String fieldName) throws NoSuchFieldException {
+  public static Field findAssignableField(@Nonnull Class<?> clazz, @Nullable Class<?> fieldType, @Nonnull String fieldName) throws NoSuchFieldException {
     Field result = processFields(clazz, field -> fieldName.equals(field.getName()) && (fieldType == null || fieldType.isAssignableFrom(field.getType())));
     if (result != null) return result;
     throw new NoSuchFieldException("Class: " + clazz + " fieldName: " + fieldName + " fieldType: " + fieldType);
@@ -379,7 +379,7 @@ public class ReflectionUtil {
 
   @Nullable
   public static Method findMethod(@Nonnull Collection<Method> methods, @NonNls @Nonnull String name, @Nonnull Class... parameters) {
-    for (final Method method : methods) {
+    for (Method method : methods) {
       if (name.equals(method.getName()) && Arrays.equals(parameters, method.getParameterTypes())) {
         method.setAccessible(true);
         return method;

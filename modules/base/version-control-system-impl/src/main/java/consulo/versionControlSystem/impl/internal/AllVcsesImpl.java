@@ -41,18 +41,18 @@ public class AllVcsesImpl implements AllVcses, Disposable {
   private final Project myProject;
 
   @Inject
-  AllVcsesImpl(final Project project) {
+  AllVcsesImpl(Project project) {
     myProject = project;
     myVcses = new HashMap<>();
     myLock = new Object();
   }
 
-  private void addVcs(final AbstractVcs vcs) {
+  private void addVcs(AbstractVcs vcs) {
     registerVcs(vcs);
     myVcses.put(vcs.getName(), vcs);
   }
 
-  private void registerVcs(final AbstractVcs vcs) {
+  private void registerVcs(AbstractVcs vcs) {
     try {
       vcs.loadSettings();
       vcs.doStart();
@@ -64,22 +64,22 @@ public class AllVcsesImpl implements AllVcses, Disposable {
   }
 
   @Override
-  public AbstractVcs getByName(final String name) {
+  public AbstractVcs getByName(String name) {
     synchronized (myLock) {
-      final AbstractVcs vcs = myVcses.get(name);
+      AbstractVcs vcs = myVcses.get(name);
       if (vcs != null) {
         return vcs;
       }
     }
 
     Map<String, VcsFactory> byIdMap = myProject.getExtensionPoint(VcsFactory.class).getOrBuildCache(BY_ID);
-    final VcsFactory ep = byIdMap.get(name);
+    VcsFactory ep = byIdMap.get(name);
     if (ep == null) {
       return null;
     }
 
     // guarantees to always return the same vcs value
-    final AbstractVcs newVcs = ep.createVcs();
+    AbstractVcs newVcs = ep.createVcs();
 
     newVcs.setupEnvironments();
 
@@ -124,7 +124,7 @@ public class AllVcsesImpl implements AllVcses, Disposable {
 
   @Override
   public VcsDescriptor[] getAll() {
-    final List<VcsDescriptor> result = new ArrayList<>();
+    List<VcsDescriptor> result = new ArrayList<>();
     myProject.getExtensionPoint(VcsFactory.class).forEachExtensionSafe(vcsFactory -> {
       result.add(vcsFactory.createDescriptor());
     });

@@ -27,20 +27,20 @@ public class DisposedPsiManagerCheck {
   private final Throwable myAllocationPlace;
   private final Project myProject;
 
-  public DisposedPsiManagerCheck(final Project project) {
+  public DisposedPsiManagerCheck(Project project) {
     myProject = project;
     myAllocationPlace = new Throwable();
   }
 
   public void performCheck() {
-    final PsiManager psiManager = PsiManager.getInstance(myProject);
+    PsiManager psiManager = PsiManager.getInstance(myProject);
     if (psiManager == null)
       log("Is null");
     else if (psiManager.isDisposed())
       log("Disposed");
   }
 
-  private void log(@NonNls final String message) {
+  private void log(@NonNls String message) {
     LOG.error(message + "\n" + StringUtil.getThrowableText(myAllocationPlace));
   }
 }

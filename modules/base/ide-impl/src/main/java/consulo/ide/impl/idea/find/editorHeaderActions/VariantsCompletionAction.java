@@ -48,7 +48,7 @@ public class VariantsCompletionAction extends AnAction {
 
   public VariantsCompletionAction(JTextComponent textField) {
     myTextField = textField;
-    final AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION);
+    AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION);
     if (action != null) {
       registerCustomShortcutSet(action.getShortcutSet(), myTextField);
     }
@@ -56,10 +56,10 @@ public class VariantsCompletionAction extends AnAction {
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
     if (editor == null) return;
-    final String prefix = myTextField.getText().substring(0, myTextField.getCaretPosition());
+    String prefix = myTextField.getText().substring(0, myTextField.getCaretPosition());
     if (StringUtil.isEmpty(prefix)) return;
 
     final String[] array = calcWords(prefix, editor);
@@ -68,9 +68,9 @@ public class VariantsCompletionAction extends AnAction {
     }
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("find.completion");
-    final JList list = new JBList(array) {
+    JList list = new JBList(array) {
       @Override
-      protected void paintComponent(final Graphics g) {
+      protected void paintComponent(Graphics g) {
         GraphicsUtil.setupAntialiasing(g);
         super.paintComponent(g);
       }
@@ -83,14 +83,14 @@ public class VariantsCompletionAction extends AnAction {
             list, null, myTextField, null);
   }
 
-  private static String[] calcWords(final String prefix, Editor editor) {
-    final Matcher matcher = NameUtil.buildMatcher(prefix, 0, true, true);
-    final Set<String> words = new HashSet<>();
+  private static String[] calcWords(String prefix, Editor editor) {
+    Matcher matcher = NameUtil.buildMatcher(prefix, 0, true, true);
+    Set<String> words = new HashSet<>();
     CharSequence chars = editor.getDocument().getCharsSequence();
 
     IdTableBuilding.scanWords(
       (chars1, charsArray, start, end) -> {
-        final String word = chars1.subSequence(start, end).toString();
+        String word = chars1.subSequence(start, end).toString();
         if (matcher.matches(word)) {
           words.add(word);
         }

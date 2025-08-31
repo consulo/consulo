@@ -93,8 +93,8 @@ class FindInProjectTask {
     List<FindInProjectSearchEngine.FindInProjectSearcher> mySearchers;
 
     FindInProjectTask(
-        @Nonnull final FindModel findModel,
-        @Nonnull final Project project,
+        @Nonnull FindModel findModel,
+        @Nonnull Project project,
         @Nonnull Set<? extends VirtualFile> filesToScanInitially
     ) {
         myFindModel = findModel;
@@ -103,7 +103,7 @@ class FindInProjectTask {
         myDirectory = FindInProjectUtil.getDirectory(findModel);
         myPsiManager = PsiManager.getInstance(project);
 
-        final String moduleName = findModel.getModuleName();
+        String moduleName = findModel.getModuleName();
         myModule = moduleName == null ? null : AccessRule.read(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
         myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
         myFileIndex = myModule == null ? myProjectFileIndex : ModuleRootManager.getInstance(myModule).getFileIndex();
@@ -112,7 +112,7 @@ class FindInProjectTask {
 
         myFileMask = file -> file != null && patternCondition.test(file.getNameSequence());
 
-        final ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
+        ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
         myProgress = progress != null ? progress : new EmptyProgressIndicator();
 
         TooManyUsagesStatus.createFor(myProgress);
@@ -137,7 +137,7 @@ class FindInProjectTask {
             myProgress.setIndeterminate(true);
             myProgress.setTextValue(FindLocalize.progressTextScanningNonIndexedFiles());
             boolean canRelyOnIndices = canRelyOnSearchers();
-            final Collection<VirtualFile> otherFiles = collectFilesInScope(filesForFastWordSearch, canRelyOnIndices);
+            Collection<VirtualFile> otherFiles = collectFilesInScope(filesForFastWordSearch, canRelyOnIndices);
             myProgress.setIndeterminate(false);
 
             if (LOG.isDebugEnabled()) {
@@ -188,7 +188,7 @@ class FindInProjectTask {
     private void searchInFiles(
         @Nonnull Collection<? extends VirtualFile> virtualFiles,
         @Nonnull FindUsagesProcessPresentation processPresentation,
-        @Nonnull final Predicate<? super UsageInfo> consumer
+        @Nonnull Predicate<? super UsageInfo> consumer
     ) {
         AtomicInteger occurrenceCount = new AtomicInteger();
         AtomicInteger processedFileCount = new AtomicInteger();
@@ -203,7 +203,7 @@ class FindInProjectTask {
                 return true; // Binary or invalid
             }
 
-            final boolean skipProjectFile = ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile) && !myFindModel.isSearchInProjectFiles();
+            boolean skipProjectFile = ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile) && !myFindModel.isSearchInProjectFiles();
             if (skipProjectFile && !Registry.is("find.search.in.project.files")) {
                 return true;
             }
@@ -313,7 +313,7 @@ class FindInProjectTask {
             private final Set<VirtualFile> myFiles = new CompactVirtualFileSet();
 
             @Override
-            public boolean processFile(@Nonnull final VirtualFile virtualFile) {
+            public boolean processFile(@Nonnull VirtualFile virtualFile) {
                 Application.get().runReadAction(() -> {
                     ProgressManager.checkCanceled();
                     if (virtualFile.isDirectory() || !virtualFile.isValid() || !myFileMask.test(virtualFile) || globalCustomScope != null && !globalCustomScope.contains(
@@ -375,7 +375,7 @@ class FindInProjectTask {
         else {
             boolean success = myFileIndex.iterateContent(iterator);
             if (success && globalCustomScope != null && globalCustomScope.isSearchInLibraries()) {
-                final VirtualFile[] librarySources = AccessRule.read(() -> {
+                VirtualFile[] librarySources = AccessRule.read(() -> {
                     OrderEnumerator enumerator =
                         myModule == null ? OrderEnumerator.orderEntries(myProject) : OrderEnumerator.orderEntries(myModule);
                     return enumerator.withoutModuleSourceEntries().withoutDepModules().getSourceRoots();
@@ -388,11 +388,11 @@ class FindInProjectTask {
 
     private static void iterateAll(
         @Nonnull VirtualFile[] files,
-        @Nonnull final GlobalSearchScope searchScope,
-        @Nonnull final ContentIterator iterator
+        @Nonnull GlobalSearchScope searchScope,
+        @Nonnull ContentIterator iterator
     ) {
-        final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-        final VirtualFileFilter contentFilter =
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        VirtualFileFilter contentFilter =
             file -> file.isDirectory()
                 || !fileTypeManager.isFileIgnored(file) && !file.getFileType().isBinary() && searchScope.contains(file);
         for (VirtualFile file : files) {
@@ -408,7 +408,7 @@ class FindInProjectTask {
 
     @Nonnull
     private Set<VirtualFile> getFilesForFastWordSearch() {
-        final Set<VirtualFile> resultFiles = new CompactVirtualFileSet();
+        Set<VirtualFile> resultFiles = new CompactVirtualFileSet();
         for (VirtualFile file : myFilesToScanInitially) {
             if (myFileMask.test(file)) {
                 resultFiles.add(file);
@@ -428,7 +428,7 @@ class FindInProjectTask {
     }
 
     @RequiredReadAction
-    private Pair.NonNull<PsiFile, VirtualFile> findFile(@Nonnull final VirtualFile virtualFile) {
+    private Pair.NonNull<PsiFile, VirtualFile> findFile(@Nonnull VirtualFile virtualFile) {
         PsiFile psiFile = myPsiManager.findFile(virtualFile);
         if (psiFile != null) {
             PsiElement sourceFile = psiFile.getNavigationElement();

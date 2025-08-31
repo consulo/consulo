@@ -57,7 +57,7 @@ public class FormBuilder {
     return addLabeledComponent(label, component, myVerticalGap, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component, final int topInset) {
+  public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component, int topInset) {
     return addLabeledComponent(label, component, topInset, false);
   }
 
@@ -69,7 +69,7 @@ public class FormBuilder {
     return addLabeledComponent(labelText, component, myVerticalGap, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, final int topInset) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, int topInset) {
     return addLabeledComponent(labelText, component, topInset, false);
   }
 
@@ -77,9 +77,9 @@ public class FormBuilder {
     return addLabeledComponent(labelText, component, myVerticalGap, labelOnTop);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, final int topInset, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, int topInset, boolean labelOnTop) {
     JLabel label = new JLabel(UIUtil.removeMnemonic(labelText));
-    final int index = UIUtil.getDisplayMnemonicIndex(labelText);
+    int index = UIUtil.getDisplayMnemonicIndex(labelText);
     if (index != -1) {
       label.setDisplayedMnemonic(labelText.charAt(index + 1));
     }
@@ -92,11 +92,11 @@ public class FormBuilder {
     return addLabeledComponent((JLabel)null, component, myVerticalGap, false);
   }
 
-  public FormBuilder addComponent(@Nonnull Component component, final int topInset) {
+  public FormBuilder addComponent(@Nonnull Component component, int topInset) {
     return addLabeledComponent((JLabel)null, component, topInset, false);
   }
 
-  public FormBuilder addSeparator(final int topInset) {
+  public FormBuilder addSeparator(int topInset) {
     return addComponent(new JSeparator(), topInset);
   }
 
@@ -104,22 +104,22 @@ public class FormBuilder {
     return addSeparator(myVerticalGap);
   }
 
-  public FormBuilder addVerticalGap(final int height) {
+  public FormBuilder addVerticalGap(int height) {
     return addLabeledComponent((JLabel)null,
                                new Box.Filler(new Dimension(0, height), new Dimension(0, height), new Dimension(Short.MAX_VALUE, height)));
   }
 
-  public FormBuilder addTooltip(final String text) {
-    final JBLabel label = new JBLabel(text, UIUtil.ComponentStyle.SMALL, UIUtil.FontColor.BRIGHTER);
+  public FormBuilder addTooltip(String text) {
+    JBLabel label = new JBLabel(text, UIUtil.ComponentStyle.SMALL, UIUtil.FontColor.BRIGHTER);
     label.setBorder(new EmptyBorder(0, 10, 0, 0));
     return addComponentToRightColumn(label, 1);
   }
 
-  public FormBuilder addComponentToRightColumn(@Nonnull final Component component) {
+  public FormBuilder addComponentToRightColumn(@Nonnull Component component) {
     return addComponentToRightColumn(component, myVerticalGap);
   }
 
-  public FormBuilder addComponentToRightColumn(@Nonnull final Component component, final int topInset) {
+  public FormBuilder addComponentToRightColumn(@Nonnull Component component, int topInset) {
     return addLabeledComponent(new JLabel(), component, topInset);
   }
 

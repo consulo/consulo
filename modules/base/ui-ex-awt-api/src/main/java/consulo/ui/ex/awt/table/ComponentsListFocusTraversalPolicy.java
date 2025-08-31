@@ -26,7 +26,7 @@ import java.util.List;
 public abstract class ComponentsListFocusTraversalPolicy extends FocusTraversalPolicy {
   @Override
   public Component getComponentAfter(Container aContainer, Component aComponent) {
-    final List<Component> components = getOrderedComponents();
+    List<Component> components = getOrderedComponents();
     int i = components.indexOf(aComponent);
     if (i != -1) {
       i++;
@@ -40,7 +40,7 @@ public abstract class ComponentsListFocusTraversalPolicy extends FocusTraversalP
 
   @Override
   public Component getComponentBefore(Container aContainer, Component aComponent) {
-    final List<Component> components = getOrderedComponents();
+    List<Component> components = getOrderedComponents();
     int i = components.indexOf(aComponent);
     if (i != -1) {
       i--;
@@ -54,19 +54,19 @@ public abstract class ComponentsListFocusTraversalPolicy extends FocusTraversalP
 
   @Override
   public Component getFirstComponent(Container aContainer) {
-    final List<Component> components = getOrderedComponents();
+    List<Component> components = getOrderedComponents();
     return components.isEmpty() ? null : components.get(0);
   }
 
   @Override
   public Component getLastComponent(Container aContainer) {
-    final List<Component> components = getOrderedComponents();
+    List<Component> components = getOrderedComponents();
     return components.isEmpty() ? null : components.get(components.size() - 1);
   }
 
   @Override
   public Component getDefaultComponent(Container aContainer) {
-    final List<Component> components = getOrderedComponents();
+    List<Component> components = getOrderedComponents();
     return components.isEmpty() ? null : components.get(0);
   }
 

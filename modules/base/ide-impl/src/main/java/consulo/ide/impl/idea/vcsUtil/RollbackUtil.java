@@ -47,7 +47,7 @@ public class RollbackUtil {
   public static String getRollbackOperationName(@Nonnull Collection<AbstractVcs> vcses) {
     String operationName = null;
     for (AbstractVcs vcs : vcses) {
-      final RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
+      RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
       if (rollbackEnvironment != null) {
         if (operationName == null) {
           operationName = rollbackEnvironment.getRollbackOperationName();

@@ -62,7 +62,7 @@ public final class PackageElement implements Queryable, RootsProvider {
     }
 
     Set<VirtualFile> roots = new HashSet<>();
-    final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(getPackage(), myModule.getProject(), myModule, isLibraryElement());
+    PsiDirectory[] dirs = PackageNodeUtil.getDirectories(getPackage(), myModule.getProject(), myModule, isLibraryElement());
     for (PsiDirectory each : dirs) {
       roots.add(each.getVirtualFile());
     }
@@ -74,7 +74,7 @@ public final class PackageElement implements Queryable, RootsProvider {
     if (this == o) return true;
     if (!(o instanceof PackageElement)) return false;
 
-    final PackageElement packageElement = (PackageElement)o;
+    PackageElement packageElement = (PackageElement)o;
 
     if (myIsLibraryElement != packageElement.myIsLibraryElement) return false;
     if (!myElement.equals(packageElement.myElement)) return false;

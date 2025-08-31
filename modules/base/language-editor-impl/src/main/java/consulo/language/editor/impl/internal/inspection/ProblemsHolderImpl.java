@@ -111,7 +111,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
     }
 
     @RequiredReadAction
-    private void redirectProblem(@Nonnull final ProblemDescriptor problem, @Nonnull final PsiElement target) {
+    private void redirectProblem(@Nonnull ProblemDescriptor problem, @Nonnull PsiElement target) {
         PsiElement original = problem.getPsiElement();
         VirtualFile vFile = original.getContainingFile().getVirtualFile();
         assert vFile != null;
@@ -165,7 +165,7 @@ public class ProblemsHolderImpl implements ProblemsHolder {
     @Nonnull
     @Override
     public ProblemDescriptor[] getResultsArray() {
-        final List<ProblemDescriptor> problems = getResults();
+        List<ProblemDescriptor> problems = getResults();
         return problems.toArray(new ProblemDescriptor[problems.size()]);
     }
 

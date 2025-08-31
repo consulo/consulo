@@ -39,7 +39,7 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
   protected final Project myProject;
   private final CheckinProjectPanel myPanel;
 
-  public ReformatBeforeCheckinHandler(final Project project, final CheckinProjectPanel panel) {
+  public ReformatBeforeCheckinHandler(Project project, CheckinProjectPanel panel) {
     myProject = project;
     myPanel = panel;
   }
@@ -52,7 +52,7 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
     return new RefreshableOnComponent() {
       @Override
       public JComponent getComponent() {
-        final JPanel panel = new JPanel(new GridLayout(1, 0));
+        JPanel panel = new JPanel(new GridLayout(1, 0));
         panel.add(reformatBox);
         return panel;
       }
@@ -80,10 +80,10 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
 
   @Override
   public void runCheckinHandlers(final Runnable finishAction) {
-    final VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
-    final Collection<VirtualFile> files = myPanel.getVirtualFiles();
+    VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
+    Collection<VirtualFile> files = myPanel.getVirtualFiles();
 
-    final Runnable performCheckoutAction = new Runnable() {
+    Runnable performCheckoutAction = new Runnable() {
       @Override
       public void run() {
         FileDocumentManager.getInstance().saveAllDocuments();
@@ -102,7 +102,7 @@ public class ReformatBeforeCheckinHandler extends CheckinHandler implements Chec
 
   }
 
-  private static boolean reformat(final VcsConfiguration configuration, boolean checkinProject) {
+  private static boolean reformat(VcsConfiguration configuration, boolean checkinProject) {
     return checkinProject ? configuration.REFORMAT_BEFORE_PROJECT_COMMIT : configuration.REFORMAT_BEFORE_FILE_COMMIT;
   }
 

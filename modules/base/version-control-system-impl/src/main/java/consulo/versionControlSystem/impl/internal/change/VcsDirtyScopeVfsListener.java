@@ -67,12 +67,12 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     if (myForbid || !vcsManager.hasActiveVcss()) return;
 
-    final FilesAndDirs dirtyFilesAndDirs = new FilesAndDirs();
+    FilesAndDirs dirtyFilesAndDirs = new FilesAndDirs();
     // collect files and directories - sources of events
     for (VFileEvent event : events) {
       ProgressManager.checkCanceled();
 
-      final boolean isDirectory;
+      boolean isDirectory;
       if (event instanceof VFileCreateEvent) {
         if (!((VFileCreateEvent)event).getParent().isInLocalFileSystem()) {
           continue;
@@ -80,7 +80,7 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
         isDirectory = ((VFileCreateEvent)event).isDirectory();
       }
       else {
-        final VirtualFile file = Objects.requireNonNull(event.getFile(), "All events but VFileCreateEvent have @NotNull getFile()");
+        VirtualFile file = Objects.requireNonNull(event.getFile(), "All events but VFileCreateEvent have @NotNull getFile()");
         if (!file.isInLocalFileSystem()) {
           continue;
         }

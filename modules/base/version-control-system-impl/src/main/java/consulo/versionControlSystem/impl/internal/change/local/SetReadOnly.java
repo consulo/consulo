@@ -26,21 +26,21 @@ public class SetReadOnly implements ChangeListCommand {
   private boolean myResult;
   private LocalChangeList myListCopy;
 
-  public SetReadOnly(final String name, final boolean value) {
+  public SetReadOnly(String name, boolean value) {
     myName = name;
     myValue = value;
   }
 
-  public void apply(final ChangeListWorker worker) {
+  public void apply(ChangeListWorker worker) {
     myResult = worker.setReadOnly(myName, myValue);
     myListCopy = worker.getCopyByName(myName);
   }
 
-  public void doNotify(final EventDispatcher<ChangeListListener> dispatcher) {
+  public void doNotify(EventDispatcher<ChangeListListener> dispatcher) {
     dispatcher.getMulticaster().changeListChanged(myListCopy);
   }
 
-  public void consume(final ChangeListWorker worker) {
+  public void consume(ChangeListWorker worker) {
     myResult = worker.setReadOnly(myName, myValue);
   }
 

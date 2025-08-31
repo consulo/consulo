@@ -26,19 +26,19 @@ public class RemoveList implements ChangeListCommand {
   private LocalChangeList myListCopy;
   private LocalChangeList myDefaultListCopy;
 
-  public RemoveList(final String name) {
+  public RemoveList(String name) {
     myName = name;
   }
 
-  public void apply(final ChangeListWorker worker) {
+  public void apply(ChangeListWorker worker) {
     myListCopy = worker.getCopyByName(myName);
     myDefaultListCopy = worker.getDefaultListCopy();
     myRemoved = worker.removeChangeList(myName);
   }
 
-  public void doNotify(final EventDispatcher<ChangeListListener> dispatcher) {
+  public void doNotify(EventDispatcher<ChangeListListener> dispatcher) {
     if (myRemoved) {
-      final ChangeListListener multicaster = dispatcher.getMulticaster();
+      ChangeListListener multicaster = dispatcher.getMulticaster();
       multicaster.changesMoved(myListCopy.getChanges(), myListCopy, myDefaultListCopy);
       multicaster.changeListRemoved(myListCopy);
     }

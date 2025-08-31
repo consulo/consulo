@@ -60,7 +60,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   public void setBufferingEnabled(boolean enabled) {
-    final boolean wasEnabled = myBufferingEnabled;
+    boolean wasEnabled = myBufferingEnabled;
     assert wasEnabled != enabled;
 
     myBufferingEnabled = enabled;
@@ -124,13 +124,13 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  public boolean processKeys(@Nonnull final Predicate<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
-    final Set<Key> stopList = new HashSet<>();
+  public boolean processKeys(@Nonnull Predicate<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
+    Set<Key> stopList = new HashSet<>();
 
     Predicate<Key> decoratingProcessor = key -> {
       if (stopList.contains(key)) return true;
 
-      final UpdatableValueContainer<Value> container = myMap.get(key);
+      UpdatableValueContainer<Value> container = myMap.get(key);
       if (container != null && container.size() == 0) {
         return true;
       }
@@ -147,12 +147,12 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  public void addValue(final Key key, final int inputId, final Value value) throws StorageException {
+  public void addValue(Key key, int inputId, Value value) throws StorageException {
     if (myBufferingEnabled) {
       getMemValueContainer(key).addValue(inputId, value);
       return;
     }
-    final ChangeTrackingValueContainer<Value> valueContainer = myMap.get(key);
+    ChangeTrackingValueContainer<Value> valueContainer = myMap.get(key);
     if (valueContainer != null) {
       valueContainer.dropMergedData();
     }
@@ -166,7 +166,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
       getMemValueContainer(key).removeAssociatedValue(inputId);
       return;
     }
-    final ChangeTrackingValueContainer<Value> valueContainer = myMap.get(key);
+    ChangeTrackingValueContainer<Value> valueContainer = myMap.get(key);
     if (valueContainer != null) {
       valueContainer.dropMergedData();
     }
@@ -200,8 +200,8 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
 
   @Override
   @Nonnull
-  public ValueContainer<Value> read(final Key key) throws StorageException {
-    final ValueContainer<Value> valueContainer = myMap.get(key);
+  public ValueContainer<Value> read(Key key) throws StorageException {
+    ValueContainer<Value> valueContainer = myMap.get(key);
     if (valueContainer != null) {
       return valueContainer;
     }

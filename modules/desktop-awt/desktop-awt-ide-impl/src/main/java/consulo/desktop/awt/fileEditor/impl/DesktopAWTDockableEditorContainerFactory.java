@@ -78,7 +78,7 @@ public class DesktopAWTDockableEditorContainerFactory implements DockableEditorC
     if (!loadingState) {
       splitters.createCurrentWindow();
     }
-    final DesktopDockableEditorTabbedContainer container = new DesktopDockableEditorTabbedContainer(myProject, splitters, true);
+    DesktopDockableEditorTabbedContainer container = new DesktopDockableEditorTabbedContainer(myProject, splitters, true);
     Disposer.register(container, splitters);
     containerRef.set(container);
     container.getSplitters().startListeningFocus();

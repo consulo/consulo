@@ -36,7 +36,7 @@ public interface ExternalSystemTaskManager<S extends ExternalSystemExecutionSett
                     @Nonnull List<String> taskNames,
                     @Nonnull String projectPath,
                     @Nullable S settings,
-                    @Nonnull final List<String> vmOptions,
+                    @Nonnull List<String> vmOptions,
                     @Nonnull List<String> scriptParameters,
                     @Nullable String debuggerSetup,
                     @Nonnull ExternalSystemTaskNotificationListener listener) throws ExternalSystemException;

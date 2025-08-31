@@ -40,7 +40,7 @@ public class CommentTokenSplitter extends BaseTokenSplitter {
     }
 
     List<TextRange> toCheck = excludeByPattern(text, range, HTML, 2);
-    final TokenSplitter ps = PlainTextTokenSplitter.getInstance();
+    TokenSplitter ps = PlainTextTokenSplitter.getInstance();
     for (TextRange r : toCheck) {
       ps.split(text, r, consumer);
     }

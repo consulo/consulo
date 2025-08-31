@@ -31,7 +31,7 @@ import javax.swing.*;
 public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor implements RunConfigurable.RunDialogBase {
   protected Executor myExecutor;
 
-  public EditConfigurationsDialog(final Project project) {
+  public EditConfigurationsDialog(Project project) {
     super(project, new RunConfigurable(project), "consulo.execution.impl.internal.ui.EditConfigurationsDialog");
     getConfigurable().setRunDialog(this);
     setTitle(ExecutionLocalize.runDebugDialogTitle());

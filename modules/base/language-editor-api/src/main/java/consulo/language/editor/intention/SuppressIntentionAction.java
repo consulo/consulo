@@ -64,7 +64,7 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
   @Override
   public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (!file.getManager().isInProject(file)) return;
-    final PsiElement element = getElement(editor, file);
+    PsiElement element = getElement(editor, file);
     if (element != null) {
       invoke(project, editor, element);
     }
@@ -84,10 +84,10 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
   @Override
   public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (file == null) return false;
-    final PsiManager manager = file.getManager();
+    PsiManager manager = file.getManager();
     if (manager == null) return false;
     if (!manager.isInProject(file)) return false;
-    final PsiElement element = getElement(editor, file);
+    PsiElement element = getElement(editor, file);
     return element != null && isAvailable(project, editor, element);
   }
 

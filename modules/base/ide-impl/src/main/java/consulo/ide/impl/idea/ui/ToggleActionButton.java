@@ -70,17 +70,17 @@ public abstract class ToggleActionButton extends AnActionButton implements Toggl
 
     @Override
     public final void actionPerformed(AnActionEvent e) {
-        final boolean state = !isSelected(e);
+        boolean state = !isSelected(e);
         setSelected(e, state);
-        final Boolean selected = state ? Boolean.TRUE : Boolean.FALSE;
-        final Presentation presentation = e.getPresentation();
+        Boolean selected = state ? Boolean.TRUE : Boolean.FALSE;
+        Presentation presentation = e.getPresentation();
         presentation.putClientProperty(Toggleable.SELECTED_PROPERTY, selected);
     }
 
     @Override
     public final void updateButton(AnActionEvent e) {
-        final Boolean selected = isSelected(e) ? Boolean.TRUE : Boolean.FALSE;
-        final Presentation presentation = e.getPresentation();
+        Boolean selected = isSelected(e) ? Boolean.TRUE : Boolean.FALSE;
+        Presentation presentation = e.getPresentation();
         presentation.putClientProperty(Toggleable.SELECTED_PROPERTY, selected);
     }
 }

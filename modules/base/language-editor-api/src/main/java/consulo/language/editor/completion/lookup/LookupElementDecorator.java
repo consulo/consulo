@@ -109,18 +109,18 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
   }
 
   @Nonnull
-  public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(@Nonnull T element, @Nonnull final InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
+  public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(@Nonnull T element, @Nonnull InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
     return new InsertingDecorator<T>(element, insertHandler);
   }
 
   @Nonnull
-  public static <T extends LookupElement> LookupElementDecorator<T> withRenderer(@Nonnull final T element, @Nonnull final LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
+  public static <T extends LookupElement> LookupElementDecorator<T> withRenderer(@Nonnull T element, @Nonnull LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
     return new VisagisteDecorator<T>(element, visagiste);
   }
 
   @Override
   public <T> T as(ClassConditionKey<T> conditionKey) {
-    final T t = super.as(conditionKey);
+    T t = super.as(conditionKey);
     return t == null ? myDelegate.as(conditionKey) : t;
   }
 
@@ -172,7 +172,7 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
     }
 
     @Override
-    public void renderElement(final LookupElementPresentation presentation) {
+    public void renderElement(LookupElementPresentation presentation) {
       myVisagiste.renderElement(this, presentation);
     }
 

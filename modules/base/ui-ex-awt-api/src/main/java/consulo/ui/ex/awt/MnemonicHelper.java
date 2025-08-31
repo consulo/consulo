@@ -132,7 +132,7 @@ public class MnemonicHelper extends ComponentTreeWatcher {
   public void checkForDuplicateMnemonics(int mnemonic, String text) {
     if (mnemonic == 0) return;
     if (myMnemonics == null) myMnemonics = new HashMap<>();
-    final String other = myMnemonics.get(Integer.valueOf(mnemonic));
+    String other = myMnemonics.get(Integer.valueOf(mnemonic));
     if (other != null && !other.equals(text)) {
       LOG.error("conflict: multiple components with mnemonic '" + (char)mnemonic + "' seen on '" + text + "' and '" + other + "'");
     }

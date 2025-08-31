@@ -38,12 +38,12 @@ public class LibraryTableImplUtil {
   }
 
   public static Library loadLibrary(Element rootElement, ModuleRootLayerImpl rootModel) throws InvalidDataException {
-    final List<Element> children = rootElement.getChildren(LibraryImpl.ELEMENT);
+    List<Element> children = rootElement.getChildren(LibraryImpl.ELEMENT);
     if (children.size() != 1) throw new InvalidDataException();
     return new LibraryImpl(null, children.get(0), new ModuleRootLayerLibraryOwner(rootModel));
   }
 
-  public static Library createModuleLevelLibrary(@Nullable String name, final PersistentLibraryKind kind, ModuleRootLayerImpl rootModel) {
+  public static Library createModuleLevelLibrary(@Nullable String name, PersistentLibraryKind kind, ModuleRootLayerImpl rootModel) {
     return new LibraryImpl(name, kind, null, new ModuleRootLayerLibraryOwner(rootModel));
   }
 }

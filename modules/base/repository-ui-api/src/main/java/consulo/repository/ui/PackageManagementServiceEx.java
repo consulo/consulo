@@ -21,6 +21,6 @@ public abstract class PackageManagementServiceEx extends PackageManagementServic
     return AsyncResult.resolved();
   }
 
-  public void installPackage(final RepoPackage repoPackage, @Nullable final String version, @Nullable String extraOptions, final Listener listener, @Nonnull final File workingDir) {
+  public void installPackage(RepoPackage repoPackage, @Nullable String version, @Nullable String extraOptions, Listener listener, @Nonnull File workingDir) {
   }
 }

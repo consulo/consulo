@@ -53,7 +53,7 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
 
   public void addAction(final Action action) {
     action.addPropertyChangeListener(this);
-    final LinkLabel label =
+    LinkLabel label =
             new LinkLabel(null, null, (LinkListener)(aSource, aLinkData) -> action.actionPerformed(new ActionEvent(Banner.this, ActionEvent.ACTION_PERFORMED, Action.ACTION_COMMAND_KEY))) {
               @Override
               protected Color getTextColor() {
@@ -67,22 +67,22 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
   }
 
   void updateAction(Action action) {
-    final LinkLabel label = myActions.get(action);
+    LinkLabel label = myActions.get(action);
     label.setVisible(action.isEnabled());
     label.setText((String)action.getValue(Action.NAME));
     label.setToolTipText((String)action.getValue(Action.SHORT_DESCRIPTION));
   }
 
   @Override
-  public void propertyChange(final PropertyChangeEvent evt) {
-    final Object source = evt.getSource();
+  public void propertyChange(PropertyChangeEvent evt) {
+    Object source = evt.getSource();
     if (source instanceof Action) {
       updateAction((Action)source);
     }
   }
 
   public void clearActions() {
-    final Set<Action> actions = myActions.keySet();
+    Set<Action> actions = myActions.keySet();
     for (Action each : actions) {
       each.removePropertyChangeListener(this);
     }
@@ -92,19 +92,19 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
 
   @Override
   public Dimension getMinimumSize() {
-    final Dimension size = super.getMinimumSize();
+    Dimension size = super.getMinimumSize();
     size.height = Math.max(myBannerMinHeight, size.height);
     return size;
   }
 
   @Override
   public Dimension getPreferredSize() {
-    final Dimension size = super.getPreferredSize();
+    Dimension size = super.getPreferredSize();
     size.height = getMinimumSize().height;
     return size;
   }
 
-  public void setMinHeight(final int height) {
+  public void setMinHeight(int height) {
     myBannerMinHeight = height;
     revalidate();
     repaint();
@@ -120,16 +120,16 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
     }
   }
 
-  public void setText(@Nonnull final String... text) {
+  public void setText(@Nonnull String... text) {
     myText.removeAll();
     for (int i = 0; i < text.length; i++) {
-      final JLabel eachLabel = new JLabel(text[i], SwingConstants.CENTER);
+      JLabel eachLabel = new JLabel(text[i], SwingConstants.CENTER);
       eachLabel.setBorder(new EmptyBorder(0, 0, 0, 5));
       eachLabel.setVerticalTextPosition(SwingConstants.TOP);
       eachLabel.setFont(eachLabel.getFont().deriveFont(Font.BOLD, eachLabel.getFont().getSize()));
       myText.add(eachLabel);
       if (i < text.length - 1) {
-        final JLabel eachIcon = new JLabel("\u203A", SwingConstants.CENTER);
+        JLabel eachIcon = new JLabel("\u203A", SwingConstants.CENTER);
         eachIcon.setBorder(new EmptyBorder(0, 0, 0, 5));
         myText.add(eachIcon);
       }
@@ -137,7 +137,7 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
   }
 
   public void updateActions() {
-    final Set<Action> actions = myActions.keySet();
+    Set<Action> actions = myActions.keySet();
     for (Action action : actions) {
       updateAction(action);
     }
@@ -149,8 +149,8 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
     public void doLayout() {
       int x = 0;
       for (int i = 0; i < getComponentCount(); i++) {
-        final Component each = getComponent(i);
-        final Dimension eachSize = each.getPreferredSize();
+        Component each = getComponent(i);
+        Dimension eachSize = each.getPreferredSize();
         each.setBounds(x, 0, eachSize.width, getHeight());
         x += each.getBounds().width;
       }
@@ -160,8 +160,8 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
     public Dimension getPreferredSize() {
       Dimension size = new Dimension();
       for (int i = 0; i < getComponentCount(); i++) {
-        final Component each = getComponent(i);
-        final Dimension eachSize = each.getPreferredSize();
+        Component each = getComponent(i);
+        Dimension eachSize = each.getPreferredSize();
         size.width += eachSize.width;
         size.height = Math.max(size.height, eachSize.height);
       }

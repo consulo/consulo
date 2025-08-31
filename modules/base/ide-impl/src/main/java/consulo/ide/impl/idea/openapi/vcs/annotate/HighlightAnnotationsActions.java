@@ -35,11 +35,11 @@ public class HighlightAnnotationsActions {
   private final RemoveHighlightingAction myRemove;
   private final EditorGutterComponentEx myGutter;
 
-  public HighlightAnnotationsActions(final Project project, final VirtualFile virtualFile, final FileAnnotation fileAnnotation, final EditorGutterComponentEx gutter) {
+  public HighlightAnnotationsActions(Project project, VirtualFile virtualFile, FileAnnotation fileAnnotation, EditorGutterComponentEx gutter) {
     myGutter = gutter;
     myBefore = new HightlightAction(true, project, virtualFile, fileAnnotation, myGutter, null);
-    final List<VcsFileRevision> fileRevisionList = fileAnnotation.getRevisions();
-    final VcsFileRevision afterSelected = ((fileRevisionList != null) && (fileRevisionList.size() > 1)) ? fileRevisionList.get(0) : null;
+    List<VcsFileRevision> fileRevisionList = fileAnnotation.getRevisions();
+    VcsFileRevision afterSelected = ((fileRevisionList != null) && (fileRevisionList.size() > 1)) ? fileRevisionList.get(0) : null;
     myAfter = new HightlightAction(false, project, virtualFile, fileAnnotation, myGutter, afterSelected);
     myRemove = new RemoveHighlightingAction();
   }
@@ -48,7 +48,7 @@ public class HighlightAnnotationsActions {
     return Arrays.asList(myBefore, myAfter, myRemove);
   }
 
-  public boolean isLineBold(final int lineNumber) {
+  public boolean isLineBold(int lineNumber) {
     if (turnedOn()) {
       if (myBefore.isTurnedOn() && (!myBefore.isBold(lineNumber))) {
         return false;
@@ -67,12 +67,12 @@ public class HighlightAnnotationsActions {
 
   private class RemoveHighlightingAction extends AnAction {
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(AnActionEvent e) {
       e.getPresentation().setText("Remove highlighting");
       e.getPresentation().setEnabled(turnedOn());
     }
 
-    public void actionPerformed(final AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       myBefore.clear();
       myAfter.clear();
       myGutter.revalidateMarkup();
@@ -88,12 +88,12 @@ public class HighlightAnnotationsActions {
     private VcsFileRevision mySelectedRevision;
     private Boolean myShowComments;
 
-    private HightlightAction(final boolean before,
-                             final Project project,
-                             final VirtualFile virtualFile,
-                             final FileAnnotation fileAnnotation,
-                             final EditorGutterComponentEx gutter,
-                             @jakarta.annotation.Nullable final VcsFileRevision selectedRevision) {
+    private HightlightAction(boolean before,
+                             Project project,
+                             VirtualFile virtualFile,
+                             FileAnnotation fileAnnotation,
+                             EditorGutterComponentEx gutter,
+                             @jakarta.annotation.Nullable VcsFileRevision selectedRevision) {
       myBefore = before;
       myProject = project;
       myVirtualFile = virtualFile;
@@ -104,10 +104,10 @@ public class HighlightAnnotationsActions {
     }
 
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(AnActionEvent e) {
       super.update(e);
-      final String text;
-      final String description;
+      String text;
+      String description;
       if (myBefore) {
         text = (mySelectedRevision == null)
                ? VcsBundle.message("highlight.annotation.before.not.selected.text")
@@ -125,8 +125,8 @@ public class HighlightAnnotationsActions {
       e.getPresentation().setEnabled(myFileAnnotation.revisionsNotEmpty());
     }
 
-    public void actionPerformed(final AnActionEvent e) {
-      final List<VcsFileRevision> fileRevisionList = myFileAnnotation.getRevisions();
+    public void actionPerformed(AnActionEvent e) {
+      List<VcsFileRevision> fileRevisionList = myFileAnnotation.getRevisions();
       if (fileRevisionList != null) {
         if (myShowComments == null) {
           initShowComments(fileRevisionList);
@@ -138,7 +138,7 @@ public class HighlightAnnotationsActions {
       }
     }
 
-    private void initShowComments(final List<VcsFileRevision> revisions) {
+    private void initShowComments(List<VcsFileRevision> revisions) {
       for (VcsFileRevision revision : revisions) {
         if (revision.getCommitMessage() != null) {
           myShowComments = true;
@@ -156,11 +156,11 @@ public class HighlightAnnotationsActions {
       mySelectedRevision = null;
     }
 
-    public boolean isBold(final int line) {
+    public boolean isBold(int line) {
       if (mySelectedRevision != null) {
-        final VcsRevisionNumber number = myFileAnnotation.originalRevision(line);
+        VcsRevisionNumber number = myFileAnnotation.originalRevision(line);
         if (number != null) {
-          final int compareResult = number.compareTo(mySelectedRevision.getRevisionNumber());
+          int compareResult = number.compareTo(mySelectedRevision.getRevisionNumber());
           return (myBefore && compareResult <= 0) || ((!myBefore) && (compareResult >= 0));
         }
       }

@@ -51,11 +51,11 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
 
     ModulesConfiguratorImpl modulesConfigurator = (ModulesConfiguratorImpl)util.getModulesModel(project);
 
-    final Graph<Chunk<ModuleRootModel>> graph = ModuleCompilerUtil.toChunkGraph(modulesConfigurator.createGraphGenerator());
-    final Collection<Chunk<ModuleRootModel>> chunks = graph.getNodes();
+    Graph<Chunk<ModuleRootModel>> graph = ModuleCompilerUtil.toChunkGraph(modulesConfigurator.createGraphGenerator());
+    Collection<Chunk<ModuleRootModel>> chunks = graph.getNodes();
     List<String> cycles = new ArrayList<>();
     for (Chunk<ModuleRootModel> chunk : chunks) {
-      final Set<ModuleRootModel> modules = chunk.getNodes();
+      Set<ModuleRootModel> modules = chunk.getNodes();
       List<String> names = new ArrayList<>();
       for (ModuleRootModel model : modules) {
         names.add(model.getModule().getName());
@@ -65,12 +65,12 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
       }
     }
     if (!cycles.isEmpty()) {
-      final PlaceInProjectStructureBase place = new PlaceInProjectStructureBase(GeneralProjectSettingsElement::navigateToModules, this);
-      final LocalizeValue message;
-      final LocalizeValue description;
+      PlaceInProjectStructureBase place = new PlaceInProjectStructureBase(GeneralProjectSettingsElement::navigateToModules, this);
+      LocalizeValue message;
+      LocalizeValue description;
       if (cycles.size() > 1) {
         message = LocalizeValue.localizeTODO("Circular dependencies");
-        @NonNls final String br = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
+        @NonNls String br = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
         StringBuilder cyclesString = new StringBuilder();
         for (int i = 0; i < cycles.size(); i++) {
           cyclesString.append(br).append(i + 1).append(". ").append(cycles.get(i));

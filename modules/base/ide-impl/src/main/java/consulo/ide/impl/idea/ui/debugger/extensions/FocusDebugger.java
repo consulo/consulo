@@ -58,7 +58,7 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
     }
 
     private JComponent init() {
-        final JPanel result = new JPanel(new BorderLayout());
+        JPanel result = new JPanel(new BorderLayout());
 
         myLogModel = new DefaultListModel();
         myLog = new JBList(myLogModel);
@@ -66,13 +66,13 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
 
 
         myAllocation = new JEditorPane();
-        final DefaultCaret caret = new DefaultCaret();
+        DefaultCaret caret = new DefaultCaret();
         myAllocation.setCaret(caret);
         caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         myAllocation.setEditable(false);
 
 
-        final Splitter splitter = new Splitter(true);
+        Splitter splitter = new Splitter(true);
         splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myLog));
         splitter.setSecondComponent(ScrollPaneFactory.createScrollPane(myAllocation));
 
@@ -83,7 +83,7 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         result.add(splitter, BorderLayout.CENTER);
 
 
-        final DefaultActionGroup group = new DefaultActionGroup();
+        DefaultActionGroup group = new DefaultActionGroup();
         group.add(new ClearAction());
 
         result.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent(), BorderLayout.NORTH);
@@ -109,15 +109,15 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         }
         else {
             FocusElement element = (FocusElement) myLog.getSelectedValue();
-            final StringWriter s = new StringWriter();
-            final PrintWriter writer = new PrintWriter(s);
+            StringWriter s = new StringWriter();
+            PrintWriter writer = new PrintWriter(s);
             element.getAllocation().printStackTrace(writer);
             myAllocation.setText(s.toString());
         }
     }
 
     private boolean isInsideDebuggerDialog(Component c) {
-        final Window debuggerWindow = SwingUtilities.getWindowAncestor(myComponent);
+        Window debuggerWindow = SwingUtilities.getWindowAncestor(myComponent);
         if (!(debuggerWindow instanceof Dialog)) {
             return false;
         }
@@ -127,8 +127,8 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final Object newValue = evt.getNewValue();
-        final Object oldValue = evt.getOldValue();
+        Object newValue = evt.getNewValue();
+        Object oldValue = evt.getOldValue();
 
         boolean affectsDebugger = false;
 
@@ -141,7 +141,7 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         }
 
 
-        final SimpleColoredText text = new SimpleColoredText();
+        SimpleColoredText text = new SimpleColoredText();
         text.append(
             evt.getPropertyName(),
             maybeGrayOut(new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, null), affectsDebugger)
@@ -155,7 +155,7 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
             @Override
             public void run() {
                 if (myLog != null && myLog.isShowing()) {
-                    final int h = myLog.getFixedCellHeight();
+                    int h = myLog.getFixedCellHeight();
                     myLog.scrollRectToVisible(new Rectangle(0, myLog.getPreferredSize().height - h, myLog.getWidth(), h));
                     if (myLog.getModel().getSize() > 0) {
                         myLog.setSelectedIndex(myLog.getModel().getSize() - 1);
@@ -173,10 +173,10 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
         @Override
         protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
             clear();
-            final FocusElement element = (FocusElement) value;
-            final SimpleColoredText text = element.getText();
-            final ArrayList<String> strings = text.getTexts();
-            final ArrayList<SimpleTextAttributes> attributes = element.getText().getAttributes();
+            FocusElement element = (FocusElement) value;
+            SimpleColoredText text = element.getText();
+            ArrayList<String> strings = text.getTexts();
+            ArrayList<SimpleTextAttributes> attributes = element.getText().getAttributes();
             for (int i = 0; i < strings.size(); i++) {
                 append(strings.get(i), attributes.get(i));
             }

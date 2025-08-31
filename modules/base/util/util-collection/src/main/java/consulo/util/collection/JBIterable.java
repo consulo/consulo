@@ -399,7 +399,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * Returns the elements from this iterable that satisfy a condition.
    */
   @Nonnull
-  public final JBIterable<E> filter(@Nonnull final Predicate<? super E> condition) {
+  public final JBIterable<E> filter(@Nonnull Predicate<? super E> condition) {
     return intercept(iterator -> JBIterator.from(iterator).filter(Stateful.copy(condition)));
   }
 
@@ -419,22 +419,22 @@ public abstract class JBIterable<E> implements Iterable<E> {
   }
 
   @Nonnull
-  public final JBIterable<E> take(final int count) {
+  public final JBIterable<E> take(int count) {
     return intercept(iterator -> JBIterator.from(iterator).take(count));
   }
 
   @Nonnull
-  public final JBIterable<E> takeWhile(@Nonnull final Predicate<? super E> condition) {
+  public final JBIterable<E> takeWhile(@Nonnull Predicate<? super E> condition) {
     return intercept(iterator -> JBIterator.from(iterator).takeWhile(Stateful.copy(condition)));
   }
 
   @Nonnull
-  public final JBIterable<E> skip(final int count) {
+  public final JBIterable<E> skip(int count) {
     return intercept(iterator -> JBIterator.from(iterator).skip(count));
   }
 
   @Nonnull
-  public final JBIterable<E> skipWhile(@Nonnull final Predicate<? super E> condition) {
+  public final JBIterable<E> skipWhile(@Nonnull Predicate<? super E> condition) {
     return intercept(iterator -> JBIterator.from(iterator).skipWhile(Stateful.copy(condition)));
   }
 
@@ -442,7 +442,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * Returns a {@code JBIterable} that applies {@code function} to each element of this iterable.
    */
   @Nonnull
-  public final <T> JBIterable<T> map(@Nonnull final Function<? super E, T> function) {
+  public final <T> JBIterable<T> map(@Nonnull Function<? super E, T> function) {
     return intercept(iterator -> JBIterator.from(iterator).map(Stateful.copy(function)));
   }
 
@@ -464,7 +464,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * Nulls are supported and silently skipped.
    */
   @Nonnull
-  public <T> JBIterable<T> flatten(@Nonnull final Function<? super E, ? extends Iterable<? extends T>> function) {
+  public <T> JBIterable<T> flatten(@Nonnull Function<? super E, ? extends Iterable<? extends T>> function) {
     return intercept(new FlattenFun<E, T>(function));
   }
 
@@ -476,7 +476,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
     }
 
     @Override
-    public Iterator<T> apply(final Iterator<E> iterator) {
+    public Iterator<T> apply(Iterator<E> iterator) {
       return new FlattenIt<E, T>(iterator, Stateful.copy(function));
     }
 
@@ -529,7 +529,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * The most generic iterator transformation.
    */
   @Nonnull
-  public final <T, X extends Iterator<E>> JBIterable<T> intercept(@Nonnull final Function<X, ? extends Iterator<T>> function) {
+  public final <T, X extends Iterator<E>> JBIterable<T> intercept(@Nonnull Function<X, ? extends Iterator<T>> function) {
     if (this == EMPTY) return empty();
     if (this instanceof Intercepted) {
       return new Intercepted<E, T, X>(
@@ -706,7 +706,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * If 'strict' flag is true only groups of size 'n' are returned.
    */
   @Nonnull
-  public final JBIterable<List<E>> split(final int size, final boolean strict) {
+  public final JBIterable<List<E>> split(int size, boolean strict) {
     return split(size).filterMap(es -> {
       List<E> list = es.addAllTo(new ArrayList<E>(size));
       return strict && list.size() < size ? null : list;
@@ -749,7 +749,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * All iterations are performed in-place without data copying.
    */
   @Nonnull
-  public final JBIterable<JBIterable<E>> split(final Split mode, final Predicate<? super E> separator) {
+  public final JBIterable<JBIterable<E>> split(final Split mode, Predicate<? super E> separator) {
     return intercept(iterator -> {
       final Iterator<E> orig = iterator;
       final Predicate<? super E> condition = Stateful.copy(separator);

@@ -49,7 +49,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
 
     // special handling for roots with names (e.g. web roots)
     if (myName == null || myComment == null) {
-      final String newName = myFileElement.toString();
+      String newName = myFileElement.toString();
       if (!newName.equals(myName)) changed = true;
       myName = newName;
     }

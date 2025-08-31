@@ -39,9 +39,9 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
 
   public abstract void removeOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry);
 
-  public static String extractLocalPath(final String url) {
-    final String path = VirtualFileUtil.urlToPath(url);
-    final int jarSeparatorIndex = path.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
+  public static String extractLocalPath(String url) {
+    String path = VirtualFileUtil.urlToPath(url);
+    int jarSeparatorIndex = path.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
     if (jarSeparatorIndex > 0) {
       return path.substring(0, jarSeparatorIndex);
     }

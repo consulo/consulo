@@ -85,7 +85,7 @@ public class BaseOSProcessHandler extends LocalProcessHandler<Process> {
 
     addProcessListener(new ProcessListener() {
       @Override
-      public void startNotified(@Nonnull final ProcessEvent event) {
+      public void startNotified(@Nonnull ProcessEvent event) {
         try {
           BaseDataReader stdOutReader = createOutputDataReader();
           BaseDataReader stdErrReader = processHasSeparateErrorStream() ? createErrorDataReader() : null;

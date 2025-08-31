@@ -58,8 +58,8 @@ public class MapInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<Ke
         int removed = 0;
 
         for (Map.Entry<Key, Value> e : myMap.entrySet()) {
-          final Key key = e.getKey();
-          final Value newValue = newData.get(key);
+          Key key = e.getKey();
+          Value newValue = newData.get(key);
           if (!Comparing.equal(e.getValue(), newValue) || (newValue == null && !newData.containsKey(key))) {
             if (!newData.containsKey(key)) {
               removeProcessor.process(key, myInputId);
@@ -74,7 +74,7 @@ public class MapInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<Ke
         }
 
         for (Map.Entry<Key, Value> e : newData.entrySet()) {
-          final Key key = e.getKey();
+          Key key = e.getKey();
           if (!myMap.containsKey(key)) {
             addProcessor.process(key, e.getValue(), myInputId);
             added++;
@@ -106,7 +106,7 @@ public class MapInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<Ke
     return true;
   }
 
-  private void processAllKeysAsDeleted(final RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
+  private void processAllKeysAsDeleted(RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
     for (Key key : myMap.keySet()) {
       removeProcessor.process(key, myInputId);
     }

@@ -55,7 +55,7 @@ public class MoveFilesOrDirectoriesUtil {
      * @param destDirectory the directory to move {@code dir} into.
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
-    public static void doMoveDirectory(final PsiDirectory aDirectory, final PsiDirectory destDirectory) throws IncorrectOperationException {
+    public static void doMoveDirectory(PsiDirectory aDirectory, PsiDirectory destDirectory) throws IncorrectOperationException {
         PsiManager manager = aDirectory.getManager();
         // do actual move
         checkMove(aDirectory, destDirectory);
@@ -102,10 +102,10 @@ public class MoveFilesOrDirectoriesUtil {
      */
     @RequiredUIAccess
     public static void doMove(
-        final Project project,
-        final PsiElement[] elements,
-        final PsiElement[] targetElement,
-        final MoveCallback moveCallback
+        Project project,
+        PsiElement[] elements,
+        PsiElement[] targetElement,
+        MoveCallback moveCallback
     ) {
         doMove(project, elements, targetElement, moveCallback, null);
     }
@@ -115,11 +115,11 @@ public class MoveFilesOrDirectoriesUtil {
      */
     @RequiredUIAccess
     public static void doMove(
-        final Project project,
-        final PsiElement[] elements,
-        final PsiElement[] targetElement,
-        final MoveCallback moveCallback,
-        final Function<PsiElement[], PsiElement[]> adjustElements
+        Project project,
+        PsiElement[] elements,
+        PsiElement[] targetElement,
+        MoveCallback moveCallback,
+        Function<PsiElement[], PsiElement[]> adjustElements
     ) {
         if (adjustElements == null) {
             for (PsiElement element : elements) {
@@ -129,21 +129,21 @@ public class MoveFilesOrDirectoriesUtil {
             }
         }
 
-        final PsiDirectory targetDirectory = resolveToDirectory(project, targetElement[0]);
+        PsiDirectory targetDirectory = resolveToDirectory(project, targetElement[0]);
         if (targetElement[0] != null && targetDirectory == null) {
             return;
         }
 
-        final PsiElement[] newElements = adjustElements != null ? adjustElements.apply(elements) : elements;
+        PsiElement[] newElements = adjustElements != null ? adjustElements.apply(elements) : elements;
 
-        final PsiDirectory initialTargetDirectory = getInitialTargetDirectory(targetDirectory, elements);
+        PsiDirectory initialTargetDirectory = getInitialTargetDirectory(targetDirectory, elements);
 
-        @RequiredUIAccess final MoveFilesOrDirectoriesDialog.Callback doRun =
+        @RequiredUIAccess MoveFilesOrDirectoriesDialog.Callback doRun =
             moveDialog -> CommandProcessor.getInstance().newCommand()
                 .project(project)
                 .name(MoveHandler.REFACTORING_NAME)
                 .run(() -> {
-                    final PsiDirectory targetDirectory1 = moveDialog != null ? moveDialog.getTargetDirectory() : initialTargetDirectory;
+                    PsiDirectory targetDirectory1 = moveDialog != null ? moveDialog.getTargetDirectory() : initialTargetDirectory;
                     if (targetDirectory1 == null) {
                         LOG.error("It is null! The target directory, it is null!");
                         return;
@@ -160,9 +160,9 @@ public class MoveFilesOrDirectoriesUtil {
                     targetElement[0] = targetDirectory1;
 
                     try {
-                        final int[] choice = elements.length > 1 || elements[0] instanceof PsiDirectory ? new int[]{-1} : null;
-                        final List<PsiElement> els = new ArrayList<>();
-                        for (final PsiElement psiElement : newElements) {
+                        int[] choice = elements.length > 1 || elements[0] instanceof PsiDirectory ? new int[]{-1} : null;
+                        List<PsiElement> els = new ArrayList<>();
+                        for (PsiElement psiElement : newElements) {
                             if (psiElement instanceof PsiFile file
                                 && CopyFilesOrDirectoriesHandler.checkFileExist(targetDirectory1, choice, file, file.getName(), "Move")) {
                                 continue;
@@ -170,7 +170,7 @@ public class MoveFilesOrDirectoriesUtil {
                             checkMove(psiElement, targetDirectory1);
                             els.add(psiElement);
                         }
-                        final Runnable callback = () -> {
+                        Runnable callback = () -> {
                             if (moveDialog != null) {
                                 moveDialog.close(DialogWrapper.CANCEL_EXIT_CODE);
                             }
@@ -204,14 +204,14 @@ public class MoveFilesOrDirectoriesUtil {
             doRun.run(null);
         }
         else {
-            final MoveFilesOrDirectoriesDialog moveDialog = new MoveFilesOrDirectoriesDialog(project, doRun);
+            MoveFilesOrDirectoriesDialog moveDialog = new MoveFilesOrDirectoriesDialog(project, doRun);
             moveDialog.setData(newElements, initialTargetDirectory, "refactoring.moveFile");
             moveDialog.show();
         }
     }
 
     @Nullable
-    public static PsiDirectory resolveToDirectory(final Project project, final PsiElement element) {
+    public static PsiDirectory resolveToDirectory(Project project, PsiElement element) {
         if (element instanceof PsiDirectoryContainer directoryContainer) {
             PsiDirectory[] directories = directoryContainer.getDirectories();
             return switch (directories.length) {
@@ -230,12 +230,12 @@ public class MoveFilesOrDirectoriesUtil {
         PsiDirectory commonDirectory = null;
 
         for (PsiElement movedElement : movedElements) {
-            final PsiDirectory containingDirectory;
+            PsiDirectory containingDirectory;
             if (movedElement instanceof PsiDirectory movedDirectory) {
                 containingDirectory = movedDirectory.getParentDirectory();
             }
             else {
-                final PsiFile containingFile = movedElement.getContainingFile();
+                PsiFile containingFile = movedElement.getContainingFile();
                 containingDirectory = containingFile == null ? null : containingFile.getContainingDirectory();
             }
 
@@ -252,16 +252,16 @@ public class MoveFilesOrDirectoriesUtil {
     }
 
     @Nullable
-    public static PsiDirectory getInitialTargetDirectory(PsiDirectory initialTargetElement, final PsiElement[] movedElements) {
+    public static PsiDirectory getInitialTargetDirectory(PsiDirectory initialTargetElement, PsiElement[] movedElements) {
         if (initialTargetElement == null && movedElements != null) {
-            final PsiDirectory commonDirectory = getCommonDirectory(movedElements);
+            PsiDirectory commonDirectory = getCommonDirectory(movedElements);
             return commonDirectory != null ? commonDirectory : getContainerDirectory(movedElements[0]);
         }
         return initialTargetElement;
     }
 
     @Nullable
-    private static PsiDirectory getContainerDirectory(final PsiElement psiElement) {
+    private static PsiDirectory getContainerDirectory(PsiElement psiElement) {
         if (psiElement instanceof PsiDirectory directory) {
             return directory;
         }

@@ -74,7 +74,7 @@ public class CoverageIOUtil {
         return new byte[STRING_LENGTH_THRESHOLD + STRING_HEADER_SIZE];
     }
 
-    public static void writeUTF(final DataOutput storage, final String value) throws IOException {
+    public static void writeUTF(DataOutput storage, String value) throws IOException {
         int len = value.length();
         if (len < STRING_LENGTH_THRESHOLD && isAscii(value)) {
             ioBuffer[0] = (byte)len;
@@ -96,7 +96,7 @@ public class CoverageIOUtil {
         }
     }
 
-    public static String readUTFFast(final DataInput storage) throws IOException {
+    public static String readUTFFast(DataInput storage) throws IOException {
         int len = 0xFF & (int)storage.readByte();
         if (len == 0xFF) {
             String result = storage.readUTF();
@@ -107,7 +107,7 @@ public class CoverageIOUtil {
             return result;
         }
 
-        final char[] chars = new char[len];
+        char[] chars = new char[len];
         storage.readFully(ioBuffer, 0, len);
         for (int i = 0; i < len; i++) {
             chars[i] = (char)ioBuffer[i];
@@ -116,9 +116,9 @@ public class CoverageIOUtil {
         return new String(chars);
     }
 
-    static boolean isAscii(final String str) {
+    static boolean isAscii(String str) {
         for (int i = 0; i != str.length(); ++i) {
-            final char c = str.charAt(i);
+            char c = str.charAt(i);
             if (c < 0 || c >= 128) {
                 return false;
             }
@@ -127,7 +127,7 @@ public class CoverageIOUtil {
     }
 
     public static int readINT(DataInput record) throws IOException {
-        final int val = record.readUnsignedByte();
+        int val = record.readUnsignedByte();
         if (val < 192) {
             return val;
         }
@@ -171,7 +171,7 @@ public class CoverageIOUtil {
             methodSignature,
             new Consumer() {
                 protected String consume(String type) {
-                    final int dictionaryIndex = dictionaryLookup.getDictionaryIndex(type);
+                    int dictionaryIndex = dictionaryLookup.getDictionaryIndex(type);
                     return dictionaryIndex >= 0 ? String.valueOf(dictionaryIndex) : type;
                 }
             }
@@ -185,11 +185,11 @@ public class CoverageIOUtil {
     }
 
     public static String processWithDictionary(String methodSignature, Consumer consumer) {
-        final Matcher matcher = TYPE_PATTERN.matcher(methodSignature);
+        Matcher matcher = TYPE_PATTERN.matcher(methodSignature);
         while (matcher.find()) {
             String s = matcher.group();
             if (s.startsWith("L") && s.endsWith(";")) {
-                final String type = s.substring(1, s.length() - 1);
+                String type = s.substring(1, s.length() - 1);
                 methodSignature = methodSignature.replace(type, consumer.consume(type));
             }
         }

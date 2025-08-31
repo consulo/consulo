@@ -184,7 +184,7 @@ class TrafficProgressPanel extends JPanel {
     }
   }
 
-  private void resetProgressBars(final boolean enabled, @Nullable final Boolean completed) {
+  private void resetProgressBars(boolean enabled, @Nullable Boolean completed) {
     for (JProgressBar progress : UIUtil.uiTraverser(myPassStatuses).traverse().filter(JProgressBar.class)) {
       progress.setEnabled(enabled);
       if (completed != null) {

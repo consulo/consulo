@@ -45,22 +45,22 @@ public class StructureViewModelWrapper implements StructureViewModel {
   }
 
   @Override
-  public void addEditorPositionListener(final FileEditorPositionListener listener) {
+  public void addEditorPositionListener(FileEditorPositionListener listener) {
     myStructureViewModel.addEditorPositionListener(listener);
   }
 
   @Override
-  public void removeEditorPositionListener(final FileEditorPositionListener listener) {
+  public void removeEditorPositionListener(FileEditorPositionListener listener) {
     myStructureViewModel.removeEditorPositionListener(listener);
   }
 
   @Override
-  public void addModelListener(final ModelListener modelListener) {
+  public void addModelListener(ModelListener modelListener) {
     myStructureViewModel.addModelListener(modelListener);
   }
 
   @Override
-  public void removeModelListener(final ModelListener modelListener) {
+  public void removeModelListener(ModelListener modelListener) {
     myStructureViewModel.removeModelListener(modelListener);
   }
 
@@ -76,7 +76,7 @@ public class StructureViewModelWrapper implements StructureViewModel {
   }
 
   @Override
-  public boolean shouldEnterElement(final Object element) {
+  public boolean shouldEnterElement(Object element) {
     return false;
   }
 

@@ -119,7 +119,7 @@ public class TestResultsXmlFormatter {
       endElement(ELEM_COUNT);
     }
 
-    final Element config = new Element("config");
+    Element config = new Element("config");
     try {
       myRuntimeConfiguration.writeExternal(config);
       config.setAttribute("configId", myRuntimeConfiguration.getType().getId());
@@ -133,15 +133,15 @@ public class TestResultsXmlFormatter {
     processJDomElement(config);
 
     if (myTestRoot instanceof TestProxyRoot) {
-      final String presentation = ((TestProxyRoot)myTestRoot).getPresentation();
+      String presentation = ((TestProxyRoot)myTestRoot).getPresentation();
       if (presentation != null) {
-        final LinkedHashMap<String, String> rootAttrs = new LinkedHashMap<>();
+        LinkedHashMap<String, String> rootAttrs = new LinkedHashMap<>();
         rootAttrs.put("name", presentation);
-        final String comment = ((TestProxyRoot)myTestRoot).getComment();
+        String comment = ((TestProxyRoot)myTestRoot).getComment();
         if (comment != null) {
           rootAttrs.put("comment", comment);
         }
-        final String rootLocation = ((TestProxyRoot)myTestRoot).getRootLocation();
+        String rootLocation = ((TestProxyRoot)myTestRoot).getRootLocation();
         if (rootLocation != null) {
           rootAttrs.put("location", rootLocation);
         }
@@ -164,8 +164,8 @@ public class TestResultsXmlFormatter {
   }
 
   private void processJDomElement(Element config) throws SAXException {
-    final String name = config.getName();
-    final LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+    String name = config.getName();
+    LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
     for (Attribute attribute : config.getAttributes()) {
       attributes.put(attribute.getName(), attribute.getValue());
     }
@@ -232,7 +232,7 @@ public class TestResultsXmlFormatter {
     final Ref<SAXException> error = new Ref<>();
 
     final int bufferSize = ConsoleBuffer.useCycleBuffer() ? ConsoleBuffer.getCycleBufferSize() : -1;
-    final Printer printer = new Printer() {
+    Printer printer = new Printer() {
       @Override
       public void print(String text, ConsoleViewContentType contentType) {
         ProgressManager.checkCanceled();
@@ -327,7 +327,7 @@ public class TestResultsXmlFormatter {
   }
 
   private void writeText(String text) throws SAXException {
-    final char[] chars = text.toCharArray();
+    char[] chars = text.toCharArray();
     myResultHandler.characters(chars, 0, chars.length);
   }
 }

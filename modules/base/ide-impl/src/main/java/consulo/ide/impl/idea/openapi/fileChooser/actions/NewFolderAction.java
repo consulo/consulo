@@ -33,13 +33,13 @@ public class NewFolderAction extends FileChooserAction {
   public NewFolderAction() {
   }
 
-  public NewFolderAction(final LocalizeValue text, final LocalizeValue description, final Image icon) {
+  public NewFolderAction(LocalizeValue text, LocalizeValue description, Image icon) {
     super(text, description, icon);
   }
 
   @Deprecated
   @DeprecationInfo("Use constructor with LocalizeValue")
-  public NewFolderAction(final String text, final String description, final Image icon) {
+  public NewFolderAction(String text, String description, Image icon) {
     super(text, description, icon);
   }
 
@@ -59,7 +59,7 @@ public class NewFolderAction extends FileChooserAction {
 
   @RequiredUIAccess
   private static void createNewFolder(FileSystemTree fileSystemTree) {
-    final VirtualFile file = fileSystemTree.getNewFileParent();
+    VirtualFile file = fileSystemTree.getNewFileParent();
     if (file == null || !file.isDirectory()) return;
 
     String newFolderName;

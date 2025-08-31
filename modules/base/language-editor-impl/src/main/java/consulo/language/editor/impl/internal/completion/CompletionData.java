@@ -54,7 +54,7 @@ public class CompletionData {
 
   private boolean isScopeAcceptable(PsiElement scope) {
 
-    for (final CompletionVariant variant : myCompletionVariants) {
+    for (CompletionVariant variant : myCompletionVariants) {
       if (variant.isScopeAcceptable(scope)) {
         return true;
       }
@@ -70,8 +70,8 @@ public class CompletionData {
     myCompletionVariants.add(variant);
   }
 
-  public void completeReference(final PsiReference reference, final Set<LookupElement> set, @Nonnull final PsiElement position, final PsiFile file) {
-    final CompletionVariant[] variants = findVariants(position, file);
+  public void completeReference(PsiReference reference, Set<LookupElement> set, @Nonnull PsiElement position, PsiFile file) {
+    CompletionVariant[] variants = findVariants(position, file);
     boolean hasApplicableVariants = false;
     for (CompletionVariant variant : variants) {
       if (variant.hasReferenceFilter()) {
@@ -85,12 +85,12 @@ public class CompletionData {
     }
   }
 
-  public void addKeywordVariants(Set<CompletionVariant> set, PsiElement position, final PsiFile file) {
+  public void addKeywordVariants(Set<CompletionVariant> set, PsiElement position, PsiFile file) {
     ContainerUtil.addAll(set, findVariants(position, file));
   }
 
-  public void completeKeywordsBySet(final Set<LookupElement> set, Set<CompletionVariant> variants) {
-    for (final CompletionVariant variant : variants) {
+  public void completeKeywordsBySet(Set<LookupElement> set, Set<CompletionVariant> variants) {
+    for (CompletionVariant variant : variants) {
       variant.addKeywords(set, this);
     }
   }
@@ -99,8 +99,8 @@ public class CompletionData {
     return findPrefixStatic(insertedElement, offsetInFile);
   }
 
-  public CompletionVariant[] findVariants(final PsiElement position, final PsiFile file) {
-    final List<CompletionVariant> variants = new ArrayList<>();
+  public CompletionVariant[] findVariants(PsiElement position, PsiFile file) {
+    List<CompletionVariant> variants = new ArrayList<>();
     PsiElement scope = position;
     if (scope == null) {
       scope = file;
@@ -109,7 +109,7 @@ public class CompletionData {
       boolean breakFlag = false;
       if (isScopeAcceptable(scope)) {
 
-        for (final CompletionVariant variant : myCompletionVariants) {
+        for (CompletionVariant variant : myCompletionVariants) {
           if (variant.isVariantApplicable(position, scope) && !variants.contains(variant)) {
             variants.add(variant);
             if (variant.isScopeFinal(scope)) {
@@ -127,7 +127,7 @@ public class CompletionData {
 
   protected final CompletionVariant myGenericVariant = new CompletionVariant() {
     @Override
-    void addReferenceCompletions(PsiReference reference, PsiElement position, Set<LookupElement> set, final PsiFile file, final CompletionData completionData) {
+    void addReferenceCompletions(PsiReference reference, PsiElement position, Set<LookupElement> set, PsiFile file, CompletionData completionData) {
       completeReference(reference, position, set, TailType.NONE, TrueFilter.INSTANCE, this);
     }
   };
@@ -135,15 +135,15 @@ public class CompletionData {
   @Nullable
   public static String getReferencePrefix(@Nonnull PsiElement insertedElement, int offsetInFile) {
     try {
-      final PsiReference ref = insertedElement.getContainingFile().findReferenceAt(offsetInFile);
+      PsiReference ref = insertedElement.getContainingFile().findReferenceAt(offsetInFile);
       if (ref != null) {
-        final List<TextRange> ranges = ReferenceRange.getRanges(ref);
-        final PsiElement element = ref.getElement();
-        final int elementStart = element.getTextRange().getStartOffset();
+        List<TextRange> ranges = ReferenceRange.getRanges(ref);
+        PsiElement element = ref.getElement();
+        int elementStart = element.getTextRange().getStartOffset();
         for (TextRange refRange : ranges) {
           if (refRange.contains(offsetInFile - elementStart)) {
-            final int endIndex = offsetInFile - elementStart;
-            final int beginIndex = refRange.getStartOffset();
+            int endIndex = offsetInFile - elementStart;
+            int beginIndex = refRange.getStartOffset();
             if (beginIndex > endIndex) {
               LOG.error("Inconsistent reference (found at offset not included in its range): ref=" + ref + " element=" + element + " text=" + element.getText());
             }
@@ -161,14 +161,14 @@ public class CompletionData {
     return null;
   }
 
-  public static String findPrefixStatic(final PsiElement insertedElement, final int offsetInFile, ElementPattern<Character> prefixStartTrim) {
+  public static String findPrefixStatic(PsiElement insertedElement, int offsetInFile, ElementPattern<Character> prefixStartTrim) {
     if (insertedElement == null) return "";
 
-    final Document document = insertedElement.getContainingFile().getViewProvider().getDocument();
+    Document document = insertedElement.getContainingFile().getViewProvider().getDocument();
     assert document != null;
     LOG.assertTrue(!PsiDocumentManager.getInstance(insertedElement.getProject()).isUncommited(document), "Uncommitted");
 
-    final String prefix = getReferencePrefix(insertedElement, offsetInFile);
+    String prefix = getReferencePrefix(insertedElement, offsetInFile);
     if (prefix != null) return prefix;
 
     if (insertedElement instanceof PsiPlainText || insertedElement instanceof PsiComment) {
@@ -178,11 +178,11 @@ public class CompletionData {
     return findPrefixDefault(insertedElement, offsetInFile, prefixStartTrim);
   }
 
-  public static String findPrefixStatic(final PsiElement insertedElement, final int offsetInFile) {
+  public static String findPrefixStatic(PsiElement insertedElement, int offsetInFile) {
     return findPrefixStatic(insertedElement, offsetInFile, NOT_JAVA_ID);
   }
 
-  public static String findPrefixDefault(final PsiElement insertedElement, final int offset, @Nonnull final ElementPattern trimStart) {
+  public static String findPrefixDefault(PsiElement insertedElement, int offset, @Nonnull ElementPattern trimStart) {
     String substr = insertedElement.getText().substring(0, offset - insertedElement.getTextRange().getStartOffset());
     if (substr.length() == 0 || Character.isWhitespace(substr.charAt(substr.length() - 1))) return "";
 
@@ -193,7 +193,7 @@ public class CompletionData {
     return substr.substring(i).trim();
   }
 
-  public static LookupElement objectToLookupItem(final @Nonnull Object object) {
+  public static LookupElement objectToLookupItem(@Nonnull Object object) {
     if (object instanceof LookupElement) return (LookupElement)object;
 
     String s = null;
@@ -227,7 +227,7 @@ public class CompletionData {
   }
 
 
-  protected void addLookupItem(Set<LookupElement> set, TailType tailType, @Nonnull Object completion, final CompletionVariant variant) {
+  protected void addLookupItem(Set<LookupElement> set, TailType tailType, @Nonnull Object completion, CompletionVariant variant) {
     LookupElement ret = objectToLookupItem(completion);
     if (ret == null) return;
     if (!(ret instanceof LookupItem)) {
@@ -237,7 +237,7 @@ public class CompletionData {
 
     LookupItem item = (LookupItem)ret;
 
-    final InsertHandler insertHandler = variant.getInsertHandler();
+    InsertHandler insertHandler = variant.getInsertHandler();
     if (insertHandler != null && item.getInsertHandler() == null) {
       item.setInsertHandler(insertHandler);
       item.setTailType(TailType.UNKNOWN);
@@ -245,8 +245,8 @@ public class CompletionData {
     else if (tailType != TailType.NONE) {
       item.setTailType(tailType);
     }
-    final Map<Object, Object> itemProperties = variant.getItemProperties();
-    for (final Object key : itemProperties.keySet()) {
+    Map<Object, Object> itemProperties = variant.getItemProperties();
+    for (Object key : itemProperties.keySet()) {
       item.setAttribute(key, itemProperties.get(key));
     }
 
@@ -265,21 +265,21 @@ public class CompletionData {
       }
     }
     else {
-      final Object[] completions = reference.getVariants();
+      Object[] completions = reference.getVariants();
       for (Object completion : completions) {
         if (completion == null) {
           LOG.error("Position2D=" + position + "\n;Reference=" + reference + "\n;variants=" + Arrays.toString(completions));
           continue;
         }
         if (completion instanceof PsiElement) {
-          final PsiElement psiElement = (PsiElement)completion;
+          PsiElement psiElement = (PsiElement)completion;
           if (filter.isClassAcceptable(psiElement.getClass()) && filter.isAcceptable(psiElement, position)) {
             addLookupItem(set, tailType, completion, variant);
           }
         }
         else {
           if (completion instanceof LookupItem) {
-            final Object o = ((LookupItem)completion).getObject();
+            Object o = ((LookupItem)completion).getObject();
             if (o instanceof PsiElement) {
               if (!filter.isClassAcceptable(o.getClass()) || !filter.isAcceptable(o, position)) continue;
             }
@@ -295,9 +295,9 @@ public class CompletionData {
     }
   }
 
-  public static PsiReference[] getReferences(final PsiMultiReference multiReference) {
-    final PsiReference[] references = multiReference.getReferences();
-    final List<PsiReference> hard = ContainerUtil.findAll(references, object -> !object.isSoft());
+  public static PsiReference[] getReferences(PsiMultiReference multiReference) {
+    PsiReference[] references = multiReference.getReferences();
+    List<PsiReference> hard = ContainerUtil.findAll(references, object -> !object.isSoft());
     if (!hard.isEmpty()) {
       return hard.toArray(new PsiReference[hard.size()]);
     }
@@ -307,7 +307,7 @@ public class CompletionData {
   void addKeywords(Set<LookupElement> set, CompletionVariant variant, Object comp, TailType tailType) {
     if (!(comp instanceof String)) return;
 
-    for (final LookupElement item : set) {
+    for (LookupElement item : set) {
       if (item.getObject().toString().equals(comp)) {
         return;
       }

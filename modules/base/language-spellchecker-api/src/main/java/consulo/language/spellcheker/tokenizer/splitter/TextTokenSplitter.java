@@ -42,7 +42,7 @@ public class TextTokenSplitter extends BaseTokenSplitter {
   }
 
   protected void doSplit(@Nonnull String text, @Nonnull TextRange range, Consumer<TextRange> consumer) {
-    final WordTokenSplitter ws = WordTokenSplitter.getInstance();
+    WordTokenSplitter ws = WordTokenSplitter.getInstance();
     Matcher matcher = EXTENDED_WORD_AND_SPECIAL.matcher(text);
     matcher.region(range.getStartOffset(), range.getEndOffset());
     while (matcher.find()) {

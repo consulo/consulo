@@ -66,7 +66,7 @@ public final class PassWrapper {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("PassWrapper{");
+    StringBuilder sb = new StringBuilder("PassWrapper{");
     sb.append("myPresentableName='").append(myPresentableName).append('\'');
     sb.append(", myProgress=").append(myProgress);
     sb.append(", myFinished=").append(myFinished);

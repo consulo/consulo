@@ -36,13 +36,13 @@ import java.util.function.Supplier;
 
 public class ApplicationUtil {
   // throws exception if can't grab read action right now
-  public static <T> T tryRunReadAction(@Nonnull final Supplier<T> computable) throws CannotRunReadActionException {
-    final SimpleReference<T> result = new SimpleReference<>();
+  public static <T> T tryRunReadAction(@Nonnull Supplier<T> computable) throws CannotRunReadActionException {
+    SimpleReference<T> result = new SimpleReference<>();
     tryRunReadAction(() -> result.set(computable.get()));
     return result.get();
   }
 
-  public static void tryRunReadAction(@Nonnull final Runnable computable) throws CannotRunReadActionException {
+  public static void tryRunReadAction(@Nonnull Runnable computable) throws CannotRunReadActionException {
     if (!ApplicationManager.getApplication().tryRunReadAction(computable)) {
       throw CannotRunReadActionException.create();
     }
@@ -52,10 +52,10 @@ public class ApplicationUtil {
    * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
    * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
    */
-  public static <T> T runWithCheckCanceled(@Nonnull final Callable<T> callable,
-                                           @Nonnull final ProgressIndicator indicator) throws Exception {
-    final Ref<T> result = Ref.create();
-    final Ref<Throwable> error = Ref.create();
+  public static <T> T runWithCheckCanceled(@Nonnull Callable<T> callable,
+                                           @Nonnull ProgressIndicator indicator) throws Exception {
+    Ref<T> result = Ref.create();
+    Ref<Throwable> error = Ref.create();
 
     Future<?> future = PooledThreadExecutor.getInstance().submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
       try {

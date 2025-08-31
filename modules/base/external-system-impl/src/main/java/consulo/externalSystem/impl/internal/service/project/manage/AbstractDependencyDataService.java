@@ -68,7 +68,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
   private static void doForDependency(@Nonnull ExportableOrderEntry entry, @Nonnull Consumer<ExportableOrderEntry> consumer) {
     // We need to get an up-to-date modifiable model to work with.
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(entry.getOwnerModule());
-    final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
+    ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
     try {
       // The thing is that intellij created order entry objects every time new modifiable model is created,
       // that's why we can't use target dependency object as is but need to get a reference to the current
@@ -120,7 +120,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
         @Override
         public void execute() {
           ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-          final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
+          ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
           try {
             // The thing is that intellij created order entry objects every time new modifiable model is created,
             // that's why we can't use target dependency object as is but need to get a reference to the current

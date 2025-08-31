@@ -139,7 +139,7 @@ public class ApplicationActivationStateManager {
   }
 
   public static void updateState(Window window) {
-    final Application application = ApplicationManager.getApplication();
+    Application application = ApplicationManager.getApplication();
     if (!(application instanceof ApplicationEx)) return;
 
     if (state.isInactive() && window != null) {
@@ -149,7 +149,7 @@ public class ApplicationActivationStateManager {
 
   @Nullable
   private static IdeFrame getIdeFrameFromWindow(Window window) {
-    final Component frame = UIUtil.findUltimateParent(window);
+    Component frame = UIUtil.findUltimateParent(window);
     if (!(frame instanceof Window)) {
       return null;
     }

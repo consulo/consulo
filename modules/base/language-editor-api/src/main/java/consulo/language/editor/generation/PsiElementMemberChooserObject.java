@@ -25,12 +25,12 @@ import jakarta.annotation.Nullable;
 public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
   private final PsiElement myPsiElement;
 
-  public PsiElementMemberChooserObject(@Nonnull final PsiElement psiElement, final String text) {
+  public PsiElementMemberChooserObject(@Nonnull PsiElement psiElement, String text) {
     super(text);
     myPsiElement = psiElement;
   }
 
-  public PsiElementMemberChooserObject(final PsiElement psiElement, final String text, @Nullable final Image icon) {
+  public PsiElementMemberChooserObject(PsiElement psiElement, String text, @Nullable Image icon) {
     super(text, icon);
     myPsiElement = psiElement;
   }
@@ -40,11 +40,11 @@ public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final PsiElementMemberChooserObject that = (PsiElementMemberChooserObject)o;
+    PsiElementMemberChooserObject that = (PsiElementMemberChooserObject)o;
 
     if (!myPsiElement.getManager().areElementsEquivalent(myPsiElement, that.myPsiElement)) return false;
 

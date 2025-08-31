@@ -33,7 +33,7 @@ import jakarta.annotation.Nullable;
 public class LanguageVersionUtil {
   @RequiredReadAction
   public static LanguageVersion findLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
-    final LanguageVersion languageVersion = LanguageVersion.KEY.get(virtualFile);
+    LanguageVersion languageVersion = LanguageVersion.KEY.get(virtualFile);
     if (languageVersion != null) {
       return languageVersion;
     }

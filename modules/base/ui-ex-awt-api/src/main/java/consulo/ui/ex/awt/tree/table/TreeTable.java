@@ -193,7 +193,7 @@ public class TreeTable extends JBTable {
     }
 
     int keyCode = e.getKeyCode();
-    final int selColumn = columnModel.getSelectionModel().getAnchorSelectionIndex();
+    int selColumn = columnModel.getSelectionModel().getAnchorSelectionIndex();
     boolean treeHasFocus = selColumn == -1 || selColumn >= 0 && isTreeColumn(selColumn);
     boolean oneRowSelected = getSelectedRowCount() == 1;
     if(treeHasFocus && oneRowSelected && ((keyCode == KeyEvent.VK_LEFT) || (keyCode == KeyEvent.VK_RIGHT))){
@@ -266,7 +266,7 @@ public class TreeTable extends JBTable {
           super.resetRowSelection();
 
           listSelectionModel.clearSelection();
-          for (final Object selectedRow : selectedRows) {
+          for (Object selectedRow : selectedRows) {
             Integer row = (Integer)selectedRow;
             listSelectionModel.addSelectionInterval(row.intValue(), row.intValue());
           }
@@ -348,7 +348,7 @@ public class TreeTable extends JBTable {
       if (getRowHeight() != myTree.getRowHeight()) {
         // fix y if row heights are not equal
         // [todo]: review setRowHeight to synchronize heights correctly!
-        final Rectangle tableCellRect = getCellRect(row, column, true);
+        Rectangle tableCellRect = getCellRect(row, column, true);
         y = Math.min(y - tableCellRect.y, myTree.getRowHeight() - 1) + row * myTree.getRowHeight();
       }
 

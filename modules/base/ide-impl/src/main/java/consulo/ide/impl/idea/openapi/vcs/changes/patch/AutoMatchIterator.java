@@ -29,17 +29,17 @@ public class AutoMatchIterator {
   private final Project myProject;
   private final List<AutoMatchStrategy> myStrategies;
 
-  public AutoMatchIterator(final Project project) {
+  public AutoMatchIterator(Project project) {
     myProject = project;
-    final VirtualFile baseDir = myProject.getBaseDir();
+    VirtualFile baseDir = myProject.getBaseDir();
     myStrategies = new LinkedList<>();
     myStrategies.add(new OneBaseStrategy(baseDir));
     myStrategies.add(new IndividualPiecesStrategy(baseDir));
     myStrategies.add(new DefaultPatchStrategy(baseDir));
   }
 
-  public List<TextFilePatchInProgress> execute(final List<TextFilePatch> list) {
-    final List<TextFilePatch> creations = new LinkedList<>();
+  public List<TextFilePatchInProgress> execute(List<TextFilePatch> list) {
+    List<TextFilePatch> creations = new LinkedList<>();
 
     final PatchBaseDirectoryDetector directoryDetector = PatchBaseDirectoryDetector.getInstance(myProject);
     for (TextFilePatch patch : list) {
@@ -48,7 +48,7 @@ public class AutoMatchIterator {
         continue;
       }
       final String fileName = patch.getBeforeFileName();
-      final Collection<VirtualFile> files = ApplicationManager.getApplication().runReadAction(new Computable<Collection<VirtualFile>>() {
+      Collection<VirtualFile> files = ApplicationManager.getApplication().runReadAction(new Computable<Collection<VirtualFile>>() {
         public Collection<VirtualFile> compute() {
           return directoryDetector.findFiles(fileName);
         }

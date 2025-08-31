@@ -161,7 +161,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
     mySchemesModel = schemesModel;
   }
 
-  public void editScope(@Nullable final String selectedName) {
+  public void editScope(@Nullable String selectedName) {
     assert mySchemesModel != null;
     EditScopesDialog scopesDialog = EditScopesDialog.showDialog(getScopeHolderProject(), selectedName);
     if (scopesDialog.isOK()) {

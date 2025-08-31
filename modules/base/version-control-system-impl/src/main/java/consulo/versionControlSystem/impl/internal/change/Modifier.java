@@ -35,41 +35,41 @@ public class Modifier implements ChangeListsWriteOperations {
   private final List<ChangeListCommand> myCommandQueue;
   private final DelayedNotificator myNotificator;
 
-  public Modifier(final ChangeListWorker worker, final DelayedNotificator notificator) {
+  public Modifier(ChangeListWorker worker, DelayedNotificator notificator) {
     myWorker = worker;
     myNotificator = notificator;
     myCommandQueue = new LinkedList<ChangeListCommand>();
   }
 
   @Override
-  public LocalChangeList addChangeList(@Nonnull final String name, @jakarta.annotation.Nullable final String comment, @Nullable Object data) {
-    final AddList command = new AddList(name, comment, data);
+  public LocalChangeList addChangeList(@Nonnull String name, @jakarta.annotation.Nullable String comment, @Nullable Object data) {
+    AddList command = new AddList(name, comment, data);
     impl(command);
     return command.getNewListCopy();
   }
 
   @Override
-  public String setDefault(final String name) {
-    final SetDefault command = new SetDefault(name);
+  public String setDefault(String name) {
+    SetDefault command = new SetDefault(name);
     impl(command);
     return command.getPrevious();
   }
 
   @Override
-  public boolean removeChangeList(@Nonnull final String name) {
-    final RemoveList command = new RemoveList(name);
+  public boolean removeChangeList(@Nonnull String name) {
+    RemoveList command = new RemoveList(name);
     impl(command);
     return command.isRemoved();
   }
 
   @Override
-  public MultiMap<LocalChangeList, Change> moveChangesTo(final String name, final Change[] changes) {
-    final MoveChanges command = new MoveChanges(name, changes);
+  public MultiMap<LocalChangeList, Change> moveChangesTo(String name, Change[] changes) {
+    MoveChanges command = new MoveChanges(name, changes);
     impl(command);
     return command.getMovedFrom();
   }
 
-  private void impl(final ChangeListCommand command) {
+  private void impl(ChangeListCommand command) {
     command.apply(myWorker);
     if (myInsideUpdate) {
       myCommandQueue.add(command);
@@ -81,22 +81,22 @@ public class Modifier implements ChangeListsWriteOperations {
   }
 
   @Override
-  public boolean setReadOnly(final String name, final boolean value) {
-    final SetReadOnly command = new SetReadOnly(name, value);
+  public boolean setReadOnly(String name, boolean value) {
+    SetReadOnly command = new SetReadOnly(name, value);
     impl(command);
     return command.isResult();
   }
 
   @Override
-  public boolean editName(@Nonnull final String fromName, @Nonnull final String toName) {
-    final EditName command = new EditName(fromName, toName);
+  public boolean editName(@Nonnull String fromName, @Nonnull String toName) {
+    EditName command = new EditName(fromName, toName);
     impl(command);
     return command.isResult();
   }
 
   @Override
-  public String editComment(@Nonnull final String fromName, final String newComment) {
-    final EditComment command = new EditComment(fromName, newComment);
+  public String editComment(@Nonnull String fromName, String newComment) {
+    EditComment command = new EditComment(fromName, newComment);
     impl(command);
     return command.getOldComment();
   }
@@ -109,7 +109,7 @@ public class Modifier implements ChangeListsWriteOperations {
     myInsideUpdate = true;
   }
 
-  public void finishUpdate(final ChangeListWorker worker) {
+  public void finishUpdate(ChangeListWorker worker) {
     exitUpdate();
     // should be applied for notifications to be delivered (they were delayed)
     apply(worker);
@@ -124,7 +124,7 @@ public class Modifier implements ChangeListsWriteOperations {
     myCommandQueue.clear();
   }
 
-  private void apply(final ChangeListWorker worker) {
+  private void apply(ChangeListWorker worker) {
     for (ChangeListCommand command : myCommandQueue) {
       command.apply(worker);
       myNotificator.callNotify(command);

@@ -64,8 +64,8 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
 
   protected boolean isAvailable() {
     if (myStartElement == null) return false;
-    final PsiElement startElement = myStartElement.getElement();
-    final PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
+    PsiElement startElement = myStartElement.getElement();
+    PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
     PsiFile file = myStartElement.getContainingFile();
     Project project = myStartElement.getProject();
     return startElement != null &&
@@ -94,8 +94,8 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
 
   public void applyFix() {
     if (myStartElement == null) return;
-    final PsiElement startElement = myStartElement.getElement();
-    final PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
+    PsiElement startElement = myStartElement.getElement();
+    PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
     if (startElement == null || endElement == null) return;
     PsiFile file = startElement.getContainingFile();
     if (file == null) return;

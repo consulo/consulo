@@ -56,13 +56,13 @@ public class RunnerLayoutImpl implements RunnerLayout {
     }
 
     @Nullable
-    public String getDefaultDisplayName(final int defaultIndex) {
-        final TabImpl.Default tab = myDefaultTabs.get(defaultIndex);
+    public String getDefaultDisplayName(int defaultIndex) {
+        TabImpl.Default tab = myDefaultTabs.get(defaultIndex);
         return tab != null ? tab.myDisplayName : null;
     }
 
     @Nonnull
-    public TabImpl getOrCreateTab(final int index) {
+    public TabImpl getOrCreateTab(int index) {
         TabImpl tab = findTab(index);
         if (tab != null) {
             return tab;
@@ -74,9 +74,9 @@ public class RunnerLayoutImpl implements RunnerLayout {
     }
 
     @Nonnull
-    private TabImpl createNewTab(final int index) {
-        final TabImpl.Default defaultTab = getOrCreateDefaultTab(index);
-        final TabImpl tab = defaultTab.createTab();
+    private TabImpl createNewTab(int index) {
+        TabImpl.Default defaultTab = getOrCreateDefaultTab(index);
+        TabImpl tab = defaultTab.createTab();
 
         myTabs.add(tab);
 
@@ -84,7 +84,7 @@ public class RunnerLayoutImpl implements RunnerLayout {
     }
 
     @Nonnull
-    private TabImpl.Default getOrCreateDefaultTab(final int index) {
+    private TabImpl.Default getOrCreateDefaultTab(int index) {
         TabImpl.Default tab = myDefaultTabs.get(index);
         if (tab == null) {
             tab = new TabImpl.Default(index, null, null);
@@ -137,9 +137,9 @@ public class RunnerLayoutImpl implements RunnerLayout {
             XmlSerializer.deserializeInto(getOrCreateTab(eachTab.getIndex()), eachTabElement);
         }
 
-        final List views = parentNode.getChildren(StringUtil.getShortName(ViewImpl.class.getName()));
+        List views = parentNode.getChildren(StringUtil.getShortName(ViewImpl.class.getName()));
         for (Object content : views) {
-            final ViewImpl state = new ViewImpl(this, (Element) content);
+            ViewImpl state = new ViewImpl(this, (Element) content);
             myViews.put(state.getID(), state);
         }
 
@@ -191,9 +191,9 @@ public class RunnerLayoutImpl implements RunnerLayout {
     public void clearStateFor(@Nonnull Content content) {
         String id = getOrCreateContentId(content);
         myDefaultViews.remove(id);
-        final ViewImpl view = myViews.remove(id);
+        ViewImpl view = myViews.remove(id);
         if (view != null) {
-            final Tab tab = view.getTab();
+            Tab tab = view.getTab();
             if (tab instanceof TabImpl) {
                 myTabs.remove(tab);
             }
@@ -231,14 +231,14 @@ public class RunnerLayoutImpl implements RunnerLayout {
 
     @Nonnull
     public TabImpl.Default setDefault(int tabID, String displayName, Image icon) {
-        final TabImpl.Default tab = new TabImpl.Default(tabID, displayName, icon);
+        TabImpl.Default tab = new TabImpl.Default(tabID, displayName, icon);
         myDefaultTabs.put(tabID, tab);
         return tab;
     }
 
     @Nonnull
     public ViewImpl.Default setDefault(@Nonnull String id, int tabIndex, @Nonnull PlaceInGrid placeInGrid, boolean isMinimized) {
-        final ViewImpl.Default view = new ViewImpl.Default(id, tabIndex, placeInGrid, isMinimized);
+        ViewImpl.Default view = new ViewImpl.Default(id, tabIndex, placeInGrid, isMinimized);
         myDefaultViews.put(id, view);
         return view;
     }
@@ -248,15 +248,15 @@ public class RunnerLayoutImpl implements RunnerLayout {
         return getOrCreateDefault(getOrCreateContentId(content)).getPlaceInGrid();
     }
 
-    public boolean isToFocus(final String id, @Nonnull String condition) {
+    public boolean isToFocus(String id, @Nonnull String condition) {
         return Comparing.equal(id, getToFocus(condition));
     }
 
-    public void setToFocus(final String id, @Nonnull String condition) {
+    public void setToFocus(String id, @Nonnull String condition) {
         myGeneral.focusOnCondition.put(condition, id);
     }
 
-    public void setDefaultToFocus(@Nonnull String id, @Nonnull String condition, @Nonnull final LayoutAttractionPolicy policy) {
+    public void setDefaultToFocus(@Nonnull String id, @Nonnull String condition, @Nonnull LayoutAttractionPolicy policy) {
         myDefaultFocus.put(condition, Pair.create(id, policy));
     }
 
@@ -268,7 +268,7 @@ public class RunnerLayoutImpl implements RunnerLayout {
 
     @Nonnull
     public LayoutAttractionPolicy getAttractionPolicy(@Nonnull String condition) {
-        final Pair<String, LayoutAttractionPolicy> pair = myDefaultFocus.get(condition);
+        Pair<String, LayoutAttractionPolicy> pair = myDefaultFocus.get(condition);
         return pair == null ? new LayoutAttractionPolicy.FocusOnce() : pair.getSecond();
     }
 

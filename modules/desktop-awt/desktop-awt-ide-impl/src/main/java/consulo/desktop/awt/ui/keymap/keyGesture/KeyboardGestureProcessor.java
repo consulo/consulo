@@ -48,18 +48,18 @@ public class KeyboardGestureProcessor {
 
 
   final Timer myHoldTimer = UIUtil.createNamedTimer("Keyboard hold",1200, new ActionListener() {
-    public void actionPerformed(final ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
     }
   });
 
   final Timer myDblClickTimer = UIUtil.createNamedTimer("Double click", SystemProperties.getIntProperty("actionSystem.keyGestureDblClickTime", 650), new ActionListener() {
-    public void actionPerformed(final ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
       myState.processDblClickTimer();
     }
   });
   private final ActionProcessor myActionProcessor = new MyActionProcessor();
 
-  public KeyboardGestureProcessor(final IdeKeyEventDispatcher dispatcher) {
+  public KeyboardGestureProcessor(IdeKeyEventDispatcher dispatcher) {
     myDispatcher = dispatcher;
   }
 
@@ -102,7 +102,7 @@ public class KeyboardGestureProcessor {
   }
 
   void setState(KeyGestureState state) {
-    final boolean isGestureProcessingState = myDispatcher.getState() == KeyState.STATE_KEY_GESTURE_PROCESSOR;
+    boolean isGestureProcessingState = myDispatcher.getState() == KeyState.STATE_KEY_GESTURE_PROCESSOR;
     if (state == myWaitForStart) {
       myContext.actionKey = null;
       if (isGestureProcessingState) {
@@ -116,33 +116,33 @@ public class KeyboardGestureProcessor {
 
   private class MyActionProcessor implements ActionProcessor {
     @Nonnull
-    public AnActionEvent createEvent(final InputEvent inputEvent, @Nonnull final DataContext context, @Nonnull final String place, @Nonnull final Presentation presentation,
-                                     final ActionManager manager) {
+    public AnActionEvent createEvent(InputEvent inputEvent, @Nonnull DataContext context, @Nonnull String place, @Nonnull Presentation presentation,
+                                     ActionManager manager) {
       myContext.actionPresentation = presentation;
       myContext.actionPlace = place;
       return myState.createActionEvent();
     }
 
-    public void onUpdatePassed(final InputEvent inputEvent, @Nonnull final AnAction action, @Nonnull final AnActionEvent actionEvent) {
+    public void onUpdatePassed(InputEvent inputEvent, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent) {
     }
 
-    public void performAction(final InputEvent e, @Nonnull final AnAction action, @Nonnull final AnActionEvent actionEvent) {
+    public void performAction(final InputEvent e, @Nonnull final AnAction action, @Nonnull AnActionEvent actionEvent) {
       final boolean isGestureAction = action instanceof KeyboardGestureAction;
       actionEvent.accept(new AnActionEventVisitor() {
         @Override
-        public void visitGestureInitEvent(final AnActionEvent anActionEvent) {
+        public void visitGestureInitEvent(AnActionEvent anActionEvent) {
           if (isGestureAction) {
             execute(anActionEvent, action, e);
           }
         }
 
         @Override
-        public void visitGesturePerformedEvent(final AnActionEvent anActionEvent) {
+        public void visitGesturePerformedEvent(AnActionEvent anActionEvent) {
           execute(anActionEvent, action, e);
         }
 
         @Override
-        public void visitGestureFinishEvent(final AnActionEvent anActionEvent) {
+        public void visitGestureFinishEvent(AnActionEvent anActionEvent) {
           if (isGestureAction) {
             execute(anActionEvent, action, e);
           }
@@ -150,7 +150,7 @@ public class KeyboardGestureProcessor {
       });
     }
 
-    private void execute(final AnActionEvent anActionEvent, final AnAction action, final InputEvent e) {
+    private void execute(AnActionEvent anActionEvent, AnAction action, InputEvent e) {
       action.actionPerformed(anActionEvent);
       e.consume();
     }

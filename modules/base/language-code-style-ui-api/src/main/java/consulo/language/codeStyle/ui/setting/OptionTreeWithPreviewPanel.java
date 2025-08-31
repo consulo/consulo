@@ -220,8 +220,8 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
     return optionsTree;
   }
 
-  private List<BooleanOptionKey> orderByGroup(final List<BooleanOptionKey> options) {
-    final List<String> groupOrder = getGroupOrder(options);
+  private List<BooleanOptionKey> orderByGroup(List<BooleanOptionKey> options) {
+    List<String> groupOrder = getGroupOrder(options);
     List<BooleanOptionKey> result = new ArrayList<>(options.size());
     result.addAll(options);
     Collections.sort(result, (key1, key2) -> {
@@ -270,14 +270,14 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
   protected abstract void initTables();
 
   @Override
-  protected void resetImpl(final CodeStyleSettings settings) {
+  protected void resetImpl(CodeStyleSettings settings) {
     TreeModel treeModel = myOptionsTree.getModel();
     TreeNode root = (TreeNode)treeModel.getRoot();
     resetNode(root, settings);
     ((DefaultTreeModel)treeModel).nodeChanged(root);
   }
 
-  private void resetNode(TreeNode node, final CodeStyleSettings settings) {
+  private void resetNode(TreeNode node, CodeStyleSettings settings) {
     if (node instanceof MyToggleTreeNode) {
       resetMyTreeNode((MyToggleTreeNode)node, settings);
       return;
@@ -288,7 +288,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
     }
   }
 
-  private void resetMyTreeNode(MyToggleTreeNode childNode, final CodeStyleSettings settings) {
+  private void resetMyTreeNode(MyToggleTreeNode childNode, CodeStyleSettings settings) {
     try {
       BooleanOptionKey key = (BooleanOptionKey)childNode.getKey();
       childNode.setSelected(key.getValue(settings));
@@ -306,7 +306,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
     applyNode(root, settings);
   }
 
-  private static void applyNode(TreeNode node, final CodeStyleSettings settings) {
+  private static void applyNode(TreeNode node, CodeStyleSettings settings) {
     if (node instanceof MyToggleTreeNode) {
       applyToggleNode((MyToggleTreeNode)node, settings);
       return;
@@ -317,7 +317,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
     }
   }
 
-  private static void applyToggleNode(MyToggleTreeNode childNode, final CodeStyleSettings settings) {
+  private static void applyToggleNode(MyToggleTreeNode childNode, CodeStyleSettings settings) {
     BooleanOptionKey key = (BooleanOptionKey)childNode.getKey();
     key.setValue(settings, childNode.isSelected());
   }
@@ -332,7 +332,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
     return false;
   }
 
-  private static boolean isModified(TreeNode node, final CodeStyleSettings settings) {
+  private static boolean isModified(TreeNode node, CodeStyleSettings settings) {
     if (node instanceof MyToggleTreeNode) {
       if (isToggleNodeModified((MyToggleTreeNode)node, settings)) {
         return true;
@@ -347,7 +347,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
     return false;
   }
 
-  private static boolean isToggleNodeModified(MyToggleTreeNode childNode, final CodeStyleSettings settings) {
+  private static boolean isToggleNodeModified(MyToggleTreeNode childNode, CodeStyleSettings settings) {
     try {
       BooleanOptionKey key = (BooleanOptionKey)childNode.getKey();
       return childNode.isSelected() != key.getValue(settings);
@@ -533,7 +533,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
 
     @Override
     public void setValue(CodeStyleSettings settings, Boolean aBoolean) {
-      final CustomCodeStyleSettings customSettings = settings.getCustomSettings(mySettingsClass);
+      CustomCodeStyleSettings customSettings = settings.getCustomSettings(mySettingsClass);
       try {
         field.set(customSettings, aBoolean);
       }
@@ -545,7 +545,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
     @Override
     public boolean getValue(CodeStyleSettings settings) throws IllegalAccessException {
       try {
-        final CustomCodeStyleSettings customSettings = settings.getCustomSettings(mySettingsClass);
+        CustomCodeStyleSettings customSettings = settings.getCustomSettings(mySettingsClass);
         return field.getBoolean(customSettings);
       }
       catch (Throwable e) {

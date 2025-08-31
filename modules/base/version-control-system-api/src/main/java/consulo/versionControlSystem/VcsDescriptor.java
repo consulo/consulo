@@ -39,7 +39,7 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
     myCrawlUpToCheckUnderVcs = crawlUpToCheckUnderVcs;
   }
 
-  public boolean probablyUnderVcs(final VirtualFile file) {
+  public boolean probablyUnderVcs(VirtualFile file) {
     if (file == null || (!file.isDirectory()) || (!file.isValid())) return false;
     if (myAdministrativePattern == null) return false;
     return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> {
@@ -55,11 +55,11 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
     });
   }
 
-  private boolean checkFileForBeingAdministrative(final VirtualFile file) {
+  private boolean checkFileForBeingAdministrative(VirtualFile file) {
     return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> {
-      final String[] patterns = myAdministrativePattern.split(",");
+      String[] patterns = myAdministrativePattern.split(",");
       for (String pattern : patterns) {
-        final VirtualFile child = file.findChild(pattern.trim());
+        VirtualFile child = file.findChild(pattern.trim());
         if (child != null) return true;
       }
       return false;
@@ -97,7 +97,7 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
   }
 
   public static VcsDescriptor createFictive() {
-    final VcsDescriptor vcsDescriptor = new VcsDescriptor(null, VcsLocalize.noneVcsPresentation(), null, false);
+    VcsDescriptor vcsDescriptor = new VcsDescriptor(null, VcsLocalize.noneVcsPresentation(), null, false);
     vcsDescriptor.myIsNone = true;
     return vcsDescriptor;
   }

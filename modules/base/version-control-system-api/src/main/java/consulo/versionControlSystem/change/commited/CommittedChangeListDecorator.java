@@ -22,5 +22,5 @@ import jakarta.annotation.Nullable;
 
 public interface CommittedChangeListDecorator {
   @Nullable
-  Image decorate(final CommittedChangeList list);
+  Image decorate(CommittedChangeList list);
 }

@@ -32,17 +32,17 @@ public class RowsDnDSupport {
   private RowsDnDSupport() {
   }
 
-  public static void install(@Nonnull final JTable table, @Nonnull final EditableModel model) {
+  public static void install(@Nonnull JTable table, @Nonnull EditableModel model) {
     table.setDragEnabled(true);
     installImpl(table, model);
   }
 
-  public static void install(@Nonnull final JList list, @Nonnull final EditableModel model) {
+  public static void install(@Nonnull JList list, @Nonnull EditableModel model) {
     list.setDragEnabled(true);
     installImpl(list, model);
   }
 
-  public static void install(@Nonnull final JTree tree, @Nonnull final EditableModel model) {
+  public static void install(@Nonnull JTree tree, @Nonnull EditableModel model) {
     tree.setDragEnabled(true);
     installImpl(tree, model);
   }
@@ -53,14 +53,14 @@ public class RowsDnDSupport {
       .setBeanProvider(new Function<DnDActionInfo, DnDDragStartBean>() {
         @Override
         public DnDDragStartBean apply(DnDActionInfo info) {
-          final Point p = info.getPoint();
+          Point p = info.getPoint();
           return new DnDDragStartBean(new RowDragInfo(component, Integer.valueOf(getRow(component, p))));
         }
       })
       .setTargetChecker(new DnDTargetChecker() {
         @Override
         public boolean update(DnDEvent event) {
-          final Object o = event.getAttachedObject();
+          Object o = event.getAttachedObject();
           event.setDropPossible(o instanceof RowDragInfo && ((RowDragInfo)o).component == component);
           int oldIndex = ((RowDragInfo)o).row;
           int newIndex = getRow(component, event.getPoint());
@@ -127,8 +127,8 @@ public class RowsDnDSupport {
       .setDropHandler(new DnDDropHandler() {
         @Override
         public void drop(DnDEvent event) {
-          final Object o = event.getAttachedObject();
-          final Point p = event.getPoint();
+          Object o = event.getAttachedObject();
+          Point p = event.getPoint();
           if (o instanceof RowDragInfo && ((RowDragInfo)o).component == component) {
             int oldIndex = ((RowDragInfo)o).row;
             if (oldIndex == -1) return;

@@ -38,9 +38,9 @@ public abstract class SimpleTemplateLanguageFormattingModelBuilder implements Fo
     CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
     
     if (element instanceof PsiFile) {
-      final FileViewProvider viewProvider = ((PsiFile)element).getViewProvider();
+      FileViewProvider viewProvider = ((PsiFile)element).getViewProvider();
       if (viewProvider instanceof TemplateLanguageFileViewProvider) {
-        final Language templateDataLanguage = ((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage();
+        Language templateDataLanguage = ((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage();
         FormattingModelBuilder builder = ContainerUtil.getFirstItem(FormattingModelBuilder.forLanguage(templateDataLanguage));
         if (builder != null) {
           return builder.createModel(formattingContext.withPsiElement(viewProvider.getPsi(templateDataLanguage)));
@@ -48,7 +48,7 @@ public abstract class SimpleTemplateLanguageFormattingModelBuilder implements Fo
       }
     }
 
-    final PsiFile file = element.getContainingFile();
+    PsiFile file = element.getContainingFile();
     return new DocumentBasedFormattingModel(new AbstractBlock(element.getNode(), Wrap.createWrap(WrapType.NONE, false), Alignment.createAlignment()) {
       @Override
       protected List<Block> buildChildren() {
@@ -56,7 +56,7 @@ public abstract class SimpleTemplateLanguageFormattingModelBuilder implements Fo
       }
 
       @Override
-      public Spacing getSpacing(final Block child1, @Nonnull final Block child2) {
+      public Spacing getSpacing(Block child1, @Nonnull Block child2) {
         return Spacing.getReadOnlySpacing();
       }
 

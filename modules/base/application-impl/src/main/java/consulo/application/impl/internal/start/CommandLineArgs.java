@@ -109,7 +109,7 @@ public class CommandLineArgs {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("CommandLineArgs{");
+    StringBuilder sb = new StringBuilder("CommandLineArgs{");
     sb.append("myNoSplash=").append(myNoSplash);
     sb.append(", myLine=").append(myLine);
     sb.append(", myShowVersion=").append(myShowVersion);

@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 public class CurrentContentRevision implements ContentRevision {
   protected FilePath myFile;
 
-  public CurrentContentRevision(final FilePath file) {
+  public CurrentContentRevision(FilePath file) {
     myFile = file;
   }
 
@@ -46,15 +46,15 @@ public class CurrentContentRevision implements ContentRevision {
       vFile = getVirtualFile();
       if (vFile == null) return null;
     }
-    final VirtualFile finalVFile = vFile;
-    final Document doc = ApplicationManager.getApplication().runReadAction((Supplier<Document>)() -> FileDocumentManager.getInstance().getDocument(finalVFile));
+    VirtualFile finalVFile = vFile;
+    Document doc = ApplicationManager.getApplication().runReadAction((Supplier<Document>)() -> FileDocumentManager.getInstance().getDocument(finalVFile));
     if (doc == null) return null;
     return doc.getText();
   }
 
   @Nullable
   public VirtualFile getVirtualFile() {
-    final VirtualFile vFile = myFile.getVirtualFile();
+    VirtualFile vFile = myFile.getVirtualFile();
     if (vFile == null || !vFile.isValid()) return null;
     return vFile;
   }

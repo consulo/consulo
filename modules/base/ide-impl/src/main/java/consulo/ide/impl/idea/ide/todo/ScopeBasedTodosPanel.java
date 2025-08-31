@@ -38,7 +38,7 @@ public class ScopeBasedTodosPanel extends TodoPanel {
   private final Alarm myAlarm;
   private ScopeChooserCombo myScopes;
 
-  public ScopeBasedTodosPanel(final Project project, TodoPanelSettings settings, Content content){
+  public ScopeBasedTodosPanel(Project project, TodoPanelSettings settings, Content content){
     super(project,settings,false,content);
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
     myScopes.getChildComponent().addActionListener(new ActionListener() {
@@ -54,7 +54,7 @@ public class ScopeBasedTodosPanel extends TodoPanel {
   @Override
   protected JComponent createCenterComponent() {
     JPanel panel = new JPanel(new BorderLayout());
-    final JComponent component = super.createCenterComponent();
+    JComponent component = super.createCenterComponent();
     panel.add(component, BorderLayout.CENTER);
     String preselect = PropertiesComponent.getInstance(myProject).getValue(SELECTED_SCOPE);
     myScopes = new ScopeChooserCombo(myProject, false, true, preselect);
@@ -63,10 +63,10 @@ public class ScopeBasedTodosPanel extends TodoPanel {
     myScopes.setUsageView(false);
 
     JPanel chooserPanel = new JPanel(new GridBagLayout());
-    final JLabel scopesLabel = new JLabel("Scope:");
+    JLabel scopesLabel = new JLabel("Scope:");
     scopesLabel.setDisplayedMnemonic('S');
     scopesLabel.setLabelFor(myScopes);
-    final GridBagConstraints gc =
+    GridBagConstraints gc =
             new GridBagConstraints(GridBagConstraints.RELATIVE, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE,
                                    JBUI.insets(2), 0, 0);
     chooserPanel.add(scopesLabel, gc);

@@ -134,7 +134,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
     @RequiredUIAccess
     public LiveTemplateSettingsEditor(
         TemplateImpl template,
-        final String defaultShortcut,
+        String defaultShortcut,
         Map<TemplateOptionalProcessor, Boolean> options,
         Map<TemplateContextType, Boolean> context,
         final Runnable nodeChanged,
@@ -185,9 +185,9 @@ public class LiveTemplateSettingsEditor extends JPanel {
     }
 
     public void dispose() {
-        final Project project = myTemplateEditor.getProject();
+        Project project = myTemplateEditor.getProject();
         if (project != null) {
-            final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(myTemplateEditor.getDocument());
+            PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(myTemplateEditor.getDocument());
             if (psiFile != null) {
                 DaemonCodeAnalyzer.getInstance(project).setHighlightingEnabled(psiFile, true);
             }
@@ -234,7 +234,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         add(panel, BorderLayout.CENTER);
     }
 
-    private void applyVariables(final List<Variable> variables) {
+    private void applyVariables(List<Variable> variables) {
         myTemplate.removeAllParsed();
         for (Variable variable : variables) {
             myTemplate.addVariable(
@@ -327,10 +327,10 @@ public class LiveTemplateSettingsEditor extends JPanel {
         return result;
     }
 
-    private JPanel createShortContextPanel(final boolean allowNoContexts) {
+    private JPanel createShortContextPanel(boolean allowNoContexts) {
         JPanel panel = new JPanel(new BorderLayout());
 
-        final JLabel ctxLabel = new JLabel();
+        JLabel ctxLabel = new JLabel();
         final JLabel change = new JLabel();
         change.setForeground(JBColor.BLUE);
         change.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -341,7 +341,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
             StringBuilder sb = new StringBuilder();
             String oldPrefix = "";
             for (TemplateContextType type : getApplicableContexts()) {
-                final TemplateContextType base = type.getBaseContextType();
+                TemplateContextType base = type.getBaseContextType();
                 String ownName = type.getPresentableName().map(Presentation.NO_MNEMONIC).get();
                 String prefix = "";
                 if (base != null && !(base instanceof EverywhereContextType)) {
@@ -360,7 +360,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
                 }
                 sb.append(ownName);
             }
-            final boolean hasContexts = !sb.isEmpty();
+            boolean hasContexts = !sb.isEmpty();
             ctxLabel.setText(
                 hasContexts
                     ? CodeInsightLocalize.dialogEditTemplateApplicableInContexts(sb).get()
@@ -422,7 +422,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         }
 
         final CheckedTreeNode root = new CheckedTreeNode(Pair.create(null, "Hi"));
-        final CheckboxTree checkboxTree = new CheckboxTree(
+        CheckboxTree checkboxTree = new CheckboxTree(
             new CheckboxTree.CheckboxTreeCellRenderer() {
                 @Override
                 public void customizeRenderer(
@@ -434,7 +434,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
                     int row,
                     boolean hasFocus
                 ) {
-                    final Object o = ((DefaultMutableTreeNode)value).getUserObject();
+                    Object o = ((DefaultMutableTreeNode)value).getUserObject();
                     if (o instanceof Pair pair) {
                         getTextRenderer().append((String)pair.second);
                     }
@@ -445,7 +445,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
             @Override
             @RequiredUIAccess
             protected void onNodeStateChanged(CheckedTreeNode node) {
-                final TemplateContextType type = (TemplateContextType)((Pair)node.getUserObject()).first;
+                TemplateContextType type = (TemplateContextType)((Pair)node.getUserObject()).first;
                 if (type != null) {
                     myContext.put(type, node.isChecked());
                 }
@@ -464,7 +464,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         TreeUtil.traverse(
             root,
             _node -> {
-                final CheckedTreeNode node = (CheckedTreeNode)_node;
+                CheckedTreeNode node = (CheckedTreeNode)_node;
                 if (node.isChecked()) {
                     checkboxTree.expandPath(new TreePath(node.getPath()).getParentPath());
                 }
@@ -473,7 +473,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         );
 
         panel.add(ScrollPaneFactory.createScrollPane(checkboxTree));
-        final Dimension size = checkboxTree.getPreferredSize();
+        Dimension size = checkboxTree.getPreferredSize();
         panel.setPreferredSize(new Dimension(size.width + 30, Math.min(size.height + 10, 500)));
 
         return panel;
@@ -484,9 +484,9 @@ public class LiveTemplateSettingsEditor extends JPanel {
         CheckedTreeNode parent,
         TemplateContextType type
     ) {
-        final Collection<TemplateContextType> children = hierarchy.get(type);
-        final String name = type.getPresentableName().map(Presentation.NO_MNEMONIC).get();
-        final CheckedTreeNode node = new CheckedTreeNode(Pair.create(children.isEmpty() ? type : null, name));
+        Collection<TemplateContextType> children = hierarchy.get(type);
+        String name = type.getPresentableName().map(Presentation.NO_MNEMONIC).get();
+        CheckedTreeNode node = new CheckedTreeNode(Pair.create(children.isEmpty() ? type : null, name));
         parent.add(node);
 
         if (children.isEmpty()) {
@@ -496,7 +496,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
             for (TemplateContextType child : children) {
                 addContextNode(hierarchy, node, child);
             }
-            final CheckedTreeNode other = new CheckedTreeNode(Pair.create(type, "Other"));
+            CheckedTreeNode other = new CheckedTreeNode(Pair.create(type, "Other"));
             other.setChecked(myContext.get(type));
             node.add(other);
         }
@@ -537,7 +537,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
         myExpandByCombo.setValue(ExpandByKey.valueOfShortcutChar(myTemplate.getShortcutChar()));
 
-        final Document document = myTemplateEditor.getDocument();
+        Document document = myTemplateEditor.getDocument();
         CommandProcessor.getInstance().newCommand()
             .project(myTemplateEditor.getProject())
             .document(document)
@@ -624,7 +624,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         //TODO[peter,kirillk] without these invokeLaters this requestFocus conflicts with
         // consulo.ide.impl.idea.openapi.ui.impl.DialogWrapperPeerImpl.MyDialog.MyWindowListener.windowOpened()
         IdeFocusManager.findInstanceByComponent(myKeyField).requestFocus(myKeyField, true);
-        final ModalityState modalityState = Application.get().getModalityStateForComponent(myKeyField);
+        ModalityState modalityState = Application.get().getModalityStateForComponent(myKeyField);
         Application.get().invokeLater(
             () -> Application.get().invokeLater(
                 () -> Application.get().invokeLater(

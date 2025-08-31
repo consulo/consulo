@@ -59,7 +59,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
   }
 
   @Override
-  public Alignment createChildAlignment(final Alignment base) {
+  public Alignment createChildAlignment(Alignment base) {
     AlignmentImpl result = new AlignmentImpl();
     result.setParent(base);
     return result;
@@ -158,15 +158,15 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
   }
 
   @Override
-  public Wrap createChildWrap(final Wrap parentWrap, final WrapType wrapType, final boolean wrapFirstElement) {
-    final WrapImpl result = new WrapImpl(wrapType, wrapFirstElement);
+  public Wrap createChildWrap(Wrap parentWrap, WrapType wrapType, boolean wrapFirstElement) {
+    WrapImpl result = new WrapImpl(wrapType, wrapFirstElement);
     result.registerParent((WrapImpl)parentWrap);
     return result;
   }
 
   @Override
   @Nonnull
-  public Spacing createSpacing(int minOffset, int maxOffset, int minLineFeeds, final boolean keepLineBreaks, final int keepBlankLines) {
+  public Spacing createSpacing(int minOffset, int maxOffset, int minLineFeeds, boolean keepLineBreaks, int keepBlankLines) {
     return getSpacingImpl(minOffset, maxOffset, minLineFeeds, false, false, keepLineBreaks, keepBlankLines, false, 0);
   }
 
@@ -259,16 +259,16 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
   }
 
   @Override
-  public void adjustLineIndentsForRange(final FormattingModel model, final CodeStyleSettings settings, final CommonCodeStyleSettings.IndentOptions indentOptions, final TextRange rangeToAdjust) {
+  public void adjustLineIndentsForRange(FormattingModel model, CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions indentOptions, TextRange rangeToAdjust) {
     disableFormatting();
     try {
       validateModel(model);
-      final FormattingDocumentModel documentModel = model.getDocumentModel();
-      final Block block = model.getRootBlock();
-      final FormatProcessor processor = buildProcessorAndWrapBlocks(documentModel, block, settings, indentOptions, new FormatTextRanges(rangeToAdjust, true));
+      FormattingDocumentModel documentModel = model.getDocumentModel();
+      Block block = model.getRootBlock();
+      FormatProcessor processor = buildProcessorAndWrapBlocks(documentModel, block, settings, indentOptions, new FormatTextRanges(rangeToAdjust, true));
       LeafBlockWrapper tokenBlock = processor.getFirstTokenBlock();
       while (tokenBlock != null) {
-        final WhiteSpace whiteSpace = tokenBlock.getWhiteSpace();
+        WhiteSpace whiteSpace = tokenBlock.getWhiteSpace();
         whiteSpace.setLineFeedsAreReadOnly(true);
         if (!whiteSpace.containsLineFeeds()) {
           whiteSpace.setIsReadOnly(true);
@@ -291,12 +291,12 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     disableFormatting();
     try {
       validateModel(model);
-      final FormattingDocumentModel documentModel = model.getDocumentModel();
-      final Block block = model.getRootBlock();
-      final FormatProcessor processor = buildProcessorAndWrapBlocks(documentModel, block, settings, settings.getIndentOptionsByFile(file), null);
+      FormattingDocumentModel documentModel = model.getDocumentModel();
+      Block block = model.getRootBlock();
+      FormatProcessor processor = buildProcessorAndWrapBlocks(documentModel, block, settings, settings.getIndentOptionsByFile(file), null);
       LeafBlockWrapper tokenBlock = processor.getFirstTokenBlock();
       while (tokenBlock != null) {
-        final WhiteSpace whiteSpace = tokenBlock.getWhiteSpace();
+        WhiteSpace whiteSpace = tokenBlock.getWhiteSpace();
 
         if (whiteSpace.getEndOffset() < textRange.getStartOffset() || whiteSpace.getEndOffset() > textRange.getEndOffset() + 1) {
           whiteSpace.setIsReadOnly(true);
@@ -324,7 +324,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
   }
 
   @Override
-  public int adjustLineIndent(final FormattingModel model, final CodeStyleSettings settings, final CommonCodeStyleSettings.IndentOptions indentOptions, final int offset, final TextRange affectedRange)
+  public int adjustLineIndent(FormattingModel model, CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions indentOptions, int offset, TextRange affectedRange)
           throws IncorrectOperationException {
     disableFormatting();
     try {
@@ -332,9 +332,9 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
       if (model instanceof PsiBasedFormattingModel) {
         ((PsiBasedFormattingModel)model).canModifyAllWhiteSpaces();
       }
-      final FormattingDocumentModel documentModel = model.getDocumentModel();
-      final FormatProcessor processor = buildProcessorAndWrapBlocks(model, settings, indentOptions, affectedRange, offset);
-      final LeafBlockWrapper blockAfterOffset = processor.getBlockRangesMap().getBlockAtOrAfter(offset);
+      FormattingDocumentModel documentModel = model.getDocumentModel();
+      FormatProcessor processor = buildProcessorAndWrapBlocks(model, settings, indentOptions, affectedRange, offset);
+      LeafBlockWrapper blockAfterOffset = processor.getBlockRangesMap().getBlockAtOrAfter(offset);
       if (blockAfterOffset != null && blockAfterOffset.contains(offset)) {
         return offset;
       }
@@ -351,7 +351,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
   }
 
   @Nonnull
-  private static FormatProcessor buildProcessorAndWrapBlocks(final FormattingModel model,
+  private static FormatProcessor buildProcessorAndWrapBlocks(FormattingModel model,
                                                              CodeStyleSettings settings,
                                                              CommonCodeStyleSettings.IndentOptions indentOptions,
                                                              @Nullable TextRange affectedRange,
@@ -361,7 +361,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     return buildProcessorAndWrapBlocks(docModel, rootBlock, settings, indentOptions, new FormatTextRanges(affectedRange, true), offset);
   }
 
-  private static FormatProcessor buildProcessorAndWrapBlocks(final FormattingDocumentModel docModel,
+  private static FormatProcessor buildProcessorAndWrapBlocks(FormattingDocumentModel docModel,
                                                              Block rootBlock,
                                                              CodeStyleSettings settings,
                                                              CommonCodeStyleSettings.IndentOptions indentOptions,
@@ -369,7 +369,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     return buildProcessorAndWrapBlocks(docModel, rootBlock, settings, indentOptions, affectedRanges, -1);
   }
 
-  private static FormatProcessor buildProcessorAndWrapBlocks(final FormattingDocumentModel docModel,
+  private static FormatProcessor buildProcessorAndWrapBlocks(FormattingDocumentModel docModel,
                                                              Block rootBlock,
                                                              CodeStyleSettings settings,
                                                              CommonCodeStyleSettings.IndentOptions indentOptions,
@@ -382,20 +382,20 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     return processor;
   }
 
-  private static int adjustLineIndent(final int offset,
-                                      final FormattingDocumentModel documentModel,
-                                      final FormatProcessor processor,
-                                      final CommonCodeStyleSettings.IndentOptions indentOptions,
-                                      final FormattingModel model,
-                                      final WhiteSpace whiteSpace,
+  private static int adjustLineIndent(int offset,
+                                      FormattingDocumentModel documentModel,
+                                      FormatProcessor processor,
+                                      CommonCodeStyleSettings.IndentOptions indentOptions,
+                                      FormattingModel model,
+                                      WhiteSpace whiteSpace,
                                       ASTNode nodeAfter) {
     boolean wsContainsCaret = whiteSpace.getStartOffset() <= offset && offset < whiteSpace.getEndOffset();
 
     int lineStartOffset = getLineStartOffset(offset, whiteSpace, documentModel);
 
-    final IndentInfo indent = calcIndent(offset, documentModel, processor, whiteSpace);
+    IndentInfo indent = calcIndent(offset, documentModel, processor, whiteSpace);
 
-    final String newWS = whiteSpace.generateWhiteSpace(indentOptions, lineStartOffset, indent).toString();
+    String newWS = whiteSpace.generateWhiteSpace(indentOptions, lineStartOffset, indent).toString();
     if (!whiteSpace.equalsToString(newWS)) {
       try {
         if (model instanceof FormattingModelEx) {
@@ -410,10 +410,10 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
       }
     }
 
-    final int defaultOffset = offset - whiteSpace.getLength() + newWS.length();
+    int defaultOffset = offset - whiteSpace.getLength() + newWS.length();
 
     if (wsContainsCaret) {
-      final int ws = whiteSpace.getStartOffset() + CharArrayUtil.shiftForward(newWS, Math.max(0, lineStartOffset - whiteSpace.getStartOffset()), " \t");
+      int ws = whiteSpace.getStartOffset() + CharArrayUtil.shiftForward(newWS, Math.max(0, lineStartOffset - whiteSpace.getStartOffset()), " \t");
       return Math.max(defaultOffset, ws);
     }
     else {
@@ -421,23 +421,23 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     }
   }
 
-  private static boolean hasContentAfterLineBreak(final FormattingDocumentModel documentModel, final int offset, final WhiteSpace whiteSpace) {
+  private static boolean hasContentAfterLineBreak(FormattingDocumentModel documentModel, int offset, WhiteSpace whiteSpace) {
     return documentModel.getLineNumber(offset) == documentModel.getLineNumber(whiteSpace.getEndOffset()) && documentModel.getTextLength() != whiteSpace.getEndOffset();
   }
 
   @Override
-  public String getLineIndent(final FormattingModel model,
-                              final CodeStyleSettings settings,
-                              final CommonCodeStyleSettings.IndentOptions indentOptions,
-                              final int offset,
-                              final TextRange affectedRange) {
-    final FormattingDocumentModel documentModel = model.getDocumentModel();
-    final Block block = model.getRootBlock();
+  public String getLineIndent(FormattingModel model,
+                              CodeStyleSettings settings,
+                              CommonCodeStyleSettings.IndentOptions indentOptions,
+                              int offset,
+                              TextRange affectedRange) {
+    FormattingDocumentModel documentModel = model.getDocumentModel();
+    Block block = model.getRootBlock();
     if (block.getTextRange().isEmpty()) return null; // handing empty document case
-    final FormatProcessor processor = buildProcessorAndWrapBlocks(model, settings, indentOptions, affectedRange, offset);
+    FormatProcessor processor = buildProcessorAndWrapBlocks(model, settings, indentOptions, affectedRange, offset);
     WhiteSpace whiteSpace = getWhiteSpaceAtOffset(offset, processor);
     if (whiteSpace != null) {
-      final IndentInfo indent = calcIndent(offset, documentModel, processor, whiteSpace);
+      IndentInfo indent = calcIndent(offset, documentModel, processor, whiteSpace);
       return indent.generateNewWhiteSpace(indentOptions);
     }
     return null;
@@ -445,7 +445,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
 
   @Nullable
   private static WhiteSpace getWhiteSpaceAtOffset(int offset, @Nonnull FormatProcessor formatProcessor) {
-    final LeafBlockWrapper blockAfterOffset = formatProcessor.getBlockRangesMap().getBlockAtOrAfter(offset);
+    LeafBlockWrapper blockAfterOffset = formatProcessor.getBlockRangesMap().getBlockAtOrAfter(offset);
     if (blockAfterOffset != null) {
       if (!blockAfterOffset.contains(offset)) return blockAfterOffset.getWhiteSpace();
     }
@@ -460,7 +460,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
   private static IndentInfo calcIndent(int offset, FormattingDocumentModel documentModel, FormatProcessor processor, WhiteSpace whiteSpace) {
     processor.setAllWhiteSpacesAreReadOnly();
     whiteSpace.setLineFeedsAreReadOnly(true);
-    final IndentInfo indent;
+    IndentInfo indent;
     if (hasContentAfterLineBreak(documentModel, offset, whiteSpace)) {
       whiteSpace.setReadOnly(false);
       processor.formatWithoutRealModifications();
@@ -472,22 +472,22 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
     return indent;
   }
 
-  public static String getText(final FormattingDocumentModel documentModel) {
+  public static String getText(FormattingDocumentModel documentModel) {
     return getCharSequence(documentModel).toString();
   }
 
-  private static CharSequence getCharSequence(final FormattingDocumentModel documentModel) {
+  private static CharSequence getCharSequence(FormattingDocumentModel documentModel) {
     return documentModel.getText(new TextRange(0, documentModel.getTextLength()));
   }
 
-  private static int getLineStartOffset(final int offset, final WhiteSpace whiteSpace, final FormattingDocumentModel documentModel) {
+  private static int getLineStartOffset(int offset, WhiteSpace whiteSpace, FormattingDocumentModel documentModel) {
     int lineStartOffset = offset;
 
     CharSequence text = getCharSequence(documentModel);
     lineStartOffset = CharArrayUtil.shiftBackwardUntil(text, lineStartOffset, " \t\n");
     if (lineStartOffset > whiteSpace.getStartOffset()) {
       if (lineStartOffset >= text.length()) lineStartOffset = text.length() - 1;
-      final int wsStart = whiteSpace.getStartOffset();
+      int wsStart = whiteSpace.getStartOffset();
       int prevEnd;
 
       if (text.charAt(lineStartOffset) == '\n' && wsStart <= (prevEnd = documentModel.getLineStartOffset(documentModel.getLineNumber(lineStartOffset - 1))) &&
@@ -505,7 +505,7 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
   }
 
   @Override
-  public Indent getSpaceIndent(final int spaces, final boolean relative) {
+  public Indent getSpaceIndent(int spaces, boolean relative) {
     return getIndent(Indent.Type.SPACES, spaces, relative, false);
   }
 
@@ -536,33 +536,33 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
 
   @Override
   @Nonnull
-  public Spacing createSafeSpacing(final boolean shouldKeepLineBreaks, final int keepBlankLines) {
+  public Spacing createSafeSpacing(boolean shouldKeepLineBreaks, int keepBlankLines) {
     return getSpacingImpl(0, 0, 0, false, true, shouldKeepLineBreaks, keepBlankLines, false, 0);
   }
 
   @Override
   @Nonnull
-  public Spacing createKeepingFirstColumnSpacing(final int minSpace, final int maxSpace, final boolean keepLineBreaks, final int keepBlankLines) {
+  public Spacing createKeepingFirstColumnSpacing(int minSpace, int maxSpace, boolean keepLineBreaks, int keepBlankLines) {
     return getSpacingImpl(minSpace, maxSpace, -1, false, false, keepLineBreaks, keepBlankLines, true, 0);
   }
 
   @Override
   @Nonnull
-  public Spacing createSpacing(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean keepLineBreaks, final int keepBlankLines, final int prefLineFeeds) {
+  public Spacing createSpacing(int minSpaces, int maxSpaces, int minLineFeeds, boolean keepLineBreaks, int keepBlankLines, int prefLineFeeds) {
     return getSpacingImpl(minSpaces, maxSpaces, minLineFeeds, false, false, keepLineBreaks, keepBlankLines, false, prefLineFeeds);
   }
 
   private final Map<SpacingImpl, SpacingImpl> ourSharedProperties = new HashMap<>();
   private final SpacingImpl ourSharedSpacing = new SpacingImpl(-1, -1, -1, false, false, false, -1, false, 0);
 
-  private SpacingImpl getSpacingImpl(final int minSpaces,
-                                     final int maxSpaces,
-                                     final int minLineFeeds,
-                                     final boolean readOnly,
-                                     final boolean safe,
-                                     final boolean keepLineBreaksFlag,
-                                     final int keepLineBreaks,
-                                     final boolean keepFirstColumn,
+  private SpacingImpl getSpacingImpl(int minSpaces,
+                                     int maxSpaces,
+                                     int minLineFeeds,
+                                     boolean readOnly,
+                                     boolean safe,
+                                     boolean keepLineBreaksFlag,
+                                     int keepLineBreaks,
+                                     boolean keepFirstColumn,
                                      int prefLineFeeds) {
     synchronized (ourSharedSpacing) {
       ourSharedSpacing.init(minSpaces, maxSpaces, minLineFeeds, readOnly, safe, keepLineBreaksFlag, keepLineBreaks, keepFirstColumn, prefLineFeeds);

@@ -42,9 +42,9 @@ public abstract class AbstractTitledSeparatorWithIcon extends JPanel {
   protected final Image myIconOpen;
   protected final JSeparator mySeparator;
 
-  public AbstractTitledSeparatorWithIcon(@Nonnull final Image icon,
-                                         @Nonnull final Image iconOpen,
-                                         @Nonnull final String text) {
+  public AbstractTitledSeparatorWithIcon(@Nonnull Image icon,
+                                         @Nonnull Image iconOpen,
+                                         @Nonnull String text) {
     myIcon = icon;
     myIconOpen = iconOpen;
     setLayout(new GridBagLayout());
@@ -94,7 +94,7 @@ public abstract class AbstractTitledSeparatorWithIcon extends JPanel {
     });
   }
   
-  public void setText(final String text) {
+  public void setText(String text) {
     myLabel.setText(UIUtil.replaceMnemonicAmpersand(text));
   }
 

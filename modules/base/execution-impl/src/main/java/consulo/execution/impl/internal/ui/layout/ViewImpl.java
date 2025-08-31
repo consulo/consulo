@@ -38,7 +38,7 @@ public class ViewImpl implements View {
 
   private boolean myMinimizedInGrid;
 
-  public ViewImpl(String id, TabImpl tab, final PlaceInGrid placeInGrid, boolean minimizedInGrid, int window) {
+  public ViewImpl(String id, TabImpl tab, PlaceInGrid placeInGrid, boolean minimizedInGrid, int window) {
     myID = id;
     myTab = tab;
     myPlaceInGrid = placeInGrid;
@@ -67,7 +67,7 @@ public class ViewImpl implements View {
     return myMinimizedInGrid;
   }
 
-  public void setID(final String ID) {
+  public void setID(String ID) {
     myID = ID;
   }
 
@@ -77,7 +77,7 @@ public class ViewImpl implements View {
 
 
   @Override
-  public void setMinimizedInGrid(final boolean minimizedInGrid) {
+  public void setMinimizedInGrid(boolean minimizedInGrid) {
     myMinimizedInGrid = minimizedInGrid;
   }
 
@@ -87,7 +87,7 @@ public class ViewImpl implements View {
   }
 
   @Override
-  public void assignTab(final Tab tab) {
+  public void assignTab(Tab tab) {
     myTab = tab;
   }
 
@@ -97,7 +97,7 @@ public class ViewImpl implements View {
   }
 
   @Override
-  public void setTabIndex(final int tabIndex) {
+  public void setTabIndex(int tabIndex) {
     myTabIndex = tabIndex;
   }
 
@@ -118,7 +118,7 @@ public class ViewImpl implements View {
     private final PlaceInGrid myPlaceInGrid;
     private final boolean myMinimizedInGrid;
 
-    public Default(final String ID, final int tabID, final PlaceInGrid placeInGrid, final boolean minimizedInGrid) {
+    public Default(String ID, int tabID, PlaceInGrid placeInGrid, boolean minimizedInGrid) {
       myID = ID;
       myTabID = tabID;
       myPlaceInGrid = placeInGrid;
@@ -126,7 +126,7 @@ public class ViewImpl implements View {
     }
 
     public ViewImpl createView(RunnerLayoutImpl settings) {
-      final TabImpl tab = myTabID == Integer.MAX_VALUE ? settings.createNewTab() : settings.getOrCreateTab(myTabID);
+      TabImpl tab = myTabID == Integer.MAX_VALUE ? settings.createNewTab() : settings.getOrCreateTab(myTabID);
       return new ViewImpl(myID, tab, myPlaceInGrid, myMinimizedInGrid, 0);
     }
 

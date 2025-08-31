@@ -62,7 +62,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
   public DvcsCommitAdditionalComponent(@Nonnull final Project project, @Nonnull CheckinProjectPanel panel) {
     myCheckinPanel = panel;
     myPanel = new JPanel(new GridBagLayout());
-    final Insets insets = new Insets(2, 2, 2, 2);
+    Insets insets = new Insets(2, 2, 2, 2);
     // add amend checkbox
     GridBagConstraints c = new GridBagConstraints();
     //todo change to MigLayout
@@ -158,7 +158,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
   private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
     Map<VirtualFile, String> messagesForRoots = new HashMap<>();
     Collection<VirtualFile> roots = myCheckinPanel.getRoots(); //all committed vcs roots, not only selected
-    final Ref<VcsException> exception = Ref.create();
+    Ref<VcsException> exception = Ref.create();
     for (VirtualFile root : roots) {
       String message = getLastCommitMessage(root);
       messagesForRoots.put(root, message);

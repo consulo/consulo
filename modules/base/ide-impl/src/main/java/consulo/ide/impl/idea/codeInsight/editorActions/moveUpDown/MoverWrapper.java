@@ -38,7 +38,7 @@ class MoverWrapper {
   private final StatementUpDownMover myMover;
   private final StatementUpDownMover.MoveInfo myInfo;
 
-  protected MoverWrapper(@Nonnull final StatementUpDownMover mover, @Nonnull final StatementUpDownMover.MoveInfo info, final boolean isDown) {
+  protected MoverWrapper(@Nonnull StatementUpDownMover mover, @Nonnull StatementUpDownMover.MoveInfo info, boolean isDown) {
     myMover = mover;
     myIsDown = isDown;
 
@@ -49,19 +49,19 @@ class MoverWrapper {
     return myInfo;
   }
 
-  public final void move(final Editor editor, final PsiFile file) {
+  public final void move(final Editor editor, PsiFile file) {
     assert myInfo.toMove2 != null;
     myMover.beforeMove(editor, myInfo, myIsDown);
-    final Document document = editor.getDocument();
-    final int start = StatementUpDownMover.getLineStartSafeOffset(document, myInfo.toMove.startLine);
-    final int end = StatementUpDownMover.getLineStartSafeOffset(document, myInfo.toMove.endLine);
+    Document document = editor.getDocument();
+    int start = StatementUpDownMover.getLineStartSafeOffset(document, myInfo.toMove.startLine);
+    int end = StatementUpDownMover.getLineStartSafeOffset(document, myInfo.toMove.endLine);
     myInfo.range1 = document.createRangeMarker(start, end);
 
     String textToInsert = document.getCharsSequence().subSequence(start, end).toString();
     if (!StringUtil.endsWithChar(textToInsert, '\n')) textToInsert += '\n';
 
-    final int start2 = document.getLineStartOffset(myInfo.toMove2.startLine);
-    final int end2 = StatementUpDownMover.getLineStartSafeOffset(document,myInfo.toMove2.endLine);
+    int start2 = document.getLineStartOffset(myInfo.toMove2.startLine);
+    int end2 = StatementUpDownMover.getLineStartSafeOffset(document,myInfo.toMove2.endLine);
     String textToInsert2 = document.getCharsSequence().subSequence(start2, end2).toString();
     if (!StringUtil.endsWithChar(textToInsert2,'\n')) textToInsert2 += '\n';
     myInfo.range2 = document.createRangeMarker(start2, end2);
@@ -78,12 +78,12 @@ class MoverWrapper {
       myInfo.range2.setGreedyToRight(false);
     }
 
-    final CaretModel caretModel = editor.getCaretModel();
-    final int caretRelativePos = caretModel.getOffset() - start;
-    final SelectionModel selectionModel = editor.getSelectionModel();
-    final int selectionStart = selectionModel.getSelectionStart();
-    final int selectionEnd = selectionModel.getSelectionEnd();
-    final boolean hasSelection = selectionModel.hasSelection();
+    CaretModel caretModel = editor.getCaretModel();
+    int caretRelativePos = caretModel.getOffset() - start;
+    SelectionModel selectionModel = editor.getSelectionModel();
+    int selectionStart = selectionModel.getSelectionStart();
+    int selectionEnd = selectionModel.getSelectionEnd();
+    boolean hasSelection = selectionModel.hasSelection();
 
     // to prevent flicker
     caretModel.moveToOffset(0);
@@ -109,7 +109,7 @@ class MoverWrapper {
       document.deleteString(s, e);
     }
 
-    final Project project = file.getProject();
+    Project project = file.getProject();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     // Swap fold regions status if necessary.
@@ -183,20 +183,20 @@ class MoverWrapper {
     return region1.getStartOffset() <= region2.getStartOffset() && region1.getEndOffset() >= region2.getEndOffset();
   }
 
-  private static void indentLinesIn(final Editor editor, final PsiFile file, final Document document, final Project project, RangeMarker range) {
-    final CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
+  private static void indentLinesIn(Editor editor, PsiFile file, Document document, Project project, RangeMarker range) {
+    CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
     int line1 = editor.offsetToLogicalPosition(range.getStartOffset()).line;
     int line2 = editor.offsetToLogicalPosition(range.getEndOffset()).line;
 
     while (!lineContainsNonSpaces(document, line1) && line1 < line2) line1++;
     while (!lineContainsNonSpaces(document, line2) && line1 < line2) line2--;
 
-    final FileViewProvider provider = file.getViewProvider();
+    FileViewProvider provider = file.getViewProvider();
     PsiFile rootToAdjustIndentIn = provider.getPsi(provider.getBaseLanguage());
     codeStyleManager.adjustLineIndent(rootToAdjustIndentIn, new TextRange(document.getLineStartOffset(line1), document.getLineStartOffset(line2)));
   }
 
-  private static boolean lineContainsNonSpaces(final Document document, final int line) {
+  private static boolean lineContainsNonSpaces(Document document, int line) {
     if (line >= document.getLineCount()) {
       return false;
     }
@@ -206,8 +206,8 @@ class MoverWrapper {
     return text.trim().length() != 0;
   }
 
-  private static void restoreSelection(final Editor editor, final int selectionStart, final int selectionEnd, final int moveOffset, int insOffset) {
-    final int selectionRelativeOffset = selectionStart - moveOffset;
+  private static void restoreSelection(Editor editor, int selectionStart, int selectionEnd, int moveOffset, int insOffset) {
+    int selectionRelativeOffset = selectionStart - moveOffset;
     int newSelectionStart = insOffset + selectionRelativeOffset;
     int newSelectionEnd = newSelectionStart + selectionEnd - selectionStart;
     editor.getSelectionModel().setSelection(newSelectionStart, newSelectionEnd);

@@ -81,14 +81,14 @@ public class LanguageTextField extends EditorTextField {
   private static Document createDocument(String value, @Nullable Language language, Project project,
                                          @Nonnull SimpleDocumentCreator documentCreator) {
     if (language != null) {
-      final PsiFileFactory factory = PsiFileFactory.getInstance(project);
-      final FileType fileType = language.getAssociatedFileType();
+      PsiFileFactory factory = PsiFileFactory.getInstance(project);
+      FileType fileType = language.getAssociatedFileType();
       assert fileType != null;
 
-      final long stamp = LocalTimeCounter.currentTime();
-      final PsiFile psiFile = factory.createFileFromText("Dummy." + fileType.getDefaultExtension(), fileType, value, stamp, true, false);
+      long stamp = LocalTimeCounter.currentTime();
+      PsiFile psiFile = factory.createFileFromText("Dummy." + fileType.getDefaultExtension(), fileType, value, stamp, true, false);
       documentCreator.customizePsiFile(psiFile);
-      final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
+      Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
       assert document != null;
       return document;
     }
@@ -99,10 +99,10 @@ public class LanguageTextField extends EditorTextField {
 
   @Override
   protected EditorEx createEditor() {
-    final EditorEx ex = super.createEditor();
+    EditorEx ex = super.createEditor();
 
     if (myLanguage != null) {
-      final FileType fileType = myLanguage.getAssociatedFileType();
+      FileType fileType = myLanguage.getAssociatedFileType();
       ex.setHighlighter(HighlighterFactory.createHighlighter(myProject, fileType));
     }
     ex.setEmbeddedIntoDialogWrapper(true);

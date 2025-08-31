@@ -53,7 +53,7 @@ public class UnknownFeaturesCollectorImpl implements PersistentStateComponent<El
 
     @Override
     public void registerUnknownFeature(Class<?> extensionClass, String implementationName) {
-        final ExtensionPreview extensionPreview = ExtensionPreview.of(extensionClass, implementationName);
+        ExtensionPreview extensionPreview = ExtensionPreview.of(extensionClass, implementationName);
         if (!isIgnored(extensionPreview)) {
             myUnknownExtensions.add(extensionPreview);
         }
@@ -82,9 +82,9 @@ public class UnknownFeaturesCollectorImpl implements PersistentStateComponent<El
             return null;
         }
 
-        final Element ignored = new Element("ignoreExtensions");
+        Element ignored = new Element("ignoreExtensions");
         for (ExtensionPreview feature : myIgnoredUnknownExtensions) {
-            final Element option = new Element("ignoreExtensions");
+            Element option = new Element("ignoreExtensions");
             option.setAttribute(API_PLUGIN_ID, feature.apiPluginId().getIdString());
             option.setAttribute(API_CLASS_NAME, feature.apiClassName());
             option.setAttribute(IMPL_PLUGIN_ID, feature.implPluginId().getIdString());

@@ -25,12 +25,12 @@ public class SortedIdSet implements Cloneable, RandomAccessIntContainer {
   private int mySetLength;
   private int mySize;
 
-  public SortedIdSet(final int initialCapacity) {
+  public SortedIdSet(int initialCapacity) {
     assert initialCapacity < Short.MAX_VALUE;
     mySet = new int[initialCapacity]; // todo slightly increase size
   }
 
-  public SortedIdSet(final int[] array, int size) {
+  public SortedIdSet(int[] array, int size) {
     mySet = array;
     mySetLength = mySize = size;
   }

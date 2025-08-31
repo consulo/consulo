@@ -94,7 +94,7 @@ public class ObjectCache<K,V> extends ObjectCacheBase implements Iterable<V> {
       removeEntryFromHashTable(index);
       myCache[index].hash_next = myFirstFree;
       myFirstFree = index;
-      final V deletedVal = myCache[index].value;
+      V deletedVal = myCache[index].value;
       myCache[index].key = null;
       myCache[index].value = null;
       fireListenersAboutDeletion(key, deletedVal);
@@ -102,7 +102,7 @@ public class ObjectCache<K,V> extends ObjectCacheBase implements Iterable<V> {
   }
 
   public void removeAll() {
-    final ArrayList<K> keys = new ArrayList<K>(count());
+    ArrayList<K> keys = new ArrayList<K>(count());
     int current = myTop;
     while (current > 0) {
       if (myCache[current].value != null) {
@@ -138,7 +138,7 @@ public class ObjectCache<K,V> extends ObjectCacheBase implements Iterable<V> {
       index = myBack;
       removeEntryFromHashTable(index);
 
-      final CacheEntry<K, V> cacheEntry = myCache[index];
+      CacheEntry<K, V> cacheEntry = myCache[index];
       deletedKey = cacheEntry.key;
       deletedValue = cacheEntry.value;
       
@@ -161,11 +161,11 @@ public class ObjectCache<K,V> extends ObjectCacheBase implements Iterable<V> {
       return null;
     }
     ++myHits;
-    final CacheEntry<K, V> cacheEntry = myCache[index];
-    final int top = myTop;
+    CacheEntry<K, V> cacheEntry = myCache[index];
+    int top = myTop;
     if (index != top) {
-      final int prev = cacheEntry.prev;
-      final int next = cacheEntry.next;
+      int prev = cacheEntry.prev;
+      int next = cacheEntry.next;
       if (index == myBack) {
         myBack = prev;
       }
@@ -325,7 +325,7 @@ public class ObjectCache<K,V> extends ObjectCacheBase implements Iterable<V> {
     }
   }
 
-  private void fireListenersAboutDeletion(final K key, final V value) {
+  private void fireListenersAboutDeletion(K key, V value) {
     if (myListeners != null) {
       for (DeletedPairsListener myListener : myListeners) {
         myListener.objectRemoved(key, value);

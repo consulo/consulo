@@ -179,7 +179,7 @@ public class SyntaxTable implements Cloneable {
     if (this == o) return true;
     if (!(o instanceof SyntaxTable)) return false;
 
-    final SyntaxTable syntaxTable = (SyntaxTable)o;
+    SyntaxTable syntaxTable = (SyntaxTable)o;
 
     if (myIgnoreCase != syntaxTable.myIgnoreCase) return false;
     if (myEndComment != null ? !myEndComment.equals(syntaxTable.myEndComment) : syntaxTable.myEndComment != null) return false;
@@ -225,7 +225,7 @@ public class SyntaxTable implements Cloneable {
     return myHasStringEscapes;
   }
 
-  public void setHasStringEscapes(final boolean hasEscapes) {
+  public void setHasStringEscapes(boolean hasEscapes) {
     myHasStringEscapes = hasEscapes;
   }
 }

@@ -23,7 +23,7 @@ public class ProcessIOExecutorService extends ThreadPoolExecutor {
     setThreadFactory(new ThreadFactory() {
       @Nonnull
       @Override
-      public Thread newThread(@Nonnull final Runnable r) {
+      public Thread newThread(@Nonnull Runnable r) {
         Thread thread = new Thread(r, POOLED_THREAD_PREFIX + counter.incrementAndGet());
         thread.setPriority(Thread.NORM_PRIORITY - 1);
         return thread;

@@ -105,13 +105,13 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
       return Collections.emptyList();
     }
 
-    final List<ArrangementSectionRule> result = new ArrayList<>();
-    final List<StdArrangementMatchRule> buffer = new ArrayList<>();
+    List<ArrangementSectionRule> result = new ArrayList<>();
+    List<StdArrangementMatchRule> buffer = new ArrayList<>();
     String currentSectionStart = null;
     for (int i = 0; i < getModel().getSize(); i++) {
-      final Object element = getModel().getElementAt(i);
+      Object element = getModel().getElementAt(i);
       if (element instanceof StdArrangementMatchRule) {
-        final ArrangementSectionRuleData sectionRule =
+        ArrangementSectionRuleData sectionRule =
                 mySectionRuleManager == null ? null : mySectionRuleManager.getSectionRuleData((StdArrangementMatchRule)element);
         if (sectionRule != null) {
           if (sectionRule.isSectionStart()) {
@@ -140,7 +140,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
   }
 
   public void setSections(@Nullable List<ArrangementSectionRule> sections) {
-    final List<StdArrangementMatchRule> rules = sections == null ? null : ArrangementUtil.collectMatchRules(sections);
+    List<StdArrangementMatchRule> rules = sections == null ? null : ArrangementUtil.collectMatchRules(sections);
     myComponents.clear();
     getModel().clear();
 
@@ -184,7 +184,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
   @Nonnull
   public ArrangementRuleAliasDialog createRuleAliasEditDialog() {
     final Set<String> tokenIds = new HashSet<String>();
-    final List<ArrangementSectionRule> sections = getSections();
+    List<ArrangementSectionRule> sections = getSections();
     for (ArrangementSectionRule section : sections) {
       for (StdArrangementMatchRule rule : section.getMatchRules()) {
         rule.getMatcher().getCondition().invite(new ArrangementMatchConditionVisitor() {
@@ -205,7 +205,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
       }
     }
 
-    final Collection<StdArrangementRuleAliasToken> aliases = getRulesAliases();
+    Collection<StdArrangementRuleAliasToken> aliases = getRulesAliases();
     assert aliases != null;
     return new ArrangementRuleAliasDialog(null, mySettingsManager, myColorsProvider, aliases, tokenIds);
   }

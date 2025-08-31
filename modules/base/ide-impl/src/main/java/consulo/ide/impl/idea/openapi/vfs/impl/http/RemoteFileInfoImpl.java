@@ -55,7 +55,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
   private final AtomicBoolean myCancelled = new AtomicBoolean();
   private final List<FileDownloadingListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public RemoteFileInfoImpl(final @Nonnull String url, final @Nonnull RemoteFileManagerImpl manager) {
+  public RemoteFileInfoImpl(@Nonnull String url, @Nonnull RemoteFileManagerImpl manager) {
     myUrl = url;
     myManager = manager;
   }
@@ -66,7 +66,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
   }
 
   @Override
-  public void removeDownloadingListener(final @Nonnull FileDownloadingListener listener) {
+  public void removeDownloadingListener(@Nonnull FileDownloadingListener listener) {
     myListeners.remove(listener);
   }
 
@@ -122,8 +122,8 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
   }
 
   @Override
-  public void finished(@Nullable final FileType fileType) {
-    final File localIOFile;
+  public void finished(@Nullable FileType fileType) {
+    File localIOFile;
 
     synchronized (myLock) {
       LOG.debug(
@@ -150,7 +150,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     }
 
     VirtualFile localFile = WriteAction.compute(() -> {
-      final VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(localIOFile);
+      VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(localIOFile);
       if (file != null) {
         file.refresh(false, false);
       }
@@ -182,7 +182,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
   }
 
   @Override
-  public void errorOccurred(@Nonnull final String errorMessage, boolean cancelled) {
+  public void errorOccurred(@Nonnull String errorMessage, boolean cancelled) {
     LOG.debug("Error: " + errorMessage);
     synchronized (myLock) {
       myLocalVirtualFile = null;
@@ -198,14 +198,14 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
   }
 
   @Override
-  public void setProgressFraction(final double fraction) {
+  public void setProgressFraction(double fraction) {
     for (FileDownloadingListener listener : myListeners) {
       listener.progressFractionChanged(fraction);
     }
   }
 
   @Override
-  public void setProgressText(@Nonnull final String text, final boolean indeterminate) {
+  public void setProgressText(@Nonnull String text, boolean indeterminate) {
     for (FileDownloadingListener listener : myListeners) {
       listener.progressMessageChanged(indeterminate, text);
     }
@@ -219,7 +219,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
 
   @Override
   public String toString() {
-    final String errorMessage = getErrorMessage();
+    String errorMessage = getErrorMessage();
     return "state=" + getState() + ", local file=" + myLocalFile + (errorMessage != null ? ", error=" + errorMessage : "") + (isCancelled() ? ", cancelled" : "");
   }
 
@@ -249,12 +249,12 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     }
   }
 
-  public void refresh(final @Nullable Runnable postRunnable) {
+  public void refresh(@Nullable Runnable postRunnable) {
     VirtualFile localVirtualFile;
     synchronized (myLock) {
       localVirtualFile = myLocalVirtualFile;
     }
-    final RemoteContentProvider contentProvider = myManager.findContentProvider(myUrl);
+    RemoteContentProvider contentProvider = myManager.findContentProvider(myUrl);
     if ((localVirtualFile == null || !contentProvider.equals(myContentProvider) || !contentProvider.isUpToDate(myUrl, localVirtualFile))) {
       myContentProvider = contentProvider;
       addDownloadingListener(new MyRefreshingDownloadingListener(postRunnable));
@@ -265,7 +265,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
   private class MyRefreshingDownloadingListener extends FileDownloadingAdapter {
     private final Runnable myPostRunnable;
 
-    public MyRefreshingDownloadingListener(final Runnable postRunnable) {
+    public MyRefreshingDownloadingListener(Runnable postRunnable) {
       myPostRunnable = postRunnable;
     }
 
@@ -278,7 +278,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     }
 
     @Override
-    public void fileDownloaded(final VirtualFile localFile) {
+    public void fileDownloaded(VirtualFile localFile) {
       removeDownloadingListener(this);
       if (myPostRunnable != null) {
         myPostRunnable.run();
@@ -286,7 +286,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     }
 
     @Override
-    public void errorOccurred(@Nonnull final String errorMessage) {
+    public void errorOccurred(@Nonnull String errorMessage) {
       removeDownloadingListener(this);
       if (myPostRunnable != null) {
         myPostRunnable.run();

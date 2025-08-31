@@ -64,7 +64,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
   }
 
   private ActionGroup createPopupGroup() {
-    final DefaultActionGroup group = new DefaultActionGroup();
+    DefaultActionGroup group = new DefaultActionGroup();
     group.add(new PutSourceItemIntoDefaultLocationAction(this, myArtifactsEditor));
     group.add(new PackAndPutIntoDefaultLocationAction(this, myArtifactsEditor));
     // java specific group.add(new PutSourceItemIntoParentAndLinkViaManifestAction(this, myArtifactsEditor));
@@ -75,7 +75,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
     //group.add(new SourceItemFindUsagesAction(this, myArtifactsEditor.getContext().getProject(), myArtifactsEditor.getContext().getParent()));
 
     DefaultTreeExpander expander = new DefaultTreeExpander(this);
-    final CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
+    CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
     group.add(AnSeparator.getInstance());
     group.addAction(commonActionsManager.createExpandAllAction(expander, this));
     group.addAction(commonActionsManager.createCollapseAllAction(expander, this));
@@ -113,9 +113,9 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
   }
 
   public List<SourceItemNode> getSelectedSourceItemNodes() {
-    final List<SourceItemNode> nodes = new ArrayList<SourceItemNode>();
+    List<SourceItemNode> nodes = new ArrayList<SourceItemNode>();
     for (DefaultMutableTreeNode treeNode : getSelectedTreeNodes()) {
-      final Object userObject = treeNode.getUserObject();
+      Object userObject = treeNode.getUserObject();
       if (userObject instanceof SourceItemNode) {
         nodes.add((SourceItemNode)userObject);
       }
@@ -126,7 +126,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
   public List<PackagingSourceItem> getSelectedItems() {
     List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
     for (SourceItemNode node : getSelectedSourceItemNodes()) {
-      final PackagingSourceItem sourceItem = node.getSourceItem();
+      PackagingSourceItem sourceItem = node.getSourceItem();
       if (sourceItem != null && sourceItem.isProvideElements()) {
         items.add(sourceItem);
       }
@@ -136,7 +136,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
 
   @Override
   public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
-    final DefaultMutableTreeNode[] nodes = getSelectedTreeNodes();
+    DefaultMutableTreeNode[] nodes = getSelectedTreeNodes();
     if (nodes.length == 1) {
       return DnDAwareTree.getDragImage(this, TreeUtil.getPathFromRoot(nodes[0]), dragOrigin);
     }

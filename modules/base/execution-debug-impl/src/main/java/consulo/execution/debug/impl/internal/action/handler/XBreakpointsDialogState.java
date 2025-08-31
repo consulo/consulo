@@ -34,7 +34,7 @@ public class XBreakpointsDialogState {
     return mySelectedGroupingRules;
   }
 
-  public void setSelectedGroupingRules(final Set<String> selectedGroupingRules) {
+  public void setSelectedGroupingRules(Set<String> selectedGroupingRules) {
     mySelectedGroupingRules = selectedGroupingRules;
   }
 }

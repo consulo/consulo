@@ -79,7 +79,7 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
         @Override
         public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
           if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
-            final VirtualFile root = ((FileOrDirectoryCopyPackagingElement)element).findFile();
+            VirtualFile root = ((FileOrDirectoryCopyPackagingElement)element).findFile();
             if (root != null) {
               result.put(root, artifact);
             }
@@ -98,7 +98,7 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
 
   @Override
   public Collection<? extends Artifact> findArtifacts(@Nonnull VirtualFile sourceFile) {
-    final MultiValuesMap<VirtualFile, Artifact> map = getFileToArtifactsMap().getValue();
+    MultiValuesMap<VirtualFile, Artifact> map = getFileToArtifactsMap().getValue();
     if (map.isEmpty()) {
       return Collections.emptyList();
     }
@@ -106,7 +106,7 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
     List<Artifact> result = null;
     VirtualFile file = sourceFile;
     while (file != null) {
-      final Collection<Artifact> artifacts = map.get(file);
+      Collection<Artifact> artifacts = map.get(file);
       if (artifacts != null) {
         if (result == null) {
           result = new SmartList<Artifact>();

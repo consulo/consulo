@@ -100,7 +100,7 @@ public abstract class EditorTracker implements Disposable {
   protected abstract void unregisterEditor(Editor editor);
 
   protected void editorReleased(@Nonnull EditorFactoryEvent event) {
-    final Editor editor = event.getEditor();
+    Editor editor = event.getEditor();
     if (editor.getProject() != null && editor.getProject() != myProject) return;
     unregisterEditor(editor);
     executeOnRelease(editor);
@@ -119,7 +119,7 @@ public abstract class EditorTracker implements Disposable {
       myExecuteOnEditorRelease.clear();
     }
     else {
-      final Runnable runnable = myExecuteOnEditorRelease.get(editor);
+      Runnable runnable = myExecuteOnEditorRelease.get(editor);
       if (runnable != null) {
         runnable.run();
         myExecuteOnEditorRelease.remove(editor);

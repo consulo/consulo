@@ -28,7 +28,7 @@ public class KeyShortcutCommand extends TypeCommand {
   }
 
   public ActionCallback _execute(PlaybackContext context) {
-    final String one = getText().substring(PREFIX.length());
+    String one = getText().substring(PREFIX.length());
     if (!one.endsWith(POSTFIX)) {
       dumpError(context, "Expected " + "]");
       return new ActionCallback.Rejected();

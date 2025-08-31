@@ -115,7 +115,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
 
         @Override
         public boolean isCutEnabled(@Nonnull DataContext dataContext) {
-            final PsiElement[] elements = getValidSelectedElements();
+            PsiElement[] elements = getValidSelectedElements();
             return elements.length != 0 && MoveHandler.canMove(elements, null);
         }
 
@@ -136,16 +136,16 @@ public class CopyPasteDelegator implements CopyPasteSupport {
             }
         }
 
-        private boolean performDefaultPaste(final DataContext dataContext) {
-            final boolean[] isCopied = new boolean[1];
-            final PsiElement[] elements = PsiCopyPasteManager.getInstance().getElements(isCopied);
+        private boolean performDefaultPaste(DataContext dataContext) {
+            boolean[] isCopied = new boolean[1];
+            PsiElement[] elements = PsiCopyPasteManager.getInstance().getElements(isCopied);
             if (elements == null) {
                 return false;
             }
 
             DumbService.getInstance(myProject).setAlternativeResolveEnabled(true);
             try {
-                final Module module = dataContext.getData(Module.KEY);
+                Module module = dataContext.getData(Module.KEY);
                 PsiElement target = getPasteTarget(dataContext, module);
                 if (isCopied[0]) {
                     pasteAfterCopy(elements, module, target, true);
@@ -167,7 +167,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         private PsiElement getPasteTarget(@Nonnull DataContext dataContext, @Nullable Module module) {
             PsiElement target = dataContext.getData(LangDataKeys.PASTE_TARGET_PSI_ELEMENT);
             if (module != null && target instanceof PsiDirectoryContainer directoryContainer) {
-                final PsiDirectory[] directories = directoryContainer.getDirectories(GlobalSearchScope.moduleScope(module));
+                PsiDirectory[] directories = directoryContainer.getDirectories(GlobalSearchScope.moduleScope(module));
                 if (directories.length == 1) {
                     return directories[0];
                 }
@@ -179,7 +179,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         private PsiDirectory getTargetDirectory(@Nullable Module module, @Nullable PsiElement target) {
             PsiDirectory targetDirectory = target instanceof PsiDirectory ? (PsiDirectory)target : null;
             if (targetDirectory == null && target instanceof PsiDirectoryContainer directoryContainer) {
-                final PsiDirectory[] directories = module == null
+                PsiDirectory[] directories = module == null
                     ? directoryContainer.getDirectories()
                     : directoryContainer.getDirectories(GlobalSearchScope.moduleScope(module));
                 if (directories.length > 0) {
@@ -188,7 +188,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
                 }
             }
             if (targetDirectory == null && target != null) {
-                final PsiFile containingFile = target.getContainingFile();
+                PsiFile containingFile = target.getContainingFile();
                 if (containingFile != null) {
                     targetDirectory = containingFile.getContainingDirectory();
                 }
@@ -249,7 +249,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
             return false;
         }
 
-        private boolean isDefaultPasteEnabled(final DataContext dataContext) {
+        private boolean isDefaultPasteEnabled(DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project == null) {
                 return false;

@@ -54,7 +54,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
 
   @Nullable
   protected final Editor getEditor() {
-    final Project project = getProject();
+    Project project = getProject();
     if (project.isDisposed()) return null;
 
     FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(myStatusBar);
@@ -67,7 +67,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     }
 
     if (result == null) {
-      final FileEditorManager manager = FileEditorManager.getInstance(project);
+      FileEditorManager manager = FileEditorManager.getInstance(project);
       Editor editor = manager.getSelectedTextEditor();
       if (editor != null && WindowManager.getInstance().getStatusBar(editor.getComponent(), project) == myStatusBar && ensureValidEditorFile(editor)) {
         result = editor;
@@ -126,7 +126,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
 
   @Nullable
   protected VirtualFile getSelectedFile() {
-    final Editor editor = getEditor();
+    Editor editor = getEditor();
     if (editor == null) return null;
     Document document = editor.getDocument();
     return FileDocumentManager.getInstance().getFile(document);

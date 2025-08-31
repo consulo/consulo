@@ -42,13 +42,13 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
   private final List<String> myInitialCollection;
   @Nullable private final Project myProject;
 
-  public PathsChooserComponent(@Nonnull final List<String> collection, @Nonnull final PathProcessor processor) {
+  public PathsChooserComponent(@Nonnull List<String> collection, @Nonnull PathProcessor processor) {
     this(collection, processor, null);
   }
 
-  public PathsChooserComponent(@Nonnull final List<String> collection,
+  public PathsChooserComponent(@Nonnull List<String> collection,
                                @Nonnull final PathProcessor processor,
-                               @Nullable final Project project) {
+                               @Nullable Project project) {
     myList = new JBList();
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     myInitialCollection = collection;
@@ -60,7 +60,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
     myContentPane = ToolbarDecorator.createDecorator(myList).disableUpDownActions().setAddAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {
-        final FileChooserDescriptor dirChooser = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        FileChooserDescriptor dirChooser = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         dirChooser.setShowFileSystemRoots(true);
         dirChooser.setHideIgnored(true);
         dirChooser.setTitle(UIBundle.message("file.chooser.default.title"));
@@ -69,7 +69,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
           public void accept(List<VirtualFile> files) {
             for (VirtualFile file : files) {
               // adding to the end
-              final String path = file.getPath();
+              String path = file.getPath();
               if (processor.addPath(myWorkingCollection, path)) {
                 myListModel.addElement(path);
               }
@@ -83,7 +83,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
         int selected = myList.getSelectedIndex();
         if (selected != -1) {
           // removing index
-          final String path = (String) myListModel.get(selected);
+          String path = (String) myListModel.get(selected);
           if (processor.removePath(myWorkingCollection, path)){
             myListModel.remove(selected);
           }

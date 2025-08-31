@@ -33,7 +33,7 @@ public interface CodeStyleSettingsBase {
     }
 
     @Nonnull
-    public abstract Configurable createSettingsPage(CodeStyleSettings settings, final CodeStyleSettings originalSettings);
+    public abstract Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings);
 
     /**
      * Returns the name of the configurable page without creating a Configurable instance.

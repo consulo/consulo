@@ -34,19 +34,19 @@ public interface ChangeListManagerGate {
   List<LocalChangeList> getListsCopy();
 
   @Nullable
-  LocalChangeList findChangeList(final String name);
+  LocalChangeList findChangeList(String name);
 
-  LocalChangeList addChangeList(final String name, final String comment);
+  LocalChangeList addChangeList(String name, String comment);
 
-  LocalChangeList findOrCreateList(final String name, final String comment);
+  LocalChangeList findOrCreateList(String name, String comment);
 
-  void editComment(final String name, final String comment);
+  void editComment(String name, String comment);
 
-  void editName(final String oldName, final String newName);
+  void editName(String oldName, String newName);
 
-  void setListsToDisappear(final Collection<String> names);
+  void setListsToDisappear(Collection<String> names);
 
-  FileStatus getStatus(final VirtualFile file);
+  FileStatus getStatus(VirtualFile file);
 
   @Nullable
   FileStatus getStatus(@Nonnull FilePath filePath);
@@ -57,7 +57,7 @@ public interface ChangeListManagerGate {
    * @deprecated to remove in IDEA 16
    */
   @Deprecated
-  FileStatus getStatus(final File file);
+  FileStatus getStatus(File file);
 
   void setDefaultChangeList(@Nonnull String list);
 }

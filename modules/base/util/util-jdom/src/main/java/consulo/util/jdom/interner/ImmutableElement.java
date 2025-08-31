@@ -30,7 +30,7 @@ class ImmutableElement extends Element {
   private static final Content[] EMPTY_CONTENT = new Content[0];
   private final List<Attribute> myAttributes;
 
-  ImmutableElement(@Nonnull Element origin, @Nonnull final JDOMInterner interner) {
+  ImmutableElement(@Nonnull Element origin, @Nonnull JDOMInterner interner) {
     // FIXME [VISTALL] we can't do that 'content = null;'
 
     name = interner.internString(origin.getName());
@@ -107,7 +107,7 @@ class ImmutableElement extends Element {
   }
 
   @Override
-  public <T extends Content> List<T> getContent(final Filter<T> filter) {
+  public <T extends Content> List<T> getContent(Filter<T> filter) {
     return (List<T>)ContainerUtil.filter(myContent, content -> filter.matches(content));
   }
 
@@ -152,7 +152,7 @@ class ImmutableElement extends Element {
 
     // If we hold only a Text or CDATA, return it directly
     if (myContent.length == 1) {
-      final Object obj = myContent[0];
+      Object obj = myContent[0];
       if (obj instanceof Text) {
         return ((Text)obj).getText();
       }
@@ -176,7 +176,7 @@ class ImmutableElement extends Element {
   }
 
   @Override
-  public int indexOf(final Content child) {
+  public int indexOf(Content child) {
     return ArrayUtil.indexOf(myContent, child);
   }
 
@@ -227,7 +227,7 @@ class ImmutableElement extends Element {
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
   public Element clone() {
-    final Element element = new Element(name, namespace);
+    Element element = new Element(name, namespace);
 
     // Cloning attributes
     List<Attribute> attributes = getAttributes();

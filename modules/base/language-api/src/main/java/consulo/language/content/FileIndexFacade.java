@@ -33,7 +33,7 @@ import jakarta.annotation.Nullable;
 public abstract class FileIndexFacade {
   protected final Project myProject;
 
-  protected FileIndexFacade(final Project project) {
+  protected FileIndexFacade(Project project) {
     myProject = project;
   }
 

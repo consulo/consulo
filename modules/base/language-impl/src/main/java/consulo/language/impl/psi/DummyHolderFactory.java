@@ -62,7 +62,7 @@ public class DummyHolderFactory  {
     return INSTANCE.createHolder(manager, context, table);
   }
 
-  public static DummyHolder createHolder(@Nonnull PsiManager manager, final CharTable table, final Language language) {
+  public static DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, Language language) {
     return INSTANCE.createHolder(manager, table, language);
   }
 
@@ -83,7 +83,7 @@ public class DummyHolderFactory  {
     }
 
     @Override
-    public DummyHolder createHolder(@Nonnull final PsiManager manager, final Language language, final PsiElement context) {
+    public DummyHolder createHolder(@Nonnull PsiManager manager, Language language, PsiElement context) {
       return new DummyHolder(manager, language, context);
     }
 
@@ -98,7 +98,7 @@ public class DummyHolderFactory  {
     }
 
     @Override
-    public DummyHolder createHolder(@Nonnull PsiManager manager, final CharTable table, final Language language) {
+    public DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, Language language) {
       return new DummyHolder(manager, table, language);
     }
   }

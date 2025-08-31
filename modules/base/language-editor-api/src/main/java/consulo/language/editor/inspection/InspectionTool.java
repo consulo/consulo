@@ -58,7 +58,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
             if (suppressor.isSuppressedFor(element, toolId)) {
                 return true;
             }
-            final String alternativeId = getAlternativeID();
+            String alternativeId = getAlternativeID();
             if (alternativeId != null && !alternativeId.equals(toolId) && suppressor.isSuppressedFor(element, alternativeId)) {
                 return true;
             }
@@ -167,7 +167,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
     @Nullable
     @Deprecated
     protected URL getDescriptionUrl() {
-        final String fileName = getDescriptionFileName();
+        String fileName = getDescriptionFileName();
         if (fileName == null) {
             return null;
         }
@@ -183,7 +183,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
     @Nullable
     @Deprecated
     public String loadDescription() {
-        final String description = getStaticDescription();
+        String description = getStaticDescription();
         if (description != null) {
             return description;
         }

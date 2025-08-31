@@ -66,7 +66,7 @@ public class UniqueFileNamesProvider {
     return buf.toString();
   }
 
-  public void reserveFileName(final String fileName) {
+  public void reserveFileName(String fileName) {
     myExistingNames.add(fileName);
   }
 }

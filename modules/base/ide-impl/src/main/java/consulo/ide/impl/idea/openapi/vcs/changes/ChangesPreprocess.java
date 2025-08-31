@@ -33,14 +33,14 @@ public class ChangesPreprocess {
   private static final Logger LOG = Logger.getInstance(ChangesPreprocess.class);
 
   public static List<Change> preprocessChangesRemoveDeletedForDuplicateMoved(List<Change> list) {
-    final List<Change> result = new ArrayList<Change>();
-    final Map<FilePath, Change> map = new HashMap<FilePath, Change>();
+    List<Change> result = new ArrayList<Change>();
+    Map<FilePath, Change> map = new HashMap<FilePath, Change>();
     for (Change change : list) {
       if (change.getBeforeRevision() == null) {
         result.add(change);
       } else {
-        final FilePath beforePath = ChangesUtil.getBeforePath(change);
-        final Change existing = map.get(beforePath);
+        FilePath beforePath = ChangesUtil.getBeforePath(change);
+        Change existing = map.get(beforePath);
         if (existing == null) {
           map.put(beforePath, change);
           continue;

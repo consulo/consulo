@@ -22,9 +22,9 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nullable;
 
 public interface XmlAwareBraceMatcher extends BraceMatcher {
-  boolean isStrictTagMatching(final FileType fileType, final int braceGroupId);
+  boolean isStrictTagMatching(FileType fileType, int braceGroupId);
 
-  boolean areTagsCaseSensitive(FileType fileType, final int braceGroupId);
+  boolean areTagsCaseSensitive(FileType fileType, int braceGroupId);
 
   @Nullable
   String getTagName(CharSequence fileText, HighlighterIterator iterator);

@@ -82,10 +82,10 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
     return findDisposable(myParent, PlatformDataKeys.UI_DISPOSABLE);
   }
 
-  private static AsyncResult<Disposable> findDisposable(Disposable defaultValue, final Key<? extends Disposable> key) {
+  private static AsyncResult<Disposable> findDisposable(Disposable defaultValue, Key<? extends Disposable> key) {
     if (defaultValue == null) {
       if (ApplicationManager.getApplication() != null) {
-        final AsyncResult<Disposable> result = AsyncResult.undefined();
+        AsyncResult<Disposable> result = AsyncResult.undefined();
         DataManager.getInstance().getDataContextFromFocus().doWhenDone(context -> {
           Disposable disposable = context.getData(key);
           if (disposable == null) {

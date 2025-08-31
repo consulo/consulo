@@ -30,7 +30,7 @@ public class BaseTestProxyNodeDescriptor<T extends AbstractTestProxy> extends No
   @Nonnull
   private final T myTestProxy;
 
-  public BaseTestProxyNodeDescriptor(@Nullable final Project project, @Nonnull final T testProxy, @Nullable final NodeDescriptor parentDescriptor) {
+  public BaseTestProxyNodeDescriptor(@Nullable Project project, @Nonnull T testProxy, @Nullable NodeDescriptor parentDescriptor) {
     super(parentDescriptor);
     myTestProxy = testProxy;
     myName = testProxy.getName();

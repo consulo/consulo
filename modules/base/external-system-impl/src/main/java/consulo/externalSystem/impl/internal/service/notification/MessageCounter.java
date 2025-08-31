@@ -52,9 +52,9 @@ public class MessageCounter {
     }
 
     public synchronized void remove(
-        @Nullable final String groupName,
-        @Nonnull final NotificationSource notificationSource,
-        @Nonnull final ProjectSystemId projectSystemId
+        @Nullable String groupName,
+        @Nonnull NotificationSource notificationSource,
+        @Nonnull ProjectSystemId projectSystemId
     ) {
         Map<String, Map<NotificationSource, Object2IntMap<NotificationCategory>>> groupMap =
             map.computeIfAbsent(projectSystemId, p -> new HashMap<>());
@@ -74,10 +74,10 @@ public class MessageCounter {
     }
 
     public synchronized int getCount(
-        @Nullable final String groupName,
-        @Nonnull final NotificationSource notificationSource,
-        @Nullable final NotificationCategory notificationCategory,
-        @Nonnull final ProjectSystemId projectSystemId
+        @Nullable String groupName,
+        @Nonnull NotificationSource notificationSource,
+        @Nullable NotificationCategory notificationCategory,
+        @Nonnull ProjectSystemId projectSystemId
     ) {
         Map<String, Map<NotificationSource, Object2IntMap<NotificationCategory>>> groupMap = map.getOrDefault(projectSystemId, Map.of());
 
@@ -85,7 +85,7 @@ public class MessageCounter {
 
         for (Map.Entry<String, Map<NotificationSource, Object2IntMap<NotificationCategory>>> entry : groupMap.entrySet()) {
             if (groupName == null || groupName.equals(entry.getKey())) {
-                final Object2IntMap<NotificationCategory> counter = entry.getValue().get(notificationSource);
+                Object2IntMap<NotificationCategory> counter = entry.getValue().get(notificationSource);
                 if (counter == null) {
                     continue;
                 }

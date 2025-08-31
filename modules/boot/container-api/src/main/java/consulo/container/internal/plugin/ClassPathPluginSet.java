@@ -40,7 +40,7 @@ public class ClassPathPluginSet {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("ClassPathPluginSet{");
+    StringBuilder sb = new StringBuilder("ClassPathPluginSet{");
     sb.append("myPluginIdSet=").append(myPluginIdSet);
     sb.append('}');
     return sb.toString();

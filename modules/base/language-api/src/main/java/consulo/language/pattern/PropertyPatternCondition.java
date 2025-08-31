@@ -27,7 +27,7 @@ import java.util.function.BiPredicate;
  */
 public abstract class PropertyPatternCondition<T,P> extends PatternConditionPlus<T, P> {
 
-  public PropertyPatternCondition(@NonNls String methodName, final ElementPattern propertyPattern) {
+  public PropertyPatternCondition(@NonNls String methodName, ElementPattern propertyPattern) {
     super(methodName, propertyPattern);
   }
 

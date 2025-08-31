@@ -114,9 +114,9 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
      *                                  is {@code null} or {@code providers} is {@code null} or {@code myEditor} arrays is empty
      */
     DesktopEditorComposite(
-        @Nonnull final VirtualFile file,
-        @Nonnull final FileEditor[] editors,
-        @Nonnull final FileEditorManagerEx fileEditorManager
+        @Nonnull VirtualFile file,
+        @Nonnull FileEditor[] editors,
+        @Nonnull FileEditorManagerEx fileEditorManager
     ) {
         myFile = file;
         myEditors = editors;
@@ -148,16 +148,16 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
 
         myFileEditorManager.addFileEditorManagerListener(new FileEditorManagerListener() {
             @Override
-            public void selectionChanged(@Nonnull final FileEditorManagerEvent event) {
-                final VirtualFile oldFile = event.getOldFile();
-                final VirtualFile newFile = event.getNewFile();
+            public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+                VirtualFile oldFile = event.getOldFile();
+                VirtualFile newFile = event.getNewFile();
                 if (Comparing.equal(oldFile, newFile) && Comparing.equal(getFile(), newFile)) {
                     Runnable runnable = () -> {
-                        final FileEditor oldEditor = event.getOldEditor();
+                        FileEditor oldEditor = event.getOldEditor();
                         if (oldEditor != null) {
                             oldEditor.deselectNotify();
                         }
-                        final FileEditor newEditor = event.getNewEditor();
+                        FileEditor newEditor = event.getNewEditor();
                         if (newEditor != null) {
                             newEditor.selectNotify();
                         }
@@ -182,7 +182,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     private TabFactoryBuilderImpl.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
         PrevNextActionsDescriptor descriptor =
             new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
-        final TabFactoryBuilderImpl.AsJBTabs wrapper =
+        TabFactoryBuilderImpl.AsJBTabs wrapper =
             new TabFactoryBuilderImpl.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
         wrapper.getTabs().getPresentation().setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(0, 8)));
         wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
@@ -199,7 +199,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         return wrapper;
     }
 
-    private JComponent createEditorComponent(final FileEditor editor) {
+    private JComponent createEditorComponent(FileEditor editor) {
         JPanel component = new JPanel(new BorderLayout());
         JComponent comp = editor.getComponent();
         if (!FileEditorManagerImpl.isDumbAware(editor)) {
@@ -212,7 +212,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         myTopComponents.put(editor, topPanel);
         component.add(topPanel, BorderLayout.NORTH);
 
-        final JPanel bottomPanel = new TopBottomPanel();
+        JPanel bottomPanel = new TopBottomPanel();
         myBottomComponents.put(editor, bottomPanel);
         component.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -230,22 +230,22 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     /**
      * Sets new "pinned" state
      */
-    void setPinned(final boolean pinned) {
+    void setPinned(boolean pinned) {
         myPinned = pinned;
     }
 
-    private void fireSelectedEditorChanged(final FileEditor oldSelectedEditor, final FileEditor newSelectedEditor) {
+    private void fireSelectedEditorChanged(FileEditor oldSelectedEditor, FileEditor newSelectedEditor) {
         if ((!EventQueue.isDispatchThread() || !myFileEditorManager.isInsideChange())
             && !Comparing.equal(oldSelectedEditor, newSelectedEditor)) {
             myFileEditorManager.notifyPublisher(() -> {
-                final FileEditorManagerEvent event =
+                FileEditorManagerEvent event =
                     new FileEditorManagerEvent(myFileEditorManager, myFile, oldSelectedEditor, myFile, newSelectedEditor);
-                final FileEditorManagerListener publisher =
+                FileEditorManagerListener publisher =
                     myFileEditorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class);
                 publisher.selectionChanged(event);
             });
-            final JComponent component = newSelectedEditor.getComponent();
-            final EditorWindowHolder holder = UIUtil.getParentOfType(EditorWindowHolder.class, component);
+            JComponent component = newSelectedEditor.getComponent();
+            EditorWindowHolder holder = UIUtil.getParentOfType(EditorWindowHolder.class, component);
             if (holder != null) {
                 ((FileEditorManagerImpl)myFileEditorManager).addSelectionRecord(myFile, holder.getEditorWindow());
             }
@@ -263,7 +263,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
             return null;
         }
 
-        final Component component = myFocusWatcher.getFocusedComponent();
+        Component component = myFocusWatcher.getFocusedComponent();
         if (!(component instanceof JComponent) || !component.isShowing() || !component.isEnabled() || !component.isFocusable()) {
             return getSelectedEditor().getPreferredFocusedComponent();
         }
@@ -346,7 +346,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
 
     @Nonnull
     private Disposable manageTopOrBottomComponent(FileEditor editor, @Nonnull ComponentContainer componentContainer, boolean top) {
-        final JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
+        JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
         assert container != null;
 
         JComponent component = componentContainer.getComponent();
@@ -362,7 +362,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     }
 
     private void manageTopOrBottomComponent(FileEditor editor, JComponent component, boolean top, boolean remove) {
-        final JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
+        JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
         assert container != null;
 
         if (remove) {
@@ -435,7 +435,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     public abstract FileEditorWithProvider getSelectedEditorWithProvider();
 
     @Override
-    public void setSelectedEditor(final int index) {
+    public void setSelectedEditor(int index) {
         if (myEditors.length == 1) {
             // nothing to do
             LOG.assertTrue(myTabbedPaneWrapper == null);

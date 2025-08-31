@@ -36,13 +36,13 @@ public class StringTableCellEditor extends AbstractCellEditor implements TableCe
   private final Project myProject;
   private final List<DocumentListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-  public StringTableCellEditor(final Project project) {
+  public StringTableCellEditor(Project project) {
     myProject = project;
   }
 
   @Override
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-    final EditorTextField editorTextField = new EditorTextField((String)value, myProject, InternalStdFileTypes.JAVA) {
+    EditorTextField editorTextField = new EditorTextField((String)value, myProject, InternalStdFileTypes.JAVA) {
       @Override
       protected boolean shouldHaveBorder() {
         return false;

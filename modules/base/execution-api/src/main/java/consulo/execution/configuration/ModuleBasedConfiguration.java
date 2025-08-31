@@ -43,12 +43,12 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
 
   protected static final String TO_CLONE_ELEMENT_NAME = "toClone";
 
-  public ModuleBasedConfiguration(final String name, final ConfigurationModule configurationModule, final ConfigurationFactory factory) {
+  public ModuleBasedConfiguration(String name, ConfigurationModule configurationModule, ConfigurationFactory factory) {
     super(configurationModule.getProject(), factory, name);
     myModule = configurationModule;
   }
 
-  public ModuleBasedConfiguration(final ConfigurationModule configurationModule, final ConfigurationFactory factory) {
+  public ModuleBasedConfiguration(ConfigurationModule configurationModule, ConfigurationFactory factory) {
     super(configurationModule.getProject(), factory, "");
     myModule = configurationModule;
   }
@@ -59,7 +59,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
     return myModule;
   }
 
-  public void setModule(final Module module) {
+  public void setModule(Module module) {
     myModule.setModule(module);
   }
 
@@ -82,11 +82,11 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   }
 
   @Deprecated
-  protected void readModule(final Element element) throws InvalidDataException {
+  protected void readModule(Element element) throws InvalidDataException {
   }
 
   @Deprecated
-  protected void writeModule(final Element element) throws WriteExternalException {
+  protected void writeModule(Element element) throws WriteExternalException {
   }
 
   public Collection<Module> getAllModules() {
@@ -101,10 +101,10 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
 
   @Override
   public ModuleBasedConfiguration clone() {
-    final Element element = new Element(TO_CLONE_ELEMENT_NAME);
+    Element element = new Element(TO_CLONE_ELEMENT_NAME);
     try {
       writeExternal(element);
-      final ModuleBasedConfiguration configuration = createInstance();
+      ModuleBasedConfiguration configuration = createInstance();
 
       configuration.readExternal(element);
 
@@ -124,16 +124,16 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   @Nonnull
   public Module[] getModules() {
     ThrowableComputable<Module[],RuntimeException> action = () -> {
-      final Module module = getConfigurationModule().getModule();
+      Module module = getConfigurationModule().getModule();
       return module == null ? Module.EMPTY_ARRAY : new Module[]{module};
     };
     return AccessRule.read(action);
   }
 
-  public void restoreOriginalModule(final Module originalModule) {
+  public void restoreOriginalModule(Module originalModule) {
     if (originalModule == null) return;
-    final Module[] classModules = getModules();
-    final Set<Module> modules = new HashSet<>();
+    Module[] classModules = getModules();
+    Set<Module> modules = new HashSet<>();
     for (Module classModule : classModules) {
       ModuleContentUtil.collectModulesDependsOn(classModule, modules);
     }
@@ -141,9 +141,9 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   }
 
   public void onNewConfigurationCreated() {
-    final RunConfigurationModule configurationModule = getConfigurationModule();
+    RunConfigurationModule configurationModule = getConfigurationModule();
     if (configurationModule.getModule() == null) {
-      final Module[] modules = ModuleManager.getInstance(getProject()).getModules();
+      Module[] modules = ModuleManager.getInstance(getProject()).getModules();
       configurationModule.setModule(modules.length == 1 ? modules[0] : null);
     }
   }

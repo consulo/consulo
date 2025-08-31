@@ -36,11 +36,11 @@ public class PrefixSuffixStripperLexer extends LexerBase {
     private final IElementType mySuffixType;
 
     public PrefixSuffixStripperLexer(
-        final String prefix,
-        final IElementType prefixType,
-        final String suffix,
-        final IElementType suffixType,
-        final IElementType middleTokenType
+        String prefix,
+        IElementType prefixType,
+        String suffix,
+        IElementType suffixType,
+        IElementType middleTokenType
     ) {
         mySuffixType = suffixType;
         myMiddleTokenType = middleTokenType;
@@ -112,7 +112,7 @@ public class PrefixSuffixStripperLexer extends LexerBase {
 
         if (myState == 1) {
             myTokenStart = myTokenEnd;
-            final int suffixStart = myBufferEnd - mySuffix.length();
+            int suffixStart = myBufferEnd - mySuffix.length();
             myTokenType = myMiddleTokenType;
             if ((myBufferArray != null && CharArrayUtil.regionMatches(myBufferArray, suffixStart, myBufferEnd, mySuffix))
                 || (myBufferArray == null && CharArrayUtil.regionMatches(myBuffer, suffixStart, myBufferEnd, mySuffix))

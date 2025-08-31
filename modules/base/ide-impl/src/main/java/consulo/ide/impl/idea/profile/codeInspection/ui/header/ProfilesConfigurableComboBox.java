@@ -37,7 +37,7 @@ import java.util.Collection;
 public abstract class ProfilesConfigurableComboBox extends JPanel {
   private final ComboBox<InspectionProfile> myProfilesComboBox;
 
-  public ProfilesConfigurableComboBox(final ListCellRenderer<InspectionProfile> comboBoxItemsRenderer) {
+  public ProfilesConfigurableComboBox(ListCellRenderer<InspectionProfile> comboBoxItemsRenderer) {
     super(new BorderLayout());
 
     myProfilesComboBox = new ComboBox<>();
@@ -47,7 +47,7 @@ public abstract class ProfilesConfigurableComboBox extends JPanel {
     myProfilesComboBox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final InspectionProfileImpl profile = getSelectedProfile();
+        InspectionProfileImpl profile = getSelectedProfile();
         if (profile != null) {
           onProfileChosen(profile);
         }
@@ -55,7 +55,7 @@ public abstract class ProfilesConfigurableComboBox extends JPanel {
     });
   }
 
-  protected abstract void onProfileChosen(final InspectionProfileImpl inspectionProfile);
+  protected abstract void onProfileChosen(InspectionProfileImpl inspectionProfile);
 
   public void showEditCard(final String initialValue, final SaveInputComponentValidator inputValidator) {
     String name = Messages.showInputDialog(this, "Enter name:", "Name", null, initialValue, new InputValidator() {
@@ -74,7 +74,7 @@ public abstract class ProfilesConfigurableComboBox extends JPanel {
     }
   }
 
-  public void reset(final Collection<InspectionProfile> profiles) {
+  public void reset(Collection<InspectionProfile> profiles) {
     myProfilesComboBox.setModel(new MutableCollectionComboBoxModel<>(new ArrayList<>(profiles)));
     myProfilesComboBox.setSelectedIndex(0);
   }

@@ -28,7 +28,7 @@ public final class TableCell {
     if (this == o) return true;
     if (!(o instanceof TableCell)) return false;
 
-    final TableCell myKey = (TableCell)o;
+    TableCell myKey = (TableCell)o;
 
     if (column != myKey.column) return false;
     if (row != myKey.row) return false;

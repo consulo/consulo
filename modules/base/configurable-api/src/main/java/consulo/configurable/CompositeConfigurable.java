@@ -53,7 +53,7 @@ public abstract class CompositeConfigurable<T extends UnnamedConfigurable> imple
   @Override
   public void disposeUIResources() {
     if (myConfigurables != null) {
-      for (final T myConfigurable : myConfigurables) {
+      for (T myConfigurable : myConfigurables) {
         myConfigurable.disposeUIResources();
       }
       myConfigurables = null;

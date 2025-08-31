@@ -31,7 +31,7 @@ import java.awt.event.ContainerListener;
 public abstract class ComponentTreeWatcher {
   protected final Class[] myControlsToIgnore;
 
-  protected ComponentTreeWatcher(final Class[] controlsToIgnore) {
+  protected ComponentTreeWatcher(Class[] controlsToIgnore) {
     myControlsToIgnore = controlsToIgnore;
   }
 

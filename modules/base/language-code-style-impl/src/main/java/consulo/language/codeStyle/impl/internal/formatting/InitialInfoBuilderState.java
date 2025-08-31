@@ -54,7 +54,7 @@ class InitialInfoBuilderState {
     return myWrappedChildren.size() == parentBlock.getSubBlocks().size();
   }
 
-  private static void setDefaultIndents(final List<AbstractBlockWrapper> list, boolean useRelativeIndents) {
+  private static void setDefaultIndents(List<AbstractBlockWrapper> list, boolean useRelativeIndents) {
     for (AbstractBlockWrapper wrapper : list) {
       if (wrapper.getIndent() == null) {
         wrapper.setIndent((IndentImpl)Indent.getContinuationWithoutFirstIndent(useRelativeIndents));

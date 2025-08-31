@@ -277,7 +277,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
   @Nullable
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    final ConsoleView consoleView = getSubConsoleView(isPrimaryConsoleEnabled());
+    ConsoleView consoleView = getSubConsoleView(isPrimaryConsoleEnabled());
     return consoleView instanceof DataProvider dataProvider ? dataProvider.getData(dataId) : null;
   }
 
@@ -293,7 +293,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
   @Nonnull
   private List<AnAction> mergeConsoleActions(@Nonnull List<AnAction> actions1, @Nonnull Collection<AnAction> actions2) {
     return ContainerUtil.map(actions1, action1 -> {
-      final AnAction action2 = ContainerUtil.find(actions2, action -> action1.getClass() == action.getClass() &&
+      AnAction action2 = ContainerUtil.find(actions2, action -> action1.getClass() == action.getClass() &&
                                                                       StringUtil.equals(action1.getTemplatePresentation().getText(),
                                                                                         action.getTemplatePresentation().getText()));
       if (action2 instanceof ToggleUseSoftWrapsToolbarAction toggleUseSoftWrapsToolbarAction2) {
@@ -331,12 +331,12 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     @Override
-    public boolean isSelected(@Nonnull final AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return !isPrimaryConsoleEnabled();
     }
 
     @Override
-    public void setSelected(@Nonnull final AnActionEvent event, final boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       enableConsole(!flag);
       setStoredState(!flag);
       Application.get().invokeLater(() -> update(event));
@@ -347,8 +347,8 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
       super.update(event);
       if (!myDisableSwitchConsoleActionOnProcessEnd) return;
 
-      final Presentation presentation = event.getPresentation();
-      final boolean isRunning = myProcessHandler != null && !myProcessHandler.isProcessTerminated();
+      Presentation presentation = event.getPresentation();
+      boolean isRunning = myProcessHandler != null && !myProcessHandler.isProcessTerminated();
       if (isRunning) {
         presentation.setEnabled(true);
       }

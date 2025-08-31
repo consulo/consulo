@@ -150,7 +150,7 @@ public class TokenSequence implements TokenList {
             LOG.error(sb.toString());
         }
 
-        private void resizeLexemes(final int newSize) {
+        private void resizeLexemes(int newSize) {
             myLexStarts = ArrayUtil.realloc(myLexStarts, newSize);
             myLexTypes = ArrayUtil.realloc(myLexTypes, newSize, IElementType.ARRAY_FACTORY);
         }

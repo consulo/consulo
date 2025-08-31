@@ -41,9 +41,9 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
     return myPatch;
   }
 
-  public Result apply(final VirtualFile fileToPatch,
-                      final ApplyPatchContext context,
-                      final Project project,
+  public Result apply(VirtualFile fileToPatch,
+                      ApplyPatchContext context,
+                      Project project,
                       FilePath pathBeforeRename,
                       Getter<CharSequence> baseContents,
                       CommitContext commitContext) throws IOException {
@@ -67,8 +67,8 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
   protected abstract Result applyChange(Project project, VirtualFile fileToPatch, FilePath pathBeforeRename, Getter<CharSequence> baseContents) throws IOException;
 
   @Nullable
-  public static VirtualFile findPatchTarget(final ApplyPatchContext context, final String beforeName, final String afterName,
-                                            final boolean isNewFile) throws IOException {
+  public static VirtualFile findPatchTarget(ApplyPatchContext context, String beforeName, String afterName,
+                                            boolean isNewFile) throws IOException {
     VirtualFile file = null;
     if (beforeName != null) {
       file = findFileToPatchByName(context, beforeName, isNewFile);
@@ -99,9 +99,9 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
     return file;
   }
 
-  private static boolean checkPackageRename(final ApplyPatchContext context,
-                                            final String[] beforeNameComponents,
-                                            final String[] afterNameComponents) {
+  private static boolean checkPackageRename(ApplyPatchContext context,
+                                            String[] beforeNameComponents,
+                                            String[] afterNameComponents) {
     int changedIndex = -1;
     for(int i=context.getSkipTopDirs(); i<afterNameComponents.length-1; i++) {
       if (!beforeNameComponents [i].equals(afterNameComponents [i])) {
@@ -121,7 +121,7 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
   }
 
   @Nullable
-  private static VirtualFile findFileToPatchByName(@Nonnull ApplyPatchContext context, final String fileName,
+  private static VirtualFile findFileToPatchByName(@Nonnull ApplyPatchContext context, String fileName,
                                                    boolean isNewFile) {
     String[] pathNameComponents = fileName.split("/");
     int lastComponentToFind = isNewFile ? pathNameComponents.length-1 : pathNameComponents.length;
@@ -130,8 +130,8 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
 
   @jakarta.annotation.Nullable
   private static VirtualFile findFileToPatchByComponents(ApplyPatchContext context,
-                                                         final String[] pathNameComponents,
-                                                         final int lastComponentToFind) {
+                                                         String[] pathNameComponents,
+                                                         int lastComponentToFind) {
     VirtualFile patchedDir = context.getBaseDir();
     for(int i=context.getSkipTopDirs(); i<lastComponentToFind; i++) {
       VirtualFile nextChild;

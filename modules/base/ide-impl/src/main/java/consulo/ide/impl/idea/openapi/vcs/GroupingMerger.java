@@ -28,21 +28,21 @@ import java.util.function.Consumer;
 public abstract class GroupingMerger<T, S> {
   private S myCurrentGroup;
 
-  protected boolean filter(final T t) {
+  protected boolean filter(T t) {
     return true;
   }
 
   protected abstract void willBeRecountFrom(int idx, int wasSize);
 
-  protected abstract S getGroup(final T t);
+  protected abstract S getGroup(T t);
 
-  protected abstract T wrapGroup(final S s, T item);
+  protected abstract T wrapGroup(S s, T item);
 
-  protected abstract void oldBecame(final int was, final int is);
+  protected abstract void oldBecame(int was, int is);
 
-  protected abstract void afterConsumed(final T t, int i);
+  protected abstract void afterConsumed(T t, int i);
 
-  protected T wrapItem(final T t) {
+  protected T wrapItem(T t) {
     return t;
   }
 
@@ -50,8 +50,8 @@ public abstract class GroupingMerger<T, S> {
     return myCurrentGroup;
   }
 
-  public int firstPlusSecond(final StepList<T> first, final ReadonlyList<T> second, final Comparator<T> comparator, final int idxFrom) {
-    final int wasSize = first.getSize();
+  public int firstPlusSecond(final StepList<T> first, ReadonlyList<T> second, Comparator<T> comparator, int idxFrom) {
+    int wasSize = first.getSize();
     if (second.getSize() == 0) {
       return wasSize;
     }
@@ -70,7 +70,7 @@ public abstract class GroupingMerger<T, S> {
       --idx;
       //if (idx > 0) --idx;         // todo whether its ok
     }
-    final ReadonlyList<T> remergePart = first.cut(idx);
+    ReadonlyList<T> remergePart = first.cut(idx);
     if (idx > 0) {
       myCurrentGroup = getGroup(first.get(idx - 1));
     }
@@ -88,7 +88,7 @@ public abstract class GroupingMerger<T, S> {
     }, t -> {
       doForGroup(t, first);
 
-      final T wrapped = wrapItem(t);
+      T wrapped = wrapItem(t);
       first.add(wrapped);
       afterConsumed(wrapped, first.getSize() - 1);
     });
@@ -96,23 +96,23 @@ public abstract class GroupingMerger<T, S> {
   }
 
   private void doForGroup(T t, StepList<T> first) {
-    final S newGroup = getGroup(t);
+    S newGroup = getGroup(t);
     if (newGroup != null && !Comparing.equal(newGroup, myCurrentGroup)) {
       first.add(wrapGroup(newGroup, t));
       myCurrentGroup = newGroup;
     }
   }
 
-  public void merge(final ReadonlyList<T> one, final ReadonlyList<T> two, final Comparator<T> comparator, final PairConsumer<T, Integer> oldAdder, final Consumer<T> newAdder) {
+  public void merge(ReadonlyList<T> one, ReadonlyList<T> two, Comparator<T> comparator, PairConsumer<T, Integer> oldAdder, Consumer<T> newAdder) {
     int idx1 = 0;
     int idx2 = 0;
     while (idx1 < one.getSize() && idx2 < two.getSize()) {
-      final T firstOne = one.get(idx1);
+      T firstOne = one.get(idx1);
       if (!filter(firstOne)) {
         ++idx1;
         continue;
       }
-      final int comp = comparator.compare(firstOne, two.get(idx2));
+      int comp = comparator.compare(firstOne, two.get(idx2));
       if (comp <= 0) {
         oldAdder.consume(firstOne, idx1);
         ++idx1;
@@ -127,7 +127,7 @@ public abstract class GroupingMerger<T, S> {
       }
     }
     while (idx1 < one.getSize()) {
-      final T firstOne = one.get(idx1);
+      T firstOne = one.get(idx1);
       if (!filter(firstOne)) {
         ++idx1;
         continue;
@@ -141,7 +141,7 @@ public abstract class GroupingMerger<T, S> {
     }
   }
 
-  private static <T> int stolenBinarySearch(ReadonlyList<? extends T> l, T key, Comparator<? super T> c, final int from) {
+  private static <T> int stolenBinarySearch(ReadonlyList<? extends T> l, T key, Comparator<? super T> c, int from) {
     int low = from;
     int high = (l.getSize() - from) - 1;
 

@@ -44,12 +44,12 @@ public class AlphaComparator implements Comparator<NodeDescriptor>{
   }
 
   private static Pair<String, String> normalize(String s1, String s2) {
-    final int minLen = Math.min(s1.length(), s2.length());
-    final StringBuilder sb1 = new StringBuilder(s1);
-    final StringBuilder sb2 = new StringBuilder(s2);
+    int minLen = Math.min(s1.length(), s2.length());
+    StringBuilder sb1 = new StringBuilder(s1);
+    StringBuilder sb2 = new StringBuilder(s2);
     for (int i = 0; i < minLen; i++) {
-      final char ch1 = s1.charAt(i);
-      final char ch2 = sb2.charAt(i);
+      char ch1 = s1.charAt(i);
+      char ch2 = sb2.charAt(i);
       if (ch1 == ch2 && ch1 == '-') {
         sb1.setCharAt(i, '_');
         sb2.setCharAt(i, '_');

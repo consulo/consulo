@@ -47,8 +47,8 @@ public class AppIconUtil {
   }
 
   @Nullable
-  public static String findIcon(final String iconsPath) {
-    final File iconsDir = new File(iconsPath);
+  public static String findIcon(String iconsPath) {
+    File iconsDir = new File(iconsPath);
 
     // 1. look for .svg icon
     for (String child : iconsDir.list()) {
@@ -62,9 +62,9 @@ public class AppIconUtil {
     String iconPath = null;
     for (String child : iconsDir.list()) {
       if (!child.endsWith(".png")) continue;
-      final String path = iconsPath + '/' + child;
-      final Icon icon = new ImageIcon(path);
-      final int size = icon.getIconHeight();
+      String path = iconsPath + '/' + child;
+      Icon icon = new ImageIcon(path);
+      int size = icon.getIconHeight();
       if (size >= MIN_ICON_SIZE && size > max && size == icon.getIconWidth()) {
         max = size;
         iconPath = path;

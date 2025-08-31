@@ -56,30 +56,30 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   @RequiredReadAction
   @Nonnull
   protected Lexer createBaseLexer(PsiFile file, TemplateLanguageFileViewProvider viewProvider) {
-    final Language baseLanguage = viewProvider.getBaseLanguage();
-    final LanguageVersion languageVersion = LanguageVersionResolver.forLanguage(baseLanguage).getLanguageVersion(baseLanguage, file);
+    Language baseLanguage = viewProvider.getBaseLanguage();
+    LanguageVersion languageVersion = LanguageVersionResolver.forLanguage(baseLanguage).getLanguageVersion(baseLanguage, file);
     return ParserDefinition.forLanguage(viewProvider.getBaseLanguage()).createLexer(languageVersion);
   }
 
-  protected LanguageFileType createTemplateFakeFileType(final Language language) {
+  protected LanguageFileType createTemplateFakeFileType(Language language) {
     return new TemplateFileType(language);
   }
 
   @Override
   public ASTNode parseContents(@Nonnull ASTNode chameleon) {
-    final CharTable charTable = SharedImplUtil.findCharTableByTree(chameleon);
-    final FileElement fileElement = TreeUtil.getFileElement((TreeElement)chameleon);
-    final PsiFile psiFile = (PsiFile)fileElement.getPsi();
+    CharTable charTable = SharedImplUtil.findCharTableByTree(chameleon);
+    FileElement fileElement = TreeUtil.getFileElement((TreeElement)chameleon);
+    PsiFile psiFile = (PsiFile)fileElement.getPsi();
     PsiFile originalPsiFile = psiFile.getOriginalFile();
 
-    final TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider)originalPsiFile.getViewProvider();
+    TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider)originalPsiFile.getViewProvider();
 
-    final Language templateLanguage = getTemplateFileLanguage(viewProvider);
-    final CharSequence sourceCode = chameleon.getChars();
+    Language templateLanguage = getTemplateFileLanguage(viewProvider);
+    CharSequence sourceCode = chameleon.getChars();
 
     RangeCollectorImpl collector = new RangeCollectorImpl(this);
-    final PsiFile templatePsiFile = createTemplateFile(psiFile, templateLanguage, sourceCode, viewProvider, collector);
-    final FileElement templateFileElement = ((PsiFileImpl)templatePsiFile).calcTreeElement();
+    PsiFile templatePsiFile = createTemplateFile(psiFile, templateLanguage, sourceCode, viewProvider, collector);
+    FileElement templateFileElement = ((PsiFileImpl)templatePsiFile).calcTreeElement();
 
     return DebugUtil.performPsiModification("template language parsing", () -> {
       collector.insertOuterElementsAndRemoveRanges(templateFileElement, sourceCode, charTable, templateFileElement.getPsi().getLanguage());
@@ -111,10 +111,10 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * @param rangeCollector   collector for ranges with non-template/additional elements
    * @return template psiFile
    */
-  protected PsiFile createTemplateFile(final PsiFile psiFile,
-                                       final Language templateLanguage,
-                                       final CharSequence sourceCode,
-                                       final TemplateLanguageFileViewProvider viewProvider,
+  protected PsiFile createTemplateFile(PsiFile psiFile,
+                                       Language templateLanguage,
+                                       CharSequence sourceCode,
+                                       TemplateLanguageFileViewProvider viewProvider,
                                        @Nonnull TemplateDataElementType.RangeCollector rangeCollector) {
     CharSequence templateSourceCode = createTemplateText(sourceCode, createBaseLexer(psiFile, viewProvider), rangeCollector);
     if (rangeCollector instanceof RangeCollectorImpl rc) {
@@ -290,7 +290,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   protected static class TemplateFileType extends LanguageFileType {
     private final Language myLanguage;
 
-    protected TemplateFileType(final Language language) {
+    protected TemplateFileType(Language language) {
       super(language);
       myLanguage = language;
     }

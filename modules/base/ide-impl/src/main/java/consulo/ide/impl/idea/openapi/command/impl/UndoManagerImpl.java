@@ -186,7 +186,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         return myCommandLevel > 0;
     }
 
-    private void onCommandStarted(final Project project, UndoConfirmationPolicy undoConfirmationPolicy, boolean recordOriginalReference) {
+    private void onCommandStarted(Project project, UndoConfirmationPolicy undoConfirmationPolicy, boolean recordOriginalReference) {
         if (myCommandLevel == 0) {
             forEachProvider(undoProvider -> undoProvider.commandStarted(project));
             myCurrentActionProject = project;
@@ -197,7 +197,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
         LOG.assertTrue(myCommandLevel == 0 || !(myCurrentActionProject instanceof DummyProject));
     }
 
-    private void onCommandFinished(final Project project, @Nonnull LocalizeValue commandName, Object commandGroupId) {
+    private void onCommandFinished(Project project, @Nonnull LocalizeValue commandName, Object commandGroupId) {
         commandFinished(commandName, commandGroupId);
         if (myCommandLevel == 0) {
             forEachProvider(undoProvider -> undoProvider.commandFinished(project));
@@ -212,7 +212,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
 
             if (recordOriginalReference && myProject != null) {
                 Editor editor = null;
-                final Application application = myProject.getApplication();
+                Application application = myProject.getApplication();
                 if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
                     editor = DataManager.getInstance().getDataContext().getData(Editor.KEY);
                 }
@@ -264,7 +264,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
             return;
         }
 
-        final DocumentReference[] refs = {myOriginatorReference};
+        DocumentReference[] refs = {myOriginatorReference};
         myCurrentMerger.addAction(new MentionOnlyUndoableAction(refs));
     }
 
@@ -288,7 +288,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
 
     @Override
     @RequiredWriteAction
-    public void nonundoableActionPerformed(@Nonnull final DocumentReference ref, final boolean isGlobal) {
+    public void nonundoableActionPerformed(@Nonnull DocumentReference ref, boolean isGlobal) {
         UIAccess.assertIsUIThread();
         if (myProject != null && myProject.isDisposed()) {
             return;
@@ -395,7 +395,7 @@ public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable
     }
 
     @RequiredUIAccess
-    private void undoOrRedo(final Object editor, final boolean isUndo) {
+    private void undoOrRedo(Object editor, boolean isUndo) {
         myCurrentOperationState = isUndo ? OperationState.UNDO : OperationState.REDO;
 
         CommandProcessor.getInstance().newCommand()

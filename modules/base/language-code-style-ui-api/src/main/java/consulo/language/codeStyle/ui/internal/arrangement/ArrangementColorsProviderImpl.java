@@ -77,7 +77,7 @@ public class ArrangementColorsProviderImpl implements ArrangementColorsProvider 
   @Nonnull
   @Override
   public Color getBorderColor(boolean selected) {
-    final Color cached;
+    Color cached;
     if (selected) {
       cached = myCachedSelectedBorderColor;
     }
@@ -107,7 +107,7 @@ public class ArrangementColorsProviderImpl implements ArrangementColorsProvider 
   @Nonnull
   @Override
   public TextAttributes getTextAttributes(@Nonnull ArrangementSettingsToken token, boolean selected) {
-    final TextAttributes cached;
+    TextAttributes cached;
     if (selected) {
       cached = mySelectedAttributesCache.get(token);
     }

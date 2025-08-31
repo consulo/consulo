@@ -55,25 +55,25 @@ public class PatchProjectUtil {
     final Map<Pattern, Set<Pattern>> includePatterns = loadPatterns("idea.include.patterns");
 
     if (excludePatterns.isEmpty() && includePatterns.isEmpty()) return;
-    final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+    ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     final ModifiableModuleModel modulesModel = ModuleManager.getInstance(project).getModifiableModel();
     final Module[] modules = modulesModel.getModules();
     final ModifiableRootModel[] models = new ModifiableRootModel[modules.length];
     for (int i = 0; i < modules.length; i++) {
       models[i] = ModuleRootManager.getInstance(modules[i]).getModifiableModel();
       final int idx = i;
-      final ContentEntry[] contentEntries = models[i].getContentEntries();
+      ContentEntry[] contentEntries = models[i].getContentEntries();
       for (final ContentEntry contentEntry : contentEntries) {
         final VirtualFile contentRoot = contentEntry.getFile();
         if (contentRoot == null) continue;
         final Set<VirtualFile> included = new HashSet<VirtualFile>();
         iterate(contentRoot, new ContentIterator() {
           @Override
-          public boolean processFile(final VirtualFile fileOrDir) {
+          public boolean processFile(VirtualFile fileOrDir) {
             String relativeName = VfsUtilCore.getRelativePath(fileOrDir, contentRoot, '/');
             for (Pattern module : excludePatterns.keySet()) {
               if (module == null || module.matcher(modules[idx].getName()).matches()) {
-                final Set<Pattern> dirPatterns = excludePatterns.get(module);
+                Set<Pattern> dirPatterns = excludePatterns.get(module);
                 for (Pattern pattern : dirPatterns) {
                   if (pattern.matcher(relativeName).matches()) {
                     contentEntry.addFolder(fileOrDir, ExcludedContentFolderTypeProvider.getInstance());
@@ -85,7 +85,7 @@ public class PatchProjectUtil {
             if (includePatterns.isEmpty()) return true;
             for (Pattern module : includePatterns.keySet()) {
               if (module == null || module.matcher(modules[idx].getName()).matches()) {
-                final Set<Pattern> dirPatterns = includePatterns.get(module);
+                Set<Pattern> dirPatterns = includePatterns.get(module);
                 for (Pattern pattern : dirPatterns) {
                   if (pattern.matcher(relativeName).matches()) {
                     included.add(fileOrDir);
@@ -109,12 +109,12 @@ public class PatchProjectUtil {
     });
   }
 
-  public static void processIncluded(final ContentEntry contentEntry, final Set<VirtualFile> included) {
+  public static void processIncluded(ContentEntry contentEntry, Set<VirtualFile> included) {
     if (included.isEmpty()) return;
-    final Set<VirtualFile> parents = new HashSet<VirtualFile>();
+    Set<VirtualFile> parents = new HashSet<VirtualFile>();
     for (VirtualFile file : included) {
       if (Comparing.equal(file, contentEntry.getFile())) return;
-      final VirtualFile parent = file.getParent();
+      VirtualFile parent = file.getParent();
       if (parent == null || parents.contains(parent)) continue;
       parents.add(parent);
       for (VirtualFile toExclude : parent.getChildren()) {  // if it will ever dead-loop on symlink blame anna.kozlova
@@ -144,10 +144,10 @@ public class PatchProjectUtil {
   }
 
   public static Map<Pattern, Set<Pattern>> loadPatterns(@NonNls String propertyKey) {
-    final Map<Pattern, Set<Pattern>> result = new HashMap<Pattern, Set<Pattern>>();
-    final String patterns = System.getProperty(propertyKey);
+    Map<Pattern, Set<Pattern>> result = new HashMap<Pattern, Set<Pattern>>();
+    String patterns = System.getProperty(propertyKey);
     if (patterns != null) {
-      final String[] pathPatterns = patterns.split(";");
+      String[] pathPatterns = patterns.split(";");
       for (String excludedPattern : pathPatterns) {
         String module = null;
         int idx = 0;
@@ -155,8 +155,8 @@ public class PatchProjectUtil {
           idx = excludedPattern.indexOf("]") + 1;
           module = excludedPattern.substring(1, idx - 1);
         }
-        final Pattern modulePattern = module != null ? Pattern.compile(StringUtil.replace(module, "*", ".*")) : null;
-        final Pattern pattern = Pattern.compile(FileUtil.convertAntToRegexp(excludedPattern.substring(idx)));
+        Pattern modulePattern = module != null ? Pattern.compile(StringUtil.replace(module, "*", ".*")) : null;
+        Pattern pattern = Pattern.compile(FileUtil.convertAntToRegexp(excludedPattern.substring(idx)));
         Set<Pattern> dirPatterns = result.get(modulePattern);
         if (dirPatterns == null) {
           dirPatterns = new HashSet<Pattern>();

@@ -39,7 +39,7 @@ public abstract class MultipleTraitsSpeedSearch<Comp extends JComponent> extends
   @Override
   protected boolean isMatchingElement(Object element, String pattern) {
     for (PairConvertor<Object, String, Boolean> convertor : myOrderedConvertors) {
-      final Boolean matched = convertor.convert(element, pattern);
+      Boolean matched = convertor.convert(element, pattern);
       if (Boolean.TRUE.equals(matched)) return true;
     }
     return false;

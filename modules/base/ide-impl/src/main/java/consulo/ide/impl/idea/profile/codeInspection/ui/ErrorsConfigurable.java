@@ -31,9 +31,9 @@ import java.util.Collection;
  * @author yole
  */
 public interface ErrorsConfigurable extends Configurable {
-  void selectProfile(final Profile profile);
+  void selectProfile(Profile profile);
 
-  void selectInspectionTool(final String selectedToolShortName);
+  void selectInspectionTool(String selectedToolShortName);
 
   void setFilterLanguages(@Nonnull Collection<Language> languages);
 

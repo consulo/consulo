@@ -37,5 +37,5 @@ public interface ChangeListsWriteOperations {
   boolean editName(@Nonnull String fromName, @Nonnull String toName);
 
   @Nullable
-  String editComment(@Nonnull String fromName, final String newComment);
+  String editComment(@Nonnull String fromName, String newComment);
 }

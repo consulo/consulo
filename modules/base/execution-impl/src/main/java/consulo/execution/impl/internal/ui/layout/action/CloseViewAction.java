@@ -22,13 +22,13 @@ import consulo.ui.ex.content.Content;
 
 public class CloseViewAction extends BaseViewAction {
     @Override
-    protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
+    protected void update(AnActionEvent e, ViewContext context, Content[] content) {
         setEnabled(e, isEnabled(content));
         e.getPresentation().setIcon(PlatformIconGroup.actionsClose());
     }
 
     @Override
-    protected void actionPerformed(final AnActionEvent e, final ViewContext context, final Content[] content) {
+    protected void actionPerformed(AnActionEvent e, ViewContext context, Content[] content) {
         perform(context, content[0]);
     }
 

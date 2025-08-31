@@ -54,11 +54,11 @@ public interface PathMacros {
 
   Collection<String> getIgnoredMacroNames();
 
-  void setIgnoredMacroNames(@Nonnull final Collection<String> names);
+  void setIgnoredMacroNames(@Nonnull Collection<String> names);
 
-  void addIgnoredMacro(@Nonnull final String name);
+  void addIgnoredMacro(@Nonnull String name);
 
-  boolean isIgnoredMacroName(@Nonnull final String macro);
+  boolean isIgnoredMacroName(@Nonnull String macro);
 
   void removeAllMacros();
 

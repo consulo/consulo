@@ -39,7 +39,7 @@ public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
   private static final Logger LOG = Logger.getInstance(MoveFilesOrDirectoriesHandler.class);
 
   @Override
-  public boolean canMove(final PsiElement[] elements, final PsiElement targetContainer) {
+  public boolean canMove(PsiElement[] elements, PsiElement targetContainer) {
     HashSet<String> names = new HashSet<>();
     for (PsiElement element : elements) {
       if (element instanceof PsiFile) {
@@ -59,7 +59,7 @@ public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
   }
 
   @Override
-  public boolean isValidTarget(final PsiElement psiElement, PsiElement[] sources) {
+  public boolean isValidTarget(PsiElement psiElement, PsiElement[] sources) {
     return isValidTarget(psiElement);
   }
 
@@ -68,8 +68,8 @@ public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
     return psiElement.getManager().isInProject(psiElement) || ScratchFileService.isInScratchRoot(PsiUtilCore.getVirtualFile(psiElement));
   }
 
-  public void doMove(final PsiElement[] elements, final PsiElement targetContainer) {
-    final Project project = targetContainer != null ? targetContainer.getProject() : elements[0].getProject();
+  public void doMove(PsiElement[] elements, PsiElement targetContainer) {
+    Project project = targetContainer != null ? targetContainer.getProject() : elements[0].getProject();
     doMove(project, elements, targetContainer, null);
   }
 
@@ -81,20 +81,20 @@ public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
   }
 
   @Override
-  public void doMove(final Project project, final PsiElement[] elements, final PsiElement targetContainer, @Nullable final MoveCallback callback) {
+  public void doMove(Project project, PsiElement[] elements, PsiElement targetContainer, @Nullable MoveCallback callback) {
     if (!LOG.assertTrue(targetContainer == null || targetContainer instanceof PsiDirectory || targetContainer instanceof PsiDirectoryContainer,
                         "container: " + targetContainer + "; elements: " + Arrays.toString(elements) + "; working handler: " + toString())) {
       return;
     }
-    final PsiElement[] adjustedElements = adjustForMove(project, elements, targetContainer);
+    PsiElement[] adjustedElements = adjustForMove(project, elements, targetContainer);
     if (adjustedElements != null) {
       MoveFilesOrDirectoriesUtil.doMove(project, adjustedElements, new PsiElement[] {targetContainer}, callback);
     }
   }
 
   @Override
-  public boolean tryToMove(final PsiElement element, final Project project, final DataContext dataContext, final PsiReference reference,
-                           final Editor editor) {
+  public boolean tryToMove(PsiElement element, Project project, DataContext dataContext, PsiReference reference,
+                           Editor editor) {
     if ((element instanceof PsiFile && ((PsiFile)element).getVirtualFile() != null)
         || element instanceof PsiDirectory) {
       doMove(project, new PsiElement[]{element}, dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT), null);

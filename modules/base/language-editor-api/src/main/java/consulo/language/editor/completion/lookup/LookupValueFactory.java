@@ -74,7 +74,7 @@ public class LookupValueFactory {
 
     private final String myHint;
 
-    protected LookupValueWithIconAndHint(final String name, final Image icon, String hint) {
+    protected LookupValueWithIconAndHint(String name, Image icon, String hint) {
       super(name, icon);
       myHint = hint;
     }

@@ -36,12 +36,12 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
     this(new ListTableModel<Item>(ColumnInfo.EMPTY_ARRAY));
   }
 
-  public TableView(final ListTableModel<Item> model) {
+  public TableView(ListTableModel<Item> model) {
     super(model);
     setModelAndUpdateColumns(model);
   }
 
-  public void setModel(final TableModel dataModel) {
+  public void setModel(TableModel dataModel) {
     assert dataModel instanceof SortableColumnModel : "SortableColumnModel required";
     super.setModel(dataModel);
   }
@@ -51,11 +51,11 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
    * @param model
    */
   @Deprecated
-  public void setModel(final ListTableModel<Item> model) {
+  public void setModel(ListTableModel<Item> model) {
     setModelAndUpdateColumns(model);
   }
   
-  public void setModelAndUpdateColumns(final ListTableModel<Item> model) {
+  public void setModelAndUpdateColumns(ListTableModel<Item> model) {
     super.setModel(model);
     createDefaultColumnsFromModel();
     updateColumnSizes();
@@ -66,9 +66,9 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
   }
 
   public TableCellRenderer getCellRenderer(int row, int column) {
-    final ColumnInfo<Item, ?> columnInfo = getListTableModel().getColumnInfos()[convertColumnIndexToModel(column)];
-    final Item item = getListTableModel().getItems().get(convertRowIndexToModel(row));
-    final TableCellRenderer renderer = columnInfo.getCustomizedRenderer(item, columnInfo.getRenderer(item));
+    ColumnInfo<Item, ?> columnInfo = getListTableModel().getColumnInfos()[convertColumnIndexToModel(column)];
+    Item item = getListTableModel().getItems().get(convertRowIndexToModel(row));
+    TableCellRenderer renderer = columnInfo.getCustomizedRenderer(item, columnInfo.getRenderer(item));
     if (renderer == null) {
       return super.getCellRenderer(row, column);
     }
@@ -90,11 +90,11 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
   }
 
   public void updateColumnSizes() {
-    final JTableHeader header = getTableHeader();
-    final TableCellRenderer defaultRenderer = header == null? null : header.getDefaultRenderer();
+    JTableHeader header = getTableHeader();
+    TableCellRenderer defaultRenderer = header == null? null : header.getDefaultRenderer();
 
-    final RowSorter<? extends TableModel> sorter = getRowSorter();
-    final RowSorter.SortKey sortKey = sorter == null ? null : ContainerUtil.getFirstItem(sorter.getSortKeys());
+    RowSorter<? extends TableModel> sorter = getRowSorter();
+    RowSorter.SortKey sortKey = sorter == null ? null : ContainerUtil.getFirstItem(sorter.getSortKeys());
     ColumnInfo[] columns = getListTableModel().getColumnInfos();
     int[] sizeMode = new int[columns.length];
     int[] headers = new int[columns.length];
@@ -107,10 +107,10 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
 
     // calculate
     for (int i = 0; i < columns.length; i++) {
-      final ColumnInfo columnInfo = columns[i];
-      final TableColumn column = getColumnModel().getColumn(i);
+      ColumnInfo columnInfo = columns[i];
+      TableColumn column = getColumnModel().getColumn(i);
 
-      final Component headerComponent = defaultRenderer == null? null :
+      Component headerComponent = defaultRenderer == null? null :
         defaultRenderer.getTableCellRendererComponent(this, column.getHeaderValue(), false, false, 0, 0);
 
       if (headerComponent != null) {
@@ -121,8 +121,8 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
           headers[i] += sortIcon.getIconWidth() + (headerComponent instanceof JLabel? ((JLabel)headerComponent).getIconTextGap() : 0);
         }
       }
-      final String maxStringValue;
-      final String preferredValue;
+      String maxStringValue;
+      String preferredValue;
       if (columnInfo.getWidth(this) > 0) {
         sizeMode[i] = 1;
         int width = columnInfo.getWidth(this);
@@ -179,10 +179,10 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
     ArrayList<Item> result = new ArrayList<Item>();
     int[] selectedRows = getSelectedRows();
     if (selectedRows == null) return result;
-    final List<Item> items = getItems();
+    List<Item> items = getItems();
     if (! items.isEmpty()) {
       for (int selectedRow : selectedRows) {
-        final int modelIndex = convertRowIndexToModel(selectedRow);
+        int modelIndex = convertRowIndexToModel(selectedRow);
         if (modelIndex >= 0 && modelIndex < items.size()) {
           result.add(items.get(modelIndex));
         }
@@ -193,17 +193,17 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
 
   @Nullable
   public Item getSelectedObject() {
-    final int row = getSelectedRow();
-    final List<Item> list = getItems();
+    int row = getSelectedRow();
+    List<Item> list = getItems();
     return row >= 0 && row < list.size() ? list.get(convertRowIndexToModel(row)) : null;
   }
 
   @Nonnull
   public List<Item> getSelectedObjects() {
-    final int[] selectedRows = getSelectedRows();
+    int[] selectedRows = getSelectedRows();
     if (selectedRows == null || (selectedRows.length == 0)) return Collections.emptyList();
-    final List<Item> items = getItems();
-    final List<Item> result = new ArrayList<Item>();
+    List<Item> items = getItems();
+    List<Item> result = new ArrayList<Item>();
     for (int selectedRow : selectedRows) {
       result.add(items.get(convertRowIndexToModel(selectedRow)));
     }
@@ -220,8 +220,8 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
   }
 
   public TableCellEditor getCellEditor(int row, int column) {
-    final ColumnInfo<Item, ?> columnInfo = getListTableModel().getColumnInfos()[convertColumnIndexToModel(column)];
-    final TableCellEditor editor = columnInfo.getEditor(getListTableModel().getItems().get(convertRowIndexToModel(row)));
+    ColumnInfo<Item, ?> columnInfo = getListTableModel().getColumnInfos()[convertColumnIndexToModel(column)];
+    TableCellEditor editor = columnInfo.getEditor(getListTableModel().getItems().get(convertRowIndexToModel(row)));
     return editor == null ? super.getCellEditor(row, column) : editor;
   }
 

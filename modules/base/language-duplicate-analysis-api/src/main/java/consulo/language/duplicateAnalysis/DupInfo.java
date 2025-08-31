@@ -15,7 +15,7 @@ public interface DupInfo {
 
     UsageInfo[] getUsageOccurences(int pattern);
 
-    int getFileCount(final int pattern);
+    int getFileCount(int pattern);
 
     @Nullable
     String getTitle(int pattern);
@@ -23,5 +23,5 @@ public interface DupInfo {
     @Nullable
     String getComment(int pattern);
 
-    int getHash(final int i);
+    int getHash(int i);
 }

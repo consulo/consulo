@@ -37,26 +37,26 @@ public class TablePassInfo extends LayoutPassInfo {
 
   final JBTabsImpl myTabs;
 
-  TablePassInfo(final JBTabsImpl tabs, List<TabInfo> visibleInfos) {
+  TablePassInfo(JBTabsImpl tabs, List<TabInfo> visibleInfos) {
     super(visibleInfos);
     myTabs = tabs;
   }
 
   @Nullable
-  public TabInfo getPreviousFor(final TabInfo info) {
-    final TableRow row = myInfo2Row.get(info);
+  public TabInfo getPreviousFor(TabInfo info) {
+    TableRow row = myInfo2Row.get(info);
     return row != null ? getPrevious(row.myColumns, row.myColumns.indexOf(info)) : null;
   }
 
   @Nullable
-  public TabInfo getNextFor(final TabInfo info) {
-    final TableRow row = myInfo2Row.get(info);
+  public TabInfo getNextFor(TabInfo info) {
+    TableRow row = myInfo2Row.get(info);
     return row != null ? getNext(row.myColumns, row.myColumns.indexOf(info)) : null;
   }
 
-  public boolean isInSelectionRow(final TabInfo tabInfo) {
-    final TableRow row = myInfo2Row.get(tabInfo);
-    final int index = table.indexOf(row);
+  public boolean isInSelectionRow(TabInfo tabInfo) {
+    TableRow row = myInfo2Row.get(tabInfo);
+    int index = table.indexOf(row);
     return index != -1 && index == table.size() - 1;
   }
 
@@ -64,16 +64,16 @@ public class TablePassInfo extends LayoutPassInfo {
     return table.size();
   }
 
-  public int getColumnCount(final int row) {
+  public int getColumnCount(int row) {
     return table.get(row).myColumns.size();
   }
 
-  public TabInfo getTabAt(final int row, final int column) {
+  public TabInfo getTabAt(int row, int column) {
     return table.get(row).myColumns.get(column);
   }
 
-  public boolean hasCurveSpaceFor(final TabInfo tabInfo) {
-    final TableRow row = myInfo2Row.get(tabInfo);
+  public boolean hasCurveSpaceFor(TabInfo tabInfo) {
+    TableRow row = myInfo2Row.get(tabInfo);
     return row != null ? row.myColumns.indexOf(tabInfo) < row.myColumns.size() - 1 : false;
   }
 

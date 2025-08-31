@@ -40,10 +40,10 @@ public final class GotoHomeAction extends FileChooserAction {
 
   @Override
   protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
+    Presentation presentation = e.getPresentation();
     if (!presentation.isEnabled()) return;
 
-    final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+    VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
     presentation.setEnabled(userHomeDir != null && fileSystemTree.isUnderRoots(userHomeDir));
   }
 }

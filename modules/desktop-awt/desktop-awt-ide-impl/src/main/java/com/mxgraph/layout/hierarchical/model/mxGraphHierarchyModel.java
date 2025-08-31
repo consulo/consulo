@@ -484,7 +484,7 @@ public class mxGraphHierarchyModel {
 
         // Copy the connects as source list so that visitors
         // can change the original for edge direction inversions
-        final Object[] outgoingEdges = root.connectsAsSource.toArray();
+        Object[] outgoingEdges = root.connectsAsSource.toArray();
 
         for (int i = 0; i < outgoingEdges.length; i++) {
           mxGraphHierarchyEdge internalEdge = (mxGraphHierarchyEdge)outgoingEdges[i];
@@ -565,7 +565,7 @@ public class mxGraphHierarchyModel {
         seen.add(root);
         // Copy the connects as source list so that visitors
         // can change the original for edge direction inversions
-        final Object[] outgoingEdges = root.connectsAsSource.toArray();
+        Object[] outgoingEdges = root.connectsAsSource.toArray();
 
         for (int i = 0; i < outgoingEdges.length; i++) {
           mxGraphHierarchyEdge internalEdge = (mxGraphHierarchyEdge)outgoingEdges[i];

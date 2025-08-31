@@ -16,7 +16,7 @@ public class ProcessingContext {
   public ProcessingContext() {
   }
 
-  public ProcessingContext(final SharedProcessingContext sharedContext) {
+  public ProcessingContext(SharedProcessingContext sharedContext) {
     mySharedContext = sharedContext;
   }
 
@@ -29,11 +29,11 @@ public class ProcessingContext {
   }
 
   @SuppressWarnings({"ConstantConditions"})
-  public Object get(@Nonnull final Object key) {
+  public Object get(@Nonnull Object key) {
     return myMap == null ? null : myMap.get(key);
   }
 
-  public void put(@Nonnull final Object key, @Nonnull final Object value) {
+  public void put(@Nonnull Object key, @Nonnull Object value) {
     checkMapInitialized();
     myMap.put(key, value);
   }

@@ -83,16 +83,16 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
 
   @Override
   @RequiredUIAccess
-  public void updateRequest(final boolean force, @Nullable final ScrollToPolicy scrollToChangePolicy) {
+  public void updateRequest(boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
     updateRequest(force, true, scrollToChangePolicy);
   }
 
   @RequiredUIAccess
-  public void updateRequest(final boolean force, boolean useCache, @Nullable final ScrollToPolicy scrollToChangePolicy) {
+  public void updateRequest(boolean force, boolean useCache, @Nullable ScrollToPolicy scrollToChangePolicy) {
     UIAccess.assertIsUIThread();
     if (isDisposed()) return;
 
-    final T requestProvider = getCurrentRequestProvider();
+    T requestProvider = getCurrentRequestProvider();
     if (requestProvider == null) {
       applyRequest(NoDiffRequest.INSTANCE, force, scrollToChangePolicy);
       return;
@@ -105,7 +105,7 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
     }
 
     myQueue.executeAndTryWait(indicator -> {
-      final DiffRequest request = doLoadRequest(requestProvider, indicator);
+      DiffRequest request = doLoadRequest(requestProvider, indicator);
       return () -> {
         myRequestCache.put(requestProvider, request);
         applyRequest(request, force, scrollToChangePolicy);

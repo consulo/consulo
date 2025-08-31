@@ -43,12 +43,12 @@ public class LocalChangesUnderRoots {
   }
 
   public Map<String, Map<VirtualFile, Collection<Change>>> getChangesByLists(@Nonnull Collection<VirtualFile> rootsToSave) {
-    final Map<String, Map<VirtualFile, Collection<Change>>> result = new HashMap<>();
+    Map<String, Map<VirtualFile, Collection<Change>>> result = new HashMap<>();
     myRoots = myVcsManager.getAllVcsRoots();
 
-    final List<LocalChangeList> changeLists = myChangeManager.getChangeListsCopy();
+    List<LocalChangeList> changeLists = myChangeManager.getChangeListsCopy();
     for (LocalChangeList list : changeLists) {
-      final HashMap<VirtualFile, Collection<Change>> subMap = new HashMap<>();
+      HashMap<VirtualFile, Collection<Change>> subMap = new HashMap<>();
       addChangesToMap(rootsToSave, subMap, list.getChanges());
       result.put(list.getName(), subMap);
     }
@@ -64,7 +64,7 @@ public class LocalChangesUnderRoots {
   @Nonnull
   public Map<VirtualFile, Collection<Change>> getChangesUnderRoots(@Nonnull Collection<VirtualFile> rootsToSave) {
     Map<VirtualFile, Collection<Change>> result = new HashMap<>();
-    final Collection<Change> allChanges = myChangeManager.getAllChanges();
+    Collection<Change> allChanges = myChangeManager.getAllChanges();
     myRoots = myVcsManager.getAllVcsRoots();
 
     addChangesToMap(rootsToSave, result, allChanges);
@@ -91,7 +91,7 @@ public class LocalChangesUnderRoots {
 
   @Nullable
   private VirtualFile getRootForPath(@Nonnull FilePath file, @Nonnull Collection<VirtualFile> rootsToSave) {
-    final VirtualFile vf = ChangesUtil.findValidParentUnderReadAction(file);
+    VirtualFile vf = ChangesUtil.findValidParentUnderReadAction(file);
     if (vf == null) {
       return null;
     }

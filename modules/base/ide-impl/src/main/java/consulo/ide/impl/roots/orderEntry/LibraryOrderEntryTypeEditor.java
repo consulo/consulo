@@ -44,7 +44,7 @@ import java.util.function.Consumer;
 public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<LibraryOrderEntryImpl> {
   @RequiredUIAccess
   @Override
-  public void navigate(@Nonnull final LibraryOrderEntryImpl orderEntry) {
+  public void navigate(@Nonnull LibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(orderEntry, true));
   }

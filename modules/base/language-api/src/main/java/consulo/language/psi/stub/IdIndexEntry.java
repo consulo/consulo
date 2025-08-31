@@ -36,11 +36,11 @@ public final class IdIndexEntry {
     return myWordHashCode;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final IdIndexEntry that = (IdIndexEntry)o;
+    IdIndexEntry that = (IdIndexEntry)o;
 
     if (myWordHashCode != that.myWordHashCode) return false;
 

@@ -36,7 +36,7 @@ public class ArtifactPointerImpl extends NamedPointerImpl<Artifact> implements A
   @Override
   @Nonnull
   public String getArtifactName(@Nonnull ArtifactModel artifactModel) {
-    final Artifact artifact = get();
+    Artifact artifact = get();
     if (artifact != null) {
       return artifactModel.getArtifactByOriginal(artifact).getName();
     }
@@ -45,7 +45,7 @@ public class ArtifactPointerImpl extends NamedPointerImpl<Artifact> implements A
 
   @Override
   public Artifact findArtifact(@Nonnull ArtifactModel artifactModel) {
-    final Artifact artifact = get();
+    Artifact artifact = get();
     if (artifact != null) {
       return artifactModel.getArtifactByOriginal(artifact);
     }

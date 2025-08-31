@@ -22,7 +22,7 @@ public interface TreeChooser<T> {
   T getSelected();
 
   @RequiredUIAccess
-  void select(final T aClass);
+  void select(T aClass);
 
   @RequiredUIAccess
   void showDialog();

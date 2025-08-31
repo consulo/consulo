@@ -60,7 +60,7 @@ public class DateChangeListGroupingStrategy implements ChangeListGroupingStrateg
     return getGroupName(changeList.getCommitDate());
   }
 
-  public String getGroupName(final Date date) {
+  public String getGroupName(Date date) {
     myCalendar.setTime(date);
     if (myCurrentCalendar.get(Calendar.YEAR) == myCalendar.get(Calendar.YEAR)) {
       if (myCurrentCalendar.get(Calendar.DAY_OF_YEAR) == myCalendar.get(Calendar.DAY_OF_YEAR)) {
@@ -79,7 +79,7 @@ public class DateChangeListGroupingStrategy implements ChangeListGroupingStrateg
 
   public Comparator<CommittedChangeList> getComparator() {
     return new Comparator<CommittedChangeList>() {
-      public int compare(final CommittedChangeList o1, final CommittedChangeList o2) {
+      public int compare(CommittedChangeList o1, CommittedChangeList o2) {
         return -o1.getCommitDate().compareTo(o2.getCommitDate());
       }
     };
@@ -89,7 +89,7 @@ public class DateChangeListGroupingStrategy implements ChangeListGroupingStrateg
     @NonNls private final SimpleDateFormat myMonthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
     private final Map<Integer, String> myCache;
 
-    private MonthsCache(final Calendar calendarForInit) {
+    private MonthsCache(Calendar calendarForInit) {
       myCache = new HashMap<Integer, String>();
       for (int i = 0; i < 12; i++) {
         calendarForInit.set(Calendar.MONTH, i);
@@ -97,7 +97,7 @@ public class DateChangeListGroupingStrategy implements ChangeListGroupingStrateg
       }
     }
 
-    public String get(final int month) {
+    public String get(int month) {
       return myCache.get(month);
     }
   }
@@ -106,7 +106,7 @@ public class DateChangeListGroupingStrategy implements ChangeListGroupingStrateg
     @NonNls private final SimpleDateFormat myWeekdayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
     private final Map<Integer, String> myCache;
 
-    private WeekDayFormatCache(final Calendar calendarForInit) {
+    private WeekDayFormatCache(Calendar calendarForInit) {
       myCache = new HashMap<Integer, String>();
       for (int i = 1; i < 8; i++) {
         calendarForInit.set(Calendar.DAY_OF_WEEK, i);
@@ -114,7 +114,7 @@ public class DateChangeListGroupingStrategy implements ChangeListGroupingStrateg
       }
     }
 
-    public String get(final int dayOfWeek) {
+    public String get(int dayOfWeek) {
       return myCache.get(dayOfWeek);
     }
   }

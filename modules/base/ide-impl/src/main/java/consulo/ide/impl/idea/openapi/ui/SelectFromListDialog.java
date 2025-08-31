@@ -82,8 +82,8 @@ public class SelectFromListDialog extends DialogWrapper {
     myMainPanel.add(userComponent, borderLayoutConstraints);
   }
 
-  public void setSelection(final String defaultLocation) {
-    final int index = myModel.indexOf(defaultLocation);
+  public void setSelection(String defaultLocation) {
+    int index = myModel.indexOf(defaultLocation);
     if (index >= 0) {
       myList.getSelectionModel().setSelectionInterval(index, index);
     }

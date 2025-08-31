@@ -30,7 +30,7 @@ import javax.swing.*;
 public abstract class ColoredListCellRendererWrapper<T> extends ColoredListCellRenderer<T> {
   @Override
   protected final void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-    @SuppressWarnings("unchecked") final T t = (T)value;
+    @SuppressWarnings("unchecked") T t = (T)value;
     doCustomize(list, t, index, selected, hasFocus);
   }
 

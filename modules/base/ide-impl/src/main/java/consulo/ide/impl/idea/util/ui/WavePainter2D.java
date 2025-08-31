@@ -33,7 +33,7 @@ public class WavePainter2D extends WavePainter {
       g.setColor(color);
       double height = 1;
       double cycle = 4 * height;
-      final double wavedAt = 3 - STROKE_WIDTH - height;
+      double wavedAt = 3 - STROKE_WIDTH - height;
       GeneralPath wavePath = new GeneralPath();
       wavePath.moveTo(0, wavedAt - Math.cos(0 * 2 * Math.PI / cycle) * height);
       for (int x = 0; x < PATTERN_WIDTH; x++) {
@@ -59,8 +59,8 @@ public class WavePainter2D extends WavePainter {
    */
   public void paint(Graphics2D g, double xStart, double xEnd, double y) {
     Shape clip = g.getClip();
-    final Rectangle2D rectangle = new Rectangle2D.Double(xStart, y - 3, xEnd - xStart, 3);
-    final Rectangle2D waveClip = clip != null ? clip.getBounds2D().createIntersection(rectangle) : rectangle;
+    Rectangle2D rectangle = new Rectangle2D.Double(xStart, y - 3, xEnd - xStart, 3);
+    Rectangle2D waveClip = clip != null ? clip.getBounds2D().createIntersection(rectangle) : rectangle;
     if (waveClip.isEmpty()) return;
 
     Graphics2D g2d = (Graphics2D)g.create();

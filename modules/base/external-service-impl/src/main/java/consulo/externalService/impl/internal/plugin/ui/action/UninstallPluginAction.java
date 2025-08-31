@@ -94,7 +94,7 @@ public class UninstallPluginAction {
                 ((PluginDescriptorImpl) descriptor).setDeleted(true);
             }
 
-            final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
+            Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
             while (installedPlugins.contains(pluginId)) {
                 installedPlugins.remove(pluginId);
             }

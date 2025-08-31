@@ -222,7 +222,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
         }
 
         @Override
-        public boolean isHighlightableContentNode(@Nonnull final PresentableNodeDescriptor kid) {
+        public boolean isHighlightableContentNode(@Nonnull PresentableNodeDescriptor kid) {
             return myDelegate instanceof PresentableNodeDescriptor node && node.isHighlightableContentNode(kid);
         }
 

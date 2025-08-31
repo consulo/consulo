@@ -57,13 +57,13 @@ public class AnnotateLocalFileAction {
     VirtualFile file = context.getSelectedFile();
     if (file == null || file.isDirectory() || file.getFileType().isBinary()) return false;
 
-    final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
+    AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
     if (vcs == null) return false;
 
-    final AnnotationProvider annotationProvider = vcs.getAnnotationProvider();
+    AnnotationProvider annotationProvider = vcs.getAnnotationProvider();
     if (annotationProvider == null) return false;
 
-    final FileStatus fileStatus = FileStatusManager.getInstance(project).getStatus(file);
+    FileStatus fileStatus = FileStatusManager.getInstance(project).getStatus(file);
     if (fileStatus == FileStatus.UNKNOWN || fileStatus == FileStatus.ADDED || fileStatus == FileStatus.IGNORED) {
       return false;
     }
@@ -88,7 +88,7 @@ public class AnnotateLocalFileAction {
   }
 
   public static void perform(AnActionEvent e, boolean selected) {
-    final VcsContext context = VcsContextFactory.getInstance().createContextOn(e);
+    VcsContext context = VcsContextFactory.getInstance().createContextOn(e);
 
     if (!selected) {
       for (Editor editor : getEditors(context)) {
@@ -128,9 +128,9 @@ public class AnnotateLocalFileAction {
 
     VcsAnnotateUtil.getBackgroundableLock(project, file).lock();
 
-    final Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations().get(), true) {
+    Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations().get(), true) {
       @Override
-      public void run(final @Nonnull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           fileAnnotationRef.set(annotationProvider.annotate(file));
         }

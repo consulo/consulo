@@ -41,7 +41,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nonnull
   protected final HashingStrategy<? super K> myHashingStrategy;
 
-  public ConcurrentWeakKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentWeakKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
     myHashingStrategy = hashingStrategy;
     myMap = Maps.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
   }
@@ -116,7 +116,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
     // otherwise it's just canonical equals on referents for replace(K,V,V) to work
     @Override
-    public final boolean equals(final Object o) {
+    public final boolean equals(Object o) {
       if (this == o) return true;
       if (o == null) return false;
 
@@ -133,8 +133,8 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   }
 
   @Nonnull
-  public KeyReference<K, V> createKeyReference(@Nonnull K k, @Nonnull final V v) {
-    final ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
+  public KeyReference<K, V> createKeyReference(@Nonnull K k, @Nonnull V v) {
+    ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
     WeakKey<K, V> keyReference = new WeakKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
     if (valueReference instanceof SoftValue) {
       ((SoftValue)valueReference).myKeyReference = keyReference;
@@ -314,7 +314,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
       processQueues();
       ValueReference<K, V> oldRef = myMap.putIfAbsent(keyRef, newRef);
       if (oldRef == null) return null;
-      final V oldVal = oldRef.get();
+      V oldVal = oldRef.get();
       if (oldVal == null) {
         if (myMap.replace(keyRef, oldRef, newRef)) return null;
       }

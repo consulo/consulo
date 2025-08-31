@@ -50,7 +50,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
             doSetExpanded(expanded, foldingModel, this, notify);
         }
         else {
-            for (final FoldRegion region : foldingModel.getGroupedRegions(myGroup)) {
+            for (FoldRegion region : foldingModel.getGroupedRegions(myGroup)) {
                 doSetExpanded(expanded, foldingModel, region, notify || region != this);
                 // There is a possible case that we can't change expanded status of particular fold region (e.g. we can't collapse
                 // if it contains caret). So, we revert all changes for the fold regions from the same group then.

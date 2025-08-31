@@ -38,7 +38,7 @@ import jakarta.annotation.Nullable;
 public abstract class RenameableFakePsiElement extends FakePsiElement implements PsiMetaOwner, PsiPresentableMetaData {
   private final PsiElement myParent;
 
-  protected RenameableFakePsiElement(final PsiElement parent) {
+  protected RenameableFakePsiElement(PsiElement parent) {
     myParent = parent;
   }
 
@@ -91,12 +91,12 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
   }
 
   @Override
-  public String getName(final PsiElement context) {
+  public String getName(PsiElement context) {
     return getName();
   }
 
   @Override
-  public void init(final PsiElement element) {
+  public void init(PsiElement element) {
   }
 
   @Override

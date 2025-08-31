@@ -50,13 +50,13 @@ class TabContentLayout extends ContentLayout {
 
         new BaseButtonBehavior(myUi) {
             @Override
-            protected void execute(final MouseEvent e) {
+            protected void execute(MouseEvent e) {
                 if (!myUi.isCurrent(TabContentLayout.this)) {
                     return;
                 }
 
                 if (myLastLayout != null) {
-                    final Rectangle moreRect = myLastLayout.moreRect;
+                    Rectangle moreRect = myLastLayout.moreRect;
                     if (moreRect != null && moreRect.contains(e.getPoint())) {
                         showPopup(e, ContainerUtil.filter(myTabs, myLastLayout.toDrop::contains));
                     }
@@ -88,8 +88,8 @@ class TabContentLayout extends ContentLayout {
     }
 
     private static void showPopup(MouseEvent e, List<ContentTabLabel> tabs) {
-        final List<Content> contentsToShow = ContainerUtil.map(tabs, ContentTabLabel::getContent);
-        final SelectContentStep step = new SelectContentStep(contentsToShow);
+        List<Content> contentsToShow = ContainerUtil.map(tabs, ContentTabLabel::getContent);
+        SelectContentStep step = new SelectContentStep(contentsToShow);
         JBPopupFactory.getInstance().createListPopup(step).show(new RelativePoint(e));
     }
 
@@ -131,7 +131,7 @@ class TabContentLayout extends ContentLayout {
 
         if (data.fullLayout) {
             for (ContentTabLabel eachTab : myTabs) {
-                final Dimension eachSize = eachTab.getPreferredSize();
+                Dimension eachSize = eachTab.getPreferredSize();
                 data.requiredWidth += eachSize.width;
                 data.toLayout.add(eachTab);
             }
@@ -139,7 +139,7 @@ class TabContentLayout extends ContentLayout {
             data.moreRectWidth = calcMoreIconWidth();
             data.toFitWidth = bounds.getSize().width - data.eachX;
 
-            final ContentTabLabel selectedTab = myContent2Tabs.get(selected);
+            ContentTabLabel selectedTab = myContent2Tabs.get(selected);
             while (true) {
                 if (data.requiredWidth <= data.toFitWidth) {
                     break;
@@ -163,14 +163,14 @@ class TabContentLayout extends ContentLayout {
             data.moreRect = null;
             for (ContentTabLabel each : data.toLayout) {
                 data.eachY = 0;
-                final Dimension eachSize = each.getPreferredSize();
+                Dimension eachSize = each.getPreferredSize();
                 if (data.eachX + eachSize.width < data.toFitWidth + tabsStart) {
                     each.setBounds(data.eachX, data.eachY, eachSize.width, bounds.height - data.eachY);
                     data.eachX += eachSize.width;
                 }
                 else {
                     if (!reachedBounds) {
-                        final int width = bounds.width - data.eachX - data.moreRectWidth;
+                        int width = bounds.width - data.eachX - data.moreRectWidth;
                         each.setBounds(data.eachX, data.eachY, width, bounds.height - data.eachY);
                         data.eachX += width;
                     }
@@ -194,7 +194,7 @@ class TabContentLayout extends ContentLayout {
             data.moreRect = null;
         }
 
-        final Rectangle moreRect = data.moreRect == null ? null : new Rectangle(data.eachX, 0, myMoreIcon.getIconWidth() + 0, bounds.height);
+        Rectangle moreRect = data.moreRect == null ? null : new Rectangle(data.eachX, 0, myMoreIcon.getIconWidth() + 0, bounds.height);
 
         myUi.isResizableArea = p -> moreRect == null || !moreRect.contains(p);
         myLastLayout = data;
@@ -221,7 +221,7 @@ class TabContentLayout extends ContentLayout {
         return result;
     }
 
-    static void dropTab(final LayoutData data, final ContentTabLabel toDropLabel) {
+    static void dropTab(LayoutData data, ContentTabLabel toDropLabel) {
         data.requiredWidth -= (toDropLabel.getPreferredSize().width + 1);
         data.toDrop.add(toDropLabel);
         if (data.toDrop.size() == 1) {
@@ -326,8 +326,8 @@ class TabContentLayout extends ContentLayout {
 
     @Override
     public void contentAdded(ContentManagerEvent event) {
-        final Content content = event.getContent();
-        final ContentTabLabel tab;
+        Content content = event.getContent();
+        ContentTabLabel tab;
         if (content instanceof TabbedContent) {
             tab = new TabbedContentTabLabel((TabbedContent) content, this);
         }
@@ -344,7 +344,7 @@ class TabContentLayout extends ContentLayout {
 
     @Override
     public void contentRemoved(ContentManagerEvent event) {
-        final ContentTabLabel tab = myContent2Tabs.get(event.getContent());
+        ContentTabLabel tab = myContent2Tabs.get(event.getContent());
         if (tab != null) {
             myTabs.remove(tab);
             myContent2Tabs.remove(event.getContent());

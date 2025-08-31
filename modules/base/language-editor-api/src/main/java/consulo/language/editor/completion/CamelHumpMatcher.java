@@ -25,7 +25,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
   private final boolean myTypoTolerant;
 
 
-  public CamelHumpMatcher(@Nonnull final String prefix) {
+  public CamelHumpMatcher(@Nonnull String prefix) {
     this(prefix, true);
   }
 
@@ -68,7 +68,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
   }
 
   @Override
-  public boolean prefixMatches(@Nonnull final String name) {
+  public boolean prefixMatches(@Nonnull String name) {
     if (name.startsWith("_") && CodeInsightSettings.getInstance().COMPLETION_CASE_SENSITIVE == CodeInsightSettings.FIRST_LETTER && firstLetterCaseDiffers(name)) {
       return false;
     }
@@ -87,12 +87,12 @@ public class CamelHumpMatcher extends PrefixMatcher {
   }
 
   @Override
-  public boolean prefixMatches(@Nonnull final CompositeStringHolder element) {
+  public boolean prefixMatches(@Nonnull CompositeStringHolder element) {
     return prefixMatchersInternal(element, !element.isCaseSensitive());
   }
 
-  private boolean prefixMatchersInternal(final CompositeStringHolder element, final boolean itemCaseInsensitive) {
-    for (final String name : element.getAllStrings()) {
+  private boolean prefixMatchersInternal(CompositeStringHolder element, boolean itemCaseInsensitive) {
+    for (String name : element.getAllStrings()) {
       if (itemCaseInsensitive && StringUtil.startsWithIgnoreCase(name, myPrefix) || prefixMatches(name)) {
         return true;
       }
@@ -107,7 +107,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
 
   @Override
   @Nonnull
-  public PrefixMatcher cloneWithPrefix(@Nonnull final String prefix) {
+  public PrefixMatcher cloneWithPrefix(@Nonnull String prefix) {
     if (prefix.equals(myPrefix)) {
       return this;
     }
@@ -115,7 +115,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
     return new CamelHumpMatcher(prefix, myCaseSensitive, myTypoTolerant);
   }
 
-  private MinusculeMatcher createMatcher(final boolean caseSensitive) {
+  private MinusculeMatcher createMatcher(boolean caseSensitive) {
     String prefix = applyMiddleMatching(myPrefix);
 
     NameUtil.MatcherBuilder builder = NameUtil.buildMatcher(prefix);

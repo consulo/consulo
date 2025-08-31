@@ -59,7 +59,7 @@ public class BreakpointsDialogFactory {
       return;
     }
 
-    final BreakpointsDialog dialog = new BreakpointsDialog(myProject, initialBreakpoint != null ? initialBreakpoint : myBreakpoint, XBreakpointUtil.collectPanelProviders()) {
+    BreakpointsDialog dialog = new BreakpointsDialog(myProject, initialBreakpoint != null ? initialBreakpoint : myBreakpoint, XBreakpointUtil.collectPanelProviders()) {
       @Override
       protected void dispose() {
         for (BreakpointPanelProvider provider : XBreakpointUtil.collectPanelProviders()) {

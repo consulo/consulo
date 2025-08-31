@@ -48,7 +48,7 @@ public interface HtmlView extends Component {
     /**
      * Use only of result of processing {@link #render(RenderData)}
      */
-    void scrollToMarkdownSrcOffset(final int offset);
+    void scrollToMarkdownSrcOffset(int offset);
 
     @Nonnull
     default Disposable addHyperlinkListener(@Nonnull ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {

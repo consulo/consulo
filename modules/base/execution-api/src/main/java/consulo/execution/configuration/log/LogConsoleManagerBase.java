@@ -71,14 +71,14 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
 
     getUi().addListener(new ContentManagerAdapter() {
       @Override
-      public void selectionChanged(final ContentManagerEvent event) {
+      public void selectionChanged(ContentManagerEvent event) {
         log.activate();
       }
     }, log);
   }
 
   private boolean isConsoleActive(String id) {
-    final Content content = getUi().findContent(id);
+    Content content = getUi().findContent(id);
     return content != null && content.isSelected();
   }
 
@@ -106,7 +106,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   @Override
   public void removeAdditionalTabComponent(@Nonnull AdditionalTabComponent component) {
     Disposer.dispose(component);
-    final Content content = myAdditionalContent.remove(component);
+    Content content = myAdditionalContent.remove(component);
     if (!getUi().isDisposed()) {
       getUi().removeContent(content, true);
     }

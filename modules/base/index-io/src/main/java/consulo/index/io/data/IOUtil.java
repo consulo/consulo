@@ -157,9 +157,9 @@ public class IOUtil {
   }
 
   public static boolean deleteAllFilesStartingWith(@Nonnull File file) {
-    final String baseName = file.getName();
+    String baseName = file.getName();
     File parentFile = file.getParentFile();
-    final File[] files = parentFile != null ? parentFile.listFiles(pathname -> pathname.getName().startsWith(baseName)) : null;
+    File[] files = parentFile != null ? parentFile.listFiles(pathname -> pathname.getName().startsWith(baseName)) : null;
 
     boolean ok = true;
     if (files != null) {
@@ -195,7 +195,7 @@ public class IOUtil {
     }
   }
 
-  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableSupplier<T, ? extends IOException> factoryComputable, @Nonnull final File file) throws IOException {
+  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableSupplier<T, ? extends IOException> factoryComputable, @Nonnull File file) throws IOException {
     return openCleanOrResetBroken(factoryComputable, () -> deleteAllFilesStartingWith(file));
   }
 

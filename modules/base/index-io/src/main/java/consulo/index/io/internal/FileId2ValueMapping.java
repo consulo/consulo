@@ -42,10 +42,10 @@ public class FileId2ValueMapping<Value> {
     IntList removedFileIdList = null;
     List<Value> removedValueList = null;
 
-    for (final ValueContainer.ValueIterator<Value> valueIterator = _valueContainer.getValueIterator(); valueIterator.hasNext(); ) {
-      final Value value = valueIterator.next();
+    for (ValueContainer.ValueIterator<Value> valueIterator = _valueContainer.getValueIterator(); valueIterator.hasNext(); ) {
+      Value value = valueIterator.next();
 
-      for (final ValueContainer.IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext(); ) {
+      for (ValueContainer.IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext(); ) {
         int id = intIterator.next();
         Value previousValue = id2ValueMap.put(id, value);
         if (previousValue != null) {  // delay removal of duplicated id -> value mapping since it will affect valueIterator we are using
@@ -79,7 +79,7 @@ public class FileId2ValueMapping<Value> {
       valueContainer.removeValue(inputId, mapped);
     }
     if (DebugAssertions.EXTRA_SANITY_CHECKS && myOnePerFileValidationEnabled) {
-      for (final InvertedIndexValueIterator<Value> valueIterator = valueContainer.getValueIterator(); valueIterator.hasNext(); ) {
+      for (InvertedIndexValueIterator<Value> valueIterator = valueContainer.getValueIterator(); valueIterator.hasNext(); ) {
         valueIterator.next();
         DebugAssertions.assertTrue(!valueIterator.getValueAssociationPredicate().contains(inputId));
       }

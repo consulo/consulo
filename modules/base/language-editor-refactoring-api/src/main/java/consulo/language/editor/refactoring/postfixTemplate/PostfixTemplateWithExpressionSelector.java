@@ -78,7 +78,7 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
 
     @Override
     @RequiredUIAccess
-    public final void expand(@Nonnull PsiElement context, @Nonnull final Editor editor) {
+    public final void expand(@Nonnull PsiElement context, @Nonnull Editor editor) {
         List<PsiElement> expressions = mySelector.getExpressions(
             context,
             editor.getDocument(),

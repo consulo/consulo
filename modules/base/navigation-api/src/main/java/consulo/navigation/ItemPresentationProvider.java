@@ -42,7 +42,7 @@ public interface ItemPresentationProvider<T extends NavigationItem> {
 
   @Nullable
   public static ItemPresentation getItemPresentation(NavigationItem element) {
-    final ItemPresentationProvider<NavigationItem> provider = getItemPresentationProvider(element);
+    ItemPresentationProvider<NavigationItem> provider = getItemPresentationProvider(element);
     return provider != null ? provider.getPresentation(element) : null;
   }
 

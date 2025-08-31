@@ -30,7 +30,7 @@ public class FixedColumnsModel  extends MultiColumnListModel {
 
   @Override
   public int getRowCount() {
-    final int columns = getColumnCount();
+    int columns = getColumnCount();
     return columns == 0 ? 0 : getSize() / columns + 1;
   }
 
@@ -41,7 +41,7 @@ public class FixedColumnsModel  extends MultiColumnListModel {
 
   @Override
   public int toListIndex(int row, int column) {
-    final int columns = getColumnCount();
+    int columns = getColumnCount();
     return columns == 0 ? -1 : row * columns + column;
   }
 

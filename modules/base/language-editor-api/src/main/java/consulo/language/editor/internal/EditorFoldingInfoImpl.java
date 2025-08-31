@@ -56,7 +56,7 @@ public class EditorFoldingInfoImpl implements EditorFoldingInfo {
   @Nullable
   @RequiredReadAction
   public PsiElement getPsiElement(@Nonnull FoldRegion region) {
-    final SmartPsiElementPointer<?> pointer = myFoldRegionToSmartPointerMap.get(region);
+    SmartPsiElementPointer<?> pointer = myFoldRegionToSmartPointerMap.get(region);
     if (pointer == null) {
       return null;
     }

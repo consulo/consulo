@@ -115,11 +115,11 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
         return super.getBackground();
     }
 
-    public HyperlinkLabel createActionLabel(final String text, final String actionId) {
+    public HyperlinkLabel createActionLabel(String text, String actionId) {
         return createActionLabel(text, () -> executeAction(actionId));
     }
 
-    public HyperlinkLabel createActionLabel(final String text, final Runnable action) {
+    public HyperlinkLabel createActionLabel(String text, final Runnable action) {
         HyperlinkLabel label = new HyperlinkLabel(text, JBColor.BLUE, getBackground(), JBColor.BLUE);
         label.setOpaque(false);
 
@@ -134,9 +134,9 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     }
 
     @RequiredUIAccess
-    protected void executeAction(final String actionId) {
-        final AnAction action = ActionManager.getInstance().getAction(actionId);
-        final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(), ActionManager.getInstance(), 0);
+    protected void executeAction(String actionId) {
+        AnAction action = ActionManager.getInstance().getAction(actionId);
+        AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(), ActionManager.getInstance(), 0);
         action.beforeActionPerformedUpdate(event);
         action.update(event);
 

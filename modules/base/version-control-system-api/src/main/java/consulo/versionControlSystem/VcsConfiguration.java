@@ -98,7 +98,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     STATUS(VcsBundle.message("vcs.command.name.status")),
     UPDATE(VcsBundle.message("vcs.command.name.update"));
 
-    StandardOption(final String id) {
+    StandardOption(String id) {
       myId = id;
     }
 
@@ -113,7 +113,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     ADD(VcsBundle.message("vcs.command.name.add")),
     REMOVE(VcsBundle.message("vcs.command.name.remove"));
 
-    StandardConfirmation(final String id) {
+    StandardConfirmation(String id) {
       myId = id;
     }
 
@@ -172,7 +172,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     return project.getInstance(VcsConfiguration.class);
   }
 
-  public void saveCommitMessage(final String comment) {
+  public void saveCommitMessage(String comment) {
     LAST_COMMIT_MESSAGE = comment;
     if (comment == null || comment.length() == 0) return;
     myLastCommitMessages.remove(comment);
@@ -196,7 +196,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     return new ArrayList<>(myLastCommitMessages);
   }
 
-  public void removeMessage(final String content) {
+  public void removeMessage(String content) {
     myLastCommitMessages.remove(content);
   }
 
@@ -286,7 +286,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     return DEFAULT_PATCH_EXTENSION;
   }
 
-  public void acceptLastCreatedPatchName(final String string) {
+  public void acceptLastCreatedPatchName(String string) {
     if (StringUtil.isEmptyOrSpaces(string)) return;
     if (FileUtil.extensionEquals(string, DIFF)) {
       DEFAULT_PATCH_EXTENSION = DIFF;

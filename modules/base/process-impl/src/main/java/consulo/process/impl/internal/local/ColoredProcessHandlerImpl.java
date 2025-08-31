@@ -57,7 +57,7 @@ public class ColoredProcessHandlerImpl extends KillableProcessHandlerImpl implem
   }
 
   @Override
-  public final void notifyTextAvailable(final String text, final Key outputType) {
+  public final void notifyTextAvailable(String text, Key outputType) {
     myAnsiEscapeDecoder.escapeText(text, outputType, this);
   }
 
@@ -93,7 +93,7 @@ public class ColoredProcessHandlerImpl extends KillableProcessHandlerImpl implem
    * and override method coloredChunksAvailable to process colored chunks.
    * To be removed in IDEA 14.
    */
-  protected void textAvailable(final String text, final Key attributes) {
+  protected void textAvailable(String text, Key attributes) {
     super.notifyTextAvailable(text, attributes);
   }
 }

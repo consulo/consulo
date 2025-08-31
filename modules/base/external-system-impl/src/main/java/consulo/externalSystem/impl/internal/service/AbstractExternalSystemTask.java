@@ -91,9 +91,9 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
     if (getState() != ExternalSystemTaskState.IN_PROGRESS) {
       return;
     }
-    final ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
+    ExternalSystemFacadeManager manager = Application.get().getInstance(ExternalSystemFacadeManager.class);
     try {
-      final RemoteExternalSystemFacade facade = manager.getFacade(myIdeProject, myExternalProjectPath, myExternalSystemId);
+      RemoteExternalSystemFacade facade = manager.getFacade(myIdeProject, myExternalProjectPath, myExternalSystemId);
       setState(facade.isTaskInProgress(getId()) ? ExternalSystemTaskState.IN_PROGRESS : ExternalSystemTaskState.FAILED);
     }
     catch (Throwable e) {
@@ -114,7 +114,7 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
         indicator.setText(wrapProgressText(event.getDescription()));
       }
     };
-    final ExternalSystemTaskNotificationListener[] ls;
+    ExternalSystemTaskNotificationListener[] ls;
     if (listeners.length > 0) {
       ls = ArrayUtil.append(listeners, adapter);
     }
@@ -163,7 +163,7 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
         indicator.setText(wrapProgressText(event.getDescription()));
       }
     };
-    final ExternalSystemTaskNotificationListener[] ls;
+    ExternalSystemTaskNotificationListener[] ls;
     if (listeners.length > 0) {
       ls = ArrayUtil.append(listeners, adapter);
     }

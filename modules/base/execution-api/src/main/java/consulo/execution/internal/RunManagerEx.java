@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class RunManagerEx extends RunManager {
-  public static RunManagerEx getInstanceEx(final Project project) {
+  public static RunManagerEx getInstanceEx(Project project) {
     return (RunManagerEx)project.getInstance(RunManager.class);
   }
 
@@ -76,7 +76,7 @@ public abstract class RunManagerEx extends RunManager {
   @Nonnull
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
 
-  public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable final String name);
+  public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable String name);
 
   @Nonnull
   public abstract Image getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings);

@@ -97,14 +97,14 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     @Nonnull
     @Override
     public ColorValue getDefaultBackground() {
-        final ColorValue c = getAttributes(StandardTextAttributesKeys.TEXT).getBackgroundColor();
+        ColorValue c = getAttributes(StandardTextAttributesKeys.TEXT).getBackgroundColor();
         return c != null ? c : StandardColors.WHITE;
     }
 
     @Nonnull
     @Override
     public ColorValue getDefaultForeground() {
-        final ColorValue c = getAttributes(StandardTextAttributesKeys.TEXT).getForegroundColor();
+        ColorValue c = getAttributes(StandardTextAttributesKeys.TEXT).getForegroundColor();
         return c != null ? c : StandardColors.BLACK;
     }
 
@@ -129,7 +129,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         myConsoleFontPreferences.copyTo(newScheme.myConsoleFontPreferences);
         newScheme.myConsoleLineSpacing = myConsoleLineSpacing;
 
-        final Set<EditorFontType> types = myFonts.keySet();
+        Set<EditorFontType> types = myFonts.keySet();
         for (EditorFontType type : types) {
             Font font = myFonts.get(type);
             newScheme.setFont(type, font);
@@ -167,7 +167,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     @Override
     public Font getFont(EditorFontType key) {
         if (UISettings.getInstance().PRESENTATION_MODE) {
-            final Font font = myFonts.get(key);
+            Font font = myFonts.get(key);
             return new Font(font.getName(), font.getStyle(), UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE);
         }
         return myFonts.get(key);
@@ -295,7 +295,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
             myParentScheme = myEditorColorsManager.getBundledSchemes().get(defaultAttributeValue);
         }
 
-        for (final Element childNode : node.getChildren()) {
+        for (Element childNode : node.getChildren()) {
             String childName = childNode.getName();
             switch (childName) {
                 case OPTION_ELEMENT:
@@ -343,13 +343,13 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
 
     private void readColors(Element childNode) {
-        for (final Element colorElement : childNode.getChildren(OPTION_ELEMENT)) {
+        for (Element colorElement : childNode.getChildren(OPTION_ELEMENT)) {
             ColorValue valueColor = readColor(colorElement);
             if (valueColor == null) {
                 continue;
             }
 
-            final String colorName = colorElement.getAttributeValue(NAME_ATTR);
+            String colorName = colorElement.getAttributeValue(NAME_ATTR);
             if (BACKGROUND_COLOR_NAME.equals(colorName)) {
                 // This setting has been deprecated to usages of HighlighterColors.TEXT attributes.
                 myDeprecatedBackgroundColor = valueColor;
@@ -361,7 +361,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
 
     @Nullable
-    private static ColorValue readColor(final Element colorElement) {
+    private static ColorValue readColor(Element colorElement) {
         String value = getValue(colorElement);
         ColorValue valueColor = null;
         if (value != null && value.trim().length() > 0) {
@@ -459,7 +459,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
 
     private static String getValue(Element e) {
-        final String value = e.getAttributeValue(Platform.current().os().fileNamePrefix());
+        String value = e.getAttributeValue(Platform.current().os().fileNamePrefix());
         return value == null ? e.getAttributeValue(VALUE_ELEMENT) : value;
     }
 
@@ -574,7 +574,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         }
     }
 
-    private static boolean haveToWrite(final TextAttributesKey key, final TextAttributes value, final TextAttributes defaultAttribute) {
+    private static boolean haveToWrite(TextAttributesKey key, TextAttributes value, TextAttributes defaultAttribute) {
         return !(key.getFallbackAttributeKey() != null && value.isFallbackEnabled()) && !value.equals(defaultAttribute);
     }
 
@@ -624,7 +624,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         }
     }
 
-    private boolean haveToWrite(final EditorColorKey key) {
+    private boolean haveToWrite(EditorColorKey key) {
         ColorValue value = myColorsMap.get(key);
         if (myParentScheme != null) {
             if (myParentScheme instanceof AbstractColorsScheme) {

@@ -21,7 +21,7 @@ import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointItem;
 public class BreakpointItemNode extends CheckedTreeNode {
   private final BreakpointItem myBreakpoint;
 
-  BreakpointItemNode(final BreakpointItem breakpoint) {
+  BreakpointItemNode(BreakpointItem breakpoint) {
     super(breakpoint);
     myBreakpoint = breakpoint;
     setChecked(breakpoint.isEnabled());

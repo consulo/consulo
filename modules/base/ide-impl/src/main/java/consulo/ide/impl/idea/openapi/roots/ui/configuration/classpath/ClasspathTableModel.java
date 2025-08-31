@@ -42,7 +42,7 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
   private final List<ClasspathTableItem<?>> myItems = new ArrayList<ClasspathTableItem<?>>();
   private final ModuleConfigurationState myState;
 
-  public ClasspathTableModel(final ModuleConfigurationState state) {
+  public ClasspathTableModel(ModuleConfigurationState state) {
     myState = state;
     init();
   }
@@ -52,7 +52,7 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
   }
 
   public void init() {
-    for (final OrderEntry orderEntry : getModel().getOrderEntries()) {
+    for (OrderEntry orderEntry : getModel().getOrderEntries()) {
       addItem(ClasspathTableItem.createItem(orderEntry, myState.getProject(), myState.getModulesConfigurator(), myState.getLibrariesConfigurator()));
     }
   }
@@ -90,7 +90,7 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
-    final ClasspathTableItem<?> item = myItems.get(rowIndex);
+    ClasspathTableItem<?> item = myItems.get(rowIndex);
     if (columnIndex == EXPORT_COLUMN) {
       return item.isExported();
     }
@@ -106,7 +106,7 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
 
   @Override
   public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-    final ClasspathTableItem<?> item = myItems.get(rowIndex);
+    ClasspathTableItem<?> item = myItems.get(rowIndex);
     if (columnIndex == EXPORT_COLUMN) {
       item.setExported(((Boolean)aValue).booleanValue());
     }
@@ -148,7 +148,7 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
   @Override
   public boolean isCellEditable(int row, int column) {
     if (column == EXPORT_COLUMN || column == SCOPE_COLUMN) {
-      final ClasspathTableItem<?> item = myItems.get(row);
+      ClasspathTableItem<?> item = myItems.get(row);
       return item != null && item.isExportable();
     }
     return false;

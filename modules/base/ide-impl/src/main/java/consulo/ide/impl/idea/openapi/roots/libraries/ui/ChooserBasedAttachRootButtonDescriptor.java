@@ -42,13 +42,13 @@ public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootB
     return FileChooserDescriptorFactory.createMultipleJavaPathDescriptor();
   }
 
-  public abstract String getChooserTitle(final @Nullable String libraryName);
+  public abstract String getChooserTitle(@Nullable String libraryName);
   public abstract String getChooserDescription();
 
   @Override
-  public VirtualFile[] selectFiles(final @Nonnull JComponent parent, @Nullable VirtualFile initialSelection,
-                                   final @Nonnull DataContext dataContext, @Nonnull LibraryEditor libraryEditor) {
-    final FileChooserDescriptor chooserDescriptor = createChooserDescriptor();
+  public VirtualFile[] selectFiles(@Nonnull JComponent parent, @Nullable VirtualFile initialSelection,
+                                   @Nonnull DataContext dataContext, @Nonnull LibraryEditor libraryEditor) {
+    FileChooserDescriptor chooserDescriptor = createChooserDescriptor();
     chooserDescriptor.setTitle(getChooserTitle(libraryEditor.getName()));
     chooserDescriptor.setDescription(getChooserDescription());
     Module contextModule = dataContext.getData(Module.KEY);

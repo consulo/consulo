@@ -60,7 +60,7 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
             List<PsiReferenceProviderByPattern> referenceProviderBeans = PsiReferenceProviderByPattern.forLanguage(language);
             for (final PsiReferenceProviderByPattern provider : referenceProviderBeans) {
                 try {
-                    final ElementPattern<PsiElement> pattern = provider.getElementPattern();
+                    ElementPattern<PsiElement> pattern = provider.getElementPattern();
                     registrar.registerReferenceProvider(pattern, new PsiReferenceProvider() {
                         @Nonnull
                         @Override
@@ -96,7 +96,7 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
         }
 
         if (providersCount == 1) {
-            final ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> firstProvider = (providersForAllLanguages.isEmpty() ? providersForContextLanguage : providersForAllLanguages).get(0);
+            ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> firstProvider = (providersForAllLanguages.isEmpty() ? providersForContextLanguage : providersForAllLanguages).get(0);
             return firstProvider.provider.getReferencesByElement(context, firstProvider.processingContext);
         }
 
@@ -106,10 +106,10 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
         Arrays.sort(providers, PRIORITY_COMPARATOR);
 
         List<PsiReference> result = new ArrayList<>();
-        final double maxPriority = providers[0].priority;
+        double maxPriority = providers[0].priority;
         next:
         for (ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> trinity : providers) {
-            final PsiReference[] refs;
+            PsiReference[] refs;
             try {
                 refs = trinity.provider.getReferencesByElement(context, trinity.processingContext);
             }

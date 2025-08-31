@@ -80,7 +80,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
       currentStack.add(this);
       return doGetComponentInstance(container);
     }
-    catch (final CyclicDependencyException e) {
+    catch (CyclicDependencyException e) {
       e.push(stackFrame);
       throw e;
     }
@@ -184,8 +184,8 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
       }
     }
 
-    final Set<Constructor> conflicts = new HashSet<>();
-    final Set<List<Type>> unsatisfiableDependencyTypes = new HashSet<>();
+    Set<Constructor> conflicts = new HashSet<>();
+    Set<List<Type>> unsatisfiableDependencyTypes = new HashSet<>();
     Constructor greediestConstructor = null;
     int lastSatisfiableConstructorSize = -1;
     Type unsatisfiedDependencyType = null;
@@ -235,7 +235,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     }
     else if (greediestConstructor == null) {
       // be nice to the user, show all constructors that were filtered out
-      final List<Constructor> nonMatching = Arrays.asList(getConstructors());
+      List<Constructor> nonMatching = Arrays.asList(getConstructors());
       throw new PicoInitializationException("Either do the specified parameters not match any of the following constructors: " +
                                             nonMatching.toString() +
                                             " or the constructors were not accessible for '" +

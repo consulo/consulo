@@ -99,7 +99,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
         assert file != null;
         assert fileRevision != null;
 
-        final Editor editor = getEditor(e);
+        Editor editor = getEditor(e);
         final CharSequence oldContent = editor == null ? null : editor.getDocument().getImmutableCharSequence();
         final int oldLine = getAnnotatedLine(e);
 

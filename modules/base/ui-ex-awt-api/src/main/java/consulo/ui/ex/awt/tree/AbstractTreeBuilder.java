@@ -57,8 +57,8 @@ public class AbstractTreeBuilder implements Disposable {
   protected void init(@Nonnull JTree tree,
                       @Nonnull DefaultTreeModel treeModel,
                       AbstractTreeStructure treeStructure,
-                      @Nullable final Comparator<? super NodeDescriptor> comparator,
-                      final boolean updateIfInactive) {
+                      @Nullable Comparator<? super NodeDescriptor> comparator,
+                      boolean updateIfInactive) {
 
     tree.putClientProperty(TREE_BUILDER, new WeakReference<>(this));
 
@@ -82,27 +82,27 @@ public class AbstractTreeBuilder implements Disposable {
     if (ui != null) ui.userScrollTo(element, onDone == null ? null : new UserRunnable(onDone));
   }
 
-  public final void select(final Object element) {
+  public final void select(Object element) {
     AbstractTreeUi ui = getUi();
     if (ui != null) ui.userSelect(new Object[]{element}, null, false, true);
   }
 
-  public final void select(final Object element, @Nullable final Runnable onDone) {
+  public final void select(Object element, @Nullable Runnable onDone) {
     AbstractTreeUi ui = getUi();
     if (ui != null) ui.userSelect(new Object[]{element}, new UserRunnable(onDone), false, true);
   }
 
-  public final void select(final Object element, @Nullable final Runnable onDone, boolean addToSelection) {
+  public final void select(Object element, @Nullable Runnable onDone, boolean addToSelection) {
     AbstractTreeUi ui = getUi();
     if (ui != null) ui.userSelect(new Object[]{element}, new UserRunnable(onDone), addToSelection, true);
   }
 
-  public final void select(final Object[] elements, @Nullable final Runnable onDone) {
+  public final void select(Object[] elements, @Nullable Runnable onDone) {
     AbstractTreeUi ui = getUi();
     if (ui != null) ui.userSelect(elements, new UserRunnable(onDone), false, true);
   }
 
-  public final void select(final Object[] elements, @Nullable final Runnable onDone, boolean addToSelection) {
+  public final void select(Object[] elements, @Nullable Runnable onDone, boolean addToSelection) {
     AbstractTreeUi ui = getUi();
     if (ui != null) ui.userSelect(elements, new UserRunnable(onDone), addToSelection, true);
   }
@@ -179,7 +179,7 @@ public class AbstractTreeBuilder implements Disposable {
   }
 
 
-  protected void updateNode(final DefaultMutableTreeNode node) {
+  protected void updateNode(DefaultMutableTreeNode node) {
     AbstractTreeUi ui = getUi();
     if (ui != null) ui.doUpdateNode(node);
   }
@@ -239,7 +239,7 @@ public class AbstractTreeBuilder implements Disposable {
   }
 
   @Nonnull
-  public final ActionCallback queueUpdateFrom(final Object element, final boolean forceResort) {
+  public final ActionCallback queueUpdateFrom(Object element, boolean forceResort) {
     return queueUpdateFrom(element, forceResort, true);
   }
 
@@ -303,11 +303,11 @@ public class AbstractTreeBuilder implements Disposable {
     if (ui != null) ui.doExpandNodeChildren(node);
   }
 
-  protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
+  protected boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
     return !isDisposed() && getRootElement() == getTreeStructureElement(nodeDescriptor);
   }
 
-  protected boolean isAlwaysShowPlus(final NodeDescriptor descriptor) {
+  protected boolean isAlwaysShowPlus(NodeDescriptor descriptor) {
     return false;
   }
 
@@ -325,7 +325,7 @@ public class AbstractTreeBuilder implements Disposable {
     return ui != null && ui.wasRootNodeInitialized();
   }
 
-  public final boolean isNodeBeingBuilt(final TreePath path) {
+  public final boolean isNodeBeingBuilt(TreePath path) {
     AbstractTreeUi ui = getUi();
     return ui != null && ui.isNodeBeingBuilt(path);
   }
@@ -336,7 +336,7 @@ public class AbstractTreeBuilder implements Disposable {
     return ui == null ? null : ui.findNodeByElement(element);
   }
 
-  public static boolean isLoadingNode(final DefaultMutableTreeNode node) {
+  public static boolean isLoadingNode(DefaultMutableTreeNode node) {
     return AbstractTreeUi.isLoadingNode(node);
   }
 
@@ -375,7 +375,7 @@ public class AbstractTreeBuilder implements Disposable {
   protected void runBackgroundLoading(@Nonnull final Runnable runnable) {
     if (isDisposed()) return;
 
-    final Application app = ApplicationManager.getApplication();
+    Application app = ApplicationManager.getApplication();
     if (app != null) {
       app.runReadAction(new TreeRunnable("AbstractTreeBuilder.runBackgroundLoading") {
         @Override
@@ -553,9 +553,9 @@ public class AbstractTreeBuilder implements Disposable {
       return element;
     }
 
-    final Object[] children = structure.getChildElements(element);
+    Object[] children = structure.getChildElements(element);
     for (Object each : children) {
-      final Object childObject = accept(nodeClass, each, visitor);
+      Object childObject = accept(nodeClass, each, visitor);
       if (childObject != null) return childObject;
     }
 
@@ -563,7 +563,7 @@ public class AbstractTreeBuilder implements Disposable {
   }
 
   public <T> boolean select(@Nonnull Class nodeClass, @Nonnull Predicate<T> visitor, @Nullable Runnable onDone, boolean addToSelection) {
-    final Object element = accept(nodeClass, visitor);
+    Object element = accept(nodeClass, visitor);
     if (element != null) {
       select(element, onDone, addToSelection);
       return true;

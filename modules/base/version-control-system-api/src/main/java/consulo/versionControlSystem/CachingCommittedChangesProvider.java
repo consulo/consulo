@@ -40,9 +40,9 @@ public interface CachingCommittedChangesProvider<T extends CommittedChangeList, 
    */
   int getFormatVersion();
 
-  void writeChangeList(final DataOutput stream, final T list) throws IOException;
+  void writeChangeList(DataOutput stream, T list) throws IOException;
 
-  T readChangeList(final RepositoryLocation location, final DataInput stream) throws IOException;
+  T readChangeList(RepositoryLocation location, DataInput stream) throws IOException;
 
   /**
    * Returns true if the underlying VCS allows to limit the number of loaded changes. If the VCS does not
@@ -61,7 +61,7 @@ public interface CachingCommittedChangesProvider<T extends CommittedChangeList, 
    * @return the files which may contain the changes, or null if the call is not supported.
    */
   @Nullable
-  Collection<FilePath> getIncomingFiles(final RepositoryLocation location) throws VcsException;
+  Collection<FilePath> getIncomingFiles(RepositoryLocation location) throws VcsException;
 
   /**
    * Returns true if the changelist number restriction should be used when refreshing the cache,

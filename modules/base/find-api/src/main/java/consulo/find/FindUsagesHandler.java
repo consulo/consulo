@@ -127,7 +127,7 @@ public abstract class FindUsagesHandler {
 
     @Nonnull
     @RequiredReadAction
-    public static FindUsagesOptions createFindUsagesOptions(@Nonnull Project project, @Nullable final DataContext dataContext) {
+    public static FindUsagesOptions createFindUsagesOptions(@Nonnull Project project, @Nullable DataContext dataContext) {
         FindUsagesOptions findUsagesOptions = new FindUsagesOptions(project, dataContext);
         findUsagesOptions.isUsages = true;
         findUsagesOptions.isSearchForTextOccurrences = true;
@@ -140,20 +140,20 @@ public abstract class FindUsagesHandler {
     }
 
     @Nonnull
-    public FindUsagesOptions getFindUsagesOptions(@Nullable final DataContext dataContext) {
+    public FindUsagesOptions getFindUsagesOptions(@Nullable DataContext dataContext) {
         FindUsagesOptions options = createFindUsagesOptions(getProject(), dataContext);
         options.isSearchForTextOccurrences &= isSearchForTextOccurrencesAvailable(getPsiElement(), false);
         return options;
     }
 
     public boolean processElementUsages(
-        @Nonnull final PsiElement element,
+        @Nonnull PsiElement element,
         @Nonnull final Predicate<UsageInfo> processor,
-        @Nonnull final FindUsagesOptions options
+        @Nonnull FindUsagesOptions options
     ) {
-        final ReadActionProcessor<PsiReference> refProcessor = new ReadActionProcessor<>() {
+        ReadActionProcessor<PsiReference> refProcessor = new ReadActionProcessor<>() {
             @Override
-            public boolean processInReadAction(final PsiReference ref) {
+            public boolean processInReadAction(PsiReference ref) {
                 TextRange rangeInElement = ref.getRangeInElement();
                 return processor.test(new UsageInfo(
                     ref.getElement(),
@@ -164,9 +164,9 @@ public abstract class FindUsagesHandler {
             }
         };
 
-        final SearchScope scope = options.searchScope;
+        SearchScope scope = options.searchScope;
 
-        final boolean searchText = options.isSearchForTextOccurrences && scope instanceof GlobalSearchScope;
+        boolean searchText = options.isSearchForTextOccurrences && scope instanceof GlobalSearchScope;
 
         if (options.isUsages) {
             boolean success =
@@ -189,7 +189,7 @@ public abstract class FindUsagesHandler {
     }
 
     public boolean processUsagesInText(
-        @Nonnull final PsiElement element,
+        @Nonnull PsiElement element,
         @Nonnull Predicate<UsageInfo> processor,
         @Nonnull GlobalSearchScope searchScope
     ) {
@@ -199,7 +199,7 @@ public abstract class FindUsagesHandler {
         }
 
     @Nullable
-    protected Collection<String> getStringsToSearch(@Nonnull final PsiElement element) {
+    protected Collection<String> getStringsToSearch(@Nonnull PsiElement element) {
         if (element instanceof PsiNamedElement) {
             return ContainerUtil.createMaybeSingletonList(((PsiNamedElement)element).getName());
         }

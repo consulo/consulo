@@ -15,7 +15,7 @@ public final class UndoUtil {
     }
 
     @RequiredUIAccess
-    public static void writeInRunUndoTransparentAction(@Nonnull final Runnable runnable) {
+    public static void writeInRunUndoTransparentAction(@Nonnull Runnable runnable) {
         CommandProcessor.getInstance().runUndoTransparentAction(() -> Application.get().runWriteAction(runnable));
     }
 

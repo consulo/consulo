@@ -65,7 +65,7 @@ public class ArrangementMatchNodeComponentFactory {
    * @return renderer for the given model
    */
   @Nonnull
-  public ArrangementUiComponent getComponent(@Nonnull final ArrangementMatchCondition rendererTarget,
+  public ArrangementUiComponent getComponent(@Nonnull ArrangementMatchCondition rendererTarget,
                                              @Nonnull final StdArrangementMatchRule rule,
                                              final boolean allowModification)
   {

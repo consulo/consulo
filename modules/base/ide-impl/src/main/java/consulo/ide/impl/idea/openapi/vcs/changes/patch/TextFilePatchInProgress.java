@@ -53,12 +53,12 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
     if (myNewContentRevision == null) {
       myConflicts = null;
       if (FilePatchStatus.ADDED.equals(myStatus)) {
-        final FilePath newFilePath = VcsUtil.getFilePath(myIoCurrentBase, false);
-        final String content = myPatch.getNewFileText();
+        FilePath newFilePath = VcsUtil.getFilePath(myIoCurrentBase, false);
+        String content = myPatch.getNewFileText();
         myNewContentRevision = new SimpleContentRevision(content, newFilePath, myPatch.getAfterVersionId());
       }
       else {
-        final FilePath newFilePath = detectNewFilePathForMovedOrModified();
+        FilePath newFilePath = detectNewFilePathForMovedOrModified();
         myNewContentRevision = new LazyPatchContentRevision(myCurrentBase, newFilePath, myPatch.getAfterVersionId(), myPatch);
         if (myCurrentBase != null) {
           ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
@@ -76,7 +76,7 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
   @Override
   public DiffRequestProducer getDiffRequestProducers(final Project project, final PatchReader patchReader) {
     final PatchChange change = getChange();
-    final FilePatch patch = getPatch();
+    FilePatch patch = getPatch();
     final String path = patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName();
     final Getter<CharSequence> baseContentGetter = new Getter<CharSequence>() {
       @Override
@@ -115,7 +115,7 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
       @Nonnull
       @Override
       public String getName() {
-        final File ioCurrentBase = getIoCurrentBase();
+        File ioCurrentBase = getIoCurrentBase();
         return ioCurrentBase == null ? getCurrentPath() : ioCurrentBase.getPath();
       }
     };

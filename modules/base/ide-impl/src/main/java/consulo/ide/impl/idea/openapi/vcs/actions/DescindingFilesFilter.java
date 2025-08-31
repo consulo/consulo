@@ -31,13 +31,13 @@ public class DescindingFilesFilter {
 
   @Nonnull
   public static FilePath[] filterDescindingFiles(@Nonnull FilePath[] roots, Project project) {
-    final List<FilePath> result = new LinkedList<FilePath>();
+    List<FilePath> result = new LinkedList<FilePath>();
     ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
 
     Arrays.sort(roots, FilePathComparator.getInstance());
-    final Map<VcsKey, List<FilePath>> chains = new HashMap<VcsKey, List<FilePath>>();
+    Map<VcsKey, List<FilePath>> chains = new HashMap<VcsKey, List<FilePath>>();
     for (FilePath root : roots) {
-      final AbstractVcs vcs = manager.getVcsFor(root);
+      AbstractVcs vcs = manager.getVcsFor(root);
       if (vcs == null) continue;
       if (vcs.allowsNestedRoots()) {
         // just put into result: nested roots are allowed
@@ -46,9 +46,9 @@ public class DescindingFilesFilter {
       }
       //if (pathsFilter != null && (! pathsFilter.convert(new Pair<DocumentFilePath, AbstractVcs>(root, vcs)))) continue;
       
-      final List<FilePath> chain = chains.get(vcs.getKeyInstanceMethod());
+      List<FilePath> chain = chains.get(vcs.getKeyInstanceMethod());
       if (chain == null) {
-        final LinkedList<FilePath> newList = new LinkedList<FilePath>();
+        LinkedList<FilePath> newList = new LinkedList<FilePath>();
         newList.add(root);
         chains.put(vcs.getKeyInstanceMethod(), newList);
       } else {
@@ -80,7 +80,7 @@ public class DescindingFilesFilter {
       return ourInstance;
     }
 
-    public int compare(final FilePath fp1, final FilePath fp2) {
+    public int compare(FilePath fp1, FilePath fp2) {
       return fp1.getIOFile().getAbsolutePath().length() - fp2.getIOFile().getAbsolutePath().length();
     }
   }

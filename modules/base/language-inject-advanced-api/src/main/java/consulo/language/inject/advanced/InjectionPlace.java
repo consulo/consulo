@@ -42,12 +42,12 @@ public class InjectionPlace {
   private final boolean myEnabled;
 
 
-  public InjectionPlace(final ElementPattern<PsiElement> myElementPattern, final boolean enabled) {
+  public InjectionPlace(ElementPattern<PsiElement> myElementPattern, boolean enabled) {
     this.myElementPattern = myElementPattern;
     myEnabled = enabled;
   }
 
-  public InjectionPlace enabled(final boolean enabled) {
+  public InjectionPlace enabled(boolean enabled) {
     return new InjectionPlace(myElementPattern, enabled);
   }
 
@@ -64,11 +64,11 @@ public class InjectionPlace {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final InjectionPlace place = (InjectionPlace)o;
+    InjectionPlace place = (InjectionPlace)o;
 
     if (!myElementPattern.equals(place.myElementPattern)) return false;
 

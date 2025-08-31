@@ -36,9 +36,9 @@ public interface QualifiedNameProvider {
     String getQualifiedName(PsiElement element);
 
     @Nullable
-    PsiElement qualifiedNameToElement(final String fqn, final Project project);
+    PsiElement qualifiedNameToElement(String fqn, Project project);
 
-    default void insertQualifiedName(final String fqn, final PsiElement element, final Editor editor, final Project project) {
+    default void insertQualifiedName(String fqn, PsiElement element, Editor editor, Project project) {
         EditorModificationUtil.insertStringAtCaret(editor, fqn);
     }
 }

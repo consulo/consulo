@@ -76,7 +76,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     private boolean waitingForAppKit = false;
     private LinkedList<Runnable> queueModel = new LinkedList<>();
 
-    synchronized void runOrEnqueue(final T runnable) {
+    synchronized void runOrEnqueue(T runnable) {
       if (waitingForAppKit) {
         enqueue(runnable);
       }
@@ -86,7 +86,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
       }
     }
 
-    synchronized private void enqueue(final T runnable) {
+    synchronized private void enqueue(T runnable) {
       queueModel.add(runnable);
     }
 
@@ -155,7 +155,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
   public static final Runnable TOOLBAR_SETTER = new Runnable() {
     @Override
     public void run() {
-      final UISettings settings = UISettings.getInstance();
+      UISettings settings = UISettings.getInstance();
       settings.SHOW_MAIN_TOOLBAR = SHOWN;
       settings.fireUISettingsChanged();
     }
@@ -164,7 +164,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
   public static final Runnable NAVBAR_SETTER = new Runnable() {
     @Override
     public void run() {
-      final UISettings settings = UISettings.getInstance();
+      UISettings settings = UISettings.getInstance();
       settings.SHOW_NAVIGATION_BAR = SHOWN;
       settings.fireUISettingsChanged();
     }
@@ -190,7 +190,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   private boolean myInFullScreen;
 
-  public MacMainFrameDecorator(@Nonnull final IdeFrameEx frame, final boolean navBar) {
+  public MacMainFrameDecorator(@Nonnull IdeFrameEx frame, boolean navBar) {
     super(frame);
 
     if (CURRENT_SETTER == null) {
@@ -201,7 +201,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
     UISettings.getInstance().addUISettingsListener(this, this);
 
-    final ID pool = invoke("NSAutoreleasePool", "new");
+    ID pool = invoke("NSAutoreleasePool", "new");
 
     //if (ORACLE_BUG_ID_8003173) {
     //  replaceNativeFullscreenListenerCallback();
@@ -268,10 +268,10 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
   private static void createProtocolHandler() {
     if (ourProtocolHandler == null) {
       // install uri handler
-      final ID mainBundle = invoke("NSBundle", "mainBundle");
-      final ID urlTypes = invoke(mainBundle, "objectForInfoDictionaryKey:", Foundation.nsString("CFBundleURLTypes"));
-      final ApplicationInfo info = ApplicationInfo.getInstance();
-      final BuildNumber build = info != null ? info.getBuild() : null;
+      ID mainBundle = invoke("NSBundle", "mainBundle");
+      ID urlTypes = invoke(mainBundle, "objectForInfoDictionaryKey:", Foundation.nsString("CFBundleURLTypes"));
+      ApplicationInfo info = ApplicationInfo.getInstance();
+      BuildNumber build = info != null ? info.getBuild() : null;
       if (urlTypes.equals(ID.NIL) && build != null && !build.isSnapshot()) {
         LOG.warn("no url bundle present. \n" +
                  "To use platform protocol handler to open external links specify required protocols in the mac app layout section of the build file\n" +
@@ -303,7 +303,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
   }
 
   @Override
-  public void uiSettingsChanged(final UISettings source) {
+  public void uiSettingsChanged(UISettings source) {
     if (CURRENT_GETTER != null) {
       SHOWN = CURRENT_GETTER.apply(null);
     }
@@ -316,7 +316,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   @Nonnull
   @Override
-  public ActionCallback toggleFullScreen(final boolean state) {
+  public ActionCallback toggleFullScreen(boolean state) {
     JFrame jFrame = getJFrame();
     if (!SystemInfo.isMacOSLion || jFrame == null || myInFullScreen == state) return ActionCallback.REJECTED;
     final ActionCallback callback = new ActionCallback();

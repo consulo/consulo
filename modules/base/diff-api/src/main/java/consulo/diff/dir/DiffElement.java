@@ -100,7 +100,7 @@ public abstract class DiffElement<T> {
   public DiffContent createDiffContent(@Nullable Project project, @Nonnull ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException {
     try {
-      final T src = getValue();
+      T src = getValue();
       if (src instanceof VirtualFile) {
         return DiffContentFactory.getInstance().create(project, (VirtualFile)src);
       }

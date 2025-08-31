@@ -24,7 +24,7 @@ public class UpdateHighlightersUtil {
                                                int endOffset,
                                                @Nonnull Collection<HighlightInfo> highlights,
                                                // if null global scheme will be used
-                                               @Nullable final EditorColorsScheme colorsScheme,
+                                               @Nullable EditorColorsScheme colorsScheme,
                                                int group) {
         LanguageEditorInternalHelper.getInstance().setHighlightersToEditor(project, document, startOffset, endOffset, highlights, colorsScheme, group);
     }

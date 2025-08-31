@@ -114,8 +114,8 @@ public class SystemProperties {
    * @param defaultValue default value
    * @return the property value as integer, or default value.
    */
-  public static int getIntProperty(@Nonnull final String key, final int defaultValue) {
-    final String value = System.getProperty(key);
+  public static int getIntProperty(@Nonnull String key, int defaultValue) {
+    String value = System.getProperty(key);
     if (value != null) {
       try {
         return Integer.parseInt(value);
@@ -135,8 +135,8 @@ public class SystemProperties {
    * @param defaultValue default value
    * @return the property value as boolean, or default value.
    */
-  public static boolean getBooleanProperty(@Nonnull final String key, final boolean defaultValue) {
-    final String value = System.getProperty(key);
+  public static boolean getBooleanProperty(@Nonnull String key, boolean defaultValue) {
+    String value = System.getProperty(key);
     if (value != null) {
       return Boolean.parseBoolean(value);
     }

@@ -39,14 +39,14 @@ public class CleanupOnScopeIntention extends CleanupIntention {
   @Nullable
   @Override                               
   @RequiredUIAccess
-  protected AnalysisScope getScope(final Project project, final PsiFile file) {
-    final Module module = file.getModule();
+  protected AnalysisScope getScope(Project project, PsiFile file) {
+    Module module = file.getModule();
     AnalysisScope analysisScope = new AnalysisScope(file);
-    final VirtualFile virtualFile = file.getVirtualFile();
+    VirtualFile virtualFile = file.getVirtualFile();
     if (file.isPhysical() || virtualFile == null || !virtualFile.isInLocalFileSystem()) {
       analysisScope = new AnalysisScope(project);
     }
-    final BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(
+    BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(
       AnalysisScopeLocalize.specifyAnalysisScope(InspectionLocalize.inspectionActionTitle()).get(),
       AnalysisScopeLocalize.analysisScopeTitle(InspectionLocalize.inspectionActionNoun()).get(),
       project,
@@ -58,7 +58,7 @@ public class CleanupOnScopeIntention extends CleanupIntention {
     );
     dlg.show();
     if (!dlg.isOK()) return null;
-    final AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
+    AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
     return dlg.getScope(uiOptions, analysisScope, project, module);
   }
 }

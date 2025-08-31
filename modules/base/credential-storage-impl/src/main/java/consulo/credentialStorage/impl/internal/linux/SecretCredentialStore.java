@@ -109,7 +109,7 @@ public class SecretCredentialStore implements CredentialStore {
     }
 
     @Override
-    public Credentials get(final CredentialAttributes attributes) {
+    public Credentials get(CredentialAttributes attributes) {
         long start = System.currentTimeMillis();
         try {
             Credentials credentials = CompletableFuture.supplyAsync((Supplier<Credentials>) () -> {
@@ -151,7 +151,7 @@ public class SecretCredentialStore implements CredentialStore {
     }
 
     @Override
-    public void set(final CredentialAttributes attributes, final Credentials credentials) {
+    public void set(CredentialAttributes attributes, Credentials credentials) {
         Memory serviceNamePointer = stringPointer(attributes.getServiceName().getBytes());
         String accountName = StringUtil.nullize(attributes.getUserName());
         if (accountName == null && credentials != null) {
@@ -165,7 +165,7 @@ public class SecretCredentialStore implements CredentialStore {
         byte[] joinedData = CredentialStoreUtil.joinData(credentials.getUserName(), credentials.getPassword());
         Memory passwordPointer = stringPointer(joinedData, true);
 
-        final String finalAccountName = accountName;
+        String finalAccountName = accountName;
         
         checkError("secret_password_store_sync", errorRef -> {
             try {

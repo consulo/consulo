@@ -48,9 +48,9 @@ public class FilePathImpl implements FilePath {
 
   private FilePathImpl(VirtualFile virtualParent,
                        @Nonnull String name,
-                       final boolean isDirectory,
+                       boolean isDirectory,
                        VirtualFile child,
-                       final boolean forDeleted) {
+                       boolean forDeleted) {
     this(fileFromVirtual(virtualParent, child, name), isDirectory, true);
     myVirtualParent = virtualParent;
 
@@ -64,7 +64,7 @@ public class FilePathImpl implements FilePath {
     }
   }
 
-  private static File fileFromVirtual(VirtualFile virtualParent, final VirtualFile child, String name) {
+  private static File fileFromVirtual(VirtualFile virtualParent, VirtualFile child, String name) {
     assert virtualParent != null || child != null;
     if (virtualParent != null) {
       return new File(virtualParent.getPath(), name);
@@ -72,19 +72,19 @@ public class FilePathImpl implements FilePath {
     return new File(child.getPath());
   }
 
-  public FilePathImpl(@Nonnull VirtualFile virtualParent, String name, final boolean isDirectory) {
+  public FilePathImpl(@Nonnull VirtualFile virtualParent, String name, boolean isDirectory) {
     this(virtualParent, name, isDirectory, null, false);
   }
 
-  private FilePathImpl(@Nonnull VirtualFile virtualParent, String name, final boolean isDirectory, final boolean forDeleted) {
+  private FilePathImpl(@Nonnull VirtualFile virtualParent, String name, boolean isDirectory, boolean forDeleted) {
     this(virtualParent, name, isDirectory, null, forDeleted);
   }
 
-  public FilePathImpl(@Nonnull File file, final boolean isDirectory) {
+  public FilePathImpl(@Nonnull File file, boolean isDirectory) {
     this(file, isDirectory, true);
   }
 
-  private FilePathImpl(@Nonnull File file, final boolean isDirectory, boolean local) {
+  private FilePathImpl(@Nonnull File file, boolean isDirectory, boolean local) {
     myFile = file;
     myName = file.getName();
     myIsDirectory = isDirectory;
@@ -95,7 +95,7 @@ public class FilePathImpl implements FilePath {
     this(virtualFile.getParent(), virtualFile.getName(), virtualFile.isDirectory(), virtualFile, false);
   }
 
-  public FilePath createChild(final String subPath, final boolean isDirectory) {
+  public FilePath createChild(String subPath, boolean isDirectory) {
     if (StringUtil.isEmptyOrSpaces(subPath)) return this;
 
     if (getVirtualFile() != null && subPath.indexOf('/') == -1 && subPath.indexOf('\\') == -1) {
@@ -121,7 +121,7 @@ public class FilePathImpl implements FilePath {
     }
   }
   
-  private static boolean isSpecialName(final String name) {
+  private static boolean isSpecialName(String name) {
     return ".".equals(name) || "..".equals(name);
   }
 
@@ -146,7 +146,7 @@ public class FilePathImpl implements FilePath {
 
   @Override
   public String getPath() {
-    final VirtualFile virtualFile = myVirtualFile;
+    VirtualFile virtualFile = myVirtualFile;
     if (virtualFile != null && virtualFile.isValid()) {
       return virtualFile.getPath();
     }
@@ -172,7 +172,7 @@ public class FilePathImpl implements FilePath {
   @Override
   public boolean isUnder(FilePath parent, boolean strict) {
     if (myVirtualFile != null) {
-      final VirtualFile parentFile = parent.getVirtualFile();
+      VirtualFile parentFile = parent.getVirtualFile();
       if (parentFile != null) {
         return VirtualFileUtil.isAncestor(parentFile, myVirtualFile, strict);
       }
@@ -189,7 +189,7 @@ public class FilePathImpl implements FilePath {
     // can't use File.getParentPath() because the path may not correspond to an actual file on disk,
     // and adding a drive letter would not be appropriate (IDEADEV-7405)
     // path containing exactly one separator is assumed to be root path
-    final String path = myFile.getPath();
+    String path = myFile.getPath();
     int pos = path.lastIndexOf(File.separatorChar);
     if (pos < 0 || pos == path.indexOf(File.separatorChar)) {
       return null;
@@ -304,7 +304,7 @@ public class FilePathImpl implements FilePath {
     return createForDeletedFile(selectedFile, isDirectory);
   }
 
-  public static FilePathImpl createForDeletedFile(final File selectedFile, final boolean isDirectory) {
+  public static FilePathImpl createForDeletedFile(File selectedFile, boolean isDirectory) {
     LocalFileSystem lfs = LocalFileSystem.getInstance();
 
     File parentFile = selectedFile.getParentFile();
@@ -323,7 +323,7 @@ public class FilePathImpl implements FilePath {
 
   public static FilePath createOn(String s) {
     File ioFile = new File(s);
-    final LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+    LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
     VirtualFile virtualFile = localFileSystem.findFileByIoFile(ioFile);
     if (virtualFile != null) {
       return new FilePathImpl(virtualFile);
@@ -343,7 +343,7 @@ public class FilePathImpl implements FilePath {
   private static boolean ourFileStringConstructorInitialized;
 
   @Nonnull
-  public static FilePath createNonLocal(String path, final boolean directory) {
+  public static FilePath createNonLocal(String path, boolean directory) {
     path = path.replace('/', File.separatorChar);
     // avoid filename normalization (IDEADEV-10548)
     if (!ourFileStringConstructorInitialized) {

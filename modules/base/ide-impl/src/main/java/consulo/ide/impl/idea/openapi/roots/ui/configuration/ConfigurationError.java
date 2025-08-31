@@ -28,11 +28,11 @@ public abstract class ConfigurationError implements Comparable<ConfigurationErro
   private final String myDescription;
   private boolean myIgnored;
 
-  protected ConfigurationError(final String plainTextTitle, final String description) {
+  protected ConfigurationError(String plainTextTitle, String description) {
     this(plainTextTitle, description, false);
   }
 
-  protected ConfigurationError(final String plainTextTitle, final String description, final boolean ignored) {
+  protected ConfigurationError(String plainTextTitle, String description, boolean ignored) {
     myPlainTextTitle = plainTextTitle;
     myDescription = description;
     myIgnored = ignored;
@@ -52,7 +52,7 @@ public abstract class ConfigurationError implements Comparable<ConfigurationErro
    * Called when user invokes "Ignore" action
    * @param "true" if user invokes "Ignore", "false" if user wish to not ignore this error anymore
    */
-  public void ignore(final boolean b) {
+  public void ignore(boolean b) {
     if (b != myIgnored) {
       myIgnored = b;
     }
@@ -78,13 +78,13 @@ public abstract class ConfigurationError implements Comparable<ConfigurationErro
   public abstract void navigate();
 
   @Override
-  public int compareTo(final ConfigurationError o) {
+  public int compareTo(ConfigurationError o) {
     if (myIgnored != o.isIgnored()) return -1;
 
-    final int titleResult = getPlainTextTitle().compareTo(o.getPlainTextTitle());
+    int titleResult = getPlainTextTitle().compareTo(o.getPlainTextTitle());
     if (titleResult != 0) return titleResult;
 
-    final int descriptionResult = getDescription().compareTo(o.getDescription());
+    int descriptionResult = getDescription().compareTo(o.getDescription());
     if (descriptionResult != 0) return descriptionResult;
 
     return 0;

@@ -29,7 +29,7 @@ public abstract class ArtifactsTreeNode extends CachingSimpleNode {
   private final TreeNodePresentation myPresentation;
   protected final ArtifactEditorContext myContext;
 
-  protected ArtifactsTreeNode(ArtifactEditorContext context, NodeDescriptor parentDescriptor, final TreeNodePresentation presentation) {
+  protected ArtifactsTreeNode(ArtifactEditorContext context, NodeDescriptor parentDescriptor, TreeNodePresentation presentation) {
     super(context.getProject(), parentDescriptor);
     myContext = context;
     myPresentation = presentation;

@@ -41,7 +41,7 @@ import java.util.Set;
 public class InspectionsOptionsToolbarAction extends AnAction {
     private final InspectionResultsView myView;
 
-    public InspectionsOptionsToolbarAction(final InspectionResultsView view) {
+    public InspectionsOptionsToolbarAction(InspectionResultsView view) {
         super(getToolOptions(null), getToolOptions(null), AllIcons.General.InspectionsTrafficOff);
         myView = view;
     }
@@ -49,13 +49,13 @@ public class InspectionsOptionsToolbarAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final DefaultActionGroup options = new DefaultActionGroup();
-        final List<AnAction> actions = createActions();
+        DefaultActionGroup options = new DefaultActionGroup();
+        List<AnAction> actions = createActions();
         for (AnAction action : actions) {
             options.add(action);
         }
-        final DataContext dataContext = e.getDataContext();
-        final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+        DataContext dataContext = e.getDataContext();
+        ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
             getSelectedToolWrapper().getDisplayName(),
             options,
             dataContext,
@@ -78,29 +78,29 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         }
         InspectionToolWrapper toolWrapper = getSelectedToolWrapper();
         assert toolWrapper != null;
-        final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+        HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
         if (key == null) {
             e.getPresentation().setEnabled(false);
         }
         e.getPresentation().setEnabled(true);
-        final LocalizeValue text = getToolOptions(toolWrapper);
+        LocalizeValue text = getToolOptions(toolWrapper);
         e.getPresentation().setTextValue(text);
         e.getPresentation().setDescriptionValue(text);
     }
 
     @Nonnull
-    private static LocalizeValue getToolOptions(@Nullable final InspectionToolWrapper toolWrapper) {
+    private static LocalizeValue getToolOptions(@Nullable InspectionToolWrapper toolWrapper) {
         return InspectionLocalize.inspectionsViewOptionsTitle(toolWrapper != null ? toolWrapper.getDisplayName() : "");
     }
 
     public List<AnAction> createActions() {
-        final List<AnAction> result = new ArrayList<>();
+        List<AnAction> result = new ArrayList<>();
         final InspectionTree tree = myView.getTree();
         final InspectionToolWrapper toolWrapper = tree.getSelectedToolWrapper();
         if (toolWrapper == null) {
             return result;
         }
-        final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+        HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
         if (key == null) {
             return result;
         }
@@ -111,7 +111,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
-                final PsiElement psiElement = getPsiElement(tree);
+                PsiElement psiElement = getPsiElement(tree);
                 assert psiElement != null;
                 new RunInspectionIntention(toolWrapper).invoke(myView.getProject(), null, psiElement.getContainingFile());
             }
@@ -123,9 +123,9 @@ public class InspectionsOptionsToolbarAction extends AnAction {
 
             @Nullable
             private PsiElement getPsiElement(InspectionTree tree) {
-                final RefEntity[] selectedElements = tree.getSelectedElements();
+                RefEntity[] selectedElements = tree.getSelectedElements();
 
-                final PsiElement psiElement;
+                PsiElement psiElement;
                 if (selectedElements.length > 0 && selectedElements[0] instanceof RefElement) {
                     psiElement = ((RefElement) selectedElements[0]).getPsiElement();
                 }
@@ -145,29 +145,29 @@ public class InspectionsOptionsToolbarAction extends AnAction {
     private class DisableInspectionAction extends AnAction {
         private final HighlightDisplayKey myKey;
 
-        public DisableInspectionAction(final HighlightDisplayKey key) {
+        public DisableInspectionAction(HighlightDisplayKey key) {
             super(InspectionLocalize.disableInspectionActionName());
             myKey = key;
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(final AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             try {
                 if (myView.isProfileDefined()) {
-                    final ModifiableModel model = myView.getCurrentProfile().getModifiableModel();
+                    ModifiableModel model = myView.getCurrentProfile().getModifiableModel();
                     model.disableTool(myKey.toString(), myView.getProject());
                     model.commit();
                     myView.updateCurrentProfile();
                 }
                 else {
-                    final RefEntity[] selectedElements = myView.getTree().getSelectedElements();
-                    final Set<PsiElement> files = new HashSet<>();
-                    final Project project = myView.getProject();
-                    final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
+                    RefEntity[] selectedElements = myView.getTree().getSelectedElements();
+                    Set<PsiElement> files = new HashSet<>();
+                    Project project = myView.getProject();
+                    InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
                     for (RefEntity selectedElement : selectedElements) {
                         if (selectedElement instanceof RefElement) {
-                            final PsiElement element = ((RefElement) selectedElement).getPsiElement();
+                            PsiElement element = ((RefElement) selectedElement).getPsiElement();
                             files.add(element);
                         }
                     }

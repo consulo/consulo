@@ -103,7 +103,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
 
                 if (element == null && file != null) {
                     try {
-                        final PsiReference ref = file.findReferenceAt(editor.getCaretModel().getOffset());
+                        PsiReference ref = file.findReferenceAt(editor.getCaretModel().getOffset());
                         if (ref instanceof PsiPolyVariantReference) {
                             element = ref.getElement();
                         }
@@ -124,12 +124,12 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        final Editor editor = e.getData(Editor.KEY);
-        final PsiElement element = e.getData(PsiElement.KEY);
+        Editor editor = e.getData(Editor.KEY);
+        PsiElement element = e.getData(PsiElement.KEY);
 
         if (editor != null) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_FEATURE);
-            final LookupEx lookup = LookupManager.getInstance(project).getActiveLookup();
+            LookupEx lookup = LookupManager.getInstance(project).getActiveLookup();
             if (lookup != null) {
                 //dumpLookupElementWeights(lookup);
                 FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE);

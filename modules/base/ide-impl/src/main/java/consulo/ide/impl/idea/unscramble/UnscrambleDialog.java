@@ -171,7 +171,7 @@ public class UnscrambleDialog extends DialogWrapper {
 
     @RequiredUIAccess
     private void reset() {
-        final List<String> savedUrls = getSavedLogFileUrls();
+        List<String> savedUrls = getSavedLogFileUrls();
         myLogFile.setHistorySize(10);
         myLogFile.setHistory(savedUrls);
 
@@ -183,13 +183,13 @@ public class UnscrambleDialog extends DialogWrapper {
             myLogFile.setText(lastUrl);
             myLogFile.setSelectedItem(lastUrl);
         }
-        final UnscrambleSupport selectedUnscrambler = getSavedUnscrambler();
+        UnscrambleSupport selectedUnscrambler = getSavedUnscrambler();
 
-        final int count = getRegisteredUnscramblers().size();
+        int count = getRegisteredUnscramblers().size();
         int index = 0;
         if (selectedUnscrambler != null) {
             for (int i = 0; i < count; i++) {
-                final UnscrambleSupport unscrambleSupport = myUnscrambleChooser.getItemAt(i);
+                UnscrambleSupport unscrambleSupport = myUnscrambleChooser.getItemAt(i);
                 if (unscrambleSupport != null && Comparing.strEqual(unscrambleSupport.getId(), selectedUnscrambler.getId())) {
                     index = i;
                     break;
@@ -215,10 +215,10 @@ public class UnscrambleDialog extends DialogWrapper {
 
     @Nullable
     public UnscrambleSupport getSavedUnscrambler() {
-        final List<UnscrambleSupport> registeredUnscramblers = getRegisteredUnscramblers();
-        final String savedUnscramblerId = PropertiesComponent.getInstance().getValue(PROPERTY_UNSCRAMBLER_ID_USED);
+        List<UnscrambleSupport> registeredUnscramblers = getRegisteredUnscramblers();
+        String savedUnscramblerId = PropertiesComponent.getInstance().getValue(PROPERTY_UNSCRAMBLER_ID_USED);
         UnscrambleSupport selectedUnscrambler = null;
-        for (final UnscrambleSupport unscrambleSupport : registeredUnscramblers) {
+        for (UnscrambleSupport unscrambleSupport : registeredUnscramblers) {
             if (Comparing.strEqual(unscrambleSupport.getId(), savedUnscramblerId)) {
                 selectedUnscrambler = unscrambleSupport;
             }
@@ -227,9 +227,9 @@ public class UnscrambleDialog extends DialogWrapper {
     }
 
     public static List<String> getSavedLogFileUrls() {
-        final List<String> res = new ArrayList<>();
-        final String savedUrl = PropertiesComponent.getInstance().getValue(PROPERTY_LOG_FILE_HISTORY_URLS);
-        final String[] strings = savedUrl == null ? ArrayUtil.EMPTY_STRING_ARRAY : savedUrl.split(":::");
+        List<String> res = new ArrayList<>();
+        String savedUrl = PropertiesComponent.getInstance().getValue(PROPERTY_LOG_FILE_HISTORY_URLS);
+        String[] strings = savedUrl == null ? ArrayUtil.EMPTY_STRING_ARRAY : savedUrl.split(":::");
         for (int i = 0; i != strings.length; ++i) {
             res.add(strings[i]);
         }
@@ -276,7 +276,7 @@ public class UnscrambleDialog extends DialogWrapper {
         myUnscrambleChooser.addItem(null);
 
         List<UnscrambleSupport> unscrambleComponents = getRegisteredUnscramblers();
-        for (final UnscrambleSupport unscrambleSupport : unscrambleComponents) {
+        for (UnscrambleSupport unscrambleSupport : unscrambleComponents) {
             myUnscrambleChooser.addItem(unscrambleSupport);
         }
         myUnscrambleChooser.setRenderer(new ColoredListCellRenderer<UnscrambleSupport>() {
@@ -307,10 +307,10 @@ public class UnscrambleDialog extends DialogWrapper {
     @Override
     public void dispose() {
         if (isOK()) {
-            final List list = myLogFile.getHistory();
+            List list = myLogFile.getHistory();
             String res = null;
             for (Object aList : list) {
-                final String s = (String) aList;
+                String s = (String) aList;
                 if (res == null) {
                     res = s;
                 }
@@ -390,7 +390,7 @@ public class UnscrambleDialog extends DialogWrapper {
         return addConsole(project, threadStates, unscrambledTrace);
     }
 
-    private RunContentDescriptor addConsole(final Project project, final List<ThreadState> threadDump, String unscrambledTrace) {
+    private RunContentDescriptor addConsole(Project project, List<ThreadState> threadDump, String unscrambledTrace) {
         Image icon = null;
         String message = IdeLocalize.unscrambleUnscrambledStacktraceTab().get();
         if (!threadDump.isEmpty()) {

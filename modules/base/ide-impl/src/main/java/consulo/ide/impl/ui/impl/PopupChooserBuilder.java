@@ -228,20 +228,20 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
 
 
     @Override
-    public PopupChooserBuilder<T> setRequestFocus(final boolean requestFocus) {
+    public PopupChooserBuilder<T> setRequestFocus(boolean requestFocus) {
         myRequestFocus = requestFocus;
         return this;
     }
 
     @Override
-    public PopupChooserBuilder<T> setResizable(final boolean forceResizable) {
+    public PopupChooserBuilder<T> setResizable(boolean forceResizable) {
         myForceResizable = forceResizable;
         return this;
     }
 
 
     @Override
-    public PopupChooserBuilder<T> setMovable(final boolean forceMovable) {
+    public PopupChooserBuilder<T> setMovable(boolean forceMovable) {
         myForceMovable = forceMovable;
         return this;
     }
@@ -265,13 +265,13 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     }
 
     @Override
-    public PopupChooserBuilder<T> setAlpha(final float alpha) {
+    public PopupChooserBuilder<T> setAlpha(float alpha) {
         myAlpha = alpha;
         return this;
     }
 
     @Override
-    public PopupChooserBuilder<T> setAutoselectOnMouseMove(final boolean doAutoSelect) {
+    public PopupChooserBuilder<T> setAutoselectOnMouseMove(boolean doAutoSelect) {
         myAutoselectOnMouseMove = doAutoSelect;
         return this;
     }
@@ -416,7 +416,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
 
 
     @Override
-    public PopupChooserBuilder<T> setMinSize(final Dimension dimension) {
+    public PopupChooserBuilder<T> setMinSize(Dimension dimension) {
         myMinSize = dimension;
         return this;
     }
@@ -427,7 +427,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return this;
     }
 
-    private void registerClosePopupKeyboardAction(final KeyStroke keyStroke, final boolean shouldPerformAction) {
+    private void registerClosePopupKeyboardAction(KeyStroke keyStroke, final boolean shouldPerformAction) {
         registerPopupKeyboardAction(keyStroke, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -439,7 +439,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         });
     }
 
-    private void registerPopupKeyboardAction(final KeyStroke keyStroke, AbstractAction action) {
+    private void registerPopupKeyboardAction(KeyStroke keyStroke, AbstractAction action) {
         myChooserComponent.getComponent().registerKeyboardAction(action, keyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
@@ -453,19 +453,19 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     }
 
     @Override
-    public PopupChooserBuilder<T> setAutoSelectIfEmpty(final boolean autoselect) {
+    public PopupChooserBuilder<T> setAutoSelectIfEmpty(boolean autoselect) {
         myAutoselect = autoselect;
         return this;
     }
 
     @Override
-    public PopupChooserBuilder<T> setCancelKeyEnabled(final boolean enabled) {
+    public PopupChooserBuilder<T> setCancelKeyEnabled(boolean enabled) {
         myCancelKeyEnabled = enabled;
         return this;
     }
 
     @Override
-    public PopupChooserBuilder<T> addListener(final JBPopupListener listener) {
+    public PopupChooserBuilder<T> addListener(JBPopupListener listener) {
         myListeners.add(listener);
         return this;
     }

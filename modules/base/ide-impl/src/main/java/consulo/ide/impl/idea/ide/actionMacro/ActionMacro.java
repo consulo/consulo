@@ -78,7 +78,7 @@ public class ActionMacro implements JDOMExternalizable {
   public void readExternal(Element macro) throws InvalidDataException {
     setName(macro.getAttributeValue(ATTRIBUTE_NAME));
     List actions = macro.getChildren();
-    for (final Object o : actions) {
+    for (Object o : actions) {
       Element action = (Element)o;
       if (ELEMENT_TYPING.equals(action.getName())) {
         Pair<List<Integer>, List<Integer>> codes = parseKeyCodes(action.getAttributeValue(ATTRIBUTE_KEY_CODES));
@@ -112,7 +112,7 @@ public class ActionMacro implements JDOMExternalizable {
 
   public void writeExternal(Element macro) throws WriteExternalException {
     macro.setAttribute(ATTRIBUTE_NAME, myName);
-    final ActionDescriptor[] actions = getActions();
+    ActionDescriptor[] actions = getActions();
     for (ActionDescriptor action : actions) {
       Element actionNode = null;
       if (action instanceof TypedDescriptor typedDescriptor) {
@@ -155,7 +155,7 @@ public class ActionMacro implements JDOMExternalizable {
     if (this == o) return true;
     if (!(o instanceof ActionMacro)) return false;
 
-    final ActionMacro actionMacro = (ActionMacro)o;
+    ActionMacro actionMacro = (ActionMacro)o;
 
     if (!myActions.equals(actionMacro.myActions)) return false;
     if (!myName.equals(actionMacro.myName)) return false;
@@ -276,8 +276,8 @@ public class ActionMacro implements JDOMExternalizable {
 
     public void playBack(DataContext context) {
       Editor editor = context.getData(Editor.KEY);
-      final TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();
-      for (final char aChar : myText.toCharArray()) {
+      TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();
+      for (char aChar : myText.toCharArray()) {
         typedAction.actionPerformed(editor, aChar, context);
       }
     }

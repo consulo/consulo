@@ -26,18 +26,18 @@ public class ExactFileNameMatcherImpl implements ExactFileNameMatcher {
   private final String myFileName;
   private final boolean myIgnoreCase;
 
-  public ExactFileNameMatcherImpl(@Nonnull final String fileName) {
+  public ExactFileNameMatcherImpl(@Nonnull String fileName) {
     myFileName = fileName;
     myIgnoreCase = false;
   }
 
-  public ExactFileNameMatcherImpl(@Nonnull final String fileName, final boolean ignoreCase) {
+  public ExactFileNameMatcherImpl(@Nonnull String fileName, boolean ignoreCase) {
     myFileName = fileName;
     myIgnoreCase = ignoreCase;
   }
 
   @Override
-  public boolean acceptsCharSequence(@Nonnull final CharSequence fileName) {
+  public boolean acceptsCharSequence(@Nonnull CharSequence fileName) {
     return StringUtil.equal(fileName, myFileName, !myIgnoreCase);
   }
 
@@ -58,11 +58,11 @@ public class ExactFileNameMatcherImpl implements ExactFileNameMatcher {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final ExactFileNameMatcherImpl that = (ExactFileNameMatcherImpl)o;
+    ExactFileNameMatcherImpl that = (ExactFileNameMatcherImpl)o;
 
     if (!myFileName.equals(that.myFileName)) return false;
 

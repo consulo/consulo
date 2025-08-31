@@ -95,9 +95,9 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
   @Override
   public boolean isValid() {
     if (myElement instanceof RefElement && !myElement.isValid()) return false;
-    final CommonProblemDescriptor descriptor = getDescriptor();
+    CommonProblemDescriptor descriptor = getDescriptor();
     if (descriptor instanceof ProblemDescriptor) {
-      final PsiElement psiElement = ((ProblemDescriptor)descriptor).getPsiElement();
+      PsiElement psiElement = ((ProblemDescriptor)descriptor).getPsiElement();
       return psiElement != null && psiElement.isValid();
     }
     return true;

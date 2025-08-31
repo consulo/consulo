@@ -23,7 +23,7 @@ import java.awt.*;
 public interface Painter {
 
   boolean needsRepaint();
-  void paint(Component component, final Graphics2D g);
+  void paint(Component component, Graphics2D g);
 
   void addListener(Listener listener);
   void removeListener(Listener listener);

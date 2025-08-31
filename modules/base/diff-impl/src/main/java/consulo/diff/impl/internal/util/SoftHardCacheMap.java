@@ -28,7 +28,7 @@ public class SoftHardCacheMap<K, V> {
   @Nonnull
   private final Map<K, V> mySoftLinkMap;
 
-  public SoftHardCacheMap(final int protectedQueueSize, final int probationalQueueSize) {
+  public SoftHardCacheMap(int protectedQueueSize, int probationalQueueSize) {
     mySLRUMap = new SLRUMap<K, V>(protectedQueueSize, probationalQueueSize);
     mySoftLinkMap = ContainerUtil.createSoftValueMap();
   }

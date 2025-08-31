@@ -86,7 +86,7 @@ public class ApplyPatchMergeTool implements MergeTool {
 
         @Nullable
         @Override
-        public ActionRecord getResolveAction(@Nonnull final MergeResult result) {
+        public ActionRecord getResolveAction(@Nonnull MergeResult result) {
             if (result == MergeResult.LEFT || result == MergeResult.RIGHT) {
                 return null;
             }

@@ -34,7 +34,7 @@ public final class DocumentEventUtil {
      * notifying about a {@link #isMoveInsertion move insertion}.
      */
     public static int getMoveOffsetBeforeInsertion(@Nonnull DocumentEvent e) {
-        final int moveOffset = e.getMoveOffset();
+        int moveOffset = e.getMoveOffset();
         if (moveOffset > e.getOffset()) {
             return moveOffset - e.getNewLength();
         }
@@ -47,7 +47,7 @@ public final class DocumentEventUtil {
      * notifying about a {@link #isMoveDeletion move deletion}.
      */
     public static int getMoveOffsetAfterDeletion(@Nonnull DocumentEvent e) {
-        final int moveOffset = e.getMoveOffset();
+        int moveOffset = e.getMoveOffset();
         if (moveOffset > e.getOffset()) {
             return moveOffset - e.getOldLength();
         }

@@ -41,7 +41,7 @@ public final class LibraryGroupElement {
     if (this == o) return true;
     if (!(o instanceof LibraryGroupElement)) return false;
 
-    final LibraryGroupElement libraryGroupElement = (LibraryGroupElement)o;
+    LibraryGroupElement libraryGroupElement = (LibraryGroupElement)o;
 
     if (!myModule.equals(libraryGroupElement.myModule)) return false;
 

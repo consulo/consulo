@@ -187,7 +187,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
             return;
         }
 
-        final Application app = myApplication;
+        Application app = myApplication;
 
         runActivities(uiAccess, myDumbAwarePostStartupActivities, StartUpMeasurer.Phases.PROJECT_DUMB_POST_STARTUP);
 
@@ -321,7 +321,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
 
     @Override
     public void runWhenProjectIsInitialized(@Nonnull StartupActivity startupActivity) {
-        final Application application = myProject.getApplication();
+        Application application = myProject.getApplication();
 
         Runnable runnable = () -> {
             if (myProject.isDisposedOrDisposeInProgress()) {

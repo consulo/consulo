@@ -32,7 +32,7 @@ public class InternalPopupUtil {
       if (ApplicationManager.getApplication() == null) {
         return false;
       }
-      final StackingPopupDispatcher popupDispatcher = StackingPopupDispatcher.getInstance();
+      StackingPopupDispatcher popupDispatcher = StackingPopupDispatcher.getInstance();
       return popupDispatcher.isPopupFocused();
     }
   }

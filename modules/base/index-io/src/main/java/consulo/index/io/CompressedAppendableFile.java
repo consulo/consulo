@@ -62,14 +62,14 @@ public class CompressedAppendableFile {
     file.getParentFile().mkdirs();
   }
 
-  public synchronized <Data> Data read(final long addr, KeyDescriptor<Data> descriptor) throws IOException {
+  public synchronized <Data> Data read(long addr, KeyDescriptor<Data> descriptor) throws IOException {
     try (DataInputStream stream = getStream(addr)) {
       return descriptor.read(stream);
     }
   }
 
   @Nonnull
-  public synchronized DataInputStream getStream(final long addr) throws IOException {
+  public synchronized DataInputStream getStream(long addr) throws IOException {
     initChunkLengthTable();
     loadAppendBuffer();
     return new DataInputStream(new SegmentedChunkInputStream(addr, myChunkTableLength, myNextChunkBuffer, myBufferPosition));
@@ -183,11 +183,11 @@ public class CompressedAppendableFile {
   }
 
   @Nonnull
-  private DataInputStream getChunkStream(final File appendFile, int pageNumber) throws IOException {
+  private DataInputStream getChunkStream(File appendFile, int pageNumber) throws IOException {
     assert myFileLength != 0;
     int limit;
     long pageStartOffset;
-    final long pageEndOffset = pageNumber < myChunkTableLength ? calcOffsetOfPage(pageNumber) : myFileLength;
+    long pageEndOffset = pageNumber < myChunkTableLength ? calcOffsetOfPage(pageNumber) : myFileLength;
 
     if (pageNumber > 0) {
       pageStartOffset = calcOffsetOfPage(pageNumber - 1);
@@ -202,9 +202,9 @@ public class CompressedAppendableFile {
   }
 
   private long calcOffsetOfPage(int pageNumber) {
-    final int calculatedOffset = (pageNumber + 1) / FACTOR;
+    int calculatedOffset = (pageNumber + 1) / FACTOR;
     long offset = calculatedOffset > 0 ? myChunkOffsetTable[calculatedOffset - 1] : 0;
-    final int baseOffset = calculatedOffset * FACTOR;
+    int baseOffset = calculatedOffset * FACTOR;
     for (int index = 0, len = (pageNumber + 1) % FACTOR; index < len; ++index) {
       offset += myChunkLengthTable[baseOffset + index] & MAX_PAGE_LENGTH;
     }
@@ -229,11 +229,11 @@ public class CompressedAppendableFile {
   }
 
   public synchronized <Data> void append(Data value, KeyDescriptor<Data> descriptor) throws IOException {
-    final BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
+    BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
     DataOutput out = new DataOutputStream(bos);
     descriptor.save(out, value);
-    final int size = bos.size();
-    final byte[] buffer = bos.getInternalBuffer();
+    int size = bos.size();
+    byte[] buffer = bos.getInternalBuffer();
     append(buffer, size);
   }
 

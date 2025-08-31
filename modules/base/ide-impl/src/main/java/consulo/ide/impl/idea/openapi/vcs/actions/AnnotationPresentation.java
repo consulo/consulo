@@ -56,14 +56,14 @@ class AnnotationPresentation implements TextAnnotationPresentation {
   }
 
   @Override
-  public EditorFontType getFontType(final int line) {
+  public EditorFontType getFontType(int line) {
     VcsRevisionNumber revision = myFileAnnotation.originalRevision(line);
     VcsRevisionNumber currentRevision = myFileAnnotation.getCurrentRevision();
     return currentRevision != null && currentRevision.equals(revision) ? EditorFontType.BOLD : EditorFontType.PLAIN;
   }
 
   @Override
-  public EditorColorKey getColor(final int line) {
+  public EditorColorKey getColor(int line) {
     if (mySwitcher == null) return AnnotationSource.LOCAL.getColor();
     return mySwitcher.getAnnotationSource(line).getColor();
   }

@@ -66,13 +66,13 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
   private static final ColumnInfo<VirtualFileCheckedTreeNode, String> ROOT_TYPE_COLUMN = new ColumnInfo<>("") {
     @Override
     public String valueOf(VirtualFileCheckedTreeNode node) {
-      final SuggestedChildRootInfo rootInfo = node.getRootInfo();
+      SuggestedChildRootInfo rootInfo = node.getRootInfo();
       return rootInfo != null ? rootInfo.getRootTypeName(rootInfo.getSelectedRootType()) : "";
     }
 
     @Override
     public TableCellRenderer getRenderer(VirtualFileCheckedTreeNode node) {
-      final SuggestedChildRootInfo rootInfo = node.getRootInfo();
+      SuggestedChildRootInfo rootInfo = node.getRootInfo();
       if (rootInfo != null && isCellEditable(node)) {
         return new ComboBoxTableRenderer<>(rootInfo.getRootTypeNames());
       }
@@ -83,7 +83,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     public TableCellEditor getEditor(VirtualFileCheckedTreeNode o) {
       final SuggestedChildRootInfo rootInfo = o.getRootInfo();
       if (rootInfo == null) return null;
-      final ComboBoxCellEditor editor = new ComboBoxCellEditor() {
+      ComboBoxCellEditor editor = new ComboBoxCellEditor() {
         @Override
         protected List<String> getComboBoxItems() {
           return Arrays.asList(rootInfo.getRootTypeNames());
@@ -95,13 +95,13 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
 
     @Override
     public boolean isCellEditable(VirtualFileCheckedTreeNode node) {
-      final SuggestedChildRootInfo rootInfo = node.getRootInfo();
+      SuggestedChildRootInfo rootInfo = node.getRootInfo();
       return rootInfo != null && rootInfo.getDetectedRoot().getTypes().size() > 1;
     }
 
     @Override
     public void setValue(VirtualFileCheckedTreeNode node, String value) {
-      final SuggestedChildRootInfo rootInfo = node.getRootInfo();
+      SuggestedChildRootInfo rootInfo = node.getRootInfo();
       if (rootInfo != null) {
         rootInfo.setSelectedRootType(value);
       }
@@ -135,7 +135,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
   }
 
   private static CheckboxTreeTable createTreeTable(List<SuggestedChildRootInfo> suggestedRoots) {
-    final CheckedTreeNode root = createRoot(suggestedRoots);
+    CheckedTreeNode root = createRoot(suggestedRoots);
     CheckboxTreeTable treeTable = new CheckboxTreeTable(root, new CheckboxTree.CheckboxTreeCellRenderer(true) {
       @Override
       public void customizeRenderer(
@@ -180,7 +180,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
           attributes = SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
           icon = AllIcons.Nodes.TreeClosed;
         }
-        final ColoredTreeCellRenderer textRenderer = getTextRenderer();
+        ColoredTreeCellRenderer textRenderer = getTextRenderer();
         textRenderer.setIcon(icon);
         if (!isValid) {
           textRenderer.append("[INVALID] ", SimpleTextAttributes.ERROR_ATTRIBUTES);
@@ -197,7 +197,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
         max = Math.max(max, treeTable.getFontMetrics(treeTable.getFont()).stringWidth(s));
       }
     }
-    final TableColumn column = treeTable.getColumnModel().getColumn(1);
+    TableColumn column = treeTable.getColumnModel().getColumn(1);
     int width = max + 20;//add space for combobox button
     column.setPreferredWidth(width);
     column.setMaxWidth(width);
@@ -210,7 +210,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     CheckedTreeNode root = new CheckedTreeNode(null);
     Map<VirtualFile, CheckedTreeNode> rootCandidateNodes = new HashMap<>();
     for (SuggestedChildRootInfo rootInfo : suggestedRoots) {
-      final VirtualFile rootCandidate = rootInfo.getRootCandidate();
+      VirtualFile rootCandidate = rootInfo.getRootCandidate();
       CheckedTreeNode parent = rootCandidateNodes.get(rootCandidate);
       if (parent == null) {
         parent = new VirtualFileCheckedTreeNode(rootCandidate);

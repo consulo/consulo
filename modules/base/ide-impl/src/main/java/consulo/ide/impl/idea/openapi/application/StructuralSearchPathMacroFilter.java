@@ -29,7 +29,7 @@ import org.jdom.Attribute;
 public class StructuralSearchPathMacroFilter extends PathMacroFilter {
   @Override
   public boolean skipPathMacros(Attribute attribute) {
-    final String parentName = attribute.getParent().getName();
+    String parentName = attribute.getParent().getName();
     if ("replaceConfiguration".equals(parentName) || "searchConfiguration".equals(parentName)) {
       return true;
     }

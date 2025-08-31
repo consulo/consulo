@@ -53,7 +53,7 @@ public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerI
                                    @Nullable Function<? super T, String> tooltipProvider,
                                    @Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
-                                   @Nonnull final Collection<? extends GotoRelatedItem> targets) {
+                                   @Nonnull Collection<? extends GotoRelatedItem> targets) {
     this(element, range, icon, updatePass, tooltipProvider, navHandler, alignment, () -> targets);
   }
 
@@ -69,7 +69,7 @@ public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerI
   }
 
   private static class RelatedItemLineMarkerGutterIconRenderer<T extends PsiElement> extends LineMarkerGutterIconRenderer<T> {
-    public RelatedItemLineMarkerGutterIconRenderer(final RelatedItemLineMarkerInfo<T> markerInfo) {
+    public RelatedItemLineMarkerGutterIconRenderer(RelatedItemLineMarkerInfo<T> markerInfo) {
       super(markerInfo);
     }
 
@@ -79,8 +79,8 @@ public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerI
         return false;
       }
 
-      final RelatedItemLineMarkerInfo<?> markerInfo = (RelatedItemLineMarkerInfo<?>)getLineMarkerInfo();
-      final RelatedItemLineMarkerInfo<?> otherInfo = (RelatedItemLineMarkerInfo<?>)renderer.getLineMarkerInfo();
+      RelatedItemLineMarkerInfo<?> markerInfo = (RelatedItemLineMarkerInfo<?>)getLineMarkerInfo();
+      RelatedItemLineMarkerInfo<?> otherInfo = (RelatedItemLineMarkerInfo<?>)renderer.getLineMarkerInfo();
       return markerInfo.myTargets.equals(otherInfo.myTargets);
     }
   }

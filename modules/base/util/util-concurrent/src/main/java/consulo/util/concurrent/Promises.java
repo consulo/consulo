@@ -129,7 +129,7 @@ public class Promises {
 
     int i = 0;
     for (Promise<T> promise : thisValue) {
-      final int index = i;
+      int index = i;
 
       try {
         promise.onSuccess(it -> {

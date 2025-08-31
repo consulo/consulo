@@ -100,19 +100,19 @@ class PageSizes {
     myNamesToPageSizes = new HashMap();
 
     try {
-      final Document document = JDOMUtil.loadDocument(PageSizes.class.getResourceAsStream(PAGE_SIZES_RESOURCE));
-      final List elements = document.getRootElement().getChildren(ELEMENT_SIZE);
+      Document document = JDOMUtil.loadDocument(PageSizes.class.getResourceAsStream(PAGE_SIZES_RESOURCE));
+      List elements = document.getRootElement().getChildren(ELEMENT_SIZE);
       for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
-        final Element element = (Element) iterator.next();
+        Element element = (Element) iterator.next();
         String name = element.getAttributeValue(ATTRIBUTE_NAME);
-        final String widthStr = element.getAttributeValue(ATTRIBUTE_WIDTH);
-        final String heightStr = element.getAttributeValue(ATTRIBUTE_HEIGHT);
+        String widthStr = element.getAttributeValue(ATTRIBUTE_WIDTH);
+        String heightStr = element.getAttributeValue(ATTRIBUTE_HEIGHT);
         String unit = element.getAttributeValue(ATTRIBUTE_UNIT);
 
-        final String unitName = unit.equals(UNIT_MM)
+        String unitName = unit.equals(UNIT_MM)
                                 ? CodeEditorBundle.message("print.page.size.unit.mm")
                                 : CodeEditorBundle.message("print.page.size.unit.in");
-        final String dimensions = CodeEditorBundle.message("print.page.width.x.height.unit.template",
+        String dimensions = CodeEditorBundle.message("print.page.width.x.height.unit.template",
                                                            widthStr, heightStr, unitName);
 
         double width = parsePageSize(widthStr);
@@ -129,7 +129,7 @@ class PageSizes {
     }
   }
 
-  private static double parsePageSize(final String sizeStr) {
+  private static double parsePageSize(String sizeStr) {
     int slashPos = sizeStr.indexOf('/');
     if (slashPos >= 0) {
       int spacePos = sizeStr.indexOf(' ');

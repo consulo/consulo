@@ -85,7 +85,7 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
     setToComponent(createLabel(AnalysisScopeLocalize.usageViewCanceled().get()));
   }
 
-  void setToComponent(final JComponent cmp) {
+  void setToComponent(JComponent cmp) {
     SwingUtilities.invokeLater(() -> {
       if (myProject.isDisposed()) return;
       if (myCurrentComponent != null) {

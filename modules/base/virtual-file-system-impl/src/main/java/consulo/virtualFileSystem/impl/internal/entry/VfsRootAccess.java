@@ -95,7 +95,7 @@ public class VfsRootAccess {
     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
     if (openProjects.length == 0) return null;
 
-    final Set<String> allowed = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
+    Set<String> allowed = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
     allowed.add(FileUtil.toSystemIndependentName(ContainerPathManager.get().getHomePath()));
 
     // In plugin development environment PathManager.getHomePath() returns path like "~/.IntelliJIdea/system/plugins-sandbox/test" when running tests
@@ -128,7 +128,7 @@ public class VfsRootAccess {
       allowed.add("/etc"); // After recent update of Oracle JDK 1.8 under Ubuntu Certain files in the JDK installation are symlinked to /etc
       allowed.add("/private/etc");
 
-      for (final Project project : openProjects) {
+      for (Project project : openProjects) {
         if (!project.isInitialized()) {
           return null; // all is allowed
         }
@@ -167,7 +167,7 @@ public class VfsRootAccess {
   @Nonnull
   private static Collection<String> getAllRootUrls(@Nonnull Project project) {
     insideGettingRoots = true;
-    final Set<String> roots = new HashSet<>();
+    Set<String> roots = new HashSet<>();
 
     OrderEnumerator enumerator = ProjectRootManager.getInstance(project).orderEntries().using(ModulesProvider.of(project));
     ContainerUtil.addAll(roots, enumerator.classes().getUrls());
@@ -178,7 +178,7 @@ public class VfsRootAccess {
   }
 
   @TestOnly
-  public static void allowRootAccess(@Nonnull Disposable disposable, @Nonnull final String... roots) {
+  public static void allowRootAccess(@Nonnull Disposable disposable, @Nonnull String... roots) {
     if (roots.length == 0) return;
     allowRootAccess(roots);
     Disposer.register(disposable, () -> disallowRootAccess(roots));

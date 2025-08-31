@@ -924,7 +924,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
    */
   @Nonnull
   @Override
-  public ListIterator<E> listIterator(final int index) {
+  public ListIterator<E> listIterator(int index) {
     Object[] elements = array;
     int len = elements.length;
     if (index < 0 || index > len) {

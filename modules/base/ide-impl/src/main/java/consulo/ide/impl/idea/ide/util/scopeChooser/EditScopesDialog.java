@@ -39,7 +39,7 @@ public class EditScopesDialog extends SingleConfigurableEditor {
   private NamedScope mySelectedScope;
   private final boolean myCheckShared;
 
-  public EditScopesDialog(final Project project, final ScopeChooserConfigurable configurable, final boolean checkShared) {
+  public EditScopesDialog(Project project, ScopeChooserConfigurable configurable, boolean checkShared) {
     super(project, configurable, "scopes");
     myCheckShared = checkShared;
   }
@@ -47,19 +47,19 @@ public class EditScopesDialog extends SingleConfigurableEditor {
   @RequiredUIAccess
   @Override
   protected void doOKAction() {
-    final Object selectedObject = ((ScopeChooserConfigurable)getConfigurable()).getSelectedObject();
+    Object selectedObject = ((ScopeChooserConfigurable)getConfigurable()).getSelectedObject();
     if (selectedObject instanceof NamedScope) {
       mySelectedScope = (NamedScope)selectedObject;
     }
     super.doOKAction();
     if (myCheckShared && mySelectedScope != null) {
-      final Project project = getProject();
+      Project project = getProject();
       final DependencyValidationManager manager = DependencyValidationManager.getInstance(project);
       NamedScope scope = manager.getScope(mySelectedScope.getName());
       if (scope == null) {
         if (Messages.showYesNoDialog(IdeBundle.message("scope.unable.to.save.scope.message"), IdeBundle.message("scope.unable.to.save.scope.title"), Messages.getErrorIcon()) ==
             DialogWrapper.OK_EXIT_CODE) {
-          final String newName = Messages.showInputDialog(project, IdeBundle.message("add.scope.name.label"), IdeBundle.message("scopes.save.dialog.title.shared"), Messages.getQuestionIcon(),
+          String newName = Messages.showInputDialog(project, IdeBundle.message("add.scope.name.label"), IdeBundle.message("scopes.save.dialog.title.shared"), Messages.getQuestionIcon(),
                                                           mySelectedScope.getName(), new InputValidator() {
                     @Override
                     public boolean checkInput(String inputString) {
@@ -72,7 +72,7 @@ public class EditScopesDialog extends SingleConfigurableEditor {
                     }
                   });
           if (newName != null) {
-            final PackageSet packageSet = mySelectedScope.getValue();
+            PackageSet packageSet = mySelectedScope.getValue();
             scope = new NamedScope(newName, packageSet != null ? packageSet.createCopy() : null);
             mySelectedScope = scope;
             manager.addScope(mySelectedScope);
@@ -84,16 +84,16 @@ public class EditScopesDialog extends SingleConfigurableEditor {
 
   @Deprecated
   @DeprecationInfo("Use ShowSettingsUtil")
-  public static EditScopesDialog showDialog(final Project project, @Nullable final String scopeToSelect) {
+  public static EditScopesDialog showDialog(Project project, @Nullable String scopeToSelect) {
     return showDialog(project, scopeToSelect, false);
   }
 
   @Deprecated
   @DeprecationInfo("Use ShowSettingsUtil")
 
-  public static EditScopesDialog showDialog(final Project project, @Nullable final String scopeToSelect, final boolean checkShared) {
-    final ScopeChooserConfigurable configurable = new ScopeChooserConfigurable(project, () -> MasterDetailsStateService.getInstance(project));
-    final EditScopesDialog dialog = new EditScopesDialog(project, configurable, checkShared);
+  public static EditScopesDialog showDialog(Project project, @Nullable String scopeToSelect, boolean checkShared) {
+    ScopeChooserConfigurable configurable = new ScopeChooserConfigurable(project, () -> MasterDetailsStateService.getInstance(project));
+    EditScopesDialog dialog = new EditScopesDialog(project, configurable, checkShared);
     if (scopeToSelect != null) {
       configurable.selectNodeInTree(scopeToSelect);
     }

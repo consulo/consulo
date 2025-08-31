@@ -74,7 +74,7 @@ public interface CheckinProjectPanel extends Refreshable, CommitMessageI {
   /**
    * Checks whether any changes under vcs are included into commit operation
    */
-  boolean vcsIsAffected(final String name);
+  boolean vcsIsAffected(String name);
 
   /**
    * Returns the list of roots for the check-in (roots of all modules under version control

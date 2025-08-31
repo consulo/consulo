@@ -118,7 +118,7 @@ public class RecentProjectPanel {
     public RecentProjectPanel(@Nonnull consulo.disposer.Disposable parentDisposable) {
         myRootPanel = new JPanel(new BorderLayout());
 
-        final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false, isUseGroups());
+        AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false, isUseGroups());
 
         myPathShortener = new UniqueNameBuilder<>(Platform.current().user().homePath().toString(), File.separator, 40);
 
@@ -193,7 +193,7 @@ public class RecentProjectPanel {
                 List<AnAction> selection = myList.getSelectedValuesList();
 
                 if (selection != null && !selection.isEmpty()) {
-                    final int rc = Messages.showOkCancelDialog(
+                    int rc = Messages.showOkCancelDialog(
                         myRootPanel,
                         "Remove '" + StringUtil.join(
                             selection,
@@ -265,12 +265,12 @@ public class RecentProjectPanel {
     }
 
     protected static void removeRecentProjectElement(Object element) {
-        final RecentProjectsManager manager = RecentProjectsManager.getInstance();
+        RecentProjectsManager manager = RecentProjectsManager.getInstance();
         if (element instanceof ReopenProjectAction reopenProjectAction) {
             manager.removePath(reopenProjectAction.getProjectPath());
         }
         else if (element instanceof PopupProjectGroupActionGroup actionGroup) {
-            final ProjectGroup group = actionGroup.getGroup();
+            ProjectGroup group = actionGroup.getGroup();
             for (String path : group.getProjects()) {
                 manager.removePath(path);
             }
@@ -305,7 +305,7 @@ public class RecentProjectPanel {
                     int index = myList.locationToIndex(point);
                     myList.setSelectedIndex(index);
 
-                    final Rectangle cellBounds = myList.getCellBounds(index, index);
+                    Rectangle cellBounds = myList.getCellBounds(index, index);
                     if (cellBounds != null && cellBounds.contains(point)) {
                         myList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                         myHoverIndex = index;
@@ -354,13 +354,13 @@ public class RecentProjectPanel {
             setEmptyText("  No Project Open Yet  ");
             setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             getAccessibleContext().setAccessibleName(RECENT_PROJECTS_LABEL);
-            final MouseHandler handler = new MouseHandler();
+            MouseHandler handler = new MouseHandler();
             addMouseListener(handler);
             addMouseMotionListener(handler);
         }
 
         public Rectangle getCloseIconRect(int index) {
-            final Rectangle bounds = getCellBounds(index, index);
+            Rectangle bounds = getCellBounds(index, index);
             Image icon = PlatformIconGroup.actionsMorevertical();
             return new Rectangle(bounds.width - icon.getWidth() * 2, bounds.y, icon.getWidth() * 2, (int) bounds.getHeight());
         }
@@ -392,9 +392,9 @@ public class RecentProjectPanel {
         class MouseHandler extends MouseAdapter {
             @Override
             public void mouseReleased(MouseEvent e) {
-                final Point point = e.getPoint();
-                final MyList list = MyList.this;
-                final int index = list.locationToIndex(point);
+                Point point = e.getPoint();
+                MyList list = MyList.this;
+                int index = list.locationToIndex(point);
                 if (index != -1) {
                     if (getCloseIconRect(index).contains(point)) {
                         e.consume();
@@ -406,7 +406,7 @@ public class RecentProjectPanel {
         }
 
         protected void onActionClick(int index, MouseEvent e) {
-            final Object element = getModel().getElementAt(index);
+            Object element = getModel().getElementAt(index);
             removeRecentProjectElement(element);
             ListUtil.removeSelectedItems(MyList.this);
         }
@@ -593,7 +593,7 @@ public class RecentProjectPanel {
             }
 
             myService.schedule(() -> {
-                final long startTime = System.currentTimeMillis();
+                long startTime = System.currentTimeMillis();
                 boolean pathIsValid;
                 try {
                     pathIsValid = !RecentProjectsManagerImpl.isFileSystemPath(path) || isPathAvailable(path);

@@ -217,7 +217,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     withRoots(roots);
   }
 
-  public FileChooserDescriptor withRoots(final VirtualFile... roots) {
+  public FileChooserDescriptor withRoots(VirtualFile... roots) {
     return withRoots(Arrays.asList(roots));
   }
 
@@ -330,21 +330,21 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   }
 
   @Nullable
-  public Image getIcon(final VirtualFile file) {
+  public Image getIcon(VirtualFile file) {
     return VirtualFileManager.getInstance().getFileIcon(file, null, Iconable.ICON_FLAG_READ_STATUS);
   }
 
   @Nonnull
-  protected static Image dressIcon(final VirtualFile file, final Image baseIcon) {
+  protected static Image dressIcon(VirtualFile file, Image baseIcon) {
     return file.isValid() && file.is(VFileProperty.SYMLINK) ? ImageEffects.layered(baseIcon, PlatformIconGroup.nodesSymlink()) : baseIcon;
   }
 
-  public String getName(final VirtualFile file) {
+  public String getName(VirtualFile file) {
     return file.getPath();
   }
 
   @Nullable
-  public String getComment(final VirtualFile file) {
+  public String getComment(VirtualFile file) {
     return null;
   }
 

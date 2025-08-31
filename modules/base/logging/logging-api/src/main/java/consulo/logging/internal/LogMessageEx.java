@@ -86,7 +86,7 @@ public class LogMessageEx extends LogMessage {
      * @param attachments attachments that will be suggested to include to the report
      * @return
      */
-    public static IdeaLoggingEvent createEvent(String userMessage, final String details, final Attachment... attachments) {
+    public static IdeaLoggingEvent createEvent(String userMessage, String details, Attachment... attachments) {
         return createEvent(userMessage, details, userMessage, null, Arrays.asList(attachments));
     }
 
@@ -119,7 +119,7 @@ public class LogMessageEx extends LogMessage {
         return new IdeaLoggingEvent(userMessage, throwable) {
             @Override
             public Object getData() {
-                final LogMessageEx logMessageEx = new LogMessageEx(this, title != null ? title : userMessage, notificationText);
+                LogMessageEx logMessageEx = new LogMessageEx(this, title != null ? title : userMessage, notificationText);
                 for (Attachment attachment : attachments) {
                     logMessageEx.addAttachment(attachment);
                 }
@@ -150,9 +150,9 @@ public class LogMessageEx extends LogMessage {
      * @return
      */
     public static IdeaLoggingEvent createEvent(String userMessage,
-                                               final String details,
-                                               @Nullable final String title,
-                                               @Nullable final String notificationText,
+                                               String details,
+                                               @Nullable String title,
+                                               @Nullable String notificationText,
                                                @Nullable Attachment attachment) {
         return createEvent(userMessage, details, title, notificationText,
             attachment != null ? Collections.singletonList(attachment) : Collections.<Attachment>emptyList());

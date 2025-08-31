@@ -104,10 +104,10 @@ public final class IdeMouseEventDispatcher {
 
         // search in main keymap
         if (KeymapManagerImpl.ourKeymapManagerInitialized) {
-            final KeymapManager keymapManager = KeymapManager.getInstance();
+            KeymapManager keymapManager = KeymapManager.getInstance();
             if (keymapManager != null) {
-                final Keymap keymap = keymapManager.getActiveKeymap();
-                final String[] actionIds = keymap.getActionIds(mouseShortcut);
+                Keymap keymap = keymapManager.getActiveKeymap();
+                String[] actionIds = keymap.getActionIds(mouseShortcut);
 
                 ActionManager actionManager = ActionManager.getInstance();
                 for (String actionId : actionIds) {
@@ -201,7 +201,7 @@ public final class IdeMouseEventDispatcher {
             }
         }
 
-        final JRootPane root = findRoot(e);
+        JRootPane root = findRoot(e);
         if (root != null) {
             BlockState blockState = myRootPane2BlockedId.get(root);
             if (blockState != null) {
@@ -247,7 +247,7 @@ public final class IdeMouseEventDispatcher {
             return false;
         }
 
-        final MouseShortcut shortcut = new MouseShortcut(button, modifiersEx, clickCount);
+        MouseShortcut shortcut = new MouseShortcut(button, modifiersEx, clickCount);
         fillActionsList(c, shortcut, IdeKeyEventDispatcher.isModalContext(c));
         ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
         AnAction[] actions = myActions.toArray(new AnAction[myActions.size()]);
@@ -259,7 +259,7 @@ public final class IdeMouseEventDispatcher {
 
             if (ActionImplUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
                 actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-                final Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+                Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
 
                 if (context != null && !context.isShowing()) {
                     continue;
@@ -273,7 +273,7 @@ public final class IdeMouseEventDispatcher {
         return e.getButton() > 3;
     }
 
-    private static void resetPopupTrigger(final MouseEvent e) {
+    private static void resetPopupTrigger(MouseEvent e) {
         ReflectionUtil.setField(MouseEvent.class, e, boolean.class, "popupTrigger", false);
     }
 
@@ -284,7 +284,7 @@ public final class IdeMouseEventDispatcher {
      *
      * @return true if event was patched
      */
-    public static boolean patchClickCount(final MouseEvent e) {
+    public static boolean patchClickCount(MouseEvent e) {
         if (e.getClickCount() != 1 && e.getButton() > 3) {
             ReflectionUtil.setField(MouseEvent.class, e, int.class, "clickCount", 1);
             return true;
@@ -292,8 +292,8 @@ public final class IdeMouseEventDispatcher {
         return false;
     }
 
-    public void blockNextEvents(final MouseEvent e, IdeEventQueue.BlockMode blockMode) {
-        final JRootPane root = findRoot(e);
+    public void blockNextEvents(MouseEvent e, IdeEventQueue.BlockMode blockMode) {
+        JRootPane root = findRoot(e);
         if (root == null) {
             return;
         }
@@ -303,7 +303,7 @@ public final class IdeMouseEventDispatcher {
 
     @Nullable
     private static JRootPane findRoot(MouseEvent e) {
-        final Component parent = UIUtil.findUltimateParent(e.getComponent());
+        Component parent = UIUtil.findUltimateParent(e.getComponent());
         JRootPane root = null;
 
         if (parent instanceof JWindow) {

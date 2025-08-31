@@ -47,12 +47,12 @@ public class TextBlockTransferable implements Transferable {
 
     List<DataFlavor> dataFlavors = new ArrayList<DataFlavor>();
     Collections.addAll(dataFlavors, DataFlavor.stringFlavor, DataFlavor.plainTextFlavor);
-    final DataFlavor flavor = RawText.getDataFlavor();
+    DataFlavor flavor = RawText.getDataFlavor();
     if (myRawText != null && flavor != null) {
       dataFlavors.add(flavor);
     }
     for(TextBlockTransferableData data: extraData) {
-      final DataFlavor blockFlavor = data.getFlavor();
+      DataFlavor blockFlavor = data.getFlavor();
       if (blockFlavor != null) {
         dataFlavors.add(blockFlavor);
       }

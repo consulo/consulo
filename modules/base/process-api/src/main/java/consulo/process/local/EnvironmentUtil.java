@@ -339,7 +339,7 @@ public final class EnvironmentUtil {
                                                                                           @Nullable Path workingDir,
                                                                                           @Nonnull Consumer<Map<String, String>> scriptEnvironmentProcessor,
                                                                                           @Nonnull Path envFile) throws IOException {
-      final ProcessBuilder builder = new ProcessBuilder(command).redirectErrorStream(true);
+      ProcessBuilder builder = new ProcessBuilder(command).redirectErrorStream(true);
 
       /*
        * Add, remove or change the environment variables.
@@ -351,12 +351,12 @@ public final class EnvironmentUtil {
       }
       builder.environment().put(DISABLE_OMZ_AUTO_UPDATE, "true");
       builder.environment().put(INTELLIJ_ENVIRONMENT_READER, "true");
-      final Process process = builder.start();
-      final StreamGobbler gobbler = new StreamGobbler(process.getInputStream());
-      final int exitCode = waitAndTerminateAfter(process, myTimeoutMillis);
+      Process process = builder.start();
+      StreamGobbler gobbler = new StreamGobbler(process.getInputStream());
+      int exitCode = waitAndTerminateAfter(process, myTimeoutMillis);
       gobbler.stop();
 
-      final String lines = new String(Files.readAllBytes(envFile), StandardCharsets.UTF_8);
+      String lines = new String(Files.readAllBytes(envFile), StandardCharsets.UTF_8);
       if (exitCode != 0 || lines.isEmpty()) {
         throw new IOException("command " + command + "\n\texit code:" + exitCode + " text:" + lines.length() + " out:" + gobbler.getText().trim());
       }
@@ -444,7 +444,7 @@ public final class EnvironmentUtil {
   /**
    * @param timeoutMillis the time-out (in milliseconds) for {@code process} to terminate.
    */
-  private static int waitAndTerminateAfter(@Nonnull Process process, final long timeoutMillis) {
+  private static int waitAndTerminateAfter(@Nonnull Process process, long timeoutMillis) {
     Integer exitCode = waitFor(process, timeoutMillis);
     if (exitCode != null) {
       return exitCode;
@@ -483,7 +483,7 @@ public final class EnvironmentUtil {
    */
   private static
   @Nullable
-  Integer waitFor(@Nonnull Process process, final long timeoutMillis) {
+  Integer waitFor(@Nonnull Process process, long timeoutMillis) {
     try {
       if (process.waitFor(timeoutMillis, TimeUnit.MILLISECONDS)) {
         return process.exitValue();
@@ -553,7 +553,7 @@ public final class EnvironmentUtil {
     }
   }
 
-  public static boolean containsEnvKeySubstitution(final String envKey, final String val) {
+  public static boolean containsEnvKeySubstitution(String envKey, String val) {
     return ArrayUtil.find(val.split(File.pathSeparator), "$" + envKey + "$") != -1;
   }
 

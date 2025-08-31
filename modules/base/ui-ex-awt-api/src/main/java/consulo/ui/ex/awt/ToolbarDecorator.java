@@ -184,16 +184,16 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     }
 
     public ToolbarDecorator setButtonComparator(String... actionNames) {
-        final List<String> names = Arrays.asList(actionNames);
+        List<String> names = Arrays.asList(actionNames);
         myButtonComparator = (o1, o2) -> {
-            final String t1 = o1.getTemplatePresentation().getText();
-            final String t2 = o2.getTemplatePresentation().getText();
+            String t1 = o1.getTemplatePresentation().getText();
+            String t2 = o2.getTemplatePresentation().getText();
             if (t1 == null || t2 == null) {
                 return 0;
             }
 
-            final int ind1 = names.indexOf(t1);
-            final int ind2 = names.indexOf(t2);
+            int ind1 = names.indexOf(t1);
+            int ind2 = names.indexOf(t2);
             if (ind1 == -1 && ind2 >= 0) {
                 return 1;
             }
@@ -365,8 +365,8 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
      * @return panel that contains wrapped component (with added scrollpane) and toolbar panel.
      */
     public JPanel createPanel() {
-        final CommonActionsPanel.Buttons[] buttons = getButtons();
-        final JComponent contextComponent = getComponent();
+        CommonActionsPanel.Buttons[] buttons = getButtons();
+        JComponent contextComponent = getComponent();
         myActionsPanel = new CommonActionsPanel(
             this,
             contextComponent,
@@ -381,11 +381,11 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
             myAddIcon,
             buttons
         );
-        final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(contextComponent, true);
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(contextComponent, true);
         if (myPreferredSize != null) {
             scrollPane.setPreferredSize(myPreferredSize);
         }
-        final JPanel panel = new JPanel(new BorderLayout()) {
+        JPanel panel = new JPanel(new BorderLayout()) {
             @Override
             public void addNotify() {
                 super.addNotify();
@@ -458,8 +458,8 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     }
 
     private CommonActionsPanel.Buttons[] getButtons() {
-        final ArrayList<CommonActionsPanel.Buttons> buttons = new ArrayList<>();
-        final HashMap<CommonActionsPanel.Buttons, Pair<Boolean, AnActionButtonRunnable>> map = new HashMap<>();
+        ArrayList<CommonActionsPanel.Buttons> buttons = new ArrayList<>();
+        HashMap<CommonActionsPanel.Buttons, Pair<Boolean, AnActionButtonRunnable>> map = new HashMap<>();
         map.put(CommonActionsPanel.Buttons.ADD, Pair.create(myAddActionEnabled, myAddAction));
         map.put(CommonActionsPanel.Buttons.REMOVE, Pair.create(myRemoveActionEnabled, myRemoveAction));
         map.put(CommonActionsPanel.Buttons.EDIT, Pair.create(myEditActionEnabled, myEditAction));
@@ -467,7 +467,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
         map.put(CommonActionsPanel.Buttons.DOWN, Pair.create(myDownActionEnabled, myDownAction));
 
         for (CommonActionsPanel.Buttons button : CommonActionsPanel.Buttons.values()) {
-            final Pair<Boolean, AnActionButtonRunnable> action = map.get(button);
+            Pair<Boolean, AnActionButtonRunnable> action = map.get(button);
             if (action != null && action.first != null && action.first && action.second != null) {
                 buttons.add(button);
             }
@@ -537,7 +537,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     }
 
     private static AnActionButton findButton(JComponent comp, CommonActionsPanel.Buttons type) {
-        final CommonActionsPanel panel = UIUtil.findComponentOfType(comp, CommonActionsPanel.class);
+        CommonActionsPanel panel = UIUtil.findComponentOfType(comp, CommonActionsPanel.class);
         if (panel != null) {
             return panel.getAnActionButton(type);
         }

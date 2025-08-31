@@ -112,7 +112,7 @@ public abstract class PopupHandler extends MouseAdapter {
       @Override
       public void invokePopup(Component comp, int x, int y) {
         if (tree.getPathForLocation(x, y) != null && Arrays.binarySearch(tree.getSelectionRows(), tree.getRowForLocation(x, y)) > -1) { //do not show popup menu on rows other than selection
-          final ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(place, group);
+          ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(place, group);
           popupMenu.getComponent().show(comp, x, y);
         }
       }
@@ -134,7 +134,7 @@ public abstract class PopupHandler extends MouseAdapter {
       @Override
       public void invokePopup(Component comp, int x, int y) {
         ActionGroup group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(groupId);
-        final ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(place, group);
+        ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(place, group);
         popupMenu.getComponent().show(comp, x, y);
       }
     };

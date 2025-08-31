@@ -33,7 +33,7 @@ import jakarta.annotation.Nullable;
  * @author Vladimir Kondratyev
  */
 public final class WindowInfoImpl implements Cloneable, WindowInfo {
-  public static float normalizeWeigh(final float weight) {
+  public static float normalizeWeigh(float weight) {
     if (weight <= 0) return WindowInfoImpl.DEFAULT_WEIGHT;
     if (weight >= 1) return 1 - WindowInfoImpl.DEFAULT_WEIGHT;
     return weight;
@@ -212,7 +212,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     return myOrder;
   }
 
-  public void setOrder(final int order) {
+  public void setOrder(int order) {
     myOrder = order;
   }
 
@@ -265,11 +265,11 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     return mySplitMode;
   }
 
-  public void setSplit(final boolean sideTool) {
+  public void setSplit(boolean sideTool) {
     mySplitMode = sideTool;
   }
 
-  public void readExternal(final Element element) {
+  public void readExternal(Element element) {
     myId = element.getAttributeValue(ID_ATTR);
     myWasRead = true;
     try {
@@ -329,7 +329,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     myContentUiType = ToolWindowContentUiType.getInstance(element.getAttributeValue(CONTENT_UI_ATTR));
   }
 
-  public void writeExternal(final Element element) {
+  public void writeExternal(Element element) {
     element.setAttribute(ID_ATTR, myId);
     element.setAttribute(ACTIVE_ATTR, Boolean.toString(myActive));
     element.setAttribute(ANCHOR_ATTR, myAnchor.toString());
@@ -363,15 +363,15 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * Sets new anchor.
    */
-  public void setAnchor(@Nonnull final ToolWindowAnchor anchor) {
+  public void setAnchor(@Nonnull ToolWindowAnchor anchor) {
     myAnchor = anchor;
   }
 
-  public void setActive(final boolean active) {
+  public void setActive(boolean active) {
     myActive = active;
   }
 
-  public void setAutoHide(final boolean autoHide) {
+  public void setAutoHide(boolean autoHide) {
     myAutoHide = autoHide;
   }
 
@@ -379,14 +379,14 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     myFloatingBounds = floatingBounds;
   }
 
-  public void setType(@Nonnull final ToolWindowType type) {
+  public void setType(@Nonnull ToolWindowType type) {
     if (ToolWindowType.DOCKED == type || ToolWindowType.SLIDING == type) {
       myInternalType = type;
     }
     myType = type;
   }
 
-  public void setVisible(final boolean visible) {
+  public void setVisible(boolean visible) {
     myVisible = visible;
   }
 
@@ -401,11 +401,11 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     mySideWeight = Math.max(0, Math.min(1, weight));
   }
 
-  public boolean equals(final Object obj) {
+  public boolean equals(Object obj) {
     if (!(obj instanceof WindowInfoImpl)) {
       return false;
     }
-    final WindowInfoImpl info = (WindowInfoImpl)obj;
+    WindowInfoImpl info = (WindowInfoImpl)obj;
     return myActive == info.myActive &&
            myAnchor == info.myAnchor &&
            myId.equals(info.myId) &&

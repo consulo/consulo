@@ -45,7 +45,7 @@ public class DefaultIdeaErrorLogger extends FatalErrorReporter {
 
     try {
       Throwable throwable = event.getThrowable();
-      final MemoryKind kind = getOOMErrorKind(throwable);
+      MemoryKind kind = getOOMErrorKind(throwable);
       if (kind != null) {
         ourOomOccurred = true;
         SwingUtilities.invokeAndWait(() -> new OutOfMemoryDialog(kind).showAsync());

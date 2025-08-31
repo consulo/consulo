@@ -42,7 +42,7 @@ public class ModulesComboBox extends ComboBox<Module> {
     this(new SortedComboBoxModel<>(ModulesAlphaComparator.INSTANCE));
   }
 
-  private ModulesComboBox(final SortedComboBoxModel<Module> model) {
+  private ModulesComboBox(SortedComboBoxModel<Module> model) {
     super(model);
     myModel = model;
     new ComboboxSpeedSearch(this) {

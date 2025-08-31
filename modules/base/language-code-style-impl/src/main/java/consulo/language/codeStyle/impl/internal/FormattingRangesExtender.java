@@ -54,7 +54,7 @@ class FormattingRangesExtender {
   private TextRange ensureRangeIsValid(@Nonnull TextRange range) {
     int startOffset = range.getStartOffset();
     int endOffset = range.getEndOffset();
-    final int docLength = myDocument.getTextLength();
+    int docLength = myDocument.getTextLength();
     if (endOffset > docLength) {
       LOG.warn("The given range " + endOffset + " exceeds the document length " + docLength);
       return new TextRange(Math.min(startOffset, docLength), docLength);

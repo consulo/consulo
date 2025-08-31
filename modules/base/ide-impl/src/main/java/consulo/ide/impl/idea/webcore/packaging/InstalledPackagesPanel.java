@@ -196,17 +196,17 @@ public class InstalledPackagesPanel extends JPanel {
     }
 
     private void upgradeAction() {
-        final int[] rows = myPackagesTable.getSelectedRows();
+        int[] rows = myPackagesTable.getSelectedRows();
         if (myPackageManagementService != null) {
-            final Set<String> upgradedPackages = new HashSet<>();
-            final Set<String> packagesShouldBePostponed = getPackagesToPostpone();
+            Set<String> upgradedPackages = new HashSet<>();
+            Set<String> packagesShouldBePostponed = getPackagesToPostpone();
             for (int row : rows) {
-                final Object packageObj = myPackagesTableModel.getValueAt(row, 0);
+                Object packageObj = myPackagesTableModel.getValueAt(row, 0);
                 if (packageObj instanceof InstalledPackage) {
                     InstalledPackage pkg = (InstalledPackage) packageObj;
-                    final String packageName = pkg.getName();
-                    final String currentVersion = pkg.getVersion();
-                    final String availableVersion = (String) myPackagesTableModel.getValueAt(row, 2);
+                    String packageName = pkg.getName();
+                    String currentVersion = pkg.getVersion();
+                    String availableVersion = (String) myPackagesTableModel.getValueAt(row, 2);
 
                     if (packagesShouldBePostponed.contains(packageName)) {
                         myWaitingToUpgrade.put(pkg, availableVersion);
@@ -225,8 +225,8 @@ public class InstalledPackagesPanel extends JPanel {
     }
 
     private void upgradePostponedPackages() {
-        final Iterator<Entry<InstalledPackage, String>> iterator = myWaitingToUpgrade.entrySet().iterator();
-        final Entry<InstalledPackage, String> toUpgrade = iterator.next();
+        Iterator<Entry<InstalledPackage, String>> iterator = myWaitingToUpgrade.entrySet().iterator();
+        Entry<InstalledPackage, String> toUpgrade = iterator.next();
         iterator.remove();
         upgradePackage(toUpgrade.getKey(), toUpgrade.getValue());
     }
@@ -235,7 +235,7 @@ public class InstalledPackagesPanel extends JPanel {
         return Collections.emptySet();
     }
 
-    private void upgradePackage(@Nonnull final InstalledPackage pkg, @Nullable final String toVersion) {
+    private void upgradePackage(@Nonnull InstalledPackage pkg, @Nullable String toVersion) {
         final PackageManagementService selPackageManagementService = myPackageManagementService;
 
         AsyncResult<List<String>> result = myPackageManagementService.fetchPackageVersions(pkg.getName());
@@ -246,9 +246,9 @@ public class InstalledPackagesPanel extends JPanel {
 
             ApplicationManager.getApplication().invokeLater(() -> {
                 IdeaModalityState modalityState = IdeaModalityState.current();
-                final PackageManagementService.Listener listener = new PackageManagementService.Listener() {
+                PackageManagementService.Listener listener = new PackageManagementService.Listener() {
                     @Override
-                    public void operationStarted(final String packageName) {
+                    public void operationStarted(String packageName) {
                         ApplicationManager.getApplication().invokeLater(() -> {
                             myPackagesTable.setPaintBusy(true);
                             myCurrentlyInstalling.add(packageName);
@@ -257,8 +257,8 @@ public class InstalledPackagesPanel extends JPanel {
 
                     @Override
                     public void operationFinished(
-                        final String packageName,
-                        @Nullable final PackageManagementService.ErrorDescription errorDescription
+                        String packageName,
+                        @Nullable PackageManagementService.ErrorDescription errorDescription
                     ) {
                         ApplicationManager.getApplication().invokeLater(() -> {
                             myPackagesTable.clearSelection();
@@ -317,20 +317,20 @@ public class InstalledPackagesPanel extends JPanel {
     }
 
     protected void updateUninstallUpgrade() {
-        final int[] selected = myPackagesTable.getSelectedRows();
+        int[] selected = myPackagesTable.getSelectedRows();
         boolean upgradeAvailable = false;
         boolean canUninstall = selected.length != 0;
         boolean canInstall = installEnabled();
         boolean canUpgrade = true;
         if (myPackageManagementService != null && selected.length != 0) {
             for (int i = 0; i != selected.length; ++i) {
-                final int index = selected[i];
+                int index = selected[i];
                 if (index >= myPackagesTable.getRowCount()) {
                     continue;
                 }
-                final Object value = myPackagesTable.getValueAt(index, 0);
+                Object value = myPackagesTable.getValueAt(index, 0);
                 if (value instanceof InstalledPackage) {
-                    final InstalledPackage pkg = (InstalledPackage) value;
+                    InstalledPackage pkg = (InstalledPackage) value;
                     if (!canUninstallPackage(pkg)) {
                         canUninstall = false;
                     }
@@ -338,8 +338,8 @@ public class InstalledPackagesPanel extends JPanel {
                     if (!canUpgradePackage(pkg)) {
                         canUpgrade = false;
                     }
-                    final String pyPackageName = pkg.getName();
-                    final String availableVersion = (String) myPackagesTable.getValueAt(index, 2);
+                    String pyPackageName = pkg.getName();
+                    String availableVersion = (String) myPackagesTable.getValueAt(index, 2);
                     if (!upgradeAvailable) {
                         upgradeAvailable =
                             isUpdateAvailable(pkg.getVersion(), availableVersion) && !myCurrentlyInstalling.contains(pyPackageName);
@@ -359,7 +359,7 @@ public class InstalledPackagesPanel extends JPanel {
         return true;
     }
 
-    protected boolean canInstallPackage(@Nonnull final InstalledPackage pyPackage) {
+    protected boolean canInstallPackage(@Nonnull InstalledPackage pyPackage) {
         return true;
     }
 
@@ -372,7 +372,7 @@ public class InstalledPackagesPanel extends JPanel {
     }
 
     private void uninstallAction() {
-        final List<InstalledPackage> packages = getSelectedPackages();
+        List<InstalledPackage> packages = getSelectedPackages();
         final PackageManagementService selPackageManagementService = myPackageManagementService;
         if (selPackageManagementService != null) {
             IdeaModalityState modalityState = IdeaModalityState.current();
@@ -384,8 +384,8 @@ public class InstalledPackagesPanel extends JPanel {
 
                 @Override
                 public void operationFinished(
-                    final String packageName,
-                    @Nullable final PackageManagementService.ErrorDescription errorDescription
+                    String packageName,
+                    @Nullable PackageManagementService.ErrorDescription errorDescription
                 ) {
                     ApplicationManager.getApplication().invokeLater(() -> {
                         myPackagesTable.clearSelection();
@@ -415,10 +415,10 @@ public class InstalledPackagesPanel extends JPanel {
 
     @Nonnull
     private List<InstalledPackage> getSelectedPackages() {
-        final List<InstalledPackage> results = new ArrayList<>();
-        final int[] rows = myPackagesTable.getSelectedRows();
+        List<InstalledPackage> results = new ArrayList<>();
+        int[] rows = myPackagesTable.getSelectedRows();
         for (int row : rows) {
-            final Object packageName = myPackagesTableModel.getValueAt(row, 0);
+            Object packageName = myPackagesTableModel.getValueAt(row, 0);
             if (packageName instanceof InstalledPackage) {
                 results.add((InstalledPackage) packageName);
             }
@@ -469,8 +469,8 @@ public class InstalledPackagesPanel extends JPanel {
                         LOG.warn(e.getMessage()); // do nothing, we already have an empty list
                     }
                     finally {
-                        final Map<String, RepoPackage> cache = buildNameToPackageMap(packageManagementService.getAllPackagesCached());
-                        final boolean shouldFetchLatestVersionsForOnlyInstalledPackages =
+                        Map<String, RepoPackage> cache = buildNameToPackageMap(packageManagementService.getAllPackagesCached());
+                        boolean shouldFetchLatestVersionsForOnlyInstalledPackages =
                             shouldFetchLatestVersionsForOnlyInstalledPackages();
                         if (cache.isEmpty()) {
                             if (!shouldFetchLatestVersionsForOnlyInstalledPackages) {
@@ -507,7 +507,7 @@ public class InstalledPackagesPanel extends JPanel {
     }
 
     private void setLatestVersionsForInstalledPackages() {
-        final PackageManagementServiceEx serviceEx = getServiceEx();
+        PackageManagementServiceEx serviceEx = getServiceEx();
         if (serviceEx == null) {
             return;
         }
@@ -515,10 +515,10 @@ public class InstalledPackagesPanel extends JPanel {
         if (packageCount == 0) {
             onUpdateFinished();
         }
-        final AtomicInteger inProgressPackageCount = new AtomicInteger(packageCount);
+        AtomicInteger inProgressPackageCount = new AtomicInteger(packageCount);
         for (int i = 0; i < packageCount; ++i) {
-            final int finalIndex = i;
-            final InstalledPackage pkg = getInstalledPackageAt(finalIndex);
+            int finalIndex = i;
+            InstalledPackage pkg = getInstalledPackageAt(finalIndex);
             AsyncResult<String> result = serviceEx.fetchLatestVersion(pkg);
             Runnable decrement = () -> {
                 if (inProgressPackageCount.decrementAndGet() == 0) {
@@ -569,17 +569,17 @@ public class InstalledPackagesPanel extends JPanel {
         return PackageVersionComparator.VERSION_COMPARATOR.compare(currentVersion, availableVersion) < 0;
     }
 
-    private void refreshLatestVersions(@Nonnull final PackageManagementService packageManagementService) {
-        final Application application = ApplicationManager.getApplication();
+    private void refreshLatestVersions(@Nonnull PackageManagementService packageManagementService) {
+        Application application = ApplicationManager.getApplication();
         application.executeOnPooledThread(() -> {
             if (packageManagementService == myPackageManagementService) {
                 try {
                     List<RepoPackage> packages = packageManagementService.reloadAllPackages();
-                    final Map<String, RepoPackage> packageMap = buildNameToPackageMap(packages);
+                    Map<String, RepoPackage> packageMap = buildNameToPackageMap(packages);
                     application.invokeLater(() -> {
                         for (int i = 0; i != myPackagesTableModel.getRowCount(); ++i) {
-                            final InstalledPackage pyPackage = (InstalledPackage) myPackagesTableModel.getValueAt(i, 0);
-                            final RepoPackage repoPackage = packageMap.get(pyPackage.getName());
+                            InstalledPackage pyPackage = (InstalledPackage) myPackagesTableModel.getValueAt(i, 0);
+                            RepoPackage repoPackage = packageMap.get(pyPackage.getName());
                             myPackagesTableModel.setValueAt(repoPackage == null ? null : repoPackage.getLatestVersion(), i, 2);
                         }
                         myPackagesTable.setPaintBusy(!myCurrentlyInstalling.isEmpty());
@@ -605,7 +605,7 @@ public class InstalledPackagesPanel extends JPanel {
     }
 
     private static Map<String, RepoPackage> doBuildNameToPackageMap(List<? extends RepoPackage> packages) {
-        final Map<String, RepoPackage> packageMap = new HashMap<>();
+        Map<String, RepoPackage> packageMap = new HashMap<>();
         for (RepoPackage aPackage : packages) {
             packageMap.put(aPackage.getName(), aPackage);
         }
@@ -621,19 +621,19 @@ public class InstalledPackagesPanel extends JPanel {
     private class MyTableCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(
-            final JTable table,
-            final Object value,
-            final boolean isSelected,
-            final boolean hasFocus,
-            final int row,
-            final int column
+            JTable table,
+            Object value,
+            boolean isSelected,
+            boolean hasFocus,
+            int row,
+            int column
         ) {
-            final JLabel cell = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            final String version = (String) table.getValueAt(row, 1);
-            final String availableVersion = (String) table.getValueAt(row, 2);
+            JLabel cell = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            String version = (String) table.getValueAt(row, 1);
+            String availableVersion = (String) table.getValueAt(row, 2);
             boolean update = column == 2 && StringUtil.isNotEmpty(availableVersion) && isUpdateAvailable(version, availableVersion);
             cell.setIcon(update ? TargetAWT.to(IconUtil.getMoveUpIcon()) : null);
-            final Object pyPackage = table.getValueAt(row, 0);
+            Object pyPackage = table.getValueAt(row, 0);
             if (pyPackage instanceof InstalledPackage) {
                 cell.setToolTipText(((InstalledPackage) pyPackage).getTooltipText());
             }

@@ -27,13 +27,13 @@ import jakarta.annotation.Nonnull;
 public abstract class AbstractElementManipulator<T extends PsiElement> implements ElementManipulator<T> {
 
   @Override
-  public T handleContentChange(@Nonnull final T element, final String newContent) throws IncorrectOperationException {
+  public T handleContentChange(@Nonnull T element, String newContent) throws IncorrectOperationException {
     return handleContentChange(element, getRangeInElement(element), newContent);
   }
 
   @Override
   @Nonnull
-  public TextRange getRangeInElement(@Nonnull final T element) {
+  public TextRange getRangeInElement(@Nonnull T element) {
     return new TextRange(0, element.getTextLength());
   }
 }

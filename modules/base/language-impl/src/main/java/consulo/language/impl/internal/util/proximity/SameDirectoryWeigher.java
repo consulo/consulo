@@ -33,11 +33,11 @@ public class SameDirectoryWeigher extends ProximityWeigher {
         NullableLazyKey.create("placeDirectory", location -> PsiTreeUtil.getParentOfType(location.getPosition(), PsiDirectory.class, false));
 
     @Override
-    public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
+    public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
         if (location.getPosition() == null) {
             return null;
         }
-        final PsiDirectory placeDirectory = PLACE_DIRECTORY.getValue(location);
+        PsiDirectory placeDirectory = PLACE_DIRECTORY.getValue(location);
         if (placeDirectory == null) {
             return false;
         }

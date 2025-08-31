@@ -93,10 +93,10 @@ public class ResolveCacheImpl implements ResolveCache {
   }
 
   @Nullable
-  private <TRef extends PsiReference, TResult> TResult resolve(@Nonnull final TRef ref,
-                                                               @Nonnull final AbstractResolver<? super TRef, TResult> resolver,
+  private <TRef extends PsiReference, TResult> TResult resolve(@Nonnull TRef ref,
+                                                               @Nonnull AbstractResolver<? super TRef, TResult> resolver,
                                                                boolean needToPreventRecursion,
-                                                               final boolean incompleteCode,
+                                                               boolean incompleteCode,
                                                                boolean isPoly,
                                                                boolean isPhysical) {
     ProgressIndicatorProvider.checkCanceled();
@@ -149,11 +149,11 @@ public class ResolveCacheImpl implements ResolveCache {
 
   @Override
   @Nonnull
-  public <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(@Nonnull final T ref,
-                                                                                @Nonnull final PolyVariantContextResolver<T> resolver,
+  public <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(@Nonnull T ref,
+                                                                                @Nonnull PolyVariantContextResolver<T> resolver,
                                                                                 boolean needToPreventRecursion,
-                                                                                final boolean incompleteCode,
-                                                                                @Nonnull final PsiFile containingFile) {
+                                                                                boolean incompleteCode,
+                                                                                @Nonnull PsiFile containingFile) {
     ProgressIndicatorProvider.checkCanceled();
     ApplicationManager.getApplication().assertReadAccessAllowed();
 

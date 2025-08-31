@@ -128,7 +128,7 @@ class JBZipOutputStream {
    */
   public void finish() throws IOException {
     long cdOffset = written;
-    final List<JBZipEntry> entries = myFile.getEntries();
+    List<JBZipEntry> entries = myFile.getEntries();
     for (int i = 0, entriesSize = entries.size(); i < entriesSize; i++) {
       writeCentralFileHeader(entries.get(i));
     }
@@ -309,7 +309,7 @@ class JBZipOutputStream {
     writeOutShort(0);
 
     // number of entries
-    final int entiresCount = myFile.getEntries().size();
+    int entiresCount = myFile.getEntries().size();
     writeOutShort(entiresCount);
     writeOutShort(entiresCount);
 
@@ -396,12 +396,12 @@ class JBZipOutputStream {
       entry.setTime(System.currentTimeMillis());
     }
 
-    final byte[] outputBytes;
-    final int outputBytesLength;
+    byte[] outputBytes;
+    int outputBytesLength;
     if (entry.getMethod() == ZipEntry.DEFLATED) {
       def.setLevel(level);
-      final BufferExposingByteArrayOutputStream compressedBytesStream = new BufferExposingByteArrayOutputStream();
-      final DeflaterOutputStream stream = new DeflaterOutputStream(compressedBytesStream, def);
+      BufferExposingByteArrayOutputStream compressedBytesStream = new BufferExposingByteArrayOutputStream();
+      DeflaterOutputStream stream = new DeflaterOutputStream(compressedBytesStream, def);
       try {
         stream.write(bytes);
       }

@@ -51,17 +51,17 @@ public class CharacterNameHacking {
 
   public static void iterate(Consumer<String> consumer) {
     try {
-      final Class<?> aClass = Class.forName("java.lang.CharacterName");
-      final Method instance = getMethod(aClass, "getInstance");
-      final Field field1 = getField(aClass, "strPool");
-      final Field field2 = getField(aClass, "lookup");
+      Class<?> aClass = Class.forName("java.lang.CharacterName");
+      Method instance = getMethod(aClass, "getInstance");
+      Field field1 = getField(aClass, "strPool");
+      Field field2 = getField(aClass, "lookup");
       if (instance != null && field1 != null && field2 != null) { // jdk 9
-        final Object characterName = instance.invoke(null);
+        Object characterName = instance.invoke(null);
         byte[] namePool = (byte[])field1.get(characterName);
-        final int[] lookup = (int[])field2.get(characterName);
+        int[] lookup = (int[])field2.get(characterName);
         for (int index : lookup) {
           if (index != 0) {
-            final String name = new String(namePool, index >>> 8, index & 0xff, StandardCharsets.US_ASCII);
+            String name = new String(namePool, index >>> 8, index & 0xff, StandardCharsets.US_ASCII);
             consumer.accept(name);
           }
         }
@@ -76,7 +76,7 @@ public class CharacterNameHacking {
     if (name == null) {
       return -1;
     }
-    final Method method = getMethod(Character.class, "codePointOf", String.class); // jdk 9 method
+    Method method = getMethod(Character.class, "codePointOf", String.class); // jdk 9 method
     if (method != null) {
       try {
         return (int)method.invoke(null, name);

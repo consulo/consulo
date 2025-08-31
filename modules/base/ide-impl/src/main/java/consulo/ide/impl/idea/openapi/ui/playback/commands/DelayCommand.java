@@ -26,10 +26,10 @@ public class DelayCommand extends AbstractCommand {
   }
 
   public ActionCallback _execute(PlaybackContext context) {
-    final String s = getText().substring(PREFIX.length()).trim();
+    String s = getText().substring(PREFIX.length()).trim();
 
     try {
-      final Integer delay = Integer.valueOf(s);
+      Integer delay = Integer.valueOf(s);
       context.getRobot().delay(delay.intValue());
     }
     catch (NumberFormatException e) {

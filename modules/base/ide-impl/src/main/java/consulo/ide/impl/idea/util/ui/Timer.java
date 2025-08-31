@@ -50,7 +50,7 @@ public abstract class Timer implements Disposable, Runnable  {
     mySpan = span;
   }
 
-  public void setTakeInitialDelay(final boolean take) {
+  public void setTakeInitialDelay(boolean take) {
     myTakeInitialDelay = take;
   }
 
@@ -182,7 +182,7 @@ public abstract class Timer implements Disposable, Runnable  {
   }
 
   private static void queue(Timer timer, int span) {
-    final ScheduledFuture<?> future = timer.getFuture();
+    ScheduledFuture<?> future = timer.getFuture();
     if (future != null) {
       future.cancel(true);
     }

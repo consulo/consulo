@@ -172,8 +172,8 @@ public class ChangeBufferingList implements Cloneable {
   }
 
   private void removingDupesAndSort() { // duplicated ids can be present for some index due to cancellation of indexing for next index
-    final int[] currentChanges = changes;
-    final int intLength = length;
+    int[] currentChanges = changes;
+    int intLength = length;
 
     if (intLength < 250) { // Plain sorting in Arrays works without allocations for small number of elements (see DualPivotQuicksort.QUICKSORT_THRESHOLD)
       Arrays.sort(currentChanges, 0, intLength);

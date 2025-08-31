@@ -154,7 +154,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     public int getEndOffset(@Nonnull FoldingGroup group) {
-        final List<FoldRegion> regions = getGroupedRegions(group);
+        List<FoldRegion> regions = getGroupedRegions(group);
         int endOffset = 0;
         for (FoldRegion region : regions) {
             if (region.isValid()) {
@@ -222,7 +222,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     @Override
-    public void runBatchFoldingOperation(@Nonnull Runnable operation, final boolean dontCollapseCaret, final boolean moveCaret) {
+    public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean dontCollapseCaret, boolean moveCaret) {
         assertIsDispatchThreadForEditor();
         boolean oldDontCollapseCaret = myDoNotCollapseCaret;
         myDoNotCollapseCaret |= dontCollapseCaret;
@@ -250,7 +250,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     @Override
-    public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull final Runnable operation) {
+    public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation) {
         runBatchFoldingOperation(operation, true, true);
     }
 
@@ -300,7 +300,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     @Override
-    public void removeFoldRegion(@Nonnull final FoldRegion region) {
+    public void removeFoldRegion(@Nonnull FoldRegion region) {
         assertIsDispatchThreadForEditor();
         assertOurRegion(region);
 
@@ -430,7 +430,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
     }
 
-    private void notifyBatchFoldingProcessingDone(final boolean moveCaretFromCollapsedRegion) {
+    private void notifyBatchFoldingProcessingDone(boolean moveCaretFromCollapsedRegion) {
         clearCachedValues();
 
         for (FoldingListener listener : myListeners) {
@@ -646,7 +646,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     @Override
-    public void addListener(@Nonnull final FoldingListener listener, @Nonnull Disposable parentDisposable) {
+    public void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable) {
         myListeners.add(listener);
         Disposer.register(parentDisposable, () -> myListeners.remove(listener));
     }

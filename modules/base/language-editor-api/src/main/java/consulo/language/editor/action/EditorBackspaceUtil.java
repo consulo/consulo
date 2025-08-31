@@ -32,7 +32,7 @@ public final class EditorBackspaceUtil {
   private EditorBackspaceUtil() {
   }
 
-  public static char getRightChar(final char c) {
+  public static char getRightChar(char c) {
     if (c == '(') return ')';
     if (c == '[') return ']';
     if (c == '{') return '}';
@@ -53,10 +53,10 @@ public final class EditorBackspaceUtil {
   }
 
   @Nullable
-  public static LogicalPosition getBackspaceUnindentPosition(final PsiFile file, final Editor editor) {
+  public static LogicalPosition getBackspaceUnindentPosition(PsiFile file, Editor editor) {
     if (editor.getSelectionModel().hasSelection()) return null;
 
-    final LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();
+    LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();
     if (caretPos.column == 0) {
       return null;
     }
@@ -65,7 +65,7 @@ public final class EditorBackspaceUtil {
     }
 
     // Decrease column down to indentation * n
-    final int indent = CodeStyle.getIndentOptions(file).INDENT_SIZE;
+    int indent = CodeStyle.getIndentOptions(file).INDENT_SIZE;
     int column = (caretPos.column - 1) / indent * indent;
     if (column < 0) {
       column = 0;
@@ -74,23 +74,23 @@ public final class EditorBackspaceUtil {
   }
 
   public static void deleteToTargetPosition(@Nonnull Editor editor, @Nonnull LogicalPosition pos) {
-    final int offset = editor.getCaretModel().getOffset();
-    final int targetOffset = editor.logicalPositionToOffset(pos);
+    int offset = editor.getCaretModel().getOffset();
+    int targetOffset = editor.logicalPositionToOffset(pos);
     editor.getSelectionModel().setSelection(targetOffset, offset);
     EditorModificationUtil.deleteSelectedText(editor);
     editor.getCaretModel().moveToLogicalPosition(pos);
   }
 
   public static boolean isWhitespaceBeforeCaret(Editor editor) {
-    final LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();
-    final CharSequence charSeq = editor.getDocument().getCharsSequence();
+    LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();
+    CharSequence charSeq = editor.getDocument().getCharsSequence();
     // smart backspace is activated only if all characters in the check range are whitespace characters
     for (int pos = 0; pos < caretPos.column; pos++) {
       // use logicalPositionToOffset to make sure tabs are handled correctly
-      final LogicalPosition checkPos = new LogicalPosition(caretPos.line, pos);
-      final int offset = editor.logicalPositionToOffset(checkPos);
+      LogicalPosition checkPos = new LogicalPosition(caretPos.line, pos);
+      int offset = editor.logicalPositionToOffset(checkPos);
       if (offset < charSeq.length()) {
-        final char c = charSeq.charAt(offset);
+        char c = charSeq.charAt(offset);
         if (c != '\t' && c != ' ' && c != '\n') {
           return false;
         }

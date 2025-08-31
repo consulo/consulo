@@ -42,7 +42,7 @@ public interface InjectedEditorManager {
      * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
      */
     @Contract("null,_,_->null;!null,_,_->!null")
-    Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, final int offset);
+    Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset);
 
     /**
      * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!

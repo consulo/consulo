@@ -43,10 +43,10 @@ public class PlatformDocumentationUtil {
   }
 
   @Nullable
-  public static List<String> getHttpRoots(final String[] roots, String relPath) {
-    final ArrayList<String> result = new ArrayList<>();
+  public static List<String> getHttpRoots(String[] roots, String relPath) {
+    ArrayList<String> result = new ArrayList<>();
     for (String root : roots) {
-      final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(root);
+      VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(root);
       if (virtualFile != null) {
         if (virtualFile.getFileSystem() instanceof HttpFileSystem) {
           String url = virtualFile.getUrl();

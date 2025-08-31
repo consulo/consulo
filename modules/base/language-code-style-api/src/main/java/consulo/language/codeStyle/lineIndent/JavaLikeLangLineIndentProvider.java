@@ -185,7 +185,7 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
             if (position.isAt(IfKeyword) || position.isAt(ForKeyword)) {
               SemanticEditorPosition.SyntaxElement element = position.getCurrElement();
               assert element != null;
-              final int controlKeywordOffset = position.getStartOffset();
+              int controlKeywordOffset = position.getStartOffset();
               Type indentType = getPosition(factory, offsetAfterParen).afterOptional(Whitespace).isAt(BlockOpeningBrace) ? NONE : NORMAL;
               return myFactory.createIndentCalculator(indentType, baseLineOffset -> controlKeywordOffset);
             }
@@ -315,8 +315,8 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
         SemanticEditorPosition statementStart = position.copy();
         statementStart = statementStart.after().afterOptionalMix(Whitespace, LineComment);
         if (!isIndentProvider(statementStart, ignoreLabels)) {
-          final SemanticEditorPosition maybeColon = statementStart.afterOptionalMix(Whitespace, BlockComment).after();
-          final SemanticEditorPosition afterColonStatement = maybeColon.after().after();
+          SemanticEditorPosition maybeColon = statementStart.afterOptionalMix(Whitespace, BlockComment).after();
+          SemanticEditorPosition afterColonStatement = maybeColon.after().after();
           if (atColonWithNewLineAfterColonStatement(maybeColon, afterColonStatement)) {
             return afterColonStatement.getStartOffset();
           }
@@ -342,7 +342,7 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
    */
   protected boolean isStartOfStatementWithOptionalBlock(@Nonnull SemanticEditorPosition position) {
     return position.matchesRule(self -> {
-      final SemanticEditorPosition before = self.before();
+      SemanticEditorPosition before = self.before();
       return before.isAt(Whitespace) && before.isAtMultiline() && self.isAtAnyOf(ElseKeyword, IfKeyword, ForKeyword, TryKeyword, DoKeyword);
     });
   }

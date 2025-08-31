@@ -42,7 +42,7 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
 
   public RenameElementFix(@Nonnull PsiNamedElement element) {
     super(element);
-    final VirtualFile vFile = element.getContainingFile().getVirtualFile();
+    VirtualFile vFile = element.getContainingFile().getVirtualFile();
     assert vFile != null : element;
     myNewName = vFile.getNameWithoutExtension();
     myText =  CodeInsightBundle.message("rename.public.class.text", element.getName(), myNewName);
@@ -67,10 +67,10 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
   }
 
   @Override
-  public void invoke(@Nonnull final Project project,
-                     @Nonnull final PsiFile file,
+  public void invoke(@Nonnull Project project,
+                     @Nonnull PsiFile file,
                      @Nullable Editor editor,
-                     @Nonnull final PsiElement startElement,
+                     @Nonnull PsiElement startElement,
                      @Nonnull PsiElement endElement) {
     if (isAvailable(project, null, file)) {
       LOG.assertTrue(file == startElement.getContainingFile());
@@ -88,7 +88,7 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
     if (!startElement.isValid()) {
       return false;
     }
-    final NamesValidator namesValidator = NamesValidator.forLanguage(file.getLanguage());
+    NamesValidator namesValidator = NamesValidator.forLanguage(file.getLanguage());
     return namesValidator != null && namesValidator.isIdentifier(myNewName, project);
   }
 

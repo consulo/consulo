@@ -216,9 +216,9 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
             @Override
             public void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
                 if (!(breakpoint instanceof XLineBreakpoint)) {
-                    final XDebugSessionImpl session = getCurrentSession();
+                    XDebugSessionImpl session = getCurrentSession();
                     if (session != null && breakpoint.equals(session.getActiveNonLineBreakpoint())) {
-                        final XBreakpointBase breakpointBase = (XBreakpointBase) breakpoint;
+                        XBreakpointBase breakpointBase = (XBreakpointBase) breakpoint;
                         breakpointBase.clearIcon();
                         myExecutionPointHighlighter.updateGutterIcon(breakpointBase.createGutterIconRenderer());
                     }
@@ -342,7 +342,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         return session;
     }
 
-    public void removeSession(@Nonnull final XDebugSessionImpl session) {
+    public void removeSession(@Nonnull XDebugSessionImpl session) {
         XDebugSessionTab sessionTab = session.getSessionTab();
         mySessions.remove(session.getDebugProcess().getProcessHandler());
         if (sessionTab != null &&
@@ -375,14 +375,14 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     @Override
     @Nonnull
     public XDebugSession[] getDebugSessions() {
-        final Collection<XDebugSessionImpl> sessions = mySessions.values();
+        Collection<XDebugSessionImpl> sessions = mySessions.values();
         return sessions.toArray(new XDebugSessionImpl[sessions.size()]);
     }
 
     @Override
     @Nullable
     public XDebugSession getDebugSession(@Nonnull ExecutionConsole executionConsole) {
-        for (final XDebugSessionImpl debuggerSession : mySessions.values()) {
+        for (XDebugSessionImpl debuggerSession : mySessions.values()) {
             XDebugSessionTab sessionTab = debuggerSession.getSessionTab();
             if (sessionTab != null) {
                 RunContentDescriptor contentDescriptor = sessionTab.getRunContentDescriptor();
@@ -399,7 +399,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     public <T extends XDebugProcess> List<? extends T> getDebugProcesses(Class<T> processClass) {
         List<T> list = null;
         for (XDebugSessionImpl session : mySessions.values()) {
-            final XDebugProcess process = session.getDebugProcess();
+            XDebugProcess process = session.getDebugProcess();
             if (processClass.isInstance(process)) {
                 if (list == null) {
                     list = new SmartList<>();
@@ -442,7 +442,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     }
 
     @Override
-    public void loadState(final XDebuggerState state) {
+    public void loadState(XDebuggerState state) {
         myBreakpointManager.loadState(state.myBreakpointManagerState);
         myWatchesManager.loadState(state.myWatchesManagerState);
     }
@@ -459,7 +459,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         public XDebuggerState() {
         }
 
-        public XDebuggerState(final XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState,
+        public XDebuggerState(XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState,
                               XDebuggerWatchesManager.WatchesManagerState watchesManagerState) {
             myBreakpointManagerState = breakpointManagerState;
             myWatchesManagerState = watchesManagerState;
@@ -470,7 +470,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
             return myBreakpointManagerState;
         }
 
-        public void setBreakpointManagerState(final XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState) {
+        public void setBreakpointManagerState(XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState) {
             myBreakpointManagerState = breakpointManagerState;
         }
 

@@ -45,7 +45,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
   @Override
   public void fillFiles(Set<PsiFile> set, boolean recursively) {
     super.fillFiles(set, recursively);
-    final PsiFile file = getFile();
+    PsiFile file = getFile();
     if (file != null && file.isValid()) {
       set.add(file);
     }
@@ -103,7 +103,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
     if (this == o) return true;
     if (!(o instanceof FileNode)) return false;
 
-    final FileNode fileNode = (FileNode)o;
+    FileNode fileNode = (FileNode)o;
 
     if (!myVFile.equals(fileNode.myVFile)) return false;
 
@@ -121,7 +121,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
   }
 
   @Override
-  public boolean canSelectInLeftTree(final Map<PsiFile, Set<PsiFile>> deps) {
+  public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
     return deps.containsKey(getFile());
   }
 
@@ -132,7 +132,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
 
   @Override
   public int compareTo(FileNode o) {
-    final int compare = StringUtil.compare(myVFile != null ? myVFile.getFileType().getDefaultExtension() : null, o.myVFile != null ? o.myVFile.getFileType().getDefaultExtension() : null, true);
+    int compare = StringUtil.compare(myVFile != null ? myVFile.getFileType().getDefaultExtension() : null, o.myVFile != null ? o.myVFile.getFileType().getDefaultExtension() : null, true);
     if (compare != 0) return compare;
     return StringUtil.compare(toString(), o.toString(), true);
   }

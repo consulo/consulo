@@ -33,7 +33,7 @@ public class PsiIdentifierOwnerTokenizer extends Tokenizer<PsiNameIdentifierOwne
       return;
     }
     PsiElement parent = element;
-    final TextRange range = identifier.getTextRange();
+    TextRange range = identifier.getTextRange();
     if (range.isEmpty()) return;
 
     int offset = range.getStartOffset() - parent.getTextRange().getStartOffset();

@@ -75,8 +75,8 @@ public class ByteArraySequence implements ByteSequence {
     int len = myLen;
     if (len != sequence.myLen) return false;
 
-    final byte[] thisBytes = myBytes;
-    final byte[] thatBytes = sequence.myBytes;
+    byte[] thisBytes = myBytes;
+    byte[] thatBytes = sequence.myBytes;
     for (int i = 0, j = myOffset, k = sequence.myOffset; i < len; i++, j++, k++) {
       if (thisBytes[j] != thatBytes[k]) {
         return false;
@@ -88,8 +88,8 @@ public class ByteArraySequence implements ByteSequence {
 
   @Override
   public int hashCode() {
-    final int len = myLen;
-    final byte[] thisBytes = myBytes;
+    int len = myLen;
+    byte[] thisBytes = myBytes;
 
     int result = 1;
     for (int i = 0, j = myOffset; i < len; i++, j++) {

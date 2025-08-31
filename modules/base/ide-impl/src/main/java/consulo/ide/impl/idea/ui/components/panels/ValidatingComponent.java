@@ -64,7 +64,7 @@ public abstract class ValidatingComponent<T extends JComponent> extends NonOpaqu
   }
 
   public String  getErrorText() {
-    final String text = myErrorLabel.getText();
+    String text = myErrorLabel.getText();
     return " ".equals(text) ? "" : text;
   }
 
@@ -75,7 +75,7 @@ public abstract class ValidatingComponent<T extends JComponent> extends NonOpaqu
   }
 
   protected JLabel createErrorLabel() {
-    final JLabel label = new JLabel(" ");
+    JLabel label = new JLabel(" ");
     label.setForeground(JBColor.red);
     label.setFont(ERROR_FONT);
     return label;

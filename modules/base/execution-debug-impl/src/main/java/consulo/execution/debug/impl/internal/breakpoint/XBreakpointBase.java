@@ -74,10 +74,10 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     private volatile boolean myDisposed;
 
     public XBreakpointBase(
-        final XBreakpointType<Self, P> type,
+        XBreakpointType<Self, P> type,
         XBreakpointManagerImpl breakpointManager,
-        final @Nullable P properties,
-        final S state
+        @Nullable P properties,
+        S state
     ) {
         myState = state;
         myType = type;
@@ -86,7 +86,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         initExpressions();
     }
 
-    protected XBreakpointBase(final XBreakpointType<Self, P> type, XBreakpointManagerImpl breakpointManager, S breakpointState) {
+    protected XBreakpointBase(XBreakpointType<Self, P> type, XBreakpointManagerImpl breakpointManager, S breakpointState) {
         myState = breakpointState;
         myType = type;
         myBreakpointManager = breakpointManager;
@@ -144,7 +144,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    public void setEnabled(final boolean enabled) {
+    public void setEnabled(boolean enabled) {
         if (enabled != isEnabled()) {
             myState.setEnabled(enabled);
             fireBreakpointChanged();
@@ -171,7 +171,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    public void setLogMessage(final boolean logMessage) {
+    public void setLogMessage(boolean logMessage) {
         if (logMessage != isLogMessage()) {
             myState.setLogMessage(logMessage);
             fireBreakpointChanged();
@@ -208,7 +208,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    public void setLogExpression(@Nullable final String expression) {
+    public void setLogExpression(@Nullable String expression) {
         if (!Comparing.equal(getLogExpression(), expression)) {
             myLogExpression = XExpression.fromText(expression);
             fireBreakpointChanged();
@@ -240,7 +240,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    public void setCondition(@Nullable final String condition) {
+    public void setCondition(@Nullable String condition) {
         if (!Comparing.equal(condition, getCondition())) {
             myCondition = XExpression.fromText(condition);
             fireBreakpointChanged();
@@ -408,7 +408,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     protected void updateIcon() {
-        final Image icon = calculateSpecialIcon();
+        Image icon = calculateSpecialIcon();
         setIcon(icon != null ? icon : getType().getEnabledIcon());
     }
 
@@ -459,7 +459,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             }
         }
         if (myCustomizedPresentation != null) {
-            final Image icon = myCustomizedPresentation.getIcon();
+            Image icon = myCustomizedPresentation.getIcon();
             if (icon != null) {
                 return icon;
             }
@@ -477,11 +477,11 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
     @Nullable
     public String getErrorMessage() {
-        final XDebugSessionImpl currentSession = getBreakpointManager().getDebuggerManager().getCurrentSession();
+        XDebugSessionImpl currentSession = getBreakpointManager().getDebuggerManager().getCurrentSession();
         if (currentSession != null) {
             CustomizedBreakpointPresentation presentation = currentSession.getBreakpointPresentation(this);
             if (presentation != null) {
-                final String message = presentation.getErrorMessage();
+                String message = presentation.getErrorMessage();
                 if (message != null) {
                     return message;
                 }

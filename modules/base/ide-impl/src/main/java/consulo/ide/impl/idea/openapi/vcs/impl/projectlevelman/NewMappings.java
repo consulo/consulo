@@ -96,7 +96,7 @@ public class NewMappings implements Disposable {
 
   public AbstractVcs[] getActiveVcses() {
     synchronized (myLock) {
-      final AbstractVcs[] result = new AbstractVcs[myActiveVcses.length];
+      AbstractVcs[] result = new AbstractVcs[myActiveVcses.length];
       System.arraycopy(myActiveVcses, 0, result, 0, myActiveVcses.length);
       return result;
     }
@@ -117,9 +117,9 @@ public class NewMappings implements Disposable {
     mappingsChanged();
   }
 
-  public void setMapping(final String path, final String activeVcsName) {
+  public void setMapping(String path, String activeVcsName) {
     LOG.debug("setMapping path = '" + path + "' vcs = " + activeVcsName);
-    final VcsDirectoryMapping newMapping = new VcsDirectoryMapping(path, activeVcsName);
+    VcsDirectoryMapping newMapping = new VcsDirectoryMapping(path, activeVcsName);
     // do not add duplicates
     synchronized (myLock) {
       Collection<VcsDirectoryMapping> vcsDirectoryMappings = myVcsToPaths.get(activeVcsName);
@@ -128,7 +128,7 @@ public class NewMappings implements Disposable {
       }
     }
 
-    final Ref<Boolean> switched = new Ref<>(Boolean.FALSE);
+    Ref<Boolean> switched = new Ref<>(Boolean.FALSE);
     keepActiveVcs(() -> {
       // sorted -> map. sorted mappings are NOT changed;
       switched.set(trySwitchVcs(path, activeVcsName));
@@ -142,13 +142,13 @@ public class NewMappings implements Disposable {
   }
 
   private void keepActiveVcs(@Nonnull Runnable runnable) {
-    final MyVcsActivator activator;
+    MyVcsActivator activator;
     synchronized (myLock) {
       if (!myActivated) {
         runnable.run();
         return;
       }
-      final HashSet<String> old = new HashSet<>();
+      HashSet<String> old = new HashSet<>();
       for (AbstractVcs activeVcs : myActiveVcses) {
         old.add(activeVcs.getName());
       }
@@ -161,11 +161,11 @@ public class NewMappings implements Disposable {
 
   private void restoreActiveVcses() {
     synchronized (myLock) {
-      final Set<String> set = myVcsToPaths.keySet();
-      final List<AbstractVcs> list = new ArrayList<>(set.size());
+      Set<String> set = myVcsToPaths.keySet();
+      List<AbstractVcs> list = new ArrayList<>(set.size());
       for (String s : set) {
         if (s.trim().length() == 0) continue;
-        final AbstractVcs vcs = AllVcses.getInstance(myProject).getByName(s);
+        AbstractVcs vcs = AllVcses.getInstance(myProject).getByName(s);
         if (vcs != null) {
           list.add(vcs);
         }
@@ -187,10 +187,10 @@ public class NewMappings implements Disposable {
     }
   }
 
-  public void setDirectoryMappings(final List<VcsDirectoryMapping> items) {
+  public void setDirectoryMappings(List<VcsDirectoryMapping> items) {
     LOG.debug("setDirectoryMappings, size: " + items.size());
 
-    final List<VcsDirectoryMapping> itemsCopy;
+    List<VcsDirectoryMapping> itemsCopy;
     if (items.isEmpty()) {
       itemsCopy = Collections.singletonList(new VcsDirectoryMapping("", ""));
     }
@@ -220,7 +220,7 @@ public class NewMappings implements Disposable {
   }
 
   @Nullable
-  public VcsDirectoryMapping getMappingFor(final VirtualFile file, final Object parentModule) {
+  public VcsDirectoryMapping getMappingFor(VirtualFile file, Object parentModule) {
     // if parentModule is not null it means that file belongs to the module so it isn't excluded
     if (parentModule == null && myVcsManager.isIgnored(file)) {
       return null;
@@ -228,14 +228,14 @@ public class NewMappings implements Disposable {
 
     // performance: calculate file path just once, rather than once per mapping
     String path = file.getPath();
-    final String systemIndependentPath =
+    String systemIndependentPath =
       FileUtil.toSystemIndependentName((file.isDirectory() && (!path.endsWith("/"))) ? (path + "/") : path);
-    final VcsDirectoryMapping[] mappings;
+    VcsDirectoryMapping[] mappings;
     synchronized (myLock) {
       mappings = mySortedMappings;
     }
     for (int i = mappings.length - 1; i >= 0; --i) {
-      final VcsDirectoryMapping mapping = mappings[i];
+      VcsDirectoryMapping mapping = mappings[i];
       if (fileMatchesMapping(file, parentModule, systemIndependentPath, mapping)) {
         return mapping;
       }
@@ -254,9 +254,9 @@ public class NewMappings implements Disposable {
 
   private boolean fileMatchesMapping(
     @Nonnull VirtualFile file,
-    final Object matchContext,
-    final String systemIndependentPath,
-    final VcsDirectoryMapping mapping
+    Object matchContext,
+    String systemIndependentPath,
+    VcsDirectoryMapping mapping
   ) {
     if (mapping.getDirectory().length() == 0) {
       return myDefaultVcsRootPolicy.matchesDefaultMapping(file, matchContext);
@@ -266,12 +266,12 @@ public class NewMappings implements Disposable {
 
   @Nonnull
   public List<VirtualFile> getMappingsAsFilesUnderVcs(@Nonnull AbstractVcs vcs) {
-    final List<VirtualFile> result = new ArrayList<>();
-    final String vcsName = vcs.getName();
+    List<VirtualFile> result = new ArrayList<>();
+    String vcsName = vcs.getName();
 
-    final List<VcsDirectoryMapping> mappings;
+    List<VcsDirectoryMapping> mappings;
     synchronized (myLock) {
-      final Collection<VcsDirectoryMapping> vcsMappings = myVcsToPaths.get(vcsName);
+      Collection<VcsDirectoryMapping> vcsMappings = myVcsToPaths.get(vcsName);
       if (vcsMappings.isEmpty()) return result;
       mappings = new ArrayList<>(vcsMappings);
     }
@@ -281,7 +281,7 @@ public class NewMappings implements Disposable {
         result.addAll(myDefaultVcsRootPolicy.getDefaultVcsRoots(this, vcsName));
       }
       else {
-        final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(mapping.getDirectory());
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(mapping.getDirectory());
         if (file != null) {
           result.add(file);
         }
@@ -350,7 +350,7 @@ public class NewMappings implements Disposable {
     }
   }
 
-  public void removeDirectoryMapping(final VcsDirectoryMapping mapping) {
+  public void removeDirectoryMapping(VcsDirectoryMapping mapping) {
     LOG.debug("remove mapping: " + mapping.getDirectory());
 
     keepActiveVcs(() -> {
@@ -364,12 +364,12 @@ public class NewMappings implements Disposable {
 
   // todo area for optimization
   private void removeRedundantMappings() {
-    final LocalFileSystem lfs = LocalFileSystem.getInstance();
-    final AllVcses allVcses = AllVcses.getInstance(myProject);
+    LocalFileSystem lfs = LocalFileSystem.getInstance();
+    AllVcses allVcses = AllVcses.getInstance(myProject);
 
     for (Iterator<String> iterator = myVcsToPaths.keySet().iterator(); iterator.hasNext(); ) {
-      final String vcsName = iterator.next();
-      final Collection<VcsDirectoryMapping> mappings = myVcsToPaths.get(vcsName);
+      String vcsName = iterator.next();
+      Collection<VcsDirectoryMapping> mappings = myVcsToPaths.get(vcsName);
 
       List<Pair<VirtualFile, VcsDirectoryMapping>> objects = mapNotNull(mappings, dm -> {
         VirtualFile vf = lfs.findFileByPath(dm.getDirectory());
@@ -379,14 +379,14 @@ public class NewMappings implements Disposable {
         return vf == null ? null : Pair.create(vf, dm);
       });
 
-      final List<Pair<VirtualFile, VcsDirectoryMapping>> filteredFiles;
+      List<Pair<VirtualFile, VcsDirectoryMapping>> filteredFiles;
       // todo static
       Function<Pair<VirtualFile, VcsDirectoryMapping>, VirtualFile> fileConvertor = pair -> pair.getFirst();
       if (StringUtil.isEmptyOrSpaces(vcsName)) {
         filteredFiles = AbstractVcs.filterUniqueRootsDefault(objects, fileConvertor);
       }
       else {
-        final AbstractVcs<?> vcs = allVcses.getByName(vcsName);
+        AbstractVcs<?> vcs = allVcses.getByName(vcsName);
         if (vcs == null) {
           VcsBalloonProblemNotifier.showOverChangesView(
             myProject,
@@ -414,11 +414,11 @@ public class NewMappings implements Disposable {
     sortedMappingsByMap();
   }
 
-  private boolean trySwitchVcs(final String path, final String activeVcsName) {
-    final String fixedPath = FileUtil.toSystemIndependentName(path);
+  private boolean trySwitchVcs(String path, String activeVcsName) {
+    String fixedPath = FileUtil.toSystemIndependentName(path);
     for (VcsDirectoryMapping mapping : mySortedMappings) {
       if (mapping.systemIndependentPath().equals(fixedPath)) {
-        final String oldVcs = mapping.getVcs();
+        String oldVcs = mapping.getVcs();
         if (!oldVcs.equals(activeVcsName)) {
           migrateVcs(activeVcsName, mapping, oldVcs);
         }
@@ -453,16 +453,16 @@ public class NewMappings implements Disposable {
   private static class MyVcsActivator {
     private final Set<String> myOld;
 
-    public MyVcsActivator(final Set<String> old) {
+    public MyVcsActivator(Set<String> old) {
       myOld = old;
     }
 
-    public void activate(final Set<String> newOne, final AllVcses vcsesI) {
-      final Set<String> toAdd = notInBottom(newOne, myOld);
-      final Set<String> toRemove = notInBottom(myOld, newOne);
+    public void activate(Set<String> newOne, AllVcses vcsesI) {
+      Set<String> toAdd = notInBottom(newOne, myOld);
+      Set<String> toRemove = notInBottom(myOld, newOne);
       if (toAdd != null) {
         for (String s : toAdd) {
-          final AbstractVcs vcs = vcsesI.getByName(s);
+          AbstractVcs vcs = vcsesI.getByName(s);
           if (vcs != null) {
             try {
               vcs.doActivate();
@@ -478,7 +478,7 @@ public class NewMappings implements Disposable {
       }
       if (toRemove != null) {
         for (String s : toRemove) {
-          final AbstractVcs vcs = vcsesI.getByName(s);
+          AbstractVcs vcs = vcsesI.getByName(s);
           if (vcs != null) {
             try {
               vcs.doDeactivate();
@@ -495,7 +495,7 @@ public class NewMappings implements Disposable {
     }
 
     @Nullable
-    private static Set<String> notInBottom(final Set<String> top, final Set<String> bottom) {
+    private static Set<String> notInBottom(Set<String> top, Set<String> bottom) {
       Set<String> notInBottom = null;
       for (String topItem : top) {
         // omit empty vcs: not a vcs
@@ -512,13 +512,13 @@ public class NewMappings implements Disposable {
     }
   }
 
-  public boolean haveActiveVcs(final String name) {
+  public boolean haveActiveVcs(String name) {
     synchronized (myLock) {
       return myVcsToPaths.containsKey(name);
     }
   }
 
-  public void beingUnregistered(final String name) {
+  public void beingUnregistered(String name) {
     synchronized (myLock) {
       keepActiveVcs(() -> {
         myVcsToPaths.remove(name);
@@ -532,15 +532,15 @@ public class NewMappings implements Disposable {
   @Nonnull
   public List<VirtualFile> getDefaultRoots() {
     synchronized (myLock) {
-      final String defaultVcs = haveDefaultMapping();
+      String defaultVcs = haveDefaultMapping();
       if (defaultVcs == null) return Collections.emptyList();
-      final List<VirtualFile> list = new ArrayList<>();
+      List<VirtualFile> list = new ArrayList<>();
       list.addAll(myDefaultVcsRootPolicy.getDefaultVcsRoots(this, defaultVcs));
       if (StringUtil.isEmptyOrSpaces(defaultVcs)) {
         return AbstractVcs.filterUniqueRootsDefault(list, identity());
       }
       else {
-        final AbstractVcs<?> vcs = AllVcses.getInstance(myProject).getByName(defaultVcs);
+        AbstractVcs<?> vcs = AllVcses.getInstance(myProject).getByName(defaultVcs);
         if (vcs == null) {
           return AbstractVcs.filterUniqueRootsDefault(list, identity());
         }

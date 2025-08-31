@@ -29,7 +29,7 @@ public class ANDCombinedMemberInfoModel<T extends PsiElement, M extends MemberIn
   private final MemberInfoTooltipManager<T, M> myTooltipManager = new MemberInfoTooltipManager<T, M>(new MemberInfoTooltipManager.TooltipProvider<T, M>() {
     @Override
     public String getTooltip(M memberInfo) {
-      final String tooltipText1 = myModel1.getTooltipText(memberInfo);
+      String tooltipText1 = myModel1.getTooltipText(memberInfo);
       if (tooltipText1 != null) return tooltipText1;
       return myModel2.getTooltipText(memberInfo);
     }
@@ -75,7 +75,7 @@ public class ANDCombinedMemberInfoModel<T extends PsiElement, M extends MemberIn
 
   @Override
   public Boolean isFixedAbstract(M member) {
-    final Boolean fixedAbstract1 = myModel1.isFixedAbstract(member);
+    Boolean fixedAbstract1 = myModel1.isFixedAbstract(member);
     if(fixedAbstract1 == null) return null;
     if(fixedAbstract1.equals(myModel2.isFixedAbstract(member))) return fixedAbstract1;
     return null;

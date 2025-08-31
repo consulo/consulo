@@ -48,7 +48,7 @@ public abstract class BreakpointPanelProvider<B> {
   @Nullable
   public abstract GutterIconRenderer getBreakpointGutterIconRenderer(Object breakpoint);
 
-  public abstract void onDialogClosed(final Project project);
+  public abstract void onDialogClosed(Project project);
 
   public abstract void provideBreakpointItems(Project project, Collection<BreakpointItem> items);
 }

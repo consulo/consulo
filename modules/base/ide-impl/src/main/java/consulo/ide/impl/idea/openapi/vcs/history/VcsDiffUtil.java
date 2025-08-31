@@ -42,10 +42,10 @@ public class VcsDiffUtil {
 
   @RequiredUIAccess
   public static void showDiffFor(@Nonnull Project project,
-                                 @Nonnull final Collection<Change> changes,
-                                 @Nonnull final String revNumTitle1,
-                                 @Nonnull final String revNumTitle2,
-                                 @Nonnull final FilePath filePath) {
+                                 @Nonnull Collection<Change> changes,
+                                 @Nonnull String revNumTitle1,
+                                 @Nonnull String revNumTitle2,
+                                 @Nonnull FilePath filePath) {
     if (filePath.isDirectory()) {
       showChangesDialog(project, getDialogTitle(filePath, revNumTitle1, revNumTitle2), ContainerUtil.newArrayList(changes));
     }
@@ -70,8 +70,8 @@ public class VcsDiffUtil {
   }
 
   @Nonnull
-  private static String getDialogTitle(@Nonnull final FilePath filePath, @Nonnull final String revNumTitle1,
-                                       @Nonnull final String revNumTitle2) {
+  private static String getDialogTitle(@Nonnull FilePath filePath, @Nonnull String revNumTitle1,
+                                       @Nonnull String revNumTitle2) {
     return String.format("Difference between %s and %s versions in %s", revNumTitle1, revNumTitle2, filePath.getName());
   }
 
@@ -87,7 +87,7 @@ public class VcsDiffUtil {
 
     dialogBuilder.setTitle(title);
     dialogBuilder.setActionDescriptors(new DialogBuilder.CloseDialogAction());
-    final ChangesBrowser changesBrowser =
+    ChangesBrowser changesBrowser =
             new ChangesBrowser(project, null, changes, null, false, true, null, ChangesBrowser.MyUseCase.COMMITTED_CHANGES, null);
     changesBrowser.setChangesToDisplay(changes);
     dialogBuilder.setCenterPanel(changesBrowser);

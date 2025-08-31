@@ -33,7 +33,7 @@ public class PsiCommentImpl extends PsiCoreCommentImpl implements PsiLanguageInj
   }
 
   @Override
-  public PsiLanguageInjectionHost updateText(@Nonnull final String text) {
+  public PsiLanguageInjectionHost updateText(@Nonnull String text) {
     return (PsiCommentImpl)replaceWithText(text);
   }
 

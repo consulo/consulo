@@ -249,7 +249,7 @@ public class ScrollingUtil {
         return list.getLastVisibleIndex() - list.getFirstVisibleIndex() + 1;
     }
 
-    public static void moveDown(JList list, @JdkConstants.InputEventMask final int modifiers) {
+    public static void moveDown(JList list, @JdkConstants.InputEventMask int modifiers) {
         _moveDown(list, list.getSelectionModel(), modifiers, list.getModel().getSize(), UISettings.getInstance().CYCLE_SCROLLING);
     }
 
@@ -269,11 +269,11 @@ public class ScrollingUtil {
         }
     }
 
-    public static void installActions(final JList list) {
+    public static void installActions(JList list) {
         installActions(list, null);
     }
 
-    public static void installActions(final JList list, @Nullable JComponent focusParent) {
+    public static void installActions(JList list, @Nullable JComponent focusParent) {
         ActionMap actionMap = list.getActionMap();
         actionMap.put(SCROLLUP_ACTION_ID, new MoveAction(SCROLLUP_ACTION_ID, list));
         actionMap.put(SCROLLDOWN_ACTION_ID, new MoveAction(SCROLLDOWN_ACTION_ID, list));
@@ -387,7 +387,7 @@ public class ScrollingUtil {
     }
 
     public static abstract class ListScrollAction extends MyScrollingAction {
-        protected ListScrollAction(final ShortcutSet shortcutSet, final JComponent component) {
+        protected ListScrollAction(ShortcutSet shortcutSet, JComponent component) {
             super(component);
             registerCustomShortcutSet(shortcutSet, component);
         }
@@ -505,7 +505,7 @@ public class ScrollingUtil {
     private static void _moveDown(
         JComponent c,
         ListSelectionModel selectionModel,
-        @JdkConstants.InputEventMask final int modifiers,
+        @JdkConstants.InputEventMask int modifiers,
         int size,
         boolean cycleScrolling
     ) {
@@ -515,7 +515,7 @@ public class ScrollingUtil {
     private static void _move(
         JComponent c,
         ListSelectionModel selectionModel,
-        @JdkConstants.InputEventMask final int modifiers,
+        @JdkConstants.InputEventMask int modifiers,
         int size,
         boolean cycleScrolling,
         int direction
@@ -607,7 +607,7 @@ public class ScrollingUtil {
         ensureIndexIsVisible(table, index, 0);
     }
 
-    public static void installActions(final JTable table) {
+    public static void installActions(JTable table) {
         installActions(table, UISettings.getInstance().CYCLE_SCROLLING);
     }
 
@@ -634,7 +634,7 @@ public class ScrollingUtil {
         return false;
     }
 
-    public static void installActions(final JTable table, final boolean cycleScrolling) {
+    public static void installActions(JTable table, boolean cycleScrolling) {
         installActions(table, cycleScrolling, null);
     }
 
@@ -719,7 +719,7 @@ public class ScrollingUtil {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            final int modifiers = e.getModifiers();
+            int modifiers = e.getModifiers();
             if (SCROLLUP_ACTION_ID.equals(myId)) {
                 doPageUp();
             }

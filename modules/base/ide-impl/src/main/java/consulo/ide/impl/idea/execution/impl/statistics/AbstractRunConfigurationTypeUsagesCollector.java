@@ -44,12 +44,12 @@ public abstract class AbstractRunConfigurationTypeUsagesCollector extends Abstra
       @Override
       public void run() {
         if (project.isDisposed()) return;
-        final RunManager runManager = RunManager.getInstance(project);
+        RunManager runManager = RunManager.getInstance(project);
         for (RunConfiguration runConfiguration : runManager.getAllConfigurationsList()) {
           if (runConfiguration != null && isApplicable(runManager, runConfiguration)) {
-            final ConfigurationFactory configurationFactory = runConfiguration.getFactory();
-            final ConfigurationType configurationType = configurationFactory.getType();
-            final StringBuilder keyBuilder = new StringBuilder();
+            ConfigurationFactory configurationFactory = runConfiguration.getFactory();
+            ConfigurationType configurationType = configurationFactory.getType();
+            StringBuilder keyBuilder = new StringBuilder();
             keyBuilder.append(configurationType.getId());
             if (configurationType.getConfigurationFactories().length > 1) {
               keyBuilder.append(".").append(configurationFactory.getIcon());

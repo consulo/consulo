@@ -24,9 +24,9 @@ import jakarta.annotation.Nullable;
  */
 public abstract class ReducingParser extends TokenParser {
   @Override
-  public final boolean parseToken(final PrattBuilder builder) {
+  public final boolean parseToken(PrattBuilder builder) {
     builder.advance();
-    final IElementType type = parseFurther(builder);
+    IElementType type = parseFurther(builder);
     if (type == null) return false;
 
     builder.reduce(type);
@@ -34,5 +34,5 @@ public abstract class ReducingParser extends TokenParser {
   }
 
   @Nullable
-  public abstract IElementType parseFurther(final PrattBuilder builder);
+  public abstract IElementType parseFurther(PrattBuilder builder);
 }

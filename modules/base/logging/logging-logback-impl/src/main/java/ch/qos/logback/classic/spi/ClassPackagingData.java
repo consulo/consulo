@@ -65,7 +65,7 @@ public class ClassPackagingData implements Serializable {
 
     @Override
     public int hashCode() {
-        final int PRIME = 31;
+        int PRIME = 31;
         int result = 1;
         result = PRIME * result + ((codeLocation == null) ? 0 : codeLocation.hashCode());
         return result;
@@ -79,7 +79,7 @@ public class ClassPackagingData implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        final ClassPackagingData other = (ClassPackagingData) obj;
+        ClassPackagingData other = (ClassPackagingData) obj;
         if (codeLocation == null) {
             if (other.codeLocation != null)
                 return false;

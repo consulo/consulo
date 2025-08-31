@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  */
 public class OnePixelDivider extends Divider {
   public static final Color BACKGROUND = new JBColor(() -> {
-    final Color bg = UIManager.getColor("OnePixelDivider.background");
+    Color bg = UIManager.getColor("OnePixelDivider.background");
     return bg != null ? bg : JBColor.border();
   });
 
@@ -61,11 +61,11 @@ public class OnePixelDivider extends Divider {
 
   @Override
   public void paint(Graphics g) {
-    final Rectangle bounds = g.getClipBounds();
+    Rectangle bounds = g.getClipBounds();
     if (mySplitter instanceof OnePixelSplitter) {
-      final Supplier<Insets> blindZone = ((OnePixelSplitter)mySplitter).getBlindZone();
+      Supplier<Insets> blindZone = ((OnePixelSplitter)mySplitter).getBlindZone();
       if (blindZone != null) {
-        final Insets insets = blindZone.get();
+        Insets insets = blindZone.get();
         if (insets != null) {
           bounds.x += insets.left;
           bounds.y += insets.top;
@@ -130,7 +130,7 @@ public class OnePixelDivider extends Divider {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-      final OnePixelDivider divider = OnePixelDivider.this;
+      OnePixelDivider divider = OnePixelDivider.this;
       if (isInDragZone(e)) {
         myGlassPane.setCursor(divider.getCursor(), divider);
       } else {
@@ -189,7 +189,7 @@ public class OnePixelDivider extends Divider {
   public void setOrientation(boolean vertical) {
     removeAll();
     myVertical = vertical;
-    final int cursorType = isVertical() ? Cursor.N_RESIZE_CURSOR : Cursor.W_RESIZE_CURSOR;
+    int cursorType = isVertical() ? Cursor.N_RESIZE_CURSOR : Cursor.W_RESIZE_CURSOR;
     setCursor(Cursor.getPredefinedCursor(cursorType));
   }
 
@@ -200,8 +200,8 @@ public class OnePixelDivider extends Divider {
     if (MouseEvent.MOUSE_DRAGGED == e.getID() && myDragging) {
       myPoint = SwingUtilities.convertPoint(this, e.getPoint(), mySplitter.asComponent());
       float proportion;
-      final float firstMinProportion = mySplitter.getMinProportion(true);
-      final float secondMinProportion = mySplitter.getMinProportion(false);
+      float firstMinProportion = mySplitter.getMinProportion(true);
+      float secondMinProportion = mySplitter.getMinProportion(false);
       if (isVertical()) {
         if (getHeight() > 0) {
           proportion = Math.min(1.0f, Math

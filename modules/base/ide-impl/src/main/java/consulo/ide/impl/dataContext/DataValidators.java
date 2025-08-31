@@ -51,7 +51,7 @@ public class DataValidators {
 
     @Override
     @SuppressWarnings("unchecked")
-    public T[] findInvalid(final Key<T[]> dataId, T[] array, final Object dataSource) {
+    public T[] findInvalid(Key<T[]> dataId, T[] array, Object dataSource) {
       for (T element : array) {
         if (element == null) {
           LOG.error("Data isn't valid. " + dataId + "=null Provided by: " + dataSource.getClass()
@@ -76,7 +76,7 @@ public class DataValidators {
     }
 
     @Override
-    public VirtualFile findInvalid(final Key<VirtualFile> dataId, VirtualFile file, final Object dataSource) {
+    public VirtualFile findInvalid(Key<VirtualFile> dataId, VirtualFile file, Object dataSource) {
       return file.isValid() ? null : file;
     }
   };
@@ -89,7 +89,7 @@ public class DataValidators {
     }
 
     @Override
-    public Project findInvalid(final Key<Project> dataId, final Project project, final Object dataSource) {
+    public Project findInvalid(Key<Project> dataId, Project project, Object dataSource) {
       return project.isDisposed() ? project : null;
     }
   };
@@ -112,7 +112,7 @@ public class DataValidators {
     return map.get(dataId);
   }
 
-  public static <T> T findInvalidData(Key<T> dataId, T data, final Object dataSource) {
+  public static <T> T findInvalidData(Key<T> dataId, T data, Object dataSource) {
     if (data == null) return null;
     DataValidator<T> validator = getValidator(dataId);
     if (validator != null) return validator.findInvalid(dataId, (T)data, dataSource);

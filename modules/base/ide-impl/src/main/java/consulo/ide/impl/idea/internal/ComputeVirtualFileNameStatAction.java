@@ -120,7 +120,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
 
         while (picked.size() != 15) {
             Pair<String, Integer> cp = saveSorted.get(0);
-            final String candidate = cp.first;
+            String candidate = cp.first;
             picked.add(candidate);
             System.out.println("Candidate: '" + candidate + "', save = " + cp.second);
             Collections.sort(picked, new Comparator<String>() {
@@ -179,7 +179,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
         System.out.println("Time spent: " + (System.currentTimeMillis() - start));
     }
 
-    private static List<Pair<String, Integer>> show(final TObjectIntHashMap<String> prefixes) {
+    private static List<Pair<String, Integer>> show(TObjectIntHashMap<String> prefixes) {
         final List<Pair<String, Integer>> prefs = new ArrayList<Pair<String, Integer>>(prefixes.size());
         prefixes.forEachEntry(new TObjectIntProcedure<String>() {
             @Override

@@ -29,7 +29,7 @@ public abstract class OptionsMessageDialog extends OptionsDialog {
     private final LocalizeValue myMessage;
     private final Image myIcon;
 
-    protected OptionsMessageDialog(Project project, @Nonnull LocalizeValue message, @Nonnull LocalizeValue title, final Image icon) {
+    protected OptionsMessageDialog(Project project, @Nonnull LocalizeValue message, @Nonnull LocalizeValue title, Image icon) {
         super(project);
         myMessage = message;
         myIcon = icon;
@@ -39,7 +39,7 @@ public abstract class OptionsMessageDialog extends OptionsDialog {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    protected OptionsMessageDialog(Project project, final String message, String title, final Image icon) {
+    protected OptionsMessageDialog(Project project, String message, String title, Image icon) {
         this(project, LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title), icon);
     }
 

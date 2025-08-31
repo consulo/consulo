@@ -33,5 +33,5 @@ public interface HolderFactory {
   DummyHolder createHolder(@Nonnull PsiManager manager, Language language, PsiElement context);
   DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table);
   DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context, CharTable table);
-  DummyHolder createHolder(@Nonnull PsiManager manager, final CharTable table, final Language language);
+  DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, Language language);
 }

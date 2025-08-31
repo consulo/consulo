@@ -29,7 +29,7 @@ public class LimitedRangeHighlighterIterator implements HighlighterIterator {
   private final int myEndOffset;
 
 
-  public LimitedRangeHighlighterIterator(final HighlighterIterator original, final int startOffset, final int endOffset) {
+  public LimitedRangeHighlighterIterator(HighlighterIterator original, int startOffset, int endOffset) {
     myOriginal = original;
     myStartOffset = startOffset;
     myEndOffset = endOffset;

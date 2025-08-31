@@ -48,7 +48,7 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
    * @param previousTokenBlock  previous token block
    * @param isReadOnly          flag that indicates if target block is read-only
    */
-  public LeafBlockWrapper(final Block block,
+  public LeafBlockWrapper(Block block,
                           @Nullable CompositeBlockWrapper parent,
                           WhiteSpace whiteSpaceBefore,
                           FormattingDocumentModel model,
@@ -59,21 +59,21 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
     this(block, parent, whiteSpaceBefore, model, options, previousTokenBlock, isReadOnly, block.getTextRange());
   }
 
-  public LeafBlockWrapper(final Block block,
+  public LeafBlockWrapper(Block block,
                           CompositeBlockWrapper parent,
                           WhiteSpace whiteSpaceBefore,
                           FormattingDocumentModel model,
                           CommonCodeStyleSettings.IndentOptions options,
                           LeafBlockWrapper previousTokenBlock,
                           boolean isReadOnly,
-                          final TextRange textRange)
+                          TextRange textRange)
   {
     super(block, whiteSpaceBefore, parent, textRange);
     myPreviousBlock = previousTokenBlock;
-    final int lastLineNumber = model.getLineNumber(textRange.getEndOffset());
+    int lastLineNumber = model.getLineNumber(textRange.getEndOffset());
 
     int flagsValue = myFlags;
-    final boolean containsLineFeeds = model.getLineNumber(textRange.getStartOffset()) != lastLineNumber;
+    boolean containsLineFeeds = model.getLineNumber(textRange.getStartOffset()) != lastLineNumber;
     flagsValue |= containsLineFeeds ? CONTAIN_LINE_FEEDS:0;
 
     // We need to perform such a complex calculation because block construction algorithm is allowed to create 'leaf' blocks
@@ -97,7 +97,7 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
     }
     mySymbolsAtTheLastLine = symbols;
     flagsValue |= isReadOnly ? READ_ONLY:0;
-    final boolean isLeaf = block.isLeaf();
+    boolean isLeaf = block.isLeaf();
     flagsValue |= isLeaf ? LEAF : 0;
 
     myFlags = flagsValue;
@@ -120,12 +120,12 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
     return myNextBlock;
   }
 
-  public void setNextBlock(final LeafBlockWrapper nextBlock) {
+  public void setNextBlock(LeafBlockWrapper nextBlock) {
     myNextBlock = nextBlock;
   }
 
   @Override
-  protected boolean indentAlreadyUsedBefore(final AbstractBlockWrapper child) {
+  protected boolean indentAlreadyUsedBefore(AbstractBlockWrapper child) {
     return false;
   }
 
@@ -164,15 +164,15 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
     return mySpaceProperty;
   }
 
-  public IndentData calculateOffset(final CommonCodeStyleSettings.IndentOptions options) {
+  public IndentData calculateOffset(CommonCodeStyleSettings.IndentOptions options) {
     // Calculate result as an indent of current block from parent plus parent block indent.
     if (myIndentFromParent != null) {
-      final AbstractBlockWrapper firstIndentedParent = findFirstIndentedParent();
-      final IndentData indentData = new IndentData(myIndentFromParent.getIndentSpaces(), myIndentFromParent.getSpaces());
+      AbstractBlockWrapper firstIndentedParent = findFirstIndentedParent();
+      IndentData indentData = new IndentData(myIndentFromParent.getIndentSpaces(), myIndentFromParent.getSpaces());
       if (firstIndentedParent == null) {
         return indentData;
       } else {
-        final WhiteSpace whiteSpace = firstIndentedParent.getWhiteSpace();
+        WhiteSpace whiteSpace = firstIndentedParent.getWhiteSpace();
         return new IndentData(whiteSpace.getIndentOffset(), whiteSpace.getSpaces()).add(indentData);
       }
     }
@@ -193,16 +193,16 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
     return myParent.getChildOffset(this, options, this.getStartOffset());
   }
 
-  public void setSpaceProperty(@Nullable final SpacingImpl currentSpaceProperty) {
+  public void setSpaceProperty(@Nullable SpacingImpl currentSpaceProperty) {
     mySpaceProperty = currentSpaceProperty;
   }
 
   @Nullable
   public IndentInfo calcIndentFromParent() {
     AbstractBlockWrapper firstIndentedParent = findFirstIndentedParent();
-    final WhiteSpace mySpace = getWhiteSpace();
+    WhiteSpace mySpace = getWhiteSpace();
     if (firstIndentedParent != null) {
-      final WhiteSpace parentSpace = firstIndentedParent.getWhiteSpace();
+      WhiteSpace parentSpace = firstIndentedParent.getWhiteSpace();
       return new IndentInfo(0,
                             mySpace.getIndentOffset() - parentSpace.getIndentOffset(),
                             mySpace.getSpaces() - parentSpace.getSpaces());
@@ -215,7 +215,7 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
     return (myFlags & LEAF) != 0;
   }
 
-  public boolean contains(final int offset) {
+  public boolean contains(int offset) {
     return myStart < offset && myEnd > offset;
   }
 

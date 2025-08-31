@@ -99,7 +99,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Override
-    public void toggleLineBreakpoint(@Nonnull final Project project, @Nonnull final VirtualFile file, final int line, boolean temporary) {
+    public void toggleLineBreakpoint(@Nonnull Project project, @Nonnull VirtualFile file, int line, boolean temporary) {
         XLineBreakpointType<?> breakpointType = XLineBreakpointTypeResolver.forFile(project, file, line);
         if (breakpointType != null) {
             toggleLineBreakpoint(project, breakpointType, file, line, temporary);
@@ -114,11 +114,11 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
     @Override
     public <P extends XBreakpointProperties> void toggleLineBreakpoint(
-        @Nonnull final Project project,
-        @Nonnull final XLineBreakpointType<P> type,
-        @Nonnull final VirtualFile file,
-        final int line,
-        final boolean temporary
+        @Nonnull Project project,
+        @Nonnull XLineBreakpointType<P> type,
+        @Nonnull VirtualFile file,
+        int line,
+        boolean temporary
     ) {
         XSourcePositionImpl position = XSourcePositionImpl.create(file, line);
         if (position != null) {
@@ -130,7 +130,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     public static <P extends XBreakpointProperties> AsyncResult<XLineBreakpoint> toggleAndReturnLineBreakpoint(
         @Nonnull final Project project,
         @Nonnull final XLineBreakpointType<P> type,
-        @Nonnull final XSourcePosition position,
+        @Nonnull XSourcePosition position,
         final boolean temporary,
         @Nullable final Editor editor
     ) {
@@ -222,7 +222,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
                             @Override
                             @RequiredUIAccess
-                            public PopupStep onChosen(final XLineBreakpointType.XLineBreakpointVariant selectedValue, boolean finalChoice) {
+                            public PopupStep onChosen(XLineBreakpointType.XLineBreakpointVariant selectedValue, boolean finalChoice) {
                                 selectionListener.clearHighlighter();
                                 project.getApplication().runWriteAction(() -> {
                                     P properties = (P) selectedValue.createProperties();
@@ -257,11 +257,11 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     public static <P extends XBreakpointProperties> XLineBreakpoint toggleAndReturnLineBreakpoint(
-        @Nonnull final Project project,
-        @Nonnull final XLineBreakpointType<P> type,
-        @Nonnull final VirtualFile file,
-        final int line,
-        final boolean temporary
+        @Nonnull Project project,
+        @Nonnull XLineBreakpointType<P> type,
+        @Nonnull VirtualFile file,
+        int line,
+        boolean temporary
     ) {
         return WriteAction.compute(() -> {
             XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
@@ -278,7 +278,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Override
-    public void removeBreakpoint(final Project project, final XBreakpoint<?> breakpoint) {
+    public void removeBreakpoint(Project project, XBreakpoint<?> breakpoint) {
         WriteAction.run(() -> XDebuggerManager.getInstance(project).getBreakpointManager().removeBreakpoint(breakpoint));
     }
 
@@ -317,8 +317,8 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
             return null;
         }
 
-        final Document document = editor.getDocument();
-        final int line = editor.getCaretModel().getLogicalPosition().line;
+        Document document = editor.getDocument();
+        int line = editor.getCaretModel().getLogicalPosition().line;
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         return XSourcePositionImpl.create(file, line);
     }
@@ -330,7 +330,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
             return Collections.emptyList();
         }
 
-        final Document document = editor.getDocument();
+        Document document = editor.getDocument();
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         Collection<XSourcePosition> res = new ArrayList<>();
         List<Caret> carets = editor.getCaretModel().getAllCarets();
@@ -354,7 +354,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Override
-    public <B extends XBreakpoint<?>> Comparator<B> getDefaultBreakpointComparator(final XBreakpointType<B, ?> type) {
+    public <B extends XBreakpoint<?>> Comparator<B> getDefaultBreakpointComparator(XBreakpointType<B, ?> type) {
         return (o1, o2) -> type.getDisplayText(o1).compareTo(type.getDisplayText(o2));
     }
 
@@ -370,7 +370,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     }
 
     @Nullable
-    public static XDebuggerEvaluator getEvaluator(final XSuspendContext suspendContext) {
+    public static XDebuggerEvaluator getEvaluator(XSuspendContext suspendContext) {
         XExecutionStack executionStack = suspendContext.getActiveExecutionStack();
         if (executionStack != null) {
             XStackFrame stackFrame = executionStack.getTopFrame();

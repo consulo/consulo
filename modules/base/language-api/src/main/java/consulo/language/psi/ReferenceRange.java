@@ -39,10 +39,10 @@ public class ReferenceRange {
 
   @RequiredReadAction
   public static List<TextRange> getAbsoluteRanges(PsiReference ref) {
-    final PsiElement elt = ref.getElement();
-    final List<TextRange> relativeRanges = getRanges(ref);
-    final List<TextRange> answer = new ArrayList<TextRange>(relativeRanges.size());
-    final int parentOffset = elt.getTextRange().getStartOffset();
+    PsiElement elt = ref.getElement();
+    List<TextRange> relativeRanges = getRanges(ref);
+    List<TextRange> answer = new ArrayList<TextRange>(relativeRanges.size());
+    int parentOffset = elt.getTextRange().getStartOffset();
     for (TextRange relativeRange : relativeRanges) {
       answer.add(relativeRange.shiftRight(parentOffset));
     }
@@ -52,7 +52,7 @@ public class ReferenceRange {
   @RequiredReadAction
   public static TextRange getRange(PsiReference ref) {
     if (ref instanceof MultiRangeReference) {
-      final List<TextRange> ranges = ((MultiRangeReference)ref).getRanges();
+      List<TextRange> ranges = ((MultiRangeReference)ref).getRanges();
       return new TextRange(ranges.get(0).getStartOffset(), ranges.get(ranges.size() - 1).getEndOffset());
     }
 

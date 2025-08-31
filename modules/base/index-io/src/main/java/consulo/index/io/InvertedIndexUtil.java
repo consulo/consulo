@@ -35,21 +35,21 @@ public class InvertedIndexUtil {
     for (K dataKey : dataKeys) {
       if (keyChecker != null && !keyChecker.test(dataKey)) continue;
 
-      final IntSet copy = IntSets.newHashSet();
-      final ValueContainer<V> container = index.getData(dataKey);
+      IntSet copy = IntSets.newHashSet();
+      ValueContainer<V> container = index.getData(dataKey);
 
       for (ValueContainer.ValueIterator<V> valueIt = container.getValueIterator(); valueIt.hasNext(); ) {
-        final V value = valueIt.next();
+        V value = valueIt.next();
         if (valueChecker != null && !valueChecker.test(value)) {
           continue;
         }
 
         ValueContainer.IntIterator iterator = valueIt.getInputIdsIterator();
 
-        final ValueContainer.IntPredicate predicate;
+        ValueContainer.IntPredicate predicate;
         if (mainIntersection == null || iterator.size() < mainIntersection.size() || (predicate = valueIt.getValueAssociationPredicate()) == null) {
           while (iterator.hasNext()) {
-            final int id = iterator.next();
+            int id = iterator.next();
             if (mainIntersection == null && (idChecker == null || idChecker.contains(id)) || mainIntersection != null && mainIntersection.contains(id)) {
               copy.add(id);
             }

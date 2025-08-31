@@ -57,7 +57,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
     return myLinks;
   }
 
-  public void setLinks(final List<IssueNavigationLink> links) {
+  public void setLinks(List<IssueNavigationLink> links) {
     myLinks = new ArrayList<>(links);
     incModificationCount();
   }
@@ -76,7 +76,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
     private final TextRange myRange;
     private final String myTargetUrl;
 
-    public LinkMatch(final TextRange range, final String targetUrl) {
+    public LinkMatch(TextRange range, String targetUrl) {
       myRange = range;
       myTargetUrl = targetUrl;
     }
@@ -96,7 +96,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
   }
 
   public List<LinkMatch> findIssueLinks(CharSequence text) {
-    final List<LinkMatch> result = new ArrayList<>();
+    List<LinkMatch> result = new ArrayList<>();
     for (IssueNavigationLink link : myLinks) {
       Pattern issuePattern = link.getIssuePattern();
       Matcher m = issuePattern.matcher(text);
@@ -113,7 +113,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
     return result;
   }
 
-  private static void addMatch(final List<LinkMatch> result, final TextRange range, final String replacement) {
+  private static void addMatch(List<LinkMatch> result, TextRange range, String replacement) {
     for (Iterator<LinkMatch> iterator = result.iterator(); iterator.hasNext(); ) {
       LinkMatch oldMatch = iterator.next();
       if (range.contains(oldMatch.getRange())) {

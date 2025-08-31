@@ -49,7 +49,7 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
 
   @Override
   public Image getIcon() {
-    final PsiElement element = getElement();
+    PsiElement element = getElement();
     if (element != null) {
       int flags = Iconable.ICON_FLAG_READ_STATUS;
       if (!(element instanceof PsiFile) || !element.isWritable()) flags |= Iconable.ICON_FLAG_VISIBILITY;
@@ -75,7 +75,7 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   }
 
   public String toString() {
-    final T element = getElement();
+    T element = getElement();
     return element != null ? element.toString() : "";
   }
 
@@ -107,7 +107,7 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
 
   @Override
   public boolean canNavigate() {
-    final T element = getElement();
+    T element = getElement();
     return element instanceof Navigatable && ((Navigatable)element).canNavigate();
   }
 
@@ -119,11 +119,11 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   @Nonnull
   public abstract Collection<StructureViewTreeElement> getChildrenBase();
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final PsiTreeElementBase that = (PsiTreeElementBase)o;
+    PsiTreeElementBase that = (PsiTreeElementBase)o;
 
     T value = getValue();
     return value == null ? that.getValue() == null : value.equals(that.getValue());

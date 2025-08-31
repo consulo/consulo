@@ -47,7 +47,7 @@ public class WindowHacking {
 
   }
 
-  public static boolean isModalBlocked(final Window window) {
+  public static boolean isModalBlocked(Window window) {
     boolean result = false;
     try {
       result = (Boolean)isModalBlockedMethod.invoke(window);
@@ -58,7 +58,7 @@ public class WindowHacking {
     return result;
   }
 
-  public static JDialog getModalBlockerFor(final Window window) {
+  public static JDialog getModalBlockerFor(Window window) {
     JDialog result = null;
     try {
       result = (JDialog)getModalBlockerMethod.invoke(window);

@@ -55,7 +55,7 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
 
   @RequiredUIAccess
   @Override
-  public void navigate(@Nonnull final ModuleLibraryOrderEntryImpl orderEntry) {
+  public void navigate(@Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(orderEntry, true));
   }

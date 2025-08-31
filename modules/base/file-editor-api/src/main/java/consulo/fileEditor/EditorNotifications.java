@@ -34,7 +34,7 @@ public abstract class EditorNotifications  {
     return project.getInstance(EditorNotifications.class);
   }
 
-  public abstract void updateNotifications(final VirtualFile file);
+  public abstract void updateNotifications(VirtualFile file);
 
   public abstract void updateAllNotifications();
 

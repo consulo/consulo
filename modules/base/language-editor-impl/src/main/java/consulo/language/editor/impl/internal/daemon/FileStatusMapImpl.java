@@ -125,7 +125,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
             return true;
         }
 
-        private void combineScopesWith(@Nonnull final TextRange scope, final int fileLength, @Nonnull final Document document) {
+        private void combineScopesWith(@Nonnull TextRange scope, int fileLength, @Nonnull Document document) {
             List<IntObjectMap.IntObjectEntry<RangeMarker>> rangeMarkers = new ArrayList<>(dirtyScopes.entrySet());
 
             for (IntObjectMap.IntObjectEntry<RangeMarker> entry : rangeMarkers) {

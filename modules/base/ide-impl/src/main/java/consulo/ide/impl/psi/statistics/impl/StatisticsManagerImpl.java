@@ -55,7 +55,7 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
   private boolean myTestingStatistics;
 
   @Override
-  public int getUseCount(@Nonnull final StatisticsInfo info) {
+  public int getUseCount(@Nonnull StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return 0;
 
     int useCount = 0;
@@ -98,7 +98,7 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
 
   @Override
   @RequiredUIAccess
-  public void incUseCount(@Nonnull final StatisticsInfo info) {
+  public void incUseCount(@Nonnull StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return;
     if (ApplicationManager.getApplication().isUnitTestMode() && !myTestingStatistics) {
       return;
@@ -112,7 +112,7 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
   }
 
   private void doIncUseCount(StatisticsInfo info) {
-    final String key1 = info.getContext();
+    String key1 = info.getContext();
     int unitNumber = getUnitNumber(key1);
     synchronized (LOCK) {
       StatisticsUnit unit = getUnit(unitNumber);
@@ -122,8 +122,8 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
   }
 
   @Override
-  public StatisticsInfo[] getAllValues(final String context) {
-    final String[] strings;
+  public StatisticsInfo[] getAllValues(String context) {
+    String[] strings;
     synchronized (LOCK) {
       strings = getUnit(getUnitNumber(context)).getKeys2(context);
     }

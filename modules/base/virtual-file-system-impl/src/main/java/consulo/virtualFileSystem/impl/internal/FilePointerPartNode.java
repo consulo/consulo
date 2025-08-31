@@ -346,12 +346,12 @@ class FilePointerPartNode {
     @Nullable
     // returns pair.second != null always
     Pair<VirtualFile, String> update() {
-        final long lastUpdated = myLastUpdated;
-        final Pair<VirtualFile, String> fileAndUrl = myFileAndUrl;
+        long lastUpdated = myLastUpdated;
+        Pair<VirtualFile, String> fileAndUrl = myFileAndUrl;
         if (fileAndUrl == null) {
             return null;
         }
-        final long fsModCount = ManagingFS.getInstance().getStructureModificationCount();
+        long fsModCount = ManagingFS.getInstance().getStructureModificationCount();
         if (lastUpdated == fsModCount) {
             return fileAndUrl;
         }

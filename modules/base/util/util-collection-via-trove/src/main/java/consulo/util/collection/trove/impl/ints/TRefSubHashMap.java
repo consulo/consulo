@@ -30,12 +30,12 @@ public class TRefSubHashMap<K, V> extends THashMap<RefHashMap.Key<K>, V> impleme
   public TRefSubHashMap(int initialCapacity, float loadFactor, RefHashMap<K, V> map, HashingStrategy<? super K> hashingStrategy) {
     super(initialCapacity, loadFactor, new TObjectHashingStrategy<>() {
       @Override
-      public int computeHashCode(final RefHashMap.Key<K> key) {
+      public int computeHashCode(RefHashMap.Key<K> key) {
         return key.hashCode(); // use stored hashCode
       }
 
       @Override
-      public boolean equals(final RefHashMap.Key<K> o1, final RefHashMap.Key<K> o2) {
+      public boolean equals(RefHashMap.Key<K> o1, RefHashMap.Key<K> o2) {
         return o1 == o2 || RefHashMap.keyEqual(o1.get(), o2.get(), hashingStrategy);
       }
     });

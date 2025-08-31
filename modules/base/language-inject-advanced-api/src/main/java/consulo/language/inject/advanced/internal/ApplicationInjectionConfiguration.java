@@ -58,14 +58,14 @@ public class ApplicationInjectionConfiguration extends Configuration {
   }
 
   @Override
-  public void loadState(final Element element) {
+  public void loadState(Element element) {
     myAdvancedConfiguration.loadState(element);
     super.loadState(element);
   }
 
   @Override
   public Element getState() {
-    final Element element = new Element(COMPONENT_NAME);
+    Element element = new Element(COMPONENT_NAME);
     myAdvancedConfiguration.writeState(element);
     return getState(element);
   }

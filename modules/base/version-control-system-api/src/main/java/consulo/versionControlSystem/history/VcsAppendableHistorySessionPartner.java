@@ -20,9 +20,9 @@ import consulo.versionControlSystem.VcsException;
 public interface VcsAppendableHistorySessionPartner {
   void reportCreatedEmptySession(VcsAbstractHistorySession session);
 
-  void acceptRevision(final VcsFileRevision revision);
+  void acceptRevision(VcsFileRevision revision);
 
-  void reportException(final VcsException exception);
+  void reportException(VcsException exception);
 
   void finished();
 

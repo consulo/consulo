@@ -45,9 +45,9 @@ public class PopupProjectGroupActionGroup extends DefaultActionGroup implements 
             @Override
             public void actionPerformed(AnActionEvent e) {
                 myGroup.setExpanded(!myGroup.isExpanded());
-                final JList list = getList(e);
+                JList list = getList(e);
                 if (list != null) {
-                    final int index = list.getSelectedIndex();
+                    int index = list.getSelectedIndex();
                     rebuildRecentProjectsList(e);
                     list.setSelectedIndex(index);
                 }

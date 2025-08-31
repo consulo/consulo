@@ -122,7 +122,7 @@ public class PathManager {
 
   @Nonnull
   public static Collection<String> getUtilClassPath() {
-    final Class<?>[] classes = {PathManager.class,            // module 'util'
+    Class<?>[] classes = {PathManager.class,            // module 'util'
             Nonnull.class,                // module 'annotations'
             SystemInfoRt.class,           // module 'util-rt'
             Document.class,               // jDOM
@@ -130,15 +130,15 @@ public class PathManager {
             FileUtils.class,              // JNA (jna-platform)
     };
 
-    final Set<String> classPath = new HashSet<String>();
+    Set<String> classPath = new HashSet<String>();
     for (Class<?> aClass : classes) {
-      final String path = getJarPathForClass(aClass);
+      String path = getJarPathForClass(aClass);
       if (path != null) {
         classPath.add(path);
       }
     }
 
-    final String resourceRoot = getResourceRoot(PathManager.class, "/consulo/application/CommonBundle.properties");  // platform-resources-en
+    String resourceRoot = getResourceRoot(PathManager.class, "/consulo/application/CommonBundle.properties");  // platform-resources-en
     if (resourceRoot != null) {
       classPath.add(new File(resourceRoot).getAbsolutePath());
     }

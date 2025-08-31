@@ -47,7 +47,7 @@ public class GraphGenerator<Node> implements Graph<Node> {
       Iterator<Node> inIt = myGraph.getIn(node);
       while (inIt.hasNext()) {
         Node inNode = inIt.next();
-        final Set<Node> set = myOuts.get(inNode);
+        Set<Node> set = myOuts.get(inNode);
         if (set == null) {
           throw new AssertionError("Unexpected node " + inNode + "; nodes=" + nodes);
         }

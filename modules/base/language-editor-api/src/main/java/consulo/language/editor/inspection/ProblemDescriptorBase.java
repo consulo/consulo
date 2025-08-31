@@ -54,7 +54,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
                                @Nonnull ProblemHighlightType highlightType,
                                boolean isAfterEndOfLine,
                                @Nullable TextRange rangeInElement,
-                               final boolean tooltip,
+                               boolean tooltip,
                                boolean onTheFly) {
     super(fixes, descriptionTemplate);
     myShowTooltip = tooltip;
@@ -65,9 +65,9 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
     assertPhysical(startElement);
     if (startElement != endElement) assertPhysical(endElement);
 
-    final TextRange startElementRange = startElement.getTextRange();
+    TextRange startElementRange = startElement.getTextRange();
     LOG.assertTrue(startElementRange != null, startElement);
-    final TextRange endElementRange = endElement.getTextRange();
+    TextRange endElementRange = endElement.getTextRange();
     LOG.assertTrue(endElementRange != null, endElement);
     if (startElementRange.getStartOffset() >= endElementRange.getEndOffset()) {
       if (!(startElement instanceof PsiFile && endElement instanceof PsiFile)) {
@@ -76,8 +76,8 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
     }
 
     myHighlightType = highlightType;
-    final Project project = startContainingFile == null ? startElement.getProject() : startContainingFile.getProject();
-    final SmartPointerManager manager = SmartPointerManager.getInstance(project);
+    Project project = startContainingFile == null ? startElement.getProject() : startContainingFile.getProject();
+    SmartPointerManager manager = SmartPointerManager.getInstance(project);
     myStartSmartPointer = manager.createSmartPsiElementPointer(startElement, startContainingFile);
     myEndSmartPointer = startElement == endElement ? null : manager.createSmartPsiElementPointer(endElement, endContainingFile);
 
@@ -85,7 +85,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
     myTextRangeInElement = rangeInElement;
   }
 
-  protected void assertPhysical(final PsiElement element) {
+  protected void assertPhysical(PsiElement element) {
     if (!element.isPhysical()) {
       LOG.error("Non-physical PsiElement. Physical element is required to be able to anchor the problem in the source tree: " + element + "; file: " + element.getContainingFile());
     }
@@ -138,8 +138,8 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
       TextRange textRange = getTextRange();
       if (textRange == null) return -1;
       textRange = manager.injectedToHost(psiElement, textRange);
-      final int startOffset = textRange.getStartOffset();
-      final int textLength = document.getTextLength();
+      int startOffset = textRange.getStartOffset();
+      int textLength = document.getTextLength();
       LOG.assertTrue(startOffset <= textLength, getDescriptionTemplate() + " at " + startOffset + ", " + textLength);
       myLineNumber = document.getLineNumber(startOffset) + 1;
     }
@@ -195,7 +195,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
     return myNavigatable;
   }
 
-  public void setNavigatable(final Navigatable navigatable) {
+  public void setNavigatable(Navigatable navigatable) {
     myNavigatable = navigatable;
   }
 

@@ -30,7 +30,7 @@ public class DefaultStateSerializer {
   }
 
   @Nullable
-  public static Element serializeState(@Nonnull Object state, @Nullable final Storage storage) throws WriteExternalException {
+  public static Element serializeState(@Nonnull Object state, @Nullable Storage storage) throws WriteExternalException {
     if (state instanceof Element) {
       return (Element)state;
     }
@@ -54,7 +54,7 @@ public class DefaultStateSerializer {
       return (T)stateElement;
     }
     else if (JDOMExternalizable.class.isAssignableFrom(stateClass)) {
-      final T t = ReflectionUtil.newInstance(stateClass);
+      T t = ReflectionUtil.newInstance(stateClass);
       try {
         ((JDOMExternalizable)t).readExternal(stateElement);
         return t;

@@ -98,7 +98,7 @@ public class TextMergeRequestImpl extends TextMergeRequest {
     @RequiredUIAccess
     @Override
     public void applyResult(@Nonnull MergeResult result) {
-        final CharSequence applyContent;
+        CharSequence applyContent;
         switch (result) {
             case CANCEL:
                 applyContent = myOriginalContent;

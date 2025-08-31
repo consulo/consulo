@@ -27,7 +27,7 @@ import java.util.function.BiPredicate;
 public abstract class PatternConditionPlus<Target, Value> extends PatternCondition<Target> implements BiPredicate<Value, ProcessingContext> {
   private final ElementPattern myValuePattern;
 
-  public PatternConditionPlus(@NonNls String methodName, final ElementPattern valuePattern) {
+  public PatternConditionPlus(@NonNls String methodName, ElementPattern valuePattern) {
     super(methodName);
     myValuePattern = valuePattern;
   }
@@ -36,10 +36,10 @@ public abstract class PatternConditionPlus<Target, Value> extends PatternConditi
     return myValuePattern;
   }
 
-  public abstract boolean processValues(final Target t, final ProcessingContext context, final BiPredicate<Value, ProcessingContext> processor);
+  public abstract boolean processValues(Target t, ProcessingContext context, BiPredicate<Value, ProcessingContext> processor);
 
   @Override
-  public boolean accepts(@Nonnull final Target t, final ProcessingContext context) {
+  public boolean accepts(@Nonnull Target t, ProcessingContext context) {
     return !processValues(t, context, this);
   }
 

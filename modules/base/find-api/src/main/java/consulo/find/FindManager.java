@@ -276,7 +276,7 @@ public abstract class FindManager {
   public abstract boolean findPreviousUsageInEditor(@Nonnull FileEditor editor);
 
   @Nullable
-  public abstract FindUsagesHandler getFindUsagesHandler(@Nonnull PsiElement element, final boolean forHighlightUsages);
+  public abstract FindUsagesHandler getFindUsagesHandler(@Nonnull PsiElement element, boolean forHighlightUsages);
 
   @MagicConstant(valuesFromClass = FindManager.PromptResult.class)
   public @interface PromptResultValue {}

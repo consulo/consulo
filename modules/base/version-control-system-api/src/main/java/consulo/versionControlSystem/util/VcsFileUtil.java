@@ -194,15 +194,15 @@ public class VcsFileUtil {
     return chunkArguments(toRelativeFiles(root, files));
   }
 
-  public static String getRelativeFilePath(VirtualFile file, @Nonnull final VirtualFile baseDir) {
+  public static String getRelativeFilePath(VirtualFile file, @Nonnull VirtualFile baseDir) {
     return getRelativeFilePath(file.getPath(), baseDir);
   }
 
-  public static String getRelativeFilePath(String file, @Nonnull final VirtualFile baseDir) {
+  public static String getRelativeFilePath(String file, @Nonnull VirtualFile baseDir) {
     if (Platform.current().os().isWindows()) {
       file = file.replace('\\', '/');
     }
-    final String basePath = baseDir.getPath();
+    String basePath = baseDir.getPath();
     if (!file.startsWith(basePath)) {
       return file;
     }
@@ -228,7 +228,7 @@ public class VcsFileUtil {
    * @return a relative path
    * @throws IllegalArgumentException if path is not under root.
    */
-  public static String relativePath(final VirtualFile root, FilePath path) {
+  public static String relativePath(VirtualFile root, FilePath path) {
     return relativePath(VirtualFileUtil.virtualToIoFile(root), path.getIOFile());
   }
 
@@ -240,7 +240,7 @@ public class VcsFileUtil {
    * @return a relative path
    * @throws IllegalArgumentException if path is not under root.
    */
-  public static String relativePath(final File root, FilePath path) {
+  public static String relativePath(File root, FilePath path) {
     return relativePath(root, path.getIOFile());
   }
 
@@ -252,7 +252,7 @@ public class VcsFileUtil {
    * @return a relative path
    * @throws IllegalArgumentException if path is not under root.
    */
-  public static String relativePath(final File root, VirtualFile file) {
+  public static String relativePath(File root, VirtualFile file) {
     return relativePath(root, VirtualFileUtil.virtualToIoFile(file));
   }
 
@@ -264,7 +264,7 @@ public class VcsFileUtil {
    * @return a relative path
    * @throws IllegalArgumentException if path is not under root.
    */
-  public static String relativePath(final VirtualFile root, VirtualFile file) {
+  public static String relativePath(VirtualFile root, VirtualFile file) {
     return relativePath(VirtualFileUtil.virtualToIoFile(root), VirtualFileUtil.virtualToIoFile(file));
   }
 
@@ -276,7 +276,7 @@ public class VcsFileUtil {
    * @return a relative path
    * @throws IllegalArgumentException if path is not under root.
    */
-  public static String relativeOrFullPath(final VirtualFile root, VirtualFile file) {
+  public static String relativeOrFullPath(VirtualFile root, VirtualFile file) {
     if (root == null) {
       file.getPath();
     }
@@ -291,7 +291,7 @@ public class VcsFileUtil {
    * @return a relative path
    * @throws IllegalArgumentException if path is not under root.
    */
-  public static String relativePath(final File root, File path) {
+  public static String relativePath(File root, File path) {
     String rc = FileUtil.getRelativePath(root, path);
     if (rc == null) {
       throw new IllegalArgumentException("The file " + path + " cannot be made relative to " + root);
@@ -307,7 +307,7 @@ public class VcsFileUtil {
    * @return a list of relative paths
    * @throws IllegalArgumentException if some path is not under root.
    */
-  public static List<String> toRelativePaths(@Nonnull VirtualFile root, @Nonnull final Collection<FilePath> filePaths) {
+  public static List<String> toRelativePaths(@Nonnull VirtualFile root, @Nonnull Collection<FilePath> filePaths) {
     ArrayList<String> rc = new ArrayList<>(filePaths.size());
     for (FilePath path : filePaths) {
       rc.add(relativePath(root, path));
@@ -323,7 +323,7 @@ public class VcsFileUtil {
    * @return a list of relative paths
    * @throws IllegalArgumentException if some path is not under root.
    */
-  public static List<String> toRelativeFiles(@Nonnull VirtualFile root, @Nonnull final Collection<VirtualFile> files) {
+  public static List<String> toRelativeFiles(@Nonnull VirtualFile root, @Nonnull Collection<VirtualFile> files) {
     ArrayList<String> rc = new ArrayList<>(files.size());
     for (VirtualFile file : files) {
       rc.add(relativePath(root, file));
@@ -332,7 +332,7 @@ public class VcsFileUtil {
   }
 
   public static void markFilesDirty(@Nonnull Project project, @Nonnull Collection<VirtualFile> affectedFiles) {
-    final VcsDirtyScopeManager dirty = VcsDirtyScopeManager.getInstance(project);
+    VcsDirtyScopeManager dirty = VcsDirtyScopeManager.getInstance(project);
     for (VirtualFile file : affectedFiles) {
       if (file.isDirectory()) {
         dirty.dirDirtyRecursively(file);
@@ -344,7 +344,7 @@ public class VcsFileUtil {
   }
 
   public static void markFilesDirty(@Nonnull Project project, @Nonnull List<FilePath> affectedFiles) {
-    final VcsDirtyScopeManager dirty = VcsDirtyScopeManager.getInstance(project);
+    VcsDirtyScopeManager dirty = VcsDirtyScopeManager.getInstance(project);
     for (FilePath file : affectedFiles) {
       if (file.isDirectory()) {
         dirty.dirDirtyRecursively(file);
@@ -363,11 +363,11 @@ public class VcsFileUtil {
    * @return the file base
    */
   @Nullable
-  public static VirtualFile getPossibleBase(final VirtualFile file, final String... path) {
+  public static VirtualFile getPossibleBase(VirtualFile file, String... path) {
     if (file == null || path.length == 0) return null;
 
     VirtualFile current = file;
-    final List<VirtualFile> backTrace = new ArrayList<>();
+    List<VirtualFile> backTrace = new ArrayList<>();
     int idx = path.length - 1;
     while (current != null) {
       if (Platform.current().fs().isCaseSensitive() ? current.getName().equals(path[idx]) : current.getName().equalsIgnoreCase(path[idx])) {

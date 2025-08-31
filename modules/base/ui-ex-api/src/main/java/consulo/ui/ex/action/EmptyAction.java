@@ -62,7 +62,7 @@ public final class EmptyAction extends AnAction {
     }
 
     public static AnAction createEmptyAction(@Nullable String name, @Nullable Image icon, boolean alwaysEnabled) {
-        final EmptyAction emptyAction = new EmptyAction(name, null, icon);
+        EmptyAction emptyAction = new EmptyAction(name, null, icon);
         emptyAction.myEnabled = alwaysEnabled;
         return emptyAction;
     }
@@ -103,7 +103,7 @@ public final class EmptyAction extends AnAction {
      * <p>
      * It allows to alter template presentation and shortcut set without affecting original action,
      */
-    public static AnAction wrap(final AnAction action) {
+    public static AnAction wrap(AnAction action) {
         return action instanceof ActionGroup ?
             new MyDelegatingActionGroup(((ActionGroup) action)) :
             new MyDelegatingAction(action);
@@ -163,7 +163,7 @@ public final class EmptyAction extends AnAction {
 
         @Nonnull
         @Override
-        public AnAction[] getChildren(@Nullable final AnActionEvent e) {
+        public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myDelegate.getChildren(e);
         }
 

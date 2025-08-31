@@ -28,8 +28,8 @@ import org.jdom.Element;
 public class VcsPathMacroFilter extends PathMacroFilter {
   @Override
   public boolean skipPathMacros(Attribute attribute) {
-    final Element parent = attribute.getParent();
-    final String parentName = parent.getName();
+    Element parent = attribute.getParent();
+    String parentName = parent.getName();
     if (VcsConfiguration.MESSAGE_ELEMENT_NAME.equals(parentName) && VcsConfiguration.VALUE_ATTR.equals(attribute.getName())) {
       return true;
     }

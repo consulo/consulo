@@ -47,7 +47,7 @@ public class Chunk<Node> {
     if (this == o) return true;
     if (!(o instanceof Chunk)) return false;
 
-    final Chunk chunk = (Chunk)o;
+    Chunk chunk = (Chunk)o;
 
     if (!myNodes.equals(chunk.myNodes)) return false;
 
@@ -61,9 +61,9 @@ public class Chunk<Node> {
 
   @Override
   public String toString() {
-    final StringBuilder buf = new StringBuilder();
+    StringBuilder buf = new StringBuilder();
     buf.append("[");
-    for (final Node node : myNodes) {
+    for (Node node : myNodes) {
       if (buf.length() > 1) {
         buf.append(", ");
       }

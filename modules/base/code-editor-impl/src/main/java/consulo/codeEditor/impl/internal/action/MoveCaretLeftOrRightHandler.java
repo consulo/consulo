@@ -35,8 +35,8 @@ class MoveCaretLeftOrRightHandler extends EditorActionHandler {
 
   @Override
   public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
-    final SelectionModel selectionModel = editor.getSelectionModel();
-    final CaretModel caretModel = editor.getCaretModel();
+    SelectionModel selectionModel = editor.getSelectionModel();
+    CaretModel caretModel = editor.getCaretModel();
     ScrollingModel scrollingModel = editor.getScrollingModel();
 
     if (selectionModel.hasSelection() && (!(editor instanceof EditorEx) || !((EditorEx)editor).isStickySelection())) {
@@ -62,7 +62,7 @@ class MoveCaretLeftOrRightHandler extends EditorActionHandler {
       caret.moveToVisualPosition(currentPosition.leanRight(!currentPosition.leansRight));
     }
     else {
-      final boolean scrollToCaret = (!(editor instanceof RealEditor) || ((RealEditor)editor).isScrollToCaret())
+      boolean scrollToCaret = (!(editor instanceof RealEditor) || ((RealEditor)editor).isScrollToCaret())
                                     && caret == editor.getCaretModel().getPrimaryCaret();
       caretModel.moveCaretRelatively(myDirection == Direction.RIGHT ? 1 : -1, 0, false, false, scrollToCaret);
     }

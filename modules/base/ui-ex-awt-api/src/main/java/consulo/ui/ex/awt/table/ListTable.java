@@ -28,14 +28,14 @@ public class ListTable extends JBTable {
         setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
         setRowSelectionAllowed(true);
         setDragEnabled(false);
-        final JTableHeader header = getTableHeader();
+        JTableHeader header = getTableHeader();
         header.setReorderingAllowed(false);
         final TableCellRenderer delegate = header.getDefaultRenderer();
-        final TableCellRenderer newRenderer = new TableCellRenderer() {
+        TableCellRenderer newRenderer = new TableCellRenderer() {
 
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                final Component component = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                Component component = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 // to display the table header in disabled state when the table is disabled.
                 component.setEnabled(table.isEnabled());
                 return component;
@@ -62,7 +62,7 @@ public class ListTable extends JBTable {
     @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row,
                                      int column) {
-        final Component component =
+        Component component =
                 super.prepareRenderer(renderer, row, column);
         // to properly display the table in disabled state. See also
         // sun java bugs #4841903 and #4795987

@@ -82,13 +82,13 @@ public abstract class AbstractTestProxy extends CompositePrintable {
 
   public abstract boolean shouldSkipRootNodeForExport();
 
-  public void fireOnNewPrintable(@Nonnull final Printable printable) {
+  public void fireOnNewPrintable(@Nonnull Printable printable) {
     if (myPrinter != null) {
       myPrinter.onNewAvailable(printable);
     }
   }
 
-  public void setPrinter(final Printer printer) {
+  public void setPrinter(Printer printer) {
     myPrinter = printer;
     for (AbstractTestProxy testProxy : getChildren()) {
       testProxy.setPrinter(printer);
@@ -101,13 +101,13 @@ public abstract class AbstractTestProxy extends CompositePrintable {
    * @param printable Printable info
    */
   @Override
-  public void addLast(@Nonnull final Printable printable) {
+  public void addLast(@Nonnull Printable printable) {
     super.addLast(printable);
     fireOnNewPrintable(printable);
   }
 
   @Override
-  public void insert(@Nonnull final Printable printable, int i) {
+  public void insert(@Nonnull Printable printable, int i) {
     super.insert(printable, i);
     fireOnNewPrintable(printable);
   }
@@ -129,7 +129,7 @@ public abstract class AbstractTestProxy extends CompositePrintable {
 
     AbstractTestProxy parent = testProxy.getParent();
     while (parent != null) {
-      final List<? extends AbstractTestProxy> children = parent.getChildren();
+      List<? extends AbstractTestProxy> children = parent.getChildren();
       if (!testProxy.isInProgress() && testProxy.equals(children.get(children.size() - 1))) {
         parent.flush();
       } else {
@@ -150,7 +150,7 @@ public abstract class AbstractTestProxy extends CompositePrintable {
 
   @Nonnull
   public List<DiffHyperlink> getDiffViewerProviders() {
-    final DiffHyperlink provider = getDiffViewerProvider();
+    DiffHyperlink provider = getDiffViewerProvider();
     return provider == null ? Collections.emptyList() : Collections.singletonList(provider);
   }
 

@@ -29,8 +29,8 @@ public class WriteAccessFilteringRule implements UsageFilteringRule{
   @Override
   public boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
     if (usage instanceof ReadWriteAccessUsage) {
-      final ReadWriteAccessUsage readWriteAccessUsage = (ReadWriteAccessUsage)usage;
-      final boolean isForWritingOnly = readWriteAccessUsage.isAccessedForWriting() && !readWriteAccessUsage.isAccessedForReading();
+      ReadWriteAccessUsage readWriteAccessUsage = (ReadWriteAccessUsage)usage;
+      boolean isForWritingOnly = readWriteAccessUsage.isAccessedForWriting() && !readWriteAccessUsage.isAccessedForReading();
       return !isForWritingOnly;
     }
     return true;

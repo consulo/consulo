@@ -26,14 +26,14 @@ public abstract class AppendTokenParser extends TokenParser {
   public static final AppendTokenParser JUST_APPEND = new AppendTokenParser() {
     @Override
     @Nullable
-    protected IElementType parseAppend(final PrattBuilder builder) {
+    protected IElementType parseAppend(PrattBuilder builder) {
       return null;
     }
   };
 
   @Override
-  public boolean parseToken(final PrattBuilder builder) {
-    final MutableMarker marker = builder.mark();
+  public boolean parseToken(PrattBuilder builder) {
+    MutableMarker marker = builder.mark();
     builder.advance();
     marker.finish(parseAppend(builder));
     return true;

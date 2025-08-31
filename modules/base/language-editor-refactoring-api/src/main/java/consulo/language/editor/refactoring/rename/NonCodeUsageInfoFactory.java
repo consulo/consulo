@@ -28,7 +28,7 @@ public class NonCodeUsageInfoFactory implements UsageInfoFactory {
   private final PsiElement myElement;
   private final String myStringToReplace;
 
-  public NonCodeUsageInfoFactory(final PsiElement element, final String stringToReplace) {
+  public NonCodeUsageInfoFactory(PsiElement element, String stringToReplace) {
     myElement = element;
     myStringToReplace = stringToReplace;
   }
@@ -36,7 +36,7 @@ public class NonCodeUsageInfoFactory implements UsageInfoFactory {
   @Override
   @Nullable
   public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
-    final PsiElement namedElement = TargetElementUtil.getNamedElement(usage, startOffset);
+    PsiElement namedElement = TargetElementUtil.getNamedElement(usage, startOffset);
     if (namedElement != null) {
       return null;
     }

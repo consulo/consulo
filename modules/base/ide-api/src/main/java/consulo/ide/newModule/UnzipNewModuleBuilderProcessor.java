@@ -51,7 +51,7 @@ public abstract class UnzipNewModuleBuilderProcessor<C extends NewModuleWizardCo
     try {
       File tempFile = FileUtil.createTempFile("template", "zip");
       Files.copy(resourceAsStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      final VirtualFile moduleDir = model.getModule().getModuleDir();
+      VirtualFile moduleDir = model.getModule().getModuleDir();
 
       File outputDir = VirtualFileUtil.virtualToIoFile(moduleDir);
 

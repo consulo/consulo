@@ -27,15 +27,15 @@ import java.nio.channels.FileChannel;
 public class ReadWriteMappedBufferWrapper extends MappedBufferWrapper {
   private static final String RW = "rw";
 
-  protected ReadWriteMappedBufferWrapper(final File file, final int offset, final int len) {
+  protected ReadWriteMappedBufferWrapper(File file, int offset, int len) {
     super(file, offset, len);
   }
 
   @Override
   protected MappedByteBuffer map() throws IOException {
-    final RandomAccessFile file = new RandomAccessFile(myFile, RW);
+    RandomAccessFile file = new RandomAccessFile(myFile, RW);
     try {
-      final FileChannel channel = file.getChannel();
+      FileChannel channel = file.getChannel();
       try {
         return channel.map(FileChannel.MapMode.READ_WRITE, myPosition, myLength);
       }

@@ -73,10 +73,10 @@ public class CompressionUtil {
     long started = DUMP_COMPRESSION_STATS ? System.nanoTime() : 0;
 
     LZ4Compressor compressor = compressor();
-    final byte[] compressedOutputBuffer = spareBufferLocal.getBuffer(compressor.maxCompressedLength(length));
+    byte[] compressedOutputBuffer = spareBufferLocal.getBuffer(compressor.maxCompressedLength(length));
     int compressedSize = compressor.compress(bytes, 0, length, compressedOutputBuffer, 0);
 
-    final long time = (DUMP_COMPRESSION_STATS ? System.nanoTime() : 0) - started;
+    long time = (DUMP_COMPRESSION_STATS ? System.nanoTime() : 0) - started;
     mySizeAfterCompression.addAndGet(compressedSize);
     mySizeBeforeCompression.addAndGet(length);
     int requests = myCompressionRequests.incrementAndGet();
@@ -106,7 +106,7 @@ public class CompressionUtil {
     int decompressedRequests = myDecompressionRequests.incrementAndGet();
     long started = DUMP_COMPRESSION_STATS ? System.nanoTime() : 0;
 
-    final byte[] decompressedResult = decompressor().decompress(bytes, 0, originalBufferLength);
+    byte[] decompressedResult = decompressor().decompress(bytes, 0, originalBufferLength);
 
     long doneTime = (DUMP_COMPRESSION_STATS ? System.nanoTime() : 0) - started;
     long decompressedSize = myDecompressedSize.addAndGet(size);

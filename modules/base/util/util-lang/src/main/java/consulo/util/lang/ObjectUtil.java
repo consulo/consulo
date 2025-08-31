@@ -65,7 +65,7 @@ public class ObjectUtil {
    * Useful for stubs in generic code, e.g. for storing in {@code List<T>} to represent empty special value.
    */
   @Nonnull
-  public static <T> T sentinel(@Nonnull final String name, @Nonnull Class<T> ofInterface) {
+  public static <T> T sentinel(@Nonnull String name, @Nonnull Class<T> ofInterface) {
     if (!ofInterface.isInterface()) {
       throw new IllegalArgumentException("Expected interface but got: " + ofInterface);
     }
@@ -168,7 +168,7 @@ public class ObjectUtil {
   }
 
   @Nullable
-  public static <T, S> S doIfCast(@Nullable Object obj, @Nonnull Class<T> clazz, final Function<? super T, ? extends S> convertor) {
+  public static <T, S> S doIfCast(@Nullable Object obj, @Nonnull Class<T> clazz, Function<? super T, ? extends S> convertor) {
     if (clazz.isInstance(obj)) {
       //noinspection unchecked
       return convertor.apply((T)obj);
@@ -188,7 +188,7 @@ public class ObjectUtil {
     }
   }
 
-  public static <T> void consumeIfCast(@Nullable Object obj, @Nonnull Class<T> clazz, final Consumer<? super T> consumer) {
+  public static <T> void consumeIfCast(@Nullable Object obj, @Nonnull Class<T> clazz, Consumer<? super T> consumer) {
     if (clazz.isInstance(obj)) {
       //noinspection unchecked
       consumer.accept((T)obj);
@@ -197,7 +197,7 @@ public class ObjectUtil {
 
   @Nullable
   @Contract("null, _ -> null")
-  public static <T> T nullizeByCondition(@Nullable final T obj, @Nonnull final Predicate<? super T> condition) {
+  public static <T> T nullizeByCondition(@Nullable T obj, @Nonnull Predicate<? super T> condition) {
     if (condition.test(obj)) {
       return null;
     }

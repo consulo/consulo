@@ -43,10 +43,10 @@ public class DesktopAWTEmbeddedNavService implements EmbeddedNavService {
 
     @Override
     public void show(DataContext context) {
-        final Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         if (!isInsideNavBar(component)) {
-            final Editor editor = context.getData(Editor.KEY);
-            final NavBarPanel toolbarPanel = new NavBarPanel(myProject, false);
+            Editor editor = context.getData(Editor.KEY);
+            NavBarPanel toolbarPanel = new NavBarPanel(myProject, false);
             toolbarPanel.showHint(editor, context);
         }
     }

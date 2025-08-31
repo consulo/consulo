@@ -44,25 +44,25 @@ public class ChangesBrowserDialog extends DialogWrapper {
 
   public enum Mode { Simple, Browse, Choose }
 
-  public ChangesBrowserDialog(Project project, CommittedChangesTableModel changes, final Mode mode, Consumer<ChangesBrowserDialog> initRunnable) {
+  public ChangesBrowserDialog(Project project, CommittedChangesTableModel changes, Mode mode, Consumer<ChangesBrowserDialog> initRunnable) {
     super(project, true);
     myInitRunnable = initRunnable;
     initDialog(project, changes, mode);
   }
 
-  public ChangesBrowserDialog(Project project, Component parent, CommittedChangesTableModel changes, final Mode mode, Consumer<ChangesBrowserDialog> initRunnable) {
+  public ChangesBrowserDialog(Project project, Component parent, CommittedChangesTableModel changes, Mode mode, Consumer<ChangesBrowserDialog> initRunnable) {
     super(parent, true);
     myInitRunnable = initRunnable;
     initDialog(project, changes, mode);
   }
 
-  private void initDialog(final Project project, final CommittedChangesTableModel changes, final Mode mode) {
+  private void initDialog(Project project, CommittedChangesTableModel changes, Mode mode) {
     myProject = project;
     myChanges = changes;
     myMode = mode;
     setTitle(VcsBundle.message("dialog.title.changes.browser"));
     setCancelButtonText(CommonBundle.getCloseButtonText());
-    final IdeaModalityState currentState = IdeaModalityState.current();
+    IdeaModalityState currentState = IdeaModalityState.current();
     if ((mode != Mode.Choose) && (IdeaModalityState.nonModal().equals(currentState))) {
       setModal(false);
     }
@@ -84,7 +84,7 @@ public class ChangesBrowserDialog extends DialogWrapper {
           @Override
           public void run() {
             if (ChangesBrowserDialog.this.isShowing()) {
-              final boolean selectFirst = (myChanges.getRowCount() == 0) && (!committedChangeLists.isEmpty());
+              boolean selectFirst = (myChanges.getRowCount() == 0) && (!committedChangeLists.isEmpty());
               myChanges.addRows(committedChangeLists);
               if (selectFirst) {
                 myCommittedChangesBrowser.selectFirstIfAny();

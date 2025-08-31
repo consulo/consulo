@@ -43,9 +43,9 @@ public class OpaquePanel extends JPanel {
 
   protected void paintComponent(Graphics g) {
     if (isOpaqueActive()) {
-      final Color bg = getBackground();
+      Color bg = getBackground();
       g.setColor(bg);
-      final Dimension size = getSize();
+      Dimension size = getSize();
       g.fillRect(0, 0, size.width, size.height);
     }
   }
@@ -54,7 +54,7 @@ public class OpaquePanel extends JPanel {
     return myOpaqueActive;
   }
 
-  public void setOpaqueActive(final boolean opaqueActive) {
+  public void setOpaqueActive(boolean opaqueActive) {
     myOpaqueActive = opaqueActive;
   }
 

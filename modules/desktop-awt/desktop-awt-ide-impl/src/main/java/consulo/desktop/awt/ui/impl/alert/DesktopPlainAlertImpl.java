@@ -129,17 +129,17 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
 
       String textValue = myText.getValue();
       if (!textValue.isEmpty()) {
-        final JTextPane messageComponent = createMessageComponent(textValue);
+        JTextPane messageComponent = createMessageComponent(textValue);
 
-        final Dimension screenSize = messageComponent.getToolkit().getScreenSize();
-        final Dimension textSize = messageComponent.getPreferredSize();
+        Dimension screenSize = messageComponent.getToolkit().getScreenSize();
+        Dimension textSize = messageComponent.getPreferredSize();
         if (textValue.length() > 100) {
-          final JScrollPane pane = ScrollPaneFactory.createScrollPane(messageComponent);
+          JScrollPane pane = ScrollPaneFactory.createScrollPane(messageComponent);
           pane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
           pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
           pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-          final int scrollSize = (int)new JScrollBar(Adjustable.VERTICAL).getPreferredSize().getWidth();
-          final Dimension preferredSize = new Dimension(Math.min(textSize.width, screenSize.width / 2) + scrollSize, Math.min(textSize.height, screenSize.height / 3) + scrollSize);
+          int scrollSize = (int)new JScrollBar(Adjustable.VERTICAL).getPreferredSize().getWidth();
+          Dimension preferredSize = new Dimension(Math.min(textSize.width, screenSize.width / 2) + scrollSize, Math.min(textSize.height, screenSize.height / 3) + scrollSize);
           pane.setPreferredSize(preferredSize);
           panel.add(pane, BorderLayout.CENTER);
         }
@@ -150,8 +150,8 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       return panel;
     }
 
-    protected JTextPane createMessageComponent(final String message) {
-      final JTextPane messageComponent = new JTextPane();
+    protected JTextPane createMessageComponent(String message) {
+      JTextPane messageComponent = new JTextPane();
       return configureMessagePaneUi(messageComponent, message);
     }
 

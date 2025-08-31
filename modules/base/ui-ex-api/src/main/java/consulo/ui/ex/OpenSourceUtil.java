@@ -40,11 +40,11 @@ public class OpenSourceUtil {
    *
    * @see OpenSourceUtil#navigate(boolean, Navigatable...)
    */
-  public static void navigate(final Navigatable...navigatables) {
+  public static void navigate(Navigatable...navigatables) {
     navigate(true, navigatables);
   }
 
-  public static void navigate(final boolean requestFocus, final Navigatable...navigatables) {
+  public static void navigate(boolean requestFocus, Navigatable...navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
       if (navigatable.canNavigate()) {
@@ -53,7 +53,7 @@ public class OpenSourceUtil {
     }
   }
 
-  public static void navigate(final boolean requestFocus, final boolean tryNotToScroll, final Navigatable...navigatables) {
+  public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable...navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
       if (navigatable.canNavigate()) {

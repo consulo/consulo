@@ -30,7 +30,7 @@ public class PatchHunk {
   private final int myEndLineAfter;
   private final List<PatchLine> myLines = new ArrayList<PatchLine>();
 
-  public PatchHunk(final int startLineBefore, final int endLineBefore, final int startLineAfter, final int endLineAfter) {
+  public PatchHunk(int startLineBefore, int endLineBefore, int startLineAfter, int endLineAfter) {
     myStartLineBefore = startLineBefore;
     myEndLineBefore = endLineBefore;
     myStartLineAfter = startLineAfter;
@@ -53,7 +53,7 @@ public class PatchHunk {
     return myEndLineAfter;
   }
 
-  public void addLine(final PatchLine line) {
+  public void addLine(PatchLine line) {
     myLines.add(line);
   }
 

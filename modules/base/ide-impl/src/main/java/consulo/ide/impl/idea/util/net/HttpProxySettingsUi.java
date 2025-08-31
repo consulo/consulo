@@ -161,16 +161,16 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
     myCheckButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(@Nonnull ActionEvent e) {
-        final String title = "Check Proxy Settings";
-        final String answer = Messages.showInputDialog(myMainPanel, "Warning: your settings will be saved.\n\nEnter any URL to check connection to:",
+        String title = "Check Proxy Settings";
+        String answer = Messages.showInputDialog(myMainPanel, "Warning: your settings will be saved.\n\nEnter any URL to check connection to:",
                                                        title, Messages.getQuestionIcon(), "http://", null);
         if (StringUtil.isEmptyOrSpaces(answer)) {
           return;
         }
 
-        final HttpProxyManagerImpl settings = HttpProxyManagerImpl.getInstance();
+        HttpProxyManagerImpl settings = HttpProxyManagerImpl.getInstance();
         apply(settings);
-        final AtomicReference<IOException> exceptionReference = new AtomicReference<>();
+        AtomicReference<IOException> exceptionReference = new AtomicReference<>();
         myCheckButton.setEnabled(false);
         myCheckButton.setText("Check connection (in progress...)");
         myConnectionCheckInProgress = true;
@@ -204,12 +204,12 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
               parent = frame.getComponent();
             }
             //noinspection ThrowableResultOfMethodCallIgnored
-            final IOException exception = exceptionReference.get();
+            IOException exception = exceptionReference.get();
             if (exception == null) {
               Messages.showMessageDialog(parent, "Connection successful", title, Messages.getInformationIcon());
             }
             else {
-              final String message = exception.getMessage();
+              String message = exception.getMessage();
               if (settings.getState().USE_HTTP_PROXY) {
                 settings.getState().LAST_ERROR = message;
               }
@@ -253,7 +253,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
     myErrorLabel.setVisible(showError);
     myErrorLabel.setText(showError ? errorText(state.LAST_ERROR) : null);
 
-    final String oldStyleText = CommonProxy.getMessageFromProps(CommonProxy.getOldStyleProperties());
+    String oldStyleText = CommonProxy.getMessageFromProps(CommonProxy.getOldStyleProperties());
     myOtherWarning.setVisible(oldStyleText != null);
     if (oldStyleText != null) {
       myOtherWarning.setText(oldStyleText);
@@ -348,7 +348,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
     enableProxyAuthentication(enabled && myProxyAuthCheckBox.isSelected());
     myCheckButton.setEnabled(canEnableConnectionCheck());
 
-    final boolean autoDetectProxy = myAutoDetectProxyRb.isSelected();
+    boolean autoDetectProxy = myAutoDetectProxyRb.isSelected();
     myPacUrlCheckBox.setEnabled(autoDetectProxy);
     myClearPasswordsButton.setEnabled(autoDetectProxy);
     myPacUrlTextField.setEnabled(autoDetectProxy && myPacUrlCheckBox.isSelected());

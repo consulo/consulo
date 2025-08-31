@@ -91,7 +91,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         myInitialName = mySdk.getName();
         myInitialPath = mySdk.getHomePath();
 
-        final AdditionalDataConfigurable additionalDataConfigurable = getAdditionalDataConfigurable();
+        AdditionalDataConfigurable additionalDataConfigurable = getAdditionalDataConfigurable();
         if (additionalDataConfigurable != null) {
             additionalDataConfigurable.setSdk(sdk);
         }
@@ -118,12 +118,12 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
         for (OrderRootType type : OrderRootType.getAllTypes()) {
             if (showTabForType(type)) {
-                final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
+                OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
                 if (factory == null) {
                     LOG.error("OrderRootTypeUIFactory is not defined for order root type: " + type);
                     continue;
                 }
-                final SdkPathEditor pathEditor = factory.createPathEditor(mySdk);
+                SdkPathEditor pathEditor = factory.createPathEditor(mySdk);
                 if (pathEditor != null) {
                     pathEditor.setAddBaseDir(mySdk.getHomeDirectory());
                     myPathEditors.put(type, pathEditor);
@@ -243,7 +243,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         for (PathEditor pathEditor : myPathEditors.values()) {
             isModified = isModified || pathEditor.isModified();
         }
-        final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
+        AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
         if (configurable != null) {
             isModified = isModified || configurable.isModified();
         }
@@ -260,7 +260,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         }
         myInitialName = mySdk.getName();
         myInitialPath = mySdk.getHomePath();
-        final SdkModificator sdkModificator = mySdk.getSdkModificator();
+        SdkModificator sdkModificator = mySdk.getSdkModificator();
         SdkType sdkType = (SdkType)mySdk.getSdkType();
         // we can change home path only when user can add sdk via interface
         if (sdkType.supportsUserAdd()) {
@@ -270,7 +270,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
             pathEditor.apply(sdkModificator);
         }
         Application.get().runWriteAction(sdkModificator::commitChanges);
-        final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
+        AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
         if (configurable != null) {
             configurable.apply();
         }
@@ -279,7 +279,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     @RequiredUIAccess
     @Override
     public void reset() {
-        final SdkModificator sdkModificator = mySdk.getSdkModificator();
+        SdkModificator sdkModificator = mySdk.getSdkModificator();
         for (OrderRootType type : myPathEditors.keySet()) {
             myPathEditors.get(type).reset(sdkModificator);
         }
@@ -288,7 +288,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         myVersionString = null;
         myHomeFieldLabel.setText(ProjectLocalize.sdkConfigureTypeHomePath().get());
         updateAdditionalDataComponent();
-        final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
+        AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
         if (configurable != null) {
             configurable.reset();
         }
@@ -297,8 +297,8 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     @RequiredUIAccess
     @Override
     public void disposeUIResources() {
-        for (final SdkType sdkType : myAdditionalDataConfigurables.keySet()) {
-            final AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
+        for (SdkType sdkType : myAdditionalDataConfigurables.keySet()) {
+            AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
             configurable.disposeUIResources();
         }
         myMainPanel = null;
@@ -323,9 +323,9 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         }
 
         myHomeComponent.setValue(absolutePath);
-        final ColorValue fg;
+        ColorValue fg;
         if (absolutePath != null && !absolutePath.isEmpty()) {
-            final File homeDir = new File(absolutePath);
+            File homeDir = new File(absolutePath);
             boolean homeMustBeDirectory;
 
             SdkType sdkType = (SdkType)mySdk.getSdkType();
@@ -346,7 +346,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     @RequiredUIAccess
     private void doSelectHomePath() {
-        final SdkType sdkType = (SdkType)mySdk.getSdkType();
+        SdkType sdkType = (SdkType)mySdk.getSdkType();
         if (sdkType instanceof BundleType bundleType) {
             SdkUtil.selectSdkHome(mySdk.getPlatform(), bundleType, path -> doSetHomePath(path.toString(), sdkType));
         }
@@ -356,17 +356,17 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     }
 
     @RequiredUIAccess
-    private void doSetHomePath(final String homePath, final SdkType sdkType) {
+    private void doSetHomePath(String homePath, SdkType sdkType) {
         if (homePath == null) {
             return;
         }
         setHomePathValue(homePath.replace('/', File.separatorChar));
 
-        final String newSdkName = suggestSdkName(homePath);
+        String newSdkName = suggestSdkName(homePath);
         ((SdkImpl)mySdk).setName(newSdkName);
 
         try {
-            final Sdk dummySdk = (Sdk)mySdk.clone();
+            Sdk dummySdk = (Sdk)mySdk.clone();
             SdkModificator sdkModificator = dummySdk.getSdkModificator();
             sdkModificator.setHomePath(homePath);
             sdkModificator.removeAllRoots();
@@ -394,14 +394,14 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         }
     }
 
-    private String suggestSdkName(final String homePath) {
-        final String currentName = mySdk.getName();
-        final String suggestedName = ((SdkType)mySdk.getSdkType()).suggestSdkName(currentName, homePath);
+    private String suggestSdkName(String homePath) {
+        String currentName = mySdk.getName();
+        String suggestedName = ((SdkType)mySdk.getSdkType()).suggestSdkName(currentName, homePath);
         if (Comparing.equal(currentName, suggestedName)) {
             return currentName;
         }
         String newSdkName = suggestedName;
-        final Set<String> allNames = new HashSet<>();
+        Set<String> allNames = new HashSet<>();
         Sdk[] sdks = mySdkModel.getSdks();
         for (Sdk sdk : sdks) {
             allNames.add(sdk.getName());
@@ -416,7 +416,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     @RequiredUIAccess
     private void updateAdditionalDataComponent() {
         myAdditionalDataPanel.removeAll();
-        final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
+        AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
         if (configurable != null) {
             JComponent component = myAdditionalDataComponents.get(configurable);
             if (component == null) {
@@ -434,7 +434,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     @Nullable
     private AdditionalDataConfigurable initAdditionalDataConfigurable(Sdk sdk) {
-        final SdkType sdkType = (SdkType)sdk.getSdkType();
+        SdkType sdkType = (SdkType)sdk.getSdkType();
         AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
         if (configurable == null) {
             configurable = sdkType.createAdditionalDataConfigurable(mySdkModel, myEditedSdkModificator);
@@ -503,7 +503,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         @Nonnull
         @Override
         public VirtualFile[] getRoots(@Nonnull OrderRootType rootType) {
-            final PathEditor editor = myPathEditors.get(rootType);
+            PathEditor editor = myPathEditors.get(rootType);
             if (editor == null) {
                 throw new IllegalStateException("no editor for root type " + rootType);
             }

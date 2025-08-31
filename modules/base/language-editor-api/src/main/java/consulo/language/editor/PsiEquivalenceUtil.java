@@ -88,11 +88,11 @@ public class PsiEquivalenceUtil {
     return areElementsEquivalent(element1, element2, null, false);
   }
 
-  public static PsiElement[] getFilteredChildren(@Nonnull final PsiElement element, @Nullable Predicate<PsiElement> isElementSignificantCondition, boolean areCommentsSignificant) {
+  public static PsiElement[] getFilteredChildren(@Nonnull PsiElement element, @Nullable Predicate<PsiElement> isElementSignificantCondition, boolean areCommentsSignificant) {
     ASTNode[] children1 = element.getNode().getChildren(null);
     ArrayList<PsiElement> array = new ArrayList<>();
     for (ASTNode node : children1) {
-      final PsiElement child = node.getPsi();
+      PsiElement child = node.getPsi();
       if (!(child instanceof PsiWhiteSpace) && (areCommentsSignificant || !(child instanceof PsiComment)) && (isElementSignificantCondition == null || isElementSignificantCondition.test(child))) {
         array.add(child);
       }
@@ -100,7 +100,7 @@ public class PsiEquivalenceUtil {
     return PsiUtilCore.toPsiElementArray(array);
   }
 
-  public static void findChildRangeDuplicates(PsiElement first, PsiElement last, final List<Pair<PsiElement, PsiElement>> result, PsiElement scope) {
+  public static void findChildRangeDuplicates(PsiElement first, PsiElement last, List<Pair<PsiElement, PsiElement>> result, PsiElement scope) {
     findChildRangeDuplicates(first, last, scope, (start, end) -> result.add(new Pair<>(start, end)));
   }
 
@@ -110,8 +110,8 @@ public class PsiEquivalenceUtil {
     addRangeDuplicates(scope, first, last, consumer);
   }
 
-  private static void addRangeDuplicates(final PsiElement scope, final PsiElement first, final PsiElement last, final BiConsumer<PsiElement, PsiElement> result) {
-    final PsiElement[] children = getFilteredChildren(scope, null, true);
+  private static void addRangeDuplicates(PsiElement scope, PsiElement first, PsiElement last, BiConsumer<PsiElement, PsiElement> result) {
+    PsiElement[] children = getFilteredChildren(scope, null, true);
     NextChild:
     for (int i = 0; i < children.length; ) {
       PsiElement child = children[i];

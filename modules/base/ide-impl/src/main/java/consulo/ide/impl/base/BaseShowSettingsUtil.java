@@ -69,7 +69,7 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
             project = ProjectManager.getInstance().getDefaultProject();
         }
 
-        final Project tempProject = project;
+        Project tempProject = project;
 
         List<ApplicationConfigurable> applicationConfigurables = tempProject.getApplication().getExtensionPoint(ApplicationConfigurable.class).getExtensionList();
         List<ProjectConfigurable> projectConfigurables = tempProject.getExtensionPoint(ProjectConfigurable.class).getExtensionList();

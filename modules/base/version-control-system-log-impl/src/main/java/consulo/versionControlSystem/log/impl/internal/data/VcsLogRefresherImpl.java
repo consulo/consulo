@@ -100,7 +100,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
     };
   }
 
-  protected void startNewBackgroundTask(@Nonnull final Task.Backgroundable refreshTask) {
+  protected void startNewBackgroundTask(@Nonnull Task.Backgroundable refreshTask) {
     UIUtil.invokeLaterIfNeeded(() -> {
       LOG.debug("Starting a background task...");
       ProgressManager.getInstance().runProcessWithProgressAsynchronously(refreshTask, myProgress.createProgressIndicator());
@@ -187,7 +187,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
   }
 
   @Nonnull
-  private GraphCommitImpl<Integer> compactCommit(@Nonnull TimedVcsCommit commit, @Nonnull final VirtualFile root) {
+  private GraphCommitImpl<Integer> compactCommit(@Nonnull TimedVcsCommit commit, @Nonnull VirtualFile root) {
     List<Integer> parents = ContainerUtil.map(commit.getParents(), hash -> myHashMap.getCommitIndex(hash, root));
     int index = myHashMap.getCommitIndex(commit.getId(), root);
     myIndex.markForIndexing(index, root);
@@ -368,8 +368,8 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
       final LogInfo logInfo = new LogInfo(myHashMap);
       new ProviderIterator() {
         @Override
-        void each(@Nonnull final VirtualFile root, @Nonnull VcsLogProvider provider) throws VcsException {
-          final List<GraphCommit<Integer>> graphCommits = new ArrayList<>();
+        void each(@Nonnull VirtualFile root, @Nonnull VcsLogProvider provider) throws VcsException {
+          List<GraphCommit<Integer>> graphCommits = new ArrayList<>();
           VcsLogProvider.LogData data = provider.readAllHashes(root, commit -> graphCommits.add(compactCommit(commit, root)));
           logInfo.put(root, graphCommits);
           logInfo.put(root, data.getRefs());

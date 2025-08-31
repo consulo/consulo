@@ -34,7 +34,7 @@ public class UpdatedFilesReverseSide {
   private final static List<String> ourStoppingGroups = Arrays.asList(
       FileGroup.MERGED_WITH_CONFLICT_ID, FileGroup.UNKNOWN_ID, FileGroup.SKIPPED_ID);
 
-  public UpdatedFilesReverseSide(final UpdatedFiles files) {
+  public UpdatedFilesReverseSide(UpdatedFiles files) {
     myFiles = files;
     myGroupHolder = new HashMap<String, FileGroup>();
     myFileIdx = new HashMap<String, FileGroup>();
@@ -44,18 +44,18 @@ public class UpdatedFilesReverseSide {
     return myFileIdx.isEmpty();
   }
 
-  public FileGroup getGroup(final String id) {
+  public FileGroup getGroup(String id) {
     return myGroupHolder.get(id);
   }
 
-  public void addFileToGroup(final String groupId, final String file, final DuplicateLevel duplicateLevel, final String vcsName) {
-    final FileGroup newGroup = myGroupHolder.get(groupId);
+  public void addFileToGroup(String groupId, String file, DuplicateLevel duplicateLevel, String vcsName) {
+    FileGroup newGroup = myGroupHolder.get(groupId);
     addFileToGroup(newGroup, file, duplicateLevel, vcsName);
   }
 
-  public void addFileToGroup(final FileGroup group, final String file, final DuplicateLevel duplicateLevel, final String vcsName) {
+  public void addFileToGroup(FileGroup group, String file, DuplicateLevel duplicateLevel, String vcsName) {
     if (duplicateLevel.searchPreviousContainment(group.getId())) {
-      final FileGroup oldGroup = myFileIdx.get(file);
+      FileGroup oldGroup = myFileIdx.get(file);
       if (oldGroup != null) {
         if (duplicateLevel.doesExistingWin(group.getId(), oldGroup.getId())) {
           return;
@@ -81,7 +81,7 @@ public class UpdatedFilesReverseSide {
     }
   }
 
-  private void addGroupToIndexes(final FileGroup fromGroup) {
+  private void addGroupToIndexes(FileGroup fromGroup) {
     myGroupHolder.put(fromGroup.getId(), fromGroup);
 
     for (String file : fromGroup.getFiles()) {
@@ -93,8 +93,8 @@ public class UpdatedFilesReverseSide {
     }
   }
 
-  private void copyGroup(final Parent parent, final FileGroup from, final DuplicateLevel duplicateLevel) {
-    final FileGroup to = createOrGet(parent, from);
+  private void copyGroup(Parent parent, FileGroup from, DuplicateLevel duplicateLevel) {
+    FileGroup to = createOrGet(parent, from);
 
     for (FileGroup.UpdatedFile updatedFile : from.getUpdatedFiles()) {
       addFileToGroup(to, updatedFile.getPath(), duplicateLevel, updatedFile.getVcsName());
@@ -109,7 +109,7 @@ public class UpdatedFilesReverseSide {
   }
 
   private class TopLevelParent implements Parent {
-    public void accept(final FileGroup group) {
+    public void accept(FileGroup group) {
       myFiles.getTopLevelGroups().add(group);
     }
   }
@@ -117,16 +117,16 @@ public class UpdatedFilesReverseSide {
   private static class GroupParent implements Parent {
     private final FileGroup myGroup;
 
-    private GroupParent(final FileGroup group) {
+    private GroupParent(FileGroup group) {
       myGroup = group;
     }
 
-    public void accept(final FileGroup group) {
+    public void accept(FileGroup group) {
       myGroup.addChild(group);
     }
   }
 
-  private FileGroup createOrGet(final Parent possibleParent, final FileGroup fromGroup) {
+  private FileGroup createOrGet(Parent possibleParent, FileGroup fromGroup) {
     FileGroup ownGroup = myGroupHolder.get(fromGroup.getId());
     if (ownGroup == null) {
       ownGroup = new FileGroup(fromGroup.getUpdateName(), fromGroup.getStatusName(), fromGroup.getSupportsDeletion(),
@@ -137,14 +137,14 @@ public class UpdatedFilesReverseSide {
     return ownGroup;
   }
 
-  public static Set<String> getPathsFromUpdatedFiles(final UpdatedFiles from) {
+  public static Set<String> getPathsFromUpdatedFiles(UpdatedFiles from) {
     UpdatedFilesReverseSide helper = new UpdatedFilesReverseSide(UpdatedFiles.create());
     helper.accomulateFiles(from, DuplicateLevel.DUPLICATE_ERRORS);
     return helper.myFileIdx.keySet();
   }
 
-  public void accomulateFiles(final UpdatedFiles from, final DuplicateLevel duplicateLevel) {
-    final Parent topLevel = new TopLevelParent();
+  public void accomulateFiles(UpdatedFiles from, DuplicateLevel duplicateLevel) {
+    Parent topLevel = new TopLevelParent();
     for (FileGroup fromGroup : from.getTopLevelGroups()) {
       copyGroup(topLevel, fromGroup, duplicateLevel);
     }
@@ -154,9 +154,9 @@ public class UpdatedFilesReverseSide {
     return containErrors(myFiles);
   }
 
-  public static boolean containErrors(final UpdatedFiles files) {
+  public static boolean containErrors(UpdatedFiles files) {
     for (String groupId : ourStoppingGroups) {
-      final FileGroup group = files.getGroupById(groupId);
+      FileGroup group = files.getGroupById(groupId);
       if ((group != null) && (! group.isEmpty())) {
         return true;
       }
@@ -164,7 +164,7 @@ public class UpdatedFilesReverseSide {
     return false;
   }
 
-  public boolean containsFile(final VirtualFile file) {
+  public boolean containsFile(VirtualFile file) {
     return myFileIdx.containsKey(file.getPresentableUrl());
   }
 
@@ -172,46 +172,46 @@ public class UpdatedFilesReverseSide {
     private final static List<String> ourErrorGroups = Arrays.asList(FileGroup.UNKNOWN_ID, FileGroup.SKIPPED_ID);
     private final static List<String> ourLocals = Arrays.asList(FileGroup.LOCALLY_ADDED_ID, FileGroup.LOCALLY_REMOVED_ID);
 
-    abstract boolean searchPreviousContainment(final String groupId);
-    abstract boolean doesExistingWin(final String groupId, final String existingGroupId);
+    abstract boolean searchPreviousContainment(String groupId);
+    abstract boolean doesExistingWin(String groupId, String existingGroupId);
 
     private DuplicateLevel() {
     }
 
     public static final DuplicateLevel NO_DUPLICATES = new DuplicateLevel() {
-      boolean searchPreviousContainment(final String groupId) {
+      boolean searchPreviousContainment(String groupId) {
         return true;
       }
 
-      boolean doesExistingWin(final String groupId, final String existingGroupId) {
+      boolean doesExistingWin(String groupId, String existingGroupId) {
         return false;
       }
     };
     public static final DuplicateLevel DUPLICATE_ERRORS_LOCALS = new DuplicateLevel() {
-      boolean searchPreviousContainment(final String groupId) {
+      boolean searchPreviousContainment(String groupId) {
         return (! ourLocals.contains(groupId)) && (! ourErrorGroups.contains(groupId));
       }
 
-      boolean doesExistingWin(final String groupId, final String existingGroupId) {
+      boolean doesExistingWin(String groupId, String existingGroupId) {
         return ourLocals.contains(groupId);
       }
     };
 
     public static final DuplicateLevel DUPLICATE_ERRORS = new DuplicateLevel() {
-      boolean searchPreviousContainment(final String groupId) {
+      boolean searchPreviousContainment(String groupId) {
         return ! ourErrorGroups.contains(groupId);
       }
 
-      boolean doesExistingWin(final String groupId, final String existingGroupId) {
+      boolean doesExistingWin(String groupId, String existingGroupId) {
         return false;
       }
     };
     public static final DuplicateLevel ALLOW_DUPLICATES = new DuplicateLevel() {
-      boolean searchPreviousContainment(final String groupId) {
+      boolean searchPreviousContainment(String groupId) {
         return false;
       }
 
-      boolean doesExistingWin(final String groupId, final String existingGroupId) {
+      boolean doesExistingWin(String groupId, String existingGroupId) {
         return false;
       }
     };

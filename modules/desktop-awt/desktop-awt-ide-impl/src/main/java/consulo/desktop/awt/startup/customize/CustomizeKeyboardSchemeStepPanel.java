@@ -35,7 +35,7 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
 
     public CustomizeKeyboardSchemeStepPanel() {
         setLayout(new GridLayout(1, 2, GAP, GAP));
-        final JRadioButton macRadioButton = new JRadioButton("I've never used " + Application.get().getName());
+        JRadioButton macRadioButton = new JRadioButton("I've never used " + Application.get().getName());
         macRadioButton.setOpaque(false);
         JPanel macPanel =
             createBigButtonPanel(new VerticalFlowLayout(), macRadioButton, () -> applyKeymap(KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP));
@@ -56,7 +56,7 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
         ));
 
         add(macPanel);
-        final JRadioButton defaultRadioButton = new JRadioButton("I used " + Application.get().getName() + " before");
+        JRadioButton defaultRadioButton = new JRadioButton("I used " + Application.get().getName() + " before");
         defaultRadioButton.setOpaque(false);
         JPanel defaultPanel =
             createBigButtonPanel(new VerticalFlowLayout(), defaultRadioButton, () -> applyKeymap(KeymapManager.MAC_OS_X_KEYMAP));

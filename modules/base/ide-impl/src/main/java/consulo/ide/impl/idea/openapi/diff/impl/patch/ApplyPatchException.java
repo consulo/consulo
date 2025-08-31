@@ -20,7 +20,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch;
  * @since 2006-11-15
  */
 public class ApplyPatchException extends Exception {
-  public ApplyPatchException(final String s) {
+  public ApplyPatchException(String s) {
     super(s);
   }
 }

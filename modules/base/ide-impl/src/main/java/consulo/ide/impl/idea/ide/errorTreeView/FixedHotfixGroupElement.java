@@ -39,8 +39,8 @@ public class FixedHotfixGroupElement extends GroupingElement {
                                         boolean hasFocus) {
         renderer.setIcon(AllIcons.General.Information);
         renderer.append("Fixed: ", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-        final String[] text = getText();
-        final String checkedText = ((text != null) && (text.length > 0)) ? text[0] : "";
+        String[] text = getText();
+        String checkedText = ((text != null) && (text.length > 0)) ? text[0] : "";
         renderer.append(checkedText, SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
     };

@@ -40,7 +40,7 @@ import java.util.List;
 public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
   @Nonnull
-  public CheckinHandler createHandler(@Nonnull final CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {
+  public CheckinHandler createHandler(@Nonnull CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {
     return new CleanupCodeCheckinHandler(panel);
   }
 
@@ -59,7 +59,7 @@ public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory {
       return new RefreshableOnComponent() {
         @Override
         public JComponent getComponent() {
-          final JPanel cbPanel = new JPanel(new BorderLayout());
+          JPanel cbPanel = new JPanel(new BorderLayout());
           cbPanel.add(cleanupCodeCb, BorderLayout.WEST);
           CheckinHandlerUtil
                   .disableWhenDumb(myProject, cleanupCodeCb, "Code analysis is impossible until indices are up-to-date");

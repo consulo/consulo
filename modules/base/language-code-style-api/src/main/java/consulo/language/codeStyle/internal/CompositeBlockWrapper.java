@@ -27,7 +27,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
   private List<AbstractBlockWrapper> myChildren;
   private ProbablyIncreasingLowerboundAlgorithm<AbstractBlockWrapper> myPrevBlockCalculator = null;
 
-  public CompositeBlockWrapper(final Block block, final WhiteSpace whiteSpaceBefore, @Nullable final CompositeBlockWrapper parent) {
+  public CompositeBlockWrapper(Block block, WhiteSpace whiteSpaceBefore, @Nullable CompositeBlockWrapper parent) {
     super(block, whiteSpaceBefore, parent, block.getTextRange());
   }
 
@@ -35,7 +35,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
     return myChildren;
   }
 
-  public void setChildren(final List<AbstractBlockWrapper> children) {
+  public void setChildren(List<AbstractBlockWrapper> children) {
     myChildren = children;
     if (myPrevBlockCalculator != null) {
       myPrevBlockCalculator.setBlocksList(myChildren);
@@ -55,7 +55,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
   }
 
   @Override
-  protected boolean indentAlreadyUsedBefore(final AbstractBlockWrapper child) {
+  protected boolean indentAlreadyUsedBefore(AbstractBlockWrapper child) {
     for (AbstractBlockWrapper childBefore : myChildren) {
       if (childBefore == child) return false;
       if (childBefore.getWhiteSpace().containsLineFeeds()) return true;
@@ -95,7 +95,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
    *                  {@code null} otherwise
    */
   @Nullable
-  public AbstractBlockWrapper getPrevIndentedSibling(@Nonnull final AbstractBlockWrapper current) {
+  public AbstractBlockWrapper getPrevIndentedSibling(@Nonnull AbstractBlockWrapper current) {
     if (myChildren.size() > 10) {
       return getPrevIndentedSiblingFast(current);
     }
@@ -110,14 +110,14 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
   }
 
   @Nullable
-  private AbstractBlockWrapper getPrevIndentedSiblingFast(@Nonnull final AbstractBlockWrapper current) {
+  private AbstractBlockWrapper getPrevIndentedSiblingFast(@Nonnull AbstractBlockWrapper current) {
     if (myPrevBlockCalculator == null) {
       myPrevBlockCalculator = new ProbablyIncreasingLowerboundAlgorithm<>(myChildren);
     }
 
-    final List<AbstractBlockWrapper> leftBlocks = myPrevBlockCalculator.getLeftSubList(current);
+    List<AbstractBlockWrapper> leftBlocks = myPrevBlockCalculator.getLeftSubList(current);
     for (int i = leftBlocks.size() - 1; i >= 0; i--) {
-      final AbstractBlockWrapper child = leftBlocks.get(i);
+      AbstractBlockWrapper child = leftBlocks.get(i);
       if (child.getWhiteSpace().containsLineFeeds()) {
         return child;
       }

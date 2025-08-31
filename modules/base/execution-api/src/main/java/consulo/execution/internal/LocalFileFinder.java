@@ -45,13 +45,13 @@ public final class LocalFileFinder {
       return false;
     }
 
-    final char driveLetter = Character.toUpperCase(path.charAt(0));
-    final Boolean driveExists = windowsDrivesMap.getIfPresent(driveLetter);
+    char driveLetter = Character.toUpperCase(path.charAt(0));
+    Boolean driveExists = windowsDrivesMap.getIfPresent(driveLetter);
     if (driveExists != null) {
       return driveExists;
     }
     else {
-      final long t0 = System.currentTimeMillis();
+      long t0 = System.currentTimeMillis();
       boolean exists = new File(driveLetter + ":" + File.separator).exists();
       if (System.currentTimeMillis() - t0 > FILE_EXISTS_MAX_TIMEOUT_MILLIS) {
         exists = false; // may be a slow network drive

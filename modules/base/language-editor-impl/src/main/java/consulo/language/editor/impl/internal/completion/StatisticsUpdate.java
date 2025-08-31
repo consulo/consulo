@@ -52,7 +52,7 @@ public class StatisticsUpdate implements Disposable {
     public static StatisticsUpdate collectStatisticChanges(LookupElement item) {
         applyLastCompletionStatisticsUpdate();
 
-        final StatisticsInfo base = CompletionStatistician.getBaseStatisticsInfo(item, null);
+        StatisticsInfo base = CompletionStatistician.getBaseStatisticsInfo(item, null);
         if (base == StatisticsInfo.EMPTY) {
             return new StatisticsUpdate(StatisticsInfo.EMPTY);
         }
@@ -73,7 +73,7 @@ public class StatisticsUpdate implements Disposable {
             return;
         }
 
-        final Document document = context.getDocument();
+        Document document = context.getDocument();
         int startOffset = context.getStartOffset();
         int tailOffset = context.getEditor().getCaretModel().getOffset();
         if (startOffset < 0 || tailOffset <= startOffset) {
@@ -81,7 +81,7 @@ public class StatisticsUpdate implements Disposable {
         }
 
         final RangeMarker marker = document.createRangeMarker(startOffset, tailOffset);
-        final DocumentAdapter listener = new DocumentAdapter() {
+        DocumentAdapter listener = new DocumentAdapter() {
             @Override
             public void beforeDocumentChange(DocumentEvent e) {
                 if (!marker.isValid() || e.getOffset() > marker.getStartOffset() && e.getOffset() < marker.getEndOffset()) {

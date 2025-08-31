@@ -42,7 +42,7 @@ public class PathMacroListEditor {
     this(null);
   }
 
-  public PathMacroListEditor(final Collection<String> undefinedMacroNames) {
+  public PathMacroListEditor(Collection<String> undefinedMacroNames) {
     myPathMacroTable = undefinedMacroNames != null ? new PathMacroTable(undefinedMacroNames) : new PathMacroTable();
     myPathVariablesPanel.add(
       ToolbarDecorator.createDecorator(myPathMacroTable)
@@ -58,19 +58,19 @@ public class PathMacroListEditor {
   }
 
   private void fillIgnoredVariables() {
-    final Collection<String> ignored = PathMacros.getInstance().getIgnoredMacroNames();
+    Collection<String> ignored = PathMacros.getInstance().getIgnoredMacroNames();
     myIgnoredVariables.setText(StringUtil.join(ignored, ";"));
   }
 
   private boolean isIgnoredModified() {
-    final Collection<String> ignored = PathMacros.getInstance().getIgnoredMacroNames();
+    Collection<String> ignored = PathMacros.getInstance().getIgnoredMacroNames();
     return !parseIgnoredVariables().equals(ignored);
   }
 
   private Collection<String> parseIgnoredVariables() {
-    final String s = myIgnoredVariables.getText();
-    final List<String> ignored = new ArrayList<>();
-    final StringTokenizer st = new StringTokenizer(s, ";");
+    String s = myIgnoredVariables.getText();
+    List<String> ignored = new ArrayList<>();
+    StringTokenizer st = new StringTokenizer(s, ";");
     while (st.hasMoreElements()) {
       ignored.add(st.nextElement().trim());
     }
@@ -83,8 +83,8 @@ public class PathMacroListEditor {
     Application.get().runWriteAction(()-> {
       myPathMacroTable.commit();
 
-      final Collection<String> ignored = parseIgnoredVariables();
-      final PathMacros instance = PathMacros.getInstance();
+      Collection<String> ignored = parseIgnoredVariables();
+      PathMacros instance = PathMacros.getInstance();
       instance.setIgnoredMacroNames(ignored);
     });
   }

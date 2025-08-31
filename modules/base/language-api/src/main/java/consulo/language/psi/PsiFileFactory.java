@@ -129,9 +129,9 @@ public interface PsiFileFactory {
     PsiFile createFileFromText(@Nonnull CharSequence chars, @Nonnull PsiFile original);
 
     @Nullable
-    PsiElement createElementFromText(@Nullable final String text,
-                                     @Nonnull final Language language,
-                                     @Nonnull final LanguageVersion languageVersion,
-                                     @Nonnull final IElementType type,
-                                     @Nullable final PsiElement context);
+    PsiElement createElementFromText(@Nullable String text,
+                                     @Nonnull Language language,
+                                     @Nonnull LanguageVersion languageVersion,
+                                     @Nonnull IElementType type,
+                                     @Nullable PsiElement context);
 }

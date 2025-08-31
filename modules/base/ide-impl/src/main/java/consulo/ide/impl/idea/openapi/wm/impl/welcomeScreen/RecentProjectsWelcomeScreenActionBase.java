@@ -36,15 +36,15 @@ import java.util.List;
 public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAction {
   @Nullable
   public static DefaultListModel getDataModel(@Nonnull AnActionEvent e) {
-    final JList list = getList(e);
+    JList list = getList(e);
     return list != null && list.getModel() instanceof NameFilteringListModel nameFilteringListModel
       && nameFilteringListModel.getOriginalModel() instanceof DefaultListModel defaultListModel ? defaultListModel : null;
   }
 
   @Nonnull
   public static List<AnAction> getSelectedElements(@Nonnull AnActionEvent e) {
-    final JList list = getList(e);
-    final List<AnAction> actions = new ArrayList<>();
+    JList list = getList(e);
+    List<AnAction> actions = new ArrayList<>();
     if (list != null) {
       for (Object value : list.getSelectedValues()) {
         if (value instanceof AnAction) {
@@ -57,7 +57,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
 
   @Nullable
   public static JList getList(@Nonnull AnActionEvent e) {
-    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     return component instanceof JList jList ? jList : null;
   }
 
@@ -71,7 +71,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
   }
 
   public static void rebuildRecentProjectsList(@Nonnull AnActionEvent e) {
-    final DefaultListModel model = getDataModel(e);
+    DefaultListModel model = getDataModel(e);
     if (model != null) {
       rebuildRecentProjectDataModel(model);
     }

@@ -46,14 +46,14 @@ public class LinuxDragAndDropSupport {
   private LinuxDragAndDropSupport() { }
 
   @Nullable
-  public static List<File> getFiles(@Nonnull final Transferable transferable) throws IOException, UnsupportedFlavorException {
+  public static List<File> getFiles(@Nonnull Transferable transferable) throws IOException, UnsupportedFlavorException {
     if (transferable.isDataFlavorSupported(uriListFlavor)) {
-      final Object transferData = transferable.getTransferData(uriListFlavor);
+      Object transferData = transferable.getTransferData(uriListFlavor);
       return getFiles(transferData.toString());
     }
     else if (transferable.isDataFlavorSupported(gnomeFileListFlavor)) {
-      final Object transferData = transferable.getTransferData(gnomeFileListFlavor);
-      final String content = FileUtil.loadTextAndClose((InputStream)transferData);
+      Object transferData = transferable.getTransferData(gnomeFileListFlavor);
+      String content = FileUtil.loadTextAndClose((InputStream)transferData);
       return getFiles(content);
     }
 
@@ -61,20 +61,20 @@ public class LinuxDragAndDropSupport {
   }
 
   @Nonnull
-  private static List<File> getFiles(@Nullable final String transferData) {
-    final List<File> fileList = new ArrayList<>();
+  private static List<File> getFiles(@Nullable String transferData) {
+    List<File> fileList = new ArrayList<>();
 
     if (transferData != null) {
-      final String[] uriList = StringUtil.convertLineSeparators(transferData).split("\n");
+      String[] uriList = StringUtil.convertLineSeparators(transferData).split("\n");
       for (String uriString : uriList) {
         if (StringUtil.isEmptyOrSpaces(uriString) || uriString.startsWith("#") || !uriString.startsWith("file:/")) {
           continue;
         }
         try {
-          final URI uri = new URI(uriString);
+          URI uri = new URI(uriString);
           fileList.add(new File(uri));
         }
-        catch (final URISyntaxException ignore) { }
+        catch (URISyntaxException ignore) { }
       }
     }
 
@@ -82,15 +82,15 @@ public class LinuxDragAndDropSupport {
   }
 
   @Nonnull
-  public static String toUriList(@Nonnull final List<File> files) {
+  public static String toUriList(@Nonnull List<File> files) {
     return StringUtil.join(files, file -> file.toURI().toString(), "\n");
   }
 
-  public static boolean isMoveOperation(@Nonnull final Transferable transferable) {
+  public static boolean isMoveOperation(@Nonnull Transferable transferable) {
     if (transferable.isDataFlavorSupported(gnomeFileListFlavor)) {
       try {
-        final Object transferData = transferable.getTransferData(gnomeFileListFlavor);
-        final String content = FileUtil.loadTextAndClose((InputStream)transferData);
+        Object transferData = transferable.getTransferData(gnomeFileListFlavor);
+        String content = FileUtil.loadTextAndClose((InputStream)transferData);
         return content.startsWith("cut\n");
       }
       catch (Exception ignored) { }

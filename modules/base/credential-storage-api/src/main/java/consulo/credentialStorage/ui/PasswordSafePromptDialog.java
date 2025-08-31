@@ -40,7 +40,7 @@ public interface PasswordSafePromptDialog {
    * @param error         the error to show in the dialog       @return null if dialog was cancelled or password (stored in database or a entered by user)
    */
   @Nullable
-  default String askPassword(final String title, final String message, @Nonnull final Class<?> requestor, final String key, boolean resetPassword, String error) {
+  default String askPassword(String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword, String error) {
     return askPassword(title, message, requestor, key, resetPassword, error, null, null);
   }
 
@@ -56,7 +56,7 @@ public interface PasswordSafePromptDialog {
    * @return null if dialog was cancelled or password (stored in database or a entered by user)
    */
   @Nullable
-  default String askPassword(final String title, final String message, @Nonnull final Class<?> requestor, final String key, boolean resetPassword) {
+  default String askPassword(String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword) {
     return askPassword(title, message, requestor, key, resetPassword, null);
   }
 
@@ -74,7 +74,7 @@ public interface PasswordSafePromptDialog {
    * @param error         the error to show in the dialog       @return null if dialog was cancelled or password (stored in database or a entered by user)
    */
   @Nullable
-  default String askPassphrase(final String title, final String message, @Nonnull final Class<?> requestor, final String key, boolean resetPassword, String error) {
+  default String askPassphrase(String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword, String error) {
     return askPassword(title, message, requestor, key, resetPassword, error, "Passphrase:", "Remember the passphrase");
   }
 
@@ -94,12 +94,12 @@ public interface PasswordSafePromptDialog {
    * @param checkboxLabel the checkbox text   @return null if dialog was cancelled or password (stored in database or a entered by user)
    */
   @Nullable
-  String askPassword(final String title,
-                     final String message,
-                     @Nonnull final Class<?> requestor,
-                     final String key,
+  String askPassword(String title,
+                     String message,
+                     @Nonnull Class<?> requestor,
+                     String key,
                      boolean resetPassword,
-                     final String error,
-                     final String promptLabel,
-                     final String checkboxLabel);
+                     String error,
+                     String promptLabel,
+                     String checkboxLabel);
 }

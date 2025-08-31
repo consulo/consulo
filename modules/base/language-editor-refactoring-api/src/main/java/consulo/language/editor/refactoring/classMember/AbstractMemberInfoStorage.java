@@ -48,7 +48,7 @@ public abstract class AbstractMemberInfoStorage<T extends PsiElement, C extends 
     if(result == null) {
       result = new HashSet<C>();
       result.add(baseClass);
-      final Set<C> allClasses = getAllClasses();
+      Set<C> allClasses = getAllClasses();
       for (C aClass : allClasses) {
         if (isInheritor(baseClass, aClass)) {
           result.add(aClass);
@@ -130,12 +130,12 @@ public abstract class AbstractMemberInfoStorage<T extends PsiElement, C extends 
     List<M> memberInfos = getIntermediateMemberInfosList(baseClass);
 
     for (int i = 0; i < memberInfos.size(); i++) {
-      final M memberInfo = memberInfos.get(i);
-      final T member = memberInfo.getMember();
+      M memberInfo = memberInfos.get(i);
+      T member = memberInfo.getMember();
 
       for(int j = 0; j < i; j++) {
-        final M memberInfo1 = memberInfos.get(j);
-        final T member1 = memberInfo1.getMember();
+        M memberInfo1 = memberInfos.get(j);
+        T member1 = memberInfo1.getMember();
         if(memberConflict(member1,  member)) {
           result.add(memberInfo);
 //        We let the first one be...

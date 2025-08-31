@@ -42,23 +42,23 @@ import java.util.Set;
  */
 public class ModuleContentLibraryUtil {
   @RequiredReadAction
-  public static VirtualFile[] getLibraryRoots(final Project project) {
+  public static VirtualFile[] getLibraryRoots(Project project) {
     return getLibraryRoots(project, true, true);
   }
 
   @RequiredReadAction
-  public static VirtualFile[] getLibraryRoots(final Project project, final boolean includeSourceFiles, final boolean includeJdk) {
+  public static VirtualFile[] getLibraryRoots(Project project, boolean includeSourceFiles, boolean includeJdk) {
     return getLibraryRoots(ModuleManager.getInstance(project).getModules(), includeSourceFiles, includeJdk);
   }
 
-  public static VirtualFile[] getLibraryRoots(final Module[] modules, final boolean includeSourceFiles, final boolean includeSdk) {
+  public static VirtualFile[] getLibraryRoots(Module[] modules, boolean includeSourceFiles, boolean includeSdk) {
     Set<VirtualFile> roots = new HashSet<VirtualFile>();
     for (Module module : modules) {
-      final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-      final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
+      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+      OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
       for (OrderEntry entry : orderEntries) {
         if (entry instanceof LibraryOrderEntry) {
-          final Library library = ((LibraryOrderEntry)entry).getLibrary();
+          Library library = ((LibraryOrderEntry)entry).getLibrary();
           if (library != null) {
             VirtualFile[] files = includeSourceFiles ? library.getFiles(SourcesOrderRootType.getInstance()) : null;
             if (files == null || files.length == 0) {
@@ -80,7 +80,7 @@ public class ModuleContentLibraryUtil {
   }
 
   @Nullable
-  public static OrderEntry findLibraryEntry(VirtualFile file, final Project project) {
+  public static OrderEntry findLibraryEntry(VirtualFile file, Project project) {
     List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
     for (OrderEntry entry : entries) {
       if (entry instanceof LibraryOrderEntry || entry instanceof ModuleExtensionWithSdkOrderEntry) {

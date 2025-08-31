@@ -191,7 +191,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
             }
 
             @Override
-            public ByteContent getByteContent(final String path) {
+            public ByteContent getByteContent(String path) {
                 ThrowableComputable<ByteContent, RuntimeException> action =
                     () -> impl.getByteContent(myGateway.createTransientRootEntryForPathOnly(path), path);
                 return AccessRule.read(action);
@@ -201,7 +201,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
 
     @Nullable
     @Override
-    public byte[] getByteContent(final VirtualFile f, final FileRevisionTimestampComparator c) {
+    public byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c) {
         if (!isInitialized()) {
             return null;
         }

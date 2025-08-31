@@ -26,17 +26,17 @@ public class MappedFileInputStream extends InputStream {
   private int cur;
   private long limit;
 
-  public MappedFileInputStream(final ResizeableMappedFile raf, final long pos, final long limit) {
+  public MappedFileInputStream(ResizeableMappedFile raf, long pos, long limit) {
     this.raf = raf;
     setup(pos, limit);
   }
 
-  public void setup(final long pos, final long limit) {
+  public void setup(long pos, long limit) {
     this.cur = (int)pos;
     this.limit = limit;
   }
 
-  public MappedFileInputStream(final ResizeableMappedFile raf, final long pos) throws IOException {
+  public MappedFileInputStream(ResizeableMappedFile raf, long pos) throws IOException {
     this(raf, pos, raf.length());
   }
 

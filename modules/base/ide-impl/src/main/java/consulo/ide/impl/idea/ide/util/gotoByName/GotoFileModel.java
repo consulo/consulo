@@ -54,10 +54,10 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
   }
 
   @Override
-  protected boolean acceptItem(final NavigationItem item) {
+  protected boolean acceptItem(NavigationItem item) {
     if (item instanceof PsiFile) {
-      final PsiFile file = (PsiFile)item;
-      final Collection<FileType> types = getFilterItems();
+      PsiFile file = (PsiFile)item;
+      Collection<FileType> types = getFilterItems();
       // if language substitutors are used, PsiFile.getFileType() can be different from
       // PsiFile.getVirtualFile().getFileType()
       if (types != null) {
@@ -136,7 +136,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
 
   @Override
   @Nullable
-  public String getFullName(@Nonnull final Object element) {
+  public String getFullName(@Nonnull Object element) {
     return element instanceof PsiFileSystemItem ? getFullName(((PsiFileSystemItem)element).getVirtualFile()) : getElementName(element);
   }
 

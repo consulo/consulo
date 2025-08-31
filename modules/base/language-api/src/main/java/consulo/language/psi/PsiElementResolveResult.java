@@ -37,7 +37,7 @@ public class PsiElementResolveResult implements ResolveResult {
     this(element, true);
   }
 
-  public PsiElementResolveResult(@Nonnull final PsiElement element, final boolean validResult) {
+  public PsiElementResolveResult(@Nonnull PsiElement element, boolean validResult) {
     myElement = element;
     myValidResult = validResult;
   }
@@ -53,11 +53,11 @@ public class PsiElementResolveResult implements ResolveResult {
     return myValidResult;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final PsiElementResolveResult that = (PsiElementResolveResult)o;
+    PsiElementResolveResult that = (PsiElementResolveResult)o;
 
     if (!myElement.equals(that.myElement)) return false;
 
@@ -77,7 +77,7 @@ public class PsiElementResolveResult implements ResolveResult {
   public static ResolveResult[] createResults(@Nullable Collection<? extends PsiElement> elements) {
     if (elements == null || elements.isEmpty()) return EMPTY_ARRAY;
 
-    final ResolveResult[] results = new ResolveResult[elements.size()];
+    ResolveResult[] results = new ResolveResult[elements.size()];
     int i = 0;
     for (PsiElement element : elements) {
       results[i++] = new PsiElementResolveResult(element);
@@ -89,7 +89,7 @@ public class PsiElementResolveResult implements ResolveResult {
   public static ResolveResult[] createResults(@Nullable PsiElement... elements) {
     if (elements == null || elements.length == 0) return EMPTY_ARRAY;
 
-    final ResolveResult[] results = new ResolveResult[elements.length];
+    ResolveResult[] results = new ResolveResult[elements.length];
     for (int i = 0; i < elements.length; i++) {
       results[i] = new PsiElementResolveResult(elements[i]);
     }

@@ -86,8 +86,8 @@ public abstract class LineStatusTrackerBase {
   @jakarta.annotation.Nullable
   private DirtyRange myDirtyRange;
 
-  public LineStatusTrackerBase(@jakarta.annotation.Nullable final Project project,
-                               @Nonnull final Document document) {
+  public LineStatusTrackerBase(@jakarta.annotation.Nullable Project project,
+                               @Nonnull Document document) {
     myDocument = document;
     myProject = project;
 
@@ -132,7 +132,7 @@ public abstract class LineStatusTrackerBase {
   //
 
   @RequiredUIAccess
-  public void setBaseRevision(@Nonnull final CharSequence vcsContent) {
+  public void setBaseRevision(@Nonnull CharSequence vcsContent) {
     UIAccess.assertIsUIThread();
     if (myReleased) return;
 
@@ -158,7 +158,7 @@ public abstract class LineStatusTrackerBase {
       destroyRanges();
       try {
         myRanges = RangesBuilder.createRanges(myDocument, myVcsDocument, isDetectWhitespaceChangedLines());
-        for (final Range range : myRanges) {
+        for (Range range : myRanges) {
           createHighlighter(range);
         }
 
@@ -397,7 +397,7 @@ public abstract class LineStatusTrackerBase {
 
     @Override
     @RequiredUIAccess
-    public void documentChanged(final DocumentEvent e) {
+    public void documentChanged(DocumentEvent e) {
       UIAccess.assertIsUIThread();
 
       if (isSuppressed()) return;
@@ -570,7 +570,7 @@ public abstract class LineStatusTrackerBase {
   }
 
   private static void shiftRanges(@Nonnull List<Range> rangesAfterChange, int shift) {
-    for (final Range range : rangesAfterChange) {
+    for (Range range : rangesAfterChange) {
       range.shift(shift);
     }
   }
@@ -652,7 +652,7 @@ public abstract class LineStatusTrackerBase {
   public Range getNextRange(Range range) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
-      final int index = myRanges.indexOf(range);
+      int index = myRanges.indexOf(range);
       if (index == myRanges.size() - 1) return null;
       return myRanges.get(index + 1);
     }
@@ -662,7 +662,7 @@ public abstract class LineStatusTrackerBase {
   public Range getPrevRange(Range range) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
-      final int index = myRanges.indexOf(range);
+      int index = myRanges.indexOf(range);
       if (index <= 0) return null;
       return myRanges.get(index - 1);
     }
@@ -699,7 +699,7 @@ public abstract class LineStatusTrackerBase {
   public Range getRangeForLine(int line) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
-      for (final Range range : myRanges) {
+      for (Range range : myRanges) {
         if (range.isSelectedByLine(line)) return range;
       }
       return null;
@@ -716,7 +716,7 @@ public abstract class LineStatusTrackerBase {
   }
 
   @RequiredWriteAction
-  public void rollbackChanges(@Nonnull final BitSet lines) {
+  public void rollbackChanges(@Nonnull BitSet lines) {
     List<Range> toRollback = new ArrayList<>();
     for (Range range : myRanges) {
       boolean check = DiffImplUtil.isSelectedByLine(lines, range.getLine1(), range.getLine2());
@@ -732,7 +732,7 @@ public abstract class LineStatusTrackerBase {
    * @param ranges - sorted list of ranges to rollback
    */
   @RequiredWriteAction
-  private void rollbackChanges(@Nonnull final List<Range> ranges) {
+  private void rollbackChanges(@Nonnull List<Range> ranges) {
     runBulkRollback(() -> {
       Range first = null;
       Range last = null;
@@ -793,16 +793,16 @@ public abstract class LineStatusTrackerBase {
   @Nonnull
   public CharSequence getCurrentContent(@Nonnull Range range) {
     TextRange textRange = getCurrentTextRange(range);
-    final int startOffset = textRange.getStartOffset();
-    final int endOffset = textRange.getEndOffset();
+    int startOffset = textRange.getStartOffset();
+    int endOffset = textRange.getEndOffset();
     return myDocument.getImmutableCharSequence().subSequence(startOffset, endOffset);
   }
 
   @Nonnull
   public CharSequence getVcsContent(@Nonnull Range range) {
     TextRange textRange = getVcsTextRange(range);
-    final int startOffset = textRange.getStartOffset();
-    final int endOffset = textRange.getEndOffset();
+    int startOffset = textRange.getStartOffset();
+    int endOffset = textRange.getEndOffset();
     return myVcsDocument.getImmutableCharSequence().subSequence(startOffset, endOffset);
   }
 

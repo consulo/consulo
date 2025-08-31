@@ -301,7 +301,7 @@ public class SimpleDiffChange {
     }
 
     @Nullable
-    private GutterIconRenderer createApplyRenderer(@Nonnull final Side side) {
+    private GutterIconRenderer createApplyRenderer(@Nonnull Side side) {
         return createIconRenderer(
             side,
             DiffLocalize.actionPresentationDiffAcceptText(),
@@ -311,7 +311,7 @@ public class SimpleDiffChange {
     }
 
     @Nullable
-    private GutterIconRenderer createAppendRenderer(@Nonnull final Side side) {
+    private GutterIconRenderer createAppendRenderer(@Nonnull Side side) {
         return createIconRenderer(
             side,
             DiffLocalize.actionPresentationDiffAppendText(),

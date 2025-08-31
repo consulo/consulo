@@ -23,11 +23,11 @@ public class ComparatorUtil {
   private ComparatorUtil() {
   }
 
-  public static <Type, Aspect> Comparator<Type> compareBy(final Function<Type, Aspect> aspect, final Comparator<Aspect> comparator) {
+  public static <Type, Aspect> Comparator<Type> compareBy(Function<Type, Aspect> aspect, Comparator<Aspect> comparator) {
     return (element1, element2) -> comparator.compare(aspect.apply(element1), aspect.apply(element2));
   }
 
-  public static int compareInt(final int first, final int second) {
+  public static int compareInt(int first, int second) {
     if (first < second) {
       return -1;
     }

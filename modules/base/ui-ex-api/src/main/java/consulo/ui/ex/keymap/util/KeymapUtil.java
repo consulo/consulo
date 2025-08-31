@@ -130,7 +130,7 @@ public class KeymapUtil {
             s = getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount());
         }
         else if (shortcut instanceof KeyboardModifierGestureShortcut) {
-            final KeyboardModifierGestureShortcut gestureShortcut = (KeyboardModifierGestureShortcut) shortcut;
+            KeyboardModifierGestureShortcut gestureShortcut = (KeyboardModifierGestureShortcut) shortcut;
             s = gestureShortcut.getType() == KeyboardGestureAction.ModifierType.dblClick ? "Press, release and hold " : "Hold ";
             s += getKeystrokeText(gestureShortcut.getStroke());
         }
@@ -201,7 +201,7 @@ public class KeymapUtil {
             return MacKeymapUtil.getModifiersText(modifiers);
         }
 
-        final String keyModifiersText = KeyEvent.getKeyModifiersText(modifiers);
+        String keyModifiersText = KeyEvent.getKeyModifiersText(modifiers);
         if (keyModifiersText.isEmpty()) {
             return keyModifiersText;
         }
@@ -213,11 +213,11 @@ public class KeymapUtil {
     /**
      * Checks that one of the mouse shortcuts assigned to the provided action has the same modifiers as provided
      */
-    public static boolean matchActionMouseShortcutsModifiers(final Keymap activeKeymap, @JdkConstants.InputEventMask int modifiers, final String actionId) {
-        final MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
+    public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, @JdkConstants.InputEventMask int modifiers, String actionId) {
+        MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
         for (Shortcut shortcut : activeKeymap.getShortcuts(actionId)) {
             if (shortcut instanceof MouseShortcut) {
-                final MouseShortcut mouseShortcut = (MouseShortcut) shortcut;
+                MouseShortcut mouseShortcut = (MouseShortcut) shortcut;
                 if (mouseShortcut.getModifiers() == syntheticShortcut.getModifiers()) {
                     return true;
                 }

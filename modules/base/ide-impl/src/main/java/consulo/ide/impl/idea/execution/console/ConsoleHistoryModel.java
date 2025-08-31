@@ -124,7 +124,7 @@ class ConsoleHistoryModel extends SimpleModificationTracker {
     }
   }
 
-  public boolean hasHistory(final boolean next) {
+  public boolean hasHistory(boolean next) {
     synchronized (myLock) {
       return next ? myIndex > 0 : myIndex < myEntries.size() - 1;
     }

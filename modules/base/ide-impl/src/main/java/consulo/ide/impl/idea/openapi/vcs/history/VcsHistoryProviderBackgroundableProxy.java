@@ -56,7 +56,7 @@ public class VcsHistoryProviderBackgroundableProxy {
   private final VcsType myType;
   private VcsConfiguration myConfiguration;
 
-  public VcsHistoryProviderBackgroundableProxy(final AbstractVcs vcs, final VcsHistoryProvider delegate, DiffProvider diffProvider) {
+  public VcsHistoryProviderBackgroundableProxy(AbstractVcs vcs, VcsHistoryProvider delegate, DiffProvider diffProvider) {
     myDelegate = delegate;
     myProject = vcs.getProject();
     myConfiguration = VcsConfiguration.getInstance(myProject);
@@ -78,14 +78,14 @@ public class VcsHistoryProviderBackgroundableProxy {
     };
   }
 
-  public void createSessionFor(final VcsKey vcsKey, final FilePath filePath, final Consumer<VcsHistorySession> continuation,
+  public void createSessionFor(VcsKey vcsKey, FilePath filePath, Consumer<VcsHistorySession> continuation,
                                @Nullable VcsBackgroundableActions actionKey,
-                               final boolean silent,
-                               @Nullable final Consumer<VcsHistorySession> backgroundSpecialization) {
-    final ThrowableComputable<VcsHistorySession, VcsException> throwableComputable =
+                               boolean silent,
+                               @Nullable Consumer<VcsHistorySession> backgroundSpecialization) {
+    ThrowableComputable<VcsHistorySession, VcsException> throwableComputable =
             myHistoryComputerFactory.create(filePath, backgroundSpecialization, vcsKey);
-    final VcsBackgroundableActions resultingActionKey = actionKey == null ? VcsBackgroundableActions.CREATE_HISTORY_SESSION : actionKey;
-    final Object key = VcsBackgroundableActions.keyFrom(filePath);
+    VcsBackgroundableActions resultingActionKey = actionKey == null ? VcsBackgroundableActions.CREATE_HISTORY_SESSION : actionKey;
+    Object key = VcsBackgroundableActions.keyFrom(filePath);
 
     if (silent) {
       VcsBackgroundableComputable.createAndRunSilent(myProject, resultingActionKey, key, VcsBundle.message("loading.file.history.progress"),
@@ -96,7 +96,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     }
   }
 
-  public void executeAppendableSession(final VcsKey vcsKey, final FilePath filePath, final VcsAppendableHistorySessionPartner partner,
+  public void executeAppendableSession(VcsKey vcsKey, FilePath filePath, VcsAppendableHistorySessionPartner partner,
                                        @jakarta.annotation.Nullable VcsBackgroundableActions actionKey, boolean canUseCache, boolean canUseLastRevisionCheck) {
     doExecuteAppendableSession(vcsKey, filePath, null, partner, actionKey, canUseCache, canUseLastRevisionCheck);
   }
@@ -105,17 +105,17 @@ public class VcsHistoryProviderBackgroundableProxy {
    * @throws UnsupportedOperationException if this proxy was created for {@link VcsHistoryProvider} instance,
    * that doesn't implement {@link VcsHistoryProviderEx}
    */
-  public void executeAppendableSession(final VcsKey vcsKey, final FilePath filePath, @Nullable VcsRevisionNumber startRevisionNumber,
-                                       final VcsAppendableHistorySessionPartner partner, @Nullable VcsBackgroundableActions actionKey) {
+  public void executeAppendableSession(VcsKey vcsKey, FilePath filePath, @Nullable VcsRevisionNumber startRevisionNumber,
+                                       VcsAppendableHistorySessionPartner partner, @Nullable VcsBackgroundableActions actionKey) {
     if (!(myDelegate instanceof VcsHistoryProviderEx)) throw new UnsupportedOperationException();
     doExecuteAppendableSession(vcsKey, filePath, startRevisionNumber, partner, actionKey, false, false);
   }
 
-  private void doExecuteAppendableSession(final VcsKey vcsKey, final FilePath filePath, @Nullable VcsRevisionNumber startRevisionNumber,
-                                          final VcsAppendableHistorySessionPartner partner, @Nullable VcsBackgroundableActions actionKey,
+  private void doExecuteAppendableSession(VcsKey vcsKey, FilePath filePath, @Nullable VcsRevisionNumber startRevisionNumber,
+                                          VcsAppendableHistorySessionPartner partner, @Nullable VcsBackgroundableActions actionKey,
                                           boolean canUseCache, boolean canUseLastRevisionCheck) {
     if (myCachesHistory && canUseCache) {
-      final VcsAbstractHistorySession session = getFullHistoryFromCache(vcsKey, filePath);
+      VcsAbstractHistorySession session = getFullHistoryFromCache(vcsKey, filePath);
       if (session != null) {
         partner.reportCreatedEmptySession(session);
         partner.finished();
@@ -123,17 +123,17 @@ public class VcsHistoryProviderBackgroundableProxy {
       }
     }
 
-    final ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(myProject);
-    final VcsBackgroundableActions resultingActionKey = actionKey == null ? VcsBackgroundableActions.CREATE_HISTORY_SESSION : actionKey;
+    ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(myProject);
+    VcsBackgroundableActions resultingActionKey = actionKey == null ? VcsBackgroundableActions.CREATE_HISTORY_SESSION : actionKey;
 
-    final BackgroundableActionEnabledHandler handler;
+    BackgroundableActionEnabledHandler handler;
     handler = vcsManager.getBackgroundableActionHandler(resultingActionKey);
     // fo not start same action twice
     if (handler.isInProgress(resultingActionKey)) return;
 
     handler.register(resultingActionKey);
 
-    final VcsAppendableHistorySessionPartner cachedPartner;
+    VcsAppendableHistorySessionPartner cachedPartner;
     if (myCachesHistory && startRevisionNumber == null) {
       cachedPartner = new HistoryPartnerProxy(partner, session -> {
         if (session == null) return;
@@ -154,8 +154,8 @@ public class VcsHistoryProviderBackgroundableProxy {
     if (full != null) {
       if (myConfiguration.LIMIT_HISTORY) {
         if (myConfiguration.MAXIMUM_HISTORY_ROWS < full.getRevisionList().size()) {
-          final List<VcsFileRevision> list = full.getRevisionList();
-          final List<VcsFileRevision> was = new ArrayList<>(list.subList(0, myConfiguration.MAXIMUM_HISTORY_ROWS));
+          List<VcsFileRevision> list = full.getRevisionList();
+          List<VcsFileRevision> was = new ArrayList<>(list.subList(0, myConfiguration.MAXIMUM_HISTORY_ROWS));
           list.clear();
           list.addAll(was);
         }
@@ -202,7 +202,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     private final Consumer<VcsAbstractHistorySession> myFinish;
     private VcsAbstractHistorySession myCopy;
 
-    private HistoryPartnerProxy(VcsAppendableHistorySessionPartner partner, final Consumer<VcsAbstractHistorySession> finish) {
+    private HistoryPartnerProxy(VcsAppendableHistorySessionPartner partner, Consumer<VcsAbstractHistorySession> finish) {
       myPartner = partner;
       myFinish = finish;
     }
@@ -264,9 +264,9 @@ public class VcsHistoryProviderBackgroundableProxy {
     }
   }
 
-  private VcsAbstractHistorySession createSessionWithLimitCheck(final FilePath filePath) throws VcsException {
+  private VcsAbstractHistorySession createSessionWithLimitCheck(FilePath filePath) throws VcsException {
     final LimitHistoryCheck check = new LimitHistoryCheck(myProject, filePath.getPath());
-    final VcsAppendableHistoryPartnerAdapter partner = new VcsAppendableHistoryPartnerAdapter() {
+    VcsAppendableHistoryPartnerAdapter partner = new VcsAppendableHistoryPartnerAdapter() {
       @Override
       public void acceptRevision(VcsFileRevision revision) {
         check.checkNumber();
@@ -312,33 +312,33 @@ public class VcsHistoryProviderBackgroundableProxy {
   }
 
   @jakarta.annotation.Nullable
-  private VcsAbstractHistorySession getSessionFromCacheWithLastRevisionCheck(final FilePath filePath, final VcsKey vcsKey) {
-    final ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
+  private VcsAbstractHistorySession getSessionFromCacheWithLastRevisionCheck(FilePath filePath, VcsKey vcsKey) {
+    ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
     if (pi != null) {
       pi.setText2("Checking last revision");
     }
     VcsAbstractHistorySession cached = getFullHistoryFromCache(vcsKey, filePath);
     if (cached == null) return null;
-    final FilePath correctedFilePath =
+    FilePath correctedFilePath =
             ((VcsCacheableHistorySessionFactory<Serializable, VcsAbstractHistorySession>)myDelegate).getUsedFilePath(cached);
 
     if (VcsType.distributed.equals(myType)) {
-      final FilePath path = correctedFilePath != null ? correctedFilePath : filePath;
+      FilePath path = correctedFilePath != null ? correctedFilePath : filePath;
       VirtualFile virtualFile = path.getVirtualFile();
       if (virtualFile == null) {
         virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path.getPath());
       }
       if (virtualFile != null) {
-        final VcsRevisionNumber currentRevision = myDiffProvider.getCurrentRevision(virtualFile);
-        final List<VcsFileRevision> revisionList = cached.getRevisionList();
+        VcsRevisionNumber currentRevision = myDiffProvider.getCurrentRevision(virtualFile);
+        List<VcsFileRevision> revisionList = cached.getRevisionList();
         if (! revisionList.isEmpty() && revisionList.get(0).getRevisionNumber().equals(currentRevision)) {
           return cached;
         }
       }
     } else {
-      final ItemLatestState lastRevision = myDiffProvider.getLastRevision(correctedFilePath != null ? correctedFilePath : filePath);
+      ItemLatestState lastRevision = myDiffProvider.getLastRevision(correctedFilePath != null ? correctedFilePath : filePath);
       if (lastRevision != null && ! lastRevision.isDefaultHead() && lastRevision.isItemExists()) {
-        final List<VcsFileRevision> revisionList = cached.getRevisionList();
+        List<VcsFileRevision> revisionList = cached.getRevisionList();
         if (! revisionList.isEmpty() && revisionList.get(0).getRevisionNumber().equals(lastRevision.getNumber())) {
           return cached;
         }

@@ -29,5 +29,5 @@ public interface ILightLazyParseableElementType {
    * @param chameleon the node to parse.
    * @return the parsed contents of the node.
    */
-  FlyweightCapableTreeStructure<LighterASTNode> parseContents(final LighterLazyParseableNode chameleon);
+  FlyweightCapableTreeStructure<LighterASTNode> parseContents(LighterLazyParseableNode chameleon);
 }

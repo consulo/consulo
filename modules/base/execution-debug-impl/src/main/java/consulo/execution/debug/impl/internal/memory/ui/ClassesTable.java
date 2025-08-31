@@ -133,7 +133,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     }
 
     protected void customizeColumns() {
-        final TableColumnModel columnModel = getColumnModel();
+        TableColumnModel columnModel = getColumnModel();
         TableColumn classesColumn = columnModel.getColumn(DiffViewTableModel.CLASSNAME_COLUMN_INDEX);
         TableColumn countColumn = columnModel.getColumn(DiffViewTableModel.COUNT_COLUMN_INDEX);
         TableColumn diffColumn = columnModel.getColumn(DiffViewTableModel.DIFF_COLUMN_INDEX);
@@ -324,7 +324,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     @SuppressWarnings("WeakerAccess")
     public void updateClassesOnly(@Nonnull List<? extends TypeInfo> classes) {
         myIsShowCounts = false;
-        final LinkedHashMap<TypeInfo, Long> class2Count = new LinkedHashMap<>();
+        LinkedHashMap<TypeInfo, Long> class2Count = new LinkedHashMap<>();
         classes.forEach(x -> class2Count.put(x, 0L));
         updateCountsInternal(class2Count);
     }
@@ -350,18 +350,18 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         releaseMouseListener();
         getEmptyText().setText(StatusText.getDefaultEmptyText());
 
-        final TypeInfo selectedClass = myModel.getSelectedClassBeforeHide();
+        TypeInfo selectedClass = myModel.getSelectedClassBeforeHide();
         int newSelectedIndex = -1;
-        final boolean isInitialized = !myItems.isEmpty();
+        boolean isInitialized = !myItems.isEmpty();
         myItems = List.copyOf(class2Count.keySet());
 
         int i = 0;
-        for (final TypeInfo ref : class2Count.keySet()) {
+        for (TypeInfo ref : class2Count.keySet()) {
             if (ref.equals(selectedClass)) {
                 newSelectedIndex = i;
             }
 
-            final DiffValue oldValue = isInitialized && !myCounts.containsKey(ref)
+            DiffValue oldValue = isInitialized && !myCounts.containsKey(ref)
                 ? new DiffValue(0, 0)
                 : myCounts.getOrDefault(ref, UNKNOWN_VALUE);
             myCounts.put(ref, oldValue.update(class2Count.get(ref)));
@@ -372,7 +372,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         showContent();
 
         if (newSelectedIndex != -1 && !myModel.isHidden()) {
-            final int ix = convertRowIndexToView(newSelectedIndex);
+            int ix = convertRowIndexToView(newSelectedIndex);
             changeSelection(ix,
                 DiffViewTableModel.CLASSNAME_COLUMN_INDEX, false, false);
         }

@@ -34,7 +34,7 @@ import javax.swing.*;
 public class DesktopFileChooserFactoryImpl extends FileChooserFactoryImpl {
   @Nonnull
   @Override
-  public FileTextField createFileTextField(@Nonnull final FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
+  public FileTextField createFileTextField(@Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
     return new FileTextFieldImpl.Vfs(new JTextField(), getMacroMap(), parent, new LocalFsFinder.FileChooserFilter(descriptor, showHidden));
   }
 

@@ -386,17 +386,17 @@ public class DesktopContainerPathManager extends ContainerPathManager {
     }
 
     try (InputStream fis = new BufferedInputStream(new FileInputStream(propFile))) {
-      final PropertyResourceBundle bundle = new PropertyResourceBundle(fis);
-      final Enumeration keys = bundle.getKeys();
+      PropertyResourceBundle bundle = new PropertyResourceBundle(fis);
+      Enumeration keys = bundle.getKeys();
       String home = (String)bundle.handleGetObject("idea.home");
       if (home != null && ourHomePath == null) {
         ourHomePath = getAbsolutePath(substituteVars(home));
       }
-      final Properties sysProperties = System.getProperties();
+      Properties sysProperties = System.getProperties();
       while (keys.hasMoreElements()) {
         String key = (String)keys.nextElement();
         if (sysProperties.getProperty(key, null) == null) { // load the property from the property file only if it is not defined yet
-          final String value = substituteVars(bundle.getString(key));
+          String value = substituteVars(bundle.getString(key));
           sysProperties.setProperty(key, value);
         }
       }
@@ -409,7 +409,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
 
   @Contract("null -> null")
   public String substituteVars(String s) {
-    final String ideaHomePath = getHomePath();
+    String ideaHomePath = getHomePath();
     return substituteVars(s, ideaHomePath);
   }
 
@@ -420,9 +420,9 @@ public class DesktopContainerPathManager extends ContainerPathManager {
       s = ideaHomePath + File.separatorChar + BIN_FOLDER + File.separatorChar + s;
     }
     s = StringUtil.replace(s, "${idea.home}", ideaHomePath);
-    final Properties props = System.getProperties();
-    final Set keys = props.keySet();
-    for (final Object key1 : keys) {
+    Properties props = System.getProperties();
+    Set keys = props.keySet();
+    for (Object key1 : keys) {
       String key = (String)key1;
       String value = props.getProperty(key);
       s = StringUtil.replace(s, "${" + key + "}", value);

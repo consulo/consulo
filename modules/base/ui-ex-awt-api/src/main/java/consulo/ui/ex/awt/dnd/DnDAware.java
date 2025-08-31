@@ -24,9 +24,9 @@ import java.awt.event.MouseEvent;
 
 public interface DnDAware {
 
-  void processMouseEvent(final MouseEvent e);
+  void processMouseEvent(MouseEvent e);
 
-  boolean isOverSelection(final Point point);
+  boolean isOverSelection(Point point);
   
   void dropSelectionButUnderPoint(Point point);
 

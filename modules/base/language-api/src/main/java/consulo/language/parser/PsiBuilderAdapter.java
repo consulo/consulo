@@ -32,7 +32,7 @@ import jakarta.annotation.Nullable;
 public class PsiBuilderAdapter implements PsiBuilder {
     protected final PsiBuilder myDelegate;
 
-    public PsiBuilderAdapter(final PsiBuilder delegate) {
+    public PsiBuilderAdapter(PsiBuilder delegate) {
         myDelegate = delegate;
     }
 
@@ -63,12 +63,12 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    public void setTokenTypeRemapper(final ITokenTypeRemapper remapper) {
+    public void setTokenTypeRemapper(ITokenTypeRemapper remapper) {
         myDelegate.setTokenTypeRemapper(remapper);
     }
 
     @Override
-    public void setWhitespaceSkippedCallback(@Nullable final WhitespaceSkippedCallback callback) {
+    public void setWhitespaceSkippedCallback(@Nullable WhitespaceSkippedCallback callback) {
         myDelegate.setWhitespaceSkippedCallback(callback);
     }
 
@@ -147,12 +147,12 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    public void setDebugMode(final boolean dbgMode) {
+    public void setDebugMode(boolean dbgMode) {
         myDelegate.setDebugMode(dbgMode);
     }
 
     @Override
-    public void enforceCommentTokens(final TokenSet tokens) {
+    public void enforceCommentTokens(TokenSet tokens) {
         myDelegate.enforceCommentTokens(tokens);
     }
 
@@ -175,12 +175,12 @@ public class PsiBuilderAdapter implements PsiBuilder {
 
     @Override
     @Nullable
-    public <T> T getUserData(@Nonnull final Key<T> key) {
+    public <T> T getUserData(@Nonnull Key<T> key) {
         return myDelegate.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull final Key<T> key, @Nullable final T value) {
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
         myDelegate.putUserData(key, value);
     }
 

@@ -33,13 +33,13 @@ public class VcsHandleTypeFactory implements HandleTypeFactory {
   private final Project myProject;
 
   @Inject
-  public VcsHandleTypeFactory(final Project project) {
+  public VcsHandleTypeFactory(Project project) {
     myProject = project;
   }
 
   @Override
   @Nullable
-  public HandleType createHandleType(final VirtualFile file) {
+  public HandleType createHandleType(VirtualFile file) {
     if (!myProject.isInitialized()) return null;
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(myProject).getVcsFor(file);
     if (vcs != null) {

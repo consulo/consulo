@@ -94,7 +94,7 @@ public class TrigramIndexImpl extends TrigramIndex implements CustomInputsIndexF
         return new DataExternalizer<Collection<Integer>>() {
             @Override
             public void save(@Nonnull DataOutput out, @Nonnull Collection<Integer> value) throws IOException {
-                final int numberOfValues = value.size();
+                int numberOfValues = value.size();
 
                 int[] buffer = spareBufferLocal.getBuffer(numberOfValues);
                 int ptr = 0;

@@ -30,7 +30,7 @@ public interface LocalFileOperationsHandler {
   boolean move(VirtualFile file, VirtualFile toDir) throws IOException;
 
   @Nullable
-  File copy(VirtualFile file, VirtualFile toDir, final String copyName) throws IOException;
+  File copy(VirtualFile file, VirtualFile toDir, String copyName) throws IOException;
 
   boolean rename(VirtualFile file, String newName) throws IOException;
 
@@ -38,5 +38,5 @@ public interface LocalFileOperationsHandler {
 
   boolean createDirectory(VirtualFile dir, String name) throws IOException;
 
-  void afterDone(final ThrowableConsumer<LocalFileOperationsHandler, IOException> invoker);
+  void afterDone(ThrowableConsumer<LocalFileOperationsHandler, IOException> invoker);
 }

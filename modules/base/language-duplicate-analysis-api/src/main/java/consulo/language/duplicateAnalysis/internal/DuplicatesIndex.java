@@ -121,7 +121,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
     private final DataIndexer<Integer, IntList, FileContent> myIndexer = new DataIndexer<Integer, IntList, FileContent>() {
         @Override
         @Nonnull
-        public Map<Integer, IntList> map(@Nonnull final FileContent inputData) {
+        public Map<Integer, IntList> map(@Nonnull FileContent inputData) {
             FileType type = inputData.getFileType();
 
             DuplicatesProfile profile = findDuplicatesProfile(type);
@@ -133,7 +133,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
                 PsiDependentFileContent fileContent = (PsiDependentFileContent) inputData;
 
                 if (profile instanceof LightDuplicateProfile lightDuplicateProfile && ourEnabledLightProfiles) {
-                    final Map<Integer, IntList> result = new HashMap<>();
+                    Map<Integer, IntList> result = new HashMap<>();
                     LighterAST ast = fileContent.getLighterAST();
 
                     lightDuplicateProfile.process(ast, (hash, hash2, ast1, nodes) -> {

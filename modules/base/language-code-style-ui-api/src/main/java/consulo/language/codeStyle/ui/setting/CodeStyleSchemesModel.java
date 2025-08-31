@@ -33,15 +33,15 @@ public interface CodeStyleSchemesModel {
 
   boolean isUsePerProjectSettings();
 
-  default void setUsePerProjectSettings(final boolean usePerProjectSettings) {
+  default void setUsePerProjectSettings(boolean usePerProjectSettings) {
     setUsePerProjectSettings(usePerProjectSettings, false);
   }
 
-  void setUsePerProjectSettings(final boolean usePerProjectSettings, final boolean commit);
+  void setUsePerProjectSettings(boolean usePerProjectSettings, boolean commit);
 
-  void selectScheme(final CodeStyleScheme selected, @Nullable Object source);
+  void selectScheme(CodeStyleScheme selected, @Nullable Object source);
 
-  void addScheme(final CodeStyleScheme newScheme, boolean changeSelection);
+  void addScheme(CodeStyleScheme newScheme, boolean changeSelection);
 
   @Nonnull
   List<CodeStyleScheme> getAllSortedSchemes();
@@ -51,7 +51,7 @@ public interface CodeStyleSchemesModel {
   @Nullable
   CodeStyleScheme getSelectedGlobalScheme();
 
-  void copyToProject(final CodeStyleScheme selectedScheme);
+  void copyToProject(CodeStyleScheme selectedScheme);
 
   void fireSchemeChanged(CodeStyleScheme scheme);
 
@@ -61,11 +61,11 @@ public interface CodeStyleSchemesModel {
   @Nonnull
   CodeStyleScheme getSelectedScheme();
 
-  void removeScheme(final CodeStyleScheme scheme);
+  void removeScheme(CodeStyleScheme scheme);
 
   void addListener(CodeStyleSchemesModelListener listener);
 
-  CodeStyleScheme createNewScheme(final String preferredName, final CodeStyleScheme parentScheme);
+  CodeStyleScheme createNewScheme(String preferredName, CodeStyleScheme parentScheme);
 
   CodeStyleScheme exportProjectScheme(@Nonnull String name);
 

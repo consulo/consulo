@@ -52,17 +52,17 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
                 continue;
             }
 
-            final JRadioButton radioButton = new JRadioButton(style.getName(), defaultStyleId.equals(style.getId()));
+            JRadioButton radioButton = new JRadioButton(style.getName(), defaultStyleId.equals(style.getId()));
             radioButton.setOpaque(false);
 
-            final JPanel panel = createBigButtonPanel(
+            JPanel panel = createBigButtonPanel(
                 new BorderLayout(10, 10),
                 radioButton,
                 () -> applyStyle(style)
             );
             panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             panel.add(radioButton, BorderLayout.NORTH);
-            final JLabel label = new JLabel(TargetAWT.to(image)) {
+            JLabel label = new JLabel(TargetAWT.to(image)) {
                 @Override
                 public Dimension getPreferredSize() {
                     Dimension size = super.getPreferredSize();

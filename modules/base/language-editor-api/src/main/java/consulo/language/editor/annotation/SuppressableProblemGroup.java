@@ -34,5 +34,5 @@ public interface SuppressableProblemGroup extends ProblemGroup {
    * @return the list of suppression actions.
    */
   @Nonnull
-  SuppressIntentionAction[] getSuppressActions(@Nullable final PsiElement element);
+  SuppressIntentionAction[] getSuppressActions(@Nullable PsiElement element);
 }

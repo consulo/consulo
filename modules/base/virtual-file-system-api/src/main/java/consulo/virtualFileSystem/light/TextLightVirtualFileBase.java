@@ -78,8 +78,8 @@ public abstract class TextLightVirtualFileBase extends LightVirtualFileBase {
   @Override
   @Nonnull
   public byte[] contentsToByteArray() throws IOException {
-    final Charset charset = getCharset();
-    final String s = getContent().toString();
+    Charset charset = getCharset();
+    String s = getContent().toString();
     return s.getBytes(charset.name());
   }
 

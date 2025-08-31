@@ -149,7 +149,7 @@ public class VcsLogUtil {
   // same if root is invisible as a whole
   // so check that before calling this method
   @Nonnull
-  public static Set<FilePath> getFilteredFilesForRoot(@Nonnull final VirtualFile root, @Nonnull VcsLogFilterCollection filterCollection) {
+  public static Set<FilePath> getFilteredFilesForRoot(@Nonnull VirtualFile root, @Nonnull VcsLogFilterCollection filterCollection) {
     if (filterCollection.getStructureFilter() == null) return Collections.emptySet();
     Collection<FilePath> files = filterCollection.getStructureFilter().getFiles();
 

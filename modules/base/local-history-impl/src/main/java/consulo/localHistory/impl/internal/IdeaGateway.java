@@ -332,12 +332,12 @@ public class IdeaGateway {
     return new FileEntry(file.getName(), contentAndStamps.first, contentAndStamps.second, !file.isWritable());
   }
 
-  private void doCreateChildren(@Nonnull DirectoryEntry parent, Iterable<VirtualFile> children, final boolean forDeletion) {
+  private void doCreateChildren(@Nonnull DirectoryEntry parent, Iterable<VirtualFile> children, boolean forDeletion) {
     List<Entry> entries = ContainerUtil.mapNotNull(children, each -> doCreateEntry(each, forDeletion));
     parent.addChildren(entries);
   }
 
-  public void registerUnsavedDocuments(@Nonnull final LocalHistoryFacade vcs) {
+  public void registerUnsavedDocuments(@Nonnull LocalHistoryFacade vcs) {
     ApplicationManager.getApplication().runReadAction(() -> {
       vcs.beginChangeSet();
       for (Document d : FileDocumentManager.getInstance().getUnsavedDocuments()) {

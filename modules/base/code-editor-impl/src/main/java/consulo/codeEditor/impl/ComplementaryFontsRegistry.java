@@ -76,7 +76,7 @@ public class ComplementaryFontsRegistry {
         fillStyledFontMap();
       }
       String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-      for (final String fontName : fontNames) {
+      for (String fontName : fontNames) {
         if (!fontName.endsWith(BOLD_SUFFIX) && !fontName.endsWith(ITALIC_SUFFIX) && !fontName.equals(ADOBE_BLANK)) {
           ourFontNames.add(fontName);
         }
@@ -184,7 +184,7 @@ public class ComplementaryFontsRegistry {
     FontInfo result;
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0, len = fontFamilies.size(); i < len; ++i) { // avoid foreach, it instantiates ArrayList$Itr, this traversal happens very often
-      final String fontFamily = fontFamilies.get(i);
+      String fontFamily = fontFamilies.get(i);
       result = doGetFontAbleToDisplay(codePoint, preferences.getSize(fontFamily), style, fontFamily, useLigatures, context, len > 1);
       if (result != null && result.getFont().canDisplayUpTo(remainingText, start, end) == -1) {
         return result;
@@ -220,7 +220,7 @@ public class ComplementaryFontsRegistry {
     FontInfo result;
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0, len = fontFamilies.size(); i < len; ++i) { // avoid foreach, it instantiates ArrayList$Itr, this traversal happens very often
-      final String fontFamily = fontFamilies.get(i);
+      String fontFamily = fontFamilies.get(i);
       result = doGetFontAbleToDisplay(codePoint, preferences.getSize(fontFamily), style, fontFamily, useLigatures, context, len > 1);
       if (result != null) {
         return result;
@@ -308,7 +308,7 @@ public class ComplementaryFontsRegistry {
       FallBackInfo fallBackInfo = DEFAULT_FONT_INFO;
       if (!ourUndisplayableChars.contains(codePoint)) {
         boolean canDisplayFirst = false;
-        final Collection<FallBackInfo> descriptors = ourUsedFonts.values();
+        Collection<FallBackInfo> descriptors = ourUsedFonts.values();
         for (FallBackInfo info : descriptors) {
           if (info.myOriginalStyle == style && info.canDisplay(codePoint, false)) {
             canDisplayFirst = true;

@@ -60,8 +60,8 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
      * Test Only
      */
     public String getUserDataString() {
-        final KeyFMap userMap = getUserMap();
-        final KeyFMap copyableMap = getUserData(COPYABLE_USER_MAP_KEY);
+        KeyFMap userMap = getUserMap();
+        KeyFMap copyableMap = getUserData(COPYABLE_USER_MAP_KEY);
         return userMap.toString() + (copyableMap == null ? "" : copyableMap.toString());
     }
 
@@ -131,7 +131,7 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
 
     @Override
     @Nonnull
-    public <T> T putUserDataIfAbsent(@Nonnull final Key<T> key, @Nonnull final T value) {
+    public <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value) {
         while (true) {
             KeyFMap map = getUserMap();
             T oldValue = map.get(key);

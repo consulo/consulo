@@ -42,17 +42,17 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
   @Override
   protected String getContainerText(PsiFileSystemItem element, String name) {
     PsiFileSystemItem parent = element.getParent();
-    final PsiDirectory psiDirectory = parent instanceof PsiDirectory ? (PsiDirectory)parent : null;
+    PsiDirectory psiDirectory = parent instanceof PsiDirectory ? (PsiDirectory)parent : null;
     if (psiDirectory == null) return null;
-    final VirtualFile virtualFile = psiDirectory.getVirtualFile();
-    final String relativePath = getRelativePath(virtualFile, element.getProject());
+    VirtualFile virtualFile = psiDirectory.getVirtualFile();
+    String relativePath = getRelativePath(virtualFile, element.getProject());
     if (relativePath == null) return "( " + File.separator + " )";
     String path = FilePathSplittingPolicy.SPLIT_BY_SEPARATOR.getOptimalTextForComponent(name + "          ", new File(relativePath), this, myMaxWidth);
     return "(" + path + ")";
   }
 
   @Nullable
-  public static String getRelativePath(final VirtualFile virtualFile, final Project project) {
+  public static String getRelativePath(VirtualFile virtualFile, Project project) {
     if (project == null) {
       return virtualFile.getPresentableUrl();
     }
@@ -62,11 +62,11 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
     }
 
     String url = virtualFile.getPresentableUrl();
-    final VirtualFile baseDir = project.getBaseDir();
+    VirtualFile baseDir = project.getBaseDir();
     if (baseDir != null) {
-      final String projectHomeUrl = baseDir.getPresentableUrl();
+      String projectHomeUrl = baseDir.getPresentableUrl();
       if (url.startsWith(projectHomeUrl)) {
-        final String cont = url.substring(projectHomeUrl.length());
+        String cont = url.substring(projectHomeUrl.length());
         if (cont.isEmpty()) return null;
         url = "..." + cont;
       }

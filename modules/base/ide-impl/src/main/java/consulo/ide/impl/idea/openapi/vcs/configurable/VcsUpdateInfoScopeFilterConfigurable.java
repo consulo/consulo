@@ -69,12 +69,12 @@ class VcsUpdateInfoScopeFilterConfigurable implements NamedScopesHolder.ScopeLis
   @RequiredUIAccess
   @Nullable
   public JComponent createComponent(Disposable uiDisposable) {
-    final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panel.add(myCheckbox);
     panel.add(myComboBox);
     panel.add(Box.createHorizontalStrut(UIUtil.DEFAULT_HGAP));
     panel.add(new LinkLabel<>("Edit scopes", null, (aSource, aLinkData) -> {
-      final Settings optionsEditor = DataManager.getInstance().getDataContext(panel).getData(Settings.KEY);
+      Settings optionsEditor = DataManager.getInstance().getDataContext(panel).getData(Settings.KEY);
       if (optionsEditor != null) {
         optionsEditor.select(ScopeChooserConfigurable.class);
       }

@@ -64,7 +64,7 @@ public class ProgressStreamUtil {
       indicator.setIndeterminate(expectedContentSize < 0);
     }
 
-    final byte[] buffer = new byte[8 * 1024];
+    byte[] buffer = new byte[8 * 1024];
     int count;
     int total = 0;
     while ((count = inputStream.read(buffer)) > 0) {

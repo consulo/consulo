@@ -37,7 +37,7 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByTy
     private final AtomicReference<GlobalPathReferenceProvider> myReferenceProvider = new AtomicReference<>();
 
     @Override
-    protected CachedValue<PsiReference[]> compute(final PsiElement element, Object p) {
+    protected CachedValue<PsiReference[]> compute(PsiElement element, Object p) {
       return CachedValuesManager.getManager(element.getProject()).createCachedValue(() -> {
         IssueNavigationConfiguration navigationConfiguration = IssueNavigationConfiguration.getInstance(element.getProject());
 
@@ -60,7 +60,7 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByTy
 
   @Nonnull
   @Override
-  public PsiReference[] getReferencesByElement(@Nonnull final PsiElement element, @Nonnull ProcessingContext context) {
+  public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
     return ourRefsCache.get(element, null).getValue();
   }
 

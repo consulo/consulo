@@ -53,14 +53,14 @@ public class HighlightData {
         }
     }
 
-    public void addHighlToView(final Editor view, EditorColorsScheme scheme, final Map<TextAttributesKey, LocalizeValue> displayText) {
+    public void addHighlToView(Editor view, EditorColorsScheme scheme, Map<TextAttributesKey, LocalizeValue> displayText) {
 
         // XXX: Hack
         if (HighlighterColors.BAD_CHARACTER.equals(myHighlightType)) {
             return;
         }
 
-        final TextAttributes attr = scheme.getAttributes(myHighlightType);
+        TextAttributes attr = scheme.getAttributes(myHighlightType);
         if (attr != null) {
             UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
                 try {
@@ -75,9 +75,9 @@ public class HighlightData {
                     RangeHighlighter highlighter = view.getMarkupModel()
                         .addRangeHighlighter(myHighlightType, myStartOffset, myEndOffset, HighlighterLayer.ADDITIONAL_SYNTAX,
                             HighlighterTargetArea.EXACT_RANGE);
-                    final ColorValue errorStripeColor = attr.getErrorStripeColor();
+                    ColorValue errorStripeColor = attr.getErrorStripeColor();
                     highlighter.setErrorStripeMarkColor(errorStripeColor);
-                    final LocalizeValue tooltip = displayText.get(myHighlightType);
+                    LocalizeValue tooltip = displayText.get(myHighlightType);
                     highlighter.setErrorStripeTooltip(tooltip);
                     if (highlighter instanceof RangeHighlighterEx rangeHighlighterEx) {
                         rangeHighlighterEx.setVisibleIfFolded(true);

@@ -34,7 +34,7 @@ public abstract class CachingReference implements PsiReference {
   public abstract PsiElement resolveInner();
 
   @Override
-  public boolean isReferenceTo(final PsiElement element) {
+  public boolean isReferenceTo(PsiElement element) {
     return getElement().getManager().areElementsEquivalent(resolve(), element);
   }
 

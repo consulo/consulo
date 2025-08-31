@@ -49,7 +49,7 @@ public abstract class BaseDockManager implements DockManager, PersistentStateCom
   }
 
   @Override
-  public void register(final DockContainer container) {
+  public void register(DockContainer container) {
     myContainers.add(container);
     Disposer.register(container, () -> myContainers.remove(container));
   }
@@ -102,7 +102,7 @@ public abstract class BaseDockManager implements DockManager, PersistentStateCom
       DockContainer container = persistentFactory.loadContainerFrom(this, eachContent);
       register(container);
 
-      final DockWindow window = createWindowFor(eachId, container);
+      DockWindow window = createWindowFor(eachId, container);
       myProject.getUIAccess().giveIfNeed(window::show);
     }
   }

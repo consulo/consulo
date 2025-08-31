@@ -28,10 +28,10 @@ public interface EditorDropHandler {
   boolean canHandleDrop(DataFlavor[] transferFlavors);
 
   @RequiredUIAccess
-  void handleDrop(Transferable t, final Project project, Object editorWindow);
+  void handleDrop(Transferable t, Project project, Object editorWindow);
 
   @RequiredUIAccess
-  default void handleDrop(Transferable t, final Project project, Object editorWindow, @SuppressWarnings("unused") int dropAction) {
+  default void handleDrop(Transferable t, Project project, Object editorWindow, @SuppressWarnings("unused") int dropAction) {
     handleDrop(t, project, editorWindow);
   }
 }

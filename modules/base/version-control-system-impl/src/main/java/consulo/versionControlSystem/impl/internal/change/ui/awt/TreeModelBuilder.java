@@ -164,7 +164,7 @@ public class TreeModelBuilder {
 
   @Nonnull
   public TreeModelBuilder setChangeLists(@Nonnull Collection<? extends ChangeList> changeLists) {
-    final RemoteRevisionsCache revisionsCache = RemoteRevisionsCache.getInstance(myProject);
+    RemoteRevisionsCache revisionsCache = RemoteRevisionsCache.getInstance(myProject);
     for (ChangeList list : changeLists) {
       List<Change> changes = ContainerUtil.sorted(list.getChanges(), PATH_LENGTH_COMPARATOR);
       ChangeListRemoteState listRemoteState = new ChangeListRemoteState(changes.size());
@@ -224,7 +224,7 @@ public class TreeModelBuilder {
 
     for (LocallyDeletedChange change : locallyDeletedChanges) {
       // whether a folder does not matter
-      final StaticFilePath key = new StaticFilePath(false, change.getPresentableUrl(), change.getPath().getVirtualFile());
+      StaticFilePath key = new StaticFilePath(false, change.getPresentableUrl(), change.getPath().getVirtualFile());
       ChangesBrowserNode oldNode = getFolderCache(subtreeRoot).get(key.getKey());
       if (oldNode == null) {
         ChangesBrowserNode node = ChangesBrowserNode.create(change);
@@ -246,14 +246,14 @@ public class TreeModelBuilder {
     for (FilePath file : filePaths) {
       assert file != null;
       // whether a folder does not matter
-      final String path = file.getPath();
-      final StaticFilePath pathKey = !FileUtil.isAbsolute(path) || VcsUtil.isPathRemote(path)
+      String path = file.getPath();
+      StaticFilePath pathKey = !FileUtil.isAbsolute(path) || VcsUtil.isPathRemote(path)
         ? new StaticFilePath(false, path, null)
         : new StaticFilePath(false, new File(file.getIOFile().getPath().replace('\\', '/')).getAbsolutePath(), file.getVirtualFile());
       ChangesBrowserNode oldNode = getFolderCache(subtreeRoot).get(pathKey.getKey());
       if (oldNode == null) {
-        final ChangesBrowserNode node = ChangesBrowserNode.create(myProject, file);
-        final ChangesBrowserNode parentNode = getParentNodeFor(pathKey, subtreeRoot);
+        ChangesBrowserNode node = ChangesBrowserNode.create(myProject, file);
+        ChangesBrowserNode parentNode = getParentNodeFor(pathKey, subtreeRoot);
         myModel.insertNodeInto(node, parentNode, 0);
         // we could also ask whether a file or directory, though for deleted files not a good idea
         getFolderCache(subtreeRoot).put(pathKey.getKey(), node);
@@ -265,14 +265,14 @@ public class TreeModelBuilder {
   @Nonnull
   public TreeModelBuilder setSwitchedRoots(@Nullable Map<VirtualFile, String> switchedRoots) {
     if (ContainerUtil.isEmpty(switchedRoots)) return this;
-    final ChangesBrowserNode rootsHeadNode = createTagNode(ChangesBrowserNode.SWITCHED_ROOTS_TAG);
+    ChangesBrowserNode rootsHeadNode = createTagNode(ChangesBrowserNode.SWITCHED_ROOTS_TAG);
     rootsHeadNode.setAttributes(SimpleTextAttributes.GRAYED_BOLD_ATTRIBUTES);
 
     List<VirtualFile> files = ContainerUtil.sorted(switchedRoots.keySet(), VirtualFileHierarchicalComparator.getInstance());
 
     for (VirtualFile vf : files) {
-      final ContentRevision cr = new CurrentContentRevision(VcsUtil.getFilePath(vf));
-      final Change change = new Change(cr, cr, FileStatus.NOT_CHANGED);
+      ContentRevision cr = new CurrentContentRevision(VcsUtil.getFilePath(vf));
+      Change change = new Change(cr, cr, FileStatus.NOT_CHANGED);
       final String branchName = switchedRoots.get(vf);
       insertChangeNode(vf, rootsHeadNode, createChangeNode(change, new ChangeNodeDecorator() {
         @Override
@@ -309,13 +309,13 @@ public class TreeModelBuilder {
   @Nonnull
   public TreeModelBuilder setLogicallyLockedFiles(@Nullable Map<VirtualFile, LogicalLock> logicallyLockedFiles) {
     if (ContainerUtil.isEmpty(logicallyLockedFiles)) return this;
-    final ChangesBrowserNode subtreeRoot = createTagNode(ChangesBrowserNode.LOGICALLY_LOCKED_TAG);
+    ChangesBrowserNode subtreeRoot = createTagNode(ChangesBrowserNode.LOGICALLY_LOCKED_TAG);
 
     List<VirtualFile> keys = ContainerUtil.sorted(logicallyLockedFiles.keySet(), VirtualFileHierarchicalComparator.getInstance());
 
     for (VirtualFile file : keys) {
-      final LogicalLock lock = logicallyLockedFiles.get(file);
-      final ChangesBrowserLogicallyLockedFileImpl obj = new ChangesBrowserLogicallyLockedFileImpl(myProject, file, lock);
+      LogicalLock lock = logicallyLockedFiles.get(file);
+      ChangesBrowserLogicallyLockedFileImpl obj = new ChangesBrowserLogicallyLockedFileImpl(myProject, file, lock);
       insertChangeNode(obj, subtreeRoot, ChangesBrowserNode.create(myProject, obj));
     }
     return this;
@@ -329,7 +329,7 @@ public class TreeModelBuilder {
                                   @Nonnull ChangesBrowserNode subtreeRoot,
                                   @Nonnull ChangesBrowserNode node,
                                   @Nonnull Function<StaticFilePath, ChangesBrowserNode> nodeBuilder) {
-    final StaticFilePath pathKey = getKey(change);
+    StaticFilePath pathKey = getKey(change);
     ChangesBrowserNode parentNode = getParentNodeFor(pathKey, subtreeRoot, nodeBuilder);
     myModel.insertNodeInto(node, parentNode, myModel.getChildCount(parentNode));
 
@@ -353,10 +353,10 @@ public class TreeModelBuilder {
 
   private static void collapseDirectories(@Nonnull DefaultTreeModel model, @Nonnull ChangesBrowserNode node) {
     if (node.getUserObject() instanceof FilePath && node.getChildCount() == 1) {
-      final ChangesBrowserNode child = (ChangesBrowserNode)node.getChildAt(0);
+      ChangesBrowserNode child = (ChangesBrowserNode)node.getChildAt(0);
       if (child.getUserObject() instanceof FilePath && !child.isLeaf()) {
         ChangesBrowserNode parent = (ChangesBrowserNode)node.getParent();
-        final int idx = parent.getIndex(node);
+        int idx = parent.getIndex(node);
         model.removeNodeFromParent(node);
         model.removeNodeFromParent(child);
         model.insertNodeInto(child, parent, idx);
@@ -364,7 +364,7 @@ public class TreeModelBuilder {
       }
     }
     else {
-      final Enumeration children = node.children();
+      Enumeration children = node.children();
       while (children.hasMoreElements()) {
         ChangesBrowserNode child = (ChangesBrowserNode)children.nextElement();
         collapseDirectories(model, child);
@@ -395,7 +395,7 @@ public class TreeModelBuilder {
 
   @Nonnull
   private static StaticFilePath staticFrom(@Nonnull FilePath fp) {
-    final String path = fp.getPath();
+    String path = fp.getPath();
     if (fp.isNonLocal() && (!FileUtil.isAbsolute(path) || VcsUtil.isPathRemote(path))) {
       return new StaticFilePath(fp.isDirectory(), fp.getIOFile().getPath().replace('\\', '/'), fp.getVirtualFile());
     }

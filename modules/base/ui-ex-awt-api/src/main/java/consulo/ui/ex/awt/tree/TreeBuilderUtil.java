@@ -47,10 +47,10 @@ public class TreeBuilderUtil {
 
   private static void _storePaths(JTree tree, DefaultMutableTreeNode root, List<Object> pathsToExpand, List<Object> selectionPaths, boolean storeElementsOnly) {
     List<TreeNode> childNodes = TreeUtil.listChildren(root);
-    for (final TreeNode childNode1 : childNodes) {
+    for (TreeNode childNode1 : childNodes) {
       DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)childNode1;
       TreePath path = new TreePath(childNode.getPath());
-      final Object userObject = childNode.getUserObject();
+      Object userObject = childNode.getUserObject();
       if (tree.isPathSelected(path)) {
         if (!(userObject instanceof NodeDescriptor)) {
           LOG.error("Node: " + childNode + "; userObject: " + userObject + " of class " + userObject.getClass());

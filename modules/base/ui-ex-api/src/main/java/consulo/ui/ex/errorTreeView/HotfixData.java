@@ -24,7 +24,7 @@ public class HotfixData {
   private final String myFixComment;
   private final Consumer<HotfixGate> myFix;
 
-  public HotfixData(@Nonnull final String id, @Nonnull final String errorText, @Nonnull String fixComment, final Consumer<HotfixGate> fix) {
+  public HotfixData(@Nonnull String id, @Nonnull String errorText, @Nonnull String fixComment, Consumer<HotfixGate> fix) {
     myErrorText = errorText;
     myFixComment = fixComment;
     myFix = fix;

@@ -154,7 +154,7 @@ public class RemoteServerComboWithAutoDetect<S extends ServerConfiguration> exte
          * Too quick validation just flickers the screen, so we will ensure that validation message is shown for at least some time
          */
         private void waitABit(@SuppressWarnings("SameParameterValue") long maxTotalDelayMillis) {
-            final long THRESHOLD_MS = 50;
+            long THRESHOLD_MS = 50;
             long naturalDelay = System.currentTimeMillis() - myLastStartedTestConnectionMillis;
             if (naturalDelay > 0 && naturalDelay + THRESHOLD_MS < maxTotalDelayMillis) {
                 try {

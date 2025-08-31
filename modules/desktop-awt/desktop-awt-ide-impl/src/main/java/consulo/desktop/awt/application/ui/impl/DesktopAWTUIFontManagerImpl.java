@@ -38,7 +38,7 @@ public class DesktopAWTUIFontManagerImpl extends UIFontManagerImpl {
     // find any other suitable font withing "preferred" fonts first.
     boolean fontIsValid = UIUtil.isValidFont(new Font(getFontName(), Font.PLAIN, getFontSize()));
     if (!fontIsValid) {
-      final String[] preferredFonts = {"dialog", "Arial", "Tahoma"};
+      String[] preferredFonts = {"dialog", "Arial", "Tahoma"};
       for (String preferredFont : preferredFonts) {
         if (UIUtil.isValidFont(new Font(preferredFont, Font.PLAIN, getFontSize()))) {
           setFontName(preferredFont);

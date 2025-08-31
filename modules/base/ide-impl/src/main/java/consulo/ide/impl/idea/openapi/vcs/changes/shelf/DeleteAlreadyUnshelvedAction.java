@@ -37,15 +37,15 @@ public class DeleteAlreadyUnshelvedAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
-        final int result = Messages.showYesNoDialog(
+        Project project = e.getRequiredData(Project.KEY);
+        int result = Messages.showYesNoDialog(
             project,
             VcsLocalize.deleteAllAlreadyUnshelvedConfirmation().get(),
             VcsLocalize.deleteAllAlreadyUnshelved().get(),
             UIUtil.getWarningIcon()
         );
         if (result == Messages.YES) {
-            final ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
+            ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
             manager.clearRecycled();
         }
     }

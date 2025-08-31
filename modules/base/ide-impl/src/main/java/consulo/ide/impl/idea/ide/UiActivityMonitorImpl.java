@@ -41,8 +41,8 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
           @Override
           public boolean isReady() {
             for (Map.Entry<Project, BusyContainer> entry : myObjects.entrySet()) {
-              final BusyContainer eachContainer = entry.getValue();
-              final BusyImpl busy = eachContainer.getOrCreateBusy(myToWatchArray);
+              BusyContainer eachContainer = entry.getValue();
+              BusyImpl busy = eachContainer.getOrCreateBusy(myToWatchArray);
               if (busy == this) continue;
               if (!busy.isOwnReady()) return false;
             }
@@ -100,12 +100,12 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public void addActivity(@Nonnull final ComponentManager project, @Nonnull final UiActivity activity) {
+  public void addActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity) {
     addActivity(project, activity, getDefaultModalityState());
   }
 
   @Override
-  public void addActivity(@Nonnull final ComponentManager project, @Nonnull final UiActivity activity, @Nonnull final consulo.ui.ModalityState effectiveModalityState) {
+  public void addActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity, @Nonnull consulo.ui.ModalityState effectiveModalityState) {
     if (!isActive()) return;
 
 
@@ -113,14 +113,14 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public void removeActivity(@Nonnull final ComponentManager project, @Nonnull final UiActivity activity) {
+  public void removeActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity) {
     if (!isActive()) return;
 
     UIUtil.invokeLaterIfNeeded(() -> _getBusy((Project)project).removeActivity(activity));
   }
 
   @Override
-  public void addActivity(@Nonnull final UiActivity activity) {
+  public void addActivity(@Nonnull UiActivity activity) {
     addActivity(activity, getDefaultModalityState());
   }
 
@@ -129,14 +129,14 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public void addActivity(@Nonnull final UiActivity activity, @Nonnull final consulo.ui.ModalityState effectiveModalityState) {
+  public void addActivity(@Nonnull UiActivity activity, @Nonnull consulo.ui.ModalityState effectiveModalityState) {
     if (!isActive()) return;
 
     UIUtil.invokeLaterIfNeeded(() -> getBusyContainer(null).addActivity(activity, effectiveModalityState));
   }
 
   @Override
-  public void removeActivity(@Nonnull final UiActivity activity) {
+  public void removeActivity(@Nonnull UiActivity activity) {
     if (!isActive()) return;
 
     UIUtil.invokeLaterIfNeeded(() -> _getBusy(null).removeActivity(activity));
@@ -167,7 +167,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
 
   @Override
   public void clear() {
-    final Set<Project> keys = myObjects.keySet();
+    Set<Project> keys = myObjects.keySet();
     for (Project each : keys) {
       myObjects.get(each).clear();
     }
@@ -231,7 +231,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
       Map<UiActivity, ActivityInfo> infoToCheck = new HashMap<>();
 
       for (Set<UiActivity> eachActivitySet : myContainer.myActivities2Object.keySet()) {
-        final BusyImpl eachBusyObject = myContainer.myActivities2Object.get(eachActivitySet);
+        BusyImpl eachBusyObject = myContainer.myActivities2Object.get(eachActivitySet);
         if (eachBusyObject == this) continue;
 
         for (UiActivity eachOtherActivity : eachActivitySet) {
@@ -247,9 +247,9 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
 
       if (infoToCheck.isEmpty()) return true;
 
-      final IdeaModalityState current = getCurrentState();
+      IdeaModalityState current = getCurrentState();
       for (Map.Entry<UiActivity, ActivityInfo> entry : infoToCheck.entrySet()) {
-        final ActivityInfo info = entry.getValue();
+        ActivityInfo info = entry.getValue();
         if (!current.dominates(info.getEffectiveState())) {
           return false;
         }
@@ -267,7 +267,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
       myContainer.onActivityAdded(activity);
     }
 
-    public void removeActivity(@Nonnull final UiActivity activity) {
+    public void removeActivity(@Nonnull UiActivity activity) {
       if (!myActivities.containsKey(activity)) return;
 
       myQueuedToRemove.add(activity);
@@ -315,7 +315,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
 
     @Nonnull
     private BusyImpl registerBusyObject(@Nonnull Set<UiActivity> key) {
-      final BusyImpl busy = createBusyImpl(key);
+      BusyImpl busy = createBusyImpl(key);
       myActivities2Object.put(key, busy);
       myObject2Activities.put(busy, key);
       return busy;
@@ -327,10 +327,10 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
     }
 
     public void onReady() {
-      final Iterator<Set<UiActivity>> keyIterator = myActivities2Object.keySet().iterator();
+      Iterator<Set<UiActivity>> keyIterator = myActivities2Object.keySet().iterator();
       while (keyIterator.hasNext()) {
         Set<UiActivity> eachKey = keyIterator.next();
-        final BusyImpl busy = myActivities2Object.get(eachKey);
+        BusyImpl busy = myActivities2Object.get(eachKey);
         busy.onReady();
         if (busy.isReady()) {
           keyIterator.remove();
@@ -340,7 +340,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
     }
 
     public void clear() {
-      final UiActivity[] activities = myActivities.toArray(new UiActivity[0]);
+      UiActivity[] activities = myActivities.toArray(new UiActivity[0]);
       for (UiActivity each : activities) {
         removeActivity(each);
       }
@@ -353,7 +353,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
     public void onActivityRemoved(@Nonnull BusyImpl busy, @Nonnull UiActivity activity) {
       if (myRemovingActivityNow) return;
 
-      final Map<BusyImpl, Set<UiActivity>> toRemove = new HashMap<>();
+      Map<BusyImpl, Set<UiActivity>> toRemove = new HashMap<>();
 
       try {
         myRemovingActivityNow = true;
@@ -364,14 +364,14 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
             each.removeActivity(activity);
           }
           if (each.isReady()) {
-            final Set<UiActivity> activities = myObject2Activities.get(busy);
+            Set<UiActivity> activities = myObject2Activities.get(busy);
             toRemove.put(busy, activities);
           }
         }
       }
       finally {
         for (BusyImpl each : toRemove.keySet()) {
-          final Set<UiActivity> activities = myObject2Activities.remove(each);
+          Set<UiActivity> activities = myObject2Activities.remove(each);
           myActivities2Object.remove(activities);
         }
 
@@ -381,7 +381,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
 
     public void addActivity(@Nonnull UiActivity activity, @Nonnull consulo.ui.ModalityState state) {
       getOrCreateBusy(activity);
-      final Set<BusyImpl> busies = myObject2Activities.keySet();
+      Set<BusyImpl> busies = myObject2Activities.keySet();
       for (BusyImpl each : busies) {
         each.addActivity(activity, (IdeaModalityState)state);
       }

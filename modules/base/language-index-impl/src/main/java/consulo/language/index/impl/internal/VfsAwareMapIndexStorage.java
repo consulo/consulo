@@ -60,7 +60,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     private static final ConcurrentIntObjectMap<Boolean> ourInvalidatedSessionIds = IntMaps.newConcurrentIntObjectHashMap();
 
     @TestOnly
-    public VfsAwareMapIndexStorage(@Nonnull File storageFile, @Nonnull KeyDescriptor<Key> keyDescriptor, @Nonnull DataExternalizer<Value> valueExternalizer, final int cacheSize, final boolean readOnly)
+    public VfsAwareMapIndexStorage(@Nonnull File storageFile, @Nonnull KeyDescriptor<Key> keyDescriptor, @Nonnull DataExternalizer<Value> valueExternalizer, int cacheSize, boolean readOnly)
         throws IOException {
         super(storageFile, keyDescriptor, valueExternalizer, cacheSize, false, true, readOnly, null);
         myBuildKeyHashToVirtualFileMapping = false;
@@ -69,7 +69,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     public VfsAwareMapIndexStorage(@Nonnull File storageFile,
                                    @Nonnull KeyDescriptor<Key> keyDescriptor,
                                    @Nonnull DataExternalizer<Value> valueExternalizer,
-                                   final int cacheSize,
+                                   int cacheSize,
                                    boolean keyIsUniqueForIndexedFile,
                                    boolean buildKeyHashToVirtualFileMapping) throws IOException {
         super(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile, false, false, null);
@@ -152,7 +152,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     }
 
     @Override
-    public boolean processKeys(@Nonnull final Predicate<? super Key> processor, SearchScope scope, final IdFilter idFilter) throws StorageException {
+    public boolean processKeys(@Nonnull Predicate<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
         l.lock();
         try {
             myCache.clear(); // this will ensure that all new keys are made into the map
@@ -164,7 +164,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
                 SearchScope effectiveFilteringScope = filterScope != null ? filterScope : scope;
 
                 File fileWithCaches = getSavedProjectFileValueIds(myLastScannedId, effectiveFilteringScope);
-                final boolean useCachedHashIds =
+                boolean useCachedHashIds =
                     ENABLE_CACHED_HASH_IDS && (effectiveFilteringScope instanceof ProjectScopeImpl || effectiveFilteringScope instanceof ProjectAndLibrariesScope) && fileWithCaches != null;
                 int id = myKeyHashToVirtualFileMapping.getCurrentLength();
 
@@ -184,7 +184,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
                     }
 
                     hashMaskSet = new TIntHashSet(1000);
-                    final TIntHashSet finalHashMaskSet = hashMaskSet;
+                    TIntHashSet finalHashMaskSet = hashMaskSet;
                     withLock(() -> {
                         myKeyHashToVirtualFileMapping.force();
                         ProgressManager.checkCanceled();
@@ -207,7 +207,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Scanned keyHashToVirtualFileMapping of " + myBaseStorageFile + " for " + (System.currentTimeMillis() - l));
                 }
-                final TIntHashSet finalHashMaskSet = hashMaskSet;
+                TIntHashSet finalHashMaskSet = hashMaskSet;
                 return myMap.processKeys(key -> {
                     if (!finalHashMaskSet.contains(myKeyDescriptor.hashCode(key))) {
                         return true;
@@ -299,7 +299,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     }
 
     @Override
-    public void addValue(final Key key, final int inputId, final Value value) throws StorageException {
+    public void addValue(Key key, int inputId, Value value) throws StorageException {
         try {
             if (myKeyHashToVirtualFileMapping != null) {
                 withLock(() -> myKeyHashToVirtualFileMapping.append(new int[]{myKeyDescriptor.hashCode(key), inputId}, IntPairInArrayKeyDescriptor.INSTANCE));

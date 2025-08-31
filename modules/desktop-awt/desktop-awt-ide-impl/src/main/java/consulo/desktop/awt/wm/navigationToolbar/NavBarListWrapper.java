@@ -47,8 +47,8 @@ class NavBarListWrapper extends JBScrollPane implements DataProvider {
       @Override
       public void mouseMoved(MouseEvent e) {
         if (myIsEngaged && !UIUtil.isSelectionButtonDown(e)) {
-          final Point point = e.getPoint();
-          final int index = list.locationToIndex(point);
+          Point point = e.getPoint();
+          int index = list.locationToIndex(point);
           list.setSelectedIndex(index);
         } else {
           myIsEngaged = true;
@@ -58,7 +58,7 @@ class NavBarListWrapper extends JBScrollPane implements DataProvider {
 
     ScrollingUtil.installActions(list);
 
-    final int modelSize = list.getModel().getSize();
+    int modelSize = list.getModel().getSize();
     setBorder(BorderFactory.createEmptyBorder());
     if (modelSize > 0 && modelSize <= MAX_SIZE) {
       list.setVisibleRowCount(0);

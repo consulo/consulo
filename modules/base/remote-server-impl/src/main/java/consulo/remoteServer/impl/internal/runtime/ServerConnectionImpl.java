@@ -219,13 +219,13 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     }
 
     @Override
-    public void undeploy(@Nonnull Deployment deployment, final @Nullable DeploymentRuntime runtime) {
+    public void undeploy(@Nonnull Deployment deployment, @Nullable DeploymentRuntime runtime) {
         String deploymentName = deployment.getName();
         final MyDeployments.UndeployTransition undeployInProgress = myAllDeployments.startUndeploy(deploymentName);
 
         myEventDispatcher.queueDeploymentsChanged(this);
 
-        final List<LoggingHandlerImpl> handlers = myPerProjectLogManagers.values().stream()
+        List<LoggingHandlerImpl> handlers = myPerProjectLogManagers.values().stream()
             .map(nextForProject -> nextForProject.findManager(deployment))
             .filter(Objects::nonNull)
             .map(DeploymentLogManagerImpl::getMainLoggingHandler)
@@ -308,7 +308,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
 
     @Override
     public void connectIfNeeded(final ServerConnector.ConnectionCallback<D> callback) {
-        final ServerRuntimeInstance<D> instance = myRuntimeInstance;
+        ServerRuntimeInstance<D> instance = myRuntimeInstance;
         if (instance != null) {
             callback.connected(instance);
             return;
@@ -333,11 +333,11 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         });
     }
 
-    private void setStatus(final ConnectionStatus status) {
+    private void setStatus(ConnectionStatus status) {
         setStatus(status, null);
     }
 
-    private void setStatus(final ConnectionStatus status, @Nls String statusText) {
+    private void setStatus(ConnectionStatus status, @Nls String statusText) {
         myStatus = status;
         myStatusText = statusText;
         myEventDispatcher.queueConnectionStatusChanged(this);
@@ -434,10 +434,10 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             return myDeployment;
         }
 
-        private <D extends DebugConnectionData, R extends DeploymentRuntime> void launchDebugger(final @Nonnull DebugConnector<D, R> debugConnector,
+        private <D extends DebugConnectionData, R extends DeploymentRuntime> void launchDebugger(@Nonnull DebugConnector<D, R> debugConnector,
                                                                                                  @Nonnull DeploymentRuntime runtime) {
             try {
-                final D debugInfo = debugConnector.getConnectionData((R) runtime);
+                D debugInfo = debugConnector.getConnectionData((R) runtime);
                 ApplicationManager.getApplication().invokeLater(() -> {
                     try {
                         debugConnector.getLauncher().startDebugSession(debugInfo, myDeploymentTask.getExecutionEnvironment(), myServer);
@@ -570,7 +570,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
                 }
             }
 
-            final DeploymentStatus finishedExternally = DeploymentStatus.NOT_DEPLOYED;
+            DeploymentStatus finishedExternally = DeploymentStatus.NOT_DEPLOYED;
             for (LocalDeploymentImpl<?> nextLocal : matchedLocalsBefore) {
                 if (!nextLocal.hasRemoteDeloyment()) {
                     nextLocal.changeState(nextLocal.getStatus(), finishedExternally, null, null);

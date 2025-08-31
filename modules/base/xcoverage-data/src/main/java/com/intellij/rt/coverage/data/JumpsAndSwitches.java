@@ -41,7 +41,7 @@ public class JumpsAndSwitches implements CoverageData {
         return mySwitchesArray;
     }
 
-    public JumpData addJump(final int jump) {
+    public JumpData addJump(int jump) {
         if (myJumps == null) {
             myJumps = new ArrayList();
         }
@@ -57,11 +57,11 @@ public class JumpsAndSwitches implements CoverageData {
         return myJumpsArray == null ? null : myJumpsArray[jump];
     }
 
-    public SwitchData addSwitch(final int switchNumber, final int[] keys) {
+    public SwitchData addSwitch(int switchNumber, int[] keys) {
         if (mySwitches == null) {
             mySwitches = new ArrayList();
         }
-        final SwitchData switchData = new SwitchData(keys);
+        SwitchData switchData = new SwitchData(keys);
         if (mySwitches.size() <= switchNumber) {
             for (int i = mySwitches.size(); i < switchNumber; i++) {
                 mySwitches.add(new SwitchData(new int[0]));
@@ -77,7 +77,7 @@ public class JumpsAndSwitches implements CoverageData {
         return mySwitchesArray == null ? null : mySwitchesArray[switchNumber];
     }
 
-    public void save(final DataOutputStream os) throws IOException {
+    public void save(DataOutputStream os) throws IOException {
         CoverageIOUtil.writeINT(os, myJumpsArray != null ? myJumpsArray.length : 0);
         if (myJumpsArray != null) {
             for (int j = 0; j < myJumpsArray.length; j++) {
@@ -92,7 +92,7 @@ public class JumpsAndSwitches implements CoverageData {
         }
     }
 
-    public void removeJump(final int jump) {
+    public void removeJump(int jump) {
         if (jump > 0 && jump <= myJumps.size()) {
             myJumps.remove(jump - 1);
         }
@@ -115,7 +115,7 @@ public class JumpsAndSwitches implements CoverageData {
         }
     }
 
-    public void merge(final CoverageData data) {
+    public void merge(CoverageData data) {
         JumpsAndSwitches jumpsData = (JumpsAndSwitches)data;
         if (jumpsData.myJumpsArray != null) {
             if (myJumpsArray == null) {

@@ -70,7 +70,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   @Override
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     assert myDocument != null;
-    final Long stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT);
+    Long stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT);
     if (stamp != null && stamp.longValue() == nowStamp()) return;
 
     myDescriptors = buildDescriptors();
@@ -95,12 +95,12 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
   @Override
   public void doApplyInformationToEditor() {
-    final Long stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT);
+    Long stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT);
     if (stamp != null && stamp.longValue() == nowStamp()) return;
 
     List<RangeHighlighter> oldHighlighters = myEditor.getUserData(INDENT_HIGHLIGHTERS_IN_EDITOR_KEY);
-    final List<RangeHighlighter> newHighlighters = new ArrayList<>();
-    final MarkupModel mm = myEditor.getMarkupModel();
+    List<RangeHighlighter> newHighlighters = new ArrayList<>();
+    MarkupModel mm = myEditor.getMarkupModel();
 
     int curRange = 0;
 
@@ -132,7 +132,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       }
     }
 
-    final int startRangeIndex = curRange;
+    int startRangeIndex = curRange;
     assert myDocument != null;
     DocumentUtil.executeInBulk(myDocument, myRanges.size() > 10000, () -> {
       for (int i = startRangeIndex; i < myRanges.size(); i++) {
@@ -166,7 +166,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
       while (!indents.isEmpty() && curIndent <= indents.peek()) {
         ProgressManager.checkCanceled();
-        final int level = indents.pop();
+        int level = indents.pop();
         int startLine = lines.pop();
         if (level > 0) {
           for (int i = startLine; i < line; i++) {
@@ -189,7 +189,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
     while (!indents.isEmpty()) {
       ProgressManager.checkCanceled();
-      final int level = indents.pop();
+      int level = indents.pop();
       int startLine = lines.pop();
       if (level > 0) {
         descriptors.add(createDescriptor(level, startLine, myDocument.getLineCount(), lineIndents));
@@ -205,7 +205,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
   @Nonnull
   protected RangeHighlighter createHighlighter(MarkupModel mm, TextRange range) {
-    final RangeHighlighter highlighter =
+    RangeHighlighter highlighter =
       mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
     //highlighter.setCustomRenderer(RENDERER);
     return highlighter;
@@ -236,7 +236,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
      */
     void calculate() {
       assert myDocument != null;
-      final FileType fileType = myFile.getFileType();
+      FileType fileType = myFile.getFileType();
       int tabSize = EditorUtil.getTabSize(myEditor);
 
       for (int line = 0; line < lineIndents.length; line++) {
@@ -303,7 +303,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
     @RequiredReadAction
     private boolean isComment(int offset) {
-      final HighlighterIterator it = myEditor.getHighlighter().createIterator(offset);
+      HighlighterIterator it = myEditor.getHighlighter().createIterator(offset);
       IElementType tokenType = (IElementType)it.getTokenType();
       Language language = tokenType.getLanguage();
       return myComments.computeIfAbsent(language, l -> {

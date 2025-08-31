@@ -33,10 +33,10 @@ class IndividualPiecesStrategy extends AutoMatchStrategy {
   public void acceptPatch(TextFilePatch patch, Collection<VirtualFile> foundByName) {
     if (! mySucceeded) return;
 
-    final Collection<VirtualFile> variants = filterVariants(patch, foundByName);
+    Collection<VirtualFile> variants = filterVariants(patch, foundByName);
 
     if ((variants != null) && (! variants.isEmpty())) {
-      final TextFilePatchInProgress textFilePatchInProgress = new TextFilePatchInProgress(patch, variants, myBaseDir);
+      TextFilePatchInProgress textFilePatchInProgress = new TextFilePatchInProgress(patch, variants, myBaseDir);
       myResult.add(textFilePatchInProgress);
       registerFolderDecision(patch.getBeforeName(), textFilePatchInProgress.getBase());
     } else {

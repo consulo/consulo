@@ -52,7 +52,7 @@ public abstract class FileEditorManager {
    * @return array of opened editors
    */
   @Nonnull
-  public FileEditor[] openFile(@Nonnull final VirtualFile file, final boolean focusEditor) {
+  public FileEditor[] openFile(@Nonnull VirtualFile file, boolean focusEditor) {
     return openFileWithProviders(file, focusEditor, false).getFirst();
   }
 
@@ -170,17 +170,17 @@ public abstract class FileEditorManager {
    * @return disposer for removing it from editor. null mean not added, if editor not found in registry
    */
   @Nullable
-  public abstract Disposable addTopComponent(@Nonnull final FileEditor editor, @Nonnull final ComponentContainer component);
+  public abstract Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component);
 
   @Deprecated
   @DeprecationInfo("addTopComponent(FileEditor, ComponentContainer)")
-  public abstract void addTopComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component);
+  public abstract void addTopComponent(@Nonnull FileEditor editor, @Nonnull JComponent component);
 
-  public abstract void removeTopComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component);
+  public abstract void removeTopComponent(@Nonnull FileEditor editor, @Nonnull JComponent component);
 
-  public abstract void addBottomComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component);
+  public abstract void addBottomComponent(@Nonnull FileEditor editor, @Nonnull JComponent component);
 
-  public abstract void removeBottomComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component);
+  public abstract void removeBottomComponent(@Nonnull FileEditor editor, @Nonnull JComponent component);
 
   /**
    * @deprecated Use {@link FileEditorManagerListener#FILE_EDITOR_MANAGER} instead
@@ -318,9 +318,9 @@ public abstract class FileEditorManager {
 
   public abstract boolean isChanged(@Nonnull FileEditorComposite editor);
 
-  public abstract FileEditorWindow getNextWindow(@Nonnull final FileEditorWindow window);
+  public abstract FileEditorWindow getNextWindow(@Nonnull FileEditorWindow window);
 
-  public abstract FileEditorWindow getPrevWindow(@Nonnull final FileEditorWindow window);
+  public abstract FileEditorWindow getPrevWindow(@Nonnull FileEditorWindow window);
 
   public abstract boolean isInsideChange();
 

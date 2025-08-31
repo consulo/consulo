@@ -166,7 +166,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
         if (index < 0 || !myManager.canCloseContents()) {
           return;
         }
-        final Content content = myManager.getContent(index);
+        Content content = myManager.getContent(index);
         if (content != null && content.isCloseable()) {
           myManager.removeContent(content, true);
         }
@@ -274,7 +274,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
         group.addSeparator();
         group.add(new TabbedContentAction.MyNextTabAction(myManager));
         group.add(new TabbedContentAction.MyPreviousTabAction(myManager));
-        final List<AnAction> additionalActions = myManager.getAdditionalPopupActions(content);
+        List<AnAction> additionalActions = myManager.getAdditionalPopupActions(content);
         if (additionalActions != null) {
           group.addSeparator();
           for (AnAction anAction : additionalActions) {

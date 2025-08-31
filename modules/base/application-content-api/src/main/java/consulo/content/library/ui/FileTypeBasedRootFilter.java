@@ -34,20 +34,20 @@ public class FileTypeBasedRootFilter extends RootFilter {
   private final FileType myFileType;
 
   public FileTypeBasedRootFilter(OrderRootType rootType, boolean jarDirectory, @Nonnull FileType fileType,
-                                 final String presentableRootTypeName) {
+                                 String presentableRootTypeName) {
     super(rootType, jarDirectory, presentableRootTypeName);
     myFileType = fileType;
   }
 
   @Override
-  public boolean isAccepted(@Nonnull VirtualFile rootCandidate, @Nonnull final ProgressIndicator progressIndicator) {
+  public boolean isAccepted(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator) {
     if (isJarDirectory()) {
       if (!rootCandidate.isDirectory() || !rootCandidate.isInLocalFileSystem()) {
         return false;
       }
       for (VirtualFile child : rootCandidate.getChildren()) {
         if (!child.isDirectory() && child.getFileType() instanceof ArchiveFileType) {
-          final VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(child);
+          VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(child);
           if (archiveRoot != null && containsFileOfType(archiveRoot, progressIndicator)) {
             return true;
           }
@@ -60,7 +60,7 @@ public class FileTypeBasedRootFilter extends RootFilter {
     }
   }
 
-  private boolean containsFileOfType(VirtualFile rootCandidate, final ProgressIndicator progressIndicator) {
+  private boolean containsFileOfType(VirtualFile rootCandidate, ProgressIndicator progressIndicator) {
     return !VirtualFileUtil.processFilesRecursively(rootCandidate, virtualFile -> {
       progressIndicator.checkCanceled();
       if (virtualFile.isDirectory()) {

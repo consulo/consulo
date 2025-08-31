@@ -31,16 +31,16 @@ public class ModuleGroupUtil {
   private ModuleGroupUtil() {
   }
 
-  public static <T> T buildModuleGroupPath(final ModuleGroup group,
+  public static <T> T buildModuleGroupPath(ModuleGroup group,
                                            T parentNode,
-                                           final Map<ModuleGroup, T> map,
-                                           final Consumer<ParentChildRelation<T>> insertNode,
-                                           final Function<ModuleGroup, T> createNewNode) {
-    final ArrayList<String> path = new ArrayList<String>();
-    final String[] groupPath = group.getGroupPath();
+                                           Map<ModuleGroup, T> map,
+                                           Consumer<ParentChildRelation<T>> insertNode,
+                                           Function<ModuleGroup, T> createNewNode) {
+    ArrayList<String> path = new ArrayList<String>();
+    String[] groupPath = group.getGroupPath();
     for (String pathElement : groupPath) {
       path.add(pathElement);
-      final ModuleGroup moduleGroup = new ModuleGroup(ArrayUtil.toStringArray(path));
+      ModuleGroup moduleGroup = new ModuleGroup(ArrayUtil.toStringArray(path));
       T moduleGroupNode = map.get(moduleGroup);
       if (moduleGroupNode == null) {
         moduleGroupNode = createNewNode.apply(moduleGroup);
@@ -52,16 +52,16 @@ public class ModuleGroupUtil {
     return parentNode;
   }
 
-  public static <T> T updateModuleGroupPath(final ModuleGroup group,
+  public static <T> T updateModuleGroupPath(ModuleGroup group,
                                             T parentNode,
-                                            final Function<ModuleGroup, T> needToCreateNode,
-                                            final Consumer<ParentChildRelation<T>> insertNode,
-                                            final Function<ModuleGroup, T> createNewNode) {
-    final ArrayList<String> path = new ArrayList<String>();
-    final String[] groupPath = group.getGroupPath();
+                                            Function<ModuleGroup, T> needToCreateNode,
+                                            Consumer<ParentChildRelation<T>> insertNode,
+                                            Function<ModuleGroup, T> createNewNode) {
+    ArrayList<String> path = new ArrayList<String>();
+    String[] groupPath = group.getGroupPath();
     for (String pathElement : groupPath) {
       path.add(pathElement);
-      final ModuleGroup moduleGroup = new ModuleGroup(ArrayUtil.toStringArray(path));
+      ModuleGroup moduleGroup = new ModuleGroup(ArrayUtil.toStringArray(path));
       T moduleGroupNode = needToCreateNode.apply(moduleGroup);
       if (moduleGroupNode == null) {
         moduleGroupNode = createNewNode.apply(moduleGroup);
@@ -76,7 +76,7 @@ public class ModuleGroupUtil {
     private final T myParent;
     private final T myChild;
 
-    public ParentChildRelation(final T parent, final T child) {
+    public ParentChildRelation(T parent, T child) {
       myParent = parent;
       myChild = child;
     }

@@ -49,7 +49,7 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
   /**
    * @param checkDeep false for show implementations to present definition only
    */
-  public static Query<PsiElement> search(PsiElement definitionsOf, SearchScope searchScope, final boolean checkDeep) {
+  public static Query<PsiElement> search(PsiElement definitionsOf, SearchScope searchScope, boolean checkDeep) {
     return INSTANCE.createUniqueResultsQuery(new SearchParameters(definitionsOf, searchScope, checkDeep));
   }
 
@@ -67,7 +67,7 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
       }), true);
     }
 
-    public SearchParameters(@Nonnull PsiElement element, @Nonnull SearchScope scope, final boolean checkDeep) {
+    public SearchParameters(@Nonnull PsiElement element, @Nonnull SearchScope scope, boolean checkDeep) {
       myElement = element;
       myScope = scope;
       myCheckDeep = checkDeep;

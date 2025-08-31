@@ -61,12 +61,12 @@ public class ToDoRootNode extends BaseToDoNode {
   }
 
   @Override
-  public int getFileCount(final Object val) {
+  public int getFileCount(Object val) {
     return mySummaryNode.getFileCount(null);
   }
 
   @Override
-  public int getTodoItemCount(final Object val) {
+  public int getTodoItemCount(Object val) {
     return mySummaryNode.getTodoItemCount(null);
   }
 }

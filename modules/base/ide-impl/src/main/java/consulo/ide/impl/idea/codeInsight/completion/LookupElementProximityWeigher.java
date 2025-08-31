@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class LookupElementProximityWeigher extends CompletionWeigher {
 
   @Override
-  public Comparable weigh(@Nonnull final LookupElement item, @Nonnull final CompletionLocation location) {
+  public Comparable weigh(@Nonnull LookupElement item, @Nonnull CompletionLocation location) {
     if (item.getObject() instanceof PsiElement) {
       return PsiProximityComparator.getProximity((NullableComputable<PsiElement>)() -> item.getPsiElement(), location.getCompletionParameters().getPosition(), location.getProcessingContext());
     }

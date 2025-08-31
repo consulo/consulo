@@ -30,7 +30,7 @@ public class LineRange {
   public PsiElement firstElement;
   public PsiElement lastElement;
 
-  public LineRange(final int startLine, final int endLine) {
+  public LineRange(int startLine, int endLine) {
     this.startLine = startLine;
     this.endLine = endLine;
     LOG.assertTrue(startLine >= 0, "Negative start line");

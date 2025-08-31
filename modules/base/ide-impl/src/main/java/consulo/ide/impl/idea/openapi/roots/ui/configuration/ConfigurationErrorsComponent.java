@@ -47,7 +47,7 @@ public class ConfigurationErrorsComponent extends JPanel {
   private final JBList myErrorList;
   private final CollectionListModel<ConfigurationError> myModel;
 
-  public ConfigurationErrorsComponent(@Nonnull final Project project) {
+  public ConfigurationErrorsComponent(@Nonnull Project project) {
     super(new BorderLayout());
     myModel = new CollectionListModel<ConfigurationError>();
     final JLabel label = new JLabel("<html><body><b>Problems:</b></body></html>");
@@ -78,7 +78,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     myErrorList.setCellRenderer(new ErrorListRenderer(myErrorList));
     myErrorList.addMouseListener(new MouseAdapter() {
       @Override
-      public void mouseClicked(final MouseEvent e) {
+      public void mouseClicked(MouseEvent e) {
         if (!e.isPopupTrigger()) {
           processListMouseEvent(e, true);
         }
@@ -102,12 +102,12 @@ public class ConfigurationErrorsComponent extends JPanel {
     private Image myIcon;
     private String myName;
 
-    ToolbarAlikeButton(@Nonnull final Image icon, @Nonnull final String name) {
+    ToolbarAlikeButton(@Nonnull Image icon, @Nonnull String name) {
       this(icon);
       myName = name;
     }
 
-    ToolbarAlikeButton(@Nonnull final Image icon) {
+    ToolbarAlikeButton(@Nonnull Image icon) {
       myIcon = icon;
 
       myBehavior = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
@@ -139,14 +139,14 @@ public class ConfigurationErrorsComponent extends JPanel {
 
     @Override
     public Dimension getMinimumSize() {
-      final Insets insets = getInsets();
+      Insets insets = getInsets();
       return new Dimension(myIcon.getWidth() + insets.left + insets.right, myIcon.getHeight() + insets.top + insets.bottom);
     }
 
     @Override
-    public void paint(final Graphics g) {
-      final Insets insets = getInsets();
-      final Dimension d = getSize();
+    public void paint(Graphics g) {
+      Insets insets = getInsets();
+      Dimension d = getSize();
 
       int x = (d.width - myIcon.getWidth() - insets.left - insets.right) / 2;
       int y = (d.height - myIcon.getHeight() - insets.top - insets.bottom) / 2;
@@ -164,24 +164,24 @@ public class ConfigurationErrorsComponent extends JPanel {
     }
   }
 
-  private void processListMouseEvent(final MouseEvent e, final boolean click) {
-    final int index = myErrorList.locationToIndex(e.getPoint());
+  private void processListMouseEvent(MouseEvent e, boolean click) {
+    int index = myErrorList.locationToIndex(e.getPoint());
     if (index > -1) {
-      final Object value = myErrorList.getModel().getElementAt(index);
+      Object value = myErrorList.getModel().getElementAt(index);
       if (value != null && value instanceof ConfigurationError) {
-        final ConfigurationError error = (ConfigurationError)value;
-        final Component renderer = myErrorList.getCellRenderer().getListCellRendererComponent(myErrorList, value, index, false, false);
+        ConfigurationError error = (ConfigurationError)value;
+        Component renderer = myErrorList.getCellRenderer().getListCellRendererComponent(myErrorList, value, index, false, false);
         if (renderer instanceof ErrorListRenderer) {
-          final Rectangle bounds = myErrorList.getCellBounds(index, index);
+          Rectangle bounds = myErrorList.getCellBounds(index, index);
           renderer.setBounds(bounds);
           renderer.doLayout();
 
-          final Point point = e.getPoint();
+          Point point = e.getPoint();
           point.translate(-bounds.x, -bounds.y);
 
-          final Component deepestComponentAt = SwingUtilities.getDeepestComponentAt(renderer, point.x, point.y);
+          Component deepestComponentAt = SwingUtilities.getDeepestComponentAt(renderer, point.x, point.y);
           if (deepestComponentAt instanceof ToolbarAlikeButton) {
-            final String name = ((ToolbarAlikeButton)deepestComponentAt).getButtonName();
+            String name = ((ToolbarAlikeButton)deepestComponentAt).getButtonName();
             if (click) {
               if (FIX_ACTION_NAME.equals(name)) {
                 onClickFix(error, (JComponent)deepestComponentAt, e);
@@ -215,7 +215,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     myErrorList.setToolTipText(null);
   }
 
-  private void onClickFix(@Nonnull final ConfigurationError error, JComponent component, MouseEvent e) {
+  private void onClickFix(@Nonnull ConfigurationError error, JComponent component, MouseEvent e) {
     error.fix(component, new RelativePoint(e));
   }
 
@@ -228,7 +228,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     private JPanel myButtonsPanel;
     private JPanel myFixGroup;
 
-    private ErrorListRenderer(@Nonnull final JList list) {
+    private ErrorListRenderer(@Nonnull JList list) {
       setLayout(new BorderLayout());
       setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
       setOpaque(false);
@@ -240,7 +240,7 @@ public class ConfigurationErrorsComponent extends JPanel {
       myButtonsPanel = new JPanel(new BorderLayout());
       myButtonsPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 5, 3));
       myButtonsPanel.setOpaque(false);
-      final JPanel buttons = new JPanel();
+      JPanel buttons = new JPanel();
       buttons.setOpaque(false);
       buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
       myButtonsPanel.add(buttons, BorderLayout.NORTH);
@@ -283,17 +283,17 @@ public class ConfigurationErrorsComponent extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-      final Container parent = myList.getParent();
+      Container parent = myList.getParent();
       if (parent != null) {
         myFakeTextPane.setText(myText.getText());
-        final Dimension size = parent.getSize();
+        Dimension size = parent.getSize();
         myFakeViewport.setSize(size);
-        final Dimension preferredSize = myFakeTextPane.getPreferredSize();
+        Dimension preferredSize = myFakeTextPane.getPreferredSize();
 
-        final Dimension buttonsPrefSize = myButtonsPanel.getPreferredSize();
-        final int maxHeight = Math.max(buttonsPrefSize.height, preferredSize.height);
+        Dimension buttonsPrefSize = myButtonsPanel.getPreferredSize();
+        int maxHeight = Math.max(buttonsPrefSize.height, preferredSize.height);
 
-        final Insets insets = getInsets();
+        Insets insets = getInsets();
         return new Dimension(Math.min(size.width, preferredSize.width), maxHeight + insets.top + insets.bottom);
       }
 
@@ -301,8 +301,8 @@ public class ConfigurationErrorsComponent extends JPanel {
     }
 
     @Override
-    public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
-      final ConfigurationError error = (ConfigurationError)value;
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      ConfigurationError error = (ConfigurationError)value;
 
       myList = list;
 
@@ -315,15 +315,15 @@ public class ConfigurationErrorsComponent extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-      final Graphics2D g2d = (Graphics2D)g;
+      Graphics2D g2d = (Graphics2D)g;
 
-      final Rectangle bounds = getBounds();
-      final Insets insets = getInsets();
+      Rectangle bounds = getBounds();
+      Insets insets = getInsets();
 
-      final GraphicsConfig cfg = new GraphicsConfig(g);
+      GraphicsConfig cfg = new GraphicsConfig(g);
       cfg.setAntialiasing(true);
 
-      final Shape shape = new RoundRectangle2D.Double(insets.left, insets.top, bounds.width - 1 - insets.left - insets.right,
+      Shape shape = new RoundRectangle2D.Double(insets.left, insets.top, bounds.width - 1 - insets.left - insets.right,
                                                       bounds.height - 1 - insets.top - insets.bottom, 6, 6);
       g2d.setColor(JBColor.WHITE);
       g2d.fill(shape);

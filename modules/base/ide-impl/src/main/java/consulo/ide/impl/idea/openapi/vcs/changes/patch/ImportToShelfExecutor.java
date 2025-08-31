@@ -72,16 +72,16 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
       LOG.error("Patch file name shouldn't be null");
       return;
     }
-    final VcsCatchingRunnable vcsCatchingRunnable = new VcsCatchingRunnable() {
+    VcsCatchingRunnable vcsCatchingRunnable = new VcsCatchingRunnable() {
       @Override
       public void runImpl() throws VcsException {
-        final VirtualFile baseDir = myProject.getBaseDir();
-        final File ioBase = new File(baseDir.getPath());
-        final List<FilePatch> allPatches = new ArrayList<>();
+        VirtualFile baseDir = myProject.getBaseDir();
+        File ioBase = new File(baseDir.getPath());
+        List<FilePatch> allPatches = new ArrayList<>();
         for (VirtualFile virtualFile : patchGroupsToApply.keySet()) {
-          final File ioCurrentBase = new File(virtualFile.getPath());
+          File ioCurrentBase = new File(virtualFile.getPath());
           allPatches.addAll(ContainerUtil.map(patchGroupsToApply.get(virtualFile), patchInProgress -> {
-            final TextFilePatch was = patchInProgress.getPatch();
+            TextFilePatch was = patchInProgress.getPatch();
             was.setBeforeName(PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getBeforeName()))));
             was.setAfterName(PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getAfterName()))));
             return was;
@@ -91,9 +91,9 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
           PatchEP[] patchTransitExtensions = null;
           if (additionalInfo != null) {
             try {
-              final Map<String, PatchEP> extensions = new HashMap<>();
+              Map<String, PatchEP> extensions = new HashMap<>();
               for (Map.Entry<String, Map<String, CharSequence>> entry : additionalInfo.compute().entrySet()) {
-                final String filePath = entry.getKey();
+                String filePath = entry.getKey();
                 Map<String, CharSequence> extToValue = entry.getValue();
                 for (Map.Entry<String, CharSequence> innerEntry : extToValue.entrySet()) {
                   TransitExtension patchEP = (TransitExtension)extensions.get(innerEntry.getKey());
@@ -112,7 +112,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
             }
           }
           try {
-            final ShelvedChangeList shelvedChangeList = ShelveChangesManager.getInstance(myProject).
+            ShelvedChangeList shelvedChangeList = ShelveChangesManager.getInstance(myProject).
                     importFilePatches(fileName, allPatches, patchTransitExtensions);
             ShelvedChangesViewManager.getInstance(myProject).activateView(shelvedChangeList);
           }

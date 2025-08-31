@@ -23,7 +23,7 @@ import java.util.function.BiFunction;
  */
 @FunctionalInterface
 public interface PairConvertor<First, Second, Result> extends BiFunction<First, Second, Result> {
-  Result convert(final First first, final Second second);
+  Result convert(First first, Second second);
 
   @Override
   default Result apply(First first, Second second) {

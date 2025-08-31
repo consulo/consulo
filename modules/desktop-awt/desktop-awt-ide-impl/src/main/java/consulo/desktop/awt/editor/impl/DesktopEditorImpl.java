@@ -335,7 +335,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     mySelectionModel.setSelection(selectionStart, myCaretModel.getVisualPosition(), myCaretModel.getOffset());
                 }
 
-                final IndentGuideDescriptor newGuide = myIndentsModel.getCaretIndentGuide();
+                IndentGuideDescriptor newGuide = myIndentsModel.getCaretIndentGuide();
                 if (!Comparing.equal(myCurrentCaretGuide, newGuide)) {
                     repaintGuide(newGuide);
                     repaintGuide(myCurrentCaretGuide);
@@ -347,8 +347,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     }
 
                     if (newGuide != null) {
-                        final Rectangle visibleArea = getScrollingModel().getVisibleArea();
-                        final int endLine = newGuide.startLine;
+                        Rectangle visibleArea = getScrollingModel().getVisibleArea();
+                        int endLine = newGuide.startLine;
                         if (logicalLineToY(endLine) < visibleArea.y) {
                             int startLine = Math.max(
                                 newGuide.codeConstructStartLine,
@@ -951,7 +951,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         Disposer.register(getDisposable(), connector);
 
         try {
-            final DropTarget dropTarget = myEditorComponent.getDropTarget();
+            DropTarget dropTarget = myEditorComponent.getDropTarget();
             if (dropTarget != null) { // might be null in headless environment
                 dropTarget.addDropTargetListener(new DropTargetAdapter() {
                     @Override
@@ -1002,7 +1002,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-    public void setFontSize(final int fontSize) {
+    public void setFontSize(int fontSize) {
         setFontSize(fontSize, null);
     }
 
@@ -1044,8 +1044,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Nonnull
-    public ActionCallback type(@Nonnull final String text) {
-        final ActionCallback result = new ActionCallback();
+    public ActionCallback type(@Nonnull String text) {
+        ActionCallback result = new ActionCallback();
 
         for (int i = 0; i < text.length(); i++) {
             myLastTypedActionTimestamp = System.currentTimeMillis();
@@ -1067,7 +1067,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return false;
         }
         FileDocumentManager manager = FileDocumentManager.getInstance();
-        final VirtualFile file = manager.getFile(myDocument);
+        VirtualFile file = manager.getFile(myDocument);
         if (file != null && !file.isValid()) {
             return false;
         }
@@ -1702,8 +1702,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myTextDrawingCallback;
     }
 
-    ColorValue getBackgroundColor(@Nonnull final TextAttributes attributes) {
-        final ColorValue attrColor = attributes.getBackgroundColor();
+    ColorValue getBackgroundColor(@Nonnull TextAttributes attributes) {
+        ColorValue attrColor = attributes.getBackgroundColor();
         return Comparing.equal(attrColor, myScheme.getDefaultBackground()) ? getBackgroundColor() : attrColor;
     }
 
@@ -1991,7 +1991,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return;
         }
 
-        final FoldRegion region = getFoldingModel().getFoldingPlaceholderAt(e.getPoint());
+        FoldRegion region = getFoldingModel().getFoldingPlaceholderAt(e.getPoint());
         if (region != null && region == myMouseSelectedRegion) {
             getFoldingModel().runBatchFoldingOperation(() -> {
                 myFoldingModel.disableScrollingPositionAdjustment();
@@ -2034,7 +2034,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     private void requestFocus() {
-        final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
+        IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
         if (focusManager.getFocusOwner() != myEditorComponent) { //IDEA-64501
             focusManager.requestFocus(myEditorComponent, true);
         }
@@ -2087,7 +2087,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @RequiredUIAccess
-    private void runMouseDraggedCommand(@Nonnull final MouseEvent e) {
+    private void runMouseDraggedCommand(@Nonnull MouseEvent e) {
         if (myCommandProcessor == null || myMousePressedEvent != null && myMousePressedEvent.isConsumed()) {
             return;
         }
@@ -2389,7 +2389,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     private void setCursorPosition() {
-        final List<CaretRectangle> caretPoints = new ArrayList<>();
+        List<CaretRectangle> caretPoints = new ArrayList<>();
         for (Caret caret : getCaretModel().getAllCarets()) {
             boolean isRtl = caret.isAtRtlLocation();
             VisualPosition caretPosition = caret.getVisualPosition();
@@ -2479,8 +2479,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         private void activate() {
-            final boolean blink = mySettings.isBlinkCaret();
-            final int blinkPeriod = mySettings.getCaretBlinkPeriod();
+            boolean blink = mySettings.isBlinkCaret();
+            int blinkPeriod = mySettings.getCaretBlinkPeriod();
             synchronized (ourCaretBlinkingCommand) {
                 ourCaretBlinkingCommand.myEditor = DesktopEditorImpl.this;
                 ourCaretBlinkingCommand.setBlinkCaret(blink);
@@ -2862,12 +2862,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         @Nonnull
         @Override
-        public Rectangle getTextLocation(final TextHitInfo offset) {
+        public Rectangle getTextLocation(TextHitInfo offset) {
             return execute(() -> myDelegate.getTextLocation(offset));
         }
 
         @Override
-        public TextHitInfo getLocationOffset(final int x, final int y) {
+        public TextHitInfo getLocationOffset(int x, int y) {
             return execute(() -> myDelegate.getLocationOffset(x, y));
         }
 
@@ -2879,9 +2879,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Nonnull
         @Override
         public AttributedCharacterIterator getCommittedText(
-            final int beginIndex,
-            final int endIndex,
-            final AttributedCharacterIterator.Attribute[] attributes
+            int beginIndex,
+            int endIndex,
+            AttributedCharacterIterator.Attribute[] attributes
         ) {
             return execute(() -> myDelegate.getCommittedText(beginIndex, endIndex, attributes));
         }
@@ -2898,11 +2898,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         @Override
-        public AttributedCharacterIterator getSelectedText(final AttributedCharacterIterator.Attribute[] attributes) {
+        public AttributedCharacterIterator getSelectedText(AttributedCharacterIterator.Attribute[] attributes) {
             return execute(() -> myDelegate.getSelectedText(attributes));
         }
 
-        private static <T> T execute(final Computable<T> computable) {
+        private static <T> T execute(Computable<T> computable) {
             return UIUtil.invokeAndWaitIfNeeded(computable);
         }
     }
@@ -3098,7 +3098,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             AttributedCharacterIterator text = e.getText();
 
             // old composed text deletion
-            final Document doc = getDocument();
+            Document doc = getDocument();
 
             if (composedText != null) {
                 if (!isViewer() && doc.isWritable()) {
@@ -3193,7 +3193,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         @RequiredUIAccess
-        private void runMousePressedCommand(@Nonnull final MouseEvent e) {
+        private void runMousePressedCommand(@Nonnull MouseEvent e) {
             myLastPressWasAtBlockInlay = false;
             myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
             myCaretStateBeforeLastPress = isToggleCaretEvent(e) ? myCaretModel.getCaretsAndSelections() : Collections.emptyList();
@@ -3251,7 +3251,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             invokePopupIfNeeded(event);
         }
 
-        private void runMouseClickedCommand(@Nonnull final MouseEvent e) {
+        private void runMouseClickedCommand(@Nonnull MouseEvent e) {
             EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseClicked(event);
@@ -3266,7 +3266,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         @RequiredUIAccess
-        private void runMouseReleasedCommand(@Nonnull final MouseEvent e) {
+        private void runMouseReleasedCommand(@Nonnull MouseEvent e) {
             myMultiSelectionInProgress = false;
             myDragOnGutterSelectionStartLine = -1;
             myScrollingTimer.stop();
@@ -3806,7 +3806,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         private final AtomicBoolean nrp = new AtomicBoolean(true);
 
-        ExplosionPainter(final Point explosionLocation, Image image, @Nonnull Disposable painterListenersDisposable) {
+        ExplosionPainter(Point explosionLocation, Image image, @Nonnull Disposable painterListenersDisposable) {
             myExplosionLocation = new Point(explosionLocation.x, explosionLocation.y);
             myImage = image;
             myPainterListenersDisposable = painterListenersDisposable;
@@ -3857,8 +3857,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @RequiredUIAccess
-    static boolean handleDrop(@Nonnull DesktopEditorImpl editor, @Nonnull final Transferable t, int dropAction) {
-        final EditorDropHandler dropHandler = editor.getDropHandler();
+    static boolean handleDrop(@Nonnull DesktopEditorImpl editor, @Nonnull Transferable t, int dropAction) {
+        EditorDropHandler dropHandler = editor.getDropHandler();
 
         boolean singleClickForDisablingBreakpoint =
             XDebuggerSettingsManager.getInstance().getGeneralSettings().isSingleClickForDisablingBreakpoint();
@@ -3897,7 +3897,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return true;
         }
 
-        final int caretOffset = editor.getCaretModel().getOffset();
+        int caretOffset = editor.getCaretModel().getOffset();
         if (editor.myDraggedRange != null && editor.myDraggedRange.getStartOffset() <= caretOffset && caretOffset < editor.myDraggedRange.getEndOffset()) {
             return false;
         }
@@ -3915,7 +3915,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 try {
                     editor.getSelectionModel().removeSelection();
 
-                    final int offset;
+                    int offset;
                     if (editor.myDraggedRange != null) {
                         editor.getCaretModel().moveToOffset(caretOffset);
                         offset = caretOffset;
@@ -3963,7 +3963,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Override
         public boolean canImport(@Nonnull JComponent comp, @Nonnull DataFlavor[] transferFlavors) {
             DesktopEditorImpl editor = getEditor(comp);
-            final EditorDropHandler dropHandler = editor.getDropHandler();
+            EditorDropHandler dropHandler = editor.getDropHandler();
             if (dropHandler != null && dropHandler.canHandleDrop(transferFlavors)) {
                 return true;
             }
@@ -4006,18 +4006,18 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         @Override
         @RequiredUIAccess
-        protected void exportDone(@Nonnull final JComponent source, @Nullable Transferable data, int action) {
+        protected void exportDone(@Nonnull JComponent source, @Nullable Transferable data, int action) {
             if (data == null) {
                 return;
             }
 
-            final Component last = DnDManager.getInstance().getLastDropHandler();
+            Component last = DnDManager.getInstance().getLastDropHandler();
 
             if (last != null && !(last instanceof EditorComponentImpl) && !(last instanceof EditorGutterComponentImpl)) {
                 return;
             }
 
-            final DesktopEditorImpl editor = getEditor(source);
+            DesktopEditorImpl editor = getEditor(source);
             if (action == MOVE && !editor.isViewer() && editor.myDraggedRange != null) {
                 removeDraggedOutFragment(editor);
             }

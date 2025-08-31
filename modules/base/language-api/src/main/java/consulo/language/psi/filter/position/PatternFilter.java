@@ -25,7 +25,7 @@ import consulo.language.psi.filter.ElementFilter;
 public class PatternFilter implements ElementFilter {
   private final ElementPattern<?> myPattern;
 
-  public PatternFilter(final ElementPattern<?> pattern) {
+  public PatternFilter(ElementPattern<?> pattern) {
     myPattern = pattern;
   }
 

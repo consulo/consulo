@@ -52,16 +52,16 @@ public abstract class UnixAttachOSHandler extends AttachOSHandler {
 
   public int getPtraceScope() {
     try {
-      final InputStream fileStream = myHost.getFileContent(PTRACE_SCOPE_PATH);
+      InputStream fileStream = myHost.getFileContent(PTRACE_SCOPE_PATH);
 
       if (fileStream != null) {
         if (!myHost.canReadFile(PTRACE_SCOPE_PATH)) {
           LOGGER.warn(PTRACE_SCOPE_PATH + " file exists but you don't have permissions to read it.");
           return 3; // The strongest possible level
         }
-        final BufferedReader buf = new BufferedReader(new InputStreamReader(fileStream, StandardCharsets.UTF_8));
+        BufferedReader buf = new BufferedReader(new InputStreamReader(fileStream, StandardCharsets.UTF_8));
 
-        final String fileContent = buf.readLine();
+        String fileContent = buf.readLine();
         try (Scanner scanner = new Scanner(fileContent)) {
           return scanner.nextInt();
         }

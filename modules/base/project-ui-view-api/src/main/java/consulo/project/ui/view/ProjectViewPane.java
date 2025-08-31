@@ -47,7 +47,7 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
 
   void select(Object element, VirtualFile file, boolean requestFocus);
 
-  void selectModule(@Nonnull Module module, final boolean requestFocus);
+  void selectModule(@Nonnull Module module, boolean requestFocus);
 
   void selectModuleGroup(@Nonnull ModuleGroup moduleGroup, boolean requestFocus);
 
@@ -64,7 +64,7 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
   String[] getSubIds();
 
   @Nonnull
-  LocalizeValue getPresentableSubIdName(@Nonnull final String subId);
+  LocalizeValue getPresentableSubIdName(@Nonnull String subId);
 
   default void queueUpdate() {
   }

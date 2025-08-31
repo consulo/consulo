@@ -62,10 +62,10 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
     mySplitterProportionProperty = splitterProportionProperty;
     mySplitterDefaultProportion = splitterDefaultProportion;
     myStatisticsSplitterProportionProperty = mySplitterProportionProperty + "_Statistics";
-    final ToolWindowManagerListener listener = new ToolWindowManagerListener() {
+    ToolWindowManagerListener listener = new ToolWindowManagerListener() {
       @Override
       public void stateChanged(ToolWindowManager toolWindowManager) {
-        final boolean splitVertically = splitVertically();
+        boolean splitVertically = splitVertically();
         myStatusLine.setPreferredSize(splitVertically);
         mySplitter.setOrientation(splitVertically);
         revalidate();
@@ -95,13 +95,13 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
       mySplitter.dispose();
     });
     add(mySplitter, BorderLayout.CENTER);
-    final JPanel leftPanel = new JPanel(new BorderLayout());
+    JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.add(myLeftPane, BorderLayout.CENTER);
     leftPanel.add(myToolbarPanel, BorderLayout.NORTH);
     mySplitter.setFirstComponent(leftPanel);
     myStatusLine.setMinimumSize(new Dimension(0, myStatusLine.getMinimumSize().height));
     myStatusLine.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-    final JPanel rightPanel = new JPanel(new BorderLayout());
+    JPanel rightPanel = new JPanel(new BorderLayout());
     rightPanel.add(SameHeightPanel.wrap(myStatusLine, myToolbarPanel), BorderLayout.NORTH);
     myStatisticsSplitter = createSplitter(myStatisticsSplitterProportionProperty, 0.5f, false);
     myStatisticsSplitter.setFirstComponent(createOutputTab(myConsole, myConsoleActions));
@@ -112,11 +112,11 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   }
 
   private boolean splitVertically() {
-    final String windowId = myProperties.getExecutor().getToolWindowId();
-    final ToolWindow toolWindow = ToolWindowManager.getInstance(myProperties.getProject()).getToolWindow(windowId);
+    String windowId = myProperties.getExecutor().getToolWindowId();
+    ToolWindow toolWindow = ToolWindowManager.getInstance(myProperties.getProject()).getToolWindow(windowId);
     boolean splitVertically = false;
     if (toolWindow != null) {
-      final ToolWindowAnchor anchor = toolWindow.getAnchor();
+      ToolWindowAnchor anchor = toolWindow.getAnchor();
       splitVertically = anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.RIGHT;
     }
     return splitVertically;
@@ -146,7 +146,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   @Nullable
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    final TestTreeView view = getTreeView();
+    TestTreeView view = getTreeView();
     if (view != null) {
       return view.getData(dataId);
     }
@@ -156,10 +156,10 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   private JComponent createOutputTab(JComponent console, AnAction[] consoleActions) {
     JPanel outputTab = new JPanel(new BorderLayout());
     console.setFocusable(true);
-    final Color editorBackground = TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground());
+    Color editorBackground = TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground());
     console.setBorder(new CompoundBorder(IdeBorderFactory.createBorder(SideBorder.RIGHT | SideBorder.TOP), new SideBorder(editorBackground, SideBorder.LEFT)));
     outputTab.add(console, BorderLayout.CENTER);
-    final ActionToolbar toolbar =
+    ActionToolbar toolbar =
       ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, new DefaultActionGroup(consoleActions), false);
     toolbar.setTargetComponent(outputTab);
     outputTab.add(toolbar.getComponent(), BorderLayout.EAST);
@@ -177,7 +177,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
     return splitter;
   }
 
-  protected void setLeftComponent(final JComponent component) {
+  protected void setLeftComponent(JComponent component) {
     if (component != myLeftPane.getViewport().getView()) myLeftPane.setViewportView(component);
   }
 }

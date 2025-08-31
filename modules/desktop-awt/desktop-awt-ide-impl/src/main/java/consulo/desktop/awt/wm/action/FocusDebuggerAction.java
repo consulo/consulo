@@ -76,7 +76,7 @@ public class FocusDebuggerAction extends AnAction implements DumbAware {
 
         private boolean myRunning = true;
 
-        public void setRunning(final boolean running) {
+        public void setRunning(boolean running) {
             myRunning = running;
         }
 

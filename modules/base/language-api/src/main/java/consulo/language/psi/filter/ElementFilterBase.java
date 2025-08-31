@@ -23,7 +23,7 @@ import consulo.language.psi.PsiElement;
 public abstract class ElementFilterBase<T> implements ElementFilter {
   private final Class<T> myClass;
 
-  public ElementFilterBase(final Class<T> aClass) {
+  public ElementFilterBase(Class<T> aClass) {
     myClass = aClass;
   }
 

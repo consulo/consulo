@@ -69,9 +69,9 @@ public final class KeyboardShortcut extends Shortcut {
   }
 
   @Override
-  public boolean startsWith(final Shortcut sc) {
+  public boolean startsWith(Shortcut sc) {
     if (sc instanceof KeyboardShortcut) {
-      final KeyboardShortcut other = (KeyboardShortcut)sc;
+      KeyboardShortcut other = (KeyboardShortcut)sc;
       return myFirstKeyStroke.equals(other.myFirstKeyStroke) && (other.mySecondKeyStroke == null || other.mySecondKeyStroke.equals(mySecondKeyStroke)); 
     }
     else {
@@ -80,7 +80,7 @@ public final class KeyboardShortcut extends Shortcut {
   }
 
   public static KeyboardShortcut fromString(@NonNls String s) {
-    final KeyStroke keyStroke = KeyStroke.getKeyStroke(s);
+    KeyStroke keyStroke = KeyStroke.getKeyStroke(s);
     assert keyStroke != null : "Can't create key stroke for " + s;
     return new KeyboardShortcut(keyStroke, null);
   }

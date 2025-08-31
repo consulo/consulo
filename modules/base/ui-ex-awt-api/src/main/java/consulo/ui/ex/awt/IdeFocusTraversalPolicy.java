@@ -34,7 +34,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
     return getPreferredFocusedComponent((JComponent)focusCycleRoot, this);
   }
 
-  public static JComponent getPreferredFocusedComponent(@Nonnull final JComponent component) {
+  public static JComponent getPreferredFocusedComponent(@Nonnull JComponent component) {
     return getPreferredFocusedComponent(component, null);
   }
 
@@ -43,12 +43,12 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
    * Method can return component itself if the <code>component</code> is legal
    * (JTextFiel)focusable
    */
-  public static JComponent getPreferredFocusedComponent(@Nonnull final JComponent component, final FocusTraversalPolicy policyToIgnore) {
+  public static JComponent getPreferredFocusedComponent(@Nonnull JComponent component, FocusTraversalPolicy policyToIgnore) {
     if (!component.isVisible()) {
       return null;
     }
 
-    final FocusTraversalPolicy focusTraversalPolicy = ContainerHacking.getFocusTraversalPolicyAwtImpl(component);
+    FocusTraversalPolicy focusTraversalPolicy = ContainerHacking.getFocusTraversalPolicyAwtImpl(component);
     if (focusTraversalPolicy != null && focusTraversalPolicy != policyToIgnore) {
       if (focusTraversalPolicy.getClass().getName().indexOf("LegacyGlueFocusTraversalPolicy") >= 0) {
         return component;
@@ -62,8 +62,8 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
     }
 
     if (component instanceof JTabbedPane) {
-      final JTabbedPane tabbedPane = (JTabbedPane)component;
-      final Component selectedComponent = tabbedPane.getSelectedComponent();
+      JTabbedPane tabbedPane = (JTabbedPane)component;
+      Component selectedComponent = tabbedPane.getSelectedComponent();
       if (selectedComponent instanceof JComponent) {
         return getPreferredFocusedComponent((JComponent)selectedComponent);
       }
@@ -78,7 +78,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
       if (!(ca instanceof JComponent)) {
         continue;
       }
-      final JComponent c = getPreferredFocusedComponent((JComponent)ca);
+      JComponent c = getPreferredFocusedComponent((JComponent)ca);
       if (c != null) {
         return c;
       }
@@ -87,14 +87,14 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
   }
 
   @Override
-  protected final boolean accept(final Component aComponent) {
+  protected final boolean accept(Component aComponent) {
     if (aComponent instanceof JComponent) {
       return _accept((JComponent)aComponent);
     }
     return super.accept(aComponent);
   }
 
-  private static boolean _accept(final JComponent component) {
+  private static boolean _accept(JComponent component) {
     if (!component.isEnabled() || !component.isVisible() || !component.isFocusable()) {
       return false;
     }

@@ -30,7 +30,7 @@ public abstract class TaskStateCombo extends JPanel {
         if (task == null || !task.isIssue()) {
             return false;
         }
-        final TaskRepository repository = task.getRepository();
+        TaskRepository repository = task.getRepository();
         return repository != null && repository.isSupported(TaskRepository.STATE_UPDATING);
     }
 
@@ -51,7 +51,7 @@ public abstract class TaskStateCombo extends JPanel {
         myHintLabel = new JBLabel();
         myHintLabel.setIcon(PlatformIconGroup.ideUpdown());
         myHintLabel.setToolTipText("Pressing Up or Down arrows while in editor changes the state");
-        final JComboBox comboBox = myKindCombo.getComboBox();
+        JComboBox comboBox = myKindCombo.getComboBox();
         comboBox.setPreferredSize(new Dimension(300, UIUtil.fixComboBoxHeight(comboBox.getPreferredSize().height)));
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         add(myKindCombo);
@@ -78,7 +78,7 @@ public abstract class TaskStateCombo extends JPanel {
                 @Nullable
                 @Override
                 public CustomStateTrinityAdapter getSelectedItem() {
-                    final CustomTaskState state = getPreferredState(repository, CustomStateTrinityAdapter.unwrapList(myResult));
+                    CustomTaskState state = getPreferredState(repository, CustomStateTrinityAdapter.unwrapList(myResult));
                     return state != null ? new CustomStateTrinityAdapter(state) : null;
                 }
             }.queue();
@@ -102,7 +102,7 @@ public abstract class TaskStateCombo extends JPanel {
      */
     @Nullable
     public CustomTaskState getSelectedState() {
-        final CustomStateTrinityAdapter item = (CustomStateTrinityAdapter) myKindCombo.getComboBox().getSelectedItem();
+        CustomStateTrinityAdapter item = (CustomStateTrinityAdapter) myKindCombo.getComboBox().getSelectedItem();
         if (item == null) {
             return null;
         }

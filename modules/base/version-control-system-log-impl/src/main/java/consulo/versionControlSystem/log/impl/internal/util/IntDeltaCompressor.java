@@ -50,7 +50,7 @@ public class IntDeltaCompressor implements IntList {
   @Nonnull
   private final IntToIntMap myStartIndexMap;
 
-  private IntDeltaCompressor(@Nonnull byte[] compressedDeltas, @Nonnull final Flags startedDeltaIndex, int countDeltas) {
+  private IntDeltaCompressor(@Nonnull byte[] compressedDeltas, @Nonnull Flags startedDeltaIndex, int countDeltas) {
     myCompressedDeltas = compressedDeltas;
     myStartedDeltaIndex = startedDeltaIndex;
     myStartIndexMap = PermanentListIntToIntMap.newInstance(startedDeltaIndex, countDeltas);

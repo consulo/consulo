@@ -169,7 +169,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
       ExternalSystemApiUtil.updateRecentTasks(new ExternalTaskExecutionInfo(mySettings.clone(), executor.getId()), myProject);
       ConsoleView console = TextConsoleBuilderFactory.getInstance().createBuilder(myProject).getConsole();
-      final List<ExternalTaskPojo> tasks = new ArrayList<>();
+      List<ExternalTaskPojo> tasks = new ArrayList<>();
       for (String taskName : mySettings.getTaskNames()) {
         tasks.add(new ExternalTaskPojo(taskName, mySettings.getExternalProjectPath(), null));
       }
@@ -185,14 +185,14 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
       FileDocumentManager.getInstance().saveAllDocuments();
 
       ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);
-      final ExternalSystemTask task = helper.createExecuteSystemTask(myExternalSystemId, myProject, tasks, mySettings.getVmOptions(), mySettings.getScriptParameters(), debuggerSetup);
+      ExternalSystemTask task = helper.createExecuteSystemTask(myExternalSystemId, myProject, tasks, mySettings.getVmOptions(), mySettings.getScriptParameters(), debuggerSetup);
 
       final MyProcessHandler processHandler = new MyProcessHandler(task);
       console.attachToProcess(processHandler);
 
       myProject.getApplication().executeOnPooledThread((Runnable)() -> {
-        final String startDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
-        final LocalizeValue greeting = mySettings.getTaskNames().size() > 1
+        String startDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
+        LocalizeValue greeting = mySettings.getTaskNames().size() > 1
           ? ExternalSystemLocalize.runTextStartingMultipleTask(startDateTime, StringUtil.join(mySettings.getTaskNames(), " "))
           : ExternalSystemLocalize.runTextStartingSingleTask(startDateTime, StringUtil.join(mySettings.getTaskNames(), " "));
         processHandler.notifyTextAvailable(greeting.get(), ProcessOutputTypes.SYSTEM);
@@ -219,8 +219,8 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
           @Override
           public void onEnd(@Nonnull ExternalSystemTaskId id) {
-            final String endDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
-            final LocalizeValue farewell = mySettings.getTaskNames().size() > 1
+            String endDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
+            LocalizeValue farewell = mySettings.getTaskNames().size() > 1
               ? ExternalSystemLocalize.runTextEndedMultipleTask(endDateTime, StringUtil.join(mySettings.getTaskNames(), " "))
               : ExternalSystemLocalize.runTextEndedSingleTask(endDateTime, StringUtil.join(mySettings.getTaskNames(), " "));
             processHandler.notifyTextAvailable(farewell.get(), ProcessOutputTypes.SYSTEM);

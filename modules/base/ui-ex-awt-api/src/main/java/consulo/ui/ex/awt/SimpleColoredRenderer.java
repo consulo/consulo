@@ -32,7 +32,7 @@ public class SimpleColoredRenderer extends SimpleColoredComponent {
     super.append(fragment, modifyAttributes(attributes), isMainText);
   }
 
-  protected SimpleTextAttributes modifyAttributes(final SimpleTextAttributes attributes) {
+  protected SimpleTextAttributes modifyAttributes(SimpleTextAttributes attributes) {
     return myCellState.modifyAttributes(attributes);
   }
 

@@ -38,7 +38,7 @@ public class NavBarBorder implements Border {
     }
 
     @Override
-    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width, final int height) {
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         if (UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
             g.setColor(Gray._0.withAlpha(50));
             g.drawLine(x, y, x + width, y);
@@ -46,7 +46,7 @@ public class NavBarBorder implements Border {
     }
 
     @Override
-    public Insets getBorderInsets(final Component c) {
+    public Insets getBorderInsets(Component c) {
         boolean fullScreen = myFullScreenGetter.getAsBoolean();
         if (!UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
             if (NavBarRootPaneExtensionImpl.runToolbarExists()) {

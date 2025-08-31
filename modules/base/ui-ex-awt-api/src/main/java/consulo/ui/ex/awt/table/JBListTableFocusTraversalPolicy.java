@@ -31,7 +31,7 @@ class JBListTableFocusTraversalPolicy extends FocusTraversalPolicy {
 
   @Override
   public Component getComponentAfter(Container aContainer, Component aComponent) {
-    final List<Component> focusableComponents = Arrays.<Component>asList(myEditor.getFocusableComponents());
+    List<Component> focusableComponents = Arrays.<Component>asList(myEditor.getFocusableComponents());
     int i = focusableComponents.indexOf(aComponent);
     if (i != -1) {
       i++;
@@ -45,7 +45,7 @@ class JBListTableFocusTraversalPolicy extends FocusTraversalPolicy {
 
   @Override
   public Component getComponentBefore(Container aContainer, Component aComponent) {
-    final List<Component> focusableComponents = Arrays.<Component>asList(myEditor.getFocusableComponents());
+    List<Component> focusableComponents = Arrays.<Component>asList(myEditor.getFocusableComponents());
     int i = focusableComponents.indexOf(aComponent);
     if (i != -1) {
       i--;
@@ -59,13 +59,13 @@ class JBListTableFocusTraversalPolicy extends FocusTraversalPolicy {
 
   @Override
   public Component getFirstComponent(Container aContainer) {
-    final List<Component> focusableComponents = Arrays.<Component>asList(myEditor.getFocusableComponents());
+    List<Component> focusableComponents = Arrays.<Component>asList(myEditor.getFocusableComponents());
     return focusableComponents.isEmpty() ? null : focusableComponents.get(0);
   }
 
   @Override
   public Component getLastComponent(Container aContainer) {
-    final List<Component> focusableComponents = Arrays.<Component>asList(myEditor.getFocusableComponents());
+    List<Component> focusableComponents = Arrays.<Component>asList(myEditor.getFocusableComponents());
     return focusableComponents.isEmpty() ? null : focusableComponents.get(focusableComponents.size() - 1);
   }
 

@@ -88,9 +88,9 @@ public abstract class LineStatusMarkerPopup {
 
   public void scrollAndShow() {
     if (!myTracker.isValid()) return;
-    final Document document = myTracker.getDocument();
+    Document document = myTracker.getDocument();
     int line = Math.min(myRange.getType() == Range.DELETED ? myRange.getLine2() : myRange.getLine2() - 1, getLineCount(document) - 1);
-    final int lastOffset = document.getLineStartOffset(line);
+    int lastOffset = document.getLineStartOffset(line);
     myEditor.getCaretModel().moveToOffset(lastOffset);
     myEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
 
@@ -106,9 +106,9 @@ public abstract class LineStatusMarkerPopup {
   }
 
   public void showHint(@Nonnull MouseEvent e) {
-    final JComponent comp = (JComponent)e.getComponent(); // shall be EditorGutterComponent, cast is safe.
-    final JLayeredPane layeredPane = comp.getRootPane().getLayeredPane();
-    final Point point = SwingUtilities.convertPoint(comp, ((EditorEx)myEditor).getGutterComponentEx().getComponent().getWidth(), e.getY(), layeredPane);
+    JComponent comp = (JComponent)e.getComponent(); // shall be EditorGutterComponent, cast is safe.
+    JLayeredPane layeredPane = comp.getRootPane().getLayeredPane();
+    Point point = SwingUtilities.convertPoint(comp, ((EditorEx)myEditor).getGutterComponentEx().getComponent().getWidth(), e.getY(), layeredPane);
     showHintAt(point);
     e.consume();
   }
@@ -132,7 +132,7 @@ public abstract class LineStatusMarkerPopup {
 
     LightweightHintImpl hint = new LightweightHintImpl(popupPanel);
     HintListener closeListener = new HintListener() {
-      public void hintHidden(final EventObject event) {
+      public void hintHidden(EventObject event) {
         Disposer.dispose(disposable);
       }
     };
@@ -162,15 +162,15 @@ public abstract class LineStatusMarkerPopup {
     if (!isShowInnerDifferences()) return null;
     if (myRange.getType() != Range.MODIFIED) return null;
 
-    final CharSequence vcsContent = myTracker.getVcsContent(myRange);
-    final CharSequence currentContent = myTracker.getCurrentContent(myRange);
+    CharSequence vcsContent = myTracker.getVcsContent(myRange);
+    CharSequence currentContent = myTracker.getCurrentContent(myRange);
 
     return BackgroundTaskUtil.tryComputeFast(indicator -> ByWord.compare(vcsContent, currentContent, ComparisonPolicy.DEFAULT, indicator), Registry.intValue("diff.status.tracker.byword.delay"));
   }
 
   private void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, @Nonnull Disposable parentDisposable) {
     if (wordDiff == null) return;
-    final List<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
+    List<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
 
     int currentStartShift = myTracker.getCurrentTextRange(myRange).getStartOffset();
     for (DiffFragment fragment : wordDiff) {
@@ -220,7 +220,7 @@ public abstract class LineStatusMarkerPopup {
   }
 
   private static String getFileName(@Nonnull Document document) {
-    final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null) return "";
     return file.getName();
   }

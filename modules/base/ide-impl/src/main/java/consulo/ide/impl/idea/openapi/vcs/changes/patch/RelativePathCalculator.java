@@ -32,12 +32,12 @@ public class RelativePathCalculator {
   private String myResult;
   private boolean myRename;
 
-  public RelativePathCalculator(final String base, final String shifted) {
+  public RelativePathCalculator(String base, String shifted) {
     myShifted = shifted;
     myBase = base;
   }
 
-  private static boolean stringEqual(@Nonnull final String s1, @Nonnull final String s2) {
+  private static boolean stringEqual(@Nonnull String s1, @Nonnull String s2) {
     return Platform.current().fs().isCaseSensitive() ? s1.equals(s2) : s1.equalsIgnoreCase(s2);
   }
 
@@ -51,8 +51,8 @@ public class RelativePathCalculator {
       myRename = false;
       return;
     }
-    final String[] baseParts = split(myBase);
-    final String[] shiftedParts = split(myShifted);
+    String[] baseParts = split(myBase);
+    String[] shiftedParts = split(myShifted);
 
     myRename = checkRename(baseParts, shiftedParts);
 
@@ -68,18 +68,18 @@ public class RelativePathCalculator {
       ++ cnt;
     }
 
-    final int stepsUp = baseParts.length - cnt - 1;
+    int stepsUp = baseParts.length - cnt - 1;
     if ((! myRename) && (stepsUp > ourNumOfAllowedStepsAbove) && ((shiftedParts.length - cnt) <= ourAllowedStepsDown)) {
       myResult = myShifted;
       return;
     }
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < stepsUp; i++) {
       sb.append("../");
     }
 
     for (int i = cnt; i < shiftedParts.length; i++) {
-      final String shiftedPart = shiftedParts[i];
+      String shiftedPart = shiftedParts[i];
       sb.append(shiftedPart);
       if (i < (shiftedParts.length - 1)) {
         sb.append('/');
@@ -93,7 +93,7 @@ public class RelativePathCalculator {
     return myRename;
   }
 
-  private boolean checkRename(final String[] baseParts, final String[] shiftedParts) {
+  private boolean checkRename(String[] baseParts, String[] shiftedParts) {
     if (baseParts.length == shiftedParts.length) {
       for (int i = 0; i < baseParts.length; i++) {
         if (! stringEqual(baseParts[i], shiftedParts[i])) {
@@ -109,17 +109,17 @@ public class RelativePathCalculator {
   }
 
   @Nullable
-  public static String getMovedString(final String beforeName, final String afterName) {
+  public static String getMovedString(String beforeName, String afterName) {
     if ((beforeName != null) && (afterName != null) && (! stringEqual(beforeName, afterName))) {
-      final RelativePathCalculator calculator = new RelativePathCalculator(beforeName, afterName);
+      RelativePathCalculator calculator = new RelativePathCalculator(beforeName, afterName);
       calculator.execute();
-      final String key = (calculator.isRename()) ? "change.file.renamed.to.text" : "change.file.moved.to.text";
+      String key = (calculator.isRename()) ? "change.file.renamed.to.text" : "change.file.moved.to.text";
       return VcsBundle.message(key, calculator.getResult());
     }
     return null;
   }
 
-  public static String[] split(final String s) {
+  public static String[] split(String s) {
     return s.replace(File.separatorChar, '/').split("/");
   }
 }

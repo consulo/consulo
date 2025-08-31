@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.containers;
  */
 public interface StepList<T> extends ReadonlyList<T> {
   // changes our state also
-  ReadonlyList<T> cut(final int idxFromIncluded);
+  ReadonlyList<T> cut(int idxFromIncluded);
   void ensureCapacity(int minCapacity);
   void add(T t);
 }

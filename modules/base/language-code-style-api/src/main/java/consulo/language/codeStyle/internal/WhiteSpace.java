@@ -112,7 +112,7 @@ public class WhiteSpace {
    * @param options               indent formatting options
    */
   public void changeEndOffset(int newEndOffset, FormattingDocumentModel model, CommonCodeStyleSettings.IndentOptions options) {
-    final int oldEndOffset = myEnd;
+    int oldEndOffset = myEnd;
     if (newEndOffset == oldEndOffset) return;
     if (myStart >= newEndOffset) {
       myRangesAssert.assertInvalidRanges(myStart, newEndOffset, model, "some block intersects with whitespace");
@@ -138,7 +138,7 @@ public class WhiteSpace {
 
     setFlag(CONTAINS_LF_INITIALLY_MASK, getLineFeeds() > 0);
 
-    final int totalSpaces = getTotalSpaces();
+    int totalSpaces = getTotalSpaces();
     setFlag(CONTAINS_SPACES_INITIALLY_MASK, totalSpaces > 0);
   }
 
@@ -156,7 +156,7 @@ public class WhiteSpace {
    * @return          {@code true} if {@code 'myInitial'} property value stands for white space;
    *                  {@code false} otherwise
    */
-  private boolean coveredByBlock(final FormattingDocumentModel model) {
+  private boolean coveredByBlock(FormattingDocumentModel model) {
     if (myInitial == null) return true;
     if (model.containsWhiteSpaceSymbolsOnly(myStart, myEnd)) return true;
 
@@ -285,7 +285,7 @@ public class WhiteSpace {
    * @param spaces      new value for the {@link #getSpaces() spaces} property
    * @param indent      new value for the {@link #getIndentSpaces()}  indentSpaces} property
    */
-  public void setSpaces(final int spaces, final int indent) {
+  public void setSpaces(int spaces, int indent) {
     performModification(() -> {
       if (!isKeepFirstColumn() || getFlag(CONTAINS_SPACES_INITIALLY_MASK)) {
         mySpaces = spaces;
@@ -331,14 +331,14 @@ public class WhiteSpace {
    */
   private void performModification(Runnable action) {
     if (isIsReadOnly()) return;
-    final boolean before = doesNotContainAnySpaces();
-    final int lineFeedsBefore = getLineFeeds();
+    boolean before = doesNotContainAnySpaces();
+    int lineFeedsBefore = getLineFeeds();
     action.run();
     if (isLineFeedsAreReadOnly()) {
       setLineFeeds(lineFeedsBefore);
     }
     if (isIsSafe()) {
-      final boolean after = doesNotContainAnySpaces();
+      boolean after = doesNotContainAnySpaces();
       if (before && !after) {
         // Actions below seem to be useless if 'after' value is 'false'. Are kept as historical heritage.
         mySpaces = 0;
@@ -362,7 +362,7 @@ public class WhiteSpace {
    *
    * @param spaceProperty     spacing settings holder
    */
-  public void arrangeSpaces(final SpacingImpl spaceProperty) {
+  public void arrangeSpaces(SpacingImpl spaceProperty) {
     performModification(() -> {
       if (spaceProperty != null) {
         if (getLineFeeds() == 0) {
@@ -381,7 +381,7 @@ public class WhiteSpace {
    * Tries to ensure that number of line feeds managed by the current {@link WhiteSpace} is consistent to the settings
    * defined at the given spacing property.
    */
-  public void arrangeLineFeeds(final SpacingImpl spaceProperty, final BlockRangesMap helper) {
+  public void arrangeLineFeeds(SpacingImpl spaceProperty, BlockRangesMap helper) {
     performModification(() -> {
       if (spaceProperty != null) {
         spaceProperty.refresh(helper);
@@ -486,15 +486,15 @@ public class WhiteSpace {
     return Comparing.equal(ws, myInitial, true);
   }
 
-  public void setIsSafe(final boolean value) {
+  public void setIsSafe(boolean value) {
     setFlag(SAFE_MASK, value);
   }
 
-  private void setFlag(final int mask, final boolean value) {
+  private void setFlag(int mask, boolean value) {
     myFlags = BitUtil.set(myFlags, mask, value);
   }
 
-  private boolean getFlag(final int mask) {
+  private boolean getFlag(int mask) {
     return BitUtil.isSet(myFlags, mask);
   }
 
@@ -521,7 +521,7 @@ public class WhiteSpace {
    * This method may be considered a shortcut for calling {@link #arrangeLineFeeds(SpacingImpl, FormatProcessor)} and
    * {@link #arrangeSpaces(SpacingImpl)}.
    */
-  public void removeLineFeeds(final SpacingImpl spacing, final BlockRangesMap helper) {
+  public void removeLineFeeds(SpacingImpl spacing, BlockRangesMap helper) {
     performModification(() -> {
       setLineFeeds(0);
       mySpaces = 0;
@@ -555,7 +555,7 @@ public class WhiteSpace {
     return mySpaces;
   }
 
-  public void setKeepFirstColumn(final boolean b) {
+  public void setKeepFirstColumn(boolean b) {
     setFlag(KEEP_FIRST_COLUMN_MASK, b);
   }
 
@@ -563,7 +563,7 @@ public class WhiteSpace {
     setLineFeedsAreReadOnly(true);
   }
 
-  public void setReadOnly(final boolean isReadOnly) {
+  public void setReadOnly(boolean isReadOnly) {
     setIsReadOnly(isReadOnly);
   }
 
@@ -583,7 +583,7 @@ public class WhiteSpace {
     return getFlag(LINE_FEEDS_ARE_READ_ONLY_MASK);
   }
 
-  public void setLineFeedsAreReadOnly(final boolean lineFeedsAreReadOnly) {
+  public void setLineFeedsAreReadOnly(boolean lineFeedsAreReadOnly) {
     setFlag(LINE_FEEDS_ARE_READ_ONLY_MASK, lineFeedsAreReadOnly);
   }
 
@@ -591,18 +591,18 @@ public class WhiteSpace {
     return getFlag(READ_ONLY_MASK);
   }
 
-  public void setIsReadOnly(final boolean isReadOnly) {
+  public void setIsReadOnly(boolean isReadOnly) {
     setFlag(READ_ONLY_MASK, isReadOnly);
   }
 
-  public void setIsFirstWhiteSpace(final boolean isFirstWhiteSpace) {
+  public void setIsFirstWhiteSpace(boolean isFirstWhiteSpace) {
     setFlag(FIRST_MASK, isFirstWhiteSpace);
   }
 
-  public StringBuilder generateWhiteSpace(final CommonCodeStyleSettings.IndentOptions indentOptions,
-                                          final int offset,
-                                          final IndentInfo indent) {
-    final StringBuilder result = new StringBuilder();
+  public StringBuilder generateWhiteSpace(CommonCodeStyleSettings.IndentOptions indentOptions,
+                                          int offset,
+                                          IndentInfo indent) {
+    StringBuilder result = new StringBuilder();
     int currentOffset = getStartOffset();
     CharSequence[] lines = getInitialLines();
     int currentLine = 0;
@@ -617,7 +617,7 @@ public class WhiteSpace {
       }
 
     }
-    final String newIndentSpaces = indent.generateNewWhiteSpace(indentOptions);
+    String newIndentSpaces = indent.generateNewWhiteSpace(indentOptions);
     result.append(newIndentSpaces);
     appendNonWhitespaces(result, lines, currentLine);
     if (currentLine + 1 < lines.length) {
@@ -654,10 +654,10 @@ public class WhiteSpace {
    */
   private CharSequence[] getInitialLines() {
     if (myInitial == null) return new CharSequence[]{""};
-    final ArrayList<CharSequence> result = new ArrayList<>();
+    ArrayList<CharSequence> result = new ArrayList<>();
     StringBuilder currentLine = new StringBuilder();
     for (int i = 0; i < myInitial.length(); i++) {
-      final char c = myInitial.charAt(i);
+      char c = myInitial.charAt(i);
       if (c == LINE_FEED) {
         result.add(currentLine);
         currentLine = new StringBuilder();
@@ -711,9 +711,9 @@ public class WhiteSpace {
     return myFlags >>> LF_COUNT_SHIFT;
   }
 
-  public void setLineFeeds(final int lineFeeds) {
+  public void setLineFeeds(int lineFeeds) {
     assert lineFeeds < MAX_LF_COUNT;
-    final int flags = myFlags;
+    int flags = myFlags;
     myFlags &= ~0xFFFFFF80; // keep only seven lower bits, i.e. drop all line feeds registered before if any
     myFlags |= (lineFeeds << LF_COUNT_SHIFT);
 

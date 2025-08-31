@@ -45,11 +45,11 @@ public class PseudoSplitter extends Splitter {
     myFirstIsFixed = true;
   }
 
-  private int getSizeForComp(final JComponent component) {
+  private int getSizeForComp(JComponent component) {
     return getOrientation() ? component.getHeight() : component.getWidth();
   }
 
-  public void fixFirst(final float proportion) {
+  public void fixFirst(float proportion) {
     assert getFirstComponent() != null;
     int comp = getSizeForComp(this);
     myFirstFixedSize = (int)(comp * proportion - getDividerWidth());

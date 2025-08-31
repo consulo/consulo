@@ -37,8 +37,8 @@ public class CompletionContributorForInplaceRename extends CompletionContributor
   @RequiredReadAction
   @Override
   public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
-    final Editor editor = parameters.getEditor();
-    final TemplateState state = TemplateManager.getInstance(parameters.getOriginalFile().getProject()).getTemplateState(editor);
+    Editor editor = parameters.getEditor();
+    TemplateState state = TemplateManager.getInstance(parameters.getOriginalFile().getProject()).getTemplateState(editor);
     if (state != null) {
       if (editor.getUserData(InplaceRefactoring.INPLACE_RENAMER) != null && parameters.getInvocationCount() == 0) {
         result.stopHere();

@@ -162,7 +162,7 @@ public class CodeCompletionPanel implements Supplier<Layout> {
   public void reset() {
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 
-    final ThreeState caseSensitiveValue;
+    ThreeState caseSensitiveValue;
     switch (codeInsightSettings.COMPLETION_CASE_SENSITIVE) {
       case CodeInsightSettings.ALL:
         caseSensitiveValue = ThreeState.YES;

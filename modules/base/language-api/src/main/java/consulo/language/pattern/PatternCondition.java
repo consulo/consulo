@@ -41,7 +41,7 @@ public abstract class PatternCondition<T> {
     return myDebugMethodName;
   }
 
-  private static void appendValue(final StringBuilder builder, final String indent, final Object obj) {
+  private static void appendValue(StringBuilder builder, String indent, Object obj) {
     if (obj instanceof ElementPattern) {
       ((ElementPattern)obj).getCondition().append(builder, indent + "  ");
     }
@@ -59,10 +59,10 @@ public abstract class PatternCondition<T> {
     }
   }
 
-  protected static void appendArray(final StringBuilder builder, final String indent, final Object[] objects) {
+  protected static void appendArray(StringBuilder builder, String indent, Object[] objects) {
     builder.append("[");
     boolean first = true;
-    for (final Object o : objects) {
+    for (Object o : objects) {
       if (!first) {
         builder.append(", ");
       }
@@ -72,11 +72,11 @@ public abstract class PatternCondition<T> {
     builder.append("]");
   }
 
-  public abstract boolean accepts(@Nonnull T t, final ProcessingContext context);
+  public abstract boolean accepts(@Nonnull T t, ProcessingContext context);
 
   @Override
   public String toString() {
-    final StringBuilder builder = new StringBuilder();
+    StringBuilder builder = new StringBuilder();
     append(builder, "");
     return builder.toString();
   }
@@ -109,14 +109,14 @@ public abstract class PatternCondition<T> {
   }
 
   // this code eats CPU, for debug purposes ONLY
-  public boolean processParameters(final BiPredicate<String, Object> processor) {
+  public boolean processParameters(BiPredicate<String, Object> processor) {
     for (Class aClass = getClass(); aClass != null; aClass = aClass.getSuperclass()) {
-      for (final Field field : aClass.getDeclaredFields()) {
+      for (Field field : aClass.getDeclaredFields()) {
         if (!Modifier.isStatic(field.getModifiers()) &&
             (((field.getModifiers() & 0x1000 /*Modifer.SYNTHETIC*/) == 0 && !aClass.equals(PatternCondition.class)) || field.getName().startsWith(PARAMETER_FIELD_PREFIX))) {
-          final String name = field.getName();
-          final String fixedName = name.startsWith(PARAMETER_FIELD_PREFIX) ? name.substring(PARAMETER_FIELD_PREFIX.length()) : name;
-          final Object value = getFieldValue(field);
+          String name = field.getName();
+          String fixedName = name.startsWith(PARAMETER_FIELD_PREFIX) ? name.substring(PARAMETER_FIELD_PREFIX.length()) : name;
+          Object value = getFieldValue(field);
           if (!processor.test(fixedName, value)) return false;
         }
       }
@@ -125,7 +125,7 @@ public abstract class PatternCondition<T> {
   }
 
   private Object getFieldValue(Field field) {
-    final boolean accessible = field.isAccessible();
+    boolean accessible = field.isAccessible();
     try {
       field.setAccessible(true);
       return field.get(this);

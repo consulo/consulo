@@ -225,13 +225,13 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return getTemplate(getSingleSelectedIndex()) != null ? myCurrentTemplateEditor.getKeyField() : null;
     }
 
-    private static List<TemplateImpl> collectTemplates(final List<TemplateGroup> groups) {
+    private static List<TemplateImpl> collectTemplates(List<TemplateGroup> groups) {
         ArrayList<TemplateImpl> result = new ArrayList<>();
         for (TemplateGroup group : groups) {
             result.addAll(group.getElements());
         }
         Collections.sort(result, (o1, o2) -> {
-            final int groupsEqual = o1.getGroupName().compareToIgnoreCase(o2.getGroupName());
+            int groupsEqual = o1.getGroupName().compareToIgnoreCase(o2.getGroupName());
             if (groupsEqual != 0) {
                 return groupsEqual;
             }
@@ -240,7 +240,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return result;
     }
 
-    private boolean checkAreEqual(final List<TemplateImpl> originalGroup, final List<TemplateImpl> newGroup) {
+    private boolean checkAreEqual(List<TemplateImpl> originalGroup, List<TemplateImpl> newGroup) {
         if (originalGroup.size() != newGroup.size()) {
             return false;
         }
@@ -274,7 +274,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return true;
     }
 
-    private boolean areContextsEqual(final TemplateImpl newTemplate, final TemplateImpl originalTemplate) {
+    private boolean areContextsEqual(TemplateImpl newTemplate, TemplateImpl originalTemplate) {
         Map<TemplateContextType, Boolean> templateContext = getTemplateContext(newTemplate);
         for (TemplateContextType processor : templateContext.keySet()) {
             if (originalTemplate.getTemplateContext().isEnabled(processor) != templateContext.get(processor)) {
@@ -284,7 +284,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return true;
     }
 
-    private boolean areOptionsEqual(final TemplateImpl newTemplate, final TemplateImpl originalTemplate) {
+    private boolean areOptionsEqual(TemplateImpl newTemplate, TemplateImpl originalTemplate) {
         Map<TemplateOptionalProcessor, Boolean> templateOptions = getTemplateOptions(newTemplate);
         for (TemplateOptionalProcessor processor : templateOptions.keySet()) {
             if (processor.isEnabled(originalTemplate) != templateOptions.get(processor)) {
@@ -294,11 +294,11 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return true;
     }
 
-    private Map<TemplateContextType, Boolean> getTemplateContext(final TemplateImpl newTemplate) {
+    private Map<TemplateContextType, Boolean> getTemplateContext(TemplateImpl newTemplate) {
         return myTemplateContext.get(getKey(newTemplate));
     }
 
-    private Map<TemplateOptionalProcessor, Boolean> getTemplateOptions(final TemplateImpl newTemplate) {
+    private Map<TemplateOptionalProcessor, Boolean> getTemplateOptions(TemplateImpl newTemplate) {
         return myTemplateOptions.get(getKey(newTemplate));
     }
 
@@ -308,7 +308,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
     @RequiredUIAccess
     private void createTemplateEditor(
-        final TemplateImpl template,
+        TemplateImpl template,
         String shortcut,
         Map<TemplateOptionalProcessor, Boolean> options,
         Map<TemplateContextType, Boolean> context
@@ -411,7 +411,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
     }
 
     @Nullable
-    private DefaultMutableTreeNode getNode(final int row) {
+    private DefaultMutableTreeNode getNode(int row) {
         JTree tree = myTree;
         TreePath path = tree.getPathForRow(row);
         if (path != null) {
@@ -422,7 +422,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
     }
 
     @Nullable
-    private TemplateGroup getTemplateGroup(final String groupName) {
+    private TemplateGroup getTemplateGroup(String groupName) {
         for (TemplateGroup group : myTemplateGroups) {
             if (group.getName().equals(groupName)) {
                 return group;
@@ -435,7 +435,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
     @RequiredUIAccess
     private void addRow() {
         String defaultGroup = TemplateSettingsImpl.USER_GROUP_NAME;
-        final DefaultMutableTreeNode node = getNode(getSingleSelectedIndex());
+        DefaultMutableTreeNode node = getNode(getSingleSelectedIndex());
         if (node != null) {
             if (node.getUserObject() instanceof TemplateImpl template) {
                 defaultGroup = template.getGroupName();
@@ -467,7 +467,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return context;
     }
 
-    private static int getKey(final TemplateImpl template) {
+    private static int getKey(TemplateImpl template) {
         return System.identityHashCode(template);
     }
 
@@ -540,13 +540,13 @@ public class TemplateListPanel extends JPanel implements Disposable {
             new CheckboxTree.CheckboxTreeCellRenderer() {
                 @Override
                 public void customizeRenderer(
-                    final JTree tree,
+                    JTree tree,
                     Object value,
-                    final boolean selected,
-                    final boolean expanded,
-                    final boolean leaf,
-                    final int row,
-                    final boolean hasFocus
+                    boolean selected,
+                    boolean expanded,
+                    boolean leaf,
+                    int row,
+                    boolean hasFocus
                 ) {
                     if (!(value instanceof DefaultMutableTreeNode)) {
                         return;
@@ -568,7 +568,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
             myTreeRoot
         ) {
             @Override
-            protected void onNodeStateChanged(final CheckedTreeNode node) {
+            protected void onNodeStateChanged(CheckedTreeNode node) {
                 if (node.getUserObject() instanceof TemplateImpl template) {
                     template.setDeactivated(!node.isChecked());
                 }
@@ -700,8 +700,8 @@ public class TemplateListPanel extends JPanel implements Disposable {
         final DumbAwareAction rename = new DumbAwareAction(IdeLocalize.actionAnonymousTextRename()) {
             @Override
             public void update(@Nonnull AnActionEvent e) {
-                final int selected = getSingleSelectedIndex();
-                final TemplateGroup templateGroup = getGroup(selected);
+                int selected = getSingleSelectedIndex();
+                TemplateGroup templateGroup = getGroup(selected);
                 e.getPresentation().setEnabledAndVisible(templateGroup != null);
                 super.update(e);
             }
@@ -763,7 +763,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         myTree.addMouseListener(new PopupHandler() {
             @Override
             public void invokePopup(Component comp, int x, int y) {
-                final DefaultActionGroup group = new DefaultActionGroup();
+                DefaultActionGroup group = new DefaultActionGroup();
                 group.add(rename);
                 group.add(move);
                 ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group).getComponent().show(comp, x, y);
@@ -798,13 +798,13 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
     @RequiredUIAccess
     private void renameGroup() {
-        final int selected = getSingleSelectedIndex();
-        final TemplateGroup templateGroup = getGroup(selected);
+        int selected = getSingleSelectedIndex();
+        TemplateGroup templateGroup = getGroup(selected);
         if (templateGroup == null) {
             return;
         }
 
-        final String oldName = templateGroup.getName();
+        String oldName = templateGroup.getName();
         String newName = Messages.showInputDialog(
             myTree,
             CodeInsightLocalize.labelEnterTheNewGroupName().get(),
@@ -872,7 +872,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         return node;
     }
 
-    private void insertNewGroup(final TemplateGroup newGroup) {
+    private void insertNewGroup(TemplateGroup newGroup) {
         myTemplateGroups.add(newGroup);
 
         int index = getIndexToInsert(myTreeRoot, newGroup.getName());
@@ -932,7 +932,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         selectTemplate(lastSelectedGroup, lastSelectedKey);
     }
 
-    private void selectTemplate(final String lastSelectedGroup, final String lastSelectedKey) {
+    private void selectTemplate(String lastSelectedGroup, String lastSelectedKey) {
         TreeUtil.traverseDepth(
             myTreeRoot,
             node -> {
@@ -961,7 +961,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         List<TemplateImpl> templates = new ArrayList<>(group.getElements());
         Collections.sort(templates, TEMPLATE_COMPARATOR);
 
-        for (final TemplateImpl template : templates) {
+        for (TemplateImpl template : templates) {
             myTemplateOptions.put(getKey(template), createOptions(template));
             myTemplateContext.put(getKey(template), template.createContext());
             CheckedTreeNode node = new CheckedTreeNode(template);

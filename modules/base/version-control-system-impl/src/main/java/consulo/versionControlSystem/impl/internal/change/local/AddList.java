@@ -30,13 +30,13 @@ public class AddList implements ChangeListCommand {
 
   private LocalChangeList myNewListCopy;
 
-  public AddList(@Nonnull final String name, @Nullable final String comment, @Nullable Object data) {
+  public AddList(@Nonnull String name, @Nullable String comment, @Nullable Object data) {
     myName = name;
     myComment = comment;
     myData = data;
   }
 
-  public void apply(final ChangeListWorker worker) {
+  public void apply(ChangeListWorker worker) {
     if (! worker.findListByName(myName)) {
       myNewListCopy = worker.addChangeList(myName, myComment, myData);
     } else {
@@ -45,7 +45,7 @@ public class AddList implements ChangeListCommand {
     }
   }
 
-  public void doNotify(final EventDispatcher<ChangeListListener> dispatcher) {
+  public void doNotify(EventDispatcher<ChangeListListener> dispatcher) {
     dispatcher.getMulticaster().changeListAdded(myNewListCopy);
   }
 

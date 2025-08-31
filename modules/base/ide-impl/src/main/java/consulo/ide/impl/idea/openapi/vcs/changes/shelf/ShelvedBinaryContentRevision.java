@@ -35,7 +35,7 @@ public class ShelvedBinaryContentRevision implements BinaryContentRevision {
   private final FilePath myPath;
   private final String myShelvedContentPath;
 
-  public ShelvedBinaryContentRevision(FilePath path, final String shelvedContentPath) {
+  public ShelvedBinaryContentRevision(FilePath path, String shelvedContentPath) {
     myPath = path;
     myShelvedContentPath = shelvedContentPath;
   }

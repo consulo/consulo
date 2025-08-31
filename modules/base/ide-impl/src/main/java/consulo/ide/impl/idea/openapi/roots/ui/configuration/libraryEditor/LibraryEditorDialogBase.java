@@ -37,7 +37,7 @@ public abstract class LibraryEditorDialogBase extends DialogWrapper {
   protected JTextField myNameField;
   private LibraryRootsComponent myLibraryRootsComponent;
 
-  public LibraryEditorDialogBase(final Component parent, final LibraryRootsComponent libraryRootsComponent) {
+  public LibraryEditorDialogBase(Component parent, LibraryRootsComponent libraryRootsComponent) {
     super(parent, true);
     myLibraryRootsComponent = libraryRootsComponent;
     libraryRootsComponent.resetProperties();
@@ -73,7 +73,7 @@ public abstract class LibraryEditorDialogBase extends DialogWrapper {
       newName = null;
     }
     if (shouldCheckName(newName)) {
-      final LibraryTable.ModifiableModel tableModifiableModel = getTableModifiableModel();
+      LibraryTable.ModifiableModel tableModifiableModel = getTableModifiableModel();
       if (tableModifiableModel != null && !(tableModifiableModel instanceof ModuleLibraryTable)) {
         if (newName == null) {
           Messages.showErrorDialog(ProjectBundle.message("library.name.not.specified.error", newName), ProjectBundle.message("library.name.not.specified.title"));

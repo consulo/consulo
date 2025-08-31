@@ -45,7 +45,7 @@ class XBreakpointItem extends BreakpointItem {
     if (plainView) {
       renderer.setIcon(getIcon());
     }
-    final SimpleTextAttributes attributes = myBreakpoint.isEnabled()
+    SimpleTextAttributes attributes = myBreakpoint.isEnabled()
       ? SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES : SimpleTextAttributes.GRAYED_ATTRIBUTES;
     renderer.append(StringUtil.notNullize(getDisplayText()), attributes);
     String description = getUserDescription();
@@ -149,7 +149,7 @@ class XBreakpointItem extends BreakpointItem {
 
   @Override
   public void removed(Project project) {
-    final XBreakpointManagerImpl breakpointManager = getManager();
+    XBreakpointManagerImpl breakpointManager = getManager();
     WriteAction.run(() -> breakpointManager.removeBreakpoint(myBreakpoint));
   }
 

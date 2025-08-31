@@ -64,7 +64,7 @@ public class MultiValuesMap<K, V>{
 
   public Collection<V> values() {
     Set<V> result = myOrdered ? new LinkedHashSet<>() : new HashSet<>();
-    for (final Collection<V> values : myBaseMap.values()) {
+    for (Collection<V> values : myBaseMap.values()) {
       result.addAll(values);
     }
 
@@ -73,7 +73,7 @@ public class MultiValuesMap<K, V>{
 
   public void remove(K key, V value) {
     if (!myBaseMap.containsKey(key)) return;
-    final Collection<V> values = myBaseMap.get(key);
+    Collection<V> values = myBaseMap.get(key);
     values.remove(value);
     if (values.isEmpty()) {
       myBaseMap.remove(key);
@@ -85,7 +85,7 @@ public class MultiValuesMap<K, V>{
   }
 
   @Nullable
-  public Collection<V> removeAll(final K key) {
+  public Collection<V> removeAll(K key) {
     return myBaseMap.remove(key);
   }
 
@@ -97,7 +97,7 @@ public class MultiValuesMap<K, V>{
     return myBaseMap.isEmpty();
   }
 
-  public boolean containsKey(final K key) {
+  public boolean containsKey(K key) {
     return myBaseMap.containsKey(key);
   }
 
@@ -111,7 +111,7 @@ public class MultiValuesMap<K, V>{
   }
 
   @Nullable
-  public V getFirst(final K key) {
+  public V getFirst(K key) {
     Collection<V> values = myBaseMap.get(key);
     return values == null || values.isEmpty() ? null : values.iterator().next();
   }

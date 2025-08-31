@@ -84,14 +84,14 @@ public abstract class TaskManager {
    */
   public abstract List<Task> getCachedIssues();
 
-  public abstract List<Task> getCachedIssues(final boolean withClosed);
+  public abstract List<Task> getCachedIssues(boolean withClosed);
 
   @Nullable
   public abstract Task updateIssue(@Nonnull String id);
 
   public abstract List<LocalTask> getLocalTasks();
 
-  public abstract List<LocalTask> getLocalTasks(final boolean withClosed);
+  public abstract List<LocalTask> getLocalTasks(boolean withClosed);
 
   public abstract LocalTask addTask(Task issue);
 

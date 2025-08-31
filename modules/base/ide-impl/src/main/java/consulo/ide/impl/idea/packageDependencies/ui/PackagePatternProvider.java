@@ -55,7 +55,7 @@ public class PackagePatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    public PackageSet createPackageSet(final PackageDependenciesNode node, final boolean recursively) {
+    public PackageSet createPackageSet(PackageDependenciesNode node, boolean recursively) {
         GeneralGroupNode groupParent = getGroupParent(node);
         String scope1 = PatternPackageSet.SCOPE_ANY;
         if (groupParent != null) {
@@ -70,15 +70,15 @@ public class PackagePatternProvider extends PatternDialectProvider {
                 scope1 = PatternPackageSet.SCOPE_LIBRARY;
             }
         }
-        final String scope = scope1;
+        String scope = scope1;
         if (node instanceof ModuleGroupNode groupNode) {
             if (!recursively) return null;
-            @NonNls final String modulePattern = "group:" + groupNode.getModuleGroup().toString();
+            @NonNls String modulePattern = "group:" + groupNode.getModuleGroup().toString();
             return new PatternPackageSet("*..*", scope, modulePattern);
         }
         else if (node instanceof ModuleNode moduleNode) {
             if (!recursively) return null;
-            final String modulePattern = moduleNode.getModuleName();
+            String modulePattern = moduleNode.getModuleName();
             return new PatternPackageSet("*..*", scope, modulePattern);
         }
         else if (node instanceof PackageNode packageNode) {
@@ -94,7 +94,7 @@ public class PackagePatternProvider extends PatternDialectProvider {
         }
         else if (node instanceof FileNode fNode) {
             if (recursively) return null;
-            final PsiElement element = fNode.getPsiElement();
+            PsiElement element = fNode.getPsiElement();
             String qName = null;
 
             if (element != null) {
@@ -120,16 +120,16 @@ public class PackagePatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    public TreeModel createTreeModel(final Project project, final Marker marker) {
+    public TreeModel createTreeModel(Project project, Marker marker) {
         return TreeModelBuilder.createTreeModel(project, false, marker);
     }
 
     @Override
     public TreeModel createTreeModel(
-        final Project project,
-        final Set<PsiFile> deps,
-        final Marker marker,
-        final DependenciesPanel.DependencyPanelSettings settings
+        Project project,
+        Set<PsiFile> deps,
+        Marker marker,
+        DependenciesPanel.DependencyPanelSettings settings
     ) {
         return TreeModelBuilder.createTreeModel(project, false, deps, marker, settings);
     }
@@ -146,7 +146,7 @@ public class PackagePatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    public AnAction[] createActions(Project project, final Runnable update) {
+    public AnAction[] createActions(Project project, Runnable update) {
         return new AnAction[]{new GroupByScopeTypeAction(update)};
     }
 }

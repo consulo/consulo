@@ -53,7 +53,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
   @Nullable
   Element getStateCopy() {
-    final Element element = getProject().getStateElement();
+    Element element = getProject().getStateElement();
     return element != null ? element.clone() : null;
   }
 

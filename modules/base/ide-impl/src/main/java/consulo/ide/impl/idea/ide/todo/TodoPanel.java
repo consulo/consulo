@@ -200,7 +200,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
           if (path == null) {
             return;
           }
-          final Object userObject = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
+          Object userObject = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
           if (!((userObject instanceof NodeDescriptor ? (NodeDescriptor)userObject : null) instanceof TodoItemNode)) {
             return;
           }
@@ -270,7 +270,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
   private void updatePreviewPanel() {
     if (myProject == null || myProject.isDisposed()) return;
     List<UsageInfo> infos = new ArrayList<>();
-    final TreePath path = myTree.getSelectionPath();
+    TreePath path = myTree.getSelectionPath();
     if (path != null) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
       Object userObject = node.getUserObject();
@@ -278,10 +278,10 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         Object element = ((NodeDescriptor)userObject).getElement();
         TodoItemNode pointer = myTodoTreeBuilder.getFirstPointerForElement(element);
         if (pointer != null) {
-          final SmartTodoItemPointer value = pointer.getValue();
-          final Document document = value.getDocument();
-          final PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
-          final RangeMarker rangeMarker = value.getRangeMarker();
+          SmartTodoItemPointer value = pointer.getValue();
+          Document document = value.getDocument();
+          PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
+          RangeMarker rangeMarker = value.getRangeMarker();
           if (psiFile != null) {
             infos.add(new UsageInfo(psiFile, rangeMarker.getStartOffset(), rangeMarker.getEndOffset()));
             for (RangeMarker additionalMarker : value.getAdditionalRangeMarkers()) {
@@ -375,7 +375,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
     DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
     Object userObject = node.getUserObject();
-    final PsiElement selectedElement = TodoTreeHelper.getSelectedElement(userObject);
+    PsiElement selectedElement = TodoTreeHelper.getSelectedElement(userObject);
     if (selectedElement != null) return selectedElement;
     return getSelectedFile();
   }
@@ -409,7 +409,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       }
     }
     else if (VirtualFile.KEY == dataId) {
-      final PsiFile file = getSelectedFile();
+      PsiFile file = getSelectedFile();
       return file != null ? file.getVirtualFile() : null;
     }
     else if (PsiElement.KEY == dataId) {
@@ -468,17 +468,17 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     return myOccurenceNavigator.hasPreviousOccurence();
   }
 
-  protected void rebuildWithAlarm(final Alarm alarm) {
+  protected void rebuildWithAlarm(Alarm alarm) {
     alarm.cancelAllRequests();
     alarm.addRequest(() -> {
-      final Set<VirtualFile> files = new HashSet<>();
+      Set<VirtualFile> files = new HashSet<>();
       DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
         if (myTodoTreeBuilder.isDisposed()) return;
         myTodoTreeBuilder.collectFiles(virtualFile -> {
           files.add(virtualFile);
           return true;
         });
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
           if (myTodoTreeBuilder.isDisposed()) return;
           myTodoTreeBuilder.rebuildCache(files);
           updateTree();
@@ -566,8 +566,8 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       return userObject instanceof NodeDescriptor && !isFirst(node);
     }
 
-    private boolean isFirst(final TreeNode node) {
-      final TreeNode parent = node.getParent();
+    private boolean isFirst(TreeNode node) {
+      TreeNode parent = node.getParent();
       return parent == null || parent.getIndex(node) == 0 && isFirst(parent);
     }
 

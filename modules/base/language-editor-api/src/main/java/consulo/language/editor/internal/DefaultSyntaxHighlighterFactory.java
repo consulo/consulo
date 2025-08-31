@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
 public class DefaultSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Override
   @Nonnull
-  public SyntaxHighlighter getSyntaxHighlighter(final Project project, final VirtualFile virtualFile) {
+  public SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
     return new DefaultSyntaxHighlighter();
   }
 

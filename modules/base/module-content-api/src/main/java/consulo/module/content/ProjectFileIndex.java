@@ -123,7 +123,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @return the file for the content root, or null if the file does not belong to this project.
    */
   @Nullable
-  VirtualFile getContentRootForFile(@Nonnull VirtualFile file, final boolean honorExclusion);
+  VirtualFile getContentRootForFile(@Nonnull VirtualFile file, boolean honorExclusion);
 
   /**
    * Returns the name of the package corresponding to the specified directory.

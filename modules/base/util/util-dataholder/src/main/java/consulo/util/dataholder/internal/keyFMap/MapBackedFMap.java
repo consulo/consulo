@@ -30,7 +30,7 @@ class MapBackedFMap implements KeyFMap {
 
     private final IntObjectMap<Object> myMap;
 
-    private MapBackedFMap(@Nonnull MapBackedFMap oldMap, final int exclude) {
+    private MapBackedFMap(@Nonnull MapBackedFMap oldMap, int exclude) {
         myMap = IntMaps.newIntObjectHashMap(oldMap.size());
         oldMap.myMap.forEach((key, val) -> {
             if (key != exclude) {
@@ -110,7 +110,7 @@ class MapBackedFMap implements KeyFMap {
 
     @Override
     public String toString() {
-        final StringBuilder s = new StringBuilder();
+        StringBuilder s = new StringBuilder();
         myMap.forEach(
             (key, value) -> s.append(s.length() == 0 ? "" : ", ")
                 .append(ourRegistry.getKeyByIndex(key))

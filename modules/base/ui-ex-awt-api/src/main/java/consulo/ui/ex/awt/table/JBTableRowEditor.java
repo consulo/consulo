@@ -67,8 +67,8 @@ public abstract class JBTableRowEditor extends JPanel {
   }
 
   public static JPanel createLabeledPanel(String labelText, JComponent component) {
-    final JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 4, 2, true, false));
-    final JBLabel label = new JBLabel(labelText, UIUtil.ComponentStyle.SMALL);
+    JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 4, 2, true, false));
+    JBLabel label = new JBLabel(labelText, UIUtil.ComponentStyle.SMALL);
     panel.add(label);
     panel.add(component);
     return panel;

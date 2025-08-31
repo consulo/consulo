@@ -120,8 +120,8 @@ public class ModuleDependenciesAnalyzer {
     if (myProduction) {
       e.productionOnly();
     }
-    final Map<String, List<OrderPath>> urlExplanations = new LinkedHashMap<String, List<OrderPath>>();
-    final OrderRootsEnumerator classes = e.classes();
+    Map<String, List<OrderPath>> urlExplanations = new LinkedHashMap<String, List<OrderPath>>();
+    OrderRootsEnumerator classes = e.classes();
     if (myCompile) {
       classes.withoutSelfModuleOutput();
     }
@@ -130,7 +130,7 @@ public class ModuleDependenciesAnalyzer {
         urlExplanations.put(url, new ArrayList<OrderPath>());
       }
     }
-    final Map<OrderEntry, List<OrderPath>> orderExplanations = new LinkedHashMap<OrderEntry, List<OrderPath>>();
+    Map<OrderEntry, List<OrderPath>> orderExplanations = new LinkedHashMap<OrderEntry, List<OrderPath>>();
     new PathWalker(urlExplanations, orderExplanations).examine(myModule, 0);
     for (Map.Entry<OrderEntry, List<OrderPath>> entry : orderExplanations.entrySet()) {
       myOrderEntries.add(new OrderEntryExplanation(entry.getKey(), entry.getValue()));
@@ -184,7 +184,7 @@ public class ModuleDependenciesAnalyzer {
       }
       myVisited.add(m);
       try {
-        final OrderEnumerator e = ModuleRootManager.getInstance(m).orderEntries();
+        OrderEnumerator e = ModuleRootManager.getInstance(m).orderEntries();
         if (!mySdk || level != 0) {
           e.withoutSdk();
         }
@@ -212,7 +212,7 @@ public class ModuleDependenciesAnalyzer {
               else if (orderEntry instanceof ModuleSourceOrderEntry) {
                 if (!myProduction || !myCompile) {
                   ModuleCompilerPathsManager e = ModuleCompilerPathsManager.getInstance(m);
-                  final OrderPath p = new OrderPath(myStack);
+                  OrderPath p = new OrderPath(myStack);
 
                   addUrlPath(p, e.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance()));
                   addUrlPath(p, e.getCompilerOutputUrl(ProductionResourceContentFolderTypeProvider.getInstance()));
@@ -225,7 +225,7 @@ public class ModuleDependenciesAnalyzer {
                 }
               }
               else {
-                final OrderPath p = new OrderPath(myStack);
+                OrderPath p = new OrderPath(myStack);
                 for (String u : orderEntry.getUrls(BinariesOrderRootType.getInstance())) {
                   addUrlPath(p, u);
                 }
@@ -254,7 +254,7 @@ public class ModuleDependenciesAnalyzer {
       if (u == null) {
         return;
       }
-      final List<OrderPath> orderPaths = myUrlExplanations.get(u);
+      List<OrderPath> orderPaths = myUrlExplanations.get(u);
       if (orderPaths != null) {
         orderPaths.add(p);
       }

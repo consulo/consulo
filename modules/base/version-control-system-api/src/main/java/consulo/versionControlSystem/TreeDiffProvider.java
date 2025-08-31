@@ -21,5 +21,5 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.Collection;
 
 public interface TreeDiffProvider extends VcsProviderMarker {
-  Collection<String> getRemotelyChanged(final VirtualFile vcsRoot, final Collection<String> paths);
+  Collection<String> getRemotelyChanged(VirtualFile vcsRoot, Collection<String> paths);
 }

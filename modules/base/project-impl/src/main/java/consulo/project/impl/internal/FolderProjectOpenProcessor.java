@@ -61,8 +61,8 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
     @Nonnull
     @Override
     public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context) {
-        final ProjectManager projectManager = ProjectManager.getInstance();
-        final String projectFilePath = virtualFile.getPath();
+        ProjectManager projectManager = ProjectManager.getInstance();
+        String projectFilePath = virtualFile.getPath();
         String projectName = virtualFile.getName();
 
         AsyncResult<Project> result = AsyncResult.undefined();

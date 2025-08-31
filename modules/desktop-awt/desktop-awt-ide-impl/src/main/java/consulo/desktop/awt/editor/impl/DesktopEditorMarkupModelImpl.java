@@ -135,20 +135,20 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     showToolTipByMouseMove(e);
   }
 
-  public boolean showToolTipByMouseMove(final MouseEvent e) {
-    final boolean newLook = true;
+  public boolean showToolTipByMouseMove(MouseEvent e) {
+    boolean newLook = true;
 
     if (myEditor.getVisibleLineCount() == 0) return false;
     MouseEvent me = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), 0, e.getY() + 1, e.getClickCount(), e.isPopupTrigger());
 
-    final int visualLine = getVisualLineByEvent(e);
+    int visualLine = getVisualLineByEvent(e);
     Rectangle area = myEditor.getScrollingModel().getVisibleArea();
     int visualY = myEditor.getLineHeight() * visualLine;
     boolean isVisible = area.contains(area.x, visualY) && myWheelAccumulator == 0;
 
     TooltipRenderer bigRenderer;
     if (IJSwingUtilities.findParentByInterface(myEditor.getComponent(), EditorWindowHolder.class) == null || isVisible || !UISettings.getInstance().SHOW_EDITOR_TOOLTIP) {
-      final Set<RangeHighlighter> highlighters = new HashSet<>();
+      Set<RangeHighlighter> highlighters = new HashSet<>();
       getNearestHighlighters(this, me.getY(), highlighters);
       getNearestHighlighters(DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), me.getY(), highlighters);
       if (highlighters.isEmpty()) return false;
@@ -173,7 +173,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       float rowRatio = (float)visualLine / (myEditor.getVisibleLineCount() - 1);
       int y = myRowAdjuster != 0 ? (int)(rowRatio * myEditor.getVerticalScrollBar().getHeight()) : me.getY();
       me = new MouseEvent(me.getComponent(), me.getID(), me.getWhen(), me.getModifiers(), me.getX(), y, me.getClickCount(), me.isPopupTrigger());
-      final List<RangeHighlighterEx> highlighters = new ArrayList<>();
+      List<RangeHighlighterEx> highlighters = new ArrayList<>();
       collectRangeHighlighters(this, visualLine, highlighters);
       collectRangeHighlighters(DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), visualLine, highlighters);
       myEditorFragmentRenderer.update(visualLine, highlighters, me.isAltDown());
@@ -199,9 +199,9 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     return startLine ? myEditor.getDocument().getLineStartOffset(logicalLine) : myEditor.getDocument().getLineEndOffset(logicalLine);
   }
 
-  private void collectRangeHighlighters(MarkupModelEx markupModel, final int visualLine, final Collection<RangeHighlighterEx> highlighters) {
-    final int startOffset = getOffset(fitLineToEditor(visualLine - myPreviewLines), true);
-    final int endOffset = getOffset(fitLineToEditor(visualLine + myPreviewLines), false);
+  private void collectRangeHighlighters(MarkupModelEx markupModel, int visualLine, Collection<RangeHighlighterEx> highlighters) {
+    int startOffset = getOffset(fitLineToEditor(visualLine - myPreviewLines), true);
+    int endOffset = getOffset(fitLineToEditor(visualLine + myPreviewLines), false);
     markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, highlighter -> {
       if (highlighter.getErrorStripeMarkColor(myEditor.getColorsScheme()) != null) {
         if (highlighter.getStartOffset() < endOffset && highlighter.getEndOffset() > startOffset) {
@@ -213,14 +213,14 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   @Nullable
-  private RangeHighlighter getNearestRangeHighlighter(final MouseEvent e) {
+  private RangeHighlighter getNearestRangeHighlighter(MouseEvent e) {
     List<RangeHighlighter> highlighters = new ArrayList<>();
     getNearestHighlighters(this, e.getY(), highlighters);
     getNearestHighlighters(DocumentMarkupModel.forDocument(myEditor.getDocument(), myEditor.getProject(), true), e.getY(), highlighters);
     RangeHighlighter nearestMarker = null;
     int yPos = 0;
     for (RangeHighlighter highlighter : highlighters) {
-      final int newYPos = offsetsToYPositions(highlighter.getStartOffset(), highlighter.getEndOffset()).getStartOffset();
+      int newYPos = offsetsToYPositions(highlighter.getStartOffset(), highlighter.getEndOffset()).getStartOffset();
 
       if (nearestMarker == null || Math.abs(yPos - e.getY()) > Math.abs(newYPos - e.getY())) {
         nearestMarker = highlighter;
@@ -230,7 +230,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     return nearestMarker;
   }
 
-  private void getNearestHighlighters(MarkupModelEx markupModel, final int scrollBarY, final Collection<RangeHighlighter> nearest) {
+  private void getNearestHighlighters(MarkupModelEx markupModel, int scrollBarY, Collection<RangeHighlighter> nearest) {
     int startOffset = yPositionToOffset(scrollBarY - myMinMarkHeight, true);
     int endOffset = yPositionToOffset(scrollBarY + myMinMarkHeight, false);
     markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, highlighter -> {
@@ -254,7 +254,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   @RequiredUIAccess
-  public void doClick(final MouseEvent e) {
+  public void doClick(MouseEvent e) {
     RangeHighlighter marker = getNearestRangeHighlighter(e);
     int offset;
     LogicalPosition logicalPositionToScroll = null;
@@ -271,7 +271,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       offset = marker.getStartOffset();
     }
 
-    final Document doc = myEditor.getDocument();
+    Document doc = myEditor.getDocument();
     if (doc.getLineCount() > 0 && myEditorPreviewHint == null) {
       // Necessary to expand folded block even if navigating just before one
       // Very useful when navigating to first unused import statement.
@@ -332,7 +332,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   @Override
-  public void setErrorStripTooltipRendererProvider(@Nonnull final ErrorStripTooltipRendererProvider provider) {
+  public void setErrorStripTooltipRendererProvider(@Nonnull ErrorStripTooltipRendererProvider provider) {
     myTooltipRendererProvider = provider;
   }
 
@@ -367,7 +367,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   @Override
   public void dispose() {
-    final DesktopEditorErrorPanel panel = getErrorPanel();
+    DesktopEditorErrorPanel panel = getErrorPanel();
     if (panel != null) {
       panel.setPopupHandler(null);
     }
@@ -403,12 +403,12 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   @Override
-  public void addErrorMarkerListener(@Nonnull final ErrorStripeListener listener, @Nonnull Disposable parent) {
+  public void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent) {
     DisposerUtil.add(listener, myErrorMarkerListeners, parent);
   }
 
   @Override
-  public void setMinMarkHeight(final int minMarkHeight) {
+  public void setMinMarkHeight(int minMarkHeight) {
     myMinMarkHeight = JBUI.scale(minMarkHeight);
   }
 
@@ -419,16 +419,16 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   private static class BasicTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<? extends RangeHighlighter> highlighters) {
+    public TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters) {
       LineTooltipRenderer bigRenderer = null;
       //do not show same tooltip twice
       Set<String> tooltips = null;
 
       for (RangeHighlighter highlighter : highlighters) {
-        final Object tooltipObject = highlighter.getErrorStripeTooltip();
+        Object tooltipObject = highlighter.getErrorStripeTooltip();
         if (tooltipObject == null) continue;
 
-        final String text = tooltipObject instanceof HighlightInfo ? ((HighlightInfo)tooltipObject).getToolTip() : tooltipObject.toString();
+        String text = tooltipObject instanceof HighlightInfo ? ((HighlightInfo)tooltipObject).getToolTip() : tooltipObject.toString();
         if (text == null) continue;
 
         if (tooltips == null) {
@@ -449,13 +449,13 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
     @Nonnull
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull final String text) {
+    public TooltipRenderer calcTooltipRenderer(@Nonnull String text) {
       return new LineTooltipRenderer(text, new Object[]{text});
     }
 
     @Nonnull
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull final String text, final int width) {
+    public TooltipRenderer calcTooltipRenderer(@Nonnull String text, int width) {
       return new LineTooltipRenderer(text, width, new Object[]{text});
     }
 
@@ -533,8 +533,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     }
 
     @Override
-    public LightweightHintImpl show(@Nonnull final Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull final HintHint hintInfo) {
-      final HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
+    public LightweightHintImpl show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintInfo) {
+      HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
       boolean needDelay = false;
       if (myEditorPreviewHint == null) {
         needDelay = true;
@@ -562,7 +562,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
                 myCacheLevel2 = UIUtil.createImage(size.width, myEditor.getLineHeight() * (2 * myCachePreviewLines + JBUI.scale(1)), BufferedImage.TYPE_INT_RGB);
               }
               Graphics2D cg = myCacheLevel2.createGraphics();
-              final AffineTransform t = cg.getTransform();
+              AffineTransform t = cg.getTransform();
               EditorUIUtil.setupAntialiasing(cg);
               int lineShift = -myEditor.getLineHeight() * myCacheStartLine;
 
@@ -586,7 +586,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
             if (isDirty) {
               myRelativeY = SwingUtilities.convertPoint(this, 0, 0, myEditor.getScrollPane()).y;
               Graphics2D g2d = myCacheLevel1.createGraphics();
-              final AffineTransform transform = g2d.getTransform();
+              AffineTransform transform = g2d.getTransform();
               EditorUIUtil.setupAntialiasing(g2d);
               GraphicsUtil.setupAAPainting(g2d);
               g2d.setColor(TargetAWT.to(myEditor.getBackgroundColor()));

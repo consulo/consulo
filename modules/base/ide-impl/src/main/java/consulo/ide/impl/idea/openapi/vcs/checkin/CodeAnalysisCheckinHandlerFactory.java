@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
 public class CodeAnalysisCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
   @Nonnull
-  public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
+  public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
     return new CodeAnalysisBeforeCheckinHandler(panel.getProject(), panel);
   }
 }

@@ -111,7 +111,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
     public void writeExternal(Element element) {
       if (myConfig != null) {
         element.removeContent();
-        final List attributes = myConfig.getAttributes();
+        List attributes = myConfig.getAttributes();
         for (Object attribute : attributes) {
          element.setAttribute((Attribute)((Attribute)attribute).clone());
         }

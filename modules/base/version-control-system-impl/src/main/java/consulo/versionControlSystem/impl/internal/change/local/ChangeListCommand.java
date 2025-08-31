@@ -20,7 +20,7 @@ import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.impl.internal.change.ChangeListWorker;
 
 public interface ChangeListCommand {
-  void apply(final ChangeListWorker worker);
+  void apply(ChangeListWorker worker);
 
-  void doNotify(final EventDispatcher<ChangeListListener> dispatcher);
+  void doNotify(EventDispatcher<ChangeListListener> dispatcher);
 }

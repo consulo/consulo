@@ -35,13 +35,13 @@ public class FileIncludeContextHectorProvider implements HectorComponentPanelsPr
   private final FileIncludeManager myIncludeManager;
 
   @Inject
-  public FileIncludeContextHectorProvider(final FileIncludeManager includeManager) {
+  public FileIncludeContextHectorProvider(FileIncludeManager includeManager) {
     myIncludeManager = includeManager;
   }
 
   @Override
   @Nullable
-  public HectorComponentPanel createConfigurable(@Nonnull final PsiFile file) {
+  public HectorComponentPanel createConfigurable(@Nonnull PsiFile file) {
     if (DumbService.getInstance(file.getProject()).isDumb()) {
       return null;
     }

@@ -69,7 +69,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
       return Collections.emptyList();
     }
 
-    final Set<VcsRoot> roots = scanForRootsInsideDir(startDir);
+    Set<VcsRoot> roots = scanForRootsInsideDir(startDir);
     roots.addAll(scanForRootsInContentRoots());
     for (VcsRoot root : roots) {
       if (startDir.equals(root.getPath())) {
@@ -104,8 +104,8 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
   }
 
   @Nonnull
-  private Set<VcsRoot> scanForRootsInsideDir(@Nonnull final VirtualFile dir, final int depth) {
-    final Set<VcsRoot> roots = new HashSet<VcsRoot>();
+  private Set<VcsRoot> scanForRootsInsideDir(@Nonnull VirtualFile dir, int depth) {
+    Set<VcsRoot> roots = new HashSet<VcsRoot>();
     if (depth > MAXIMUM_SCAN_DEPTH) {
       // performance optimization via limitation: don't scan deep though the whole VFS, 2 levels under a content root is enough
       return roots;
@@ -130,7 +130,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
   }
 
   @Nonnull
-  private List<VcsRoot> scanForSingleRootAboveDir(@Nonnull final VirtualFile dir) {
+  private List<VcsRoot> scanForSingleRootAboveDir(@Nonnull VirtualFile dir) {
     List<VcsRoot> roots = new ArrayList<VcsRoot>();
     if (myProject.isDisposed()) {
       return roots;

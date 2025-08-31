@@ -28,13 +28,13 @@ public class AsyncFutureFactory {
   }
 
   public static <V> AsyncFuture<V> wrap(V v) {
-    final AsyncFutureResult<V> result = getInstance().createAsyncFutureResult();
+    AsyncFutureResult<V> result = getInstance().createAsyncFutureResult();
     result.set(v);
     return result;
   }
 
   public static <V> AsyncFuture<V> wrapException(Throwable e) {
-    final AsyncFutureResult<V> result = getInstance().createAsyncFutureResult();
+    AsyncFutureResult<V> result = getInstance().createAsyncFutureResult();
     result.setException(e);
     return result;
   }

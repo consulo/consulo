@@ -40,11 +40,11 @@ public class BrowserSelector {
         this(true);
     }
 
-    public BrowserSelector(final boolean allowDefaultBrowser) {
+    public BrowserSelector(boolean allowDefaultBrowser) {
         this(browser -> allowDefaultBrowser || browser != null);
     }
 
-    public BrowserSelector(@Nonnull final Predicate<WebBrowser> browserCondition) {
+    public BrowserSelector(@Nonnull Predicate<WebBrowser> browserCondition) {
         myModel = createBrowsersComboModel(browserCondition);
         myBrowserComboWithBrowse = new ComboboxWithBrowseButton(new ComboBox(myModel));
         myBrowserComboWithBrowse.addActionListener(e -> {

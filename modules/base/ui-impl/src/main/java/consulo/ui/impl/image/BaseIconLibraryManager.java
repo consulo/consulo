@@ -212,7 +212,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
                 try {
                     ZipEntry zipEntry = entries.nextElement();
 
-                    final String name = zipEntry.getName();
+                    String name = zipEntry.getName();
 
                     if (name.startsWith(ICON_DIRECTORY_LIB_START) && !zipEntry.isDirectory() && (name.endsWith("svg") || name.endsWith("png"))) {
                         String nameWithoutIcon = name.substring(ICON_DIRECTORY_LIB_START.length(), name.length());

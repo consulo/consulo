@@ -176,7 +176,7 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
     for (Element configElement : langs) {
       String name = configElement.getAttributeValue("name");
 
-      final LoadedOption option;
+      LoadedOption option;
 
       if(LANG_TEMPLATE.equals(name)) {
         option = new TemplateLoadedOption();

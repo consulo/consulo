@@ -46,19 +46,19 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   private boolean myViewer;
   private boolean myUsePredefinedMessageFilter = true;
 
-  public TextConsoleBuilderImpl(final Project project) {
+  public TextConsoleBuilderImpl(Project project) {
     this(project, GlobalSearchScope.allScope(project));
   }
 
-  public TextConsoleBuilderImpl(@Nonnull final Project project, @Nonnull SearchScope scope) {
+  public TextConsoleBuilderImpl(@Nonnull Project project, @Nonnull SearchScope scope) {
     myProject = project;
     myScope = scope;
   }
 
   @Override
   public ConsoleView getConsole() {
-    final ConsoleView consoleView = createConsole();
-    for (final Filter filter : myFilters) {
+    ConsoleView consoleView = createConsole();
+    for (Filter filter : myFilters) {
       consoleView.addMessageFilter(filter);
     }
     return consoleView;
@@ -69,7 +69,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   }
 
   @Override
-  public void addFilter(final Filter filter) {
+  public void addFilter(Filter filter) {
     myFilters.add(filter);
   }
 

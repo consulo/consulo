@@ -69,7 +69,7 @@ public class StructureViewElementWrapper<V extends PsiElement> implements Struct
   }
 
   @Override
-  public void navigate(final boolean requestFocus) {
+  public void navigate(boolean requestFocus) {
     Navigatable navigatable = getNavigatableInTemplateLanguageFile();
     if (navigatable != null) {
       navigatable.navigate(requestFocus);
@@ -82,8 +82,8 @@ public class StructureViewElementWrapper<V extends PsiElement> implements Struct
     if (element == null) return null;
 
     int offset = element.getTextRange().getStartOffset();
-    final Language dataLanguage = ((TemplateLanguageFileViewProvider)myMainFile.getViewProvider()).getTemplateDataLanguage();
-    final PsiFile dataFile = myMainFile.getViewProvider().getPsi(dataLanguage);
+    Language dataLanguage = ((TemplateLanguageFileViewProvider)myMainFile.getViewProvider()).getTemplateDataLanguage();
+    PsiFile dataFile = myMainFile.getViewProvider().getPsi(dataLanguage);
     if (dataFile == null) return null;
 
     PsiElement tlElement = dataFile.findElementAt(offset);

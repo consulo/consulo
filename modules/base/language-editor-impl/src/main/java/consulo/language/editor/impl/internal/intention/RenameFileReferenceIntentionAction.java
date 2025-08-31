@@ -36,7 +36,7 @@ public class RenameFileReferenceIntentionAction implements IntentionAction, Loca
     private final String myExistingElementName;
     private final FileReference myFileReference;
 
-    public RenameFileReferenceIntentionAction(final String existingElementName, final FileReference fileReference) {
+    public RenameFileReferenceIntentionAction(String existingElementName, FileReference fileReference) {
         myExistingElementName = existingElementName;
         myFileReference = fileReference;
     }
@@ -61,7 +61,7 @@ public class RenameFileReferenceIntentionAction implements IntentionAction, Loca
 
     @Override
     @RequiredUIAccess
-    public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
+    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
         if (isAvailable(project, null, null)) {
             CommandProcessor.getInstance().newCommand()
                 .project(project)

@@ -37,7 +37,7 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
   private final ConcurrentMap<Class, SimpleProviderBinding<PsiReferenceProvider>> myBindingsMap = new ConcurrentHashMap<>();
   private final ConcurrentMap<Class, NamedObjectProviderBinding<PsiReferenceProvider>> myNamedBindingsMap = new ConcurrentHashMap<>();
   private final ConcurrentMap<Class, Class[]> myKnownSupers = ConcurrentFactoryMap.createMap(key -> {
-    final Set<Class> result = new LinkedHashSet<Class>();
+    Set<Class> result = new LinkedHashSet<Class>();
     for (Class candidate : myBindingsMap.keySet()) {
       if (candidate.isAssignableFrom(key)) {
         result.add(candidate);
@@ -59,22 +59,22 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
                                                                @Nonnull PsiReferenceProvider provider,
                                                                double priority) {
     myKnownSupers.clear(); // we should clear the cache
-    final Class scope = pattern.getCondition().getInitialCondition().getAcceptedClass();
-    final List<PatternCondition<? super T>> conditions = pattern.getCondition().getConditions();
+    Class scope = pattern.getCondition().getInitialCondition().getAcceptedClass();
+    List<PatternCondition<? super T>> conditions = pattern.getCondition().getConditions();
     for (PatternCondition<? super T> _condition : conditions) {
       if (!(_condition instanceof PsiNamePatternCondition)) {
         continue;
       }
-      final PsiNamePatternCondition<?> nameCondition = (PsiNamePatternCondition)_condition;
+      PsiNamePatternCondition<?> nameCondition = (PsiNamePatternCondition)_condition;
       List<PatternCondition<? super String>> conditions1 = nameCondition.getNamePattern().getCondition().getConditions();
       for (PatternCondition<? super String> condition1 : conditions1) {
         if (condition1 instanceof ValuePatternCondition) {
-          final Collection<String> strings = ((ValuePatternCondition)condition1).getValues();
+          Collection<String> strings = ((ValuePatternCondition)condition1).getValues();
           registerNamedReferenceProvider(ArrayUtil.toStringArray(strings), nameCondition, scope, true, provider, priority, pattern);
           return;
         }
         if (condition1 instanceof CaseInsensitiveValuePatternCondition) {
-          final String[] strings = ((CaseInsensitiveValuePatternCondition)condition1).getValues();
+          String[] strings = ((CaseInsensitiveValuePatternCondition)condition1).getValues();
           registerNamedReferenceProvider(strings, nameCondition, scope, false, provider, priority, pattern);
           return;
         }
@@ -98,16 +98,16 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
   private void registerNamedReferenceProvider(@Nonnull String[] names,
                                               final PsiNamePatternCondition<?> nameCondition,
                                               @Nonnull Class scopeClass,
-                                              final boolean caseSensitive,
+                                              boolean caseSensitive,
                                               @Nonnull PsiReferenceProvider provider,
-                                              final double priority,
+                                              double priority,
                                               @Nonnull ElementPattern pattern) {
     NamedObjectProviderBinding<PsiReferenceProvider> providerBinding = myNamedBindingsMap.get(scopeClass);
 
     if (providerBinding == null) {
       providerBinding = Maps.cacheOrGet(myNamedBindingsMap, scopeClass, new NamedObjectProviderBinding<PsiReferenceProvider>() {
         @Override
-        protected String getName(final PsiElement position) {
+        protected String getName(PsiElement position) {
           return nameCondition.getPropertyValue(position);
         }
       });
@@ -119,7 +119,7 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
   @Nonnull
   List<ProviderBinding.ProviderInfo<PsiReferenceProvider,ProcessingContext>> getPairsByElement(@Nonnull PsiElement element,
                                                                                                @Nonnull PsiReferenceService.Hints hints) {
-    final Class<? extends PsiElement> clazz = element.getClass();
+    Class<? extends PsiElement> clazz = element.getClass();
     List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> ret = null;
 
     for (Class aClass : myKnownSupers.get(clazz)) {

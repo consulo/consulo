@@ -165,7 +165,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
         }
 
         @Override
-        public TableCellRenderer getRenderer(final Item item) {
+        public TableCellRenderer getRenderer(Item item) {
             return new WarningIconCellRenderer(() -> myWarnings.get(doGetItems().indexOf(item)));
         }
     }
@@ -179,9 +179,9 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
     private void createUIComponents() {
         myTable = new ChangesTrackingTableView<Item>() {
             protected void onCellValueChanged(int row, int column, Object value) {
-                final Item original = getItems().get(row);
+                Item original = getItems().get(row);
                 Item override = cloneOf(original);
-                final ColumnInfo<Item, Object> columnInfo = getTableModel().getColumnInfos()[column];
+                ColumnInfo<Item, Object> columnInfo = getTableModel().getColumnInfos()[column];
                 columnInfo.setValue(override, value);
                 updateMessage(row, override);
             }
@@ -231,7 +231,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
 
         myTable.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), REMOVE_KEY);
         myTable.getActionMap().put(REMOVE_KEY, new AbstractAction() {
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 removeSelected();
             }
         });
@@ -258,7 +258,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
     private void removeSelected() {
         myTable.stopEditing();
         List<Item> items = new ArrayList<Item>(doGetItems());
-        final int[] rows = myTable.getSelectedRows();
+        int[] rows = myTable.getSelectedRows();
         for (int i = rows.length - 1; i >= 0; i--) {
             items.remove(rows[i]);
         }
@@ -282,7 +282,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
 
         setItems(items);
 
-        final int row = items.size() - 1;
+        int row = items.size() - 1;
         myTable.getSelectionModel().setSelectionInterval(row, row);
         myTable.scrollRectToVisible(myTable.getCellRect(row, 0, true));
         if (getTableModel().getColumnInfos()[1].isCellEditable(items.get(row))) {

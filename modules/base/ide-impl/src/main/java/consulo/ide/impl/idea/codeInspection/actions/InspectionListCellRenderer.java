@@ -56,28 +56,28 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
 
   @Override
   public Component getListCellRendererComponent(JList list, Object value, int index, boolean sel, boolean focus) {
-    final JPanel panel = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
     panel.setOpaque(true);
 
-    final Color bg = sel ? UIUtil.getListSelectionBackground() : UIUtil.getListBackground();
-    final Color fg = sel ? UIUtil.getListSelectionForeground() : UIUtil.getListForeground();
+    Color bg = sel ? UIUtil.getListSelectionBackground() : UIUtil.getListBackground();
+    Color fg = sel ? UIUtil.getListSelectionForeground() : UIUtil.getListForeground();
     panel.setBackground(bg);
     panel.setForeground(fg);
 
     SimpleTextAttributes attr = sel ? SELECTED : PLAIN;
     if (value instanceof InspectionToolWrapper) {
-      final InspectionToolWrapper toolWrapper = (InspectionToolWrapper)value;
-      final SimpleColoredComponent c = new SimpleColoredComponent();
+      InspectionToolWrapper toolWrapper = (InspectionToolWrapper)value;
+      SimpleColoredComponent c = new SimpleColoredComponent();
       SpeedSearchUtil.appendColoredFragmentForMatcher("  " + toolWrapper.getDisplayName(), c, attr, myMatcher, bg, sel);
       panel.add(c, BorderLayout.WEST);
 
-      final SimpleColoredComponent group = new SimpleColoredComponent();
+      SimpleColoredComponent group = new SimpleColoredComponent();
       SpeedSearchUtil.appendColoredFragmentForMatcher(toolWrapper.getJoinedGroupPath() + "  ", group, attr, myMatcher, bg, sel);
-      final JPanel right = new JPanel(new BorderLayout());
+      JPanel right = new JPanel(new BorderLayout());
       right.setBackground(bg);
       right.setForeground(fg);
       right.add(group, BorderLayout.CENTER);
-      final JLabel icon = new JLabel(TargetAWT.to(getIcon(toolWrapper)));
+      JLabel icon = new JLabel(TargetAWT.to(getIcon(toolWrapper)));
       icon.setBackground(bg);
       icon.setForeground(fg);
       right.add(icon, BorderLayout.EAST);
@@ -94,9 +94,9 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
   @Nonnull
   private static Image getIcon(@Nonnull InspectionToolWrapper tool) {
     Image icon = null;
-    final Language language = tool.getLanguage();
+    Language language = tool.getLanguage();
     if (language != null) {
-      final LanguageFileType fileType = language.getAssociatedFileType();
+      LanguageFileType fileType = language.getAssociatedFileType();
       if (fileType != null) {
         icon = fileType.getIcon();
       }

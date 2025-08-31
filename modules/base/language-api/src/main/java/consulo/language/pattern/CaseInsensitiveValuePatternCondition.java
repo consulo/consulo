@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 public class CaseInsensitiveValuePatternCondition extends PatternCondition<String> {
   private final String[] myValues;
 
-  public CaseInsensitiveValuePatternCondition(String methodName, final String... values) {
+  public CaseInsensitiveValuePatternCondition(String methodName, String... values) {
     super(methodName);
     myValues = values;
   }
@@ -34,8 +34,8 @@ public class CaseInsensitiveValuePatternCondition extends PatternCondition<Strin
     return myValues;
   }
 
-  public boolean accepts(@Nonnull final String str, final ProcessingContext context) {
-    for (final String value : myValues) {
+  public boolean accepts(@Nonnull String str, ProcessingContext context) {
+    for (String value : myValues) {
       if (str.equalsIgnoreCase(value)) return true;
     }
     return false;

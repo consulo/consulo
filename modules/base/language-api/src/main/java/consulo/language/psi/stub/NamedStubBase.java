@@ -31,7 +31,7 @@ public abstract class NamedStubBase<T extends PsiNamedElement> extends StubBase<
     this(parent, elementType, StringRef.toString(name));
   }
 
-  protected NamedStubBase(final StubElement parent, final IStubElementType elementType, @Nullable final String name) {
+  protected NamedStubBase(StubElement parent, IStubElementType elementType, @Nullable String name) {
     super(parent, elementType);
     myName = name;
   }

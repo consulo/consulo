@@ -262,8 +262,8 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
 
     Object element = model.getElementAt(row);
     ArrangementSettingsToken orderType = element instanceof ArrangementMatchRule ? ((ArrangementMatchRule)element).getOrderType() : null;
-    final ArrangementMatchCondition condition;
-    final Map<ArrangementSettingsToken, Object> conditionTokens;
+    ArrangementMatchCondition condition;
+    Map<ArrangementSettingsToken, Object> conditionTokens;
 
     if (element instanceof EmptyArrangementRuleComponent) {
       // We need to disable conditions which are not applicable for empty rules (e.g. we don't want to enable 'volatile' condition
@@ -329,8 +329,8 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
   }
 
   private void apply() {
-    final Pair<ArrangementMatchCondition, ArrangementSettingsToken> pair = buildCondition();
-    final Object modelValue;
+    Pair<ArrangementMatchCondition, ArrangementSettingsToken> pair = buildCondition();
+    Object modelValue;
     if (pair == null) {
       modelValue = new EmptyArrangementRuleComponent(myControl.getRowHeight(myRow));
     }
@@ -369,7 +369,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
       if (component.isEnabled()) {
         if (component.isSelected()) {
           // don't allow to remove start/end section indication
-          final Set<ArrangementSettingsToken> mutexes = ArrangementSectionRuleManager.getSectionMutexes();
+          Set<ArrangementSettingsToken> mutexes = ArrangementSectionRuleManager.getSectionMutexes();
           if (!mutexes.contains(component.getToken())) {
             removeCondition(component);
           }

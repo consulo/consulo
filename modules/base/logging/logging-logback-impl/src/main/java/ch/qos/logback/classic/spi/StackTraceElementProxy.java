@@ -69,7 +69,7 @@ public class StackTraceElementProxy implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        final StackTraceElementProxy other = (StackTraceElementProxy) obj;
+        StackTraceElementProxy other = (StackTraceElementProxy) obj;
 
         if (!ste.equals(other.ste)) {
             return false;

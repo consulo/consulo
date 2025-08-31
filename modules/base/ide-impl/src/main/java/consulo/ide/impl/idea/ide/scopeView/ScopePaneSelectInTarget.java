@@ -37,7 +37,7 @@ import jakarta.annotation.Nonnull;
  * @author cdr
  */
 public class ScopePaneSelectInTarget extends ProjectViewSelectInTarget {
-    public ScopePaneSelectInTarget(final Project project) {
+    public ScopePaneSelectInTarget(Project project) {
         super(project);
     }
 
@@ -88,14 +88,14 @@ public class ScopePaneSelectInTarget extends ProjectViewSelectInTarget {
         if (context == null) {
             return false;
         }
-        final NamedScope scope = NamedScopesHolder.getScope(myProject, subId);
+        NamedScope scope = NamedScopesHolder.getScope(myProject, subId);
         if (scope == null) {
             return false;
         }
         PackageSet packageSet = scope.getValue();
-        final VirtualFile virtualFile = context.getVirtualFile();
+        VirtualFile virtualFile = context.getVirtualFile();
         if (packageSet != null) {
-            final NamedScopesHolder holder = NamedScopesHolder.getHolder(myProject, subId, DependencyValidationManager.getInstance(myProject));
+            NamedScopesHolder holder = NamedScopesHolder.getHolder(myProject, subId, DependencyValidationManager.getInstance(myProject));
             if (packageSet.contains(virtualFile, myProject, holder)) {
                 return true;
             }

@@ -39,8 +39,8 @@ public class MacFileSaverDialog implements FileSaverDialog {
   private FileDialog myFileDialog;
   private FileSaverDescriptor myDescriptor;
 
-  private static String getChooserTitle(final FileChooserDescriptor descriptor) {
-    final String title = descriptor.getTitle();
+  private static String getChooserTitle(FileChooserDescriptor descriptor) {
+    String title = descriptor.getTitle();
     return title != null ? title : UILocalize.fileChooserDefaultTitle().get();
   }
 
@@ -80,8 +80,8 @@ public class MacFileSaverDialog implements FileSaverDialog {
   }
 
   private static VirtualFile fileToVirtualFile(File file) {
-    final LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-    final String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
+    LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+    String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
     return localFileSystem.refreshAndFindFileByPath(vfsPath);
   }
 }

@@ -182,7 +182,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public void copyTo(@Nonnull final FontPreferences preferences) {
+  public void copyTo(@Nonnull FontPreferences preferences) {
     if (preferences instanceof ModifiableFontPreferences) {
       ModifiableFontPreferences modifiablePreferences = (ModifiableFontPreferences)preferences;
       modifiablePreferences.setEffectiveFontFamilies(myEffectiveFontFamilies);

@@ -220,7 +220,7 @@ public class AsyncEditorLoader {
   }
 
   @RequiredUIAccess
-  public void setEditorState(@Nonnull final TextEditorState state, boolean exactState) {
+  public void setEditorState(@Nonnull TextEditorState state, boolean exactState) {
     UIAccess.assertIsUIThread();
 
     if (!isDone()) {

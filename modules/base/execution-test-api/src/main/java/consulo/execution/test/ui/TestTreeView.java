@@ -66,11 +66,11 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   public AbstractTestProxy getSelectedTest() {
     TreePath[] paths = getSelectionPaths();
     if (paths != null && paths.length > 1) return null;
-    final TreePath selectionPath = getSelectionPath();
+    TreePath selectionPath = getSelectionPath();
     return selectionPath != null ? getSelectedTest(selectionPath) : null;
   }
 
-  public void attachToModel(final TestFrameworkRunningModel model) {
+  public void attachToModel(TestFrameworkRunningModel model) {
     setModel(new DefaultTreeModel(new DefaultMutableTreeNode(model.getRoot())));
     getSelectionModel().setSelectionMode(model.getProperties().getSelectionMode());
     myModel = model;
@@ -84,7 +84,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public Object getData(@Nonnull final Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CopyProvider.KEY == dataId) {
       return this;
     }
@@ -92,12 +92,12 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     if (PsiElement.KEY_OF_ARRAY == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths != null && paths.length > 1) {
-        final List<PsiElement> els = new ArrayList<>(paths.length);
+        List<PsiElement> els = new ArrayList<>(paths.length);
         for (TreePath path : paths) {
           if (isPathSelected(path.getParentPath())) continue;
           AbstractTestProxy test = getSelectedTest(path);
           if (test != null) {
-            final PsiElement psiElement = TestsUIUtil.getData(test, PsiElement.KEY, myModel);
+            PsiElement psiElement = TestsUIUtil.getData(test, PsiElement.KEY, myModel);
             if (psiElement != null) {
               els.add(psiElement);
             }
@@ -110,12 +110,12 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     if (Location.DATA_KEYS == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths != null && paths.length > 1) {
-        final List<Location<?>> locations = new ArrayList<>(paths.length);
+        List<Location<?>> locations = new ArrayList<>(paths.length);
         for (TreePath path : paths) {
           if (isPathSelected(path.getParentPath())) continue;
           AbstractTestProxy test = getSelectedTest(path);
           if (test != null) {
-            final Location<?> location = TestsUIUtil.getData(test, Location.DATA_KEY, myModel);
+            Location<?> location = TestsUIUtil.getData(test, Location.DATA_KEY, myModel);
             if (location != null) {
               locations.add(location);
             }
@@ -129,17 +129,17 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
       return myModel;
     }
 
-    final TreePath selectionPath = getSelectionPath();
+    TreePath selectionPath = getSelectionPath();
     if (selectionPath == null) return null;
-    final AbstractTestProxy testProxy = getSelectedTest(selectionPath);
+    AbstractTestProxy testProxy = getSelectedTest(selectionPath);
     if (testProxy == null) return null;
     return TestsUIUtil.getData(testProxy, dataId, myModel);
   }
 
   @Override
   public void performCopy(@Nonnull DataContext dataContext) {
-    final PsiElement element = dataContext.getData(PsiElement.KEY);
-    final String fqn;
+    PsiElement element = dataContext.getData(PsiElement.KEY);
+    String fqn;
     if (element != null) {
       fqn = QualifiedNameProviderUtil.elementToFqn(element, null);
     }
@@ -167,7 +167,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   protected void installHandlers() {                                                
     EditSourceOnDoubleClickHandler.install(this);
     new TreeSpeedSearch(this, path -> {
-      final AbstractTestProxy testProxy = getSelectedTest(path);
+      AbstractTestProxy testProxy = getSelectedTest(path);
       if (testProxy == null) return null;
       return testProxy.getName();
     });
@@ -176,8 +176,8 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   public boolean isExpandableHandlerVisibleForCurrentRow(int row) {
-    final ExpandableItemsHandler<Integer> handler = getExpandableItemsHandler();
-    final Collection<Integer> items = handler.getExpandedItems();
+    ExpandableItemsHandler<Integer> handler = getExpandableItemsHandler();
+    Collection<Integer> items = handler.getExpandedItems();
     return items.size() == 1 && row == items.iterator().next();
   }
 }

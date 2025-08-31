@@ -32,7 +32,7 @@ import java.util.*;
 public class PsiMultiReference implements PsiPolyVariantReference {
   public static final Comparator<PsiReference> COMPARATOR = new Comparator<PsiReference>() {
     @Override
-    public int compare(final PsiReference ref1, final PsiReference ref2) {
+    public int compare(PsiReference ref1, PsiReference ref2) {
       if (ref1.isSoft() && !ref2.isSoft()) return 1;
       if (!ref1.isSoft() && ref2.isSoft()) return -1;
 
@@ -41,8 +41,8 @@ public class PsiMultiReference implements PsiPolyVariantReference {
       if (resolves1 && !resolves2) return -1;
       if (!resolves1 && resolves2) return 1;
 
-      final TextRange range1 = ref1.getRangeInElement();
-      final TextRange range2 = ref2.getRangeInElement();
+      TextRange range1 = ref1.getRangeInElement();
+      TextRange range2 = ref2.getRangeInElement();
 
       if(TextRange.areSegmentsEqual(range1, range2)) return 0;
       if(range1.getStartOffset() >= range2.getStartOffset() && range1.getEndOffset() <= range2.getEndOffset()) return -1;
@@ -52,7 +52,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
     }
   };
 
-  private static boolean resolves(final PsiReference ref1) {
+  private static boolean resolves(PsiReference ref1) {
     return ref1 instanceof PsiPolyVariantReference && ((PsiPolyVariantReference)ref1).multiResolve(false).length > 0 || ref1.resolve() != null;
   }
 
@@ -88,7 +88,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   @RequiredReadAction
   @Override
   public TextRange getRangeInElement(){
-    final PsiReference chosenRef = chooseReference();
+    PsiReference chosenRef = chooseReference();
     TextRange rangeInElement = chosenRef.getRangeInElement();
     PsiElement element = chosenRef.getElement();
     while(element != myElement) {
@@ -102,9 +102,9 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   @RequiredReadAction
   @Override
   public PsiElement resolve(){
-    final PsiReference reference = chooseReference();
+    PsiReference reference = chooseReference();
     if (cannotChoose()) {
-      final ResolveResult[] results = multiResolve(false);
+      ResolveResult[] results = multiResolve(false);
       return results.length == 1 ? results[0].getElement() : null;
     }
     return reference.resolve();
@@ -168,8 +168,8 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   @RequiredReadAction
   @Override
   @Nonnull
-  public ResolveResult[] multiResolve(final boolean incompleteCode) {
-    final PsiReference[] refs = getReferences();
+  public ResolveResult[] multiResolve(boolean incompleteCode) {
+    PsiReference[] refs = getReferences();
     Collection<ResolveResult> result = new LinkedHashSet<ResolveResult>(refs.length);
     PsiElementResolveResult selfReference = null;
     for (PsiReference reference : refs) {
@@ -177,9 +177,9 @@ public class PsiMultiReference implements PsiPolyVariantReference {
         ContainerUtil.addAll(result, ((PsiPolyVariantReference)reference).multiResolve(incompleteCode));
       }
       else {
-        final PsiElement resolved = reference.resolve();
+        PsiElement resolved = reference.resolve();
         if (resolved != null) {
-          final PsiElementResolveResult rresult = new PsiElementResolveResult(resolved);
+          PsiElementResolveResult rresult = new PsiElementResolveResult(resolved);
           if (getElement() == resolved) {
             selfReference = rresult;
           } else {

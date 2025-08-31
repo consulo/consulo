@@ -114,7 +114,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
         return null;
     }
 
-    private EditorNotificationBuilder build(@Nonnull final VirtualFile file, EditorNotificationBuilder builder) {
+    private EditorNotificationBuilder build(@Nonnull VirtualFile file, EditorNotificationBuilder builder) {
         builder.withText(IdeLocalize.fileChangedExternallyMessage());
         builder.withType(NotificationType.WARNING);
         builder.withAction(IdeLocalize.fileChangedExternallyReload(), (i) -> {

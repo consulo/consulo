@@ -58,16 +58,16 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
                                                       @Nullable String baseName,
                                                       @Nonnull ArtifactEditorContext context) {
-    final String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "archive", ".zip");
+    String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "archive", ".zip");
     String path =
       Messages.showInputDialog(context.getProject(), "Enter archive name: ", "New Archive", null, initialValue, new FilePathValidator());
     if (path == null) {
       return null;
     }
     path = FileUtil.toSystemIndependentName(path);
-    final String parentPath = PathUtil.getParentPath(path);
-    final String fileName = PathUtil.getFileName(path);
-    final PackagingElement<?> element = new ZipArchivePackagingElement(fileName);
+    String parentPath = PathUtil.getParentPath(path);
+    String fileName = PathUtil.getFileName(path);
+    PackagingElement<?> element = new ZipArchivePackagingElement(fileName);
     return (CompositePackagingElement<?>)PackagingElementFactory.getInstance(context.getProject()).createParentDirectories(parentPath, element);
   }
 }

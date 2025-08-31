@@ -44,7 +44,7 @@ public class PermanentInstallationID {
   }
 
   private static String calculateValue(String key, Supplier<String> factory) {
-    final Preferences prefs = Preferences.userRoot().node("consulo");
+    Preferences prefs = Preferences.userRoot().node("consulo");
 
     String value = prefs.get(key, null);
     if (StringUtil.isEmptyOrSpaces(value)) {

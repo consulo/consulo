@@ -72,7 +72,7 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
 
   @Nonnull
   private DiffContent createDiffContent(@Nonnull Document document, @Nonnull TextRange textRange, @Nullable VirtualFile file) {
-    final Project project = myLineStatusTracker.getProject();
+    Project project = myLineStatusTracker.getProject();
     DocumentContent content = DiffContentFactory.getInstance().create(project, document, file);
     return DiffContentFactory.getInstance().createFragment(project, content, textRange);
   }

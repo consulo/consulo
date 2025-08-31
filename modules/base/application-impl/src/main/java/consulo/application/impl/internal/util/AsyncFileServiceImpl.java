@@ -55,7 +55,7 @@ public class AsyncFileServiceImpl implements AsyncFileService {
   public Future<Void> asyncDelete(@Nonnull Collection<File> files) {
     List<File> tempFiles = new ArrayList<>();
     for (File file : files) {
-      final File tempFile = renameToTempFileOrDelete(file);
+      File tempFile = renameToTempFileOrDelete(file);
       if (tempFile != null) {
         tempFiles.add(tempFile);
       }
@@ -67,11 +67,11 @@ public class AsyncFileServiceImpl implements AsyncFileService {
   }
 
   private Future<Void> startDeletionThread(@Nonnull final File... tempFiles) {
-    final RunnableFuture<Void> deleteFilesTask = new FutureTask<>(new Runnable() {
+    RunnableFuture<Void> deleteFilesTask = new FutureTask<>(new Runnable() {
       @Override
       public void run() {
-        final Thread currentThread = Thread.currentThread();
-        final int priority = currentThread.getPriority();
+        Thread currentThread = Thread.currentThread();
+        int priority = currentThread.getPriority();
         currentThread.setPriority(Thread.MIN_PRIORITY);
         try {
           for (File tempFile : tempFiles) {
@@ -101,7 +101,7 @@ public class AsyncFileServiceImpl implements AsyncFileService {
 
     if (isSameDrive) {
       // the optimization is reasonable only if destination dir is located on the same drive
-      final String originalFileName = file.getName();
+      String originalFileName = file.getName();
       File tempFile = getTempFile(originalFileName, tempDir);
       if (file.renameTo(tempFile)) {
         return tempFile;

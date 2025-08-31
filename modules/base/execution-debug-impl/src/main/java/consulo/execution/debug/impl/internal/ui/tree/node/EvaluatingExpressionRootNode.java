@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class EvaluatingExpressionRootNode extends XValueContainerNode<EvaluatingExpressionRootNode.EvaluatingResultContainer> {
-  public EvaluatingExpressionRootNode(XDebuggerEvaluationDialog evaluationDialog, final XDebuggerTree tree) {
+  public EvaluatingExpressionRootNode(XDebuggerEvaluationDialog evaluationDialog, XDebuggerTree tree) {
     super(tree, null, new EvaluatingResultContainer(evaluationDialog));
     setLeaf(false);
   }
@@ -43,7 +43,7 @@ public class EvaluatingExpressionRootNode extends XValueContainerNode<Evaluating
   public static class EvaluatingResultContainer extends XValueContainer {
     private final XDebuggerEvaluationDialog myDialog;
 
-    public EvaluatingResultContainer(final XDebuggerEvaluationDialog dialog) {
+    public EvaluatingResultContainer(XDebuggerEvaluationDialog dialog) {
       myDialog = dialog;
     }
 
@@ -51,14 +51,14 @@ public class EvaluatingExpressionRootNode extends XValueContainerNode<Evaluating
     public void computeChildren(@Nonnull final XCompositeNode node) {
       myDialog.startEvaluation(new XEvaluationCallbackBase() {
         @Override
-        public void evaluated(@Nonnull final XValue result) {
+        public void evaluated(@Nonnull XValue result) {
           String name = UIUtil.removeMnemonic(XDebuggerBundle.message("xdebugger.evaluate.result"));
           node.addChildren(XValueChildrenList.singleton(name, result), true);
           myDialog.evaluationDone();
         }
 
         @Override
-        public void errorOccurred(@Nonnull final String errorMessage) {
+        public void errorOccurred(@Nonnull String errorMessage) {
           node.setErrorMessage(errorMessage);
           myDialog.evaluationDone();
         }

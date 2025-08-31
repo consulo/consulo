@@ -203,7 +203,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
 
   @Override
   public void navigate(boolean requestFocus) {
-    final Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
+    Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
     if (descriptor != null) {
       descriptor.navigate(requestFocus);
     }
@@ -230,7 +230,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   @Override
   @Nonnull
   public Project getProject() {
-    final PsiManager manager = getManager();
+    PsiManager manager = getManager();
     return manager.getProject();
   }
 
@@ -241,26 +241,26 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  public boolean isEquivalentTo(final PsiElement another) {
+  public boolean isEquivalentTo(PsiElement another) {
     return this == another;
   }
 
   @Override
   public PsiFile getContainingFile() {
-    final PsiElement parent = getParent();
+    PsiElement parent = getParent();
     if (parent == null) throw new PsiInvalidElementAccessException(this);
     return parent.getContainingFile();
   }
 
   @Override
   public boolean isPhysical() {
-    final PsiElement parent = getParent();
+    PsiElement parent = getParent();
     return parent != null && parent.isPhysical();
   }
 
   @Override
   public boolean isWritable() {
-    final PsiElement parent = getParent();
+    PsiElement parent = getParent();
     return parent != null && parent.isWritable();
   }
 

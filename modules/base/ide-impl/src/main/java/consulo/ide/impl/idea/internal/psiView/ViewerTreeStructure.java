@@ -82,7 +82,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       @Override
       public void run() {
-        final Object[] result;
+        Object[] result;
         if (myShowTreeNodes) {
           final ArrayList<Object> list = new ArrayList<Object>();
           ASTNode root = element instanceof PsiElement? SourceTreeToPsiMap.psiElementToTree((PsiElement)element) :
@@ -95,7 +95,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
             ASTNode child = root.getFirstChildNode();
             while (child != null) {
               if (myShowWhiteSpaces || child.getElementType() != TokenType.WHITE_SPACE) {
-                final PsiElement childElement = child.getPsi();
+                PsiElement childElement = child.getPsi();
                 list.add(childElement == null ? child : childElement);
               }
               child = child.getTreeNext();
@@ -113,9 +113,9 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
           result = ArrayUtil.toObjectArray(list);
         }
         else {
-          final PsiElement[] elementChildren = ((PsiElement)element).getChildren();
+          PsiElement[] elementChildren = ((PsiElement)element).getChildren();
           if (!myShowWhiteSpaces) {
-            final List<PsiElement> childrenList = new ArrayList<PsiElement>(elementChildren.length);
+            List<PsiElement> childrenList = new ArrayList<PsiElement>(elementChildren.length);
             for (PsiElement psiElement : elementChildren) {
               if (!myShowWhiteSpaces && psiElement instanceof PsiWhiteSpace) {
                 continue;
@@ -190,7 +190,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
     return myShowTreeNodes;
   }
 
-  public void setShowTreeNodes(final boolean showTreeNodes) {
+  public void setShowTreeNodes(boolean showTreeNodes) {
     myShowTreeNodes = showTreeNodes;
   }
 

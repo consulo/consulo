@@ -53,33 +53,33 @@ public abstract class AbstractListBuilder {
   public interface Model {
     void removeAllElements();
 
-    void addElement(final Object node);
+    void addElement(Object node);
 
-    void replaceElements(final List newElements);
+    void replaceElements(List newElements);
 
     Object[] toArray();
 
-    int indexOf(final Object o);
+    int indexOf(Object o);
 
     int getSize();
 
     Object getElementAt(int idx);
   }
 
-  public AbstractListBuilder(final Project project,
-                             final JList list,
-                             final Model model,
-                             final AbstractTreeStructure treeStructure,
-                             final Comparator comparator,
-                             final boolean showRoot) {
+  public AbstractListBuilder(Project project,
+                             JList list,
+                             Model model,
+                             AbstractTreeStructure treeStructure,
+                             Comparator comparator,
+                             boolean showRoot) {
     myProject = project;
     myList = list;
     myModel = model;
     myTreeStructure = treeStructure;
     myComparator = comparator;
 
-    final Object rootElement = myTreeStructure.getRootElement();
-    final Object[] rootChildren = myTreeStructure.getChildElements(rootElement);
+    Object rootElement = myTreeStructure.getRootElement();
+    Object[] rootChildren = myTreeStructure.getChildElements(rootElement);
 
     if (!showRoot && rootChildren.length == 1 && shouldEnterSingleTopLevelElement(rootChildren[0])) {
       myShownRoot = (AbstractTreeNode)rootChildren[0];
@@ -91,12 +91,12 @@ public abstract class AbstractListBuilder {
 
   protected abstract boolean shouldEnterSingleTopLevelElement(Object rootChild);
 
-  public final void setParentTitle(final JLabel parentTitle) {
+  public final void setParentTitle(JLabel parentTitle) {
     myParentTitle = parentTitle;
   }
 
   public final void drillDown() {
-    final Object value = getSelectedValue();
+    Object value = getSelectedValue();
     if (value instanceof AbstractTreeNode node) {
       try {
         buildList(node);
@@ -115,7 +115,7 @@ public abstract class AbstractListBuilder {
     if (myCurrentParent == myShownRoot.getParent()) {
       return;
     }
-    final AbstractTreeNode element = (AbstractTreeNode)myCurrentParent.getParent();
+    AbstractTreeNode element = (AbstractTreeNode)myCurrentParent.getParent();
     if (element == null) {
       return;
     }
@@ -127,7 +127,7 @@ public abstract class AbstractListBuilder {
 
       for (int i = 0; i < myModel.getSize(); i++) {
         if (myModel.getElementAt(i) instanceof NodeDescriptor desc) {
-          final Object elem = desc.getElement();
+          Object elem = desc.getElement();
           if (oldParent.equals(elem)) {
             selectItem(i);
             break;
@@ -153,7 +153,7 @@ public abstract class AbstractListBuilder {
   }
 
   @RequiredUIAccess
-  public final void selectElement(final Object element, VirtualFile virtualFile) {
+  public final void selectElement(Object element, VirtualFile virtualFile) {
     if (element == null) {
       return;
     }
@@ -188,7 +188,7 @@ public abstract class AbstractListBuilder {
     }
   }
 
-  public final void enterElement(final PsiElement element, VirtualFile file) {
+  public final void enterElement(PsiElement element, VirtualFile file) {
     try {
       AbstractTreeNode lastPathNode = goDownToElement(element, file);
       if (lastPathNode == null) return;
@@ -200,11 +200,11 @@ public abstract class AbstractListBuilder {
     }
   }
 
-  private AbstractTreeNode goDownToElement(final Object element, VirtualFile file) {
+  private AbstractTreeNode goDownToElement(Object element, VirtualFile file) {
     return goDownToNode((AbstractTreeNode)myTreeStructure.getRootElement(), element, file);
   }
 
-  public final void enterElement(final AbstractTreeNode element) {
+  public final void enterElement(AbstractTreeNode element) {
     try {
       buildList(element);
       ensureSelectionExist();
@@ -214,7 +214,7 @@ public abstract class AbstractListBuilder {
     }
   }
 
-  private AbstractTreeNode goDownToNode(AbstractTreeNode lastPathNode, final Object lastPathElement, VirtualFile file) {
+  private AbstractTreeNode goDownToNode(AbstractTreeNode lastPathNode, Object lastPathElement, VirtualFile file) {
     if (file == null) return lastPathNode;
     AbstractTreeNode found = lastPathNode;
     while (found != null) {
@@ -268,12 +268,12 @@ public abstract class AbstractListBuilder {
   }
 
   @RequiredUIAccess
-  private void buildList(final AbstractTreeNode parentElement) {
+  private void buildList(AbstractTreeNode parentElement) {
     myCurrentParent = parentElement;
     Future<?> future = AppExecutorUtil.getAppScheduledExecutorService()
             .schedule(() -> myList.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)), 200, TimeUnit.MILLISECONDS);
 
-    final Object[] children = getChildren(parentElement);
+    Object[] children = getChildren(parentElement);
     myModel.removeAllElements();
     if (shouldAddTopElement()) {
       myModel.addElement(new TopLevelNode(myProject, parentElement.getValue()));
@@ -300,7 +300,7 @@ public abstract class AbstractListBuilder {
     return !myShownRoot.equals(myCurrentParent);
   }
 
-  private Object[] getChildren(final AbstractTreeNode parentElement) {
+  private Object[] getChildren(AbstractTreeNode parentElement) {
     if (parentElement == null) {
       return new Object[]{myTreeStructure.getRootElement()};
     }
@@ -325,22 +325,22 @@ public abstract class AbstractListBuilder {
       parentDescriptor = (AbstractTreeNode)parentDescriptor.getParent();
     }
 
-    final Object[] children = getChildren(parentDescriptor);
-    final HashMap<Object, Integer> elementToIndexMap = new HashMap<Object, Integer>();
+    Object[] children = getChildren(parentDescriptor);
+    HashMap<Object, Integer> elementToIndexMap = new HashMap<Object, Integer>();
     for (int i = 0; i < children.length; i++) {
       elementToIndexMap.put(children[i], Integer.valueOf(i));
     }
 
-    final List<NodeDescriptor> resultDescriptors = new ArrayList<NodeDescriptor>();
-    final Object[] listChildren = myModel.toArray();
-    for (final Object child : listChildren) {
+    List<NodeDescriptor> resultDescriptors = new ArrayList<NodeDescriptor>();
+    Object[] listChildren = myModel.toArray();
+    for (Object child : listChildren) {
       if (!(child instanceof NodeDescriptor)) {
         continue;
       }
-      final NodeDescriptor descriptor = (NodeDescriptor)child;
+      NodeDescriptor descriptor = (NodeDescriptor)child;
       descriptor.update();
-      final Object newElement = descriptor.getElement();
-      final Integer index = newElement != null ? elementToIndexMap.get(newElement) : null;
+      Object newElement = descriptor.getElement();
+      Integer index = newElement != null ? elementToIndexMap.get(newElement) : null;
       if (index != null) {
         resultDescriptors.add(descriptor);
         descriptor.setIndex(index.intValue());
@@ -348,17 +348,17 @@ public abstract class AbstractListBuilder {
       }
     }
 
-    for (final Object child : elementToIndexMap.keySet()) {
-      final Integer index = elementToIndexMap.get(child);
+    for (Object child : elementToIndexMap.keySet()) {
+      Integer index = elementToIndexMap.get(child);
       if (index != null) {
-        final NodeDescriptor childDescr = myTreeStructure.createDescriptor(child, parentDescriptor);
+        NodeDescriptor childDescr = myTreeStructure.createDescriptor(child, parentDescriptor);
         childDescr.setIndex(index.intValue());
         childDescr.update();
         resultDescriptors.add(childDescr);
       }
     }
 
-    final SelectionInfo selection = storeSelection();
+    SelectionInfo selection = storeSelection();
     if (myComparator != null) {
       Collections.sort(resultDescriptors, myComparator);
     }
@@ -367,7 +367,7 @@ public abstract class AbstractListBuilder {
     }
 
     if (shouldAddTopElement()) {
-      final List elems = new ArrayList();
+      List elems = new ArrayList();
       elems.add(new TopLevelNode(myProject, parentDescriptor.getValue()));
       elems.addAll(resultDescriptors);
       myModel.replaceElements(elems);
@@ -385,7 +385,7 @@ public abstract class AbstractListBuilder {
     public final Object myLeadSelection;
     public final int myLeadSelectionIndex;
 
-    public SelectionInfo(final ArrayList<Object> selectedObjects, final int leadSelectionIndex, final Object leadSelection) {
+    public SelectionInfo(ArrayList<Object> selectedObjects, int leadSelectionIndex, Object leadSelection) {
       myLeadSelection = leadSelection;
       myLeadSelectionIndex = leadSelectionIndex;
       mySelectedObjects = selectedObjects;
@@ -393,14 +393,14 @@ public abstract class AbstractListBuilder {
   }
 
   private SelectionInfo storeSelection() {
-    final ListSelectionModel selectionModel = myList.getSelectionModel();
-    final ArrayList<Object> selectedObjects = new ArrayList<Object>();
-    final int[] selectedIndices = myList.getSelectedIndices();
-    final int leadSelectionIndex = selectionModel.getLeadSelectionIndex();
+    ListSelectionModel selectionModel = myList.getSelectionModel();
+    ArrayList<Object> selectedObjects = new ArrayList<Object>();
+    int[] selectedIndices = myList.getSelectedIndices();
+    int leadSelectionIndex = selectionModel.getLeadSelectionIndex();
     Object leadSelection = null;
-    for (final int index : selectedIndices) {
+    for (int index : selectedIndices) {
       if (index < myList.getModel().getSize()) {
-        final Object o = myModel.getElementAt(index);
+        Object o = myModel.getElementAt(index);
         selectedObjects.add(o);
         if (index == leadSelectionIndex) {
           leadSelection = o;
@@ -410,17 +410,17 @@ public abstract class AbstractListBuilder {
     return new SelectionInfo(selectedObjects, leadSelectionIndex, leadSelection);
   }
 
-  private void restoreSelection(final SelectionInfo selection) {
-    final ArrayList<Object> selectedObjects = selection.mySelectedObjects;
+  private void restoreSelection(SelectionInfo selection) {
+    ArrayList<Object> selectedObjects = selection.mySelectedObjects;
 
-    final ListSelectionModel selectionModel = myList.getSelectionModel();
+    ListSelectionModel selectionModel = myList.getSelectionModel();
 
     selectionModel.clearSelection();
     if (!selectedObjects.isEmpty()) {
       int leadIndex = -1;
       for (int i = 0; i < selectedObjects.size(); i++) {
-        final Object o = selectedObjects.get(i);
-        final int index = myModel.indexOf(o);
+        Object o = selectedObjects.get(i);
+        int index = myModel.indexOf(o);
         if (index > -1) {
           selectionModel.addSelectionInterval(index, index);
           if (o == selection.myLeadSelection) {
@@ -430,7 +430,7 @@ public abstract class AbstractListBuilder {
       }
 
       if (selectionModel.getMinSelectionIndex() == -1) {
-        final int toSelect = Math.min(selection.myLeadSelectionIndex, myModel.getSize() - 1);
+        int toSelect = Math.min(selection.myLeadSelectionIndex, myModel.getSize() - 1);
         if (toSelect >= 0) {
           myList.setSelectedIndex(toSelect);
         }

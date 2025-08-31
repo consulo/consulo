@@ -70,7 +70,7 @@ public class VfsIconUtil {
 
         if (project != null) {
             PsiManager manager = PsiManager.getInstance(project);
-            final PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
+            PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
             if (element != null) {
                 IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, element, flags);
                 processedDescriptors = true;
@@ -83,7 +83,7 @@ public class VfsIconUtil {
         }
 
         if (BitUtil.isSet(flags, Iconable.ICON_FLAG_READ_STATUS)) {
-            final boolean isLocked = !file.isWritable() || !WritingAccessProvider.isPotentiallyWritable(file, project);
+            boolean isLocked = !file.isWritable() || !WritingAccessProvider.isPotentiallyWritable(file, project);
             if (isLocked) {
                 iconDescriptor.addLayerIcon(PlatformIconGroup.nodesLocked());
             }
@@ -95,7 +95,7 @@ public class VfsIconUtil {
     }
 
     @Nullable
-    public static Image getIcon(@Nonnull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
+    public static Image getIcon(@Nonnull VirtualFile file, @Iconable.IconFlags int flags, @Nullable Project project) {
         Image icon = Iconable.LastComputedIcon.get(file, flags);
         if (icon == null) {
             icon = VirtualFilePresentation.getIcon(file);
@@ -106,7 +106,7 @@ public class VfsIconUtil {
 
     @Nonnull
     @RequiredReadAction
-    public static Image getIconNoDefer(@Nonnull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
+    public static Image getIconNoDefer(@Nonnull VirtualFile file, @Iconable.IconFlags int flags, @Nullable Project project) {
         UIAccess.assetIsNotUIThread();
 
         Image image = requestIcon(project, file, flags);

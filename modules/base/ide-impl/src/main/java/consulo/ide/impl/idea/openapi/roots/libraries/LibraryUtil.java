@@ -45,15 +45,15 @@ public class LibraryUtil {
   private LibraryUtil() {
   }
 
-  public static boolean isClassAvailableInLibrary(final Library library, final String fqn) {
+  public static boolean isClassAvailableInLibrary(Library library, String fqn) {
     return isClassAvailableInLibrary(library.getFiles(BinariesOrderRootType.getInstance()), fqn);
   }
 
-  public static boolean isClassAvailableInLibrary(VirtualFile[] files, final String fqn) {
+  public static boolean isClassAvailableInLibrary(VirtualFile[] files, String fqn) {
     return isClassAvailableInLibrary(Arrays.asList(files), fqn);
   }
 
-  public static boolean isClassAvailableInLibrary(List<VirtualFile> files, final String fqn) {
+  public static boolean isClassAvailableInLibrary(List<VirtualFile> files, String fqn) {
     for (VirtualFile file : files) {
       if (findInFile(file, new StringTokenizer(fqn, "."))) return true;
     }
@@ -61,9 +61,9 @@ public class LibraryUtil {
   }
 
   @Nullable
-  public static Library findLibraryByClass(final String fqn, @Nullable Project project) {
+  public static Library findLibraryByClass(String fqn, @Nullable Project project) {
     if (project != null) {
-      final LibraryTable projectTable = LibraryTablesRegistrar.getInstance().getLibraryTable(project);
+      LibraryTable projectTable = LibraryTablesRegistrar.getInstance().getLibraryTable(project);
       Library library = findInTable(projectTable, fqn);
       if (library != null) {
         return library;
@@ -73,13 +73,13 @@ public class LibraryUtil {
   }
 
 
-  private static boolean findInFile(VirtualFile file, final StringTokenizer tokenizer) {
+  private static boolean findInFile(VirtualFile file, StringTokenizer tokenizer) {
     if (!tokenizer.hasMoreTokens()) return true;
     @NonNls StringBuilder name = new StringBuilder(tokenizer.nextToken());
     if (!tokenizer.hasMoreTokens()) {
       name.append(".class");
     }
-    final VirtualFile child = file.findChild(name.toString());
+    VirtualFile child = file.findChild(name.toString());
     return child != null && findInFile(child, tokenizer);
   }
 
@@ -93,7 +93,7 @@ public class LibraryUtil {
     return null;
   }
 
-  public static Library createLibrary(final LibraryTable libraryTable, @NonNls final String baseName) {
+  public static Library createLibrary(LibraryTable libraryTable, @NonNls String baseName) {
     String name = baseName;
     int count = 2;
     while (libraryTable.getLibraryByName(name) != null) {
@@ -102,21 +102,21 @@ public class LibraryUtil {
     return libraryTable.createLibrary(name);
   }
 
-  public static VirtualFile[] getLibraryRoots(final Project project) {
+  public static VirtualFile[] getLibraryRoots(Project project) {
     return getLibraryRoots(project, true, true);
   }
 
-  public static VirtualFile[] getLibraryRoots(final Project project, final boolean includeSourceFiles, final boolean includeJdk) {
+  public static VirtualFile[] getLibraryRoots(Project project, boolean includeSourceFiles, boolean includeJdk) {
     return getLibraryRoots(ModuleManager.getInstance(project).getModules(), includeSourceFiles, includeJdk);
   }
 
-  public static VirtualFile[] getLibraryRoots(final Module[] modules, final boolean includeSourceFiles, final boolean includeSdk) {
+  public static VirtualFile[] getLibraryRoots(Module[] modules, boolean includeSourceFiles, boolean includeSdk) {
     return ModuleContentLibraryUtil.getLibraryRoots(modules, includeSourceFiles, includeSdk);
   }
 
   @Nullable
-  public static Library findLibrary(@Nonnull Module module, @Nonnull final String name) {
-    final Ref<Library> result = Ref.create(null);
+  public static Library findLibrary(@Nonnull Module module, @Nonnull String name) {
+    Ref<Library> result = Ref.create(null);
     OrderEnumerator.orderEntries(module).forEachLibrary(library -> {
       if (name.equals(library.getName())) {
         result.set(library);
@@ -128,13 +128,13 @@ public class LibraryUtil {
   }
 
   @Nullable
-  public static OrderEntry findLibraryEntry(VirtualFile file, final Project project) {
+  public static OrderEntry findLibraryEntry(VirtualFile file, Project project) {
     return ModuleContentLibraryUtil.findLibraryEntry(file, project);
   }
 
   @Nonnull
   public static String getPresentableName(@Nonnull Library library) {
-    final String name = library.getName();
+    String name = library.getName();
     if (name != null) {
       return name;
     }

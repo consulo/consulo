@@ -67,7 +67,7 @@ public final class EnvironmentVariablesData {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
+    int prime = 31;
     int result = myEnvs.hashCode();
     result = prime * result + (myPassParentEnvs ? 1 : 0);
     if (myEnvironmentFile != null) result = prime * result + myEnvironmentFile.hashCode();

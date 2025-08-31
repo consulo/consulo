@@ -22,7 +22,7 @@ import java.util.EventListener;
  * @since 05/12/2022
  */
 public interface ProgressIndicatorListener extends EventListener {
-  default void onFractionChange(final double fraction) {
+  default void onFractionChange(double fraction) {
   }
 
   default void finished() {

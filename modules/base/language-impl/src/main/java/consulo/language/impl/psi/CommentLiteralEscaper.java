@@ -33,14 +33,14 @@ public class CommentLiteralEscaper extends LiteralTextEscaper<PsiCommentImpl> {
   }
 
   @Override
-  public boolean decode(@Nonnull final TextRange rangeInsideHost, @Nonnull StringBuilder outChars) {
+  public boolean decode(@Nonnull TextRange rangeInsideHost, @Nonnull StringBuilder outChars) {
     ProperTextRange.assertProperRange(rangeInsideHost);
     outChars.append(myHost.getText(), rangeInsideHost.getStartOffset(), rangeInsideHost.getEndOffset());
     return true;
   }
 
   @Override
-  public int getOffsetInHost(int offsetInDecoded, @Nonnull final TextRange rangeInsideHost) {
+  public int getOffsetInHost(int offsetInDecoded, @Nonnull TextRange rangeInsideHost) {
     int offset = offsetInDecoded + rangeInsideHost.getStartOffset();
     if (offset < rangeInsideHost.getStartOffset()) offset = rangeInsideHost.getStartOffset();
     if (offset > rangeInsideHost.getEndOffset()) offset = rangeInsideHost.getEndOffset();
@@ -49,7 +49,7 @@ public class CommentLiteralEscaper extends LiteralTextEscaper<PsiCommentImpl> {
 
   @Override
   public boolean isOneLine() {
-    final Commenter commenter = Commenter.forLanguage(myHost.getLanguage());
+    Commenter commenter = Commenter.forLanguage(myHost.getLanguage());
     if (commenter instanceof CodeDocumentationAwareCommenter) {
       return myHost.getTokenType() == ((CodeDocumentationAwareCommenter) commenter).getLineCommentTokenType();
     }

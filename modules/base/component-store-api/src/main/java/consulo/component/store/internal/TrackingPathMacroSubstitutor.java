@@ -24,7 +24,7 @@ import java.util.Set;
 public interface TrackingPathMacroSubstitutor extends PathMacroSubstitutor {
   Set<String> getUnknownMacros(@Nullable String componentName);
 
-  Set<String> getComponents(final Collection<String> macros);
+  Set<String> getComponents(Collection<String> macros);
 
   void addUnknownMacros(String componentName, Collection<String> unknownMacros);
 

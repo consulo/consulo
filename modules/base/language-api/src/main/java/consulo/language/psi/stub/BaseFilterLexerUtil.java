@@ -35,12 +35,12 @@ public class BaseFilterLexerUtil {
       return data;
     }
 
-    final boolean needTodo = content.getFile().getFileSystem() instanceof LocalFileSystem;
-    final boolean needIdIndex = IdTableBuilding.getFileTypeIndexer(content.getFileType()) instanceof LexerBasedIdIndexer;
+    boolean needTodo = content.getFile().getFileSystem() instanceof LocalFileSystem;
+    boolean needIdIndex = IdTableBuilding.getFileTypeIndexer(content.getFileType()) instanceof LexerBasedIdIndexer;
 
-    final IdDataConsumer consumer = needIdIndex? new IdDataConsumer():null;
-    final OccurrenceConsumer todoOccurrenceConsumer = new OccurrenceConsumer(consumer, needTodo);
-    final Lexer filterLexer = indexer.createLexer(todoOccurrenceConsumer);
+    IdDataConsumer consumer = needIdIndex? new IdDataConsumer():null;
+    OccurrenceConsumer todoOccurrenceConsumer = new OccurrenceConsumer(consumer, needTodo);
+    Lexer filterLexer = indexer.createLexer(todoOccurrenceConsumer);
     filterLexer.start(content.getContentAsText());
 
     while (filterLexer.getTokenType() != null) filterLexer.advance();
@@ -48,7 +48,7 @@ public class BaseFilterLexerUtil {
     Map<TodoIndexEntry,Integer> todoMap = null;
     if (needTodo) {
       for (IndexPattern indexPattern : IndexPatternUtil.getIndexPatterns()) {
-          final int count = todoOccurrenceConsumer.getOccurrenceCount(indexPattern);
+          int count = todoOccurrenceConsumer.getOccurrenceCount(indexPattern);
           if (count > 0) {
             if (todoMap == null) todoMap = new HashMap<TodoIndexEntry, Integer>();
             todoMap.put(new TodoIndexEntry(indexPattern.getPatternString(), indexPattern.isCaseSensitive()), count);

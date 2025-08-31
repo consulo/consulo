@@ -112,7 +112,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
 
     @Override
     @Nonnull
-    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
         try {
             indicator.checkCanceled();
 
@@ -121,8 +121,8 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
                 return applyNotification(null);
             }
 
-            final VirtualFile file1 = ((FileContent)contents.get(0)).getFile();
-            final VirtualFile file2 = ((FileContent)contents.get(1)).getFile();
+            VirtualFile file1 = ((FileContent)contents.get(0)).getFile();
+            VirtualFile file2 = ((FileContent)contents.get(1)).getFile();
 
             ThrowableComputable<JPanel, RuntimeException> action = () -> {
                 if (!file1.isValid() || !file2.isValid()) {
@@ -142,7 +142,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
                     return null;
                 }
             };
-            final JComponent notification = AccessRule.read(action);
+            JComponent notification = AccessRule.read(action);
 
             return applyNotification(notification);
         }
@@ -156,7 +156,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     }
 
     @Nonnull
-    private Runnable applyNotification(@Nullable final JComponent notification) {
+    private Runnable applyNotification(@Nullable JComponent notification) {
         return () -> {
             clearDiffPresentation();
             if (notification != null) {
@@ -222,8 +222,8 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final VirtualFile baseFile = getContentFile(myBaseSide);
-            final VirtualFile targetFile = getContentFile(myBaseSide.other());
+            VirtualFile baseFile = getContentFile(myBaseSide);
+            VirtualFile targetFile = getContentFile(myBaseSide.other());
             assert baseFile != null && targetFile != null;
 
             try {

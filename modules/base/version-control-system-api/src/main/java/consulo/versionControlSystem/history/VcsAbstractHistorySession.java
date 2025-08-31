@@ -34,7 +34,7 @@ public abstract class VcsAbstractHistorySession implements VcsHistorySession {
     }
   }
 
-  protected void setCachedRevision(final VcsRevisionNumber number) {
+  protected void setCachedRevision(VcsRevisionNumber number) {
     synchronized (myLock) {
       myCachedRevisionNumber = number;
     }
@@ -56,7 +56,7 @@ public abstract class VcsAbstractHistorySession implements VcsHistorySession {
     return myRevisions;
   }
 
-  public void appendRevision(final VcsFileRevision revision) {
+  public void appendRevision(VcsFileRevision revision) {
     myRevisions.add(revision);
   }
 
@@ -78,8 +78,8 @@ public abstract class VcsAbstractHistorySession implements VcsHistorySession {
   }
 
   public synchronized boolean shouldBeRefreshed() {
-    final VcsRevisionNumber oldValue = getCachedRevision();
-    final VcsRevisionNumber newNumber = calcCurrentRevisionNumber();
+    VcsRevisionNumber oldValue = getCachedRevision();
+    VcsRevisionNumber newNumber = calcCurrentRevisionNumber();
     setCachedRevision(newNumber);
     return !Comparing.equal(oldValue, newNumber);
   }
@@ -91,13 +91,13 @@ public abstract class VcsAbstractHistorySession implements VcsHistorySession {
   public abstract VcsHistorySession copy();
 
   public VcsHistorySession copyWithCachedRevision() {
-    final VcsAbstractHistorySession copy = (VcsAbstractHistorySession)copy();
+    VcsAbstractHistorySession copy = (VcsAbstractHistorySession)copy();
     copy.setCachedRevision(myCachedRevisionNumber);
     return copy;
   }
 
   public Map<VcsRevisionNumber, VcsFileRevision> getHistoryAsMap() {
-    final Map<VcsRevisionNumber, VcsFileRevision> map = new HashMap<VcsRevisionNumber, VcsFileRevision>();
+    Map<VcsRevisionNumber, VcsFileRevision> map = new HashMap<VcsRevisionNumber, VcsFileRevision>();
     for (VcsFileRevision revision : myRevisions) {
       map.put(revision.getRevisionNumber(), revision);
     }

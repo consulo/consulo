@@ -76,7 +76,7 @@ public final class CharTrie {
 
   public int getHashCode(CharSequence seq) {
     int index = 0;
-    final int l = seq.length();
+    int l = seq.length();
     for (int i = 0; i < l; i++) {
       index = getSubNode(index, seq.charAt(i), true);
     }
@@ -131,7 +131,7 @@ public final class CharTrie {
   }
 
   @Nonnull
-  public char[] getReversedChars(final int hashCode) {
+  public char[] getReversedChars(int hashCode) {
     int length = 0;
     int run = hashCode;
     while (run > 0) {

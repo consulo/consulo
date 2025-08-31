@@ -32,7 +32,7 @@ import java.util.HashSet;
 public class ModuleOrderEnumerator extends OrderEnumeratorBase {
   private final ModuleRootLayer myRootModel;
 
-  public ModuleOrderEnumerator(ModuleRootLayer rootModel, final OrderRootsCache cache) {
+  public ModuleOrderEnumerator(ModuleRootLayer rootModel, OrderRootsCache cache) {
     super(rootModel.getModule(), rootModel.getModule().getProject(), cache);
     myRootModel = rootModel;
   }

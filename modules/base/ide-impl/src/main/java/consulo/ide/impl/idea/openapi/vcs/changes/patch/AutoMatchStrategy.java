@@ -31,13 +31,13 @@ abstract class AutoMatchStrategy {
   protected MultiMap<String, VirtualFile> myFolderDecisions;
   protected final List<TextFilePatchInProgress> myResult;
 
-  AutoMatchStrategy(final VirtualFile baseDir) {
+  AutoMatchStrategy(VirtualFile baseDir) {
     myBaseDir = baseDir;
     myResult = new LinkedList<>();
     myFolderDecisions = MultiMap.createSet();
   }
 
-  public abstract void acceptPatch(TextFilePatch patch, final Collection<VirtualFile> foundByName);
+  public abstract void acceptPatch(TextFilePatch patch, Collection<VirtualFile> foundByName);
 
   public abstract void processCreation(TextFilePatch creation);
 
@@ -49,24 +49,24 @@ abstract class AutoMatchStrategy {
     return myResult;
   }
 
-  protected void registerFolderDecision(final String patchPath, final VirtualFile base) {
-    final String path = extractPathWithoutName(patchPath);
+  protected void registerFolderDecision(String patchPath, VirtualFile base) {
+    String path = extractPathWithoutName(patchPath);
     if (path != null) {
       myFolderDecisions.putValue(path, base);
     }
   }
 
   @Nullable
-  protected Collection<VirtualFile> suggestFolderForCreation(final TextFilePatch creation) {
-    final String newFileParentPath = extractPathWithoutName(creation.getAfterName());
+  protected Collection<VirtualFile> suggestFolderForCreation(TextFilePatch creation) {
+    String newFileParentPath = extractPathWithoutName(creation.getAfterName());
     if (newFileParentPath != null) {
       return filterVariants(creation, myFolderDecisions.get(newFileParentPath));
     }
     return null;
   }
 
-  protected void processCreationBasedOnFolderDecisions(final TextFilePatch creation) {
-    final Collection<VirtualFile> variants = suggestFolderForCreation(creation);
+  protected void processCreationBasedOnFolderDecisions(TextFilePatch creation) {
+    Collection<VirtualFile> variants = suggestFolderForCreation(creation);
     if (variants != null) {
       myResult.add(new TextFilePatchInProgress(creation, variants, myBaseDir));
     }
@@ -75,14 +75,14 @@ abstract class AutoMatchStrategy {
     }
   }
 
-  protected Collection<VirtualFile> filterVariants(final TextFilePatch patch, final Collection<VirtualFile> in) {
+  protected Collection<VirtualFile> filterVariants(TextFilePatch patch, Collection<VirtualFile> in) {
     String path = patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName();
     path = path.replace("\\", "/");
 
-    final boolean caseSensitive = Platform.current().fs().isCaseSensitive();
-    final Collection<VirtualFile> result = new LinkedList<>();
+    boolean caseSensitive = Platform.current().fs().isCaseSensitive();
+    Collection<VirtualFile> result = new LinkedList<>();
     for (VirtualFile vf : in) {
-      final String vfPath = vf.getPath();
+      String vfPath = vf.getPath();
       if ((caseSensitive && vfPath.endsWith(path)) || ((!caseSensitive) && StringUtil.endsWithIgnoreCase(vfPath, path))) {
         result.add(vf);
       }
@@ -91,18 +91,18 @@ abstract class AutoMatchStrategy {
   }
 
   @Nullable
-  protected String extractPathWithoutName(final String path) {
-    final String replaced = path.replace("\\", "/");
-    final int idx = replaced.lastIndexOf('/');
+  protected String extractPathWithoutName(String path) {
+    String replaced = path.replace("\\", "/");
+    int idx = replaced.lastIndexOf('/');
     if (idx == -1) return null;
     return replaced.substring(0, idx);
   }
 
   @Nullable
-  protected TextFilePatchInProgress processMatch(final TextFilePatch patch, final VirtualFile file) {
-    final String beforeName = patch.getBeforeName();
+  protected TextFilePatchInProgress processMatch(TextFilePatch patch, VirtualFile file) {
+    String beforeName = patch.getBeforeName();
     if (beforeName == null) return null;
-    final String[] parts = beforeName.replace('\\', '/').split("/");
+    String[] parts = beforeName.replace('\\', '/').split("/");
     VirtualFile parent = file.getParent();
     int idx = parts.length - 2;
     while ((parent != null) && (idx >= 0)) {
@@ -113,7 +113,7 @@ abstract class AutoMatchStrategy {
       --idx;
     }
     if (parent != null) {
-      final TextFilePatchInProgress result = new TextFilePatchInProgress(patch, null, myBaseDir);
+      TextFilePatchInProgress result = new TextFilePatchInProgress(patch, null, myBaseDir);
       result.setNewBase(parent);
       int numDown = idx + 1;
       processStipUp(result, numDown);

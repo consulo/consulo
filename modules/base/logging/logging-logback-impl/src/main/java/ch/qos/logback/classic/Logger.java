@@ -128,14 +128,14 @@ public final class Logger
         return parent == null;
     }
 
-    Logger getChildByName(final String childName) {
+    Logger getChildByName(String childName) {
         if (childrenList == null) {
             return null;
         } else {
             int len = this.childrenList.size();
             for (int i = 0; i < len; i++) {
-                final Logger childLogger_i = (Logger) childrenList.get(i);
-                final String childName_i = childLogger_i.getName();
+                Logger childLogger_i = (Logger) childrenList.get(i);
+                String childName_i = childLogger_i.getName();
 
                 if (childName.equals(childName_i)) {
                     return childLogger_i;
@@ -298,7 +298,7 @@ public final class Logger
      *                 character.
      * @return
      */
-    Logger createChildByLastNamePart(final String lastPart) {
+    Logger createChildByLastNamePart(String lastPart) {
         int i_index = LoggerNameUtil.getFirstSeparatorIndexOf(lastPart);
         if (i_index != -1) {
             throw new IllegalArgumentException(
@@ -345,7 +345,7 @@ public final class Logger
      * smaller value to save a little space.
      */
 
-    Logger createChildByName(final String childName) {
+    Logger createChildByName(String childName) {
         int i_index = LoggerNameUtil.getSeparatorIndexOf(childName, this.name.length() + 1);
         if (i_index != -1) {
             throw new IllegalArgumentException("For logger [" + this.name + "] child name [" + childName
@@ -368,10 +368,10 @@ public final class Logger
      * by about 20 nanoseconds.
      */
 
-    private void filterAndLog_0_Or3Plus(final String localFQCN, final Marker marker, final Level level,
-            final String msg, final Object[] params, final Throwable t) {
+    private void filterAndLog_0_Or3Plus(String localFQCN, Marker marker, Level level,
+                                        String msg, Object[] params, Throwable t) {
 
-        final FilterReply decision = loggerContext.getTurboFilterChainDecision_0_3OrMore(marker, this, level, msg,
+        FilterReply decision = loggerContext.getTurboFilterChainDecision_0_3OrMore(marker, this, level, msg,
                 params, t);
 
         if (decision == FilterReply.NEUTRAL) {
@@ -385,10 +385,10 @@ public final class Logger
         buildLoggingEventAndAppend(localFQCN, marker, level, msg, params, t);
     }
 
-    private void filterAndLog_1(final String localFQCN, final Marker marker, final Level level, final String msg,
-            final Object param, final Throwable t) {
+    private void filterAndLog_1(String localFQCN, Marker marker, Level level, String msg,
+                                Object param, Throwable t) {
 
-        final FilterReply decision = loggerContext.getTurboFilterChainDecision_1(marker, this, level, msg, param, t);
+        FilterReply decision = loggerContext.getTurboFilterChainDecision_1(marker, this, level, msg, param, t);
 
         if (decision == FilterReply.NEUTRAL) {
             if (effectiveLevelInt > level.levelInt) {
@@ -401,10 +401,10 @@ public final class Logger
         buildLoggingEventAndAppend(localFQCN, marker, level, msg, new Object[] { param }, t);
     }
 
-    private void filterAndLog_2(final String localFQCN, final Marker marker, final Level level, final String msg,
-            final Object param1, final Object param2, final Throwable t) {
+    private void filterAndLog_2(String localFQCN, Marker marker, Level level, String msg,
+                                Object param1, Object param2, Throwable t) {
 
-        final FilterReply decision = loggerContext.getTurboFilterChainDecision_2(marker, this, level, msg, param1,
+        FilterReply decision = loggerContext.getTurboFilterChainDecision_2(marker, this, level, msg, param1,
                 param2, t);
 
         if (decision == FilterReply.NEUTRAL) {
@@ -418,8 +418,8 @@ public final class Logger
         buildLoggingEventAndAppend(localFQCN, marker, level, msg, new Object[] { param1, param2 }, t);
     }
 
-    private void buildLoggingEventAndAppend(final String localFQCN, final Marker marker, final Level level,
-            final String msg, final Object[] params, final Throwable t) {
+    private void buildLoggingEventAndAppend(String localFQCN, Marker marker, Level level,
+                                            String msg, Object[] params, Throwable t) {
         LoggingEvent le = new LoggingEvent(localFQCN, this, level, msg, t, params);
         le.addMarker(marker);
         callAppenders(le);
@@ -470,7 +470,7 @@ public final class Logger
     }
 
     public boolean isDebugEnabled(Marker marker) {
-        final FilterReply decision = callTurboFilters(marker, Level.DEBUG);
+        FilterReply decision = callTurboFilters(marker, Level.DEBUG);
         if (decision == FilterReply.NEUTRAL) {
             return effectiveLevelInt <= Level.DEBUG_INT;
         } else if (decision == FilterReply.DENY) {
@@ -624,7 +624,7 @@ public final class Logger
     }
 
     public boolean isTraceEnabled(Marker marker) {
-        final FilterReply decision = callTurboFilters(marker, Level.TRACE);
+        FilterReply decision = callTurboFilters(marker, Level.TRACE);
         if (decision == FilterReply.NEUTRAL) {
             return effectiveLevelInt <= Level.TRACE_INT;
         } else if (decision == FilterReply.DENY) {

@@ -32,8 +32,8 @@ public class AppUIUtil {
   private AppUIUtil() {
   }
 
-  public static void invokeLaterIfProjectAlive(@Nonnull final Project project, @Nonnull final Runnable runnable) {
-    final Application application = Application.get();
+  public static void invokeLaterIfProjectAlive(@Nonnull Project project, @Nonnull Runnable runnable) {
+    Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();
     }
@@ -47,7 +47,7 @@ public class AppUIUtil {
   }
 
   public static void invokeOnEdt(@RequiredUIAccess Runnable runnable, @Nullable BooleanSupplier condition) {
-    final Application application = Application.get();
+    Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();
     }
@@ -59,7 +59,7 @@ public class AppUIUtil {
     }
   }
 
-  public static void hideToolWindowBalloon(@Nonnull final String id, @Nonnull final Project project) {
+  public static void hideToolWindowBalloon(@Nonnull String id, @Nonnull Project project) {
     invokeLaterIfProjectAlive(project, () -> {
       Balloon balloon = ToolWindowManager.getInstance(project).getToolWindowBalloon(id);
       if (balloon != null) {

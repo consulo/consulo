@@ -36,7 +36,7 @@ public class DirDiffDialog extends DialogWrapper {
     myModel = model;
     setTitle("Directory Diff");
     init();
-    final JBTable table = myDiffPanel.getTable();
+    JBTable table = myDiffPanel.getTable();
     table.setColumnSelectionAllowed(false);
     table.getTableHeader().setReorderingAllowed(false);
     table.getTableHeader().setResizingAllowed(false);

@@ -20,12 +20,12 @@ import consulo.process.cmd.GeneralCommandLine;
 public class ProcessNotCreatedException extends ExecutionException {
   private final GeneralCommandLine myCommandLine;
 
-  public ProcessNotCreatedException(final String s, final GeneralCommandLine commandLine) {
+  public ProcessNotCreatedException(String s, GeneralCommandLine commandLine) {
     super(s);
     myCommandLine = commandLine;
   }
 
-  public ProcessNotCreatedException(final String s, final Throwable cause, final GeneralCommandLine commandLine) {
+  public ProcessNotCreatedException(String s, Throwable cause, GeneralCommandLine commandLine) {
     super(s, cause);
     myCommandLine = commandLine;
   }

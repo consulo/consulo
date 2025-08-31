@@ -123,9 +123,9 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
   @Override
   public ArtifactManagerState getState() {
-    final ArtifactManagerState state = new ArtifactManagerState();
+    ArtifactManagerState state = new ArtifactManagerState();
     for (Artifact artifact : getAllArtifactsIncludingInvalid()) {
-      final ArtifactState artifactState;
+      ArtifactState artifactState;
       if (artifact instanceof InvalidArtifact) {
         artifactState = ((InvalidArtifact)artifact).getState();
       }
@@ -137,7 +137,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
         artifactState.setRootElement(serializePackagingElement(artifact.getRootElement()));
         artifactState.setArtifactType(artifact.getArtifactType().getId());
         for (ArtifactPropertiesProvider provider : artifact.getPropertiesProviders()) {
-          final ArtifactPropertiesState propertiesState = serializeProperties(provider, artifact.getProperties(provider));
+          ArtifactPropertiesState propertiesState = serializeProperties(provider, artifact.getProperties(provider));
           if (propertiesState != null) {
             artifactState.getPropertiesList().add(propertiesState);
           }
@@ -151,9 +151,9 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
   @Nullable
   private static <S> ArtifactPropertiesState serializeProperties(ArtifactPropertiesProvider provider, ArtifactProperties<S> properties) {
-    final ArtifactPropertiesState state = new ArtifactPropertiesState();
+    ArtifactPropertiesState state = new ArtifactPropertiesState();
     state.setId(provider.getId());
-    final Element options = new Element("options");
+    Element options = new Element("options");
     XmlSerializer.serializeInto(properties.getState(), options, new SkipDefaultValuesSerializationFilters());
     if (options.getContent().isEmpty() && options.getAttributes().isEmpty()) return null;
     state.setOptions(options);
@@ -163,7 +163,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   private static Element serializePackagingElement(PackagingElement<?> packagingElement) {
     Element element = new Element(PACKAGING_ELEMENT_NAME);
     element.setAttribute(TYPE_ID_ATTRIBUTE, packagingElement.getType().getId());
-    final Object bean = packagingElement.getState();
+    Object bean = packagingElement.getState();
     if (bean != null) {
       XmlSerializer.serializeInto(bean, element, new SkipDefaultValuesSerializationFilters());
     }
@@ -176,7 +176,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   private <T> PackagingElement<T> deserializeElement(Element element) throws UnknownPackagingElementTypeException {
-    final String id = element.getAttributeValue(TYPE_ID_ATTRIBUTE);
+    String id = element.getAttributeValue(TYPE_ID_ATTRIBUTE);
     PackagingElementType<?> type = myPackagingElementFactory.findElementType(id);
     if (type == null) {
       throw new UnknownPackagingElementTypeException(id);
@@ -188,7 +188,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       XmlSerializer.deserializeInto(state, element);
       packagingElement.loadState(this, state);
     }
-    final List children = element.getChildren(PACKAGING_ELEMENT_NAME);
+    List children = element.getChildren(PACKAGING_ELEMENT_NAME);
     //noinspection unchecked
     for (Element child : (List<? extends Element>)children) {
       ((CompositePackagingElement<?>)packagingElement).addOrFindChild(deserializeElement(child));
@@ -198,13 +198,13 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
   @Override
   public void loadState(ArtifactManagerState managerState) {
-    final List<ArtifactImpl> artifacts = new ArrayList<>();
+    List<ArtifactImpl> artifacts = new ArrayList<>();
     for (ArtifactState state : managerState.getArtifacts()) {
       artifacts.add(loadArtifact(state));
     }
 
     if (myLoaded) {
-      final ArtifactModelImpl model = new ArtifactModelImpl(this, artifacts);
+      ArtifactModelImpl model = new ArtifactModelImpl(this, artifacts);
       doCommit(model);
     }
     else {
@@ -220,9 +220,9 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       return createInvalidArtifact(state, "Unknown artifact type: " + state.getArtifactType());
     }
 
-    final Element element = state.getRootElement();
-    final String artifactName = state.getName();
-    final CompositePackagingElement<?> rootElement;
+    Element element = state.getRootElement();
+    String artifactName = state.getName();
+    CompositePackagingElement<?> rootElement;
     if (element != null) {
       try {
         rootElement = (CompositePackagingElement<?>)deserializeElement(element);
@@ -235,10 +235,10 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       rootElement = type.createRootElement(myPackagingElementFactory, artifactName);
     }
 
-    final ArtifactImpl artifact = new ArtifactImpl(artifactName, type, state.isBuildOnMake(), rootElement, state.getOutputPath());
-    final List<ArtifactPropertiesState> propertiesList = state.getPropertiesList();
+    ArtifactImpl artifact = new ArtifactImpl(artifactName, type, state.isBuildOnMake(), rootElement, state.getOutputPath());
+    List<ArtifactPropertiesState> propertiesList = state.getPropertiesList();
     for (ArtifactPropertiesState propertiesState : propertiesList) {
-      final ArtifactPropertiesProvider provider = ArtifactPropertiesProvider.findById(propertiesState.getId());
+      ArtifactPropertiesProvider provider = ArtifactPropertiesProvider.findById(propertiesState.getId());
       if (provider != null) {
         deserializeProperties(artifact.getProperties(provider), propertiesState);
       }
@@ -250,17 +250,17 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   private InvalidArtifact createInvalidArtifact(ArtifactState state, String errorMessage) {
-    final InvalidArtifact artifact = new InvalidArtifact(myPackagingElementFactory, state, errorMessage);
+    InvalidArtifact artifact = new InvalidArtifact(myPackagingElementFactory, state, errorMessage);
     ProjectLoadingErrorsNotifier.getInstance(myProject).registerError(new ArtifactLoadingErrorDescription(this, artifact));
     return artifact;
   }
 
   private static <S> void deserializeProperties(ArtifactProperties<S> artifactProperties, ArtifactPropertiesState propertiesState) {
-    final Element options = propertiesState.getOptions();
+    Element options = propertiesState.getOptions();
     if (artifactProperties == null || options == null) {
       return;
     }
-    final S state = artifactProperties.getState();
+    S state = artifactProperties.getState();
     if (state != null) {
       XmlSerializer.deserializeInto(state, options);
       artifactProperties.loadState(state);
@@ -276,7 +276,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     Set<String> pathsToRemove = new HashSet<>(myWatchedOutputs.keySet());
     Set<String> toAdd = new HashSet<>();
     for (Artifact artifact : getArtifacts()) {
-      final String path = artifact.getOutputPath();
+      String path = artifact.getOutputPath();
       if (path != null && path.length() > 0) {
         pathsToRemove.remove(path);
         if (!myWatchedOutputs.containsKey(path)) {
@@ -287,7 +287,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
     List<LocalFileSystem.WatchRequest> requestsToRemove = new ArrayList<>();
     for (String path : pathsToRemove) {
-      final LocalFileSystem.WatchRequest request = myWatchedOutputs.remove(path);
+      LocalFileSystem.WatchRequest request = myWatchedOutputs.remove(path);
       ContainerUtil.addIfNotNull(requestsToRemove, request);
     }
 
@@ -330,20 +330,20 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     myInsideCommit = true;
     try {
 
-      final List<ArtifactImpl> allArtifacts = artifactModel.getOriginalArtifacts();
+      List<ArtifactImpl> allArtifacts = artifactModel.getOriginalArtifacts();
 
       final Set<ArtifactImpl> removed = new HashSet<>(myModel.myArtifactsList);
       final List<ArtifactImpl> added = new ArrayList<>();
       final List<Pair<ArtifactImpl, String>> changed = new ArrayList<>();
 
       for (ArtifactImpl artifact : allArtifacts) {
-        final boolean isAdded = !removed.remove(artifact);
-        final ArtifactImpl modifiableCopy = artifactModel.getModifiableCopy(artifact);
+        boolean isAdded = !removed.remove(artifact);
+        ArtifactImpl modifiableCopy = artifactModel.getModifiableCopy(artifact);
         if (isAdded) {
           added.add(artifact);
         }
         else if (modifiableCopy != null && !modifiableCopy.equals(artifact)) {
-          final String oldName = artifact.getName();
+          String oldName = artifact.getName();
           artifact.copyFrom(modifiableCopy);
           changed.add(Pair.create(artifact, oldName));
         }
@@ -391,8 +391,8 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   public void addElementsToDirectory(@Nonnull Artifact artifact,
                                      @Nonnull String relativePath,
                                      @Nonnull Collection<? extends PackagingElement<?>> elements) {
-    final ModifiableArtifactModel model = createModifiableModel();
-    final CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
+    ModifiableArtifactModel model = createModifiableModel();
+    CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
     myPackagingElementFactory.getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);
     WriteAction.run(model::commit);
   }

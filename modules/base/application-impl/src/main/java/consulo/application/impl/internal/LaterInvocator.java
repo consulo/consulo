@@ -282,7 +282,7 @@ public final class LaterInvocator {
     }
   }
 
-  public static boolean isInModalContextForProject(final Project project) {
+  public static boolean isInModalContextForProject(Project project) {
     assertIsDispatchThread();
 
     if (ourModalEntities.isEmpty()) return false;

@@ -195,7 +195,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
      * @param parent parent component which is used to calculate heavy weight window ancestor.
      *               <code>parent</code> cannot be <code>null</code> and must be showing.
      */
-    protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nonnull Component parent, final boolean canBeParent) {
+    protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nonnull Component parent, boolean canBeParent) {
         myWrapper = wrapper;
         myCanBeParent = canBeParent;
 
@@ -214,10 +214,10 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
     public DialogWrapperPeerImpl(
-        @Nonnull final DialogWrapper wrapper,
-        final Window owner,
-        final boolean canBeParent,
-        final DialogWrapper.IdeModalityType ideModalityType
+        @Nonnull DialogWrapper wrapper,
+        Window owner,
+        boolean canBeParent,
+        DialogWrapper.IdeModalityType ideModalityType
     ) {
         myWrapper = wrapper;
         myWindowManager = null;
@@ -238,16 +238,16 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
      * @see DialogWrapper#DialogWrapper(boolean, boolean)
      */
     @Deprecated
-    public DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, final boolean canBeParent, final boolean applicationModalIfPossible) {
+    public DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, boolean canBeParent, boolean applicationModalIfPossible) {
         this(wrapper, null, canBeParent, applicationModalIfPossible);
     }
 
     @Deprecated
     public DialogWrapperPeerImpl(
         @Nonnull DialogWrapper wrapper,
-        final Window owner,
-        final boolean canBeParent,
-        final boolean applicationModalIfPossible
+        Window owner,
+        boolean canBeParent,
+        boolean applicationModalIfPossible
     ) {
         this(
             wrapper,
@@ -466,10 +466,10 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
 
         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
-        final ActionCallback result = new ActionCallback();
+        ActionCallback result = new ActionCallback();
 
-        final AnCancelAction anCancelAction = new AnCancelAction();
-        final JRootPane rootPane = getRootPane();
+        AnCancelAction anCancelAction = new AnCancelAction();
+        JRootPane rootPane = getRootPane();
         anCancelAction.registerCustomShortcutSet(CommonShortcuts.ESCAPE, rootPane);
         myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
 
@@ -477,14 +477,14 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             myWindowManager.doNotSuggestAsParent(TargetAWT.from(myDialog.getWindow()));
         }
 
-        final Disposable tb = TouchBarController.getInstance().showWindowActions(myDialog.getContentPane());
+        Disposable tb = TouchBarController.getInstance().showWindowActions(myDialog.getContentPane());
         if (tb != null) {
             myDisposeActions.add(() -> Disposer.dispose(tb));
         }
 
-        final CommandProcessorEx commandProcessor =
+        CommandProcessorEx commandProcessor =
             ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
-        final boolean appStarted = commandProcessor != null;
+        boolean appStarted = commandProcessor != null;
 
         // ProgressWindow starts a modality state itself
         boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog();
@@ -530,8 +530,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     public AsyncResult<Void> showAsync() {
         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
 
-        final AnCancelAction anCancelAction = new AnCancelAction();
-        final JRootPane rootPane = getRootPane();
+        AnCancelAction anCancelAction = new AnCancelAction();
+        JRootPane rootPane = getRootPane();
         anCancelAction.registerCustomShortcutSet(CommonShortcuts.ESCAPE, rootPane);
         myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
 
@@ -539,9 +539,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             myWindowManager.doNotSuggestAsParent(TargetAWT.from(myDialog.getWindow()));
         }
 
-        final CommandProcessorEx commandProcessor =
+        CommandProcessorEx commandProcessor =
             ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
-        final boolean appStarted = commandProcessor != null;
+        boolean appStarted = commandProcessor != null;
 
         // ProgressWindow starts a modality state itself
         boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog();
@@ -684,7 +684,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
             myFocusedCallback = focused;
 
-            final long typeAhead = getDialogWrapper().getTypeAheadTimeoutMs();
+            long typeAhead = getDialogWrapper().getTypeAheadTimeoutMs();
 
             setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             myWindowListener = new MyWindowListener();
@@ -713,7 +713,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         @Override
         public Object getData(@Nonnull Key<?> dataId) {
-            final DialogWrapper wrapper = myDialogWrapper.get();
+            DialogWrapper wrapper = myDialogWrapper.get();
             if (wrapper instanceof DataProvider dataProvider) {
                 return dataProvider.getData(dataId);
             }
@@ -762,7 +762,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         @Override
         @SuppressWarnings("deprecation")
         public void show() {
-            final DialogWrapper dialogWrapper = getDialogWrapper();
+            DialogWrapper dialogWrapper = getDialogWrapper();
             boolean isAutoAdjustable = dialogWrapper.isAutoAdjustable();
             Point location = null;
             if (isAutoAdjustable) {
@@ -779,7 +779,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 myDimensionServiceKey = dialogWrapper.getDimensionKey();
 
                 if (myDimensionServiceKey != null) {
-                    final Project projectGuess = DataManager.getInstance().getDataContext(this).getData(Project.KEY);
+                    Project projectGuess = DataManager.getInstance().getDataContext(this).getData(Project.KEY);
                     location = TargetAWT.to(getWindowStateService(projectGuess).getLocation(myDimensionServiceKey));
                     Dimension size = TargetAWT.to(getWindowStateService(projectGuess).getSize(myDimensionServiceKey));
                     if (size != null) {
@@ -805,13 +805,13 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
 
             if (isAutoAdjustable) {
-                final Rectangle bounds = getBounds();
+                Rectangle bounds = getBounds();
                 ScreenUtil.fitToScreen(bounds);
                 setBounds(bounds);
             }
 
             if (Registry.is("actionSystem.fixLostTyping")) {
-                final IdeEventQueue queue = IdeEventQueue.getInstance();
+                IdeEventQueue queue = IdeEventQueue.getInstance();
                 if (queue != null) {
                     queue.getKeyEventDispatcher().resetState();
                 }
@@ -821,15 +821,15 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             // Workaround for switching workspaces on dialog show
             if (Platform.current().os().isMac() && myProject != null
                 && Registry.is("ide.mac.fix.dialog.showing") && !dialogWrapper.isModalProgress()) {
-                final IdeFrame frame = WindowManager.getInstance().getIdeFrame(myProject.get());
+                IdeFrame frame = WindowManager.getInstance().getIdeFrame(myProject.get());
                 AppIcon.getInstance().requestFocus(frame.getWindow());
             }
 
             setBackground(UIUtil.getPanelBackground());
 
-            final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+            ApplicationEx app = ApplicationManagerEx.getApplicationEx();
             if (app != null && !app.isLoaded() && DesktopSplash.BOUNDS != null) {
-                final Point loc = getLocation();
+                Point loc = getLocation();
                 loc.y = DesktopSplash.BOUNDS.y + DesktopSplash.BOUNDS.height;
                 setLocation(loc);
             }
@@ -873,7 +873,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
             DialogWrapper.cleanupWindowListeners(this);
 
-            final BufferStrategy strategy = getBufferStrategy();
+            BufferStrategy strategy = getBufferStrategy();
             if (strategy != null) {
                 strategy.dispose();
             }
@@ -890,7 +890,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                     list.remove(this);
                 }
             }
-            catch (final Exception ignored) {
+            catch (Exception ignored) {
             }
         }
 
@@ -898,7 +898,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         @RequiredUIAccess
         public Component getMostRecentFocusOwner() {
             if (!myOpened) {
-                final DialogWrapper wrapper = getDialogWrapper();
+                DialogWrapper wrapper = getDialogWrapper();
                 if (wrapper != null) {
                     JComponent toFocus = wrapper.getPreferredFocusedComponent();
                     if (toFocus != null) {
@@ -938,7 +938,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
             public void saveSize() {
                 if (myDimensionServiceKey != null && myInitialSize != null && myOpened) { // myInitialSize can be null only if dialog is disposed before first showing
-                    final Project projectGuess = DataManager.getInstance().getDataContext(MyDialog.this).getData(Project.KEY);
+                    Project projectGuess = DataManager.getInstance().getDataContext(MyDialog.this).getData(Project.KEY);
 
                     // Save location
                     Point location = getLocation();
@@ -953,10 +953,10 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
 
             @Override
-            public void windowOpened(final WindowEvent e) {
+            public void windowOpened(WindowEvent e) {
                 SwingUtilities.invokeLater(() -> {
                     myOpened = true;
-                    final DialogWrapper activeWrapper = getActiveWrapper();
+                    DialogWrapper activeWrapper = getActiveWrapper();
                     for (JComponent c : UIUtil.uiTraverser(e.getWindow()).filter(JComponent.class)) {
                         GraphicsUtil.setAntialiasingType(c, DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
                     }
@@ -964,7 +964,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                         myFocusedCallback.setRejected();
                     }
 
-                    final DialogWrapper wrapper = getActiveWrapper();
+                    DialogWrapper wrapper = getActiveWrapper();
                     if (wrapper == null && !myFocusedCallback.isProcessed()) {
                         myFocusedCallback.setRejected();
                         return;
@@ -1059,7 +1059,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
 
             @Override
-            public void setGlassPane(final Component glass) {
+            public void setGlassPane(Component glass) {
                 if (myGlassPaneIsSet) {
                     LOG.warn("Setting of glass pane for DialogWrapper is prohibited", new Exception());
                     return;
@@ -1079,7 +1079,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
             @Override
             public Object getData(@Nonnull Key<?> dataId) {
-                final DialogWrapper wrapper = myDialogWrapper.get();
+                DialogWrapper wrapper = myDialogWrapper.get();
                 return wrapper != null && PlatformDataKeys.UI_DISPOSABLE == dataId ? wrapper.getDisposable() : null;
             }
         }
@@ -1090,7 +1090,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
     }
 
-    private static void setupSelectionOnPreferredComponent(final JComponent component) {
+    private static void setupSelectionOnPreferredComponent(JComponent component) {
         if (component instanceof JTextField) {
             JTextField field = (JTextField)component;
             String text = field.getText();

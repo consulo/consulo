@@ -198,7 +198,7 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
   }
 
   @Nonnull
-  public TextEditorState getStateImpl(final Project project, @Nonnull Editor editor, @Nonnull FileEditorStateLevel level) {
+  public TextEditorState getStateImpl(Project project, @Nonnull Editor editor, @Nonnull FileEditorStateLevel level) {
     TextEditorState state = new TextEditorState();
     CaretModel caretModel = editor.getCaretModel();
     if (caretModel.supportsMultipleCarets()) {
@@ -232,7 +232,7 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
       return false;
     }
 
-    final FileType ft = file.getFileType();
+    FileType ft = file.getFileType();
     return !ft.isBinary() || BinaryFileDecompiler.forFileType(ft) != null;
   }
 

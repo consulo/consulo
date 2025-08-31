@@ -148,7 +148,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                         return;
                     }
 
-                    final List<WebTreeNodeImpl<NODE>> finalChildren = children;
+                    List<WebTreeNodeImpl<NODE>> finalChildren = children;
                     ui.access(() -> {
                         TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
 

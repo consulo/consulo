@@ -48,7 +48,7 @@ public class EmptyFindUsagesProvider implements FindUsagesProvider {
   @Nonnull
   public String getNodeText(@Nonnull PsiElement element, boolean useFullName) {
     if (element instanceof PsiNamedElement) {
-      final String name = ((PsiNamedElement)element).getName();
+      String name = ((PsiNamedElement)element).getName();
       if (name != null) {
         return name;
       }

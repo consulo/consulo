@@ -40,15 +40,15 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   @Override
   @Nullable
   public final Object getData(@Nonnull Key dataId, @Nonnull Editor editor, @Nonnull Caret caret) {
-    for (final EditorDataProvider dataProvider : myDataProviders) {
-      final Object o = dataProvider.getData(dataId, editor, caret);
+    for (EditorDataProvider dataProvider : myDataProviders) {
+      Object o = dataProvider.getData(dataId, editor, caret);
       if (o != null) return o;
     }
     return null;
   }
 
   @Override
-  public void registerExtraEditorDataProvider(@Nonnull final EditorDataProvider provider, Disposable parentDisposable) {
+  public void registerExtraEditorDataProvider(@Nonnull EditorDataProvider provider, Disposable parentDisposable) {
     myDataProviders.add(provider);
     if (parentDisposable != null) {
       Disposer.register(parentDisposable, () -> myDataProviders.remove(provider));

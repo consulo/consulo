@@ -48,8 +48,8 @@ public class PostfixDescriptionPanel implements Disposable {
 
   public void reset(@Nonnull PostfixTemplateMetaData actionMetaData) {
 
-    final TextDescriptor url = actionMetaData.getDescription();
-    final String description = getDescription(url);
+    TextDescriptor url = actionMetaData.getDescription();
+    String description = getDescription(url);
     myDescriptionBrowser.setText(description);
 
     showUsages(myBeforePanel, ArrayUtil.getFirstElement(actionMetaData.getExampleUsagesBefore()));

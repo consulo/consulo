@@ -41,22 +41,22 @@ public abstract class DependenciesBuilder {
   protected int myFileCount = 0;
   protected int myTransitive = 0;
 
-  protected DependenciesBuilder(@Nonnull final Project project, @Nonnull final AnalysisScope scope) {
+  protected DependenciesBuilder(@Nonnull Project project, @Nonnull AnalysisScope scope) {
     this(project, scope, null);
   }
 
-  public DependenciesBuilder(final Project project, final AnalysisScope scope, final @Nullable AnalysisScope scopeOfInterest) {
+  public DependenciesBuilder(Project project, AnalysisScope scope, @Nullable AnalysisScope scopeOfInterest) {
     myProject = project;
     myScope = scope;
     myScopeOfInterest = scopeOfInterest;
     myTotalFileCount = scope.getFileCount();
   }
 
-  public void setInitialFileCount(final int fileCount) {
+  public void setInitialFileCount(int fileCount) {
     myFileCount = fileCount;
   }
 
-  public void setTotalFileCount(final int totalFileCount) {
+  public void setTotalFileCount(int totalFileCount) {
     myTotalFileCount = totalFileCount;
   }
 
@@ -99,7 +99,7 @@ public abstract class DependenciesBuilder {
       Set<PsiFile> deps = getDirectDependencies().get(file);
       Map<DependencyRule, Set<PsiFile>> illegal = null;
       for (PsiFile dependency : deps) {
-        final DependencyRule rule = isBackward() ?
+        DependencyRule rule = isBackward() ?
                                     validator.getViolatorDependencyRule(dependency, file) :
                                     validator.getViolatorDependencyRule(file, dependency);
         if (rule != null) {
@@ -124,11 +124,11 @@ public abstract class DependenciesBuilder {
   }
 
   private List<List<PsiFile>> findPaths(PsiFile from, PsiFile to, Set<PsiFile> processed) {
-    final List<List<PsiFile>> result = new ArrayList<List<PsiFile>>();
-    final Set<PsiFile> reachable = getDirectDependencies().get(from);
+    List<List<PsiFile>> result = new ArrayList<List<PsiFile>>();
+    Set<PsiFile> reachable = getDirectDependencies().get(from);
     if (reachable != null) {
       if (reachable.contains(to)) {
-        final ArrayList<PsiFile> path = new ArrayList<PsiFile>();
+        ArrayList<PsiFile> path = new ArrayList<PsiFile>();
         result.add(path);
         return result;
       }
@@ -136,7 +136,7 @@ public abstract class DependenciesBuilder {
         processed.add(from);
         for (PsiFile file : reachable) {
           if (!getScope().contains(file)) { //exclude paths through scope
-            final List<List<PsiFile>> paths = findPaths(file, to, processed);
+            List<List<PsiFile>> paths = findPaths(file, to, processed);
             for (List<PsiFile> path : paths) {
               path.add(0, file);
             }

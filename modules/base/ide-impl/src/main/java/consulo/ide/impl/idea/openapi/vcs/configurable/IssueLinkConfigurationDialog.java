@@ -46,7 +46,7 @@ public class IssueLinkConfigurationDialog extends DialogWrapper {
       }
     });
     myExampleIssueIDTextField.getDocument().addDocumentListener(new DocumentAdapter() {
-      protected void textChanged(final DocumentEvent e) {
+      protected void textChanged(DocumentEvent e) {
         updateFeedback();
       }
     });
@@ -57,7 +57,7 @@ public class IssueLinkConfigurationDialog extends DialogWrapper {
     try {
       Pattern p = Pattern.compile(myIssueIDTextField.getText());
       if (myIssueIDTextField.getText().length() > 0) {
-        final Matcher matcher = p.matcher(myExampleIssueIDTextField.getText());
+        Matcher matcher = p.matcher(myExampleIssueIDTextField.getText());
         if (matcher.matches()) {
           myExampleIssueLinkTextField.setText(matcher.replaceAll(myIssueLinkTextField.getText()));
         }
@@ -88,7 +88,7 @@ public class IssueLinkConfigurationDialog extends DialogWrapper {
     return new IssueNavigationLink(myIssueIDTextField.getText(), myIssueLinkTextField.getText());
   }
 
-  public void setLink(final IssueNavigationLink link) {
+  public void setLink(IssueNavigationLink link) {
     myIssueIDTextField.setText(link.getIssueRegexp());
     myIssueLinkTextField.setText(link.getLinkRegexp());
   }

@@ -58,12 +58,12 @@ public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
    */
   @Deprecated
   @Override
-  public DialogWrapperPeer createPeer(@Nonnull final DialogWrapper wrapper, final boolean canBeParent, final boolean applicationModalIfPossible) {
+  public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, boolean canBeParent, boolean applicationModalIfPossible) {
     return new DialogWrapperPeerImpl(wrapper, null, canBeParent, applicationModalIfPossible);
   }
 
   @Override
-  public DialogWrapperPeer createPeer(@Nonnull final DialogWrapper wrapper, final consulo.ui.Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
+  public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, consulo.ui.Window owner, boolean canBeParent, boolean applicationModalIfPossible) {
     return new DialogWrapperPeerImpl(wrapper, TargetAWT.to(owner), canBeParent, applicationModalIfPossible);
   }
 

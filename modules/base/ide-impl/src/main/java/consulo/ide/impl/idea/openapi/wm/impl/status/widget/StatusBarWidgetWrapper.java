@@ -62,7 +62,7 @@ public interface StatusBarWidgetWrapper {
         private final StatusBarWidget myWidget;
         private final StatusBarWidget.MultipleTextValuesPresentation myPresentation;
 
-        public MultipleTextValues(StatusBarWidget widget, @Nonnull final StatusBarWidget.MultipleTextValuesPresentation presentation) {
+        public MultipleTextValues(StatusBarWidget widget, @Nonnull StatusBarWidget.MultipleTextValuesPresentation presentation) {
             myWidget = widget;
             myPresentation = presentation;
             setVisible(StringUtil.isNotEmpty(myPresentation.getSelectedValue()));
@@ -76,12 +76,12 @@ public interface StatusBarWidgetWrapper {
                     if (myPopupState.isRecentlyHidden()) {
                         return false; // do not show new popup
                     }
-                    final ListPopup popup = myPresentation.getPopupStep();
+                    ListPopup popup = myPresentation.getPopupStep();
                     if (popup == null) {
                         return false;
                     }
-                    final Dimension dimension = popup.getContent().getPreferredSize();
-                    final Point at = new Point(0, -dimension.height);
+                    Dimension dimension = popup.getContent().getPreferredSize();
+                    Point at = new Point(0, -dimension.height);
                     myPopupState.prepareToShow(popup);
                     popup.show(new RelativePoint(e.getComponent(), at));
                     return true;
@@ -112,7 +112,7 @@ public interface StatusBarWidgetWrapper {
         private final StatusBarWidget myWidget;
         private final StatusBarWidget.TextPresentation myPresentation;
 
-        public Text(StatusBarWidget widget, @Nonnull final StatusBarWidget.TextPresentation presentation) {
+        public Text(StatusBarWidget widget, @Nonnull StatusBarWidget.TextPresentation presentation) {
             myWidget = widget;
             myPresentation = presentation;
             setTextAlignment(presentation.getAlignment());
@@ -146,7 +146,7 @@ public interface StatusBarWidgetWrapper {
         private final StatusBarWidget myWidget;
         private final StatusBarWidget.IconPresentation myPresentation;
 
-        public Icon(StatusBarWidget widget, @Nonnull final StatusBarWidget.IconPresentation presentation) {
+        public Icon(StatusBarWidget widget, @Nonnull StatusBarWidget.IconPresentation presentation) {
             myWidget = widget;
             myPresentation = presentation;
             setTextAlignment(Component.CENTER_ALIGNMENT);

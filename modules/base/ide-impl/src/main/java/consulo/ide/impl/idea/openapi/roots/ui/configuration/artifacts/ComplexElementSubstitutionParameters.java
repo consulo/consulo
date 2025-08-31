@@ -48,7 +48,7 @@ public class ComplexElementSubstitutionParameters {
   }
 
   public boolean shouldSubstitute(@Nonnull ComplexPackagingElement<?> element) {
-    final ComplexPackagingElementType<?> type = (ComplexPackagingElementType<?>)element.getType();
+    ComplexPackagingElementType<?> type = (ComplexPackagingElementType<?>)element.getType();
     return myTypesToSubstitute.contains(type) || mySubstituted.contains(element);
   }
 
@@ -59,7 +59,7 @@ public class ComplexElementSubstitutionParameters {
     else {
       myTypesToSubstitute.remove(type);
     }
-    final Iterator<ComplexPackagingElement<?>> iterator = mySubstituted.iterator();
+    Iterator<ComplexPackagingElement<?>> iterator = mySubstituted.iterator();
     while (iterator.hasNext()) {
       if (iterator.next().getType().equals(type)) {
         iterator.remove();

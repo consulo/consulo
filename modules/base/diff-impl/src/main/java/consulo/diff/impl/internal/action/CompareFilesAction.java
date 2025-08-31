@@ -167,7 +167,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
         if (project == null) {
             return file;
         }
-        final String path = ProjectPropertiesComponent.getInstance(project).getValue(key);
+        String path = ProjectPropertiesComponent.getInstance(project).getValue(key);
         if (path == null) {
             return file;
         }

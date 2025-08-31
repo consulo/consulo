@@ -41,7 +41,7 @@ public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget impleme
   @Override
   public boolean canSelect(PsiFileSystemItem file) {
     if (!super.canSelect(file)) return false;
-    final VirtualFile vFile = file.getVirtualFile();
+    VirtualFile vFile = file.getVirtualFile();
     return vFile != null && ProjectViewPaneImpl.canBeSelectedInProjectView(myProject, vFile);
   }
 

@@ -40,10 +40,10 @@ public abstract class DefaultVcsRootPolicy {
   @Nonnull
   public abstract Collection<VirtualFile> getDefaultVcsRoots(@Nonnull NewMappings mappingList, @Nonnull String vcsName);
 
-  public abstract boolean matchesDefaultMapping(@Nonnull VirtualFile file, final Object matchContext);
+  public abstract boolean matchesDefaultMapping(@Nonnull VirtualFile file, Object matchContext);
 
   @Nullable
-  public abstract Object getMatchContext(final VirtualFile file);
+  public abstract Object getMatchContext(VirtualFile file);
 
   @jakarta.annotation.Nullable
   public abstract VirtualFile getVcsRootFor(@Nonnull VirtualFile file);
@@ -53,7 +53,7 @@ public abstract class DefaultVcsRootPolicy {
 
   public String getProjectConfigurationMessage(@Nonnull Project project) {
     boolean isDirectoryBased = ProjectCoreUtil.isDirectoryBased(project);
-    final StringBuilder sb = new StringBuilder("Content roots of all modules");
+    StringBuilder sb = new StringBuilder("Content roots of all modules");
     if (isDirectoryBased) {
       sb.append(", ");
     }

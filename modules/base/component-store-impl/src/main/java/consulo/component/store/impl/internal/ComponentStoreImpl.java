@@ -205,13 +205,13 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return null;
   }
 
-  private void validateUnusedMacros(@Nullable final String componentName, final boolean service) {
-    final ComponentManager project = getProject();
+  private void validateUnusedMacros(@Nullable String componentName, boolean service) {
+    ComponentManager project = getProject();
     if (project == null) return;
 
     if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !ApplicationManager.getApplication().isUnitTestMode()) {
       if (service && componentName != null && project.isInitialized()) {
-        final TrackingPathMacroSubstitutor substitutor = getStateStorageManager().getMacroSubstitutor();
+        TrackingPathMacroSubstitutor substitutor = getStateStorageManager().getMacroSubstitutor();
         if (substitutor != null) {
           StorageUtil.notifyUnknownMacros(substitutor, project, componentName);
         }
@@ -271,7 +271,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Nullable
-  private <T> T loadDefaultState(@Nonnull StateComponentInfo<T> stateComponentInfo, @Nonnull Object component, @Nonnull final Class<T> stateClass) {
+  private <T> T loadDefaultState(@Nonnull StateComponentInfo<T> stateComponentInfo, @Nonnull Object component, @Nonnull Class<T> stateClass) {
     String defaultStateFilePath = stateComponentInfo.getState().defaultStateFilePath();
 
     if (StringUtil.isEmpty(defaultStateFilePath)) {

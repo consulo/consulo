@@ -80,11 +80,11 @@ public class ExceptionUtil {
     final String skipPattern = prefix + stackFrameSkipPattern;
 
     final StringWriter stringWriter = new StringWriter();
-    final PrintWriter writer = new PrintWriter(stringWriter) {
+    PrintWriter writer = new PrintWriter(stringWriter) {
       private boolean skipping;
 
       @Override
-      public void println(final String x) {
+      public void println(String x) {
         boolean curSkipping = skipping;
         if (x != null) {
           if (!skipping && x.startsWith(skipPattern)) curSkipping = true;

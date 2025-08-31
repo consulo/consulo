@@ -69,7 +69,7 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
   }
 
   @RequiredUIAccess
-  public void updateRequest(final boolean force, @Nullable final ScrollToPolicy scrollToChangePolicy) {
+  public void updateRequest(boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
     updateRequest(force, true, scrollToChangePolicy);
   }
 

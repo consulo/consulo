@@ -70,14 +70,14 @@ public class WSLDistribution {
   @Nullable
   public String readReleaseInfo() {
     try {
-      final String key = "PRETTY_NAME";
-      final String releaseInfo = "/etc/os-release"; // available for all distributions
-      final ProcessOutput output = executeOnWsl(10000, "cat", releaseInfo);
+      String key = "PRETTY_NAME";
+      String releaseInfo = "/etc/os-release"; // available for all distributions
+      ProcessOutput output = executeOnWsl(10000, "cat", releaseInfo);
       if (LOG.isDebugEnabled()) LOG.debug("Reading release info: " + getId());
       if (!output.checkSuccess(LOG)) return null;
       for (String line : output.getStdoutLines(true)) {
         if (line.startsWith(key) && line.length() >= (key.length() + 1)) {
-          final String prettyName = line.substring(key.length() + 1);
+          String prettyName = line.substring(key.length() + 1);
           return StringUtil.nullize(StringUtil.unquoteString(prettyName));
         }
       }
@@ -258,7 +258,7 @@ public class WSLDistribution {
   public String resolveSymlink(@Nonnull String path, int timeoutInMilliseconds) {
 
     try {
-      final ProcessOutput output = executeOnWsl(timeoutInMilliseconds, "readlink", "-f", path);
+      ProcessOutput output = executeOnWsl(timeoutInMilliseconds, "readlink", "-f", path);
       if (output.getExitCode() == 0) {
         String stdout = output.getStdout().trim();
         if (output.getExitCode() == 0 && StringUtil.isNotEmpty(stdout)) {

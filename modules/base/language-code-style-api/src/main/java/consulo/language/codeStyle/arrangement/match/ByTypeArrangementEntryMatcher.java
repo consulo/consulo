@@ -51,9 +51,9 @@ public class ByTypeArrangementEntryMatcher implements ArrangementEntryMatcher {
   @Override
   public boolean isMatched(@Nonnull ArrangementEntry entry) {
     if (entry instanceof TypeAwareArrangementEntry) {
-      final Set<ArrangementSettingsToken> types = ((TypeAwareArrangementEntry)entry).getTypes();
+      Set<ArrangementSettingsToken> types = ((TypeAwareArrangementEntry)entry).getTypes();
       for (ArrangementAtomMatchCondition condition : myTypes) {
-        final Object value = condition.getValue();
+        Object value = condition.getValue();
         boolean isInverted = value instanceof Boolean && !((Boolean)value);
         if (isInverted == types.contains(condition.getType())) {
           return false;

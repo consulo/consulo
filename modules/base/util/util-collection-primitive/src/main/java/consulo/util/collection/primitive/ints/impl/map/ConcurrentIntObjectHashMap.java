@@ -2334,8 +2334,8 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
       if ((p = next) == null) {
         throw new NoSuchElementException();
       }
-      final int k = p.key;
-      final V v = p.val;
+      int k = p.key;
+      V v = p.val;
       lastReturned = p;
       advance();
       return new SimpleIntObjectEntry<>(k, v);
@@ -2713,7 +2713,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
    */
   @Override
   @Nonnull
-  public V cacheOrGet(final int key, @Nonnull final V defaultValue) {
+  public V cacheOrGet(int key, @Nonnull V defaultValue) {
     V v = get(key);
     if (v != null) return v;
     V prev = putIfAbsent(key, defaultValue);

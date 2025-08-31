@@ -42,7 +42,7 @@ public class MouseGestureManager {
   private Map<IdeFrame, Object> myListeners = new HashMap<>();
   private boolean HAS_TRACKPAD = false;
 
-  public void add(final IdeFrame frame) {
+  public void add(IdeFrame frame) {
     if (!Registry.is("actionSystem.mouseGesturesEnabled")) return;
 
     if (SystemInfo.isMacOSSnowLeopard) {

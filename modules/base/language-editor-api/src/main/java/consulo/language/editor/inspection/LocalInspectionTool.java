@@ -123,8 +123,8 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @return not-null visitor for this inspection.
    */
   @Nonnull
-  public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder,
-                                        final boolean isOnTheFly,
+  public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder,
+                                        boolean isOnTheFly,
                                         @Nonnull LocalInspectionToolSession session,
                                         @Nonnull Object state) {
     return buildVisitor(holder, isOnTheFly);
@@ -151,7 +151,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
       }
 
       @RequiredReadAction
-      private void addDescriptors(final ProblemDescriptor[] descriptors) {
+      private void addDescriptors(ProblemDescriptor[] descriptors) {
         if (descriptors != null) {
           for (ProblemDescriptor descriptor : descriptors) {
             holder.registerProblem(Objects.requireNonNull(descriptor));

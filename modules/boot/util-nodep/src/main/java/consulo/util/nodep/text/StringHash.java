@@ -152,17 +152,17 @@ public class StringHash {
   }
 
   public static int murmur(String data, int seed) {
-    final int length = data.length();
+    int length = data.length();
     // 'm' and 'r' are mixing constants generated offline.
     // They're not really 'magic', they just happen to work well.
-    final int m = 0x5bd1e995;
-    final int r = 24;
+    int m = 0x5bd1e995;
+    int r = 24;
     // Initialize the hash to a random value
     int h = seed ^ length;
     int length4 = length >> 2;
 
     for (int i = 0; i < length4; i++) {
-      final int i4 = i << 2;
+      int i4 = i << 2;
       int k = data.charAt(i4) + (data.charAt(i4 + 1) << 8) +
               (data.charAt(i4 + 2) << 16) + (data.charAt(i4 + 3) << 24);
       k *= m;

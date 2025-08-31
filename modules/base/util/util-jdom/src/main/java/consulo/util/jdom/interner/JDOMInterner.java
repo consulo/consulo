@@ -158,7 +158,7 @@ public class JDOMInterner {
   }
 
   @Nonnull
-  private static String intern(@Nonnull final Interner<String> interner, @Nonnull final String s) {
+  private static String intern(@Nonnull Interner<String> interner, @Nonnull String s) {
     return interner.intern(s);
   }
 
@@ -201,7 +201,7 @@ public class JDOMInterner {
   }
 
   @Nonnull
-  public synchronized Element intern(@Nonnull final Element element) {
+  public synchronized Element intern(@Nonnull Element element) {
     if (element instanceof ImmutableElement) return element;
     Element interned = myElements.get(element);
     if (interned == null) {

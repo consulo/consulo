@@ -31,7 +31,7 @@ public class ThreesideBinaryDiffViewer extends ThreesideDiffViewer<BinaryEditorH
 
     @Override
     @Nonnull
-    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
         return EmptyRunnable.INSTANCE;
     }
 

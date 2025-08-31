@@ -37,7 +37,7 @@ public class AddTestProcessActionIndefinite extends AnAction implements DumbAwar
 
         new Task.Backgroundable(project, "Test", true) {
             @Override
-            public void run(@Nonnull final ProgressIndicator indicator) {
+            public void run(@Nonnull ProgressIndicator indicator) {
                 try {
                     Thread.currentThread().sleep(6000);
 

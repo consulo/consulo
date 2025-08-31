@@ -42,7 +42,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
 
   protected abstract void customizeRendererText(ColoredTreeCellRenderer renderer);
 
-  protected MethodNodeBase(final M method, Set<M> called, Project project, Runnable cancelCallback) {
+  protected MethodNodeBase(M method, Set<M> called, Project project, Runnable cancelCallback) {
     super(method);
     myMethod = method;
     myCalled = called;
@@ -54,12 +54,12 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
   //IMPORTANT: do not build children in children()
   private void buildChildren() {
     if (children == null) {
-      final List<M> callers = findCallers();
+      List<M> callers = findCallers();
       children = new Vector(callers.size());
       for (M caller : callers) {
-        final HashSet<M> called = new HashSet<>(myCalled);
+        HashSet<M> called = new HashSet<>(myCalled);
         called.add(myMethod);
-        final MethodNodeBase<M> child = createNode(caller, called);
+        MethodNodeBase<M> child = createNode(caller, called);
         children.add(child);
         child.parent = this;
       }
@@ -86,7 +86,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
 
   private List<M> findCallers() {
     if (myMethod == null) return Collections.emptyList();
-    final Ref<List<M>> callers = new Ref<>();
+    Ref<List<M>> callers = new Ref<>();
     if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
       () -> callers.set(computeCallers()),
       RefactoringLocalize.callerChooserLookingForCallers(),
@@ -109,7 +109,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
   }
 
   @Override
-  public void setEnabled(final boolean enabled) {
+  public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
     if (!enabled) {
       myOldChecked = isChecked();

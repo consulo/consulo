@@ -159,7 +159,7 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
         return myUseSafeWrite;
     }
 
-    public void setUseSafeWrite(final boolean useSafeWrite) {
+    public void setUseSafeWrite(boolean useSafeWrite) {
         myUseSafeWrite = useSafeWrite;
     }
 
@@ -214,7 +214,7 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
         return mySearchInBackground;
     }
 
-    public void setSearchInBackground(final boolean searchInBackground) {
+    public void setSearchInBackground(boolean searchInBackground) {
         mySearchInBackground = searchInBackground;
     }
 }

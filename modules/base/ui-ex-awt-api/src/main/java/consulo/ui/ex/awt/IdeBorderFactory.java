@@ -62,7 +62,7 @@ public class IdeBorderFactory {
   }
 
   @Nonnull
-  public static RoundedLineBorder createRoundedBorder(int arcSize, final int thickness) {
+  public static RoundedLineBorder createRoundedBorder(int arcSize, int thickness) {
     return new RoundedLineBorder(getBorderColor(), arcSize, thickness);
   }
 

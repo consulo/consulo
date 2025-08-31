@@ -132,7 +132,7 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
     @Override
     @RequiredUIAccess
     public void applyResult(@Nonnull MergeResult result) {
-        final CharSequence applyContent = switch (result) {
+        CharSequence applyContent = switch (result) {
             case CANCEL -> myOriginalContent;
             case LEFT -> myLocalContent;
             case RIGHT -> PatchChangeBuilder.getPatchedContent(myAppliedPatch, myLocalContent);

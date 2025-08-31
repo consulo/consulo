@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   private final ASTNode myRoot;
 
-  public ASTStructure(@Nonnull final ASTNode root) {
+  public ASTStructure(@Nonnull ASTNode root) {
     myRoot = root;
   }
 
@@ -39,18 +39,18 @@ public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   }
 
   @Override
-  public ASTNode getParent(@Nonnull final ASTNode node) {
+  public ASTNode getParent(@Nonnull ASTNode node) {
     return node.getTreeParent();
   }
 
   @Override
   @Nonnull
-  public ASTNode prepareForGetChildren(@Nonnull final ASTNode astNode) {
+  public ASTNode prepareForGetChildren(@Nonnull ASTNode astNode) {
     return astNode;
   }
 
   @Override
-  public int getChildren(@Nonnull final ASTNode astNode, @Nonnull final SimpleReference<ASTNode[]> into) {
+  public int getChildren(@Nonnull ASTNode astNode, @Nonnull SimpleReference<ASTNode[]> into) {
     ASTNode child = astNode.getFirstChildNode();
     if (child == null) return 0;
 
@@ -76,7 +76,7 @@ public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   }
 
   @Override
-  public void disposeChildren(final ASTNode[] nodes, final int count) {
+  public void disposeChildren(ASTNode[] nodes, int count) {
   }
 
   @Nonnull

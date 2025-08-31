@@ -39,19 +39,19 @@ public abstract class PsiFileBase extends PsiFileImpl {
   protected PsiFileBase(@Nonnull FileViewProvider viewProvider, @Nonnull Language language) {
     super(viewProvider);
     myLanguage = findLanguage(language, viewProvider);
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(myLanguage);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(myLanguage);
     if (parserDefinition == null) {
       throw new RuntimeException("PsiFileBase: language.getParserDefinition() returned null for: "+myLanguage);
     }
     myParserDefinition = parserDefinition;
-    final IFileElementType nodeType = parserDefinition.getFileNodeType();
+    IFileElementType nodeType = parserDefinition.getFileNodeType();
     assert nodeType.getLanguage() == myLanguage: nodeType.getLanguage() + " != " + myLanguage;
     init(nodeType, nodeType);
   }
 
   private static Language findLanguage(Language baseLanguage, FileViewProvider viewProvider) {
-    final Set<Language> languages = viewProvider.getLanguages();
-    for (final Language actualLanguage : languages) {
+    Set<Language> languages = viewProvider.getLanguages();
+    for (Language actualLanguage : languages) {
       if (actualLanguage.isKindOf(baseLanguage)) {
         return actualLanguage;
       }

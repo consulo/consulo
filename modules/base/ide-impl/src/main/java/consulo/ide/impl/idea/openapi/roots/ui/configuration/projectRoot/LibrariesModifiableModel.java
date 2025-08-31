@@ -48,7 +48,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
   private final LibraryTable myTable;
   private final LibraryEditorListener myLibraryEditorListener;
 
-  public LibrariesModifiableModel(final LibraryTable table, final Project project, LibraryEditorListener libraryEditorListener) {
+  public LibrariesModifiableModel(LibraryTable table, Project project, LibraryEditorListener libraryEditorListener) {
     myProject = project;
     myTable = table;
     myLibraryEditorListener = libraryEditorListener;
@@ -56,7 +56,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
 
   @Override
   public Library createLibrary(String name, @Nullable PersistentLibraryKind type) {
-    final Library library = getLibrariesModifiableModel().createLibrary(name, type);
+    Library library = getLibrariesModifiableModel().createLibrary(name, type);
     //createLibraryEditor(library);
     myLibraryEditorListener.libraryCreated(library);
     return library;
@@ -67,7 +67,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
     if (getLibrariesModifiableModel().getLibraryByName(library.getName()) == null) return;
 
     removeLibraryEditor(library);
-    final Library existingLibrary = myTable.getLibraryByName(library.getName());
+    Library existingLibrary = myTable.getLibraryByName(library.getName());
     getLibrariesModifiableModel().removeLibrary(library);
     if (existingLibrary == library) {
       myRemovedLibraries.add(library);
@@ -109,7 +109,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
   }
 
   public void deferredCommit() {
-    final List<ExistingLibraryEditor> libraryEditors = new ArrayList<ExistingLibraryEditor>(myLibrary2EditorMap.values());
+    List<ExistingLibraryEditor> libraryEditors = new ArrayList<ExistingLibraryEditor>(myLibrary2EditorMap.values());
     myLibrary2EditorMap.clear();
     for (ExistingLibraryEditor libraryEditor : libraryEditors) {
       libraryEditor.commit(); // TODO: is seems like commit will recreate the editor, but it should not
@@ -131,7 +131,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
   }
 
   public ExistingLibraryEditor getLibraryEditor(Library library) {
-    final Library source = ((LibraryImpl)library).getSource();
+    Library source = ((LibraryImpl)library).getSource();
     if (source != null) {
       return getLibraryEditor(source);
     }
@@ -142,20 +142,20 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
     return libraryEditor;
   }
 
-  private ExistingLibraryEditor createLibraryEditor(final Library library) {
-    final ExistingLibraryEditor libraryEditor = new ExistingLibraryEditor(library, myLibraryEditorListener);
+  private ExistingLibraryEditor createLibraryEditor(Library library) {
+    ExistingLibraryEditor libraryEditor = new ExistingLibraryEditor(library, myLibraryEditorListener);
     myLibrary2EditorMap.put(library, libraryEditor);
     return libraryEditor;
   }
 
-  private void removeLibraryEditor(final Library library) {
-    final ExistingLibraryEditor libraryEditor = myLibrary2EditorMap.remove(library);
+  private void removeLibraryEditor(Library library) {
+    ExistingLibraryEditor libraryEditor = myLibrary2EditorMap.remove(library);
     if (libraryEditor != null) {
       Disposer.dispose(libraryEditor);
     }
   }
 
-  public Library.ModifiableModel getLibraryModifiableModel(final Library library) {
+  public Library.ModifiableModel getLibraryModifiableModel(Library library) {
     return getLibraryEditor(library).getModel();
   }
 
@@ -168,13 +168,13 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
   }
 
   public void disposeUncommittedLibraries() {
-    for (final Library library : new ArrayList<Library>(myLibrary2EditorMap.keySet())) {
-      final Library existingLibrary = myTable.getLibraryByName(library.getName());
+    for (Library library : new ArrayList<Library>(myLibrary2EditorMap.keySet())) {
+      Library existingLibrary = myTable.getLibraryByName(library.getName());
       if (existingLibrary != library) {
         Disposer.dispose(library);
       }
 
-      final ExistingLibraryEditor libraryEditor = myLibrary2EditorMap.get(library);
+      ExistingLibraryEditor libraryEditor = myLibrary2EditorMap.get(library);
       if (libraryEditor != null) {
         Disposer.dispose(libraryEditor);
       }

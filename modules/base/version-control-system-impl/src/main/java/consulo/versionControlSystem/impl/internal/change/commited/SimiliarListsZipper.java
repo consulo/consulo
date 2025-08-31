@@ -32,8 +32,8 @@ public class SimiliarListsZipper {
    * @param lists - MUST be internally ordered in ??? ascending order
    * @param zipper
    */
-  public SimiliarListsZipper(final Collection<List<CommittedChangeList>> lists,
-                             final VcsCommittedListsZipper zipper, final RepositoryLocationGroup group) {
+  public SimiliarListsZipper(Collection<List<CommittedChangeList>> lists,
+                             VcsCommittedListsZipper zipper, RepositoryLocationGroup group) {
     myZipper = zipper;
     myGroup = group;
     myLists = new LinkedList<>();
@@ -62,7 +62,7 @@ public class SimiliarListsZipper {
 
   private boolean usualStep() {
     while (! myLists.isEmpty()) {
-      final SubSequence<CommittedChangeList> sequence = myLists.removeFirst();
+      SubSequence<CommittedChangeList> sequence = myLists.removeFirst();
       myResult.add(sequence.getCurrentList());
 
       if (sequence.hasNext()) {
@@ -75,12 +75,12 @@ public class SimiliarListsZipper {
   }
   
   private boolean tryZipFirstN() {
-    final SubSequence<CommittedChangeList> firstSequence = myLists.getFirst();
+    SubSequence<CommittedChangeList> firstSequence = myLists.getFirst();
     List<SubSequence<CommittedChangeList>> removed = null;
     List<CommittedChangeList> toBeZipped = null;
     
     for (ListIterator<SubSequence<CommittedChangeList>> iterator = myLists.listIterator(1); iterator.hasNext();) {
-      final SubSequence<CommittedChangeList> sequence = iterator.next();
+      SubSequence<CommittedChangeList> sequence = iterator.next();
       if (sequence.compareTo(firstSequence) != 0) {
         break;
       }
@@ -99,7 +99,7 @@ public class SimiliarListsZipper {
       removed.add(firstSequence);
       toBeZipped.add(firstSequence.getCurrentList());
 
-      final CommittedChangeList zippedList = myZipper.zip(myGroup, toBeZipped);
+      CommittedChangeList zippedList = myZipper.zip(myGroup, toBeZipped);
       myResult.add(zippedList);
 
       for (SubSequence<CommittedChangeList> sequence : removed) {
@@ -113,9 +113,9 @@ public class SimiliarListsZipper {
     return false;
   }
 
-  private void insert(final SubSequence<CommittedChangeList> firstSequence) {
+  private void insert(SubSequence<CommittedChangeList> firstSequence) {
     for (ListIterator<SubSequence<CommittedChangeList>> iterator = myLists.listIterator(); iterator.hasNext();) {
-      final SubSequence<CommittedChangeList> currentSequence = iterator.next();
+      SubSequence<CommittedChangeList> currentSequence = iterator.next();
       if (currentSequence.compareTo(firstSequence) > 0) {
         iterator.previous();
         iterator.add(firstSequence);
@@ -134,7 +134,7 @@ public class SimiliarListsZipper {
     private long myCachedNumber;
     private final List<T> myList;
 
-    private SubSequence(final List<T> list) {
+    private SubSequence(List<T> list) {
       myList = list;
       myIdx = 0;
       myCachedNumber = myZipper.getNumber(myList.get(0));
@@ -144,8 +144,8 @@ public class SimiliarListsZipper {
       return myIdx < (myList.size() - 1);
     }
 
-    public int compareTo(final SubSequence<T> other) {
-      final long sign = myCachedNumber - other.myCachedNumber;
+    public int compareTo(SubSequence<T> other) {
+      long sign = myCachedNumber - other.myCachedNumber;
       return sign == 0 ? 0 : ((sign < 0) ? -1 : 1);
     }
 

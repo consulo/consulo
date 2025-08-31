@@ -48,19 +48,19 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     if (!openDiff(e.getDataContext(), null)) {
-      final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+      Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       Messages.showInfoMessage(component, "Comparison error was not found", "No Comparison Data Found");
     }
   }
 
   @RequiredUIAccess
   public static boolean openDiff(DataContext context, @Nullable DiffHyperlink currentHyperlink) {
-    final AbstractTestProxy testProxy = context.getData(AbstractTestProxy.KEY);
-    final Project project = context.getData(Project.KEY);
+    AbstractTestProxy testProxy = context.getData(AbstractTestProxy.KEY);
+    Project project = context.getData(Project.KEY);
     if (testProxy != null) {
       DiffHyperlink diffViewerProvider = testProxy.getDiffViewerProvider();
       if (diffViewerProvider != null) {
-        final List<DiffHyperlink> providers = collectAvailableProviders(context.getData(TestTreeView.MODEL_DATA_KEY));
+        List<DiffHyperlink> providers = collectAvailableProviders(context.getData(TestTreeView.MODEL_DATA_KEY));
         int index = currentHyperlink != null ? providers.indexOf(currentHyperlink) : -1;
         if (index == -1) index = providers.indexOf(diffViewerProvider);
         DiffRequestChain chain = TestDiffRequestProcessor.createRequestChain(project, ListSelection.createAt(providers, index));
@@ -77,10 +77,10 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
   }
 
   private static List<DiffHyperlink> collectAvailableProviders(TestFrameworkRunningModel model) {
-    final List<DiffHyperlink> providers = new ArrayList<>();
+    List<DiffHyperlink> providers = new ArrayList<>();
     if (model != null) {
-      final AbstractTestProxy root = model.getRoot();
-      final List<? extends AbstractTestProxy> allTests = root.getAllTests();
+      AbstractTestProxy root = model.getRoot();
+      List<? extends AbstractTestProxy> allTests = root.getAllTests();
       for (AbstractTestProxy test : allTests) {
         if (test.isLeaf()) {
           providers.addAll(test.getDiffViewerProviders());
@@ -92,14 +92,14 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    final boolean enabled;
-    final DataContext dataContext = e.getDataContext();
+    Presentation presentation = e.getPresentation();
+    boolean enabled;
+    DataContext dataContext = e.getDataContext();
     if (!dataContext.hasData(Project.KEY)) {
       enabled = false;
     }
     else {
-      final AbstractTestProxy test = dataContext.getData(AbstractTestProxy.KEY);
+      AbstractTestProxy test = dataContext.getData(AbstractTestProxy.KEY);
       enabled = test != null && (test.isLeaf() ? test.getDiffViewerProvider() != null : test.isDefect());
     }
     presentation.setEnabledAndVisible(enabled);

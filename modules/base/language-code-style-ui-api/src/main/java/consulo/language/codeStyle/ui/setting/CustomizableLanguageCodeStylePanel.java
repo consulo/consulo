@@ -115,7 +115,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
 
     @Override
     @Nullable
-    protected EditorHighlighter createHighlighter(final EditorColorsScheme scheme) {
+    protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
         FileType fileType = getFileType();
         return EditorHighlighterProvider.forFileType(fileType)
             .getEditorHighlighter(ProjectUIUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
@@ -124,10 +124,10 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
 
     @Override
     @RequiredUIAccess
-    protected PsiFile doReformat(final Project project, final PsiFile psiFile) {
-        final String text = psiFile.getText();
-        final PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
-        final Document doc = manager.getDocument(psiFile);
+    protected PsiFile doReformat(Project project, PsiFile psiFile) {
+        String text = psiFile.getText();
+        PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
+        Document doc = manager.getDocument(psiFile);
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .inWriteAction()

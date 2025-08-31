@@ -41,30 +41,30 @@ public class ComboEditorCompletionContributor extends CompletionContributor impl
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(@Nonnull final CompletionParameters parameters, @Nonnull final CompletionResultSet result) {
+  public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
     if (parameters.getInvocationCount() == 0) {
       return;
     }
 
-    final PsiFile file = parameters.getOriginalFile();
-    final Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
+    PsiFile file = parameters.getOriginalFile();
+    Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
     if (document != null) {
       JComboBox comboBox = document.getUserData(StringComboboxEditor.COMBO_BOX_KEY);
       if (comboBox != null) {
         String substring = document.getText().substring(0, parameters.getOffset());
         boolean plainPrefixMatcher = Boolean.TRUE.equals(document.getUserData(StringComboboxEditor.USE_PLAIN_PREFIX_MATCHER));
-        final CompletionResultSet resultSet = plainPrefixMatcher ?
+        CompletionResultSet resultSet = plainPrefixMatcher ?
                                               result.withPrefixMatcher(new PlainPrefixMatcher(substring)) :
                                               result.withPrefixMatcher(substring);
-        final int count = comboBox.getItemCount();
+        int count = comboBox.getItemCount();
         for (int i = 0; i < count; i++) {
-          final Object o = comboBox.getItemAt(i);
+          Object o = comboBox.getItemAt(i);
           if (o instanceof String) {
             resultSet.addElement(PrioritizedLookupElement.withPriority(LookupElementBuilder.create((String)o).withInsertHandler(
                     new InsertHandler<LookupElement>() {
                       @Override
-                      public void handleInsert(final InsertionContext context, final LookupElement item) {
-                        final Document document = context.getEditor().getDocument();
+                      public void handleInsert(InsertionContext context, LookupElement item) {
+                        Document document = context.getEditor().getDocument();
                         document.deleteString(context.getEditor().getCaretModel().getOffset(), document.getTextLength());
                       }
                     }), count-i));

@@ -47,6 +47,6 @@ public abstract class XSuspendContext {
   }
 
   public interface XExecutionStackContainer extends XValueCallback {
-    void addExecutionStack(@Nonnull List<? extends XExecutionStack> executionStacks, final boolean last);
+    void addExecutionStack(@Nonnull List<? extends XExecutionStack> executionStacks, boolean last);
   }
 }

@@ -119,7 +119,7 @@ public interface SearchableConfigurable extends Configurable {
       }
 
       @Override
-      public Runnable enableSearch(final String option) {
+      public Runnable enableSearch(String option) {
         return null;
       }
 

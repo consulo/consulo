@@ -21,7 +21,7 @@ public abstract class InstructionBaseImpl implements Instruction {
         return myElement;
     }
 
-    public InstructionBaseImpl(final @Nullable PsiElement element) {
+    public InstructionBaseImpl(@Nullable PsiElement element) {
         myElement = element;
     }
 
@@ -37,7 +37,7 @@ public abstract class InstructionBaseImpl implements Instruction {
 
     @Override
     public @Nonnull String toString() {
-        final StringBuilder builder = new StringBuilder(id());
+        StringBuilder builder = new StringBuilder(id());
         builder.append("(");
         for (int i = 0; i < mySucc.size(); i++) {
             if (i > 0) builder.append(',');

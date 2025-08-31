@@ -30,14 +30,14 @@ import jakarta.annotation.Nullable;
 public final class ShowHiddensAction extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(AnActionEvent e) {
-        final FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
+        FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
         return fileSystemTree != null && fileSystemTree.areHiddensShown();
     }
 
     @Override
     @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean state) {
-        final FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
+        FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
         if (fileSystemTree != null) {
             fileSystemTree.showHiddens(state);
         }

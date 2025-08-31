@@ -19,5 +19,5 @@ package consulo.desktop.boot.main.windows;
  * @author yole
  */
 public interface WindowsCommandLineListener {
-  void processWindowsLauncherCommandLine(final String currentDirectory, final String commandLine);
+  void processWindowsLauncherCommandLine(String currentDirectory, String commandLine);
 }

@@ -37,12 +37,12 @@ public class ID<K, V> extends IndexId<K, V> {
   private final short myUniqueId;
 
   public static void reload() {
-    final File indices = getEnumFile();
+    File indices = getEnumFile();
     try {
       ObjectIntMap<String> nameToIdRegistry = ObjectMaps.newObjectIntHashMap();
       try (BufferedReader reader = new BufferedReader(new FileReader(indices))) {
         for (int cnt = 1; ; cnt++) {
-          final String name = reader.readLine();
+          String name = reader.readLine();
           if (name == null) break;
           nameToIdRegistry.putInt(name, cnt);
         }
@@ -62,7 +62,7 @@ public class ID<K, V> extends IndexId<K, V> {
 
   @Nonnull
   private static File getEnumFile() {
-    final File indexFolder = ContainerPathManager.get().getIndexRoot();
+    File indexFolder = ContainerPathManager.get().getIndexRoot();
     return new File(indexFolder, "indices.enum");
   }
 
@@ -70,7 +70,7 @@ public class ID<K, V> extends IndexId<K, V> {
     super(name);
     myUniqueId = stringToId(name);
 
-    final ID old = ourRegistry.put(myUniqueId, this);
+    ID old = ourRegistry.put(myUniqueId, this);
     assert old == null : "ID with name '" + name + "' is already registered";
   }
 
@@ -97,9 +97,9 @@ public class ID<K, V> extends IndexId<K, V> {
 
   private static void writeEnumFile() {
     try {
-      final File f = getEnumFile();
+      File f = getEnumFile();
       try (BufferedWriter w = new BufferedWriter(new FileWriter(f))) {
-        final String[] names = new String[ourNameToIdRegistry.size()];
+        String[] names = new String[ourNameToIdRegistry.size()];
 
         ourNameToIdRegistry.forEach((key, value) -> names[value - 1] = key);
 
@@ -116,7 +116,7 @@ public class ID<K, V> extends IndexId<K, V> {
 
   @Nonnull
   public static <K, V> ID<K, V> create(@Nonnull String name) {
-    final ID<K, V> found = findByName(name);
+    ID<K, V> found = findByName(name);
     return found == null ? new ID<>(name) : found;
   }
 

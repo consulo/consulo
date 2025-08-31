@@ -163,7 +163,7 @@ public abstract class CompletionPhase implements Disposable {
       Language language = PsiUtilCore.findLanguageFromElement(elementAt);
 
       for (CompletionConfidence confidence : CompletionConfidence.forLanguage(language)) {
-        final ThreeState result = confidence.shouldSkipAutopopup(elementAt, psiFile, offset);
+        ThreeState result = confidence.shouldSkipAutopopup(elementAt, psiFile, offset);
         if (result != ThreeState.UNSURE) {
           LOG.debug(confidence + " has returned shouldSkipAutopopup=" + result);
           return result == ThreeState.YES;
@@ -239,37 +239,37 @@ public abstract class CompletionPhase implements Disposable {
 
   public static abstract class ZombiePhase extends CompletionPhase {
 
-    protected ZombiePhase(@Nullable final LightweightHintImpl hint, final CompletionProgressIndicator indicator) {
+    protected ZombiePhase(@Nullable final LightweightHintImpl hint, CompletionProgressIndicator indicator) {
       super(indicator);
       @Nonnull Editor editor = indicator.getEditor();
       final HintListener hintListener = new HintListener() {
         @Override
-        public void hintHidden(@Nonnull final EventObject event) {
+        public void hintHidden(@Nonnull EventObject event) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };
-      final DocumentListener documentListener = new DocumentListener() {
+      DocumentListener documentListener = new DocumentListener() {
         @Override
         public void beforeDocumentChange(@Nonnull DocumentEvent e) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };
-      final SelectionListener selectionListener = new SelectionListener() {
+      SelectionListener selectionListener = new SelectionListener() {
         @Override
         public void selectionChanged(@Nonnull SelectionEvent e) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };
-      final CaretListener caretListener = new CaretListener() {
+      CaretListener caretListener = new CaretListener() {
         @Override
         public void caretPositionChanged(@Nonnull CaretEvent e) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };
 
-      final Document document = editor.getDocument();
-      final SelectionModel selectionModel = editor.getSelectionModel();
-      final CaretModel caretModel = editor.getCaretModel();
+      Document document = editor.getDocument();
+      SelectionModel selectionModel = editor.getSelectionModel();
+      CaretModel caretModel = editor.getCaretModel();
 
 
       if (hint != null) {

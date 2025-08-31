@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public abstract class SimpleMacro extends Macro {
   private final String myName;
 
-  protected SimpleMacro(final String name) {
+  protected SimpleMacro(String name) {
     myName = name;
   }
 
@@ -50,14 +50,14 @@ public abstract class SimpleMacro extends Macro {
   }
 
   @Override
-  public Result calculateResult(@Nonnull final Expression[] params, final ExpressionContext context) {
+  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
     return new TextResult(evaluateSimpleMacro(params, context));
   }
 
   @Override
-  public Result calculateQuickResult(@Nonnull final Expression[] params, final ExpressionContext context) {
+  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
     return calculateResult(params, context);
   }
 
-  protected abstract String evaluateSimpleMacro(Expression[] params, final ExpressionContext context);
+  protected abstract String evaluateSimpleMacro(Expression[] params, ExpressionContext context);
 }

@@ -67,7 +67,7 @@ public class ArchivePackageInfo {
   }
 
   public List<ArchiveDestinationInfo> getArchiveDestinations() {
-    final ArrayList<ArchiveDestinationInfo> list = new ArrayList<>();
+    ArrayList<ArchiveDestinationInfo> list = new ArrayList<>();
     for (DestinationInfo destination : myDestinations) {
       if (destination instanceof ArchiveDestinationInfo) {
         list.add((ArchiveDestinationInfo)destination);

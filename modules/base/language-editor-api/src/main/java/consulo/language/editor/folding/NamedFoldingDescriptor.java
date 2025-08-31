@@ -34,7 +34,7 @@ public class NamedFoldingDescriptor extends FoldingDescriptor {
   }
 
   public NamedFoldingDescriptor(@Nonnull ASTNode node,
-                                @Nonnull final TextRange range,
+                                @Nonnull TextRange range,
                                 @Nullable FoldingGroup group,
                                 @Nonnull String placeholderText) {
     super(node, range, group);

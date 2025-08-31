@@ -64,10 +64,10 @@ public abstract class OrderPanel<T> extends JPanel{
       e -> {
         if(getCheckboxColumn() == -1) return;
 
-        final int[] selectedRows = myEntryTable.getSelectedRows();
+        int[] selectedRows = myEntryTable.getSelectedRows();
         boolean currentlyMarked = true;
         for (int idx = 0; idx < selectedRows.length; idx++) {
-          final int selectedRow = selectedRows[idx];
+          int selectedRow = selectedRows[idx];
           if (selectedRow < 0 || !myEntryTable.isCellEditable(selectedRow, getCheckboxColumn())) {
             return;
           }
@@ -92,19 +92,19 @@ public abstract class OrderPanel<T> extends JPanel{
     myEntryEditable = entryEditable;
   }
 
-  public void setCheckboxColumnName(final String name) {
-    final int width;
+  public void setCheckboxColumnName(String name) {
+    int width;
     if (StringUtil.isEmpty(name)) {
       CHECKBOX_COLUMN_NAME = "";
       width = new JCheckBox().getPreferredSize().width;
     }
     else {
       CHECKBOX_COLUMN_NAME = name;
-      final FontMetrics fontMetrics = myEntryTable.getFontMetrics(myEntryTable.getFont());
+      FontMetrics fontMetrics = myEntryTable.getFontMetrics(myEntryTable.getFont());
       width = fontMetrics.stringWidth(" " + name + " ") + 4;
     }
 
-    final TableColumn checkboxColumn = myEntryTable.getColumnModel().getColumn(getCheckboxColumn());
+    TableColumn checkboxColumn = myEntryTable.getColumnModel().getColumn(getCheckboxColumn());
     checkboxColumn.setWidth(width);
     checkboxColumn.setPreferredWidth(width);
     checkboxColumn.setMaxWidth(width);
@@ -264,8 +264,8 @@ public abstract class OrderPanel<T> extends JPanel{
   }
 
   public List<T> getEntries() {
-    final TableModel model = myEntryTable.getModel();
-    final int size = model.getRowCount();
+    TableModel model = myEntryTable.getModel();
+    int size = model.getRowCount();
     List<T> result = new ArrayList<>(size);
     for (int idx = 0; idx < size; idx++) {
       result.add(getValueAt(idx));

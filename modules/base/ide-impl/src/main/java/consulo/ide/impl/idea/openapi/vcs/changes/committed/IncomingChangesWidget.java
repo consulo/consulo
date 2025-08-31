@@ -52,7 +52,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
   }
 
    void refreshIndicator() {
-    final List<CommittedChangeList> list = myIncomingChangesIndicator.getCache().getCachedIncomingChanges();
+    List<CommittedChangeList> list = myIncomingChangesIndicator.getCache().getCachedIncomingChanges();
     if (list == null || list.isEmpty()) {
       clear();
     }
@@ -65,11 +65,11 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
     update(ImageEffects.grayed(PlatformIconGroup.ideIncomingchangeson()), "No incoming changelists available");
   }
 
-  void setChangesAvailable(@Nonnull final String toolTipText) {
+  void setChangesAvailable(@Nonnull String toolTipText) {
     update(PlatformIconGroup.ideIncomingchangeson(), toolTipText);
   }
 
-  private void update(@Nonnull final Image icon, @Nullable final String toolTipText) {
+  private void update(@Nonnull Image icon, @Nullable String toolTipText) {
     myCurrentIcon = icon;
     myToolTipText = toolTipText;
     if (myStatusBar != null) myStatusBar.updateWidget(getId());
@@ -92,7 +92,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
     return mouseEvent -> {
       if (myStatusBar != null) {
         DataContext dataContext = DataManager.getInstance().getDataContext((Component)myStatusBar);
-        final Project project = dataContext.getData(Project.KEY);
+        Project project = dataContext.getData(Project.KEY);
         if (project != null) {
           ToolWindow changesView = ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
           changesView.show(() -> ChangesViewContentManager.getInstance(project).selectContent("Incoming"));

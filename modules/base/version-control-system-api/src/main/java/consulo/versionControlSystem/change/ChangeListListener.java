@@ -53,7 +53,7 @@ public interface ChangeListListener extends EventListener {
   default void changesMoved(Collection<Change> changes, ChangeList fromList, ChangeList toList) {
   }
 
-  default void defaultListChanged(final ChangeList oldDefaultList, ChangeList newDefaultList) {
+  default void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
   }
 
   default void unchangedFileStatusChanged() {

@@ -115,7 +115,7 @@ public class CharArrayUtil {
    *                     as that that symbol is not contained at the given 'chars';
    *                     <code>endOffset</code> otherwise
    */
-  public static int shiftForward(@Nonnull CharSequence buffer, final int startOffset, final int endOffset, @Nonnull String chars) {
+  public static int shiftForward(@Nonnull CharSequence buffer, int startOffset, int endOffset, @Nonnull String chars) {
     return consulo.util.lang.CharArrayUtil.shiftForward(buffer, startOffset, endOffset, chars);
   }
 
@@ -215,7 +215,7 @@ public class CharArrayUtil {
    * @param toIndex      end index (exclusive)
    * @return             index of the given pattern at the given buffer if the match is found; <code>-1</code> otherwise
    */
-  public static int indexOf(@Nonnull CharSequence buffer, @Nonnull CharSequence pattern, int fromIndex, final int toIndex) {
+  public static int indexOf(@Nonnull CharSequence buffer, @Nonnull CharSequence pattern, int fromIndex, int toIndex) {
     return consulo.util.lang.CharArrayUtil.indexOf(buffer, pattern, fromIndex, toIndex);
   }
 
@@ -230,7 +230,7 @@ public class CharArrayUtil {
    *                    <code>[from; to)</code> if target symbol is found;
    *                    <code>-1</code> otherwise
    */
-  public static int indexOf(@Nonnull char[] buffer, final char symbol, int fromIndex, final int toIndex) {
+  public static int indexOf(@Nonnull char[] buffer, char symbol, int fromIndex, int toIndex) {
     return consulo.util.lang.CharArrayUtil.indexOf(buffer, symbol, fromIndex, toIndex);
   }
 
@@ -245,7 +245,7 @@ public class CharArrayUtil {
    *                    <code>[from; to)</code> if target symbol is found;
    *                    <code>-1</code> otherwise
    */
-  public static int lastIndexOf(@Nonnull char[] buffer, final char symbol, int fromIndex, final int toIndex) {
+  public static int lastIndexOf(@Nonnull char[] buffer, char symbol, int fromIndex, int toIndex) {
     return consulo.util.lang.CharArrayUtil.lastIndexOf(buffer, symbol, fromIndex, toIndex);
   }
 

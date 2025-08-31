@@ -56,13 +56,13 @@ public class StructureViewSelectInTarget implements SelectInTarget {
         final FileEditor fileEditor = context.getFileEditorProvider().get();
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(context.getProject());
-        final Runnable runnable = new Runnable() {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 StructureViewFactoryEx.getInstanceEx(myProject).runWhenInitialized(new Runnable() {
                     @Override
                     public void run() {
-                        final StructureViewWrapper structureView = getStructureViewWrapper();
+                        StructureViewWrapper structureView = getStructureViewWrapper();
                         structureView.selectCurrentElement(fileEditor, context.getVirtualFile(), requestFocus);
                     }
                 });

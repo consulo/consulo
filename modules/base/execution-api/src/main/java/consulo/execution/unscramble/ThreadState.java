@@ -43,7 +43,7 @@ public class ThreadState {
   @Nullable
   private ThreadOperation myOperation;
 
-  public ThreadState(final String name, final String state) {
+  public ThreadState(String name, String state) {
     myName = name;
     myState = state.trim();
   }
@@ -60,7 +60,7 @@ public class ThreadState {
     return myStackTrace;
   }
 
-  public void setStackTrace(final String stackTrace, boolean isEmpty) {
+  public void setStackTrace(String stackTrace, boolean isEmpty) {
     myStackTrace = stackTrace;
     myEmptyStackTrace = isEmpty;
   }
@@ -74,11 +74,11 @@ public class ThreadState {
     return myName;
   }
 
-  public void setJavaThreadState(final String javaThreadState) {
+  public void setJavaThreadState(String javaThreadState) {
     myJavaThreadState = javaThreadState;
   }
 
-  public void setThreadStateDetail(@NonNls final String threadStateDetail) {
+  public void setThreadStateDetail(@NonNls String threadStateDetail) {
     myThreadStateDetail = threadStateDetail;
   }
 
@@ -101,7 +101,7 @@ public class ThreadState {
     return myExtraState;
   }
 
-  public void setExtraState(final String extraState) {
+  public void setExtraState(String extraState) {
     myExtraState = extraState;
   }
 
@@ -134,7 +134,7 @@ public class ThreadState {
     return myOperation;
   }
 
-  public void setOperation(@Nullable final ThreadOperation operation) {
+  public void setOperation(@Nullable ThreadOperation operation) {
     myOperation = operation;
   }
 
@@ -143,7 +143,7 @@ public class ThreadState {
   }
 
   public boolean isEDT() {
-    final String name = getName();
+    String name = getName();
     return isEDT(name);
   }
 

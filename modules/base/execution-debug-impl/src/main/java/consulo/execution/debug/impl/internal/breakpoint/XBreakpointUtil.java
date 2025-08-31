@@ -76,20 +76,20 @@ public class XBreakpointUtil {
     }
 
     @Nonnull
-    public static Pair<GutterIconRenderer, Object> findSelectedBreakpoint(@Nonnull final Project project, @Nonnull final Editor editor) {
+    public static Pair<GutterIconRenderer, Object> findSelectedBreakpoint(@Nonnull Project project, @Nonnull Editor editor) {
         int offset = editor.getCaretModel().getOffset();
         Document editorDocument = editor.getDocument();
 
-        final BreakpointPanelProvider<?> provider = XBreakpointPanelProvider.getInstance();
+        BreakpointPanelProvider<?> provider = XBreakpointPanelProvider.getInstance();
 
-        final int textLength = editor.getDocument().getTextLength();
+        int textLength = editor.getDocument().getTextLength();
         if (offset > textLength) {
             offset = textLength;
         }
 
         Object breakpoint = provider.findBreakpoint(project, editorDocument, offset);
         if (breakpoint != null) {
-            final GutterIconRenderer iconRenderer = provider.getBreakpointGutterIconRenderer(breakpoint);
+            GutterIconRenderer iconRenderer = provider.getBreakpointGutterIconRenderer(breakpoint);
             return Pair.create(iconRenderer, breakpoint);
         }
 
@@ -122,7 +122,7 @@ public class XBreakpointUtil {
             }
         }
 
-        final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+        XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
         XLineBreakpointType<?>[] lineTypes = XDebuggerUtil.getInstance().getLineBreakpointTypes();
         List<XLineBreakpointType> typeWinner = new SmartList<>();
         int lineWinner = -1;
@@ -185,13 +185,13 @@ public class XBreakpointUtil {
             }
         }
 
-        final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+        XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
         XLineBreakpointType<?>[] lineTypes = XDebuggerUtil.getInstance().getLineBreakpointTypes();
         XLineBreakpointType<?> typeWinner = null;
         int lineWinner = -1;
         for (int line = lineStart; line <= linesEnd; line++) {
             for (XLineBreakpointType<?> type : lineTypes) {
-                final XLineBreakpoint<? extends XBreakpointProperties> breakpoint = breakpointManager.findBreakpointAtLine(type, file, line);
+                XLineBreakpoint<? extends XBreakpointProperties> breakpoint = breakpointManager.findBreakpointAtLine(type, file, line);
                 if (breakpoint != null && temporary && !breakpoint.isTemporary()) {
                     breakpoint.setTemporary(true);
                 }

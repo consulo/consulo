@@ -43,13 +43,13 @@ public class ScopesOrderDialog extends DialogWrapper {
   private final Project myProject;
   private final JPanel myPanel;
 
-  public ScopesOrderDialog(final InspectionProfileImpl inspectionProfile,
-                           final Project project) {
+  public ScopesOrderDialog(InspectionProfileImpl inspectionProfile,
+                           Project project) {
     super(project, true);
     myInspectionProfile = inspectionProfile;
     myProject = project;
 
-    final JPanel listPanel = ToolbarDecorator.createDecorator(myOptionsList).setMoveDownAction(new AnActionButtonRunnable() {
+    JPanel listPanel = ToolbarDecorator.createDecorator(myOptionsList).setMoveDownAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton anActionButton) {
         ListUtil.moveSelectedItemsDown(myOptionsList);
@@ -60,7 +60,7 @@ public class ScopesOrderDialog extends DialogWrapper {
         ListUtil.moveSelectedItemsUp(myOptionsList);
       }
     }).disableRemoveAction().disableAddAction().createPanel();
-    final JLabel descr = new JLabel("<html><p>If file appears in two or more scopes, it will be " +
+    JLabel descr = new JLabel("<html><p>If file appears in two or more scopes, it will be " +
                                     "inspected with settings of the topmost scope in list above.</p><p/>" +
                                     "<p>Scope order is set globally for all inspections in the profile.</p></html>");
     descr.setPreferredSize(new Dimension(300, 100));
@@ -78,9 +78,9 @@ public class ScopesOrderDialog extends DialogWrapper {
     DefaultListModel model = new DefaultListModel();
     model.removeAllElements();
 
-    final List<String> scopes = new ArrayList<String>();
-    for (final NamedScopesHolder holder : NamedScopesHolder.getAllNamedScopeHolders(myProject)) {
-      for (final NamedScope scope : holder.getScopes()) {
+    List<String> scopes = new ArrayList<String>();
+    for (NamedScopesHolder holder : NamedScopesHolder.getAllNamedScopeHolders(myProject)) {
+      for (NamedScope scope : holder.getScopes()) {
         if (!(scope instanceof NonProjectFilesScope)) {
           scopes.add(scope.getName());
         }
@@ -103,10 +103,10 @@ public class ScopesOrderDialog extends DialogWrapper {
 
   @Override
   protected void doOKAction() {
-    final int size = myOptionsList.getModel().getSize();
-    final String[] newScopeOrder = new String[size];
+    int size = myOptionsList.getModel().getSize();
+    String[] newScopeOrder = new String[size];
     for (int i = 0; i < size; i++) {
-      final String scopeName = (String) myOptionsList.getModel().getElementAt(i);
+      String scopeName = (String) myOptionsList.getModel().getElementAt(i);
       newScopeOrder[i] = scopeName;
     }
     if (!Arrays.equals(newScopeOrder, myInspectionProfile.getScopesOrder())) {

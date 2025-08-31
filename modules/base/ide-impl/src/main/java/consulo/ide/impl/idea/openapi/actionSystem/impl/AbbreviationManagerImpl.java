@@ -42,21 +42,21 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
   @Nullable
   @Override
   public Element getState() {
-    final Element actions = new Element("actions");
-    final Element abbreviations = new Element("abbreviations");
+    Element actions = new Element("actions");
+    Element abbreviations = new Element("abbreviations");
     actions.addContent(abbreviations);
     for (String key : myActionId2Abbreviations.keySet()) {
-      final LinkedHashSet<String> abbrs = myActionId2Abbreviations.get(key);
-      final LinkedHashSet<String> pluginAbbrs = myPluginsActionId2Abbreviations.get(key);
+      LinkedHashSet<String> abbrs = myActionId2Abbreviations.get(key);
+      LinkedHashSet<String> pluginAbbrs = myPluginsActionId2Abbreviations.get(key);
       if (abbrs == pluginAbbrs || (abbrs != null && abbrs.equals(pluginAbbrs))) {
         continue;
       }
       if (abbrs != null) {
-        final Element action = new Element("action");
+        Element action = new Element("action");
         action.setAttribute("id", key);
         abbreviations.addContent(action);
         for (String abbr : abbrs) {
-          final Element abbreviation = new Element("abbreviation");
+          Element abbreviation = new Element("abbreviation");
           abbreviation.setAttribute("name", abbr);
           action.addContent(abbreviation);
         }
@@ -68,22 +68,22 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
 
   @Override
   public void loadState(Element state) {
-    final List<Element> abbreviations = state.getChildren("abbreviations");
+    List<Element> abbreviations = state.getChildren("abbreviations");
     if (abbreviations != null && abbreviations.size() == 1) {
-      final List<Element> actions = abbreviations.get(0).getChildren("action");
+      List<Element> actions = abbreviations.get(0).getChildren("action");
       if (actions != null && actions.size() > 0) {
         for (Element action : actions) {
-          final String actionId = action.getAttributeValue("id");
+          String actionId = action.getAttributeValue("id");
           LinkedHashSet<String> values = myActionId2Abbreviations.get(actionId);
           if (values == null) {
             values = new LinkedHashSet<>(1);
             myActionId2Abbreviations.put(actionId, values);
           }
 
-          final List<Element> abbreviation = action.getChildren("abbreviation");
+          List<Element> abbreviation = action.getChildren("abbreviation");
           if (abbreviation != null) {
             for (Element abbr : abbreviation) {
-              final String abbrValue = abbr.getAttributeValue("name");
+              String abbrValue = abbr.getAttributeValue("name");
               if (abbrValue != null) {
                 values.add(abbrValue);
               }
@@ -96,7 +96,7 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
 
   @Override
   public Set<String> getAbbreviations() {
-    final Set<String> result = new HashSet<>();
+    Set<String> result = new HashSet<>();
     for (Set<String> abbrs : myActionId2Abbreviations.values()) {
       result.addAll(abbrs);
     }
@@ -105,7 +105,7 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
 
   @Override
   public Set<String> getAbbreviations(String actionId) {
-    final LinkedHashSet<String> abbreviations = myActionId2Abbreviations.get(actionId);
+    LinkedHashSet<String> abbreviations = myActionId2Abbreviations.get(actionId);
     if (abbreviations == null) {
       return Collections.emptySet();
     }
@@ -114,7 +114,7 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
 
   @Override
   public List<String> findActions(String abbreviation) {
-    final List<String> actions = myAbbreviation2ActionId.get(abbreviation);
+    List<String> actions = myAbbreviation2ActionId.get(abbreviation);
     return actions == null ? Collections.<String>emptyList() : Collections.unmodifiableList(actions);
   }
 
@@ -156,18 +156,18 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
 
   @Override
   public void remove(String abbreviation, String actionId) {
-    final List<String> actions = myAbbreviation2ActionId.get(abbreviation);
+    List<String> actions = myAbbreviation2ActionId.get(abbreviation);
     if (actions != null) {
       actions.remove(actionId);
     }
-    final LinkedHashSet<String> abbreviations = myActionId2Abbreviations.get(actionId);
+    LinkedHashSet<String> abbreviations = myActionId2Abbreviations.get(actionId);
     if (abbreviations != null) {
       abbreviations.remove(abbreviation);
     }
     else {
-      final LinkedHashSet<String> abbrs = myActionId2Abbreviations.get(actionId);
+      LinkedHashSet<String> abbrs = myActionId2Abbreviations.get(actionId);
       if (abbrs != null) {
-        final LinkedHashSet<String> customValues = new LinkedHashSet<>(abbrs);
+        LinkedHashSet<String> customValues = new LinkedHashSet<>(abbrs);
         customValues.remove(abbreviation);
         myActionId2Abbreviations.put(actionId, customValues);
       }

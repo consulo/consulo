@@ -165,7 +165,7 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
         myText = condition.getValue().toString();
       }
       Object v = condition.getValue();
-      final ArrangementSettingsToken type = condition.getType();
+      ArrangementSettingsToken type = condition.getType();
       if (type instanceof StdArrangementSettingsToken) {
         //Process any StdArrangementSettingsToken. No need to change it when new types of tokens will be processed.
         addToContext((StdArrangementSettingsToken)type, condition);

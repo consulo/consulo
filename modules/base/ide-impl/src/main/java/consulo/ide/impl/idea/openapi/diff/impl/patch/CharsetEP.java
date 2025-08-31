@@ -56,8 +56,8 @@ public class CharsetEP implements PatchEP {
 
   @Override
   public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
-    final File file = new File(myBaseDir, path);
-    final VirtualFile vf = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+    File file = new File(myBaseDir, path);
+    VirtualFile vf = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
     return vf == null ? null : vf.getCharset().name();
   }
 
@@ -75,13 +75,13 @@ public class CharsetEP implements PatchEP {
       map = new HashMap<String, String>();
       commitContext.putUserData(ourName, map);
     }
-    final File file = new File(myBaseDir, path);
+    File file = new File(myBaseDir, path);
     map.put(FilePathsHelper.convertPath(file.getPath()), content.toString());
   }
   
-  public static String getCharset(final String path, final CommitContext commitContext) {
+  public static String getCharset(String path, CommitContext commitContext) {
     if (commitContext == null) return null;
-    final Map<String, String> userData = commitContext.getUserData(ourName);
+    Map<String, String> userData = commitContext.getUserData(ourName);
     return userData == null ? null : userData.get(FilePathsHelper.convertPath(path));
   }
 }

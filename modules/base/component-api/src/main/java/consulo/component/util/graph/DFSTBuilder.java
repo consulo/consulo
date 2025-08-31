@@ -213,7 +213,7 @@ public class DFSTBuilder<Node> {
   @Nonnull
   public Comparator<Node> comparator() {
     if (myComparator == null) {
-      final ObjectIntMap<Node> map = isAcyclic() ? myNodeToNNumber : myNodeToTNumber;
+      ObjectIntMap<Node> map = isAcyclic() ? myNodeToNNumber : myNodeToTNumber;
       myComparator = (t, t1) -> map.getInt(t) - map.getInt(t1);
     }
     return myComparator;
@@ -228,12 +228,12 @@ public class DFSTBuilder<Node> {
   }
 
   @Nonnull
-  public Node getNodeByNNumber(final int n) {
+  public Node getNodeByNNumber(int n) {
     return myInvN[n];
   }
 
   @Nonnull
-  public Node getNodeByTNumber(final int n) {
+  public Node getNodeByTNumber(int n) {
     return myInvT[n];
   }
 

@@ -214,12 +214,12 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
     @Override
     @Nonnull
-    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
         try {
             indicator.checkCanceled();
 
-            final Document document1 = getContent1().getDocument();
-            final Document document2 = getContent2().getDocument();
+            Document document1 = getContent1().getDocument();
+            Document document2 = getContent2().getDocument();
 
             ThrowableComputable<CharSequence[], RuntimeException> action =
                 () -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
@@ -248,7 +248,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     @Nonnull
-    private Runnable apply(@Nonnull final CompareData data) {
+    private Runnable apply(@Nonnull CompareData data) {
         return () -> {
             myFoldingModel.updateContext(myRequest, getFoldingModelSettings());
 
@@ -281,7 +281,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     @Nonnull
-    private Runnable applyNotification(@Nullable final JComponent notification) {
+    private Runnable applyNotification(@Nullable JComponent notification) {
         return () -> {
             clearDiffPresentation();
             myFoldingModel.destroy();
@@ -370,11 +370,11 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         return true;
     }
 
-    private void doScrollToChange(@Nonnull SimpleDiffChange change, final boolean animated) {
-        final int line1 = change.getStartLine(Side.LEFT);
-        final int line2 = change.getStartLine(Side.RIGHT);
-        final int endLine1 = change.getEndLine(Side.LEFT);
-        final int endLine2 = change.getEndLine(Side.RIGHT);
+    private void doScrollToChange(@Nonnull SimpleDiffChange change, boolean animated) {
+        int line1 = change.getStartLine(Side.LEFT);
+        int line2 = change.getStartLine(Side.RIGHT);
+        int endLine1 = change.getEndLine(Side.LEFT);
+        int endLine2 = change.getEndLine(Side.RIGHT);
 
         DiffImplUtil.moveCaret(getEditor1(), line1);
         DiffImplUtil.moveCaret(getEditor2(), line2);
@@ -449,7 +449,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     @Nonnull
     @RequiredUIAccess
     private List<SimpleDiffChange> getSelectedChanges(@Nonnull Side side) {
-        final BitSet lines = DiffImplUtil.getSelectedLines(getEditor(side));
+        BitSet lines = DiffImplUtil.getSelectedLines(getEditor(side));
 
         List<SimpleDiffChange> affectedChanges = new ArrayList<>();
         for (int i = myDiffChanges.size() - 1; i >= 0; i--) {
@@ -572,8 +572,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             Editor editor = e.getData(Editor.KEY);
-            final Side side = assertNotNull(Side.fromValue(getEditors(), editor));
-            final List<SimpleDiffChange> selectedChanges = getSelectedChanges(side);
+            Side side = assertNotNull(Side.fromValue(getEditors(), editor));
+            List<SimpleDiffChange> selectedChanges = getSelectedChanges(side);
             if (selectedChanges.isEmpty()) {
                 return;
             }
@@ -702,7 +702,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     @RequiredWriteAction
-    public void replaceChange(@Nonnull SimpleDiffChange change, @Nonnull final Side sourceSide) {
+    public void replaceChange(@Nonnull SimpleDiffChange change, @Nonnull Side sourceSide) {
         if (!change.isValid()) {
             return;
         }
@@ -722,7 +722,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     @RequiredWriteAction
-    public void appendChange(@Nonnull SimpleDiffChange change, @Nonnull final Side sourceSide) {
+    public void appendChange(@Nonnull SimpleDiffChange change, @Nonnull Side sourceSide) {
         if (!change.isValid()) {
             return;
         }
@@ -957,7 +957,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         public void install(
-            @Nullable final List<LineFragment> fragments,
+            @Nullable List<LineFragment> fragments,
             @Nonnull UserDataHolder context,
             @Nonnull FoldingModelSupport.Settings settings
         ) {

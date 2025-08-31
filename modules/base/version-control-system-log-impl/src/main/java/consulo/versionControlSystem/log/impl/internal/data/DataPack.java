@@ -46,7 +46,7 @@ public class DataPack extends DataPackBase {
     @Nonnull List<? extends GraphCommit<Integer>> commits,
     @Nonnull Map<VirtualFile, CompressedRefs> refs,
     @Nonnull Map<VirtualFile, VcsLogProvider> providers,
-    @Nonnull final VcsLogStorage hashMap,
+    @Nonnull VcsLogStorage hashMap,
     boolean full
   ) {
     RefsModel refsModel;
@@ -70,7 +70,7 @@ public class DataPack extends DataPackBase {
   }
 
   @Nonnull
-  public static Function<Integer, Hash> createHashGetter(@Nonnull final VcsLogStorage hashMap) {
+  public static Function<Integer, Hash> createHashGetter(@Nonnull VcsLogStorage hashMap) {
     return commitIndex -> {
       CommitId commitId = hashMap.getCommitId(commitIndex);
       if (commitId == null) return null;

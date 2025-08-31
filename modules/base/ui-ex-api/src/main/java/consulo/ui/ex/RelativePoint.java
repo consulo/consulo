@@ -86,13 +86,13 @@ public class RelativePoint {
 
   @Nonnull
   public RelativePoint getPointOn(@Nonnull Component aTargetComponent) {
-    final Point point = getPoint(aTargetComponent);
+    Point point = getPoint(aTargetComponent);
     return new RelativePoint(aTargetComponent, point);
   }
 
   @Nonnull
   public Point getScreenPoint() {
-    final Point point = (Point)getPoint().clone();
+    Point point = (Point)getPoint().clone();
     SwingUtilities.convertPointToScreen(point, getComponent());
     return point;
   }
@@ -111,44 +111,44 @@ public class RelativePoint {
 
   @Nonnull
   public static RelativePoint getCenterOf(@Nonnull JComponent component) {
-    final Rectangle visibleRect = component.getVisibleRect();
-    final Point point = new Point(visibleRect.x + visibleRect.width / 2, visibleRect.y + visibleRect.height / 2);
+    Rectangle visibleRect = component.getVisibleRect();
+    Point point = new Point(visibleRect.x + visibleRect.width / 2, visibleRect.y + visibleRect.height / 2);
     return new RelativePoint(component, point);
   }
 
   @Nonnull
   public static RelativePoint getSouthEastOf(@Nonnull JComponent component) {
-    final Rectangle visibleRect = component.getVisibleRect();
-    final Point point = new Point(visibleRect.x + visibleRect.width, visibleRect.y + visibleRect.height);
+    Rectangle visibleRect = component.getVisibleRect();
+    Point point = new Point(visibleRect.x + visibleRect.width, visibleRect.y + visibleRect.height);
     return new RelativePoint(component, point);
   }
 
   @Nonnull
   public static RelativePoint getSouthWestOf(@Nonnull JComponent component) {
-    final Rectangle visibleRect = component.getVisibleRect();
-    final Point point = new Point(visibleRect.x, visibleRect.y + visibleRect.height);
+    Rectangle visibleRect = component.getVisibleRect();
+    Point point = new Point(visibleRect.x, visibleRect.y + visibleRect.height);
     return new RelativePoint(component, point);
   }
 
   @Nonnull
   public static RelativePoint getSouthOf(@Nonnull JComponent component) {
-    final Rectangle visibleRect = component.getVisibleRect();
-    final Point point = new Point(visibleRect.x + visibleRect.width / 2, visibleRect.y + visibleRect.height);
+    Rectangle visibleRect = component.getVisibleRect();
+    Point point = new Point(visibleRect.x + visibleRect.width / 2, visibleRect.y + visibleRect.height);
     return new RelativePoint(component, point);
   }
 
   @Nonnull
   public static RelativePoint getNorthWestOf(@Nonnull JComponent component) {
-    final Rectangle visibleRect = component.getVisibleRect();
-    final Point point = new Point(visibleRect.x, visibleRect.y);
+    Rectangle visibleRect = component.getVisibleRect();
+    Point point = new Point(visibleRect.x, visibleRect.y);
     return new RelativePoint(component, point);
   }
 
   @Nonnull
   @SuppressWarnings("unused")
   public static RelativePoint getNorthEastOf(@Nonnull JComponent component) {
-    final Rectangle visibleRect = component.getVisibleRect();
-    final Point point = new Point(visibleRect.x + visibleRect.width, visibleRect.y);
+    Rectangle visibleRect = component.getVisibleRect();
+    Point point = new Point(visibleRect.x + visibleRect.width, visibleRect.y);
     return new RelativePoint(component, point);
   }
 

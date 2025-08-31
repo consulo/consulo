@@ -34,7 +34,7 @@ public class ModuleUrl extends AbstractUrl {
 
   @Override
   public Object[] createPath(Project project) {
-    final Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
+    Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
     if (module == null) return null;
     return new Object[]{module};
   }

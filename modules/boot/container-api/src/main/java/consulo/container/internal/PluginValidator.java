@@ -38,22 +38,22 @@ public class PluginValidator {
         }
     };
 
-    public static boolean isIncompatible(final PluginDescriptor descriptor) {
+    public static boolean isIncompatible(PluginDescriptor descriptor) {
         return !VALIDATOR.validateVersion(descriptor);
     }
 
-    public static void checkDependants(final PluginDescriptor pluginDescriptor, final Function<PluginId, PluginDescriptor> pluginId2Descriptor, final Predicate<PluginId> check) {
+    public static void checkDependants(PluginDescriptor pluginDescriptor, Function<PluginId, PluginDescriptor> pluginId2Descriptor, Predicate<PluginId> check) {
         checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<>());
     }
 
-    private static boolean checkDependants(final PluginDescriptor pluginDescriptor,
-                                           final Function<PluginId, PluginDescriptor> pluginId2Descriptor,
-                                           final Predicate<PluginId> check,
-                                           final Set<PluginId> processed) {
+    private static boolean checkDependants(PluginDescriptor pluginDescriptor,
+                                           Function<PluginId, PluginDescriptor> pluginId2Descriptor,
+                                           Predicate<PluginId> check,
+                                           Set<PluginId> processed) {
         processed.add(pluginDescriptor.getPluginId());
-        final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
-        final Set<PluginId> optionalDependencies = new HashSet<PluginId>(Arrays.asList(pluginDescriptor.getOptionalDependentPluginIds()));
-        for (final PluginId dependentPluginId : dependentPluginIds) {
+        PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
+        Set<PluginId> optionalDependencies = new HashSet<PluginId>(Arrays.asList(pluginDescriptor.getOptionalDependentPluginIds()));
+        for (PluginId dependentPluginId : dependentPluginIds) {
             if (processed.contains(dependentPluginId)) {
                 continue;
             }
@@ -61,7 +61,7 @@ public class PluginValidator {
                 if (!check.test(dependentPluginId)) {
                     return false;
                 }
-                final PluginDescriptor dependantPluginDescriptor = pluginId2Descriptor.apply(dependentPluginId);
+                PluginDescriptor dependantPluginDescriptor = pluginId2Descriptor.apply(dependentPluginId);
                 if (dependantPluginDescriptor != null && !checkDependants(dependantPluginDescriptor, pluginId2Descriptor, check, processed)) {
                     return false;
                 }

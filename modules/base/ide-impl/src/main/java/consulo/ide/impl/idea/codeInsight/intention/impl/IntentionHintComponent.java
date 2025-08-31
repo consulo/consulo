@@ -159,7 +159,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     public static IntentionHintComponent showIntentionHint(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Editor editor, boolean showExpanded, @Nonnull CachedIntentions cachedIntentions) {
         UIAccess.assertIsUIThread();
 
-        final IntentionHintComponent component = new IntentionHintComponent(project, file, editor, cachedIntentions);
+        IntentionHintComponent component = new IntentionHintComponent(project, file, editor, cachedIntentions);
 
         if (editor.getSettings().isShowIntentionBulb()) {
             component.showIntentionHintImpl(!showExpanded);
@@ -189,7 +189,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         myPanel.hide();
 
         if (myOuterComboboxPopupListener != null) {
-            final Container ancestor = SwingUtilities.getAncestorOfClass(JComboBox.class, myEditor.getContentComponent());
+            Container ancestor = SwingUtilities.getAncestorOfClass(JComboBox.class, myEditor.getContentComponent());
             if (ancestor != null) {
                 ((JComboBox) ancestor).removePopupMenuListener(myOuterComboboxPopupListener);
             }
@@ -245,8 +245,8 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     @RequiredUIAccess
-    private void showIntentionHintImpl(final boolean delay) {
-        final int offset = myEditor.getCaretModel().getOffset();
+    private void showIntentionHintImpl(boolean delay) {
+        int offset = myEditor.getCaretModel().getOffset();
 
         myComponentHint.setShouldDelay(delay);
 
@@ -279,20 +279,20 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         if (ApplicationManager.getApplication().isUnitTestMode()) {
             return new Point();
         }
-        final int offset = editor.getCaretModel().getOffset();
-        final VisualPosition pos = editor.offsetToVisualPosition(offset);
+        int offset = editor.getCaretModel().getOffset();
+        VisualPosition pos = editor.offsetToVisualPosition(offset);
         int line = pos.line;
 
-        final Point position = editor.visualPositionToXY(new VisualPosition(line, 0));
+        Point position = editor.visualPositionToXY(new VisualPosition(line, 0));
         LOG.assertTrue(editor.getComponent().isDisplayable());
 
         JComponent convertComponent = editor.getContentComponent();
 
         Point realPoint;
-        final boolean oneLineEditor = editor.isOneLineMode();
+        boolean oneLineEditor = editor.isOneLineMode();
         if (oneLineEditor) {
             // place bulb at the corner of the surrounding component
-            final JComponent contentComponent = editor.getContentComponent();
+            JComponent contentComponent = editor.getContentComponent();
             Container ancestorOfClass = SwingUtilities.getAncestorOfClass(JComboBox.class, contentComponent);
 
             if (ancestorOfClass != null) {
@@ -322,7 +322,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
                 yShift = editor.getLineHeight() - NORMAL_BORDER_SIZE;
             }
 
-            final int xShift = Image.DEFAULT_ICON_SIZE;
+            int xShift = Image.DEFAULT_ICON_SIZE;
 
             realPoint = new Point(Math.max(0, visibleArea.x - xShift), position.y + yShift);
         }
@@ -338,15 +338,15 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         if (Registry.is("always.show.intention.above.current.line", false)) {
             return false;
         }
-        final int offset = editor.getCaretModel().getOffset();
-        final VisualPosition pos = editor.offsetToVisualPosition(offset);
+        int offset = editor.getCaretModel().getOffset();
+        VisualPosition pos = editor.offsetToVisualPosition(offset);
         int line = pos.line;
 
-        final int firstNonSpaceColumnOnTheLine = EditorActionUtil.findFirstNonSpaceColumnOnTheLine(editor, line);
+        int firstNonSpaceColumnOnTheLine = EditorActionUtil.findFirstNonSpaceColumnOnTheLine(editor, line);
         if (firstNonSpaceColumnOnTheLine == -1) {
             return false;
         }
-        final Point point = editor.visualPositionToXY(new VisualPosition(line, firstNonSpaceColumnOnTheLine));
+        Point point = editor.visualPositionToXY(new VisualPosition(line, firstNonSpaceColumnOnTheLine));
         return point.x > Image.DEFAULT_ICON_SIZE + (editor.isOneLineMode() ? SMALL_BORDER_SIZE : NORMAL_BORDER_SIZE) * 2;
     }
 
@@ -419,14 +419,14 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         Disposer.dispose(this);
     }
 
-    private void onMouseExit(final boolean small) {
+    private void onMouseExit(boolean small) {
         if (!myPopup.isVisible()) {
             myIconLabel.setIcon(TargetAWT.to(myInactiveIcon));
             myPanel.setBorder(small ? INACTIVE_BORDER_SMALL : INACTIVE_BORDER);
         }
     }
 
-    private void onMouseEnter(final boolean small) {
+    private void onMouseEnter(boolean small) {
         myIconLabel.setIcon(TargetAWT.to(myHighlightedIcon));
         myPanel.setBorder(small ? createActiveBorderSmall() : createActiveBorder());
 
@@ -458,8 +458,8 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
 
         if (mouseClick && myPanel.isShowing()) {
-            final RelativePoint swCorner = RelativePoint.getSouthWestOf(myPanel);
-            final int yOffset = canPlaceBulbOnTheSameLine(myEditor) ? 0 : myEditor.getLineHeight() - (myEditor.isOneLineMode() ? SMALL_BORDER_SIZE : NORMAL_BORDER_SIZE);
+            RelativePoint swCorner = RelativePoint.getSouthWestOf(myPanel);
+            int yOffset = canPlaceBulbOnTheSameLine(myEditor) ? 0 : myEditor.getLineHeight() - (myEditor.isOneLineMode() ? SMALL_BORDER_SIZE : NORMAL_BORDER_SIZE);
             myPopup.show(new RelativePoint(swCorner.getComponent(), new Point(swCorner.getPoint().x, swCorner.getPoint().y + yOffset)));
         }
         else {
@@ -495,8 +495,8 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
 
         boolean committed = PsiDocumentManager.getInstance(myFile.getProject()).isCommitted(myEditor.getDocument());
-        final PsiFile injectedFile = committed ? InjectedLanguageUtil.findInjectedPsiNoCommit(myFile, myEditor.getCaretModel().getOffset()) : null;
-        final Editor injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(myEditor, injectedFile);
+        PsiFile injectedFile = committed ? InjectedLanguageUtil.findInjectedPsiNoCommit(myFile, myEditor.getCaretModel().getOffset()) : null;
+        Editor injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(myEditor, injectedFile);
 
         final ScopeHighlighter highlighter = new ScopeHighlighter(myEditor);
         final ScopeHighlighter injectionHighlighter = new ScopeHighlighter(injectedEditor);
@@ -510,25 +510,25 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
             }
         });
         myPopup.addListSelectionListener(e -> {
-            final Object source = e.getSource();
+            Object source = e.getSource();
             highlighter.dropHighlight();
             injectionHighlighter.dropHighlight();
 
             if (source instanceof DataProvider) {
-                final Object selectedItem = ((DataProvider) source).getData(PlatformDataKeys.SELECTED_ITEM);
+                Object selectedItem = ((DataProvider) source).getData(PlatformDataKeys.SELECTED_ITEM);
                 if (selectedItem instanceof IntentionActionWithTextCaching) {
                     IntentionAction action = IntentionActionDelegate.unwrap(((IntentionActionWithTextCaching) selectedItem).getAction());
                     if (action instanceof SuppressIntentionActionFromFix) {
                         if (injectedFile != null && ((SuppressIntentionActionFromFix) action).isShouldBeAppliedToInjectionHost() == ThreeState.NO) {
-                            final PsiElement at = injectedFile.findElementAt(injectedEditor.getCaretModel().getOffset());
-                            final PsiElement container = ((SuppressIntentionActionFromFix) action).getContainer(at);
+                            PsiElement at = injectedFile.findElementAt(injectedEditor.getCaretModel().getOffset());
+                            PsiElement container = ((SuppressIntentionActionFromFix) action).getContainer(at);
                             if (container != null) {
                                 injectionHighlighter.highlight(container, Collections.singletonList(container));
                             }
                         }
                         else {
-                            final PsiElement at = myFile.findElementAt(myEditor.getCaretModel().getOffset());
-                            final PsiElement container = ((SuppressIntentionActionFromFix) action).getContainer(at);
+                            PsiElement at = myFile.findElementAt(myEditor.getCaretModel().getOffset());
+                            PsiElement container = ((SuppressIntentionActionFromFix) action).getContainer(at);
                             if (container != null) {
                                 highlighter.highlight(container, Collections.singletonList(container));
                             }
@@ -540,9 +540,9 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
         if (myEditor.isOneLineMode()) {
             // hide popup on combobox popup show
-            final Container ancestor = SwingUtilities.getAncestorOfClass(JComboBox.class, myEditor.getContentComponent());
+            Container ancestor = SwingUtilities.getAncestorOfClass(JComboBox.class, myEditor.getContentComponent());
             if (ancestor != null) {
-                final JComboBox comboBox = (JComboBox) ancestor;
+                JComboBox comboBox = (JComboBox) ancestor;
                 myOuterComboboxPopupListener = new PopupMenuListenerAdapter() {
                     @Override
                     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -575,7 +575,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
 
         @Override
-        public void show(@Nonnull final JComponent parentComponent, final int x, final int y, final JComponent focusBackComponent, @Nonnull HintHint hintHint) {
+        public void show(@Nonnull JComponent parentComponent, int x, int y, JComponent focusBackComponent, @Nonnull HintHint hintHint) {
             myVisible = true;
             if (myShouldDelay) {
                 ourAlarm.cancelAllRequests();

@@ -20,7 +20,7 @@ import consulo.language.dataFlow.DFAEngine;
 import consulo.language.dataFlow.map.DFAMap;
 
 public class DFAMapEngine<E> extends DFAEngine<DFAMap<E>>{
-  public DFAMapEngine(final Instruction[] flow, final DfaMapInstance<E> dfa, final MapSemilattice<E> dfaMapSemilattice) {
+  public DFAMapEngine(Instruction[] flow, DfaMapInstance<E> dfa, MapSemilattice<E> dfaMapSemilattice) {
     super(flow, dfa, dfaMapSemilattice);
   }
 }

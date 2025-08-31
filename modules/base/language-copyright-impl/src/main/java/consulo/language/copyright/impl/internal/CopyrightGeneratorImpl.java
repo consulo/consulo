@@ -98,7 +98,7 @@ public class CopyrightGeneratorImpl implements CopyrightGenerator {
       stripLineBreak = true;
     }
     engine.evaluate(vc, sw, CopyrightGeneratorImpl.class.getName(), template);
-    final String result = sw.getBuffer().toString();
+    String result = sw.getBuffer().toString();
     return stripLineBreak ? StringUtil.trimEnd(result, getVelocitySuffix()) : result;
   }
 

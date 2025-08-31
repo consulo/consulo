@@ -16,15 +16,15 @@
 package consulo.versionControlSystem.change.commited;
 
 public interface DecoratorManager {
-  void install(final CommittedChangeListDecorator decorator);
+  void install(CommittedChangeListDecorator decorator);
 
-  void remove(final CommittedChangeListDecorator decorator);
+  void remove(CommittedChangeListDecorator decorator);
 
   void repaintTree();
 
-  void reportLoadedLists(final CommittedChangeListsListener listener);
+  void reportLoadedLists(CommittedChangeListsListener listener);
 
-  void removeFilteringStrategy(final CommittedChangesFilterKey key);
+  void removeFilteringStrategy(CommittedChangesFilterKey key);
 
-  boolean setFilteringStrategy(final ChangeListFilteringStrategy filteringStrategy);
+  boolean setFilteringStrategy(ChangeListFilteringStrategy filteringStrategy);
 }

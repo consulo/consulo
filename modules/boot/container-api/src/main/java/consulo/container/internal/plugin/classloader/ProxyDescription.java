@@ -29,7 +29,7 @@ public class ProxyDescription {
 
   private final int myHashCode;
 
-  public ProxyDescription(final Class superClass, final Class[] interfaces, boolean interceptObjectMethods) {
+  public ProxyDescription(Class superClass, Class[] interfaces, boolean interceptObjectMethods) {
     mySuperClass = superClass;
     myInterfaces = interfaces;
     myInterceptObjectMethods = interceptObjectMethods;

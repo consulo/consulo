@@ -46,7 +46,7 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
 
   public GotoInspectionModel(Project project) {
     super(project, IdeBundle.message("prompt.goto.inspection.enter.name"), "goto.inspection.help.id");
-    final InspectionProfileImpl rootProfile = (InspectionProfileImpl)InspectionProfileManager.getInstance().getRootProfile();
+    InspectionProfileImpl rootProfile = (InspectionProfileImpl)InspectionProfileManager.getInstance().getRootProfile();
     for (ScopeToolState state : rootProfile.getAllTools(project)) {
       try {
         InspectionToolWrapper tool = state.getTool();
@@ -58,7 +58,7 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
           }
         }
         myToolNames.put(tool.getDisplayName(), workingTool);
-        final String groupName = tool.getJoinedGroupPath();
+        String groupName = tool.getJoinedGroupPath();
         Set<InspectionToolWrapper> toolsInGroup = myGroupNames.get(groupName);
         if (toolsInGroup == null) {
           toolsInGroup = new HashSet<>();
@@ -72,7 +72,7 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
       }
     }
 
-    final Set<String> nameIds = new HashSet<>();
+    Set<String> nameIds = new HashSet<>();
     nameIds.addAll(myToolNames.keySet());
     nameIds.addAll(myGroupNames.keySet());
     myNames = ArrayUtil.toStringArray(nameIds);
@@ -89,8 +89,8 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
   }
 
   @Override
-  public Object[] getElementsByName(final String id, final String pattern) {
-    final Set<InspectionToolWrapper> result = new HashSet<>();
+  public Object[] getElementsByName(String id, String pattern) {
+    Set<InspectionToolWrapper> result = new HashSet<>();
     InspectionToolWrapper e = myToolNames.get(id);
     if (e != null) {
       result.add(e);
@@ -99,7 +99,7 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
     if (e != null) {
       result.add(e);
     }
-    final Set<InspectionToolWrapper> entries = myGroupNames.get(id);
+    Set<InspectionToolWrapper> entries = myGroupNames.get(id);
     if (entries != null) {
       result.addAll(entries);
     }
@@ -107,7 +107,7 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
   }
 
   @Override
-  public String getElementName(final Object element) {
+  public String getElementName(Object element) {
     if (element instanceof InspectionToolWrapper) {
       InspectionToolWrapper entry = (InspectionToolWrapper)element;
       return entry.getDisplayName() + " " + entry.getJoinedGroupPath();

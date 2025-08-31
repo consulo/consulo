@@ -39,7 +39,7 @@ class CustomFileTypeQuoteHandler implements FileQuoteHandler {
 
   @Override
   public boolean isClosingQuote(HighlighterIterator iterator, int offset) {
-    final IElementType tokenType = (IElementType)iterator.getTokenType();
+    IElementType tokenType = (IElementType)iterator.getTokenType();
 
     if (tokenType == CustomHighlighterTokenType.STRING || tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING || tokenType == CustomHighlighterTokenType.CHARACTER) {
       int start = iterator.getStart();
@@ -51,7 +51,7 @@ class CustomFileTypeQuoteHandler implements FileQuoteHandler {
 
   @Override
   public boolean isOpeningQuote(HighlighterIterator iterator, int offset) {
-    final IElementType tokenType = (IElementType)iterator.getTokenType();
+    IElementType tokenType = (IElementType)iterator.getTokenType();
 
     if (tokenType == CustomHighlighterTokenType.STRING || tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING || tokenType == CustomHighlighterTokenType.CHARACTER) {
       int start = iterator.getStart();
@@ -88,7 +88,7 @@ class CustomFileTypeQuoteHandler implements FileQuoteHandler {
 
   @Override
   public boolean isInsideLiteral(HighlighterIterator iterator) {
-    final IElementType tokenType = (IElementType)iterator.getTokenType();
+    IElementType tokenType = (IElementType)iterator.getTokenType();
 
     return tokenType == CustomHighlighterTokenType.STRING || tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING || tokenType == CustomHighlighterTokenType.CHARACTER;
   }

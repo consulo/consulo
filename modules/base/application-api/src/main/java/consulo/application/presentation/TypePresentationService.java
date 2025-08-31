@@ -53,9 +53,9 @@ public abstract class TypePresentationService {
     return typeName != null ? typeName : getDefaultTypeName(o.getClass());
   }
 
-  public static String getDefaultTypeName(final Class aClass) {
+  public static String getDefaultTypeName(Class aClass) {
     String simpleName = aClass.getSimpleName();
-    final int i = simpleName.indexOf('$');
+    int i = simpleName.indexOf('$');
     if (i >= 0) {
       simpleName = simpleName.substring(i + 1);
     }

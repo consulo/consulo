@@ -83,15 +83,15 @@ public class SpeedSearchUtilBase {
                                                    @Nonnull SimpleTextAttributes attributes,
                                                    boolean selected,
                                                    @Nonnull ColoredTextContainer simpleColoredComponent) {
-    final SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
+    SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
     if (speedSearch != null) {
-      final Iterable<MatcherTextRange> fragments = speedSearch.matchingFragments(text);
+      Iterable<MatcherTextRange> fragments = speedSearch.matchingFragments(text);
       if (fragments != null) {
-        final Color fg = attributes.getFgColor();
-        final Color bg = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
-        final int style = attributes.getStyle();
-        final SimpleTextAttributes plain = new SimpleTextAttributes(style, fg);
-        final SimpleTextAttributes highlighted = new SimpleTextAttributes(bg, fg, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH);
+        Color fg = attributes.getFgColor();
+        Color bg = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
+        int style = attributes.getStyle();
+        SimpleTextAttributes plain = new SimpleTextAttributes(style, fg);
+        SimpleTextAttributes highlighted = new SimpleTextAttributes(bg, fg, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH);
         appendColoredFragments(simpleColoredComponent, text, fragments, plain, highlighted);
         return;
       }
@@ -99,17 +99,17 @@ public class SpeedSearchUtilBase {
     simpleColoredComponent.append(text, attributes);
   }
 
-  public static void appendColoredFragments(final ColoredTextContainer simpleColoredComponent,
-                                            final String text,
+  public static void appendColoredFragments(ColoredTextContainer simpleColoredComponent,
+                                            String text,
                                             Iterable<MatcherTextRange> colored,
-                                            final SimpleTextAttributes plain,
-                                            final SimpleTextAttributes highlighted) {
-    final List<Pair<String, Integer>> searchTerms = new ArrayList<Pair<String, Integer>>();
+                                            SimpleTextAttributes plain,
+                                            SimpleTextAttributes highlighted) {
+    List<Pair<String, Integer>> searchTerms = new ArrayList<Pair<String, Integer>>();
     for (MatcherTextRange fragment : colored) {
       searchTerms.add(Pair.create(text.substring(fragment.getStartOffset(), fragment.getEndOffset()), fragment.getStartOffset()));
     }
 
-    final int[] lastOffset = {0};
+    int[] lastOffset = {0};
     ContainerUtil.process(searchTerms, pair -> {
       if (pair.second > lastOffset[0]) {
         simpleColoredComponent.append(text.substring(lastOffset[0], pair.second), plain);

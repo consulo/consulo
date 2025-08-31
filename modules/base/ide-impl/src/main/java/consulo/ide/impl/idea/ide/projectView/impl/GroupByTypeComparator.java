@@ -35,26 +35,26 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
   private String myPaneId;
   private boolean myForceSortByType;
 
-  public GroupByTypeComparator(final ProjectView projectView, final String paneId) {
+  public GroupByTypeComparator(ProjectView projectView, String paneId) {
     myProjectView = projectView;
     myPaneId = paneId;
   }
 
-  public GroupByTypeComparator(final boolean forceSortByType) {
+  public GroupByTypeComparator(boolean forceSortByType) {
     myForceSortByType = forceSortByType;
   }
 
   @Override
   public int compare(NodeDescriptor descriptor1, NodeDescriptor descriptor2) {
     if (!isSortByType() && descriptor1 instanceof ProjectViewNode && ((ProjectViewNode) descriptor1).isSortByFirstChild()) {
-      final Collection<AbstractTreeNode> children = ((ProjectViewNode)descriptor1).getChildren();
+      Collection<AbstractTreeNode> children = ((ProjectViewNode)descriptor1).getChildren();
       if (!children.isEmpty()) {
         descriptor1 = children.iterator().next();
         descriptor1.update();
       }
     }
     if (!isSortByType() && descriptor2 instanceof ProjectViewNode && ((ProjectViewNode) descriptor2).isSortByFirstChild()) {
-      final Collection<AbstractTreeNode> children = ((ProjectViewNode)descriptor2).getChildren();
+      Collection<AbstractTreeNode> children = ((ProjectViewNode)descriptor2).getChildren();
       if (!children.isEmpty()) {
         descriptor2 = children.iterator().next();
         descriptor2.update();
@@ -66,8 +66,8 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
       ProjectViewNode node2 = (ProjectViewNode)descriptor2;
 
       if (isManualOrder()) {
-        final Comparable key1 = node1.getManualOrderKey();
-        final Comparable key2 = node2.getManualOrderKey();
+        Comparable key1 = node1.getManualOrderKey();
+        Comparable key2 = node2.getManualOrderKey();
         int result = compare(key1, key2);
         if (result != 0) return result;
       }
@@ -88,14 +88,14 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
       }
 
       if (isSortByType()) {
-        final Comparable typeSortKey1 = node1.getTypeSortKey();
-        final Comparable typeSortKey2 = node2.getTypeSortKey();
+        Comparable typeSortKey1 = node1.getTypeSortKey();
+        Comparable typeSortKey2 = node2.getTypeSortKey();
         int result = compare(typeSortKey1, typeSortKey2);
         if (result != 0) return result;
       }
       else {
-        final Comparable typeSortKey1 = node1.getSortKey();
-        final Comparable typeSortKey2 = node2.getSortKey();
+        Comparable typeSortKey1 = node1.getSortKey();
+        Comparable typeSortKey2 = node2.getSortKey();
         if (typeSortKey1 != null && typeSortKey2 != null) {
           int result = compare(typeSortKey1, typeSortKey2);
           if (result != 0) return result;

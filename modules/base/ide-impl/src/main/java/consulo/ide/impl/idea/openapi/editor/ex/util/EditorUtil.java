@@ -87,7 +87,7 @@ public final class EditorUtil {
         return editor instanceof EditorEx editorEx ? editorEx : null;
     }
 
-    public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
+    public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
         return EditorImplUtil.getLastVisualLineColumnNumber(editor, line);
     }
 
@@ -128,13 +128,13 @@ public final class EditorUtil {
     }
 
     public static void fillVirtualSpaceUntilCaret(@Nonnull Editor editor) {
-        final LogicalPosition position = editor.getCaretModel().getLogicalPosition();
+        LogicalPosition position = editor.getCaretModel().getLogicalPosition();
         fillVirtualSpaceUntil(editor, position.column, position.line);
     }
 
-    public static void fillVirtualSpaceUntil(@Nonnull final Editor editor, int columnNumber, int lineNumber) {
-        final int offset = editor.logicalPositionToOffset(new LogicalPosition(lineNumber, columnNumber));
-        final String filler = EditorModificationUtil.calcStringToFillVirtualSpace(editor);
+    public static void fillVirtualSpaceUntil(@Nonnull Editor editor, int columnNumber, int lineNumber) {
+        int offset = editor.logicalPositionToOffset(new LogicalPosition(lineNumber, columnNumber));
+        String filler = EditorModificationUtil.calcStringToFillVirtualSpace(editor);
         if (!filler.isEmpty()) {
             WriteAction.run(() -> {
                 editor.getDocument().insertString(offset, filler);
@@ -149,9 +149,9 @@ public final class EditorUtil {
 
     public static int calcColumnNumber(@Nullable Editor editor,
                                        @Nonnull CharSequence text,
-                                       final int start,
-                                       final int offset,
-                                       final int tabSize) {
+                                       int start,
+                                       int offset,
+                                       int tabSize) {
         return EditorImplUtil.calcColumnNumber(editor, text, start, offset, tabSize);
     }
 
@@ -164,7 +164,7 @@ public final class EditorUtil {
     }
 
     @Nonnull
-    public static FontInfo fontForChar(final char c, @JdkConstants.FontStyle int style, @Nonnull Editor editor) {
+    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, @Nonnull Editor editor) {
         return EditorImplUtil.fontForChar(c, style, editor);
     }
 
@@ -441,8 +441,8 @@ public final class EditorUtil {
             endFoldRegion = null;
         }
         if (startFoldRegion != null || endFoldRegion != null) {
-            final FoldRegion finalStartFoldRegion = startFoldRegion;
-            final FoldRegion finalEndFoldRegion = endFoldRegion;
+            FoldRegion finalStartFoldRegion = startFoldRegion;
+            FoldRegion finalEndFoldRegion = endFoldRegion;
             foldingModel.runBatchFoldingOperation(() -> {
                 if (finalStartFoldRegion != null) {
                     finalStartFoldRegion.setExpanded(true);

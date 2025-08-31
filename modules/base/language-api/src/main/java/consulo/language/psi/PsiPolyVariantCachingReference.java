@@ -42,7 +42,7 @@ public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantRe
   protected abstract ResolveResult[] resolveInner(boolean incompleteCode, @Nonnull PsiFile containingFile);
 
   @Override
-  public boolean isReferenceTo(final PsiElement element) {
+  public boolean isReferenceTo(PsiElement element) {
     return getElement().getManager().areElementsEquivalent(resolve(), element);
   }
 

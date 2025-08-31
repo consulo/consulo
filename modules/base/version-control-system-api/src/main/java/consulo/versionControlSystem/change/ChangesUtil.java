@@ -313,10 +313,10 @@ public class ChangesUtil {
   public static <T> void processItemsByVcs(@Nonnull Collection<T> items,
                                            @Nonnull VcsSeparator<T> separator,
                                            @Nonnull PerVcsProcessor<T> processor) {
-    final Map<AbstractVcs, List<T>> changesByVcs = new HashMap<>();
+    Map<AbstractVcs, List<T>> changesByVcs = new HashMap<>();
 
     for (T item : items) {
-      final AbstractVcs vcs = separator.getVcsFor(item);
+      AbstractVcs vcs = separator.getVcsFor(item);
       if (vcs != null) {
         List<T> vcsChanges = changesByVcs.get(vcs);
         if (vcsChanges == null) {

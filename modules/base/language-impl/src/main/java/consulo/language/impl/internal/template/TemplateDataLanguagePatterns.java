@@ -73,15 +73,15 @@ public class TemplateDataLanguagePatterns implements PersistentStateComponent<El
   public void loadState(Element state) {
     myAssocTable = new FileTypeAssocTable<>();
 
-    final Map<String, Language> dialectMap = new HashMap<>();
+    Map<String, Language> dialectMap = new HashMap<>();
     for (Language dialect : TemplateDataLanguageMappings.getTemplateableLanguages()) {
       dialectMap.put(dialect.getID(), dialect);
     }
-    final List<Element> files = state.getChildren("pattern");
+    List<Element> files = state.getChildren("pattern");
     for (Element fileElement : files) {
-      final String patterns = fileElement.getAttributeValue("value");
-      final String langId = fileElement.getAttributeValue("lang");
-      final Language dialect = dialectMap.get(langId);
+      String patterns = fileElement.getAttributeValue("value");
+      String langId = fileElement.getAttributeValue("lang");
+      Language dialect = dialectMap.get(langId);
       if (dialect == null || StringUtil.isEmpty(patterns)) continue;
 
       for (String pattern : patterns.split(SEPARATOR)) {
@@ -94,10 +94,10 @@ public class TemplateDataLanguagePatterns implements PersistentStateComponent<El
   @Override
   public Element getState() {
     Element state = new Element("x");
-    for (final Language language : TemplateDataLanguageMappings.getTemplateableLanguages()) {
-      final List<FileNameMatcher> matchers = myAssocTable.getAssociations(language);
+    for (Language language : TemplateDataLanguageMappings.getTemplateableLanguages()) {
+      List<FileNameMatcher> matchers = myAssocTable.getAssociations(language);
       if (!matchers.isEmpty()) {
-        final Element child = new Element("pattern");
+        Element child = new Element("pattern");
         state.addContent(child);
         child.setAttribute("value", StringUtil.join(matchers, FileNameMatcher::getPresentableString, SEPARATOR));
         child.setAttribute("lang", language.getID());

@@ -30,7 +30,7 @@ public class SelectFilteringAction extends LabeledComboBoxAction {
   private final CommittedChangesTreeBrowser myBrowser;
   private CommittedChangesFilterKey myPreviousSelection;
 
-  public SelectFilteringAction(final Project project, final CommittedChangesTreeBrowser browser) {
+  public SelectFilteringAction(Project project, CommittedChangesTreeBrowser browser) {
     super(VcsBundle.message("committed.changes.filter.title"));
     myProject = project;
     myBrowser = browser;
@@ -38,15 +38,15 @@ public class SelectFilteringAction extends LabeledComboBoxAction {
   }
 
   protected ComboBoxModel createModel() {
-    final DefaultComboBoxModel model = new DefaultComboBoxModel(new Object[]{
+    DefaultComboBoxModel model = new DefaultComboBoxModel(new Object[]{
       ChangeListFilteringStrategy.NONE,
       /*new ColumnFilteringStrategy(ChangeListColumn.NAME, provider.getClass()),*/
       new StructureFilteringStrategy(myProject)
     });
-    final AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+    AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
     boolean addNameFilter = false;
     for(AbstractVcs vcs: vcss) {
-      final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+      CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
       if (provider != null) {
         addNameFilter = true;
         for(ChangeListColumn column: provider.getColumns()) {
@@ -62,12 +62,12 @@ public class SelectFilteringAction extends LabeledComboBoxAction {
     return model;
   }
 
-  protected void selectionChanged(final Object selection) {
+  protected void selectionChanged(Object selection) {
     if (selection == null) return;
     if (myPreviousSelection != null) {
         myBrowser.removeFilteringStrategy(myPreviousSelection);
     }
-    final ChangeListFilteringStrategy strategy = (ChangeListFilteringStrategy)selection;
+    ChangeListFilteringStrategy strategy = (ChangeListFilteringStrategy)selection;
     if (!ChangeListFilteringStrategy.NONE.equals(selection)) {
       myBrowser.setFilteringStrategy(strategy);
     }

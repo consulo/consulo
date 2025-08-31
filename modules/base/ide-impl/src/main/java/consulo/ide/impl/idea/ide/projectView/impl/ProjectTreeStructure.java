@@ -26,7 +26,7 @@ import consulo.project.Project;
 public abstract class ProjectTreeStructure extends AbstractProjectTreeStructure {
   private final String myId;
 
-  public ProjectTreeStructure(Project project, final String ID) {
+  public ProjectTreeStructure(Project project, String ID) {
     super(project);
     myId = ID;
   }

@@ -91,8 +91,8 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         JComponent component;
         StatusBarWidget widget;
 
-        static WidgetBean create(@Nonnull final StatusBarWidget widget, @Nonnull final JComponent component) {
-            final WidgetBean bean = new WidgetBean();
+        static WidgetBean create(@Nonnull StatusBarWidget widget, @Nonnull JComponent component) {
+            WidgetBean bean = new WidgetBean();
             bean.widget = widget;
             bean.component = component;
             return bean;
@@ -215,7 +215,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull List<String> order, @Nonnull final Disposable parentDisposable) {
+    public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull List<String> order, @Nonnull Disposable parentDisposable) {
         myApplication.invokeLater(() -> addWidget(widget, order));
         Disposer.register(parentDisposable, () -> removeWidget(widget.getId()));
     }
@@ -353,7 +353,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void setProcessWindowOpen(final boolean open) {
+    public void setProcessWindowOpen(boolean open) {
         this.<InfoAndProgressPanel>findWidget(widget -> widget instanceof InfoAndProgressPanel).ifPresent(widget -> {
             widget.setProcessWindowOpen(open);
         });
@@ -366,7 +366,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void startRefreshIndication(final String tooltipText) {
+    public void startRefreshIndication(String tooltipText) {
     }
 
     @Override
@@ -387,7 +387,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         new NotificationPopup(this, content, backgroundColor);
     }
 
-    private static JComponent wrap(@Nonnull final StatusBarWidget widget) {
+    private static JComponent wrap(@Nonnull StatusBarWidget widget) {
         if (widget instanceof CustomStatusBarWidget) {
             JComponent component = ((CustomStatusBarWidget) widget).getComponent();
             if (component.getBorder() == null) {
@@ -472,7 +472,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void removeWidget(@Nonnull final String id) {
+    public void removeWidget(@Nonnull String id) {
         myApplication.invokeLater(() -> {
             WidgetBean bean = myWidgetMap.remove(id);
             if (bean != null) {
@@ -487,7 +487,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
 
     @Override
     public void updateWidgets() {
-        for (final String s : myWidgetMap.keySet()) {
+        for (String s : myWidgetMap.keySet()) {
             updateWidget(s);
         }
 
@@ -516,7 +516,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void updateWidget(@Nonnull final String id) {
+    public void updateWidget(@Nonnull String id) {
         myApplication.invokeLater(() -> {
             WidgetBean bean = myWidgetMap.get(id);
             if (bean != null) {

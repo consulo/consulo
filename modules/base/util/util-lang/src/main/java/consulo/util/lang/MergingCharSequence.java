@@ -22,7 +22,7 @@ public class MergingCharSequence implements CharSequence {
   private final CharSequence s1;
   private final CharSequence s2;
 
-  public MergingCharSequence(final CharSequence s1, final CharSequence s2) {
+  public MergingCharSequence(CharSequence s1, CharSequence s2) {
     this.s1 = s1;
     this.s2 = s2;
   }

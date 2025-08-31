@@ -418,7 +418,7 @@ class CellTreeNodeView<T> extends UIObject {
     private final NodeInfo<C> nodeInfo;
     private CellTreeNodeView<?> nodeView;
 
-    public NodeCellList(final NodeInfo<C> nodeInfo, final CellTreeNodeView<?> nodeView, int pageSize) {
+    public NodeCellList(NodeInfo<C> nodeInfo, final CellTreeNodeView<?> nodeView, int pageSize) {
       this.defaultPageSize = pageSize;
       this.nodeInfo = nodeInfo;
       this.nodeView = nodeView;
@@ -524,7 +524,7 @@ class CellTreeNodeView<T> extends UIObject {
     }
 
     @Override
-    public void setSelectionModel(final SelectionModel<? super C> selectionModel) {
+    public void setSelectionModel(SelectionModel<? super C> selectionModel) {
       presenter.setSelectionModel(selectionModel);
     }
 
@@ -940,7 +940,7 @@ class CellTreeNodeView<T> extends UIObject {
    * @param value          the value of this node
    * @param messages       translation messages
    */
-  CellTreeNodeView(final CellTree tree, final CellTreeNodeView<?> parent, NodeInfo<T> parentNodeInfo, Element elem, T value, CellTreeMessages messages) {
+  CellTreeNodeView(CellTree tree, CellTreeNodeView<?> parent, NodeInfo<T> parentNodeInfo, Element elem, T value, CellTreeMessages messages) {
     this.tree = tree;
     this.parentNode = parent;
     this.parentNodeInfo = parentNodeInfo;
@@ -1205,14 +1205,14 @@ class CellTreeNodeView<T> extends UIObject {
    *                 child values
    * @param <C>      the child data type of the node
    */
-  protected <C> void onOpen(final NodeInfo<C> nodeInfo) {
+  protected <C> void onOpen(NodeInfo<C> nodeInfo) {
     NodeCellList<C> view = new NodeCellList<C>(nodeInfo, this, tree.getDefaultNodeSize());
     listView = view;
     view.setSelectionModel(nodeInfo.getSelectionModel());
     nodeInfo.setDataDisplay(view);
   }
 
-  boolean belongsToTree(final CellTree tree) {
+  boolean belongsToTree(CellTree tree) {
     return this.tree == tree;
   }
 

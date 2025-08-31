@@ -48,7 +48,7 @@ public class InstalledPluginsTab extends PluginTab {
         super(pluginsPanel);
         init();
 
-        final StatusText emptyText = myPluginList.getEmptyText();
+        StatusText emptyText = myPluginList.getEmptyText();
         emptyText.setText("Nothing to show.");
         emptyText.appendText(" Click ");
         emptyText.appendText("View available plugins...", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener());
@@ -64,7 +64,7 @@ public class InstalledPluginsTab extends PluginTab {
         pluginDescriptors.addAll(InstalledPluginsState.getInstance().getAllPlugins());
 
         for (Iterator<PluginDescriptor> iterator = pluginDescriptors.iterator(); iterator.hasNext(); ) {
-            final PluginId pluginId = iterator.next().getPluginId();
+            PluginId pluginId = iterator.next().getPluginId();
             if (PluginIds.isPlatformPlugin(pluginId)) {
                 iterator.remove();
             }
@@ -78,15 +78,15 @@ public class InstalledPluginsTab extends PluginTab {
     }
 
     @Nullable
-    public static PluginDescriptor loadDescriptorFromArchive(final File file) throws IOException {
+    public static PluginDescriptor loadDescriptorFromArchive(File file) throws IOException {
         PluginDescriptor descriptor = null;
 
         TempFileService tempFileService = Application.get().getInstance(TempFileService.class);
-        final Path outputDirPath = tempFileService.createTempDirectory("plugin", "");
+        Path outputDirPath = tempFileService.createTempDirectory("plugin", "");
         File outputDir = outputDirPath.toFile();
         try {
             ZipUtil.extract(file, outputDir, null);
-            final File[] files = outputDir.listFiles();
+            File[] files = outputDir.listFiles();
             if (files != null && files.length == 1) {
                 descriptor = PluginsLoader.loadPluginDescriptor(files[0]);
             }
@@ -104,7 +104,7 @@ public class InstalledPluginsTab extends PluginTab {
 
     @Override
     public String apply() {
-        final String apply = super.apply();
+        String apply = super.apply();
         if (apply != null) {
             return apply;
         }
@@ -114,7 +114,7 @@ public class InstalledPluginsTab extends PluginTab {
 
     @Override
     protected String canApply() {
-        final Map<PluginId, Set<PluginId>> dependentToRequiredListMap = new HashMap<>(myPluginsPanel.getDependentToRequiredListMap());
+        Map<PluginId, Set<PluginId>> dependentToRequiredListMap = new HashMap<>(myPluginsPanel.getDependentToRequiredListMap());
         for (Iterator<PluginId> iterator = dependentToRequiredListMap.keySet().iterator(); iterator.hasNext(); ) {
             PluginId item = iterator.next();
             // ignore
@@ -124,7 +124,7 @@ public class InstalledPluginsTab extends PluginTab {
             return "<html><body style=\"padding: 5px;\">Unable to apply changes: plugin" +
                 (dependentToRequiredListMap.size() == 1 ? " " : "s ") +
                 StringUtil.join(dependentToRequiredListMap.keySet(), pluginId -> {
-                    final PluginDescriptor ideaPluginDescriptor = PluginManager.findPlugin(pluginId);
+                    PluginDescriptor ideaPluginDescriptor = PluginManager.findPlugin(pluginId);
                     return "\"" + (ideaPluginDescriptor != null ? ideaPluginDescriptor.getName() : pluginId.getIdString()) + "\"";
                 }, ", ") +
                 " won't be able to load.</body></html>";

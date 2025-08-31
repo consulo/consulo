@@ -556,7 +556,7 @@ public class GeneratedParserUtilBase {
     int lastErrorPos = getLastVariantPos(state, initialPos);
     if (!state.suppressErrors && eatMore != null) {
       state.suppressErrors = true;
-      final boolean eatMoreFlagOnce = !builder.eof() && eatMore.parse(builder, frame.level + 1);
+      boolean eatMoreFlagOnce = !builder.eof() && eatMore.parse(builder, frame.level + 1);
       boolean eatMoreFlag = eatMoreFlagOnce || !result && frame.position == initialPos && lastErrorPos > frame.position;
 
       PsiBuilderImpl.ProductionMarker latestDoneMarker =
@@ -1095,16 +1095,16 @@ public class GeneratedParserUtilBase {
 
   private static final int MAX_CHILDREN_IN_TREE = 10;
 
-  public static boolean parseAsTree(ErrorState state, final PsiBuilder builder, int level, final IElementType chunkType, boolean checkBraces, final Parser parser, final Parser eatMoreCondition) {
-    final LinkedList<Pair<PsiBuilder.Marker, PsiBuilder.Marker>> parenList = new LinkedList<>();
-    final LinkedList<Pair<PsiBuilder.Marker, Integer>> siblingList = new LinkedList<>();
+  public static boolean parseAsTree(ErrorState state, PsiBuilder builder, int level, IElementType chunkType, boolean checkBraces, Parser parser, Parser eatMoreCondition) {
+    LinkedList<Pair<PsiBuilder.Marker, PsiBuilder.Marker>> parenList = new LinkedList<>();
+    LinkedList<Pair<PsiBuilder.Marker, Integer>> siblingList = new LinkedList<>();
     PsiBuilder.Marker marker = null;
 
-    final Runnable checkSiblingsRunnable = () -> {
+    Runnable checkSiblingsRunnable = () -> {
       main:
       while (!siblingList.isEmpty()) {
-        final Pair<PsiBuilder.Marker, PsiBuilder.Marker> parenPair = parenList.peek();
-        final int rating = siblingList.getFirst().second;
+        Pair<PsiBuilder.Marker, PsiBuilder.Marker> parenPair = parenList.peek();
+        int rating = siblingList.getFirst().second;
         int count = 0;
         for (Pair<PsiBuilder.Marker, Integer> pair : siblingList) {
           if (pair.second != rating || parenPair != null && pair.first == parenPair.second) break main;
@@ -1135,7 +1135,7 @@ public class GeneratedParserUtilBase {
     }
     int c = current_position_(builder);
     while (true) {
-      final IElementType tokenType = builder.getTokenType();
+      IElementType tokenType = builder.getTokenType();
       if (checkParens && (tokenType == state.braces[0].getLeftBraceType() || tokenType == state.braces[0].getRightBraceType() && !parenList.isEmpty())) {
         if (marker != null) {
           marker.done(chunkType);
@@ -1144,13 +1144,13 @@ public class GeneratedParserUtilBase {
           tokenCount = 0;
         }
         if (tokenType == state.braces[0].getLeftBraceType()) {
-          final Pair<PsiBuilder.Marker, Integer> prev = siblingList.peek();
+          Pair<PsiBuilder.Marker, Integer> prev = siblingList.peek();
           parenList.addFirst(Pair.create(builder.mark(), prev == null ? null : prev.first));
         }
         checkSiblingsRunnable.run();
         builder.advanceLexer();
         if (tokenType == state.braces[0].getRightBraceType()) {
-          final Pair<PsiBuilder.Marker, PsiBuilder.Marker> pair = parenList.removeFirst();
+          Pair<PsiBuilder.Marker, PsiBuilder.Marker> pair = parenList.removeFirst();
           pair.first.done(chunkType);
           // drop all markers inside parens
           while (!siblingList.isEmpty() && siblingList.getFirst().first != pair.second) {

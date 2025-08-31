@@ -29,7 +29,7 @@ public final class NameUtil {
 
   @Nonnull
   public static String buildRegexp(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower, boolean lowerCaseWords, boolean forCompletion) {
-    final int eol = pattern.indexOf('\n');
+    int eol = pattern.indexOf('\n');
     if (eol != -1) {
       pattern = pattern.substring(0, eol);
     }
@@ -37,8 +37,8 @@ public final class NameUtil {
       pattern = pattern.substring(0, MAX_LENGTH);
     }
 
-    @NonNls final StringBuilder buffer = new StringBuilder();
-    final boolean endsWithSpace = !forCompletion && StringUtil.endsWithChar(pattern, ' ');
+    @NonNls StringBuilder buffer = new StringBuilder();
+    boolean endsWithSpace = !forCompletion && StringUtil.endsWithChar(pattern, ' ');
     if (!forCompletion) {
       pattern = pattern.trim();
     }
@@ -54,7 +54,7 @@ public final class NameUtil {
     }
 
     for (int i = 0; i != exactPrefixLen; ++i) {
-      final char c = pattern.charAt(i);
+      char c = pattern.charAt(i);
       if (Character.isLetterOrDigit(c)) {
         buffer.append(c);
       }
@@ -76,7 +76,7 @@ public final class NameUtil {
     boolean firstIdentifierLetter = exactPrefixLen == 0;
     boolean lastIsUppercase = false;
     for (int i = exactPrefixLen; i < pattern.length(); i++) {
-      final char c = pattern.charAt(i);
+      char c = pattern.charAt(i);
       lastIsUppercase = false;
       if (Character.isLetterOrDigit(c)) {
         prevIsUppercase = false;
@@ -323,9 +323,9 @@ public final class NameUtil {
 
   @Nonnull
   public static String splitWords(@Nonnull String text, char separator, @Nonnull Function<? super String, String> transformWord) {
-    final String[] words = NameUtilCore.nameToWords(text);
+    String[] words = NameUtilCore.nameToWords(text);
     boolean insertSeparator = false;
-    final StringBuilder buf = new StringBuilder();
+    StringBuilder buf = new StringBuilder();
     for (String word : words) {
       if (!Character.isLetterOrDigit(word.charAt(0))) {
         buf.append(separator);

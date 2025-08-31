@@ -37,7 +37,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
   @Nullable
   private final ElementProducer<?> myProducer;
 
-  TableToolbarDecorator(@Nonnull JTable table, @Nullable final ElementProducer<?> producer) {
+  TableToolbarDecorator(@Nonnull JTable table, @Nullable ElementProducer<?> producer) {
     myTable = table;
     myProducer = producer;
     myAddActionEnabled = myRemoveActionEnabled = myUpActionEnabled = myDownActionEnabled = isModelEditable();
@@ -64,15 +64,15 @@ class TableToolbarDecorator extends ToolbarDecorator {
   }
 
   protected void updateButtons() {
-    final CommonActionsPanel p = getActionsPanel();
+    CommonActionsPanel p = getActionsPanel();
     if (p != null) {
       if (myTable.isEnabled()) {
-        final int index = myTable.getSelectedRow();
-        final int size = myTable.getModel().getRowCount();
+        int index = myTable.getSelectedRow();
+        int size = myTable.getModel().getRowCount();
         if (0 <= index && index < size) {
-          final boolean downEnable = myTable.getSelectionModel().getMaxSelectionIndex() < size - 1;
-          final boolean upEnable = myTable.getSelectionModel().getMinSelectionIndex() > 0;
-          final boolean editEnabled = myTable.getSelectedRowCount() == 1;
+          boolean downEnable = myTable.getSelectionModel().getMaxSelectionIndex() < size - 1;
+          boolean upEnable = myTable.getSelectionModel().getMinSelectionIndex() > 0;
+          boolean editEnabled = myTable.getSelectedRowCount() == 1;
           p.setEnabled(CommonActionsPanel.Buttons.EDIT, editEnabled);
           p.setEnabled(CommonActionsPanel.Buttons.REMOVE, true);
           p.setEnabled(CommonActionsPanel.Buttons.UP, upEnable);
@@ -104,7 +104,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
       @Override
       public void run(AnActionButton button) {
         TableUtil.stopEditing(table);
-        final int rowCount = table.getRowCount();
+        int rowCount = table.getRowCount();
         if (tableModel instanceof ListTableModel && producer != null) {
           //noinspection unchecked
           ((ListTableModel)tableModel).addRow(producer.createElement());
@@ -112,7 +112,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
           tableModel.addRow();
         }
         if (rowCount == table.getRowCount()) return;
-        final int index = table.getModel().getRowCount() - 1;
+        int index = table.getModel().getRowCount() - 1;
 
         table.setRowSelectionInterval(index, index);
         table.setColumnSelectionInterval(0, 0);
@@ -123,9 +123,9 @@ class TableToolbarDecorator extends ToolbarDecorator {
         SwingUtilities.invokeLater(new Runnable() {
           @Override
           public void run() {
-            final Component editorComponent = table.getEditorComponent();
+            Component editorComponent = table.getEditorComponent();
             if (editorComponent != null) {
-              final Rectangle bounds = editorComponent.getBounds();
+              Rectangle bounds = editorComponent.getBounds();
               table.scrollRectToVisible(bounds);
               IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(editorComponent);
             }
@@ -163,10 +163,10 @@ class TableToolbarDecorator extends ToolbarDecorator {
     myUpAction = new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {
-        final int row = table.getEditingRow();
-        final int col = table.getEditingColumn();
+        int row = table.getEditingRow();
+        int col = table.getEditingColumn();
         TableUtil.stopEditing(table);
-        final int[] indexes = table.getSelectedRows();
+        int[] indexes = table.getSelectedRows();
         for (int index : indexes) {
           if (0 < index && index < table.getModel().getRowCount()) {
             tableModel.exchangeRows(index, index - 1);
@@ -183,11 +183,11 @@ class TableToolbarDecorator extends ToolbarDecorator {
     myDownAction = new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {
-        final int row = table.getEditingRow();
-        final int col = table.getEditingColumn();
+        int row = table.getEditingRow();
+        int col = table.getEditingColumn();
 
         TableUtil.stopEditing(table);
-        final int[] indexes = table.getSelectedRows();
+        int[] indexes = table.getSelectedRows();
         for (int index : indexes) {
           if (0 <= index && index < table.getModel().getRowCount() - 1) {
             tableModel.exchangeRows(index, index + 1);
@@ -206,7 +206,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
     JScrollPane scrollPane = UIUtil.getParentOfType(JScrollPane.class, table);
     if (scrollPane != null) {
       if (temporaryHideVerticalScrollBar) {
-        final JScrollBar bar = scrollPane.getVerticalScrollBar();
+        JScrollBar bar = scrollPane.getVerticalScrollBar();
         if (bar == null || !bar.isVisible()) {
           scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         }

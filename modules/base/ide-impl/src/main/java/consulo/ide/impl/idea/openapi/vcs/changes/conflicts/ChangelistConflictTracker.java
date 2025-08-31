@@ -81,7 +81,7 @@ public class ChangelistConflictTracker {
       if (project.getApplication().isDisposed() || myProject.isDisposed() || !myProject.isOpen()) {
         return;
       }
-      final Set<VirtualFile> localSet;
+      Set<VirtualFile> localSet;
       synchronized (myCheckSetLock) {
         localSet = new HashSet<>();
         localSet.addAll(myCheckSet);
@@ -133,9 +133,9 @@ public class ChangelistConflictTracker {
     };
   }
 
-  private void checkFiles(final Collection<VirtualFile> files) {
+  private void checkFiles(Collection<VirtualFile> files) {
     myChangeListManager.invokeAfterUpdate(() -> {
-      final LocalChangeList list = myChangeListManager.getDefaultChangeList();
+      LocalChangeList list = myChangeListManager.getDefaultChangeList();
       for (VirtualFile file : files) {
         checkOneFile(file, list);
       }
@@ -185,8 +185,8 @@ public class ChangelistConflictTracker {
       if (revision != null) {
         FilePath filePath = revision.getFile();
         String path = filePath.getPath();
-        final Conflict wasRemoved = myConflicts.remove(path);
-        final VirtualFile file = filePath.getVirtualFile();
+        Conflict wasRemoved = myConflicts.remove(path);
+        VirtualFile file = filePath.getVirtualFile();
         if (wasRemoved != null && file != null) {
           myEditorNotifications.updateNotifications(file);
           // we need to update status

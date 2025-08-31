@@ -54,7 +54,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   protected HighlightingSession myHighlightingSession;
 
   protected ProgressableTextEditorHighlightingPass(@Nonnull Project project,
-                                                   @Nullable final Document document,
+                                                   @Nullable Document document,
                                                    @Nonnull String presentableName,
                                                    @Nullable PsiFile file,
                                                    @Nullable Editor editor,
@@ -79,7 +79,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   }
 
   @Override
-  public final void doCollectInformation(@Nonnull final ProgressIndicator progress) {
+  public final void doCollectInformation(@Nonnull ProgressIndicator progress) {
     if (!(progress instanceof DaemonProgressIndicator)) {
       throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: " + progress);
     }
@@ -169,12 +169,12 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   }
 
   public static class EmptyPass extends TextEditorHighlightingPass {
-    public EmptyPass(final Project project, @Nullable final Document document) {
+    public EmptyPass(Project project, @Nullable Document document) {
       super(project, document, false);
     }
 
     @Override
-    public void doCollectInformation(@Nonnull final ProgressIndicator progress) {
+    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     }
 
     @Override

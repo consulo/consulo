@@ -28,7 +28,7 @@ public class FakeVirtualFile extends StubVirtualFile {
   private final VirtualFile myParent;
   private final String myName;
 
-  public FakeVirtualFile(@Nonnull final VirtualFile parent, @Nonnull final String name) {
+  public FakeVirtualFile(@Nonnull VirtualFile parent, @Nonnull String name) {
     myName = name;
     myParent = parent;
   }
@@ -47,7 +47,7 @@ public class FakeVirtualFile extends StubVirtualFile {
   @Nonnull
   @Override
   public String getPath() {
-    final String basePath = myParent.getPath();
+    String basePath = myParent.getPath();
     return StringUtil.endsWithChar(basePath, '/') ? basePath + myName : basePath + '/' + myName;
   }
 

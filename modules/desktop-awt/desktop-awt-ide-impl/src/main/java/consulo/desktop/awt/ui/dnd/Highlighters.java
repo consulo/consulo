@@ -63,7 +63,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
 
   static void hideAllBut(int aType) {
     for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
-      final DropTargetHighlighter each = ourCurrentHighlighters.get(i);
+      DropTargetHighlighter each = ourCurrentHighlighters.get(i);
       if ((each.getMask() & aType) == 0) {
         each.vanish();
         ourCurrentHighlighters.remove(each);
@@ -80,7 +80,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
 
   static void hide(int aType) {
     for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
-      final DropTargetHighlighter each = ourCurrentHighlighters.get(i);
+      DropTargetHighlighter each = ourCurrentHighlighters.get(i);
       if ((each.getMask() & aType) != 0) {
         each.vanish();
         ourCurrentHighlighters.remove(each);
@@ -91,7 +91,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
   static boolean isVisibleExcept(int type) {
     int resultType = type;
     for (int i = 0; i < ourCurrentHighlighters.size(); i++) {
-      final DropTargetHighlighter each = ourCurrentHighlighters.get(i);
+      DropTargetHighlighter each = ourCurrentHighlighters.get(i);
       resultType = resultType | each.getMask();
     }
 
@@ -124,7 +124,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
 
     @Override
     public void vanish() {
-      final Container parent = getParent();
+      Container parent = getParent();
       Rectangle bounds = getBounds();
       if (parent != null) {
         parent.remove(this);
@@ -148,7 +148,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
     public void show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
       if (!Registry.is("ide.dnd.textHints")) return;
 
-      final String result = aEvent.getExpectedDropResult();
+      String result = aEvent.getExpectedDropResult();
       if (result != null && result.length() > 0) {
         RelativePoint point  = null;
         for (DropTargetHighlighter each : ourHightlighters) {
@@ -246,7 +246,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
 
     @Override
     protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      final Rectangle rectangle = new Rectangle(aRectangle.x - AllIcons.Ide.Dnd.Left.getWidth(), aRectangle.y - AllIcons.Ide.Dnd.Left
+      Rectangle rectangle = new Rectangle(aRectangle.x - AllIcons.Ide.Dnd.Left.getWidth(), aRectangle.y - AllIcons.Ide.Dnd.Left
         .getHeight(), aRectangle.width + AllIcons.Ide.Dnd.Left.getWidth() + AllIcons.Ide.Dnd.Right.getWidth(), aRectangle.height + AllIcons.Ide.Dnd.Left
         .getHeight());
       setBounds(rectangle);
@@ -270,7 +270,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
 
     @Override
     protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      final Rectangle rectangle = new Rectangle(aRectangle.x, aRectangle.y - TOP.getHeight(), aRectangle.width, aRectangle.height + TOP.getHeight() + BOTTOM
+      Rectangle rectangle = new Rectangle(aRectangle.x, aRectangle.y - TOP.getHeight(), aRectangle.width, aRectangle.height + TOP.getHeight() + BOTTOM
         .getHeight());
       setBounds(rectangle);
     }

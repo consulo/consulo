@@ -17,22 +17,22 @@ public class MacUtil {
   @Nullable
   public static ID findWindowForTitle(@Nullable String title) {
     if (title == null || title.isEmpty()) return null;
-    final ID pool = invoke("NSAutoreleasePool", "new");
+    ID pool = invoke("NSAutoreleasePool", "new");
 
     ID focusedWindow = null;
     try {
-      final ID sharedApplication = invoke("NSApplication", "sharedApplication");
-      final ID windows = invoke(sharedApplication, "windows");
-      final ID windowEnumerator = invoke(windows, "objectEnumerator");
+      ID sharedApplication = invoke("NSApplication", "sharedApplication");
+      ID windows = invoke(sharedApplication, "windows");
+      ID windowEnumerator = invoke(windows, "objectEnumerator");
 
       while (true) {
         // dirty hack: walks through all the windows to find a cocoa window to show sheet for
-        final ID window = invoke(windowEnumerator, "nextObject");
+        ID window = invoke(windowEnumerator, "nextObject");
         if (0 == window.intValue()) break;
 
-        final ID windowTitle = invoke(window, "title");
+        ID windowTitle = invoke(window, "title");
         if (windowTitle != null && windowTitle.intValue() != 0) {
-          final String titleString = toStringViaUTF8(windowTitle);
+          String titleString = toStringViaUTF8(windowTitle);
           if (Comparing.equal(titleString, title)) {
             focusedWindow = window;
             break;

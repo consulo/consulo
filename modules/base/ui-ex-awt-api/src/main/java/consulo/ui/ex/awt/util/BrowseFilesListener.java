@@ -42,7 +42,7 @@ public class BrowseFilesListener implements ActionListener {
   private final String myDescription;
   protected final FileChooserDescriptor myChooserDescriptor;
 
-  public BrowseFilesListener(JTextField textField, final String title, final String description, final FileChooserDescriptor chooserDescriptor) {
+  public BrowseFilesListener(JTextField textField, String title, String description, FileChooserDescriptor chooserDescriptor) {
     myTextField = textField;
     myTitle = title;
     myDescription = description;
@@ -51,7 +51,7 @@ public class BrowseFilesListener implements ActionListener {
 
   @Nullable
   protected VirtualFile getFileToSelect() {
-    final String path = myTextField.getText().trim().replace(File.separatorChar, '/');
+    String path = myTextField.getText().trim().replace(File.separatorChar, '/');
     if (path.length() > 0) {
       File file = new File(path);
       while (file != null && !file.exists()) {
@@ -64,12 +64,12 @@ public class BrowseFilesListener implements ActionListener {
     return null;
   }
 
-  protected void doSetText(@Nonnull final String path) {
+  protected void doSetText(@Nonnull String path) {
     myTextField.setText(path);
   }
 
   public void actionPerformed( ActionEvent e ) {
-    final VirtualFile fileToSelect = getFileToSelect();
+    VirtualFile fileToSelect = getFileToSelect();
     myChooserDescriptor.setTitle(myTitle); // important to set title and description here because a shared descriptor instance can be used
     myChooserDescriptor.setDescription(myDescription);
     IdeaFileChooser.chooseFiles(myChooserDescriptor, null, fileToSelect, files -> doSetText(FileUtil.toSystemDependentName(files.get(0).getPath())));

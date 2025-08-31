@@ -35,7 +35,7 @@ public class XmlCharsetDetector {
   private static final byte[] XML_PROLOG_END_BYTES = XML_PROLOG_END.getBytes(StandardCharsets.UTF_8);
 
   @Nullable
-  public static String extractXmlEncodingFromProlog(final byte[] bytes) {
+  public static String extractXmlEncodingFromProlog(byte[] bytes) {
     int index = 0;
     if (CharsetToolkit.hasUTF8Bom(bytes)) {
       index = CharsetToolkit.UTF8_BOM.length;

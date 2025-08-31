@@ -22,7 +22,7 @@ import consulo.language.Language;
  * @author ven
  */
 public abstract class ICodeFragmentElementType extends IFileElementType {
-  public ICodeFragmentElementType( final String debugName, final Language language) {
+  public ICodeFragmentElementType( String debugName, Language language) {
     super(debugName, language);
   }
 }

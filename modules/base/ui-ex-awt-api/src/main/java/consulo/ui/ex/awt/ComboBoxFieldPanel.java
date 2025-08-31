@@ -31,11 +31,11 @@ public class ComboBoxFieldPanel extends AbstractFieldPanel {
     myComboBox = (JComboBox)getComponent();
   }
 
-  public ComboBoxFieldPanel(String[] items, String labelText, final String viewerDialogTitle, ActionListener browseButtonActionListener) {
+  public ComboBoxFieldPanel(String[] items, String labelText, String viewerDialogTitle, ActionListener browseButtonActionListener) {
     this(items, labelText, viewerDialogTitle, browseButtonActionListener, null);
   }
 
-  public ComboBoxFieldPanel(String[] items, String labelText, final String viewerDialogTitle, ActionListener browseButtonActionListener, final Runnable documentListener) {
+  public ComboBoxFieldPanel(String[] items, String labelText, String viewerDialogTitle, ActionListener browseButtonActionListener, Runnable documentListener) {
     super(new JComboBox(items), labelText, viewerDialogTitle, browseButtonActionListener, documentListener);
 
     myComboBox = (JComboBox)getComponent();
@@ -53,14 +53,14 @@ public class ComboBoxFieldPanel extends AbstractFieldPanel {
     myComboBox.setMaximumRowCount(8);
 
     myComboBox.setEditable(true);
-    final JTextField editorComponent = (JTextField)myComboBox.getEditor().getEditorComponent();
+    JTextField editorComponent = (JTextField)myComboBox.getEditor().getEditorComponent();
     editorComponent.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
       protected void textChanged(DocumentEvent e) {
-        final String text = getText();
+        String text = getText();
         if (!Comparing.equal(text, oldText, true)) {
           oldText = text;
-          final Runnable changeListener = getChangeListener();
+          Runnable changeListener = getChangeListener();
           if (changeListener != null) {
             changeListener.run();
           }
@@ -71,7 +71,7 @@ public class ComboBoxFieldPanel extends AbstractFieldPanel {
 
   @Override
   public String getText() {
-    final Object selectedItem = myComboBox.isEditable() ? myComboBox.getEditor().getItem() : myComboBox.getSelectedItem();
+    Object selectedItem = myComboBox.isEditable() ? myComboBox.getEditor().getItem() : myComboBox.getSelectedItem();
     return selectedItem instanceof String ? (String)selectedItem : null;
   }
 

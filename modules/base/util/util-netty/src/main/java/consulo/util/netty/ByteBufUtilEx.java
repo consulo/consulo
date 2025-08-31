@@ -33,8 +33,8 @@ public class ByteBufUtilEx {
       throw new NullPointerException("seq");
     }
     // UTF-8 uses max. 3 bytes per char, so calculate the worst case.
-    final int len = end - start;
-    final int maxSize = len * 3;
+    int len = end - start;
+    int maxSize = len * 3;
     buf.ensureWritable(maxSize);
 
     int oldWriterIndex;
@@ -72,7 +72,7 @@ public class ByteBufUtilEx {
           buffer.setByte(writerIndex++, WRITE_UTF_UNKNOWN);
           continue;
         }
-        final char c2;
+        char c2;
         try {
           // Surrogate Pair consumes 2 characters. Optimistically try to get the next character to avoid
           // duplicate bounds checking with charAt. If an IndexOutOfBoundsException is thrown we will

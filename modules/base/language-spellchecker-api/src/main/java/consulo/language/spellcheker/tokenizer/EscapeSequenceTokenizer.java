@@ -18,7 +18,7 @@ public abstract class EscapeSequenceTokenizer<T extends PsiElement> extends Toke
     if (element != null) {
       element.putUserData(ESCAPE_OFFSETS, offsets);
     }
-    final String text = unescapedText.toString();
+    String text = unescapedText.toString();
     consumer.consumeToken(element, text, false, startOffset, TextRange.allOf(text), PlainTextTokenSplitter.getInstance());
     if (element != null) {
       element.putUserData(ESCAPE_OFFSETS, null);
@@ -28,7 +28,7 @@ public abstract class EscapeSequenceTokenizer<T extends PsiElement> extends Toke
   @Override
   @Nonnull
   public TextRange getHighlightingRange(PsiElement element, int offset, TextRange range) {
-    final int[] offsets = element.getUserData(ESCAPE_OFFSETS);
+    int[] offsets = element.getUserData(ESCAPE_OFFSETS);
     if (offsets != null) {
       int start = offsets[range.getStartOffset()];
       int end = offsets[range.getEndOffset()];

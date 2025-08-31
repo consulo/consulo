@@ -146,11 +146,11 @@ public class ExportToFileUtil {
 
     @Override
     protected JComponent createCenterPanel() {
-      final Document document = ((EditorFactoryImpl)EditorFactory.getInstance()).createDocument(true);
+      Document document = ((EditorFactoryImpl)EditorFactory.getInstance()).createDocument(true);
       ((DocumentImpl)document).setAcceptSlashR(true);
 
       myTextArea = EditorFactory.getInstance().createEditor(document, myProject, PlainTextFileType.INSTANCE, true);
-      final EditorSettings settings = myTextArea.getSettings();
+      EditorSettings settings = myTextArea.getSettings();
       settings.setLineNumbersShown(false);
       settings.setLineMarkerAreaShown(false);
       settings.setFoldingOutlineShown(false);

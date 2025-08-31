@@ -24,7 +24,7 @@ public class TemplateGroup extends CompoundScheme<TemplateImpl> {
 
     private final String myReplace;
 
-    public TemplateGroup(final String name) {
+    public TemplateGroup(String name) {
         this(name, null);
     }
 

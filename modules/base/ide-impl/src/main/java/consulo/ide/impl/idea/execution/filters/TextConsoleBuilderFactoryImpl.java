@@ -33,7 +33,7 @@ import jakarta.annotation.Nonnull;
 @ServiceImpl
 public class TextConsoleBuilderFactoryImpl extends TextConsoleBuilderFactory {
   @Override
-  public TextConsoleBuilder createBuilder(@Nonnull final Project project) {
+  public TextConsoleBuilder createBuilder(@Nonnull Project project) {
     return new TextConsoleBuilderImpl(project);
   }
 

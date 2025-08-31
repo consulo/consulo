@@ -65,23 +65,23 @@ public abstract class LanguageInjectionSupport {
     /**
      * @see #FIX_KEY
      */
-    public abstract boolean addInjectionInPlace(final Language language, final PsiLanguageInjectionHost psiElement);
+    public abstract boolean addInjectionInPlace(Language language, PsiLanguageInjectionHost psiElement);
 
-    public abstract boolean removeInjectionInPlace(final PsiLanguageInjectionHost psiElement);
+    public abstract boolean removeInjectionInPlace(PsiLanguageInjectionHost psiElement);
 
-    public boolean removeInjection(final PsiElement psiElement) {
+    public boolean removeInjection(PsiElement psiElement) {
         return psiElement instanceof PsiLanguageInjectionHost && removeInjectionInPlace((PsiLanguageInjectionHost) psiElement);
     }
 
-    public abstract boolean editInjectionInPlace(final PsiLanguageInjectionHost psiElement);
+    public abstract boolean editInjectionInPlace(PsiLanguageInjectionHost psiElement);
 
-    public abstract BaseInjection createInjection(final Element element);
+    public abstract BaseInjection createInjection(Element element);
 
-    public abstract void setupPresentation(final BaseInjection injection, final SimpleColoredText presentation, final boolean isSelected);
+    public abstract void setupPresentation(BaseInjection injection, SimpleColoredText presentation, boolean isSelected);
 
-    public abstract Configurable[] createSettings(final Project project, final Configuration configuration);
+    public abstract Configurable[] createSettings(Project project, Configuration configuration);
 
-    public abstract AnAction[] createAddActions(final Project project, final Consumer<BaseInjection> consumer);
+    public abstract AnAction[] createAddActions(Project project, Consumer<BaseInjection> consumer);
 
-    public abstract AnAction createEditAction(final Project project, final Supplier<BaseInjection> producer);
+    public abstract AnAction createEditAction(Project project, Supplier<BaseInjection> producer);
 }

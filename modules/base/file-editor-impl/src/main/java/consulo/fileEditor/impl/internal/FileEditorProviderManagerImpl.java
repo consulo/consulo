@@ -58,11 +58,11 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
   @Override
   @Nonnull
-  public FileEditorProvider[] getProviders(@Nonnull final Project project, @Nonnull final VirtualFile file) {
+  public FileEditorProvider[] getProviders(@Nonnull Project project, @Nonnull VirtualFile file) {
     // Collect all possible editors
     List<FileEditorProvider> sharedProviders = new ArrayList<>();
     boolean doNotShowTextEditor = false;
-    for (final FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
+    for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
       ThrowableComputable<Boolean, RuntimeException> action = () -> {
         if (DumbService.isDumb(project) && !DumbService.isDumbAware(provider)) {
           return false;
@@ -139,10 +139,10 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
     @Override
     public int compare(FileEditorProvider provider1, FileEditorProvider provider2) {
-      final int i1 = provider1.getPolicy().ordinal();
-      final int i2 = provider2.getPolicy().ordinal();
+      int i1 = provider1.getPolicy().ordinal();
+      int i2 = provider2.getPolicy().ordinal();
       if (i1 != i2) return i1 - i2;
-      final double value = getWeight(provider1) - getWeight(provider2);
+      double value = getWeight(provider1) - getWeight(provider2);
       return value > 0 ? 1 : value < 0 ? -1 : 0;
     }
   }

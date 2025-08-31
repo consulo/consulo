@@ -41,12 +41,12 @@ public class FileTypePatternDialog {
     myPatternField.setText(initialPatterns);
 
     if (fileType instanceof TemplateLanguageFileType) {
-      final DefaultComboBoxModel model = (DefaultComboBoxModel) myLanguageCombo.getModel();
+      DefaultComboBoxModel model = (DefaultComboBoxModel) myLanguageCombo.getModel();
       model.addElement(null);
-      final List<Language> languages = TemplateDataLanguageMappings.getTemplateableLanguages();
+      List<Language> languages = TemplateDataLanguageMappings.getTemplateableLanguages();
       Collections.sort(languages, new Comparator<Language>() {
         @Override
-        public int compare(final Language o1, final Language o2) {
+        public int compare(Language o1, Language o2) {
           return o1.getID().compareTo(o2.getID());
         }
       });
@@ -58,7 +58,7 @@ public class FileTypePatternDialog {
         public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
           setText(value == null ? "" : ((Language) value).getDisplayName().get());
           if (value != null) {
-            final FileType type = ((Language)value).getAssociatedFileType();
+            FileType type = ((Language)value).getAssociatedFileType();
             if (type != null) {
               setIcon(TargetAWT.to(type.getIcon()));
             }

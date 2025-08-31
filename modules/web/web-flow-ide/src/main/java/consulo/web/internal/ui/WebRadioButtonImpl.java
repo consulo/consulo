@@ -95,7 +95,7 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
 
     @RequiredUIAccess
     @Override
-    public void setLabelText(@Nonnull final LocalizeValue text) {
+    public void setLabelText(@Nonnull LocalizeValue text) {
         UIAccess.assertIsUIThread();
 
         myText = text;

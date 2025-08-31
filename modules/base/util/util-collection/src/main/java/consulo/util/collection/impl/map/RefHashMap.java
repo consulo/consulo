@@ -40,7 +40,7 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
   private Set<Entry<K, V>> entrySet;
   private boolean processingQueue;
 
-  public RefHashMap(int initialCapacity, float loadFactor, @Nonnull final HashingStrategy<? super K> strategy) {
+  public RefHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
     myStrategy = strategy;
     myMap = createSubMap(initialCapacity, loadFactor, strategy);
   }
@@ -64,7 +64,7 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     putAll(t);
   }
 
-  public RefHashMap(@Nonnull final HashingStrategy<? super K> hashingStrategy) {
+  public RefHashMap(@Nonnull HashingStrategy<? super K> hashingStrategy) {
     this(4, 0.8f, hashingStrategy);
   }
 

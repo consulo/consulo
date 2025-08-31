@@ -31,18 +31,18 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    public void moveCaretRelatively(final int columnShift, final int lineShift, final boolean withSelection, final boolean blockSelection, final boolean scrollToCaret) {
+    public void moveCaretRelatively(int columnShift, int lineShift, boolean withSelection, boolean blockSelection, boolean scrollToCaret) {
         myDelegate.moveCaretRelatively(columnShift, lineShift, withSelection, blockSelection, scrollToCaret);
     }
 
     @Override
-    public void moveToLogicalPosition(@Nonnull final LogicalPosition pos) {
+    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
         LogicalPosition hostPos = myEditorWindow.injectedToHost(pos);
         myDelegate.moveToLogicalPosition(hostPos);
     }
 
     @Override
-    public void moveToVisualPosition(@Nonnull final VisualPosition pos) {
+    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
         LogicalPosition hostPos = myEditorWindow.injectedToHost(myEditorWindow.visualToLogicalPosition(pos));
         myDelegate.moveToLogicalPosition(hostPos);
     }
@@ -53,7 +53,7 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    public void moveToOffset(final int offset, boolean locateBeforeSoftWrap) {
+    public void moveToOffset(int offset, boolean locateBeforeSoftWrap) {
         int hostOffset = myEditorWindow.getDocument().injectedToHost(offset);
         myDelegate.moveToOffset(hostOffset, locateBeforeSoftWrap);
     }
@@ -103,7 +103,7 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    public void removeCaretListener(@Nonnull final CaretListener listener) {
+    public void removeCaretListener(@Nonnull CaretListener listener) {
         CaretListener wrapper = myCaretListeners.removeWrapper(listener);
         if (wrapper != null) {
             myDelegate.removeCaretListener(wrapper);
@@ -260,12 +260,12 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    public void runForEachCaret(final @Nonnull CaretAction action) {
+    public void runForEachCaret(@Nonnull CaretAction action) {
         myDelegate.runForEachCaret(caret -> action.perform(createInjectedCaret(caret)));
     }
 
     @Override
-    public void runForEachCaret(@Nonnull final CaretAction action, boolean reverseOrder) {
+    public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
         myDelegate.runForEachCaret(caret -> action.perform(createInjectedCaret(caret)), reverseOrder);
     }
 

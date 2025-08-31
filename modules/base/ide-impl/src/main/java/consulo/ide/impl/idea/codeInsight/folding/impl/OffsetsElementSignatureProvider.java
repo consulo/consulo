@@ -93,7 +93,7 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
             psiFile.getLanguage(), element, element.getText()
           ));
         }
-        final PsiElement injectedStartElement = InjectedLanguageUtil.findElementAtNoCommit(psiFile, start);
+        PsiElement injectedStartElement = InjectedLanguageUtil.findElementAtNoCommit(psiFile, start);
         if (processingInfoStorage != null) {
           processingInfoStorage.append(String.format(
             "Trying to find injected element starting from the '%s'%s%n",

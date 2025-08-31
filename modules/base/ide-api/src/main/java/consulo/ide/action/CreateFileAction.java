@@ -129,7 +129,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     }
 
     public static PsiDirectory findOrCreateSubdirectory(@Nonnull PsiDirectory parent, @Nonnull String subdirName) {
-        final PsiDirectory sub = parent.findSubdirectory(subdirName);
+        PsiDirectory sub = parent.findSubdirectory(subdirName);
         return sub == null ? WriteAction.compute(() -> parent.createSubdirectory(subdirName)) : sub;
     }
 
@@ -143,23 +143,23 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
                 newName = newName.replace('\\', '/');
             }
             if (newName.contains("/")) {
-                final List<String> subDirs = StringUtil.split(newName, "/");
+                List<String> subDirs = StringUtil.split(newName, "/");
                 newName = subDirs.remove(subDirs.size() - 1);
                 boolean firstToken = true;
                 for (String dir : subDirs) {
                     if (firstToken && "~".equals(dir)) {
-                        final VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
+                        VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
                         if (userHomeDir == null) {
                             throw new IncorrectOperationException("User home directory not found");
                         }
-                        final PsiDirectory directory1 = directory.getManager().findDirectory(userHomeDir);
+                        PsiDirectory directory1 = directory.getManager().findDirectory(userHomeDir);
                         if (directory1 == null) {
                             throw new IncorrectOperationException("User home directory not found");
                         }
                         directory = directory1;
                     }
                     else if ("..".equals(dir)) {
-                        final PsiDirectory parentDirectory = directory.getParentDirectory();
+                        PsiDirectory parentDirectory = directory.getParentDirectory();
                         if (parentDirectory == null) {
                             throw new IncorrectOperationException("Not a valid directory");
                         }
@@ -214,18 +214,18 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         @Override
         @RequiredUIAccess
         public boolean checkInput(String inputString) {
-            final StringTokenizer tokenizer = new StringTokenizer(inputString, "\\/");
+            StringTokenizer tokenizer = new StringTokenizer(inputString, "\\/");
             VirtualFile vFile = getDirectory().getVirtualFile();
             boolean firstToken = true;
             while (tokenizer.hasMoreTokens()) {
-                final String token = tokenizer.nextToken();
+                String token = tokenizer.nextToken();
                 if ((token.equals(".") || token.equals("..")) && !tokenizer.hasMoreTokens()) {
                     myErrorText = "Can't create file with name '" + token + "'";
                     return false;
                 }
                 if (vFile != null) {
                     if (firstToken && "~".equals(token)) {
-                        final VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
+                        VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
                         if (userHomeDir == null) {
                             myErrorText = "User home directory not found";
                             return false;
@@ -240,7 +240,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
                         }
                     }
                     else if (!".".equals(token)) {
-                        final VirtualFile child = vFile.findChild(token);
+                        VirtualFile child = vFile.findChild(token);
                         if (child != null) {
                             if (!child.isDirectory()) {
                                 myErrorText = "A file with name '" + token + "' already exists";

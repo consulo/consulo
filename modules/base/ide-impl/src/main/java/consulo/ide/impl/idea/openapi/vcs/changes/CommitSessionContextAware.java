@@ -22,5 +22,5 @@ import consulo.versionControlSystem.change.CommitContext;
  * @since 2011-09-19
  */
 public interface CommitSessionContextAware {
-  void setContext(final CommitContext context);
+  void setContext(CommitContext context);
 }

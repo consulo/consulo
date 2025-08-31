@@ -40,12 +40,12 @@ public class GwtRootPanelImpl extends Grid {
     resize(2, 1);
 
     int rows = 0;
-    final Widget menuComponent = state.menuBarExists ? ArrayUtil2.safeGet(children, 0) : null;
+    Widget menuComponent = state.menuBarExists ? ArrayUtil2.safeGet(children, 0) : null;
     if (state.menuBarExists) {
       rows++;
     }
 
-    final Widget contentComponent = state.contentExists ? ArrayUtil2.safeGet(children, state.menuBarExists ? 1 : 0) : null;
+    Widget contentComponent = state.contentExists ? ArrayUtil2.safeGet(children, state.menuBarExists ? 1 : 0) : null;
     if (state.contentExists) {
       rows++;
     }

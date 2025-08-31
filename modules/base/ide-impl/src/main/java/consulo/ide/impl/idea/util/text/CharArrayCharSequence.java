@@ -102,7 +102,7 @@ public class CharArrayCharSequence implements CharSequenceBackedByArray {
    * See {@link java.io.Reader#read(char[], int, int)};
    */
   public int readCharsTo(int start, char[] cbuf, int off, int len) {
-    final int readChars = Math.min(len, length() - start);
+    int readChars = Math.min(len, length() - start);
     if (readChars <= 0) return -1;
 
     System.arraycopy(myChars, start, cbuf, off, readChars);

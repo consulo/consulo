@@ -24,21 +24,21 @@ import java.awt.event.ContainerListener;
  * @author Vladimir Kondratyev
  */
 public abstract class HierarchyWatcher implements ContainerListener{
-  public final void componentAdded(final ContainerEvent e){
+  public final void componentAdded(ContainerEvent e){
     install(e.getChild());
     hierarchyChanged(e);
   }
 
-  public final void componentRemoved(final ContainerEvent e){
-    final Component removedChild=e.getChild();
+  public final void componentRemoved(ContainerEvent e){
+    Component removedChild=e.getChild();
     deinstall(removedChild);
     hierarchyChanged(e);
   }
 
-  private void install(final Component component){
+  private void install(Component component){
     if(component instanceof Container){
-      final Container container=(Container)component;
-      final int componentCount=container.getComponentCount();
+      Container container=(Container)component;
+      int componentCount=container.getComponentCount();
       for(int i=0;i<componentCount;i++){
         install(container.getComponent(i));
       }
@@ -46,10 +46,10 @@ public abstract class HierarchyWatcher implements ContainerListener{
     }
   }
 
-  private void deinstall(final Component component){
+  private void deinstall(Component component){
     if(component instanceof Container){
-      final Container container=(Container)component;
-      final int componentCount=container.getComponentCount();
+      Container container=(Container)component;
+      int componentCount=container.getComponentCount();
       for(int i=0;i<componentCount;i++){
         deinstall(container.getComponent(i));
       }

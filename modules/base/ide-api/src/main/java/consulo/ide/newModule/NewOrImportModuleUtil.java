@@ -45,8 +45,8 @@ public class NewOrImportModuleUtil {
   @RequiredReadAction
   public static Module doCreate(@Nonnull NewModuleBuilderProcessor<NewModuleWizardContext> processor,
                                 @Nonnull NewModuleWizardContext context,
-                                @Nonnull final Project project,
-                                @Nonnull final VirtualFile baseDir) {
+                                @Nonnull Project project,
+                                @Nonnull VirtualFile baseDir) {
     return doCreate(processor, context, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
   }
 
@@ -55,9 +55,9 @@ public class NewOrImportModuleUtil {
   @SuppressWarnings("unchecked")
   public static Module doCreate(@Nonnull NewModuleBuilderProcessor<NewModuleWizardContext> processor,
                                 @Nonnull NewModuleWizardContext context,
-                                @Nonnull final ModifiableModuleModel modifiableModel,
-                                @Nonnull final VirtualFile baseDir,
-                                final boolean requireModelCommit) {
+                                @Nonnull ModifiableModuleModel modifiableModel,
+                                @Nonnull VirtualFile baseDir,
+                                boolean requireModelCommit) {
     String name = StringUtil.notNullize(context.getName(), baseDir.getName());
 
     Module newModule = modifiableModel.newModule(name, baseDir.getPath());
@@ -85,8 +85,8 @@ public class NewOrImportModuleUtil {
   @Nonnull
   @RequiredUIAccess
   public static <T extends ModuleImportContext> AsyncResult<Project> importProject(@Nonnull T context, @Nonnull ModuleImportProvider<T> importProvider) {
-    final ProjectManager projectManager = ProjectManager.getInstance();
-    final String projectFilePath = context.getPath();
+    ProjectManager projectManager = ProjectManager.getInstance();
+    String projectFilePath = context.getPath();
     String projectName = context.getName();
 
     try {
@@ -95,7 +95,7 @@ public class NewOrImportModuleUtil {
       File projectConfigDir = new File(projectDir, Project.DIRECTORY_STORE_FOLDER);
       FileUtil.ensureExists(projectConfigDir);
 
-      final Project newProject = projectManager.createProject(projectName, projectFilePath);
+      Project newProject = projectManager.createProject(projectName, projectFilePath);
 
       if (newProject == null) return AsyncResult.rejected();
 

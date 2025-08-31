@@ -208,7 +208,7 @@ public abstract class CodeEditorSelectionModelBase implements SelectionModel {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     if (myEditor.getCaretModel().supportsMultipleCarets() && allCarets) {
-      final StringBuilder buf = new StringBuilder();
+      StringBuilder buf = new StringBuilder();
       String separator = "";
       for (Caret caret : myEditor.getCaretModel().getAllCarets()) {
         buf.append(separator);

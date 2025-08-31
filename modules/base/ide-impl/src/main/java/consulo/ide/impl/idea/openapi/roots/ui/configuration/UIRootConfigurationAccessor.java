@@ -45,14 +45,14 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
 
   @Override
   @Nullable
-  public Library getLibrary(Library library, final String libraryName, final String libraryLevel) {
+  public Library getLibrary(Library library, String libraryName, String libraryLevel) {
     if (library == null) {
       if (libraryName != null) {
         library = myLibrariesConfigurator.getLibrary(libraryName, libraryLevel);
       }
     }
     else {
-      final Library model = myLibrariesConfigurator.getLibraryModel(library);
+      Library model = myLibrariesConfigurator.getLibraryModel(library);
       if (model != null) {
         library = model;
       }
@@ -63,8 +63,8 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
 
   @Override
   @Nullable
-  public Sdk getSdk(final Sdk sdk, final String sdkName) {
-    final SdkModel model = ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel();
+  public Sdk getSdk(Sdk sdk, String sdkName) {
+    SdkModel model = ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel();
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 
@@ -87,7 +87,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @Override
-  public Module getModule(final Module module, final String moduleName) {
+  public Module getModule(Module module, String moduleName) {
     if (module == null) {
       return myModulesConfigurator.getModule(moduleName);
     }

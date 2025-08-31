@@ -79,11 +79,11 @@ public interface ResolveCache {
                                                                                 @Nonnull PsiFile containingFile);
 
   @Nonnull
-  public <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(@Nonnull final T ref,
-                                                                                @Nonnull final PolyVariantContextResolver<T> resolver,
+  public <T extends PsiPolyVariantReference> ResolveResult[] resolveWithCaching(@Nonnull T ref,
+                                                                                @Nonnull PolyVariantContextResolver<T> resolver,
                                                                                 boolean needToPreventRecursion,
-                                                                                final boolean incompleteCode,
-                                                                                @Nonnull final PsiFile containingFile);
+                                                                                boolean incompleteCode,
+                                                                                @Nonnull PsiFile containingFile);
 
   <TRef extends PsiReference, TResult> TResult resolveWithCaching(@Nonnull TRef ref, @Nonnull AbstractResolver<TRef, TResult> resolver, boolean needToPreventRecursion, boolean incompleteCode);
 

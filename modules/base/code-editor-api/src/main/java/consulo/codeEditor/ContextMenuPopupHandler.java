@@ -35,7 +35,7 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
       // obsolete implementation
       else {
         MouseEvent e = event.getMouseEvent();
-        final Component c = e.getComponent();
+        Component c = e.getComponent();
         if (c != null && c.isShowing()) {
           popupMenu.getComponent().show(c, e.getX(), e.getY());
         }

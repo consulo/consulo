@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 public abstract class BaseRepositoryType<T extends BaseRepository> extends TaskRepositoryType<T> {
   @Override
   @Nonnull
-  public TaskRepositoryEditor createEditor(final T repository, Project project, final Consumer<T> changeListener) {
+  public TaskRepositoryEditor createEditor(T repository, Project project, Consumer<T> changeListener) {
     return new BaseRepositoryEditor<T>(project, repository, changeListener);
   }
 }

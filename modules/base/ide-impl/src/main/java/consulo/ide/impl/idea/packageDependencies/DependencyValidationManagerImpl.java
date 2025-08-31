@@ -66,7 +66,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   private final Map<String, PackageSet> myUnnamedScopes = new HashMap<>();
 
   @Inject
-  public DependencyValidationManagerImpl(final Project project, NamedScopeManager namedScopeManager) {
+  public DependencyValidationManagerImpl(Project project, NamedScopeManager namedScopeManager) {
     super(project);
     myNamedScopeManager = namedScopeManager;
     namedScopeManager.addScopeListener(this::reloadScopes, this);
@@ -79,8 +79,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   @Override
   @Nonnull
   public List<NamedScope> getPredefinedScopes() {
-    final List<NamedScope> predefinedScopes = new ArrayList<>();
-    final List<CustomScopesProvider> scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensionList(myProject);
+    List<NamedScope> predefinedScopes = new ArrayList<>();
+    List<CustomScopesProvider> scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensionList(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
       scopesProvider.acceptScopes(predefinedScopes::add);
     }
@@ -89,9 +89,9 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   @Override
   public NamedScope getPredefinedScope(@Nonnull String name) {
-    final List<CustomScopesProvider> scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensionList(myProject);
+    List<CustomScopesProvider> scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensionList(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
-      final NamedScope scope = scopesProvider.getCustomScope(name);
+      NamedScope scope = scopesProvider.getCustomScope(name);
       if (scope != null) {
         return scope;
       }
@@ -144,7 +144,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  public void setSkipImportStatements(final boolean skip) {
+  public void setSkipImportStatements(boolean skip) {
     mySkipImportStatements = skip;
   }
 
@@ -174,14 +174,14 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   @Override
   public void reloadRules() {
-    final Element element = new Element("rules_2_reload");
+    Element element = new Element("rules_2_reload");
     writeRules(element);
     readRules(element);
   }
 
-  private void appendUnnamedScope(final NamedScope fromScope) {
+  private void appendUnnamedScope(NamedScope fromScope) {
     if (getScope(fromScope.getName()) == null) {
-      final PackageSet packageSet = fromScope.getValue();
+      PackageSet packageSet = fromScope.getValue();
       if (packageSet != null && !myUnnamedScopes.containsKey(packageSet.getText())) {
         myUnnamedScopes.put(packageSet.getText(), packageSet);
       }
@@ -208,11 +208,11 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
     super.loadState(element);
     myUnnamedScopes.clear();
-    final List unnamedScopes = element.getChildren(UNNAMED_SCOPE);
-    final PackageSetFactory packageSetFactory = PackageSetFactory.getInstance();
+    List unnamedScopes = element.getChildren(UNNAMED_SCOPE);
+    PackageSetFactory packageSetFactory = PackageSetFactory.getInstance();
     for (Object unnamedScope : unnamedScopes) {
       try {
-        final String packageSet = ((Element)unnamedScope).getAttributeValue(VALUE);
+        String packageSet = ((Element)unnamedScope).getAttributeValue(VALUE);
         myUnnamedScopes.put(packageSet, packageSetFactory.compile(packageSet));
       }
       catch (ParsingException ignored) {
@@ -265,10 +265,10 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   @Override
   @Nullable
-  public NamedScope getScope(@Nullable final String name) {
-    final NamedScope scope = super.getScope(name);
+  public NamedScope getScope(@Nullable String name) {
+    NamedScope scope = super.getScope(name);
     if (scope == null) {
-      final PackageSet packageSet = myUnnamedScopes.get(name);
+      PackageSet packageSet = myUnnamedScopes.get(name);
       if (packageSet != null) {
         return new NamedScope.UnnamedScope(packageSet);
       }
@@ -298,8 +298,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     String toScope = ruleElement.getAttributeValue(TO_SCOPE_KEY);
     String denyRule = ruleElement.getAttributeValue(IS_DENY_KEY);
     if (fromScope == null || toScope == null || denyRule == null) return null;
-    final NamedScope fromNamedScope = getScope(fromScope);
-    final NamedScope toNamedScope = getScope(toScope);
+    NamedScope fromNamedScope = getScope(fromScope);
+    NamedScope toNamedScope = getScope(toScope);
     if (fromNamedScope == null || toNamedScope == null) return null;
     return new DependencyRule(fromNamedScope, toNamedScope, Boolean.valueOf(denyRule).booleanValue());
   }
@@ -341,7 +341,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     });
   }
 
-  private static void addScopesToList(@Nonnull final List<Pair<NamedScope, NamedScopesHolder>> scopeList, @Nonnull final NamedScopesHolder holder) {
+  private static void addScopesToList(@Nonnull List<Pair<NamedScope, NamedScopesHolder>> scopeList, @Nonnull NamedScopesHolder holder) {
     for (NamedScope scope : holder.getScopes()) {
       scopeList.add(Pair.create(scope, holder));
     }

@@ -81,8 +81,8 @@ public class AnnotateVcsVirtualFileAction {
   }
 
   public static void perform(AnActionEvent e, boolean selected) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final VirtualFile file = e.getRequiredData(VirtualFile.KEY_OF_ARRAY)[0];
+    Project project = e.getRequiredData(Project.KEY);
+    VirtualFile file = e.getRequiredData(VirtualFile.KEY_OF_ARRAY)[0];
     List<Editor> editors = VcsAnnotateUtil.getEditors(project, file);
 
     if (!selected) {
@@ -91,7 +91,7 @@ public class AnnotateVcsVirtualFileAction {
       }
     }
     else {
-      final Editor editor = editors.get(0);
+      Editor editor = editors.get(0);
       doAnnotate(project, editor, file);
     }
   }
@@ -109,9 +109,9 @@ public class AnnotateVcsVirtualFileAction {
 
     VcsAnnotateUtil.getBackgroundableLock(project, file).lock();
 
-    final Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations().get(), true) {
+    Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations().get(), true) {
       @Override
-      public void run(final @Nonnull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           fileAnnotationRef.set(provider.annotate(data.filePath, data.revisionNumber));
         }

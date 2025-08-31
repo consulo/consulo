@@ -56,7 +56,7 @@ public class IgnoredSettingsDialog extends DialogWrapper {
     HelpManager.getInstance().invokeHelp("configureIgnoredFilesDialog");
   }
 
-  public static void configure(final Project project) {
+  public static void configure(Project project) {
     IgnoredSettingsDialog dlg = new IgnoredSettingsDialog(project);
     dlg.show();
     if (!dlg.isOK()) {

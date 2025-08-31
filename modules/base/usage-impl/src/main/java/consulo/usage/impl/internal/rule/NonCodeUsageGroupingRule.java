@@ -115,7 +115,7 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
         return DYNAMIC_CAPTION;
       }
       else {
-        final String dynamicCodeUsagesString = view.getPresentation().getDynamicCodeUsagesString();
+        String dynamicCodeUsagesString = view.getPresentation().getDynamicCodeUsagesString();
         return dynamicCodeUsagesString == null ? DYNAMIC_CAPTION : dynamicCodeUsagesString;
       }
     }
@@ -144,7 +144,7 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     }
     if (usage instanceof PsiElementUsage) {
       if (usage instanceof UsageInfo2UsageAdapter) {
-        final UsageInfo usageInfo = ((UsageInfo2UsageAdapter)usage).getUsageInfo();
+        UsageInfo usageInfo = ((UsageInfo2UsageAdapter)usage).getUsageInfo();
         if (usageInfo.isDynamicUsage()) {
           return DynamicUsageGroup.INSTANCE;
         }

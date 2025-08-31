@@ -179,7 +179,7 @@ public final class TouchbarSupport {
         if (!isInitialized || !isEnabled()) {
             return;
         }
-        final Disposable tb = CtxPopup.showPopupItems(popup, popupComponent);
+        Disposable tb = CtxPopup.showPopupItems(popup, popupComponent);
         if (tb != null) {
             Disposer.register(popup, tb);
         }

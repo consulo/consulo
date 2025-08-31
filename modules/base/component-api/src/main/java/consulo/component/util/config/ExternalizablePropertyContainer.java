@@ -70,7 +70,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
     registerProperty(property, itemTagName, Externalizer.FactoryBased.create(factory));
   }
 
-  private static <T> Externalizer<List<T>> createListExternalizer(final Externalizer<T> itemExternalizer, final String itemTagName) {
+  private static <T> Externalizer<List<T>> createListExternalizer(Externalizer<T> itemExternalizer, String itemTagName) {
     return new ListExternalizer(itemExternalizer, itemTagName);
   }
 

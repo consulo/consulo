@@ -36,11 +36,11 @@ public abstract class AbstractPainter implements Painter {
     return myNeedsRepaint;
   }
 
-  public void setNeedsRepaint(final boolean needsRepaint) {
+  public void setNeedsRepaint(boolean needsRepaint) {
     setNeedsRepaint(needsRepaint, null);
   }
 
-  public void setNeedsRepaint(final boolean needsRepaint, @Nullable JComponent dirtyComponent) {
+  public void setNeedsRepaint(boolean needsRepaint, @Nullable JComponent dirtyComponent) {
     myNeedsRepaint = needsRepaint;
     if (myNeedsRepaint) {
       fireNeedsRepaint(dirtyComponent);
@@ -48,12 +48,12 @@ public abstract class AbstractPainter implements Painter {
   }
 
   @Override
-  public void addListener(final Listener listener) {
+  public void addListener(Listener listener) {
     myListeners.add(listener);
   }
 
   @Override
-  public void removeListener(final Listener listener) {
+  public void removeListener(Listener listener) {
     myListeners.remove(listener);
   }
 
@@ -98,11 +98,11 @@ public abstract class AbstractPainter implements Painter {
   }
 
   @Override
-  public final void paint(final Component component, final Graphics2D g) {
+  public final void paint(Component component, Graphics2D g) {
     myNeedsRepaint = false;
     executePaint(component, g);
   }
 
-  public abstract void executePaint(final Component component, final Graphics2D g);
+  public abstract void executePaint(Component component, Graphics2D g);
 
 }

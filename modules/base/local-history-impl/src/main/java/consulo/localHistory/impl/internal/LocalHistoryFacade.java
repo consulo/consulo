@@ -118,7 +118,7 @@ public class LocalHistoryFacade {
   }
 
   @TestOnly
-  public void putLabelInTests(final PutLabelChange c) {
+  public void putLabelInTests(PutLabelChange c) {
     putLabel(c);
   }
 

@@ -37,7 +37,7 @@ public class SourceItemFindUsagesAction extends ArtifactEditorFindUsagesActionBa
 
   @Override
   protected ProjectStructureElement getSelectedElement() {
-    final List<SourceItemNode> nodes = myTree.getSelectedSourceItemNodes();
+    List<SourceItemNode> nodes = myTree.getSelectedSourceItemNodes();
     if (nodes.size() != 1) return null;
     ArtifactsTreeNode node = nodes.get(0);
     if (!(node instanceof SourceItemNode)) {

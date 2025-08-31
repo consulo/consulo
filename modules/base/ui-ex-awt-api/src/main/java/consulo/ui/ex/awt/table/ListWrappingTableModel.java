@@ -53,16 +53,16 @@ public class ListWrappingTableModel extends AbstractTableModel {
                                          "columns: " + values.length);
     }
     for (int i = 0; i < values.length; i++) {
-      final String value = values[i];
+      String value = values[i];
       list.get(i).add(value);
     }
-    final int index = list.get(0).size() - 1;
+    int index = list.get(0).size() - 1;
     fireTableRowsInserted(index, index);
   }
 
   public void addRow() {
-    final int columnCount = list.size();
-    final String[] strings = new String[columnCount];
+    int columnCount = list.size();
+    String[] strings = new String[columnCount];
     Arrays.fill(strings, "");
     addRow(strings);
   }
@@ -87,7 +87,7 @@ public class ListWrappingTableModel extends AbstractTableModel {
 
   @Override
   public int getRowCount() {
-    final List<String> column0 = list.get(0);
+    List<String> column0 = list.get(0);
     if (column0 == null) {
       return 0;
     }

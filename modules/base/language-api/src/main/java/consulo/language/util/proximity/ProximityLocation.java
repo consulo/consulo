@@ -32,7 +32,7 @@ public class ProximityLocation implements UserDataHolder {
   private final Module myPositionModule;
   private final ProcessingContext myContext;
 
-  public ProximityLocation(@Nullable final PsiElement position, final Module positionModule) {
+  public ProximityLocation(@Nullable PsiElement position, Module positionModule) {
     this(position, positionModule, new ProcessingContext());
   }
 

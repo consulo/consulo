@@ -22,7 +22,7 @@ class PoolPageKey implements Comparable<PoolPageKey> {
   private RandomAccessDataFile owner;
   private long offset;
 
-  public PoolPageKey(final RandomAccessDataFile owner, final long offset) {
+  public PoolPageKey(RandomAccessDataFile owner, long offset) {
     this.owner = owner;
     this.offset = offset;
   }
@@ -40,7 +40,7 @@ class PoolPageKey implements Comparable<PoolPageKey> {
   }
 
   @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
-  public boolean equals(final Object obj) {
+  public boolean equals(Object obj) {
     PoolPageKey k = (PoolPageKey)obj;
     return k.owner == owner && k.offset == offset;
   }
@@ -50,7 +50,7 @@ class PoolPageKey implements Comparable<PoolPageKey> {
     this.offset = offset;
   }
 
-  public int compareTo(final PoolPageKey o) {
+  public int compareTo(PoolPageKey o) {
     if (owner != o.owner) {
       return owner.hashCode() - o.owner.hashCode();
     }

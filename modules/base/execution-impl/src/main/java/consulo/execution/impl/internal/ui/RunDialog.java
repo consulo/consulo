@@ -43,7 +43,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
     private JComponent myCenterPanel;
     private final Executor myExecutor;
 
-    public RunDialog(final Project project, final Executor executor) {
+    public RunDialog(Project project, Executor executor) {
         super(project, true);
         myProject = project;
         myExecutor = executor;
@@ -104,7 +104,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
     }
 
     @Override
-    public void setOKActionEnabled(final boolean isEnabled) {
+    public void setOKActionEnabled(boolean isEnabled) {
         super.setOKActionEnabled(isEnabled);
     }
 
@@ -114,7 +114,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
         super.dispose();
     }
 
-    public static boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title) {
+    public static boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title) {
         return editConfiguration(project, configuration, title, null);
     }
 
@@ -122,9 +122,9 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
         return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
     }
 
-    public static boolean editConfiguration(final Project project, final RunnerAndConfigurationSettings configuration, final String title, @Nullable final Executor executor) {
+    public static boolean editConfiguration(final Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable final Executor executor) {
         final SingleConfigurationConfigurable<RunConfiguration> configurable = SingleConfigurationConfigurable.editSettings(configuration, executor);
-        final SingleConfigurableEditor dialog = new SingleConfigurableEditor(project, configurable, IdeModalityType.PROJECT) {
+        SingleConfigurableEditor dialog = new SingleConfigurableEditor(project, configurable, IdeModalityType.PROJECT) {
             {
                 if (executor != null) {
                     setOKButtonText(executor.getActionName());
@@ -146,7 +146,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
         }
 
         @Override
-        public void actionPerformed(final ActionEvent event) {
+        public void actionPerformed(ActionEvent event) {
             try {
                 myConfigurable.apply();
             }

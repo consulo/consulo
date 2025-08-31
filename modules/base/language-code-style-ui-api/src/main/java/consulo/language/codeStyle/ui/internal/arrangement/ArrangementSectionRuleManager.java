@@ -72,7 +72,7 @@ public class ArrangementSectionRuleManager {
                                         @Nonnull ArrangementMatchingRulesControl control) {
     myCommenter = Commenter.forLanguage(language);
     myControl = control;
-    final List<CompositeArrangementSettingsToken> tokens = new ArrayList<>();
+    List<CompositeArrangementSettingsToken> tokens = new ArrayList<>();
     tokens.add(new CompositeArrangementSettingsToken(TYPE, ContainerUtil.newArrayList(START_SECTION, END_SECTION)));
     tokens.add(new CompositeArrangementSettingsToken(TEXT));
     myEditor = new ArrangementMatchingRuleEditor(settingsManager, tokens, colorsProvider, control);
@@ -101,7 +101,7 @@ public class ArrangementSectionRuleManager {
 
   @Nullable
   public ArrangementSectionRuleData getSectionRuleData(@Nonnull StdArrangementMatchRule element) {
-    final ArrangementMatchCondition condition = element.getMatcher().getCondition();
+    ArrangementMatchCondition condition = element.getMatcher().getCondition();
     return getSectionRuleData(condition);
   }
 
@@ -112,7 +112,7 @@ public class ArrangementSectionRuleManager {
     condition.invite(new ArrangementMatchConditionVisitor() {
       @Override
       public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
-        final ArrangementSettingsToken type = condition.getType();
+        ArrangementSettingsToken type = condition.getType();
         if (type.equals(START_SECTION)) {
           isStart.set(true);
         }
@@ -143,21 +143,21 @@ public class ArrangementSectionRuleManager {
 
   @Nonnull
   public StdArrangementMatchRule createDefaultSectionRule() {
-    final ArrangementAtomMatchCondition type = new ArrangementAtomMatchCondition(START_SECTION);
-    final ArrangementAtomMatchCondition text = new ArrangementAtomMatchCondition(TEXT, createDefaultSectionText());
-    final ArrangementMatchCondition condition = ArrangementUtil.combine(type, text);
+    ArrangementAtomMatchCondition type = new ArrangementAtomMatchCondition(START_SECTION);
+    ArrangementAtomMatchCondition text = new ArrangementAtomMatchCondition(TEXT, createDefaultSectionText());
+    ArrangementMatchCondition condition = ArrangementUtil.combine(type, text);
     return new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition));
   }
 
   @Nonnull
   private String processSectionText(@Nonnull String text) {
-    final String lineCommentPrefix = myCommenter.getLineCommentPrefix();
+    String lineCommentPrefix = myCommenter.getLineCommentPrefix();
     if (lineCommentPrefix != null && text.startsWith(lineCommentPrefix)) {
       return text;
     }
 
-    final String prefix = myCommenter.getBlockCommentPrefix();
-    final String suffix = myCommenter.getBlockCommentSuffix();
+    String prefix = myCommenter.getBlockCommentPrefix();
+    String suffix = myCommenter.getBlockCommentSuffix();
     if (prefix != null && suffix != null &&
         text.length() >= prefix.length() + suffix.length() && text.startsWith(prefix) && text.endsWith(suffix)) {
       return text;
@@ -169,13 +169,13 @@ public class ArrangementSectionRuleManager {
   @Nonnull
   private String createDefaultSectionText() {
     if (myCommenter != null) {
-      final String lineCommentPrefix = myCommenter.getLineCommentPrefix();
+      String lineCommentPrefix = myCommenter.getLineCommentPrefix();
       if (StringUtil.isNotEmpty(lineCommentPrefix)) {
         return wrapIntoLineComment(lineCommentPrefix, "");
       }
 
-      final String prefix = myCommenter.getBlockCommentPrefix();
-      final String suffix = myCommenter.getBlockCommentSuffix();
+      String prefix = myCommenter.getBlockCommentPrefix();
+      String suffix = myCommenter.getBlockCommentSuffix();
       if (StringUtil.isNotEmpty(prefix) && StringUtil.isNotEmpty(suffix)) {
         return wrapIntoBlockComment(prefix, suffix, " ");
       }

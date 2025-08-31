@@ -79,7 +79,7 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
   public void moduleStateChanged() {
   }
 
-  public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
+  public void moduleCompileOutputChanged(String baseUrl, String moduleName) {
   }
 
   @RequiredUIAccess

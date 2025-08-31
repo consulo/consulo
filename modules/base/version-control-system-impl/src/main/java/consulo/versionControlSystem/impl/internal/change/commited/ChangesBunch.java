@@ -23,7 +23,7 @@ public class ChangesBunch {
   private final List<CommittedChangeList> myList;
   private final boolean myConsistentWithPrevious;
 
-  public ChangesBunch(final List<CommittedChangeList> list, final boolean consistentWithPrevious) {
+  public ChangesBunch(List<CommittedChangeList> list, boolean consistentWithPrevious) {
     myList = list;
     myConsistentWithPrevious = consistentWithPrevious;
   }

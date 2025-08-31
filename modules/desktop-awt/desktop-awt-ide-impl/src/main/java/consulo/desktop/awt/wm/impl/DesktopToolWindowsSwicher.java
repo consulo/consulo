@@ -93,8 +93,8 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
     public boolean mouseExited(Point currentLocationOnScreen) {
         myAlarm.cancelAllRequests();
         if (popup != null && popup.isVisible()) {
-            final Point screen = popup.getLocationOnScreen();
-            final Rectangle popupScreenRect = new Rectangle(screen.x, screen.y, popup.getSize().width, popup.getSize().height);
+            Point screen = popup.getLocationOnScreen();
+            Rectangle popupScreenRect = new Rectangle(screen.x, screen.y, popup.getSize().width, popup.getSize().height);
             if (!popupScreenRect.contains(currentLocationOnScreen)) {
                 myAlarm.cancelAllRequests();
                 myAlarm.addRequest(() -> {
@@ -109,28 +109,28 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
     }
 
     public void mouseEntered() {
-        final boolean active = ApplicationManager.getApplication().isActive();
+        boolean active = ApplicationManager.getApplication().isActive();
         if (!active) {
             return;
         }
         if (myAlarm.getActiveRequestCount() == 0) {
             myAlarm.addRequest(() -> {
-                final IdeFrameEx frame = DesktopIdeFrameUtil.findIdeFrameExFromParent(TargetAWT.to(myLabel));
+                IdeFrameEx frame = DesktopIdeFrameUtil.findIdeFrameExFromParent(TargetAWT.to(myLabel));
                 if (frame == null) {
                     return;
                 }
 
                 List<ToolWindow> toolWindows = new ArrayList<>();
-                final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(frame.getProject());
+                ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(frame.getProject());
                 for (String id : toolWindowManager.getToolWindowIds()) {
-                    final ToolWindow tw = toolWindowManager.getToolWindow(id);
+                    ToolWindow tw = toolWindowManager.getToolWindow(id);
                     if (tw.isAvailable() && tw.isShowStripeButton()) {
                         toolWindows.add(tw);
                     }
                 }
                 toolWindows.sort((o1, o2) -> StringUtil.naturalCompare(o1.getDisplayName().getValue(), o2.getDisplayName().getValue()));
 
-                final JBList<ToolWindow> list = new JBList<>(toolWindows);
+                JBList<ToolWindow> list = new JBList<>(toolWindows);
                 list.setCellRenderer(new ColoredListCellRenderer<>() {
                     @Override
                     @RequiredUIAccess
@@ -150,10 +150,10 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
                     }
                 });
 
-                final Dimension size = list.getPreferredSize();
-                final JComponent c = (JComponent) TargetAWT.to(myLabel);
-                final Insets padding = UIUtil.getListViewportPadding();
-                final RelativePoint point =
+                Dimension size = list.getPreferredSize();
+                JComponent c = (JComponent) TargetAWT.to(myLabel);
+                Insets padding = UIUtil.getListViewportPadding();
+                RelativePoint point =
                     new RelativePoint(c, new Point(-4, -padding.top - padding.bottom - 4 - size.height + (Platform.current().os().isMac() ? 2 : 0)));
 
                 if (popup != null && popup.isVisible()) {

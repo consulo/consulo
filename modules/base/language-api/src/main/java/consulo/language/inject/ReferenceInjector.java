@@ -45,9 +45,9 @@ public abstract class ReferenceInjector extends Injectable {
    * Generated references should be soft ({@link PsiReference#isSoft()})
    */
   @Nonnull
-  public abstract PsiReference[] getReferences(@Nonnull PsiElement element, @Nonnull final ProcessingContext context, @Nonnull TextRange range);
+  public abstract PsiReference[] getReferences(@Nonnull PsiElement element, @Nonnull ProcessingContext context, @Nonnull TextRange range);
 
-  public static ReferenceInjector findById(final String id) {
+  public static ReferenceInjector findById(String id) {
     return ContainerUtil.find(EXTENSION_POINT_NAME.getExtensionList(), injector -> id.equals(injector.getId()));
   }
 }

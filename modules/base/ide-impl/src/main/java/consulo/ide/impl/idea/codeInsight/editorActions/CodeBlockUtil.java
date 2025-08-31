@@ -42,7 +42,7 @@ public class CodeBlockUtil {
   }
 
   private static Language getBraceType(HighlighterIterator iterator) {
-    final IElementType type = (IElementType)iterator.getTokenType();
+    IElementType type = (IElementType)iterator.getTokenType();
     return type.getLanguage();
   }
 
@@ -53,15 +53,15 @@ public class CodeBlockUtil {
     if (file == null) return;
 
     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-    final CodeBlockProvider provider = CodeBlockProvider.forLanguage(file.getLanguage());
+    CodeBlockProvider provider = CodeBlockProvider.forLanguage(file.getLanguage());
     if (provider != null) {
-      final TextRange range = provider.getCodeBlockRange(editor, file);
+      TextRange range = provider.getCodeBlockRange(editor, file);
       if (range != null) {
         editor.getCaretModel().moveToOffset(range.getEndOffset());
       }
     }
     else {
-      final IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
+      IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
       if (guide != null) {
         editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(guide.endLine, guide.indentLevel));
       }
@@ -91,15 +91,15 @@ public class CodeBlockUtil {
 
     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
 
-    final CodeBlockProvider provider = CodeBlockProvider.forLanguage(file.getLanguage());
+    CodeBlockProvider provider = CodeBlockProvider.forLanguage(file.getLanguage());
     if (provider != null) {
-      final TextRange range = provider.getCodeBlockRange(editor, file);
+      TextRange range = provider.getCodeBlockRange(editor, file);
       if (range != null) {
         editor.getCaretModel().moveToOffset(range.getStartOffset());
       }
     }
     else {
-      final IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
+      IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
       if (guide != null && guide.startLine != editor.getCaretModel().getLogicalPosition().line) {
         editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(guide.startLine, guide.indentLevel));
       }
@@ -125,7 +125,7 @@ public class CodeBlockUtil {
 
     Document document = editor.getDocument();
     int offset = editor.getCaretModel().getOffset();
-    final FileType fileType = file.getFileType();
+    FileType fileType = file.getFileType();
     HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
     if (iterator.atEnd()) return -1;
 
@@ -181,7 +181,7 @@ public class CodeBlockUtil {
     if (offset < 0) return -1;
 
     Document document = editor.getDocument();
-    final FileType fileType = file.getFileType();
+    FileType fileType = file.getFileType();
     HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
 
     int depth = 0;
@@ -226,11 +226,11 @@ public class CodeBlockUtil {
     return isAfterRBrace ? iterator.getStart() : iterator.getEnd();
   }
 
-  private static boolean isLStructuralBrace(final FileType fileType, HighlighterIterator iterator, CharSequence fileText) {
+  private static boolean isLStructuralBrace(FileType fileType, HighlighterIterator iterator, CharSequence fileText) {
     return BraceMatchingUtil.isLBraceToken(iterator, fileText, fileType) && BraceMatchingUtil.isStructuralBraceToken(fileType, iterator,fileText);
   }
 
-  private static boolean isRStructuralBrace(final FileType fileType, HighlighterIterator iterator, CharSequence fileText) {
+  private static boolean isRStructuralBrace(FileType fileType, HighlighterIterator iterator, CharSequence fileText) {
     return BraceMatchingUtil.isRBraceToken(iterator, fileText, fileType) && BraceMatchingUtil.isStructuralBraceToken(fileType, iterator,fileText);
   }
 }

@@ -69,12 +69,12 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   }
 
   @Override
-  public void setOwner(@Nullable final WritableRefEntity owner) {
+  public void setOwner(@Nullable WritableRefEntity owner) {
     myOwner = owner;
   }
 
   @Override
-  public synchronized void add(@Nonnull final RefEntity child) {
+  public synchronized void add(@Nonnull RefEntity child) {
     List<RefEntity> children = myChildren;
     if (children == null) {
       myChildren = children = new ArrayList<>(1);
@@ -84,7 +84,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   }
 
   @Override
-  public synchronized void removeChild(@Nonnull final RefEntity child) {
+  public synchronized void removeChild(@Nonnull RefEntity child) {
     if (myChildren != null) {
       myChildren.remove(child);
       ((WritableRefEntity)child).setOwner(null);
@@ -106,7 +106,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   }
 
   @Override
-  public void accept(@Nonnull final RefVisitor refVisitor) {
+  public void accept(@Nonnull RefVisitor refVisitor) {
     ApplicationManager.getApplication().runReadAction(() -> refVisitor.visitElement(this));
   }
 
@@ -134,7 +134,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
     return BitUtil.isSet(myFlags, mask);
   }
 
-  public synchronized void setFlag(final boolean value, final long mask) {
+  public synchronized void setFlag(boolean value, long mask) {
     myFlags = BitUtil.set(myFlags, mask, value);
   }
 

@@ -150,7 +150,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     }
 
     @Override
-    protected void onFrameChanged(final Object selectedValue) {
+    protected void onFrameChanged(Object selectedValue) {
         if (mySelectedFrame != selectedValue) {
             SwingUtilities.invokeLater(() -> repaint());
             
@@ -209,11 +209,11 @@ public class XDebuggerFramesList extends DebuggerFramesList {
         }
 
         @Override
-        protected void customizeCellRenderer(@Nonnull final JList list,
-                                             final Object value,
-                                             final int index,
-                                             final boolean selected,
-                                             final boolean hasFocus) {
+        protected void customizeCellRenderer(@Nonnull JList list,
+                                             Object value,
+                                             int index,
+                                             boolean selected,
+                                             boolean hasFocus) {
             setBorder(JBCurrentTheme.listCellBorderFull());
 
             if (value == null) {

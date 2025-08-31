@@ -29,9 +29,9 @@ public abstract class MoreTabsIcon {
   private final Image icon = AllIcons.Actions.FindAndShowNextMatchesSmall;
   private int myCounter;
 
-  public void paintIcon(final Component c, Graphics graphics) {
+  public void paintIcon(Component c, Graphics graphics) {
     if (myCounter <= 0) return;
-    final Rectangle moreRect = getIconRec();
+    Rectangle moreRect = getIconRec();
 
     if (moreRect == null) return;
 
@@ -49,11 +49,11 @@ public abstract class MoreTabsIcon {
     return icon.getHeight();
   }
 
-  protected int getIconX(final Rectangle iconRec) {
+  protected int getIconX(Rectangle iconRec) {
     return iconRec.x + iconRec.width / 2 - (getIconWidth()) / 2;
   }
 
-  protected int getIconY(final Rectangle iconRec) {
+  protected int getIconY(Rectangle iconRec) {
     return iconRec.y + iconRec.height / 2 - getIconHeight() / 2;
   }
 

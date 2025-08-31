@@ -132,7 +132,7 @@ public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
     return myString;
   }
 
-  public void updatePattern(final String string) {
+  public void updatePattern(String string) {
     String prevString = myString;
     myString = string;
     try {

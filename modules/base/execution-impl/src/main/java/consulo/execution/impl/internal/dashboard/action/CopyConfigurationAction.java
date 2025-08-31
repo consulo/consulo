@@ -66,7 +66,7 @@ public final class CopyConfigurationAction extends AnAction {
         copiedSettings.setFolderName(settings.getFolderName());
         //FIXME copiedSettings.getConfiguration().setBeforeRunTasks(settings.getConfiguration().getBeforeRunTasks());
 
-        final ConfigurationFactory factory = settings.getFactory();
+        ConfigurationFactory factory = settings.getFactory();
         RunConfiguration configuration = settings.getConfiguration();
         factory.onConfigurationCopied(configuration);
 

@@ -133,7 +133,7 @@ public interface EditorGutterComponentEx extends EditorGutter {
     }
 
     @Nullable
-    default GutterIconRenderer getGutterRenderer(final Point p) {
+    default GutterIconRenderer getGutterRenderer(Point p) {
         return null;
     }
 

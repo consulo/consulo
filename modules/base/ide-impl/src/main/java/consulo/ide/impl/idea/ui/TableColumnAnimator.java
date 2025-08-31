@@ -59,7 +59,7 @@ public class TableColumnAnimator extends Timer implements ActionListener {
       return;
     }
 
-    final TableColumn c = myColumns.get(0).first;
+    TableColumn c = myColumns.get(0).first;
     if (!added) {
       myTable.addColumn(c);
       c.setMaxWidth(0);
@@ -68,7 +68,7 @@ public class TableColumnAnimator extends Timer implements ActionListener {
       added = true;
     }
 
-    final int prefWidth = myColumns.get(0).second.intValue();
+    int prefWidth = myColumns.get(0).second.intValue();
     int width = c.getWidth();
     width = Math.min(width + myStep, prefWidth);
     c.setMaxWidth(width);

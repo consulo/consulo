@@ -35,7 +35,7 @@ public class ItemLatestState {
    * @param defaultHead
    */
 
-  public ItemLatestState(final VcsRevisionNumber number, final boolean itemExists, boolean defaultHead) {
+  public ItemLatestState(VcsRevisionNumber number, boolean itemExists, boolean defaultHead) {
     myNumber = number;
     myItemExists = itemExists;
     myDefaultHead = defaultHead;

@@ -44,7 +44,7 @@ public final class History {
   public void pushQueryPlace() {
     if (isNavigatingNow()) return;
 
-    final Place place = query();
+    Place place = query();
     if (place != null) {
       pushPlace(query());
     }
@@ -56,7 +56,7 @@ public final class History {
     }
 
     if (myHistory.size() > 0) {
-      final Place prev = myHistory.get(myHistory.size() - 1);
+      Place prev = myHistory.get(myHistory.size() - 1);
       if (prev.equals(place)) return;
 
       if (prev.isMoreGeneralFor(place)) {
@@ -75,13 +75,13 @@ public final class History {
   public void pushPlaceForElement(String name, Object value) {
     if (!canNavigateFor(name)) return;
 
-    final Place checkPlace = getCheckPlace(name);
+    Place checkPlace = getCheckPlace(name);
     if (checkPlace == null) return;
     pushPlace(checkPlace.cloneForElement(name, value));
   }
 
   public Place getPlaceForElement(String name, String value) {
-    final Place checkPlace = getCheckPlace(name);
+    Place checkPlace = getCheckPlace(name);
     if (checkPlace == null) return new Place();
 
     return checkPlace.cloneForElement(name, value);
@@ -102,7 +102,7 @@ public final class History {
     final Place from = getCurrent();
     fireStarted(from, next);
     try {
-      final AsyncResult<Void> callback = myRoot.navigateTo(next, false);
+      AsyncResult<Void> callback = myRoot.navigateTo(next, false);
       callback.doWhenDone(new Runnable() {
         @Override
         public void run() {
@@ -145,7 +145,7 @@ public final class History {
   }
 
   public Place query() {
-    final Place result = new Place();
+    Place result = new Place();
     myRoot.queryPlace(result);
     return result;
   }

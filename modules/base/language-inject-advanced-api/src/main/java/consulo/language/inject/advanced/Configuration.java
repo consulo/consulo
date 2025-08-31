@@ -135,16 +135,16 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     @Override
-    public void loadState(final Element element) {
+    public void loadState(Element element) {
         myInjections.clear();
-        final Map<String, LanguageInjectionSupport> supports = new HashMap<>();
+        Map<String, LanguageInjectionSupport> supports = new HashMap<>();
         for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
             supports.put(support.getId(), support);
         }
         for (Element child : element.getChildren("injection")) {
-            final String key = child.getAttributeValue("injector-id");
-            final LanguageInjectionSupport support = supports.get(key);
-            final BaseInjection injection = support == null ? new BaseInjection(key) : support.createInjection(child);
+            String key = child.getAttributeValue("injector-id");
+            LanguageInjectionSupport support = supports.get(key);
+            BaseInjection injection = support == null ? new BaseInjection(key) : support.createInjection(child);
             injection.loadState(child);
             InjectionPlace[] places = dropKnownInvalidPlaces(injection.getInjectionPlaces());
             if (places != null) { // not all places were removed
@@ -167,7 +167,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     private static boolean readBoolean(Element element, String key, boolean defValue) {
-        final String value = JDOMExternalizerUtil.readField(element, key);
+        String value = JDOMExternalizerUtil.readField(element, key);
         if (value == null) {
             return defValue;
         }
@@ -175,7 +175,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     public static List<BaseInjection> loadDefaultInjections() {
-        final ArrayList<Configuration> cfgList = new ArrayList<>();
+        ArrayList<Configuration> cfgList = new ArrayList<>();
         Application application = Application.get();
 
         application.getExtensionPoint(InjectionConfigProvider.class).forEachExtensionSafe(provider -> {
@@ -191,10 +191,10 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             }
         });
 
-        final ArrayList<BaseInjection> defaultInjections = new ArrayList<>();
+        ArrayList<BaseInjection> defaultInjections = new ArrayList<>();
         for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
             for (Configuration cfg : cfgList) {
-                final List<BaseInjection> imported = cfg.getInjections(supportId);
+                List<BaseInjection> imported = cfg.getInjections(supportId);
                 defaultInjections.addAll(imported);
             }
         }
@@ -206,7 +206,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return getState(new Element(COMPONENT_NAME));
     }
 
-    protected Element getState(final Element element) {
+    protected Element getState(Element element) {
         Comparator<BaseInjection> comparator = (o1, o2) -> Comparing.compare(o1.getDisplayName(), o2.getDisplayName());
         List<String> injectorIds = new ArrayList<>(myInjections.keySet());
         Collections.sort(injectorIds);
@@ -230,12 +230,12 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     @Nullable
-    public static Configuration load(final InputStream is) throws IOException, JDOMException {
+    public static Configuration load(InputStream is) throws IOException, JDOMException {
         try {
-            final Document document = JDOMUtil.loadDocument(is);
-            final ArrayList<Element> elements = new ArrayList<>();
-            final Element rootElement = document.getRootElement();
-            final Element state;
+            Document document = JDOMUtil.loadDocument(is);
+            ArrayList<Element> elements = new ArrayList<>();
+            Element rootElement = document.getRootElement();
+            Element state;
             if (rootElement.getName().equals(COMPONENT_NAME)) {
                 state = rootElement;
             }
@@ -250,7 +250,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 );
             }
             if (state != null) {
-                final Configuration cfg = new Configuration();
+                Configuration cfg = new Configuration();
                 cfg.loadState(state);
                 return cfg;
             }
@@ -261,12 +261,12 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         }
     }
 
-    private int importPlaces(final List<BaseInjection> injections) {
-        final Map<String, Set<BaseInjection>> map = ContainerUtil.classify(injections.iterator(), BaseInjection::getSupportId);
-        final ArrayList<BaseInjection> originalInjections = new ArrayList<>();
-        final ArrayList<BaseInjection> newInjections = new ArrayList<>();
+    private int importPlaces(List<BaseInjection> injections) {
+        Map<String, Set<BaseInjection>> map = ContainerUtil.classify(injections.iterator(), BaseInjection::getSupportId);
+        ArrayList<BaseInjection> originalInjections = new ArrayList<>();
+        ArrayList<BaseInjection> newInjections = new ArrayList<>();
         for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
-            final Set<BaseInjection> importingInjections = map.get(supportId);
+            Set<BaseInjection> importingInjections = map.get(supportId);
             if (importingInjections == null) {
                 continue;
             }
@@ -280,12 +280,12 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     public static void importInjections(
-        final Collection<BaseInjection> existingInjections,
-        final Collection<BaseInjection> importingInjections,
-        final Collection<BaseInjection> originalInjections,
-        final Collection<BaseInjection> newInjections
+        Collection<BaseInjection> existingInjections,
+        Collection<BaseInjection> importingInjections,
+        Collection<BaseInjection> originalInjections,
+        Collection<BaseInjection> newInjections
     ) {
-        final MultiValuesMap<InjectionPlace, BaseInjection> placeMap = new MultiValuesMap<>();
+        MultiValuesMap<InjectionPlace, BaseInjection> placeMap = new MultiValuesMap<>();
         for (BaseInjection exising : existingInjections) {
             for (InjectionPlace place : exising.getInjectionPlaces()) {
                 placeMap.put(place, exising);
@@ -293,10 +293,10 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         }
         main:
         for (BaseInjection other : importingInjections) {
-            final List<BaseInjection> matchingInjections = ContainerUtil.concat(
+            List<BaseInjection> matchingInjections = ContainerUtil.concat(
                 other.getInjectionPlaces(),
                 o -> {
-                    final Collection<BaseInjection> collection = placeMap.get(o);
+                    Collection<BaseInjection> collection = placeMap.get(o);
                     return collection == null ? Collections.<BaseInjection>emptyList() : collection;
                 }
             );
@@ -316,7 +316,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 if (existing == null) {
                     continue; // skip!! language changed
                 }
-                final BaseInjection newInjection = existing.copy();
+                BaseInjection newInjection = existing.copy();
                 newInjection.mergeOriginalPlacesFrom(other, true);
                 if (!newInjection.equals(existing)) {
                     originalInjections.add(existing);
@@ -336,8 +336,8 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     @Nullable
-    public BaseInjection findExistingInjection(@Nonnull final BaseInjection injection) {
-        final List<BaseInjection> list = getInjections(injection.getSupportId());
+    public BaseInjection findExistingInjection(@Nonnull BaseInjection injection) {
+        List<BaseInjection> list = getInjections(injection.getSupportId());
         for (BaseInjection cur : list) {
             if (cur.intersectsWith(injection)) {
                 return cur;
@@ -347,16 +347,16 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     @RequiredUIAccess
-    public boolean setHostInjectionEnabled(final PsiLanguageInjectionHost host, final Collection<String> languages, final boolean enabled) {
-        final ArrayList<BaseInjection> originalInjections = new ArrayList<>();
-        final ArrayList<BaseInjection> newInjections = new ArrayList<>();
+    public boolean setHostInjectionEnabled(PsiLanguageInjectionHost host, Collection<String> languages, boolean enabled) {
+        ArrayList<BaseInjection> originalInjections = new ArrayList<>();
+        ArrayList<BaseInjection> newInjections = new ArrayList<>();
         for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
             for (BaseInjection injection : getInjections(support.getId())) {
                 if (!languages.contains(injection.getInjectedLanguageId())) {
                     continue;
                 }
                 boolean replace = false;
-                final ArrayList<InjectionPlace> newPlaces = new ArrayList<>();
+                ArrayList<InjectionPlace> newPlaces = new ArrayList<>();
                 for (InjectionPlace place : injection.getInjectionPlaces()) {
                     if (place.isEnabled() != enabled && place.getElementPattern() != null
                         && (place.getElementPattern().accepts(host) || place.getElementPattern().accepts(host.getParent()))) {
@@ -369,7 +369,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 }
                 if (replace) {
                     originalInjections.add(injection);
-                    final BaseInjection newInjection = injection.copy();
+                    BaseInjection newInjection = injection.copy();
                     newInjection.setInjectionPlaces(newPlaces.toArray(new InjectionPlace[newPlaces.size()]));
                     newInjections.add(newInjection);
                 }
@@ -392,16 +392,16 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
      * @param injectorId see {@link LanguageInjectionSupport#getId()}
      */
     @Nonnull
-    public List<BaseInjection> getInjections(final String injectorId) {
+    public List<BaseInjection> getInjections(String injectorId) {
         return Collections.unmodifiableList(myInjections.get(injectorId));
     }
 
     @RequiredUIAccess
     public void replaceInjectionsWithUndo(
-        final Project project,
-        final List<? extends BaseInjection> newInjections,
-        final List<? extends BaseInjection> originalInjections,
-        final List<? extends PsiElement> psiElementsToRemove
+        Project project,
+        List<? extends BaseInjection> newInjections,
+        List<? extends BaseInjection> originalInjections,
+        List<? extends PsiElement> psiElementsToRemove
     ) {
         replaceInjectionsWithUndo(
             project,
@@ -418,7 +418,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         );
     }
 
-    protected void replaceInjectionsWithUndoInner(final List<? extends BaseInjection> add, final List<? extends BaseInjection> remove) {
+    protected void replaceInjectionsWithUndoInner(List<? extends BaseInjection> add, List<? extends BaseInjection> remove) {
         replaceInjections(add, remove, false);
     }
 
@@ -580,7 +580,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             return myDfaOption;
         }
 
-        public void setDfaOption(@Nonnull final DfaOption dfaOption) {
+        public void setDfaOption(@Nonnull DfaOption dfaOption) {
             myDfaOption = dfaOption;
         }
 
@@ -596,7 +596,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             return myInstrumentationType;
         }
 
-        public void writeState(final Element element) {
+        public void writeState(Element element) {
             JDOMExternalizerUtil.writeField(element, INSTRUMENTATION_TYPE_NAME, myInstrumentationType.toString());
             JDOMExternalizerUtil.writeField(element, LANGUAGE_ANNOTATION_NAME, myLanguageAnnotation);
             JDOMExternalizerUtil.writeField(element, PATTERN_ANNOTATION_NAME, myPatternAnnotation);
@@ -622,7 +622,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             }
         }
 
-        public void loadState(final Element element) {
+        public void loadState(Element element) {
             setInstrumentationType(JDOMExternalizerUtil.readField(element, INSTRUMENTATION_TYPE_NAME));
             setLanguageAnnotation(JDOMExternalizerUtil.readField(element, LANGUAGE_ANNOTATION_NAME));
             setPatternAnnotation(JDOMExternalizerUtil.readField(element, PATTERN_ANNOTATION_NAME));

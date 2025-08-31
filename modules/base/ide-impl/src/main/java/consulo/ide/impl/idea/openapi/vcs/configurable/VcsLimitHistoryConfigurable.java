@@ -35,7 +35,7 @@ public class VcsLimitHistoryConfigurable extends VcsCheckBoxWithSpinnerConfigura
 
   @Override
   protected SpinnerNumberModel createSpinnerModel() {
-    final int rows = myConfiguration.MAXIMUM_HISTORY_ROWS;
+    int rows = myConfiguration.MAXIMUM_HISTORY_ROWS;
     return new SpinnerNumberModel(rows, 10, 1000000, 10);
   }
 

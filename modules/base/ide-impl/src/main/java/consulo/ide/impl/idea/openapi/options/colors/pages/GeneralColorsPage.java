@@ -366,7 +366,7 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
 
         myApplication.getExtensionPoint(SeveritiesProvider.class).forEachExtensionSafe(provider -> {
             for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
-                final TextAttributesKey attributesKey = highlightInfoType.getAttributesKey();
+                TextAttributesKey attributesKey = highlightInfoType.getAttributesKey();
                 // FIXME [VISTALL] correct? Maybe localized name?
                 descriptors.add(new AttributesDescriptor(LocalizeValue.of(toDisplayName(attributesKey)), attributesKey));
             }
@@ -415,11 +415,11 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
     }
 
     private String getCustomSeveritiesDemoText() {
-        final StringBuilder buff = new StringBuilder();
+        StringBuilder buff = new StringBuilder();
 
         myApplication.getExtensionPoint(SeveritiesProvider.class).forEachExtensionSafe(provider -> {
             for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
-                final String tag = getHighlightDescTagName(highlightInfoType);
+                String tag = getHighlightDescTagName(highlightInfoType);
                 buff.append("  <").append(tag).append(">");
                 buff.append(tag.toLowerCase());
                 buff.append("</").append(tag).append(">").append("\n");

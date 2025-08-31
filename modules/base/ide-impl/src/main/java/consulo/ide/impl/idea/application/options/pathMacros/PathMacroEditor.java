@@ -72,7 +72,7 @@ public class PathMacroEditor extends DialogWrapper {
 
                 @Override
                 public void setText(JTextField component, String text) {
-                    final int len = text.length();
+                    int len = text.length();
                     if (len > 0 && text.charAt(len - 1) == File.separatorChar) {
                         text = text.substring(0, len - 1);
                     }
@@ -91,10 +91,10 @@ public class PathMacroEditor extends DialogWrapper {
     }
 
     private void updateControls() {
-        final boolean isNameOK = myValidator.checkName(myNameField.getText());
+        boolean isNameOK = myValidator.checkName(myNameField.getText());
         getOKAction().setEnabled(isNameOK);
         if (isNameOK) {
-            final String text = myValueField.getText().trim();
+            String text = myValueField.getText().trim();
             getOKAction().setEnabled(text.length() > 0 && !"/".equals(text.trim()));
         }
     }

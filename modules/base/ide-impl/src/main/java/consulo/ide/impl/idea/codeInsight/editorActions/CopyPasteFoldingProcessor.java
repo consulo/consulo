@@ -39,13 +39,13 @@ import java.util.List;
 public class CopyPasteFoldingProcessor extends CopyPastePostProcessor<FoldingTransferableData> {
   @Nonnull
   @Override
-  public List<FoldingTransferableData> collectTransferableData(final PsiFile file, final Editor editor, final int[] startOffsets, final int[] endOffsets) {
+  public List<FoldingTransferableData> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets) {
     // might be slow
     //CodeFoldingManager.getInstance(file.getManager().getProject()).updateFoldRegions(editor);
 
-    final ArrayList<FoldingData> list = new ArrayList<FoldingData>();
-    final FoldRegion[] regions = editor.getFoldingModel().getAllFoldRegions();
-    for (final FoldRegion region : regions) {
+    ArrayList<FoldingData> list = new ArrayList<FoldingData>();
+    FoldRegion[] regions = editor.getFoldingModel().getAllFoldRegions();
+    for (FoldRegion region : regions) {
       if (!region.isValid()) continue;
       for (int j = 0; j < startOffsets.length; j++) {
         if (startOffsets[j] <= region.getStartOffset() && region.getEndOffset() <= endOffsets[j]) {
@@ -65,10 +65,10 @@ public class CopyPasteFoldingProcessor extends CopyPastePostProcessor<FoldingTra
 
   @Nonnull
   @Override
-  public List<FoldingTransferableData> extractTransferableData(final Transferable content) {
+  public List<FoldingTransferableData> extractTransferableData(Transferable content) {
     FoldingTransferableData foldingData = null;
     try {
-      final DataFlavor flavor = FoldingData.getDataFlavor();
+      DataFlavor flavor = FoldingData.getDataFlavor();
       if (flavor != null) {
         foldingData = (FoldingTransferableData)content.getTransferData(flavor);
       }
@@ -87,12 +87,12 @@ public class CopyPasteFoldingProcessor extends CopyPastePostProcessor<FoldingTra
   }
 
   @Override
-  public void processTransferableData(final Project project,
+  public void processTransferableData(Project project,
                                       final Editor editor,
                                       final RangeMarker bounds,
                                       int caretOffset,
                                       SimpleReference<Boolean> indented,
-                                      final List<FoldingTransferableData> values) {
+                                      List<FoldingTransferableData> values) {
     assert values.size() == 1;
     final FoldingTransferableData value = values.get(0);
     if (value.getData().length == 0) return;

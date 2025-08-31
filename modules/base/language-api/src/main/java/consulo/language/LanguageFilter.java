@@ -19,7 +19,7 @@ package consulo.language;
 import consulo.language.psi.PsiFile;
 
 public interface LanguageFilter {
-  boolean isRelevantForFile(final PsiFile psi);
+  boolean isRelevantForFile(PsiFile psi);
 
   Language getLanguage();
 }

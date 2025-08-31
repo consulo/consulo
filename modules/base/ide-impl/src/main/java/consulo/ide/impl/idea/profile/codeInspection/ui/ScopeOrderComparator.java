@@ -26,7 +26,7 @@ import java.util.Comparator;
 public class ScopeOrderComparator implements Comparator<String> {
   private final String[] myScopesOrder;
 
-  public ScopeOrderComparator(final InspectionProfileImpl inspectionProfile) {
+  public ScopeOrderComparator(InspectionProfileImpl inspectionProfile) {
     this(inspectionProfile.getScopesOrder());
   }
 
@@ -40,8 +40,8 @@ public class ScopeOrderComparator implements Comparator<String> {
 
   @Override
   public int compare(String scope1, String scope2) {
-    final int key = getKey(scope1);
-    final int key1 = getKey(scope2);
+    int key = getKey(scope1);
+    int key1 = getKey(scope2);
     if (key >= 0) {
       if (key1 >= 0) {
         return key - key1;

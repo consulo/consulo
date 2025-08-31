@@ -26,11 +26,11 @@ public class DefaultRepositoryLocation implements RepositoryLocation {
   private final String myURL;
   private final String myLocation;
 
-  public DefaultRepositoryLocation(final String URL) {
+  public DefaultRepositoryLocation(String URL) {
     this(URL, URL);
   }
 
-  public DefaultRepositoryLocation(final String URL, final String location) {
+  public DefaultRepositoryLocation(String URL, String location) {
     myURL = URL;
     myLocation = location;
   }

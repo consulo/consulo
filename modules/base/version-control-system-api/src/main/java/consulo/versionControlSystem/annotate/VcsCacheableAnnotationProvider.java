@@ -25,8 +25,8 @@ import jakarta.annotation.Nullable;
  * @since 2011-03-17
  */
 public interface VcsCacheableAnnotationProvider {
-  VcsAnnotation createCacheable(final FileAnnotation fileAnnotation);
+  VcsAnnotation createCacheable(FileAnnotation fileAnnotation);
 
   @Nullable
-  FileAnnotation restore(final VcsAnnotation vcsAnnotation, VcsAbstractHistorySession session, String annotatedContent, boolean forCurrentRevision, VcsRevisionNumber revisionNumber);
+  FileAnnotation restore(VcsAnnotation vcsAnnotation, VcsAbstractHistorySession session, String annotatedContent, boolean forCurrentRevision, VcsRevisionNumber revisionNumber);
 }

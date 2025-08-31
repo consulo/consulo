@@ -57,7 +57,7 @@ class LineMarkersUtil {
       LOG.debug("LineMarkersUtil.setLineMarkersToEditor(markers: " + markers + ", group: " + group + "); oldMarkers: " + oldMarkers + "; reused: " + toReuse.forAllInGarbageBin().size());
     }
 
-    for (final LineMarkerInfo<?> info : markers) {
+    for (LineMarkerInfo<?> info : markers) {
       PsiElement element = info.getElement();
       if (element == null) {
         continue;

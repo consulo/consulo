@@ -41,7 +41,7 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
   protected final List<AbstractTreeNode<T>> myChildren = new ArrayList<>();
   protected final FavoritesListNode myNode;
 
-  protected AbstractFavoritesListProvider(@Nonnull Project project, final String listName) {
+  protected AbstractFavoritesListProvider(@Nonnull Project project, String listName) {
     this(project, listName, null);
   }
 

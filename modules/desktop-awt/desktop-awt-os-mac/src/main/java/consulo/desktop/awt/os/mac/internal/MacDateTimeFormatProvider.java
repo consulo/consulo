@@ -37,10 +37,10 @@ public class MacDateTimeFormatProvider implements DateTimeFormatProvider {
     }
 
     private static DateFormat[] getMacFormats() {
-        final int MacFormatterNoStyle = 0;
-        final int MacFormatterShortStyle = 1;
-        final int MacFormatterMediumStyle = 2;
-        final int MacFormatterBehavior_10_4 = 1040;
+        int MacFormatterNoStyle = 0;
+        int MacFormatterShortStyle = 1;
+        int MacFormatterMediumStyle = 2;
+        int MacFormatterBehavior_10_4 = 1040;
 
         ID autoReleasePool = Foundation.invoke("NSAutoreleasePool", "new");
         try {

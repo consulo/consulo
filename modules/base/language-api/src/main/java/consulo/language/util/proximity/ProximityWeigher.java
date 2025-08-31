@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public abstract class ProximityWeigher extends Weigher<PsiElement, ProximityLocation> {
 
   @Override
-  public abstract Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location);
+  public abstract Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location);
 
   @Nonnull
   @Override

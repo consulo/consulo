@@ -122,19 +122,19 @@ public class ActionCallback {
     }
 
     @Nonnull
-    public ActionCallback doWhenDone(@Nonnull final Runnable runnable) {
+    public ActionCallback doWhenDone(@Nonnull Runnable runnable) {
         myDone.doWhenExecuted(runnable);
         return this;
     }
 
     @Nonnull
-    public final ActionCallback doWhenRejected(@Nonnull final Runnable runnable) {
+    public final ActionCallback doWhenRejected(@Nonnull Runnable runnable) {
         myRejected.doWhenExecuted(runnable);
         return this;
     }
 
     @Nonnull
-    public final ActionCallback doWhenRejectedButNotThrowable(@Nonnull final Runnable runnable) {
+    public final ActionCallback doWhenRejectedButNotThrowable(@Nonnull Runnable runnable) {
         myRejected.doWhenExecuted(() -> {
             if (myThrowable == null) {
                 runnable.run();
@@ -144,7 +144,7 @@ public class ActionCallback {
     }
 
     @Nonnull
-    public final ActionCallback doWhenRejectedWithThrowable(@Nonnull final Consumer<Throwable> consumer) {
+    public final ActionCallback doWhenRejectedWithThrowable(@Nonnull Consumer<Throwable> consumer) {
         myRejected.doWhenExecuted(() -> {
             if (myThrowable != null) {
                 consumer.accept(myThrowable);
@@ -154,30 +154,30 @@ public class ActionCallback {
     }
 
     @Nonnull
-    public final ActionCallback doWhenRejected(@Nonnull final Consumer<String> consumer) {
+    public final ActionCallback doWhenRejected(@Nonnull Consumer<String> consumer) {
         myRejected.doWhenExecuted(() -> consumer.accept(myError));
         return this;
     }
 
     @Nonnull
-    public ActionCallback doWhenProcessed(@Nonnull final Runnable runnable) {
+    public ActionCallback doWhenProcessed(@Nonnull Runnable runnable) {
         doWhenDone(runnable);
         doWhenRejected(runnable);
         return this;
     }
 
     @Nonnull
-    public final ActionCallback notifyWhenDone(@Nonnull final ActionCallback child) {
+    public final ActionCallback notifyWhenDone(@Nonnull ActionCallback child) {
         return doWhenDone(child.createSetDoneRunnable());
     }
 
     @Nonnull
-    public final ActionCallback notifyWhenRejected(@Nonnull final ActionCallback child) {
+    public final ActionCallback notifyWhenRejected(@Nonnull ActionCallback child) {
         return doWhenRejected(() -> child.reject(myError));
     }
 
     @Nonnull
-    public ActionCallback notify(@Nonnull final ActionCallback child) {
+    public ActionCallback notify(@Nonnull ActionCallback child) {
         return doWhenDone(child.createSetDoneRunnable()).notifyWhenRejected(child);
     }
 
@@ -204,7 +204,7 @@ public class ActionCallback {
 
     @Override
     public String toString() {
-        final String name = myName != null ? myName : super.toString();
+        String name = myName != null ? myName : super.toString();
         return name + " done=[" + myDone + "] rejected=[" + myRejected + "]";
     }
 
@@ -231,7 +231,7 @@ public class ActionCallback {
 
         @Nonnull
         public ActionCallback getWhenProcessed() {
-            final ActionCallback result = new ActionCallback(myCallbacks.size());
+            ActionCallback result = new ActionCallback(myCallbacks.size());
             Runnable setDoneRunnable = result.createSetDoneRunnable();
             for (ActionCallback each : myCallbacks) {
                 each.doWhenProcessed(setDoneRunnable);
@@ -259,7 +259,7 @@ public class ActionCallback {
             return true;
         }
 
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
         doWhenProcessed(countDownLatch::countDown);
 
         try {

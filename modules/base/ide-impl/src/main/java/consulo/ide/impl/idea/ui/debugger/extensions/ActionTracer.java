@@ -50,15 +50,15 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
     public JComponent getComponent() {
         if (myComponent == null) {
             myText = new JTextArea();
-            final JBScrollPane log = new JBScrollPane(myText);
-            final AnAction clear = new AnAction("Clear", "Clear log", AllIcons.General.Reset) {
+            JBScrollPane log = new JBScrollPane(myText);
+            AnAction clear = new AnAction("Clear", "Clear log", AllIcons.General.Reset) {
                 @Override
                 public void actionPerformed(AnActionEvent e) {
                     myText.setText(null);
                 }
             };
             myComponent = new JPanel(new BorderLayout());
-            final DefaultActionGroup group = new DefaultActionGroup();
+            DefaultActionGroup group = new DefaultActionGroup();
             group.add(clear);
             myComponent.add(
                 ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent(),
@@ -81,12 +81,12 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
     @Override
     public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
         StringBuffer out = new StringBuffer();
-        final ActionManager actionManager = ActionManager.getInstance();
-        final String id = actionManager.getId(action);
+        ActionManager actionManager = ActionManager.getInstance();
+        String id = actionManager.getId(action);
         out.append("id=" + id);
         if (id != null) {
             out.append(" shortcuts:");
-            final Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(id);
+            Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(id);
             for (int i = 0; i < shortcuts.length; i++) {
                 Shortcut shortcut = shortcuts[i];
                 out.append(shortcut);
@@ -96,13 +96,13 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
             }
         }
         out.append("\n");
-        final Document doc = myText.getDocument();
+        Document doc = myText.getDocument();
         try {
             doc.insertString(doc.getLength(), out.toString(), null);
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    final int y = (int) myText.getBounds().getMaxY();
+                    int y = (int) myText.getBounds().getMaxY();
                     myText.scrollRectToVisible(new Rectangle(0, y, myText.getBounds().width, 0));
                 }
             });

@@ -38,7 +38,7 @@ public interface CustomSuppressableInspectionTool {
    * @return the list of suppression actions.
    */
   @Nullable
-  SuppressIntentionAction[] getSuppressActions(@Nullable final PsiElement element);
+  SuppressIntentionAction[] getSuppressActions(@Nullable PsiElement element);
 
   /**
    * Checks if the inspection is suppressed for the specified element.

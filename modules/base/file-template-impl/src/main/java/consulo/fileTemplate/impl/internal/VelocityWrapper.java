@@ -52,7 +52,7 @@ class VelocityWrapper {
 
   static {
     try {
-      final Class<?>[] interfaces = ResourceManagerImpl.class.getInterfaces();
+      Class<?>[] interfaces = ResourceManagerImpl.class.getInterfaces();
       if (interfaces.length != 1 || !interfaces[0].equals(ResourceManager.class)) {
         throw new IllegalStateException("Incorrect velocity version in the classpath" +
                                         ", ResourceManager in " +
@@ -73,7 +73,7 @@ class VelocityWrapper {
         public Reader getResourceReader(String source, String encoding) throws ResourceNotFoundException {
           FileTemplateManager templateManager = ourTemplateManager.get();
           if (templateManager == null) templateManager = FileTemplateManager.getDefaultInstance();
-          final FileTemplate include = templateManager.getPattern(source);
+          FileTemplate include = templateManager.getPattern(source);
           if (include == null) {
             throw new ResourceNotFoundException("Template not found: " + source);
           }

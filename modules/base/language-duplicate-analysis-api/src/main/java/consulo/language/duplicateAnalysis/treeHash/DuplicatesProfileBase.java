@@ -36,7 +36,7 @@ public abstract class DuplicatesProfileBase extends DuplicatesProfile {
     if (fragments.length > 0) {
       PsiElement[] elements = fragments[0].getElements();
       if (elements.length > 0) {
-        final PsiElement first = elements[0];
+        PsiElement first = elements[0];
         if (first != null) {
           Language language = first.getLanguage();
           return isMyLanguage(language);

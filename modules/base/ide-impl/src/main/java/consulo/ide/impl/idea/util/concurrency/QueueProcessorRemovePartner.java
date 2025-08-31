@@ -32,14 +32,14 @@ public class QueueProcessorRemovePartner<Key, Task> {
   private final Consumer<Task> myConsumer;
   private final Object myLock;
 
-  public QueueProcessorRemovePartner(final Project project, Consumer<Task> consumer) {
+  public QueueProcessorRemovePartner(Project project, Consumer<Task> consumer) {
     myConsumer = consumer;
     myMap = new HashMap<Key, Task>();
     myLock = new Object();
     myProcessor = new QueueProcessor<Key>(new Consumer<Key>() {
       @Override
       public void accept(Key key) {
-        final Task task;
+        Task task;
         synchronized (myLock) {
           task = myMap.remove(key);
         }
@@ -50,14 +50,14 @@ public class QueueProcessorRemovePartner<Key, Task> {
     }, project.getDisposed(), true);
   }
 
-  public void add(final Key key, final Task task) {
+  public void add(Key key, Task task) {
     synchronized (myLock) {
       myMap.put(key, task);
     }
     myProcessor.add(key);
   }
 
-  public void remove(final Key key) {
+  public void remove(Key key) {
     synchronized (myLock) {
       myMap.remove(key);
     }
@@ -75,7 +75,7 @@ public class QueueProcessorRemovePartner<Key, Task> {
     }
   }
 
-  public boolean containsKey(final Key key) {
+  public boolean containsKey(Key key) {
     synchronized (myLock) {
       return myMap.containsKey(key);
     }

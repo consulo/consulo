@@ -54,7 +54,7 @@ public class OrderEntryUtil {
   public static LibraryOrderEntry findLibraryOrderEntry(@Nonnull ModuleRootModel model, @Nonnull String libraryName) {
     for (OrderEntry orderEntry : model.getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry) {
-        final String libName = ((LibraryOrderEntry)orderEntry).getLibraryName();
+        String libName = ((LibraryOrderEntry)orderEntry).getLibraryName();
         if (libraryName.equals(libName)) {
           return (LibraryOrderEntry)orderEntry;
         }
@@ -95,24 +95,24 @@ public class OrderEntryUtil {
 
   public static boolean equals(OrderEntry orderEntry1, OrderEntry orderEntry2) {
     if (orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
-      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry1 = (ModuleExtensionWithSdkOrderEntry)orderEntry1;
-      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry2 = (ModuleExtensionWithSdkOrderEntry)orderEntry2;
+      ModuleExtensionWithSdkOrderEntry sdkOrderEntry1 = (ModuleExtensionWithSdkOrderEntry)orderEntry1;
+      ModuleExtensionWithSdkOrderEntry sdkOrderEntry2 = (ModuleExtensionWithSdkOrderEntry)orderEntry2;
       return Comparing.equal(sdkOrderEntry1.getSdk(), sdkOrderEntry2.getSdk()) && Comparing.strEqual(sdkOrderEntry1.getSdkName(),
                                                                                                      sdkOrderEntry2.getSdkName());
     }
     if (orderEntry1 instanceof LibraryOrderEntry && orderEntry2 instanceof LibraryOrderEntry) {
-      final LibraryOrderEntry jdkOrderEntry1 = (LibraryOrderEntry)orderEntry1;
-      final LibraryOrderEntry jdkOrderEntry2 = (LibraryOrderEntry)orderEntry2;
+      LibraryOrderEntry jdkOrderEntry1 = (LibraryOrderEntry)orderEntry1;
+      LibraryOrderEntry jdkOrderEntry2 = (LibraryOrderEntry)orderEntry2;
       return Comparing.equal(jdkOrderEntry1.getLibrary(), jdkOrderEntry2.getLibrary());
     }
     if (orderEntry1 instanceof ModuleSourceOrderEntry && orderEntry2 instanceof ModuleSourceOrderEntry) {
-      final ModuleSourceOrderEntry jdkOrderEntry1 = (ModuleSourceOrderEntry)orderEntry1;
-      final ModuleSourceOrderEntry jdkOrderEntry2 = (ModuleSourceOrderEntry)orderEntry2;
+      ModuleSourceOrderEntry jdkOrderEntry1 = (ModuleSourceOrderEntry)orderEntry1;
+      ModuleSourceOrderEntry jdkOrderEntry2 = (ModuleSourceOrderEntry)orderEntry2;
       return Comparing.equal(jdkOrderEntry1.getOwnerModule(), jdkOrderEntry2.getOwnerModule());
     }
     if (orderEntry1 instanceof ModuleOrderEntry && orderEntry2 instanceof ModuleOrderEntry) {
-      final ModuleOrderEntry jdkOrderEntry1 = (ModuleOrderEntry)orderEntry1;
-      final ModuleOrderEntry jdkOrderEntry2 = (ModuleOrderEntry)orderEntry2;
+      ModuleOrderEntry jdkOrderEntry1 = (ModuleOrderEntry)orderEntry1;
+      ModuleOrderEntry jdkOrderEntry2 = (ModuleOrderEntry)orderEntry2;
       return Comparing.equal(jdkOrderEntry1.getModule(), jdkOrderEntry2.getModule());
     }
     return false;
@@ -122,10 +122,10 @@ public class OrderEntryUtil {
     if (library1 == library2) return true;
     if (library1 == null || library2 == null) return false;
 
-    final LibraryTable table = library1.getTable();
+    LibraryTable table = library1.getTable();
     if (table != null) {
       if (library2.getTable() != table) return false;
-      final String name = library1.getName();
+      String name = library1.getName();
       return name != null && name.equals(library2.getName());
     }
 
@@ -139,19 +139,19 @@ public class OrderEntryUtil {
     return true;
   }
 
-  public static void addLibraryToRoots(final LibraryOrderEntry libraryOrderEntry, final Module module) {
+  public static void addLibraryToRoots(LibraryOrderEntry libraryOrderEntry, Module module) {
     Library library = libraryOrderEntry.getLibrary();
     if (library == null) return;
     addLibraryToRoots(module, library);
   }
 
   public static void addLibraryToRoots(@Nonnull Module module, @Nonnull Library library) {
-    final ModuleRootManager manager = ModuleRootManager.getInstance(module);
-    final ModifiableRootModel rootModel = manager.getModifiableModel();
+    ModuleRootManager manager = ModuleRootManager.getInstance(module);
+    ModifiableRootModel rootModel = manager.getModifiableModel();
 
     if (library.getTable() == null) {
-      final Library jarLibrary = rootModel.getModuleLibraryTable().createLibrary();
-      final Library.ModifiableModel libraryModel = jarLibrary.getModifiableModel();
+      Library jarLibrary = rootModel.getModuleLibraryTable().createLibrary();
+      Library.ModifiableModel libraryModel = jarLibrary.getModifiableModel();
       for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
         VirtualFile[] files = library.getFiles(orderRootType);
         for (VirtualFile jarFile : files) {
@@ -172,8 +172,8 @@ public class OrderEntryUtil {
       OrderEntry orderEntry = entries[i];
       if (orderEntry instanceof LibraryOrderEntry && oldLibrary.equals(((LibraryOrderEntry)orderEntry).getLibrary())) {
         model.removeOrderEntry(orderEntry);
-        final LibraryOrderEntry newEntry = model.addLibraryEntry(newLibrary);
-        final OrderEntry[] newEntries = new OrderEntry[entries.length];
+        LibraryOrderEntry newEntry = model.addLibraryEntry(newLibrary);
+        OrderEntry[] newEntries = new OrderEntry[entries.length];
         System.arraycopy(entries, 0, newEntries, 0, i);
         newEntries[i] = newEntry;
         System.arraycopy(entries, i, newEntries, i + 1, entries.length - i - 1);

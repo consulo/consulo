@@ -45,14 +45,14 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   private Spacing mySpacing;
   private Map<Pair<Block, Block>, Spacing> myChildDataBorderSpacings;
 
-  private DataLanguageBlockWrapper(@Nonnull final Block original) {
+  private DataLanguageBlockWrapper(@Nonnull Block original) {
     assert !(original instanceof DataLanguageBlockWrapper) && !(original instanceof TemplateLanguageBlock);
     myOriginal = original;
 
-    final ASTNode node = getNode();
+    ASTNode node = getNode();
     Language language = null;
     if (node != null) {
-      final PsiElement psi = node.getPsi();
+      PsiElement psi = node.getPsi();
       if (psi != null) {
         language = psi.getContainingFile().getLanguage();
       }
@@ -104,8 +104,8 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
     if (isLeaf()) {
       return AbstractBlock.EMPTY;
     }
-    final List<DataLanguageBlockWrapper> subWrappers = BlockUtil.buildChildWrappers(myOriginal);
-    final List<Block> children;
+    List<DataLanguageBlockWrapper> subWrappers = BlockUtil.buildChildWrappers(myOriginal);
+    List<Block> children;
     if (myTlBlocks == null) {
       children = new ArrayList<>(subWrappers);
     }
@@ -131,7 +131,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
 
   @Override
   @Nonnull
-  public ChildAttributes getChildAttributes(final int newChildIndex) {
+  public ChildAttributes getChildAttributes(int newChildIndex) {
     return myOriginal.getChildAttributes(newChildIndex);
   }
 
@@ -187,8 +187,8 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   }
 
   @Nullable
-  public static DataLanguageBlockWrapper create(@Nonnull final Block original, @Nullable final Indent indent) {
-    final boolean doesntNeedWrapper = original instanceof ASTBlock && ((ASTBlock)original).getNode() instanceof OuterLanguageElement;
+  public static DataLanguageBlockWrapper create(@Nonnull Block original, @Nullable Indent indent) {
+    boolean doesntNeedWrapper = original instanceof ASTBlock && ((ASTBlock)original).getNode() instanceof OuterLanguageElement;
     return doesntNeedWrapper ? null : new DataLanguageBlockWrapper(original);
   }
 

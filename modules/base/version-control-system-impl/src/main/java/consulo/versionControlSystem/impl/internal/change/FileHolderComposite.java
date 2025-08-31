@@ -27,7 +27,7 @@ import java.util.Map;
 public class FileHolderComposite implements FileHolder {
   private final Map<HolderType, FileHolder> myHolders;
 
-  public FileHolderComposite(final Project project) {
+  public FileHolderComposite(Project project) {
     myHolders = new HashMap<>();
     myHolders.put(FileHolder.HolderType.UNVERSIONED, new VirtualFileHolder(project, FileHolder.HolderType.UNVERSIONED));
     myHolders.put(FileHolder.HolderType.ROOT_SWITCH, new SwitchedFileHolder(project, HolderType.ROOT_SWITCH));
@@ -38,15 +38,15 @@ public class FileHolderComposite implements FileHolder {
     myHolders.put(FileHolder.HolderType.LOGICALLY_LOCKED, new LogicallyLockedHolder(project));
   }
 
-  public FileHolderComposite(final FileHolderComposite holder) {
+  public FileHolderComposite(FileHolderComposite holder) {
     myHolders = new HashMap<>();
     for (FileHolder fileHolder : holder.myHolders.values()) {
       myHolders.put(fileHolder.getType(), fileHolder.copy());
     }
   }
 
-  public FileHolder add(@Nonnull final FileHolder fileHolder, final boolean copy) {
-    final FileHolder added = copy ? fileHolder.copy() : fileHolder;
+  public FileHolder add(@Nonnull FileHolder fileHolder, boolean copy) {
+    FileHolder added = copy ? fileHolder.copy() : fileHolder;
     myHolders.put(fileHolder.getType(), added);
     return added;
   }
@@ -59,7 +59,7 @@ public class FileHolderComposite implements FileHolder {
   }
 
   @Override
-  public void cleanAndAdjustScope(final VcsModifiableDirtyScope scope) {
+  public void cleanAndAdjustScope(VcsModifiableDirtyScope scope) {
     for (FileHolder holder : myHolders.values()) {
       holder.cleanAndAdjustScope(scope);
     }
@@ -70,20 +70,20 @@ public class FileHolderComposite implements FileHolder {
     return new FileHolderComposite(this);
   }
 
-  public FileHolder get(final HolderType type) {
+  public FileHolder get(HolderType type) {
     return myHolders.get(type);
   }
 
-  public VirtualFileHolder getVFHolder(final HolderType type) {
+  public VirtualFileHolder getVFHolder(HolderType type) {
     return (VirtualFileHolder)myHolders.get(type);
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final FileHolderComposite another = (FileHolderComposite)o;
+    FileHolderComposite another = (FileHolderComposite)o;
     if (another.myHolders.size() != myHolders.size()) {
       return false;
     }

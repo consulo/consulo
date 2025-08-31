@@ -41,7 +41,7 @@ public class ModulePathMacroManagerImpl extends BasePathMacroManager implements 
 
   @Override
   public ExpandMacroToPathMap getExpandMacroMap() {
-    final ExpandMacroToPathMap result = new ExpandMacroToPathMap();
+    ExpandMacroToPathMap result = new ExpandMacroToPathMap();
 
     if (!myModule.isDisposed()) {
       addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath());
@@ -54,7 +54,7 @@ public class ModulePathMacroManagerImpl extends BasePathMacroManager implements 
 
   @Override
   public ReplacePathToMacroMap getReplacePathMap() {
-    final ReplacePathToMacroMap result = super.getReplacePathMap();
+    ReplacePathToMacroMap result = super.getReplacePathMap();
 
     if (!myModule.isDisposed()) {
 

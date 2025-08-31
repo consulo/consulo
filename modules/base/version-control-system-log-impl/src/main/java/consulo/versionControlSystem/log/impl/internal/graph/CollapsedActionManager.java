@@ -41,7 +41,7 @@ class CollapsedActionManager {
     return null;
   }
 
-  public static void expandNodes(@Nonnull final CollapsedGraph collapsedGraph, Set<Integer> nodesToShow) {
+  public static void expandNodes(@Nonnull CollapsedGraph collapsedGraph, Set<Integer> nodesToShow) {
     FragmentGenerator generator =
       new FragmentGenerator(LinearGraphUtils.asLiteLinearGraph(collapsedGraph.getDelegatedGraph()), collapsedGraph::isNodeVisible);
 
@@ -143,9 +143,9 @@ class CollapsedActionManager {
     private final LinearFragmentGenerator linearFragmentGenerator;
 
     private FragmentGenerators(
-      @Nonnull final LinearGraph linearGraph,
+      @Nonnull LinearGraph linearGraph,
       @Nonnull PermanentGraphInfo<?> permanentGraphInfo,
-      @Nonnull final UnsignedBitSet matchedNodeId
+      @Nonnull UnsignedBitSet matchedNodeId
     ) {
       fragmentGenerator = new FragmentGenerator(
         LinearGraphUtils.asLiteLinearGraph(linearGraph),
@@ -160,7 +160,7 @@ class CollapsedActionManager {
   private final static ActionCase LINEAR_COLLAPSE_CASE = new ActionCase() {
     @Nullable
     @Override
-    public LinearGraphAnswer performAction(@Nonnull final ActionContext context) {
+    public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
       if (isForDelegateGraph(context)) return null;
 
       GraphElement affectedGraphElement = context.getAffectedGraphElement();

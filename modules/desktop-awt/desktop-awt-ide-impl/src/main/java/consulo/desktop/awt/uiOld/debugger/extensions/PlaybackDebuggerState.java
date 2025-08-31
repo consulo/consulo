@@ -35,14 +35,14 @@ public class PlaybackDebuggerState implements PersistentStateComponent<Element> 
 
   @Override
   public Element getState() {
-    final Element element = new Element("playback");
+    Element element = new Element("playback");
     element.setAttribute(ATTR_CURRENT_SCRIPT, currentScript);
     return element;
   }
 
   @Override
   public void loadState(Element state) {
-    final String path = state.getAttributeValue(ATTR_CURRENT_SCRIPT);
+    String path = state.getAttributeValue(ATTR_CURRENT_SCRIPT);
     if (path != null) {
       currentScript = path;
     }

@@ -60,13 +60,13 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
     @RequiredUIAccess
     public FlatWelcomeFrame(Application application, Runnable clearInstance) {
         myClearInstance = clearInstance;
-        final JRootPane rootPane = getRootPane();
+        JRootPane rootPane = getRootPane();
 
         TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane(), TitlelessDecorator.WELCOME_WINDOW);
 
         FlatWelcomeScreen screen = new FlatWelcomeScreen(this, titlelessDecorator);
 
-        final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
+        IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
 
         setGlassPane(glassPane);
         glassPane.setVisible(false);
@@ -100,7 +100,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(final WindowEvent e) {
+            public void windowClosing(WindowEvent e) {
                 saveLocation(frame.getBounds());
 
                 frame.dispose();

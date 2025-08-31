@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class NativeFileTypeFactory extends FileTypeFactory {
   @Override
-  public void createFileTypes(@Nonnull final FileTypeConsumer consumer) {
+  public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
     consumer.consume(NativeFileType.INSTANCE, "doc;docx;xls;xlsx;ppt;pptx;mdb;vsd;pdf;hlp;chm;odt");
   }
 }

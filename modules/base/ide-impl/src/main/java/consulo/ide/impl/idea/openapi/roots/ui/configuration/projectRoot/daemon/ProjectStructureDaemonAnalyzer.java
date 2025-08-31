@@ -42,7 +42,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     myAnalyzerQueue = new MergingUpdateQueue("Project Structure Daemon Analyzer", 300, false, null, this, null, false);
   }
 
-  private void doUpdate(final ProjectStructureElement element, final boolean check, final boolean collectUsages) {
+  private void doUpdate(ProjectStructureElement element, boolean check, boolean collectUsages) {
     if (myStopped.get()) return;
 
     if (check) {
@@ -53,8 +53,8 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     }
   }
 
-  private void doCheck(final ProjectStructureElement element) {
-    final ProjectStructureProblemsHolderImpl problemsHolder = new ProjectStructureProblemsHolderImpl();
+  private void doCheck(ProjectStructureElement element) {
+    ProjectStructureProblemsHolderImpl problemsHolder = new ProjectStructureProblemsHolderImpl();
     AccessRule.read(() -> {
       if (myStopped.get()) return;
 
@@ -70,14 +70,14 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
       if (LOG.isDebugEnabled()) {
         LOG.debug("updating problems for " + element);
       }
-      final ProjectStructureProblemDescription warning = myWarningsAboutUnused.get(element);
+      ProjectStructureProblemDescription warning = myWarningsAboutUnused.get(element);
       if (warning != null) problemsHolder.registerProblem(warning);
       myProblemHolders.put(element, problemsHolder);
       myDispatcher.getMulticaster().problemsChanged(element);
     });
   }
 
-  private void doCollectUsages(final ProjectStructureElement element) {
+  private void doCollectUsages(ProjectStructureElement element) {
     ThrowableComputable<List<ProjectStructureElementUsage>,RuntimeException> action = () -> {
       if (myStopped.get()) return null;
 
@@ -86,7 +86,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
       }
       return getUsagesInElement(element);
     };
-    final List<ProjectStructureElementUsage> usages = AccessRule.read(action);
+    List<ProjectStructureElementUsage> usages = AccessRule.read(action);
 
     invokeLater(() -> {
       if (myStopped.get() || usages == null) return;
@@ -98,7 +98,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     });
   }
 
-  private static List<ProjectStructureElementUsage> getUsagesInElement(final ProjectStructureElement element) {
+  private static List<ProjectStructureElementUsage> getUsagesInElement(ProjectStructureElement element) {
     return ProjectStructureValidator.getUsagesInElement(element);
   }
 
@@ -115,11 +115,11 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     Application.get().getLastUIAccess().give(runnable);
   }
 
-  public void queueUpdate(@Nonnull final ProjectStructureElement element) {
+  public void queueUpdate(@Nonnull ProjectStructureElement element) {
     queueUpdate(element, true, true);
   }
 
-  private void queueUpdate(@Nonnull final ProjectStructureElement element, final boolean check, final boolean collectUsages) {
+  private void queueUpdate(@Nonnull ProjectStructureElement element, boolean check, boolean collectUsages) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("start " + (check ? "checking " : "") + (collectUsages ? "collecting usages " : "") + "for " + element);
     }
@@ -137,7 +137,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     myElementsToShowWarningIfUnused.remove(element);
     myWarningsAboutUnused.remove(element);
     myProblemHolders.remove(element);
-    final Collection<ProjectStructureElementUsage> usages = mySourceElement2Usages.removeAll(element);
+    Collection<ProjectStructureElementUsage> usages = mySourceElement2Usages.removeAll(element);
     if (usages != null) {
       for (ProjectStructureElementUsage usage : usages) {
         myProblemHolders.remove(usage.getContainingElement());
@@ -152,8 +152,8 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     if (!myElementWithNotCalculatedUsages.isEmpty()) return;
 
     for (ProjectStructureElement element : myElementsToShowWarningIfUnused) {
-      final ProjectStructureProblemDescription warning;
-      final Collection<ProjectStructureElementUsage> usages = mySourceElement2Usages.get(element);
+      ProjectStructureProblemDescription warning;
+      Collection<ProjectStructureElementUsage> usages = mySourceElement2Usages.get(element);
       if (usages == null || usages.isEmpty()) {
         warning = element.createUnusedElementWarning(myProject);
       }
@@ -161,7 +161,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
         warning = null;
       }
 
-      final ProjectStructureProblemDescription old = myWarningsAboutUnused.put(element, warning);
+      ProjectStructureProblemDescription old = myWarningsAboutUnused.put(element, warning);
       ProjectStructureProblemsHolderImpl holder = myProblemHolders.get(element);
       if (holder == null) {
         holder = new ProjectStructureProblemsHolderImpl();
@@ -180,7 +180,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
   }
 
   private void removeUsagesInElement(ProjectStructureElement element) {
-    final Collection<ProjectStructureElementUsage> usages = myContainingElement2Usages.removeAll(element);
+    Collection<ProjectStructureElementUsage> usages = myContainingElement2Usages.removeAll(element);
     if (usages != null) {
       for (ProjectStructureElementUsage usage : usages) {
         mySourceElement2Usages.remove(usage.getSourceElement(), usage);
@@ -236,7 +236,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     for (ProjectStructureElement element : elements) {
       updateUsages(element, getUsagesInElement(element));
     }
-    final Collection<ProjectStructureElementUsage> usages = mySourceElement2Usages.get(selected);
+    Collection<ProjectStructureElementUsage> usages = mySourceElement2Usages.get(selected);
     return usages != null ? usages : Collections.<ProjectStructureElementUsage>emptyList();
   }
 
@@ -284,7 +284,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     @Override
     public boolean canEat(Update update) {
       if (!(update instanceof AnalyzeElementUpdate)) return false;
-      final AnalyzeElementUpdate other = (AnalyzeElementUpdate)update;
+      AnalyzeElementUpdate other = (AnalyzeElementUpdate)update;
       return myElement.equals(other.myElement) && (!other.myCheck || myCheck) && (!other.myCollectUsages || myCollectUsages);
     }
 

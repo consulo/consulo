@@ -56,21 +56,21 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
   @RequiredUIAccess
   @Override
   @Nonnull
-  public FileEditor createEditor(@Nonnull final Project project, @Nonnull final VirtualFile file) {
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
     return new PsiAwareTextEditorImpl(project, file, this);
   }
 
   @Override
   @Nonnull
-  public FileEditorState readState(@Nonnull final Element element, @Nonnull final Project project, @Nonnull final VirtualFile file) {
-    final TextEditorState state = (TextEditorState)super.readState(element, project, file);
+  public FileEditorState readState(@Nonnull Element element, @Nonnull Project project, @Nonnull VirtualFile file) {
+    TextEditorState state = (TextEditorState)super.readState(element, project, file);
 
     // Foldings
     Element child = element.getChild(FOLDING_ELEMENT);
     Document document = FileDocumentManager.getInstance().getCachedDocument(file);
     if (child != null) {
       if (document == null) {
-        final Element detachedStateCopy = child.clone();
+        Element detachedStateCopy = child.clone();
         state.setDelayedFoldState(() -> {
           Document document1 = FileDocumentManager.getInstance().getCachedDocument(file);
           return document1 == null ? null : CodeFoldingManager.getInstance(project).readFoldingState(detachedStateCopy, document1);
@@ -85,7 +85,7 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
   }
 
   @Override
-  public void writeState(@Nonnull final FileEditorState _state, @Nonnull final Project project, @Nonnull final Element element) {
+  public void writeState(@Nonnull FileEditorState _state, @Nonnull Project project, @Nonnull Element element) {
     super.writeState(_state, project, element);
 
     TextEditorState state = (TextEditorState)_state;
@@ -106,8 +106,8 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
 
   @Nonnull
   @Override
-  public TextEditorState getStateImpl(final Project project, @Nonnull final Editor editor, @Nonnull final FileEditorStateLevel level) {
-    final TextEditorState state = super.getStateImpl(project, editor, level);
+  public TextEditorState getStateImpl(Project project, @Nonnull Editor editor, @Nonnull FileEditorStateLevel level) {
+    TextEditorState state = super.getStateImpl(project, editor, level);
     // Save folding only on FULL level. It's very expensive to commit document on every
     // type (caused by undo).
     if (FileEditorStateLevel.FULL == level) {
@@ -124,10 +124,10 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
   }
 
   @Override
-  public void setStateImpl(final Project project, final Editor editor, final TextEditorState state) {
+  public void setStateImpl(Project project, Editor editor, TextEditorState state) {
     super.setStateImpl(project, editor, state);
     // Folding
-    final CodeFoldingState foldState = state.getFoldingState();
+    CodeFoldingState foldState = state.getFoldingState();
     if (project != null && foldState != null && AsyncEditorLoader.isEditorLoaded(editor)) {
       if (!PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
         PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
@@ -139,7 +139,7 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
 
   @Nonnull
   @Override
-  protected EditorWrapper createWrapperForEditor(@Nonnull final Editor editor) {
+  protected EditorWrapper createWrapperForEditor(@Nonnull Editor editor) {
     return new PsiAwareEditorWrapper(editor);
   }
 
@@ -148,7 +148,7 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
 
     private PsiAwareEditorWrapper(@Nonnull Editor editor) {
       super(editor);
-      final Project project = editor.getProject();
+      Project project = editor.getProject();
       myBackgroundHighlighter = project == null ? null : new TextEditorBackgroundHighlighter(project, editor);
     }
 

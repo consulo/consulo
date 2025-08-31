@@ -28,13 +28,13 @@ public class ElementPatternCondition<T> {
   private final InitialPatternCondition<T> myInitialCondition;
   private final List<PatternCondition<? super T>> myConditions = new ArrayList<>();
 
-  public ElementPatternCondition(final InitialPatternCondition<T> startCondition) {
+  public ElementPatternCondition(InitialPatternCondition<T> startCondition) {
     myInitialCondition = startCondition;
   }
 
-  public boolean accepts(@Nullable Object o, final ProcessingContext context) {
+  public boolean accepts(@Nullable Object o, ProcessingContext context) {
     if (!myInitialCondition.accepts(o, context)) return false;
-    final int listSize = myConditions.size();
+    int listSize = myConditions.size();
     for (int i=0; i<listSize; i++) {
       if (!myConditions.get(i).accepts((T)o, context)) return false;
     }
@@ -49,10 +49,10 @@ public class ElementPatternCondition<T> {
 
   public void append(StringBuilder builder, String indent) {
     myInitialCondition.append(builder, indent);
-    final int conditionSize = myConditions.size();
+    int conditionSize = myConditions.size();
 
     for (int i = 0; i < conditionSize; ++i) { // for each is slower
-      final PatternCondition<? super T> condition = myConditions.get(i);
+      PatternCondition<? super T> condition = myConditions.get(i);
       condition.append(builder.append(".\n").append(indent), indent);
     }
   }
@@ -66,7 +66,7 @@ public class ElementPatternCondition<T> {
   }
 
   public ElementPatternCondition<T> append(PatternCondition<? super T> condition) {
-    final ElementPatternCondition<T> copy = new ElementPatternCondition<T>(myInitialCondition);
+    ElementPatternCondition<T> copy = new ElementPatternCondition<T>(myInitialCondition);
     copy.myConditions.addAll(myConditions);
     copy.myConditions.add(condition);
     return copy;

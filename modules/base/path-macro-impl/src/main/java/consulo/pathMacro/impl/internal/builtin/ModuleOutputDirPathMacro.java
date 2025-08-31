@@ -34,7 +34,7 @@ public abstract class ModuleOutputDirPathMacro extends Macro {
 
   @Override
   public String expand(DataContext dataContext) {
-    final Module module = dataContext.getData(Module.KEY);
+    Module module = dataContext.getData(Module.KEY);
     if(module == null) {
       return null;
     }

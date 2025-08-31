@@ -140,7 +140,7 @@ public interface PsiSearchHelper {
    * @param processor       the processor which accepts the references.
    * @param caseSensitively if words differing in the case only should not be considered equal
    */
-  boolean processAllFilesWithWord(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Predicate<PsiFile> processor, final boolean caseSensitively);
+  boolean processAllFilesWithWord(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Predicate<PsiFile> processor, boolean caseSensitively);
 
   /**
    * Passes all files containing the specified word in {@link UsageSearchContext#IN_PLAIN_TEXT code}
@@ -151,7 +151,7 @@ public interface PsiSearchHelper {
    * @param processor       the processor which accepts the references.
    * @param caseSensitively if words differing in the case only should not be considered equal
    */
-  boolean processAllFilesWithWordInText(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Predicate<PsiFile> processor, final boolean caseSensitively);
+  boolean processAllFilesWithWordInText(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Predicate<PsiFile> processor, boolean caseSensitively);
 
   /**
    * Passes all files containing the specified word in {@link UsageSearchContext#IN_COMMENTS comments}
@@ -201,11 +201,11 @@ public interface PsiSearchHelper {
                                          @Nullable PsiFile fileToIgnoreOccurencesIn,
                                          @Nullable ProgressIndicator progress);
 
-  public boolean processFilesWithText(@Nonnull final GlobalSearchScope scope,
-                                      final short searchContext,
-                                      final boolean caseSensitively,
+  public boolean processFilesWithText(@Nonnull GlobalSearchScope scope,
+                                      short searchContext,
+                                      boolean caseSensitively,
                                       @Nonnull String text,
-                                      @Nonnull final Predicate<VirtualFile> processor);
+                                      @Nonnull Predicate<VirtualFile> processor);
 
   enum SearchCostResult {
     ZERO_OCCURRENCES,

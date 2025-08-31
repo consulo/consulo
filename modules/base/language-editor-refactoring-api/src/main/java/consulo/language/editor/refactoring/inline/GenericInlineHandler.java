@@ -39,7 +39,7 @@ public class GenericInlineHandler {
         InlineHandler.Settings settings,
         Collection<? extends PsiReference> allReferences
     ) {
-        final Map<Language, InlineHandler.Inliner> inliners = new HashMap<>();
+        Map<Language, InlineHandler.Inliner> inliners = new HashMap<>();
         for (PsiReference ref : allReferences) {
             if (ref == null) {
                 LOG.error("element: " + element.getClass() + ", allReferences contains null!");
@@ -48,12 +48,12 @@ public class GenericInlineHandler {
             PsiElement refElement = ref.getElement();
             LOG.assertTrue(refElement != null, ref.getClass().getName());
 
-            final Language language = refElement.getLanguage();
+            Language language = refElement.getLanguage();
             if (inliners.containsKey(language)) {
                 continue;
             }
 
-            final List<InlineHandler> handlers = InlineHandler.forLanguage(language);
+            List<InlineHandler> handlers = InlineHandler.forLanguage(language);
             for (InlineHandler handler : handlers) {
                 InlineHandler.Inliner inliner = handler.createInliner(element, settings);
                 if (inliner != null) {
@@ -111,8 +111,8 @@ public class GenericInlineHandler {
         Arrays.sort(
             usages,
             (usage1, usage2) -> {
-                final PsiElement element1 = usage1.getElement();
-                final PsiElement element2 = usage2.getElement();
+                PsiElement element1 = usage1.getElement();
+                PsiElement element2 = usage2.getElement();
                 if (element1 == null || element2 == null) {
                     return 0;
                 }

@@ -67,16 +67,16 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
                                                       String baseName,
                                                       @Nonnull ArtifactEditorContext context) {
-    final String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "folder", "");
+    String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "folder", "");
     String path = Messages
       .showInputDialog(context.getProject(), "Enter directory name: ", "New Directory", null, initialValue, new FilePathValidator());
     if (path == null) {
       return null;
     }
     path = FileUtil.toSystemIndependentName(path);
-    final String parentPath = PathUtil.getParentPath(path);
-    final String fileName = PathUtil.getFileName(path);
-    final PackagingElement<?> element = new DirectoryPackagingElement(fileName);
+    String parentPath = PathUtil.getParentPath(path);
+    String fileName = PathUtil.getFileName(path);
+    PackagingElement<?> element = new DirectoryPackagingElement(fileName);
     return (CompositePackagingElement<?>)PackagingElementFactory.getInstance(context.getProject()).createParentDirectories(parentPath, element);
 
   }

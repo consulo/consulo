@@ -129,7 +129,7 @@ public class ClassPath {
     }
 
     public Resource getResource(String resourcePath) {
-        final long started = startTiming();
+        long started = startTiming();
         try {
             // if we have full jar index, and its not our resource - skip fully
             if (myFullJarIndex != null && !myFullJarIndex.contains(resourcePath)) {
@@ -176,7 +176,7 @@ public class ClassPath {
         return null;
     }
 
-    public Enumeration<URL> getResources(final String name) {
+    public Enumeration<URL> getResources(String name) {
         return new MyEnumeration(name);
     }
 
@@ -229,7 +229,7 @@ public class ClassPath {
         return result;
     }
 
-    private void initLoaders(final URL url, int index) throws IOException {
+    private void initLoaders(URL url, int index) throws IOException {
         String path;
 
         if (myAcceptUnescapedUrls) {

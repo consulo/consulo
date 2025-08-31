@@ -48,11 +48,11 @@ public class KeyProcessorContext {
     return SoftReference.dereference(myFoundComponent);
   }
 
-  public void setFoundComponent(final JComponent foundComponent) {
+  public void setFoundComponent(JComponent foundComponent) {
     myFoundComponent = new WeakReference<JComponent>(foundComponent);
   }
 
-  public void setHasSecondStroke(final boolean hasSecondStroke) {
+  public void setHasSecondStroke(boolean hasSecondStroke) {
     myHasSecondStroke = hasSecondStroke;
   }
 
@@ -64,7 +64,7 @@ public class KeyProcessorContext {
     return myDataContext;
   }
 
-  public void setDataContext(final DataContext dataContext) {
+  public void setDataContext(DataContext dataContext) {
     myDataContext = dataContext;
   }
 
@@ -72,7 +72,7 @@ public class KeyProcessorContext {
     return isModalContext;
   }
 
-  public void setModalContext(final boolean modalContext) {
+  public void setModalContext(boolean modalContext) {
     isModalContext = modalContext;
   }
 
@@ -81,11 +81,11 @@ public class KeyProcessorContext {
     return SoftReference.dereference(myFocusOwner);
   }
 
-  public void setFocusOwner(final Component focusOwner) {
+  public void setFocusOwner(Component focusOwner) {
     myFocusOwner = new WeakReference<Component>(focusOwner);
   }
 
-  public void setInputEvent(final KeyEvent e) {
+  public void setInputEvent(KeyEvent e) {
     myInputEvent = e;
   }
 

@@ -43,7 +43,7 @@ public class PsiUtilBase extends PsiUtilCore {
       node = node.getTreeParent();
     }
     if (node != null) root = node.getPsi();
-    final PsiFile containingFile = root.getContainingFile();
+    PsiFile containingFile = root.getContainingFile();
     FileViewProvider provider = containingFile.getViewProvider();
     Set<Language> languages = provider.getLanguages();
     if (languages.size() == 1) {
@@ -69,12 +69,12 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language getLanguageInEditor(@Nonnull final Editor editor, @Nonnull final Project project) {
+  public static Language getLanguageInEditor(@Nonnull Editor editor, @Nonnull Project project) {
     return getLanguageInEditor(editor.getCaretModel().getCurrentCaret(), project);
   }
 
   @Nullable
-  public static Language getLanguageInEditor(@Nonnull Caret caret, @Nonnull final Project project) {
+  public static Language getLanguageInEditor(@Nonnull Caret caret, @Nonnull Project project) {
     Editor editor = caret.getEditor();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
@@ -85,7 +85,7 @@ public class PsiUtilBase extends PsiUtilCore {
     Language lang = findLanguageFromElement(elt);
 
     if (caret.hasSelection()) {
-      final Language rangeLanguage = evaluateLanguageInRange(caret.getSelectionStart(), caret.getSelectionEnd(), file);
+      Language rangeLanguage = evaluateLanguageInRange(caret.getSelectionStart(), caret.getSelectionEnd(), file);
       if (rangeLanguage == null) return file.getLanguage();
 
       lang = rangeLanguage;
@@ -103,19 +103,19 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static PsiFile getPsiFileInEditor(@Nonnull final Editor editor, @Nonnull final Project project) {
+  public static PsiFile getPsiFileInEditor(@Nonnull Editor editor, @Nonnull Project project) {
     return getPsiFileInEditor(editor.getCaretModel().getCurrentCaret(), project);
   }
 
   @Nullable
-  public static PsiFile getPsiFileInEditor(@Nonnull Caret caret, @Nonnull final Project project) {
+  public static PsiFile getPsiFileInEditor(@Nonnull Caret caret, @Nonnull Project project) {
     Editor editor = caret.getEditor();
-    final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
 
     PsiUtilCore.ensureValid(file);
 
-    final Language language = getLanguageInEditor(caret, project);
+    Language language = getLanguageInEditor(caret, project);
     if (language == null) return file;
 
     if (language == file.getLanguage()) return file;
@@ -125,7 +125,7 @@ public class PsiUtilBase extends PsiUtilCore {
     return getPsiFileAtOffset(file, mostProbablyCorrectLanguageOffset);
   }
 
-  public static PsiFile getPsiFileAtOffset(final PsiFile file, final int offset) {
+  public static PsiFile getPsiFileAtOffset(PsiFile file, int offset) {
     PsiElement elt = getElementAtOffset(file, offset);
 
     assert elt.isValid() : elt + "; file: " + file + "; isvalid: " + file.isValid();
@@ -133,7 +133,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language reallyEvaluateLanguageInRange(final int start, final int end, @Nonnull PsiFile file) {
+  public static Language reallyEvaluateLanguageInRange(int start, int end, @Nonnull PsiFile file) {
     if (file instanceof PsiBinaryFile) {
       return file.getLanguage();
     }
@@ -143,7 +143,7 @@ public class PsiUtilBase extends PsiUtilCore {
       PsiElement elt = getElementAtOffset(file, curOffset);
 
       if (!(elt instanceof PsiWhiteSpace)) {
-        final Language language = findLanguageFromElement(elt);
+        Language language = findLanguageFromElement(elt);
         if (lang == null) {
           lang = language;
         }
@@ -164,7 +164,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language evaluateLanguageInRange(final int start, final int end, @Nonnull PsiFile file) {
+  public static Language evaluateLanguageInRange(int start, int end, @Nonnull PsiFile file) {
     PsiElement elt = getElementAtOffset(file, start);
 
     TextRange selectionRange = new TextRange(start, end);
@@ -191,7 +191,7 @@ public class PsiUtilBase extends PsiUtilCore {
   public static ASTNode getRoot(@Nonnull ASTNode node) {
     ASTNode child = node;
     do {
-      final ASTNode parent = child.getTreeParent();
+      ASTNode parent = child.getTreeParent();
       if (parent == null) return child;
       child = parent;
     }
@@ -218,8 +218,8 @@ public class PsiUtilBase extends PsiUtilCore {
     return PsiEditorUtil.findEditor(element);
   }
 
-  public static boolean isSymLink(@Nonnull final PsiFileSystemItem element) {
-    final VirtualFile virtualFile = element.getVirtualFile();
+  public static boolean isSymLink(@Nonnull PsiFileSystemItem element) {
+    VirtualFile virtualFile = element.getVirtualFile();
     return virtualFile != null && virtualFile.is(VFileProperty.SYMLINK);
   }
 

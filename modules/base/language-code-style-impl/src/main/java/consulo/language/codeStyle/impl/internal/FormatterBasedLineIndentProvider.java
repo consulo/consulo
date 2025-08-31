@@ -40,7 +40,7 @@ public class FormatterBasedLineIndentProvider implements LineIndentProvider {
                               @Nonnull SemanticEditorPositionFactory factory,
                               Language language,
                               int offset) {
-    final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
     documentManager.commitDocument(document);
     PsiFile file = documentManager.getPsiFile(document);
     if (file == null) return "";

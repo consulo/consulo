@@ -30,11 +30,11 @@ public class MemberChooserObjectBase implements MemberChooserObject {
   private final String myText;
   private final Image myIcon;
 
-  public MemberChooserObjectBase(final String text) {
+  public MemberChooserObjectBase(String text) {
     this(text, null);
   }
 
-  public MemberChooserObjectBase(final String text, @Nullable final Image icon) {
+  public MemberChooserObjectBase(String text, @Nullable Image icon) {
     myText = text;
     myIcon = icon;
   }

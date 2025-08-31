@@ -34,7 +34,7 @@ public class LeftNeighbour extends PositionElementFilter {
   @Override
   public boolean isAcceptable(Object element, PsiElement context){
     if (!(element instanceof PsiElement)) return false;
-    final PsiElement previous = FilterPositionUtil.searchNonSpaceNonCommentBack((PsiElement) element);
+    PsiElement previous = FilterPositionUtil.searchNonSpaceNonCommentBack((PsiElement) element);
     if(previous != null){
       return getFilter().isAcceptable(previous, context);
     }

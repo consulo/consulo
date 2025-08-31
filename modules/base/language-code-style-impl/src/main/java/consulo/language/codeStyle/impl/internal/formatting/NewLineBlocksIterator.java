@@ -110,7 +110,7 @@ public class NewLineBlocksIterator implements Iterator<Block> {
     return current;
   }
 
-  private void popUntilTopBlockStartOffsetGreaterOrEqual(final int lineStartOffset) {
+  private void popUntilTopBlockStartOffsetGreaterOrEqual(int lineStartOffset) {
     while (!myStack.isEmpty()) {
       checkCancelled();
       Block current = myStack.peek();

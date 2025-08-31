@@ -26,7 +26,7 @@ public class PorterStemmerUtil {
   @Nullable
   public static String stem(String str) {
     // check for zero length
-    final int strLen = str.length();
+    int strLen = str.length();
     if (strLen > 0) {
       int lastNonLetter = -1;
       for (int i = 0; i < strLen; ++i) {

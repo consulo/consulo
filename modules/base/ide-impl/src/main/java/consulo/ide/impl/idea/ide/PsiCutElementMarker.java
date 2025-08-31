@@ -26,7 +26,7 @@ import consulo.language.editor.PsiCopyPasteManager;
 @ExtensionImpl
 public class PsiCutElementMarker implements CutElementMarker {
   @Override
-  public boolean isCutElement(final Object element) {
+  public boolean isCutElement(Object element) {
     return PsiCopyPasteManager.getInstance().isCutElement(element);
   }
 }

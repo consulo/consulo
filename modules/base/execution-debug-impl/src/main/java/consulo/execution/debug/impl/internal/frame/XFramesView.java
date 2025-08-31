@@ -86,7 +86,7 @@ public class XFramesView extends XDebugView {
         });
         myFramesList.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(final MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (myListenersEnabled) {
                     int i = myFramesList.locationToIndex(e.getPoint());
                     if (i != -1 && myFramesList.isSelectedIndex(i)) {
@@ -98,7 +98,7 @@ public class XFramesView extends XDebugView {
 
         myFramesList.addMouseListener(new PopupHandler() {
             @Override
-            public void invokePopup(final Component comp, final int x, final int y) {
+            public void invokePopup(Component comp, int x, int y) {
                 ActionManager actionManager = ActionManager.getInstance();
                 ActionGroup group = (ActionGroup) actionManager.getAction(XDebuggerActions.FRAMES_TREE_POPUP_GROUP);
                 actionManager.createActionPopupMenu(ActionPlaces.UNKNOWN, group).getComponent().show(comp, x, y);
@@ -159,7 +159,7 @@ public class XFramesView extends XDebugView {
                     myThreadComboBox.addItem(null); // rendered as "Loading..."
                     context.computeExecutionStacks(new XSuspendContext.XExecutionStackContainer() {
                         @Override
-                        public void addExecutionStack(@Nonnull final List<? extends XExecutionStack> executionStacks, boolean last) {
+                        public void addExecutionStack(@Nonnull List<? extends XExecutionStack> executionStacks, boolean last) {
                             ApplicationManager.getApplication().invokeLater(() -> {
                                 addExecutionStacks(executionStacks);
                                 if (last) {
@@ -257,7 +257,7 @@ public class XFramesView extends XDebugView {
 
             myThreadComboBox.setSelectedItem(activeExecutionStack);
             myThreadsPanel.removeAll();
-            final boolean invisible = executionStacks.length == 1 && StringUtil.isEmpty(executionStacks[0].getDisplayName());
+            boolean invisible = executionStacks.length == 1 && StringUtil.isEmpty(executionStacks[0].getDisplayName());
             if (!invisible) {
                 myThreadsPanel.add(myThreadComboBox, BorderLayout.CENTER);
             }
@@ -331,7 +331,7 @@ public class XFramesView extends XDebugView {
         private final XDebugSession mySession;
         private Object myToSelect;
 
-        private StackFramesListBuilder(final XExecutionStack executionStack, XDebugSession session) {
+        private StackFramesListBuilder(XExecutionStack executionStack, XDebugSession session) {
             myExecutionStack = executionStack;
             mySession = session;
             myStackFrames = new ArrayList<>();
@@ -342,12 +342,12 @@ public class XFramesView extends XDebugView {
         }
 
         @Override
-        public void addStackFrames(@Nonnull final List<? extends XStackFrame> stackFrames, final boolean last) {
+        public void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, boolean last) {
             addStackFrames(stackFrames, null, last);
         }
 
         @Override
-        public void addStackFrames(@Nonnull final List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, final boolean last) {
+        public void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, boolean last) {
             if (isObsolete()) {
                 return;
             }
@@ -378,7 +378,7 @@ public class XFramesView extends XDebugView {
         }
 
         @Override
-        public void errorOccurred(@Nonnull final String errorMessage) {
+        public void errorOccurred(@Nonnull String errorMessage) {
             if (isObsolete()) {
                 return;
             }
@@ -395,7 +395,7 @@ public class XFramesView extends XDebugView {
             });
         }
 
-        private void addFrameListElements(final List<?> values, final boolean last) {
+        private void addFrameListElements(List<?> values, boolean last) {
             if (myExecutionStack != null && myExecutionStack == mySelectedStack) {
                 DefaultListModel model = myFramesList.getModel();
                 int insertIndex = model.size();
@@ -468,7 +468,7 @@ public class XFramesView extends XDebugView {
         }
 
         @SuppressWarnings("unchecked")
-        public void initModel(final DefaultListModel model) {
+        public void initModel(DefaultListModel model) {
             model.removeAllElements();
             myStackFrames.forEach(model::addElement);
             if (myErrorMessage != null) {

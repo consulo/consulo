@@ -55,26 +55,26 @@ public class ObjectsConvertor {
   private ObjectsConvertor() {
   }
 
-  public static List<VirtualFile> fp2vf(@Nonnull final Collection<FilePath> in) {
+  public static List<VirtualFile> fp2vf(@Nonnull Collection<FilePath> in) {
     return convert(in, FILEPATH_TO_VIRTUAL);
   }
 
-  public static List<FilePath> vf2fp(@Nonnull final List<VirtualFile> in) {
+  public static List<FilePath> vf2fp(@Nonnull List<VirtualFile> in) {
     return convert(in, VIRTUAL_FILEPATH);
   }
 
-  public static List<File> fp2jiof(@Nonnull final Collection<FilePath> in) {
+  public static List<File> fp2jiof(@Nonnull Collection<FilePath> in) {
     return convert(in, FILEPATH_FILE);
   }
 
-  public static <T, S> List<S> convert(@Nonnull final Collection<T> in, final Function<T, S> convertor) {
+  public static <T, S> List<S> convert(@Nonnull Collection<T> in, Function<T, S> convertor) {
     return convert(in, convertor, null);
   }
 
-  public static <T, U, S extends U> List<S> convert(@Nonnull final Collection<T> in, final Function<T, S> convertor, @Nullable final Function<U, Boolean> outFilter) {
-    final List<S> out = new ArrayList<S>();
+  public static <T, U, S extends U> List<S> convert(@Nonnull Collection<T> in, Function<T, S> convertor, @Nullable Function<U, Boolean> outFilter) {
+    List<S> out = new ArrayList<S>();
     for (T t : in) {
-      final S converted = convertor.apply(t);
+      S converted = convertor.apply(t);
       if ((outFilter != null) && (!Boolean.TRUE.equals(outFilter.apply(converted)))) continue;
       out.add(converted);
     }

@@ -44,8 +44,8 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
   }
 
   public void checkModulesNames(Project project, ProjectStructureProblemsHolder problemsHolder) {
-    final ModifiableModuleModel moduleModel = myModulesConfigurator.getModuleModel();
-    final Module[] all = moduleModel.getModules();
+    ModifiableModuleModel moduleModel = myModulesConfigurator.getModuleModel();
+    Module[] all = moduleModel.getModules();
     if (!ArrayUtil.contains(myModule, all)) {
       return;//module has been deleted
     }
@@ -68,9 +68,9 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
   public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
     checkModulesNames(project, problemsHolder);
 
-    final ModuleRootModel rootModel = myModulesConfigurator.getRootModel(myModule);
+    ModuleRootModel rootModel = myModulesConfigurator.getRootModel(myModule);
     if (rootModel == null) return; //already disposed
-    final OrderEntry[] entries = rootModel.getOrderEntries();
+    OrderEntry[] entries = rootModel.getOrderEntries();
     for (OrderEntry entry : entries) {
       if (!entry.isValid()) {
         if (entry instanceof ModuleExtensionWithSdkOrderEntry && ((ModuleExtensionWithSdkOrderEntry)entry).getSdkName() == null) {
@@ -112,26 +112,26 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
 
   @Override
   public List<ProjectStructureElementUsage> getUsagesInElement() {
-    final List<ProjectStructureElementUsage> usages = new ArrayList<>();
-    final ModuleEditor moduleEditor = ((ModulesConfiguratorImpl)myModulesConfigurator).getModuleEditor(myModule);
+    List<ProjectStructureElementUsage> usages = new ArrayList<>();
+    ModuleEditor moduleEditor = ((ModulesConfiguratorImpl)myModulesConfigurator).getModuleEditor(myModule);
     if (moduleEditor != null) {
       for (OrderEntry entry : moduleEditor.getOrderEntries()) {
         if (entry instanceof ModuleOrderEntry) {
           ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)entry;
-          final Module module = moduleOrderEntry.getModule();
+          Module module = moduleOrderEntry.getModule();
           if (module != null) {
             usages.add(new UsageInModuleClasspath(myModulesConfigurator, this, new ModuleProjectStructureElement(myModulesConfigurator, module), moduleOrderEntry.getScope()));
           }
         }
         else if (entry instanceof LibraryOrderEntry) {
           LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)entry;
-          final Library library = libraryOrderEntry.getLibrary();
+          Library library = libraryOrderEntry.getLibrary();
           if (library != null) {
             usages.add(new UsageInModuleClasspath(myModulesConfigurator, this, new LibraryProjectStructureElement(library), libraryOrderEntry.getScope()));
           }
         }
         else if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
-          final Sdk jdk = ((ModuleExtensionWithSdkOrderEntry)entry).getSdk();
+          Sdk jdk = ((ModuleExtensionWithSdkOrderEntry)entry).getSdk();
           if (jdk != null) {
             usages.add(new UsageInModuleClasspath(myModulesConfigurator, this, new SdkProjectStructureElement(jdk), null));
           }

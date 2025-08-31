@@ -39,20 +39,20 @@ public final class FileNestingBuilder {
      * Returns all possible nesting rules, including transitive rules
      */
     public synchronized @Nonnull Collection<ProjectViewFileNestingService.NestingRule> getNestingRules() {
-        final ProjectViewFileNestingService fileNestingService = ProjectViewFileNestingService.getInstance();
-        final List<ProjectViewFileNestingService.NestingRule> baseRules = fileNestingService.getRules();
-        final long modCount = fileNestingService.getModificationCount();
+        ProjectViewFileNestingService fileNestingService = ProjectViewFileNestingService.getInstance();
+        List<ProjectViewFileNestingService.NestingRule> baseRules = fileNestingService.getRules();
+        long modCount = fileNestingService.getModificationCount();
 
         if (myNestingRules == null || myBaseListModCount != modCount) {
             myNestingRules = new HashSet<>();
             myBaseListModCount = modCount;
 
-            final MultiMap<String, String> childToParentSuffix = new MultiMap<>();
-            final MultiMap<String, String> parentToChildSuffix = new MultiMap<>();
+            MultiMap<String, String> childToParentSuffix = new MultiMap<>();
+            MultiMap<String, String> parentToChildSuffix = new MultiMap<>();
 
             for (ProjectViewFileNestingService.NestingRule rule : baseRules) {
-                final String parentFileSuffix = rule.getParentFileSuffix();
-                final String childFileSuffix = rule.getChildFileSuffix();
+                String parentFileSuffix = rule.getParentFileSuffix();
+                String childFileSuffix = rule.getChildFileSuffix();
                 if (parentFileSuffix.isEmpty() || childFileSuffix.isEmpty()) {
                     continue; // shouldn't happen, checked on component loading and in UI
                 }
@@ -115,10 +115,10 @@ public final class FileNestingBuilder {
       As a result we get a number of separated parent-to-many-children sub-graphs, and use them to nest child files under parent file in Project View.
       One child still may have more than one parent. For real use cases it is not expected to happen, but anyway it's not a big problem, it will be shown as a subnode more than once.
      */
-    public @Nonnull <T> MultiMap<T, T> mapParentToChildren(final @Nonnull Collection<? extends T> nodes,
-                                                           final @Nonnull Function<? super T, String> fileNameFunc) {
+    public @Nonnull <T> MultiMap<T, T> mapParentToChildren(@Nonnull Collection<? extends T> nodes,
+                                                           @Nonnull Function<? super T, String> fileNameFunc) {
 
-        final Collection<ProjectViewFileNestingService.NestingRule> rules = getNestingRules();
+        Collection<ProjectViewFileNestingService.NestingRule> rules = getNestingRules();
         if (rules.isEmpty()) {
             return MultiMap.empty();
         }
@@ -130,15 +130,15 @@ public final class FileNestingBuilder {
         Map<Pair<String, ProjectViewFileNestingService.NestingRule>, Edge<T>> baseNameAndRuleToEdge = null; // temporary map for building edges
 
         for (T node : nodes) {
-            final String fileName = fileNameFunc.apply(node);
+            String fileName = fileNameFunc.apply(node);
             if (fileName == null) {
                 continue;
             }
 
             for (ProjectViewFileNestingService.NestingRule rule : rules) {
-                final Couple<Boolean> c = checkMatchingAsParentOrChild(rule, fileName);
-                final boolean matchesParent = c.first;
-                final boolean matchesChild = c.second;
+                Couple<Boolean> c = checkMatchingAsParentOrChild(rule, fileName);
+                boolean matchesParent = c.first;
+                boolean matchesChild = c.second;
 
                 if (!matchesChild && !matchesParent) {
                     continue;
@@ -151,15 +151,15 @@ public final class FileNestingBuilder {
                 }
 
                 if (matchesParent) {
-                    final String baseName = fileName.substring(0, fileName.length() - rule.getParentFileSuffix().length());
-                    final Edge<T> edge = getOrCreateEdge(baseNameAndRuleToEdge, baseName, rule);
+                    String baseName = fileName.substring(0, fileName.length() - rule.getParentFileSuffix().length());
+                    Edge<T> edge = getOrCreateEdge(baseNameAndRuleToEdge, baseName, rule);
                     edge.from = node;
                     updateInfoIfEdgeComplete(parentToChildren, allChildNodes, edge);
                 }
 
                 if (matchesChild) {
-                    final String baseName = fileName.substring(0, fileName.length() - rule.getChildFileSuffix().length());
-                    final Edge<T> edge = getOrCreateEdge(baseNameAndRuleToEdge, baseName, rule);
+                    String baseName = fileName.substring(0, fileName.length() - rule.getChildFileSuffix().length());
+                    Edge<T> edge = getOrCreateEdge(baseNameAndRuleToEdge, baseName, rule);
                     edge.to = node;
                     updateInfoIfEdgeComplete(parentToChildren, allChildNodes, edge);
                 }
@@ -172,8 +172,8 @@ public final class FileNestingBuilder {
     /**
      * Returns [matching parent; matching child] pair
      */
-    public static Couple<Boolean> checkMatchingAsParentOrChild(final @Nonnull ProjectViewFileNestingService.NestingRule rule,
-                                                               final @Nonnull String fileName) {
+    public static Couple<Boolean> checkMatchingAsParentOrChild(@Nonnull ProjectViewFileNestingService.NestingRule rule,
+                                                               @Nonnull String fileName) {
         String parentFileSuffix = rule.getParentFileSuffix();
         String childFileSuffix = rule.getChildFileSuffix();
 
@@ -192,10 +192,10 @@ public final class FileNestingBuilder {
         return Couple.of(matchesParent, matchesChild);
     }
 
-    private static @Nonnull <T> Edge<T> getOrCreateEdge(final @Nonnull Map<Pair<String, ProjectViewFileNestingService.NestingRule>, Edge<T>> baseNameAndRuleToEdge,
-                                                        final @Nonnull String baseName,
-                                                        final @Nonnull ProjectViewFileNestingService.NestingRule rule) {
-        final Pair<String, ProjectViewFileNestingService.NestingRule> baseNameAndRule = Pair.create(baseName, rule);
+    private static @Nonnull <T> Edge<T> getOrCreateEdge(@Nonnull Map<Pair<String, ProjectViewFileNestingService.NestingRule>, Edge<T>> baseNameAndRuleToEdge,
+                                                        @Nonnull String baseName,
+                                                        @Nonnull ProjectViewFileNestingService.NestingRule rule) {
+        Pair<String, ProjectViewFileNestingService.NestingRule> baseNameAndRule = Pair.create(baseName, rule);
 
         Edge<T> edge = baseNameAndRuleToEdge.get(baseNameAndRule);
         if (edge == null) {
@@ -205,9 +205,9 @@ public final class FileNestingBuilder {
         return edge;
     }
 
-    private static <T> void updateInfoIfEdgeComplete(final @Nonnull MultiMap<T, T> parentToChildren,
-                                                     final @Nonnull Set<? super T> allChildNodes,
-                                                     final @Nonnull Edge<? extends T> edge) {
+    private static <T> void updateInfoIfEdgeComplete(@Nonnull MultiMap<T, T> parentToChildren,
+                                                     @Nonnull Set<? super T> allChildNodes,
+                                                     @Nonnull Edge<? extends T> edge) {
         if (edge.from != null && edge.to != null) { // if edge complete
             allChildNodes.add(edge.to);
             parentToChildren.remove(edge.to); // nodes that appear as a child shouldn't be a parent of another edge, corresponding edges removed

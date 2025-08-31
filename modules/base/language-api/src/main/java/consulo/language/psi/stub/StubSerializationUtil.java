@@ -23,7 +23,7 @@ public abstract class StubSerializationUtil {
 
   public static ObjectStubSerializer getSerializer(Stub rootStub) {
     if (rootStub instanceof PsiFileStub) {
-      final PsiFileStub fileStub = (PsiFileStub)rootStub;
+      PsiFileStub fileStub = (PsiFileStub)rootStub;
       return fileStub.getType();
     }
 

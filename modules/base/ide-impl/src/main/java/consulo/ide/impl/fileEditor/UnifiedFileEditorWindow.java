@@ -253,14 +253,14 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
   @Override
   public void closeFile(@Nonnull VirtualFile file, boolean disposeIfNeeded, boolean transferFocus) {
-    final FileEditorManagerImpl editorManager = getManager();
+    FileEditorManagerImpl editorManager = getManager();
     editorManager.runChange(splitters -> {
-      final List<FileEditorWithProviderComposite> editors = splitters.findEditorComposites(file);
+      List<FileEditorWithProviderComposite> editors = splitters.findEditorComposites(file);
       if (editors.isEmpty()) return;
       try {
-        final FileEditorWithProviderComposite editor = findFileComposite(file);
+        FileEditorWithProviderComposite editor = findFileComposite(file);
 
-        final FileEditorManagerBeforeListener beforePublisher =
+        FileEditorManagerBeforeListener beforePublisher =
           editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class);
 
         beforePublisher.beforeFileClosed(editorManager, file);
@@ -298,9 +298,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         editorManager.removeSelectionRecord(file, this);
 
         editorManager.notifyPublisher(() -> {
-          final Project project = editorManager.getProject();
+          Project project = editorManager.getProject();
           if (!project.isDisposed()) {
-            final FileEditorManagerListener afterPublisher = project.getMessageBus().syncPublisher(FileEditorManagerListener.class);
+            FileEditorManagerListener afterPublisher = project.getMessageBus().syncPublisher(FileEditorManagerListener.class);
             afterPublisher.fileClosed(editorManager, file);
           }
         });

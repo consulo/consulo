@@ -31,7 +31,7 @@ public class IssueNavigationLink {
   public IssueNavigationLink() {
   }
 
-  public IssueNavigationLink(final String issueRegexp, final String linkRegexp) {
+  public IssueNavigationLink(String issueRegexp, String linkRegexp) {
     myIssueRegexp = issueRegexp;
     myLinkRegexp = linkRegexp;
   }
@@ -41,7 +41,7 @@ public class IssueNavigationLink {
     return myIssueRegexp;
   }
 
-  public void setIssueRegexp(final String issueRegexp) {
+  public void setIssueRegexp(String issueRegexp) {
     myIssueRegexp = issueRegexp;
     myIssuePattern = null;
   }
@@ -58,15 +58,15 @@ public class IssueNavigationLink {
     return myLinkRegexp;
   }
 
-  public void setLinkRegexp(final String linkRegexp) {
+  public void setLinkRegexp(String linkRegexp) {
     myLinkRegexp = linkRegexp;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final IssueNavigationLink that = (IssueNavigationLink)o;
+    IssueNavigationLink that = (IssueNavigationLink)o;
 
     if (!myIssueRegexp.equals(that.myIssueRegexp)) return false;
     if (!myLinkRegexp.equals(that.myLinkRegexp)) return false;

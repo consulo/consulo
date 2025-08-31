@@ -60,7 +60,7 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
    * @param image buffered image
    * @param imageFileSize File length in bytes.
    */
-  private ImagePreviewComponent(@Nonnull final BufferedImage image, final long imageFileSize) {
+  private ImagePreviewComponent(@Nonnull BufferedImage image, long imageFileSize) {
     setLayout(new BorderLayout());
 
     myImage = image;
@@ -92,11 +92,11 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
   }
 
   @Nonnull
-  private static JLabel createLabel(@Nonnull final BufferedImage image, long imageFileSize) {
-    final int width = image.getWidth();
-    final int height = image.getHeight();
-    final ColorModel colorModel = image.getColorModel();
-    final int i = colorModel.getPixelSize();
+  private static JLabel createLabel(@Nonnull BufferedImage image, long imageFileSize) {
+    int width = image.getWidth();
+    int height = image.getHeight();
+    ColorModel colorModel = image.getColorModel();
+    int i = colorModel.getPixelSize();
     return new JLabel(String.format("%dx%d, %dbpp, %s", width, height, i, StringUtil.formatFileSize(imageFileSize)));
   }
 
@@ -106,7 +106,7 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
     SoftReference<BufferedImage> imageRef = file.getUserData(BUFFERED_IMAGE_REF_KEY);
     if (loadedTimeStamp == null || loadedTimeStamp < file.getTimeStamp() || SoftReference.dereference(imageRef) == null) {
       try {
-        final byte[] content = file.contentsToByteArray();
+        byte[] content = file.contentsToByteArray();
         InputStream inputStream = new ByteArrayInputStream(content, 0, content.length);
         ImageInputStream imageInputStream = ImageIO.createImageInputStream(inputStream);
         try {
@@ -139,22 +139,22 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
     return false;
   }
 
-  public static JComponent getPreviewComponent(@Nullable final PsiElement parent) {
+  public static JComponent getPreviewComponent(@Nullable PsiElement parent) {
     if (parent == null) {
       return null;
     }
-    final PsiReference[] references = parent.getReferences();
-    for (final PsiReference reference : references) {
-      final PsiElement fileItem = reference.resolve();
+    PsiReference[] references = parent.getReferences();
+    for (PsiReference reference : references) {
+      PsiElement fileItem = reference.resolve();
       if (fileItem instanceof PsiFileSystemItem) {
-        final PsiFileSystemItem item = (PsiFileSystemItem)fileItem;
+        PsiFileSystemItem item = (PsiFileSystemItem)fileItem;
         if (!item.isDirectory()) {
-          final VirtualFile file = item.getVirtualFile();
+          VirtualFile file = item.getVirtualFile();
           if (file != null && supportedExtensions.contains(file.getExtension())) {
             try {
               refresh(file);
               SoftReference<BufferedImage> imageRef = file.getUserData(BUFFERED_IMAGE_REF_KEY);
-              final BufferedImage image = SoftReference.dereference(imageRef);
+              BufferedImage image = SoftReference.dereference(imageRef);
               if (image != null) {
                 return new ImagePreviewComponent(image, file.getLength());
               }
@@ -173,7 +173,7 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
   /**
    * This method doesn't use caching, so if you want to use it then you should consider implementing external cache.
    */
-  public static ImagePreviewComponent getPreviewComponent(@Nonnull final BufferedImage image, final long imageFileSize) {
+  public static ImagePreviewComponent getPreviewComponent(@Nonnull BufferedImage image, long imageFileSize) {
     return new ImagePreviewComponent(image, imageFileSize);
   }
 
@@ -183,7 +183,7 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
     private ImageComp() {
       if (myImage.getWidth() > 300 || myImage.getHeight() > 300) {
         // will make image smaller
-        final float factor = 300.0f / Math.max(myImage.getWidth(), myImage.getHeight());
+        float factor = 300.0f / Math.max(myImage.getWidth(), myImage.getHeight());
         myPreferredSize = new Dimension((int)(myImage.getWidth() * factor), (int)(myImage.getHeight() * factor));
       }
       else {
@@ -192,11 +192,11 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
     }
 
     @Override
-    public void paint(final Graphics g) {
+    public void paint(Graphics g) {
       super.paint(g);
       Rectangle r = getBounds();
-      final int width = myImage.getWidth();
-      final int height = myImage.getHeight();
+      int width = myImage.getWidth();
+      int height = myImage.getHeight();
 
       g.drawImage(myImage, 0, 0, r.width > width ? width : r.width, r.height > height ? height : r.height, this);
     }

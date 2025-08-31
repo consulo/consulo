@@ -48,7 +48,7 @@ public class ArtifactElementPresentation extends TreeNodePresentation {
 
   @Override
   public void navigateToSource() {
-    final Artifact artifact = findArtifact();
+    Artifact artifact = findArtifact();
     if (artifact != null) {
       myContext.selectArtifact(artifact);
     }
@@ -56,7 +56,7 @@ public class ArtifactElementPresentation extends TreeNodePresentation {
 
   @Override
   public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
-    final Artifact artifact = findArtifact();
+    Artifact artifact = findArtifact();
     Image icon = artifact != null ? artifact.getArtifactType().getIcon() : AllIcons.Nodes.Artifact;
     presentationData.setIcon(icon);
     presentationData.addText(getPresentableName(), artifact != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);

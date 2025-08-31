@@ -56,5 +56,5 @@ public interface BraceMatcher {
    * @param openingBraceOffset the offset of an opening structural brace.
    * @return the offset of corresponding code construct, or the same offset if not defined.
    */
-  int getCodeConstructStart(final PsiFile file, int openingBraceOffset);
+  int getCodeConstructStart(PsiFile file, int openingBraceOffset);
 }

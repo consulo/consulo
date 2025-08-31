@@ -36,7 +36,7 @@ public class MappingsToRoots {
   private final NewMappings myMappings;
   private final Project myProject;
 
-  public MappingsToRoots(final NewMappings mappings, final Project project) {
+  public MappingsToRoots(NewMappings mappings, Project project) {
     myMappings = mappings;
     myProject = project;
   }
@@ -45,20 +45,20 @@ public class MappingsToRoots {
   public VirtualFile[] getRootsUnderVcs(@Nonnull AbstractVcs vcs) {
     List<VirtualFile> result = myMappings.getMappingsAsFilesUnderVcs(vcs);
 
-    final AbstractVcs.RootsConvertor convertor = vcs.getCustomConvertor();
+    AbstractVcs.RootsConvertor convertor = vcs.getCustomConvertor();
     if (convertor != null) {
       result = convertor.convertRoots(result);
     }
 
     Collections.sort(result, FilePathComparator.getInstance());
     if (! vcs.allowsNestedRoots()) {
-      final FileIndexFacade facade = ServiceManager.getService(myProject, FileIndexFacade.class);
-      final List<VirtualFile> finalResult = result;
+      FileIndexFacade facade = ServiceManager.getService(myProject, FileIndexFacade.class);
+      List<VirtualFile> finalResult = result;
       ApplicationManager.getApplication().runReadAction(() -> {
         int i=1;
         while(i < finalResult.size()) {
-          final VirtualFile previous = finalResult.get(i - 1);
-          final VirtualFile current = finalResult.get(i);
+          VirtualFile previous = finalResult.get(i - 1);
+          VirtualFile current = finalResult.get(i);
           if (facade.isValidAncestor(previous, current)) {
             finalResult.remove(i);
           }
@@ -73,13 +73,13 @@ public class MappingsToRoots {
   }
 
   // not only set mappings, but include all modules inside: modules might have different settings
-  public List<VirtualFile> getDetailedVcsMappings(final AbstractVcs vcs) {
+  public List<VirtualFile> getDetailedVcsMappings(AbstractVcs vcs) {
     // same as above, but no compression
-    final List<VirtualFile> result = myMappings.getMappingsAsFilesUnderVcs(vcs);
+    List<VirtualFile> result = myMappings.getMappingsAsFilesUnderVcs(vcs);
 
     boolean addInnerModules = true;
-    final String vcsName = vcs.getName();
-    final List<VcsDirectoryMapping> directoryMappings = myMappings.getDirectoryMappings(vcsName);
+    String vcsName = vcs.getName();
+    List<VcsDirectoryMapping> directoryMappings = myMappings.getDirectoryMappings(vcsName);
     for (VcsDirectoryMapping directoryMapping : directoryMappings) {
       if (directoryMapping.isDefaultMapping()) {
         addInnerModules = false;
@@ -89,12 +89,12 @@ public class MappingsToRoots {
 
     Collections.sort(result, FilePathComparator.getInstance());
     if (addInnerModules) {
-      final FileIndexFacade facade = ServiceManager.getService(myProject, FileIndexFacade.class);
-      final Collection<VirtualFile> modules = DefaultVcsRootPolicy.getInstance(myProject).getDefaultVcsRoots(myMappings, vcsName);
+      FileIndexFacade facade = ServiceManager.getService(myProject, FileIndexFacade.class);
+      Collection<VirtualFile> modules = DefaultVcsRootPolicy.getInstance(myProject).getDefaultVcsRoots(myMappings, vcsName);
       ApplicationManager.getApplication().runReadAction(() -> {
         Iterator<VirtualFile> iterator = modules.iterator();
         while (iterator.hasNext()) {
-          final VirtualFile module = iterator.next();
+          VirtualFile module = iterator.next();
           boolean included = false;
           for (VirtualFile root : result) {
             if (facade.isValidAncestor(root, module)) {

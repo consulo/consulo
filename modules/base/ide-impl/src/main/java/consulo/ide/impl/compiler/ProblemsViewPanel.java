@@ -48,7 +48,7 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
             @Nullable
             @Override
             protected VirtualFile getFile() {
-                final ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
+                ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
                 ErrorTreeElement element = descriptor != null ? descriptor.getElement() : null;
                 if (element != null && !(element instanceof GroupingElement)) {
                     NodeDescriptor parent = descriptor.getParentDescriptor();

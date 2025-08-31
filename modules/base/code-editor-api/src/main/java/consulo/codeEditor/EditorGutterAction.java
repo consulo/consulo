@@ -38,5 +38,5 @@ public interface EditorGutterAction {
    * @param lineNum the line number.
    * @return the cursor to show.
    */
-  Cursor getCursor(final int lineNum);
+  Cursor getCursor(int lineNum);
 }

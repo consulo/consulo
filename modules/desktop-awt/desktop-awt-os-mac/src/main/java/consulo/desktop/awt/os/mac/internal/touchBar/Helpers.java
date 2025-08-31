@@ -47,10 +47,10 @@ public final class Helpers {
     }
 
     public static boolean isTouchBarServerRunning() {
-        final GeneralCommandLine cmdLine = new GeneralCommandLine("pgrep", TB_SERVER_PROCESS)
+        GeneralCommandLine cmdLine = new GeneralCommandLine("pgrep", TB_SERVER_PROCESS)
             .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.SYSTEM);
         try {
-            final ProcessOutput out = CapturingProcessUtil.execAndGetOutput(cmdLine);
+            ProcessOutput out = CapturingProcessUtil.execAndGetOutput(cmdLine);
             return !out.getStdout().isEmpty();
         }
         catch (ExecutionException e) {
@@ -62,7 +62,7 @@ public final class Helpers {
     // returns true on success
     public static boolean restartTouchBarServer() {
         try {
-            final GeneralCommandLine cmdLine = new GeneralCommandLine("pkill", TB_SERVER_PROCESS)
+            GeneralCommandLine cmdLine = new GeneralCommandLine("pkill", TB_SERVER_PROCESS)
                 .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.SYSTEM)
                 .withSudo("");
 
@@ -86,11 +86,11 @@ public final class Helpers {
         }
 
         String appId;
-        final ID nativePool = Foundation.invoke("NSAutoreleasePool", "new");
+        ID nativePool = Foundation.invoke("NSAutoreleasePool", "new");
         try {
-            final ID bundle = Foundation.invoke("NSBundle", "mainBundle");
-            final ID dict = Foundation.invoke(bundle, "infoDictionary");
-            final ID nsAppID = Foundation.invoke(dict, "objectForKey:", Foundation.nsString("CFBundleIdentifier"));
+            ID bundle = Foundation.invoke("NSBundle", "mainBundle");
+            ID dict = Foundation.invoke(bundle, "infoDictionary");
+            ID nsAppID = Foundation.invoke(dict, "objectForKey:", Foundation.nsString("CFBundleIdentifier"));
             appId = Foundation.toStringViaUTF8(nsAppID);
         }
         finally {
@@ -150,12 +150,12 @@ public final class Helpers {
 
         ourIsPhysicalEsc = false;
 
-        final @Nonnull Application app = ApplicationManager.getApplication();
+        @Nonnull Application app = ApplicationManager.getApplication();
         ourIsPhysicalEscFuture = app.executeOnPooledThread(() -> {
-            final GeneralCommandLine cmdLine = new GeneralCommandLine("system_profiler", TB_SERVER_PROCESS);
+            GeneralCommandLine cmdLine = new GeneralCommandLine("system_profiler", TB_SERVER_PROCESS);
             cmdLine.addParameter("SPHardwareDataType");
             try {
-                final ProcessOutput out =
+                ProcessOutput out =
                     CapturingProcessUtil.execAndGetOutput(cmdLine.withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.SYSTEM));
                 LOG.debug("SPHardwareDataType output:");
                 for (String line : out.getStdoutLines(true)) {
@@ -183,7 +183,7 @@ public final class Helpers {
     //
 
     static @Nullable Component getCurrentFocusComponent() {
-        final KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         Component focusOwner = focusManager.getFocusOwner();
         if (focusOwner == null) {
             focusOwner = focusManager.getPermanentFocusOwner();

@@ -60,7 +60,7 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
     myChangeListManager = ChangeListManagerImpl.getInstanceImpl(myProject);
   }
 
-  private void setItems(final IgnoredFileBean[] filesToIgnore) {
+  private void setItems(IgnoredFileBean[] filesToIgnore) {
     myModel = new DefaultListModel();
     for (IgnoredFileBean bean : filesToIgnore) {
       myModel.addElement(bean);
@@ -69,7 +69,7 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
   }
 
   public IgnoredFileBean[] getItems() {
-    final int count = myList.getModel().getSize();
+    int count = myList.getModel().getSize();
     IgnoredFileBean[] result = new IgnoredFileBean[count];
     for (int i = 0; i < count; i++) {
       result[i] = (IgnoredFileBean)myList.getModel().getElementAt(i);
@@ -81,7 +81,7 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
     IgnoreUnversionedDialog dlg = new IgnoreUnversionedDialog(myProject);
     dlg.show();
     if (dlg.isOK()) {
-      final IgnoredFileBean[] ignoredFiles = dlg.getSelectedIgnoredFiles();
+      IgnoredFileBean[] ignoredFiles = dlg.getSelectedIgnoredFiles();
       for (IgnoredFileBean bean : ignoredFiles) {
         myModel.addElement(bean);
       }
@@ -169,12 +169,12 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
     @Override
     protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
       if (UIUtil.isUnderGTKLookAndFeel()) {
-        final Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
+        Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
         UIUtil.changeBackGround(this, background);
       }
 
       IgnoredFileBean bean = (IgnoredFileBean)value;
-      final String path = bean.getPath();
+      String path = bean.getPath();
       if (path != null) {
         if (path.endsWith("/")) {
           append(VcsLocalize.ignoredConfigureItemDirectory(path).get(), SimpleTextAttributes.REGULAR_ATTRIBUTES);

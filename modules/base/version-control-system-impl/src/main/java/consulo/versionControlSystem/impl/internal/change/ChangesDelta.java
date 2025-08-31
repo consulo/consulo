@@ -27,12 +27,12 @@ public class ChangesDelta {
   private final PlusMinusModify<BaseRevision> myDeltaListener;
   private boolean myInitialized;
 
-  public ChangesDelta(final PlusMinusModify<BaseRevision> deltaListener) {
+  public ChangesDelta(PlusMinusModify<BaseRevision> deltaListener) {
     myDeltaListener = deltaListener;
   }
 
   // true -> something changed
-  public boolean step(final ChangeListsIndexes was, final ChangeListsIndexes became) {
+  public boolean step(ChangeListsIndexes was, ChangeListsIndexes became) {
     List<BaseRevision> wasAffected = was.getAffectedFilesUnderVcs();
     if (!myInitialized) {
       sendPlus(wasAffected);
@@ -40,9 +40,9 @@ public class ChangesDelta {
       return true;  //+-
     }
 
-    final Set<BaseRevision> toRemove = new HashSet<>();
-    final Set<BaseRevision> toAdd = new HashSet<>();
-    final Set<BeforeAfter<BaseRevision>> toModify = new HashSet<>();
+    Set<BaseRevision> toRemove = new HashSet<>();
+    Set<BaseRevision> toAdd = new HashSet<>();
+    Set<BeforeAfter<BaseRevision>> toModify = new HashSet<>();
     was.getDelta(became, toRemove, toAdd, toModify);
 
     for (BaseRevision pair : toRemove) {
@@ -55,7 +55,7 @@ public class ChangesDelta {
     return !toRemove.isEmpty() || !toAdd.isEmpty();
   }
 
-  private void sendPlus(final Collection<BaseRevision> toAdd) {
+  private void sendPlus(Collection<BaseRevision> toAdd) {
     if (toAdd != null) {
       for (BaseRevision pair : toAdd) {
         myDeltaListener.plus(pair);

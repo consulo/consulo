@@ -71,7 +71,7 @@ public class PopupDispatcher implements AWTEventListener, KeyEventDispatcher, Id
     }
 
     WizardPopup eachParent = ourShowingStep;
-    final MouseEvent mouseEvent = (MouseEvent)event;
+    MouseEvent mouseEvent = (MouseEvent)event;
 
     Point point = (Point)mouseEvent.getPoint().clone();
     SwingUtilities.convertPointToScreen(point, mouseEvent.getComponent());
@@ -105,7 +105,7 @@ public class PopupDispatcher implements AWTEventListener, KeyEventDispatcher, Id
   }
 
   @Override
-  public boolean dispatchKeyEvent(final KeyEvent e) {
+  public boolean dispatchKeyEvent(KeyEvent e) {
     if (ourShowingStep == null) {
       return false;
     }

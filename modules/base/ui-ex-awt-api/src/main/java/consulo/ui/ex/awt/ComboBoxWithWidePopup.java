@@ -20,15 +20,15 @@ import javax.swing.*;
 import java.util.Vector;
 
 public class ComboBoxWithWidePopup<E> extends JComboBox<E> {
-    public ComboBoxWithWidePopup(final ComboBoxModel<E> aModel) {
+    public ComboBoxWithWidePopup(ComboBoxModel<E> aModel) {
         super(aModel);
     }
 
-    public ComboBoxWithWidePopup(final E[] items) {
+    public ComboBoxWithWidePopup(E[] items) {
         super(items);
     }
 
-    public ComboBoxWithWidePopup(final Vector<E> items) {
+    public ComboBoxWithWidePopup(Vector<E> items) {
         super(items);
     }
 

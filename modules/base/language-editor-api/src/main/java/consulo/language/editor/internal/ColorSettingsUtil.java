@@ -33,10 +33,10 @@ public class ColorSettingsUtil {
   }
 
   @Nonnull
-  public static Map<TextAttributesKey, LocalizeValue> keyToDisplayTextMap(final ColorSettingsPage page) {
-    final Map<TextAttributesKey, LocalizeValue> displayText = new HashMap<>();
+  public static Map<TextAttributesKey, LocalizeValue> keyToDisplayTextMap(ColorSettingsPage page) {
+    Map<TextAttributesKey, LocalizeValue> displayText = new HashMap<>();
     for (AttributesDescriptor attributeDescriptor : page.getAttributeDescriptors()) {
-      final TextAttributesKey key = attributeDescriptor.getKey();
+      TextAttributesKey key = attributeDescriptor.getKey();
       displayText.put(key, attributeDescriptor.getDisplayName());
     }
     return displayText;

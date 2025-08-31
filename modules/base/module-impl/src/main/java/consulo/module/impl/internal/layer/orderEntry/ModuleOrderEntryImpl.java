@@ -64,7 +64,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
 
   private ModuleOrderEntryImpl(ModuleOrderEntryImpl that, ModuleRootLayerImpl rootLayer) {
     super(ModuleOrderEntryType.getInstance(), rootLayer);
-    final NamedPointer<Module> thatModule = that.myModulePointer;
+    NamedPointer<Module> thatModule = that.myModulePointer;
     myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), thatModule.getName());
     myExported = that.myExported;
     myProductionOnTestDependency = that.myProductionOnTestDependency;
@@ -90,13 +90,13 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   @Override
   @Nonnull
   public VirtualFile[] getFiles(OrderRootType type) {
-    final OrderRootsEnumerator enumerator = getEnumerator(type);
+    OrderRootsEnumerator enumerator = getEnumerator(type);
     return enumerator != null ? enumerator.getRoots() : VirtualFile.EMPTY_ARRAY;
   }
 
   @Nullable
   private OrderRootsEnumerator getEnumerator(OrderRootType type) {
-    final Module module = myModulePointer.get();
+    Module module = myModulePointer.get();
     if (module == null) return null;
 
     return ModuleRootManagerImpl.getCachingEnumeratorForType(type, module);
@@ -105,7 +105,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   @Override
   @Nonnull
   public String[] getUrls(OrderRootType rootType) {
-    final OrderRootsEnumerator enumerator = getEnumerator(rootType);
+    OrderRootsEnumerator enumerator = getEnumerator(rootType);
     return enumerator != null ? enumerator.getUrls() : ArrayUtil.EMPTY_STRING_ARRAY;
   }
 

@@ -143,7 +143,7 @@ public class CloudConfigurationBase<Self extends CloudConfigurationBase<Self>>
     }
 
     public void migrateToPasswordSafe() {
-        final String unsafePassword = getPassword();
+        String unsafePassword = getPassword();
         if (!StringUtil.isEmpty(unsafePassword)) {
             setPasswordSafe(unsafePassword);
         }

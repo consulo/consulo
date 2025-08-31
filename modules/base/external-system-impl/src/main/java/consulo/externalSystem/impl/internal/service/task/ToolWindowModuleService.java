@@ -58,9 +58,9 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
 
   @Override
   protected void processData(
-    @Nonnull final Collection<DataNode<ModuleData>> nodes,
+    @Nonnull Collection<DataNode<ModuleData>> nodes,
     @Nonnull Project project,
-    @Nullable final ExternalSystemTasksTreeModel model
+    @Nullable ExternalSystemTasksTreeModel model
   ) {
     if (nodes.isEmpty()) {
       return;
@@ -69,7 +69,7 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
 
-    final Map<DataNode<ProjectData>, List<DataNode<ModuleData>>> grouped = ExternalSystemApiUtil.groupBy(nodes, ProjectKeys.PROJECT);
+    Map<DataNode<ProjectData>, List<DataNode<ModuleData>>> grouped = ExternalSystemApiUtil.groupBy(nodes, ProjectKeys.PROJECT);
     Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> data = new HashMap<>();
     for (Map.Entry<DataNode<ProjectData>, List<DataNode<ModuleData>>> entry : grouped.entrySet()) {
       data.put(ExternalProjectPojo.from(entry.getKey().getData()), ContainerUtil.map2List(entry.getValue(), MAPPER));

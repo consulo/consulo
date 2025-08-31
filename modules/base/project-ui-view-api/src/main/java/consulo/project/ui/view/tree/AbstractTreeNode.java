@@ -52,7 +52,7 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
 
   @Override
   protected void setForcedForeground(@Nonnull PresentationData presentation) {
-    final FileStatus status = getFileStatus();
+    FileStatus status = getFileStatus();
     ColorValue fgColor = getFileStatusColor(status);
     fgColor = fgColor == null ? status.getColor() : fgColor;
 
@@ -70,9 +70,9 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
     return !myProject.isDisposed() && getEqualityObject() != null;
   }
 
-  public ColorValue getFileStatusColor(final FileStatus status) {
+  public ColorValue getFileStatusColor(FileStatus status) {
     if (FileStatus.NOT_CHANGED.equals(status) && !myProject.isDefault()) {
-      final VirtualFile vf = getVirtualFile();
+      VirtualFile vf = getVirtualFile();
       if (vf != null && vf.isDirectory()) {
         return FileStatusManager.getInstance(myProject).getRecursiveStatus(vf).getColor();
       }

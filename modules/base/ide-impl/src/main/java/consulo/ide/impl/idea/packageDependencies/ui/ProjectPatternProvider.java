@@ -51,16 +51,16 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     private static final Logger LOG = Logger.getInstance(ProjectPatternProvider.class);
 
     @Override
-    public TreeModel createTreeModel(final Project project, final Marker marker) {
+    public TreeModel createTreeModel(Project project, Marker marker) {
         return FileTreeModelBuilder.createTreeModel(project, false, marker);
     }
 
     @Override
     public TreeModel createTreeModel(
-        final Project project,
-        final Set<PsiFile> deps,
-        final Marker marker,
-        final DependenciesPanel.DependencyPanelSettings settings
+        Project project,
+        Set<PsiFile> deps,
+        Marker marker,
+        DependenciesPanel.DependencyPanelSettings settings
     ) {
         return FileTreeModelBuilder.createTreeModel(project, false, deps, marker, settings);
     }
@@ -77,25 +77,25 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    public AnAction[] createActions(Project project, final Runnable update) {
+    public AnAction[] createActions(Project project, Runnable update) {
         return new AnAction[]{new CompactEmptyMiddlePackagesAction(update)};
     }
 
     @Override
     @Nullable
-    public PackageSet createPackageSet(final PackageDependenciesNode node, final boolean recursively) {
+    public PackageSet createPackageSet(PackageDependenciesNode node, boolean recursively) {
         if (node instanceof ModuleGroupNode moduleGroupNode) {
             if (!recursively) {
                 return null;
             }
-            @NonNls final String modulePattern = "group:" + moduleGroupNode.getModuleGroup().toString();
+            @NonNls String modulePattern = "group:" + moduleGroupNode.getModuleGroup().toString();
             return new FilePatternPackageSet(modulePattern, "*//*");
         }
         else if (node instanceof ModuleNode moduleNode) {
             if (!recursively) {
                 return null;
             }
-            final String modulePattern = moduleNode.getModuleName();
+            String modulePattern = moduleNode.getModuleName();
             return new FilePatternPackageSet(modulePattern, "*/");
         }
 
@@ -115,18 +115,18 @@ public class ProjectPatternProvider extends PatternDialectProvider {
             if (recursively) {
                 return null;
             }
-            final PsiFile file = (PsiFile) fNode.getPsiElement();
+            PsiFile file = (PsiFile) fNode.getPsiElement();
             if (file == null) {
                 return null;
             }
-            final VirtualFile virtualFile = file.getVirtualFile();
+            VirtualFile virtualFile = file.getVirtualFile();
             LOG.assertTrue(virtualFile != null);
-            final VirtualFile contentRoot =
+            VirtualFile contentRoot =
                 ProjectRootManager.getInstance(file.getProject()).getFileIndex().getContentRootForFile(virtualFile);
             if (contentRoot == null) {
                 return null;
             }
-            final String fqName = VfsUtilCore.getRelativePath(virtualFile, contentRoot, '/');
+            String fqName = VfsUtilCore.getRelativePath(virtualFile, contentRoot, '/');
             if (fqName != null) {
                 return new FilePatternPackageSet(getModulePattern(node), fqName);
             }

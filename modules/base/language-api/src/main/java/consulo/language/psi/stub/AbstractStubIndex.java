@@ -34,7 +34,7 @@ public abstract class AbstractStubIndex<Key, Psi extends PsiElement> implements 
     return StubIndex.getInstance().processAllKeys(getKey(), project, processor);
   }
 
-  public Collection<Psi> get(Key key, final Project project, final ProjectAwareSearchScope scope) {
+  public Collection<Psi> get(Key key, Project project, ProjectAwareSearchScope scope) {
     return StubIndex.getInstance().get(getKey(), key, project, scope);
   }
 

@@ -34,17 +34,17 @@ public class CommittedChangesTableModel extends ListTableModel<CommittedChangeLi
   private static final ChangeListColumn[] ourDefaultColumns = new ChangeListColumn[] { ChangeListColumn.DATE, ChangeListColumn.NAME };
   private RowSorter.SortKey mySortKey;
 
-  public CommittedChangesTableModel(final List<CommittedChangeList> changeLists, boolean asynchLoad) {
+  public CommittedChangesTableModel(List<CommittedChangeList> changeLists, boolean asynchLoad) {
     super(buildColumnInfos(ourDefaultColumns), changeLists, 0);
     myAsynchLoad = asynchLoad;
   }
 
-  public CommittedChangesTableModel(final List<CommittedChangeList> changeLists, final ChangeListColumn[] columns, boolean asynchLoad) {
+  public CommittedChangesTableModel(List<CommittedChangeList> changeLists, ChangeListColumn[] columns, boolean asynchLoad) {
     super(buildColumnInfos(columns), changeLists, 0);
     myAsynchLoad = asynchLoad;
   }
 
-  protected void setSortKey(final RowSorter.SortKey sortKey) {
+  protected void setSortKey(RowSorter.SortKey sortKey) {
     mySortKey = sortKey;
   }
 
@@ -53,7 +53,7 @@ public class CommittedChangesTableModel extends ListTableModel<CommittedChangeLi
     return mySortKey;
   }
 
-  private static ColumnInfo[] buildColumnInfos(final ChangeListColumn[] columns) {
+  private static ColumnInfo[] buildColumnInfos(ChangeListColumn[] columns) {
     ColumnInfo[] result = new ColumnInfo[columns.length];
     for(int i=0; i<columns.length; i++) {
       result [i] = new ColumnInfoAdapter(columns [i]);
@@ -69,7 +69,7 @@ public class CommittedChangesTableModel extends ListTableModel<CommittedChangeLi
       myColumn = column;
     }
 
-    public Object valueOf(final Object o) {
+    public Object valueOf(Object o) {
       //noinspection unchecked
       return myColumn.getValue((ChangeList)o);
     }

@@ -41,15 +41,15 @@ public class Centerizer extends JPanel {
 
   @Override
   public void doLayout() {
-    final Component c = getComponent();
+    Component c = getComponent();
     if (c == null) return;
 
-    final Dimension compSize = c.getPreferredSize();
+    Dimension compSize = c.getPreferredSize();
 
-    final Dimension size = getSize();
+    Dimension size = getSize();
 
-    final Couple<Integer> x = (type == TYPE.BOTH || type == TYPE.HORIZONTAL) ? getFit(compSize.width, size.width) : Couple.of(0, compSize.width);
-    final Couple<Integer> y = (type == TYPE.BOTH || type == TYPE.VERTICAL) ? getFit(compSize.height, size.height) : Couple.of(0, compSize.height);
+    Couple<Integer> x = (type == TYPE.BOTH || type == TYPE.HORIZONTAL) ? getFit(compSize.width, size.width) : Couple.of(0, compSize.width);
+    Couple<Integer> y = (type == TYPE.BOTH || type == TYPE.VERTICAL) ? getFit(compSize.height, size.height) : Couple.of(0, compSize.height);
 
     c.setBounds(x.first.intValue(), y.first.intValue(), x.second.intValue(), y.second.intValue());
   }
@@ -59,7 +59,7 @@ public class Centerizer extends JPanel {
       return Couple.of(0, compSize);
     }
     else {
-      final int position = containerSize / 2 - compSize / 2;
+      int position = containerSize / 2 - compSize / 2;
       return Couple.of(position, compSize);
     }
   }

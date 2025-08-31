@@ -36,7 +36,7 @@ public class BracePair {
    * @param rightBrace     the lexer token type for the right brace in the pair.
    * @param structural     if true, the brace is considered structural (see {@link #isStructural()} for details)
    */
-  public BracePair(final IElementType leftBrace, final IElementType rightBrace, final boolean structural) {
+  public BracePair(IElementType leftBrace, IElementType rightBrace, boolean structural) {
     myLeftBrace = leftBrace;
     myRightBrace = rightBrace;
     myStructural = structural;

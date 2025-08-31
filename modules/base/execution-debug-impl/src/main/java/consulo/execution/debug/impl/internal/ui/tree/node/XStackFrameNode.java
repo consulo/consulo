@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class XStackFrameNode extends XValueContainerNode<XStackFrame> {
-  public XStackFrameNode(final @Nonnull XDebuggerTree tree, final @Nonnull XStackFrame xStackFrame) {
+  public XStackFrameNode(@Nonnull XDebuggerTree tree, @Nonnull XStackFrame xStackFrame) {
     super(tree, null, xStackFrame);
     setLeaf(false);
   }

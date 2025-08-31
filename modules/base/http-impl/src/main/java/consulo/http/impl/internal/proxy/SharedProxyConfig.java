@@ -61,8 +61,8 @@ public class SharedProxyConfig {
     @Nullable
     public static ProxyParameters load() {
         try {
-            final Properties props = ourEncryptionSupport.load(CONFIG_FILE);
-            final String password = props.getProperty(PASSWORD, "");
+            Properties props = ourEncryptionSupport.load(CONFIG_FILE);
+            String password = props.getProperty(PASSWORD, "");
             return new ProxyParameters(
                 props.getProperty(HOST, null),
                 Integer.parseInt(props.getProperty(PORT, "0")),
@@ -78,7 +78,7 @@ public class SharedProxyConfig {
     public static boolean store(@Nonnull ProxyParameters params) {
         if (params.host != null) {
             try {
-                final Properties props = new Properties();
+                Properties props = new Properties();
                 props.setProperty(HOST, params.host);
                 props.setProperty(PORT, String.valueOf(params.port));
                 if (params.login != null) {

@@ -26,8 +26,8 @@ import consulo.util.lang.StringUtil;
  * @author msk
  */
 public abstract class HighlightHandlerBase {
-  static void setupFindModel(final Project project) {
-    final FindManager findManager = FindManager.getInstance(project);
+  static void setupFindModel(Project project) {
+    FindManager findManager = FindManager.getInstance(project);
     FindModel model = findManager.getFindNextModel();
     if (model == null) {
       model = findManager.getFindInFileModel();
@@ -38,7 +38,7 @@ public abstract class HighlightHandlerBase {
   }
 
   public static String getLineTextErrorStripeTooltip(Document document, int offset, boolean escape) {
-    final int lineNumber = document.getLineNumber(offset);
+    int lineNumber = document.getLineNumber(offset);
     int lineStartOffset = document.getLineStartOffset(lineNumber);
     int lineEndOffset = document.getLineEndOffset(lineNumber);
     int lineFragmentEndOffset = Math.min(lineStartOffset + 140, lineEndOffset);

@@ -31,7 +31,7 @@ public class ExportToHTMLDialog extends DialogWrapper{
   protected TextFieldWithBrowseButton myTargetDirectoryField;
   protected final boolean myCanBeOpenInBrowser;
 
-  public ExportToHTMLDialog(Project project, final boolean canBeOpenInBrowser) {
+  public ExportToHTMLDialog(Project project, boolean canBeOpenInBrowser) {
     super(project, true);
     myProject = project;
     myCanBeOpenInBrowser = canBeOpenInBrowser;

@@ -43,7 +43,7 @@ public class RemoteStatusChangeNodeDecorator implements ChangeNodeDecorator {
 
   @Override
   public void decorate(Change change, SimpleColoredComponent component, boolean isShowFlatten) {
-    final boolean state = myRemoteRevisionsCache.isUpToDate(change);
+    boolean state = myRemoteRevisionsCache.isUpToDate(change);
     if (myListState != null) myListState.report(myIdx, state);
     if (!state) {
       component.append(" ");

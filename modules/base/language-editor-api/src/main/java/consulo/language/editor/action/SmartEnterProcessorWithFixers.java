@@ -34,7 +34,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
   private final List<Fixer<? extends SmartEnterProcessorWithFixers>> myFixers = new ArrayList<Fixer<? extends SmartEnterProcessorWithFixers>>();
   private final List<FixEnterProcessor> myEnterProcessors = new ArrayList<FixEnterProcessor>();
 
-  protected static void plainEnter(@Nonnull final Editor editor) {
+  protected static void plainEnter(@Nonnull Editor editor) {
     getEnterHandler().execute(editor, ((EditorEx)editor).getDataContext());
   }
 
@@ -42,8 +42,8 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
     return EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_START_NEW_LINE);
   }
 
-  protected static boolean isModified(@Nonnull final Editor editor) {
-    final Long timestamp = editor.getUserData(SMART_ENTER_TIMESTAMP);
+  protected static boolean isModified(@Nonnull Editor editor) {
+    Long timestamp = editor.getUserData(SMART_ENTER_TIMESTAMP);
     assert timestamp != null;
     return editor.getDocument().getModificationStamp() != timestamp.longValue();
   }
@@ -53,9 +53,9 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
   }
 
   @Override
-  public boolean process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile psiFile) {
-    final Document document = editor.getDocument();
-    final String textForRollback = document.getText();
+  public boolean process(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
+    Document document = editor.getDocument();
+    String textForRollback = document.getText();
     try {
       editor.putUserData(SMART_ENTER_TIMESTAMP, editor.getDocument().getModificationStamp());
       myFirstErrorOffset = Integer.MAX_VALUE;
@@ -70,7 +70,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
     return true;
   }
 
-  protected void process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file, final int attempt)
+  protected void process(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, int attempt)
     throws TooManyAttemptsException {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.complete.statement");
     if (attempt > MAX_ATTEMPTS) throw new TooManyAttemptsException();

@@ -33,13 +33,13 @@ public class PsiFileUrl extends AbstractUrl {
   @NonNls
   private static final String ELEMENT_TYPE = "psiFile";
 
-  public PsiFileUrl(final String url) {
+  public PsiFileUrl(String url) {
     super(url, null, ELEMENT_TYPE);
   }
 
   @Override
-  public Object[] createPath(final Project project) {
-    final VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(url);
+  public Object[] createPath(Project project) {
+    VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(url);
     if (file == null || !file.isValid()){
       return null;
     }

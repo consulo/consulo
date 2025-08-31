@@ -43,7 +43,7 @@ public class IgnoredFilesComponent {
   private final Lock myWriteLock = myLock.writeLock();
   private final Project myProject;
 
-  public IgnoredFilesComponent(@Nonnull Project project, final boolean registerListener) {
+  public IgnoredFilesComponent(@Nonnull Project project, boolean registerListener) {
     myProject = project;
     myFilesToIgnore = new LinkedHashSet<>();
     myFilesMap = new HashMap<>();
@@ -72,7 +72,7 @@ public class IgnoredFilesComponent {
     myDirectoriesManuallyRemovedFromIgnored = new HashSet<>(other.myDirectoriesManuallyRemovedFromIgnored);
   }
 
-  public void add(final IgnoredFileBean... filesToIgnore) {
+  public void add(IgnoredFileBean... filesToIgnore) {
     myWriteLock.lock();
     try {
       Collections.addAll(myFilesToIgnore, filesToIgnore);
@@ -121,8 +121,8 @@ public class IgnoredFilesComponent {
   private void addIgnoredFiles(@Nonnull IgnoredFileBean[] filesToIgnore) {
     for (IgnoredFileBean bean : filesToIgnore) {
       if (IgnoreSettingsType.FILE.equals(bean.getType())) {
-        final Project project = bean.getProject();
-        final VirtualFile baseDir = project.getBaseDir();
+        Project project = bean.getProject();
+        VirtualFile baseDir = project.getBaseDir();
         if (baseDir != null) {
           // if baseDir == null, then nothing will be added to map, but check will still be correct through set
           myFilesMap.put(FilePathsHelper.convertPath(baseDir.getPath(), bean.getPath()), bean);
@@ -152,7 +152,7 @@ public class IgnoredFilesComponent {
     }
   }
 
-  public void set(final IgnoredFileBean... filesToIgnore) {
+  public void set(IgnoredFileBean... filesToIgnore) {
     myWriteLock.lock();
     try {
       myFilesToIgnore.clear();
@@ -193,8 +193,8 @@ public class IgnoredFilesComponent {
     try {
       if (myFilesToIgnore.isEmpty()) return false;
 
-      final String path = FilePathsHelper.convertPath(filePath);
-      final IgnoredFileBean fileBean = myFilesMap.get(path);
+      String path = FilePathsHelper.convertPath(filePath);
+      IgnoredFileBean fileBean = myFilesMap.get(path);
 
       VirtualFile file = filePath.getVirtualFile();
       if (file == null) {

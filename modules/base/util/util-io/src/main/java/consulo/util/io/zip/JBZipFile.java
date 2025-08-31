@@ -175,7 +175,7 @@ public class JBZipFile {
   public void close() throws IOException {
     if (myOutputStream != null) {
       if (entries.isEmpty()) {
-        final JBZipEntry empty = getOrCreateEntry("/empty.file.marker");
+        JBZipEntry empty = getOrCreateEntry("/empty.file.marker");
         myOutputStream.putNextEntryBytes(empty, "empty".getBytes());
       }
       
@@ -250,30 +250,30 @@ public class JBZipFile {
     byte[] signatureBytes = new byte[WORD];
     archive.readFully(signatureBytes);
     long sig = ZipLong.getValue(signatureBytes);
-    final long cfhSig = ZipLong.getValue(JBZipOutputStream.CFH_SIG);
+    long cfhSig = ZipLong.getValue(JBZipOutputStream.CFH_SIG);
     while (sig == cfhSig) {
       archive.readFully(cfh);
       int off = 0;
 
       int versionMadeBy = ZipShort.getValue(cfh, off);
       off += SHORT;
-      final int platform = (versionMadeBy >> BYTE_SHIFT) & NIBLET_MASK;
+      int platform = (versionMadeBy >> BYTE_SHIFT) & NIBLET_MASK;
 
       off += WORD; // skip version info and general purpose byte
 
-      final int method = ZipShort.getValue(cfh, off);
+      int method = ZipShort.getValue(cfh, off);
       off += SHORT;
 
       long time = DosTime.dosToJavaTime(ZipLong.getValue(cfh, off));
       off += WORD;
 
-      final long crc = ZipLong.getValue(cfh, off);
+      long crc = ZipLong.getValue(cfh, off);
       off += WORD;
 
-      final long compressedSize = ZipLong.getValue(cfh, off);
+      long compressedSize = ZipLong.getValue(cfh, off);
       off += WORD;
 
-      final long uncompressedSize = ZipLong.getValue(cfh, off);
+      long uncompressedSize = ZipLong.getValue(cfh, off);
       off += WORD;
 
       int fileNameLen = ZipShort.getValue(cfh, off);
@@ -287,10 +287,10 @@ public class JBZipFile {
 
       off += SHORT; // disk number
 
-      final int internalAttributes = ZipShort.getValue(cfh, off);
+      int internalAttributes = ZipShort.getValue(cfh, off);
       off += SHORT;
 
-      final long externalAttributes = ZipLong.getValue(cfh, off);
+      long externalAttributes = ZipLong.getValue(cfh, off);
       off += WORD;
 
       long localHeaderOffset = ZipLong.getValue(cfh, off);

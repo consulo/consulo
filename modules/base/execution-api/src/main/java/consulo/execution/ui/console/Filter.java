@@ -45,25 +45,25 @@ public interface Filter {
     private NextAction myNextAction = NextAction.EXIT;
     private final List<? extends ResultItem> myResultItems;
 
-    public Result(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo) {
+    public Result(int highlightStartOffset, int highlightEndOffset, @Nullable HyperlinkInfo hyperlinkInfo) {
       this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, null);
     }
 
-    public Result(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo, @Nullable final TextAttributes highlightAttributes) {
+    public Result(int highlightStartOffset, int highlightEndOffset, @Nullable HyperlinkInfo hyperlinkInfo, @Nullable TextAttributes highlightAttributes) {
       super(highlightStartOffset, highlightEndOffset, hyperlinkInfo, highlightAttributes, null);
       myResultItems = null;
     }
 
-    public Result(final int highlightStartOffset,
-                  final int highlightEndOffset,
-                  @Nullable final HyperlinkInfo hyperlinkInfo,
-                  @Nullable final TextAttributes highlightAttributes,
-                  @Nullable final TextAttributes followedHyperlinkAttributes) {
+    public Result(int highlightStartOffset,
+                  int highlightEndOffset,
+                  @Nullable HyperlinkInfo hyperlinkInfo,
+                  @Nullable TextAttributes highlightAttributes,
+                  @Nullable TextAttributes followedHyperlinkAttributes) {
       super(highlightStartOffset, highlightEndOffset, hyperlinkInfo, highlightAttributes, followedHyperlinkAttributes);
       myResultItems = null;
     }
 
-    public Result(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo, final boolean grayedHyperlink) {
+    public Result(int highlightStartOffset, int highlightEndOffset, @Nullable HyperlinkInfo hyperlinkInfo, boolean grayedHyperlink) {
       super(highlightStartOffset, highlightEndOffset, hyperlinkInfo, grayedHyperlink);
       myResultItems = null;
     }
@@ -179,11 +179,11 @@ public interface Filter {
 
     private final TextAttributes myFollowedHyperlinkAttributes;
 
-    public ResultItem(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo) {
+    public ResultItem(int highlightStartOffset, int highlightEndOffset, @Nullable HyperlinkInfo hyperlinkInfo) {
       this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, null, null);
     }
 
-    public ResultItem(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo, @Nullable final TextAttributes highlightAttributes) {
+    public ResultItem(int highlightStartOffset, int highlightEndOffset, @Nullable HyperlinkInfo hyperlinkInfo, @Nullable TextAttributes highlightAttributes) {
       this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, highlightAttributes, null);
     }
 
@@ -192,11 +192,11 @@ public interface Filter {
            grayedHyperlink ? getGrayedHyperlinkAttributes(CodeInsightColors.FOLLOWED_HYPERLINK_ATTRIBUTES) : null);
     }
 
-    public ResultItem(final int highlightStartOffset,
-                      final int highlightEndOffset,
-                      @Nullable final HyperlinkInfo hyperlinkInfo,
-                      @Nullable final TextAttributes highlightAttributes,
-                      @Nullable final TextAttributes followedHyperlinkAttributes) {
+    public ResultItem(int highlightStartOffset,
+                      int highlightEndOffset,
+                      @Nullable HyperlinkInfo hyperlinkInfo,
+                      @Nullable TextAttributes highlightAttributes,
+                      @Nullable TextAttributes followedHyperlinkAttributes) {
       this.highlightStartOffset = highlightStartOffset;
       this.highlightEndOffset = highlightEndOffset;
       this.hyperlinkInfo = hyperlinkInfo;

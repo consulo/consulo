@@ -128,7 +128,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   }
 
   private void storeBTreeVars(boolean toDisk) {
-    final IntToIntBtree tree = myBTree;
+    IntToIntBtree tree = myBTree;
     if (tree != null) {
       final int BTREE_DATA_START = DATA_START + 36;
       tree.persistVars(new IntToIntBtree.BtreeDataStorage() {
@@ -168,7 +168,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
       super.doClose();
     }
     finally {
-      final IntToIntBtree tree = myBTree;
+      IntToIntBtree tree = myBTree;
       if (tree != null) {
         tree.doClose();
       }
@@ -186,7 +186,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
     if (myInlineKeysNoMapping) {
       return traverseAllRecords(new RecordsProcessor() {
         @Override
-        public boolean process(final int record) {
+        public boolean process(int record) {
           if (filter == null || filter.accept(record)) {
             Data data = ((InlineKeyDescriptor<Data>)myDataDescriptor).fromInt(getCurrentKey());
             return processor.test(data);
@@ -252,11 +252,11 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   @Override
   protected int setupValueId(int hashCode, int dataOff) {
     if (myExternalKeysNoMapping) return addrToIndex(dataOff);
-    final PersistentEnumeratorBase.RecordBufferHandler<PersistentEnumeratorBase> recordHandler = getRecordHandler();
-    final byte[] buf = recordHandler.getRecordBuffer(this);
+    PersistentEnumeratorBase.RecordBufferHandler<PersistentEnumeratorBase> recordHandler = getRecordHandler();
+    byte[] buf = recordHandler.getRecordBuffer(this);
 
     // optimization for using putInt / getInt on aligned empty storage (our page always contains on storage ByteBuffer)
-    final int pos = recordHandler.recordWriteOffset(this, buf);
+    int pos = recordHandler.recordWriteOffset(this, buf);
     myStorage.ensureSize(pos + buf.length);
 
     if (!myInlineKeysNoMapping) myStorage.putInt(pos, dataOff);
@@ -283,7 +283,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
     assert myInlineKeysNoMapping;
     try {
       lockStorage();
-      final boolean hasMapping = myBTree.get(((InlineKeyDescriptor<Data>)myDataDescriptor).toInt(key), myResultBuf);
+      boolean hasMapping = myBTree.get(((InlineKeyDescriptor<Data>)myDataDescriptor).toInt(key), myResultBuf);
       if (!hasMapping) {
         return NULL_ID;
       }
@@ -358,18 +358,18 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   }
 
   @Override
-  protected synchronized int enumerateImpl(final Data value, final boolean onlyCheckForExisting, boolean saveNewValue) throws IOException {
+  protected synchronized int enumerateImpl(Data value, boolean onlyCheckForExisting, boolean saveNewValue) throws IOException {
     try {
       lockStorage();
       if (IntToIntBtree.doDump) System.out.println(value);
-      final int valueHC = myDataDescriptor.hashCode(value);
+      int valueHC = myDataDescriptor.hashCode(value);
 
-      final boolean hasMapping = myBTree.get(valueHC, myResultBuf);
+      boolean hasMapping = myBTree.get(valueHC, myResultBuf);
       if (!hasMapping && onlyCheckForExisting) {
         return NULL_ID;
       }
 
-      final int indexNodeValueAddress = hasMapping ? myResultBuf[0] : 0;
+      int indexNodeValueAddress = hasMapping ? myResultBuf[0] : 0;
       int collisionAddress = NULL_ID;
       boolean hasExistingData = false;
 
@@ -390,7 +390,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
           collisionAddress = -indexNodeValueAddress;
 
           while (true) {
-            final int address = myStorage.getInt(collisionAddress);
+            int address = myStorage.getInt(collisionAddress);
             if (isKeyAtIndex(value, address)) {
               if (!saveNewValue) return address;
               hasExistingData = true;

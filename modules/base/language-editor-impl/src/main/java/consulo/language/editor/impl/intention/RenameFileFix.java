@@ -67,8 +67,8 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
 
     @Override
     @RequiredUIAccess
-    public void applyFix(@Nonnull final Project project, @Nonnull ProblemDescriptor descriptor) {
-        final PsiFile file = descriptor.getPsiElement().getContainingFile();
+    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        PsiFile file = descriptor.getPsiElement().getContainingFile();
         if (isAvailable(project, null, file)) {
             CommandProcessor.getInstance().newCommand()
                 .project(project)
@@ -86,11 +86,11 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
         if (vFile == null) {
             return false;
         }
-        final VirtualFile parent = vFile.getParent();
+        VirtualFile parent = vFile.getParent();
         if (parent == null) {
             return false;
         }
-        final VirtualFile newVFile = parent.findChild(myNewFileName);
+        VirtualFile newVFile = parent.findChild(myNewFileName);
         return newVFile == null || newVFile.equals(vFile);
     }
 

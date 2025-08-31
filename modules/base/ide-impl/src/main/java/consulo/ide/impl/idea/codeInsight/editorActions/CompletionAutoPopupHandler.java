@@ -28,7 +28,7 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
 
   @Nonnull
   @Override
-  public Result checkAutoPopup(char charTyped, @Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
+  public Result checkAutoPopup(char charTyped, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
 
     if (LOG.isDebugEnabled()) {

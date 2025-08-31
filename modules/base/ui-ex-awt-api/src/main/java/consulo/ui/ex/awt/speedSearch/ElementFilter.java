@@ -17,7 +17,7 @@ public interface ElementFilter<T> {
 
   interface Active<T> extends ElementFilter<T> {
     @Nonnull
-    Promise<?> fireUpdate(@Nullable final T preferredSelection, final boolean adjustSelection, final boolean now);
+    Promise<?> fireUpdate(@Nullable T preferredSelection, boolean adjustSelection, boolean now);
 
     void addListener(Listener<T> listener, Disposable parent);
 
@@ -31,7 +31,7 @@ public interface ElementFilter<T> {
       }
 
       @Override
-      public void addListener(final Listener<T> listener, final Disposable parent) {
+      public void addListener(final Listener<T> listener, Disposable parent) {
         myListeners.add(listener);
         Disposer.register(parent, new Disposable() {
           @Override
@@ -45,6 +45,6 @@ public interface ElementFilter<T> {
 
   interface Listener<T> {
     @Nonnull
-    Promise<Void> update(@Nullable final T preferredSelection, final boolean adjustSelection, final boolean now);
+    Promise<Void> update(@Nullable T preferredSelection, boolean adjustSelection, boolean now);
   }
 }

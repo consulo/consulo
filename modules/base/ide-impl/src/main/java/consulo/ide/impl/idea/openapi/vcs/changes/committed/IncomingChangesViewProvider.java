@@ -52,7 +52,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
   private MessageBusConnection myConnection;
   private Consumer<List<CommittedChangeList>> myListConsumer;
 
-  public IncomingChangesViewProvider(final Project project) {
+  public IncomingChangesViewProvider(Project project) {
     myProject = project;
     myBus = project.getMessageBus();
     myListConsumer = lists -> UIUtil.invokeLaterIfNeeded(new Runnable() {
@@ -68,7 +68,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
     myBrowser = new CommittedChangesTreeBrowser(myProject, Collections.<CommittedChangeList>emptyList());
     myBrowser.getEmptyText().setText(VcsLocalize.incomingChangesNotLoadedMessage());
     ActionGroup group = (ActionGroup) ActionManager.getInstance().getAction("IncomingChangesToolbar");
-    final ActionToolbar toolbar = myBrowser.createGroupFilterToolbar(myProject, group, null, Collections.<AnAction>emptyList());
+    ActionToolbar toolbar = myBrowser.createGroupFilterToolbar(myProject, group, null, Collections.<AnAction>emptyList());
     myBrowser.setToolBar(toolbar.getComponent());
     myBrowser.setTableContextMenu(group, Collections.<AnAction>emptyList());
     myConnection = myBus.connect();
@@ -97,11 +97,11 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
     });
   }
 
-  private void loadChangesToBrowser(final boolean inBackground, final boolean refresh) {
-    final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
+  private void loadChangesToBrowser(boolean inBackground, boolean refresh) {
+    CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
     cache.hasCachesForAnyRoot(notEmpty -> {
       if (Boolean.TRUE.equals(notEmpty)) {
-        final List<CommittedChangeList> list = cache.getCachedIncomingChanges();
+        List<CommittedChangeList> list = cache.getCachedIncomingChanges();
         if (list != null) {
           myBrowser.getEmptyText().setText(VcsLocalize.incomingChangesEmptyMessage());
           myBrowser.setItems(list, CommittedChangesBrowserUseCase.INCOMING);
@@ -116,11 +116,11 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
   }
 
   private class MyCommittedChangesListener extends CommittedChangesAdapter {
-    public void changesLoaded(final RepositoryLocation location, final List<CommittedChangeList> changes) {
+    public void changesLoaded(RepositoryLocation location, List<CommittedChangeList> changes) {
       updateModel(true, true);
     }
 
-    public void incomingChangesUpdated(final List<CommittedChangeList> receivedChanges) {
+    public void incomingChangesUpdated(List<CommittedChangeList> receivedChanges) {
       updateModel(true, true);                                                              
     }
 
@@ -135,7 +135,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
       myBrowser.setItems(Collections.<CommittedChangeList>emptyList(), CommittedChangesBrowserUseCase.INCOMING);
     }
 
-    public void refreshErrorStatusChanged(@Nullable final VcsException lastError) {
+    public void refreshErrorStatusChanged(@Nullable VcsException lastError) {
       if (lastError != null) {
         VcsBalloonProblemNotifier.showOverChangesView(myProject, lastError.getMessage(), NotificationType.ERROR);
       }

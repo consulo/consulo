@@ -95,12 +95,12 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
           }
         }
 
-        final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
+        ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
         try {
           for (DataNode<ModuleDependencyData> dependencyNode : toImport) {
-            final ModuleDependencyData dependencyData = dependencyNode.getData();
+            ModuleDependencyData dependencyData = dependencyNode.getData();
             toRemove.remove(Pair.create(dependencyData.getInternalName(), dependencyData.getScope()));
-            final String moduleName = dependencyData.getInternalName();
+            String moduleName = dependencyData.getInternalName();
             Module ideDependencyModule = ProjectStructureHelper.findIdeModule(moduleName, module.getProject());
             if (ideDependencyModule == null) {
               DataNode<ProjectData> projectNode = dependencyNode.getDataNode(ProjectKeys.PROJECT);

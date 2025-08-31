@@ -50,7 +50,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
     myDocumentColumn = documentColumn;
   }
 
-  public FileHyperlinkInfoBase(@Nonnull Project project, final int line) {
+  public FileHyperlinkInfoBase(@Nonnull Project project, int line) {
     this(project, line, 0);
   }
 
@@ -88,7 +88,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
 
   @RequiredUIAccess
   @Override
-  public void navigate(final Project project) {
+  public void navigate(Project project) {
     Application.get().runReadAction(() -> {
       OpenFileDescriptor descriptor = getDescriptor();
       if (descriptor != null) {
@@ -110,7 +110,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
    * @param documentColumn zero-based column of the document
    * @return calculated offset or UNDEFINED_OFFSET if it's impossible to calculate
    */
-  private static int calculateOffset(@Nonnull final VirtualFile file, final int documentLine, final int documentColumn) {
+  private static int calculateOffset(@Nonnull VirtualFile file, int documentLine, int documentColumn) {
     return Application.get().runReadAction((Supplier<Integer>)() -> {
       Document document = FileDocumentManager.getInstance().getDocument(file);
       if (document != null) {

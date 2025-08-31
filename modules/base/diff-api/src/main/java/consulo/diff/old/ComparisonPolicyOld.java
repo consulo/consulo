@@ -33,7 +33,7 @@ public abstract class ComparisonPolicyOld {
 
   private final String myName;
 
-  protected ComparisonPolicyOld(final String name) {
+  protected ComparisonPolicyOld(String name) {
     myName = name;
   }
 

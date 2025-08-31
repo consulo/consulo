@@ -47,7 +47,7 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
     private final WindowInfoImpl myInfo;
     private final Comparator<ToolWindowStripeButton> myComparator;
 
-    public AddToolStripeButtonCmd(final ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
+    public AddToolStripeButtonCmd(ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
       myButton = button;
       myInfo = info;
       myComparator = comparator;
@@ -55,7 +55,7 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
 
     @Override
     public final void run() {
-      final ToolWindowAnchor anchor = myInfo.getAnchor();
+      ToolWindowAnchor anchor = myInfo.getAnchor();
       if (ToolWindowAnchor.TOP == anchor) {
         myTopStripe.addButton(myButton, myComparator);
       }
@@ -115,7 +115,7 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public AddDockedComponentCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, final boolean dirtyMode) {
+    public AddDockedComponentCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
       myDecorator = decorator;
       myInfo = info;
       myDirtyMode = dirtyMode;
@@ -123,7 +123,7 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
 
     @Override
     public final void run() {
-      final ToolWindowAnchor anchor = myInfo.getAnchor();
+      ToolWindowAnchor anchor = myInfo.getAnchor();
 
       setComponent(myDecorator, anchor, WindowInfoImpl.normalizeWeigh(myInfo.getWeight()));
     }
@@ -133,7 +133,7 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, final boolean dirtyMode) {
+    public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, boolean dirtyMode) {
       myInfo = info;
       myDirtyMode = dirtyMode;
     }
@@ -180,7 +180,7 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
     return myRoot;
   }
 
-  private void setComponent(@Nullable ToolWindowInternalDecorator d, @Nonnull ToolWindowAnchor anchor, final float weight) {
+  private void setComponent(@Nullable ToolWindowInternalDecorator d, @Nonnull ToolWindowAnchor anchor, float weight) {
     DesktopSwtToolWindowInternalDecorator decorator = (DesktopSwtToolWindowInternalDecorator)d;
 
     consulo.ui.Component component = decorator == null ? null : decorator.getComponent();
@@ -211,14 +211,14 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
   }
 
   @Nullable
-  private DesktopSwtToolWindowStripeButtonImpl getButtonById(final String id) {
+  private DesktopSwtToolWindowStripeButtonImpl getButtonById(String id) {
     return myId2Button.get(id);
   }
 
   @RequiredUIAccess
   @Override
   public void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
-    final WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
+    WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
     myId2Button.put(copiedInfo.getId(), (DesktopSwtToolWindowStripeButtonImpl)button);
     new AddToolStripeButtonCmd(button, copiedInfo, comparator).run();
   }
@@ -233,8 +233,8 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
   @RequiredUIAccess
   @Override
   public void removeDecorator(@Nonnull String id, boolean dirtyMode) {
-    final ToolWindowInternalDecorator decorator = getDecoratorById(id);
-    final WindowInfoImpl info = getDecoratorInfoById(id);
+    ToolWindowInternalDecorator decorator = getDecoratorById(id);
+    WindowInfoImpl info = getDecoratorInfoById(id);
 
     myDecorator2Info.remove(decorator);
     myId2Decorator.remove(id);
@@ -258,19 +258,19 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
     }
   }
 
-  private WindowInfoImpl getDecoratorInfoById(final String id) {
+  private WindowInfoImpl getDecoratorInfoById(String id) {
     return myDecorator2Info.get(myId2Decorator.get(id));
   }
 
-  private ToolWindowInternalDecorator getDecoratorById(final String id) {
+  private ToolWindowInternalDecorator getDecoratorById(String id) {
     return myId2Decorator.get(id);
   }
 
   @RequiredUIAccess
   @Override
   public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode) {
-    final WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
-    final String id = copiedInfo.getId();
+    WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
+    String id = copiedInfo.getId();
 
     myDecorator2Info.put(decorator, copiedInfo);
     myId2Decorator.put(id, decorator);

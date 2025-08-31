@@ -100,7 +100,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         myActionManager = actionManager;
 
         myWindowWatcher = new DesktopWindowWatcher(application, dataManager);
-        final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         keyboardFocusManager.addPropertyChangeListener("focusedWindow", myWindowWatcher);
         myLayout = new ToolWindowLayout();
         myProject2Frame = new HashMap<>();
@@ -147,7 +147,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     @Override
     @Nonnull
     public DesktopIdeFrameImpl[] getAllProjectFrames() {
-        final Collection<DesktopIdeFrameImpl> ideFrames = myProject2Frame.values();
+        Collection<DesktopIdeFrameImpl> ideFrames = myProject2Frame.values();
         return ideFrames.toArray(new DesktopIdeFrameImpl[ideFrames.size()]);
     }
 
@@ -167,12 +167,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public void addListener(final WindowManagerListener listener) {
+    public void addListener(WindowManagerListener listener) {
         myEventDispatcher.addListener(listener);
     }
 
     @Override
-    public void removeListener(final WindowManagerListener listener) {
+    public void removeListener(WindowManagerListener listener) {
         myEventDispatcher.removeListener(listener);
     }
 
@@ -183,11 +183,11 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     @Override
     public Rectangle getScreenBounds(@Nonnull Project project) {
-        final GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final Point onScreen = getFrame(project).getLocationOnScreen();
-        final GraphicsDevice[] devices = environment.getScreenDevices();
-        for (final GraphicsDevice device : devices) {
-            final Rectangle bounds = device.getDefaultConfiguration().getBounds();
+        GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point onScreen = getFrame(project).getLocationOnScreen();
+        GraphicsDevice[] devices = environment.getScreenDevices();
+        for (GraphicsDevice device : devices) {
+            Rectangle bounds = device.getDefaultConfiguration().getBounds();
             if (bounds.contains(onScreen)) {
                 return bounds;
             }
@@ -197,12 +197,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final boolean isInsideScreenBounds(final int x, final int y, final int width) {
+    public final boolean isInsideScreenBounds(int x, int y, int width) {
         return ScreenUtil.getAllScreensShape().contains(x, y, width, 1);
     }
 
     @Override
-    public final boolean isInsideScreenBounds(final int x, final int y) {
+    public final boolean isInsideScreenBounds(int x, int y) {
         return ScreenUtil.getAllScreensShape().contains(x, y);
     }
 
@@ -238,7 +238,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final void setAlphaModeRatio(final Window window, final float ratio) {
+    public final void setAlphaModeRatio(Window window, float ratio) {
         if (!window.isDisplayable() || !window.isShowing()) {
             throw new IllegalArgumentException("window must be displayable and showing. window=" + window);
         }
@@ -278,7 +278,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public void setWindowMask(final Window window, @Nullable final Shape mask) {
+    public void setWindowMask(Window window, @Nullable Shape mask) {
         try {
             if (isPerPixelTransparencySupported()) {
                 window.setShape(mask);
@@ -302,7 +302,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public void resetWindow(final Window window) {
+    public void resetWindow(Window window) {
         try {
             if (!isAlphaModeSupported()) {
                 return;
@@ -318,7 +318,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final boolean isAlphaModeEnabled(final Window window) {
+    public final boolean isAlphaModeEnabled(Window window) {
         if (!window.isDisplayable() || !window.isShowing()) {
             throw new IllegalArgumentException("window must be displayable and showing. window=" + window);
         }
@@ -326,7 +326,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final void setAlphaModeEnabled(final Window window, final boolean state) {
+    public final void setAlphaModeEnabled(Window window, boolean state) {
         if (!window.isDisplayable() || !window.isShowing()) {
             throw new IllegalArgumentException("window must be displayable and showing. window=" + window);
         }
@@ -371,27 +371,27 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final void doNotSuggestAsParent(final consulo.ui.Window window) {
+    public final void doNotSuggestAsParent(consulo.ui.Window window) {
         myWindowWatcher.doNotSuggestAsParent(window);
     }
 
     @Override
-    public final void dispatchComponentEvent(final ComponentEvent e) {
+    public final void dispatchComponentEvent(ComponentEvent e) {
         myWindowWatcher.dispatchComponentEvent(e);
     }
 
     @Override
     @Nullable
-    public consulo.ui.Window suggestParentWindow(@Nullable final Project project) {
+    public consulo.ui.Window suggestParentWindow(@Nullable Project project) {
         return myWindowWatcher.suggestParentWindow(project);
     }
 
     @Override
-    public final StatusBar getStatusBar(final Project project) {
+    public final StatusBar getStatusBar(Project project) {
         if (!myProject2Frame.containsKey(project)) {
             return null;
         }
-        final IdeFrameEx frame = getIdeFrame(project);
+        IdeFrameEx frame = getIdeFrame(project);
         LOG.assertTrue(frame != null);
         return frame.getStatusBar();
     }
@@ -436,7 +436,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     @RequiredUIAccess
     @Override
-    public IdeFrame findFrameFor(@Nullable final Project project) {
+    public IdeFrame findFrameFor(@Nullable Project project) {
         IdeFrame frame = null;
         if (project != null) {
             frame = project.isDefault() ? WelcomeFrameManager.getInstance().getCurrentFrame() : getIdeFrame(project);
@@ -468,7 +468,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     private static IdeFrame tryToFindTheOnlyFrame() {
         IdeFrame candidate = null;
-        final Frame[] all = Frame.getFrames();
+        Frame[] all = Frame.getFrames();
         for (Frame each : all) {
             consulo.ui.Window uiWindow = TargetAWT.from(each);
             if (uiWindow == null) {
@@ -502,12 +502,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public IdeFrameEx getIdeFrame(@Nullable final Project project) {
+    public IdeFrameEx getIdeFrame(@Nullable Project project) {
         if (project != null) {
             return myProject2Frame.get(project);
         }
-        final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-        final Component parentMaybeWindow = UIUtil.findUltimateParent(window);
+        Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        Component parentMaybeWindow = UIUtil.findUltimateParent(window);
         if (parentMaybeWindow instanceof Window) {
             consulo.ui.Window uiWindow = TargetAWT.from((Window) parentMaybeWindow);
 
@@ -517,7 +517,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
             }
         }
 
-        final Frame[] frames = Frame.getFrames();
+        Frame[] frames = Frame.getFrames();
         for (Frame each : frames) {
             consulo.ui.Window uiWindow = TargetAWT.from(each);
             if (uiWindow == null) {
@@ -534,7 +534,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     public void showFrame() {
-        final DesktopIdeFrameImpl frame = new DesktopIdeFrameImpl(myActionManager, myDataManager, myApplication);
+        DesktopIdeFrameImpl frame = new DesktopIdeFrameImpl(myActionManager, myDataManager, myApplication);
         myProject2Frame.put(null, frame);
 
         JFrame jWindow = (JFrame) TargetAWT.to(frame.getWindow());
@@ -549,11 +549,11 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     @RequiredUIAccess
     @Nonnull
     @Override
-    public final IdeFrameEx allocateFrame(@Nonnull final Project project, @Nullable IdeFrameState state) {
+    public final IdeFrameEx allocateFrame(@Nonnull Project project, @Nullable IdeFrameState state) {
         LOG.assertTrue(!myProject2Frame.containsKey(project));
 
         JFrame jFrame;
-        final DesktopIdeFrameImpl ideFrame;
+        DesktopIdeFrameImpl ideFrame;
         if (myProject2Frame.containsKey(null)) {
             ideFrame = getDefaultEmptyIdeFrame();
             myProject2Frame.remove(null);
@@ -616,12 +616,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final void releaseFrame(final IdeFrameEx frame) {
+    public final void releaseFrame(IdeFrameEx frame) {
         DesktopIdeFrameImpl implFrame = (DesktopIdeFrameImpl) frame;
 
         myEventDispatcher.getMulticaster().beforeFrameReleased(implFrame);
 
-        final Project project = implFrame.getProject();
+        Project project = implFrame.getProject();
         LOG.assertTrue(project != null);
 
         JFrame jFrame = (JFrame) TargetAWT.to(implFrame.getWindow());
@@ -646,7 +646,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     @Override
     public final void disposeRootFrame() {
         if (myProject2Frame.size() == 1) {
-            final DesktopIdeFrameImpl rootFrame = myProject2Frame.remove(null);
+            DesktopIdeFrameImpl rootFrame = myProject2Frame.remove(null);
             if (rootFrame != null) {
                 // disposing last frame if quitting
                 rootFrame.getWindow().dispose();
@@ -660,19 +660,19 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final Component getFocusedComponent(@Nonnull final Window window) {
+    public final Component getFocusedComponent(@Nonnull Window window) {
         return myWindowWatcher.getFocusedComponent(window);
     }
 
     @Override
     @Nullable
-    public final Component getFocusedComponent(@Nullable final Project project) {
+    public final Component getFocusedComponent(@Nullable Project project) {
         return myWindowWatcher.getFocusedComponent(project);
     }
 
     @Override
     public void loadState(Element state) {
-        final Element desktopElement = state.getChild(ToolWindowLayout.TAG);
+        Element desktopElement = state.getChild(ToolWindowLayout.TAG);
         if (desktopElement != null) {
             myLayout.readExternal(desktopElement);
         }
@@ -697,7 +697,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     @Override
-    public final void setLayout(final ToolWindowLayout layout) {
+    public final void setLayout(ToolWindowLayout layout) {
         myLayout.copyFrom(layout);
     }
 

@@ -44,14 +44,14 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(SyntaxHighlighter highlighter, @Nonnull final EditorColorsScheme colors) {
+  public EditorHighlighter createEditorHighlighter(SyntaxHighlighter highlighter, @Nonnull EditorColorsScheme colors) {
     if (highlighter == null) highlighter = new DefaultSyntaxHighlighter();
     return new LexerEditorHighlighter(highlighter, colors);
   }
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull final FileType fileType, @Nonnull final EditorColorsScheme settings, final Project project) {
+  public EditorHighlighter createEditorHighlighter(@Nonnull FileType fileType, @Nonnull EditorColorsScheme settings, Project project) {
     if (fileType instanceof LanguageFileType) {
       return EditorHighlighterProvider.forFileType(fileType).getEditorHighlighter(project, fileType, null, settings);
     }
@@ -62,7 +62,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(final Project project, @Nonnull final FileType fileType) {
+  public EditorHighlighter createEditorHighlighter(Project project, @Nonnull FileType fileType) {
     return createEditorHighlighter(fileType, EditorColorsManager.getInstance().getGlobalScheme(), project);
   }
 
@@ -109,19 +109,19 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(final Project project, @Nonnull final VirtualFile file) {
+  public EditorHighlighter createEditorHighlighter(Project project, @Nonnull VirtualFile file) {
     return createEditorHighlighter(file, EditorColorsManager.getInstance().getGlobalScheme(), project);
   }
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(final Project project, @Nonnull final String fileName) {
+  public EditorHighlighter createEditorHighlighter(Project project, @Nonnull String fileName) {
     return createEditorHighlighter(EditorColorsManager.getInstance().getGlobalScheme(), fileName, project);
   }
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull final EditorColorsScheme settings, @Nonnull final String fileName, @Nullable final Project project) {
+  public EditorHighlighter createEditorHighlighter(@Nonnull EditorColorsScheme settings, @Nonnull String fileName, @Nullable Project project) {
     return createEditorHighlighter(new LightVirtualFile(fileName), settings, project);
   }
 }

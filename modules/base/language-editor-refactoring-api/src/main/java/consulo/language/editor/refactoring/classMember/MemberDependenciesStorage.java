@@ -50,7 +50,7 @@ public class MemberDependenciesStorage<T extends NavigatablePsiElement, C extend
   }
 
   private DependentMembersCollectorBase<T, C> getCollector() {
-    final ClassMembersRefactoringSupport factory = ClassMembersRefactoringSupport.forLanguage(myClass.getLanguage());
+    ClassMembersRefactoringSupport factory = ClassMembersRefactoringSupport.forLanguage(myClass.getLanguage());
     return factory != null ? factory.createDependentMembersCollector(myClass, mySuperClass) : null;
   }
 }

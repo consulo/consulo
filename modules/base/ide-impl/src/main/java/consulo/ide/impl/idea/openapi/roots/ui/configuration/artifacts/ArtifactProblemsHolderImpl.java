@@ -64,7 +64,7 @@ public class ArtifactProblemsHolderImpl extends ArtifactProblemsHolderBase {
   }
 
   private void registerProblem(@Nonnull String message, @Nullable List<PackagingElement<?>> pathToPlace,
-                               final ProjectStructureProblemType problemType, @Nonnull ArtifactProblemQuickFix... quickFixes) {
+                               ProjectStructureProblemType problemType, @Nonnull ArtifactProblemQuickFix... quickFixes) {
     String parentPath;
     PackagingElement<?> element;
     if (pathToPlace != null && !pathToPlace.isEmpty()) {
@@ -75,18 +75,18 @@ public class ArtifactProblemsHolderImpl extends ArtifactProblemsHolderBase {
       parentPath = null;
       element = null;
     }
-    final Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
-    final PlaceInArtifact place = new PlaceInArtifact(artifact, myContext, parentPath, element);
+    Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
+    PlaceInArtifact place = new PlaceInArtifact(artifact, myContext, parentPath, element);
     myProblemsHolder.registerProblem(new ArtifactProblemDescription(message, problemType, pathToPlace, place, convertQuickFixes(quickFixes)));
   }
 
   private List<ConfigurationErrorQuickFix> convertQuickFixes(ArtifactProblemQuickFix[] quickFixes) {
-    final List<ConfigurationErrorQuickFix> result = new SmartList<ConfigurationErrorQuickFix>();
+    List<ConfigurationErrorQuickFix> result = new SmartList<ConfigurationErrorQuickFix>();
     for (final ArtifactProblemQuickFix fix : quickFixes) {
       result.add(new ConfigurationErrorQuickFix(fix.getActionName()) {
         @Override
         public void performFix(DataContext dataContext) {
-          final ArtifactEditor editor = myContext.getOrCreateEditor(myOriginalArtifact);
+          ArtifactEditor editor = myContext.getOrCreateEditor(myOriginalArtifact);
           fix.performFix(((ArtifactEditorEx)editor).getContext());
         }
       });

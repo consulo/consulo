@@ -34,12 +34,12 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
             if (myNativeItemsCount >= myItems.size())
                 return 0;
 
-            final int chunkSize = 25;
-            final int newItemsCount = Math.min(chunkSize, myItems.size() - myNativeItemsCount);
-            final int fromPosition = myNativeItemsCount;
+            int chunkSize = 25;
+            int newItemsCount = Math.min(chunkSize, myItems.size() - myNativeItemsCount);
+            int fromPosition = myNativeItemsCount;
             NST.updateScrubberItems(this, fromPosition, newItemsCount, false, true);
 
-            final @Nonnull Application app = ApplicationManager.getApplication();
+            @Nonnull Application app = ApplicationManager.getApplication();
             app.executeOnPooledThread(() -> NST.updateScrubberItems(this, fromPosition, newItemsCount, true, false));
 
             myNativeItemsCount += newItemsCount;
@@ -59,7 +59,7 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
 
     // NOTE: designed to be completely filled before usage
     public TBItemScrubber addItem(Image icon, String text, Runnable action) {
-        final Runnable nativeAction = action == null && myListener == null ? null : () -> {
+        Runnable nativeAction = action == null && myListener == null ? null : () -> {
             if (action != null)
                 action.run();
             if (myListener != null)
@@ -77,7 +77,7 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
         for (int c = 0; c < myItems.size(); ++c) {
             if (!indices.contains(c))
                 continue;
-            final ItemData id = myItems.get(c);
+            ItemData id = myItems.get(c);
             id.myEnabled = enabled;
         }
 
@@ -95,10 +95,10 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
     @Override
     protected ID _createNativePeer() {
         myNativeItemsCount = myItems.isEmpty() ? 0 : Math.min(30, myItems.size());
-        final ID result = NST.createScrubber(getUid(), myWidth, this, myUpdater, myItems, myNativeItemsCount, myStats);
+        ID result = NST.createScrubber(getUid(), myWidth, this, myUpdater, myItems, myNativeItemsCount, myStats);
         NST.enableScrubberItems(result, _getDisabledIndices(), false);
         if (myNativeItemsCount > 0 && result != ID.NIL) {
-            final @Nonnull Application app = ApplicationManager.getApplication();
+            @Nonnull Application app = ApplicationManager.getApplication();
             app.executeOnPooledThread(() -> NST.updateScrubberItems(this, 0, myNativeItemsCount, true, false));
         }
         return result;
@@ -108,13 +108,13 @@ public final class TBItemScrubber extends TBItem implements NSTLibrary.ScrubberD
     public void execute(int itemIndex) {
         if (myItems.isEmpty() || itemIndex < 0 || itemIndex >= myItems.size())
             return;
-        final ItemData id = myItems.get(itemIndex);
+        ItemData id = myItems.get(itemIndex);
         if (id != null && id.myAction != null)
             id.myAction.run();
     }
 
     private List<Integer> _getDisabledIndices() {
-        final List<Integer> disabled = new ArrayList<>();
+        List<Integer> disabled = new ArrayList<>();
         for (int c = 0; c < myItems.size(); ++c) {
             if (!myItems.get(c).myEnabled)
                 disabled.add(c);

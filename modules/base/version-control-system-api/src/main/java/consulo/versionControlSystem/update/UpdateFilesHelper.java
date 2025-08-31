@@ -24,10 +24,10 @@ public class UpdateFilesHelper {
   private UpdateFilesHelper() {
   }
 
-  public static void iterateFileGroupFilesDeletedOnServerFirst(final UpdatedFiles updatedFiles, final Callback callback) {
-    final FileGroup changedOnServer = updatedFiles.getGroupById(FileGroup.CHANGED_ON_SERVER_ID);
+  public static void iterateFileGroupFilesDeletedOnServerFirst(UpdatedFiles updatedFiles, Callback callback) {
+    FileGroup changedOnServer = updatedFiles.getGroupById(FileGroup.CHANGED_ON_SERVER_ID);
     if (changedOnServer != null) {
-      final List<FileGroup> children = changedOnServer.getChildren();
+      List<FileGroup> children = changedOnServer.getChildren();
       for (FileGroup child : children) {
         if (FileGroup.REMOVED_FROM_REPOSITORY_ID.equals(child.getId())) {
           iterateGroup(child, callback);
@@ -35,7 +35,7 @@ public class UpdateFilesHelper {
       }
     }
 
-    final List<FileGroup> groups = updatedFiles.getTopLevelGroups();
+    List<FileGroup> groups = updatedFiles.getTopLevelGroups();
     for (FileGroup group : groups) {
       iterateGroup(group, callback);
 
@@ -47,14 +47,14 @@ public class UpdateFilesHelper {
     }
   }
 
-  private static void iterateGroup(final FileGroup group, final Callback callback) {
+  private static void iterateGroup(FileGroup group, Callback callback) {
     for (String file : group.getFiles()) {
       callback.onFile(file, group.getId());
     }
   }
 
-  public static void iterateFileGroupFiles(final UpdatedFiles updatedFiles, final Callback callback) {
-    final List<FileGroup> groups = updatedFiles.getTopLevelGroups();
+  public static void iterateFileGroupFiles(UpdatedFiles updatedFiles, Callback callback) {
+    List<FileGroup> groups = updatedFiles.getTopLevelGroups();
     for (FileGroup group : groups) {
       iterateGroup(group, callback);
 
@@ -65,14 +65,14 @@ public class UpdateFilesHelper {
     }
   }
 
-  private static void iterateGroup(final FileGroup group, final Consumer<Couple<String>> callback) {
+  private static void iterateGroup(FileGroup group, Consumer<Couple<String>> callback) {
     for (FileGroup.UpdatedFile updatedFile : group.getUpdatedFiles()) {
       callback.accept(Couple.of(updatedFile.getPath(), updatedFile.getVcsName()));
     }
   }
 
-  public static void iterateAffectedFiles(final UpdatedFiles updatedFiles, final Consumer<Couple<String>> callback) {
-    final List<FileGroup> groups = updatedFiles.getTopLevelGroups();
+  public static void iterateAffectedFiles(UpdatedFiles updatedFiles, Consumer<Couple<String>> callback) {
+    List<FileGroup> groups = updatedFiles.getTopLevelGroups();
     for (FileGroup group : groups) {
       iterateGroup(group, callback);
 
@@ -84,6 +84,6 @@ public class UpdateFilesHelper {
   }
 
   public interface Callback {
-    void onFile(final String filePath, final String groupId);
+    void onFile(String filePath, String groupId);
   }
 }

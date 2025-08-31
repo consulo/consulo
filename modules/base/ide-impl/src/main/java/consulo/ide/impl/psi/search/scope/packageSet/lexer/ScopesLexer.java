@@ -354,7 +354,7 @@ public class ScopesLexer extends LexerBase {
   }
 
   @Override
-  public void start(final CharSequence buffer, int startOffset, int endOffset, final int initialState) {
+  public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
     reset(buffer, startOffset, endOffset, initialState);
     myTokenType = null;
   }
@@ -389,7 +389,7 @@ public class ScopesLexer extends LexerBase {
      catch (java.io.IOException e) { /*Can't happen*/ }
      catch (Error e) {
        // add lexer class name to the error
-       final Error error = new Error(getClass().getName() + ": " + e.getMessage());
+       Error error = new Error(getClass().getName() + ": " + e.getMessage());
        error.setStackTrace(e.getStackTrace());
        throw error;
      }

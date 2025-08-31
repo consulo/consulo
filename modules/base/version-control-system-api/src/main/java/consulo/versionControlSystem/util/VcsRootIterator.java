@@ -25,30 +25,30 @@ public class VcsRootIterator {
   private final ProjectLevelVcsManager myVcsManager;
   private final Project myProject;
 
-  public VcsRootIterator(final Project project, final AbstractVcs vcs) {
+  public VcsRootIterator(Project project, AbstractVcs vcs) {
     myProject = project;
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
     myOtherVcsFolders = new HashMap<>();
 
-    final VcsRoot[] allRoots = myVcsManager.getAllVcsRoots();
-    final VirtualFile[] roots = myVcsManager.getRootsUnderVcs(vcs);
+    VcsRoot[] allRoots = myVcsManager.getAllVcsRoots();
+    VirtualFile[] roots = myVcsManager.getRootsUnderVcs(vcs);
     for (VirtualFile root : roots) {
-      final MyRootFilter rootPresentFilter = new MyRootFilter(root, vcs.getId());
+      MyRootFilter rootPresentFilter = new MyRootFilter(root, vcs.getId());
       rootPresentFilter.init(allRoots);
       myOtherVcsFolders.put(root.getUrl(), rootPresentFilter);
     }
   }
 
-  public boolean acceptFolderUnderVcs(final VirtualFile vcsRoot, final VirtualFile file) {
-    final String vcsUrl = vcsRoot.getUrl();
-    final MyRootFilter rootFilter = myOtherVcsFolders.get(vcsUrl);
+  public boolean acceptFolderUnderVcs(VirtualFile vcsRoot, VirtualFile file) {
+    String vcsUrl = vcsRoot.getUrl();
+    MyRootFilter rootFilter = myOtherVcsFolders.get(vcsUrl);
     if ((rootFilter != null) && (!rootFilter.accept(file))) {
       return false;
     }
     return !isIgnoredByVcs(myVcsManager, myProject, file);
   }
 
-  private static boolean isIgnoredByVcs(final ProjectLevelVcsManager vcsManager, final Project project, final VirtualFile file) {
+  private static boolean isIgnoredByVcs(ProjectLevelVcsManager vcsManager, Project project, VirtualFile file) {
     return ReadAction.compute(() -> project.isDisposed() || vcsManager.isIgnored(file));
   }
 
@@ -59,20 +59,20 @@ public class VcsRootIterator {
     // virtual file URLs
     private final List<String> myExcludedByOthers;
 
-    private MyRootFilter(final VirtualFile root, final String vcsName) {
+    private MyRootFilter(VirtualFile root, String vcsName) {
       myRoot = root;
       myVcsName = vcsName;
 
       myExcludedByOthers = new ArrayList<>();
     }
 
-    private void init(final VcsRoot[] allRoots) {
-      final String ourPath = myRoot.getUrl();
+    private void init(VcsRoot[] allRoots) {
+      String ourPath = myRoot.getUrl();
 
       for (VcsRoot root : allRoots) {
-        final AbstractVcs vcs = root.getVcs();
+        AbstractVcs vcs = root.getVcs();
         if (vcs == null || Objects.equals(vcs.getName(), myVcsName)) continue;
-        final String url = root.getPath().getUrl();
+        String url = root.getPath().getUrl();
         if (url.startsWith(ourPath)) {
           myExcludedByOthers.add(url);
         }
@@ -81,8 +81,8 @@ public class VcsRootIterator {
       myExcludedByOthers.sort(StringLenComparator.getDescendingInstance());
     }
 
-    public boolean accept(final VirtualFile vf) {
-      final String url = vf.getUrl();
+    public boolean accept(VirtualFile vf) {
+      String url = vf.getUrl();
       for (String excludedByOtherVcs : myExcludedByOthers) {
         // use the fact that they are sorted
         if (url.length() > excludedByOtherVcs.length()) return true;
@@ -92,24 +92,24 @@ public class VcsRootIterator {
     }
   }
 
-  public static void iterateVfUnderVcsRoot(final Project project,
-                                           final VirtualFile root,
-                                           final Predicate<? super VirtualFile> processor) {
-    final MyRootIterator rootIterator = new MyRootIterator(project, root, null, processor, null);
+  public static void iterateVfUnderVcsRoot(Project project,
+                                           VirtualFile root,
+                                           Predicate<? super VirtualFile> processor) {
+    MyRootIterator rootIterator = new MyRootIterator(project, root, null, processor, null);
     rootIterator.iterate();
   }
 
-  public static void iterateVcsRoot(final Project project,
-                                    final VirtualFile root,
-                                    final Predicate<? super FilePath> processor) {
+  public static void iterateVcsRoot(Project project,
+                                    VirtualFile root,
+                                    Predicate<? super FilePath> processor) {
     iterateVcsRoot(project, root, processor, null);
   }
 
-  public static void iterateVcsRoot(final Project project,
-                                    final VirtualFile root,
-                                    final Predicate<? super FilePath> processor,
+  public static void iterateVcsRoot(Project project,
+                                    VirtualFile root,
+                                    Predicate<? super FilePath> processor,
                                     @Nullable VirtualFileFilter directoryFilter) {
-    final MyRootIterator rootIterator = new MyRootIterator(project, root, processor, null, directoryFilter);
+    MyRootIterator rootIterator = new MyRootIterator(project, root, processor, null, directoryFilter);
     rootIterator.iterate();
   }
 
@@ -123,9 +123,9 @@ public class VcsRootIterator {
     private final MyRootFilter myRootPresentFilter;
     private final ProjectLevelVcsManager myVcsManager;
 
-    private MyRootIterator(final Project project,
-                           final VirtualFile root,
-                           @Nullable final Predicate<? super FilePath> pathProcessor,
+    private MyRootIterator(Project project,
+                           VirtualFile root,
+                           @Nullable Predicate<? super FilePath> pathProcessor,
                            @Nullable Predicate<? super VirtualFile> fileProcessor,
                            @Nullable VirtualFileFilter directoryFilter) {
       myProject = project;
@@ -135,7 +135,7 @@ public class VcsRootIterator {
       myRoot = root;
 
       myVcsManager = ProjectLevelVcsManager.getInstance(project);
-      final AbstractVcs vcs = myVcsManager.getVcsFor(root);
+      AbstractVcs vcs = myVcsManager.getVcsFor(root);
       myRootPresentFilter = vcs == null ? null : new MyRootFilter(root, vcs.getName());
       if (myRootPresentFilter != null) {
         myRootPresentFilter.init(myVcsManager.getAllVcsRoots());
@@ -184,7 +184,7 @@ public class VcsRootIterator {
     if (project.isDisposed()) return;
 
     for (FilePath dir : scope.getRecursivelyDirtyDirectories()) {
-      final VirtualFile vFile = dir.getVirtualFile();
+      VirtualFile vFile = dir.getVirtualFile();
       if (vFile != null && vFile.isValid()) {
         iterateVcsRoot(project, vFile, iterator);
       }
@@ -192,7 +192,7 @@ public class VcsRootIterator {
 
     for (FilePath file : scope.getDirtyFilesNoExpand()) {
       iterator.test(file);
-      final VirtualFile vFile = file.getVirtualFile();
+      VirtualFile vFile = file.getVirtualFile();
       if (vFile != null && vFile.isValid() && vFile.isDirectory()) {
         for (VirtualFile child : vFile.getChildren()) {
           iterator.test(VcsUtil.getFilePath(child));
@@ -207,7 +207,7 @@ public class VcsRootIterator {
     if (project.isDisposed()) return;
 
     for (FilePath dir : scope.getRecursivelyDirtyDirectories()) {
-      final VirtualFile vFile = obtainVirtualFile(dir);
+      VirtualFile vFile = obtainVirtualFile(dir);
       if (vFile != null && vFile.isValid()) {
         iterateVfUnderVcsRoot(project, vFile, iterator);
       }

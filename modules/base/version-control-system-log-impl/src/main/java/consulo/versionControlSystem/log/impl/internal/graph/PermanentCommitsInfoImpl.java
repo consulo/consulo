@@ -33,7 +33,7 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
 
   @Nonnull
   public static <CommitId> PermanentCommitsInfoImpl<CommitId> newInstance(
-    @Nonnull final List<? extends GraphCommit<CommitId>> graphCommits,
+    @Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
     @Nonnull Map<Integer, CommitId> notLoadedCommits
   ) {
     TimestampGetter timestampGetter = createTimestampGetter(graphCommits);

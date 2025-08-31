@@ -34,7 +34,7 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
     void elementMarkChanged(T element, boolean isMarked);
   }
 
-  public ElementsChooser(final boolean elementsCanBeMarked) {
+  public ElementsChooser(boolean elementsCanBeMarked) {
     super(elementsCanBeMarked, ElementsChooser.<T>getMarkStateDescriptor());
   }
 
@@ -50,7 +50,7 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
     removeElementsMarkListener(new ElementsMarkStateListenerAdapter<T>(listener));
   }
 
-  public void addElement(T element, final boolean isMarked) {
+  public void addElement(T element, boolean isMarked) {
     addElement(element, getMarkState(isMarked));
   }
 
@@ -74,7 +74,7 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
     setElementMarkState(element, getMarkState(marked));
   }
 
-  public void addElement(T element, final boolean isMarked, ElementProperties elementProperties) {
+  public void addElement(T element, boolean isMarked, ElementProperties elementProperties) {
     addElement(element, getMarkState(isMarked), elementProperties);
   }
 
@@ -99,7 +99,7 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
   }
 
   public void invertSelection() {
-    final int count = getElementCount();
+    int count = getElementCount();
     for (int i = 0; i < count; i++) {
       T type = getElementAt(i);
       setElementMarked(type, !isElementMarked(type));

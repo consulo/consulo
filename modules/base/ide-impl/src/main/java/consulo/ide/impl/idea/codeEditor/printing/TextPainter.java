@@ -84,16 +84,16 @@ public class TextPainter implements Printable {
   public TextPainter(DocumentEx editorDocument,
                      EditorHighlighter highlighter,
                      String fileName,
-                     @Nonnull final PsiFile psiFile,
-                     final FileType fileType, final Editor editor) {
+                     @Nonnull PsiFile psiFile,
+                     FileType fileType, Editor editor) {
     this(editorDocument, highlighter, fileName, psiFile.getProject(), fileType, FileSeparatorUtil.getFileSeparators(psiFile, editorDocument));
   }
 
   public TextPainter(DocumentEx editorDocument,
                      EditorHighlighter highlighter,
                      String fileName,
-                     final Project project,
-                     final FileType fileType, final List<LineMarkerInfo> separators) {
+                     Project project,
+                     FileType fileType, List<LineMarkerInfo> separators) {
     myCodeStyleSettings = CodeStyleSettingsManager.getSettings(project);
     myDocument = editorDocument;
     myPrintSettings = PrintSettings.getInstance();

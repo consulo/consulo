@@ -137,7 +137,7 @@ public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAd
   private class MyListWrapper extends JBScrollPane implements DataProvider {
     private final JList myList;
 
-    private MyListWrapper(final JList list) {
+    private MyListWrapper(JList list) {
       super(0);
       list.setVisibleRowCount(myBuilder.getVisibleRowCount());
       setViewportView(list);

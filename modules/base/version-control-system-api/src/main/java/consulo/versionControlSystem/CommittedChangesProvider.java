@@ -43,7 +43,7 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
   @Nonnull
   @RequiredUIAccess
   @SuppressWarnings("unchecked")
-  default ChangesBrowserSettingsEditor<U> createFilterUI(final boolean showDateFilter) {
+  default ChangesBrowserSettingsEditor<U> createFilterUI(boolean showDateFilter) {
     return (ChangesBrowserSettingsEditor<U>)new SimpleStandardVersionFilterComponent(showDateFilter);
   }
 
@@ -51,19 +51,19 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
   RepositoryLocation getLocationFor(FilePath root);
 
   @Nullable
-  RepositoryLocation getLocationFor(final FilePath root, final String repositoryPath);
+  RepositoryLocation getLocationFor(FilePath root, String repositoryPath);
 
   @Nullable
   VcsCommittedListsZipper getZipper();
 
-  List<T> getCommittedChanges(U settings, RepositoryLocation location, final int maxCount) throws VcsException;
+  List<T> getCommittedChanges(U settings, RepositoryLocation location, int maxCount) throws VcsException;
 
-  void loadCommittedChanges(U settings, RepositoryLocation location, final int maxCount, final AsynchConsumer<CommittedChangeList> consumer) throws VcsException;
+  void loadCommittedChanges(U settings, RepositoryLocation location, int maxCount, AsynchConsumer<CommittedChangeList> consumer) throws VcsException;
 
   ChangeListColumn[] getColumns();
 
   @Nullable
-  VcsCommittedViewAuxiliary createActions(final DecoratorManager manager, final RepositoryLocation location);
+  VcsCommittedViewAuxiliary createActions(DecoratorManager manager, RepositoryLocation location);
 
   /**
    * since may be different for different VCSs
@@ -74,9 +74,9 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
    * @return required list and path of the target file in that revision (changes when move/rename)
    */
   @Nullable
-  Pair<T, FilePath> getOneList(final VirtualFile file, final VcsRevisionNumber number) throws VcsException;
+  Pair<T, FilePath> getOneList(VirtualFile file, VcsRevisionNumber number) throws VcsException;
 
-  RepositoryLocation getForNonLocal(final VirtualFile file);
+  RepositoryLocation getForNonLocal(VirtualFile file);
 
   /**
    * Return true if this committed changes provider can be used to show the incoming changes.

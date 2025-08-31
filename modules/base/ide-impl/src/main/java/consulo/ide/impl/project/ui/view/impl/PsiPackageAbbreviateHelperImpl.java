@@ -50,7 +50,7 @@ public class PsiPackageAbbreviateHelperImpl implements PsiPackageAbbreviateHelpe
   }
 
   private static boolean scanPackages(@Nonnull PsiPackage p, int packageNameOccurrencesFound) {
-    final PsiPackage[] subPackages = p.getSubPackages();
+    PsiPackage[] subPackages = p.getSubPackages();
     packageNameOccurrencesFound += subPackages.length;
     if (packageNameOccurrencesFound > SUBPACKAGE_LIMIT) {
       return true;

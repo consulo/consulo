@@ -85,7 +85,7 @@ public class DetailsTabForm {
         }
     }
 
-    public void addCommentsListener(final LabeledTextComponent.TextListener l) {
+    public void addCommentsListener(LabeledTextComponent.TextListener l) {
         myCommentsArea.addCommentsListener(l);
     }
 

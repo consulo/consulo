@@ -60,7 +60,7 @@ public class DescriptorComposer extends HTMLComposerBase {
 
       startList(buf);
       for (int i = 0; i < descriptions.length; i++) {
-        final CommonProblemDescriptor description = descriptions[i];
+        CommonProblemDescriptor description = descriptions[i];
 
         startListItem(buf);
         composeDescription(description, i, buf, refEntity);
@@ -83,7 +83,7 @@ public class DescriptorComposer extends HTMLComposerBase {
     }
     List<String> texts = new ArrayList<>();
     for (QuickFixAction quickFix : quickFixes) {
-      final String text = quickFix.getText(where);
+      String text = quickFix.getText(where);
       if (text == null) continue;
       texts.add(text);
     }
@@ -120,7 +120,7 @@ public class DescriptorComposer extends HTMLComposerBase {
 
     if (refElement instanceof RefElement && !refElement.isValid()) return;
 
-    final QuickFix[] fixes = descriptor.getFixes();
+    QuickFix[] fixes = descriptor.getFixes();
     if (fixes != null && fixes.length > 0) {
       //noinspection HardCodedStringLiteral
       buf.append("<br><br>");
@@ -185,10 +185,10 @@ public class DescriptorComposer extends HTMLComposerBase {
 
     String descriptionTemplate = description.getDescriptionTemplate();
     //noinspection HardCodedStringLiteral
-    final String reference = "#ref";
-    final boolean containsReference = descriptionTemplate.contains(reference);
+    String reference = "#ref";
+    boolean containsReference = descriptionTemplate.contains(reference);
     String res = descriptionTemplate.replaceAll(reference, anchor.toString());
-    final int lineNumber = description instanceof ProblemDescriptor ? ((ProblemDescriptor)description).getLineNumber() : -1;
+    int lineNumber = description instanceof ProblemDescriptor ? ((ProblemDescriptor)description).getLineNumber() : -1;
     StringBuffer lineAnchor = new StringBuffer();
     if (expression != null && lineNumber > 0) {
       Document doc = FileDocumentManager.getInstance().getDocument(vFile);
@@ -210,7 +210,7 @@ public class DescriptorComposer extends HTMLComposerBase {
       //noinspection HardCodedStringLiteral
       lineAnchor.append("</a>");
       //noinspection HardCodedStringLiteral
-      final String location = "#loc";
+      String location = "#loc";
       if (!res.contains(location)) {
         res += " (" + location + ")";
       }

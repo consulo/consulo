@@ -45,11 +45,11 @@ public abstract class ComparingClassifier<T> extends Classifier<T> {
 
   @Nonnull
   @Override
-  public Iterable<T> classify(@Nonnull final Iterable<T> source, @Nonnull final ProcessingContext context) {
+  public Iterable<T> classify(@Nonnull Iterable<T> source, @Nonnull final ProcessingContext context) {
     List<T> nulls = null;
     TreeMap<Comparable, List<T>> map = new TreeMap<Comparable, List<T>>();
     for (T t : source) {
-      final Comparable weight = getWeight(t, context);
+      Comparable weight = getWeight(t, context);
       if (weight == null) {
         if (nulls == null) nulls = new SmartList<T>();
         nulls.add(t);
@@ -81,7 +81,7 @@ public abstract class ComparingClassifier<T> extends Classifier<T> {
 
   @Nonnull
   @Override
-  public List<Pair<T, Object>> getSortingWeights(@Nonnull Iterable<T> items, @Nonnull final ProcessingContext context) {
+  public List<Pair<T, Object>> getSortingWeights(@Nonnull Iterable<T> items, @Nonnull ProcessingContext context) {
     return ContainerUtil.map(items, t -> new Pair<T, Object>(t, getWeight(t, context)));
   }
 }

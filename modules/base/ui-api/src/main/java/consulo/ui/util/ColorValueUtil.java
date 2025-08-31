@@ -38,16 +38,16 @@ public class ColorValueUtil {
   }
 
   @Nonnull
-  public static String toHtmlColor(@Nonnull final ColorValue c) {
+  public static String toHtmlColor(@Nonnull ColorValue c) {
     return "#" + toHex(c);
   }
 
-  public static String toHex(@Nonnull final ColorValue c) {
+  public static String toHex(@Nonnull ColorValue c) {
     RGBColor rgb = c.toRGB();
 
-    final String R = Integer.toHexString(rgb.getRed());
-    final String G = Integer.toHexString(rgb.getGreen());
-    final String B = Integer.toHexString(rgb.getBlue());
+    String R = Integer.toHexString(rgb.getRed());
+    String G = Integer.toHexString(rgb.getGreen());
+    String B = Integer.toHexString(rgb.getBlue());
     return (R.length() < 2 ? "0" : "") + R + (G.length() < 2 ? "0" : "") + G + (B.length() < 2 ? "0" : "") + B;
   }
 
@@ -58,7 +58,7 @@ public class ColorValueUtil {
    * @param c color to check
    * @return dark or not
    */
-  public static boolean isDark(@Nonnull final ColorValue c) {
+  public static boolean isDark(@Nonnull ColorValue c) {
     RGBColor color = c.toRGB();
     // based on perceptional luminosity, see
     return (1 - (0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue()) / 255) >= 0.5;
@@ -132,7 +132,7 @@ public class ColorValueUtil {
   }
 
   private static int shift(int colorComponent, double d) {
-    final int n = (int)(colorComponent * d);
+    int n = (int)(colorComponent * d);
     return n > 255 ? 255 : n < 0 ? 0 : n;
   }
 

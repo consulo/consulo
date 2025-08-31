@@ -288,7 +288,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
             .submitDefault();
     }
 
-    public void addCustomTodoView(final TodoTreeBuilderFactory factory, final String title, final TodoPanelSettings settings) {
+    public void addCustomTodoView(final TodoTreeBuilderFactory factory, String title, final TodoPanelSettings settings) {
         Content content = ContentFactory.getInstance().createContent(null, title, true);
         final ChangeListTodosPanel panel = new ChangeListTodosPanel(myProject, settings, content) {
             @Override

@@ -63,7 +63,7 @@ public class CompoundRuntimeException extends RuntimeException {
   }
 
   @Override
-  public void printStackTrace(final PrintStream s) {
+  public void printStackTrace(PrintStream s) {
     processAll(throwable -> {
       throwable.printStackTrace(s);
       return "";
@@ -71,7 +71,7 @@ public class CompoundRuntimeException extends RuntimeException {
   }
 
   @Override
-  public void printStackTrace(final PrintWriter s) {
+  public void printStackTrace(PrintWriter s) {
     processAll(throwable -> {
       throwable.printStackTrace(s);
       return "";

@@ -47,7 +47,7 @@ public abstract class VcsCherryPicker {
    *
    * @param commits to cherry-pick
    */
-  public abstract void cherryPick(@Nonnull final List<VcsFullCommitDetails> commits);
+  public abstract void cherryPick(@Nonnull List<VcsFullCommitDetails> commits);
 
   /**
    * Return true if cherry picker can manage all commits from roots

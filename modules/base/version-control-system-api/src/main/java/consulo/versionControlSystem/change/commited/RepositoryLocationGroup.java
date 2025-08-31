@@ -26,7 +26,7 @@ public class RepositoryLocationGroup implements RepositoryLocation {
   private final String myPresentableString;
   private final List<RepositoryLocation> myLocations;
 
-  public RepositoryLocationGroup(final String presentableString) {
+  public RepositoryLocationGroup(String presentableString) {
     myPresentableString = presentableString;
     myLocations = new ArrayList<RepositoryLocation>();
   }
@@ -36,9 +36,9 @@ public class RepositoryLocationGroup implements RepositoryLocation {
     return myPresentableString;
   }
 
-  public void add(@Nonnull final RepositoryLocation location) {
+  public void add(@Nonnull RepositoryLocation location) {
     for (int i = 0; i < myLocations.size(); i++) {
-      final RepositoryLocation t = myLocations.get(i);
+      RepositoryLocation t = myLocations.get(i);
       if (t.getKey().compareTo(location.getKey()) >= 0) {
         myLocations.add(i, location);
         return;
@@ -49,7 +49,7 @@ public class RepositoryLocationGroup implements RepositoryLocation {
 
   @Override
   public String getKey() {
-    final StringBuilder sb = new StringBuilder(myPresentableString);
+    StringBuilder sb = new StringBuilder(myPresentableString);
     // they are ordered
     for (RepositoryLocation location : myLocations) {
       sb.append(location.getKey());

@@ -67,8 +67,8 @@ public final class NotificationSettings {
   }
 
   @Nullable
-  public static NotificationSettings load(@Nonnull final Element element) {
-    final String displayTypeString = element.getAttributeValue("displayType");
+  public static NotificationSettings load(@Nonnull Element element) {
+    String displayTypeString = element.getAttributeValue("displayType");
     NotificationDisplayType displayType = NotificationDisplayType.BALLOON;
     boolean shouldLog = !"false".equals(element.getAttributeValue("shouldLog"));
     boolean shouldReadAloud = "true".equals(element.getAttributeValue("shouldReadAloud"));
@@ -84,16 +84,16 @@ public final class NotificationSettings {
       }
     }
 
-    final String groupId = element.getAttributeValue("groupId");
+    String groupId = element.getAttributeValue("groupId");
     return groupId != null ? new NotificationSettings(groupId, displayType, shouldLog, shouldReadAloud) : null;
   }
 
   @Nonnull
   public Element save() {
-    final Element result = new Element("notification");
+    Element result = new Element("notification");
 
     result.setAttribute("groupId", getGroupId());
-    final NotificationDisplayType displayType = getDisplayType();
+    NotificationDisplayType displayType = getDisplayType();
     if (displayType != NotificationDisplayType.BALLOON) {
       result.setAttribute("displayType", displayType.toString());
     }

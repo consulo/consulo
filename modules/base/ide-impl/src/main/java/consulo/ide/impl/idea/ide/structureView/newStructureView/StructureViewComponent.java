@@ -139,7 +139,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       }
 
       @Override
-      public boolean isToBuildChildrenInBackground(@Nonnull final Object element) {
+      public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
         return Registry.is("ide.structureView.StructureViewTreeStructure.BuildChildrenInBackground") || getRootElement() == element;
       }
 
@@ -168,7 +168,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     myTree.setRootVisible(showRootNode);
     myTree.getEmptyText().setText("Structure is empty");
 
-    final ModelListener modelListener = () -> queueUpdate();
+    ModelListener modelListener = () -> queueUpdate();
     myTreeModelWrapper.addModelListener(modelListener);
 
     Disposer.register(this, () -> {
@@ -343,7 +343,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   protected ActionGroup createActionGroup() {
     DefaultActionGroup result = new DefaultActionGroup();
     Sorter[] sorters = myTreeModel.getSorters();
-    for (final Sorter sorter : sorters) {
+    for (Sorter sorter : sorters) {
       if (sorter.isVisible()) {
         result.add(new TreeActionWrapper(sorter, this));
       }
@@ -359,7 +359,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       result.add(new TreeActionWrapper(filter, this));
     }
     if (myTreeModel instanceof ProvidingTreeModel) {
-      final Collection<NodeProvider> providers = ((ProvidingTreeModel)myTreeModel).getNodeProviders();
+      Collection<NodeProvider> providers = ((ProvidingTreeModel)myTreeModel).getNodeProviders();
       for (NodeProvider provider : providers) {
         result.add(new TreeActionWrapper(provider, this));
       }
@@ -478,7 +478,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   private void scrollToSelectedElementInner() {
     PsiDocumentManager.getInstance(myProject).performWhenAllCommitted(() -> {
       try {
-        final Object currentEditorElement = myTreeModel.getCurrentEditorElement();
+        Object currentEditorElement = myTreeModel.getCurrentEditorElement();
         if (currentEditorElement != null) {
           select(currentEditorElement, false);
         }
@@ -619,7 +619,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     @Override
     protected void setAutoScrollEnabled(boolean state) {
       getSettings().AUTOSCROLL_FROM_SOURCE = state;
-      final FileEditor[] selectedEditors = FileEditorManager.getInstance(myProject).getSelectedEditors();
+      FileEditor[] selectedEditors = FileEditorManager.getInstance(myProject).getSelectedEditors();
       if (selectedEditors.length > 0 && state) {
         scrollToSelectedElementInner();
       }
@@ -722,7 +722,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   //}
 
   private static int getMinimumExpandDepth(@Nonnull StructureViewModel structureViewModel) {
-    final StructureViewModel.ExpandInfoProvider provider =
+    StructureViewModel.ExpandInfoProvider provider =
       ObjectUtil.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class);
 
     return provider == null ? 2 : provider.getMinimumAutoExpandDepth();
@@ -815,7 +815,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
     @Nonnull
     @Override
-    protected GroupWrapper createGroupWrapper(Project project, @Nonnull Group group, @Nonnull final TreeModel treeModel) {
+    protected GroupWrapper createGroupWrapper(Project project, @Nonnull Group group, @Nonnull TreeModel treeModel) {
       return new MyGroupWrapper(project, group, treeModel);
     }
 
@@ -839,7 +839,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
     @Override
     public int hashCode() {
-      final Object o = unwrapElement(getValue());
+      Object o = unwrapElement(getValue());
 
       return o != null ? o.hashCode() : 0;
     }

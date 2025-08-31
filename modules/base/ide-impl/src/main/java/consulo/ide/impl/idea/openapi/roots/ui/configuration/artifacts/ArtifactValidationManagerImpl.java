@@ -70,13 +70,13 @@ public class ArtifactValidationManagerImpl implements Disposable {
     myProblemsForNodes.clear();
     myProblems.clear();
     if (holder != null) {
-      final List<ProjectStructureProblemDescription> problemDescriptions = holder.getProblemDescriptions();
+      List<ProjectStructureProblemDescription> problemDescriptions = holder.getProblemDescriptions();
       if (problemDescriptions != null) {
         for (ProjectStructureProblemDescription description : problemDescriptions) {
-          final String message = description.getMessage(false);
+          String message = description.getMessage(false);
           List<? extends ConfigurationErrorQuickFix> quickFixes = Collections.emptyList();
           if (description instanceof ArtifactProblemDescription) {
-            final ArtifactProblemDescription artifactProblem = (ArtifactProblemDescription)description;
+            ArtifactProblemDescription artifactProblem = (ArtifactProblemDescription)description;
             quickFixes = artifactProblem.getFixes();
             if (artifactProblem.getPathToPlace() != null) {
               myProblems.add(artifactProblem);
@@ -91,9 +91,9 @@ public class ArtifactValidationManagerImpl implements Disposable {
   }
 
   private void showProblemInTree(ArtifactProblemDescription problem) {
-    final LayoutTree layoutTree = myArtifactEditor.getLayoutTreeComponent().getLayoutTree();
+    LayoutTree layoutTree = myArtifactEditor.getLayoutTreeComponent().getLayoutTree();
     PackagingElementNode<?> node = layoutTree.getRootPackagingNode();
-    final List<PackagingElement<?>> pathToPlace = problem.getPathToPlace();
+    List<PackagingElement<?>> pathToPlace = problem.getPathToPlace();
     if (node != null && pathToPlace != null) {
       List<PackagingElementNode<?>> nodes = node.getNodesByPath(pathToPlace.subList(1, pathToPlace.size()));
       for (PackagingElementNode<?> elementNode : nodes) {

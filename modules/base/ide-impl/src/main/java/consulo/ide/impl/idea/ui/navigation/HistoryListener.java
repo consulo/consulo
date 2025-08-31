@@ -22,11 +22,11 @@ public interface HistoryListener {
 
   class Adapter implements HistoryListener {
     @Override
-    public void navigationStarted(final Place from, final Place to) {
+    public void navigationStarted(Place from, Place to) {
     }
 
     @Override
-    public void navigationFinished(final Place from, final Place to) {
+    public void navigationFinished(Place from, Place to) {
     }
   }
 

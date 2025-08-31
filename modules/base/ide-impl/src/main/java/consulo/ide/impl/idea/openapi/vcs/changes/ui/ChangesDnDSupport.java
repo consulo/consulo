@@ -104,13 +104,13 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
     Object attached = aEvent.getAttachedObject();
     if (!(attached instanceof ChangeListDragBean)) return false;
 
-    final ChangeListDragBean dragBean = (ChangeListDragBean)attached;
+    ChangeListDragBean dragBean = (ChangeListDragBean)attached;
     if (dragBean.getSourceComponent() != myTree) return false;
     dragBean.setTargetNode(null);
 
     RelativePoint dropPoint = aEvent.getRelativePoint();
     Point onTree = dropPoint.getPoint(myTree);
-    final TreePath dropPath = myTree.getPathForLocation(onTree.x, onTree.y);
+    TreePath dropPath = myTree.getPathForLocation(onTree.x, onTree.y);
 
     if (dropPath == null) return false;
 
@@ -123,7 +123,7 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
       return false;
     }
 
-    final Rectangle tableCellRect = myTree.getPathBounds(new TreePath(dropNode.getPath()));
+    Rectangle tableCellRect = myTree.getPathBounds(new TreePath(dropNode.getPath()));
     if (fitsInBounds(tableCellRect)) {
       aEvent.setHighlighting(new RelativeRectangle(myTree, tableCellRect), DnDEvent.DropTargetHighlightingType.RECTANGLE);
     }
@@ -139,19 +139,19 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
     Object attached = aEvent.getAttachedObject();
     if (!(attached instanceof ChangeListDragBean)) return;
 
-    final ChangeListDragBean dragBean = (ChangeListDragBean)attached;
-    final ChangesBrowserNode changesBrowserNode = dragBean.getTargetNode();
+    ChangeListDragBean dragBean = (ChangeListDragBean)attached;
+    ChangesBrowserNode changesBrowserNode = dragBean.getTargetNode();
     if (changesBrowserNode != null) {
       changesBrowserNode.acceptDrop(myChangeListManager, dragBean);
     }
   }
 
-  private boolean fitsInBounds(final Rectangle rect) {
-    final Container container = myTree.getParent();
+  private boolean fitsInBounds(Rectangle rect) {
+    Container container = myTree.getParent();
     if (container instanceof JViewport) {
-      final Container scrollPane = container.getParent();
+      Container scrollPane = container.getParent();
       if (scrollPane instanceof JScrollPane) {
-        final Rectangle rectangle = SwingUtilities.convertRectangle(myTree, rect, scrollPane.getParent());
+        Rectangle rectangle = SwingUtilities.convertRectangle(myTree, rect, scrollPane.getParent());
         return scrollPane.getBounds().contains(rectangle);
       }
     }
@@ -159,12 +159,12 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
   }
 
   private int getSelectionCount() {
-    final TreePath[] paths = myTree.getSelectionModel().getSelectionPaths();
+    TreePath[] paths = myTree.getSelectionModel().getSelectionPaths();
     int count = 0;
-    final List<ChangesBrowserNode> nodes = new ArrayList<>();
+    List<ChangesBrowserNode> nodes = new ArrayList<>();
 
-    for (final TreePath path : paths) {
-      final ChangesBrowserNode node = (ChangesBrowserNode)path.getLastPathComponent();
+    for (TreePath path : paths) {
+      ChangesBrowserNode node = (ChangesBrowserNode)path.getLastPathComponent();
       if (!node.isLeaf()) {
         nodes.add(node);
         count += node.getCount();
@@ -172,9 +172,9 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
     }
 
     for (TreePath path : paths) {
-      final ChangesBrowserNode element = (ChangesBrowserNode)path.getLastPathComponent();
+      ChangesBrowserNode element = (ChangesBrowserNode)path.getLastPathComponent();
       boolean child = false;
-      for (final ChangesBrowserNode node : nodes) {
+      for (ChangesBrowserNode node : nodes) {
         if (node.isNodeChild(element)) {
           child = true;
           break;

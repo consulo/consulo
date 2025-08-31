@@ -52,7 +52,7 @@ public class XBreakpointActionsPanel extends XBreakpointPropertiesSubPanel {
     init(project, breakpointManager, breakpoint);
     if (debuggerEditorsProvider != null) {
       ActionListener listener = new ActionListener() {
-        public void actionPerformed(final ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
           onCheckboxChanged();
         }
       };

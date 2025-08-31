@@ -70,7 +70,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
   private static final Logger LOG = Logger.getInstance(CodeSmellDetectorImpl.class);
 
   @Inject
-  public CodeSmellDetectorImpl(final Project project) {
+  public CodeSmellDetectorImpl(Project project) {
     myProject = project;
   }
 
@@ -78,7 +78,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
   public void showCodeSmellErrors(@Nonnull final List<CodeSmellInfo> smellList) {
     Collections.sort(smellList, new Comparator<CodeSmellInfo>() {
       @Override
-      public int compare(final CodeSmellInfo o1, final CodeSmellInfo o2) {
+      public int compare(CodeSmellInfo o1, CodeSmellInfo o2) {
         return o1.getTextRange().getStartOffset() - o2.getTextRange().getStartOffset();
       }
     });
@@ -91,7 +91,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
           return;
         }
 
-        final NewErrorTreeViewPanel errorTreeView = myProject.getApplication().getInstance(NewErrorTreeViewPanelFactory.class).createPanel(myProject, null);
+        NewErrorTreeViewPanel errorTreeView = myProject.getApplication().getInstance(NewErrorTreeViewPanelFactory.class).createPanel(myProject, null);
         errorTreeView.setCanHideWarningsOrInfos(false);
 
         AbstractVcsHelperImpl helper = (AbstractVcsHelperImpl)AbstractVcsHelper.getInstance(myProject);
@@ -100,11 +100,11 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
         FileDocumentManager fileManager = FileDocumentManager.getInstance();
 
         for (CodeSmellInfo smellInfo : smellList) {
-          final VirtualFile file = fileManager.getFile(smellInfo.getDocument());
-          final OpenFileDescriptorImpl navigatable =
+          VirtualFile file = fileManager.getFile(smellInfo.getDocument());
+          OpenFileDescriptorImpl navigatable =
                   new OpenFileDescriptorImpl(myProject, file, smellInfo.getStartLine(), smellInfo.getStartColumn());
-          final String exportPrefix = NewErrorTreeViewPanelImpl.createExportPrefix(smellInfo.getStartLine() + 1);
-          final String rendererPrefix =
+          String exportPrefix = NewErrorTreeViewPanelImpl.createExportPrefix(smellInfo.getStartLine() + 1);
+          String rendererPrefix =
                   NewErrorTreeViewPanelImpl.createRendererPrefix(smellInfo.getStartLine() + 1, smellInfo.getStartColumn() + 1);
           if (smellInfo.getSeverity() == HighlightSeverity.ERROR) {
             errorTreeView.addMessage(MessageCategory.ERROR, new String[]{smellInfo.getDescription()}, file.getPresentableUrl(), navigatable,
@@ -138,7 +138,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
           for (int i = 0; i < filesToCheck.size(); i++) {
             if (progress.isCanceled()) throw new ProcessCanceledException();
 
-            final VirtualFile file = filesToCheck.get(i);
+            VirtualFile file = filesToCheck.get(i);
 
             progress.setText(VcsBundle.message("searching.for.code.smells.processing.file.progress.text", file.getPresentableUrl()));
             progress.setFraction((double)i / (double)filesToCheck.size());
@@ -163,7 +163,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
   }
 
   @Nonnull
-  private List<CodeSmellInfo> findCodeSmells(@Nonnull final VirtualFile file, @Nonnull final ProgressIndicator progress) {
+  private List<CodeSmellInfo> findCodeSmells(@Nonnull final VirtualFile file, @Nonnull ProgressIndicator progress) {
     final List<CodeSmellInfo> result = Collections.synchronizedList(new ArrayList<CodeSmellInfo>());
 
     final DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(myProject);
@@ -181,8 +181,8 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
         DumbService.getInstance(myProject).runReadActionInSmartMode(new Runnable() {
           @Override
           public void run() {
-            final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
-            final Document document = FileDocumentManager.getInstance().getDocument(file);
+            PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
+            Document document = FileDocumentManager.getInstance().getDocument(file);
             if (psiFile == null || document == null) {
               return;
             }
@@ -200,7 +200,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
                                         @Nonnull List<CodeSmellInfo> result,
                                         @Nonnull Document document) {
     for (HighlightInfo highlightInfo : highlights) {
-      final HighlightSeverity severity = highlightInfo.getSeverity();
+      HighlightSeverity severity = highlightInfo.getSeverity();
       if (SeverityRegistrarImpl.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
         result.add(new CodeSmellInfo(document, getDescription(highlightInfo),
                                      new TextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()), severity));
@@ -209,11 +209,11 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
   }
 
   private static String getDescription(@Nonnull HighlightInfo highlightInfo) {
-    final String description = highlightInfo.getDescription();
-    final HighlightInfoType type = highlightInfo.getType();
+    String description = highlightInfo.getDescription();
+    HighlightInfoType type = highlightInfo.getType();
     if (type instanceof HighlightInfoType.HighlightInfoTypeSeverityByKey) {
-      final HighlightDisplayKey severityKey = ((HighlightInfoType.HighlightInfoTypeSeverityByKey)type).getSeverityKey();
-      final String id = severityKey.getID();
+      HighlightDisplayKey severityKey = ((HighlightInfoType.HighlightInfoTypeSeverityByKey)type).getSeverityKey();
+      String id = severityKey.getID();
       return "[" + id + "] " + description;
     }
     return description;

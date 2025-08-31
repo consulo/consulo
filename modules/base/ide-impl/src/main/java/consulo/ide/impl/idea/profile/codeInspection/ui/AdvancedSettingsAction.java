@@ -59,8 +59,8 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        final InspectionProfileImpl inspectionProfile = getInspectionProfile();
-        final Image icon = PlatformIconGroup.generalGearplain();
+        InspectionProfileImpl inspectionProfile = getInspectionProfile();
+        Image icon = PlatformIconGroup.generalGearplain();
         e.getPresentation().setIcon(
             (inspectionProfile != null && inspectionProfile.isProfileLocked())
                 ? ImageEffects.layered(icon, PlatformIconGroup.nodesLocked()) : icon
@@ -70,7 +70,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final ListPopupImpl actionGroupPopup = (ListPopupImpl) JBPopupFactory.getInstance().createListPopup(
+        ListPopupImpl actionGroupPopup = (ListPopupImpl) JBPopupFactory.getInstance().createListPopup(
             new BaseListPopupStep<MyAction>(
                 null,
                 ContainerUtil.list(new MyDisableNewInspectionsAction(), new MyResetAction())
@@ -87,11 +87,11 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
         actionGroupPopup.getList().setCellRenderer(
             (list, value, index, isSelected, cellHasFocus) -> ((MyAction) value).createCustomComponent(isSelected)
         );
-        final Component component = e.getInputEvent().getComponent();
+        Component component = e.getInputEvent().getComponent();
         actionGroupPopup.show(new RelativePoint(component, new Point(component.getWidth() - 1, 0)));
     }
 
-    private JLabel installLeftIndentToLabel(final JLabel label) {
+    private JLabel installLeftIndentToLabel(JLabel label) {
         label.setBorder(BorderFactory.createEmptyBorder(0, myCheckBoxIndent, 0, 0));
         return label;
     }
@@ -110,7 +110,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
 
         @Override
         public void actionPerformed() {
-            final InspectionProfileImpl inspectionProfile = getInspectionProfile();
+            InspectionProfileImpl inspectionProfile = getInspectionProfile();
             if (inspectionProfile == null) {
                 return;
             }
@@ -131,8 +131,8 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
 
         @Override
         protected JComponent createBaseComponent() {
-            final JCheckBox checkBox = new JCheckBox("Disable new inspections by default");
-            final InspectionProfileImpl profile = getInspectionProfile();
+            JCheckBox checkBox = new JCheckBox("Disable new inspections by default");
+            InspectionProfileImpl profile = getInspectionProfile();
             checkBox.setEnabled(profile != null);
             if (profile != null) {
                 checkBox.setSelected(profile.isProfileLocked());
@@ -143,7 +143,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
 
         @Override
         public void actionPerformed() {
-            final InspectionProfileImpl profile = getInspectionProfile();
+            InspectionProfileImpl profile = getInspectionProfile();
             if (profile != null) {
                 profile.lockProfile(!profile.isProfileLocked());
             }
@@ -169,12 +169,12 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
 
         protected abstract boolean enabled();
 
-        public JComponent createCustomComponent(final boolean selected) {
+        public JComponent createCustomComponent(boolean selected) {
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-            final JComponent baseComponent = createBaseComponent();
+            JComponent baseComponent = createBaseComponent();
             panel.add(baseComponent);
-            final JLabel descriptionLabel = new JLabel(myDescription);
+            JLabel descriptionLabel = new JLabel(myDescription);
             UIUtil.applyStyle(UIUtil.ComponentStyle.MINI, descriptionLabel);
             panel.add(installLeftIndentToLabel(descriptionLabel));
             UIUtil.setEnabled(panel, enabled(), true);
@@ -203,14 +203,14 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
             icon = EmptyIcon.create(20, 18);
         }
         if (icon != null) {
-            final Insets i = checkBox.getInsets();
-            final Rectangle r = checkBox.getBounds();
-            final Rectangle r1 = new Rectangle();
+            Insets i = checkBox.getInsets();
+            Rectangle r = checkBox.getBounds();
+            Rectangle r1 = new Rectangle();
             r1.x = i.left;
             r1.y = i.top;
             r1.width = r.width - (i.right + r1.x);
             r1.height = r.height - (i.bottom + r1.y);
-            final Rectangle iconRect = new Rectangle();
+            Rectangle iconRect = new Rectangle();
             SwingUtilities.layoutCompoundLabel(
                 checkBox,
                 checkBox.getFontMetrics(checkBox.getFont()),

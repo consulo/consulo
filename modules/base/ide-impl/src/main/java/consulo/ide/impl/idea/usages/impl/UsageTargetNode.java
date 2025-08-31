@@ -51,7 +51,7 @@ class UsageTargetNode extends Node {
 
   @Nonnull
   @Override
-  protected String getText(@Nonnull final UsageView view) {
+  protected String getText(@Nonnull UsageView view) {
     return ObjectUtil.notNull(getTarget().getPresentation().getPresentableText(), "");
   }
 

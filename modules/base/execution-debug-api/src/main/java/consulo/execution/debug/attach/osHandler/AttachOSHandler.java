@@ -28,7 +28,7 @@ public abstract class AttachOSHandler {
   @Nonnull
   protected final EnvironmentAwareHost myHost;
 
-  public AttachOSHandler(@Nonnull EnvironmentAwareHost host, @Nonnull final OSType osType) {
+  public AttachOSHandler(@Nonnull EnvironmentAwareHost host, @Nonnull OSType osType) {
     myHost = host;
     myOSType = osType;
   }
@@ -55,7 +55,7 @@ public abstract class AttachOSHandler {
   public static AttachOSHandler getAttachOsHandler(@Nonnull EnvironmentAwareHost host) {
 
     try {
-      final OSType osType = computeOsType(host);
+      OSType osType = computeOsType(host);
 
       if (osType == OSType.LINUX) {
         return new LinuxAttachOSHandler(host);
@@ -97,7 +97,7 @@ public abstract class AttachOSHandler {
 
     try {
       GeneralCommandLine getOsCommandLine = new GeneralCommandLine("uname", "-s");
-      final String osString = host.getProcessOutput(getOsCommandLine).getStdout().trim();
+      String osString = host.getProcessOutput(getOsCommandLine).getStdout().trim();
 
       OSType osType;
 

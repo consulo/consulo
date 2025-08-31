@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class CheckUtil {
   private CheckUtil() { }
 
-  public static void checkWritable(@Nonnull final PsiElement element) throws IncorrectOperationException {
+  public static void checkWritable(@Nonnull PsiElement element) throws IncorrectOperationException {
     if (!element.isWritable()) {
       if (element instanceof PsiDirectory) {
         throw new IncorrectOperationException(
@@ -42,7 +42,7 @@ public class CheckUtil {
         if (file == null) {
           throw new IncorrectOperationException();
         }
-        final VirtualFile virtualFile = file.getVirtualFile();
+        VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile == null) {
           throw new IncorrectOperationException();
         }
@@ -51,7 +51,7 @@ public class CheckUtil {
     }
   }
 
-  public static void checkDelete(@Nonnull final VirtualFile file) throws IncorrectOperationException {
+  public static void checkDelete(@Nonnull VirtualFile file) throws IncorrectOperationException {
     VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
       @Override
       public boolean visitFile(@Nonnull VirtualFile file) {

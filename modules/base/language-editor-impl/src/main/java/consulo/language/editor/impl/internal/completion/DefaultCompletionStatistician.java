@@ -28,7 +28,7 @@ import consulo.language.statistician.StatisticsInfo;
 public class DefaultCompletionStatistician extends CompletionStatistician {
 
   @Override
-  public StatisticsInfo serialize(final LookupElement element, final CompletionLocation location) {
+  public StatisticsInfo serialize(LookupElement element, CompletionLocation location) {
     return new StatisticsInfo("completion#" + location.getCompletionParameters().getOriginalFile().getLanguage(), element.getLookupString());
   }
 }

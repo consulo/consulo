@@ -35,7 +35,7 @@ public class SourceItemNavigateAction extends ArtifactEditorNavigateActionBase {
 
   @Override
   protected TreeNodePresentation getPresentation() {
-    final List<SourceItemNode> nodes = mySourceItemsTree.getSelectedSourceItemNodes();
+    List<SourceItemNode> nodes = mySourceItemsTree.getSelectedSourceItemNodes();
     if (nodes.size() == 1) {
       return nodes.get(0).getElementPresentation();
     }

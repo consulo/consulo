@@ -21,5 +21,5 @@ import consulo.ui.ex.content.Content;
 public interface GridCell {
   int getContentCount();
 
-  void minimize(final Content content);
+  void minimize(Content content);
 }

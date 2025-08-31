@@ -68,7 +68,7 @@ public class FileHistoryDialog extends HistoryDialog<FileHistoryDialogModel> {
   }
 
   @Override
-  protected Runnable doUpdateDiffs(final FileHistoryDialogModel model) {
+  protected Runnable doUpdateDiffs(FileHistoryDialogModel model) {
     final FileDifferenceModel diffModel = model.getDifferenceModel();
     return new Runnable() {
       public void run() {

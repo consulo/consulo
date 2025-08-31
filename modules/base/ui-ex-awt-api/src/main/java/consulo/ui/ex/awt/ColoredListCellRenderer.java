@@ -82,7 +82,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
         customizeCellRenderer(list, value, index, selected, hasFocus);
 
         if (mySeparator) {
-            final TitledSeparator separator = new TitledSeparator(mySeparatorText);
+            TitledSeparator separator = new TitledSeparator(mySeparatorText);
             separator.setBorder(JBUI.Borders.empty(0, 2, 0, 0));
             separator.setOpaque(false);
             separator.setBackground(UIUtil.TRANSPARENT_COLOR);

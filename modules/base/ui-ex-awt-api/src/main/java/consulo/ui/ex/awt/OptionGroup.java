@@ -68,10 +68,10 @@ public class OptionGroup implements PanelWithAnchor {
     panel.setLayout(new GridBagLayout());
 
     for (int i = 0; i < myOptions.size(); i++) {
-      final int leftInset = Boolean.TRUE.equals(myIsShifted.get(i)) ? IdeBorderFactory.TITLED_BORDER_INDENT : 0;
-      final int topInset = i == 0 ? 0 : UIUtil.DEFAULT_VGAP;
-      final int rightInset = UIUtil.DEFAULT_HGAP;
-      final Object option = myOptions.get(i);
+      int leftInset = Boolean.TRUE.equals(myIsShifted.get(i)) ? IdeBorderFactory.TITLED_BORDER_INDENT : 0;
+      int topInset = i == 0 ? 0 : UIUtil.DEFAULT_VGAP;
+      int rightInset = UIUtil.DEFAULT_HGAP;
+      Object option = myOptions.get(i);
       if (option instanceof JComponent) {
         JComponent component = (JComponent)option;
         panel.add(component,

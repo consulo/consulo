@@ -35,13 +35,13 @@ class FixedRowsModel extends MultiColumnListModel {
 
   @Override
   public int getColumnCount() {
-    final int rows = getRowCount();
+    int rows = getRowCount();
     return rows == 0 ? 0 : getSize() / rows + 1;
   }
 
   @Override
   public int toListIndex(int row, int column) {
-    final int rows = getRowCount();
+    int rows = getRowCount();
     return rows == 0 ? -1 : column * rows + row;
   }
 

@@ -37,7 +37,7 @@ public class RunnerLayoutUiFactoryImpl implements RunnerLayoutUiFactory {
 
   @Nonnull
   @Override
-  public RunnerLayoutUi create(@Nonnull final String runnerId, @Nonnull final String runnerTitle, @Nonnull final String sessionName, @Nonnull final Disposable parent) {
+  public RunnerLayoutUi create(@Nonnull String runnerId, @Nonnull String runnerTitle, @Nonnull String sessionName, @Nonnull Disposable parent) {
     return new DesktopAWTRunnerLayoutUiImpl(myProject, parent, runnerId, runnerTitle, sessionName);
   }
 }

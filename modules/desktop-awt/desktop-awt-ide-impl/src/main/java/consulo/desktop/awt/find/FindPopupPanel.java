@@ -279,7 +279,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 });
             Disposer.register(myDialog.getDisposable(), myDisposable);
 
-            final Window window = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
+            Window window = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
             Component parent = UIUtil.findUltimateParent(window);
             RelativePoint showPoint = null;
             Point2D location = DimensionService.getInstance().getLocation(SERVICE_KEY);
@@ -323,7 +323,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 prev.height = panelSize.height;
             }
             Window w = myDialog.getPeer().getWindow();
-            final AnAction escape = ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_ESCAPE);
+            AnAction escape = ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_ESCAPE);
             JRootPane root = ((RootPaneContainer) w).getRootPane();
 
             IdeGlassPaneImpl glass = (IdeGlassPaneImpl) myDialog.getRootPane().getGlassPane();
@@ -753,7 +753,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 return;
             }
             int[] selectedRows = myResultsPreviewTable.getSelectedRows();
-            final List<UsageInfo> selection = new SmartList<>();
+            List<UsageInfo> selection = new SmartList<>();
             String file = null;
             for (int row : selectedRows) {
                 Object value = myResultsPreviewTable.getModel().getValueAt(row, 0);
@@ -932,14 +932,14 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     }
 
     private DefaultTableModel createTableModel() {
-        final DefaultTableModel model = new DefaultTableModel() {
+        DefaultTableModel model = new DefaultTableModel() {
             private String firstResultPath;
 
             private final Comparator<Vector<UsageInfoAdapter>> COMPARATOR = (v1, v2) -> {
                 UsageInfoAdapter u1 = v1.get(0);
                 UsageInfoAdapter u2 = v2.get(0);
                 String u2Path = u2.getPath();
-                final String u1Path = u1.getPath();
+                String u1Path = u1.getPath();
                 if (u1Path.equals(firstResultPath) && !u2Path.equals(firstResultPath)) {
                     return -1; // first result is always sorted first
                 }
@@ -971,14 +971,14 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                     dataVector.clear();
                     fireTableDataChanged();
                 }
-                final Vector<UsageInfoAdapter> v = (Vector) convertToVector(rowData);
+                Vector<UsageInfoAdapter> v = (Vector) convertToVector(rowData);
                 if (dataVector.isEmpty()) {
                     addRow(v);
                     myResultsPreviewTable.getSelectionModel().setSelectionInterval(0, 0);
                     firstResultPath = v.get(0).getPath();
                 }
                 else {
-                    final int p = Collections.binarySearch(dataVector, v, COMPARATOR);
+                    int p = Collections.binarySearch(dataVector, v, COMPARATOR);
                     assert p < 0 : "duplicate result found";
                     int row = -(p + 1);
                     insertRow(row, v);
@@ -1302,11 +1302,11 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
         if (myHelper.myPreviousModel != null
             && myHelper.myPreviousModel.getStringToFind().length() < myHelper.getModel().getStringToFind().length()) {
-            final DefaultTableModel previousModel = (DefaultTableModel) myResultsPreviewTable.getModel();
+            DefaultTableModel previousModel = (DefaultTableModel) myResultsPreviewTable.getModel();
             for (int i = 0, len = previousModel.getRowCount(); i < len; ++i) {
-                final Object value = previousModel.getValueAt(i, 0);
+                Object value = previousModel.getValueAt(i, 0);
                 if (value instanceof UsageInfo2UsageAdapter usage) {
-                    final VirtualFile file = usage.getFile();
+                    VirtualFile file = usage.getFile();
                     if (file != null) {
                         filesToScanInitially.add(file);
                     }
@@ -1346,7 +1346,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 @Override
                 @RequiredReadAction
                 public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) {
-                    final FindUsagesProcessPresentation processPresentation =
+                    FindUsagesProcessPresentation processPresentation =
                         FindInProjectUtil.setupProcessPresentation(myProject, myUsageViewPresentation);
                     ThreadLocal<String> lastUsageFileRef = new ThreadLocal<>();
                     ThreadLocal<Reference<Usage>> recentUsageRef = new ThreadLocal<>();
@@ -1372,7 +1372,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
                             Usage recent = SoftReference.dereference(recentUsageRef.get());
                             UsageInfoAdapter recentAdapter = recent instanceof UsageInfoAdapter usageInfoAdapter ? usageInfoAdapter : null;
-                            final boolean merged = !myHelper.isReplaceState() && recentAdapter != null && recentAdapter.merge(usage);
+                            boolean merged = !myHelper.isReplaceState() && recentAdapter != null && recentAdapter.merge(usage);
                             if (!merged) {
                                 recentUsageRef.set(new WeakReference<>(usage));
                             }
@@ -1569,7 +1569,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             }
         }
 
-        final String mask = getFileTypeMask();
+        String mask = getFileTypeMask();
 
         if (mask != null) {
             if (mask.isEmpty()) {
@@ -1692,7 +1692,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             return;
         }
         String pattern;
-        final List<String> strings = StringUtil.split(filter, ",");
+        List<String> strings = StringUtil.split(filter, ",");
         if (strings.size() == 1) {
             pattern = PatternUtil.convertToRegex(filter.trim());
         }

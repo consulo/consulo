@@ -28,7 +28,7 @@ public interface ElementPattern<T> {
 
   boolean accepts(@Nullable Object o);
 
-  boolean accepts(@Nullable Object o, final ProcessingContext context);
+  boolean accepts(@Nullable Object o, ProcessingContext context);
 
   ElementPatternCondition<T> getCondition();
 }

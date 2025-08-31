@@ -25,14 +25,14 @@ import javax.swing.*;
 public class TestTreeExpander implements TreeExpander {
   private TestFrameworkRunningModel myModel;
 
-  public void setModel(final TestFrameworkRunningModel model) {
+  public void setModel(TestFrameworkRunningModel model) {
     myModel = model;
     Disposer.register(model, () -> myModel = null);
   }
 
   @Override
   public void expandAll() {
-    final JTree treeView = myModel.getTreeView();
+    JTree treeView = myModel.getTreeView();
     for (int i = 0; i < treeView.getRowCount(); i++)
       treeView.expandRow(i);
   }

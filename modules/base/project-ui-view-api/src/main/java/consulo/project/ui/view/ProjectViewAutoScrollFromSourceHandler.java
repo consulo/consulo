@@ -45,11 +45,11 @@ public abstract class ProjectViewAutoScrollFromSourceHandler extends AutoScrollF
 
   @Override
   public void install() {
-    final MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
+    MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
     connection.subscribe(FileEditorManagerListener.class, new FileEditorManagerAdapter() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-        final FileEditor editor = event.getNewEditor();
+        FileEditor editor = event.getNewEditor();
         if (editor != null && myComponent.isShowing() && isAutoScrollEnabled()) {
           myAlarm.cancelAllRequests();
           myAlarm.addRequest(() -> selectElementFromEditor(editor), getAlarmDelay(), getModalityState());

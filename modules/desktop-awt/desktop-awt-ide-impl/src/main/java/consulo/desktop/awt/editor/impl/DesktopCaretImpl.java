@@ -39,8 +39,8 @@ public class DesktopCaretImpl extends CodeEditorCaretBase {
     }
 
     Rectangle visibleArea = myEditor.getScrollingModel().getVisibleArea();
-    final EditorGutterComponentEx gutter = myEditor.getGutterComponentEx();
-    final EditorComponentImpl content = (EditorComponentImpl)myEditor.getContentComponent();
+    EditorGutterComponentEx gutter = myEditor.getGutterComponentEx();
+    EditorComponentImpl content = (EditorComponentImpl)myEditor.getContentComponent();
 
     int editorUpdateWidth = myEditor.getScrollPane().getHorizontalScrollBar().getValue() + visibleArea.width;
     int gutterUpdateWidth = gutter.getComponent().getWidth();

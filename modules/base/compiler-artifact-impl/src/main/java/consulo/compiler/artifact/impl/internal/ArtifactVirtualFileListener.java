@@ -71,20 +71,20 @@ public class ArtifactVirtualFileListener implements VirtualFileListener {
 
   @Override
   public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
-    final String oldPath = event.getOldParent().getPath() + "/" + event.getFileName();
+    String oldPath = event.getOldParent().getPath() + "/" + event.getFileName();
     filePathChanged(oldPath, event.getNewParent().getPath() + "/" + event.getFileName());
   }
 
   private void filePathChanged(@Nonnull final String oldPath, @Nonnull final String newPath) {
-    final Collection<Artifact> artifacts = myParentPathsToArtifacts.getValue().get(oldPath);
+    Collection<Artifact> artifacts = myParentPathsToArtifacts.getValue().get(oldPath);
     if (artifacts != null) {
-      final ModifiableArtifactModel model = myArtifactManager.createModifiableModel();
+      ModifiableArtifactModel model = myArtifactManager.createModifiableModel();
       for (Artifact artifact : artifacts) {
-        final Artifact copy = model.getOrCreateModifiableArtifact(artifact);
+        Artifact copy = model.getOrCreateModifiableArtifact(artifact);
         ArtifactUtil.processFileOrDirectoryCopyElements(copy, new PackagingElementProcessor<FileOrDirectoryCopyPackagingElement<?>>() {
           @Override
           public boolean process(@Nonnull FileOrDirectoryCopyPackagingElement<?> element, @Nonnull PackagingElementPath pathToElement) {
-            final String path = element.getFilePath();
+            String path = element.getFilePath();
             if (FileUtil.startsWith(path, oldPath)) {
               element.setFilePath(newPath + path.substring(oldPath.length()));
             }
@@ -99,7 +99,7 @@ public class ArtifactVirtualFileListener implements VirtualFileListener {
   @Override
   public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
     if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
-      final VirtualFile parent = event.getParent();
+      VirtualFile parent = event.getParent();
       if (parent != null) {
         filePathChanged(parent.getPath() + "/" + event.getOldValue(), parent.getPath() + "/" + event.getNewValue());
       }

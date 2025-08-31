@@ -54,8 +54,8 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final InputEvent inputEvent = e.getInputEvent();
-            final ActionPopupMenu popupMenu =
+            InputEvent inputEvent = e.getInputEvent();
+            ActionPopupMenu popupMenu =
                 ((ActionManagerEx) ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE,
                     myGearProducer.produce(),
                     new MenuItemPresentationFactory(true));
@@ -98,7 +98,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     private final JPanel myWestPanel;
 
     @RequiredUIAccess
-    public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
+    public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull NotNullProducer<ActionGroup> gearProducer) {
         super(new BorderLayout());
 
         myToolWindow = toolWindow;
@@ -131,7 +131,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
         myWestPanel.addMouseListener(new PopupHandler() {
             @Override
-            public void invokePopup(final Component comp, final int x, final int y) {
+            public void invokePopup(Component comp, int x, int y) {
                 toolWindow.getContentUI()
                     .showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
             }
@@ -146,7 +146,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseReleased(final MouseEvent e) {
+            public void mouseReleased(MouseEvent e) {
                 if (!e.isPopupTrigger()) {
                     if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_RELEASED)) {
                         if (e.isAltDown()) {

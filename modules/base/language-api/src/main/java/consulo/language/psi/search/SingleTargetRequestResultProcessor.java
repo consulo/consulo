@@ -32,12 +32,12 @@ public final class SingleTargetRequestResultProcessor extends RequestResultProce
 
   @Override
   @RequiredReadAction
-  public boolean processTextOccurrence(@Nonnull PsiElement element, int offsetInElement, @Nonnull final Predicate<? super PsiReference> consumer) {
+  public boolean processTextOccurrence(@Nonnull PsiElement element, int offsetInElement, @Nonnull Predicate<? super PsiReference> consumer) {
     if (!myTarget.isValid()) {
       return false;
     }
 
-    final List<PsiReference> references = myPsiReferenceService.getReferences(element, new PsiReferenceService.Hints(myTarget, offsetInElement));
+    List<PsiReference> references = myPsiReferenceService.getReferences(element, new PsiReferenceService.Hints(myTarget, offsetInElement));
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < references.size(); i++) {
       PsiReference ref = references.get(i);

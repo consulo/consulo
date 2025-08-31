@@ -81,7 +81,7 @@ public final class TextEditorState implements FileEditorState {
       return false;
     }
 
-    final TextEditorState textEditorState = (TextEditorState)o;
+    TextEditorState textEditorState = (TextEditorState)o;
 
     if (!Arrays.equals(CARETS, textEditorState.CARETS)) return false;
     if (RELATIVE_CARET_POSITION != textEditorState.RELATIVE_CARET_POSITION) return false;
@@ -134,7 +134,7 @@ public final class TextEditorState implements FileEditorState {
         return false;
       }
 
-      final CaretState caretState = (CaretState)o;
+      CaretState caretState = (CaretState)o;
 
       if (COLUMN != caretState.COLUMN) return false;
       if (LINE != caretState.LINE) return false;

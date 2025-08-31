@@ -46,7 +46,7 @@ public class CharSequenceReader extends Reader {
     }
 
     if (myText instanceof CharArrayCharSequence) { // Optimization
-      final int readChars = ((CharArrayCharSequence)myText).readCharsTo(myCurPos, cbuf, off, len);
+      int readChars = ((CharArrayCharSequence)myText).readCharsTo(myCurPos, cbuf, off, len);
       if (readChars < 0) return -1;
       myCurPos += readChars;
       return readChars;

@@ -59,7 +59,7 @@ public final class LanguageHighlightLevel {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("LanguageHighlightLevel{");
+    StringBuilder sb = new StringBuilder("LanguageHighlightLevel{");
     sb.append("myLangId='").append(myLangID).append('\'');
     sb.append(", myInspectionsLevel=").append(myLevel);
     sb.append('}');

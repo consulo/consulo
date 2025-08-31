@@ -35,18 +35,18 @@ class SwitchAnnotationSourceAction extends AnAction {
   private final List<Consumer<AnnotationSource>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private boolean myShowMerged;
 
-  SwitchAnnotationSourceAction(final AnnotationSourceSwitcher switcher, final EditorGutterComponentEx gutter) {
+  SwitchAnnotationSourceAction(AnnotationSourceSwitcher switcher, EditorGutterComponentEx gutter) {
     mySwitcher = switcher;
     myGutter = gutter;
     myShowMerged = mySwitcher.getDefaultSource().showMerged();
   }
 
-  public void addSourceSwitchListener(final Consumer<AnnotationSource> listener) {
+  public void addSourceSwitchListener(Consumer<AnnotationSource> listener) {
     myListeners.add(listener);
   }
 
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(AnActionEvent e) {
     e.getPresentation().setTextValue(
       myShowMerged
         ? VcsLocalize.annotationSwitchToOriginalText()
@@ -56,7 +56,7 @@ class SwitchAnnotationSourceAction extends AnAction {
 
   public void actionPerformed(AnActionEvent e) {
     myShowMerged = !myShowMerged;
-    final AnnotationSource newSource = AnnotationSource.getInstance(myShowMerged);
+    AnnotationSource newSource = AnnotationSource.getInstance(myShowMerged);
     mySwitcher.switchTo(newSource);
     for (Consumer<AnnotationSource> listener : myListeners) {
       listener.accept(newSource);

@@ -124,14 +124,14 @@ class SearchForUsagesRunnable implements Runnable {
     return "<a href='" + SEARCH_IN_PROJECT_HREF_TARGET + "'>Search in Project</a>";
   }
 
-  private static void notifyByFindBalloon(@Nullable final HyperlinkListener listener,
-                                          @Nonnull final NotificationType info,
+  private static void notifyByFindBalloon(@Nullable HyperlinkListener listener,
+                                          @Nonnull NotificationType info,
                                           @Nonnull FindUsagesProcessPresentation processPresentation,
-                                          @Nonnull final Project project,
-                                          @Nonnull final List<String> lines) {
+                                          @Nonnull Project project,
+                                          @Nonnull List<String> lines) {
     UsageViewContentManager.getInstance(project); // in case tool window not registered
 
-    final Collection<VirtualFile> largeFiles = processPresentation.getLargeFiles();
+    Collection<VirtualFile> largeFiles = processPresentation.getLargeFiles();
     List<String> resultLines = new ArrayList<>(lines);
     HyperlinkListener resultListener = listener;
     if (!largeFiles.isEmpty()) {
@@ -183,7 +183,7 @@ class SearchForUsagesRunnable implements Runnable {
   private static String detailedLargeFilesMessage(@Nonnull Collection<VirtualFile> largeFiles) {
     String message = "";
     if (largeFiles.size() == 1) {
-      final VirtualFile vFile = largeFiles.iterator().next();
+      VirtualFile vFile = largeFiles.iterator().next();
       message += "File " + presentableFileInfo(vFile) + " is ";
     }
     else {
@@ -208,7 +208,7 @@ class SearchForUsagesRunnable implements Runnable {
   }
 
   @Nonnull
-  private static String getPresentablePath(@Nonnull final VirtualFile virtualFile) {
+  private static String getPresentablePath(@Nonnull VirtualFile virtualFile) {
     return "'" + AccessRule.read(virtualFile::getPresentableUrl) + "'";
   }
 
@@ -240,12 +240,12 @@ class SearchForUsagesRunnable implements Runnable {
   }
 
   private static PsiElement getPsiElement(@Nonnull UsageTarget[] searchFor) {
-    final UsageTarget target = searchFor[0];
+    UsageTarget target = searchFor[0];
     if (!(target instanceof PsiElementUsageTarget)) return null;
     return AccessRule.read(((PsiElementUsageTarget)target)::getElement);
   }
 
-  private static void flashUsageScriptaculously(@Nonnull final Usage usage) {
+  private static void flashUsageScriptaculously(@Nonnull Usage usage) {
     if (!(usage instanceof UsageInfo2UsageAdapter)) {
       return;
     }
@@ -272,9 +272,9 @@ class SearchForUsagesRunnable implements Runnable {
       usageView.associateProgress(indicator);
       if (myUsageViewRef.compareAndSet(null, usageView)) {
         openView(usageView);
-        final Usage firstUsage = myFirstUsage.get();
+        Usage firstUsage = myFirstUsage.get();
         if (firstUsage != null) {
-          final UsageViewImpl finalUsageView = usageView;
+          UsageViewImpl finalUsageView = usageView;
           ApplicationManager.getApplication().runReadAction(() -> finalUsageView.appendUsage(firstUsage));
         }
       }
@@ -288,7 +288,7 @@ class SearchForUsagesRunnable implements Runnable {
     return null;
   }
 
-  private void openView(@Nonnull final UsageViewImpl usageView) {
+  private void openView(@Nonnull UsageViewImpl usageView) {
     SwingUtilities.invokeLater(() -> {
       if (myProject.isDisposed()) return;
       myUsageViewManager.addContent(usageView, myPresentation);
@@ -310,7 +310,7 @@ class SearchForUsagesRunnable implements Runnable {
     snapshot.logResponsivenessSinceCreation("Find Usages");
   }
 
-  private void searchUsages(@Nonnull final AtomicBoolean findStartedBalloonShown) {
+  private void searchUsages(@Nonnull AtomicBoolean findStartedBalloonShown) {
     ProgressIndicator indicator = ProgressWrapper.unwrap(ProgressManager.getInstance().getProgressIndicator());
     assert indicator != null : "must run find usages under progress";
     TooManyUsagesStatus.createFor(indicator);
@@ -335,12 +335,12 @@ class SearchForUsagesRunnable implements Runnable {
       boolean incrementCounter = !UsageViewManager.isSelfUsage(usage, mySearchFor);
 
       if (incrementCounter) {
-        final int usageCount = myUsageCountWithoutDefinition.incrementAndGet();
+        int usageCount = myUsageCountWithoutDefinition.incrementAndGet();
         if (usageCount == 1 && !myProcessPresentation.isShowPanelIfOnlyOneUsage()) {
           myFirstUsage.compareAndSet(null, usage);
         }
 
-        final UsageViewImpl usageView = getUsageView(indicator1);
+        UsageViewImpl usageView = getUsageView(indicator1);
 
         TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.getFrom(indicator1);
         if (usageCount > UsageLimitUtil.USAGES_LIMIT && tooManyUsagesStatus.switchTooManyUsagesStatus()) {
@@ -381,8 +381,8 @@ class SearchForUsagesRunnable implements Runnable {
             return;
           }
 
-          final List<Action> notFoundActions = myProcessPresentation.getNotFoundActions();
-          final String message = UsageViewBundle
+          List<Action> notFoundActions = myProcessPresentation.getNotFoundActions();
+          String message = UsageViewBundle
                   .message("dialog.no.usages.found.in", StringUtil.decapitalize(myPresentation.getUsagesString()), myPresentation.getScopeText(),
                            myPresentation.getContextText());
 
@@ -438,14 +438,14 @@ class SearchForUsagesRunnable implements Runnable {
       }, application.getNoneModalityState(), myProject.getDisposed());
     }
     else {
-      final UsageViewImpl usageView = myUsageViewRef.get();
+      UsageViewImpl usageView = myUsageViewRef.get();
       if (usageView != null) {
         usageView.drainQueuedUsageNodes();
         usageView.setSearchInProgress(false);
       }
 
-      final List<String> lines;
-      final HyperlinkListener hyperlinkListener;
+      List<String> lines;
+      HyperlinkListener hyperlinkListener;
       if (myOutOfScopeUsages.get() == 0 || getPsiElement(mySearchFor) == null) {
         lines = Collections.emptyList();
         hyperlinkListener = null;

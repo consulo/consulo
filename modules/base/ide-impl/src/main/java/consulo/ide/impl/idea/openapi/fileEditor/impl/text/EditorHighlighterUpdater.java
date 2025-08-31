@@ -101,7 +101,7 @@ public class EditorHighlighterUpdater {
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
     @RequiredUIAccess
-    public void fileTypesChanged(@Nonnull final FileTypeEvent event) {
+    public void fileTypesChanged(@Nonnull FileTypeEvent event) {
       UIAccess.assertIsUIThread();
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.

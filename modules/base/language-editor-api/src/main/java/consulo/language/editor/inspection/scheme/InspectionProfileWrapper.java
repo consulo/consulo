@@ -74,11 +74,11 @@ public class InspectionProfileWrapper {
     return myProfile.getName();
   }
 
-  public boolean isToolEnabled(final HighlightDisplayKey key, PsiElement element) {
+  public boolean isToolEnabled(HighlightDisplayKey key, PsiElement element) {
     return myProfile.isToolEnabled(key, element);
   }
 
-  public InspectionToolWrapper getInspectionTool(final String shortName, PsiElement element) {
+  public InspectionToolWrapper getInspectionTool(String shortName, PsiElement element) {
     return myProfile.getInspectionTool(shortName, element);
   }
 

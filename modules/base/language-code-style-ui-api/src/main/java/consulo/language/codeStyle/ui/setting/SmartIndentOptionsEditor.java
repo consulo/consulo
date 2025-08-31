@@ -108,7 +108,7 @@ public class SmartIndentOptionsEditor extends IndentOptionsEditor {
   }
 
   @Override
-  public boolean isModified(final CodeStyleSettings settings, final CommonCodeStyleSettings.IndentOptions options) {
+  public boolean isModified(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
     boolean isModified = super.isModified(settings, options);
     isModified |= isFieldModified(myCbSmartTabs, options.SMART_TABS);
     for (ContinuationOption continuationOption : myContinuationOptions) {
@@ -119,7 +119,7 @@ public class SmartIndentOptionsEditor extends IndentOptionsEditor {
   }
 
   @Override
-  public void apply(final CodeStyleSettings settings, final CommonCodeStyleSettings.IndentOptions options) {
+  public void apply(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
     super.apply(settings, options);
     for (ContinuationOption continuationOption : myContinuationOptions) {
       continuationOption.apply(options);
@@ -129,7 +129,7 @@ public class SmartIndentOptionsEditor extends IndentOptionsEditor {
   }
 
   @Override
-  public void reset(@Nonnull final CodeStyleSettings settings, @Nonnull final CommonCodeStyleSettings.IndentOptions options) {
+  public void reset(@Nonnull CodeStyleSettings settings, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
     super.reset(settings, options);
     for (ContinuationOption continuationOption : myContinuationOptions) {
       continuationOption.reset(options);
@@ -139,7 +139,7 @@ public class SmartIndentOptionsEditor extends IndentOptionsEditor {
   }
 
   @Override
-  public void setEnabled(final boolean enabled) {
+  public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
 
     @SuppressWarnings("deprecation") boolean smartTabsChecked = enabled && myCbUseTab.isSelected();

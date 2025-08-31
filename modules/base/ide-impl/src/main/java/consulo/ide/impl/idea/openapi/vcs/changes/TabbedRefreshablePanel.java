@@ -39,7 +39,7 @@ public class TabbedRefreshablePanel implements RefreshablePanel {
     myPanel.add(myPane, BorderLayout.CENTER);
   }
 
-  public void addTab(final String title, final RefreshablePanel panel) {
+  public void addTab(String title, RefreshablePanel panel) {
     myPanels.add(panel);
     myPane.add(title, panel.getPanel());
   }

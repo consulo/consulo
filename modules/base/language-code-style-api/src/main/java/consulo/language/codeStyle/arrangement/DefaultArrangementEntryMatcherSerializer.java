@@ -167,7 +167,7 @@ public class DefaultArrangementEntryMatcherSerializer {
     @Override
     public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
       ArrangementSettingsToken type = condition.getType();
-      final Element element = new Element(type.getId());
+      Element element = new Element(type.getId());
       if (StdArrangementTokenType.REG_EXP.is(type)) {
         element.setText(StringUtil.escapeStringCharacters(condition.getValue().toString()));
       }

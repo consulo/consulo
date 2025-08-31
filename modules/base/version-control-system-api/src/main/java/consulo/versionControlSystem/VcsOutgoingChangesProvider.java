@@ -27,13 +27,13 @@ import java.util.Date;
 import java.util.List;
 
 public interface VcsOutgoingChangesProvider<T extends CommittedChangeList> extends VcsProviderMarker {
-  Pair<VcsRevisionNumber, List<T>> getOutgoingChanges(final VirtualFile vcsRoot, final boolean findRemote) throws VcsException;
+  Pair<VcsRevisionNumber, List<T>> getOutgoingChanges(VirtualFile vcsRoot, boolean findRemote) throws VcsException;
 
   @Nullable
-  VcsRevisionNumber getMergeBaseNumber(final VirtualFile anyFileUnderRoot) throws VcsException;
+  VcsRevisionNumber getMergeBaseNumber(VirtualFile anyFileUnderRoot) throws VcsException;
 
-  Collection<Change> filterLocalChangesBasedOnLocalCommits(final Collection<Change> localChanges, final VirtualFile vcsRoot) throws VcsException;
+  Collection<Change> filterLocalChangesBasedOnLocalCommits(Collection<Change> localChanges, VirtualFile vcsRoot) throws VcsException;
 
   @Nullable
-  Date getRevisionDate(final VcsRevisionNumber revision, FilePath file);
+  Date getRevisionDate(VcsRevisionNumber revision, FilePath file);
 }

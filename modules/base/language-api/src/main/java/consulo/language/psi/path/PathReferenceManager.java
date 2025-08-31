@@ -90,10 +90,10 @@ public abstract class PathReferenceManager {
   public abstract PathReferenceProvider getGlobalWebPathReferenceProvider();
 
   @Nonnull
-  public abstract PathReferenceProvider createStaticPathReferenceProvider(final boolean relativePathsAllowed);
+  public abstract PathReferenceProvider createStaticPathReferenceProvider(boolean relativePathsAllowed);
 
   public static PsiReference[] getReferencesFromProvider(@Nonnull PathReferenceProvider provider, @Nonnull PsiElement psiElement, boolean soft) {
-    final ArrayList<PsiReference> references = new ArrayList<PsiReference>();
+    ArrayList<PsiReference> references = new ArrayList<PsiReference>();
     provider.createReferences(psiElement, references, soft);
     return references.toArray(new PsiReference[references.size()]);
   }

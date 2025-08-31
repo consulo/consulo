@@ -68,7 +68,7 @@ public class DispatchThreadProgressWindow extends ProgressWindow {
     showDialog();
   }
 
-  public void setRunnable(final Runnable runnable) {
+  public void setRunnable(Runnable runnable) {
     myRunnable = runnable;
   }
 }

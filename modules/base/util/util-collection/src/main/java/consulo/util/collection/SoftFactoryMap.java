@@ -29,12 +29,12 @@ public abstract class SoftFactoryMap<T, V> {
   protected abstract V create(T key);
 
   public final V get(T key) {
-    final V v = myMap.get(key);
+    V v = myMap.get(key);
     if (v != null) {
       return v == ObjectUtil.NULL ? null : v;
     }
 
-    final V value = create(key);
+    V value = create(key);
     V toPut = value == null ? (V)ObjectUtil.NULL : value;
     V prev = myMap.putIfAbsent(key, toPut);
     return prev == null || prev == ObjectUtil.NULL ? value : prev;

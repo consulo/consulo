@@ -60,7 +60,7 @@ public interface DesktopAWTActionToolbar extends ActionToolbarEx {
     default int getMaxButtonWidth() {
         int width = 0;
         for (int i = 0; i < getComponentCount(); i++) {
-            final Dimension dimension = getChildPreferredSize(i);
+            Dimension dimension = getChildPreferredSize(i);
             width = Math.max(width, dimension.width);
         }
         return width;
@@ -69,7 +69,7 @@ public interface DesktopAWTActionToolbar extends ActionToolbarEx {
     default int getMaxButtonHeight() {
         int height = 0;
         for (int i = 0; i < getComponentCount(); i++) {
-            final Dimension dimension = getChildPreferredSize(i);
+            Dimension dimension = getChildPreferredSize(i);
             height = Math.max(height, dimension.height);
         }
         return height;

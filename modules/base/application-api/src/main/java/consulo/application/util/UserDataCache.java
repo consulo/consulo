@@ -41,21 +41,21 @@ public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> exte
     myKey = Key.create(keyName);
   }
 
-  public T get(final Owner owner, final Param parameter) {
+  public T get(Owner owner, Param parameter) {
     return get(myKey, owner, parameter);
   }
 
-  public void put(final Owner owner, final T value) {
+  public void put(Owner owner, T value) {
     putValue(value, owner, myKey);
   }
 
   @Override
-  protected final T getValue(final Owner owner, final Key<T> key) {
+  protected final T getValue(Owner owner, Key<T> key) {
     return owner.getUserData(key);
   }
 
   @Override
-  protected final void putValue(final T t, final Owner owner, final Key<T> key) {
+  protected final void putValue(T t, Owner owner, Key<T> key) {
     owner.putUserData(key, t);
   }
 

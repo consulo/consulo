@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class SearchTextFieldWithStoredHistory extends SearchTextField {
   private final String myPropertyName;
 
-  public SearchTextFieldWithStoredHistory(final String propertyName) {
+  public SearchTextFieldWithStoredHistory(String propertyName) {
     myPropertyName = propertyName;
     reset();
   }
@@ -39,10 +39,10 @@ public class SearchTextFieldWithStoredHistory extends SearchTextField {
   }
 
   public void reset() {
-    final PropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
-    final String history = propertiesComponent.getValue(myPropertyName);
+    PropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
+    String history = propertiesComponent.getValue(myPropertyName);
     if (history != null) {
-      final String[] items = history.split("\n");
+      String[] items = history.split("\n");
       ArrayList<String> result = new ArrayList<>();
       for (String item : items) {
         if (item != null && item.length() > 0) {

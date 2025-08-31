@@ -44,7 +44,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
   @Override
   protected PsiElement restoreBySignatureTokens(@Nonnull PsiFile file,
                                                 @Nonnull PsiElement parent,
-                                                @Nonnull final String type,
+                                                @Nonnull String type,
                                                 @Nonnull StringTokenizer tokenizer,
                                                 @Nullable StringBuilder processingInfoStorage)
   {
@@ -121,7 +121,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
   }
 
   @Override
-  public String getSignature(@Nonnull final PsiElement element) {
+  public String getSignature(@Nonnull PsiElement element) {
     StringBuilder buffer = null;
     int length;
     for (PsiElement current = element; current != null && !(current instanceof PsiFile); current = current.getParent()) {
@@ -153,7 +153,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
    * @return         <code>true</code> if {@link #TOP_LEVEL_CHILD_MARKER} can be used for the given element; <code>false</code> otherwise
    */
   private static boolean canResolveTopLevelChild(@Nonnull PsiElement element) {
-    final PsiElement parent = element.getParent();
+    PsiElement parent = element.getParent();
     if (parent == null) {
       return false;
     }
@@ -181,7 +181,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
   private static StringBuilder getSignature(@Nonnull PsiElement element, @Nullable StringBuilder buffer) {
     if (element instanceof PsiNamedElement) {
       PsiNamedElement named = (PsiNamedElement)element;
-      final String name = named.getName();
+      String name = named.getName();
       if (StringUtil.isEmpty(name)) {
         return null;
       }

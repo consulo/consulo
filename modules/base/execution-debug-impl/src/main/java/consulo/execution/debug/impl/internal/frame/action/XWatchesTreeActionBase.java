@@ -32,7 +32,7 @@ import java.util.List;
  */
 public abstract class XWatchesTreeActionBase extends AnAction {
   @Nonnull
-  public static <T extends TreeNode> List<? extends T> getSelectedNodes(final @Nonnull XDebuggerTree tree, Class<T> nodeClass) {
+  public static <T extends TreeNode> List<? extends T> getSelectedNodes(@Nonnull XDebuggerTree tree, Class<T> nodeClass) {
     List<T> list = new ArrayList<T>();
     TreePath[] selectionPaths = tree.getSelectionPaths();
     if (selectionPaths != null) {
@@ -48,7 +48,7 @@ public abstract class XWatchesTreeActionBase extends AnAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final XDebuggerTree tree = XDebuggerTree.getTree(e);
+    XDebuggerTree tree = XDebuggerTree.getTree(e);
     XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
     boolean enabled = tree != null && watchesView != null && isEnabled(e, tree);
     e.getPresentation().setEnabled(enabled);
@@ -57,7 +57,7 @@ public abstract class XWatchesTreeActionBase extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final XDebuggerTree tree = XDebuggerTree.getTree(e);
+    XDebuggerTree tree = XDebuggerTree.getTree(e);
     XWatchesView watchesView = e.getRequiredData(XWatchesView.DATA_KEY);
     if (tree != null) {
       perform(e, tree, watchesView);

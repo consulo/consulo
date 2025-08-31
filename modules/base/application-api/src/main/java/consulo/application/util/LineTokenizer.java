@@ -36,18 +36,18 @@ public class LineTokenizer {
   }
 
   @Nonnull
-  public static String[] tokenize(CharSequence chars, final boolean includeSeparators, final boolean skipLastEmptyLine) {
-    final List<String> strings = tokenizeIntoList(chars, includeSeparators, skipLastEmptyLine);
+  public static String[] tokenize(CharSequence chars, boolean includeSeparators, boolean skipLastEmptyLine) {
+    List<String> strings = tokenizeIntoList(chars, includeSeparators, skipLastEmptyLine);
     return strings.isEmpty() ? ArrayUtil.EMPTY_STRING_ARRAY : ArrayUtil.toStringArray(strings);
   }
 
   @Nonnull
-  public static List<String> tokenizeIntoList(CharSequence chars, final boolean includeSeparators) {
+  public static List<String> tokenizeIntoList(CharSequence chars, boolean includeSeparators) {
     return tokenizeIntoList(chars, includeSeparators, true);
   }
 
   @Nonnull
-  public static List<String> tokenizeIntoList(CharSequence chars, final boolean includeSeparators, final boolean skipLastEmptyLine) {
+  public static List<String> tokenizeIntoList(CharSequence chars, boolean includeSeparators, boolean skipLastEmptyLine) {
     if (chars == null || chars.length() == 0){
       return Collections.emptyList();
     }
@@ -73,10 +73,10 @@ public class LineTokenizer {
   }
 
 
-  public static int calcLineCount(@Nonnull CharSequence chars, final boolean skipLastEmptyLine) {
+  public static int calcLineCount(@Nonnull CharSequence chars, boolean skipLastEmptyLine) {
     int lineCount = 0;
     if (chars.length() != 0) {
-      final LineTokenizer tokenizer = new LineTokenizer(chars);
+      LineTokenizer tokenizer = new LineTokenizer(chars);
       while (!tokenizer.atEnd()) {
         lineCount += 1;
         tokenizer.advance();
@@ -141,7 +141,7 @@ public class LineTokenizer {
 
   public void advance() {
     int i = myOffset + myLength + myLineSeparatorLength;
-    final int textLength = myText.length();
+    int textLength = myText.length();
     if (i >= textLength){
       atEnd = true;
       return;

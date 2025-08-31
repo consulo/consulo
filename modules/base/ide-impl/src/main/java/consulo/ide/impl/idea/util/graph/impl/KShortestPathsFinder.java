@@ -128,13 +128,13 @@ public class KShortestPathsFinder<Node> {
         continue;
       }
 
-      final Heap<Node> nextHeap = myHeaps.get(next);
+      Heap<Node> nextHeap = myHeaps.get(next);
       if (nextHeap == null) {
         myHeaps.put(node, new Heap<Node>(outRoot));
         continue;
       }
 
-      final Heap<Node> tHeap = nextHeap.insert(outRoot);
+      Heap<Node> tHeap = nextHeap.insert(outRoot);
       myHeaps.put(node, tHeap);
     }
   }
@@ -176,18 +176,18 @@ public class KShortestPathsFinder<Node> {
       List<FList<HeapNode<Node>>> sidetracks = new ArrayList<FList<HeapNode<Node>>>();
       sidetracks.add(FList.<HeapNode<Node>>emptyList());
 
-      final Heap<Node> heap = myHeaps.get(myStart);
+      Heap<Node> heap = myHeaps.get(myStart);
       if (heap != null) {
         queue.add(new Sidetracks<Node>(0, FList.<HeapNode<Node>>emptyList().prepend(heap.getRoot())));
         for (int i = 2; i <= k; i++) {
           if (queue.isEmpty()) break;
           myProgressIndicator.checkCanceled();
-          final Sidetracks<Node> current = queue.remove();
+          Sidetracks<Node> current = queue.remove();
           sidetracks.add(current.myEdges);
-          final HeapNode<Node> e = current.myEdges.getHead();
-          final Heap<Node> next = myHeaps.get(e.myEdge.getFinish());
+          HeapNode<Node> e = current.myEdges.getHead();
+          Heap<Node> next = myHeaps.get(e.myEdge.getFinish());
           if (next != null) {
-            final HeapNode<Node> f = next.getRoot();
+            HeapNode<Node> f = next.getRoot();
             queue.add(new Sidetracks<Node>(current.myLength + f.myEdge.getDelta(), current.myEdges.prepend(f)));
           }
           for (HeapNode<Node> child : e.myChildren) {
@@ -207,7 +207,7 @@ public class KShortestPathsFinder<Node> {
   }
 
   private List<List<Node>> computePathsBySidetracks(List<FList<HeapNode<Node>>> sidetracks) {
-    final List<List<Node>> result = new ArrayList<List<Node>>();
+    List<List<Node>> result = new ArrayList<List<Node>>();
     for (FList<HeapNode<Node>> sidetrack : sidetracks) {
       myProgressIndicator.checkCanceled();
       List<GraphEdge<Node>> edges = new ArrayList<GraphEdge<Node>>();
@@ -216,7 +216,7 @@ public class KShortestPathsFinder<Node> {
         sidetrack = sidetrack.getTail();
       }
       Node current = myStart;
-      final List<Node> path = new ArrayList<Node>();
+      List<Node> path = new ArrayList<Node>();
       path.add(current);
       int i = edges.size() - 1;
       while (!current.equals(myFinish) || i >= 0) {
@@ -277,7 +277,7 @@ public class KShortestPathsFinder<Node> {
       }
       HeapNode<Node> place = myRoot;
       while (true) {
-        final int ind = (pos & pow) != 0 ? 1 : 0;
+        int ind = (pos & pow) != 0 ? 1 : 0;
         if (pow == 1) {
           HeapNode<Node> placeCopy = place.copy();
           placeCopy.myChildren[ind] = node;
@@ -288,15 +288,15 @@ public class KShortestPathsFinder<Node> {
         pow >>= 1;
       }
       while (true) {
-        final HeapNode<Node> parent = node.myParent;
+        HeapNode<Node> parent = node.myParent;
         if (parent == null || parent.myEdge.getDelta() < node.myEdge.getDelta()) {
           break;
         }
-        final HeapNode<Node> parentCopy = parent.copy();
-        final GraphEdge<Node> t = parentCopy.myEdge;
+        HeapNode<Node> parentCopy = parent.copy();
+        GraphEdge<Node> t = parentCopy.myEdge;
         parentCopy.myEdge = node.myEdge;
         node.myEdge = t;
-        final HeapNode<Node> t2 = parentCopy.myChildren[2];
+        HeapNode<Node> t2 = parentCopy.myChildren[2];
         parentCopy.myChildren[2] = node.myChildren[2];
         node.myChildren[2] = t2;
         node = parentCopy;

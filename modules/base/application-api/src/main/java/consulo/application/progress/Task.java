@@ -568,9 +568,9 @@ public abstract class Task implements TaskInfo, Progressive {
         private final boolean myShowWhenFocused;
 
         public NotificationInfo(
-            @Nonnull final LocalizeValue notificationName,
-            @Nonnull final LocalizeValue notificationTitle,
-            @Nonnull final LocalizeValue notificationText
+            @Nonnull LocalizeValue notificationName,
+            @Nonnull LocalizeValue notificationTitle,
+            @Nonnull LocalizeValue notificationText
         ) {
             this(notificationName, notificationTitle, notificationText, false);
         }
@@ -578,18 +578,18 @@ public abstract class Task implements TaskInfo, Progressive {
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
         public NotificationInfo(
-            @Nonnull final String notificationName,
-            @Nonnull final String notificationTitle,
-            @Nonnull final String notificationText
+            @Nonnull String notificationName,
+            @Nonnull String notificationTitle,
+            @Nonnull String notificationText
         ) {
             this(notificationName, notificationTitle, notificationText, false);
         }
 
         public NotificationInfo(
-            @Nonnull final LocalizeValue notificationName,
-            @Nonnull final LocalizeValue notificationTitle,
-            @Nonnull final LocalizeValue notificationText,
-            final boolean showWhenFocused
+            @Nonnull LocalizeValue notificationName,
+            @Nonnull LocalizeValue notificationTitle,
+            @Nonnull LocalizeValue notificationText,
+            boolean showWhenFocused
         ) {
             myNotificationName = notificationName;
             myNotificationTitle = notificationTitle;
@@ -600,10 +600,10 @@ public abstract class Task implements TaskInfo, Progressive {
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
         public NotificationInfo(
-            @Nonnull final String notificationName,
-            @Nonnull final String notificationTitle,
-            @Nonnull final String notificationText,
-            final boolean showWhenFocused
+            @Nonnull String notificationName,
+            @Nonnull String notificationTitle,
+            @Nonnull String notificationText,
+            boolean showWhenFocused
         ) {
             this(
                 LocalizeValue.of(notificationName),

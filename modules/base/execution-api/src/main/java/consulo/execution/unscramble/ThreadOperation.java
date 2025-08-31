@@ -24,7 +24,7 @@ public class ThreadOperation {
 
   private final String myName;
 
-  ThreadOperation(final String name) {
+  ThreadOperation(String name) {
     myName = name;
   }
 

@@ -43,7 +43,7 @@ public abstract class InspectionManagerBase extends InspectionManager {
     @Override
     @Nonnull
     public List<ProblemDescriptor> runLocalToolLocaly(@Nonnull LocalInspectionTool tool, @Nonnull PsiFile file, @Nonnull Object state) {
-        final ProblemsHolder holder = new ProblemsHolderImpl(this, file, false);
+        ProblemsHolder holder = new ProblemsHolderImpl(this, file, false);
         LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
         final PsiElementVisitor customVisitor = tool.buildVisitor(holder, false, session, state);
         LOG.assertTrue(!(customVisitor instanceof PsiRecursiveVisitor),
@@ -155,12 +155,12 @@ public abstract class InspectionManagerBase extends InspectionManager {
     @Nonnull
     @Override
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull final PsiElement psiElement,
-        final TextRange rangeInElement,
-        @Nonnull final String descriptionTemplate,
-        @Nonnull final ProblemHighlightType highlightType,
+        @Nonnull PsiElement psiElement,
+        TextRange rangeInElement,
+        @Nonnull String descriptionTemplate,
+        @Nonnull ProblemHighlightType highlightType,
         boolean onTheFly,
-        final LocalQuickFix... fixes
+        LocalQuickFix... fixes
     ) {
         return new ProblemDescriptorBase(
             psiElement,
@@ -253,11 +253,11 @@ public abstract class InspectionManagerBase extends InspectionManager {
     @Override
     @Deprecated
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull final PsiElement psiElement,
-        final TextRange rangeInElement,
-        @Nonnull final String descriptionTemplate,
-        @Nonnull final ProblemHighlightType highlightType,
-        final LocalQuickFix... fixes
+        @Nonnull PsiElement psiElement,
+        TextRange rangeInElement,
+        @Nonnull String descriptionTemplate,
+        @Nonnull ProblemHighlightType highlightType,
+        LocalQuickFix... fixes
     ) {
         return createProblemDescriptor(psiElement, rangeInElement, descriptionTemplate, highlightType, true, fixes);
     }
@@ -278,7 +278,7 @@ public abstract class InspectionManagerBase extends InspectionManager {
     @Override
     public String getCurrentProfile() {
         if (myCurrentProfileName == null) {
-            final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(getProject());
+            InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(getProject());
             myCurrentProfileName = profileManager.getProjectProfile();
             if (myCurrentProfileName == null) {
                 myCurrentProfileName = InspectionProfileManager.getInstance().getRootProfile().getName();

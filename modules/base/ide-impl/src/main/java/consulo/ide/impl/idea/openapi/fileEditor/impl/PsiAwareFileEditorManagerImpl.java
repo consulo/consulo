@@ -101,15 +101,15 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   }
 
   @Override
-  public boolean isProblem(@Nonnull final VirtualFile file) {
+  public boolean isProblem(@Nonnull VirtualFile file) {
     return myProblemSolver.get().isProblemFile(file);
   }
 
   @Nonnull
   @Override
-  public String getFileTooltipText(@Nonnull final VirtualFile file) {
-    final StringBuilder tooltipText = new StringBuilder();
-    final Module module = ModuleUtilCore.findModuleForFile(file, getProject());
+  public String getFileTooltipText(@Nonnull VirtualFile file) {
+    StringBuilder tooltipText = new StringBuilder();
+    Module module = ModuleUtilCore.findModuleForFile(file, getProject());
     if (module != null) {
       tooltipText.append("[");
       tooltipText.append(module.getName());
@@ -120,7 +120,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   }
 
   @Override
-  protected Editor getOpenedEditor(@Nonnull final Editor editor, final boolean focusEditor) {
+  protected Editor getOpenedEditor(@Nonnull Editor editor, boolean focusEditor) {
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(getProject());
     Document document = editor.getDocument();
     PsiFile psiFile = documentManager.getPsiFile(document);
@@ -137,12 +137,12 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
     @Override
     @RequiredUIAccess
-    public void propertyChanged(@Nonnull final PsiTreeChangeEvent e) {
+    public void propertyChanged(@Nonnull PsiTreeChangeEvent e) {
       if (PsiTreeChangeEvent.PROP_ROOTS.equals(e.getPropertyName())) {
         UIAccess.assertIsUIThread();
-        final VirtualFile[] openFiles = getOpenFiles();
+        VirtualFile[] openFiles = getOpenFiles();
         for (int i = openFiles.length - 1; i >= 0; i--) {
-          final VirtualFile file = openFiles[i];
+          VirtualFile file = openFiles[i];
           LOG.assertTrue(file != null);
           updateFileIconAsync(file);
         }
@@ -174,7 +174,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
       doChange(event);
     }
 
-    private void doChange(final PsiTreeChangeEvent event) {
+    private void doChange(PsiTreeChangeEvent event) {
       if(UIAccess.isUIThread()) {
         doChangeInUI(event);
       }
@@ -183,15 +183,15 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
       }
     }
 
-    private void doChangeInUI(final PsiTreeChangeEvent event) {
-      final PsiFile psiFile = event.getFile();
+    private void doChangeInUI(PsiTreeChangeEvent event) {
+      PsiFile psiFile = event.getFile();
       if (psiFile == null) return;
       VirtualFile file = psiFile.getVirtualFile();
       if (file == null) return;
       FileEditor[] editors = getAllEditors(file);
       if (editors.length == 0) return;
 
-      final VirtualFile currentFile = getCurrentFile();
+      VirtualFile currentFile = getCurrentFile();
       if (currentFile != null && Comparing.equal(psiFile.getVirtualFile(), currentFile)) {
         updateFileIconAsync(currentFile);
       }
@@ -200,7 +200,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
 
   private class MyProblemListener implements ProblemListener {
     @Override
-    public void problemsAppeared(@Nonnull final VirtualFile file) {
+    public void problemsAppeared(@Nonnull VirtualFile file) {
       updateFile(file);
     }
 

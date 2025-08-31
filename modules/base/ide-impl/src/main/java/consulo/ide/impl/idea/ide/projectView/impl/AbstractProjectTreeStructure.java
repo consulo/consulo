@@ -33,7 +33,7 @@ public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeSt
         myRoot = createRoot(project, this);
     }
 
-    protected AbstractTreeNode createRoot(final Project project, ViewSettings settings) {
+    protected AbstractTreeNode createRoot(Project project, ViewSettings settings) {
         return new ProjectViewProjectNode(myProject, this);
     }
 

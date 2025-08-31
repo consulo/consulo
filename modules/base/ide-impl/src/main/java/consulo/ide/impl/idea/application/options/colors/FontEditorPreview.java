@@ -40,7 +40,7 @@ public class FontEditorPreview implements PreviewPanel{
   private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher =
     EventDispatcher.create(ColorAndFontSettingsListener.class);
 
-  FontEditorPreview(final ColorAndFontOptions options, boolean editable) {
+  FontEditorPreview(ColorAndFontOptions options, boolean editable) {
     myOptions = options;
 
     @Nls String text = getIDEDemoText();
@@ -144,7 +144,7 @@ public class FontEditorPreview implements PreviewPanel{
   }
 
   @Override
-  public void addListener(@Nonnull final ColorAndFontSettingsListener listener) {
+  public void addListener(@Nonnull ColorAndFontSettingsListener listener) {
     myDispatcher.addListener(listener);
   }
 

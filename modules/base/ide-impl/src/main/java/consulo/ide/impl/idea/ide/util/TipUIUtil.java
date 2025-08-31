@@ -98,12 +98,12 @@ public class TipUIUtil {
             if (lastIndex < 0) {
                 return;
             }
-            final int actionIdStart = lastIndex + SHORTCUT_ENTITY.length();
+            int actionIdStart = lastIndex + SHORTCUT_ENTITY.length();
             int actionIdEnd = text.indexOf(";", actionIdStart);
             if (actionIdEnd < 0) {
                 return;
             }
-            final String actionId = text.substring(actionIdStart, actionIdEnd);
+            String actionId = text.substring(actionIdStart, actionIdEnd);
             String shortcutText = getShortcutText(actionId, KeymapManager.getInstance().getActiveKeymap());
             if (shortcutText == null) {
                 Keymap defKeymap = KeymapManager.getInstance().getKeymap(DefaultKeymap.getInstance().getDefaultKeymapName());
@@ -124,7 +124,7 @@ public class TipUIUtil {
 
     @Nullable
     private static String getShortcutText(String actionId, Keymap keymap) {
-        for (final Shortcut shortcut : keymap.getShortcuts(actionId)) {
+        for (Shortcut shortcut : keymap.getShortcuts(actionId)) {
             if (shortcut instanceof KeyboardShortcut) {
                 return KeymapUtil.getShortcutText(shortcut);
             }

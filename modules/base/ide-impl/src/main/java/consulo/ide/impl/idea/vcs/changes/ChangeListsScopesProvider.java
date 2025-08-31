@@ -35,7 +35,7 @@ public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
   @Override
   public void acceptScopes(@Nonnull Consumer<NamedScope> consumer) {
     if (myProject.isDefault() || !ProjectLevelVcsManager.getInstance(myProject).hasActiveVcss()) return ;
-    final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
+    ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
 
     consumer.accept(new ChangeListScope(changeListManager));
 
@@ -53,12 +53,12 @@ public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
   @Override
   public NamedScope getCustomScope(@Nonnull String name) {
     if (myProject.isDefault()) return null;
-    final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
+    ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
     if (ChangeListScope.ALL_CHANGED_FILES_SCOPE_NAME.equals(name)) {
       return new ChangeListScope(changeListManager);
     }
     if (ChangesUtil.hasMeaningfulChangelists(myProject)) {
-      final LocalChangeList changeList = changeListManager.findChangeList(name);
+      LocalChangeList changeList = changeListManager.findChangeList(name);
       if (changeList != null) {
         return new ChangeListScope(changeListManager, changeList.getName(), LocalizeValue.of(changeList.getName()));
       }
@@ -70,7 +70,7 @@ public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
   public boolean isVetoed(NamedScope scope, ScopePlace place) {
     if (place == ScopePlace.SETTING) {
       if (myProject.isDefault()) return false;
-      final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
+      ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
       return changeListManager.findChangeList(scope.getScopeId()) != null;
     }
     return false;

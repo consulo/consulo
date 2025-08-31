@@ -107,7 +107,7 @@ public class FileTypeChooser extends DialogWrapper {
         FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
         Arrays.sort(fileTypes, (fileType1, fileType2) -> fileType1.getDescription().get().compareToIgnoreCase(fileType2.getDescription().get()));
 
-        final DefaultListModel<FileType> model = new DefaultListModel<>();
+        DefaultListModel<FileType> model = new DefaultListModel<>();
         for (FileType type : fileTypes) {
             if (!type.isReadOnly() && type != UnknownFileType.INSTANCE && !(type instanceof NativeFileType)) {
                 model.addElement(type);
@@ -216,12 +216,12 @@ public class FileTypeChooser extends DialogWrapper {
 
     @Nullable
     @RequiredUIAccess
-    public static FileType associateFileType(@Nonnull final String fileName) {
-        final FileTypeChooser chooser = new FileTypeChooser(suggestPatterns(fileName), fileName);
+    public static FileType associateFileType(@Nonnull String fileName) {
+        FileTypeChooser chooser = new FileTypeChooser(suggestPatterns(fileName), fileName);
         if (!chooser.showAndGet()) {
             return null;
         }
-        final FileType type = chooser.getSelectedType();
+        FileType type = chooser.getSelectedType();
         if (type == null) {
             PluginAdvertiserHelper.getInstance().showDialog(new PluginAdvertiserHelper.PluginsInfo(chooser.myAllPlugins, chooser.myFeaturePlugins));
             return null;

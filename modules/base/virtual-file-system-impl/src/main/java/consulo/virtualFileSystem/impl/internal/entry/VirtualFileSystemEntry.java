@@ -195,13 +195,13 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  public void delete(final Object requestor) throws IOException {
+  public void delete(Object requestor) throws IOException {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     ourPersistence.deleteFile(requestor, this);
   }
 
   @Override
-  public void rename(final Object requestor, @Nonnull @NonNls final String newName) throws IOException {
+  public void rename(Object requestor, @Nonnull @NonNls String newName) throws IOException {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (getName().equals(newName)) return;
     validateName(newName);
@@ -210,7 +210,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
 
   @Override
   @Nonnull
-  public VirtualFile createChildData(final Object requestor, @Nonnull final String name) throws IOException {
+  public VirtualFile createChildData(Object requestor, @Nonnull String name) throws IOException {
     validateName(name);
     return ourPersistence.createChildFile(requestor, this, name);
   }
@@ -231,7 +231,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  public void setTimeStamp(final long time) throws IOException {
+  public void setTimeStamp(long time) throws IOException {
     ourPersistence.setTimeStamp(this, time);
   }
 
@@ -242,7 +242,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
 
   @Nonnull
   @Override
-  public VirtualFile copy(final Object requestor, @Nonnull final VirtualFile newParent, @Nonnull final String copyName) throws IOException {
+  public VirtualFile copy(Object requestor, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VirtualFileSystemLocalize.fileCopyError(newParent.getPresentableUrl()).get());
     }
@@ -255,7 +255,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   }
 
   @Override
-  public void move(final Object requestor, @Nonnull final VirtualFile newParent) throws IOException {
+  public void move(Object requestor, @Nonnull VirtualFile newParent) throws IOException {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     if (getFileSystem() != newParent.getFileSystem()) {
@@ -285,7 +285,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
 
   @Override
   @Nonnull
-  public VirtualFile createChildDirectory(final Object requestor, @Nonnull final String name) throws IOException {
+  public VirtualFile createChildDirectory(Object requestor, @Nonnull String name) throws IOException {
     validateName(name);
     return ourPersistence.createChildDirectory(requestor, this, name);
   }
@@ -366,7 +366,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
         return super.getCharset();
       }
       try {
-        final byte[] content = VfsImplUtil.loadBytes(this);
+        byte[] content = VfsImplUtil.loadBytes(this);
         charset = LoadTextUtil.detectCharsetAndSetBOM(this, content, fileType);
       }
       catch (IOException e) {
@@ -379,7 +379,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   @Override
   public String getPresentableName() {
     if (VirtualFileSystemInternalHelper.getInstance().isHideKnownExtensionInTabs() && !isDirectory()) {
-      final String nameWithoutExtension = getNameWithoutExtension();
+      String nameWithoutExtension = getNameWithoutExtension();
       return nameWithoutExtension.isEmpty() ? getName() : nameWithoutExtension;
     }
     return getName();
@@ -416,7 +416,7 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
   @Override
   public NewVirtualFile getCanonicalFile() {
     if (getFlagInt(HAS_SYMLINK_FLAG)) {
-      final String path = getCanonicalPath();
+      String path = getCanonicalPath();
       return path != null ? (NewVirtualFile)getFileSystem().findFileByPath(path) : null;
     }
     return this;

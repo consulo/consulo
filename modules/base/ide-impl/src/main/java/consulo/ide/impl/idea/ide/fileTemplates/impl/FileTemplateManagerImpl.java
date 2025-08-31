@@ -148,7 +148,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   @Override
   @Nonnull
   public FileTemplate[] getAllTemplates() {
-    final Collection<FileTemplateBase> templates = getSettings().getDefaultTemplatesManager().getAllTemplates(false);
+    Collection<FileTemplateBase> templates = getSettings().getDefaultTemplatesManager().getAllTemplates(false);
     return templates.toArray(new FileTemplate[templates.size()]);
   }
 
@@ -165,7 +165,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
 
   @Override
   public void removeTemplate(@Nonnull FileTemplate template) {
-    final String qName = ((FileTemplateBase)template).getQualifiedName();
+    String qName = ((FileTemplateBase)template).getQualifiedName();
     for (FTManager manager : getAllManagers()) {
       manager.removeTemplate(qName);
     }
@@ -213,10 +213,10 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Nonnull
-  private static String getCalendarValue(final Calendar calendar, final int field) {
+  private static String getCalendarValue(Calendar calendar, int field) {
     int val = calendar.get(field);
     if (field == Calendar.MONTH) val++;
-    final String result = Integer.toString(val);
+    String result = Integer.toString(val);
     if (result.length() == 1) {
       return "0" + result;
     }
@@ -236,8 +236,8 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   private void validateRecentNames() {
-    final Collection<FileTemplateBase> allTemplates = getSettings().getDefaultTemplatesManager().getAllTemplates(false);
-    final List<String> allNames = new ArrayList<>(allTemplates.size());
+    Collection<FileTemplateBase> allTemplates = getSettings().getDefaultTemplatesManager().getAllTemplates(false);
+    List<String> allNames = new ArrayList<>(allTemplates.size());
     for (FileTemplate fileTemplate : allTemplates) {
       allNames.add(fileTemplate.getName());
     }
@@ -264,7 +264,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
         template.setReformatCode(true);
       }
       else {
-        final String text = normalizeText(getDefaultClassTemplateText(templateName));
+        String text = normalizeText(getDefaultClassTemplateText(templateName));
         template = getSettings().getInternalTemplatesManager().addTemplate(templateName, "java");
         template.setText(text);
       }
@@ -303,7 +303,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
 
   @Override
   @Nonnull
-  public String localizeInternalTemplateName(@Nonnull final FileTemplate template) {
+  public String localizeInternalTemplateName(@Nonnull FileTemplate template) {
     return template.getName();
   }
 
@@ -326,7 +326,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Nullable
-  private static FileTemplate getTemplateFromManager(@Nonnull final String templateName, @Nonnull final FTManager ftManager) {
+  private static FileTemplate getTemplateFromManager(@Nonnull String templateName, @Nonnull FTManager ftManager) {
     FileTemplateBase template = ftManager.getTemplate(templateName);
     if (template != null) {
       return template;
@@ -346,13 +346,13 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
 
   @Override
   @Nonnull
-  public FileTemplate getDefaultTemplate(@Nonnull final String name) {
-    final String templateQName = myTypeManager.getExtension(name).isEmpty() ? FileTemplateBase.getQualifiedName(name, "java") : name;
+  public FileTemplate getDefaultTemplate(@Nonnull String name) {
+    String templateQName = myTypeManager.getExtension(name).isEmpty() ? FileTemplateBase.getQualifiedName(name, "java") : name;
 
     for (FTManager manager : getAllManagers()) {
-      final FileTemplateBase template = manager.getTemplate(templateQName);
+      FileTemplateBase template = manager.getTemplate(templateQName);
       if (template instanceof BundledFileTemplate) {
-        final BundledFileTemplate copy = ((BundledFileTemplate)template).clone();
+        BundledFileTemplate copy = ((BundledFileTemplate)template).clone();
         copy.revertToDefaults();
         return copy;
       }
@@ -366,7 +366,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   @Override
   @Nonnull
   public FileTemplate[] getAllPatterns() {
-    final Collection<FileTemplateBase> allTemplates = getSettings().getPatternsManager().getAllTemplates(false);
+    Collection<FileTemplateBase> allTemplates = getSettings().getPatternsManager().getAllTemplates(false);
     return allTemplates.toArray(new FileTemplate[allTemplates.size()]);
   }
 
@@ -378,14 +378,14 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   @Override
   @Nonnull
   public FileTemplate[] getAllCodeTemplates() {
-    final Collection<FileTemplateBase> templates = getSettings().getCodeTemplatesManager().getAllTemplates(false);
+    Collection<FileTemplateBase> templates = getSettings().getCodeTemplatesManager().getAllTemplates(false);
     return templates.toArray(new FileTemplate[templates.size()]);
   }
 
   @Override
   @Nonnull
   public FileTemplate[] getAllJ2eeTemplates() {
-    final Collection<FileTemplateBase> templates = getSettings().getJ2eeTemplatesManager().getAllTemplates(false);
+    Collection<FileTemplateBase> templates = getSettings().getJ2eeTemplatesManager().getAllTemplates(false);
     return templates.toArray(new FileTemplate[templates.size()]);
   }
 

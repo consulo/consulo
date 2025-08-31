@@ -88,8 +88,8 @@ public class IntentionDescriptionPanel {
 
   public void reset(IntentionActionMetaData actionMetaData, String filter) {
     try {
-      final TextDescriptor url = actionMetaData.getDescription();
-      final String description = url == null ? CodeInsightBundle.message("under.construction.string") : SearchUtil.markup(url.getText(), filter);
+      TextDescriptor url = actionMetaData.getDescription();
+      String description = url == null ? CodeInsightBundle.message("under.construction.string") : SearchUtil.markup(url.getText(), filter);
       myDescriptionBrowser.setText(description);
       setupPoweredByPanel(actionMetaData);
 
@@ -103,7 +103,7 @@ public class IntentionDescriptionPanel {
     }
   }
 
-  private void setupPoweredByPanel(final IntentionActionMetaData actionMetaData) {
+  private void setupPoweredByPanel(IntentionActionMetaData actionMetaData) {
     myPoweredByPanel.removeAll();
 
     PluginId pluginId = actionMetaData == null ? null : actionMetaData.getPluginId();
@@ -113,7 +113,7 @@ public class IntentionDescriptionPanel {
     }
 
     JComponent owner;
-    final PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
+    PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
     HyperlinkLabel label = new HyperlinkLabel(CodeInsightBundle.message("powered.by.plugin", pluginDescriptor.getName()));
     label.addHyperlinkListener(new HyperlinkListener() {
       @RequiredUIAccess
@@ -156,7 +156,7 @@ public class IntentionDescriptionPanel {
     }
   }
 
-  private static void showUsages(final JPanel panel, final List<IntentionUsagePanel> usagePanels, @Nullable final TextDescriptor[] exampleUsages) throws IOException {
+  private static void showUsages(JPanel panel, List<IntentionUsagePanel> usagePanels, @Nullable TextDescriptor[] exampleUsages) throws IOException {
     GridBagConstraints gb = null;
     boolean reuse = exampleUsages != null && panel.getComponents().length == exampleUsages.length;
     if (!reuse) {
@@ -179,11 +179,11 @@ public class IntentionDescriptionPanel {
 
     if (exampleUsages != null) {
       for (int i = 0; i < exampleUsages.length; i++) {
-        final TextDescriptor exampleUsage = exampleUsages[i];
-        final String name = exampleUsage.getFileName();
-        final FileTypeManagerEx fileTypeManager = FileTypeManagerEx.getInstanceEx();
-        final String extension = fileTypeManager.getExtension(name);
-        final FileType fileType = fileTypeManager.getFileTypeByExtension(extension);
+        TextDescriptor exampleUsage = exampleUsages[i];
+        String name = exampleUsage.getFileName();
+        FileTypeManagerEx fileTypeManager = FileTypeManagerEx.getInstanceEx();
+        String extension = fileTypeManager.getExtension(name);
+        FileType fileType = fileTypeManager.getFileTypeByExtension(extension);
 
         IntentionUsagePanel usagePanel;
         if (reuse) {
@@ -218,16 +218,16 @@ public class IntentionDescriptionPanel {
   }
 
   private static void disposeUsagePanels(List<IntentionUsagePanel> usagePanels) {
-    for (final IntentionUsagePanel usagePanel : usagePanels) {
+    for (IntentionUsagePanel usagePanel : usagePanels) {
       usagePanel.dispose();
     }
     usagePanels.clear();
   }
 
-  public void init(final int preferredWidth) {
+  public void init(int preferredWidth) {
     //adjust vertical dimension to be equal for all three panels
     double height = (myDescriptionBrowser.getSize().getHeight() + myBeforePanel.getSize().getHeight() + myAfterPanel.getSize().getHeight()) / 3;
-    final Dimension newd = new Dimension(preferredWidth, (int)height);
+    Dimension newd = new Dimension(preferredWidth, (int)height);
     myDescriptionBrowser.setSize(newd);
     myDescriptionBrowser.setPreferredSize(newd);
     myDescriptionBrowser.setMaximumSize(newd);

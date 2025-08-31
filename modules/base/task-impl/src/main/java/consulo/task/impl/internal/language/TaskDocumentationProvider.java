@@ -38,7 +38,7 @@ public class TaskDocumentationProvider implements UnrestrictedDocumentationProvi
   @Override
   public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
     if (element instanceof TaskPsiElement) {
-      final String url = ((TaskPsiElement)element).getTask().getIssueUrl();
+      String url = ((TaskPsiElement)element).getTask().getIssueUrl();
       if (url != null) {
         return Collections.singletonList(url);
       }
@@ -51,8 +51,8 @@ public class TaskDocumentationProvider implements UnrestrictedDocumentationProvi
     if (!(element instanceof TaskPsiElement)) {
       return null;
     }
-    final Task task = ((TaskPsiElement)element).getTask();
-    final StringBuilder builder = new StringBuilder();
+    Task task = ((TaskPsiElement)element).getTask();
+    StringBuilder builder = new StringBuilder();
     builder.append("<b>Summary:</b> ").append(task.getSummary()).append("<br>");
     builder.append("<b>Id:</b> ").append(task.getId()).append("<br>");
     if (task.getCreated() != null) {
@@ -61,7 +61,7 @@ public class TaskDocumentationProvider implements UnrestrictedDocumentationProvi
     if (task.getUpdated() != null) {
       builder.append("<b>Updated at:</b> ").append(task.getUpdated()).append("<br>");
     }
-    final String description = task.getDescription();
+    String description = task.getDescription();
     if (description != null) {
       builder.append("<b>Description:</b><br>").append(description);
     }

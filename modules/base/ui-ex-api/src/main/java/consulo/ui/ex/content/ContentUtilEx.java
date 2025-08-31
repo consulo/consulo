@@ -48,7 +48,7 @@ public class ContentUtilEx extends ContentsUtil {
                                       boolean select,
                                       @Nullable Disposable childDisposable) {
     if (ApplicationPropertiesComponent.getInstance().getBoolean(TabbedContent.SPLIT_PROPERTY_PREFIX + groupPrefix)) {
-      final Content content = ContentFactory.getInstance().createContent(contentComponent, getFullName(groupPrefix, tabName), true);
+      Content content = ContentFactory.getInstance().createContent(contentComponent, getFullName(groupPrefix, tabName), true);
       content.putUserData(Content.TABBED_CONTENT_KEY, Boolean.TRUE);
       content.putUserData(Content.TAB_GROUP_NAME_KEY, groupPrefix);
 
@@ -70,7 +70,7 @@ public class ContentUtilEx extends ContentsUtil {
     TabbedContent tabbedContent = findTabbedContent(manager, groupPrefix);
 
     if (tabbedContent == null) {
-      final Disposable disposable = Disposable.newDisposable();
+      Disposable disposable = Disposable.newDisposable();
       tabbedContent = ContentFactory.getInstance().createTabbedContent(contentComponent, tabName, true, groupPrefix);
       ContentsUtil.addOrReplaceContent(manager, tabbedContent, select);
       Disposer.register(tabbedContent, disposable);
@@ -140,7 +140,7 @@ public class ContentUtilEx extends ContentsUtil {
    *
    * @return true if the necessary content was found (and thus selected) among content components of the given ContentManager.
    */
-  public static boolean selectContent(@Nonnull ContentManager manager, @Nonnull final JComponent contentComponent, boolean requestFocus) {
+  public static boolean selectContent(@Nonnull ContentManager manager, @Nonnull JComponent contentComponent, boolean requestFocus) {
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContent tabbedContent) {
         boolean found = tabbedContent.findAndSelectContent(contentComponent);
@@ -180,7 +180,7 @@ public class ContentUtilEx extends ContentsUtil {
   }
 
   public static int getSelectedTab(@Nonnull TabbedContent content) {
-    final JComponent current = content.getComponent();
+    JComponent current = content.getComponent();
     int index = 0;
     for (Pair<String, JComponent> tab : content.getTabs()) {
       if (tab.second == current) {

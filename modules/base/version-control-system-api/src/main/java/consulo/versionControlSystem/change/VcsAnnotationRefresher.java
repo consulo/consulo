@@ -32,5 +32,5 @@ public interface VcsAnnotationRefresher {
 
   void dirty(String path);
 
-  void configurationChanged(final VcsKey key);
+  void configurationChanged(VcsKey key);
 }

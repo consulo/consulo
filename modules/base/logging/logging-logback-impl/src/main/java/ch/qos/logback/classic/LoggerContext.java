@@ -113,12 +113,12 @@ public class LoggerContext extends ContextBase implements ILoggerFactory, LifeCy
         updateLoggerContextVO();
     }
 
-    public final Logger getLogger(final Class<?> clazz) {
+    public final Logger getLogger(Class<?> clazz) {
         return getLogger(clazz.getName());
     }
 
     @Override
-    public Logger getLogger(final String name) {
+    public Logger getLogger(String name) {
 
         if (name == null) {
             throw new IllegalArgumentException("name argument cannot be null");
@@ -186,7 +186,7 @@ public class LoggerContext extends ContextBase implements ILoggerFactory, LifeCy
         return (Logger) loggerCache.get(name);
     }
 
-    final void noAppenderDefinedWarning(final Logger logger) {
+    final void noAppenderDefinedWarning(Logger logger) {
         if (noAppenderWarning++ == 0) {
             getStatusManager().add(new WarnStatus("No appenders present in context [" + getName() + "] for logger [" + logger.getName() + "].", logger));
         }
@@ -253,24 +253,24 @@ public class LoggerContext extends ContextBase implements ILoggerFactory, LifeCy
         turboFilterList.clear();
     }
 
-    final FilterReply getTurboFilterChainDecision_0_3OrMore(final Marker marker, final Logger logger, final Level level, final String format,
-                    final Object[] params, final Throwable t) {
+    final FilterReply getTurboFilterChainDecision_0_3OrMore(Marker marker, Logger logger, Level level, String format,
+                                                            Object[] params, Throwable t) {
         if (turboFilterList.size() == 0) {
             return FilterReply.NEUTRAL;
         }
         return turboFilterList.getTurboFilterChainDecision(marker, logger, level, format, params, t);
     }
 
-    final FilterReply getTurboFilterChainDecision_1(final Marker marker, final Logger logger, final Level level, final String format, final Object param,
-                    final Throwable t) {
+    final FilterReply getTurboFilterChainDecision_1(Marker marker, Logger logger, Level level, String format, Object param,
+                                                    Throwable t) {
         if (turboFilterList.size() == 0) {
             return FilterReply.NEUTRAL;
         }
         return turboFilterList.getTurboFilterChainDecision(marker, logger, level, format, new Object[] { param }, t);
     }
 
-    final FilterReply getTurboFilterChainDecision_2(final Marker marker, final Logger logger, final Level level, final String format, final Object param1,
-                    final Object param2, final Throwable t) {
+    final FilterReply getTurboFilterChainDecision_2(Marker marker, Logger logger, Level level, String format, Object param1,
+                                                    Object param2, Throwable t) {
         if (turboFilterList.size() == 0) {
             return FilterReply.NEUTRAL;
         }

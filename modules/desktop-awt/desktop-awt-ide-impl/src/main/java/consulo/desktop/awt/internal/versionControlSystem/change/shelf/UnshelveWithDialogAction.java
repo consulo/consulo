@@ -49,13 +49,13 @@ public class UnshelveWithDialogAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final ShelvedChangeList[] changeLists = e.getRequiredData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+    Project project = e.getRequiredData(Project.KEY);
+    ShelvedChangeList[] changeLists = e.getRequiredData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
     if (changeLists.length != 1) return;
 
     FileDocumentManager.getInstance().saveAllDocuments();
 
-    final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(changeLists[0].PATH));
+    VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(changeLists[0].PATH));
     if (virtualFile == null) {
       VcsBalloonProblemNotifier.showOverChangesView(project, "Can not find path file", NotificationType.ERROR);
       return;
@@ -63,7 +63,7 @@ public class UnshelveWithDialogAction extends AnAction {
     if (!changeLists[0].getBinaryFiles().isEmpty()) {
       VcsBalloonProblemNotifier.showOverChangesView(project, "Binary file(s) would be skipped.", NotificationType.WARNING);
     }
-    final ApplyPatchDifferentiatedDialog dialog = new ApplyPatchDifferentiatedDialog(
+    ApplyPatchDifferentiatedDialog dialog = new ApplyPatchDifferentiatedDialog(
       project,
       new ApplyPatchDefaultExecutor(project),
       Collections.<ApplyPatchExecutor>emptyList(),
@@ -76,8 +76,8 @@ public class UnshelveWithDialogAction extends AnAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+    Project project = e.getData(Project.KEY);
+    ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
     e.getPresentation().setEnabled(project != null && changes != null && changes.length == 1);
   }
 }

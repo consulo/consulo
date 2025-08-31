@@ -48,7 +48,7 @@ public class XSuspendPolicyPanel extends XBreakpointPropertiesSubPanel {
   private Delegate myDelegate;
 
   @Override
-  public void init(Project project, final XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
+  public void init(Project project, XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
     super.init(project, breakpointManager, breakpoint);
 
     mySuspendCheckBox.addActionListener(new ActionListener() {

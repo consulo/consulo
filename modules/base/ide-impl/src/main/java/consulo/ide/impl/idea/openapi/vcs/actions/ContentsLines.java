@@ -33,13 +33,13 @@ public class ContentsLines {
   private final String myContents;
   private boolean myLineEndsFinished;
 
-  public ContentsLines(final String contents) {
+  public ContentsLines(String contents) {
     myContents = contents;
     mySplittingIterator = new SplittingIterator(contents);
     myLinesStartOffsets = new ArrayList<Integer>();
   }
 
-  public String getLineContents(final int number) {
+  public String getLineContents(int number) {
     assert !myLineEndsFinished || myLinesStartOffsets.size() > number;
 
     // we need to know end
@@ -47,7 +47,7 @@ public class ContentsLines {
       return extractCalculated(number);
     }
     while (((myLinesStartOffsets.size() - 1) < (number + 1)) && (!myLineEndsFinished) && mySplittingIterator.hasNext()) {
-      final Integer nextStart = mySplittingIterator.next();
+      Integer nextStart = mySplittingIterator.next();
       myLinesStartOffsets.add(nextStart);
     }
     myLineEndsFinished = myLinesStartOffsets.size() < (number + 1);

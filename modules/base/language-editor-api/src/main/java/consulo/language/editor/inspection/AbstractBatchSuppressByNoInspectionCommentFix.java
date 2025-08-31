@@ -48,14 +48,14 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
 
   @Override
   @Nullable
-  public abstract PsiElement getContainer(final PsiElement context);
+  public abstract PsiElement getContainer(PsiElement context);
 
   /**
    * @param ID                         Inspection ID
    * @param replaceOtherSuppressionIds Merge suppression policy. If false new tool id will be append to the end
    *                                   otherwise replace other ids
    */
-  public AbstractBatchSuppressByNoInspectionCommentFix(@Nonnull String ID, final boolean replaceOtherSuppressionIds) {
+  public AbstractBatchSuppressByNoInspectionCommentFix(@Nonnull String ID, boolean replaceOtherSuppressionIds) {
     myID = ID;
     myReplaceOtherSuppressionIds = replaceOtherSuppressionIds;
   }
@@ -108,7 +108,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
     invoke(project, element);
   }
 
-  protected final void replaceSuppressionComment(@Nonnull final PsiElement comment) {
+  protected final void replaceSuppressionComment(@Nonnull PsiElement comment) {
     SuppressionUtil.replaceSuppressionComment(comment, myID, myReplaceOtherSuppressionIds, getCommentLanguage(comment));
   }
 
@@ -129,11 +129,11 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   }
 
   @Override
-  public boolean isAvailable(@Nonnull final Project project, @Nonnull final PsiElement context) {
+  public boolean isAvailable(@Nonnull Project project, @Nonnull PsiElement context) {
     return context.isValid() && PsiManager.getInstance(project).isInProject(context) && getContainer(context) != null;
   }
 
-  public void invoke(@Nonnull final Project project, @Nonnull final PsiElement element) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, @Nonnull PsiElement element) throws IncorrectOperationException {
     if (!isAvailable(project, element)) return;
     PsiElement container = getContainer(element);
     if (container == null) return;
@@ -147,7 +147,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   }
 
   protected boolean replaceSuppressionComments(PsiElement container) {
-    final List<? extends PsiElement> comments = getCommentsFor(container);
+    List<? extends PsiElement> comments = getCommentsFor(container);
     if (comments != null) {
       for (PsiElement comment : comments) {
         if (comment instanceof PsiComment && SuppressionUtil.isSuppressionComment(comment)) {
@@ -160,8 +160,8 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   }
 
   @jakarta.annotation.Nullable
-  protected List<? extends PsiElement> getCommentsFor(@Nonnull final PsiElement container) {
-    final PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
+  protected List<? extends PsiElement> getCommentsFor(@Nonnull PsiElement container) {
+    PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {
       return null;
     }

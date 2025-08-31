@@ -22,5 +22,5 @@ import java.awt.*;
  * @since 2011-07-07
  */
 public interface LineSeparatorRenderer {
-  void drawLine(final Graphics g, final int x1, final int x2, final int y);
+  void drawLine(Graphics g, int x1, int x2, int y);
 }

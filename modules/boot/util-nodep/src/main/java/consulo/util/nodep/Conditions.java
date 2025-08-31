@@ -84,7 +84,7 @@ public class Conditions {
     };
   }
 
-  public static <T> Condition<T> is(final T option) {
+  public static <T> Condition<T> is(T option) {
     return equalTo(option);
   }
 
@@ -204,8 +204,8 @@ public class Conditions {
     }
 
     public final boolean value(T object) {
-      final int key = object.hashCode();
-      final Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
+      int key = object.hashCode();
+      Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
       if (entry == null || entry.first.get() != object) {
         boolean value = myCondition.value(object);
         myCache.put(key, Pair.create(new SoftReference<T>(object), value));

@@ -32,19 +32,19 @@ public abstract class TaskDescriptor {
   private final Where myWhere;
   private final Map<Object, Object> mySurviveKit;
 
-  public TaskDescriptor(final String name, @Nonnull final Where where) {
+  public TaskDescriptor(String name, @Nonnull Where where) {
     myName = name;
     myWhere = where;
     mySurviveKit = new HashMap<Object, Object>();
   }
 
-  public abstract void run(final ContinuationContext context);
+  public abstract void run(ContinuationContext context);
 
-  public final void addCure(final Object disaster, final Object cure) {
+  public final void addCure(Object disaster, Object cure) {
     mySurviveKit.put(disaster, cure);
   }
   @jakarta.annotation.Nullable
-  public final Object hasCure(final Object disaster) {
+  public final Object hasCure(Object disaster) {
     return mySurviveKit.get(disaster);
   }
 
@@ -72,7 +72,7 @@ public abstract class TaskDescriptor {
     return new TaskDescriptor(backgroundable.getTitle(), Where.POOLED) {
       @Override
       public void run(ContinuationContext context) {
-        final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         try {
           backgroundable.run(indicator);
         } catch (ProcessCanceledException e) {

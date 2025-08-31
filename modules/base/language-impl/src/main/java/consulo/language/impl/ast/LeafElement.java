@@ -82,7 +82,7 @@ public abstract class LeafElement extends TreeElement {
   }
 
   public int copyTo(@Nullable char[] buffer, int start) {
-    final int length = myText.length();
+    int length = myText.length();
     if (buffer != null) {
       CharArrayUtil.getChars(myText, buffer, start, length);
     }
@@ -92,15 +92,15 @@ public abstract class LeafElement extends TreeElement {
   @Override
   @Nonnull
   public char[] textToCharArray() {
-    final char[] buffer = new char[myText.length()];
+    char[] buffer = new char[myText.length()];
     CharArrayUtil.getChars(myText, buffer, 0);
     return buffer;
   }
 
   @Override
   public boolean textContains(char c) {
-    final CharSequence text = myText;
-    final int len = text.length();
+    CharSequence text = myText;
+    int len = text.length();
 
     if (len > TEXT_MATCHES_THRESHOLD) {
       char[] chars = CharArrayUtil.fromSequenceWithoutCopying(text);
@@ -127,7 +127,7 @@ public abstract class LeafElement extends TreeElement {
 
   static int leafTextMatches(@Nonnull CharSequence text, @Nonnull CharSequence buffer, int start) {
     assert start >= 0 : start;
-    final int length = text.length();
+    int length = text.length();
     if (buffer.length() - start < length) {
       return start == 0 ? Integer.MIN_VALUE : -start;
     }
@@ -162,9 +162,9 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  public boolean textMatches(@Nonnull final CharSequence buf, int start, int end) {
-    final CharSequence text = getChars();
-    final int len = text.length();
+  public boolean textMatches(@Nonnull CharSequence buf, int start, int end) {
+    CharSequence text = getChars();
+    int len = text.length();
 
     if (end - start != len) return false;
     if (buf == text) return true;
@@ -248,7 +248,7 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  public void addLeaf(@Nonnull final IElementType leafType, @Nonnull final CharSequence leafText, final ASTNode anchorBefore) {
+  public void addLeaf(@Nonnull IElementType leafType, @Nonnull CharSequence leafText, ASTNode anchorBefore) {
     throw new IncorrectOperationException("Leaf elements cannot have children.");
   }
 

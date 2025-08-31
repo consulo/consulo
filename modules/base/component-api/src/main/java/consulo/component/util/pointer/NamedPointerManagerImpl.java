@@ -52,7 +52,7 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     }
   }
 
-  protected void registerPointer(final T value, final NamedPointerImpl<T> pointer) {
+  protected void registerPointer(T value, NamedPointerImpl<T> pointer) {
     myPointers.put(value, pointer);
   }
 
@@ -63,7 +63,7 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   }
 
   protected void unregisterPointer(T value) {
-    final NamedPointerImpl<T> pointer = myPointers.remove(value);
+    NamedPointerImpl<T> pointer = myPointers.remove(value);
     if (pointer != null) {
       pointer.dropValue(value);
       myUnresolved.put(pointer.getName(), pointer);
@@ -95,7 +95,7 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
 
   @Nonnull
   public NamedPointer<T> create(@Nonnull String name, @Nonnull Function<String, T> findByNameFunc) {
-    final T value = findByNameFunc.apply(name);
+    T value = findByNameFunc.apply(name);
     if (value != null) {
       return create(value);
     }

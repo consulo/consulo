@@ -49,8 +49,8 @@ public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector 
   @Override
   public Set<UsageDescriptor> getProjectUsages(@Nonnull final Project project) throws CollectUsagesException {
     final Set<FileType> usedFileTypes = new HashSet<FileType>();
-    final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-    final FileType[] registeredFileTypes = fileTypeManager.getRegisteredFileTypes();
+    FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+    FileType[] registeredFileTypes = fileTypeManager.getRegisteredFileTypes();
     for (final FileType fileType : registeredFileTypes) {
       if (project.isDisposed()) {
         throw new CollectUsagesException("Project is disposed");

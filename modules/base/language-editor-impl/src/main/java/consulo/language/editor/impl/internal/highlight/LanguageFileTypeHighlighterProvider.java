@@ -33,7 +33,7 @@ import jakarta.annotation.Nullable;
 public class LanguageFileTypeHighlighterProvider implements SyntaxHighlighterProvider {
   @Override
   @Nullable
-  public SyntaxHighlighter create(final FileType fileType, @Nullable final Project project, @Nullable final VirtualFile file) {
+  public SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
     if (fileType instanceof LanguageFileType) {
       return SyntaxHighlighterFactory.getSyntaxHighlighter(((LanguageFileType)fileType).getLanguage(), project, file);
     }

@@ -64,15 +64,15 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
     this(manager, file, true);
   }
 
-  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, final boolean eventSystemEnabled) {
+  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, boolean eventSystemEnabled) {
     this(manager, virtualFile, eventSystemEnabled, calcBaseLanguage(virtualFile, manager.getProject(), virtualFile.getFileType()));
   }
 
-  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, final boolean eventSystemEnabled, @Nonnull final FileType fileType) {
+  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, boolean eventSystemEnabled, @Nonnull FileType fileType) {
     this(manager, virtualFile, eventSystemEnabled, calcBaseLanguage(virtualFile, manager.getProject(), fileType));
   }
 
-  protected SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, final boolean eventSystemEnabled, @Nonnull Language language) {
+  protected SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, boolean eventSystemEnabled, @Nonnull Language language) {
     super(manager, virtualFile, eventSystemEnabled);
     myBaseLanguage = language;
   }
@@ -83,7 +83,7 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
     return myBaseLanguage;
   }
 
-  private static Language calcBaseLanguage(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull final FileType fileType) {
+  private static Language calcBaseLanguage(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull FileType fileType) {
     if (fileType.isBinary()) return Language.ANY;
     if (RawFileLoaderHelper.isTooLargeForIntelligence(file)) return PlainTextLanguage.INSTANCE;
 
@@ -169,18 +169,18 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
 
   @Nonnull
   @Override
-  public SingleRootFileViewProvider createCopy(@Nonnull final VirtualFile copy) {
+  public SingleRootFileViewProvider createCopy(@Nonnull VirtualFile copy) {
     return new SingleRootFileViewProvider(getManager(), copy, false, getBaseLanguage());
   }
 
   @Override
-  public PsiReference findReferenceAt(final int offset) {
-    final PsiFile psiFile = getPsi(getBaseLanguage());
+  public PsiReference findReferenceAt(int offset) {
+    PsiFile psiFile = getPsi(getBaseLanguage());
     return findReferenceAt(psiFile, offset);
   }
 
   @Override
-  public PsiElement findElementAt(final int offset) {
+  public PsiElement findElementAt(int offset) {
     return findElementAt(getPsi(getBaseLanguage()), offset);
   }
 
@@ -222,17 +222,17 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
   }
 
   @Deprecated
-  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, final long contentSize) {
+  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, long contentSize) {
     return RawFileLoaderHelper.isTooLargeForIntelligence(vFile, contentSize);
   }
 
   @Deprecated
-  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, final long contentSize) {
+  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, long contentSize) {
     return RawFileLoaderHelper.isTooLargeForContentLoading(vFile, contentSize);
   }
 
   @Deprecated
-  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, final long maxBytes) {
+  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, long maxBytes) {
     return RawFileLoaderHelper.fileSizeIsGreaterThan(vFile, maxBytes);
   }
 

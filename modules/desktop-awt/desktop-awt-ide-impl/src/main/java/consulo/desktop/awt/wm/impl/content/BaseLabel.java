@@ -58,18 +58,18 @@ public class BaseLabel extends JLabel {
         return UIUtil.getLabelFont();
     }
 
-    public void setActiveFg(final Color fg) {
+    public void setActiveFg(Color fg) {
         myActiveFg = fg;
     }
 
-    public void setPassiveFg(final Color passiveFg) {
+    public void setPassiveFg(Color passiveFg) {
         myPassiveFg = passiveFg;
     }
 
     @Override
     @RequiredUIAccess
-    protected void paintComponent(final Graphics g) {
-        final Color fore = myUi.myWindow.isActive() ? myActiveFg : myPassiveFg;
+    protected void paintComponent(Graphics g) {
+        Color fore = myUi.myWindow.isActive() ? myActiveFg : myPassiveFg;
         setForeground(fore);
         super.paintComponent(g);
     }
@@ -86,7 +86,7 @@ public class BaseLabel extends JLabel {
 
             setToolTipText(content.getDescription());
 
-            final boolean show = Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON));
+            boolean show = Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON));
             if (show) {
                 setIcon(TargetAWT.to(content.getIcon()));
             }

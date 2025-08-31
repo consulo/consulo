@@ -31,7 +31,7 @@ public class InspectionSeverityGroupNode extends InspectionTreeNode {
   private final HighlightDisplayLevel myLevel;
   private final Project myProject;
 
-  public InspectionSeverityGroupNode(final Project project, final HighlightDisplayLevel level) {
+  public InspectionSeverityGroupNode(Project project, HighlightDisplayLevel level) {
     super(level);
     myLevel = level;
     myProject = project;

@@ -27,15 +27,15 @@ public class PackageVersionComparator implements Comparator<String> {
 
   @Override
   public int compare(String version1, String version2) {
-    final List<String> vs1 = parse(version1);
-    final List<String> vs2 = parse(version2);
+    List<String> vs1 = parse(version1);
+    List<String> vs2 = parse(version2);
     for (int i = 0; i < vs1.size() && i < vs2.size(); i++) {
-      final String vs1Part = vs1.get(i);
-      final String vs2Part = vs2.get(i);
+      String vs1Part = vs1.get(i);
+      String vs2Part = vs2.get(i);
       if (vs1Part.equals("**") || vs2Part.equals("**")) {
         return 0;
       }
-      final int result = vs1Part.compareTo(vs2Part);
+      int result = vs1Part.compareTo(vs2Part);
       if (result != 0) {
         return result;
       }
@@ -45,8 +45,8 @@ public class PackageVersionComparator implements Comparator<String> {
 
   @Nullable
   private static String replace(@Nonnull String s) {
-    final Map<String, String> sub = Map.of("pre", "c", "preview", "c", "rc", "c", "dev", "@");
-    final String tmp = sub.get(s);
+    Map<String, String> sub = Map.of("pre", "c", "preview", "c", "rc", "c", "dev", "@");
+    String tmp = sub.get(s);
     if (tmp != null) {
       s = tmp;
     }
@@ -55,7 +55,7 @@ public class PackageVersionComparator implements Comparator<String> {
     }
     if (s.matches("[0-9]+")) {
       try {
-        final long value = Long.parseLong(s);
+        long value = Long.parseLong(s);
         return String.format("%08d", value);
       }
       catch (NumberFormatException e) {
@@ -71,11 +71,11 @@ public class PackageVersionComparator implements Comparator<String> {
     if (s == null) {
       return Collections.emptyList();
     }
-    final Pattern COMPONENT_RE = Pattern.compile("\\d+|[a-z]+|\\.|-|.+");
-    final List<String> results = new ArrayList<>();
-    final Matcher matcher = COMPONENT_RE.matcher(s);
+    Pattern COMPONENT_RE = Pattern.compile("\\d+|[a-z]+|\\.|-|.+");
+    List<String> results = new ArrayList<>();
+    Matcher matcher = COMPONENT_RE.matcher(s);
     while (matcher.find()) {
-      final String component = replace(matcher.group());
+      String component = replace(matcher.group());
       if (component == null) {
         continue;
       }

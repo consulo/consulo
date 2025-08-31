@@ -48,7 +48,7 @@ public class VetoSavingCommittingDocumentsAdapter {
   private final FileDocumentManager myFileDocumentManager;
 
   @Inject
-  public VetoSavingCommittingDocumentsAdapter(final FileDocumentManager fileDocumentManager) {
+  public VetoSavingCommittingDocumentsAdapter(FileDocumentManager fileDocumentManager) {
     myFileDocumentManager = fileDocumentManager;
 
     Application.get().getMessageBus().connect().subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
@@ -67,7 +67,7 @@ public class VetoSavingCommittingDocumentsAdapter {
   private Map<Document, Project> getDocumentsBeingCommitted() {
     Map<Document, Project> documentsToWarn = new HashMap<>();
     for (Document unsavedDocument : myFileDocumentManager.getUnsavedDocuments()) {
-      final Object data = unsavedDocument.getUserData(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY);
+      Object data = unsavedDocument.getUserData(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY);
       if (data instanceof Project project) {
         documentsToWarn.put(unsavedDocument, project);
       }
@@ -91,7 +91,7 @@ public class VetoSavingCommittingDocumentsAdapter {
       "Saving now could cause inconsistent data to be committed.\n"
     );
     for (Document document : documentsToWarn.keySet()) {
-      final VirtualFile file = myFileDocumentManager.getFile(document);
+      VirtualFile file = myFileDocumentManager.getFile(document);
       messageBuilder.append(FileUtil.toSystemDependentName(file.getPath())).append("\n");
     }
     messageBuilder.append("Save the ").append(documentsToWarn.size() == 1 ? "file" : "files").append(" now?");

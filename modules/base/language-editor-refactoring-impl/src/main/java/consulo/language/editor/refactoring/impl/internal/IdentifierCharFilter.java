@@ -26,7 +26,7 @@ import consulo.language.editor.completion.lookup.Lookup;
 public class IdentifierCharFilter extends CharFilter {
 
   @Override
-  public Result acceptChar(char c, final int prefixLength, final Lookup lookup) {
+  public Result acceptChar(char c, int prefixLength, Lookup lookup) {
     if (lookup.isCompletion()) return null;
 
     if (Character.isJavaIdentifierPart(c)) return Result.ADD_TO_PREFIX;

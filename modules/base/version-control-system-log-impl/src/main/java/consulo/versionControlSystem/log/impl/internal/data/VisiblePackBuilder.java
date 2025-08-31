@@ -179,7 +179,7 @@ class VisiblePackBuilder {
         @Nonnull Collection<String> hashes,
         @Nonnull PermanentGraph.SortType sortType
     ) {
-        final Set<Integer> indices = ContainerUtil.map2SetNotNull(
+        Set<Integer> indices = ContainerUtil.map2SetNotNull(
             hashes,
             partOfHash -> {
                 CommitId commitId = myHashMap.findCommitId(new CommitIdByStringCondition(partOfHash));
@@ -227,7 +227,7 @@ class VisiblePackBuilder {
         return new HashSet<>(ContainerUtil.intersection(filteredByBranch, filteredByFile));
     }
 
-    private Set<Integer> getMatchingHeads(@Nonnull VcsLogRefs refs, @Nonnull final VcsLogBranchFilter filter) {
+    private Set<Integer> getMatchingHeads(@Nonnull VcsLogRefs refs, @Nonnull VcsLogBranchFilter filter) {
         return new HashSet<>(ContainerUtil.mapNotNull(refs.getBranches(), ref -> {
             boolean acceptRef = filter.matches(ref.getName());
             return acceptRef ? myHashMap.getCommitIndex(ref.getCommitHash(), ref.getRoot()) : null;
@@ -265,10 +265,10 @@ class VisiblePackBuilder {
     }
 
     private boolean matchesAllFilters(
-        @Nonnull final VcsCommitMetadata commit,
-        @Nonnull final PermanentGraph<Integer> permanentGraph,
+        @Nonnull VcsCommitMetadata commit,
+        @Nonnull PermanentGraph<Integer> permanentGraph,
         @Nonnull List<VcsLogDetailsFilter> detailsFilters,
-        @Nullable final Set<Integer> matchingHeads
+        @Nullable Set<Integer> matchingHeads
     ) {
         boolean matchesAllDetails = ContainerUtil.and(detailsFilters, filter -> filter.matches(commit));
         return matchesAllDetails && matchesAnyHead(permanentGraph, commit, matchingHeads);
@@ -288,7 +288,7 @@ class VisiblePackBuilder {
     }
 
     @Nullable
-    private VcsCommitMetadata getDetailsFromCache(final int commitIndex) {
+    private VcsCommitMetadata getDetailsFromCache(int commitIndex) {
         VcsCommitMetadata details = myTopCommitsDetailsCache.get(commitIndex);
         if (details != null) {
             return details;
@@ -307,7 +307,7 @@ class VisiblePackBuilder {
 
         Collection<CommitId> commits = new ArrayList<>();
         for (Map.Entry<VirtualFile, VcsLogProvider> entry : providers.entrySet()) {
-            final VirtualFile root = entry.getKey();
+            VirtualFile root = entry.getKey();
 
             if (!visibleRoots.contains(root) ||
                 (filterCollection.getUserFilter() != null && filterCollection.getUserFilter().getUsers(root).isEmpty())) {

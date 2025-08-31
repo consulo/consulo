@@ -29,7 +29,7 @@ public abstract class VFileEvent {
   private final Object myRequestor;
   private String myCachedPath;
 
-  public VFileEvent(Object requestor, final boolean isFromRefresh) {
+  public VFileEvent(Object requestor, boolean isFromRefresh) {
     myRequestor = requestor;
     myIsFromRefresh = isFromRefresh;
   }

@@ -101,7 +101,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final List<AnAction> selected = getSelectedElements(e);
+        List<AnAction> selected = getSelectedElements(e);
         boolean enabled =
             !selected.isEmpty() && selected.get(0) instanceof PopupProjectGroupActionGroup && !((PopupProjectGroupActionGroup) selected.get(
                 0)).getGroup().isTutorials();

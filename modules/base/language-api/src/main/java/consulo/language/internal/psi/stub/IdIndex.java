@@ -44,12 +44,12 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
 
   private final DataExternalizer<Integer> myValueExternalizer = new DataExternalizer<Integer>() {
     @Override
-    public void save(@Nonnull final DataOutput out, final Integer value) throws IOException {
+    public void save(@Nonnull DataOutput out, Integer value) throws IOException {
       out.write(value.intValue() & UsageSearchContext.ANY);
     }
 
     @Override
-    public Integer read(@Nonnull final DataInput in) throws IOException {
+    public Integer read(@Nonnull DataInput in) throws IOException {
       return Integer.valueOf(in.readByte() & UsageSearchContext.ANY);
     }
   };
@@ -69,8 +69,8 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
   private final DataIndexer<IdIndexEntry, Integer, FileContent> myIndexer = new DataIndexer<IdIndexEntry, Integer, FileContent>() {
     @Override
     @Nonnull
-    public Map<IdIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
-      final IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(inputData.getFileType());
+    public Map<IdIndexEntry, Integer> map(@Nonnull FileContent inputData) {
+      IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(inputData.getFileType());
       if (indexer != null) {
         return indexer.map(inputData);
       }

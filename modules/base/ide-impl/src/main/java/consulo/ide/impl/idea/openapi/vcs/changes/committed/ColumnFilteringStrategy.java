@@ -53,14 +53,14 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
 
   private Object[] myPrefferedSelection;
 
-  public ColumnFilteringStrategy(final ChangeListColumn column,
-                                 final Class<? extends CommittedChangesProvider> providerClass) {
+  public ColumnFilteringStrategy(ChangeListColumn column,
+                                 Class<? extends CommittedChangesProvider> providerClass) {
     myModel = new MyListModel();
     myValueList = new JBList();
     myScrollPane = ScrollPaneFactory.createScrollPane(myValueList);
     myValueList.setModel(myModel);
     myValueList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      public void valueChanged(final ListSelectionEvent e) {
+      public void valueChanged(ListSelectionEvent e) {
         for (ChangeListener listener : myListeners) {
           listener.stateChanged(new ChangeEvent(this));
         }
@@ -102,11 +102,11 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
     appendFilterBase(changeLists);
   }
 
-  public void addChangeListener(final ChangeListener listener) {
+  public void addChangeListener(ChangeListener listener) {
     myListeners.add(listener);
   }
 
-  public void removeChangeListener(final ChangeListener listener) {
+  public void removeChangeListener(ChangeListener listener) {
     myListeners.remove(listener);
   }
 
@@ -119,7 +119,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
   }
 
   public void appendFilterBase(List<CommittedChangeList> changeLists) {
-    final Object[] oldSelection = myModel.isEmpty() ? myPrefferedSelection : myValueList.getSelectedValues();
+    Object[] oldSelection = myModel.isEmpty() ? myPrefferedSelection : myValueList.getSelectedValues();
 
     myModel.addNext(changeLists, ourConvertorInstance);
     if (oldSelection != null) {
@@ -142,7 +142,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
 
   @Nonnull
   public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
-    final Object[] selection = myValueList.getSelectedValues();
+    Object[] selection = myValueList.getSelectedValues();
     if (myValueList.getSelectedIndex() == 0 || selection.length == 0) {
       return changeLists;
     }
@@ -168,10 +168,10 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
       myValues = ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
-    public <T> void addNext(final Collection<T> values, final Convertor<T, String> convertor) {
-      final TreeSet<String> set = new TreeSet<String>(Arrays.asList(myValues));
+    public <T> void addNext(Collection<T> values, Convertor<T, String> convertor) {
+      TreeSet<String> set = new TreeSet<String>(Arrays.asList(myValues));
       for (T value : values) {
-        final String converted = convertor.convert(value);
+        String converted = convertor.convert(value);
         if (converted != null) {
           // also works as filter
           set.add(converted);

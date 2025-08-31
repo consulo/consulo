@@ -68,7 +68,7 @@ public class CaptionPanel extends JPanel {
         return myActive;
     }
 
-    public void setActive(final boolean active) {
+    public void setActive(boolean active) {
         myActive = active;
         repaint();
     }

@@ -356,8 +356,8 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
     }
 
     @Override
-    public ProxyFactory registerOrGetProxy(final ProxyDescription description,
-                                           final Function<ProxyDescription, ProxyFactory> proxyFactoryFunction) {
+    public ProxyFactory registerOrGetProxy(ProxyDescription description,
+                                           Function<ProxyDescription, ProxyFactory> proxyFactoryFunction) {
         return myProxyFactories.computeIfAbsent(description, proxyFactoryFunction);
     }
 

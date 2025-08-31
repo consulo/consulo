@@ -27,7 +27,7 @@ public class TextFilePatch extends FilePatch {
   private Charset myCharset;
   private final List<PatchHunk> myHunks;
 
-  public void addHunk(final PatchHunk hunk) {
+  public void addHunk(PatchHunk hunk) {
     myHunks.add(hunk);
   }
 
@@ -40,7 +40,7 @@ public class TextFilePatch extends FilePatch {
     myHunks = new ArrayList<PatchHunk>();
   }
 
-  private TextFilePatch(final TextFilePatch patch) {
+  private TextFilePatch(TextFilePatch patch) {
     myCharset = patch.myCharset;
     setBeforeVersionId(patch.getBeforeVersionId());
     setAfterVersionId(patch.getAfterVersionId());

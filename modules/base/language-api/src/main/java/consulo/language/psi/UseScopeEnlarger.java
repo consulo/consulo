@@ -32,7 +32,7 @@ public interface UseScopeEnlarger {
     Project project = element.getProject();
     SearchScope scope = element.getUseScope();
     for (UseScopeEnlarger enlarger : project.getExtensionList(UseScopeEnlarger.class)) {
-      final SearchScope additionalScope = enlarger.getAdditionalUseScope(element);
+      SearchScope additionalScope = enlarger.getAdditionalUseScope(element);
       if (additionalScope != null) {
         scope = scope.union(additionalScope);
       }

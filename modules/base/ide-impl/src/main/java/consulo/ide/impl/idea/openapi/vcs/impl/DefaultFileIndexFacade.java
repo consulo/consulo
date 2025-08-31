@@ -30,14 +30,14 @@ public class DefaultFileIndexFacade extends FileIndexFacade {
   private final Project myProject;
   private final VirtualFile myBaseDir;
 
-  public DefaultFileIndexFacade(@Nonnull final Project project) {
+  public DefaultFileIndexFacade(@Nonnull Project project) {
     super(project);
     myProject = project;
     myBaseDir = project.getBaseDir();
   }
 
   @Override
-  public boolean isInContent(@Nonnull final VirtualFile file) {
+  public boolean isInContent(@Nonnull VirtualFile file) {
     return VfsUtil.isAncestor(getBaseDir(), file, false);
   }
 
@@ -62,7 +62,7 @@ public class DefaultFileIndexFacade extends FileIndexFacade {
   }
 
   @Override
-  public boolean isExcludedFile(@Nonnull final VirtualFile file) {
+  public boolean isExcludedFile(@Nonnull VirtualFile file) {
     return false;
   }
 
@@ -83,7 +83,7 @@ public class DefaultFileIndexFacade extends FileIndexFacade {
   }
 
   @Override
-  public boolean isValidAncestor(@Nonnull final VirtualFile baseDir, @Nonnull final VirtualFile childDir) {
+  public boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile childDir) {
     return VfsUtil.isAncestor(baseDir, childDir, false);
   }
 

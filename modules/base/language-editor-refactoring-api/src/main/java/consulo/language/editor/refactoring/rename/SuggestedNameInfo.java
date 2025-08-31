@@ -54,13 +54,13 @@ public abstract class SuggestedNameInfo {
   public static class Delegate extends SuggestedNameInfo {
     SuggestedNameInfo myDelegate;
 
-    public Delegate(final String[] names, final SuggestedNameInfo delegate) {
+    public Delegate(String[] names, SuggestedNameInfo delegate) {
       super(names);
       myDelegate = delegate;
     }
 
     @Override
-    public void nameChosen(final String name) {
+    public void nameChosen(String name) {
       myDelegate.nameChosen(name);
     }
   }

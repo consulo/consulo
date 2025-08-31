@@ -33,9 +33,9 @@ public class LanguageUndoUtil {
      *
      * @param file to make editors of to respond to undo action.
      */
-    public static void markPsiFileForUndo(@Nonnull final PsiFile file) {
+    public static void markPsiFileForUndo(@Nonnull PsiFile file) {
         Project project = file.getProject();
-        final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
+        Document document = PsiDocumentManager.getInstance(project).getDocument(file);
         if (document == null) {
             return;
         }

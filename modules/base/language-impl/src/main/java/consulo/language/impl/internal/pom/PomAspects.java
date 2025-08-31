@@ -58,16 +58,16 @@ public class PomAspects implements PomModelAspectRegistrator {
   @Override
   public void register(Class<? extends PomModelAspect> aClass, PomModelAspect aspect, Set<PomModelAspect> dependencies) {
     myAspects.put(aClass, aspect);
-    final Iterator<PomModelAspect> iterator = dependencies.iterator();
-    final List<PomModelAspect> deps = new ArrayList<>();
+    Iterator<PomModelAspect> iterator = dependencies.iterator();
+    List<PomModelAspect> deps = new ArrayList<>();
     // todo: reorder dependencies
     while (iterator.hasNext()) {
-      final PomModelAspect depend = iterator.next();
+      PomModelAspect depend = iterator.next();
       deps.addAll(getAllDependencies(depend));
     }
     deps.add(aspect); // add self to block same aspect transactions from event processing and update
-    for (final PomModelAspect pomModelAspect : deps) {
-      final List<PomModelAspect> pomModelAspects = myInvertedIncidence.get(pomModelAspect);
+    for (PomModelAspect pomModelAspect : deps) {
+      List<PomModelAspect> pomModelAspects = myInvertedIncidence.get(pomModelAspect);
       if (pomModelAspects != null) {
         pomModelAspects.add(aspect);
       }

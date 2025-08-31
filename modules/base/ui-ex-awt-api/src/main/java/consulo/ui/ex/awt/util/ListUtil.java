@@ -38,7 +38,7 @@ public class ListUtil {
     public static final String SELECTED_BY_MOUSE_EVENT = "byMouseEvent";
 
     public static <T> MouseMotionListener installAutoSelectOnMouseMove(@Nonnull JList<T> list) {
-        final MouseMotionAdapter listener = new MouseMotionAdapter() {
+        MouseMotionAdapter listener = new MouseMotionAdapter() {
             boolean myIsEngaged = false;
 
             @Override

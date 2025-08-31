@@ -30,15 +30,15 @@ public class FileEditorHistoryUtil {
 
   @Nonnull
   public static HistoryEntry currentStateAsHistoryEntry(@Nonnull FileEditorWithProviderComposite composite) {
-    final FileEditor[] editors = composite.getEditors();
-    final FileEditorState[] states = new FileEditorState[editors.length];
+    FileEditor[] editors = composite.getEditors();
+    FileEditorState[] states = new FileEditorState[editors.length];
     for (int j = 0; j < states.length; j++) {
       states[j] = editors[j].getState(FileEditorStateLevel.FULL);
       LOG.assertTrue(states[j] != null);
     }
-    final int selectedProviderIndex = ArrayUtil.find(editors, composite.getSelectedEditor());
+    int selectedProviderIndex = ArrayUtil.find(editors, composite.getSelectedEditor());
     LOG.assertTrue(selectedProviderIndex != -1);
-    final FileEditorProvider[] providers = composite.getProviders();
+    FileEditorProvider[] providers = composite.getProviders();
     return HistoryEntry.createLight(composite.getFile(), providers, states, providers[selectedProviderIndex]);
   }
 }

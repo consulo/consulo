@@ -83,7 +83,7 @@ public class ParameterInfoComponent extends JPanel {
 
   @TestOnly
   public static ParameterInfoUIContextEx createContext(Object[] objects, Editor editor, @Nonnull ParameterInfoHandler handler, int currentParameterIndex, @Nullable PsiElement parameterOwner) {
-    final ParameterInfoComponent infoComponent = new ParameterInfoComponent(objects, editor, handler);
+    ParameterInfoComponent infoComponent = new ParameterInfoComponent(objects, editor, handler);
     infoComponent.setCurrentParameterIndex(currentParameterIndex);
     infoComponent.setParameterOwner(parameterOwner);
     return infoComponent.new MyParameterContext(false);
@@ -118,7 +118,7 @@ public class ParameterInfoComponent extends JPanel {
       AccessibleContextUtil.setName(this, "Parameter Info. Press TAB to navigate through each element. Press ESC to close.");
     }
 
-    final JScrollPane pane = ScrollPaneFactory.createScrollPane(myMainPanel, true);
+    JScrollPane pane = ScrollPaneFactory.createScrollPane(myMainPanel, true);
     add(pane, BorderLayout.CENTER);
 
     myAllowSwitchLabel = allowSwitchLabel && !(editor instanceof EditorWindow);
@@ -165,7 +165,7 @@ public class ParameterInfoComponent extends JPanel {
   @Override
   public Dimension getPreferredSize() {
     long visibleRows = Stream.of(myPanels).filter(Component::isVisible).count();
-    final Dimension preferredSize = super.getPreferredSize();
+    Dimension preferredSize = super.getPreferredSize();
     if (visibleRows <= myMaxVisibleRows) {
       return preferredSize;
     }
@@ -207,8 +207,8 @@ public class ParameterInfoComponent extends JPanel {
                                                Color background) {
       List<String> split = StringUtil.split(text, ",", false);
       StringBuilder plainLine = new StringBuilder();
-      final List<Integer> startOffsets = new ArrayList<>();
-      final List<Integer> endOffsets = new ArrayList<>();
+      List<Integer> startOffsets = new ArrayList<>();
+      List<Integer> endOffsets = new ArrayList<>();
 
       TextRange highlightRange = highlightStartOffset >= 0 && highlightEndOffset >= highlightStartOffset ? new TextRange(highlightStartOffset, highlightEndOffset) : null;
       for (int j = 0; j < split.size(); j++) {
@@ -225,7 +225,7 @@ public class ParameterInfoComponent extends JPanel {
       ParameterInfoController.SignatureItem item = new ParameterInfoController.SignatureItem(plainLine.toString(), strikeout, isDisabled, startOffsets, endOffsets);
       result.signatures.add(item);
 
-      final String resultedText = myPanels[i].setup(text, myEscapeFunction, highlightStartOffset, highlightEndOffset, isDisabled, strikeout, isDisabledBeforeHighlight, background);
+      String resultedText = myPanels[i].setup(text, myEscapeFunction, highlightStartOffset, highlightEndOffset, isDisabled, strikeout, isDisabledBeforeHighlight, background);
       myPanels[i].setBorder(isLastParameterOwner() || isSingleParameterInfo() ? EMPTY_BORDER : BOTTOM_BORDER);
       return resultedText;
     }
@@ -242,8 +242,8 @@ public class ParameterInfoComponent extends JPanel {
     }
 
     @Override
-    public String setupUIComponentPresentation(final String[] texts, final EnumSet<Flag>[] flags, final Color background) {
-      final String resultedText = myPanels[i].setup(result, texts, myEscapeFunction, flags, background);
+    public String setupUIComponentPresentation(String[] texts, EnumSet<Flag>[] flags, Color background) {
+      String resultedText = myPanels[i].setup(result, texts, myEscapeFunction, flags, background);
       myPanels[i].setBorder(isLastParameterOwner() || isSingleParameterInfo() ? EMPTY_BORDER : BOTTOM_BORDER);
       return resultedText;
     }
@@ -303,7 +303,7 @@ public class ParameterInfoComponent extends JPanel {
     int highlightedComponentIdx = -1;
     for (int i = 0; i < myObjects.length; i++) {
       context.i = i;
-      final Object o = myObjects[i];
+      Object o = myObjects[i];
 
       boolean isHighlighted = myObjects[i].equals(myHighlighted);
       if (isHighlighted) {
@@ -456,17 +456,17 @@ public class ParameterInfoComponent extends JPanel {
       return escapeFunction == null ? line : escapeFunction.apply(line);
     }
 
-    public String setup(final ParameterInfoController.Model result,
-                        final String[] texts,
+    public String setup(ParameterInfoController.Model result,
+                        String[] texts,
                         Function<? super String, String> escapeFunction,
-                        final EnumSet<ParameterInfoUIContextEx.Flag>[] flags,
-                        final Color background) {
+                        EnumSet<ParameterInfoUIContextEx.Flag>[] flags,
+                        Color background) {
       StringBuilder buf = new StringBuilder();
       setBackground(background);
       int index = 0;
       int curOffset = 0;
-      final List<Integer> startOffsets = new ArrayList<>();
-      final List<Integer> endOffsets = new ArrayList<>();
+      List<Integer> startOffsets = new ArrayList<>();
+      List<Integer> endOffsets = new ArrayList<>();
       TreeMap<TextRange, ParameterInfoUIContextEx.Flag> flagsMap = new TreeMap<>(TEXT_RANGE_COMPARATOR);
       StringBuilder fullLine = new StringBuilder();
       StringBuilder line = new StringBuilder();
@@ -477,7 +477,7 @@ public class ParameterInfoComponent extends JPanel {
         fullLine.append(texts[i]);
         endOffsets.add(fullLine.length());
         line.append(texts[i]);
-        final EnumSet<ParameterInfoUIContextEx.Flag> flag = flags[i];
+        EnumSet<ParameterInfoUIContextEx.Flag> flag = flags[i];
         if (flag.contains(ParameterInfoUIContextEx.Flag.HIGHLIGHT)) {
           result.current = i;
           flagsMap.put(TextRange.create(curOffset, curOffset + paramText.trim().length()), ParameterInfoUIContextEx.Flag.HIGHLIGHT);
@@ -567,17 +567,17 @@ public class ParameterInfoComponent extends JPanel {
     }
 
     // flagsMap is supposed to use TEXT_RANGE_COMPARATOR
-    private String buildLabelText(@Nonnull final String text, @Nonnull final TreeMap<TextRange, ParameterInfoUIContextEx.Flag> flagsMap) {
-      final StringBuilder labelText = new StringBuilder(text);
-      final Map<Integer, Integer> faultMap = new HashMap<>();
+    private String buildLabelText(@Nonnull String text, @Nonnull TreeMap<TextRange, ParameterInfoUIContextEx.Flag> flagsMap) {
+      StringBuilder labelText = new StringBuilder(text);
+      Map<Integer, Integer> faultMap = new HashMap<>();
 
       for (Map.Entry<TextRange, ParameterInfoUIContextEx.Flag> entry : flagsMap.entrySet()) {
-        final TextRange highlightRange = entry.getKey();
-        final ParameterInfoUIContextEx.Flag flag = entry.getValue();
+        TextRange highlightRange = entry.getKey();
+        ParameterInfoUIContextEx.Flag flag = entry.getValue();
 
-        final String tagValue = getTagValue(flag);
-        final String tag = getOpeningTag(tagValue);
-        final String endTag = getClosingTag(tagValue);
+        String tagValue = getTagValue(flag);
+        String tag = getOpeningTag(tagValue);
+        String endTag = getClosingTag(tagValue);
 
         int startOffset = highlightRange.getStartOffset();
         int endOffset = highlightRange.getEndOffset() + tag.length();

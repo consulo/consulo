@@ -46,22 +46,22 @@ public class InlineArtifactAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final LayoutTreeSelection selection = myEditor.getLayoutTreeComponent().getSelection();
-    final PackagingElementNode<?> node = selection.getNodeIfSingle();
+    LayoutTreeSelection selection = myEditor.getLayoutTreeComponent().getSelection();
+    PackagingElementNode<?> node = selection.getNodeIfSingle();
     PackagingElement<?> element = selection.getElementIfSingle();
     e.getPresentation().setEnabled(element instanceof ArtifactPackagingElement && node != null && node.getParentElement(element) != null);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final LayoutTreeComponent treeComponent = myEditor.getLayoutTreeComponent();
-    final LayoutTreeSelection selection = treeComponent.getSelection();
+    LayoutTreeComponent treeComponent = myEditor.getLayoutTreeComponent();
+    LayoutTreeSelection selection = treeComponent.getSelection();
     final PackagingElement<?> element = selection.getElementIfSingle();
-    final PackagingElementNode<?> node = selection.getNodeIfSingle();
+    PackagingElementNode<?> node = selection.getNodeIfSingle();
     if (node == null || !(element instanceof ArtifactPackagingElement)) return;
 
     final CompositePackagingElement<?> parent = node.getParentElement(element);
-    final CompositePackagingElementNode parentNode = node.getParentNode();
+    CompositePackagingElementNode parentNode = node.getParentNode();
     if (parent == null || parentNode == null) {
       return;
     }
@@ -71,10 +71,10 @@ public class InlineArtifactAction extends DumbAwareAction {
       @Override
       public void run() {
         parent.removeChild(element);
-        final ArtifactEditorContext context = myEditor.getContext();
-        final Artifact artifact = ((ArtifactPackagingElement)element).findArtifact(context);
+        ArtifactEditorContext context = myEditor.getContext();
+        Artifact artifact = ((ArtifactPackagingElement)element).findArtifact(context);
         if (artifact != null) {
-          final CompositePackagingElement<?> rootElement = artifact.getRootElement();
+          CompositePackagingElement<?> rootElement = artifact.getRootElement();
           if (rootElement instanceof ArtifactRootElement<?>) {
             for (PackagingElement<?> child : rootElement.getChildren()) {
               parent.addOrFindChild(ArtifactUtil.copyWithChildren(child, context.getProject()));

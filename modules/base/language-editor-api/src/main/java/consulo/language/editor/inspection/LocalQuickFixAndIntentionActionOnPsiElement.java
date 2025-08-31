@@ -37,8 +37,8 @@ public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQ
   @Override
   public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (file == null||myStartElement==null) return;
-    final PsiElement startElement = myStartElement.getElement();
-    final PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
+    PsiElement startElement = myStartElement.getElement();
+    PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
     if (startElement == null || endElement == null) return;
     invoke(project, file, editor, startElement, endElement);
   }
@@ -46,8 +46,8 @@ public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQ
   @Override
   public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (myStartElement == null) return false;
-    final PsiElement startElement = myStartElement.getElement();
-    final PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
+    PsiElement startElement = myStartElement.getElement();
+    PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
     return startElement != null &&
            endElement != null &&
            startElement.isValid() &&

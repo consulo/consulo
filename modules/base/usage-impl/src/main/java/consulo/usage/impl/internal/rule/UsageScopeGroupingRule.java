@@ -128,7 +128,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof UsageScopeGroup)) return false;
-      final UsageScopeGroup usageTypeGroup = (UsageScopeGroup)o;
+      UsageScopeGroup usageTypeGroup = (UsageScopeGroup)o;
       return myCode == usageTypeGroup.myCode;
     }
 

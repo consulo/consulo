@@ -36,15 +36,15 @@ public class ReadOnlyPackageSetChooserCombo extends ComponentWithBrowseButton<JC
 
     private final Project myProject;
 
-    public ReadOnlyPackageSetChooserCombo(final Project project, final String preselect) {
+    public ReadOnlyPackageSetChooserCombo(Project project, String preselect) {
         this(project, preselect, true);
     }
 
-    public ReadOnlyPackageSetChooserCombo(final Project project, @Nullable final String preselect, final boolean useCombo) {
+    public ReadOnlyPackageSetChooserCombo(Project project, @Nullable String preselect, boolean useCombo) {
         super(useCombo ? new JComboBox() : new JBComboBoxTableCellEditorComponent(), null);
         myProject = project;
 
-        final JComponent component = getChildComponent();
+        JComponent component = getChildComponent();
         if (component instanceof JComboBox) {
             component.setBorder(null);
         }
@@ -68,13 +68,13 @@ public class ReadOnlyPackageSetChooserCombo extends ComponentWithBrowseButton<JC
         selectScope(preselect);
     }
 
-    private void selectScope(final String preselect) {
-        final JComponent component = getChildComponent();
+    private void selectScope(String preselect) {
+        JComponent component = getChildComponent();
         if (preselect != null) {
             if (component instanceof JComboBox) {
-                final DefaultComboBoxModel model = (DefaultComboBoxModel) ((JComboBox) component).getModel();
+                DefaultComboBoxModel model = (DefaultComboBoxModel) ((JComboBox) component).getModel();
                 for (int i = 0; i < model.getSize(); i++) {
-                    final NamedScope descriptor = (NamedScope) model.getElementAt(i);
+                    NamedScope descriptor = (NamedScope) model.getElementAt(i);
                     if (preselect.equals(descriptor.getName())) {
                         ((JComboBox) component).setSelectedIndex(i);
                         break;
@@ -82,9 +82,9 @@ public class ReadOnlyPackageSetChooserCombo extends ComponentWithBrowseButton<JC
                 }
             }
             else {
-                final Object[] options = ((JBComboBoxTableCellEditorComponent) component).getOptions();
+                Object[] options = ((JBComboBoxTableCellEditorComponent) component).getOptions();
                 for (Object option : options) {
-                    final NamedScope descriptor = (NamedScope) option;
+                    NamedScope descriptor = (NamedScope) option;
                     if (preselect.equals(descriptor.getName())) {
                         ((JBComboBoxTableCellEditorComponent) component).setDefaultValue(descriptor);
                         break;
@@ -95,8 +95,8 @@ public class ReadOnlyPackageSetChooserCombo extends ComponentWithBrowseButton<JC
     }
 
     private void rebuild() {
-        final JComponent component = getChildComponent();
-        final NamedScope[] model = createModel();
+        JComponent component = getChildComponent();
+        NamedScope[] model = createModel();
         if (component instanceof JComboBox) {
             ((JComboBox) component).setModel(new DefaultComboBoxModel(model));
         }
@@ -106,8 +106,8 @@ public class ReadOnlyPackageSetChooserCombo extends ComponentWithBrowseButton<JC
     }
 
     protected NamedScope[] createModel() {
-        final Collection<NamedScope> model = new ArrayList<>();
-        final DependencyValidationManager manager = DependencyValidationManager.getInstance(myProject);
+        Collection<NamedScope> model = new ArrayList<>();
+        DependencyValidationManager manager = DependencyValidationManager.getInstance(myProject);
         model.addAll(Arrays.asList(manager.getScopes()));
         for (PackageSet unnamedScope : manager.getUnnamedScopes().values()) {
             model.add(new NamedScope.UnnamedScope(unnamedScope));
@@ -118,7 +118,7 @@ public class ReadOnlyPackageSetChooserCombo extends ComponentWithBrowseButton<JC
 
     @Nullable
     public NamedScope getSelectedScope() {
-        final JComponent component = getChildComponent();
+        JComponent component = getChildComponent();
         if (component instanceof JComboBox) {
             int idx = ((JComboBox) component).getSelectedIndex();
             if (idx < 0) {

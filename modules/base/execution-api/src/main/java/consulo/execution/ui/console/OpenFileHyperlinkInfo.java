@@ -29,7 +29,7 @@ public final class OpenFileHyperlinkInfo extends FileHyperlinkInfoBase {
     this((Project)descriptor.getProject(), descriptor.getFile(), descriptor.getLine(), descriptor.getColumn());
   }
 
-  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull final VirtualFile file, final int line) {
+  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
     this(project, file, line, 0);
   }
 

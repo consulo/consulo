@@ -31,7 +31,7 @@ public class BigArray<T> implements StepList<T> {
   private int mySize;
 
   // pack size = 2^size2Power
-  public BigArray(final int size2Power) {
+  public BigArray(int size2Power) {
     assert (size2Power > 1) && (size2Power < 16);
     mySize2Power = size2Power;
     myList = new ArrayList<ArrayList<T>>();
@@ -39,13 +39,13 @@ public class BigArray<T> implements StepList<T> {
     mySize = 0;
   }
 
-  public T get(final int idx) {
-    final int itemNumber = idx >> mySize2Power;
+  public T get(int idx) {
+    int itemNumber = idx >> mySize2Power;
     return myList.get(itemNumber).get(idx ^ (itemNumber << mySize2Power));
   }
 
-  public void add(final T t) {
-    final ArrayList<T> commits;
+  public void add(T t) {
+    ArrayList<T> commits;
     if (myList.isEmpty() || (myList.get(myList.size() - 1).size() == myPack)) {
       commits = new ArrayList<T>(myPack);
       myList.add(commits);
@@ -59,11 +59,11 @@ public class BigArray<T> implements StepList<T> {
   @Override
   public ReadonlyList<T> cut(int idxFromIncluded) {
     if (idxFromIncluded >= getSize()) return ReadonlyList.EMPTY;
-    final int itemNumber = idxFromIncluded >> mySize2Power;
-    final int insideIdx = idxFromIncluded ^ (itemNumber << mySize2Power);
+    int itemNumber = idxFromIncluded >> mySize2Power;
+    int insideIdx = idxFromIncluded ^ (itemNumber << mySize2Power);
 
-    final ArrayList<T> start = myList.get(itemNumber);
-    final NotRegularReadonlyList<T> result =
+    ArrayList<T> start = myList.get(itemNumber);
+    NotRegularReadonlyList<T> result =
       new NotRegularReadonlyList<T>(new ArrayList<ArrayList<T>>(myList.subList(itemNumber + 1, myList.size())),
                                     mySize2Power, start.subList(insideIdx, start.size()));
     myList.set(itemNumber, new ArrayList<T>(start.subList(0, insideIdx)));
@@ -108,7 +108,7 @@ public class BigArray<T> implements StepList<T> {
         return myStart.get(idx);
       }
       int corrected = idx - myStart.size();
-      final int itemNumber = corrected >> mySize2Power;
+      int itemNumber = corrected >> mySize2Power;
       return myList.get(itemNumber).get(corrected ^ (itemNumber << mySize2Power));
     }
 

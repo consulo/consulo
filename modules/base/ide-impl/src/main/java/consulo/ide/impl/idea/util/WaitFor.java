@@ -40,7 +40,7 @@ public abstract class WaitFor {
   }
 
   /** Blocking call */
-  public WaitFor(int timeoutMsecs, final int step) {
+  public WaitFor(int timeoutMsecs, int step) {
     long started = System.currentTimeMillis();
     long deadline = timeoutMsecs == -1 ? Long.MAX_VALUE : started + timeoutMsecs;
 

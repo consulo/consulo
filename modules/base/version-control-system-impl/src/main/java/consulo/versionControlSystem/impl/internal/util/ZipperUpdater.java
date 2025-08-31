@@ -21,36 +21,36 @@ public class ZipperUpdater {
   private final Alarm.ThreadToUse myThreadToUse;
   private boolean myIsEmpty;
 
-  public ZipperUpdater(final int delay, @Nonnull Disposable parentDisposable) {
+  public ZipperUpdater(int delay, @Nonnull Disposable parentDisposable) {
     myDelay = delay;
     myIsEmpty = true;
     myThreadToUse = Alarm.ThreadToUse.POOLED_THREAD;
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, parentDisposable);
   }
 
-  public ZipperUpdater(final int delay, final Alarm.ThreadToUse threadToUse, @Nonnull Disposable parentDisposable) {
+  public ZipperUpdater(int delay, Alarm.ThreadToUse threadToUse, @Nonnull Disposable parentDisposable) {
     myDelay = delay;
     myThreadToUse = threadToUse;
     myIsEmpty = true;
     myAlarm = new Alarm(threadToUse, parentDisposable);
   }
 
-  public void queue(@Nonnull final Runnable runnable) {
+  public void queue(@Nonnull Runnable runnable) {
     queue(runnable, false);
   }
 
-  private void queue(@Nonnull final Runnable runnable, final boolean urgent) {
+  private void queue(@Nonnull Runnable runnable, boolean urgent) {
     queue(runnable, urgent, false);
   }
 
-  public void queue(@Nonnull final Runnable runnable, final boolean urgent, final boolean anyModality) {
+  public void queue(@Nonnull final Runnable runnable, boolean urgent, boolean anyModality) {
     synchronized (myLock) {
       if (myAlarm.isDisposed()) return;
-      final boolean wasRaised = myRaised;
+      boolean wasRaised = myRaised;
       myRaised = true;
       myIsEmpty = false;
       if (!wasRaised) {
-        final Runnable request = new Runnable() {
+        Runnable request = new Runnable() {
           @Override
           public void run() {
             synchronized (myLock) {

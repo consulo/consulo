@@ -138,7 +138,7 @@ public class ResolveState {
 
     @Override
     public <T> T get(Key<T> key) {
-      final T value = (T)myValues.get(key);
+      T value = (T)myValues.get(key);
       if (value == null && key instanceof KeyWithDefaultValue) {
         return ((KeyWithDefaultValue<T>) key).getDefaultValue();
       }

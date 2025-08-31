@@ -47,11 +47,11 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   @Nullable
   @Override
   protected synchronized Collection<Language> getFilterItems() {
-    final Collection<Language> result = super.getFilterItems();
+    Collection<Language> result = super.getFilterItems();
     if (result == null) {
       return result;
     }
-    final Collection<Language> items = new HashSet<>(result);
+    Collection<Language> items = new HashSet<>(result);
     items.add(Language.ANY);
     return items;
   }
@@ -86,7 +86,7 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   }
 
   @Override
-  public String getFullName(final Object element) {
+  public String getFullName(Object element) {
     for(ChooseByNameContributor c: getContributorList()) {
       if (c instanceof GotoClassOrTypeContributor) {
         String result = ((GotoClassOrTypeContributor) c).getQualifiedName((NavigationItem) element);
@@ -95,9 +95,9 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
     }
 
     if (element instanceof PsiElement) {
-      final PsiElement psiElement = (PsiElement)element;
+      PsiElement psiElement = (PsiElement)element;
 
-      final String containerText = SymbolPresentationUtil.getSymbolContainerText(psiElement);
+      String containerText = SymbolPresentationUtil.getSymbolContainerText(psiElement);
       return containerText + "." + getElementName(element);
     }
 

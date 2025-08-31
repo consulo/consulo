@@ -36,7 +36,7 @@ class PreviewUsageAction extends RuleAction {
   }
 
   @Override
-  protected void setOptionValue(final boolean value) {
+  protected void setOptionValue(boolean value) {
     UsageViewSettings.getInstance().IS_PREVIEW_USAGES = value;
   }
 }

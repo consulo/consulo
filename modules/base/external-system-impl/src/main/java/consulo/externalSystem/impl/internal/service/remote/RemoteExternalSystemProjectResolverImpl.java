@@ -45,7 +45,7 @@ public class RemoteExternalSystemProjectResolverImpl<S extends ExternalSystemExe
   }
 
   @Override
-  public boolean cancelTask(@Nonnull final ExternalSystemTaskId id)
+  public boolean cancelTask(@Nonnull ExternalSystemTaskId id)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException {
     return myDelegate.cancelTask(id, getNotificationListener());
   }

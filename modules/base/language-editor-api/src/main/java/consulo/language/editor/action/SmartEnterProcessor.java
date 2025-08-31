@@ -53,23 +53,23 @@ public abstract class SmartEnterProcessor implements LanguageExtension {
     return Application.get().getExtensionPoint(SmartEnterProcessor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  public abstract boolean process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile psiFile);
+  public abstract boolean process(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile psiFile);
 
-  public boolean processAfterCompletion(@Nonnull final Editor editor, @Nonnull final PsiFile psiFile) {
+  public boolean processAfterCompletion(@Nonnull Editor editor, @Nonnull PsiFile psiFile) {
     return process(psiFile.getProject(), editor, psiFile);
   }
 
   protected void reformat(PsiElement atCaret) throws IncorrectOperationException {
-    final TextRange range = atCaret.getTextRange();
-    final PsiFile file = atCaret.getContainingFile();
-    final PsiFile baseFile = file.getViewProvider().getPsi(file.getViewProvider().getBaseLanguage());
+    TextRange range = atCaret.getTextRange();
+    PsiFile file = atCaret.getContainingFile();
+    PsiFile baseFile = file.getViewProvider().getPsi(file.getViewProvider().getBaseLanguage());
     CodeStyleManager.getInstance(atCaret.getProject()).reformatText(baseFile, range.getStartOffset(), range.getEndOffset());
   }
 
-  protected RangeMarker createRangeMarker(final PsiElement elt) {
-    final PsiFile psiFile = elt.getContainingFile();
-    final PsiDocumentManager instance = PsiDocumentManager.getInstance(elt.getProject());
-    final Document document = instance.getDocument(psiFile);
+  protected RangeMarker createRangeMarker(PsiElement elt) {
+    PsiFile psiFile = elt.getContainingFile();
+    PsiDocumentManager instance = PsiDocumentManager.getInstance(elt.getProject());
+    Document document = instance.getDocument(psiFile);
     return document.createRangeMarker(elt.getTextRange());
   }
 
@@ -77,7 +77,7 @@ public abstract class SmartEnterProcessor implements LanguageExtension {
   protected PsiElement getStatementAtCaret(Editor editor, PsiFile psiFile) {
     int caret = editor.getCaretModel().getOffset();
 
-    final Document doc = editor.getDocument();
+    Document doc = editor.getDocument();
     CharSequence chars = doc.getCharsSequence();
     int offset = caret == 0 ? 0 : CharArrayUtil.shiftBackward(chars, caret - 1, " \t");
     if (doc.getLineNumber(offset) < doc.getLineNumber(caret)) {
@@ -87,12 +87,12 @@ public abstract class SmartEnterProcessor implements LanguageExtension {
     return psiFile.findElementAt(offset);
   }
 
-  protected static boolean isUncommited(@Nonnull final Project project) {
+  protected static boolean isUncommited(@Nonnull Project project) {
     return PsiDocumentManager.getInstance(project).hasUncommitedDocuments();
   }
 
-  protected void commit(@Nonnull final Editor editor) {
-    final Project project = editor.getProject();
+  protected void commit(@Nonnull Editor editor) {
+    Project project = editor.getProject();
     PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
 
     //some psi operations may block the document, unblock here

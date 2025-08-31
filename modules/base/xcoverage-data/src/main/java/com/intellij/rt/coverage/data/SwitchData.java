@@ -28,14 +28,14 @@ public class SwitchData implements CoverageData {
     private int myDefaultHits;
     private int[] myHits;
 
-    public SwitchData(final int[] keys) {
+    public SwitchData(int[] keys) {
         myKeys = keys;
 
         myHits = new int[keys.length];
         Arrays.fill(myHits, 0);
     }
 
-    public void touch(final int key) {
+    public void touch(int key) {
         if (key == -1) {
             myDefaultHits++;
         }
@@ -52,7 +52,7 @@ public class SwitchData implements CoverageData {
         return myHits;
     }
 
-    public void save(final DataOutputStream os) throws IOException {
+    public void save(DataOutputStream os) throws IOException {
         CoverageIOUtil.writeINT(os, myDefaultHits);
         CoverageIOUtil.writeINT(os, myHits.length);
         for (int i = 0; i < myHits.length; i++) {
@@ -61,7 +61,7 @@ public class SwitchData implements CoverageData {
         }
     }
 
-    public void merge(final CoverageData data) {
+    public void merge(CoverageData data) {
         SwitchData switchData = (SwitchData)data;
         myDefaultHits += switchData.myDefaultHits;
         for (int i = Math.min(myHits.length, switchData.myHits.length) - 1; i >= 0; i--) {
@@ -76,11 +76,11 @@ public class SwitchData implements CoverageData {
         }
     }
 
-    public void setDefaultHits(final int defaultHits) {
+    public void setDefaultHits(int defaultHits) {
         myDefaultHits = defaultHits;
     }
 
-    public void setKeysAndHits(final int[] keys, final int[] hits) {
+    public void setKeysAndHits(int[] keys, int[] hits) {
         myKeys = keys;
         myHits = hits;
     }

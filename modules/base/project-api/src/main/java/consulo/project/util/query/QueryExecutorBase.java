@@ -42,9 +42,9 @@ public abstract class QueryExecutorBase<Result, Params> implements QueryExecutor
     }
 
     @Override
-    public final boolean execute(@Nonnull final Params queryParameters, @Nonnull final Predicate<? super Result> consumer) {
-        final AtomicBoolean toContinue = new AtomicBoolean(true);
-        final Predicate<Result> wrapper = result -> {
+    public final boolean execute(@Nonnull Params queryParameters, @Nonnull Predicate<? super Result> consumer) {
+        AtomicBoolean toContinue = new AtomicBoolean(true);
+        Predicate<Result> wrapper = result -> {
             if (!toContinue.get()) {
                 return false;
             }

@@ -54,7 +54,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 		myOrigInjection = injection;
 		myProject = project;
 
-		final Field[] declaredFields = getClass().getDeclaredFields();
+		Field[] declaredFields = getClass().getDeclaredFields();
 		for (Field field : declaredFields)
 		{
 			if (InjectionPanel.class.isAssignableFrom(field.getType()))
@@ -92,7 +92,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 
 		for (Field panel : myOtherPanels)
 		{
-			final InjectionPanel p = getField(panel);
+			InjectionPanel p = getField(panel);
 			p.init(copy);
 		}
 		reset();
@@ -105,7 +105,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 
 		for (Field panel : myOtherPanels)
 		{
-			final InjectionPanel p = getField(panel);
+			InjectionPanel p = getField(panel);
 			p.isModified();
 		}
 
@@ -148,7 +148,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 		myUpdaters.add(updater);
 		for (Field panel : myOtherPanels)
 		{
-			final InjectionPanel field = getField(panel);
+			InjectionPanel field = getField(panel);
 			field.addUpdater(updater);
 		}
 	}

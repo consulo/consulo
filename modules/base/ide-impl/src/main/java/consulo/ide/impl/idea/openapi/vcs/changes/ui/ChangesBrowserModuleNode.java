@@ -31,8 +31,8 @@ public class ChangesBrowserModuleNode extends ChangesBrowserNode<Module> {
   }
 
   @Override
-  public void render(final ChangesBrowserNodeRenderer renderer, final boolean selected, final boolean expanded, final boolean hasFocus) {
-    final Module module = (Module)userObject;
+  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+    Module module = (Module)userObject;
 
     renderer.append(module.isDisposed() ? "" : module.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     appendCount(renderer);
@@ -50,7 +50,7 @@ public class ChangesBrowserModuleNode extends ChangesBrowserNode<Module> {
   }
 
   @Override
-  public int compareUserObjects(final Object o2) {
+  public int compareUserObjects(Object o2) {
     return o2 instanceof Module module ? getUserObject().getName().compareToIgnoreCase(module.getName()) : 0;
   }
 }

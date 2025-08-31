@@ -52,7 +52,7 @@ public final class FileEditorWithProvider {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("FileEditorWithProvider{");
+    StringBuilder sb = new StringBuilder("FileEditorWithProvider{");
     sb.append("myFileEditor=").append(myFileEditor);
     sb.append(", myProvider=").append(myProvider);
     sb.append('}');

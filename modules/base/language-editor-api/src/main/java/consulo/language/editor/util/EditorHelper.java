@@ -31,8 +31,8 @@ import jakarta.annotation.Nullable;
 
 public class EditorHelper {
   public static <T extends PsiElement> void openFilesInEditor(@Nonnull T[] elements) {
-    final int limit = UISettings.getInstance().getEditorTabLimit();
-    final int max = Math.min(limit, elements.length);
+    int limit = UISettings.getInstance().getEditorTabLimit();
+    int max = Math.min(limit, elements.length);
     for (int i = 0; i < max; i++) {
       openInEditor(elements[i], true);
     }

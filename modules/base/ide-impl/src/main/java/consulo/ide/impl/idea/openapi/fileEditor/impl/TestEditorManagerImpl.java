@@ -90,8 +90,8 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(
-        @Nonnull final VirtualFile file,
-        final boolean focusEditor,
+        @Nonnull VirtualFile file,
+        boolean focusEditor,
         boolean searchForSplitter
     ) {
         return CommandProcessor.getInstance().<Pair>newCommand()
@@ -100,9 +100,9 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     }
 
     @RequiredUIAccess
-    private Pair<FileEditor[], FileEditorProvider[]> openFileImpl3(final VirtualFile file, boolean focusEditor) {
+    private Pair<FileEditor[], FileEditorProvider[]> openFileImpl3(VirtualFile file, boolean focusEditor) {
         // for non-text editors. uml, etc
-        final FileEditorProvider provider = file.getUserData(FileEditorProvider.KEY);
+        FileEditorProvider provider = file.getUserData(FileEditorProvider.KEY);
         if (provider != null && provider.accept(getProject(), file)) {
             return Pair.create(new FileEditor[]{provider.createEditor(getProject(), file)}, new FileEditorProvider[]{provider});
         }
@@ -110,8 +110,8 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
         //text editor
         Editor editor = openTextEditor(new OpenFileDescriptorImpl(myProject, file), focusEditor);
         assert editor != null;
-        final FileEditor fileEditor = TextEditorProvider.getInstance().getTextEditor(editor);
-        final FileEditorProvider fileEditorProvider = getProvider();
+        FileEditor fileEditor = TextEditorProvider.getInstance().getTextEditor(editor);
+        FileEditorProvider fileEditorProvider = getProvider();
         Pair<FileEditor[], FileEditorProvider[]> result =
             Pair.create(new FileEditor[]{fileEditor}, new FileEditorProvider[]{fileEditorProvider});
 
@@ -131,7 +131,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
         VirtualFile currentlyFocusedFile = myTestEditorSplitter.getFocusedFile();
         FileEditorProvider newProvider = myTestEditorSplitter.getProviderFromFocused();
 
-        final FileEditorManagerEvent event = new FileEditorManagerEvent(
+        FileEditorManagerEvent event = new FileEditorManagerEvent(
             this,
             lastFocusedFile,
             lastFocusedEditor,
@@ -140,7 +140,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
             currentlyFocusedEditor,
             newProvider
         );
-        final FileEditorManagerListener publisher = getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class);
+        FileEditorManagerListener publisher = getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class);
 
         notifyPublisher(() -> publisher.selectionChanged(event));
     }
@@ -230,19 +230,19 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     }
 
     @Override
-    public void addTopComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
+    public void addTopComponent(@Nonnull FileEditor editor, @Nonnull JComponent component) {
     }
 
     @Override
-    public void removeTopComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
+    public void removeTopComponent(@Nonnull FileEditor editor, @Nonnull JComponent component) {
     }
 
     @Override
-    public void addBottomComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
+    public void addBottomComponent(@Nonnull FileEditor editor, @Nonnull JComponent component) {
     }
 
     @Override
-    public void removeBottomComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
+    public void removeBottomComponent(@Nonnull FileEditor editor, @Nonnull JComponent component) {
     }
 
     @Override
@@ -332,7 +332,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
     @Override
     public FileEditor getSelectedEditor(@Nonnull VirtualFile file) {
-        final Editor editor = getEditor(file);
+        Editor editor = getEditor(file);
         return editor == null ? null : TextEditorProvider.getInstance().getTextEditor(editor);
     }
 
@@ -369,7 +369,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     }
 
     @Override
-    public void closeFile(@Nonnull final VirtualFile file) {
+    public void closeFile(@Nonnull VirtualFile file) {
         Editor editor = myVirtualFile2Editor.remove(file);
         if (editor != null) {
             TextEditorProvider editorProvider = TextEditorProvider.getInstance();
@@ -443,7 +443,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     @Override
     @RequiredReadAction
     public Editor openTextEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor) {
-        final VirtualFile file = descriptor.getFile();
+        VirtualFile file = descriptor.getFile();
         Editor editor = myVirtualFile2Editor.get(file);
 
         if (editor == null) {
@@ -452,7 +452,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
             Document document = PsiDocumentManager.getInstance(myProject).getDocument(psiFile);
             LOG.assertTrue(document != null, psiFile);
             editor = EditorFactory.getInstance().createEditor(document, myProject);
-            final EditorHighlighter highlighter = HighlighterFactory.createHighlighter(myProject, file);
+            EditorHighlighter highlighter = HighlighterFactory.createHighlighter(myProject, file);
             ((EditorEx)editor).setHighlighter(highlighter);
             ((EditorEx)editor).setFile(file);
 

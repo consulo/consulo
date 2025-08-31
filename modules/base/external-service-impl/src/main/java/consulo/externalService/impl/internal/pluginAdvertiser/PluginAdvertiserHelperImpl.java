@@ -44,7 +44,7 @@ public class PluginAdvertiserHelperImpl implements PluginAdvertiserHelper {
     @RequiredUIAccess
     @Override
     public void showDialog(PluginsInfo pluginsInfo) {
-        final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, pluginsInfo.allPlugins(), new ArrayList<>(pluginsInfo.featurePlugins()));
+        PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, pluginsInfo.allPlugins(), new ArrayList<>(pluginsInfo.featurePlugins()));
         advertiserDialog.show();
     }
 }

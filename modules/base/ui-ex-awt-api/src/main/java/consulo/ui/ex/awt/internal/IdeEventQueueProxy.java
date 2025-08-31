@@ -88,7 +88,7 @@ public interface IdeEventQueueProxy {
     runnable.run();
   }
 
-  default void addActivityListener(@Nonnull final Runnable runnable, Disposable parentDisposable) {
+  default void addActivityListener(@Nonnull Runnable runnable, Disposable parentDisposable) {
   }
 
   default void removeActivityListener(@Nonnull Runnable runnable) {
@@ -110,7 +110,7 @@ public interface IdeEventQueueProxy {
   default void dispatchEvent(AWTEvent event) {
   }
 
-  default void addIdleListener(@Nonnull final Runnable runnable, final int timeoutMillis) {
+  default void addIdleListener(@Nonnull Runnable runnable, int timeoutMillis) {
   }
 
   default void removeIdleListener(@Nonnull Runnable runnable) {

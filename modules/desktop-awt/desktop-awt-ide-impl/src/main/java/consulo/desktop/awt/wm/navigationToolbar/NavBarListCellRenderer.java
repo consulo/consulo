@@ -52,12 +52,12 @@ public class NavBarListCellRenderer extends ColoredListCellRenderer {
   @Override
   protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
     setFocusBorderAroundIcon(false);
-    final String name = myPanel.getPresentation().getPresentableText(value);
+    String name = myPanel.getPresentation().getPresentableText(value);
 
     ColorValue color = TargetAWT.from(list.getForeground());
     boolean isProblemFile = false;
     if (value instanceof PsiElement) {
-      final PsiElement psiElement = (PsiElement)value;
+      PsiElement psiElement = (PsiElement)value;
       PsiFile psiFile = psiElement.getContainingFile();
       if (psiFile != null) {
         VirtualFile vFile = psiFile.getVirtualFile();
@@ -74,11 +74,11 @@ public class NavBarListCellRenderer extends ColoredListCellRenderer {
       }
     }
     else if (value instanceof Module) {
-      final Module module = (Module)value;
+      Module module = (Module)value;
       isProblemFile = WolfTheProblemSolver.getInstance(myProject).hasProblemFilesBeneath(module);
     }
     else if (value instanceof Project) {
-      final Module[] modules = ModuleManager.getInstance((Project)value).getModules();
+      Module[] modules = ModuleManager.getInstance((Project)value).getModules();
       for (Module module : modules) {
         if (WolfTheProblemSolver.getInstance(myProject).hasProblemFilesBeneath(module)) {
           isProblemFile = true;
@@ -86,7 +86,7 @@ public class NavBarListCellRenderer extends ColoredListCellRenderer {
         }
       }
     }
-    final SimpleTextAttributes nameAttributes;
+    SimpleTextAttributes nameAttributes;
     if (isProblemFile) {
       TextAttributes attributes = new TextAttributes(color, null, StandardColors.RED, EffectType.WAVE_UNDERSCORE, Font.PLAIN);
       nameAttributes = TextAttributesUtil.fromTextAttributes(attributes);

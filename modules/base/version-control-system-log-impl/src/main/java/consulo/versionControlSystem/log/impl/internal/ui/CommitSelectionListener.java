@@ -71,7 +71,7 @@ public abstract class CommitSelectionListener implements ListSelectionListener {
       onSelection(myGraphTable.getSelectedRows());
       myLoadingPanel.startLoading();
 
-      final EmptyProgressIndicator indicator = new EmptyProgressIndicator();
+      EmptyProgressIndicator indicator = new EmptyProgressIndicator();
       myLastRequest = indicator;
 
       List<Integer> selectionToLoad = getSelectionToLoad();

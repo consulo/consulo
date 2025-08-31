@@ -25,11 +25,11 @@ import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 
 public class ILightStubFileElementType<T extends PsiFileStub> extends IStubFileElementType<T> {
-  public ILightStubFileElementType(final Language language) {
+  public ILightStubFileElementType(Language language) {
     super(language);
   }
 
-  public ILightStubFileElementType(final String debugName, final Language language) {
+  public ILightStubFileElementType(String debugName, Language language) {
     super(debugName, language);
   }
 
@@ -38,18 +38,18 @@ public class ILightStubFileElementType<T extends PsiFileStub> extends IStubFileE
     return new LightStubBuilder();
   }
 
-  public FlyweightCapableTreeStructure<LighterASTNode> parseContentsLight(final ASTNode chameleon) {
-    final PsiElement psi = chameleon.getPsi();
+  public FlyweightCapableTreeStructure<LighterASTNode> parseContentsLight(ASTNode chameleon) {
+    PsiElement psi = chameleon.getPsi();
     assert psi != null : "Bad chameleon: " + chameleon;
 
-    final Project project = psi.getProject();
-    final PsiBuilderFactory factory = PsiBuilderFactory.getInstance();
-    final Language language = getLanguage();
-    final LanguageVersion languageVersion = psi.getLanguageVersion();
-    final PsiBuilder builder = factory.createBuilder(project, chameleon, languageVersion);
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
+    Project project = psi.getProject();
+    PsiBuilderFactory factory = PsiBuilderFactory.getInstance();
+    Language language = getLanguage();
+    LanguageVersion languageVersion = psi.getLanguageVersion();
+    PsiBuilder builder = factory.createBuilder(project, chameleon, languageVersion);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
     assert parserDefinition != null : this;
-    final PsiParser parser = parserDefinition.createParser(languageVersion);
+    PsiParser parser = parserDefinition.createParser(languageVersion);
     parser.parse(this, builder, languageVersion);
     return builder.getLightTree();
   }

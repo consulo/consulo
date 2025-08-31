@@ -72,11 +72,11 @@ public class LightStubBuilder implements StubBuilder {
   }
 
   protected void buildStubTree(@Nonnull LighterAST tree, @Nonnull LighterASTNode root, @Nonnull StubElement rootStub) {
-    final Stack<LighterASTNode> parents = new Stack<>();
-    final IntStack childNumbers = new IntStack();
-    final BooleanStack parentsStubbed = new BooleanStack();
-    final Stack<List<LighterASTNode>> kinderGarden = new Stack<>();
-    final Stack<StubElement> parentStubs = new Stack<>();
+    Stack<LighterASTNode> parents = new Stack<>();
+    IntStack childNumbers = new IntStack();
+    BooleanStack parentsStubbed = new BooleanStack();
+    Stack<List<LighterASTNode>> kinderGarden = new Stack<>();
+    Stack<StubElement> parentStubs = new Stack<>();
 
     LighterASTNode parent = null;
     LighterASTNode element = root;
@@ -89,14 +89,14 @@ public class LightStubBuilder implements StubBuilder {
     while (element != null) {
       ProgressManager.checkCanceled();
 
-      final StubElement stub = createStub(tree, element, parentStub);
+      StubElement stub = createStub(tree, element, parentStub);
       boolean hasStub = stub != parentStub || parent == null;
       if (hasStub && !immediateParentStubbed) {
         ((ObjectStubBase) stub).markDangling();
       }
 
       if (parent == null || !skipNode(tree, parent, element)) {
-        final List<LighterASTNode> kids = tree.getChildren(element);
+        List<LighterASTNode> kids = tree.getChildren(element);
         if (!kids.isEmpty()) {
           if (parent != null) {
             parents.push(parent);
@@ -135,11 +135,11 @@ public class LightStubBuilder implements StubBuilder {
   }
 
   @Nonnull
-  private static StubElement createStub(final LighterAST tree, final LighterASTNode element, final StubElement parentStub) {
-    final IElementType elementType = element.getTokenType();
+  private static StubElement createStub(LighterAST tree, LighterASTNode element, StubElement parentStub) {
+    IElementType elementType = element.getTokenType();
     if (elementType instanceof IStubElementType) {
       if (elementType instanceof ILightStubElementType) {
-        final ILightStubElementType lightElementType = (ILightStubElementType)elementType;
+        ILightStubElementType lightElementType = (ILightStubElementType)elementType;
         if (lightElementType.shouldCreateStub(tree, element, parentStub)) {
           return lightElementType.createStub(tree, element, parentStub);
         }

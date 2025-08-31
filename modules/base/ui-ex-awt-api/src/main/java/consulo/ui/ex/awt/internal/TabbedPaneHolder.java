@@ -32,7 +32,7 @@ public class TabbedPaneHolder extends JPanel {
 
   @Override
   public boolean requestDefaultFocus() {
-    final JComponent preferredFocusedComponent = IdeFocusTraversalPolicy.getPreferredFocusedComponent(myWrapper.getTabbedPane().getComponent());
+    JComponent preferredFocusedComponent = IdeFocusTraversalPolicy.getPreferredFocusedComponent(myWrapper.getTabbedPane().getComponent());
     if (preferredFocusedComponent != null) {
       if (!preferredFocusedComponent.requestFocusInWindow()) {
         IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(preferredFocusedComponent);

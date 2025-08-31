@@ -22,7 +22,7 @@ public class PrevNextActionsDescriptor {
   private final String myPrevActionId;
   private final String myNextActionId;
 
-  public PrevNextActionsDescriptor(final String nextActionId, final String prevActionId) {
+  public PrevNextActionsDescriptor(String nextActionId, String prevActionId) {
     myNextActionId = nextActionId;
     myPrevActionId = prevActionId;
   }

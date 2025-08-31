@@ -48,8 +48,8 @@ public class AsyncProcessIcon extends AnimatedIconComponent {
     super.paintIcon(g, icon, x, y);
   }
 
-  public void updateLocation(final JComponent container) {
-    final Rectangle newBounds = calculateBounds(container);
+  public void updateLocation(JComponent container) {
+    Rectangle newBounds = calculateBounds(container);
     if (!newBounds.equals(getBounds())) {
       setBounds(newBounds);
       // painting problems with scrollpane
@@ -68,7 +68,7 @@ public class AsyncProcessIcon extends AnimatedIconComponent {
   public static class Big extends AsyncProcessIcon {
     private static final Image[] BIG_ICONS = AnimatedIcon.Big.ICONS.toArray(new Image[0]);
 
-    public Big(@NonNls final String name) {
+    public Big(@NonNls String name) {
       super(name, BIG_ICONS, AllIcons.Process.Big.Step_passive);
     }
   }

@@ -57,7 +57,7 @@ public class StdArrangementSettings implements ArrangementSettings {
 
   public static StdArrangementSettings createByMatchRules(@Nonnull List<ArrangementGroupingRule> groupingRules,
                                                           @Nonnull List<StdArrangementMatchRule> matchRules) {
-    final List<ArrangementSectionRule> sectionRules = new ArrayList<ArrangementSectionRule>();
+    List<ArrangementSectionRule> sectionRules = new ArrayList<ArrangementSectionRule>();
     for (StdArrangementMatchRule rule : matchRules) {
       sectionRules.add(ArrangementSectionRule.create(rule));
     }
@@ -66,7 +66,7 @@ public class StdArrangementSettings implements ArrangementSettings {
 
   @Nonnull
   protected List<ArrangementGroupingRule> cloneGroupings() {
-    final ArrayList<ArrangementGroupingRule> groupings = new ArrayList<ArrangementGroupingRule>();
+    ArrayList<ArrangementGroupingRule> groupings = new ArrayList<ArrangementGroupingRule>();
     for (ArrangementGroupingRule grouping : myGroupings) {
       groupings.add(grouping.clone());
     }
@@ -75,7 +75,7 @@ public class StdArrangementSettings implements ArrangementSettings {
 
   @Nonnull
   protected List<ArrangementSectionRule> cloneSectionRules() {
-    final ArrayList<ArrangementSectionRule> rules = new ArrayList<ArrangementSectionRule>();
+    ArrayList<ArrangementSectionRule> rules = new ArrayList<ArrangementSectionRule>();
     for (ArrangementSectionRule rule : mySectionRules) {
       rules.add(rule.clone());
     }

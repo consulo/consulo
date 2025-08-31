@@ -47,7 +47,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   private TreePath mySelectionPath;
   private boolean myFinished;
 
-  public XDebuggerTreeRestorer(final XDebuggerTree tree, Rectangle lastVisibleNodeRect) {
+  public XDebuggerTreeRestorer(XDebuggerTree tree, Rectangle lastVisibleNodeRect) {
     myTree = tree;
     myLastVisibleNodeRect = lastVisibleNodeRect;
     mySelectionPath = (TreePath)myTree.getClientProperty(SELECTION_PATH_PROPERTY);
@@ -56,7 +56,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
     tree.addTreeSelectionListener(this);
   }
 
-  private void restoreChildren(final XDebuggerTreeNode treeNode, final XDebuggerTreeState.NodeInfo nodeInfo) {
+  private void restoreChildren(XDebuggerTreeNode treeNode, XDebuggerTreeState.NodeInfo nodeInfo) {
     if (nodeInfo.isExpanded()) {
       myTree.expandPath(treeNode.getPath());
       treeNode.getLoadedChildren().forEach(child -> restoreNode(child, nodeInfo));
@@ -64,7 +64,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
     }
   }
 
-  void restore(final XDebuggerTreeNode treeNode, final XDebuggerTreeState.NodeInfo parentInfo) {
+  void restore(XDebuggerTreeNode treeNode, XDebuggerTreeState.NodeInfo parentInfo) {
     if (treeNode instanceof RestorableStateNode) {
       doRestoreNode((RestorableStateNode)treeNode, parentInfo);
     }
@@ -73,7 +73,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
     }
   }
 
-  private void restoreNode(final XDebuggerTreeNode treeNode, final XDebuggerTreeState.NodeInfo parentInfo) {
+  private void restoreNode(XDebuggerTreeNode treeNode, XDebuggerTreeState.NodeInfo parentInfo) {
     if (treeNode instanceof RestorableStateNode) {
       RestorableStateNode node = (RestorableStateNode)treeNode;
       if (node.isComputed()) {
@@ -85,7 +85,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
     }
   }
 
-  private void doRestoreNode(final RestorableStateNode treeNode, final XDebuggerTreeState.NodeInfo nodeInfo) {
+  private void doRestoreNode(RestorableStateNode treeNode, XDebuggerTreeState.NodeInfo nodeInfo) {
     if (nodeInfo != null) {
       if (!checkExtendedModified(treeNode) && !(Comparing.equal(nodeInfo.getValue(), treeNode.getRawValue()))) {
         treeNode.markChanged();
@@ -147,7 +147,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   @Override
-  public void nodeLoaded(@Nonnull final RestorableStateNode node, final String name) {
+  public void nodeLoaded(@Nonnull RestorableStateNode node, String name) {
     XDebuggerTreeState.NodeInfo parentInfo = myNode2ParentState.remove(node);
     if (parentInfo != null) {
       doRestoreNode(node, parentInfo.getChild(node));
@@ -166,7 +166,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   @Override
-  public void childrenLoaded(@Nonnull final XDebuggerTreeNode node, @Nonnull final List<XValueContainerNode<?>> children, final boolean last) {
+  public void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, boolean last) {
     XDebuggerTreeState.NodeInfo nodeInfo = myNode2State.get(node);
     if (nodeInfo != null) {
       for (XDebuggerTreeNode child : children) {

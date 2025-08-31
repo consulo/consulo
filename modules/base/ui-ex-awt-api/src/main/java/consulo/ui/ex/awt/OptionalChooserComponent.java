@@ -33,7 +33,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
   private List<Pair<T, Boolean>> myInitialList;
   private ArrayList<Pair<T, Boolean>> myWorkingList;
 
-  public OptionalChooserComponent(@Nonnull final List<Pair<T, Boolean>> list) {
+  public OptionalChooserComponent(@Nonnull List<Pair<T, Boolean>> list) {
     setInitialList(list);
     myWorkingList = new ArrayList<>(myInitialList);
 
@@ -57,7 +57,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
 
   @Override
   public void checkBoxSelectionChanged(int index, boolean value) {
-    final Pair<T, Boolean> pair = myWorkingList.remove(index);
+    Pair<T, Boolean> pair = myWorkingList.remove(index);
     myWorkingList.add(index, Pair.create(pair.first, value));
   }
 
@@ -66,17 +66,17 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
     refresh();
   }
 
-  protected abstract JCheckBox createCheckBox(final T value, final boolean checked);
+  protected abstract JCheckBox createCheckBox(T value, boolean checked);
 
   public int getSelectedIndex() {
     return myList.getSelectedIndex();
   }
 
-  public void setSelectedIndex(final int index) {
+  public void setSelectedIndex(int index) {
     myList.setSelectedIndex(index);
   }
 
-  public boolean removeAt(final int index) {
+  public boolean removeAt(int index) {
     getCurrentModel().remove(index);
     refresh();
 
@@ -92,7 +92,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
   }
 
   public boolean removeSelected() {
-    final int selectedIndex = getSelectedIndex();
+    int selectedIndex = getSelectedIndex();
     // selected index
     if (selectedIndex != -1) {
       return removeAt(selectedIndex);
@@ -104,7 +104,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
     return !myWorkingList.equals(myInitialList);
   }
 
-  public void setInitialList(@Nonnull final List<Pair<T, Boolean>> list) {
+  public void setInitialList(@Nonnull List<Pair<T, Boolean>> list) {
     myInitialList = list;
   }
 

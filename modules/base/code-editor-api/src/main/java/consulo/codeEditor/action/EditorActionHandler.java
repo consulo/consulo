@@ -60,7 +60,7 @@ public abstract class EditorActionHandler {
      * instead.
      */
     @Deprecated
-    public boolean isEnabled(Editor editor, final DataContext dataContext) {
+    public boolean isEnabled(Editor editor, DataContext dataContext) {
         if (inCheck) {
             return true;
         }
@@ -73,8 +73,8 @@ public abstract class EditorActionHandler {
             if (hostEditor == null) {
                 hostEditor = editor;
             }
-            final boolean[] result = new boolean[1];
-            final CaretTask check = (___, __) -> result[0] = true;
+            boolean[] result = new boolean[1];
+            CaretTask check = (___, __) -> result[0] = true;
             if (myRunForEachCaret) {
                 hostEditor.getCaretModel().runForEachCaret(caret -> doIfEnabled(caret, dataContext, check));
             }
@@ -193,7 +193,7 @@ public abstract class EditorActionHandler {
      * @param editor      the editor in which the action is invoked.
      * @param dataContext the data context for the action.
      */
-    public final void execute(@Nonnull Editor editor, @Nullable final Caret contextCaret, final DataContext dataContext) {
+    public final void execute(@Nonnull Editor editor, @Nullable Caret contextCaret, DataContext dataContext) {
         Editor hostEditor = dataContext == null ? null : dataContext.getData(EditorKeys.HOST_EDITOR);
         if (hostEditor == null) {
             hostEditor = editor;

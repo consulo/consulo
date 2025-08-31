@@ -58,11 +58,11 @@ public interface ProcessHandler extends UserDataHolder, TaskExecutor {
   @Nullable
   Integer getExitCode();
 
-  void addProcessListener(final ProcessListener listener);
+  void addProcessListener(ProcessListener listener);
 
-  void removeProcessListener(final ProcessListener listener);
+  void removeProcessListener(ProcessListener listener);
 
-  void notifyTextAvailable(final String text, final Key outputType);
+  void notifyTextAvailable(String text, Key outputType);
 
   @Nullable
   abstract OutputStream getProcessInput();

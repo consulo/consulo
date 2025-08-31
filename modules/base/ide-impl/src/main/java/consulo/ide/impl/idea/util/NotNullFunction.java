@@ -25,5 +25,5 @@ import jakarta.annotation.Nonnull;
 public interface NotNullFunction<Param, Result> extends NullableFunction<Param, Result> {
   @Override
   @Nonnull
-  Result apply(final Param dom);
+  Result apply(Param dom);
 }

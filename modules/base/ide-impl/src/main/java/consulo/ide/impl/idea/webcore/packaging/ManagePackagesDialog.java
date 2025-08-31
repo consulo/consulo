@@ -91,7 +91,7 @@ public class ManagePackagesDialog extends DialogWrapper {
 
     private final SearchablePackageManagementService mySearchablePackageManagement;
 
-    public ManagePackagesDialog(@Nonnull Project project, final PackageManagementService packageManagementService, @Nullable final PackageManagementService.Listener packageListener) {
+    public ManagePackagesDialog(@Nonnull Project project, PackageManagementService packageManagementService, @Nullable PackageManagementService.Listener packageListener) {
         super(project, true);
         myProject = project;
         myController = packageManagementService;
@@ -105,19 +105,19 @@ public class ManagePackagesDialog extends DialogWrapper {
 
         mySearchablePackageManagement = ObjectUtil.tryCast(packageManagementService, SearchablePackageManagementService.class);
 
-        final AnActionButton reloadButton = new AnActionButton(IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"), AllIcons.Actions.Refresh) {
+        AnActionButton reloadButton = new AnActionButton(IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"), AllIcons.Actions.Refresh) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 myPackages.setPaintBusy(true);
-                final Application application = Application.get();
+                Application application = Application.get();
                 application.executeOnPooledThread(() -> {
                     try {
                         myController.reloadAllPackages();
                         initModel("");
                         myPackages.setPaintBusy(false);
                     }
-                    catch (final IOException e1) {
+                    catch (IOException e1) {
                         application.invokeLater(() -> {
                             Messages.showErrorDialog(myMainPanel, IdeBundle.message("error.updating.package.list", e1.getMessage()), IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"));
                             LOG.info("Error updating list of repository packages", e1);
@@ -211,7 +211,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         myInstallButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                final Object pyPackage = myPackages.getSelectedValue();
+                Object pyPackage = myPackages.getSelectedValue();
                 if (pyPackage instanceof RepoPackage) {
                     RepoPackage repoPackage = (RepoPackage) pyPackage;
 
@@ -225,9 +225,9 @@ public class ManagePackagesDialog extends DialogWrapper {
                         version = (String) myVersionComboBox.getSelectedItem();
                     }
 
-                    final PackageManagementService.Listener listener = new PackageManagementService.Listener() {
+                    PackageManagementService.Listener listener = new PackageManagementService.Listener() {
                         @Override
-                        public void operationStarted(final String packageName) {
+                        public void operationStarted(String packageName) {
                             if (!ApplicationManager.getApplication().isDispatchThread()) {
                                 ApplicationManager.getApplication().invokeLater(() -> handleInstallationStarted(packageName), IdeaModalityState.stateForComponent(myMainPanel));
                             }
@@ -237,7 +237,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                         }
 
                         @Override
-                        public void operationFinished(final String packageName, @Nullable final PackageManagementService.ErrorDescription errorDescription) {
+                        public void operationFinished(String packageName, @Nullable PackageManagementService.ErrorDescription errorDescription) {
                             if (!ApplicationManager.getApplication().isDispatchThread()) {
                                 ApplicationManager.getApplication().invokeLater(() -> handleInstallationFinished(packageName, errorDescription), IdeaModalityState.stateForComponent(myMainPanel));
                             }
@@ -296,7 +296,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         myGetPackagesFuture.cancel(true);
 
         setDownloadStatus(true);
-        final Application application = Application.get();
+        Application application = Application.get();
         myGetPackagesFuture = application.executeOnPooledThread(() -> {
             try {
 
@@ -324,7 +324,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                     setDownloadStatus(false);
                 }, IdeaModalityState.any());
             }
-            catch (final IOException e) {
+            catch (IOException e) {
                 application.invokeLater(() -> {
                     if (myMainPanel.isShowing()) {
                         Messages.showErrorDialog(myMainPanel, IdeBundle.message("error.loading.package.list", e.getMessage()), IdeBundle.message("packages.title"));
@@ -374,7 +374,7 @@ public class ManagePackagesDialog extends DialogWrapper {
             super("PACKAGE_FILTER", 5);
             getTextEditor().addKeyListener(new KeyAdapter() {
                 @Override
-                public void keyPressed(final KeyEvent e) {
+                public void keyPressed(KeyEvent e) {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         e.consume();
                         filter();
@@ -415,17 +415,17 @@ public class ManagePackagesDialog extends DialogWrapper {
             super.add(new RepoPackage(element, urlResource));
         }
 
-        protected void filter(final String filter) {
-            final Collection<RepoPackage> toProcess = toProcess();
+        protected void filter(String filter) {
+            Collection<RepoPackage> toProcess = toProcess();
 
             toProcess.addAll(myFilteredOut);
             myFilteredOut.clear();
 
-            final ArrayList<RepoPackage> filtered = new ArrayList<>();
+            ArrayList<RepoPackage> filtered = new ArrayList<>();
 
             RepoPackage toSelect = null;
             for (RepoPackage repoPackage : toProcess) {
-                final String packageName = repoPackage.getName();
+                String packageName = repoPackage.getName();
                 if (StringUtil.containsIgnoreCase(packageName, filter)) {
                     filtered.add(repoPackage);
                 }
@@ -439,7 +439,7 @@ public class ManagePackagesDialog extends DialogWrapper {
             filter(filtered, toSelect);
         }
 
-        public void filter(List<? extends RepoPackage> filtered, @Nullable final RepoPackage toSelect) {
+        public void filter(List<? extends RepoPackage> filtered, @Nullable RepoPackage toSelect) {
             myView.clear();
             myPackages.clearSelection();
             myView.addAll(filtered);
@@ -481,9 +481,9 @@ public class ManagePackagesDialog extends DialogWrapper {
             myVersionComboBox.setEnabled(false);
             myOptionsField.setEnabled(false);
             myDescriptionTextArea.setText(IdeBundle.message("loading.in.progress"));
-            final Object pyPackage = myPackages.getSelectedValue();
+            Object pyPackage = myPackages.getSelectedValue();
             if (pyPackage instanceof RepoPackage) {
-                final String packageName = ((RepoPackage) pyPackage).getName();
+                String packageName = ((RepoPackage) pyPackage).getName();
                 mySelectedPackageName = packageName;
                 myVersionComboBox.removeAllItems();
                 if (myVersionCheckBox.isEnabled()) {

@@ -43,7 +43,7 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
   private final XValueNodeImpl myValueNode;
   private final int myNameOffset;
 
-  private SetValueInplaceEditor(final XValueNodeImpl node, @Nonnull final String nodeName) {
+  private SetValueInplaceEditor(XValueNodeImpl node, @Nonnull String nodeName) {
     super(node, "setValue");
     myValueNode = node;
     myModifier = myValueNode.getValueContainer().getModifier();
@@ -73,8 +73,8 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
     return bounds;
   }
 
-  public static void show(final XValueNodeImpl node, @Nonnull final String nodeName) {
-    final SetValueInplaceEditor editor = new SetValueInplaceEditor(node, nodeName);
+  public static void show(XValueNodeImpl node, @Nonnull String nodeName) {
+    SetValueInplaceEditor editor = new SetValueInplaceEditor(node, nodeName);
 
     if (editor.myModifier != null) {
       editor.myModifier.calculateInitialValueEditorText(initialValue -> AppUIUtil.invokeOnEdt(() -> {

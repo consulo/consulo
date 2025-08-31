@@ -20,7 +20,7 @@ package consulo.execution.ui.console;
  * @version 1.0
  */
 public class InvalidExpressionException extends IllegalArgumentException {
-  public InvalidExpressionException(final String s) {
+  public InvalidExpressionException(String s) {
     super(s);
   }
 }

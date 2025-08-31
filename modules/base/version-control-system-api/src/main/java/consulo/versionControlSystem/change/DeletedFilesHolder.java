@@ -33,16 +33,16 @@ public class DeletedFilesHolder implements FileHolder {
     myFiles.clear();
   }
   
-  public void takeFrom(final DeletedFilesHolder holder) {
+  public void takeFrom(DeletedFilesHolder holder) {
     myFiles.clear();
     myFiles.putAll(holder.myFiles);
   }
 
-  public void cleanAndAdjustScope(final VcsModifiableDirtyScope scope) {
+  public void cleanAndAdjustScope(VcsModifiableDirtyScope scope) {
     if (scope == null) {
       myFiles.clear();
     }
-    final List<LocallyDeletedChange> currentFiles = new ArrayList<LocallyDeletedChange>(myFiles.values());
+    List<LocallyDeletedChange> currentFiles = new ArrayList<LocallyDeletedChange>(myFiles.values());
     for (LocallyDeletedChange change : currentFiles) {
       if (scope.belongsTo(change.getPath())) {
         myFiles.remove(change.getPresentableUrl());
@@ -58,7 +58,7 @@ public class DeletedFilesHolder implements FileHolder {
   public void notifyVcsStarted(AbstractVcs scope) {
   }
 
-  public void addFile(final LocallyDeletedChange change) {
+  public void addFile(LocallyDeletedChange change) {
     myFiles.put(change.getPresentableUrl(), change);
   }
 
@@ -66,22 +66,22 @@ public class DeletedFilesHolder implements FileHolder {
     return new ArrayList<LocallyDeletedChange>(myFiles.values());
   }
 
-  public boolean isContainedInLocallyDeleted(final FilePath filePath) {
-    final String url = filePath.getPresentableUrl();
+  public boolean isContainedInLocallyDeleted(FilePath filePath) {
+    String url = filePath.getPresentableUrl();
     return myFiles.containsKey(url);
   }
 
   public DeletedFilesHolder copy() {
-    final DeletedFilesHolder copyHolder = new DeletedFilesHolder();
+    DeletedFilesHolder copyHolder = new DeletedFilesHolder();
     copyHolder.myFiles.putAll(myFiles);
     return copyHolder;
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final DeletedFilesHolder that = (DeletedFilesHolder)o;
+    DeletedFilesHolder that = (DeletedFilesHolder)o;
 
     if (!myFiles.equals(that.myFiles)) return false;
 

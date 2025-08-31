@@ -59,10 +59,10 @@ public class ComboBoxWithHistory extends JComboBox {
   }
 
   public void save() {
-    final StringBuilder buf = new StringBuilder("<map>");
+    StringBuilder buf = new StringBuilder("<map>");
     for (Object key : myWeights.keySet()) {
       if (key != null) {
-        final Long value = myWeights.get(key);
+        Long value = myWeights.get(key);
         if (value != null) {
           buf.append("<element>")
              .append("<key>").append(key).append("</key>")
@@ -72,7 +72,7 @@ public class ComboBoxWithHistory extends JComboBox {
       }
     }
 
-    final String xml = buf.append("</map>").toString();
+    String xml = buf.append("</map>").toString();
 
     if (myProject == null) {
       PropertiesComponent.getInstance().setValue(myHistoryId, xml);
@@ -82,27 +82,27 @@ public class ComboBoxWithHistory extends JComboBox {
   }
 
   public void load() {
-    final String xml = myProject == null ? PropertiesComponent.getInstance().getValue(myHistoryId)
+    String xml = myProject == null ? PropertiesComponent.getInstance().getValue(myHistoryId)
                                    : PropertiesComponent.getInstance(myProject).getValue(myHistoryId);
     myWeights.clear();
 
     if (xml == null) return;
 
     try {
-      final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-      final DocumentBuilder db = dbf.newDocumentBuilder();
-      final InputSource is = new InputSource();
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      DocumentBuilder db = dbf.newDocumentBuilder();
+      InputSource is = new InputSource();
       is.setCharacterStream(new StringReader(xml));
 
       Document doc = db.parse(is);
       NodeList nodes = doc.getElementsByTagName("map");
       if (nodes.getLength() == 1) {
-        final NodeList map = nodes.item(0).getChildNodes();
+        NodeList map = nodes.item(0).getChildNodes();
         for (int i = 0; i < map.getLength(); i++) {
-          final Node item = map.item(i);
-          final NodeList list = item.getChildNodes();
-          final Element key = (Element)list.item(0);
-          final Element value = (Element)list.item(1);
+          Node item = map.item(i);
+          NodeList list = item.getChildNodes();
+          Element key = (Element)list.item(0);
+          Element value = (Element)list.item(1);
           myWeights.put(key.getTextContent(), Long.valueOf(value.getTextContent()));
         }
       }
@@ -116,7 +116,7 @@ public class ComboBoxWithHistory extends JComboBox {
     load();
   }
 
-  private static Object[] sort(final Object[] items, HashMap<Object, Long> weights) {
+  private static Object[] sort(Object[] items, HashMap<Object, Long> weights) {
     Arrays.sort(items, new LastUsedComparator(weights, Arrays.asList(items)));
     return items;
   }
@@ -148,8 +148,8 @@ public class ComboBoxWithHistory extends JComboBox {
 
     @Override
     public int compare(Object o1, Object o2) {
-      final Long w1 = myWeights.get(o1);
-      final Long w2 = myWeights.get(o2);
+      Long w1 = myWeights.get(o1);
+      Long w2 = myWeights.get(o2);
       if (w1 != null || w2 != null) {
         return w1 != null && w2 != null ? sign(w2 - w1) : w1 != null ? -1 : 1;
       }

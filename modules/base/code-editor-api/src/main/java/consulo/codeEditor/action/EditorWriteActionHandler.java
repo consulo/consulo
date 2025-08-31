@@ -57,7 +57,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
     ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
       @Override
       public void run() {
-        final Document doc = editor.getDocument();
+        Document doc = editor.getDocument();
 
         doc.startGuardedBlockChecking();
         try {

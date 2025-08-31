@@ -64,7 +64,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
 
     private Predicate<ContentFolderTypeProvider> myFilter;
 
-    protected CompilerOutputsEditor(final ModuleConfigurationState state) {
+    protected CompilerOutputsEditor(ModuleConfigurationState state) {
         super(state);
         myFilter = LanguageContentFolderScopes.productionAndTest();
     }
@@ -125,7 +125,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         updateOutputPathPresentation();
         //
         ////compiler settings
-        final boolean outputPathInherited = moduleCompilerPathsManager.isInheritedCompilerOutput();
+        boolean outputPathInherited = moduleCompilerPathsManager.isInheritedCompilerOutput();
         myInheritCompilerOutput.setValue(outputPathInherited);
         myPerModuleCompilerOutput.setValue(!outputPathInherited);
         enableCompilerSettings(!outputPathInherited);
@@ -138,7 +138,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     private void updateOutputPathPresentation() {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
         if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
-            final String baseUrl = getState().getModulesConfigurator().getCompilerOutputUrl();
+            String baseUrl = getState().getModulesConfigurator().getCompilerOutputUrl();
 
             moduleCompileOutputChanged(baseUrl, getModule().getName());
         }
@@ -146,12 +146,12 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
             for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(myFilter)) {
                 CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
 
-                final VirtualFile compilerOutputPath = moduleCompilerPathsManager.getCompilerOutput(contentFolderTypeProvider);
+                VirtualFile compilerOutputPath = moduleCompilerPathsManager.getCompilerOutput(contentFolderTypeProvider);
                 if (compilerOutputPath != null) {
                     commitableFieldPanel.setValue(FileUtil.toSystemDependentName(compilerOutputPath.getPath()));
                 }
                 else {
-                    final String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
+                    String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
                     if (compilerOutputUrl != null) {
                         commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerOutputUrl)));
                     }
@@ -166,7 +166,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     }
 
     @RequiredUIAccess
-    private void enableCompilerSettings(final boolean enabled) {
+    private void enableCompilerSettings(boolean enabled) {
         for (CommitableFieldPanel commitableFieldPanel : myOutputFields.values()) {
             commitableFieldPanel.setEnabled(enabled);
         }
@@ -248,7 +248,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
 
     @Override
     @RequiredUIAccess
-    public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
+    public void moduleCompileOutputChanged(String baseUrl, String moduleName) {
         if (myInheritCompilerOutput.getValueOrError()) {
             if (baseUrl != null) {
                 for (Map.Entry<ContentFolderTypeProvider, CommitableFieldPanel> entry : myOutputFields.entrySet()) {
@@ -307,7 +307,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         @Nullable
         @RequiredUIAccess
         public String getUrl() {
-            final String path = myController.getValue().trim();
+            String path = myController.getValue().trim();
             if (path.length() == 0) {
                 return null;
             }

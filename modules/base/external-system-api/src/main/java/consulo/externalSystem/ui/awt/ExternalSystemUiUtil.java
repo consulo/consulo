@@ -66,7 +66,7 @@ public class ExternalSystemUiUtil {
    * @param message      message to show
    */
   public static void showBalloon(@Nonnull JComponent component, @Nonnull NotificationType messageType, @Nonnull String message) {
-    final BalloonBuilder builder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, messageType, null)
+    BalloonBuilder builder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, messageType, null)
       .setDisposable(ApplicationManager.getApplication())
       .setFadeoutTime(BALLOON_FADEOUT_TIME);
     Balloon balloon = builder.createBalloon();
@@ -164,15 +164,15 @@ public class ExternalSystemUiUtil {
     return manager instanceof ExternalSystemUiAware ? (ExternalSystemUiAware)manager : DefaultExternalSystemUiAware.INSTANCE;
   }
 
-  public static void executeAction(@Nonnull final String actionId, @Nonnull final InputEvent e) {
-    final ActionManager actionManager = ActionManager.getInstance();
-    final AnAction action = actionManager.getAction(actionId);
+  public static void executeAction(@Nonnull String actionId, @Nonnull InputEvent e) {
+    ActionManager actionManager = ActionManager.getInstance();
+    AnAction action = actionManager.getAction(actionId);
     if (action == null) {
       return;
     }
-    final Presentation presentation = new Presentation();
+    Presentation presentation = new Presentation();
     DataContext context = DataManager.getInstance().getDataContext(e.getComponent());
-    final AnActionEvent event = new AnActionEvent(e, context, "", presentation, actionManager, 0);
+    AnActionEvent event = new AnActionEvent(e, context, "", presentation, actionManager, 0);
     action.update(event);
     if (presentation.isEnabled()) {
       action.actionPerformed(event);

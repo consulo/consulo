@@ -101,11 +101,11 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
         myNameLabel = JBLabelDecorator.createJBLabelDecorator().setBold(true);
 
         myTargetDirectoryField = new TextFieldWithHistoryWithBrowseButton();
-        final List<String> recentEntries = RecentsManager.getInstance(myProject).getRecentEntries(RECENT_KEYS);
+        List<String> recentEntries = RecentsManager.getInstance(myProject).getRecentEntries(RECENT_KEYS);
         if (recentEntries != null) {
             myTargetDirectoryField.getChildComponent().setHistory(recentEntries);
         }
-        final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         myTargetDirectoryField.addBrowseFolderListener(
             RefactoringLocalize.selectTargetDirectory().get(),
             RefactoringLocalize.theFileWillBeMovedToThisDirectory().get(),
@@ -113,7 +113,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
             descriptor,
             TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT
         );
-        final JTextField textField = myTargetDirectoryField.getChildComponent().getTextEditor();
+        JTextField textField = myTargetDirectoryField.getChildComponent().getTextEditor();
         FileChooserFactory.getInstance().installFileCompletion(textField, descriptor, true, getDisposable());
         textField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
@@ -165,10 +165,10 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
             myNameLabel.setText(text.get());
         }
 
-        final String initialTargetPath = initialTargetDirectory == null ? "" : initialTargetDirectory.getVirtualFile().getPresentableUrl();
+        String initialTargetPath = initialTargetDirectory == null ? "" : initialTargetDirectory.getVirtualFile().getPresentableUrl();
         myTargetDirectoryField.getChildComponent().setText(initialTargetPath);
-        final int lastDirectoryIdx = initialTargetPath.lastIndexOf(File.separator);
-        final int textLength = initialTargetPath.length();
+        int lastDirectoryIdx = initialTargetPath.lastIndexOf(File.separator);
+        int textLength = initialTargetPath.length();
         if (lastDirectoryIdx > 0 && lastDirectoryIdx + 1 < textLength) {
             myTargetDirectoryField.getChildComponent().getTextEditor().select(lastDirectoryIdx + 1, textLength);
         }

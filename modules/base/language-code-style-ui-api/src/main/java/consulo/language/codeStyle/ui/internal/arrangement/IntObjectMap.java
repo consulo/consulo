@@ -88,7 +88,7 @@ public class IntObjectMap<V> {
     mySize = 0;
   }
 
-  public void shiftKeys(final int from, int shift) {
+  public void shiftKeys(int from, int shift) {
     if (shift == 0 || from > myMaxUsed) {
       return;
     }

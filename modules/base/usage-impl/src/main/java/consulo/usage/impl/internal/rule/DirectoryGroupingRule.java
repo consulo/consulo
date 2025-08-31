@@ -64,7 +64,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
   }
 
   @RequiredReadAction
-  protected UsageGroup getGroupForFile(final VirtualFile dir) {
+  protected UsageGroup getGroupForFile(VirtualFile dir) {
     PsiDirectory psiDirectory = PsiManager.getInstance(myProject).findDirectory(dir);
     if (psiDirectory != null) {
       PsiPackage aPackage = PsiPackageManager.getInstance(myProject).findAnyPackage(psiDirectory);
@@ -110,7 +110,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
 
     @Override
     public void navigate(boolean focus) throws UnsupportedOperationException {
-      final PsiDirectory directory = getDirectory();
+      PsiDirectory directory = getDirectory();
       if (directory != null && directory.canNavigate()) {
         directory.navigate(focus);
       }
@@ -124,7 +124,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     @Override
     @RequiredReadAction
     public boolean canNavigate() {
-      final PsiDirectory directory = getDirectory();
+      PsiDirectory directory = getDirectory();
       return directory != null && directory.canNavigate();
     }
 
@@ -150,7 +150,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void calcData(final Key<?> key, final DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
       if (!isValid()) return;
       if (VirtualFile.KEY == key) {
         sink.put(VirtualFile.KEY, myDir);
@@ -229,7 +229,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void calcData(final Key<?> key, final DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
       if (!isValid()) return;
       if (PsiElement.KEY == key) {
         sink.put(PsiElement.KEY, myPackage);

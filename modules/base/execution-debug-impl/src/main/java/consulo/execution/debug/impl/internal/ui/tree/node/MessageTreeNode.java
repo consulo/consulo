@@ -45,29 +45,29 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   private final boolean myEllipsis;
   private XDebuggerTreeNodeHyperlink myLink;
 
-  private MessageTreeNode(XDebuggerTree tree, @Nullable final XDebuggerTreeNode parent, final String message, final SimpleTextAttributes attributes, @Nullable Image icon) {
+  private MessageTreeNode(XDebuggerTree tree, @Nullable XDebuggerTreeNode parent, String message, SimpleTextAttributes attributes, @Nullable Image icon) {
     this(tree, parent, message, attributes, icon, null);
   }
 
   private MessageTreeNode(
     XDebuggerTree tree,
-    final XDebuggerTreeNode parent,
-    final String message,
-    final SimpleTextAttributes attributes,
+    XDebuggerTreeNode parent,
+    String message,
+    SimpleTextAttributes attributes,
     @Nullable Image icon,
-    final XDebuggerTreeNodeHyperlink link
+    XDebuggerTreeNodeHyperlink link
   ) {
     this(tree, parent, message, attributes, icon, false, link);
   }
 
   private MessageTreeNode(
     XDebuggerTree tree,
-    final XDebuggerTreeNode parent,
-    final String message,
-    final SimpleTextAttributes attributes,
+    XDebuggerTreeNode parent,
+    String message,
+    SimpleTextAttributes attributes,
     @Nullable Image icon,
-    final boolean ellipsis,
-    final XDebuggerTreeNodeHyperlink link
+    boolean ellipsis,
+    XDebuggerTreeNodeHyperlink link
   ) {
     super(tree, parent, true);
     myEllipsis = ellipsis;
@@ -111,7 +111,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   public void clearChildren() {
   }
 
-  public static MessageTreeNode createEllipsisNode(XDebuggerTree tree, XDebuggerTreeNode parent, final int remaining) {
+  public static MessageTreeNode createEllipsisNode(XDebuggerTree tree, XDebuggerTreeNode parent, int remaining) {
     LocalizeValue message = remaining == -1
       ? XDebuggerLocalize.nodeTextEllipsis0UnknownMoreNodesDoubleClickToShow()
       : XDebuggerLocalize.nodeTextEllipsis0MoreNodesDoubleClickToShow(remaining);
@@ -127,7 +127,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     return new MessageTreeNode(tree, parent, message, SimpleTextAttributes.REGULAR_ATTRIBUTES, icon);
   }
 
-  public static MessageTreeNode createLoadingMessage(XDebuggerTree tree, final XDebuggerTreeNode parent) {
+  public static MessageTreeNode createLoadingMessage(XDebuggerTree tree, XDebuggerTreeNode parent) {
     return new MessageTreeNode(
       tree,
       parent,
@@ -149,14 +149,14 @@ public class MessageTreeNode extends XDebuggerTreeNode {
 
   public static List<MessageTreeNode> createMessages(
     XDebuggerTree tree,
-    final XDebuggerTreeNode parent,
+    XDebuggerTreeNode parent,
     @Nonnull String errorMessage,
     XDebuggerTreeNodeHyperlink link,
-    final Image icon,
-    final SimpleTextAttributes attributes
+    Image icon,
+    SimpleTextAttributes attributes
   ) {
     List<MessageTreeNode> messages = new SmartList<>();
-    final List<String> lines = StringUtil.split(errorMessage, "\n", true, false);
+    List<String> lines = StringUtil.split(errorMessage, "\n", true, false);
     for (int i = 0; i < lines.size(); i++) {
       messages.add(new MessageTreeNode(tree, parent, lines.get(i), attributes, icon, i == lines.size() - 1 ? link : null));
     }

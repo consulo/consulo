@@ -49,7 +49,7 @@ public class UnSelectWordHandler extends EditorActionHandler implements Extensio
   public void execute(Editor editor, DataContext dataContext) {
     Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
     Document document = editor.getDocument();
-    final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 
     if (file == null) {
       if (myOriginalHandler != null) {

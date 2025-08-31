@@ -47,7 +47,7 @@ public class PackageNodeUtil {
    *                      otherwise the package is considered as empty if all direct children that it has are directories
    */
   public static boolean isEmptyMiddlePackage(@Nonnull PsiDirectory dir, @Nullable Class<? extends ModuleExtension> moduleExtensionClass, boolean strictlyEmpty) {
-    final VirtualFile[] files = dir.getVirtualFile().getChildren();
+    VirtualFile[] files = dir.getVirtualFile().getChildren();
     if (files.length == 0) {
       return false;
     }
@@ -62,7 +62,7 @@ public class PackageNodeUtil {
         directoriesCount++;
         if (strictlyEmpty && directoriesCount > 1) return false;
 
-        final PsiPackageManager psiPackageManager = PsiPackageManager.getInstance(dir.getProject());
+        PsiPackageManager psiPackageManager = PsiPackageManager.getInstance(dir.getProject());
         PsiPackage tempPackage = moduleExtensionClass == null ? psiPackageManager.findAnyPackage(childDir) : psiPackageManager.findPackage(dir, moduleExtensionClass);
         if (tempPackage != null) {
           subpackagesCount++;
@@ -85,13 +85,13 @@ public class PackageNodeUtil {
 
     @Override
     public boolean contains(@Nonnull VirtualFile file) {
-      final OrderEntry orderEntry = ModuleRootManager.getInstance(myModule).getFileIndex().getOrderEntryForFile(file);
+      OrderEntry orderEntry = ModuleRootManager.getInstance(myModule).getFileIndex().getOrderEntryForFile(file);
       return orderEntry instanceof ModuleExtensionWithSdkOrderEntry || orderEntry instanceof LibraryOrderEntry;
     }
 
     @Override
     public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
-      final ModuleFileIndex fileIndex = ModuleRootManager.getInstance(myModule).getFileIndex();
+      ModuleFileIndex fileIndex = ModuleRootManager.getInstance(myModule).getFileIndex();
       return Comparing.compare(fileIndex.getOrderEntryForFile(file2), fileIndex.getOrderEntryForFile(file1));
     }
 
@@ -139,10 +139,10 @@ public class PackageNodeUtil {
     }
   }
 
-  public static boolean isPackageEmpty(@Nonnull PsiPackage aPackage, @Nullable Module module, boolean strictlyEmpty, final boolean inLibrary) {
-    final Project project = aPackage.getProject();
-    final PsiDirectory[] dirs = getDirectories(aPackage, project, module, inLibrary);
-    for (final PsiDirectory dir : dirs) {
+  public static boolean isPackageEmpty(@Nonnull PsiPackage aPackage, @Nullable Module module, boolean strictlyEmpty, boolean inLibrary) {
+    Project project = aPackage.getProject();
+    PsiDirectory[] dirs = getDirectories(aPackage, project, module, inLibrary);
+    for (PsiDirectory dir : dirs) {
       if (!isEmptyMiddlePackage(dir, null, strictlyEmpty)) {
         return false;
       }
@@ -155,23 +155,23 @@ public class PackageNodeUtil {
                                                                               @Nonnull Project project,
                                                                               @Nonnull ViewSettings settings,
                                                                               @Nullable Module module,
-                                                                              final boolean inLibrary) {
-    final PsiManager psiManager = PsiManager.getInstance(project);
+                                                                              boolean inLibrary) {
+    PsiManager psiManager = PsiManager.getInstance(project);
 
-    final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-    final Set<PsiPackage> topLevelPackages = new HashSet<PsiPackage>();
+    List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+    Set<PsiPackage> topLevelPackages = new HashSet<PsiPackage>();
 
-    for (final VirtualFile root : sourceRoots) {
-      final PsiDirectory directory = psiManager.findDirectory(root);
+    for (VirtualFile root : sourceRoots) {
+      PsiDirectory directory = psiManager.findDirectory(root);
       if (directory == null) {
         continue;
       }
-      final PsiPackage directoryPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);
+      PsiPackage directoryPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);
       if (directoryPackage == null || isPackageDefault(directoryPackage)) {
         // add subpackages
-        final PsiDirectory[] subdirectories = directory.getSubdirectories();
+        PsiDirectory[] subdirectories = directory.getSubdirectories();
         for (PsiDirectory subdirectory : subdirectories) {
-          final PsiPackage aPackage = PsiPackageManager.getInstance(project).findAnyPackage(subdirectory);
+          PsiPackage aPackage = PsiPackageManager.getInstance(project).findAnyPackage(subdirectory);
           if (aPackage != null && !isPackageDefault(aPackage)) {
             topLevelPackages.add(aPackage);
           }
@@ -184,7 +184,7 @@ public class PackageNodeUtil {
       }
     }
 
-    for (final PsiPackage topLevelPackage : topLevelPackages) {
+    for (PsiPackage topLevelPackage : topLevelPackages) {
       addPackageAsChild(children, topLevelPackage, module, settings, inLibrary);
     }
 
@@ -192,18 +192,18 @@ public class PackageNodeUtil {
   }
 
   public static boolean isPackageDefault(@Nonnull PsiPackage directoryPackage) {
-    final String qName = directoryPackage.getQualifiedName();
+    String qName = directoryPackage.getQualifiedName();
     return qName.isEmpty();
   }
 
-  public static void addPackageAsChild(@Nonnull Collection<AbstractTreeNode> children, @Nonnull PsiPackage aPackage, @Nullable Module module, @Nonnull ViewSettings settings, final boolean inLibrary) {
-    final boolean shouldSkipPackage = settings.isHideEmptyMiddlePackages() && isPackageEmpty(aPackage, module, !settings.isFlattenPackages(), inLibrary);
-    final Project project = aPackage.getProject();
+  public static void addPackageAsChild(@Nonnull Collection<AbstractTreeNode> children, @Nonnull PsiPackage aPackage, @Nullable Module module, @Nonnull ViewSettings settings, boolean inLibrary) {
+    boolean shouldSkipPackage = settings.isHideEmptyMiddlePackages() && isPackageEmpty(aPackage, module, !settings.isFlattenPackages(), inLibrary);
+    Project project = aPackage.getProject();
     if (!shouldSkipPackage) {
       children.add(new PackageElementNode(project, new PackageElement(module, aPackage, inLibrary), settings));
     }
     if (settings.isFlattenPackages() || shouldSkipPackage) {
-      final PsiPackage[] subpackages = getSubpackages(aPackage, module, project, inLibrary);
+      PsiPackage[] subpackages = getSubpackages(aPackage, module, project, inLibrary);
       for (PsiPackage subpackage : subpackages) {
         addPackageAsChild(children, subpackage, module, settings, inLibrary);
       }
@@ -211,15 +211,15 @@ public class PackageNodeUtil {
   }
 
   @Nonnull
-  public static PsiPackage[] getSubpackages(@Nonnull PsiPackage aPackage, @Nullable Module module, @Nonnull Project project, final boolean searchInLibraries) {
-    final PsiDirectory[] dirs = getDirectories(aPackage, project, module, searchInLibraries);
-    final Set<PsiPackage> subpackages = new HashSet<PsiPackage>();
+  public static PsiPackage[] getSubpackages(@Nonnull PsiPackage aPackage, @Nullable Module module, @Nonnull Project project, boolean searchInLibraries) {
+    PsiDirectory[] dirs = getDirectories(aPackage, project, module, searchInLibraries);
+    Set<PsiPackage> subpackages = new HashSet<PsiPackage>();
     for (PsiDirectory dir : dirs) {
-      final PsiDirectory[] subdirectories = dir.getSubdirectories();
+      PsiDirectory[] subdirectories = dir.getSubdirectories();
       for (PsiDirectory subdirectory : subdirectories) {
-        final PsiPackage psiPackage = PsiPackageManager.getInstance(project).findAnyPackage(subdirectory);
+        PsiPackage psiPackage = PsiPackageManager.getInstance(project).findAnyPackage(subdirectory);
         if (psiPackage != null) {
-          final String name = psiPackage.getName();
+          String name = psiPackage.getName();
           // skip "default" subpackages as they should be attributed to other modules
           // this is the case when contents of one module is nested into contents of another
           if (name != null && !name.isEmpty()) {
@@ -233,7 +233,7 @@ public class PackageNodeUtil {
 
   @Nonnull
   public static PsiDirectory[] getDirectories(@Nonnull PsiPackage aPackage, @Nonnull Project project, @Nullable Module module, boolean inLibrary) {
-    final GlobalSearchScope scopeToShow = getScopeToShow(project, module, inLibrary);
+    GlobalSearchScope scopeToShow = getScopeToShow(project, module, inLibrary);
     return aPackage.getDirectories(scopeToShow);
   }
 

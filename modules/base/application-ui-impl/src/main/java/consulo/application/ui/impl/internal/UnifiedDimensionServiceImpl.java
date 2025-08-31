@@ -234,7 +234,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
   }
 
   @Override
-  public void loadState(@Nonnull final Element element) {
+  public void loadState(@Nonnull Element element) {
     myKey2Location.clear();
     myKey2Size.clear();
     myKey2ExtendedState.clear();
@@ -266,7 +266,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
 
   @Nullable
   protected static Project guessProject() {
-    final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
     return openProjects.length == 1 ? openProjects[0] : null;
   }
 }

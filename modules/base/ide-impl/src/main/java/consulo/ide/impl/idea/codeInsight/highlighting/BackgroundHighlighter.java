@@ -51,7 +51,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
 
     @Override
     public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
-        final EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
+        EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
 
         Alarm braceAlarm = new Alarm();
 
@@ -65,7 +65,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
                 }
                 braceAlarm.cancelAllRequests();
                 Editor editor = e.getEditor();
-                final SelectionModel selectionModel = editor.getSelectionModel();
+                SelectionModel selectionModel = editor.getSelectionModel();
                 // Don't update braces in case of the active selection.
                 if (editor.getProject() != project || selectionModel.hasSelection()) {
                     return;
@@ -79,7 +79,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
             }
         }, project);
 
-        final SelectionListener selectionListener = new SelectionListener() {
+        SelectionListener selectionListener = new SelectionListener() {
             @Override
             @RequiredUIAccess
             public void selectionChanged(@Nonnull SelectionEvent e) {
@@ -93,8 +93,8 @@ public class BackgroundHighlighter implements PostStartupActivity {
                     removeSelectionHighlights(editor);
                 }
 
-                final TextRange oldRange = e.getOldRange();
-                final TextRange newRange = e.getNewRange();
+                TextRange oldRange = e.getOldRange();
+                TextRange newRange = e.getNewRange();
                 if (oldRange != null && newRange != null && oldRange.isEmpty() == newRange.isEmpty()) {
                     // Don't perform braces update in case of active/absent selection.
                     return;
@@ -155,7 +155,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         }
 
         Document document = editor.getDocument();
-        final long stamp = document.getModificationStamp();
+        long stamp = document.getModificationStamp();
         if (document.isInBulkUpdate() || !BraceHighlightingHandler.isValidEditor(editor)) {
             return false;
         }
@@ -173,10 +173,10 @@ public class BackgroundHighlighter implements PostStartupActivity {
         if (!caret.hasSelection()) {
             return false;
         }
-        final int start = caret.getSelectionStart();
-        final int end = caret.getSelectionEnd();
+        int start = caret.getSelectionStart();
+        int end = caret.getSelectionEnd();
         CharSequence sequence = document.getCharsSequence();
-        final String toFind = sequence.subSequence(start, end).toString();
+        String toFind = sequence.subSequence(start, end).toString();
         if (toFind.isBlank() || toFind.contains("\n")) {
             return false;
         }
@@ -185,11 +185,11 @@ public class BackgroundHighlighter implements PostStartupActivity {
             return true;
         }
         FindManager findManager = FindManager.getInstance(project);
-        final FindModel findModel = new FindModel();
+        FindModel findModel = new FindModel();
         findModel.copyFrom(findManager.getFindInFileModel());
         findModel.setRegularExpressions(false);
         findModel.setStringToFind(toFind);
-        final int threshold = Registry.intValue("editor.highlight.selected.text.max.occurrences.threshold", 50);
+        int threshold = Registry.intValue("editor.highlight.selected.text.max.occurrences.threshold", 50);
 
         ReadAction.nonBlocking(() -> {
                 if (!BraceHighlightingHandler.isValidEditor(editor) || !caret.hasSelection()) {
@@ -254,7 +254,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         }
     }
 
-    static void updateBraces(@Nonnull final Editor editor, @Nonnull final Alarm alarm) {
+    static void updateBraces(@Nonnull Editor editor, @Nonnull Alarm alarm) {
         if (editor.getDocument().isInBulkUpdate()) {
             return;
         }
@@ -264,7 +264,7 @@ public class BackgroundHighlighter implements PostStartupActivity {
         });
     }
 
-    private void clearBraces(@Nonnull final Editor editor, @Nonnull Alarm braceAlarm) {
+    private void clearBraces(@Nonnull Editor editor, @Nonnull Alarm braceAlarm) {
         BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, braceAlarm, handler -> {
             handler.clearBraceHighlighters();
         });

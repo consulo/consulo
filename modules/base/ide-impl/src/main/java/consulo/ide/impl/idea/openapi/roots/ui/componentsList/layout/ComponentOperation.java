@@ -59,7 +59,7 @@ public abstract class ComponentOperation {
     private final Orientation myOrientation;
 
     public InlineLayout(Container parent, int defaultExtent, SizeProperty sizeProperty, Orientation orientation) {
-      final Insets insets = parent.getInsets();
+      Insets insets = parent.getInsets();
 
       myOrientation = orientation;
       mySizeProperty = sizeProperty;

@@ -22,11 +22,11 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
-  protected SLRUCache(final int protectedQueueSize, final int probationalQueueSize) {
+  protected SLRUCache(int protectedQueueSize, int probationalQueueSize) {
     super(protectedQueueSize, probationalQueueSize);
   }
 
-  protected SLRUCache(final int protectedQueueSize, final int probationalQueueSize, HashingStrategy<K> hashingStrategy) {
+  protected SLRUCache(int protectedQueueSize, int probationalQueueSize, HashingStrategy<K> hashingStrategy) {
     super(protectedQueueSize, probationalQueueSize, hashingStrategy);
   }
 

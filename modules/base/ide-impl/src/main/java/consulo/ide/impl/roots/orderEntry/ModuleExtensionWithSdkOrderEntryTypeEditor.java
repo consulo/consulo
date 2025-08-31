@@ -38,8 +38,8 @@ import java.util.function.Consumer;
 public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
   @RequiredUIAccess
   @Override
-  public void navigate(@Nonnull final ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
-    final Sdk sdk = orderEntry.getSdk();
+  public void navigate(@Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+    Sdk sdk = orderEntry.getSdk();
     if (sdk == null) {
       return;
     }

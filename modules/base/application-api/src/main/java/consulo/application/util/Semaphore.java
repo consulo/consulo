@@ -82,7 +82,7 @@ public class Semaphore {
   }
 
   // true if semaphore became free
-  public boolean waitFor(final long msTimeout) {
+  public boolean waitFor(long msTimeout) {
     try {
       return waitForUnsafe(msTimeout);
     }

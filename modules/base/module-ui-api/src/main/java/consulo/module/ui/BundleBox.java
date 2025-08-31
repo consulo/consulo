@@ -266,7 +266,7 @@ public class BundleBox implements PseudoComponent {
     this(bundleHolder, filter, nullItemName, null);
   }
 
-  public BundleBox(@Nonnull BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, @Nullable final String nullItemName, @Nullable final Image nullIcon) {
+  public BundleBox(@Nonnull BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, @Nullable String nullItemName, @Nullable Image nullIcon) {
     myOriginalComboBox = ComboBox.create(model(bundleHolder, filter, nullItemName));
 
     myOriginalComboBox.setRender((render, index, value) -> {
@@ -283,7 +283,7 @@ public class BundleBox implements PseudoComponent {
         render.withIcon(AllIcons.Nodes.Module);
         render.append(extensionSdkComboBoxItem.getModule().getName(), TextAttribute.REGULAR_BOLD);
 
-        final String sdkName = extensionSdkComboBoxItem.getBundleName();
+        String sdkName = extensionSdkComboBoxItem.getBundleName();
         if (sdkName != null) {
           render.append(" (" + extensionSdkComboBoxItem.getBundleName() + ")", TextAttribute.GRAYED);
         }
@@ -408,7 +408,7 @@ public class BundleBox implements PseudoComponent {
   }
 
   public void setSelectedModule(@Nonnull String name) {
-    final int index = indexOfModuleItems(name);
+    int index = indexOfModuleItems(name);
     if (index >= 0) {
       myOriginalComboBox.setValueByIndex(index);
     }
@@ -452,10 +452,10 @@ public class BundleBox implements PseudoComponent {
 
   private void removeInvalidElement() {
     MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>)myOriginalComboBox.getListModel();
-    final int count = model.getSize();
+    int count = model.getSize();
 
     for (int idx = 0; idx < count; idx++) {
-      final BundleBoxItem elementAt = model.get(idx);
+      BundleBoxItem elementAt = model.get(idx);
       if (elementAt instanceof InvalidBundleBoxItem) {
         model.remove(elementAt);
         break;
@@ -465,11 +465,11 @@ public class BundleBox implements PseudoComponent {
 
   private int indexOfModuleItems(String moduleName) {
     ListModel<BundleBoxItem> model = myOriginalComboBox.getListModel();
-    final int count = model.getSize();
+    int count = model.getSize();
     for (int idx = 0; idx < count; idx++) {
-      final BundleBoxItem elementAt = model.get(idx);
+      BundleBoxItem elementAt = model.get(idx);
       if (elementAt instanceof ModuleExtensionBundleBoxItem) {
-        final String name = ((ModuleExtensionBundleBoxItem)elementAt).getModule().getName();
+        String name = ((ModuleExtensionBundleBoxItem)elementAt).getModule().getName();
         if (name.equals(moduleName)) {
           return idx;
         }

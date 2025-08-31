@@ -45,7 +45,7 @@ public class ArrangementRuleAliasDialog extends DialogWrapper {
                                     @Nonnull Set<String> tokensInUse) {
     super(project, false);
 
-    final List<StdArrangementRuleAliasToken> tokenList = new ArrayList<>(tokens);
+    List<StdArrangementRuleAliasToken> tokenList = new ArrayList<>(tokens);
     myEditor = new ArrangementRuleAliasesListEditor(settingsManager, colorsProvider, tokenList, tokensInUse);
     if (!tokenList.isEmpty()) {
       myEditor.selectItem(tokenList.get(0));

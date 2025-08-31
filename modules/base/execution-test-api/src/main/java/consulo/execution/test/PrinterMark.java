@@ -17,7 +17,7 @@ package consulo.execution.test;
 
 public class PrinterMark implements Printable {
   @Override
-  public void printOn(final Printer printer) {
+  public void printOn(Printer printer) {
     printer.mark();
   }
 }

@@ -76,7 +76,7 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
         return false;
     }
 
-    public void processModifiedItems(@Nonnull final BiConsumer<T, T> processor) {
+    public void processModifiedItems(@Nonnull BiConsumer<T, T> processor) {
         helper.process(processor);
     }
 

@@ -67,7 +67,7 @@ public abstract class LocalProcessHandler<T extends Process> extends BaseProcess
     return myProcess.getOutputStream();
   }
 
-  protected void onOSProcessTerminated(final int exitCode) {
+  protected void onOSProcessTerminated(int exitCode) {
     notifyProcessTerminated(exitCode);
   }
 
@@ -87,7 +87,7 @@ public abstract class LocalProcessHandler<T extends Process> extends BaseProcess
 
   @Override
   protected void detachProcessImpl() {
-    final Runnable runnable = () -> {
+    Runnable runnable = () -> {
       closeStreams();
 
       myWaitFor.detach();

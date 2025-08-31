@@ -61,7 +61,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
   @Override
   @RequiredReadAction
   public List<SearchScope> getPredefinedScopes(@Nonnull final Project project,
-                                               @Nullable final DataContext dataContext,
+                                               @Nullable DataContext dataContext,
                                                boolean suggestSearchInLibs,
                                                boolean prevSearchFiles,
                                                boolean currentSelection,
@@ -127,15 +127,15 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
       SelectionModel selectionModel = selectedTextEditor.getSelectionModel();
       if (selectionModel.hasSelection()) {
         int start = selectionModel.getSelectionStart();
-        final PsiElement startElement = psiFile.findElementAt(start);
+        PsiElement startElement = psiFile.findElementAt(start);
         if (startElement != null) {
           int end = selectionModel.getSelectionEnd();
-          final PsiElement endElement = psiFile.findElementAt(end);
+          PsiElement endElement = psiFile.findElementAt(end);
           if (endElement != null) {
-            final PsiElement parent = PsiTreeUtil.findCommonParent(startElement, endElement);
+            PsiElement parent = PsiTreeUtil.findCommonParent(startElement, endElement);
             if (parent != null) {
-              final List<PsiElement> elements = new ArrayList<>();
-              final PsiElement[] children = parent.getChildren();
+              List<PsiElement> elements = new ArrayList<>();
+              PsiElement[] children = parent.getChildren();
               TextRange selection = new TextRange(start, end);
               for (PsiElement child : children) {
                 if (!(child instanceof PsiWhiteSpace) && child.getContainingFile() != null && selection.contains(child.getTextOffset())) {
@@ -160,7 +160,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
         usages.removeAll(selectedUsageView.getExcludedUsages());
 
         if (prevSearchFiles) {
-          final Set<VirtualFile> files = collectFiles(usages, true);
+          Set<VirtualFile> files = collectFiles(usages, true);
           if (!files.isEmpty()) {
             GlobalSearchScope prev = new GlobalSearchScope(project) {
               private Set<VirtualFile> myFiles;
@@ -198,10 +198,10 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
           }
         }
         else {
-          final List<PsiElement> results = new ArrayList<>(usages.size());
+          List<PsiElement> results = new ArrayList<>(usages.size());
           for (Usage usage : usages) {
             if (usage instanceof PsiElementUsage) {
-              final PsiElement element = ((PsiElementUsage)usage).getElement();
+              PsiElement element = ((PsiElementUsage)usage).getElement();
               if (element != null && element.isValid() && element.getContainingFile() != null) {
                 results.add(element);
               }
@@ -221,32 +221,32 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
   }
 
   private static void addHierarchyScope(@Nonnull Project project, Collection<SearchScope> result) {
-    final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY);
+    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY);
     if (toolWindow == null) {
       return;
     }
-    final ContentManager contentManager = toolWindow.getContentManager();
-    final Content content = contentManager.getSelectedContent();
+    ContentManager contentManager = toolWindow.getContentManager();
+    Content content = contentManager.getSelectedContent();
     if (content == null) {
       return;
     }
-    final String name = content.getDisplayName();
-    final JComponent component = content.getComponent();
+    String name = content.getDisplayName();
+    JComponent component = content.getComponent();
     if (!(component instanceof HierarchyBrowserBase)) {
       return;
     }
-    final HierarchyBrowserBase hierarchyBrowserBase = (HierarchyBrowserBase)component;
-    final PsiElement[] elements = hierarchyBrowserBase.getAvailableElements();
+    HierarchyBrowserBase hierarchyBrowserBase = (HierarchyBrowserBase)component;
+    PsiElement[] elements = hierarchyBrowserBase.getAvailableElements();
     if (elements.length > 0) {
       result.add(new LocalSearchScope(elements, "Hierarchy '" + name + "' (visible nodes only)"));
     }
   }
 
   @Nullable
-  private static SearchScope getSelectedFilesScope(final Project project, @Nullable DataContext dataContext) {
-    final VirtualFile[] filesOrDirs = dataContext == null ? null : dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+  private static SearchScope getSelectedFilesScope(Project project, @Nullable DataContext dataContext) {
+    VirtualFile[] filesOrDirs = dataContext == null ? null : dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     if (filesOrDirs != null) {
-      final List<VirtualFile> selectedFiles = ContainerUtil.filter(filesOrDirs, file -> !file.isDirectory());
+      List<VirtualFile> selectedFiles = ContainerUtil.filter(filesOrDirs, file -> !file.isDirectory());
       if (!selectedFiles.isEmpty()) {
         return GlobalSearchScope.filesScope(project, selectedFiles, "Selected Files");
       }
@@ -255,7 +255,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
   }
 
   protected static Set<VirtualFile> collectFiles(Set<Usage> usages, boolean findFirst) {
-    final Set<VirtualFile> files = new HashSet<>();
+    Set<VirtualFile> files = new HashSet<>();
     for (Usage usage : usages) {
       if (usage instanceof PsiElementUsage) {
         PsiElement psiElement = ((PsiElementUsage)usage).getElement();

@@ -317,7 +317,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     @RequiredUIAccess
     protected void initPatchViewer() {
-        final Document outputDocument = myResultEditor.getDocument();
+        Document outputDocument = myResultEditor.getDocument();
         DiffImplUtil.newWriteCommand()
             .project(myProject)
             .document(myResultEditor.getDocument())
@@ -608,14 +608,14 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull final AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             Editor editor = e.getData(Editor.KEY);
-            final Side side = Side.fromValue(Arrays.asList(myResultEditor, myPatchEditor), editor);
+            Side side = Side.fromValue(Arrays.asList(myResultEditor, myPatchEditor), editor);
             if (editor == null || side == null) {
                 return;
             }
 
-            final List<ApplyPatchChange> selectedChanges = getSelectedChanges(side);
+            List<ApplyPatchChange> selectedChanges = getSelectedChanges(side);
             if (selectedChanges.isEmpty()) {
                 return;
             }
@@ -658,7 +658,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         @Nonnull
         @RequiredUIAccess
         private List<ApplyPatchChange> getSelectedChanges(@Nonnull Side side) {
-            final BitSet lines = DiffImplUtil.getSelectedLines(side.select(myResultEditor, myPatchEditor));
+            BitSet lines = DiffImplUtil.getSelectedLines(side.select(myResultEditor, myPatchEditor));
 
             List<ApplyPatchChange> affectedChanges = new ArrayList<>();
             for (ApplyPatchChange change : myModelChanges) {

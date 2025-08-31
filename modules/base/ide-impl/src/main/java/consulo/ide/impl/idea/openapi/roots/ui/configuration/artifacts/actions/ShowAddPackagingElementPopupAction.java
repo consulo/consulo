@@ -42,12 +42,12 @@ public class ShowAddPackagingElementPopupAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DefaultActionGroup group = new DefaultActionGroup();
+    DefaultActionGroup group = new DefaultActionGroup();
     for (PackagingElementType type : PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY)).getAllElementTypes()) {
       group.add(new AddNewPackagingElementAction((PackagingElementType<?>)type, myArtifactEditor));
     }
-    final DataContext dataContext = e.getDataContext();
-    final ListPopup popup = JBPopupFactory.getInstance()
+    DataContext dataContext = e.getDataContext();
+    ListPopup popup = JBPopupFactory.getInstance()
       .createActionGroupPopup("Add", group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     popup.showInBestPositionFor(dataContext);
   }

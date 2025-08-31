@@ -40,18 +40,18 @@ public class LeftEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor 
       return null;
     }
 
-    final WhiteSpace whiteSpace = offsetResponsibleBlock.getWhiteSpace();
+    WhiteSpace whiteSpace = offsetResponsibleBlock.getWhiteSpace();
     if (whiteSpace.containsLineFeeds()) {
       return new IndentData(whiteSpace.getIndentSpaces(), whiteSpace.getSpaces());
     }
     else {
-      final int offsetBeforeBlock = CoreFormatterUtil.getStartColumn(offsetResponsibleBlock);
-      final AbstractBlockWrapper prevIndentedBlock = CoreFormatterUtil.getIndentedParentBlock(context.targetBlock);
+      int offsetBeforeBlock = CoreFormatterUtil.getStartColumn(offsetResponsibleBlock);
+      AbstractBlockWrapper prevIndentedBlock = CoreFormatterUtil.getIndentedParentBlock(context.targetBlock);
       if (prevIndentedBlock == null) {
         return new IndentData(0, offsetBeforeBlock);
       }
       else {
-        final int parentIndent = prevIndentedBlock.getWhiteSpace().getIndentOffset();
+        int parentIndent = prevIndentedBlock.getWhiteSpace().getIndentOffset();
         if (parentIndent > offsetBeforeBlock) {
           return new IndentData(0, offsetBeforeBlock);
         }

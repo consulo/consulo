@@ -362,7 +362,7 @@ public class MultiLineLabelUI extends BasicLabelUI {
     return myLines;
   }
 
-  public static String convertTabs(String text, final int tabLength) {
+  public static String convertTabs(String text, int tabLength) {
     StringBuffer buf = new StringBuffer(text.length());
     for (int idx = 0; idx < text.length(); idx++) {
       char ch = text.charAt(idx);

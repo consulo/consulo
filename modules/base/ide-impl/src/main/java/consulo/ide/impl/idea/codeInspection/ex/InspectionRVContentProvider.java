@@ -60,7 +60,7 @@ public abstract class InspectionRVContentProvider {
     @Nullable
     String getModule();
 
-    boolean areEqual(final T o1, final T o2);
+    boolean areEqual(T o1, T o2);
 
     boolean supportStructure();
   }
@@ -74,7 +74,7 @@ public abstract class InspectionRVContentProvider {
   public void appendToolNodeContent(@Nonnull GlobalInspectionContextImpl context,
                                     @Nonnull InspectionNode toolNode,
                                     @Nonnull InspectionTreeNode parentNode,
-                                    final boolean showStructure) {
+                                    boolean showStructure) {
     InspectionToolWrapper wrapper = toolNode.getToolWrapper();
     InspectionToolPresentation presentation = context.getPresentation(wrapper);
     Map<String, Set<RefEntity>> content = presentation.getContent();
@@ -86,16 +86,16 @@ public abstract class InspectionRVContentProvider {
   public abstract void appendToolNodeContent(@Nonnull GlobalInspectionContextImpl context,
                                              @Nonnull InspectionNode toolNode,
                                              @Nonnull InspectionTreeNode parentNode,
-                                             final boolean showStructure,
+                                             boolean showStructure,
                                              @Nonnull Map<String, Set<RefEntity>> contents,
                                              @Nonnull Map<RefEntity, CommonProblemDescriptor[]> problems,
-                                             @Nullable final DefaultTreeModel model);
+                                             @Nullable DefaultTreeModel model);
 
   protected abstract void appendDescriptor(@Nonnull GlobalInspectionContextImpl context,
                                            @Nonnull InspectionToolWrapper toolWrapper,
                                            @Nonnull UserObjectContainer container,
                                            @Nonnull InspectionPackageNode pNode,
-                                           final boolean canPackageRepeat);
+                                           boolean canPackageRepeat);
 
   public boolean isContentLoaded() {
     return true;
@@ -103,19 +103,19 @@ public abstract class InspectionRVContentProvider {
 
   protected <T> List<InspectionTreeNode> buildTree(@Nonnull GlobalInspectionContextImpl context,
                                                    @Nonnull Map<String, Set<T>> packageContents,
-                                                   final boolean canPackageRepeat,
+                                                   boolean canPackageRepeat,
                                                    @Nonnull InspectionToolWrapper toolWrapper,
                                                    @Nonnull Function<T, UserObjectContainer<T>> computeContainer,
-                                                   final boolean showStructure) {
-    final List<InspectionTreeNode> content = new ArrayList<InspectionTreeNode>();
-    final Map<String, Map<String, InspectionPackageNode>> module2PackageMap = new HashMap<String, Map<String, InspectionPackageNode>>();
+                                                   boolean showStructure) {
+    List<InspectionTreeNode> content = new ArrayList<InspectionTreeNode>();
+    Map<String, Map<String, InspectionPackageNode>> module2PackageMap = new HashMap<String, Map<String, InspectionPackageNode>>();
     boolean supportStructure = showStructure;
     for (String packageName : packageContents.keySet()) {
-      final Set<T> elements = packageContents.get(packageName);
+      Set<T> elements = packageContents.get(packageName);
       for (T userObject : elements) {
-        final UserObjectContainer<T> container = computeContainer.apply(userObject);
+        UserObjectContainer<T> container = computeContainer.apply(userObject);
         supportStructure &= container.supportStructure();
-        final String moduleName = showStructure ? container.getModule() : null;
+        String moduleName = showStructure ? container.getModule() : null;
         Map<String, InspectionPackageNode> packageNodes = module2PackageMap.get(moduleName);
         if (packageNodes == null) {
           packageNodes = new HashMap<String, InspectionPackageNode>();
@@ -130,15 +130,15 @@ public abstract class InspectionRVContentProvider {
       }
     }
     if (supportStructure) {
-      final HashMap<String, InspectionModuleNode> moduleNodes = new HashMap<String, InspectionModuleNode>();
-      for (final String moduleName : module2PackageMap.keySet()) {
-        final Map<String, InspectionPackageNode> packageNodes = module2PackageMap.get(moduleName);
+      HashMap<String, InspectionModuleNode> moduleNodes = new HashMap<String, InspectionModuleNode>();
+      for (String moduleName : module2PackageMap.keySet()) {
+        Map<String, InspectionPackageNode> packageNodes = module2PackageMap.get(moduleName);
         for (InspectionPackageNode packageNode : packageNodes.values()) {
           if (packageNode.getChildCount() > 0) {
             InspectionModuleNode moduleNode = moduleNodes.get(moduleName);
             if (moduleNode == null) {
               if (moduleName != null) {
-                final Module module = ModuleManager.getInstance(myProject).findModuleByName(moduleName);
+                Module module = ModuleManager.getInstance(myProject).findModuleByName(moduleName);
                 if (module != null) {
                   moduleNode = new InspectionModuleNode(module);
                   moduleNodes.put(moduleName, moduleNode);
@@ -167,20 +167,20 @@ public abstract class InspectionRVContentProvider {
       for (Map<String, InspectionPackageNode> packageNodes : module2PackageMap.values()) {
         for (InspectionPackageNode pNode : packageNodes.values()) {
           for (int i = 0; i < pNode.getChildCount(); i++) {
-            final TreeNode childNode = pNode.getChildAt(i);
+            TreeNode childNode = pNode.getChildAt(i);
             if (childNode instanceof ProblemDescriptionNode) {
               content.add(pNode);
               break;
             }
             LOG.assertTrue(childNode instanceof RefElementNode, childNode.getClass().getName());
-            final RefElementNode elementNode = (RefElementNode)childNode;
-            final Set<RefElementNode> parentNodes = new LinkedHashSet<RefElementNode>();
+            RefElementNode elementNode = (RefElementNode)childNode;
+            Set<RefElementNode> parentNodes = new LinkedHashSet<RefElementNode>();
             if (pNode.getPackageName() != null) {
               parentNodes.add(elementNode);
             } else {
               boolean hasElementNodeUnder = true;
               for(int e = 0; e < elementNode.getChildCount(); e++) {
-                final TreeNode grandChildNode = elementNode.getChildAt(e);
+                TreeNode grandChildNode = elementNode.getChildAt(e);
                 if (grandChildNode instanceof ProblemDescriptionNode) {
                   hasElementNodeUnder = false;
                   break;
@@ -197,7 +197,7 @@ public abstract class InspectionRVContentProvider {
               final List<ProblemDescriptionNode> nodes = new ArrayList<ProblemDescriptionNode>();
               TreeUtil.traverse(parentNode, new TreeUtil.Traverse() {
                 @Override
-                public boolean accept(final Object node) {
+                public boolean accept(Object node) {
                   if (node instanceof ProblemDescriptionNode) {
                     nodes.add((ProblemDescriptionNode)node);
                   }
@@ -221,20 +221,20 @@ public abstract class InspectionRVContentProvider {
   @Nonnull
   protected static RefElementNode addNodeToParent(@Nonnull UserObjectContainer container,
                                                   @Nonnull InspectionToolPresentation presentation,
-                                                  final InspectionTreeNode parentNode) {
+                                                  InspectionTreeNode parentNode) {
     final RefElementNode nodeToBeAdded = container.createNode(presentation);
     final Ref<Boolean> firstLevel = new Ref<Boolean>(true);
     RefElementNode prevNode = null;
     final Ref<RefElementNode> result = new Ref<RefElementNode>();
     while (true) {
-      final RefElementNode currentNode = firstLevel.get() ? nodeToBeAdded : container.createNode(presentation);
+      RefElementNode currentNode = firstLevel.get() ? nodeToBeAdded : container.createNode(presentation);
       final UserObjectContainer finalContainer = container;
       final RefElementNode finalPrevNode = prevNode;
       TreeUtil.traverseDepth(parentNode, new TreeUtil.Traverse() {
         @Override
         public boolean accept(Object node) {
           if (node instanceof RefElementNode) {
-            final RefElementNode refElementNode = (RefElementNode)node;
+            RefElementNode refElementNode = (RefElementNode)node;
             if (finalContainer.areEqual(refElementNode.getUserObject(), finalContainer.getUserObject())) {
               if (firstLevel.get()) {
                 result.set(refElementNode);
@@ -255,7 +255,7 @@ public abstract class InspectionRVContentProvider {
       if (!firstLevel.get()) {
         insertByIndex(prevNode, currentNode);
       }
-      final UserObjectContainer owner = container.getOwner();
+      UserObjectContainer owner = container.getOwner();
       if (owner == null) {
         insertByIndex(currentNode, parentNode);
         return nodeToBeAdded;
@@ -303,7 +303,7 @@ public abstract class InspectionRVContentProvider {
     add(model, child, parent);
   }
 
-  protected static void add(@Nullable final DefaultTreeModel model, final InspectionTreeNode child, final InspectionTreeNode parent) {
+  protected static void add(@Nullable DefaultTreeModel model, InspectionTreeNode child, InspectionTreeNode parent) {
     if (model == null) {
       insertByIndex(child, parent);
     }
@@ -319,7 +319,7 @@ public abstract class InspectionRVContentProvider {
       parent.add(child);
       return;
     }
-    final int i = TreeUtil.indexedBinarySearch(parent, child, InspectionResultsViewComparator.getInstance());
+    int i = TreeUtil.indexedBinarySearch(parent, child, InspectionResultsViewComparator.getInstance());
     if (i >= 0){
       parent.add(child);
       return;
@@ -327,7 +327,7 @@ public abstract class InspectionRVContentProvider {
     parent.insert(child, -i -1);
   }
 
-  private static void processDepth(@Nullable DefaultTreeModel model, final InspectionTreeNode child, final InspectionTreeNode current) {
+  private static void processDepth(@Nullable DefaultTreeModel model, InspectionTreeNode child, InspectionTreeNode current) {
     InspectionTreeNode[] children = new InspectionTreeNode[child.getChildCount()];
     for (int i = 0; i < children.length; i++) {
       children[i] = (InspectionTreeNode)child.getChildAt(i);

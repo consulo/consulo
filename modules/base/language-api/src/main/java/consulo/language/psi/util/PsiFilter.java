@@ -53,7 +53,7 @@ public class PsiFilter<T extends PsiElement> {
     private final PsiFilter<T> filter;
     private final List<T> elements;
 
-    protected Visitor(final PsiFilter<T> filter, final List<T> elements) {
+    protected Visitor(PsiFilter<T> filter, List<T> elements) {
       this.filter = filter;
       this.elements = elements;
     }
@@ -61,7 +61,7 @@ public class PsiFilter<T extends PsiElement> {
     @Override
     public void visitElement(PsiElement element) {
       if (filter.getParentClass().isAssignableFrom(element.getClass())) {
-        final T e = (T)element;
+        T e = (T)element;
         if (filter.accept(e)) {
           elements.add(e);
         }

@@ -29,7 +29,7 @@ import java.util.List;
 public interface ChangeListOwner {
   void moveChangesTo(LocalChangeList list, Change... changes);
 
-  void addUnversionedFiles(final LocalChangeList list, @Nonnull final List<VirtualFile> unversionedFiles);
+  void addUnversionedFiles(LocalChangeList list, @Nonnull List<VirtualFile> unversionedFiles);
 
   Project getProject();
 }

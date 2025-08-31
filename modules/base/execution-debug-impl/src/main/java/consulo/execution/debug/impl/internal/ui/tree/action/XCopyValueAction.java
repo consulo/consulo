@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class XCopyValueAction extends XFetchValueActionBase {
   @Override
-  protected void handle(final Project project, final String value, XDebuggerTree tree) {
+  protected void handle(Project project, String value, XDebuggerTree tree) {
     if (tree == null) return;
     List<? extends WatchNode> watchNodes = XWatchesTreeActionBase.getSelectedNodes(tree, WatchNode.class);
     if (watchNodes.isEmpty()) {

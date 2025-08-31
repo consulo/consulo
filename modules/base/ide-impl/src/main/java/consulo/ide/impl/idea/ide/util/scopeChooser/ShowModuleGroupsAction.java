@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 public class ShowModuleGroupsAction extends ToggleAction {
   private final Runnable myUpdate;
 
-  public ShowModuleGroupsAction(final Runnable update) {
+  public ShowModuleGroupsAction(Runnable update) {
     super("Show Module Groups",
           "Show/hide module groups", AllIcons.Nodes.ModuleGroup);
     myUpdate = update;
@@ -45,7 +45,7 @@ public class ShowModuleGroupsAction extends ToggleAction {
   }
 
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(DependencyUISettings.getInstance().UI_SHOW_MODULES);
   }

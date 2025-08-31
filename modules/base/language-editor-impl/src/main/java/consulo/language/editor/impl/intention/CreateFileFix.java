@@ -70,7 +70,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
     this(false, newFileName, directory, text, "create.file.text");
   }
 
-  public CreateFileFix(final boolean isDirectory, @Nonnull String newFileName, @Nonnull PsiDirectory directory) {
+  public CreateFileFix(boolean isDirectory, @Nonnull String newFileName, @Nonnull PsiDirectory directory) {
     this(isDirectory, newFileName, directory, null, isDirectory ? "create.directory.text" : "create.file.text");
   }
 
@@ -92,7 +92,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   }
 
   @Override
-  public void invoke(@Nonnull final Project project, @Nonnull PsiFile file, Editor editor, @Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+  public void invoke(@Nonnull Project project, @Nonnull PsiFile file, Editor editor, @Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
     if (isAvailable(project, null, file)) {
       invoke(project, (PsiDirectory)startElement);
     }
@@ -105,7 +105,7 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
 
   @Override
   public boolean isAvailable(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
-    final PsiDirectory myDirectory = (PsiDirectory)startElement;
+    PsiDirectory myDirectory = (PsiDirectory)startElement;
     long current = System.currentTimeMillis();
 
     if (ApplicationManager.getApplication().isUnitTestMode() || current - myIsAvailableTimeStamp > REFRESH_INTERVAL) {
@@ -142,13 +142,13 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
             throw new IncorrectOperationException(e.getMessage());
           }
         }
-        final PsiFile newFile = directory.createFile(newFileName);
+        PsiFile newFile = directory.createFile(newFileName);
         String text = getFileText();
 
         if (text != null) {
-          final FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(newFileName);
-          final PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("_" + newFileName, type, text);
-          final PsiElement psiElement = CodeStyleManager.getInstance(project).reformat(psiFile);
+          FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(newFileName);
+          PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("_" + newFileName, type, text);
+          PsiElement psiElement = CodeStyleManager.getInstance(project).reformat(psiFile);
           text = psiElement.getText();
         }
 
@@ -161,13 +161,13 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   }
 
   protected void openFile(@Nonnull Project project, PsiDirectory directory, PsiFile newFile, String text) {
-    final FileEditorManager editorManager = FileEditorManager.getInstance(directory.getProject());
-    final FileEditor[] fileEditors = editorManager.openFile(newFile.getVirtualFile(), true);
+    FileEditorManager editorManager = FileEditorManager.getInstance(directory.getProject());
+    FileEditor[] fileEditors = editorManager.openFile(newFile.getVirtualFile(), true);
 
     if (text != null) {
       for (FileEditor fileEditor : fileEditors) {
         if (fileEditor instanceof TextEditor) { // JSP is not safe to edit via Psi
-          final Document document = ((TextEditor)fileEditor).getEditor().getDocument();
+          Document document = ((TextEditor)fileEditor).getEditor().getDocument();
           document.setText(text);
 
           if (ApplicationManager.getApplication().isUnitTestMode()) {

@@ -28,7 +28,7 @@ abstract class KeyGestureState {
 
   final StateContext myContext;
 
-  public KeyGestureState(final KeyboardGestureProcessor processor) {
+  public KeyGestureState(KeyboardGestureProcessor processor) {
     myProcessor = processor;
     myContext = processor.myContext;
   }
@@ -46,7 +46,7 @@ abstract class KeyGestureState {
   }
 
   boolean isPureModifierEvent(int eventType) {
-    final KeyEvent event = myContext.keyToProcess;
+    KeyEvent event = myContext.keyToProcess;
     if (event.getID() != eventType) return false;
 
     return event.getKeyCode() == KeyEvent.VK_CONTROL
@@ -62,7 +62,7 @@ abstract class KeyGestureState {
 
   static class WaitForStart extends KeyGestureState {
 
-    WaitForStart(final KeyboardGestureProcessor processor) {
+    WaitForStart(KeyboardGestureProcessor processor) {
       super(processor);
     }
 
@@ -80,7 +80,7 @@ abstract class KeyGestureState {
 
   static class ModifierPressed extends KeyGestureState {
 
-    ModifierPressed(final KeyboardGestureProcessor processor) {
+    ModifierPressed(KeyboardGestureProcessor processor) {
       super(processor);
     }
 
@@ -106,7 +106,7 @@ abstract class KeyGestureState {
 
   static class WaitForDblClick extends KeyGestureState {
 
-    WaitForDblClick(final KeyboardGestureProcessor processor) {
+    WaitForDblClick(KeyboardGestureProcessor processor) {
       super(processor);
     }
 
@@ -135,7 +135,7 @@ abstract class KeyGestureState {
 
   static class WaitForAction extends KeyGestureState {
 
-    WaitForAction(final KeyboardGestureProcessor processor) {
+    WaitForAction(KeyboardGestureProcessor processor) {
       super(processor);
     }
 
@@ -146,7 +146,7 @@ abstract class KeyGestureState {
       }
 
       if (myContext.keyToProcess.getID() == KeyEvent.KEY_RELEASED && myContext.keyToProcess.getKeyChar() == KeyEvent.CHAR_UNDEFINED) {
-        final int pressedModifiers = myContext.keyToProcess.getKeyCode() & myContext.actionKey.getModifiersEx();
+        int pressedModifiers = myContext.keyToProcess.getKeyCode() & myContext.actionKey.getModifiersEx();
         if (pressedModifiers == 0) {
           myProcessor.setState(myProcessor.myFinish);
           return myProcessor.myState.process();
@@ -169,7 +169,7 @@ abstract class KeyGestureState {
   }
 
   static class ProcessFinish extends KeyGestureState {
-    ProcessFinish(final KeyboardGestureProcessor processor) {
+    ProcessFinish(KeyboardGestureProcessor processor) {
       super(processor);
     }
 
@@ -187,7 +187,7 @@ abstract class KeyGestureState {
 
   static class WaitForActionEnd extends KeyGestureState {
 
-    WaitForActionEnd(final KeyboardGestureProcessor processor) {
+    WaitForActionEnd(KeyboardGestureProcessor processor) {
       super(processor);
     }
 

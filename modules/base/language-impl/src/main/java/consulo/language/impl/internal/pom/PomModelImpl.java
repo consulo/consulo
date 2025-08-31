@@ -87,7 +87,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     }
 
     @Override
-    public void addModelListener(@Nonnull final PomModelListener listener, @Nonnull Disposable parentDisposable) {
+    public void addModelListener(@Nonnull PomModelListener listener, @Nonnull Disposable parentDisposable) {
         myListeners.add(listener, parentDisposable);
     }
 
@@ -96,7 +96,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         if (!PomAspectGuard.isAllowPsiModification()) {
             throw new IncorrectOperationException("Must not modify PSI inside save listener");
         }
-        final PomModelAspect aspect = transaction.getTransactionAspect();
+        PomModelAspect aspect = transaction.getTransactionAspect();
         ProgressManager.getInstance().executeNonCancelableSection(() -> {
             startTransaction(transaction);
 
@@ -111,7 +111,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
                     Stack<Pair<PomModelAspect, PomTransaction>> blockedAspects = myBlockedAspects.get();
                     blockedAspects.push(Pair.create(aspect, transaction));
 
-                    final PomModelEvent event;
+                    PomModelEvent event;
                     try {
                         transaction.run();
                         event = transaction.getAccumulatedEvent();
@@ -132,19 +132,19 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
                     }
 
                     { // update
-                        final Set<PomModelAspect> changedAspects = event.getChangedAspects();
-                        final Collection<PomModelAspect> dependants = new LinkedHashSet<>();
-                        for (final PomModelAspect pomModelAspect : changedAspects) {
+                        Set<PomModelAspect> changedAspects = event.getChangedAspects();
+                        Collection<PomModelAspect> dependants = new LinkedHashSet<>();
+                        for (PomModelAspect pomModelAspect : changedAspects) {
                             dependants.addAll(getAllDependants(pomModelAspect));
                         }
-                        for (final PomModelAspect modelAspect : dependants) {
+                        for (PomModelAspect modelAspect : dependants) {
                             if (!changedAspects.contains(modelAspect)) {
                                 modelAspect.update(event);
                             }
                         }
                     }
-                    for (final PomModelListener listener : myListeners) {
-                        final Set<PomModelAspect> changedAspects = event.getChangedAspects();
+                    for (PomModelListener listener : myListeners) {
+                        Set<PomModelAspect> changedAspects = event.getChangedAspects();
                         for (PomModelAspect modelAspect : changedAspects) {
                             if (listener.isAspectChangeInteresting(modelAspect)) {
                                 listener.modelChanged(event);
@@ -178,13 +178,13 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     }
 
     @Nullable
-    private Pair<PomModelAspect, PomTransaction> getBlockingTransaction(final PomModelAspect aspect, PomTransaction transaction) {
-        final List<PomModelAspect> allDependants = getAllDependants(aspect);
-        for (final PomModelAspect pomModelAspect : allDependants) {
+    private Pair<PomModelAspect, PomTransaction> getBlockingTransaction(PomModelAspect aspect, PomTransaction transaction) {
+        List<PomModelAspect> allDependants = getAllDependants(aspect);
+        for (PomModelAspect pomModelAspect : allDependants) {
             Stack<Pair<PomModelAspect, PomTransaction>> blockedAspects = myBlockedAspects.get();
             ListIterator<Pair<PomModelAspect, PomTransaction>> blocksIterator = blockedAspects.listIterator(blockedAspects.size());
             while (blocksIterator.hasPrevious()) {
-                final Pair<PomModelAspect, PomTransaction> pair = blocksIterator.previous();
+                Pair<PomModelAspect, PomTransaction> pair = blocksIterator.previous();
                 if (pomModelAspect == pair.getFirst() && // aspect dependence
                     PsiTreeUtil.isAncestor(
                         getContainingFileByTree(pair.getSecond().getChangeScope()),
@@ -199,10 +199,10 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         return null;
     }
 
-    private void commitTransaction(final PomTransaction transaction) {
-        final PsiDocumentManagerBase manager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject);
-        final PsiToDocumentSynchronizer synchronizer = manager.getSynchronizer();
-        final PsiFile containingFileByTree = getContainingFileByTree(transaction.getChangeScope());
+    private void commitTransaction(PomTransaction transaction) {
+        PsiDocumentManagerBase manager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject);
+        PsiToDocumentSynchronizer synchronizer = manager.getSynchronizer();
+        PsiFile containingFileByTree = getContainingFileByTree(transaction.getChangeScope());
         Document document = containingFileByTree != null ? manager.getCachedDocument(containingFileByTree) : null;
 
         boolean isFromCommit = myProject.getApplication()
@@ -214,7 +214,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
 
         boolean docSynced = false;
         if (document != null) {
-            final int oldLength = containingFileByTree.getTextLength();
+            int oldLength = containingFileByTree.getTextLength();
             docSynced = synchronizer.commitTransaction(document);
             if (docSynced) {
                 BlockSupportImpl.sendAfterChildrenChangedEvent(
@@ -239,7 +239,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         }
 
         CharSequence newText = changedFile.getNode().getChars();
-        for (final PsiFile file : allFiles) {
+        for (PsiFile file : allFiles) {
             FileElement fileElement = file == changedFile ? null : ((PsiFileImpl)file).getTreeElement();
             Runnable changeAction = fileElement == null ? null : reparseFile(file, fileElement, newText);
             if (changeAction == null) {
@@ -280,11 +280,11 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     }
 
     private void startTransaction(@Nonnull PomTransaction transaction) {
-        final PsiDocumentManagerBase manager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject);
-        final PsiToDocumentSynchronizer synchronizer = manager.getSynchronizer();
-        final PsiElement changeScope = transaction.getChangeScope();
+        PsiDocumentManagerBase manager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject);
+        PsiToDocumentSynchronizer synchronizer = manager.getSynchronizer();
+        PsiElement changeScope = transaction.getChangeScope();
 
-        final PsiFile containingFileByTree = getContainingFileByTree(changeScope);
+        PsiFile containingFileByTree = getContainingFileByTree(changeScope);
         if (containingFileByTree != null && !(containingFileByTree instanceof DummyHolder) && !manager.isCommitInProgress()) {
             PsiUtilCore.ensureValid(containingFileByTree);
         }
@@ -332,16 +332,16 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     }
 
     @Nullable
-    private static PsiFile getContainingFileByTree(@Nonnull final PsiElement changeScope) {
+    private static PsiFile getContainingFileByTree(@Nonnull PsiElement changeScope) {
         // there could be pseudo physical trees (JSPX/JSP/etc.) which must not translate
         // any changes to document and not to fire any PSI events
-        final PsiFile psiFile;
-        final ASTNode node = changeScope.getNode();
+        PsiFile psiFile;
+        ASTNode node = changeScope.getNode();
         if (node == null) {
             psiFile = changeScope.getContainingFile();
         }
         else {
-            final FileElement fileElement = TreeUtil.getFileElement((TreeElement)node);
+            FileElement fileElement = TreeUtil.getFileElement((TreeElement)node);
             // assert fileElement != null : "Can't find file element for node: " + node;
             // Hack. the containing tree can be invalidated if updating supplementary trees like HTML in JSP.
             if (fileElement == null) {

@@ -46,7 +46,7 @@ public interface PopupStep<T> {
    * @see #hasSubstep
    */
   @Nullable
-  PopupStep onChosen(T selectedValue, final boolean finalChoice);
+  PopupStep onChosen(T selectedValue, boolean finalChoice);
 
   /**
    * Checks if the specified item in the list has an associated substep.

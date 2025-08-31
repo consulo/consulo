@@ -84,8 +84,8 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
       return false;
     }
 
-    final ImageInputStream stream = (ImageInputStream)input;
-    final ImageFormat imageFormat = Imaging.guessFormat(new MyByteSource(stream));
+    ImageInputStream stream = (ImageInputStream)input;
+    ImageFormat imageFormat = Imaging.guessFormat(new MyByteSource(stream));
     if (myFormats.contains(imageFormat)) {
       myFormat.set(imageFormat);
       return true;
@@ -101,7 +101,7 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
   private static class MyByteSource extends ByteSource {
     private final ImageInputStream myStream;
 
-    public MyByteSource(final ImageInputStream stream) {
+    public MyByteSource(ImageInputStream stream) {
       super(stream.toString());
       myStream = stream;
     }
@@ -116,25 +116,25 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
         }
 
         @Override
-        public int read(final byte[] b, final int off, final int len) throws IOException {
+        public int read(byte[] b, int off, int len) throws IOException {
           return myStream.read(b, off, len);
         }
       };
     }
 
     @Override
-    public byte[] getBlock(final int start, final int length) throws IOException {
+    public byte[] getBlock(int start, int length) throws IOException {
       myStream.seek(start);
-      final byte[] bytes = new byte[length];
-      final int read = myStream.read(bytes);
+      byte[] bytes = new byte[length];
+      int read = myStream.read(bytes);
       return ArrayUtil.realloc(bytes, read);
     }
 
     @Override
-    public byte[] getBlock(final long start, final int length) throws IOException {
+    public byte[] getBlock(long start, int length) throws IOException {
       myStream.seek(start);
-      final byte[] bytes = new byte[length];
-      final int read = myStream.read(bytes);
+      byte[] bytes = new byte[length];
+      int read = myStream.read(bytes);
       return ArrayUtil.realloc(bytes, read);
     }
 
@@ -160,7 +160,7 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
     private BufferedImage[] myImages;
     private final ImageFormat myDefaultFormat;
 
-    private MyImageReader(final CommonsImagingImageReaderSpi provider, final ImageFormat imageFormat) {
+    private MyImageReader(CommonsImagingImageReaderSpi provider, ImageFormat imageFormat) {
       super(provider);
       myDefaultFormat = imageFormat == null ? ImageFormats.UNKNOWN : imageFormat;
     }
@@ -173,7 +173,7 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
     }
 
     @Override
-    public void setInput(final Object input, final boolean seekForwardOnly, final boolean ignoreMetadata) {
+    public void setInput(Object input, boolean seekForwardOnly, boolean ignoreMetadata) {
       super.setInput(input, seekForwardOnly, ignoreMetadata);
       myBytes = null;
       myInfo = null;
@@ -194,7 +194,7 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
 
     private byte[] getBytes() throws IOException {
       if (myBytes == null) {
-        final ImageInputStream stream = (ImageInputStream)input;
+        ImageInputStream stream = (ImageInputStream)input;
         myBytes = new MyByteSource(stream).getAll();
       }
       return myBytes;
@@ -214,22 +214,22 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
     }
 
     @Override
-    public int getNumImages(final boolean allowSearch) throws IOException {
+    public int getNumImages(boolean allowSearch) throws IOException {
       return getInfo().getNumberOfImages();
     }
 
     @Override
-    public int getWidth(final int imageIndex) throws IOException {
+    public int getWidth(int imageIndex) throws IOException {
       return getInfo().getWidth();
     }
 
     @Override
-    public int getHeight(final int imageIndex) throws IOException {
+    public int getHeight(int imageIndex) throws IOException {
       return getInfo().getHeight();
     }
 
     @Override
-    public Iterator<ImageTypeSpecifier> getImageTypes(final int imageIndex) throws IOException {
+    public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IOException {
       return Collections.singletonList(ImageTypeSpecifier.createFromRenderedImage(getImages()[imageIndex])).iterator();
     }
 
@@ -239,12 +239,12 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
     }
 
     @Override
-    public IIOMetadata getImageMetadata(final int imageIndex) throws IOException {
+    public IIOMetadata getImageMetadata(int imageIndex) throws IOException {
       return null;
     }
 
     @Override
-    public BufferedImage read(final int imageIndex, final ImageReadParam param) throws IOException {
+    public BufferedImage read(int imageIndex, ImageReadParam param) throws IOException {
       return getImages()[imageIndex];
     }
 

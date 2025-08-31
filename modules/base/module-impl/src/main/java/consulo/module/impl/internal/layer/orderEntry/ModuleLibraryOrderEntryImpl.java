@@ -55,7 +55,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
         }
     }
 
-    public ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
+    public ModuleLibraryOrderEntryImpl(String name, PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
         super(ModuleLibraryOrderEntryType.getInstance(), moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
         myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
         Disposer.register(this, myLibrary);
@@ -90,7 +90,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
     @Nonnull
     @Override
     public String getPresentableName() {
-        final String name = myLibrary.getName();
+        String name = myLibrary.getName();
         if (name != null) {
             return name;
         }
@@ -99,7 +99,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
                 return "<unknown>";
             }
 
-            final String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
+            String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
             if (urls.length > 0) {
                 String url = urls[0];
                 return VirtualFilePathUtil.toPresentableUrl(url);

@@ -84,21 +84,21 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
 
   @Nonnull
   @UsedInPlugin
-  public ModuleExtensionBundleBoxBuilder<T> sdkTypeClass(@Nonnull final Class<? extends SdkTypeId> clazz) {
+  public ModuleExtensionBundleBoxBuilder<T> sdkTypeClass(@Nonnull Class<? extends SdkTypeId> clazz) {
     mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
     return this;
   }
 
   @Nonnull
   @UsedInPlugin
-  public ModuleExtensionBundleBoxBuilder<T> sdkTypes(@Nonnull final Set<SdkType> sdkTypes) {
+  public ModuleExtensionBundleBoxBuilder<T> sdkTypes(@Nonnull Set<SdkType> sdkTypes) {
     mySdkFilter = sdkTypes::contains;
     return this;
   }
 
   @Nonnull
   @UsedInPlugin
-  public ModuleExtensionBundleBoxBuilder<T> sdkType(@Nonnull final SdkType sdkType) {
+  public ModuleExtensionBundleBoxBuilder<T> sdkType(@Nonnull SdkType sdkType) {
     return sdkTypes(Collections.singleton(sdkType));
   }
 
@@ -156,19 +156,19 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
 
     builder.withSdkTypeFilter(mySdkFilter);
 
-    final BundleBox box = builder.build();
+    BundleBox box = builder.build();
 
     box.addModuleExtensionItems(myMutableModuleExtension, mySdkPointerFunction);
 
-    final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = mySdkPointerFunction.apply(myMutableModuleExtension);
+    MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = mySdkPointerFunction.apply(myMutableModuleExtension);
     assert inheritableSdk != null;
     if (inheritableSdk.isNull()) {
       box.setSelectedNoneBundle();
     }
     else {
-      final String sdkInheritModuleName = inheritableSdk.getModuleName();
+      String sdkInheritModuleName = inheritableSdk.getModuleName();
       if (sdkInheritModuleName != null) {
-        final Module sdkInheritModule = inheritableSdk.getModule();
+        Module sdkInheritModule = inheritableSdk.getModule();
         if (sdkInheritModule == null) {
           box.addInvalidModuleItem(sdkInheritModuleName);
         }

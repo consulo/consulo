@@ -96,7 +96,7 @@ public class TreeModelBuilder {
     @RequiredUIAccess
     public TreeModelBuilder(Project project, boolean showIndividualLibs, Marker marker, DependenciesPanel.DependencyPanelSettings settings) {
         myProject = project;
-        final boolean multiModuleProject = ModuleManager.getInstance(project).getModules().length > 1;
+        boolean multiModuleProject = ModuleManager.getInstance(project).getModules().length > 1;
         myShowModules = settings.UI_SHOW_MODULES && multiModuleProject;
         myGroupByScopeType = settings.UI_GROUP_BY_SCOPE_TYPE;
         myFlattenPackages = settings.UI_FLATTEN_PACKAGES;
@@ -157,7 +157,7 @@ public class TreeModelBuilder {
     }
 
     private void countFiles(Project project) {
-        final Integer fileCount = project.getUserData(FILE_COUNT);
+        Integer fileCount = project.getUserData(FILE_COUNT);
         if (fileCount == null) {
             myFileIndex.iterateContent(fileOrDir -> {
                 if (!fileOrDir.isDirectory()) {
@@ -181,7 +181,7 @@ public class TreeModelBuilder {
         project.putUserData(FILE_COUNT, null);
     }
 
-    public TreeModel build(final Project project) {
+    public TreeModel build(Project project) {
         Runnable buildingRunnable = () -> {
             countFiles(project);
             myFileIndex.iterateContent(new ContentIterator() {
@@ -251,7 +251,7 @@ public class TreeModelBuilder {
 
     private void counting() {
         myTotalFileCount++;
-        final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         if (indicator != null) {
             ((PanelProgressIndicator) indicator).update(
                 AnalysisScopeLocalize.packageDependenciesBuildProgressText().get(),
@@ -261,13 +261,13 @@ public class TreeModelBuilder {
         }
     }
 
-    private TreeModel build(final Set<PsiFile> files, boolean showProgress) {
+    private TreeModel build(Set<PsiFile> files, boolean showProgress) {
         if (files.size() == 1) {
             myShowFiles = true;
         }
 
         Runnable buildingRunnable = () -> {
-            for (final PsiFile file : files) {
+            for (PsiFile file : files) {
                 if (file != null) {
                     buildFileNode(file.getVirtualFile(), null);
                 }
@@ -275,7 +275,7 @@ public class TreeModelBuilder {
         };
 
         if (showProgress) {
-            final LocalizeValue title = AnalysisScopeLocalize.packageDependenciesBuildProcessTitle();
+            LocalizeValue title = AnalysisScopeLocalize.packageDependenciesBuildProcessTitle();
             ProgressManager.getInstance().runProcessWithProgressSynchronously(buildingRunnable, title, false, myProject);
         }
         else {
@@ -287,8 +287,8 @@ public class TreeModelBuilder {
     }
 
     @Nullable
-    private PackageDependenciesNode buildFileNode(final VirtualFile file, @Nullable PackageDependenciesNode parent) {
-        final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+    private PackageDependenciesNode buildFileNode(VirtualFile file, @Nullable PackageDependenciesNode parent) {
+        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         if (indicator != null) {
             ((PanelProgressIndicator) indicator).update(
                 AnalysisScopeLocalize.packageDependenciesBuildProgressText().get(),
@@ -319,10 +319,10 @@ public class TreeModelBuilder {
     @RequiredUIAccess
     public PackageDependenciesNode getFileParentNode(VirtualFile vFile) {
         LOG.assertTrue(vFile != null);
-        final VirtualFile containingDirectory = vFile.getParent();
+        VirtualFile containingDirectory = vFile.getParent();
         LOG.assertTrue(containingDirectory != null);
         PsiPackage aPackage = null;
-        final String packageName = myFileIndex.getPackageNameByDirectory(containingDirectory);
+        String packageName = myFileIndex.getPackageNameByDirectory(containingDirectory);
         if (packageName != null) {
             aPackage = myPackageManager.findAnyPackage(packageName);
         }
@@ -417,8 +417,8 @@ public class TreeModelBuilder {
         ModuleNode node = getMap(myModuleNodes, scopeType).get(module);
         if (node != null) return node;
         node = new ModuleNode(module);
-        final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
-        final String[] groupPath = moduleManager.getModuleGroupPath(module);
+        ModuleManager moduleManager = ModuleManager.getInstance(myProject);
+        String[] groupPath = moduleManager.getModuleGroupPath(module);
         if (groupPath == null) {
             getMap(myModuleNodes, scopeType).put(module, node);
             getRootNode(scopeType).add(node);
@@ -435,7 +435,7 @@ public class TreeModelBuilder {
     }
 
     private PackageDependenciesNode getParentModuleGroup(String[] groupPath, ScopeType scopeType) {
-        final String key = StringUtil.join(groupPath, ",");
+        String key = StringUtil.join(groupPath, ",");
         ModuleGroupNode groupNode = getMap(myModuleGroupNodes, scopeType).get(key);
         if (groupNode == null) {
             groupNode = new ModuleGroupNode(new ModuleGroup(groupPath), myProject);
@@ -445,7 +445,7 @@ public class TreeModelBuilder {
         if (groupPath.length > 1) {
             String[] path = new String[groupPath.length - 1];
             System.arraycopy(groupPath, 0, path, 0, groupPath.length - 1);
-            final PackageDependenciesNode node = getParentModuleGroup(path, scopeType);
+            PackageDependenciesNode node = getParentModuleGroup(path, scopeType);
             node.add(groupNode);
         }
         return groupNode;

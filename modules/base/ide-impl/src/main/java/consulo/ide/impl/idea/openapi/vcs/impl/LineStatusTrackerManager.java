@@ -85,14 +85,14 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
     private final QueueProcessorRemovePartner<Document, BaseRevisionLoader> myPartner;
     private long myLoadCounter;
 
-    public static LineStatusTrackerManagerI getInstance(final Project project) {
+    public static LineStatusTrackerManagerI getInstance(Project project) {
         return project.getInstance(LineStatusTrackerManagerI.class);
     }
 
     @Inject
-    public LineStatusTrackerManager(@Nonnull final Project project,
-                                    @Nonnull final Application application,
-                                    @Nonnull final Provider<FileEditorManager> fileEditorManager,
+    public LineStatusTrackerManager(@Nonnull Project project,
+                                    @Nonnull Application application,
+                                    @Nonnull Provider<FileEditorManager> fileEditorManager,
                                     @Nonnull EditorFactory editorFactory,
                                     @Nonnull FileStatusManager fsManager,
                                     @Nonnull VirtualFileManager virtualFileManager) {
@@ -113,16 +113,16 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
         MessageBusConnection busConnection = project.getMessageBus().connect();
         busConnection.subscribe(DocumentBulkUpdateListener.class, new DocumentBulkUpdateListener() {
             @Override
-            public void updateStarted(@Nonnull final Document doc) {
-                final LineStatusTracker tracker = getLineStatusTracker(doc);
+            public void updateStarted(@Nonnull Document doc) {
+                LineStatusTracker tracker = getLineStatusTracker(doc);
                 if (tracker != null) {
                     tracker.startBulkUpdate();
                 }
             }
 
             @Override
-            public void updateFinished(@Nonnull final Document doc) {
-                final LineStatusTracker tracker = getLineStatusTracker(doc);
+            public void updateFinished(@Nonnull Document doc) {
+                LineStatusTracker tracker = getLineStatusTracker(doc);
                 if (tracker != null) {
                     tracker.finishBulkUpdate();
                 }
@@ -138,8 +138,8 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
         });
         busConnection.subscribe(VirtualFileListener.class, new MyVirtualFileListener());
 
-        final MyFileStatusListener fileStatusListener = new MyFileStatusListener();
-        final EditorFactoryListener editorFactoryListener = new MyEditorFactoryListener();
+        MyFileStatusListener fileStatusListener = new MyFileStatusListener();
+        EditorFactoryListener editorFactoryListener = new MyEditorFactoryListener();
 
         fsManager.addFileStatusListener(fileStatusListener, this);
 
@@ -149,7 +149,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
     @Override
     public void dispose() {
         synchronized (myLock) {
-            for (final TrackerData data : myLineStatusTrackers.values()) {
+            for (TrackerData data : myLineStatusTrackers.values()) {
                 data.tracker.release();
             }
 
@@ -164,7 +164,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
 
     @Override
     @Nullable
-    public LineStatusTracker getLineStatusTracker(final Document document) {
+    public LineStatusTracker getLineStatusTracker(Document document) {
         synchronized (myLock) {
             if (isDisabled()) {
                 return null;
@@ -186,19 +186,19 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
                 resetTracker(tracker.getDocument(), tracker.getVirtualFile(), tracker);
             }
 
-            final VirtualFile[] openFiles = myFileEditorManager.get().getOpenFiles();
-            for (final VirtualFile openFile : openFiles) {
+            VirtualFile[] openFiles = myFileEditorManager.get().getOpenFiles();
+            for (VirtualFile openFile : openFiles) {
                 resetTracker(openFile, true);
             }
         }
     }
 
-    private void resetTracker(@Nonnull final VirtualFile virtualFile) {
+    private void resetTracker(@Nonnull VirtualFile virtualFile) {
         resetTracker(virtualFile, false);
     }
 
-    private void resetTracker(@Nonnull final VirtualFile virtualFile, boolean insertOnly) {
-        final Document document = FileDocumentManager.getInstance().getCachedDocument(virtualFile);
+    private void resetTracker(@Nonnull VirtualFile virtualFile, boolean insertOnly) {
+        Document document = FileDocumentManager.getInstance().getCachedDocument(virtualFile);
         if (document == null) {
             log("resetTracker: no cached document", virtualFile);
             return;
@@ -209,7 +209,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
                 return;
             }
 
-            final LineStatusTracker tracker = getLineStatusTracker(document);
+            LineStatusTracker tracker = getLineStatusTracker(document);
             if (insertOnly && tracker != null) {
                 return;
             }
@@ -218,8 +218,8 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
     }
 
     private void resetTracker(@Nonnull Document document, @Nonnull VirtualFile virtualFile, @Nullable LineStatusTracker tracker) {
-        final boolean editorOpened = myFileEditorManager.get().isFileOpen(virtualFile);
-        final boolean shouldBeInstalled = editorOpened && shouldBeInstalled(virtualFile);
+        boolean editorOpened = myFileEditorManager.get().isFileOpen(virtualFile);
+        boolean shouldBeInstalled = editorOpened && shouldBeInstalled(virtualFile);
 
         log("resetTracker: shouldBeInstalled - " + shouldBeInstalled + ", tracker - " + (tracker == null ? "null" : "found"), virtualFile);
 
@@ -234,7 +234,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
         }
     }
 
-    private boolean shouldBeInstalled(@Nullable final VirtualFile virtualFile) {
+    private boolean shouldBeInstalled(@Nullable VirtualFile virtualFile) {
         if (isDisabled()) {
             return false;
         }
@@ -242,13 +242,13 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
         if (virtualFile == null || virtualFile instanceof LightVirtualFile) {
             return false;
         }
-        final FileStatusManager statusManager = FileStatusManager.getInstance(myProject);
+        FileStatusManager statusManager = FileStatusManager.getInstance(myProject);
 
         if (!myStatusProvider.isSupported(virtualFile)) {
             log("shouldBeInstalled failed: no support found", virtualFile);
             return false;
         }
-        final FileStatus status = statusManager.getStatus(virtualFile);
+        FileStatus status = statusManager.getStatus(virtualFile);
         if (status == FileStatus.NOT_CHANGED || status == FileStatus.ADDED || status == FileStatus.UNKNOWN || status == FileStatus.IGNORED) {
             log("shouldBeInstalled skipped: status=" + status, virtualFile);
             return false;
@@ -266,21 +266,21 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
         }
     }
 
-    private void releaseTracker(@Nonnull final Document document) {
+    private void releaseTracker(@Nonnull Document document) {
         synchronized (myLock) {
             if (isDisabled()) {
                 return;
             }
 
             myPartner.remove(document);
-            final TrackerData data = myLineStatusTrackers.remove(document);
+            TrackerData data = myLineStatusTrackers.remove(document);
             if (data != null) {
                 data.tracker.release();
             }
         }
     }
 
-    private void installTracker(@Nonnull final VirtualFile virtualFile, @Nonnull final Document document) {
+    private void installTracker(@Nonnull VirtualFile virtualFile, @Nonnull Document document) {
         synchronized (myLock) {
             if (isDisabled()) {
                 return;
@@ -291,7 +291,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
             }
             assert !myPartner.containsKey(document);
 
-            final LineStatusTracker tracker = LineStatusTracker.createOn(virtualFile, document, myProject, getMode());
+            LineStatusTracker tracker = LineStatusTracker.createOn(virtualFile, document, myProject, getMode());
             myLineStatusTrackers.put(document, new TrackerData(tracker));
 
             startAlarm(document, virtualFile);
@@ -307,7 +307,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
         return vcsApplicationSettings.SHOW_WHITESPACES_IN_LST ? LineStatusTracker.Mode.SMART : LineStatusTracker.Mode.DEFAULT;
     }
 
-    private void startAlarm(@Nonnull final Document document, @Nonnull final VirtualFile virtualFile) {
+    private void startAlarm(@Nonnull Document document, @Nonnull VirtualFile virtualFile) {
         synchronized (myLock) {
             myPartner.add(document, new BaseRevisionLoader(document, virtualFile));
         }
@@ -319,7 +319,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
         @Nonnull
         private final Document myDocument;
 
-        private BaseRevisionLoader(@Nonnull final Document document, @Nonnull final VirtualFile virtualFile) {
+        private BaseRevisionLoader(@Nonnull Document document, @Nonnull VirtualFile virtualFile) {
             myDocument = document;
             myVirtualFile = virtualFile;
         }
@@ -351,7 +351,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
             myLoadCounter++;
 
             synchronized (myLock) {
-                final TrackerData data = myLineStatusTrackers.get(myDocument);
+                TrackerData data = myLineStatusTrackers.get(myDocument);
                 if (data == null) {
                     log("BaseRevisionLoader canceled: tracker already released", myVirtualFile);
                     return;
@@ -370,11 +370,11 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
             }
 
             final String converted = StringUtil.convertLineSeparators(lastUpToDateContent);
-            final Runnable runnable = new Runnable() {
+            Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     synchronized (myLock) {
-                        final TrackerData data = myLineStatusTrackers.get(myDocument);
+                        TrackerData data = myLineStatusTrackers.get(myDocument);
                         if (data == null) {
                             log("BaseRevisionLoader initializing: tracker already released", myVirtualFile);
                             return;
@@ -425,8 +425,8 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
             if (editor.getProject() != null && editor.getProject() != myProject) {
                 return;
             }
-            final Document document = editor.getDocument();
-            final VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
+            Document document = editor.getDocument();
+            VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
             if (virtualFile == null) {
                 return;
             }
@@ -437,12 +437,12 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
 
         @Override
         public void editorReleased(@Nonnull EditorFactoryEvent event) {
-            final Editor editor = event.getEditor();
+            Editor editor = event.getEditor();
             if (editor.getProject() != null && editor.getProject() != myProject) {
                 return;
             }
-            final Document doc = editor.getDocument();
-            final Editor[] editors = event.getFactory().getEditors(doc, myProject);
+            Document doc = editor.getDocument();
+            Editor[] editors = event.getFactory().getEditors(doc, myProject);
             if (editors.length == 0 || (editors.length == 1 && editor == editors[0])) {
                 releaseTracker(doc);
             }

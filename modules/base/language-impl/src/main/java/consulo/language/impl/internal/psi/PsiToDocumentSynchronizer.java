@@ -61,7 +61,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
 
   @Nullable
   public DocumentChangeTransaction getTransaction(@Nonnull Document document) {
-    final Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(document);
+    Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(document);
     return Pair.getFirst(pair);
   }
 
@@ -80,36 +80,36 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     void syncDocument(@Nonnull Document document, @Nonnull PsiTreeChangeEventImpl event);
   }
 
-  private void checkPsiModificationAllowed(@Nonnull final PsiTreeChangeEvent event) {
+  private void checkPsiModificationAllowed(@Nonnull PsiTreeChangeEvent event) {
     if (!toProcessPsiEvent()) return;
-    final PsiFile psiFile = event.getFile();
+    PsiFile psiFile = event.getFile();
     if (!(psiFile instanceof PsiFileEx) || !((PsiFileEx)psiFile).isContentsLoaded()) return;
 
-    final Document document = myPsiDocumentManager.getCachedDocument(psiFile);
+    Document document = myPsiDocumentManager.getCachedDocument(psiFile);
     if (document != null && myPsiDocumentManager.isUncommited(document)) {
       throw new IllegalStateException("Attempt to modify PSI for non-committed Document!");
     }
   }
 
   private DocumentEx getCachedDocument(PsiFile psiFile, boolean force) {
-    final DocumentEx document = (DocumentEx)myPsiDocumentManager.getCachedDocument(psiFile);
+    DocumentEx document = (DocumentEx)myPsiDocumentManager.getCachedDocument(psiFile);
     if (document == null || document instanceof DocumentWindow || !force && getTransaction(document) == null) {
       return null;
     }
     return document;
   }
 
-  private void doSync(@Nonnull final PsiTreeChangeEvent event, boolean force, @Nonnull final DocSyncAction syncAction) {
+  private void doSync(@Nonnull PsiTreeChangeEvent event, boolean force, @Nonnull DocSyncAction syncAction) {
     if (!toProcessPsiEvent()) return;
-    final PsiFile psiFile = event.getFile();
+    PsiFile psiFile = event.getFile();
     if (!(psiFile instanceof PsiFileEx) || !((PsiFileEx)psiFile).isContentsLoaded()) return;
 
-    final DocumentEx document = getCachedDocument(psiFile, force);
+    DocumentEx document = getCachedDocument(psiFile, force);
     if (document == null) return;
 
     performAtomically(psiFile, () -> syncAction.syncDocument(document, (PsiTreeChangeEventImpl)event));
 
-    final boolean insideTransaction = myTransactionsMap.containsKey(document);
+    boolean insideTransaction = myTransactionsMap.containsKey(document);
     if (!insideTransaction) {
       document.setModificationStamp(psiFile.getViewProvider().getModificationStamp());
     }
@@ -153,21 +153,21 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   @Override
-  public void childAdded(@Nonnull final PsiTreeChangeEvent event) {
+  public void childAdded(@Nonnull PsiTreeChangeEvent event) {
     if (!(event.getChild() instanceof ForeignLeafPsiElement)) {
       doSync(event, false, (document, event1) -> insertString(document, event1.getOffset(), event1.getChild().getText()));
     }
   }
 
   @Override
-  public void childRemoved(@Nonnull final PsiTreeChangeEvent event) {
+  public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
     if (!(event.getChild() instanceof ForeignLeafPsiElement)) {
       doSync(event, false, (document, event1) -> deleteString(document, event1.getOffset(), event1.getOffset() + event1.getOldLength()));
     }
   }
 
   @Override
-  public void childReplaced(@Nonnull final PsiTreeChangeEvent event) {
+  public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
     doSync(event, false, (document, event1) -> {
       int oldLength = event1.getOldChild() instanceof ForeignLeafPsiElement ? 0 : event1.getOldLength();
       String newText = event1.getNewChild() instanceof ForeignLeafPsiElement ? "" : event1.getNewChild().getText();
@@ -176,7 +176,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   @Override
-  public void childrenChanged(@Nonnull final PsiTreeChangeEvent event) {
+  public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
     doSync(event, false, (document, event1) -> replaceString(document, event1.getOffset(), event1.getOffset() + event1.getOldLength(), event1.getParent().getText(), event1.getParent()));
   }
 
@@ -200,21 +200,21 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   private void replaceString(@Nonnull Document document, int startOffset, int endOffset, @Nonnull String s, @Nullable PsiElement replacement) {
-    final DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
+    DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
     if (documentChangeTransaction != null) {
       documentChangeTransaction.replace(startOffset, endOffset - startOffset, s, replacement);
     }
   }
 
   public void insertString(@Nonnull Document document, int offset, @Nonnull String s) {
-    final DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
+    DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
     if (documentChangeTransaction != null) {
       documentChangeTransaction.replace(offset, 0, s, null);
     }
   }
 
   private void deleteString(@Nonnull Document document, int startOffset, int endOffset) {
-    final DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
+    DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
     if (documentChangeTransaction != null) {
       documentChangeTransaction.replace(startOffset, endOffset - startOffset, "", null);
     }
@@ -225,7 +225,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(doc);
     Pair<DocumentChangeTransaction, Integer> prev = pair;
     if (pair == null) {
-      final PsiFile psiFile = scope.getContainingFile();
+      PsiFile psiFile = scope.getContainingFile();
       pair = new Pair<>(new DocumentChangeTransaction(doc, psiFile), 0);
       myBus.syncPublisher(PsiDocumentTransactionListener.class).transactionStarted(doc, psiFile);
     }
@@ -237,13 +237,13 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
 
   public boolean commitTransaction(@Nonnull Document document) {
     ApplicationManager.getApplication().assertIsWriteThread();
-    final DocumentChangeTransaction documentChangeTransaction = removeTransaction(document);
+    DocumentChangeTransaction documentChangeTransaction = removeTransaction(document);
     if (documentChangeTransaction == null) return false;
-    final PsiFile changeScope = documentChangeTransaction.myChangeScope;
+    PsiFile changeScope = documentChangeTransaction.myChangeScope;
     try {
       mySyncDocument = document;
 
-      final PsiTreeChangeEventImpl fakeEvent = new PsiTreeChangeEventImpl(changeScope.getManager());
+      PsiTreeChangeEventImpl fakeEvent = new PsiTreeChangeEventImpl(changeScope.getManager());
       fakeEvent.setParent(changeScope);
       fakeEvent.setFile(changeScope);
       checkPsiModificationAllowed(fakeEvent);
@@ -317,11 +317,11 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
       int start = 0;
       int end = start + length;
 
-      final CharSequence chars = myPsiText.subSequence(psiStart, psiStart + length);
+      CharSequence chars = myPsiText.subSequence(psiStart, psiStart + length);
       if (StringUtil.equals(chars, replace)) return;
 
       int newStartInReplace = 0;
-      final int replaceLength = replace.length();
+      int replaceLength = replace.length();
       while (newStartInReplace < replaceLength && start < end && replace.charAt(newStartInReplace) == chars.charAt(start)) {
         start++;
         newStartInReplace++;
@@ -365,7 +365,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
       //[mike] dirty hack for xml:
       //make sure that deletion of <t> in: <tag><t/><tag> doesn't remove t/><
       //which is perfectly valid but invalidates range markers
-      final CharSequence charsSequence = myPsiText;
+      CharSequence charsSequence = myPsiText;
       while (start < charsSequence.length() && end < charsSequence.length() && start > 0 && charsSequence.subSequence(start, end).toString().endsWith("><") && charsSequence.charAt(start - 1) == '<') {
         start--;
         newStartInReplace--;
@@ -393,7 +393,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
       myAffectedFragments.put(newFragment, newReplacement);
     }
 
-    private TextRange findFragment(final int docOffset) {
+    private TextRange findFragment(int docOffset) {
       return ContainerUtil.find(myAffectedFragments.keySet(), range -> range.containsOffset(docOffset));
     }
 

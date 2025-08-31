@@ -34,13 +34,13 @@ public abstract class MnemonicsSearch<T> {
     myPopup = popup;
     if (!myPopup.getStep().isMnemonicsNavigationEnabled()) return;
 
-    final MnemonicNavigationFilter filter = myPopup.getStep().getMnemonicNavigationFilter();
-    final List<T> values = filter.getValues();
+    MnemonicNavigationFilter filter = myPopup.getStep().getMnemonicNavigationFilter();
+    List<T> values = filter.getValues();
     for (T each : values) {
-      final int pos = filter.getMnemonicPos(each);
+      int pos = filter.getMnemonicPos(each);
       if (pos != -1) {
-        final String text = filter.getTextFor(each);
-        final String charText = text.substring(pos + 1, pos + 2);
+        String text = filter.getTextFor(each);
+        String charText = text.substring(pos + 1, pos + 2);
         myChar2ValueMap.put(StringUtil.toUpperCase(charText), each);
         myChar2ValueMap.put(StringUtil.toLowerCase(charText), each);
       }
@@ -53,8 +53,8 @@ public abstract class MnemonicsSearch<T> {
     if (!StringUtil.isEmptyOrSpaces(myPopup.getSpeedSearch().getFilter())) return;
 
     if (Character.isLetterOrDigit(e.getKeyChar())) {
-      final String s = Character.toString(e.getKeyChar());
-      final T toSelect = myChar2ValueMap.get(s);
+      String s = Character.toString(e.getKeyChar());
+      T toSelect = myChar2ValueMap.get(s);
       if (toSelect != null) {
         select(toSelect);
         e.consume();

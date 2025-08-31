@@ -37,7 +37,7 @@ public interface BaseCheckinHandlerFactory {
    * @return the handler instance - null if not supported
    */
   @Nullable
-  CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext);
+  CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext);
 
   @Nullable
   BeforeCheckinDialogHandler createSystemReadyHandler(Project project);

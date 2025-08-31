@@ -20,8 +20,8 @@ public class ParametersListUtil {
   public static final Function<String, List<String>> DEFAULT_LINE_PARSER = text -> parse(text, true);
   public static final Function<List<String>, String> DEFAULT_LINE_JOINER = strings -> StringUtil.join(strings, " ");
   public static final Function<String, List<String>> COLON_LINE_PARSER = text -> {
-    final ArrayList<String> result = new ArrayList<>();
-    final StringTokenizer tokenizer = new StringTokenizer(text, ";", false);
+    ArrayList<String> result = new ArrayList<>();
+    StringTokenizer tokenizer = new StringTokenizer(text, ";", false);
     while (tokenizer.hasMoreTokens()) {
       result.add(tokenizer.nextToken());
     }
@@ -51,7 +51,7 @@ public class ParametersListUtil {
    * @return a string with parameters.
    */
   @Nonnull
-  public static String join(@Nonnull final List<? extends CharSequence> parameters) {
+  public static String join(@Nonnull List<? extends CharSequence> parameters) {
     return encode(parameters);
   }
 
@@ -60,12 +60,12 @@ public class ParametersListUtil {
    * @see ParametersListUtil#join(List)
    */
   @Nonnull
-  public static String join(@Nonnull final List<? extends CharSequence> parameters, @Nonnull CommandLineArgumentEncoder commandLineArgumentEncoder) {
+  public static String join(@Nonnull List<? extends CharSequence> parameters, @Nonnull CommandLineArgumentEncoder commandLineArgumentEncoder) {
     return encode(parameters, commandLineArgumentEncoder);
   }
 
   @Nonnull
-  public static String join(final String... parameters) {
+  public static String join(String... parameters) {
     return encode(Arrays.asList(parameters));
   }
 
@@ -73,8 +73,8 @@ public class ParametersListUtil {
    * @see #parse(String)
    */
   @Nonnull
-  public static String[] parseToArray(@Nonnull final String string) {
-    final List<String> params = parse(string);
+  public static String[] parseToArray(@Nonnull String string) {
+    List<String> params = parse(string);
     return ArrayUtil.toStringArray(params);
   }
 
@@ -124,14 +124,14 @@ public class ParametersListUtil {
       parameterString = parameterString.trim();
     }
 
-    final ArrayList<String> params = new ArrayList<>();
+    ArrayList<String> params = new ArrayList<>();
     if (parameterString.isEmpty()) {
       return params;
     }
-    final StringBuilder token = new StringBuilder(128);
+    StringBuilder token = new StringBuilder(128);
     boolean inQuotes = false;
     boolean escapedQuote = false;
-    final IntSet possibleQuoteChars = IntSets.newHashSet();
+    IntSet possibleQuoteChars = IntSets.newHashSet();
     possibleQuoteChars.add('"');
     if (supportSingleQuotes) {
       possibleQuoteChars.add('\'');
@@ -140,7 +140,7 @@ public class ParametersListUtil {
     boolean nonEmpty = false;
 
     for (int i = 0; i < parameterString.length(); i++) {
-      final char ch = parameterString.charAt(i);
+      char ch = parameterString.charAt(i);
       if ((inQuotes ? currentQuote == ch : possibleQuoteChars.contains(ch))) {
         if (!escapedQuote) {
           inQuotes = !inQuotes;
@@ -163,7 +163,7 @@ public class ParametersListUtil {
         }
       }
       else if (ch == '\\' && i < parameterString.length() - 1) {
-        final char nextchar = parameterString.charAt(i + 1);
+        char nextchar = parameterString.charAt(i + 1);
         if (inQuotes ? currentQuote == nextchar : possibleQuoteChars.contains(nextchar)) {
           escapedQuote = true;
           if (!keepQuotes) {
@@ -183,18 +183,18 @@ public class ParametersListUtil {
   }
 
   @Nonnull
-  private static String encode(@Nonnull final List<? extends CharSequence> parameters) {
+  private static String encode(@Nonnull List<? extends CharSequence> parameters) {
     return encode(parameters, CommandLineArgumentEncoder.DEFAULT_ENCODER);
   }
 
   @Nonnull
-  private static String encode(@Nonnull final List<? extends CharSequence> parameters, @Nonnull CommandLineArgumentEncoder commandLineArgumentEncoder) {
+  private static String encode(@Nonnull List<? extends CharSequence> parameters, @Nonnull CommandLineArgumentEncoder commandLineArgumentEncoder) {
     if (parameters.isEmpty()) {
       return "";
     }
 
-    final StringBuilder buffer = new StringBuilder();
-    final StringBuilder paramBuilder = new StringBuilder();
+    StringBuilder buffer = new StringBuilder();
+    StringBuilder paramBuilder = new StringBuilder();
     for (CharSequence parameter : parameters) {
       if (buffer.length() > 0) {
         buffer.append(' ');

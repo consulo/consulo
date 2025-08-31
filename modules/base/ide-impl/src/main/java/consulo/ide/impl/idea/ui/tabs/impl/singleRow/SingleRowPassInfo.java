@@ -57,12 +57,12 @@ public class SingleRowPassInfo extends LayoutPassInfo {
   }
 
   @Override
-  public TabInfo getPreviousFor(final TabInfo info) {
+  public TabInfo getPreviousFor(TabInfo info) {
     return getPrevious(myVisibleInfos, myVisibleInfos.indexOf(info));
   }
 
   @Override
-  public TabInfo getNextFor(final TabInfo info) {
+  public TabInfo getNextFor(TabInfo info) {
     return getNext(myVisibleInfos, myVisibleInfos.indexOf(info));
   }
 
@@ -72,12 +72,12 @@ public class SingleRowPassInfo extends LayoutPassInfo {
   }
 
   @Override
-  public int getColumnCount(final int row) {
+  public int getColumnCount(int row) {
     return myVisibleInfos.size();
   }
 
   @Override
-  public TabInfo getTabAt(final int row, final int column) {
+  public TabInfo getTabAt(int row, int column) {
     return myVisibleInfos.get(column);
   }
 
@@ -87,7 +87,7 @@ public class SingleRowPassInfo extends LayoutPassInfo {
   }
 
   @Override
-  public boolean hasCurveSpaceFor(final TabInfo tabInfo) {
+  public boolean hasCurveSpaceFor(TabInfo tabInfo) {
     return true;
   }
 }

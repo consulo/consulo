@@ -52,7 +52,7 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
   }
 
   @Nonnull
-  public RemoteContentProvider findContentProvider(final @Nonnull String url) {
+  public RemoteContentProvider findContentProvider(@Nonnull String url) {
     for (RemoteContentProvider provider : myProviders) {
       if (provider.canProvideContent(url)) {
         return provider;
@@ -61,7 +61,7 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
     return myDefaultRemoteContentProvider;
   }
 
-  public synchronized VirtualFileImpl getOrCreateFile(final @Nonnull String url, final @Nonnull String path, final boolean directory) throws IOException {
+  public synchronized VirtualFileImpl getOrCreateFile(@Nonnull String url, @Nonnull String path, boolean directory) throws IOException {
     Pair<Boolean, String> key = Pair.create(directory, url);
     VirtualFileImpl file = myRemoteFiles.get(key);
 
@@ -105,18 +105,18 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
   }
 
   @Override
-  public void addFileListener(@Nonnull final HttpVirtualFileListener listener) {
+  public void addFileListener(@Nonnull HttpVirtualFileListener listener) {
     myDispatcher.addListener(listener);
   }
 
   @Override
-  public void addFileListener(@Nonnull final HttpVirtualFileListener listener, @Nonnull final Disposable parentDisposable) {
+  public void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable) {
     addFileListener(listener);
     Disposer.register(parentDisposable, () -> removeFileListener(listener));
   }
 
   @Override
-  public void removeFileListener(@Nonnull final HttpVirtualFileListener listener) {
+  public void removeFileListener(@Nonnull HttpVirtualFileListener listener) {
     myDispatcher.removeListener(listener);
   }
 
@@ -136,12 +136,12 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
   private class MyDownloadingListener extends FileDownloadingAdapter {
     private final VirtualFileImpl myFile;
 
-    public MyDownloadingListener(final VirtualFileImpl file) {
+    public MyDownloadingListener(VirtualFileImpl file) {
       myFile = file;
     }
 
     @Override
-    public void fileDownloaded(final VirtualFile localFile) {
+    public void fileDownloaded(VirtualFile localFile) {
       fireFileDownloaded(myFile);
     }
   }

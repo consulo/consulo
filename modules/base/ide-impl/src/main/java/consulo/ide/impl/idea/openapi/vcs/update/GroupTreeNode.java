@@ -148,7 +148,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
                             @jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
                             boolean showOnlyFilteredItems) {
     for (int i = getChildCount() - 1; i >= 0; i--) {
-      final TreeNode node = getChildAt(i);
+      TreeNode node = getChildAt(i);
       if (node instanceof Disposable) {
         Disposer.dispose((Disposable)node);
       }
@@ -172,7 +172,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
 
   private void buildPackages() {
     Collection<File> files = new LinkedHashSet<File>();
-    for (final String myFilePath : myFilePaths) {
+    for (String myFilePath : myFilePaths) {
       files.add(new File(myFilePath));
     }
     GroupByPackages groupByPackages = new GroupByPackages(files);
@@ -199,7 +199,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
       }
     });
 
-    for (final File root : roots) {
+    for (File root : roots) {
       FileOrDirectoryTreeNode child = files.contains(root)
                                       ? new FileTreeNode(root.getAbsolutePath(), myInvalidAttributes, myProject, parentPath)
                                       : new DirectoryTreeNode(root.getAbsolutePath(), myProject, parentPath);
@@ -219,8 +219,8 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
 
     boolean apply = false;
 
-    for (final String filePath : myFilePaths) {
-      final FileTreeNode child = new FileTreeNode(filePath, myInvalidAttributes, myProject, null);
+    for (String filePath : myFilePaths) {
+      FileTreeNode child = new FileTreeNode(filePath, myInvalidAttributes, myProject, null);
       if (filter != null) {
         if (child.acceptFilter(filter, showOnlyFilteredItems)) {
           apply = true;
@@ -229,7 +229,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
           continue;
         }
       }
-      final String error = myErrorsMap.get(filePath);
+      String error = myErrorsMap.get(filePath);
       if (error != null) {
         child.setErrorText(error);
       }

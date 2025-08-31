@@ -38,8 +38,8 @@ public final class SourcepathEntryMacro extends Macro {
   }
 
   @Override
-  public String expand(final DataContext dataContext) {
-    final Project project = dataContext.getData(Project.KEY);
+  public String expand(DataContext dataContext) {
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return null;
     }
@@ -47,7 +47,7 @@ public final class SourcepathEntryMacro extends Macro {
     if (file == null) {
       return null;
     }
-    final VirtualFile sourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(file);
+    VirtualFile sourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(file);
     if (sourceRoot == null) {
       return null;
     }

@@ -43,9 +43,9 @@ public abstract class MoreAction  extends AnAction implements CustomComponentAct
     this(LOAD_MORE);
   }
 
-  protected MoreAction(final String name) {
+  protected MoreAction(String name) {
     myPanel = new JPanel();
-    final BoxLayout layout = new BoxLayout(myPanel, BoxLayout.X_AXIS);
+    BoxLayout layout = new BoxLayout(myPanel, BoxLayout.X_AXIS);
     myPanel.setLayout(layout);
     myLoadMoreBtn = new JButton(name);
     myLoadMoreBtn.setMargin(new Insets(2, 2, 2, 2));

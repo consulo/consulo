@@ -52,7 +52,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
   private final List<VirtualFile> myAutoBases;
   protected volatile Boolean myConflicts;
 
-  protected AbstractFilePatchInProgress(final T patch, final Collection<VirtualFile> autoBases, final VirtualFile baseDir) {
+  protected AbstractFilePatchInProgress(T patch, Collection<VirtualFile> autoBases, VirtualFile baseDir) {
     myPatch = patch; //should be a copy of FilePatch! because names may be changes during processing variants
     myStrippable = new PatchStrippable(patch);
     myAutoBases = new ArrayList<>();
@@ -68,19 +68,19 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     }
   }
 
-  public void setAutoBases(@Nonnull final Collection<VirtualFile> autoBases) {
-    final String path = myPatch.getBeforeName() == null ? myPatch.getAfterName() : myPatch.getBeforeName();
+  public void setAutoBases(@Nonnull Collection<VirtualFile> autoBases) {
+    String path = myPatch.getBeforeName() == null ? myPatch.getAfterName() : myPatch.getBeforeName();
     for (VirtualFile autoBase : autoBases) {
-      final VirtualFile willBeBase = PathMerger.getBase(autoBase, path);
+      VirtualFile willBeBase = PathMerger.getBase(autoBase, path);
       if (willBeBase != null) {
         myAutoBases.add(willBeBase);
       }
     }
   }
 
-  private FilePatchStatus getStatus(final T patch) {
-    final String beforeName = PathUtil.toSystemIndependentName(patch.getBeforeName());
-    final String afterName = PathUtil.toSystemIndependentName(patch.getAfterName());
+  private FilePatchStatus getStatus(T patch) {
+    String beforeName = PathUtil.toSystemIndependentName(patch.getBeforeName());
+    String afterName = PathUtil.toSystemIndependentName(patch.getAfterName());
 
     if (patch.isNewFile() || (beforeName == null)) {
       return FilePatchStatus.ADDED;
@@ -97,13 +97,13 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     return new PatchChange(getCurrentRevision(), getNewContentRevision(), this);
   }
 
-  public void setNewBase(final VirtualFile base) {
+  public void setNewBase(VirtualFile base) {
     myBase = base;
     myNewContentRevision = null;
     myCurrentRevision = null;
     myConflicts = null;
 
-    final String beforeName = myPatch.getBeforeName();
+    String beforeName = myPatch.getBeforeName();
     if (beforeName != null) {
       myIoCurrentBase = PathMerger.getFile(new File(myBase.getPath()), beforeName);
       myCurrentBase = myIoCurrentBase == null ? null : VcsUtil.getVirtualFileWithRefresh(myIoCurrentBase);
@@ -111,14 +111,14 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     }
     else {
       // creation
-      final String afterName = myPatch.getAfterName();
+      String afterName = myPatch.getAfterName();
       myBaseExists = true;
       myIoCurrentBase = PathMerger.getFile(new File(myBase.getPath()), afterName);
       myCurrentBase = VcsUtil.getVirtualFileWithRefresh(myIoCurrentBase);
     }
   }
 
-  public void setCreatedCurrentBase(final VirtualFile vf) {
+  public void setCreatedCurrentBase(VirtualFile vf) {
     myCurrentBase = vf;
   }
 
@@ -205,7 +205,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
   public abstract DiffRequestProducer getDiffRequestProducers(Project project, PatchReader baseContents);
 
   public List<VirtualFile> getAutoBasesCopy() {
-    final ArrayList<VirtualFile> result = new ArrayList<>(myAutoBases.size() + 1);
+    ArrayList<VirtualFile> result = new ArrayList<>(myAutoBases.size() + 1);
     result.addAll(myAutoBases);
     return result;
   }
@@ -267,15 +267,15 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     private final StringBuilder mySourcePath;
     private final int[] myParts;
 
-    private StripCapablePath(final String path) {
-      final String corrected = PathUtil.toSystemIndependentName(path.trim());
+    private StripCapablePath(String path) {
+      String corrected = PathUtil.toSystemIndependentName(path.trim());
       mySourcePath = new StringBuilder(corrected);
-      final String[] steps = corrected.split("/");
+      String[] steps = corrected.split("/");
       myStripMax = steps.length - 1;
       myParts = new int[steps.length];
       int pos = 0;
       for (int i = 0; i < steps.length; i++) {
-        final String step = steps[i];
+        String step = steps[i];
         myParts[i] = pos;
         pos += step.length() + 1; // plus 1 for separator
       }
@@ -347,9 +347,9 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     private final int myBeforeIdx;
     private final int myAfterIdx;
 
-    private PatchStrippable(final FilePatch patch) {
-      final boolean onePath = patch.isDeletedFile() || patch.isNewFile() || Comparing.equal(patch.getAfterName(), patch.getBeforeName());
-      final int size = onePath ? 1 : 2;
+    private PatchStrippable(FilePatch patch) {
+      boolean onePath = patch.isDeletedFile() || patch.isNewFile() || Comparing.equal(patch.getAfterName(), patch.getBeforeName());
+      int size = onePath ? 1 : 2;
       myParts = new StripCapablePath[size];
 
       int cnt = 0;
@@ -423,12 +423,12 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
       return myParts[0].getCurrentStrip();
     }
 
-    public void applyBackToPatch(final FilePatch patch) {
-      final String beforeName = patch.getBeforeName();
+    public void applyBackToPatch(FilePatch patch) {
+      String beforeName = patch.getBeforeName();
       if (beforeName != null) {
         patch.setBeforeName(myParts[myBeforeIdx].getCurrentPath());
       }
-      final String afterName = patch.getAfterName();
+      String afterName = patch.getAfterName();
       if (afterName != null) {
         patch.setAfterName(myParts[myAfterIdx].getCurrentPath());
       }

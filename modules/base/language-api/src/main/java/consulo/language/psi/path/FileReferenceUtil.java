@@ -59,7 +59,7 @@ public class FileReferenceUtil {
         ref = ((FileReferenceOwner)ref).getLastFileReference();
       }
       if (ref instanceof PsiFileReference) {
-        final PsiElement file = references[i].resolve();
+        PsiElement file = references[i].resolve();
         return file instanceof PsiFile ? (PsiFile)file : null;
       }
     }
@@ -68,7 +68,7 @@ public class FileReferenceUtil {
 
   @Nullable
   public static PsiFileReference findFileReference(@Nonnull PsiElement element) {
-    final PsiReference[] references = element.getReferences();
+    PsiReference[] references = element.getReferences();
     for (int i = references.length - 1; i >= 0; i--) {
       PsiReference ref = references[i];
       if (ref instanceof FileReferenceOwner && !(ref instanceof PsiFileReference)) {

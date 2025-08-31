@@ -46,7 +46,7 @@ class HardElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  boolean pointsToTheSameElementAs(@Nonnull final SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
+  boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
     return other instanceof HardElementInfo && myElement.equals(((HardElementInfo)other).myElement);
   }
 

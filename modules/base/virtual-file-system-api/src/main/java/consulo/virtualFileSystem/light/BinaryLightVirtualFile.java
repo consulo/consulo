@@ -46,18 +46,18 @@ public class BinaryLightVirtualFile extends LightVirtualFileBase {
     this(name, null, content, LocalTimeCounter.currentTime());
   }
 
-  public BinaryLightVirtualFile(final String name, final FileType fileType, final byte[] content) {
+  public BinaryLightVirtualFile(String name, FileType fileType, byte[] content) {
     this(name, fileType, content, LocalTimeCounter.currentTime());
   }
 
-  public BinaryLightVirtualFile(VirtualFile original, final byte[] content, long modificationStamp) {
+  public BinaryLightVirtualFile(VirtualFile original, byte[] content, long modificationStamp) {
     this(original.getName(), original.getFileType(), content, modificationStamp);
   }
 
-  public BinaryLightVirtualFile(final String name,
-                                final FileType fileType,
-                                final byte[] content,
-                                final long modificationStamp) {
+  public BinaryLightVirtualFile(String name,
+                                FileType fileType,
+                                byte[] content,
+                                long modificationStamp) {
     super(name, fileType, modificationStamp);
     setContent(content);
   }

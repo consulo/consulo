@@ -120,7 +120,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     }
 
     @Nonnull
-    protected Runnable applyNotification(@Nullable final JComponent notification) {
+    protected Runnable applyNotification(@Nullable JComponent notification) {
         return () -> {
             clearDiffPresentation();
             if (notification != null) {

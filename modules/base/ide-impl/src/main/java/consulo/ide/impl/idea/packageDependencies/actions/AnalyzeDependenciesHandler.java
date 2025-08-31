@@ -36,7 +36,7 @@ public class AnalyzeDependenciesHandler extends DependenciesHandlerBase {
     myTransitiveBorder = transitiveBorder;
   }
 
-  public AnalyzeDependenciesHandler(final Project project, final AnalysisScope scope, final int transitiveBorder) {
+  public AnalyzeDependenciesHandler(Project project, AnalysisScope scope, int transitiveBorder) {
     this(project, Collections.singletonList(scope), transitiveBorder, new HashSet<PsiFile>());
   }
 
@@ -46,7 +46,7 @@ public class AnalyzeDependenciesHandler extends DependenciesHandlerBase {
   }
 
   @Override
-  protected String getPanelDisplayName(final AnalysisScope scope) {
+  protected String getPanelDisplayName(AnalysisScope scope) {
     return AnalysisScopeBundle.message("package.dependencies.toolwindow.title", scope.getDisplayName());
   }
 

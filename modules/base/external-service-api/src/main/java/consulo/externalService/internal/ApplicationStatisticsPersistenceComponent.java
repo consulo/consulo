@@ -54,7 +54,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   private static final String VALUES_ATTR = "values";
 
   @Override
-  public void loadState(final Element element) {
+  public void loadState(Element element) {
     List<Element> groups = element.getChildren(GROUP_TAG);
 
     for (Element groupElement : groups) {
@@ -67,7 +67,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
         if (!StringUtil.isEmptyOrSpaces(projectId) && !StringUtil.isEmptyOrSpaces(frameworks)) {
           Set<UsageDescriptor> frameworkDescriptors = new HashSet<UsageDescriptor>();
           for (String key : StringUtil.split(frameworks, TOKENIZER)) {
-            final UsageDescriptor descriptor = getUsageDescriptor(key);
+            UsageDescriptor descriptor = getUsageDescriptor(key);
             if (descriptor != null) frameworkDescriptors.add(descriptor);
           }
           getApplicationData(groupName).put(projectId, frameworkDescriptors);
@@ -88,7 +88,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
       for (Map.Entry<String, Set<UsageDescriptor>> projectData : appData.getValue().entrySet()) {
         Element projectElement = new Element(PROJECT_TAG);
         projectElement.setAttribute(PROJECT_ID_ATTR, projectData.getKey());
-        final Set<UsageDescriptor> projectDataValue = projectData.getValue();
+        Set<UsageDescriptor> projectDataValue = projectData.getValue();
         if (!projectDataValue.isEmpty()) {
           projectElement.setAttribute(VALUES_ATTR, joinUsages(projectDataValue));
           groupElement.addContent(projectElement);
@@ -107,13 +107,13 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   private static UsageDescriptor getUsageDescriptor(String usage) {
     // for instance, usage can be: "_foo"(equals "_foo=1") or "_foo=2"
     try {
-      final int i = usage.indexOf('=');
+      int i = usage.indexOf('=');
       if (i > 0 && i < usage.length() - 1) {
         String key = usage.substring(0, i).trim();
         String value = usage.substring(i + 1).trim();
         if (!StringUtil.isEmptyOrSpaces(key) && !StringUtil.isEmptyOrSpaces(value)) {
           try {
-            final int count = Integer.parseInt(value);
+            int count = Integer.parseInt(value);
             if (count > 0) {
               return new UsageDescriptor(key, count);
             }
@@ -133,8 +133,8 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   private static String joinUsages(@Nonnull Set<UsageDescriptor> usages) {
     // for instance, usage can be: "_foo"(equals "_foo=1") or "_foo=2"
     return StringUtil.join(usages, usageDescriptor -> {
-      final String key = usageDescriptor.getKey();
-      final int value = usageDescriptor.getValue();
+      String key = usageDescriptor.getKey();
+      int value = usageDescriptor.getValue();
 
       return value > 1 ? key + "=" + value : key;
     }, TOKENIZER);

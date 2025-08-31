@@ -37,11 +37,11 @@ public class ActiveIcon implements Icon {
     this(icon, icon);
   }
 
-  public ActiveIcon(@Nullable final consulo.ui.image.Image regular, @Nullable final consulo.ui.image.Image inactive) {
+  public ActiveIcon(@Nullable consulo.ui.image.Image regular, @Nullable consulo.ui.image.Image inactive) {
     setIcons(regular, inactive);
   }
 
-  protected void setIcons(@Nullable final consulo.ui.image.Image regular, @Nullable final consulo.ui.image.Image inactive) {
+  protected void setIcons(@Nullable consulo.ui.image.Image regular, @Nullable consulo.ui.image.Image inactive) {
     myRegular = regular != null ? regular : Image.empty(0);
     myInactive = inactive != null ? inactive : myRegular;
   }
@@ -58,12 +58,12 @@ public class ActiveIcon implements Icon {
     return myActive ? getRegular() : getInactive();
   }
 
-  public void setActive(final boolean active) {
+  public void setActive(boolean active) {
     myActive = active;
   }
 
   @Override
-  public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+  public void paintIcon(Component c, Graphics g, int x, int y) {
     Icon icon = TargetAWT.to(getIcon());
     
     icon.paintIcon(c, g, x, y);

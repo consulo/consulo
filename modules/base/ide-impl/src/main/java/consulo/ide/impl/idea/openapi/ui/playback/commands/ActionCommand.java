@@ -50,13 +50,13 @@ public class ActionCommand extends TypeCommand {
 
 
         if (!context.isUseDirectActionCall()) {
-            final Shortcut[] sc = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionName);
+            Shortcut[] sc = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionName);
             KeyStroke stroke = null;
             for (Shortcut each : sc) {
                 if (each instanceof KeyboardShortcut) {
-                    final KeyboardShortcut ks = (KeyboardShortcut) each;
-                    final KeyStroke first = ks.getFirstKeyStroke();
-                    final KeyStroke second = ks.getSecondKeyStroke();
+                    KeyboardShortcut ks = (KeyboardShortcut) each;
+                    KeyStroke first = ks.getFirstKeyStroke();
+                    KeyStroke second = ks.getSecondKeyStroke();
                     if (first != null && second == null) {
                         stroke = KeyStroke.getKeyStroke(first.getKeyCode(), first.getModifiers(), false);
                         break;

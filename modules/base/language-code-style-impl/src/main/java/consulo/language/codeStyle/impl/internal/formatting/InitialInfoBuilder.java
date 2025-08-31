@@ -54,11 +54,11 @@ public class InitialInfoBuilder {
   private LeafBlockWrapper myLastTokenBlock;
   private SpacingImpl myCurrentSpaceProperty;
 
-  private InitialInfoBuilder(final Block rootBlock,
-                             final FormattingDocumentModel model,
-                             @Nullable final FormatTextRanges affectedRanges,
-                             final CommonCodeStyleSettings.IndentOptions options,
-                             final int positionOfInterest,
+  private InitialInfoBuilder(Block rootBlock,
+                             FormattingDocumentModel model,
+                             @Nullable FormatTextRanges affectedRanges,
+                             CommonCodeStyleSettings.IndentOptions options,
+                             int positionOfInterest,
                              @Nonnull FormattingProgressCallback progressCallback) {
     myModel = model;
     myAffectedRanges = affectedRanges;
@@ -112,19 +112,19 @@ public class InitialInfoBuilder {
     return myStates.isEmpty();
   }
 
-  private AbstractBlockWrapper buildFrom(final Block rootBlock,
-                                         final int index,
-                                         @Nullable final CompositeBlockWrapper parent,
+  private AbstractBlockWrapper buildFrom(Block rootBlock,
+                                         int index,
+                                         @Nullable CompositeBlockWrapper parent,
                                          @Nullable WrapImpl currentWrapParent,
-                                         @Nullable final Block parentBlock) {
-    final WrapImpl wrap = (WrapImpl)rootBlock.getWrap();
+                                         @Nullable Block parentBlock) {
+    WrapImpl wrap = (WrapImpl)rootBlock.getWrap();
     if (wrap != null) {
       wrap.registerParent(currentWrapParent);
       currentWrapParent = wrap;
     }
 
     TextRange textRange = rootBlock.getTextRange();
-    final int blockStartOffset = textRange.getStartOffset();
+    int blockStartOffset = textRange.getStartOffset();
 
     if (parent != null) {
       ASSERT.checkChildRange(new TextRange(parent.getStartOffset(), parent.getEndOffset()), textRange, myModel);
@@ -135,9 +135,9 @@ public class InitialInfoBuilder {
     collectAlignments(rootBlock);
 
     if (isInsideFormattingRanges(textRange) || shouldCollectAlignmentsAround(textRange)) {
-      final List<Block> subBlocks = rootBlock.getSubBlocks();
+      List<Block> subBlocks = rootBlock.getSubBlocks();
       if (subBlocks.isEmpty()) {
-        final AbstractBlockWrapper wrapper = buildLeafBlock(rootBlock, parent, false, index, parentBlock);
+        AbstractBlockWrapper wrapper = buildLeafBlock(rootBlock, parent, false, index, parentBlock);
         if (!subBlocks.isEmpty()) {
           wrapper.setIndent((IndentImpl)subBlocks.get(0).getIndent());
         }
@@ -175,7 +175,7 @@ public class InitialInfoBuilder {
   }
 
   private CompositeBlockWrapper buildCompositeBlock(Block rootBlock, @Nullable CompositeBlockWrapper parent, int index, @Nullable WrapImpl currentWrapParent) {
-    final CompositeBlockWrapper wrappedRootBlock = new CompositeBlockWrapper(rootBlock, myCurrentWhiteSpace, parent);
+    CompositeBlockWrapper wrappedRootBlock = new CompositeBlockWrapper(rootBlock, myCurrentWhiteSpace, parent);
     if (index == 0) {
       wrappedRootBlock.arrangeParentTextRange();
     }
@@ -200,11 +200,11 @@ public class InitialInfoBuilder {
 
     List<Block> subBlocks = currentRoot.getSubBlocks();
     int currentBlockIndex = state.getIndexOfChildBlockToProcess();
-    final Block currentBlock = subBlocks.get(currentBlockIndex);
+    Block currentBlock = subBlocks.get(currentBlockIndex);
 
     initCurrentWhiteSpace(currentRoot, state.previousBlock, currentBlock);
 
-    final AbstractBlockWrapper wrapper = buildFrom(currentBlock, currentBlockIndex, state.wrappedBlock, state.parentBlockWrap, currentRoot);
+    AbstractBlockWrapper wrapper = buildFrom(currentBlock, currentBlockIndex, state.wrappedBlock, state.parentBlockWrap, currentRoot);
 
     registerExpandableIndents(currentBlock, wrapper);
 
@@ -232,13 +232,13 @@ public class InitialInfoBuilder {
     }
   }
 
-  private AbstractBlockWrapper buildLeafBlock(final Block rootBlock, @Nullable final CompositeBlockWrapper parent, final boolean readOnly, final int index, @Nullable Block parentBlock) {
+  private AbstractBlockWrapper buildLeafBlock(Block rootBlock, @Nullable CompositeBlockWrapper parent, boolean readOnly, int index, @Nullable Block parentBlock) {
     LeafBlockWrapper result = doProcessSimpleBlock(rootBlock, parent, readOnly, index, parentBlock);
     myProgressCallback.afterWrappingBlock(result);
     return result;
   }
 
-  private LeafBlockWrapper doProcessSimpleBlock(final Block rootBlock, @Nullable final CompositeBlockWrapper parent, final boolean readOnly, final int index, @Nullable Block parentBlock) {
+  private LeafBlockWrapper doProcessSimpleBlock(Block rootBlock, @Nullable CompositeBlockWrapper parent, boolean readOnly, int index, @Nullable Block parentBlock) {
     if (!INLINE_TABS_ENABLED && !myCurrentWhiteSpace.containsLineFeeds()) {
       myCurrentWhiteSpace.setForceSkipTabulationsUsage(true);
     }
@@ -289,7 +289,7 @@ public class InitialInfoBuilder {
     }
   }
 
-  private boolean isAffectedByFormatting(final Block block) {
+  private boolean isAffectedByFormatting(Block block) {
     if (myAffectedRanges == null) return true;
 
     List<FormatTextRange> allRanges = myAffectedRanges.getRanges();

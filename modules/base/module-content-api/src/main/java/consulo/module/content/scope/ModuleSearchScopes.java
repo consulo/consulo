@@ -75,7 +75,7 @@ public class ModuleSearchScopes {
   }
 
   @Nonnull
-  public static ModuleAwareSearchScope moduleRuntimeScope(@Nonnull Module module, final boolean includeTests) {
+  public static ModuleAwareSearchScope moduleRuntimeScope(@Nonnull Module module, boolean includeTests) {
     return ModuleScopeProvider.getInstance(module).getModuleRuntimeScope(includeTests);
   }
 

@@ -43,11 +43,11 @@ public class ConcurrentPackedBitsArray {
   }
 
   // stores chunk atomically, returns previous chunk
-  public long set(int id, final long flags) {
+  public long set(int id, long flags) {
     if ((flags & ~mask) != 0) {
       throw new IllegalArgumentException("Flags must be between 0 and "+ mask +" but got:"+flags);
     }
-    final int bitIndex = id/chunksPerWord * 64 + (id%chunksPerWord)*bitsPerChunk;
+    int bitIndex = id/chunksPerWord * 64 + (id%chunksPerWord)*bitsPerChunk;
 
     long prevChunk = bits.changeWord(bitIndex, word -> word & ~(mask << bitIndex) | (flags << bitIndex)) >> bitIndex;
 

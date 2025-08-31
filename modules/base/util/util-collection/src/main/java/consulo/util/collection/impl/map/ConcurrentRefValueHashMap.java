@@ -88,20 +88,20 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
   }
 
   @Override
-  public boolean remove(@Nonnull final Object key, @Nonnull Object value) {
+  public boolean remove(@Nonnull Object key, @Nonnull Object value) {
     processQueue();
     //noinspection unchecked
     return myMap.remove(key, createValueReference((K)key, (V)value));
   }
 
   @Override
-  public boolean replace(@Nonnull final K key, @Nonnull final V oldValue, @Nonnull final V newValue) {
+  public boolean replace(@Nonnull K key, @Nonnull V oldValue, @Nonnull V newValue) {
     processQueue();
     return myMap.replace(key, createValueReference(key, oldValue), createValueReference(key, newValue));
   }
 
   @Override
-  public V replace(@Nonnull final K key, @Nonnull final V value) {
+  public V replace(@Nonnull K key, @Nonnull V value) {
     processQueue();
     ValueReference<K, V> ref = myMap.replace(key, createValueReference(key, value));
     return ref == null ? null : ref.get();
@@ -164,9 +164,9 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
   @Override
   public Collection<V> values() {
     Collection<V> result = new ArrayList<>();
-    final Collection<ValueReference<K, V>> refs = myMap.values();
+    Collection<ValueReference<K, V>> refs = myMap.values();
     for (ValueReference<K, V> ref : refs) {
-      final V value = ref.get();
+      V value = ref.get();
       if (value != null) {
         result.add(value);
       }
@@ -177,7 +177,7 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
   @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
-    final Set<K> keys = keySet();
+    Set<K> keys = keySet();
     Set<Entry<K, V>> entries = new HashSet<>();
 
     for (final K key : keys) {

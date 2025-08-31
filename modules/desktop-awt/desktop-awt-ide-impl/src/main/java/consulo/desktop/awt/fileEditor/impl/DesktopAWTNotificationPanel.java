@@ -119,7 +119,7 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
         return this;
     }
 
-    public HyperlinkLabel createActionLabel(final String text, @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
+    public HyperlinkLabel createActionLabel(String text, @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
         HyperlinkLabel label = new HyperlinkLabel(text, JBColor.BLUE, getBackground(), JBColor.BLUE);
         label.setOpaque(false);
 

@@ -51,7 +51,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
 
   @Nonnull
   private static String computeDescription(ProjectStructureProblemDescription description) {
-    final String descriptionString = description.getDescription();
+    String descriptionString = description.getDescription();
     return descriptionString != null ? descriptionString : description.getMessage(true);
   }
 
@@ -81,7 +81,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
       }
 
       @Override
-      public PopupStep onChosen(final ConfigurationErrorQuickFix selectedValue, boolean finalChoice) {
+      public PopupStep onChosen(ConfigurationErrorQuickFix selectedValue, boolean finalChoice) {
         return doFinalStep(() -> selectedValue.performFix(DataManager.getInstance().getDataContext(contextComponent)));
       }
     }).show(relativePoint);

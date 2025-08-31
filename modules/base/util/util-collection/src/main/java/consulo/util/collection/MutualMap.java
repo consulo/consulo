@@ -57,12 +57,12 @@ public class MutualMap<Key, Value> {
     return myValue2Key.size();
   }
 
-  public boolean containsKey(final Key key) {
+  public boolean containsKey(Key key) {
     return myKey2Value.containsKey(key);
   }
 
-  public void remove(final Key key) {
-    final Value value = myKey2Value.get(key);
+  public void remove(Key key) {
+    Value value = myKey2Value.get(key);
     myKey2Value.remove(key);
     myValue2Key.remove(value);
   }

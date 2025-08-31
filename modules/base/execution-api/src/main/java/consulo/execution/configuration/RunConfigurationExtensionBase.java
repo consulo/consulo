@@ -50,7 +50,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param runConfiguration the run configuration being deserialized.
    * @param element          the element with persisted settings.
    */
-  protected void readExternal(@Nonnull final T runConfiguration, @Nonnull final Element element) {
+  protected void readExternal(@Nonnull T runConfiguration, @Nonnull Element element) {
   }
 
   /**
@@ -71,7 +71,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @return the editor component, or null if this extension doesn't provide any UI for editing the settings.
    */
   @Nullable
-  protected <P extends T> SettingsEditor<P> createEditor(@Nonnull final P configuration) {
+  protected <P extends T> SettingsEditor<P> createEditor(@Nonnull P configuration) {
     return null;
   }
 
@@ -90,7 +90,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @return True if extension in general applicable to given run configuration - just to attach settings tab, etc. But extension may be
    *         turned off in its settings. E.g. RCov in general available for given run configuration, but may be turned off.
    */
-  protected abstract boolean isApplicableFor(@Nonnull final T configuration);
+  protected abstract boolean isApplicableFor(@Nonnull T configuration);
 
   /**
    *
@@ -98,7 +98,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @return True if extension is turned on in configuration extension settings.
    *         E.g. RCov is turned on for given run configuration.
    */
-  protected abstract boolean isEnabledFor(@Nonnull final T applicableConfiguration, @Nullable RunnerSettings runnerSettings);
+  protected abstract boolean isEnabledFor(@Nonnull T applicableConfiguration, @Nullable RunnerSettings runnerSettings);
 
   /**
    * Patches the command line of the process about to be started by the underlying run configuration.
@@ -109,10 +109,10 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param runnerId       the ID of the {@link ProgramRunner} used to start the process.
    * @throws ExecutionException if there was an error configuring the command line and the execution should be canceled.
    */
-  protected abstract void patchCommandLine(@Nonnull final T configuration,
+  protected abstract void patchCommandLine(@Nonnull T configuration,
                                            @Nullable RunnerSettings runnerSettings,
-                                           @Nonnull final GeneralCommandLine cmdLine,
-                                           @Nonnull final String runnerId) throws ExecutionException;
+                                           @Nonnull GeneralCommandLine cmdLine,
+                                           @Nonnull String runnerId) throws ExecutionException;
 
   /**
    * Attaches the extension to a process that has been started.
@@ -121,8 +121,8 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param handler        the ProcessHandler for the running process.
    * @param runnerSettings the runner-specific settings.
    */
-  protected void attachToProcess(@Nonnull final T configuration,
-                                 @Nonnull final ProcessHandler handler,
+  protected void attachToProcess(@Nonnull T configuration,
+                                 @Nonnull ProcessHandler handler,
                                  @Nullable RunnerSettings runnerSettings) {
 
   }
@@ -135,7 +135,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @throws ExecutionException
    *
    */
-  protected void validateConfiguration(@Nonnull final T configuration, final boolean isExecution) throws Exception {
+  protected void validateConfiguration(@Nonnull T configuration, boolean isExecution) throws Exception {
   }
 
   /**
@@ -144,11 +144,11 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param configuration Configuration created from context.
    * @param location      the location from which the configuration was created.
    */
-  protected void extendCreatedConfiguration(@Nonnull final T configuration,
-                                            @Nonnull final Location location) {
+  protected void extendCreatedConfiguration(@Nonnull T configuration,
+                                            @Nonnull Location location) {
 
   }
 
-  protected void extendTemplateConfiguration(@Nonnull final T configuration) {
+  protected void extendTemplateConfiguration(@Nonnull T configuration) {
   }
 }

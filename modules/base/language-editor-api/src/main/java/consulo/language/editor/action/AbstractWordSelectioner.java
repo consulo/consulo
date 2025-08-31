@@ -29,7 +29,7 @@ import java.util.List;
  */
 public abstract class AbstractWordSelectioner extends ExtendWordSelectionHandlerBase {
   @Override
-  public boolean canSelect(final PsiElement e) {
+  public boolean canSelect(PsiElement e) {
     return false;
   }
 

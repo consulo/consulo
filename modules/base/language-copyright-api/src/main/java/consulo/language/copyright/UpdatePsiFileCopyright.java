@@ -73,7 +73,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   private static CommentRange getLineCopyrightComments(List<PsiComment> comments, Document doc, int i, PsiComment comment) {
     PsiElement firstComment = comment;
     PsiElement lastComment = comment;
-    final Commenter commenter = Commenter.forLanguage(PsiUtilCore.findLanguageFromElement(comment));
+    Commenter commenter = Commenter.forLanguage(PsiUtilCore.findLanguageFromElement(comment));
     if (isLineComment(commenter, comment, doc)) {
       int sline = doc.getLineNumber(comment.getTextRange().getStartOffset());
       int eline = doc.getLineNumber(comment.getTextRange().getEndOffset());
@@ -103,11 +103,11 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   }
 
   private static boolean isLineComment(Commenter commenter, PsiComment comment, Document doc) {
-    final String lineCommentPrefix = commenter.getLineCommentPrefix();
+    String lineCommentPrefix = commenter.getLineCommentPrefix();
     if (lineCommentPrefix != null) {
       return comment.getText().startsWith(lineCommentPrefix);
     }
-    final TextRange textRange = comment.getTextRange();
+    TextRange textRange = comment.getTextRange();
     return doc.getLineNumber(textRange.getStartOffset()) == doc.getLineNumber(textRange.getEndOffset());
   }
 
@@ -149,8 +149,8 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
 
   protected void checkComments(PsiElement last, boolean commentHere, List<PsiComment> comments) {
     try {
-      final String keyword = myCopyrightProfile.getKeyword();
-      final LinkedHashSet<CommentRange> found = new LinkedHashSet<CommentRange>();
+      String keyword = myCopyrightProfile.getKeyword();
+      LinkedHashSet<CommentRange> found = new LinkedHashSet<CommentRange>();
       Document doc = null;
       if (!StringUtil.isEmpty(keyword)) {
         Pattern pattern = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE);
@@ -275,7 +275,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
 
         int pos = 0;
         if (point != null) {
-          final TextRange textRange = point.getTextRange();
+          TextRange textRange = point.getTextRange();
           if (textRange != null) {
             pos = textRange.getStartOffset();
           }

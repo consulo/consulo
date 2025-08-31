@@ -35,11 +35,11 @@ public class ApplyBinaryShelvedFilePatch extends ApplyFilePatchBase<ShelvedBinar
     super(patch);
   }
 
-  protected void applyCreate(Project project, final VirtualFile newFile, CommitContext commitContext) throws IOException {
+  protected void applyCreate(Project project, VirtualFile newFile, CommitContext commitContext) throws IOException {
     applyChange(project, newFile, null, null);
   }
 
-  protected Result applyChange(Project project, final VirtualFile fileToPatch, FilePath pathBeforeRename, Getter<CharSequence> baseContents)
+  protected Result applyChange(Project project, VirtualFile fileToPatch, FilePath pathBeforeRename, Getter<CharSequence> baseContents)
           throws IOException {
     try {
       ContentRevision contentRevision = myPatch.getShelvedBinaryFile().createChange(project).getAfterRevision();

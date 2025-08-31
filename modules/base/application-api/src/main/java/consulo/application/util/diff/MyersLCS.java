@@ -57,7 +57,7 @@ class MyersLCS {
     myChanges1.set(myStart1, myStart1 + myCount1);
     myChanges2.set(myStart2, myStart2 + myCount2);
 
-    final int totalSequenceLength = myCount1 + myCount2;
+    int totalSequenceLength = myCount1 + myCount2;
     VForward = new int[totalSequenceLength + 1];
     VBackward = new int[totalSequenceLength + 1];
   }
@@ -101,18 +101,18 @@ class MyersLCS {
   private void execute(int oldStart, int oldEnd, int newStart, int newEnd, int differenceEstimate, boolean throwException) throws FilesTooBigForDiffException {
     assert oldStart <= oldEnd && newStart <= newEnd;
     if (oldStart < oldEnd && newStart < newEnd) {
-      final int oldLength = oldEnd - oldStart;
-      final int newLength = newEnd - newStart;
+      int oldLength = oldEnd - oldStart;
+      int newLength = newEnd - newStart;
       VForward[newLength + 1] = 0;
       VBackward[newLength + 1] = 0;
-      final int halfD = (differenceEstimate + 1) / 2;
+      int halfD = (differenceEstimate + 1) / 2;
       int xx, kk, td;
       xx = kk = td = -1;
 
       loop:
       for (int d = 0; d <= halfD; ++d) {
-        final int L = newLength + Math.max(-d, -newLength + ((d ^ newLength) & 1));
-        final int R = newLength + Math.min(d, oldLength - ((d ^ oldLength) & 1));
+        int L = newLength + Math.max(-d, -newLength + ((d ^ newLength) & 1));
+        int R = newLength + Math.min(d, oldLength - ((d ^ oldLength) & 1));
         for (int k = L; k <= R; k += 2) {
           int x = k == L || k != R && VForward[k - 1] < VForward[k + 1] ? VForward[k + 1] : VForward[k - 1] + 1;
           int y = x - k + newLength;
@@ -155,8 +155,8 @@ class MyersLCS {
       }
 
       if (td > 1) {
-        final int yy = xx - kk + newLength;
-        final int oldDiff = (td + 1) / 2;
+        int yy = xx - kk + newLength;
+        int oldDiff = (td + 1) / 2;
         if (0 < xx && 0 < yy) execute(oldStart, oldStart + xx, newStart, newStart + yy, oldDiff, throwException);
         if (oldStart + xx < oldEnd && newStart + yy < newEnd) execute(oldStart + xx, oldEnd, newStart + yy, newEnd, td - oldDiff, throwException);
       }
@@ -164,7 +164,7 @@ class MyersLCS {
         int x = oldStart;
         int y = newStart;
         while (x < oldEnd && y < newEnd) {
-          final int commonLength = commonSubsequenceLengthForward(x, y, Math.min(oldEnd - x, newEnd - y));
+          int commonLength = commonSubsequenceLengthForward(x, y, Math.min(oldEnd - x, newEnd - y));
           if (commonLength > 0) {
             addUnchanged(x, y, commonLength);
             x += commonLength;

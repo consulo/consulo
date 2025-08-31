@@ -28,7 +28,7 @@ public interface UiDecorator {
     private @Nullable final Font myLabelFont;
     private @Nullable final Insets myLabelInsets;
 
-    public UiDecoration(final Font labelFont, final Insets labelInsets) {
+    public UiDecoration(Font labelFont, Insets labelInsets) {
       myLabelFont = labelFont;
       myLabelInsets = labelInsets;
     }

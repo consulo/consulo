@@ -34,7 +34,7 @@ public abstract class CompletionStatistician extends Statistician<LookupElement,
     private static final Logger LOG = Logger.getInstance(CompletionStatistician.class);
 
     @Override
-    public abstract StatisticsInfo serialize(final LookupElement element, final CompletionLocation location);
+    public abstract StatisticsInfo serialize(LookupElement element, CompletionLocation location);
 
     @Nonnull
     @Override

@@ -49,13 +49,13 @@ class MergeSourceAvailableMarkerGutter extends AnnotationFieldGutter implements 
   @Override
   public String getLineText(int line, Editor editor) {
     if (myTurnedOn) return "";
-    final AnnotationSourceSwitcher switcher = myAnnotation.getAnnotationSourceSwitcher();
+    AnnotationSourceSwitcher switcher = myAnnotation.getAnnotationSourceSwitcher();
     if (switcher == null) return "";
     return switcher.mergeSourceAvailable(line) ? "M" : "";
   }
 
   @Override
-  public void accept(final AnnotationSource annotationSource) {
+  public void accept(AnnotationSource annotationSource) {
     myTurnedOn = annotationSource.showMerged();
   }
 }

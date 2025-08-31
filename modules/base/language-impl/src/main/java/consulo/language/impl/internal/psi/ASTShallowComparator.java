@@ -39,7 +39,7 @@ public class ASTShallowComparator implements ShallowNodeComparator<ASTNode, ASTN
 
   @Nonnull
   @Override
-  public ThreeState deepEqual(@Nonnull final ASTNode oldNode, @Nonnull final ASTNode newNode) {
+  public ThreeState deepEqual(@Nonnull ASTNode oldNode, @Nonnull ASTNode newNode) {
     return textMatches(oldNode, newNode);
   }
 
@@ -70,8 +70,8 @@ public class ASTShallowComparator implements ShallowNodeComparator<ASTNode, ASTN
     }
 
     if (oldNode instanceof PsiErrorElement && newNode instanceof PsiErrorElement) {
-      final PsiErrorElement e1 = (PsiErrorElement)oldNode;
-      final PsiErrorElement e2 = (PsiErrorElement)newNode;
+      PsiErrorElement e1 = (PsiErrorElement)oldNode;
+      PsiErrorElement e2 = (PsiErrorElement)newNode;
       if (!Objects.equals(e1.getErrorDescriptionValue(), e2.getErrorDescriptionValue())) return ThreeState.NO;
     }
 
@@ -109,19 +109,19 @@ public class ASTShallowComparator implements ShallowNodeComparator<ASTNode, ASTN
   }
 
   @Override
-  public boolean typesEqual(@Nonnull final ASTNode n1, @Nonnull final ASTNode n2) {
+  public boolean typesEqual(@Nonnull ASTNode n1, @Nonnull ASTNode n2) {
     return n1.getElementType() == n2.getElementType();
   }
 
   @Override
-  public boolean hashCodesEqual(@Nonnull final ASTNode n1, @Nonnull final ASTNode n2) {
+  public boolean hashCodesEqual(@Nonnull ASTNode n1, @Nonnull ASTNode n2) {
     if (n1 instanceof LeafElement && n2 instanceof LeafElement) {
       return textMatches(n1, n2) == ThreeState.YES;
     }
 
     if (n1 instanceof PsiErrorElement && n2 instanceof PsiErrorElement) {
-      final PsiErrorElement e1 = (PsiErrorElement)n1;
-      final PsiErrorElement e2 = (PsiErrorElement)n2;
+      PsiErrorElement e1 = (PsiErrorElement)n1;
+      PsiErrorElement e2 = (PsiErrorElement)n2;
       if (!Objects.equals(e1.getErrorDescriptionValue(), e2.getErrorDescriptionValue())) return false;
     }
 

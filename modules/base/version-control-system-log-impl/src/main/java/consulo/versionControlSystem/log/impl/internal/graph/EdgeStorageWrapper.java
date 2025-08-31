@@ -41,7 +41,7 @@ public class EdgeStorageWrapper {
   @Nonnull
   private final Function<Integer, Integer> myGetNodeIdByIndex;
 
-  public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage, @Nonnull final LinearGraph graph) {
+  public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage, @Nonnull LinearGraph graph) {
     this(edgeStorage, graph::getNodeIndex, graph::getNodeId);
   }
 

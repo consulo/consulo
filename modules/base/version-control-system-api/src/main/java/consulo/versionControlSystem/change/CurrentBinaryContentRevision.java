@@ -28,14 +28,14 @@ import java.io.IOException;
  * @author yole
  */
 public class CurrentBinaryContentRevision extends CurrentContentRevision implements BinaryContentRevision {
-  public CurrentBinaryContentRevision(final FilePath file) {
+  public CurrentBinaryContentRevision(FilePath file) {
     super(file);
   }
 
   @Override
   @Nullable
   public byte[] getBinaryContent() throws VcsException {
-    final VirtualFile vFile = getVirtualFile();
+    VirtualFile vFile = getVirtualFile();
     if (vFile == null) return null;
     try {
       return vFile.contentsToByteArray();

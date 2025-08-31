@@ -62,12 +62,12 @@ public class NativeFileType implements INativeFileType {
   }
 
   @Override
-  public boolean openFileInAssociatedApplication(final ComponentManager project, @Nonnull final VirtualFile file) {
+  public boolean openFileInAssociatedApplication(ComponentManager project, @Nonnull VirtualFile file) {
     return openAssociatedApplication(file);
   }
 
-  public static boolean openAssociatedApplication(@Nonnull final VirtualFile file) {
-    final List<String> commands = new ArrayList<>();
+  public static boolean openAssociatedApplication(@Nonnull VirtualFile file) {
+    List<String> commands = new ArrayList<>();
     if (Platform.current().os().isWindows()) {
       commands.add("rundll32.exe");
       commands.add("url.dll,FileProtocolHandler");

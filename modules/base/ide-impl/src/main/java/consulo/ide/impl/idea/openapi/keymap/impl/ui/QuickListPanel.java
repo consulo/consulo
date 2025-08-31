@@ -96,7 +96,7 @@ public class QuickListPanel {
         myDisplayName.getDocument().addDocumentListener(adapter);
     }
 
-    public void addDescriptionListener(final DocumentAdapter adapter) {
+    public void addDescriptionListener(DocumentAdapter adapter) {
         myDescription.getDocument().addDocumentListener(adapter);
     }
 
@@ -108,7 +108,7 @@ public class QuickListPanel {
     }
 
     private void includeSelectedAction() {
-        final ChooseActionsDialog dlg =
+        ChooseActionsDialog dlg =
             new ChooseActionsDialog(myActionsList, KeymapManager.getInstance().getActiveKeymap(), myAllQuickLists);
         if (dlg.showAndGet()) {
             String[] ids = dlg.getTreeSelectedActionIds();

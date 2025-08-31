@@ -36,7 +36,7 @@ public class ShowTestProxy extends AnAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
+    Presentation presentation = e.getPresentation();
 
     // visible only in StatisticsTableView
     presentation.setVisible(e.hasData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS));

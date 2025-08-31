@@ -49,21 +49,21 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
   public Collection<AbstractTreeNode> getChildren() {
     ArrayList<AbstractTreeNode> children = new ArrayList<>();
 
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(getProject()).getFileIndex();
+    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(getProject()).getFileIndex();
     if (myToDoSettings.isModulesShown()) {
       for (Iterator i = myBuilder.getAllFiles(); i.hasNext(); ) {
-        final PsiFile psiFile = (PsiFile)i.next();
+        PsiFile psiFile = (PsiFile)i.next();
         if (psiFile == null) { // skip invalid PSI files
           continue;
         }
-        final VirtualFile virtualFile = psiFile.getVirtualFile();
+        VirtualFile virtualFile = psiFile.getVirtualFile();
         createModuleTodoNodeForFile(children, projectFileIndex, virtualFile);
       }
     }
     else {
       if (myToDoSettings.getIsPackagesShown()) {
         if (myBuilder instanceof CurrentFileTodosTreeBuilder) {
-          final Iterator allFiles = myBuilder.getAllFiles();
+          Iterator allFiles = myBuilder.getAllFiles();
           if (allFiles.hasNext()) {
             children.add(new TodoFileNode(myProject, (PsiFile)allFiles.next(), myBuilder, false));
           }
@@ -74,7 +74,7 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
       }
       else {
         for (Iterator i = myBuilder.getAllFiles(); i.hasNext(); ) {
-          final PsiFile psiFile = (PsiFile)i.next();
+          PsiFile psiFile = (PsiFile)i.next();
           if (psiFile == null) { // skip invalid PSI files
             continue;
           }
@@ -129,9 +129,9 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
   }
 
   @Override
-  public int getTodoItemCount(final ToDoSummary val) {
+  public int getTodoItemCount(ToDoSummary val) {
     int count = 0;
-    for (final Iterator<PsiFile> i = myBuilder.getAllFiles(); i.hasNext(); ) {
+    for (Iterator<PsiFile> i = myBuilder.getAllFiles(); i.hasNext(); ) {
       count += ReadAction.compute(() -> getTreeStructure().getTodoItemCount(i.next()));
     }
     return count;

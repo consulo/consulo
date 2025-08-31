@@ -46,14 +46,14 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
   private final Provider<ProjectFileIndex> myFileIndex;
 
   @Inject
-  public ModuleVcsPathPresenter(final Project project, Provider<ProjectFileIndex> fileIndex) {
+  public ModuleVcsPathPresenter(Project project, Provider<ProjectFileIndex> fileIndex) {
     myProject = project;
     myFileIndex = fileIndex;
   }
 
   @Nonnull
   @Override
-  public String getPresentableRelativePathFor(final VirtualFile file) {
+  public String getPresentableRelativePathFor(VirtualFile file) {
     if (file == null) return "";
     return myProject.getApplication().runReadAction((Supplier<String>)() -> {
       ProjectFileIndex fileIndex = myFileIndex.get();
@@ -76,7 +76,7 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
 
   @Nullable
   @Override
-  public String getPresentableRelativePath(@Nonnull final ContentRevision fromRevision, @Nonnull final ContentRevision toRevision) {
+  public String getPresentableRelativePath(@Nonnull ContentRevision fromRevision, @Nonnull ContentRevision toRevision) {
     // need to use parent path because the old file is already not there
     FilePath fromPath = fromRevision.getFile();
     FilePath toPath = toRevision.getFile();
@@ -85,8 +85,8 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
       return null;
     }
 
-    final VirtualFile oldFile = fromPath.getParentPath().getVirtualFile();
-    final VirtualFile newFile = toPath.getParentPath().getVirtualFile();
+    VirtualFile oldFile = fromPath.getParentPath().getVirtualFile();
+    VirtualFile newFile = toPath.getParentPath().getVirtualFile();
     if (oldFile != null && newFile != null) {
       Module oldModule = ModuleUtilCore.findModuleForFile(oldFile, myProject);
       Module newModule = ModuleUtilCore.findModuleForFile(newFile, myProject);
@@ -94,10 +94,10 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
         return getPresentableRelativePathFor(oldFile);
       }
     }
-    final RelativePathCalculator calculator =
+    RelativePathCalculator calculator =
             new RelativePathCalculator(toPath.getIOFile().getAbsolutePath(), fromPath.getIOFile().getAbsolutePath());
     calculator.execute();
-    final String result = calculator.getResult();
+    String result = calculator.getResult();
     return (result == null) ? null : result.replace("/", File.separator);
   }
 }

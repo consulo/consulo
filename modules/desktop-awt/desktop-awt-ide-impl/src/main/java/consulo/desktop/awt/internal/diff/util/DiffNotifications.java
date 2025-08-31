@@ -82,13 +82,13 @@ public class DiffNotifications {
   }
 
   @Nonnull
-  public static JPanel createNotification(@Nonnull String text, @Nullable final ColorValue background) {
+  public static JPanel createNotification(@Nonnull String text, @Nullable ColorValue background) {
     return createNotification(text, background, true);
   }
 
   @Nonnull
-  public static JPanel createNotification(@Nonnull String text, @Nullable final ColorValue background, boolean showHideAction) {
-    final EditorNotificationPanel panel = new EditorNotificationPanel(TargetAWT.to(background));
+  public static JPanel createNotification(@Nonnull String text, @Nullable ColorValue background, boolean showHideAction) {
+    EditorNotificationPanel panel = new EditorNotificationPanel(TargetAWT.to(background));
     panel.text(text);
     if (showHideAction) {
       HyperlinkLabel link = panel.createActionLabel("Hide", () -> panel.setVisible(false));

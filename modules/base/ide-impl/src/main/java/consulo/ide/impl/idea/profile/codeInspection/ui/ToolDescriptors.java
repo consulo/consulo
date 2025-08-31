@@ -35,19 +35,19 @@ public class ToolDescriptors {
   @Nonnull
   private final List<Descriptor> myNonDefaultDescriptors;
 
-  private ToolDescriptors(final @Nonnull Descriptor defaultDescriptor,
-                          final @Nonnull List<Descriptor> nonDefaultDescriptors) {
+  private ToolDescriptors(@Nonnull Descriptor defaultDescriptor,
+                          @Nonnull List<Descriptor> nonDefaultDescriptors) {
     myDefaultDescriptor = defaultDescriptor;
     myNonDefaultDescriptors = nonDefaultDescriptors;
   }
 
-  public static ToolDescriptors fromScopeToolState(final ScopeToolState state,
-                                                   final InspectionProfileImpl profile,
-                                                   final Project project) {
-    final InspectionToolWrapper toolWrapper = state.getTool();
-    final List<ScopeToolState> nonDefaultTools = profile.getNonDefaultTools(toolWrapper.getShortName(), project);
-    final ArrayList<Descriptor> descriptors = new ArrayList<Descriptor>(nonDefaultTools.size());
-    for (final ScopeToolState nonDefaultToolState : nonDefaultTools) {
+  public static ToolDescriptors fromScopeToolState(ScopeToolState state,
+                                                   InspectionProfileImpl profile,
+                                                   Project project) {
+    InspectionToolWrapper toolWrapper = state.getTool();
+    List<ScopeToolState> nonDefaultTools = profile.getNonDefaultTools(toolWrapper.getShortName(), project);
+    ArrayList<Descriptor> descriptors = new ArrayList<Descriptor>(nonDefaultTools.size());
+    for (ScopeToolState nonDefaultToolState : nonDefaultTools) {
       descriptors.add(new Descriptor(nonDefaultToolState, profile, project));
     }
     return new ToolDescriptors(new Descriptor(state, profile, project), descriptors);

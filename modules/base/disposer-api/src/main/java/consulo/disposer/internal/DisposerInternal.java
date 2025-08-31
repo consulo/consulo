@@ -30,7 +30,7 @@ import java.util.ServiceLoader;
 public abstract class DisposerInternal {
   public static final DisposerInternal ourInstance = loadSingleOrError(DisposerInternal.class);
 
-  public abstract void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable final String key);
+  public abstract void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable String key);
 
   public abstract boolean isDisposed(@Nonnull Disposable disposable);
 

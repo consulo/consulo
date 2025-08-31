@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 public abstract class CompletionWeigher extends Weigher<LookupElement, CompletionLocation> {
 
   @Override
-  public abstract Comparable weigh(@Nonnull final LookupElement element, @Nonnull final CompletionLocation location);
+  public abstract Comparable weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location);
 
   @Nonnull
   @Override

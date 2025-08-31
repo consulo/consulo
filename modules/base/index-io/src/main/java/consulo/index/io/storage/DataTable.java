@@ -43,7 +43,7 @@ class DataTable implements Closeable, Forceable {
   private static final int HEADER_WASTE_SIZE_OFFSET = 4;
   private boolean myIsDirty = false;
 
-  public DataTable(final File filePath, final PagePool pool) throws IOException {
+  public DataTable(File filePath, PagePool pool) throws IOException {
     myFile = new RandomAccessDataFile(filePath, pool);
     if (myFile.length() == 0) {
       markDirty();
@@ -80,7 +80,7 @@ class DataTable implements Closeable, Forceable {
   }
 
   public long allocateSpace(int len) {
-    final long result = Math.max(myFile.length(), HEADER_SIZE);
+    long result = Math.max(myFile.length(), HEADER_SIZE);
 
     // Fill them in so we won't give out wrong address from allocateSpace() next time if they still not finished writing to allocated page
     long newLenght = result + len;

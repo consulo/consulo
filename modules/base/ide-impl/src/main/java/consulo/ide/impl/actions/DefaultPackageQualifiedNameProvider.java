@@ -37,7 +37,7 @@ public class DefaultPackageQualifiedNameProvider implements QualifiedNameProvide
       return element;
     }
     if (element instanceof PsiDirectory) {
-      final PsiPackage psiPackage = PsiPackageManager.getInstance(element.getProject()).findAnyPackage((PsiDirectory)element);
+      PsiPackage psiPackage = PsiPackageManager.getInstance(element.getProject()).findAnyPackage((PsiDirectory)element);
       if (psiPackage != null) {
         return psiPackage;
       }

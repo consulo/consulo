@@ -291,7 +291,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   }
 
   @Override
-  protected void resetImpl(final CodeStyleSettings settings) {
+  protected void resetImpl(CodeStyleSettings settings) {
     myVisualGuides.setValue(settings.getDefaultSoftMargins());
 
     myExcludedFilesList.reset(settings);
@@ -338,7 +338,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   }
 
   @Override
-  protected EditorHighlighter createHighlighter(final EditorColorsScheme scheme) {
+  protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
     //noinspection NullableProblems
     return EditorHighlighterFactory.getInstance().createEditorHighlighter(getFileType(), scheme, null);
   }
@@ -349,13 +349,13 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
     return null;
   }
 
-  private static void showError(final JTextField field, final String message) {
+  private static void showError(JTextField field, String message) {
     BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, NotificationType.ERROR, null);
     balloonBuilder.setFadeoutTime(1500);
-    final Balloon balloon = balloonBuilder.createBalloon();
-    final Rectangle rect = field.getBounds();
-    final Point p = new Point(0, rect.height);
-    final RelativePoint point = new RelativePoint(field, p);
+    Balloon balloon = balloonBuilder.createBalloon();
+    Rectangle rect = field.getBounds();
+    Point p = new Point(0, rect.height);
+    RelativePoint point = new RelativePoint(field, p);
     balloon.show(point, Balloon.Position.below);
     Disposer.register(ProjectManager.getInstance().getDefaultProject(), balloon);
   }

@@ -75,7 +75,7 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
 
   @Override
   @Nonnull
-  public NodeDescriptor createDescriptor(@Nonnull final Object element, final NodeDescriptor parentDescriptor) {
+  public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
     return (NodeDescriptor)element;
   }
 
@@ -84,10 +84,10 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
 
   @Nullable
   public Object getDataFromProviders(@Nonnull List<AbstractTreeNode> selectedNodes, @Nonnull Key dataId) {
-    final List<TreeStructureProvider> providers = getProvidersDumbAware();
+    List<TreeStructureProvider> providers = getProvidersDumbAware();
     if (!providers.isEmpty()) {
       for (TreeStructureProvider treeStructureProvider : providers) {
-        final Object fromProvider = treeStructureProvider.getData(selectedNodes, dataId);
+        Object fromProvider = treeStructureProvider.getData(selectedNodes, dataId);
         if (fromProvider != null) {
           return fromProvider;
         }
@@ -102,7 +102,7 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
       return Collections.emptyList();
     }
 
-    final List<TreeStructureProvider> providers = getProviders();
+    List<TreeStructureProvider> providers = getProviders();
     if (providers == null) {
       return Collections.emptyList();
     }

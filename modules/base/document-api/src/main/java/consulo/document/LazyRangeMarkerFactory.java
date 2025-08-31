@@ -29,8 +29,8 @@ public abstract class LazyRangeMarkerFactory {
   }
 
   @Nonnull
-  public abstract RangeMarker createRangeMarker(@Nonnull final VirtualFile file, final int offset);
+  public abstract RangeMarker createRangeMarker(@Nonnull VirtualFile file, int offset);
 
   @Nonnull
-  public abstract RangeMarker createRangeMarker(@Nonnull final VirtualFile file, final int line, final int column, final boolean persistent);
+  public abstract RangeMarker createRangeMarker(@Nonnull VirtualFile file, int line, int column, boolean persistent);
 }

@@ -140,7 +140,7 @@ public class FindPopupDirectoryChooser {
     }
 
     public void initByModel(@Nonnull FindModel findModel) {
-        final String directoryName = findModel.getDirectoryName();
+        String directoryName = findModel.getDirectoryName();
         java.util.List<String> strings = FindInProjectSettings.getInstance(myProject).getRecentDirectories();
 
         if (myDirectoryComboBox.getItemCount() > 0) {

@@ -36,14 +36,14 @@ public abstract class ShowModulesAction extends ToggleAction {
   @Override
   @RequiredUIAccess
   public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
-    final ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
+    ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
     projectView.setShowModules(flag, getId());
   }
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    final ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
+    ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
     e.getPresentation().setVisible(Comparing.strEqual(projectView.getCurrentViewId(), getId()));
   }
 }

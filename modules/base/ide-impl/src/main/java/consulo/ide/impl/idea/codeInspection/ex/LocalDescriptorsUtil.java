@@ -34,7 +34,7 @@ public class LocalDescriptorsUtil {
   private static final TripleFunction<LocalInspectionTool, PsiElement, GlobalInspectionContext,RefElement> CONVERT = new TripleFunction<LocalInspectionTool, PsiElement, GlobalInspectionContext,RefElement>() {
     @Override
     public RefElement fun(LocalInspectionTool tool, PsiElement element, GlobalInspectionContext context) {
-      final PsiNamedElement problemElement = tool.getProblemElement(element);
+      PsiNamedElement problemElement = tool.getProblemElement(element);
 
       RefElement refElement = context.getRefManager().getReference(problemElement);
       if (refElement == null && problemElement != null) {  // no need to lose collected results
@@ -53,9 +53,9 @@ public class LocalDescriptorsUtil {
     if (descriptors.isEmpty()) return;
 
     Map<RefElement, List<ProblemDescriptor>> problems = new HashMap<RefElement, List<ProblemDescriptor>>();
-    final RefManagerImpl refManager = (RefManagerImpl)context.getRefManager();
+    RefManagerImpl refManager = (RefManagerImpl)context.getRefManager();
     for (ProblemDescriptor descriptor : descriptors) {
-      final PsiElement element = descriptor.getPsiElement();
+      PsiElement element = descriptor.getPsiElement();
       if (element == null) continue;
       if (filterSuppressed) {
         String alternativeId;
@@ -82,7 +82,7 @@ public class LocalDescriptorsUtil {
     }
 
     for (Map.Entry<RefElement, List<ProblemDescriptor>> entry : problems.entrySet()) {
-      final List<ProblemDescriptor> problemDescriptors = entry.getValue();
+      List<ProblemDescriptor> problemDescriptors = entry.getValue();
       RefElement refElement = entry.getKey();
       CommonProblemDescriptor[] descriptions = problemDescriptors.toArray(new CommonProblemDescriptor[problemDescriptors.size()]);
       dpi.addProblemElement(refElement, filterSuppressed, descriptions);

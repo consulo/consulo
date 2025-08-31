@@ -33,7 +33,7 @@ public class ArchiveFileDiffElement extends VirtualFileDiffElement {
 
   @Override
   protected VirtualFileDiffElement createElement(VirtualFile file) {
-    final VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
+    VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
     return archiveRootForLocalFile == null ? null : new ArchiveFileDiffElement(file);
   }
 

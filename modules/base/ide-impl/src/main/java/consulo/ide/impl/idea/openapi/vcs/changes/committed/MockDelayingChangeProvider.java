@@ -34,8 +34,8 @@ public class MockDelayingChangeProvider implements ChangeProvider {
     myLock = new Object();
   }
 
-  public void getChanges(final VcsDirtyScope dirtyScope, final ChangelistBuilder builder, final ProgressIndicator progress,
-                         final ChangeListManagerGate addGate)
+  public void getChanges(VcsDirtyScope dirtyScope, ChangelistBuilder builder, ProgressIndicator progress,
+                         ChangeListManagerGate addGate)
           throws VcsException {
     synchronized (myLock) {
       if (myExecuteInsideUpdate == null) {
@@ -84,6 +84,6 @@ public class MockDelayingChangeProvider implements ChangeProvider {
     return false;
   }
 
-  public void doCleanup(final List<VirtualFile> files) {
+  public void doCleanup(List<VirtualFile> files) {
   }
 }

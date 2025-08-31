@@ -32,7 +32,7 @@ class Native2AsciiCharsetDecoder extends CharsetDecoder {
   private final StringBuilder myOutBuffer = new StringBuilder();
   private final Charset myBaseCharset;
 
-  public Native2AsciiCharsetDecoder(final Native2AsciiCharset charset) {
+  public Native2AsciiCharsetDecoder(Native2AsciiCharset charset) {
     super(charset, 1, 6);
     myBaseCharset = charset.getBaseCharset();
   }
@@ -48,7 +48,7 @@ class Native2AsciiCharsetDecoder extends CharsetDecoder {
     return doFlush(out);
   }
 
-  private CoderResult doFlush(final CharBuffer out) {
+  private CoderResult doFlush(CharBuffer out) {
     if (myOutBuffer.length() != 0) {
       int remaining = out.remaining();
       int outlen = Math.min(remaining, myOutBuffer.length());
@@ -69,7 +69,7 @@ class Native2AsciiCharsetDecoder extends CharsetDecoder {
       byte[] buf = new byte[4];
       while (in.position() < in.limit()) {
         in.mark();
-        final byte b = in.get();
+        byte b = in.get();
         if (b == '\\') {
           decodeArray(in.array(), start, in.position()-1);
           byte next = in.get();
@@ -105,7 +105,7 @@ class Native2AsciiCharsetDecoder extends CharsetDecoder {
     return doFlush(out);
   }
 
-  private void decodeArray(final byte[] buf, int start, int end) {
+  private void decodeArray(byte[] buf, int start, int end) {
     if (end <= start) return;
     ByteBuffer byteBuffer = ByteBuffer.wrap(buf, start, end-start);
     CharBuffer charBuffer = myBaseCharset.decode(byteBuffer);

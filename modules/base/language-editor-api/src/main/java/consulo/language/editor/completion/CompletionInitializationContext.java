@@ -33,7 +33,7 @@ public class CompletionInitializationContext {
   private String myDummyIdentifier = DUMMY_IDENTIFIER;
   private final Language myPositionLanguage;
 
-  public CompletionInitializationContext(final Editor editor, final @Nonnull Caret caret, Language language, final PsiFile file, final CompletionType completionType, int invocationCount) {
+  public CompletionInitializationContext(Editor editor, @Nonnull Caret caret, Language language, PsiFile file, CompletionType completionType, int invocationCount) {
     myEditor = editor;
     myCaret = caret;
     myPositionLanguage = language;
@@ -56,7 +56,7 @@ public class CompletionInitializationContext {
   }
 
   public static int calcDefaultIdentifierEnd(Editor editor, int startFrom) {
-    final CharSequence text = editor.getDocument().getCharsSequence();
+    CharSequence text = editor.getDocument().getCharsSequence();
     int idEnd = startFrom;
     while (idEnd < text.length() && Character.isJavaIdentifierPart(text.charAt(idEnd))) {
       idEnd++;

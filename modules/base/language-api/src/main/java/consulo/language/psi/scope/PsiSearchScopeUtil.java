@@ -39,7 +39,7 @@ public class PsiSearchScopeUtil {
     Project project = element.getProject();
     SearchScope scope = element.getUseScope();
     for (UseScopeEnlarger enlarger : project.getExtensionList(UseScopeEnlarger.class)) {
-      final SearchScope additionalScope = enlarger.getAdditionalUseScope(element);
+      SearchScope additionalScope = enlarger.getAdditionalUseScope(element);
       if (additionalScope != null) {
         scope = scope.union(additionalScope);
       }
@@ -78,7 +78,7 @@ public class PsiSearchScopeUtil {
     if (file == null) {
       return true;
     }
-    final PsiElement context = file.getContext();
+    PsiElement context = file.getContext();
     if (context != null) file = context.getContainingFile();
     if (file == null) return false;
     VirtualFile virtualFile = file.getVirtualFile();
@@ -87,7 +87,7 @@ public class PsiSearchScopeUtil {
 
   public static boolean isInScope(@Nonnull LocalSearchScope local, @Nonnull PsiElement element) {
     PsiElement[] scopeElements = local.getScope();
-    for (final PsiElement scopeElement : scopeElements) {
+    for (PsiElement scopeElement : scopeElements) {
       if (PsiTreeUtil.isAncestor(scopeElement, element, false)) return true;
     }
     return false;

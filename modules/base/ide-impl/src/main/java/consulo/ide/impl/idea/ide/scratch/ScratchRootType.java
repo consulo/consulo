@@ -67,7 +67,7 @@ public final class ScratchRootType extends RootType {
 
     @Nullable
     @RequiredUIAccess
-    public VirtualFile createScratchFile(Project project, final String fileName, final Language language, final String text) {
+    public VirtualFile createScratchFile(Project project, String fileName, Language language, String text) {
         return createScratchFile(project, fileName, language, text, ScratchFileService.Option.create_new_always);
     }
 
@@ -75,10 +75,10 @@ public final class ScratchRootType extends RootType {
     @RequiredUIAccess
     public VirtualFile createScratchFile(
         Project project,
-        final String fileName,
-        final Language language,
-        final String text,
-        final ScratchFileService.Option option
+        String fileName,
+        Language language,
+        String text,
+        ScratchFileService.Option option
     ) {
         try {
             return CommandProcessor.getInstance().<VirtualFile>newCommand()

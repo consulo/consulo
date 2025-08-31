@@ -93,11 +93,11 @@ public class DummyHolder extends PsiFileImpl {
     this(manager, null, context, table);
   }
 
-  public DummyHolder(@Nonnull PsiManager manager, final CharTable table, final Language language) {
+  public DummyHolder(@Nonnull PsiManager manager, CharTable table, Language language) {
     this(manager, null, null, table, null, language);
   }
 
-  public DummyHolder(@Nonnull PsiManager manager, final Language language, final PsiElement context) {
+  public DummyHolder(@Nonnull PsiManager manager, Language language, PsiElement context) {
     this(manager, null, context, null, null, language);
   }
 
@@ -130,7 +130,7 @@ public class DummyHolder extends PsiFileImpl {
       PsiFile containingFile = context.getContainingFile();
       if (containingFile != null) return containingFile.getFileType();
     }
-    final LanguageFileType fileType = myLanguage.getAssociatedFileType();
+    LanguageFileType fileType = myLanguage.getAssociatedFileType();
     return fileType != null ? fileType : PlainTextFileType.INSTANCE;
   }
 
@@ -163,11 +163,11 @@ public class DummyHolder extends PsiFileImpl {
   @Override
   @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})
   protected PsiFileImpl clone() {
-    final PsiFileImpl psiClone = cloneImpl(getTreeElement());
-    final DummyHolderViewProvider dummyHolderViewProvider = new DummyHolderViewProvider(getManager());
+    PsiFileImpl psiClone = cloneImpl(getTreeElement());
+    DummyHolderViewProvider dummyHolderViewProvider = new DummyHolderViewProvider(getManager());
     myViewProvider = dummyHolderViewProvider;
     dummyHolderViewProvider.setDummyHolder((DummyHolder)psiClone);
-    final FileElement treeClone = (FileElement)calcTreeElement().clone();
+    FileElement treeClone = (FileElement)calcTreeElement().clone();
     psiClone.setTreeElementPointer(treeClone); // should not use setTreeElement here because cloned file still have VirtualFile (SCR17963)
     psiClone.myOriginalFile = isPhysical() ? this : myOriginalFile;
     treeClone.setPsi(psiClone);

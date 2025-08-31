@@ -104,7 +104,7 @@ public class SyncScrollSupport {
 
     public void makeVisible(@Nonnull Side masterSide,
                             int startLine1, int endLine1, int startLine2, int endLine2,
-                            final boolean animate) {
+                            boolean animate) {
       doMakeVisible(masterSide.getIndex(), new int[]{startLine1, startLine2}, new int[]{endLine1, endLine2}, animate);
     }
 
@@ -252,24 +252,24 @@ public class SyncScrollSupport {
     @Nonnull
     protected abstract List<? extends ScrollHelper> getScrollHelpers();
 
-    protected void doMakeVisible(final int masterIndex, int[] startLines, int[] endLines, final boolean animate) {
-      final List<? extends Editor> editors = getEditors();
-      final List<? extends ScrollHelper> helpers = getScrollHelpers();
+    protected void doMakeVisible(int masterIndex, int[] startLines, int[] endLines, boolean animate) {
+      List<? extends Editor> editors = getEditors();
+      List<? extends ScrollHelper> helpers = getScrollHelpers();
 
-      final int count = editors.size();
+      int count = editors.size();
       assert startLines.length == count;
       assert endLines.length == count;
 
-      final int[] offsets = getTargetOffsets(editors.toArray(new Editor[count]), startLines, endLines, -1);
+      int[] offsets = getTargetOffsets(editors.toArray(new Editor[count]), startLines, endLines, -1);
 
-      final int[] startOffsets = new int[count];
+      int[] startOffsets = new int[count];
       for (int i = 0; i < count; i++) {
         startOffsets[i] = editors.get(i).getScrollingModel().getVisibleArea().y;
       }
 
-      final Editor masterEditor = editors.get(masterIndex);
-      final int masterOffset = offsets[masterIndex];
-      final int masterStartOffset = startOffsets[masterIndex];
+      Editor masterEditor = editors.get(masterIndex);
+      int masterOffset = offsets[masterIndex];
+      int masterStartOffset = startOffsets[masterIndex];
 
       for (ScrollHelper helper : helpers) {
         helper.setAnchor(startOffsets[helper.getMasterIndex()], offsets[helper.getMasterIndex()],
@@ -418,8 +418,8 @@ public class SyncScrollSupport {
     if (!animated) model.enableAnimation();
   }
 
-  private static int getHeaderOffset(@Nonnull final Editor editor) {
-    final JComponent header = editor.getHeaderComponent();
+  private static int getHeaderOffset(@Nonnull Editor editor) {
+    JComponent header = editor.getHeaderComponent();
     return header == null ? 0 : header.getHeight();
   }
 

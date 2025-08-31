@@ -36,11 +36,11 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
   @Override
   @RequiredUIAccess
   public final void actionPerformed(@Nonnull AnActionEvent e) {
-    final Editor editor = e.getRequiredData(Editor.KEY);
-    final PsiFile file = e.getData(PsiFile.KEY);
+    Editor editor = e.getRequiredData(Editor.KEY);
+    PsiFile file = e.getData(PsiFile.KEY);
     if (editor == null || file == null) return;
 
-    final List<T> expressions = getElement(editor, file);
+    List<T> expressions = getElement(editor, file);
     T first = ContainerUtil.getFirstItem(expressions);
 
     if (expressions.size() > 1) {
@@ -54,17 +54,17 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
     }
   }
 
-  protected void showError(@Nonnull final Editor editor) {
+  protected void showError(@Nonnull Editor editor) {
     ApplicationManager.getApplication().invokeLater(() -> {
-      final String errorHint = "Cannot find element of class " + myClass.getSimpleName() + " at selection/offset";
+      String errorHint = "Cannot find element of class " + myClass.getSimpleName() + " at selection/offset";
       HintManager.getInstance().showErrorHint(editor, errorHint);
     });
   }
 
-  private void performOnElement(@Nonnull final Editor editor, @Nonnull T first) {
-    final TextRange textRange = first.getTextRange();
+  private void performOnElement(@Nonnull Editor editor, @Nonnull T first) {
+    TextRange textRange = first.getTextRange();
     editor.getSelectionModel().setSelection(textRange.getStartOffset(), textRange.getEndOffset());
-    final String informationHint = getInformationHint(first);
+    String informationHint = getInformationHint(first);
     if (informationHint != null) {
       ApplicationManager.getApplication().invokeLater(() -> HintManager.getInstance().showInformationHint(editor, informationHint));
     }
@@ -81,7 +81,7 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
 
   @Nonnull
   protected List<T> getElement(@Nonnull Editor editor, @Nonnull PsiFile file) {
-    final SelectionModel selectionModel = editor.getSelectionModel();
+    SelectionModel selectionModel = editor.getSelectionModel();
     if (selectionModel.hasSelection()) {
       return ContainerUtil.list(getElementFromSelection(file, selectionModel));
     }
@@ -95,8 +95,8 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
 
   @Nullable
   protected T getElementFromSelection(@Nonnull PsiFile file, @Nonnull SelectionModel selectionModel) {
-    final int selectionStart = selectionModel.getSelectionStart();
-    final int selectionEnd = selectionModel.getSelectionEnd();
+    int selectionStart = selectionModel.getSelectionStart();
+    int selectionEnd = selectionModel.getSelectionEnd();
     return PsiTreeUtil.findElementOfClassAtRange(file, selectionStart, selectionEnd, myClass);
   }
 

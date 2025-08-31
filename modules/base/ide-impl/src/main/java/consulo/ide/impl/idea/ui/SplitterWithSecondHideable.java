@@ -69,7 +69,7 @@ public abstract class SplitterWithSecondHideable {
 
       @Override
       protected void initOnImpl() {
-        final float proportion = myPreviousProportion > 0 ? myPreviousProportion : getSplitterInitialProportion();
+        float proportion = myPreviousProportion > 0 ? myPreviousProportion : getSplitterInitialProportion();
         mySplitter.setSecondComponent(myDetailsComponent.getPanel());
         mySuperDivider.setResizeEnabled(true);
 
@@ -83,8 +83,8 @@ public abstract class SplitterWithSecondHideable {
 
       @Override
       protected void onImpl() {
-        final float proportion = myPreviousProportion > 0 ? myPreviousProportion : getSplitterInitialProportion();
-        final int firstSize = vertical ? mySplitter.getFirstComponent().getHeight() : mySplitter.getFirstComponent().getWidth();
+        float proportion = myPreviousProportion > 0 ? myPreviousProportion : getSplitterInitialProportion();
+        int firstSize = vertical ? mySplitter.getFirstComponent().getHeight() : mySplitter.getFirstComponent().getWidth();
         // !! order is important! first fix
         mySplitter.fixFirst();
         myListener.on((int)((1 - proportion) * firstSize / proportion));
@@ -97,7 +97,7 @@ public abstract class SplitterWithSecondHideable {
 
       @Override
       protected void offImpl() {
-        final int previousSize = vertical ? mySplitter.getSecondComponent().getHeight() : mySplitter.getSecondComponent().getWidth();
+        int previousSize = vertical ? mySplitter.getSecondComponent().getHeight() : mySplitter.getSecondComponent().getWidth();
         mySplitter.setSecondComponent(myFictivePanel);
         myPreviousProportion = mySplitter.getProportion();
         mySplitter.freeAll();
@@ -200,7 +200,7 @@ public abstract class SplitterWithSecondHideable {
     mySplitter.setProportion(1.0f);
   }
 
-  public void setText(final String value) {
+  public void setText(String value) {
     myTitledSeparator.setText(value);
   }
 

@@ -86,11 +86,11 @@ public class PluginManagerCore {
                                        int pluginsCount,
                                        boolean isHeadlessMode,
                                        boolean isPreInstalledPath) {
-        final File[] files = pluginsHome.listFiles();
+        File[] files = pluginsHome.listFiles();
         if (files != null) {
             int i = result.size();
             for (File file : files) {
-                final PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, PluginsLoader.C_LOG);
+                PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, PluginsLoader.C_LOG);
                 if (descriptor == null) {
                     continue;
                 }
@@ -99,7 +99,7 @@ public class PluginManagerCore {
                 }
                 int oldIndex = result.indexOf(descriptor);
                 if (oldIndex >= 0) {
-                    final PluginDescriptorImpl oldDescriptor = result.get(oldIndex);
+                    PluginDescriptorImpl oldDescriptor = result.get(oldIndex);
                     if (StringUtil.compareVersionNumbers(oldDescriptor.getVersion(), descriptor.getVersion()) < 0) {
                         result.set(oldIndex, descriptor);
                     }
@@ -115,7 +115,7 @@ public class PluginManagerCore {
     @Deprecated
     @DeprecationInfo("Must be never used from plugin or platform")
     public static List<PluginDescriptorImpl> loadDescriptorsFromPluginPath(@Nullable StartupProgress progress, boolean isHeadlessMode) {
-        final List<PluginDescriptorImpl> result = new ArrayList<>();
+        List<PluginDescriptorImpl> result = new ArrayList<>();
 
         int pluginsCount = 0;
         String[] pluginsPaths = ContainerPathManager.get().getPluginsPaths();

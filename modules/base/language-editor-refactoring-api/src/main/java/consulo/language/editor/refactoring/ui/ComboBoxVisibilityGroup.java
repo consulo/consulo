@@ -34,8 +34,8 @@ class ComboBoxVisibilityGroup extends ComboBoxAction {
     private DefaultActionGroup myGroup;
     private Map<String, String> myMap = new HashMap<String, String>();
 
-    protected ComboBoxVisibilityGroup(final String[] options, String[] presentableNames, final Runnable run) {
-        final AnAction[] myActions = new AnAction[options.length];
+    protected ComboBoxVisibilityGroup(String[] options, String[] presentableNames, final Runnable run) {
+        AnAction[] myActions = new AnAction[options.length];
         for (int i = 0; i < options.length; i++) {
             final String value = options[i];
             final String name = presentableNames[i];

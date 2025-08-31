@@ -22,7 +22,7 @@ public class OffsetKey {
   private final String myName; // for debug purposes only
   private final boolean myMovableToRight;
 
-  private OffsetKey(String name, final boolean movableToRight) {
+  private OffsetKey(String name, boolean movableToRight) {
     myName = name;
     myMovableToRight = movableToRight;
   }
@@ -39,7 +39,7 @@ public class OffsetKey {
     return create(name, true);
   }
 
-  public static OffsetKey create(String name, final boolean movableToRight) {
+  public static OffsetKey create(String name, boolean movableToRight) {
     return new OffsetKey(name, movableToRight);
   }
 }

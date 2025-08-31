@@ -67,7 +67,7 @@ public class StdArrangementTokens {
     return TOKENS_BY_ID.get(id);
   }
 
-  private static Supplier<Set<ArrangementSettingsToken>> collectFields(@Nonnull final Class<?> clazz) {
+  private static Supplier<Set<ArrangementSettingsToken>> collectFields(@Nonnull Class<?> clazz) {
     return LazyValue.notNull(() -> {
       Set<ArrangementSettingsToken> result = new HashSet<>();
       for (Field field : clazz.getFields()) {

@@ -152,7 +152,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
       myTaskController.taskCompleted(visiblePack);
 
       if (visiblePack != null && myIsValid) {
-        final List<MoreCommitsRequest> requestsToRun = myRequestsToRun;
+        List<MoreCommitsRequest> requestsToRun = myRequestsToRun;
         myRequestsToRun = new ArrayList<>();
 
         Application.get().invokeLater(() -> {

@@ -51,8 +51,8 @@ public class LowLevelSearchUtil {
   // null -> there were nothing injected found
   @RequiredReadAction
   private static Boolean processInjectedFile(PsiElement element,
-                                             final TextOccurenceProcessor processor,
-                                             final StringSearcher searcher,
+                                             TextOccurenceProcessor processor,
+                                             StringSearcher searcher,
                                              @Nonnull ProgressIndicator progress,
                                              InjectedLanguageManager injectedLanguageManager) {
     if (!(element instanceof PsiLanguageInjectionHost)) return null;
@@ -60,7 +60,7 @@ public class LowLevelSearchUtil {
     List<Pair<PsiElement, TextRange>> list = injectedLanguageManager.getInjectedPsiFiles(element);
     if (list == null) return null;
     for (Pair<PsiElement, TextRange> pair : list) {
-      final PsiElement injected = pair.getFirst();
+      PsiElement injected = pair.getFirst();
       if (!processElementsContainingWordInElement(processor, injected, searcher, false, progress)) return Boolean.FALSE;
     }
     return Boolean.TRUE;
@@ -75,15 +75,15 @@ public class LowLevelSearchUtil {
                                        @Nonnull TextOccurenceProcessor processor,
                                        @Nonnull PsiElement scope,
                                        @Nonnull StringSearcher searcher,
-                                       final int offset,
-                                       final boolean processInjectedPsi,
+                                       int offset,
+                                       boolean processInjectedPsi,
                                        @Nonnull ProgressIndicator progress,
                                        ASTNode lastElement) {
     if (scope instanceof PsiCompiledElement) {
       throw new IllegalArgumentException("Scope is compiled, can't scan: " + scope);
     }
-    final int scopeStartOffset = scope.getTextRange().getStartOffset();
-    final int patternLength = searcher.getPatternLength();
+    int scopeStartOffset = scope.getTextRange().getStartOffset();
+    int patternLength = searcher.getPatternLength();
     ASTNode scopeNode = scope.getNode();
     boolean useTree = scopeNode != null;
     assert scope.isValid();
@@ -193,9 +193,9 @@ public class LowLevelSearchUtil {
   }
 
   @RequiredReadAction
-  public static boolean processElementsContainingWordInElement(@Nonnull final TextOccurenceProcessor processor,
-                                                               @Nonnull final PsiElement scope,
-                                                               @Nonnull final StringSearcher searcher,
+  public static boolean processElementsContainingWordInElement(@Nonnull TextOccurenceProcessor processor,
+                                                               @Nonnull PsiElement scope,
+                                                               @Nonnull StringSearcher searcher,
                                                                boolean processInjectedPsi,
                                                                @Nonnull ProgressIndicator progress) {
     int[] occurrences = getTextOccurrencesInScope(scope, searcher, progress);
@@ -208,7 +208,7 @@ public class LowLevelSearchUtil {
 
     PsiFile file = scope.getContainingFile();
     FileViewProvider viewProvider = file.getViewProvider();
-    final CharSequence buffer = viewProvider.getContents();
+    CharSequence buffer = viewProvider.getContents();
 
     TextRange range = scope.getTextRange();
     if (range == null) {
@@ -262,7 +262,7 @@ public class LowLevelSearchUtil {
       msg += "\n committed=" + PsiDocumentManager.getInstance(file.getProject()).isCommitted(document);
     }
     for (Language language : viewProvider.getLanguages()) {
-      final PsiFile root = viewProvider.getPsi(language);
+      PsiFile root = viewProvider.getPsi(language);
       msg += "\n root " +
         language +
         " length=" +
@@ -356,7 +356,7 @@ public class LowLevelSearchUtil {
       }
     }
 
-    final int patternLength = searcher.getPattern().length();
+    int patternLength = searcher.getPattern().length();
     if (index + patternLength < endOffset) {
       char c = text.charAt(index + patternLength);
       if (Character.isJavaIdentifierPart(c) && c != '$') {

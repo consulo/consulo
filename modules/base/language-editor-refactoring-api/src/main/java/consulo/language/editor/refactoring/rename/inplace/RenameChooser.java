@@ -58,7 +58,7 @@ abstract class RenameChooser {
 
   protected abstract void runRenameTemplate(Collection<Pair<PsiElement, TextRange>> stringUsages);
 
-  public void showChooser(final Collection<PsiReference> refs, final Collection<Pair<PsiElement, TextRange>> stringUsages) {
+  public void showChooser(Collection<PsiReference> refs, Collection<Pair<PsiElement, TextRange>> stringUsages) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       runRenameTemplate(RefactoringSettings.getInstance().RENAME_SEARCH_IN_COMMENTS_FOR_FILE ? stringUsages : new ArrayList<Pair<PsiElement, TextRange>>());
       return;
@@ -67,22 +67,22 @@ abstract class RenameChooser {
     JBPopup popup = JBPopupFactory.getInstance().createPopupChooserBuilder(ContainerUtil.newArrayList(CODE_OCCURRENCES, ALL_OCCURRENCES)).setTitle("String occurrences found").setMovable(false)
             .setResizable(false).setRequestFocus(true).setItemSelectedCallback(selectedValue -> {
               dropHighlighters();
-              final MarkupModel markupModel = myEditor.getMarkupModel();
+              MarkupModel markupModel = myEditor.getMarkupModel();
 
               if (ALL_OCCURRENCES.equals(selectedValue)) {
                 for (Pair<PsiElement, TextRange> pair : stringUsages) {
-                  final TextRange textRange = pair.second.shiftRight(pair.first.getTextOffset());
-                  final RangeHighlighter rangeHighlighter =
+                  TextRange textRange = pair.second.shiftRight(pair.first.getTextOffset());
+                  RangeHighlighter rangeHighlighter =
                           markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes, HighlighterTargetArea.EXACT_RANGE);
                   myRangeHighlighters.add(rangeHighlighter);
                 }
               }
 
               for (PsiReference reference : refs) {
-                final PsiElement element = reference.getElement();
+                PsiElement element = reference.getElement();
                 if (element == null) continue;
-                final TextRange textRange = element.getTextRange();
-                final RangeHighlighter rangeHighlighter =
+                TextRange textRange = element.getTextRange();
+                RangeHighlighter rangeHighlighter =
                         markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes, HighlighterTargetArea.EXACT_RANGE);
                 myRangeHighlighters.add(rangeHighlighter);
               }

@@ -35,7 +35,7 @@ public class BidirectionalMultiMap<K, V> {
     this(new HashMap<K, Set<V>>(), new HashMap<V, Set<K>>());
   }
 
-  public BidirectionalMultiMap(final Map<K, Set<V>> key2Values, final Map<V, Set<K>> value2Keys) {
+  public BidirectionalMultiMap(Map<K, Set<V>> key2Values, Map<V, Set<K>> value2Keys) {
     myKey2Values = key2Values;
     myValue2Keys = value2Keys;
   }
@@ -77,11 +77,11 @@ public class BidirectionalMultiMap<K, V> {
   }
 
   public boolean removeKey(K key) {
-    final Set<V> vs = myKey2Values.get(key);
+    Set<V> vs = myKey2Values.get(key);
     if (vs == null) return false;
 
     for (V v : vs) {
-      final Set<K> ks = myValue2Keys.get(v);
+      Set<K> ks = myValue2Keys.get(v);
       ks.remove(key);
       if (ks.isEmpty()) {
         myValue2Keys.remove(v);
@@ -111,11 +111,11 @@ public class BidirectionalMultiMap<K, V> {
   }
 
   public boolean removeValue(V value) {
-    final Set<K> ks = myValue2Keys.get(value);
+    Set<K> ks = myValue2Keys.get(value);
     if (ks == null) return false;
 
     for (K k : ks) {
-      final Set<V> vs = myKey2Values.get(k);
+      Set<V> vs = myKey2Values.get(k);
       vs.remove(value);
       if (vs.isEmpty()) {
         myKey2Values.remove(k);

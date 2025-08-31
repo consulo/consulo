@@ -91,11 +91,11 @@ public class VisualPosition {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof VisualPosition)) return false;
 
-    final VisualPosition that = (VisualPosition)o;
+    VisualPosition that = (VisualPosition)o;
 
     if (column != that.column) return false;
     if (line != that.line) return false;

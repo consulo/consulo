@@ -39,8 +39,8 @@ public class TodoForBaseRevision extends TodoForRanges {
                               int additionalOffset,
                               String name,
                               String text,
-                              boolean revision, FileType type, final Getter<Object> cacheGetter,
-                              final Consumer<Object> cacheSaver) {
+                              boolean revision, FileType type, Getter<Object> cacheGetter,
+                              Consumer<Object> cacheSaver) {
     super(project, ranges, additionalOffset, name, text, revision, type);
     myGetter = cacheGetter;
     mySaver = cacheSaver;
@@ -48,11 +48,11 @@ public class TodoForBaseRevision extends TodoForRanges {
 
   @Override
   protected TodoItemData[] getTodoItems() {
-    final TodoItemData[] items = (TodoItemData[])myGetter.get();
+    TodoItemData[] items = (TodoItemData[])myGetter.get();
     if (items != null) return items;
-    final TodoItem[] todoItems = getTodoForText(PsiTodoSearchHelper.getInstance(myProject));
+    TodoItem[] todoItems = getTodoForText(PsiTodoSearchHelper.getInstance(myProject));
     if (todoItems != null) {
-      final TodoItemData[] arr = convertTodo(todoItems);
+      TodoItemData[] arr = convertTodo(todoItems);
       mySaver.accept(arr);
       return arr;
     }
@@ -60,10 +60,10 @@ public class TodoForBaseRevision extends TodoForRanges {
   }
 
   public static TodoItemData[] convertTodo(TodoItem[] todoItems) {
-    final List<TodoItemData> list = new ArrayList<TodoItemData>();
+    List<TodoItemData> list = new ArrayList<TodoItemData>();
     for (TodoItem item : todoItems) {
-      final TextRange range = item.getTextRange();
-      final TodoItemData data = new TodoItemData(range.getStartOffset(), range.getEndOffset(), item.getPattern());
+      TextRange range = item.getTextRange();
+      TodoItemData data = new TodoItemData(range.getStartOffset(), range.getEndOffset(), item.getPattern());
       list.add(data);
     }
     return list.toArray(new TodoItemData[list.size()]);

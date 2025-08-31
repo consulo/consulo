@@ -64,7 +64,7 @@ public class PresentationTreeBuilderImpl implements DeclarativeCollapsiblePresen
                     ? InlayTags.COLLAPSIBLE_LIST_IMPLICITLY_EXPANDED_TAG
                     : InlayTags.COLLAPSIBLE_LIST_IMPLICITLY_COLLAPSED_TAG;
         }
-        final byte listIndex = context.addNode(index, tag, null);
+        byte listIndex = context.addNode(index, tag, null);
 
         // helper to add one branch
         Consumer<Branch> addChild = branch -> {

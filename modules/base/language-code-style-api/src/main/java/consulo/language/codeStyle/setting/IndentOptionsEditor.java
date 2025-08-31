@@ -154,7 +154,7 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
     }
   }
 
-  public boolean isModified(final CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
+  public boolean isModified(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
     boolean isModified;
     isModified = isFieldModified(myTabSizeField, options.TAB_SIZE);
     isModified |= isFieldModified(myCbUseTab, options.USE_TAB_CHARACTER);
@@ -173,7 +173,7 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
     return ((IntegerField)myTabSizeField).getValue();
   }
 
-  public void apply(final CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
+  public void apply(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
     options.INDENT_SIZE = getUIIndent();
     options.TAB_SIZE = getUITabSize();
     options.USE_TAB_CHARACTER = myCbUseTab.isSelected();

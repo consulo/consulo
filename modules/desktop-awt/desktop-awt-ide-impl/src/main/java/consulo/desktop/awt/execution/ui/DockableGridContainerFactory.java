@@ -35,7 +35,7 @@ public class DockableGridContainerFactory implements DockContainerFactory {
 
   @Override
   public DockContainer createContainer(DockManager dockManager, DockableContent content) {
-    final RunnerContentUiImpl.DockableGrid dockableGrid = (RunnerContentUiImpl.DockableGrid)content;
+    RunnerContentUiImpl.DockableGrid dockableGrid = (RunnerContentUiImpl.DockableGrid)content;
     return new RunnerContentUiImpl(dockableGrid.getRunnerUi(), dockableGrid.getOriginalRunnerUi(), dockableGrid.getWindow());
   }
 }

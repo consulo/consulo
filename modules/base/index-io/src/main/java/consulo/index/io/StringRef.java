@@ -40,7 +40,7 @@ public class StringRef {
     store = null;
   }
 
-  private StringRef(final int id, @Nonnull AbstractStringEnumerator store) {
+  private StringRef(int id, @Nonnull AbstractStringEnumerator store) {
     this.id = id;
     this.store = store;
   }
@@ -92,7 +92,7 @@ public class StringRef {
   }
 
   @Override
-  public boolean equals(final Object that) {
+  public boolean equals(Object that) {
     return that == this || that instanceof StringRef && toString().equals(that.toString());
   }
 
@@ -113,14 +113,14 @@ public class StringRef {
 
   @Nullable
   public static StringRef fromStream(@Nonnull DataInput in, @Nonnull AbstractStringEnumerator store) throws IOException {
-    final int nameId = DataInputOutputUtil.readINT(in);
+    int nameId = DataInputOutputUtil.readINT(in);
 
     return nameId != 0 ? new StringRef(nameId, store) : null;
   }
 
   @Nullable
   public static String stringFromStream(@Nonnull DataInput in, @Nonnull AbstractStringEnumerator store) throws IOException {
-    final int nameId = DataInputOutputUtil.readINT(in);
+    int nameId = DataInputOutputUtil.readINT(in);
     return nameId != 0 ? store.valueOf(nameId) : null;
   }
 

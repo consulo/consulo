@@ -24,8 +24,8 @@ import consulo.language.version.LanguageVersion;
 
 public class CacheUtil {
 
-  public static boolean isInComments(final IElementType tokenType, LanguageVersion languageVersion) {
-    final Language language = tokenType.getLanguage();
+  public static boolean isInComments(IElementType tokenType, LanguageVersion languageVersion) {
+    Language language = tokenType.getLanguage();
 
     //for (CommentTokenSetProvider provider : CommentTokenSetProvider.EXTENSION.allForLanguage(language)) {
     //  if (provider.isInComments(tokenType)) {
@@ -34,10 +34,10 @@ public class CacheUtil {
     //}
 
     boolean inComments = false;
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
 
     if (parserDefinition != null) {
-      final TokenSet commentTokens = parserDefinition.getCommentTokens(languageVersion);
+      TokenSet commentTokens = parserDefinition.getCommentTokens(languageVersion);
 
       if (commentTokens.contains(tokenType)) {
         inComments = true;

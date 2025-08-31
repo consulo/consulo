@@ -62,7 +62,7 @@ public class ActionMenuItemEngine {
          * @return whether the component in Swing tree or not. This method is more
          * weak then {@link Component#isShowing() }
          */
-        private boolean isInTree(final Component component) {
+        private boolean isInTree(Component component) {
             if (component instanceof Window) {
                 return component.isShowing();
             }
@@ -73,14 +73,14 @@ public class ActionMenuItemEngine {
         }
 
         @Override
-        public void actionPerformed(final ActionEvent e) {
-            final IdeFocusManager fm = IdeFocusManager.findInstanceByContext(myContext);
-            final String id = ActionManager.getInstance().getId(myAction.getAction());
+        public void actionPerformed(ActionEvent e) {
+            IdeFocusManager fm = IdeFocusManager.findInstanceByContext(myContext);
+            String id = ActionManager.getInstance().getId(myAction.getAction());
             if (id != null) {
                 FeatureUsageTracker.getInstance().triggerFeatureUsed("context.menu.click.stats." + id.replace(' ', '.'));
             }
             fm.runOnOwnContext(myContext, () -> {
-                final AnActionEvent event =
+                AnActionEvent event =
                     new AnActionEvent(new MouseEvent(myButton,
                         MouseEvent.MOUSE_PRESSED,
                         0,
@@ -90,7 +90,7 @@ public class ActionMenuItemEngine {
                         1,
                         false),
                         myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers(), true, false);
-                final AnAction menuItemAction = myAction.getAction();
+                AnAction menuItemAction = myAction.getAction();
                 if (ActionImplUtil.lastUpdateAndCheckDumb(menuItemAction, event, false)) {
                     ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
                     actionManager.fireBeforeActionPerformed(menuItemAction, myContext, event);
@@ -128,7 +128,7 @@ public class ActionMenuItemEngine {
 
             try {
                 if (Presentation.PROP_VISIBLE.equals(name)) {
-                    final boolean visible = myPresentation.isVisible();
+                    boolean visible = myPresentation.isVisible();
                     if (!visible && TopApplicationMenuUtil.isMacSystemMenu && myPlace.equals(ActionPlaces.MAIN_MENU)) {
                         myButton.setEnabled(false);
                     }
@@ -178,7 +178,7 @@ public class ActionMenuItemEngine {
     public ActionMenuItemEngine(AbstractButton button,
                                 AnAction action,
                                 Presentation presentation,
-                                @Nonnull final String place,
+                                @Nonnull String place,
                                 @Nonnull DataContext context,
                                 boolean enableMnemonics,
                                 boolean prepareNow,
@@ -233,17 +233,17 @@ public class ActionMenuItemEngine {
             setAcceleratorFromShortcuts(shortcuts);
         }
         else {
-            final ShortcutSet shortcutSet = action.getShortcutSet();
+            ShortcutSet shortcutSet = action.getShortcutSet();
             if (shortcutSet != null) {
                 setAcceleratorFromShortcuts(shortcutSet.getShortcuts());
             }
         }
     }
 
-    private void setAcceleratorFromShortcuts(final Shortcut[] shortcuts) {
+    private void setAcceleratorFromShortcuts(Shortcut[] shortcuts) {
         for (Shortcut shortcut : shortcuts) {
             if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
-                final KeyStroke firstKeyStroke = keyboardShortcut.getFirstKeyStroke();
+                KeyStroke firstKeyStroke = keyboardShortcut.getFirstKeyStroke();
                 //If action has Enter shortcut, do not add it. Otherwise, user won't be able to chose any ActionMenuItem other than that
                 if (!isEnterKeyStroke(firstKeyStroke)) {
                     ((ActionMenuItem) myButton).setAccelerator(firstKeyStroke);

@@ -33,7 +33,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   private final ArtifactEditorContext myContext;
   private final ContentFolderTypeProvider myContentFolderType;
 
-  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer, @Nonnull ArtifactEditorContext context, final ContentFolderTypeProvider contentFolderType) {
+  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer, @Nonnull ArtifactEditorContext context, ContentFolderTypeProvider contentFolderType) {
     myModulePointer = modulePointer;
     myContext = context;
     myContentFolderType = contentFolderType;
@@ -56,7 +56,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
 
   @Override
   public void navigateToSource() {
-    final Module module = findModule();
+    Module module = findModule();
     if (module != null) {
       myContext.selectModule(module);
     }
@@ -64,15 +64,15 @@ public class ModuleElementPresentation extends TreeNodePresentation {
 
   @Override
   public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
-    final Module module = findModule();
+    Module module = findModule();
     presentationData.setIcon(myContentFolderType.getIcon());
 
     String moduleName;
     if (module != null) {
       moduleName = module.getName();
-      final ModifiableModuleModel moduleModel = myContext.getModifiableModuleModel();
+      ModifiableModuleModel moduleModel = myContext.getModifiableModuleModel();
       if (moduleModel != null) {
-        final String newName = moduleModel.getNewName(module);
+        String newName = moduleModel.getNewName(module);
         if (newName != null) {
           moduleName = newName;
         }

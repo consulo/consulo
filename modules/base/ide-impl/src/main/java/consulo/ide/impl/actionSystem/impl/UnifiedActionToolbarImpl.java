@@ -58,7 +58,7 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
         myComponent = myStyle.isHorizontal() ? HorizontalLayout.create() : VerticalLayout.create();
     }
 
-    public void setTargetComponent(final javax.swing.JComponent component) {
+    public void setTargetComponent(javax.swing.JComponent component) {
     }
 
     @Nonnull

@@ -68,7 +68,7 @@ class FileLocalStringEnumerator implements AbstractStringEnumerator {
   }
 
   static void readEnumeratedStrings(@Nonnull FileLocalStringEnumerator enumerator, @Nonnull DataInput stream, @Nonnull UnaryOperator<String> interner) throws IOException {
-    final int numberOfStrings = DataInputOutputUtil.readINT(stream);
+    int numberOfStrings = DataInputOutputUtil.readINT(stream);
     byte[] buffer = IOUtil.allocReadWriteUTFBuffer();
     enumerator.myStrings.ensureCapacity(numberOfStrings);
 

@@ -44,7 +44,7 @@ public class MethodSignatureComponent extends EditorTextField {
 
   public void setSignature(String signature) {
     setText(signature);
-    final EditorEx editor = (EditorEx)getEditor();
+    EditorEx editor = (EditorEx)getEditor();
     if (editor != null) {
       editor.getScrollingModel().scrollVertically(0);
       editor.getScrollingModel().scrollHorizontally(0);
@@ -54,7 +54,7 @@ public class MethodSignatureComponent extends EditorTextField {
   @Override
   protected EditorEx createEditor() {
     EditorEx editor = super.createEditor();
-    final String fileName = getFileName();
+    String fileName = getFileName();
     if (fileName != null) {
       editor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(getProject(), fileName));
     }

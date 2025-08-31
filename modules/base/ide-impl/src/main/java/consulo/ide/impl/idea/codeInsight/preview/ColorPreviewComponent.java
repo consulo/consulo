@@ -29,16 +29,16 @@ public class ColorPreviewComponent extends JComponent implements PreviewHintComp
   @Nonnull
   private final Color myColor;
 
-  public ColorPreviewComponent(@Nonnull final Color color) {
+  public ColorPreviewComponent(@Nonnull Color color) {
     myColor = color;
     setOpaque(true);
   }
 
   @Override
-  public void paintComponent(final Graphics g) {
-    final Graphics2D g2 = (Graphics2D)g;
+  public void paintComponent(Graphics g) {
+    Graphics2D g2 = (Graphics2D)g;
 
-    final Rectangle r = getBounds();
+    Rectangle r = getBounds();
 
     g2.setPaint(myColor);
     g2.fillRect(1, 1, r.width - 2, r.height - 2);

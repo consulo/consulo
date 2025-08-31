@@ -33,7 +33,7 @@ public class ExecutionErrorDialog {
   private ExecutionErrorDialog() {
   }
 
-  public static void show(final ExecutionException e, final String title, final Project project) {
+  public static void show(ExecutionException e, String title, Project project) {
     if (e instanceof RunCanceledByUserException) {
       return;
     }
@@ -41,14 +41,14 @@ public class ExecutionErrorDialog {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       throw new RuntimeException(e.getLocalizedMessage());
     }
-    final String message = e.getMessage();
+    String message = e.getMessage();
     if (message == null || message.length() < 100) {
       Messages.showErrorDialog(project, message == null ? "exception was thrown" : message, title);
       return;
     }
-    final DialogBuilder builder = new DialogBuilder(project);
+    DialogBuilder builder = new DialogBuilder(project);
     builder.setTitle(title);
-    final JTextArea textArea = new JTextArea();
+    JTextArea textArea = new JTextArea();
     textArea.setEditable(false);
     textArea.setForeground(UIUtil.getLabelForeground());
     textArea.setBackground(UIUtil.getLabelBackground());
@@ -56,9 +56,9 @@ public class ExecutionErrorDialog {
     textArea.setText(message);
     textArea.setWrapStyleWord(false);
     textArea.setLineWrap(true);
-    final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(textArea);
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(textArea);
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    final JPanel panel = new JPanel(new BorderLayout(10, 0));
+    JPanel panel = new JPanel(new BorderLayout(10, 0));
     panel.setPreferredSize(new Dimension(500, 200));
     panel.add(scrollPane, BorderLayout.CENTER);
     panel.add(new JBLabel(Messages.getErrorIcon()), BorderLayout.WEST);

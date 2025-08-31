@@ -87,7 +87,7 @@ public class ApplicationInfo {
     }
   }
 
-  private static GregorianCalendar parseDate(final String dateString) {
+  private static GregorianCalendar parseDate(String dateString) {
     int year = 0, month = 0, day = 0, hour = 0, minute = 0;
     try {
       year = Integer.parseInt(dateString.substring(0, 4));
@@ -163,9 +163,9 @@ public class ApplicationInfo {
   }
 
   public String getFullVersion() {
-    final String majorVersion = getMajorVersion();
+    String majorVersion = getMajorVersion();
     if (majorVersion.trim().length() > 0) {
-      final String minorVersion = getMinorVersion();
+      String minorVersion = getMinorVersion();
       if (minorVersion.trim().length() > 0) {
         return majorVersion + "." + minorVersion;
       }

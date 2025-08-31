@@ -109,8 +109,8 @@ public class ChangeTrackingValueContainer<Value> extends CompactableUpdatableVal
       }
 
       FileId2ValueMapping<Value> fileId2ValueMapping = null;
-      final ValueContainer<Value> fromDisk = myInitializer.compute();
-      final ValueContainerImpl<Value> newMerged;
+      ValueContainer<Value> fromDisk = myInitializer.compute();
+      ValueContainerImpl<Value> newMerged;
 
       if (fromDisk instanceof ValueContainerImpl) {
         newMerged = ((ValueContainerImpl<Value>)fromDisk).clone();
@@ -124,7 +124,7 @@ public class ChangeTrackingValueContainer<Value> extends CompactableUpdatableVal
         // Calculate file ids that have Value mapped to avoid O(NumberOfValuesInMerged) during removal
         fileId2ValueMapping = new FileId2ValueMapping<>(newMerged);
       }
-      final FileId2ValueMapping<Value> finalFileId2ValueMapping = fileId2ValueMapping;
+      FileId2ValueMapping<Value> finalFileId2ValueMapping = fileId2ValueMapping;
       if (myInvalidated != null) {
         myInvalidated.forEach(inputId -> {
           if (finalFileId2ValueMapping != null) finalFileId2ValueMapping.removeFileId(inputId);
@@ -165,14 +165,14 @@ public class ChangeTrackingValueContainer<Value> extends CompactableUpdatableVal
       getMergedData().saveTo(out, externalizer);
     }
     else {
-      final IntSet set = myInvalidated;
+      IntSet set = myInvalidated;
       if (set != null && set.size() > 0) {
         for (int inputId : set.toArray()) {
           DataInputOutputUtil.writeINT(out, -inputId); // mark inputId as invalid, to be processed on load in ValueContainerImpl.readFrom
         }
       }
 
-      final UpdatableValueContainer<Value> toAppend = myAdded;
+      UpdatableValueContainer<Value> toAppend = myAdded;
       if (toAppend != null && toAppend.size() > 0) {
         toAppend.saveTo(out, externalizer);
       }

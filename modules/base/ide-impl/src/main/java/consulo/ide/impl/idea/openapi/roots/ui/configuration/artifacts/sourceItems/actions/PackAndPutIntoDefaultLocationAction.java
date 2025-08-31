@@ -36,9 +36,9 @@ public class PackAndPutIntoDefaultLocationAction extends PutIntoDefaultLocationA
 
   @Override
   public void update(AnActionEvent e) {
-    final String jarName = suggestJarName();
-    final String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
-    final Presentation presentation = e.getPresentation();
+    String jarName = suggestJarName();
+    String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
+    Presentation presentation = e.getPresentation();
     if (jarName != null && pathForJars != null) {
       presentation.setText("Pack Into " + DeploymentUtil.appendToPath(pathForJars, jarName + ".jar"));
       presentation.setVisible(true);
@@ -50,7 +50,7 @@ public class PackAndPutIntoDefaultLocationAction extends PutIntoDefaultLocationA
 
   @Nullable
   private String suggestJarName() {
-    final List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
+    List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
     for (PackagingSourceItem item : items) {
       if (item.isProvideElements() && item.getKindOfProducedElements().containsDirectoriesWithClasses()) {
         return item.createPresentation(myArtifactEditor.getContext()).getPresentableName();
@@ -61,8 +61,8 @@ public class PackAndPutIntoDefaultLocationAction extends PutIntoDefaultLocationA
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
-    final String jarName = suggestJarName();
+    String pathForJars = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.JAR_FILES);
+    String jarName = suggestJarName();
     if (pathForJars != null) {
       myArtifactEditor.getLayoutTreeComponent().packInto(mySourceItemsTree.getSelectedItems(), 
                                                          DeploymentUtil.appendToPath(pathForJars, jarName + ".jar"));

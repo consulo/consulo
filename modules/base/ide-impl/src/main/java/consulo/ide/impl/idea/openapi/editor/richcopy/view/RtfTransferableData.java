@@ -53,7 +53,7 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
   }
 
   @Override
-  protected void build(@Nonnull final StringBuilder holder, final int maxLength) {
+  protected void build(@Nonnull StringBuilder holder, int maxLength) {
     holder.append(HEADER_PREFIX);
 
     holder.append("{\\colortbl;");

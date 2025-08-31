@@ -35,10 +35,10 @@ public class IdeGlassPaneUtil {
   public static IdeGlassPane find(Component component) {
     if (!(component instanceof JComponent)) throw new IllegalArgumentException("Component must be instance of JComponent");
 
-    final JRootPane root = ((JComponent)component).getRootPane();
+    JRootPane root = ((JComponent)component).getRootPane();
     if (root == null) throw new IllegalArgumentException("Component must be visible in order to find glass pane for it");
 
-    final Component gp = root.getGlassPane();
+    Component gp = root.getGlassPane();
     if (!(gp instanceof IdeGlassPane)) {
       throw new IllegalArgumentException("Glass pane should be " + IdeGlassPane.class.getName());
     }
@@ -46,7 +46,7 @@ public class IdeGlassPaneUtil {
   }
 
   public static void installPainter(final JComponent target, final Painter painter, final Disposable parent) {
-    final UiNotifyConnector connector = new UiNotifyConnector(target, new Activatable() {
+    UiNotifyConnector connector = new UiNotifyConnector(target, new Activatable() {
 
       IdeGlassPane myPane;
 

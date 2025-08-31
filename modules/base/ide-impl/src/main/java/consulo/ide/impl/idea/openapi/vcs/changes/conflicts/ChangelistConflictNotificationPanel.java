@@ -36,10 +36,10 @@ import java.util.function.Supplier;
 public class ChangelistConflictNotificationPanel {
   @Nullable
   public static EditorNotificationBuilder create(ChangelistConflictTracker tracker, VirtualFile file, Supplier<EditorNotificationBuilder> builderFactory) {
-    final ChangeListManager manager = tracker.getChangeListManager();
-    final Change change = manager.getChange(file);
+    ChangeListManager manager = tracker.getChangeListManager();
+    Change change = manager.getChange(file);
     if (change == null) return null;
-    final LocalChangeList changeList = manager.getChangeList(change);
+    LocalChangeList changeList = manager.getChangeList(change);
     if (changeList == null) return null;
     EditorNotificationBuilder builder = builderFactory.get();
     build(tracker, file, LocalChangeListImpl.createEmptyChangeList(tracker.getProject(), "Test"), builder);
@@ -47,7 +47,7 @@ public class ChangelistConflictNotificationPanel {
   }
 
   static void build(ChangelistConflictTracker tracker, VirtualFile file, LocalChangeList changeList, EditorNotificationBuilder builder) {
-    final ChangeListManager manager = tracker.getChangeListManager();
+    ChangeListManager manager = tracker.getChangeListManager();
     builder.withText(LocalizeValue.localizeTODO("File from non-active changelist is modified"));
 
     builder.withAction(LocalizeValue.localizeTODO("Move changes"), LocalizeValue.localizeTODO("Move changes to active changelist (" + manager.getDefaultChangeList().getName() + ")"), (i) -> {

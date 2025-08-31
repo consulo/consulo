@@ -47,7 +47,7 @@ public class ProjectStructureProblemDescription {
                                             @Nonnull PlaceInProjectStructure place,
                                             @Nonnull ProjectStructureProblemType problemType,
                                             @Nonnull ProblemLevel level,
-                                            @Nonnull List<? extends ConfigurationErrorQuickFix> fixes, final boolean canShowPlace) {
+                                            @Nonnull List<? extends ConfigurationErrorQuickFix> fixes, boolean canShowPlace) {
     myMessage = message;
     myDescription = description;
     myPlace = place;
@@ -61,7 +61,7 @@ public class ProjectStructureProblemDescription {
     return myProblemLevel;
   }
 
-  public String getMessage(final boolean includePlace) {
+  public String getMessage(boolean includePlace) {
     if (includePlace && myCanShowPlace) {
       return myPlace.getContainingElement().getPresentableName() + ": " + StringUtil.decapitalize(myMessage);
     }
@@ -86,7 +86,7 @@ public class ProjectStructureProblemDescription {
   }
 
   public String getId() {
-    final String placePath = myPlace.getPlacePath();
+    String placePath = myPlace.getPlacePath();
     return myProblemType.getId() + "(" + myPlace.getContainingElement().getId() + (placePath != null ? "," + placePath : "") + ")";
   }
 }

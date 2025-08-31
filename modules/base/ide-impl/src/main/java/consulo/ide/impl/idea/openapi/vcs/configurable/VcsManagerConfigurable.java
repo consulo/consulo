@@ -141,7 +141,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     }
 
     myProject.getExtensionPoint(VcsConfigurableProvider.class).forEachExtensionSafe(provider -> {
-      final Configurable configurable = provider.getConfigurable(myProject);
+      Configurable configurable = provider.getConfigurable(myProject);
       if (configurable != null) {
         result.add(configurable);
       }

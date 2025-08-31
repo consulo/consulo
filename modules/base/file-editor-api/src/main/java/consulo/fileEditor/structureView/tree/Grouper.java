@@ -35,5 +35,5 @@ public interface Grouper extends TreeAction {
    * @return the collection of groups
    */
   @Nonnull
-  Collection<Group> group(final Object parent, Collection<TreeElement> children);
+  Collection<Group> group(Object parent, Collection<TreeElement> children);
 }

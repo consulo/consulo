@@ -30,24 +30,24 @@ public class SelectedFilesHelper implements Runnable {
   private final VirtualFile[] myData;
   private int myCnt;
 
-  private SelectedFilesHelper(final Project project, final AnActionEvent e) {
+  private SelectedFilesHelper(Project project, AnActionEvent e) {
     myStatusManager = FileStatusManager.getInstance(project);
     myData = e.getData(VirtualFile.KEY_OF_ARRAY);
     myCheckers = new LinkedList<>();
   }
 
-  private void add(final MyChecker checker) {
+  private void add(MyChecker checker) {
     myCheckers.add(checker);
   }
 
-  public static boolean hasChangedSelectedFiles(final Project project, final AnActionEvent e) {
-    final SelectedFilesHelper helper = new SelectedFilesHelper(project, e);
+  public static boolean hasChangedSelectedFiles(Project project, AnActionEvent e) {
+    SelectedFilesHelper helper = new SelectedFilesHelper(project, e);
     helper.add(new MyChangedChecker(helper));
     return helper.execute();
   }
 
-  public static boolean hasChangedOrUnversionedFiles(final Project project, final AnActionEvent e) {
-    final SelectedFilesHelper helper = new SelectedFilesHelper(project, e);
+  public static boolean hasChangedOrUnversionedFiles(Project project, AnActionEvent e) {
+    SelectedFilesHelper helper = new SelectedFilesHelper(project, e);
     helper.add(new MyChangedChecker(helper));
     helper.add(new MyUnversionedChecker(helper));
     return helper.execute();
@@ -58,7 +58,7 @@ public class SelectedFilesHelper implements Runnable {
       myCnt = myCheckers.size();
 
       for (VirtualFile vf : myData) {
-        final FileStatus status = myStatusManager.getStatus(vf);
+        FileStatus status = myStatusManager.getStatus(vf);
         for (MyChecker checker : myCheckers) {
           checker.execute(status);
         }
@@ -94,7 +94,7 @@ public class SelectedFilesHelper implements Runnable {
     }
 
     @Override
-    protected boolean check(final FileStatus status) {
+    protected boolean check(FileStatus status) {
       return ! (FileStatus.UNKNOWN.equals(status) || FileStatus.NOT_CHANGED.equals(status) || FileStatus.IGNORED.equals(status));
     }
   }
@@ -103,13 +103,13 @@ public class SelectedFilesHelper implements Runnable {
     private boolean myFound;
     private final Runnable myFinishedListener;
 
-    protected MyChecker(final Runnable finishedListener) {
+    protected MyChecker(Runnable finishedListener) {
       myFinishedListener = finishedListener;
     }
 
-    protected abstract boolean check(final FileStatus status);
+    protected abstract boolean check(FileStatus status);
 
-    public void execute(final FileStatus status) {
+    public void execute(FileStatus status) {
       if (myFound) return;
       if (check(status)) {
         myFound = true;

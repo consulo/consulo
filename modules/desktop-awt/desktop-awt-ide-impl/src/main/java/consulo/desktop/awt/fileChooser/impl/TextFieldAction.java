@@ -33,8 +33,8 @@ public abstract class TextFieldAction extends LinkLabel implements LinkListener 
     update();
   }
 
-  protected void onSetActive(final boolean active) {
-    final String tooltip = KeymapUtil.createTooltipText(
+  protected void onSetActive(boolean active) {
+    String tooltip = KeymapUtil.createTooltipText(
       ActionLocalize.actionFilechooserTogglepathshowingText().get(),
       ActionManager.getInstance().getAction("FileChooser.TogglePathShowing")
     );

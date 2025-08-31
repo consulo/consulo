@@ -26,26 +26,26 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public abstract class XDebuggerToggleActionHandler extends DebuggerToggleActionHandler {
-  public final boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
+  public final boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && isEnabled(session, event);
   }
 
-  public boolean isSelected(@Nonnull final Project project, final AnActionEvent event) {
+  public boolean isSelected(@Nonnull Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && isSelected(session, event);
   }
 
-  public void setSelected(@Nonnull final Project project, final AnActionEvent event, final boolean state) {
+  public void setSelected(@Nonnull Project project, AnActionEvent event, boolean state) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session != null) {
       setSelected(session, event, state);
     }
   }
 
-  protected abstract boolean isEnabled(final XDebugSession session, final AnActionEvent event);
+  protected abstract boolean isEnabled(XDebugSession session, AnActionEvent event);
 
-  protected abstract boolean isSelected(final XDebugSession session, final AnActionEvent event);
+  protected abstract boolean isSelected(XDebugSession session, AnActionEvent event);
 
-  protected abstract void setSelected(final XDebugSession session, final AnActionEvent event, boolean state);
+  protected abstract void setSelected(XDebugSession session, AnActionEvent event, boolean state);
 }

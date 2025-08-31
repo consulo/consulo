@@ -33,13 +33,13 @@ public class RunConfigurationRefactoringElementListenerProvider implements Refac
   private static final Logger LOG = Logger.getInstance(RunConfigurationRefactoringElementListenerProvider.class);
 
   @Override
-  public RefactoringElementListener getListener(final PsiElement element) {
+  public RefactoringElementListener getListener(PsiElement element) {
     RefactoringElementListenerComposite composite = null;
-    final RunConfiguration[] configurations = RunManager.getInstance(element.getProject()).getAllConfigurations();
+    RunConfiguration[] configurations = RunManager.getInstance(element.getProject()).getAllConfigurations();
 
     for (RunConfiguration configuration : configurations) {
       if (configuration instanceof RefactoringListenerProvider) { // todo: perhaps better way to handle listeners?
-        final RefactoringElementListener listener;
+        RefactoringElementListener listener;
         try {
           listener = ((RefactoringListenerProvider)configuration).getRefactoringElementListener(element);
         }

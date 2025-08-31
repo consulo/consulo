@@ -54,7 +54,7 @@ public class ScrollUtil {
     }
     for (Component comp : c.getComponents()) {
       if (comp instanceof JComponent) {
-        final JScrollBar scrollBar = findScrollBar((JComponent)comp, orientation);
+        JScrollBar scrollBar = findScrollBar((JComponent)comp, orientation);
         if (scrollBar != null) {
           return scrollBar;
         }
@@ -64,14 +64,14 @@ public class ScrollUtil {
   }
 
   public static void scrollVertically(JComponent c, int position) {
-    final JScrollPane pane = findScrollPane(c);
+    JScrollPane pane = findScrollPane(c);
     if (pane != null) {
-      final JScrollBar bar = pane.getVerticalScrollBar();
+      JScrollBar bar = pane.getVerticalScrollBar();
       if (bar != null) {
         bar.setValue(position);
       }
     } else {
-      final JScrollBar scrollBar = findVerticalScrollBar(c);
+      JScrollBar scrollBar = findVerticalScrollBar(c);
       if (scrollBar != null) {
         scrollBar.setValue(position);
       }
@@ -79,31 +79,31 @@ public class ScrollUtil {
   }
 
   public static void scrollHorizontally(JComponent c, int position) {
-    final JScrollPane pane = findScrollPane(c);
+    JScrollPane pane = findScrollPane(c);
     if (pane != null) {
-      final JScrollBar bar = pane.getHorizontalScrollBar();
+      JScrollBar bar = pane.getHorizontalScrollBar();
       if (bar != null) {
         bar.setValue(position);
       }
     } else {
-      final JScrollBar scrollBar = findHorizontalScrollBar(c);
+      JScrollBar scrollBar = findHorizontalScrollBar(c);
       if (scrollBar != null) {
         scrollBar.setValue(position);
       }
     }
   }
 
-  public static void center(final JComponent c, final Rectangle r) {
+  public static void center(JComponent c, Rectangle r) {
     center(c, r, false);
   }
 
-  public static void center(final JComponent c, final Rectangle r, final boolean withInsets) {
-    final Rectangle visible = c.getVisibleRect();
+  public static void center(JComponent c, Rectangle r, boolean withInsets) {
+    Rectangle visible = c.getVisibleRect();
     visible.x = r.x - (visible.width - r.width) / 2;
     visible.y = r.y - (visible.height - r.height) / 2;
 
-    final Rectangle bounds = c.getBounds();
-    final Insets i = withInsets ? new Insets(0, 0, 0, 0) : c.getInsets();
+    Rectangle bounds = c.getBounds();
+    Insets i = withInsets ? new Insets(0, 0, 0, 0) : c.getInsets();
     bounds.x = i.left;
     bounds.y = i.top;
     bounds.width -= i.left + i.right;

@@ -29,7 +29,7 @@ public class IdentityCharTable implements CharTable {
 
   @Nonnull
   @Override
-  public CharSequence intern(@Nonnull final CharSequence text) {
+  public CharSequence intern(@Nonnull CharSequence text) {
     return text;
   }
 

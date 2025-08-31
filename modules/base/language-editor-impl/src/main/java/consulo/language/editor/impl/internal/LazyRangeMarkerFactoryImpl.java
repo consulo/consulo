@@ -106,7 +106,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
 
     @Override
     @Nonnull
-    public RangeMarker createRangeMarker(@Nonnull final VirtualFile file, final int offset) {
+    public RangeMarker createRangeMarker(@Nonnull VirtualFile file, int offset) {
         return ApplicationManager.getApplication().runReadAction((Supplier<RangeMarker>) () -> {
             // even for already loaded document do not create range marker yet - wait until it really needed when e.g. user clicked to jump to OpenFileDescriptor
             LazyMarker marker = new OffsetLazyMarker(file, offset);

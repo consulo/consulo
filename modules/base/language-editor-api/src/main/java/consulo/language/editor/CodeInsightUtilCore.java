@@ -56,8 +56,8 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
       element2 = file.getViewProvider().findElementAt(endOffset - 1, language);
     }
     if (element2 == null || element1 == null) return null;
-    final PsiElement commonParent = PsiTreeUtil.findCommonParent(element1, element2);
-    final T element = ReflectionUtil.isAssignable(klass, commonParent.getClass()) ? (T)commonParent : PsiTreeUtil.getParentOfType(commonParent, klass);
+    PsiElement commonParent = PsiTreeUtil.findCommonParent(element1, element2);
+    T element = ReflectionUtil.isAssignable(klass, commonParent.getClass()) ? (T)commonParent : PsiTreeUtil.getParentOfType(commonParent, klass);
 
     if (element == initialElement) {
       return element;
@@ -76,12 +76,12 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
 
   @RequiredReadAction
   public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(@Nonnull T element, boolean useFileLanguage) {
-    final PsiFile psiFile = element.getContainingFile();
-    final Document document = psiFile.getViewProvider().getDocument();
+    PsiFile psiFile = element.getContainingFile();
+    Document document = psiFile.getViewProvider().getDocument();
     //if (document == null) return element;
-    final Language language = useFileLanguage ? psiFile.getLanguage() : PsiUtilCore.getDialect(element);
-    final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(psiFile.getProject());
-    final RangeMarker rangeMarker = document.createRangeMarker(element.getTextRange());
+    Language language = useFileLanguage ? psiFile.getLanguage() : PsiUtilCore.getDialect(element);
+    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(psiFile.getProject());
+    RangeMarker rangeMarker = document.createRangeMarker(element.getTextRange());
     documentManager.doPostponedOperationsAndUnblockDocument(document);
     documentManager.commitDocument(document);
 
@@ -148,7 +148,7 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
                                                    boolean exitOnEscapingWrongSymbol,
                                                    @Nonnull char[] endChars) {
       int index = 0;
-      final int outOffset = outChars.length();
+      int outOffset = outChars.length();
       while (index < chars.length()) {
         char c = chars.charAt(index++);
         if (sourceOffsets != null) {

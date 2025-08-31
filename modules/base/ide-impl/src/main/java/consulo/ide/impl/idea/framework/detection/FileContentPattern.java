@@ -79,14 +79,14 @@ public class FileContentPattern extends ObjectPattern<FileContent, FileContentPa
     });
   }
 
-  public FileContentPattern xmlWithRootTagNamespace(final String namespace) {
+  public FileContentPattern xmlWithRootTagNamespace(String namespace) {
     return xmlWithRootTagNamespace(StandardPatterns.string().equalTo(namespace));
   }
 
   public FileContentPattern xmlWithRootTagNamespace(final ElementPattern<String> namespacePattern) {
     return with(new PatternCondition<FileContent>("xmlWithRootTagNamespace") {
       @Override
-      public boolean accepts(@Nonnull final FileContent fileContent, final ProcessingContext context) {
+      public boolean accepts(@Nonnull FileContent fileContent, ProcessingContext context) {
         try {
           String rootTagNamespace = parseHeaderWithException(fileContent).getRootTagNamespace();
           return rootTagNamespace != null && namespacePattern.accepts(rootTagNamespace, context);

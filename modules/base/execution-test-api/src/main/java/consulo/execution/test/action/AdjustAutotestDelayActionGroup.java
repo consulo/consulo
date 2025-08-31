@@ -61,7 +61,7 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
     @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        final AnAction[] actions = new AnAction[MAX_DELAY];
+        AnAction[] actions = new AnAction[MAX_DELAY];
         for (int i = 0; i < MAX_DELAY; i++) {
             actions[i] = new SetAutoTestDelayAction(i + 1);
         }

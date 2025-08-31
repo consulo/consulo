@@ -27,7 +27,7 @@ import javax.swing.*;
  * @since 11-Jul-2006
  */
 public class ComboboxSpeedSearch extends SpeedSearchBase<JComboBox> {
-  public ComboboxSpeedSearch(@Nonnull final JComboBox comboBox) {
+  public ComboboxSpeedSearch(@Nonnull JComboBox comboBox) {
     super(comboBox);
     removeKeyStroke(comboBox.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT), KeyStroke.getKeyStroke(' ', 0));
   }

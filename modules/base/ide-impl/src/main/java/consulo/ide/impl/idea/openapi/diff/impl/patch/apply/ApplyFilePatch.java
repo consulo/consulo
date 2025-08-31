@@ -49,7 +49,7 @@ public interface ApplyFilePatch {
       myStatus = status;
     }
 
-    protected Result(ApplyPatchStatus status, final IOException e) {
+    protected Result(ApplyPatchStatus status, IOException e) {
       myStatus = status;
       myException = e;
     }

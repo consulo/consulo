@@ -27,7 +27,7 @@ public class StructureLibraryTableModifiableModelProvider implements LibraryTabl
   private final String myLevel;
   private final DefaultLibrariesConfigurator myConfigurator;
 
-  public StructureLibraryTableModifiableModelProvider(String level, final DefaultLibrariesConfigurator configurator) {
+  public StructureLibraryTableModifiableModelProvider(String level, DefaultLibrariesConfigurator configurator) {
     myLevel = level;
     myConfigurator = configurator;
   }

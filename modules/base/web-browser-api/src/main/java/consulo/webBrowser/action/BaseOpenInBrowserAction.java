@@ -177,7 +177,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    public static void open(@Nullable final OpenInBrowserRequest request, boolean preferLocalUrl, @Nullable final WebBrowser browser) {
+    public static void open(@Nullable OpenInBrowserRequest request, boolean preferLocalUrl, @Nullable WebBrowser browser) {
         if (request == null) {
             return;
         }
@@ -205,7 +205,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
         if (urls.size() == 1) {
             return AsyncResult.resolved(ContainerUtil.getFirstItem(urls));
         }
-        final AsyncResult<Url> result = AsyncResult.undefined();
+        AsyncResult<Url> result = AsyncResult.undefined();
         JBPopupFactory.getInstance().createPopupChooserBuilder(new ArrayList<>(urls))
             .setTitle("Choose Url")
             .setRenderer(new ColoredListCellRenderer() {

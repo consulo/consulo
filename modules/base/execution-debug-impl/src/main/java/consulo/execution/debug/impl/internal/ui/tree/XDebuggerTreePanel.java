@@ -44,11 +44,11 @@ public class XDebuggerTreePanel implements DnDSource {
   private final XDebuggerTree myTree;
   private final JPanel myMainPanel;
 
-  public XDebuggerTreePanel(final @Nonnull Project project,
-                            final @Nonnull XDebuggerEditorsProvider editorsProvider,
+  public XDebuggerTreePanel(@Nonnull Project project,
+                            @Nonnull XDebuggerEditorsProvider editorsProvider,
                             @Nonnull Disposable parentDisposable,
-                            final @Nullable XSourcePosition sourcePosition,
-                            @Nonnull @NonNls final String popupActionGroupId,
+                            @Nullable XSourcePosition sourcePosition,
+                            @Nonnull @NonNls String popupActionGroupId,
                             @Nullable XValueMarkers<?, ?> markers) {
     myTree = new XDebuggerTree(project, editorsProvider, sourcePosition, popupActionGroupId, markers);
     myMainPanel = new JPanel(new BorderLayout());
@@ -66,7 +66,7 @@ public class XDebuggerTreePanel implements DnDSource {
   }
 
   @Override
-  public boolean canStartDragging(final DnDAction action, final Point dragOrigin) {
+  public boolean canStartDragging(DnDAction action, Point dragOrigin) {
     return getNodesToDrag().length > 0;
   }
 
@@ -75,12 +75,12 @@ public class XDebuggerTreePanel implements DnDSource {
   }
 
   @Override
-  public DnDDragStartBean startDragging(final DnDAction action, final Point dragOrigin) {
+  public DnDDragStartBean startDragging(DnDAction action, Point dragOrigin) {
     return new DnDDragStartBean(getNodesToDrag());
   }
 
   @Override
-  public Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin, @Nonnull DnDDragStartBean bean) {
+  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
     XValueNodeImpl[] nodes = getNodesToDrag();
     if (nodes.length == 1) {
       return DnDAwareTree.getDragImage(myTree, nodes[0].getPath(), dragOrigin);
@@ -93,6 +93,6 @@ public class XDebuggerTreePanel implements DnDSource {
   }
 
   @Override
-  public void dropActionChanged(final int gestureModifiers) {
+  public void dropActionChanged(int gestureModifiers) {
   }
 }

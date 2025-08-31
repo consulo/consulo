@@ -37,7 +37,7 @@ public class ProcessOutput {
   public ProcessOutput() {
   }
 
-  public ProcessOutput(final int exitCode) {
+  public ProcessOutput(int exitCode) {
     myExitCode = exitCode;
   }
 
@@ -92,7 +92,7 @@ public class ProcessOutput {
    * @param logger where to put error information
    * @return true iff exit code is zero
    */
-  public boolean checkSuccess(@Nonnull final Logger logger) {
+  public boolean checkSuccess(@Nonnull Logger logger) {
     if (getExitCode() != 0 || isTimeout()) {
       logger.info(getStderr() + (isTimeout() ? "\nTimed out" : "\nExit code " + getExitCode()));
       return false;

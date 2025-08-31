@@ -54,20 +54,20 @@ public class DirectoryNode extends PackageDependenciesNode {
                        Project project,
                        boolean compactPackages,
                        boolean showFQName,
-                       VirtualFile baseDir, final VirtualFile[] contentRoots) {
+                       VirtualFile baseDir, VirtualFile[] contentRoots) {
     super(project);
     myVDirectory = aDirectory;
-    final ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
-    final ProjectFileIndex index = projectRootManager.getFileIndex();
+    ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
+    ProjectFileIndex index = projectRootManager.getFileIndex();
     String dirName = aDirectory.getName();
     if (showFQName) {
-      final VirtualFile contentRoot = index.getContentRootForFile(myVDirectory);
+      VirtualFile contentRoot = index.getContentRootForFile(myVDirectory);
       if (contentRoot != null) {
         if (Comparing.equal(myVDirectory, contentRoot)) {
           myFQName = dirName;
         }
         else {
-          final VirtualFile sourceRoot = index.getSourceRootForFile(myVDirectory);
+          VirtualFile sourceRoot = index.getSourceRootForFile(myVDirectory);
           if (Comparing.equal(myVDirectory, sourceRoot)) {
             myFQName = VfsUtilCore.getRelativePath(myVDirectory, contentRoot, '/');
           }
@@ -96,7 +96,7 @@ public class DirectoryNode extends PackageDependenciesNode {
     myCompactPackages = compactPackages;
   }
 
-  private String getContentRootName(final VirtualFile baseDir, final String dirName) {
+  private String getContentRootName(VirtualFile baseDir, String dirName) {
     if (baseDir != null) {
       if (!Comparing.equal(myVDirectory, baseDir)) {
         if (VfsUtil.isAncestor(baseDir, myVDirectory, false)) {
@@ -141,7 +141,7 @@ public class DirectoryNode extends PackageDependenciesNode {
   }
 
   public String getFQName() {
-    final ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
+    ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
     VirtualFile directory = myVDirectory;
     VirtualFile contentRoot = index.getContentRootForFile(directory);
     if (Comparing.equal(directory, contentRoot)) {
@@ -190,7 +190,7 @@ public class DirectoryNode extends PackageDependenciesNode {
     if (this == o) return true;
     if (!(o instanceof DirectoryNode)) return false;
 
-    final DirectoryNode packageNode = (DirectoryNode)o;
+    DirectoryNode packageNode = (DirectoryNode)o;
 
     if (!toString().equals(packageNode.toString())) return false;
 
@@ -209,7 +209,7 @@ public class DirectoryNode extends PackageDependenciesNode {
     return AllIcons.Nodes.TreeOpen;
   }
 
-  public void setCompactedDirNode(final DirectoryNode compactedDirNode) {
+  public void setCompactedDirNode(DirectoryNode compactedDirNode) {
     if (myCompactedDirNode != null) {
       myCompactedDirNode.myWrapper = null;
     }
@@ -246,7 +246,7 @@ public class DirectoryNode extends PackageDependenciesNode {
   @Override
   public String getComment() {
     if (myVDirectory != null && myVDirectory.isValid() && !myProject.isDisposed()) {
-      final PsiDirectory directory = getPsiDirectory();
+      PsiDirectory directory = getPsiDirectory();
       if (directory != null) {
         return BaseProjectViewDirectoryHelper.getLocationString(directory);
       }
@@ -255,7 +255,7 @@ public class DirectoryNode extends PackageDependenciesNode {
   }
 
   @Override
-  public boolean canSelectInLeftTree(final Map<PsiFile, Set<PsiFile>> deps) {
+  public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
     Set<PsiFile> files = deps.keySet();
     for (PsiFile file : files) {
       if (file.getContainingDirectory() == getPsiDirectory()) {

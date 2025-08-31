@@ -50,7 +50,7 @@ class IntentionUsagePanel extends JPanel {
         myRangeBlinker = new RangeBlinker(myEditor, blinkAttributes, Integer.MAX_VALUE);
     }
 
-    public void reset(final String usageText, final FileType fileType) {
+    public void reset(String usageText, FileType fileType) {
         reinitViews();
         SwingUtilities.invokeLater(() -> {
             if (myEditor.isDisposed()) {
@@ -61,11 +61,11 @@ class IntentionUsagePanel extends JPanel {
         });
     }
 
-    private void configureByText(final String usageText, FileType fileType) {
+    private void configureByText(String usageText, FileType fileType) {
         Document document = myEditor.getDocument();
         String text = StringUtil.convertLineSeparators(usageText);
         document.replaceString(0, document.getTextLength(), text);
-        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+        EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         myEditor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(fileType, scheme, null));
         setupSpots(document);
     }

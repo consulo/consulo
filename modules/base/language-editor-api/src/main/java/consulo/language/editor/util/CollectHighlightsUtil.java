@@ -39,16 +39,16 @@ public class CollectHighlightsUtil {
 
   @Nonnull
   @RequiredReadAction
-  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, final int startOffset, final int endOffset) {
+  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, int startOffset, int endOffset) {
     return getElementsInRange(root, startOffset, endOffset, false);
   }
 
   @Nonnull
   @RequiredReadAction
-  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, final int startOffset, final int endOffset, boolean includeAllParents) {
+  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, int startOffset, int endOffset, boolean includeAllParents) {
     PsiElement commonParent = findCommonParent(root, startOffset, endOffset);
     if (commonParent == null) return new ArrayList<>();
-    final List<PsiElement> list = getElementsToHighlight(commonParent, startOffset, endOffset);
+    List<PsiElement> list = getElementsToHighlight(commonParent, startOffset, endOffset);
 
     PsiElement parent = commonParent;
     while (parent != null && parent != root) {
@@ -65,14 +65,14 @@ public class CollectHighlightsUtil {
 
   @Nonnull
   @RequiredReadAction
-  private static List<PsiElement> getElementsToHighlight(@Nonnull PsiElement commonParent, final int startOffset, final int endOffset) {
-    final List<PsiElement> result = new ArrayList<>();
+  private static List<PsiElement> getElementsToHighlight(@Nonnull PsiElement commonParent, int startOffset, int endOffset) {
+    List<PsiElement> result = new ArrayList<>();
 
     int offset = commonParent.getTextRange().getStartOffset();
 
-    final IntStack starts = new IntStack(STARTING_TREE_HEIGHT);
-    final Stack<PsiElement> elements = new Stack<>(STARTING_TREE_HEIGHT);
-    final Stack<PsiElement> children = new Stack<>(STARTING_TREE_HEIGHT);
+    IntStack starts = new IntStack(STARTING_TREE_HEIGHT);
+    Stack<PsiElement> elements = new Stack<>(STARTING_TREE_HEIGHT);
+    Stack<PsiElement> children = new Stack<>(STARTING_TREE_HEIGHT);
     PsiElement element = commonParent;
 
     PsiElement child = PsiUtilCore.NULL_PSI_ELEMENT;
@@ -121,9 +121,9 @@ public class CollectHighlightsUtil {
 
 
   @Nullable
-  public static PsiElement findCommonParent(final PsiElement root, final int startOffset, final int endOffset) {
+  public static PsiElement findCommonParent(PsiElement root, int startOffset, int endOffset) {
     if (startOffset == endOffset) return null;
-    final PsiElement left = findElementAtInRoot(root, startOffset);
+    PsiElement left = findElementAtInRoot(root, startOffset);
     PsiElement right = findElementAtInRoot(root, endOffset - 1);
     if (left == null || right == null) return null;
 
@@ -142,7 +142,7 @@ public class CollectHighlightsUtil {
   }
 
   @Nullable
-  private static PsiElement findElementAtInRoot(final PsiElement root, final int offset) {
+  private static PsiElement findElementAtInRoot(PsiElement root, int offset) {
     if (root instanceof PsiFile) {
       return ((PsiFile)root).getViewProvider().findElementAt(offset, root.getLanguage());
     }

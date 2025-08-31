@@ -72,7 +72,7 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     private void activateLayerIfNecessary() {
-        final IElementType baseTokenType = super.getTokenType();
+        IElementType baseTokenType = super.getTokenType();
         myCurrentLayerLexer = myStartTokenToLayerLexer.get(baseTokenType);
         if (myCurrentLayerLexer != null) {
             myCurrentBaseTokenType = baseTokenType;
@@ -131,7 +131,7 @@ public class LayeredLexer extends DelegateLexer {
         }
 
         if (isLayerActive()) {
-            final Lexer activeLayerLexer = myCurrentLayerLexer;
+            Lexer activeLayerLexer = myCurrentLayerLexer;
             IElementType layerTokenType = activeLayerLexer.getTokenType();
             if (!isStopToken(myCurrentLayerLexer, layerTokenType)) {
                 myCurrentLayerLexer.advance();
@@ -182,7 +182,7 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     private boolean isStopToken(Lexer lexer, IElementType tokenType) {
-        final IElementType[] stopTokens = myStopTokens.get(lexer);
+        IElementType[] stopTokens = myStopTokens.get(lexer);
         if (stopTokens == null) {
             return false;
         }

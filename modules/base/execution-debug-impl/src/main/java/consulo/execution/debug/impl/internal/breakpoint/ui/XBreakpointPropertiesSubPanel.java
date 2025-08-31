@@ -27,7 +27,7 @@ public abstract class XBreakpointPropertiesSubPanel {
   protected XBreakpointBase myBreakpoint;
   protected XBreakpointType myBreakpointType;
 
-  public void init(Project project, final XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
+  public void init(Project project, XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
     myProject = project;
     myBreakpointManager = breakpointManager;
     myBreakpoint = breakpoint;

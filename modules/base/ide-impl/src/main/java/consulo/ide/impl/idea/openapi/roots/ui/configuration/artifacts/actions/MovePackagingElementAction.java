@@ -43,7 +43,7 @@ public class MovePackagingElementAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final boolean b = isEnabled();
+    boolean b = isEnabled();
     e.getPresentation().setEnabled(b);
     e.getPresentation().setText(getTemplatePresentation().getText() + " (disabled if elements are sorted)");
   }
@@ -52,26 +52,26 @@ public class MovePackagingElementAction extends DumbAwareAction {
     if (myLayoutTreeComponent.isSortElements()) {
       return false;
     }
-    final PackagingElementNode<?> node = myLayoutTreeComponent.getSelection().getNodeIfSingle();
+    PackagingElementNode<?> node = myLayoutTreeComponent.getSelection().getNodeIfSingle();
     if (node == null) {
       return false;
     }
-    final CompositePackagingElementNode parent = node.getParentNode();
+    CompositePackagingElementNode parent = node.getParentNode();
     if (parent == null) return false;
 
-    final PackagingElement<?> element = node.getElementIfSingle();
-    final CompositePackagingElement<?> parentElement = parent.getElementIfSingle();
+    PackagingElement<?> element = node.getElementIfSingle();
+    CompositePackagingElement<?> parentElement = parent.getElementIfSingle();
     if (parentElement == null || element == null) return false;
-    final List<PackagingElement<?>> children = parentElement.getChildren();
-    final int index = children.indexOf(element);
+    List<PackagingElement<?>> children = parentElement.getChildren();
+    int index = children.indexOf(element);
     return index != -1 && 0 <= index + myDirection && index + myDirection < children.size();
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final PackagingElementNode<?> node = myLayoutTreeComponent.getSelection().getNodeIfSingle();
+    PackagingElementNode<?> node = myLayoutTreeComponent.getSelection().getNodeIfSingle();
     if (node == null) return;
-    final CompositePackagingElementNode parent = node.getParentNode();
+    CompositePackagingElementNode parent = node.getParentNode();
     if (parent == null) return;
 
     final PackagingElement<?> element = node.getElementIfSingle();
@@ -85,8 +85,8 @@ public class MovePackagingElementAction extends DumbAwareAction {
     myLayoutTreeComponent.editLayout(new Runnable() {
       @Override
       public void run() {
-        final int index = parentElement.getChildren().indexOf(element);
-        final PackagingElement<?> moved = parentElement.moveChild(index, myDirection);
+        int index = parentElement.getChildren().indexOf(element);
+        PackagingElement<?> moved = parentElement.moveChild(index, myDirection);
         if (moved != null) {
           toSelect.add(moved);
         }

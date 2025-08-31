@@ -82,7 +82,7 @@ public final class XValueNodePresentationConfigurator {
     public static void setPresentation(
         @Nullable Image icon,
         @NonNls @Nullable String type,
-        @NonNls @Nonnull final String separator,
+        @NonNls @Nonnull String separator,
         @NonNls @Nullable String value,
         boolean hasChildren,
         ConfigurableXValueNode node
@@ -113,10 +113,10 @@ public final class XValueNodePresentationConfigurator {
     }
 
     private static void doSetPresentation(
-        @Nullable final Image icon,
-        @Nonnull final XValuePresentation presentation,
-        final boolean hasChildren,
-        final ConfigurableXValueNode node
+        @Nullable Image icon,
+        @Nonnull XValuePresentation presentation,
+        boolean hasChildren,
+        ConfigurableXValueNode node
     ) {
         if (Obsolescent.isObsolete(node)) {
             return;

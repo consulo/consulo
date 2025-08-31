@@ -34,9 +34,9 @@ public class PsiElementFromSelectionsRule implements GetDataRule<PsiElement[]> {
 
   @Override
   public PsiElement[] getData(@Nonnull DataProvider dataProvider) {
-    final Object[] objects = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEMS);
+    Object[] objects = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEMS);
     if (objects != null) {
-      final PsiElement[] elements = new PsiElement[objects.length];
+      PsiElement[] elements = new PsiElement[objects.length];
       for (int i = 0, objectsLength = objects.length; i < objectsLength; i++) {
         Object object = objects[i];
         if (object instanceof PsiElement element && element.isValid()) {

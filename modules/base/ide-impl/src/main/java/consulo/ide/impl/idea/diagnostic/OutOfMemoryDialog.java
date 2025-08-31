@@ -205,7 +205,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
                 message = "Error: " + t.getMessage();
             }
             finally {
-                final String _message = message;
+                String _message = message;
                 SwingUtilities.invokeLater(() -> {
                     myDumpMessageLabel.setText(_message);
                     enableControls(true);

@@ -63,7 +63,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
     return isToBeShown(featureId, project, DAY);
   }
 
-  private boolean isToBeShown(String featureId, ComponentManager project, final long timeUnit) {
+  private boolean isToBeShown(String featureId, ComponentManager project, long timeUnit) {
     ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
     FeatureDescriptor descriptor = registry.getFeatureDescriptor(featureId);
     if (descriptor == null || !descriptor.isUnused()) return false;
@@ -112,7 +112,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
   }
 
   @Override
-  public void loadState(final Element element) {
+  public void loadState(Element element) {
     List featuresList = element.getChildren(FEATURE_TAG);
     for (Object aFeaturesList : featuresList) {
       Element featureElement = (Element)aFeaturesList;

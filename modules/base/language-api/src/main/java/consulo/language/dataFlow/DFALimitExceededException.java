@@ -19,7 +19,7 @@ package consulo.language.dataFlow;
  * @author oleg
  */
 public class DFALimitExceededException extends Exception {
-  public DFALimitExceededException(final String message) {
+  public DFALimitExceededException(String message) {
     super(message);
   }
 }

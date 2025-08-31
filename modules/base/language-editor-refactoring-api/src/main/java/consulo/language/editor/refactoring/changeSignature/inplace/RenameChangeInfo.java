@@ -31,7 +31,7 @@ public abstract class RenameChangeInfo implements ChangeInfo {
   private final int myOffset;
   private final String myOldName;
 
-  public RenameChangeInfo(final PsiNameIdentifierOwner namedElement, final ChangeInfo oldInfo) {
+  public RenameChangeInfo(PsiNameIdentifierOwner namedElement, ChangeInfo oldInfo) {
     myOldName = oldInfo instanceof RenameChangeInfo ? ((RenameChangeInfo)oldInfo).getOldName() : namedElement.getName();
     myFile = namedElement.getContainingFile();
     myOffset = namedElement.getTextOffset();
@@ -80,7 +80,7 @@ public abstract class RenameChangeInfo implements ChangeInfo {
 
   @Override
   public String getNewName() {
-    final PsiNameIdentifierOwner nameOwner = getNamedElement();
+    PsiNameIdentifierOwner nameOwner = getNamedElement();
     return nameOwner != null ? nameOwner.getName() : null;
   }
 
@@ -94,9 +94,9 @@ public abstract class RenameChangeInfo implements ChangeInfo {
   }
 
   public void perform() {
-    final PsiNameIdentifierOwner element = getNamedElement();
+    PsiNameIdentifierOwner element = getNamedElement();
     if (element != null) {
-      final String name = element.getName();
+      String name = element.getName();
       ApplicationManager.getApplication().runWriteAction(() -> {
         element.setName(myOldName);
       });
@@ -106,7 +106,7 @@ public abstract class RenameChangeInfo implements ChangeInfo {
 
   @Nullable
   public PsiElement getNameIdentifier() {
-    final PsiNameIdentifierOwner namedElement = getNamedElement();
+    PsiNameIdentifierOwner namedElement = getNamedElement();
     return namedElement != null ? namedElement.getNameIdentifier() : null;
   }
 }

@@ -38,7 +38,7 @@ public abstract class XDebuggerTreeInplaceEditor extends TreeInplaceEditor {
   protected final XDebuggerExpressionComboBox myExpressionEditor;
   protected final XDebuggerTree myTree;
 
-  public XDebuggerTreeInplaceEditor(final XDebuggerTreeNode node, @NonNls final String historyId) {
+  public XDebuggerTreeInplaceEditor(XDebuggerTreeNode node, @NonNls String historyId) {
     myNode = node;
     myTree = myNode.getTree();
     myExpressionEditor = new XDebuggerExpressionComboBox(myTree.getProject(), myTree.getEditorsProvider(), historyId, myTree.getSourcePosition(), false);
@@ -51,7 +51,7 @@ public abstract class XDebuggerTreeInplaceEditor extends TreeInplaceEditor {
 
   @Override
   protected void onHidden() {
-    final ComboPopup popup = myExpressionEditor.getComboBox().getPopup();
+    ComboPopup popup = myExpressionEditor.getComboBox().getPopup();
     if (popup != null && popup.isVisible()) {
       popup.hide();
     }

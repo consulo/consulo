@@ -39,9 +39,9 @@ public interface LookupEx extends Lookup, Disposable {
 
   void hideLookup(boolean explicitly);
 
-  void finishLookup(final char completionChar);
+  void finishLookup(char completionChar);
 
-  void finishLookup(char completionChar, @Nullable final LookupElement item);
+  void finishLookup(char completionChar, @Nullable LookupElement item);
 
   void setFocusDegree(LookupFocusDegree focusDegree);
 
@@ -69,9 +69,9 @@ public interface LookupEx extends Lookup, Disposable {
 
   void markReused();
 
-  void setCancelOnClickOutside(final boolean b);
+  void setCancelOnClickOutside(boolean b);
 
-  void setCancelOnOtherWindowOpen(final boolean b);
+  void setCancelOnOtherWindowOpen(boolean b);
 
   boolean isLookupDisposed();
 
@@ -123,7 +123,7 @@ public interface LookupEx extends Lookup, Disposable {
 
   void checkValid();
 
-  void replacePrefix(final String presentPrefix, final String newPrefix);
+  void replacePrefix(String presentPrefix, String newPrefix);
 
   void finishLookupInWritableFile(char completionChar, @Nullable LookupElement item);
 

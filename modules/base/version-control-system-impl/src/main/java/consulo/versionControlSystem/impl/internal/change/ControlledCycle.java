@@ -35,7 +35,7 @@ public class ControlledCycle {
 
   private final AtomicBoolean myActive;
 
-  public ControlledCycle(final Project project, final BooleanSupplier callback, @Nonnull final String name, final int refreshInterval) {
+  public ControlledCycle(final Project project, final BooleanSupplier callback, @Nonnull String name, int refreshInterval) {
     myRefreshInterval = (refreshInterval <= 0) ? ourRefreshInterval : refreshInterval;
     myActive = new AtomicBoolean(false);
     myRunnable = new Runnable() {
@@ -60,8 +60,8 @@ public class ControlledCycle {
     mySimpleAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, project);
   }
 
-  public boolean startIfNotStarted(final int refreshInterval) {
-    final boolean refreshIntervalChanged = (refreshInterval > 0) && refreshInterval != myRefreshInterval;
+  public boolean startIfNotStarted(int refreshInterval) {
+    boolean refreshIntervalChanged = (refreshInterval > 0) && refreshInterval != myRefreshInterval;
     if (refreshIntervalChanged) {
       mySimpleAlarm.cancelAllRequests();
     }
@@ -69,7 +69,7 @@ public class ControlledCycle {
       myRefreshInterval = refreshInterval;
     }
 
-    final boolean wasSet = myActive.compareAndSet(false, true);
+    boolean wasSet = myActive.compareAndSet(false, true);
     if (wasSet || refreshIntervalChanged) {
       mySimpleAlarm.addRequest(myRunnable, myRefreshInterval);
     }

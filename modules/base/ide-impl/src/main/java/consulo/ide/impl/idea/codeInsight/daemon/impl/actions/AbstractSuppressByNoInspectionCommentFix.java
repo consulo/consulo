@@ -47,19 +47,19 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
   private final boolean myReplaceOtherSuppressionIds;
 
   @Nullable
-  protected abstract PsiElement getContainer(final PsiElement context);
+  protected abstract PsiElement getContainer(PsiElement context);
 
   /**
    * @param ID                         Inspection ID
    * @param replaceOtherSuppressionIds Merge suppression policy. If false new tool id will be append to the end
    *                                   otherwise replace other ids
    */
-  public AbstractSuppressByNoInspectionCommentFix(@Nonnull String ID, final boolean replaceOtherSuppressionIds) {
+  public AbstractSuppressByNoInspectionCommentFix(@Nonnull String ID, boolean replaceOtherSuppressionIds) {
     myID = ID;
     myReplaceOtherSuppressionIds = replaceOtherSuppressionIds;
   }
 
-  protected final void replaceSuppressionComment(@Nonnull final PsiElement comment) {
+  protected final void replaceSuppressionComment(@Nonnull PsiElement comment) {
     SuppressionUtil.replaceSuppressionComment(comment, myID, myReplaceOtherSuppressionIds, getCommentLanguage(comment));
   }
 
@@ -80,18 +80,18 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
   }
 
   @Override
-  public boolean isAvailable(@Nonnull final Project project, final Editor editor, @Nonnull final PsiElement context) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement context) {
     return context.isValid() && context.getManager().isInProject(context) && getContainer(context) != null;
   }
 
   @Override
-  public void invoke(@Nonnull final Project project, @Nullable Editor editor, @Nonnull final PsiElement element) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, @Nullable Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
     PsiElement container = getContainer(element);
     if (container == null) return;
 
     if (!FileModificationService.getInstance().preparePsiElementForWrite(container)) return;
 
-    final List<? extends PsiElement> comments = getCommentsFor(container);
+    List<? extends PsiElement> comments = getCommentsFor(container);
     if (comments != null) {
       for (PsiElement comment : comments) {
         if (comment instanceof PsiComment && SuppressionUtil.isSuppressionComment(comment)) {
@@ -119,8 +119,8 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
   }
 
   @Nullable
-  protected List<? extends PsiElement> getCommentsFor(@Nonnull final PsiElement container) {
-    final PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
+  protected List<? extends PsiElement> getCommentsFor(@Nonnull PsiElement container) {
+    PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {
       return null;
     }

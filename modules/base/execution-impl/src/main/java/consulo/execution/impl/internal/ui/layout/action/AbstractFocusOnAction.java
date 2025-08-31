@@ -30,21 +30,21 @@ public class AbstractFocusOnAction extends BaseViewAction implements Toggleable 
     }
 
     @Override
-    protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
-        final boolean visible = content.length == 1;
+    protected void update(AnActionEvent e, ViewContext context, Content[] content) {
+        boolean visible = content.length == 1;
         e.getPresentation().setVisible(visible);
         if (visible) {
             e.getPresentation().putClientProperty(SELECTED_PROPERTY, isToFocus(context, content));
         }
     }
 
-    private boolean isToFocus(final ViewContext context, final Content[] content) {
+    private boolean isToFocus(ViewContext context, Content[] content) {
         return context.getRunnerLayoutUi().getOptions().isToFocus(content[0], myCondition);
     }
 
     @Override
-    protected void actionPerformed(final AnActionEvent e, final ViewContext context, final Content[] content) {
-        final boolean toFocus = isToFocus(context, content);
+    protected void actionPerformed(AnActionEvent e, ViewContext context, Content[] content) {
+        boolean toFocus = isToFocus(context, content);
         context.getRunnerLayoutUi().getOptions().setToFocus(toFocus ? null : content[0], myCondition);
     }
 }

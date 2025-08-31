@@ -57,7 +57,7 @@ public class LookupManagerImpl extends LookupManager {
 
     project.getMessageBus().connect().subscribe(EditorHintListener.class, new EditorHintListener() {
       @Override
-      public void hintShown(final Project project, @Nonnull final LightweightHintImpl hint, final int flags) {
+      public void hintShown(Project project, @Nonnull final LightweightHintImpl hint, int flags) {
         if (project == myProject) {
           Lookup lookup = getActiveLookup();
           if (lookup != null && BitUtil.isSet(flags, HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE)) {
@@ -106,10 +106,10 @@ public class LookupManagerImpl extends LookupManager {
   }
 
   @Override
-  public LookupEx showLookup(@Nonnull final Editor editor,
+  public LookupEx showLookup(@Nonnull Editor editor,
                              @Nonnull LookupElement[] items,
-                             @Nonnull final String prefix,
-                             @Nonnull final LookupArranger arranger) {
+                             @Nonnull String prefix,
+                             @Nonnull LookupArranger arranger) {
     for (LookupElement item : items) {
       assert item != null;
     }
@@ -120,10 +120,10 @@ public class LookupManagerImpl extends LookupManager {
 
   @Nonnull
   @Override
-  public LookupImpl createLookup(@Nonnull final Editor editor,
+  public LookupImpl createLookup(@Nonnull Editor editor,
                                  @Nonnull LookupElement[] items,
-                                 @Nonnull final String prefix,
-                                 @Nonnull final LookupArranger arranger) {
+                                 @Nonnull String prefix,
+                                 @Nonnull LookupArranger arranger) {
     hideActiveLookup();
 
     final LookupImpl lookup = createLookup(editor, arranger, myProject);

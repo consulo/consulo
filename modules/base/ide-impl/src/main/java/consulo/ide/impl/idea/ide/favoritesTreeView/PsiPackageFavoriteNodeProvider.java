@@ -53,36 +53,36 @@ import java.util.Set;
 @ExtensionImpl
 public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   @Override
-  public Collection<AbstractTreeNode> getFavoriteNodes(final DataContext context, final ViewSettings viewSettings) {
-    final Project project = context.getData(Project.KEY);
+  public Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings) {
+    Project project = context.getData(Project.KEY);
     if (project == null) {
       return null;
     }
     PsiElement[] elements = context.getData(PsiElement.KEY_OF_ARRAY);
     if (elements == null) {
-      final PsiElement element = context.getData(PsiElement.KEY);
+      PsiElement element = context.getData(PsiElement.KEY);
       if (element != null) {
         elements = new PsiElement[]{element};
       }
     }
-    final Collection<AbstractTreeNode> result = new ArrayList<>();
+    Collection<AbstractTreeNode> result = new ArrayList<>();
     if (elements != null) {
       for (PsiElement element : elements) {
         if (element instanceof PsiPackage) {
-          final PsiPackage psiPackage = (PsiPackage)element;
-          final PsiDirectory[] directories = psiPackage.getDirectories();
+          PsiPackage psiPackage = (PsiPackage)element;
+          PsiDirectory[] directories = psiPackage.getDirectories();
           if (directories.length > 0) {
-            final VirtualFile firstDir = directories[0].getVirtualFile();
-            final boolean isLibraryRoot = ProjectRootsUtil.isLibraryRoot(firstDir, project);
-            final PackageElement packageElement = new PackageElement(context.getData(Module.KEY), psiPackage, isLibraryRoot);
+            VirtualFile firstDir = directories[0].getVirtualFile();
+            boolean isLibraryRoot = ProjectRootsUtil.isLibraryRoot(firstDir, project);
+            PackageElement packageElement = new PackageElement(context.getData(Module.KEY), psiPackage, isLibraryRoot);
             result.add(new PackageElementNode(project, packageElement, viewSettings));
           }
         }
       }
       return result.isEmpty() ? null : result;
     }
-    final String currentViewId = ProjectView.getInstance(project).getCurrentViewId();
-    final Module[] modules = context.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+    String currentViewId = ProjectView.getInstance(project).getCurrentViewId();
+    Module[] modules = context.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     if (modules != null) {
       for (Module module : modules) {
         if (PackageViewPane.ID.equals(currentViewId)) {
@@ -94,7 +94,7 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
       }
     }
     else {
-      final ModuleGroup[] data = context.getData(ModuleGroup.ARRAY_DATA_KEY);
+      ModuleGroup[] data = context.getData(ModuleGroup.ARRAY_DATA_KEY);
       if (data != null) {
         for (ModuleGroup moduleGroup : data) {
           if (PackageViewPane.ID.equals(currentViewId)) {
@@ -110,7 +110,7 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  public AbstractTreeNode createNode(final Project project, final Object element, final ViewSettings viewSettings) {
+  public AbstractTreeNode createNode(Project project, Object element, ViewSettings viewSettings) {
     if (element instanceof PackageElement) {
       return new PackageElementNode(project, element, viewSettings);
     }
@@ -118,21 +118,21 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  public boolean elementContainsFile(final Object element, final VirtualFile vFile) {
+  public boolean elementContainsFile(Object element, VirtualFile vFile) {
     if (element instanceof PackageElement) {
-      final Set<Boolean> find = new HashSet<>();
-      final ContentIterator contentIterator = fileOrDir -> {
+      Set<Boolean> find = new HashSet<>();
+      ContentIterator contentIterator = fileOrDir -> {
         if (fileOrDir != null && fileOrDir.getPath().equals(vFile.getPath())) {
           find.add(Boolean.TRUE);
         }
         return true;
       };
-      final PackageElement packageElement = (PackageElement)element;
-      final PsiPackage aPackage = packageElement.getPackage();
-      final Project project = aPackage.getProject();
-      final GlobalSearchScope scope = packageElement.getModule() != null ? GlobalSearchScope.moduleScope(packageElement.getModule()) : GlobalSearchScope.projectScope(project);
-      final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-      final PsiDirectory[] directories = aPackage.getDirectories(scope);
+      PackageElement packageElement = (PackageElement)element;
+      PsiPackage aPackage = packageElement.getPackage();
+      Project project = aPackage.getProject();
+      GlobalSearchScope scope = packageElement.getModule() != null ? GlobalSearchScope.moduleScope(packageElement.getModule()) : GlobalSearchScope.projectScope(project);
+      ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+      PsiDirectory[] directories = aPackage.getDirectories(scope);
       for (PsiDirectory directory : directories) {
         projectFileIndex.iterateContentUnderDirectory(directory.getVirtualFile(), contentIterator);
       }
@@ -142,7 +142,7 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  public int getElementWeight(final Object element, final boolean isSortByType) {
+  public int getElementWeight(Object element, boolean isSortByType) {
     if (element instanceof PackageElement) {
       return 2;
     }
@@ -150,17 +150,17 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  public String getElementLocation(final Object element) {
+  public String getElementLocation(Object element) {
     if (element instanceof PackageElement) {
-      final PackageElement packageElement = ((PackageElement)element);
-      final Module module = packageElement.getModule();
+      PackageElement packageElement = ((PackageElement)element);
+      Module module = packageElement.getModule();
       return (module != null ? (module.getName() + ":") : "") + packageElement.getPackage().getQualifiedName();
     }
     return null;
   }
 
   @Override
-  public boolean isInvalidElement(final Object element) {
+  public boolean isInvalidElement(Object element) {
     return element instanceof PackageElement && !((PackageElement)element).getPackage().isValid();
   }
 
@@ -171,7 +171,7 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  public String getElementUrl(final Object element) {
+  public String getElementUrl(Object element) {
     if (element instanceof PackageElement) {
       PackageElement packageElement = (PackageElement)element;
       PsiPackage aPackage = packageElement.getPackage();
@@ -184,7 +184,7 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  public String getElementModuleName(final Object element) {
+  public String getElementModuleName(Object element) {
     if (element instanceof PackageElement) {
       PackageElement packageElement = (PackageElement)element;
       Module module = packageElement.getModule();
@@ -194,10 +194,10 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  public Object[] createPathFromUrl(final Project project, final String url, final String moduleName) {
-    final Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
+  public Object[] createPathFromUrl(Project project, String url, String moduleName) {
+    Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
     // module can be null if 'show module' turned off
-    final PsiPackage aPackage = PsiPackageManager.getInstance(project).findAnyPackage(url);
+    PsiPackage aPackage = PsiPackageManager.getInstance(project).findAnyPackage(url);
     if (aPackage == null) {
       return null;
     }
@@ -206,7 +206,7 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  public PsiElement getPsiElement(final Object element) {
+  public PsiElement getPsiElement(Object element) {
     if (element instanceof PackageElement) {
       return ((PackageElement)element).getPackage();
     }

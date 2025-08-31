@@ -158,7 +158,7 @@ public class ConsoleExecutionEditor implements Disposable {
   }
 
 
-  private void setPromptInner(@Nullable final String prompt) {
+  private void setPromptInner(@Nullable String prompt) {
     if (!myConsoleEditor.isDisposed()) {
       myConsolePromptDecorator.setMainPrompt(prompt != null ? prompt : "");
     }
@@ -178,7 +178,7 @@ public class ConsoleExecutionEditor implements Disposable {
             continue;
           }
 
-          final EditorEx editor = (EditorEx)((TextEditor)fileEditor).getEditor();
+          EditorEx editor = (EditorEx)((TextEditor)fileEditor).getEditor();
           editor.addFocusListener(myFocusListener);
           if (selectedTextEditor == editor) { // already focused
             myCurrentEditor = editor;
@@ -215,7 +215,7 @@ public class ConsoleExecutionEditor implements Disposable {
 
   }
 
-  public void setInputText(@Nonnull final String query) {
+  public void setInputText(@Nonnull String query) {
     DocumentImpUtil.writeInRunUndoTransparentAction(() -> myConsoleEditor.getDocument().setText(StringUtil.convertLineSeparators(query)));
   }
 }

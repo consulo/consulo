@@ -37,7 +37,7 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
   private final NavBarPanel myPanel;
   private final int myIndex;
 
-  public NavBarPopup(final NavBarPanel panel, int sourceItemIndex, Object[] siblings, final int selectedIndex) {
+  public NavBarPopup(NavBarPanel panel, int sourceItemIndex, Object[] siblings, final int selectedIndex) {
     super(createPopupContent(panel, sourceItemIndex, siblings));
     myPanel = panel;
     myIndex = selectedIndex;
@@ -46,20 +46,20 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
     panel.installPopupHandler(getList(), selectedIndex);
     getList().addMouseListener(new MouseAdapter() {
       @Override
-      public void mouseReleased(final MouseEvent e) {
+      public void mouseReleased(MouseEvent e) {
         if (Platform.current().os().isWindows()) {
           click(e);
         }
       }
 
       @Override
-      public void mousePressed(final MouseEvent e) {
+      public void mousePressed(MouseEvent e) {
         if (!Platform.current().os().isWindows()) {
           click(e);
         }
       }
 
-      private void click(final MouseEvent e) {
+      private void click(MouseEvent e) {
         if (e.isConsumed()) return;
         myPanel.getModel().setSelectedIndex(selectedIndex);
         if (e.isPopupTrigger()) return;
@@ -73,7 +73,7 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
 
   @Override
   protected void onPopupCancel() {
-    final JComponent component = getComponent();
+    JComponent component = getComponent();
     if (component != null) {
       Object o = component.getClientProperty(JBLIST_KEY);
       if (o instanceof JComponent) HintUpdateSupply.hideHint((JComponent)o);
@@ -85,15 +85,15 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
     Disposer.dispose(this);
   }
 
-  public void show(final NavBarItem item) {
+  public void show(NavBarItem item) {
     show(item, true);
   }
 
-  private void show(final NavBarItem item, boolean checkRepaint) {
+  private void show(NavBarItem item, boolean checkRepaint) {
     //UIEventLogger.logUIEvent(UIEventId.NavBarShowPopup);
 
-    final RelativePoint point = new RelativePoint(item, new Point(0, item.getHeight()));
-    final Point p = point.getPoint(myPanel);
+    RelativePoint point = new RelativePoint(item, new Point(0, item.getHeight()));
+    Point p = point.getPoint(myPanel);
     if (p.x == 0 && p.y == 0 && checkRepaint) { // need repaint of nav bar panel
       //noinspection SSBasedInspection
       SwingUtilities.invokeLater(() -> {
@@ -107,14 +107,14 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
     else {
       int offset = NavBarUIManager.getUI().getPopupOffset(item);
       show(myPanel, p.x - offset, p.y, myPanel, new HintHint(myPanel, p));
-      final JBList list = getList();
+      JBList list = getList();
       AccessibleContextUtil.setName(list, item.getText());
       if (0 <= myIndex && myIndex < list.getItemsCount()) {
         ScrollingUtil.selectItem(list, myIndex);
       }
     }
     if (myPanel.isInFloatingMode()) {
-      final Window window = SwingUtilities.windowForComponent(getList());
+      Window window = SwingUtilities.windowForComponent(getList());
       window.addWindowFocusListener(new WindowFocusListener() {
         @Override
         public void windowGainedFocus(WindowEvent e) {
@@ -122,7 +122,7 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
 
         @Override
         public void windowLostFocus(WindowEvent e) {
-          final Window w = e.getOppositeWindow();
+          Window w = e.getOppositeWindow();
           if (w != null && DialogWrapper.findInstance(w.getComponent(0)) != null) {
             myPanel.hideHint();
           }

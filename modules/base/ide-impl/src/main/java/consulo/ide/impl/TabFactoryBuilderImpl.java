@@ -94,7 +94,7 @@ public class TabFactoryBuilderImpl implements TabFactoryBuilder {
 
     @Override
     public TabbedPaneWrapper.TabWrapper createTabWrapper(JComponent component) {
-      final TabbedPaneWrapper.TabWrapper tabWrapper = new TabbedPaneWrapper.TabWrapper(component);
+      TabbedPaneWrapper.TabWrapper tabWrapper = new TabbedPaneWrapper.TabWrapper(component);
       tabWrapper.setCustomFocus(false);
       return tabWrapper;
     }

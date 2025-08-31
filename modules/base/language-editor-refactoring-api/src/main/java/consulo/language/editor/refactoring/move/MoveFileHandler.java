@@ -59,17 +59,17 @@ public abstract class MoveFileHandler {
 
   private static final MoveFileHandler DEFAULT = new MoveFileHandler() {
     @Override
-    public boolean canProcessElement(final PsiFile element) {
+    public boolean canProcessElement(PsiFile element) {
       return true;
     }
 
     @Override
-    public void prepareMovedFile(final PsiFile file, PsiDirectory moveDestination, Map<PsiElement, PsiElement> oldToNewMap) {
+    public void prepareMovedFile(PsiFile file, PsiDirectory moveDestination, Map<PsiElement, PsiElement> oldToNewMap) {
 
     }
 
     @Override
-    public void updateMovedFile(final PsiFile file) throws IncorrectOperationException {
+    public void updateMovedFile(PsiFile file) throws IncorrectOperationException {
 
     }
 

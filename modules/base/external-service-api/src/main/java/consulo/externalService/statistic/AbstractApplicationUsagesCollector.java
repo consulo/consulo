@@ -31,7 +31,7 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
 
   public void persistProjectUsages(@Nonnull Project project) {
     try {
-      final Set<UsageDescriptor> projectUsages = getProjectUsages(project);
+      Set<UsageDescriptor> projectUsages = getProjectUsages(project);
       persistProjectUsages(project, projectUsages);
     }
     catch (CollectUsagesException e) {
@@ -53,13 +53,13 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
   }
 
   @Nonnull
-  public Set<UsageDescriptor> getApplicationUsages(@Nonnull final ApplicationStatisticsPersistence persistence) {
-    final Map<String, Integer> result = new HashMap<String, Integer>();
+  public Set<UsageDescriptor> getApplicationUsages(@Nonnull ApplicationStatisticsPersistence persistence) {
+    Map<String, Integer> result = new HashMap<String, Integer>();
 
     for (Set<UsageDescriptor> usageDescriptors : persistence.getApplicationData(getGroupId()).values()) {
       for (UsageDescriptor usageDescriptor : usageDescriptors) {
-        final String key = usageDescriptor.getKey();
-        final Integer count = result.get(key);
+        String key = usageDescriptor.getKey();
+        Integer count = result.get(key);
         result.put(key, count == null ? 1 : count.intValue() + 1);
       }
     }
@@ -71,7 +71,7 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
   @Nonnull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
     if (project != null) {
-      final Set<UsageDescriptor> projectUsages = getProjectUsages(project);
+      Set<UsageDescriptor> projectUsages = getProjectUsages(project);
       persistProjectUsages(project, projectUsages);
     }
 

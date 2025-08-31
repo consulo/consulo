@@ -33,7 +33,7 @@ public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V
     @Nonnull
     private final HashingStrategy<? super K> myStrategy;
 
-    private WeakKey(@Nonnull K k, final int hash, @Nonnull HashingStrategy<? super K> strategy, @Nonnull ReferenceQueue<K> q) {
+    private WeakKey(@Nonnull K k, int hash, @Nonnull HashingStrategy<? super K> strategy, @Nonnull ReferenceQueue<K> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = hash;

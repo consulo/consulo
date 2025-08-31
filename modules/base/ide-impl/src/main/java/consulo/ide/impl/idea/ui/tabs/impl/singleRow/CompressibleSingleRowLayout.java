@@ -51,7 +51,7 @@ public class CompressibleSingleRowLayout extends SingleRowLayout {
 
     List<TabInfo> layout = data.toLayout;
     for (int i = 0; i < layout.size(); i++) {
-      final TabLabel label = myTabs.myInfo2Label.get(layout.get(i));
+      TabLabel label = myTabs.myInfo2Label.get(layout.get(i));
       if (maxGridSize == 0) {
         maxGridSize = GraphicsUtil.stringWidth("m", label.getLabelComponent().getFont()) * myTabs.tabMSize();
       }
@@ -60,7 +60,7 @@ public class CompressibleSingleRowLayout extends SingleRowLayout {
       lengthEstimation += lengthIncrement;
     }
 
-    final int extraWidth = data.toFitLength - lengthEstimation;
+    int extraWidth = data.toFitLength - lengthEstimation;
 
     Arrays.sort(lengths);
     double acc = 0;
@@ -74,7 +74,7 @@ public class CompressibleSingleRowLayout extends SingleRowLayout {
 
 
     for (Iterator<TabInfo> iterator = data.toLayout.iterator(); iterator.hasNext(); ) {
-      final TabLabel label = myTabs.myInfo2Label.get(iterator.next());
+      TabLabel label = myTabs.myInfo2Label.get(iterator.next());
       label.setActionPanelVisible(true);
 
       int length;

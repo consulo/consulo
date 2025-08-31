@@ -33,7 +33,7 @@ public class StaticFilePath {
     myKey = FilePathsHelper.convertPath(path);
   }
 
-  private StaticFilePath(boolean isDirectory, String path, final String key, final VirtualFile vf) {
+  private StaticFilePath(boolean isDirectory, String path, String key, VirtualFile vf) {
     myIsDirectory = isDirectory;
     myPath = path;
     myVf = vf;
@@ -58,7 +58,7 @@ public class StaticFilePath {
 
   @Nullable
   public StaticFilePath getParent() {
-    final int idx = myKey.lastIndexOf('/');
+    int idx = myKey.lastIndexOf('/');
     return (idx == -1) || (idx == 0) ? null :
            new StaticFilePath(true, myPath.substring(0, idx), myKey.substring(0, idx), myVf == null ? null : myVf.getParent());
   }

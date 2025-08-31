@@ -30,19 +30,19 @@ import java.util.Set;
  * @author Dmitry Batkovich
  */
 public class InspectionsAggregationUtil {
-  public static List<HighlightDisplayKey> getInspectionsKeys(final InspectionConfigTreeNode node) {
+  public static List<HighlightDisplayKey> getInspectionsKeys(InspectionConfigTreeNode node) {
     return ContainerUtil.map(getInspectionsNodes(node), InspectionConfigTreeNode::getKey);
   }
 
-  public static List<InspectionConfigTreeNode> getInspectionsNodes(final InspectionConfigTreeNode node) {
-    final Queue<InspectionConfigTreeNode> q = new Queue<InspectionConfigTreeNode>(1);
+  public static List<InspectionConfigTreeNode> getInspectionsNodes(InspectionConfigTreeNode node) {
+    Queue<InspectionConfigTreeNode> q = new Queue<InspectionConfigTreeNode>(1);
     q.addLast(node);
     return getInspectionsNodes(q);
   }
 
-  public static List<InspectionConfigTreeNode> getInspectionsNodes(final TreePath[] paths) {
-    final Queue<InspectionConfigTreeNode> q = new Queue<InspectionConfigTreeNode>(paths.length);
-    for (final TreePath path : paths) {
+  public static List<InspectionConfigTreeNode> getInspectionsNodes(TreePath[] paths) {
+    Queue<InspectionConfigTreeNode> q = new Queue<InspectionConfigTreeNode>(paths.length);
+    for (TreePath path : paths) {
       if (path != null) {
         q.addLast((InspectionConfigTreeNode)path.getLastPathComponent());
       }
@@ -50,13 +50,13 @@ public class InspectionsAggregationUtil {
     return getInspectionsNodes(q);
   }
 
-  private static List<InspectionConfigTreeNode> getInspectionsNodes(final Queue<InspectionConfigTreeNode> queue) {
-    final Set<InspectionConfigTreeNode> nodes = new HashSet<InspectionConfigTreeNode>();
+  private static List<InspectionConfigTreeNode> getInspectionsNodes(Queue<InspectionConfigTreeNode> queue) {
+    Set<InspectionConfigTreeNode> nodes = new HashSet<InspectionConfigTreeNode>();
     while (!queue.isEmpty()) {
-      final InspectionConfigTreeNode node = queue.pullFirst();
+      InspectionConfigTreeNode node = queue.pullFirst();
       if (node.getDescriptors() == null) {
         for (int i = 0; i < node.getChildCount(); i++) {
-          final InspectionConfigTreeNode childNode = (InspectionConfigTreeNode) node.getChildAt(i);
+          InspectionConfigTreeNode childNode = (InspectionConfigTreeNode) node.getChildAt(i);
           queue.addLast(childNode);
         }
       } else {

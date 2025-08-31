@@ -47,8 +47,8 @@ public class ListProperty<T> extends AbstractProperty<List<T>> {
   }
 
   public ArrayList<T> getModifiableList(AbstractPropertyContainer container) {
-    final ArrayList<T> modifiableList;
-    final List<T> list = get(container);
+    ArrayList<T> modifiableList;
+    List<T> list = get(container);
     if (list instanceof ArrayList) {
       modifiableList = (ArrayList<T>)list;
     }

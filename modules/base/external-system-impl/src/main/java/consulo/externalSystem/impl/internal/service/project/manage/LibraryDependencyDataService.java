@@ -130,7 +130,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
                 }
 
                 ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-                final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
+                ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
                 LibraryTable moduleLibraryTable = moduleRootModel.getModuleLibraryTable();
                 LibraryTable libraryTable = ProjectLibraryTable.getInstance(module.getProject());
                 try {
@@ -155,13 +155,13 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
         @Nonnull LibraryTable libraryTable,
         @Nonnull Module module
     ) {
-        for (final LibraryDependencyData dependencyData : toImport) {
-            final LibraryData libraryData = dependencyData.getTarget();
-            final String libraryName = libraryData.getInternalName();
+        for (LibraryDependencyData dependencyData : toImport) {
+            LibraryData libraryData = dependencyData.getTarget();
+            String libraryName = libraryData.getInternalName();
             switch (dependencyData.getLevel()) {
                 case MODULE:
-                    final Library moduleLib = moduleLibraryTable.createLibrary(libraryName);
-                    final Library.ModifiableModel libModel = moduleLib.getModifiableModel();
+                    Library moduleLib = moduleLibraryTable.createLibrary(libraryName);
+                    Library.ModifiableModel libModel = moduleLib.getModifiableModel();
                     try {
                         LibraryDataService libraryDataService = LibraryDataService.getInstance();
 
@@ -176,7 +176,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
                     }
                     break;
                 case PROJECT:
-                    final Library projectLib = libraryTable.getLibraryByName(libraryName);
+                    Library projectLib = libraryTable.getLibraryByName(libraryName);
                     if (projectLib == null) {
                         assert false;
                         continue;
@@ -234,8 +234,8 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
                 }
             }
             else if (entry instanceof LibraryOrderEntry libraryOrderEntry) {
-                final String libraryName = libraryOrderEntry.getLibraryName();
-                final LibraryDependencyData existing = projectLibrariesToImport.remove(libraryName + libraryOrderEntry.getScope().name());
+                String libraryName = libraryOrderEntry.getLibraryName();
+                LibraryDependencyData existing = projectLibrariesToImport.remove(libraryName + libraryOrderEntry.getScope().name());
                 if (existing != null) {
                     toImport.remove(existing);
                 }
@@ -256,11 +256,11 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
         LibraryTable libraryTable = ProjectLibraryTable.getInstance(module.getProject());
         List<DataNode<LibraryData>> librariesToImport = new ArrayList<>();
         for (DataNode<LibraryDependencyData> dataNode : nodesToImport) {
-            final LibraryDependencyData dependencyData = dataNode.getData();
+            LibraryDependencyData dependencyData = dataNode.getData();
             if (dependencyData.getLevel() != LibraryLevel.PROJECT) {
                 continue;
             }
-            final Library library = libraryTable.getLibraryByName(dependencyData.getInternalName());
+            Library library = libraryTable.getLibraryByName(dependencyData.getInternalName());
             if (library == null) {
                 DataNode<ProjectData> projectNode = dataNode.getDataNode(ProjectKeys.PROJECT);
                 if (projectNode != null) {

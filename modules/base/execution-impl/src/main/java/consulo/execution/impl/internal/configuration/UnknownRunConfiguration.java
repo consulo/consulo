@@ -50,7 +50,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   private static final AtomicInteger myUniqueName = new AtomicInteger(1);
   private boolean myDoNotStore;
 
-  public UnknownRunConfiguration(@Nonnull final ConfigurationFactory factory, @Nonnull final Project project) {
+  public UnknownRunConfiguration(@Nonnull ConfigurationFactory factory, @Nonnull Project project) {
     myFactory = factory;
     myProject = project;
   }
@@ -75,7 +75,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  public void setName(final String name) {
+  public void setName(String name) {
     myName = name;
   }
 
@@ -97,19 +97,19 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  public ConfigurationPerRunnerSettings createRunnerSettings(final ConfigurationInfoProvider provider) {
+  public ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider) {
     return null;
   }
 
   @Override
-  public SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(final ProgramRunner runner) {
+  public SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner) {
     return null;
   }
 
   @Override
   public RunConfiguration clone() {
     try {
-      final UnknownRunConfiguration cloned = (UnknownRunConfiguration) super.clone();
+      UnknownRunConfiguration cloned = (UnknownRunConfiguration) super.clone();
       return cloned;
     } catch (CloneNotSupportedException e) {
       return null;
@@ -123,7 +123,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  public RunProfileState getState(@Nonnull final Executor executor, @Nonnull final ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
     String factoryName = "";
     if (myStoredElement != null) {
       factoryName = myStoredElement.getAttributeValue("type");
@@ -146,22 +146,22 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  public void readExternal(final Element element) throws InvalidDataException {
+  public void readExternal(Element element) throws InvalidDataException {
     myStoredElement = (Element) element.clone();
   }
 
   @Override
-  public void writeExternal(final Element element) throws WriteExternalException {
+  public void writeExternal(Element element) throws WriteExternalException {
     if (myStoredElement != null) {
-      final List attributeList = myStoredElement.getAttributes();
+      List attributeList = myStoredElement.getAttributes();
       for (Object anAttributeList : attributeList) {
-        final Attribute a = (Attribute) anAttributeList;
+        Attribute a = (Attribute) anAttributeList;
         element.setAttribute(a.getName(), a.getValue());
       }
 
-      final List list = myStoredElement.getChildren();
+      List list = myStoredElement.getChildren();
       for (Object child : list) {
-        final Element c = (Element) child;
+        Element c = (Element) child;
         element.addContent((Element) c.clone());
       }
     }
@@ -178,11 +178,11 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
     }
 
     @Override
-    protected void resetEditorFrom(final UnknownRunConfiguration s) {
+    protected void resetEditorFrom(UnknownRunConfiguration s) {
     }
 
     @Override
-    protected void applyEditorTo(final UnknownRunConfiguration s) throws ConfigurationException {
+    protected void applyEditorTo(UnknownRunConfiguration s) throws ConfigurationException {
     }
 
     @Override

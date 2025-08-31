@@ -70,7 +70,7 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         }
 
         @Nullable
-        private String showEditDialog(final String initialValue) {
+        private String showEditDialog(String initialValue) {
             return Messages.showInputDialog(this, myQuery, "Folding pattern", Messages.getQuestionIcon(), initialValue, new InputValidatorEx() {
                 @RequiredUIAccess
                 @Override

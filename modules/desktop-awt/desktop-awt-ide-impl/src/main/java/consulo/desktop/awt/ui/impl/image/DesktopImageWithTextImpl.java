@@ -90,7 +90,7 @@ public class DesktopImageWithTextImpl extends JBUI.ScalableJBIcon implements Ico
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof DesktopImageWithTextImpl)) return false;
-    final DesktopImageWithTextImpl icon = (DesktopImageWithTextImpl)o;
+    DesktopImageWithTextImpl icon = (DesktopImageWithTextImpl)o;
 
     if (!Objects.equals(myText, icon.myText)) return false;
     if (!Objects.equals(myFont, icon.myFont)) return false;

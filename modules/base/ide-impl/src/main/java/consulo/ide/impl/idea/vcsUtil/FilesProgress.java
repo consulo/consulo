@@ -30,7 +30,7 @@ public class FilesProgress {
   private int myCnt;
   private boolean myInText2;
 
-  public FilesProgress(double total, final String prefix) {
+  public FilesProgress(double total, String prefix) {
     myTotal = total;
     myPrefix = prefix;
     myProgressIndicator = ProgressManager.getInstance().getProgressIndicator();
@@ -38,7 +38,7 @@ public class FilesProgress {
     myInText2 = false;
   }
 
-  public void updateIndicator(final VirtualFile vf) {
+  public void updateIndicator(VirtualFile vf) {
     if (myProgressIndicator == null) return;
     myProgressIndicator.checkCanceled();
     if (myInText2) {
@@ -50,8 +50,8 @@ public class FilesProgress {
     ++ myCnt;
   }
 
-  private static String getFileDescriptionForProgress(final VirtualFile file) {
-    final VirtualFile parent = file.getParent();
+  private static String getFileDescriptionForProgress(VirtualFile file) {
+    VirtualFile parent = file.getParent();
     return file.getName() + " (" + (parent == null ? file.getPath() : parent.getPath()) + ")";
   }
 

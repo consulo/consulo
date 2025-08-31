@@ -51,7 +51,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private static final boolean ourHeadlessEnvironment;
 
   static {
-    final Application app = ApplicationManager.getApplication();
+    Application app = ApplicationManager.getApplication();
     ourHeadlessEnvironment = app.isHeadlessEnvironment() || app.isUnitTestMode();
   }
 
@@ -252,7 +252,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     return myStreamProvider;
   }
 
-  protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
+  protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull String fileSpec) {
     return myPathMacroSubstitutor;
   }
 

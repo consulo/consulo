@@ -193,7 +193,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     }
 
     @RequiredUIAccess
-    private consulo.ui.Component createActionComponent(final LocalizeValue text, final String groupId, Image icon) {
+    private consulo.ui.Component createActionComponent(LocalizeValue text, String groupId, Image icon) {
         Consumer<ClickEvent> runnable = (e) -> {
             consulo.ui.Component component = e.getComponent();
             InputDetails inputDetails = Objects.requireNonNull(e.getInputDetails());

@@ -64,7 +64,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         public static final ContentComparator INSTANCE = new ContentComparator();
 
         @Override
-        public int compare(@Nonnull final ContentEntryEx o1, @Nonnull final ContentEntryEx o2) {
+        public int compare(@Nonnull ContentEntryEx o1, @Nonnull ContentEntryEx o2) {
             return o1.getUrl().compareTo(o2.getUrl());
         }
     }
@@ -227,7 +227,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
             String name = child.getName();
             switch (name) {
                 case ModuleExtensionBase.ELEMENT_NAME:
-                    final String id = child.getAttributeValue("id");
+                    String id = child.getAttributeValue("id");
 
                     ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(id);
                     if (provider != null) {
@@ -253,7 +253,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
                     myContent.add(contentEntry);
                     break;
                 case OrderEntrySerializationUtil.ORDER_ENTRY_ELEMENT_NAME:
-                    final OrderEntry orderEntry = OrderEntrySerializationUtil.loadOrderEntry(child, this);
+                    OrderEntry orderEntry = OrderEntrySerializationUtil.loadOrderEntry(child, this);
                     if (orderEntry == null) {
                         continue;
                     }
@@ -276,7 +276,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     public void writeExternal(@Nonnull Element element) {
         List<Element> moduleExtensionElements = new ArrayList<>();
         for (ModuleExtension<?> extension : myExtensions.values()) {
-            final Element state = extension.getState();
+            Element state = extension.getState();
             if (state == null) {
                 continue;
             }
@@ -291,7 +291,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         element.addContent(moduleExtensionElements);
 
         for (ContentEntry contentEntry : getContent()) {
-            final Element subElement = new Element(ContentEntryImpl.ELEMENT_NAME);
+            Element subElement = new Element(ContentEntryImpl.ELEMENT_NAME);
             if (contentEntry instanceof ContentEntryImpl) {
                 ((ContentEntryImpl) contentEntry).writeExternal(subElement);
             }
@@ -342,7 +342,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
             MutableModuleExtension mutable = provider.createMutableExtension(this);
 
             if (layer != null) {
-                final ModuleExtension<?> originalExtension = layer.getExtensionWithoutCheck(provider.getId());
+                ModuleExtension<?> originalExtension = layer.getExtensionWithoutCheck(provider.getId());
                 assert originalExtension != null;
                 mutable.commit(originalExtension);
             }
@@ -483,7 +483,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
     @Override
     public ContentEntryEx[] getContentEntries() {
-        final Collection<ContentEntryEx> content = getContent();
+        Collection<ContentEntryEx> content = getContent();
         return content.toArray(new ContentEntryEx[content.size()]);
     }
 
@@ -510,10 +510,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     @Nonnull
     @Override
     public VirtualFile[] getContentRoots() {
-        final ArrayList<VirtualFile> result = new ArrayList<>();
+        ArrayList<VirtualFile> result = new ArrayList<>();
 
         for (ContentEntry contentEntry : getContent()) {
-            final VirtualFile file = contentEntry.getFile();
+            VirtualFile file = contentEntry.getFile();
             if (file != null) {
                 result.add(file);
             }
@@ -527,7 +527,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         if (getContent().isEmpty()) {
             return ArrayUtil.EMPTY_STRING_ARRAY;
         }
-        final ArrayList<String> result = new ArrayList<>(getContent().size());
+        ArrayList<String> result = new ArrayList<>(getContent().size());
 
         for (ContentEntry contentEntry : getContent()) {
             result.add(contentEntry.getUrl());
@@ -569,7 +569,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     @Nonnull
     @Override
     public VirtualFile[] getExcludeRoots() {
-        final List<VirtualFile> result = new SmartList<>();
+        List<VirtualFile> result = new SmartList<>();
         for (ContentEntry contentEntry : getContent()) {
             Collections.addAll(result, contentEntry.getFolderFiles(LanguageContentFolderScopes.excluded()));
         }
@@ -579,7 +579,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     @Nonnull
     @Override
     public String[] getExcludeRootUrls() {
-        final List<String> result = new SmartList<>();
+        List<String> result = new SmartList<>();
         for (ContentEntry contentEntry : getContent()) {
             Collections.addAll(result, contentEntry.getFolderUrls(LanguageContentFolderScopes.excluded()));
         }
@@ -664,16 +664,16 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     @Nonnull
     @Override
     public Module[] getModuleDependencies(boolean includeTests) {
-        final List<Module> result = new ArrayList<>();
+        List<Module> result = new ArrayList<>();
 
         for (OrderEntry entry : getOrderEntries()) {
             if (entry instanceof ModuleOrderEntry) {
                 ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry) entry;
-                final DependencyScope scope = moduleOrderEntry.getScope();
+                DependencyScope scope = moduleOrderEntry.getScope();
                 if (!includeTests && !scope.isForProductionCompile() && !scope.isForProductionRuntime()) {
                     continue;
                 }
-                final Module module1 = moduleOrderEntry.getModule();
+                Module module1 = moduleOrderEntry.getModule();
                 if (module1 != null) {
                     result.add(module1);
                 }
@@ -785,7 +785,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     @Nonnull
     @Override
     public LibraryOrderEntry addLibraryEntry(@Nonnull Library library) {
-        final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(library, this);
+        LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(library, this);
         assert libraryOrderEntry.isValid();
         myOrderEntries.add(libraryOrderEntry);
         return libraryOrderEntry;
@@ -796,7 +796,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@Nonnull ModuleExtensionWithSdk<?> moduleExtension) {
         checkDisposed();
 
-        final ModuleExtensionWithSdkOrderEntryImpl moduleSdkOrderEntry = new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension.getId(), this);
+        ModuleExtensionWithSdkOrderEntryImpl moduleSdkOrderEntry = new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension.getId(), this);
         assert moduleSdkOrderEntry.isValid();
 
         // add module extension sdk entry after another SDK entry or before module source
@@ -828,7 +828,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     public LibraryOrderEntry addInvalidLibrary(@Nonnull String name, @Nonnull String level) {
         checkDisposed();
 
-        final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this);
+        LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this);
         myOrderEntries.add(libraryOrderEntry);
         return libraryOrderEntry;
     }
@@ -840,7 +840,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
         LOG.assertTrue(!module.equals(getModule()));
         LOG.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
-        final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, this);
+        ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, this);
         myOrderEntries.add(moduleOrderEntry);
         return moduleOrderEntry;
     }
@@ -868,7 +868,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         checkDisposed();
 
         LOG.assertTrue(!name.equals(getModule().getName()));
-        final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(name, this);
+        ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(name, this);
         myOrderEntries.add(moduleOrderEntry);
         return moduleOrderEntry;
     }

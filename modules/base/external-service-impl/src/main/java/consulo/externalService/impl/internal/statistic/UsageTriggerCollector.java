@@ -43,8 +43,8 @@ public class UsageTriggerCollector extends UsagesCollector {
 
   @Override
   @Nonnull
-  public Set<UsageDescriptor> getUsages(@Nullable final Project project) {
-    final UsageTriggerImpl.State state = ((UsageTriggerImpl)myUsageTrigger.get()).getState();
+  public Set<UsageDescriptor> getUsages(@Nullable Project project) {
+    UsageTriggerImpl.State state = ((UsageTriggerImpl)myUsageTrigger.get()).getState();
 
     return ContainerUtil.map2Set(state.myValues.entrySet(), e -> new UsageDescriptor(e.getKey(), e.getValue()));
   }

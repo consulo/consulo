@@ -127,8 +127,8 @@ public class VfsUtilCore {
         if (entryVFile == null) {
             return null;
         }
-        final String path = entryVFile.getPath();
-        final int separatorIndex = path.indexOf("!/");
+        String path = entryVFile.getPath();
+        int separatorIndex = path.indexOf("!/");
         if (separatorIndex < 0) {
             return null;
         }
@@ -185,7 +185,7 @@ public class VfsUtilCore {
         return VirtualFileUtil.outputStreamAddingBOM(stream, file);
     }
 
-    public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root, @Nullable final VirtualFileFilter filter, @Nonnull final ContentIterator iterator) {
+    public static boolean iterateChildrenRecursively(@Nonnull VirtualFile root, @Nullable VirtualFileFilter filter, @Nonnull ContentIterator iterator) {
         return VirtualFileUtil.iterateChildrenRecursively(root, filter, iterator);
     }
 
@@ -292,7 +292,7 @@ public class VfsUtilCore {
 
     @Nonnull
     public static String fixIDEAUrl(@Nonnull String ideaUrl) {
-        final String ideaProtocolMarker = "://";
+        String ideaProtocolMarker = "://";
         int idx = ideaUrl.indexOf(ideaProtocolMarker);
         if (idx >= 0) {
             String s = ideaUrl.substring(0, idx);
@@ -300,7 +300,7 @@ public class VfsUtilCore {
             if (s.equals("jar") || s.equals(StandardFileSystems.ZIP_PROTOCOL)) {
                 s = "jar:file";
             }
-            final String urlWithoutProtocol = ideaUrl.substring(idx + ideaProtocolMarker.length());
+            String urlWithoutProtocol = ideaUrl.substring(idx + ideaProtocolMarker.length());
             ideaUrl = s + ":" + (urlWithoutProtocol.startsWith("/") ? "" : "/") + urlWithoutProtocol;
         }
 
@@ -318,12 +318,12 @@ public class VfsUtilCore {
         }
 
         if (root.isDirectory()) {
-            final LinkedList<VirtualFile[]> queue = new LinkedList<>();
+            LinkedList<VirtualFile[]> queue = new LinkedList<>();
 
             queue.add(root.getChildren());
 
             do {
-                final VirtualFile[] files = queue.removeFirst();
+                VirtualFile[] files = queue.removeFirst();
 
                 for (VirtualFile file : files) {
                     if (!processor.process(file)) {
@@ -438,12 +438,12 @@ public class VfsUtilCore {
         }
 
         if (root.isDirectory() && directoryFilter.convert(root)) {
-            final LinkedList<VirtualFile[]> queue = new LinkedList<>();
+            LinkedList<VirtualFile[]> queue = new LinkedList<>();
 
             queue.add(root.getChildren());
 
             do {
-                final VirtualFile[] files = queue.removeFirst();
+                VirtualFile[] files = queue.removeFirst();
 
                 for (VirtualFile file : files) {
                     if (!processor.process(file)) {

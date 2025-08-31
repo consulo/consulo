@@ -57,10 +57,10 @@ public abstract class AbstractBlockWrapper {
   private WrapImpl      myWrap;
   private final ASTNode myNode;
 
-  public AbstractBlockWrapper(final Block block,
-                              final WhiteSpace whiteSpaceBefore,
-                              final CompositeBlockWrapper parent,
-                              final TextRange textRange) {
+  public AbstractBlockWrapper(Block block,
+                              WhiteSpace whiteSpaceBefore,
+                              CompositeBlockWrapper parent,
+                              TextRange textRange) {
     myWhiteSpaceBefore = whiteSpaceBefore;
     myParent = parent;
     myStart = textRange.getStartOffset();
@@ -107,10 +107,10 @@ public abstract class AbstractBlockWrapper {
    * @return the list of wraps.
    */
   public ArrayList<WrapImpl> getWraps() {
-    final ArrayList<WrapImpl> result = new ArrayList<>(3);
+    ArrayList<WrapImpl> result = new ArrayList<>(3);
     AbstractBlockWrapper current = this;
     while (current != null && current.getStartOffset() == getStartOffset()) {
-      final WrapImpl wrap = current.getOwnWrap();
+      WrapImpl wrap = current.getOwnWrap();
       if (wrap != null && !result.contains(wrap)) result.add(0, wrap);
       if (wrap != null && wrap.getIgnoreParentWraps()) break;
       current = current.myParent;
@@ -150,7 +150,7 @@ public abstract class AbstractBlockWrapper {
    *
    * @param startOffset     new start offset value to apply
    */
-  protected void arrangeStartOffset(final int startOffset) {
+  protected void arrangeStartOffset(int startOffset) {
     if (getStartOffset() == startOffset) return;
     boolean isFirst = getParent() != null && getStartOffset() == getParent().getStartOffset();
     myStart = startOffset;
@@ -169,7 +169,7 @@ public abstract class AbstractBlockWrapper {
 
   @Nullable
   public WrapImpl getWrap() {
-    final ArrayList<WrapImpl> wraps = getWraps();
+    ArrayList<WrapImpl> wraps = getWraps();
     if (wraps.size() == 0) return null;
     return wraps.get(0);
   }
@@ -183,14 +183,14 @@ public abstract class AbstractBlockWrapper {
 
   public void reset() {
     myFlags |= CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT;
-    final AlignmentImpl alignment = myAlignment;
+    AlignmentImpl alignment = myAlignment;
     if (alignment != null) alignment.reset();
-    final WrapImpl wrap = myWrap;
+    WrapImpl wrap = myWrap;
     if (wrap != null) wrap.reset();
   }
 
   public IndentData getChildOffset(AbstractBlockWrapper child, CommonCodeStyleSettings.IndentOptions options, int targetBlockStartOffset) {
-    final boolean childStartsNewLine = child.getWhiteSpace().containsLineFeeds();
+    boolean childStartsNewLine = child.getWhiteSpace().containsLineFeeds();
     Indent.Type childIndentType = child.getIndent().getType();
     IndentData childIndent;
 
@@ -253,7 +253,7 @@ public abstract class AbstractBlockWrapper {
     }
 
     if (child.getStartOffset() == getStartOffset()) {
-      final boolean newValue = (myFlags & CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT) != 0 &&
+      boolean newValue = (myFlags & CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT) != 0 &&
                                (child.myFlags & CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT) != 0 && childIndent.isEmpty();
       setCanUseFirstChildIndentAsBlockIndent(newValue);
     }
@@ -267,7 +267,7 @@ public abstract class AbstractBlockWrapper {
       }
     }
     else if (!getWhiteSpace().containsLineFeeds()) {
-      final IndentData indent = createAlignmentIndent(childIndent, child);
+      IndentData indent = createAlignmentIndent(childIndent, child);
       if (indent != null) {
         return indent;
       }
@@ -284,7 +284,7 @@ public abstract class AbstractBlockWrapper {
         }
       }
       if ((myFlags & CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT) != 0) {
-        final IndentData indent = createAlignmentIndent(childIndent, child);
+        IndentData indent = createAlignmentIndent(childIndent, child);
         if (indent != null) {
           return indent;
         }
@@ -335,7 +335,7 @@ public abstract class AbstractBlockWrapper {
    * @return        {@code true} if current block has a child that is located before the given block and contains line feed;
    *                {@code false} otherwise
    */
-  protected abstract boolean indentAlreadyUsedBefore(final AbstractBlockWrapper child);
+  protected abstract boolean indentAlreadyUsedBefore(AbstractBlockWrapper child);
 
   /**
    * Allows to retrieve object that encapsulates information about number of symbols before the current block starting
@@ -352,7 +352,7 @@ public abstract class AbstractBlockWrapper {
   @Nullable
   public abstract LeafBlockWrapper getPreviousBlock();
 
-  protected final void setCanUseFirstChildIndentAsBlockIndent(final boolean newValue) {
+  protected final void setCanUseFirstChildIndentAsBlockIndent(boolean newValue) {
     if (newValue) myFlags |= CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT;
     else myFlags &= ~CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT;
   }
@@ -365,7 +365,7 @@ public abstract class AbstractBlockWrapper {
       myParent.arrangeStartOffset(getStartOffset());
     }
   }
-  public IndentData calculateChildOffset(final CommonCodeStyleSettings.IndentOptions indentOption, final ChildAttributes childAttributes,
+  public IndentData calculateChildOffset(CommonCodeStyleSettings.IndentOptions indentOption, ChildAttributes childAttributes,
                                          int index) {
     IndentImpl childIndent = (IndentImpl)childAttributes.getChildIndent();
 
@@ -482,7 +482,7 @@ public abstract class AbstractBlockWrapper {
     return new IndentData(indentSpaces, symbolsBeforeCurrent.getSpaces());
   }
 
-  private static IndentData getIndent(final CommonCodeStyleSettings.IndentOptions options, final int index, IndentImpl indent) {
+  private static IndentData getIndent(CommonCodeStyleSettings.IndentOptions options, int index, IndentImpl indent) {
     if (indent.getType() == Indent.Type.CONTINUATION) {
       return new IndentData(options.CONTINUATION_INDENT_SIZE);
     }
@@ -512,7 +512,7 @@ public abstract class AbstractBlockWrapper {
    *
    * @param indentFromParent    indent value to apply
    */
-  public void setIndentFromParent(final IndentInfo indentFromParent) {
+  public void setIndentFromParent(IndentInfo indentFromParent) {
     myIndentFromParent = indentFromParent;
     if (myIndentFromParent != null) {
       AbstractBlockWrapper parent = myParent;
@@ -536,7 +536,7 @@ public abstract class AbstractBlockWrapper {
     return myParent.findFirstIndentedParent();
   }
 
-  public void setIndent(@Nullable final IndentImpl indent) {
+  public void setIndent(@Nullable IndentImpl indent) {
     myIndent = indent;
   }
 

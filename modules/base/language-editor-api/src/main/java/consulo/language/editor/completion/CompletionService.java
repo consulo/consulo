@@ -46,12 +46,12 @@ public abstract class CompletionService {
    * Run all contributors until any of them returns false or the list is exhausted. If from parameter is not null, contributors
    * will be run starting from the next one after that.
    */
-  public void getVariantsFromContributors(final CompletionParameters parameters, @Nullable final CompletionContributor from, final Consumer<? super CompletionResult> consumer) {
+  public void getVariantsFromContributors(CompletionParameters parameters, @Nullable CompletionContributor from, Consumer<? super CompletionResult> consumer) {
     getVariantsFromContributors(parameters, from, createMatcher(suggestPrefix(parameters), false), consumer);
   }
 
   protected void getVariantsFromContributors(CompletionParameters parameters, @Nullable CompletionContributor from, PrefixMatcher matcher, Consumer<? super CompletionResult> consumer) {
-    final List<CompletionContributor> contributors = CompletionContributor.forParameters(parameters);
+    List<CompletionContributor> contributors = CompletionContributor.forParameters(parameters);
 
     for (int i = contributors.indexOf(from) + 1; i < contributors.size(); i++) {
       ProgressManager.checkCanceled();

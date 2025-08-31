@@ -78,7 +78,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("DirectoryInfoImpl{");
+    StringBuilder sb = new StringBuilder("DirectoryInfoImpl{");
     sb.append("myRoot=").append(myRoot);
     sb.append(", module=").append(module);
     sb.append(", libraryClassRoot=").append(libraryClassRoot);

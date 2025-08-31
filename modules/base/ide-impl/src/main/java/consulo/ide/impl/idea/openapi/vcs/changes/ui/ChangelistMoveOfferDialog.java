@@ -66,8 +66,8 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
 
   @Override
   protected JComponent createCenterPanel() {
-    final JPanel panel = new JPanel(new BorderLayout());
-    final JLabel label = new JLabel(VcsLocalize.changesCommitPartialOfferToMoveText().get());
+    JPanel panel = new JPanel(new BorderLayout());
+    JLabel label = new JLabel(VcsLocalize.changesCommitPartialOfferToMoveText().get());
     label.setUI(new MultiLineLabelUI());
     label.setIconTextGap(10);
     label.setIcon(TargetAWT.to(Messages.getQuestionIcon()));

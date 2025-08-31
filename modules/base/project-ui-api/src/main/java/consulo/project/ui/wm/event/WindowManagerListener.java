@@ -20,6 +20,6 @@ import consulo.project.ui.wm.IdeFrame;
 import java.util.EventListener;
 
 public interface WindowManagerListener extends EventListener {
-  void frameCreated(final IdeFrame frame);
-  void beforeFrameReleased(final IdeFrame frame);
+  void frameCreated(IdeFrame frame);
+  void beforeFrameReleased(IdeFrame frame);
 }

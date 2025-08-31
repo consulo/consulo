@@ -39,12 +39,12 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
   @Nonnull
   private List<PathMapping> myPathMappings;
 
-  public PathMappingSettings(@Nullable final List<PathMapping> pathMappings) {
+  public PathMappingSettings(@Nullable List<PathMapping> pathMappings) {
     myPathMappings = create(pathMappings);
   }
 
   @Nonnull
-  private static List<PathMapping> create(@Nullable final List<PathMapping> mappings) {
+  private static List<PathMapping> create(@Nullable List<PathMapping> mappings) {
     List<PathMapping> result = new ArrayList<>();
     if (mappings != null) {
       for (PathMapping m : mappings) {
@@ -155,7 +155,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     return myPathMappings;
   }
 
-  public void setPathMappings(@Nullable final List<PathMapping> pathMappings) {
+  public void setPathMappings(@Nullable List<PathMapping> pathMappings) {
     myPathMappings = create(pathMappings);
   }
 
@@ -178,12 +178,12 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
   }
 
   @Nullable
-  public static PathMappingSettings readExternal(@Nullable final Element element) {
+  public static PathMappingSettings readExternal(@Nullable Element element) {
     if (element == null) {
       return null;
     }
 
-    final Element settingsElement = element.getChild(PathMappingSettings.class.getSimpleName());
+    Element settingsElement = element.getChild(PathMappingSettings.class.getSimpleName());
     if (settingsElement == null) {
       return null;
     }
@@ -191,7 +191,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     return XmlSerializer.deserialize(settingsElement, PathMappingSettings.class);
   }
 
-  public static void writeExternal(@Nullable final Element element, @Nullable final PathMappingSettings mappings) {
+  public static void writeExternal(@Nullable Element element, @Nullable PathMappingSettings mappings) {
     if (element == null || mappings == null || mappings.isEmpty()) {
       return;
     }

@@ -50,7 +50,7 @@ public class DateFilterComponent {
         this(true, DateFormatUtil.getDateTimeFormat().toPattern());
     }
 
-    public DateFilterComponent(final boolean showBorder, final String datePattern) {
+    public DateFilterComponent(boolean showBorder, String datePattern) {
         myDatePattern = datePattern;
         $$$setupUI$$$();
 
@@ -68,7 +68,7 @@ public class DateFilterComponent {
         updateAllEnabled(null);
     }
 
-    private void updateAllEnabled(final ActionEvent e) {
+    private void updateAllEnabled(ActionEvent e) {
         StandardVersionFilterComponent.updatePair(myUseDateBeforeFilter, (JComponent) TargetAWT.to(myDateBefore), e);
         StandardVersionFilterComponent.updatePair(myUseDateAfterFilter, (JComponent) TargetAWT.to(myDateAfter), e);
     }
@@ -78,14 +78,14 @@ public class DateFilterComponent {
     }
 
     @RequiredUIAccess
-    public void setBefore(final long beforeTs) {
+    public void setBefore(long beforeTs) {
         myUseDateBeforeFilter.setSelected(true);
         myDateBefore.setValue(new Date(beforeTs));
         myDateBefore.setEnabled(true);
     }
 
     @RequiredUIAccess
-    public void setAfter(final long afterTs) {
+    public void setAfter(long afterTs) {
         myUseDateAfterFilter.setSelected(true);
         myDateAfter.setValue(new Date(afterTs));
         myDateAfter.setEnabled(true);

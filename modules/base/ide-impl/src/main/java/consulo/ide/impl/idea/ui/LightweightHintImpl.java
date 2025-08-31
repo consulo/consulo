@@ -60,15 +60,15 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
     private Predicate<TooltipEvent> myAutoHideTester = tooltipEvent -> true;
 
-    public LightweightHintImpl(@Nonnull final JComponent component) {
+    public LightweightHintImpl(@Nonnull JComponent component) {
         myComponent = component;
     }
 
-    public void setForceLightweightPopup(final boolean forceLightweightPopup) {
+    public void setForceLightweightPopup(boolean forceLightweightPopup) {
         myForceLightweightPopup = forceLightweightPopup;
     }
 
-    public void setForceShowAsPopup(final boolean forceShowAsPopup) {
+    public void setForceShowAsPopup(boolean forceShowAsPopup) {
         myForceShowAsPopup = forceShowAsPopup;
     }
 
@@ -76,7 +76,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
         myFocusRequestor = c;
     }
 
-    public void setTitle(final String title) {
+    public void setTitle(String title) {
         myTitle = title;
     }
 
@@ -84,19 +84,19 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
         return mySelectingHint;
     }
 
-    public void setSelectingHint(final boolean selectingHint) {
+    public void setSelectingHint(boolean selectingHint) {
         mySelectingHint = selectingHint;
     }
 
-    public void setCancelOnClickOutside(final boolean b) {
+    public void setCancelOnClickOutside(boolean b) {
         myCancelOnClickOutside = b;
     }
 
-    public void setCancelOnOtherWindowOpen(final boolean b) {
+    public void setCancelOnOtherWindowOpen(boolean b) {
         myCancelOnOtherWindowOpen = b;
     }
 
-    public void setResizable(final boolean b) {
+    public void setResizable(boolean b) {
         myResizable = b;
     }
 
@@ -115,7 +115,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
      * appears on 250 layer.
      */
     @Override
-    public void show(@Nonnull final JComponent parentComponent, final int x, final int y, final JComponent focusBackComponent, @Nonnull final HintHint hintHint) {
+    public void show(@Nonnull JComponent parentComponent, int x, int y, JComponent focusBackComponent, @Nonnull final HintHint hintHint) {
         myParentComponent = parentComponent;
         myHintHint = hintHint;
 
@@ -125,13 +125,13 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
         myEscListener = new MyEscListener();
         myComponent.registerKeyboardAction(myEscListener, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
         myComponent.registerKeyboardAction(myEscListener, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_FOCUSED);
-        final JLayeredPane layeredPane = parentComponent.getRootPane().getLayeredPane();
+        JLayeredPane layeredPane = parentComponent.getRootPane().getLayeredPane();
 
         myComponent.validate();
 
         if (!myForceShowAsPopup && !hintHint.isPopupForced() && (myForceLightweightPopup || fitsLayeredPane(layeredPane, myComponent, new RelativePoint(parentComponent, new Point(x, y)), hintHint))) {
             beforeShow();
-            final Dimension preferredSize = myComponent.getPreferredSize();
+            Dimension preferredSize = myComponent.getPreferredSize();
 
 
             if (hintHint.isAwtTooltip()) {
@@ -186,7 +186,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
                 myCurrentIdeTooltip = IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, hintHint.isShowImmediately(), hintHint.isAnimationEnabled());
             }
             else {
-                final Point layeredPanePoint = SwingUtilities.convertPoint(parentComponent, x, y, layeredPane);
+                Point layeredPanePoint = SwingUtilities.convertPoint(parentComponent, x, y, layeredPane);
                 myComponent.setBounds(layeredPanePoint.x, layeredPanePoint.y, preferredSize.width, preferredSize.height);
                 layeredPane.add(myComponent, JLayeredPane.POPUP_LAYER);
 
@@ -285,14 +285,14 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
             }
         }
         else {
-            final Rectangle lpRect = new Rectangle(pane.getLocationOnScreen().x, pane.getLocationOnScreen().y, pane.getWidth(), pane.getHeight());
+            Rectangle lpRect = new Rectangle(pane.getLocationOnScreen().x, pane.getLocationOnScreen().y, pane.getWidth(), pane.getHeight());
             Rectangle componentRect = new Rectangle(desiredLocation.getScreenPoint().x, desiredLocation.getScreenPoint().y, component.getPreferredSize().width, component.getPreferredSize().height);
             return lpRect.contains(componentRect);
         }
     }
 
     private void fireHintHidden() {
-        final EventListener[] listeners = myListenerList.getListeners(HintListener.class);
+        EventListener[] listeners = myListenerList.getListeners(HintListener.class);
         for (EventListener listener : listeners) {
             ((HintListener) listener).hintHidden(new EventObject(this));
         }
@@ -303,7 +303,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
      */
     public final Rectangle getBounds() {
         Rectangle bounds = new Rectangle(myComponent.getBounds());
-        final JLayeredPane layeredPane = myParentComponent.getRootPane().getLayeredPane();
+        JLayeredPane layeredPane = myParentComponent.getRootPane().getLayeredPane();
         return SwingUtilities.convertRectangle(myComponent, bounds, layeredPane);
     }
 
@@ -399,12 +399,12 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
     }
 
     @Override
-    public final void addHintListener(@Nonnull final HintListener listener) {
+    public final void addHintListener(@Nonnull HintListener listener) {
         myListenerList.add(HintListener.class, listener);
     }
 
     @Override
-    public final void removeHintListener(@Nonnull final HintListener listener) {
+    public final void removeHintListener(@Nonnull HintListener listener) {
         myListenerList.remove(HintListener.class, listener);
     }
 
@@ -449,7 +449,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
         }
     }
 
-    public void setSize(final Dimension size) {
+    public void setSize(Dimension size) {
         if (myIsRealPopup && myPopup != null && !myPopup.isDisposed()) {
             // There is a possible case that a popup wraps target content component into other components which might have borders.
             // That's why we can't just apply component's size to the whole popup. It needs to be adjusted before that.
@@ -530,7 +530,7 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
     private final class MyEscListener implements ActionListener {
         @Override
-        public final void actionPerformed(final ActionEvent e) {
+        public final void actionPerformed(ActionEvent e) {
             hide();
         }
     }

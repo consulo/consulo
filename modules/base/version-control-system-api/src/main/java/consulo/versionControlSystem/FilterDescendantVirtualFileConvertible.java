@@ -44,7 +44,7 @@ public class FilterDescendantVirtualFileConvertible<T> extends AbstractFilterChi
   }
 
   @Override
-  protected boolean isAncestor(final T parent, final T child) {
+  protected boolean isAncestor(T parent, T child) {
     return VirtualFileUtil.isAncestor(myConvertor.apply(parent), myConvertor.apply(child), false);
   }
 }

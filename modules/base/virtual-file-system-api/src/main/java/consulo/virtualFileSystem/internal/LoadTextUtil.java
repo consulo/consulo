@@ -47,8 +47,8 @@ public final class LoadTextUtil {
     int lfCount = 0;
     int crlfCount = 0;
 
-    final int length = buffer.length();
-    final char[] bufferArray = CharArrayUtil.fromSequenceWithoutCopying(buffer);
+    int length = buffer.length();
+    char[] bufferArray = CharArrayUtil.fromSequenceWithoutCopying(buffer);
 
     for (int src = 0; src < length; src++) {
       char c = bufferArray != null ? bufferArray[src] : buffer.charAt(src);
@@ -491,10 +491,10 @@ public final class LoadTextUtil {
   }
 
   @Nonnull
-  public static CharSequence loadText(@Nonnull final VirtualFile file) {
+  public static CharSequence loadText(@Nonnull VirtualFile file) {
     FileType type = file.getFileType();
     if (type.isBinary()) {
-      final BinaryFileDecompiler decompiler = BinaryFileDecompiler.forFileType(type);
+      BinaryFileDecompiler decompiler = BinaryFileDecompiler.forFileType(type);
       if (decompiler != null) {
         CharSequence text = decompiler.decompile(file);
         try {
@@ -521,7 +521,7 @@ public final class LoadTextUtil {
    * @throws IllegalArgumentException for binary files
    */
   @Nonnull
-  public static CharSequence loadText(@Nonnull final VirtualFile file, int limit) {
+  public static CharSequence loadText(@Nonnull VirtualFile file, int limit) {
     FileType type = file.getFileType();
     if (type.isBinary())
       throw new IllegalArgumentException("Attempt to load truncated text for binary file: " + file.getPresentableUrl() + ". File type: " + type.getName());
@@ -548,7 +548,7 @@ public final class LoadTextUtil {
   }
 
   @Nonnull
-  public static CharSequence getTextByBinaryPresentation(@Nonnull final byte[] bytes, @Nonnull VirtualFile virtualFile) {
+  public static CharSequence getTextByBinaryPresentation(@Nonnull byte[] bytes, @Nonnull VirtualFile virtualFile) {
     return getTextByBinaryPresentation(bytes, virtualFile, true, true);
   }
 
@@ -625,12 +625,12 @@ public final class LoadTextUtil {
     Pair.NonNull<Charset, byte[]> pair = getOverriddenCharsetByBOM(bytes, charset);
     byte[] bom = pair.getSecond();
 
-    final ConvertResult result = convertBytes(bytes, Math.min(bom.length, bytes.length), bytes.length, pair.first);
+    ConvertResult result = convertBytes(bytes, Math.min(bom.length, bytes.length), bytes.length, pair.first);
     return result.text;
   }
 
   @Nonnull
-  private static ConvertResult convertBytes(@Nonnull byte[] bytes, final int startOffset, int endOffset, @Nonnull Charset internalCharset) {
+  private static ConvertResult convertBytes(@Nonnull byte[] bytes, int startOffset, int endOffset, @Nonnull Charset internalCharset) {
     assert startOffset >= 0 && startOffset <= endOffset && endOffset <= bytes.length : startOffset + "," + endOffset + ": " + bytes.length;
     if (internalCharset instanceof SevenBitCharset || internalCharset == StandardCharsets.US_ASCII) {
       // optimisation: skip byte-to-char conversion for ascii chars

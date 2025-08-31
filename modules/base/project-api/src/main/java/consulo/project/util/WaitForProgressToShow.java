@@ -28,41 +28,41 @@ public class WaitForProgressToShow {
   private WaitForProgressToShow() {
   }
 
-  public static void runOrInvokeAndWaitAboveProgress(final Runnable command) {
+  public static void runOrInvokeAndWaitAboveProgress(Runnable command) {
     runOrInvokeAndWaitAboveProgress(command, Application.get().getDefaultModalityState());
   }
 
-  public static void runOrInvokeAndWaitAboveProgress(final Runnable command, @Nullable final ModalityState modalityState) {
-    final Application application = Application.get();
+  public static void runOrInvokeAndWaitAboveProgress(Runnable command, @Nullable ModalityState modalityState) {
+    Application application = Application.get();
     if (application.isDispatchThread()) {
       command.run();
     }
     else {
-      final ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
+      ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
       if (pi != null) {
         execute(pi);
         application.invokeAndWait(command, pi.getModalityState());
       }
       else {
-        final ModalityState notNullModalityState = modalityState == null ? application.getNoneModalityState() : modalityState;
+        ModalityState notNullModalityState = modalityState == null ? application.getNoneModalityState() : modalityState;
         application.invokeAndWait(command, notNullModalityState);
       }
     }
   }
 
-  public static void runOrInvokeLaterAboveProgress(final Runnable command, @Nullable final ModalityState modalityState, @Nonnull final Project project) {
-    final Application application = Application.get();
+  public static void runOrInvokeLaterAboveProgress(Runnable command, @Nullable ModalityState modalityState, @Nonnull Project project) {
+    Application application = Application.get();
     if (application.isDispatchThread()) {
       command.run();
     }
     else {
-      final ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
+      ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
       if (pi != null) {
         execute(pi);
         application.invokeLater(command, pi.getModalityState(), () -> (!project.isOpen()) || project.isDisposed());
       }
       else {
-        final ModalityState notNullModalityState = modalityState == null ? application.getNoneModalityState() : modalityState;
+        ModalityState notNullModalityState = modalityState == null ? application.getNoneModalityState() : modalityState;
         application.invokeLater(command, notNullModalityState, project.getDisposed());
       }
     }
@@ -70,10 +70,10 @@ public class WaitForProgressToShow {
 
   public static void execute(ProgressIndicator pi) {
     if (pi.isShowing()) {
-      final long maxWait = 3000;
-      final long start = System.currentTimeMillis();
+      long maxWait = 3000;
+      long start = System.currentTimeMillis();
       while ((!pi.isPopupWasShown()) && (pi.isRunning()) && (System.currentTimeMillis() - maxWait < start)) {
-        final Object lock = new Object();
+        Object lock = new Object();
         synchronized (lock) {
           try {
             lock.wait(100);

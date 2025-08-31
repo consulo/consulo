@@ -68,7 +68,7 @@ public class XValueMarkers<V extends XValue, M> {
 
   public void unmarkValue(@Nonnull XValue value) {
     //noinspection unchecked
-    final V v = (V)value;
+    V v = (V)value;
     M m = myProvider.getMarker(v);
     if (m != null) {
       myProvider.unmarkValue(v, m);

@@ -26,7 +26,7 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public abstract class AddEditDeleteListPanel<T> extends AddDeleteListPanel<T> {
-  public AddEditDeleteListPanel(final String title, final List<T> initialList) {
+  public AddEditDeleteListPanel(String title, List<T> initialList) {
     super(title, initialList);
     new DoubleClickListener() {
       @Override

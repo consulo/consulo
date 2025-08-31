@@ -84,7 +84,7 @@ public class ExternalSystemException extends RuntimeException {
 
     boolean first = true;
     for (Throwable t = cause; t != null; t = t.getCause()) {
-      final String m = t.getLocalizedMessage();
+      String m = t.getLocalizedMessage();
       if (m == null) {
         continue;
       }

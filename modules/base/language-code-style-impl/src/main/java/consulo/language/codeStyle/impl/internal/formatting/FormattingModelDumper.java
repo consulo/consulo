@@ -31,13 +31,13 @@ public class FormattingModelDumper {
   private FormattingModelDumper() {
   }
 
-  public static void dumpFormattingModel(final Block block, int indent, PrintStream stream) {
+  public static void dumpFormattingModel(Block block, int indent, PrintStream stream) {
     StringBuilder builder = new StringBuilder();
     dumpFormattingModel(block, indent, builder);
     stream.print(builder.toString());
   }
 
-  public static void dumpFormattingModel(final Block block, int indent, final StringBuilder builder) {
+  public static void dumpFormattingModel(Block block, int indent, StringBuilder builder) {
     if (indent == 0) {
       builder.append("--- FORMATTING MODEL ---\n");
     }
@@ -62,13 +62,13 @@ public class FormattingModelDumper {
     }
   }
 
-  private static void dumpTextBlock(final Block block, final StringBuilder builder) {
+  private static void dumpTextBlock(Block block, StringBuilder builder) {
     builder.append("\"").append(getBlockText(block)).append("\"");
     dumpBlockProperties(block, builder);
     builder.append("\n");
   }
 
-  private static String getBlockText(final Block block) {
+  private static String getBlockText(Block block) {
     if (block instanceof ASTBlock) {
       return ((ASTBlock)block).getNode().getText();
     }
@@ -77,7 +77,7 @@ public class FormattingModelDumper {
     }
   }
 
-  private static void dumpBlock(final Block block, final StringBuilder builder) {
+  private static void dumpBlock(Block block, StringBuilder builder) {
     builder.append("<block ");
     if (block instanceof ASTBlock) {
       builder.append(((ASTBlock)block).getNode().getElementType());
@@ -86,7 +86,7 @@ public class FormattingModelDumper {
     builder.append(">\n");
   }
 
-  private static void dumpBlockProperties(final Block block, final StringBuilder blockData) {
+  private static void dumpBlockProperties(Block block, StringBuilder blockData) {
     TextRange textRange = block.getTextRange();
     blockData.append(" ").append(textRange.getStartOffset()).append(":").append(textRange.getEndOffset());
     Wrap wrap = block.getWrap();
@@ -97,13 +97,13 @@ public class FormattingModelDumper {
     if (indent != null) {
       blockData.append(" ").append(indent);
     }
-    final Alignment alignment = block.getAlignment();
+    Alignment alignment = block.getAlignment();
     if (alignment != null) {
       blockData.append(" ").append(alignment);
     }
   }
 
-  private static void dumpSpacing(final Spacing spacing, final int indent, final StringBuilder out) {
+  private static void dumpSpacing(Spacing spacing, int indent, StringBuilder out) {
     out.append(StringUtil.repeatSymbol(' ', indent));
     out.append("spacing: ").append(spacing).append("\n");
   }

@@ -22,7 +22,7 @@ import java.nio.ByteBuffer;
 
 public class DataInputOutputUtilRt {
   public static int readINT(DataInput record) throws IOException {
-    final int val = record.readUnsignedByte();
+    int val = record.readUnsignedByte();
     if (val < 192) {
       return val;
     }
@@ -38,7 +38,7 @@ public class DataInputOutputUtilRt {
   }
 
   public static int readINT(ByteBuffer byteBuffer) {
-    final int val = byteBuffer.get() & 0xFF;
+    int val = byteBuffer.get() & 0xFF;
     if (val < 192) {
       return val;
     }

@@ -184,7 +184,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nullable
   @Override
-  public DocumentContent createDocument(@Nullable Project project, @Nonnull final VirtualFile file) {
+  public DocumentContent createDocument(@Nullable Project project, @Nonnull VirtualFile file) {
     // TODO: add notification, that file is decompiled ?
     if (file.isDirectory()) return null;
     ThrowableComputable<Document, RuntimeException> action = () -> {

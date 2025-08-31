@@ -145,7 +145,7 @@ public abstract class CompletionContributor implements LanguageExtension {
 
   private final MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider>> myMap = new MultiMap<>();
 
-  public final void extend(@Nullable CompletionType type, final ElementPattern<? extends PsiElement> place, CompletionProvider provider) {
+  public final void extend(@Nullable CompletionType type, ElementPattern<? extends PsiElement> place, CompletionProvider provider) {
     myMap.putValue(type, Pair.create(place, provider));
   }
 
@@ -165,9 +165,9 @@ public abstract class CompletionContributor implements LanguageExtension {
    * @param result
    */
   @RequiredReadAction
-  public void fillCompletionVariants(final CompletionParameters parameters, CompletionResultSet result) {
-    for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider> pair : myMap.get(parameters.getCompletionType())) {
-      final ProcessingContext context = new ProcessingContext();
+  public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
+    for (Pair<ElementPattern<? extends PsiElement>, CompletionProvider> pair : myMap.get(parameters.getCompletionType())) {
+      ProcessingContext context = new ProcessingContext();
       if (pair.first.accepts(parameters.getPosition(), context)) {
         pair.second.addCompletions(parameters, context, result);
         if (result.isStopped()) {
@@ -175,8 +175,8 @@ public abstract class CompletionContributor implements LanguageExtension {
         }
       }
     }
-    for (final Pair<ElementPattern<? extends PsiElement>, CompletionProvider> pair : myMap.get(null)) {
-      final ProcessingContext context = new ProcessingContext();
+    for (Pair<ElementPattern<? extends PsiElement>, CompletionProvider> pair : myMap.get(null)) {
+      ProcessingContext context = new ProcessingContext();
       if (pair.first.accepts(parameters.getPosition(), context)) {
         pair.second.addCompletions(parameters, context, result);
         if (result.isStopped()) {
@@ -210,7 +210,7 @@ public abstract class CompletionContributor implements LanguageExtension {
    * @return hint text to be shown if no variants are found, typically "No suggestions"
    */
   @Nullable
-  public String handleEmptyLookup(@Nonnull CompletionParameters parameters, final Editor editor) {
+  public String handleEmptyLookup(@Nonnull CompletionParameters parameters, Editor editor) {
     return null;
   }
 
@@ -247,11 +247,11 @@ public abstract class CompletionContributor implements LanguageExtension {
    * @return String representation of action shortcut. Useful while advertising something
    * @see #advertise(CompletionParameters)
    */
-  public static String getActionShortcut(@NonNls final String actionId) {
+  public static String getActionShortcut(@NonNls String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(actionId));
   }
 
-  public static List<CompletionContributor> forParameters(final CompletionParameters parameters) {
+  public static List<CompletionContributor> forParameters(CompletionParameters parameters) {
     return ApplicationManager.getApplication()
             .runReadAction((Supplier<List<CompletionContributor>>)() -> forLanguage(PsiUtilCore.getLanguageAtOffset(parameters.getPosition().getContainingFile(), parameters.getOffset())));
   }

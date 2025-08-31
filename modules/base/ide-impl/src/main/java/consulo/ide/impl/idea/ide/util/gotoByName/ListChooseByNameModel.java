@@ -28,9 +28,9 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
   private final List<T> myItems;
   private final String myNotInMessage;
 
-  public ListChooseByNameModel(@Nonnull final Project project,
-                               final String prompt,
-                               final String notInMessage,
+  public ListChooseByNameModel(@Nonnull Project project,
+                               String prompt,
+                               String notInMessage,
                                List<T> items) {
     super(project, prompt, null);
 
@@ -40,7 +40,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
 
   @Override
   public String[] getNames() {
-    final ArrayList<String> taskFullCmds = new ArrayList<String>();
+    ArrayList<String> taskFullCmds = new ArrayList<String>();
     for (T item : myItems) {
       taskFullCmds.add(item.getName());
     }
@@ -73,23 +73,23 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
   public ListCellRenderer getListCellRenderer() {
     return new DefaultListCellRenderer() {
       @Override
-      public Component getListCellRendererComponent(final JList list,
-                                                    final Object value,
-                                                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+      public Component getListCellRendererComponent(JList list,
+                                                    Object value,
+                                                    int index, boolean isSelected, boolean cellHasFocus) {
 
-        final JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(true);
         panel.setBorder(new EmptyBorder(0, 0, 0, 5));
 
-        final Color bg = isSelected ? UIUtil.getListSelectionBackground() : UIUtil.getListBackground();
+        Color bg = isSelected ? UIUtil.getListSelectionBackground() : UIUtil.getListBackground();
         panel.setBackground(bg);
 
         if (value instanceof ChooseByNameItem) {
-          final ChooseByNameItem item = (ChooseByNameItem) value;
+          ChooseByNameItem item = (ChooseByNameItem) value;
 
-          final Color fg = isSelected ? UIUtil.getListSelectionForeground() : UIUtil.getListForeground();
+          Color fg = isSelected ? UIUtil.getListSelectionForeground() : UIUtil.getListForeground();
 
-          final JLabel actionLabel = new JLabel(item.getName(), null, LEFT);
+          JLabel actionLabel = new JLabel(item.getName(), null, LEFT);
           actionLabel.setBackground(bg);
           actionLabel.setForeground(fg);
           actionLabel.setFont(actionLabel.getFont().deriveFont(Font.BOLD));
@@ -100,14 +100,14 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
           String description = item.getDescription();
           if (description != null) {
             // truncate long descriptions
-            final String normalizedDesc;
+            String normalizedDesc;
             if (description.length() > MAX_DESC_LENGTH) {
               normalizedDesc = description.substring(0, MAX_DESC_LENGTH) + ELLIPSIS_SUFFIX;
             }
             else {
               normalizedDesc = description;
             }
-            final JLabel descriptionLabel = new JLabel(normalizedDesc);
+            JLabel descriptionLabel = new JLabel(normalizedDesc);
             descriptionLabel.setBackground(bg);
             descriptionLabel.setForeground(fg);
             descriptionLabel.setBorder(new EmptyBorder(0, 15, 0, 0));
@@ -117,7 +117,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
         }
         else {
           // E.g. "..." item
-          final JLabel actionLabel = new JLabel(value.toString(), null, LEFT);
+          JLabel actionLabel = new JLabel(value.toString(), null, LEFT);
           actionLabel.setBackground(bg);
           actionLabel.setForeground(UIUtil.getListForeground());
           actionLabel.setFont(actionLabel.getFont().deriveFont(Font.PLAIN));
@@ -130,13 +130,13 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
   }
 
   @Override
-  public String getElementName(final Object element) {
+  public String getElementName(Object element) {
     if (!(element instanceof ChooseByNameItem)) return null;
     return ((ChooseByNameItem)element).getName();
   }
 
-  public boolean matches(@Nonnull final String name, @Nonnull final String pattern) {
-    final Pattern compiledPattern = getTaskPattern(pattern);
+  public boolean matches(@Nonnull String name, @Nonnull String pattern) {
+    Pattern compiledPattern = getTaskPattern(pattern);
     if (compiledPattern == null) {
       return false;
     }
@@ -151,7 +151,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
       myPattern = pattern;
     }
     if (myCompiledPattern == null) {
-      final String regex = "^.*" + NameUtil.buildRegexp(pattern, 0, true, true);
+      String regex = "^.*" + NameUtil.buildRegexp(pattern, 0, true, true);
 
       myCompiledPattern = Pattern.compile(regex);
     }

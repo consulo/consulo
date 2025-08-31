@@ -48,7 +48,7 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
   @RequiredUIAccess
   @Override
   @Nonnull
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull final VirtualFile file) {
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
     return new LargeFileEditor(file);
   }
 

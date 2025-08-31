@@ -679,7 +679,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     }
 
     @Override
-    public void setVariableInplaceRenameEnabled(final boolean val) {
+    public void setVariableInplaceRenameEnabled(boolean val) {
         myOptions.RENAME_VARIABLES_INPLACE = val;
     }
 
@@ -689,7 +689,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     }
 
     @Override
-    public void setPreselectRename(final boolean val) {
+    public void setPreselectRename(boolean val) {
         myOptions.PRESELECT_RENAME = val;
     }
 
@@ -699,7 +699,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     }
 
     @Override
-    public void setShowInlineLocalDialog(final boolean val) {
+    public void setShowInlineLocalDialog(boolean val) {
         myOptions.SHOW_INLINE_DIALOG = val;
     }
 

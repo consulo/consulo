@@ -50,7 +50,7 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
   private boolean myDetachingMode;
   private boolean myCancelled;
 
-  public MouseDragHelper(Disposable parent, final JComponent dragComponent) {
+  public MouseDragHelper(Disposable parent, JComponent dragComponent) {
     myDragComponent = dragComponent;
     myParentDisposable = parent;
 
@@ -118,7 +118,7 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
   }
 
   @Override
-  public void mousePressed(final MouseEvent e) {
+  public void mousePressed(MouseEvent e) {
     if (!canStartDragging(e)) return;
 
     myPressPointScreen = new RelativePoint(e).getScreenPoint();
@@ -128,14 +128,14 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
 
     myDelta = new Dimension();
     if (myDragComponent.isShowing()) {
-      final Point delta = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), myDragComponent);
+      Point delta = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), myDragComponent);
       myDelta.width = delta.x;
       myDelta.height = delta.y;
     }
   }
 
   @Override
-  public void mouseReleased(final MouseEvent e) {
+  public void mouseReleased(MouseEvent e) {
     if (myCancelled) {
       myCancelled = false;
       return;
@@ -175,10 +175,10 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
   }
 
   @Override
-  public void mouseDragged(final MouseEvent e) {
+  public void mouseDragged(MouseEvent e) {
     if (myPressPointScreen == null || myCancelled) return;
 
-    final boolean deadZone = isWithinDeadZone(e);
+    boolean deadZone = isWithinDeadZone(e);
     if (!myDraggingNow && !deadZone) {
       myDraggingNow = true;
       myDragJustStarted = true;
@@ -188,7 +188,7 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
     }
 
     if (myDraggingNow && myPressPointScreen != null) {
-      final Point draggedTo = new RelativePoint(e).getScreenPoint();
+      Point draggedTo = new RelativePoint(e).getScreenPoint();
 
       boolean dragOutStarted = false;
       if (!myDetachingMode) {
@@ -214,11 +214,11 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
 
     Component component = me.getComponent();
     if (NullableComponent.Check.isNullOrHidden(component)) return false;
-    final Point dragComponentPoint = SwingUtilities.convertPoint(me.getComponent(), me.getPoint(), myDragComponent);
+    Point dragComponentPoint = SwingUtilities.convertPoint(me.getComponent(), me.getPoint(), myDragComponent);
     return canStartDragging(myDragComponent, dragComponentPoint);
   }
 
-  protected boolean canStartDragging(final JComponent dragComponent, Point dragComponentPoint) {
+  protected boolean canStartDragging(JComponent dragComponent, Point dragComponentPoint) {
     return true;
   }
 
@@ -228,10 +228,10 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
   protected void processDragCancel() {
   }
 
-  protected void processDragFinish(final MouseEvent event, boolean willDragOutStart) {
+  protected void processDragFinish(MouseEvent event, boolean willDragOutStart) {
   }
 
-  protected void processDragOutFinish(final MouseEvent event) {
+  protected void processDragOutFinish(MouseEvent event) {
   }
 
   protected void processDragOutCancel() {
@@ -251,25 +251,25 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
     event.consume();
   }
 
-  private boolean isWithinDeadZone(final MouseEvent e) {
-    final Point screen = new RelativePoint(e).getScreenPoint();
+  private boolean isWithinDeadZone(MouseEvent e) {
+    Point screen = new RelativePoint(e).getScreenPoint();
     return Math.abs(myPressPointScreen.x - screen.x - myDelta.width) < DRAG_START_DEADZONE && Math.abs(myPressPointScreen.y - screen.y - myDelta.height) < DRAG_START_DEADZONE;
   }
 
   @Override
-  public void mouseClicked(final MouseEvent e) {
+  public void mouseClicked(MouseEvent e) {
   }
 
   @Override
-  public void mouseEntered(final MouseEvent e) {
+  public void mouseEntered(MouseEvent e) {
   }
 
   @Override
-  public void mouseExited(final MouseEvent e) {
+  public void mouseExited(MouseEvent e) {
   }
 
   @Override
-  public void mouseMoved(final MouseEvent e) {
+  public void mouseMoved(MouseEvent e) {
   }
 
   @Override

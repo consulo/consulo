@@ -313,11 +313,11 @@ final public class Verifier {
    * @return the CHARFLAGS array.
    */
   private static final byte[] buildBitFlags() {
-    final byte[] ret = new byte[CHARCNT];
+    byte[] ret = new byte[CHARCNT];
     int index = 0;
     for (int i = 0; i < VALCONST.length; i++) {
       // v represents the roles a character can play.
-      final byte v = VALCONST[i];
+      byte v = VALCONST[i];
       // l is the number of consecutive chars that have the same
       // roles 'v'
       int l = LENCONST[i];
@@ -368,7 +368,7 @@ final public class Verifier {
   private Verifier() {
   }
 
-  private static final String checkJDOMName(final String name) {
+  private static final String checkJDOMName(String name) {
     // Check basic XML name rules first
     // Cannot be empty or null
     if (name == null) {
@@ -406,7 +406,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  public static String checkElementName(final String name) {
+  public static String checkElementName(String name) {
     return checkJDOMName(name);
   }
 
@@ -418,7 +418,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  public static String checkAttributeName(final String name) {
+  public static String checkAttributeName(String name) {
     // Attribute names may not be xmlns since we do this internally too
     if ("xmlns".equals(name)) {
       return "An Attribute name may not be \"xmlns\"; " +
@@ -446,12 +446,12 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  public static String checkCharacterData(final String text) {
+  public static String checkCharacterData(String text) {
     if (text == null) {
       return "A null is not a legal XML value";
     }
 
-    final int len = text.length();
+    int len = text.length();
     for (int i = 0; i < len; i++) {
       // we are expecting a normal char, but may be a surrogate.
       // the isXMLCharacter method takes an int argument, but we have a char.
@@ -521,7 +521,7 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> is name is OK.
    */
-  public static String checkCDATASection(final String data) {
+  public static String checkCDATASection(String data) {
     String reason = null;
     if ((reason = checkCharacterData(data)) != null) {
       return reason;
@@ -544,7 +544,7 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  public static String checkNamespacePrefix(final String prefix) {
+  public static String checkNamespacePrefix(String prefix) {
     // Manually do rules, since URIs can be null or empty
     if ((prefix == null) || (prefix.equals(""))) {
       return null;
@@ -586,14 +586,14 @@ final public class Verifier {
    * @return <code>String</code> reason name is illegal, or
    * <code>null</code> if name is OK.
    */
-  public static String checkNamespaceURI(final String uri) {
+  public static String checkNamespaceURI(String uri) {
     // Manually do rules, since URIs can be null or empty
     if ((uri == null) || (uri.equals(""))) {
       return null;
     }
 
     // Cannot start with a number
-    final char first = uri.charAt(0);
+    char first = uri.charAt(0);
     if (Character.isDigit(first)) {
       return "Namespace URIs cannot begin with a number";
     }
@@ -623,7 +623,7 @@ final public class Verifier {
    * @return <code>String</code> reason target is illegal, or
    * <code>null</code> if target is OK.
    */
-  public static String checkProcessingInstructionTarget(final String target) {
+  public static String checkProcessingInstructionTarget(String target) {
     // Check basic XML name rules first
     String reason;
     if ((reason = checkXMLName(target)) != null) {
@@ -659,9 +659,9 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> if data is OK.
    */
-  public static String checkProcessingInstructionData(final String data) {
+  public static String checkProcessingInstructionData(String data) {
     // Check basic XML name rules first
-    final String reason = checkCharacterData(data);
+    String reason = checkCharacterData(data);
 
     if (reason == null) {
       if (data.indexOf("?>") >= 0) {
@@ -681,7 +681,7 @@ final public class Verifier {
    * @return <code>String</code> reason data is illegal, or
    * <code>null</code> if data is OK.
    */
-  public static String checkCommentData(final String data) {
+  public static String checkCommentData(String data) {
     String reason = null;
     if ((reason = checkCharacterData(data)) != null) {
       return reason;
@@ -706,7 +706,7 @@ final public class Verifier {
    * @param low  low 16 bits
    * @return decoded character
    */
-  public static int decodeSurrogatePair(final char high, final char low) {
+  public static int decodeSurrogatePair(char high, char low) {
     return 0x10000 + (high - 0xD800) * 0x400 + (low - 0xDC00);
   }
 
@@ -718,7 +718,7 @@ final public class Verifier {
    * @return <code>String</code> reason <i>c</i> is illegal, or
    * <code>null</code> if <i>c</i> is OK.
    */
-  public static boolean isXMLPublicIDCharacter(final char c) {
+  public static boolean isXMLPublicIDCharacter(char c) {
     // [13] PubidChar ::= #x20 | #xD | #xA | [a-zA-Z0-9] |
     // [-'()+,./:=?;*#@$_%]
 
@@ -748,14 +748,14 @@ final public class Verifier {
    * @return <code>String</code> reason public ID is illegal, or
    * <code>null</code> if public ID is OK.
    */
-  public static String checkPublicID(final String publicID) {
+  public static String checkPublicID(String publicID) {
     String reason = null;
 
     if (publicID == null) return null;
     // This indicates there is no public ID
 
     for (int i = 0; i < publicID.length(); i++) {
-      final char c = publicID.charAt(i);
+      char c = publicID.charAt(i);
       if (!isXMLPublicIDCharacter(c)) {
         reason = c + " is not a legal character in public IDs";
         break;
@@ -774,7 +774,7 @@ final public class Verifier {
    * @return <code>String</code> reason system literal is illegal, or
    * <code>null</code> if system literal is OK.
    */
-  public static String checkSystemLiteral(final String systemLiteral) {
+  public static String checkSystemLiteral(String systemLiteral) {
     String reason = null;
 
     if (systemLiteral == null) return null;
@@ -800,13 +800,13 @@ final public class Verifier {
    * @return <code>String</code> reason the name is illegal, or
    * <code>null</code> if OK.
    */
-  public static String checkXMLName(final String name) {
+  public static String checkXMLName(String name) {
     // Cannot be empty or null
     if ((name == null)) {
       return "XML names cannot be null";
     }
 
-    final int len = name.length();
+    int len = name.length();
     if (len == 0) {
       return "XML names cannot be empty";
     }
@@ -838,14 +838,14 @@ final public class Verifier {
    * @return <code>String</code> reason the URI is illegal, or
    * <code>null</code> if OK.
    */
-  public static String checkURI(final String uri) {
+  public static String checkURI(String uri) {
     // URIs can be null or empty
     if ((uri == null) || (uri.equals(""))) {
       return null;
     }
 
     for (int i = 0; i < uri.length(); i++) {
-      final char test = uri.charAt(i);
+      char test = uri.charAt(i);
       if (!isURICharacter(test)) {
         String msgNumber = "0x" + Integer.toHexString(test);
         if (test <= 0x09) msgNumber = "0x0" + Integer.toHexString(test);
@@ -853,8 +853,8 @@ final public class Verifier {
       } // end if
       if (test == '%') { // must be followed by two hexadecimal digits
         try {
-          final char firstDigit = uri.charAt(i + 1);
-          final char secondDigit = uri.charAt(i + 2);
+          char firstDigit = uri.charAt(i + 1);
+          char secondDigit = uri.charAt(i + 2);
           if (!isHexDigit(firstDigit) ||
             !isHexDigit(secondDigit)) {
             return "Percent signs in URIs must be followed by "
@@ -862,7 +862,7 @@ final public class Verifier {
           }
 
         }
-        catch (final StringIndexOutOfBoundsException e) {
+        catch (StringIndexOutOfBoundsException e) {
           return "Percent signs in URIs must be followed by "
             + "exactly two hexadecimal digits.";
         }
@@ -883,7 +883,7 @@ final public class Verifier {
    * @param c to check for hex digit.
    * @return true if it's allowed, false otherwise.
    */
-  public static boolean isHexDigit(final char c) {
+  public static boolean isHexDigit(char c) {
 
     // I suspect most characters passed to this method will be
     // correct hexadecimal digits, so I test for the true cases
@@ -905,7 +905,7 @@ final public class Verifier {
    * @param ch character to check
    * @return true if the character is a high surrogate, false otherwise
    */
-  public static boolean isHighSurrogate(final char ch) {
+  public static boolean isHighSurrogate(char ch) {
     // faster way to do it is with bit manipulation....
     // return (ch >= 0xD800 && ch <= 0xDBFF);
     // A high surrogate has the bit pattern:
@@ -924,7 +924,7 @@ final public class Verifier {
    * @param ch character to check
    * @return true if the character is a low surrogate, false otherwise.
    */
-  public static boolean isLowSurrogate(final char ch) {
+  public static boolean isLowSurrogate(char ch) {
     // faster way to do it is with bit manipulation....
     // return (ch >= 0xDC00 && ch <= 0xDFFF);
     return 0x37 == ch >>> 10;
@@ -940,7 +940,7 @@ final public class Verifier {
    * @param c <code>char</code> to check for URI reference compliance.
    * @return true if it's allowed, false otherwise.
    */
-  public static boolean isURICharacter(final char c) {
+  public static boolean isURICharacter(char c) {
     return (byte)0 != (byte)(CHARFLAGS[c] & MASKURICHAR);
   }
 
@@ -953,7 +953,7 @@ final public class Verifier {
    * @return <code>boolean</code> true if it's a character,
    * false otherwise
    */
-  public static boolean isXMLCharacter(final int c) {
+  public static boolean isXMLCharacter(int c) {
     if (c >= CHARCNT) {
       return c <= 0x10FFFF;
     }
@@ -970,7 +970,7 @@ final public class Verifier {
    * @return <code>boolean</code> true if it's a name character,
    * false otherwise.
    */
-  public static boolean isXMLNameCharacter(final char c) {
+  public static boolean isXMLNameCharacter(char c) {
     return (byte)0 != (byte)(CHARFLAGS[c] & MASKXMLNAMECHAR) || c == ':';
   }
 
@@ -985,7 +985,7 @@ final public class Verifier {
    * @return <code>boolean</code> true if it's a name start character,
    * false otherwise.
    */
-  public static boolean isXMLNameStartCharacter(final char c) {
+  public static boolean isXMLNameStartCharacter(char c) {
     return (byte)0 != (byte)(CHARFLAGS[c] & MASKXMLSTARTCHAR) || c == ':';
   }
 
@@ -998,7 +998,7 @@ final public class Verifier {
    * @return <code>boolean</code> true if it's letter or digit,
    * false otherwise.
    */
-  public static boolean isXMLLetterOrDigit(final char c) {
+  public static boolean isXMLLetterOrDigit(char c) {
     return (byte)0 != (byte)(CHARFLAGS[c] & MASKXMLLETTERORDIGIT);
   }
 
@@ -1009,7 +1009,7 @@ final public class Verifier {
    * @param c <code>char</code> to check for XML name compliance.
    * @return <code>String</code> true if it's a letter, false otherwise.
    */
-  public static boolean isXMLLetter(final char c) {
+  public static boolean isXMLLetter(char c) {
     return (byte)0 != (byte)(CHARFLAGS[c] & MASKXMLLETTER);
   }
 
@@ -1022,7 +1022,7 @@ final public class Verifier {
    * @return <code>boolean</code> true if it's a combining character,
    * false otherwise.
    */
-  public static boolean isXMLCombiningChar(final char c) {
+  public static boolean isXMLCombiningChar(char c) {
     return (byte)0 != (byte)(CHARFLAGS[c] & MASKXMLCOMBINING);
   }
 
@@ -1034,7 +1034,7 @@ final public class Verifier {
    * @param c <code>char</code> to check.
    * @return <code>String</code> true if it's an extender, false otherwise.
    */
-  public static boolean isXMLExtender(final char c) {
+  public static boolean isXMLExtender(char c) {
     /*
      * This function is not accellerated by the bitmask system because
      * there are no longer any actual calls to it from the JDOM code.
@@ -1074,7 +1074,7 @@ final public class Verifier {
    * @param c <code>char</code> to check for XML digit compliance
    * @return <code>boolean</code> true if it's a digit, false otherwise
    */
-  public static boolean isXMLDigit(final char c) {
+  public static boolean isXMLDigit(char c) {
     return (byte)0 != (byte)(CHARFLAGS[c] & MASKXMLDIGIT);
   }
 
@@ -1086,7 +1086,7 @@ final public class Verifier {
    * @param c <code>char</code> to check for XML whitespace compliance
    * @return <code>boolean</code> true if it's a whitespace, false otherwise
    */
-  public static boolean isXMLWhitespace(final char c) {
+  public static boolean isXMLWhitespace(char c) {
     // the following if is faster than switch statements.
     // seems the implicit conversion to int is slower than
     // the fall-through or's
@@ -1109,7 +1109,7 @@ final public class Verifier {
    * (or the string is the empty-string).
    * @since JDOM2
    */
-  public static final boolean isAllXMLWhitespace(final String value) {
+  public static final boolean isAllXMLWhitespace(String value) {
     // Doing the count-down instead of a count-up saves a single int
     // variable declaration.
     int i = value.length();

@@ -35,7 +35,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsBundle.message("patch.apply.cannot.apply.now"))) {
             return;
         }
@@ -72,7 +72,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
 
         @Nonnull
         private static JCheckBox createAnalyzeOnTheFlyOptionPanel() {
-            final JCheckBox removeOptionCheckBox =
+            JCheckBox removeOptionCheckBox =
                 new JCheckBox(VcsBundle.message("patch.apply.analyze.from.clipboard.on.the.fly.checkbox"));
             removeOptionCheckBox.setMnemonic(KeyEvent.VK_L);
             removeOptionCheckBox.setSelected(VcsApplicationSettings.getInstance().DETECT_PATCH_ON_THE_FLY);

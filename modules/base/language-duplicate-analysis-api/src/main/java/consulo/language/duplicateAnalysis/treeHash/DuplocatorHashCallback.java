@@ -43,7 +43,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
   }
 
   @SuppressWarnings({"UnusedDeclaration"})
-  public DuplocatorHashCallback(final int bound, final int discardCost, final boolean readOnly) {
+  public DuplocatorHashCallback(int bound, int discardCost, boolean readOnly) {
     this(bound, discardCost);
     myReadOnly = readOnly;
   }
@@ -53,7 +53,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
   }
 
   @SuppressWarnings({"UnusedDeclaration"})
-  public void setReadOnly(final boolean readOnly) {
+  public void setReadOnly(boolean readOnly) {
     myReadOnly = readOnly;
   }
 
@@ -89,7 +89,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
 
     boolean found = false;
 
-    final PsiElement[] elements = frag.getElements();
+    PsiElement[] elements = frag.getElements();
 
     int discardCost = 0;
 
@@ -97,7 +97,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
       discardCost = myDiscardCost;
     }
     else {
-      final DuplocatorState state = DuplocatorUtil.getDuplocatorState(frag);
+      DuplocatorState state = DuplocatorUtil.getDuplocatorState(frag);
       if (state != null) {
         discardCost = state.getDiscardCost();
       }
@@ -111,7 +111,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
         boolean skipNew = false;
 
         for (Iterator<PsiFragment> frags = fi.iterator(); frags.hasNext() && !skipNew; ) {
-          final PsiFragment old = frags.next();
+          PsiFragment old = frags.next();
           if (frag.intersectsWith(old)) {
             if (old.getCost() < frag.getCost() || frag.contains(old)) {
               frags.remove();
@@ -144,7 +144,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
       bound = myBound;
     }
     else {
-      final DuplocatorState duplocatorState = DuplocatorUtil.getDuplocatorState(frag);
+      DuplocatorState duplocatorState = DuplocatorUtil.getDuplocatorState(frag);
       if (duplocatorState == null) {
         return;
       }
@@ -161,13 +161,13 @@ public class DuplocatorHashCallback implements FragmentsCollector {
 
     myDuplicates.forEachEntry(new TIntObjectProcedure<List<List<PsiFragment>>>() {
       @Override
-      public boolean execute(final int hash, final List<List<PsiFragment>> listList) {
+      public boolean execute(int hash, List<List<PsiFragment>> listList) {
         for (List<PsiFragment> list : listList) {
-          final int len = list.size();
+          int len = list.size();
           if (len > 1) {
             PsiFragment[] filtered = new PsiFragment[len];
             int idx = 0;
-            for (final PsiFragment fragment : list) {
+            for (PsiFragment fragment : list) {
               fragment.markDuplicate();
               filtered[idx++] = fragment;
             }
@@ -238,27 +238,27 @@ public class DuplocatorHashCallback implements FragmentsCollector {
       }
 
       @Override
-      public int getFileCount(final int pattern) {
+      public int getFileCount(int pattern) {
         if (myPattern2Description.containsKey(pattern)) {
           return myPattern2Description.get(pattern).getFilesCount();
         }
         return cacheGroupNodeDescription(pattern).getFilesCount();
       }
 
-      private GroupNodeDescription cacheGroupNodeDescription(final int pattern) {
-        final Set<PsiFile> files = new HashSet<>();
-        final PsiFragment[] occurencies = getFragmentOccurences(pattern);
+      private GroupNodeDescription cacheGroupNodeDescription(int pattern) {
+        Set<PsiFile> files = new HashSet<>();
+        PsiFragment[] occurencies = getFragmentOccurences(pattern);
         for (PsiFragment occurency : occurencies) {
-          final PsiFile file = occurency.getFile();
+          PsiFile file = occurency.getFile();
           if (file != null) {
             files.add(file);
           }
         }
-        final int fileCount = files.size();
-        final PsiFile psiFile = occurencies[0].getFile();
+        int fileCount = files.size();
+        PsiFile psiFile = occurencies[0].getFile();
         DuplicatesProfile profile = DuplicatesProfileCache.getProfile(this, pattern);
         String comment = profile != null ? profile.getComment(this, pattern) : "";
-        final GroupNodeDescription description = new GroupNodeDescription(fileCount, psiFile != null ? psiFile.getName() : "unknown", comment);
+        GroupNodeDescription description = new GroupNodeDescription(fileCount, psiFile != null ? psiFile.getName() : "unknown", comment);
         myPattern2Description.put(pattern, description);
         return description;
       }
@@ -289,21 +289,21 @@ public class DuplocatorHashCallback implements FragmentsCollector {
       }
 
       @Override
-      public int getHash(final int i) {
+      public int getHash(int i) {
         return duplicateList.get((PsiFragment[])duplicates[i]);
       }
     };
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  public void report(String path, final Project project) throws IOException {
+  public void report(String path, Project project) throws IOException {
     int[] hashCodes = myDuplicates.keys();
     Element rootElement = new Element("root");
     for (int hash : hashCodes) {
       List<List<PsiFragment>> dupList = myDuplicates.get(hash);
       Element hashElement = new Element("hash");
       hashElement.setAttribute("val", String.valueOf(hash));
-      for (final List<PsiFragment> psiFragments : dupList) {
+      for (List<PsiFragment> psiFragments : dupList) {
         writeFragments(psiFragments, hashElement, project, false);
       }
       rootElement.addContent(hashElement);
@@ -322,7 +322,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
   //duplicates
   public static void writeDuplicates(String path, Project project, DupInfo info) throws IOException {
     Element rootElement = new Element("root");
-    final int patterns = info.getPatterns();
+    int patterns = info.getPatterns();
     for (int i = 0; i < patterns; i++) {
       Element duplicate = new Element("duplicate");
 
@@ -341,30 +341,30 @@ public class DuplocatorHashCallback implements FragmentsCollector {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  private static void writeFragments(final List<? extends PsiFragment> psiFragments, Element duplicateElement, Project project, final boolean shouldWriteOffsets) {
-    final PathMacroManager macroManager = ProjectPathMacroManager.getInstance(project);
-    final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+  private static void writeFragments(List<? extends PsiFragment> psiFragments, Element duplicateElement, Project project, boolean shouldWriteOffsets) {
+    PathMacroManager macroManager = ProjectPathMacroManager.getInstance(project);
+    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
 
     for (PsiFragment fragment : psiFragments) {
-      final PsiFile psiFile = fragment.getFile();
-      final VirtualFile virtualFile = psiFile != null ? psiFile.getVirtualFile() : null;
+      PsiFile psiFile = fragment.getFile();
+      VirtualFile virtualFile = psiFile != null ? psiFile.getVirtualFile() : null;
       if (virtualFile != null) {
         Element fragmentElement = new Element("fragment");
         fragmentElement.setAttribute("file", macroManager.collapsePath(virtualFile.getUrl()));
         if (shouldWriteOffsets) {
-          final Document document = documentManager.getDocument(psiFile);
+          Document document = documentManager.getDocument(psiFile);
           LOG.assertTrue(document != null);
           int startOffset = fragment.getStartOffset();
-          final int line = document.getLineNumber(startOffset);
+          int line = document.getLineNumber(startOffset);
           fragmentElement.setAttribute("line", String.valueOf(line));
-          final int lineStartOffset = document.getLineStartOffset(line);
+          int lineStartOffset = document.getLineStartOffset(line);
           if (StringUtil.isEmptyOrSpaces(document.getText().substring(lineStartOffset, startOffset))) {
             startOffset = lineStartOffset;
           }
           fragmentElement.setAttribute("start", String.valueOf(startOffset));
           fragmentElement.setAttribute("end", String.valueOf(fragment.getEndOffset()));
           if (fragment.containsMultipleFragments()) {
-            final int[][] offsets = fragment.getOffsets();
+            int[][] offsets = fragment.getOffsets();
             for (int[] offset : offsets) {
               Element offsetElement = new Element("offset");
               offsetElement.setAttribute("start", String.valueOf(offset[0]));

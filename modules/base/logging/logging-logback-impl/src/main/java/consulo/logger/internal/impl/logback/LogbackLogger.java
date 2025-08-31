@@ -138,7 +138,7 @@ public class LogbackLogger implements Logger {
     }
 
     private void logErrorHeader() {
-        final String info = ourApplicationInfoProvider.get();
+        String info = ourApplicationInfoProvider.get();
 
         ch.qos.logback.classic.Logger logger = logger();
 
@@ -155,13 +155,13 @@ public class LogbackLogger implements Logger {
         Application application = ApplicationManager.getApplication();
         // only if app not disposed or not started disposing
         if (application != null && application.getDisposeState().get() == ThreeState.NO) {
-            final String lastPreformedActionId = LastActionTracker.ourLastActionId;
+            String lastPreformedActionId = LastActionTracker.ourLastActionId;
             if (lastPreformedActionId != null) {
                 logger.error("Last Action: " + lastPreformedActionId);
             }
 
             CommandProcessor commandProcessor = application.getInstanceIfCreated(CommandProcessor.class);
-            final String currentCommandName = commandProcessor == null ? null : commandProcessor.getCurrentCommandName();
+            String currentCommandName = commandProcessor == null ? null : commandProcessor.getCurrentCommandName();
             if (currentCommandName != null) {
                 logger.error("Current Command: " + currentCommandName);
             }
@@ -224,7 +224,7 @@ public class LogbackLogger implements Logger {
 
     private static Supplier<String> getInfoProvider() {
         return () -> {
-            final ApplicationInfo info = ApplicationInfo.getInstance();
+            ApplicationInfo info = ApplicationInfo.getInstance();
             return info.getFullApplicationName() + "  " + "Build #" + info.getBuild().asString();
         };
     }

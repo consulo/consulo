@@ -26,7 +26,7 @@ import java.util.function.Consumer;
  */
 interface CompletionThreading {
 
-  Future<?> startThread(final ProgressIndicator progressIndicator, Runnable runnable);
+  Future<?> startThread(ProgressIndicator progressIndicator, Runnable runnable);
 
   WeighingDelegate delegateWeighing(CompletionProgressIndicator indicator);
 }
@@ -39,7 +39,7 @@ class SyncCompletion extends CompletionThreadingBase {
   private final List<CompletionResult> myBatchList = new ArrayList<>();
 
   @Override
-  public Future<?> startThread(final ProgressIndicator progressIndicator, Runnable runnable) {
+  public Future<?> startThread(ProgressIndicator progressIndicator, Runnable runnable) {
     ProgressManager.getInstance().runProcess(runnable, progressIndicator);
 
     FutureResult<Object> result = new FutureResult<>();
@@ -88,8 +88,8 @@ class AsyncCompletion extends CompletionThreadingBase {
   private final LinkedBlockingQueue<Computable<Boolean>> myQueue = new LinkedBlockingQueue<>();
 
   @Override
-  public Future<?> startThread(final ProgressIndicator progressIndicator, final Runnable runnable) {
-    final Semaphore startSemaphore = new Semaphore();
+  public Future<?> startThread(ProgressIndicator progressIndicator, Runnable runnable) {
+    Semaphore startSemaphore = new Semaphore();
     startSemaphore.down();
     Future<?> future = ApplicationManager.getApplication().executeOnPooledThread(() -> ProgressManager.getInstance().runProcess(() -> {
       try {
@@ -140,7 +140,7 @@ class AsyncCompletion extends CompletionThreadingBase {
       }
 
       @Override
-      public void accept(final CompletionResult result) {
+      public void accept(CompletionResult result) {
         if (ourIsInBatchUpdate.get().booleanValue()) {
           myBatchList.add(result);
         }

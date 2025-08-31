@@ -51,7 +51,7 @@ public class ContentManagerUtil {
       return null;
     }
 
-    final ContentManager fromContext = dataContext.getData(ContentManager.KEY);
+    ContentManager fromContext = dataContext.getData(ContentManager.KEY);
     if (fromContext != null) return fromContext;
 
     return toolWindow != null ? toolWindow.getContentManager() : null;

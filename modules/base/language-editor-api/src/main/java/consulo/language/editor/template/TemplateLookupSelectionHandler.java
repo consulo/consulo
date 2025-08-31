@@ -27,5 +27,5 @@ import consulo.language.psi.PsiFile;
 public interface TemplateLookupSelectionHandler {
   Key<TemplateLookupSelectionHandler> KEY_IN_LOOKUP_ITEM = Key.create("templateLookupSelectionHandler");
 
-  void itemSelected(LookupElement item, final PsiFile psiFile, final Document document, final int segmentStart, final int segmentEnd);
+  void itemSelected(LookupElement item, PsiFile psiFile, Document document, int segmentStart, int segmentEnd);
 }

@@ -107,12 +107,12 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
       super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
       if (value instanceof FileTemplateNode) {
-        final FileTemplateNode node = (FileTemplateNode)value;
+        FileTemplateNode node = (FileTemplateNode)value;
         setText((String)node.getUserObject());
         setIcon(node.getIcon());
         setFont(getFont().deriveFont(AllFileTemplatesConfigurable.isInternalTemplate(node.getTemplateName(), getTitle()) ? Font.BOLD : Font.PLAIN));
 
-        final FileTemplate template = getTemplate(node);
+        FileTemplate template = getTemplate(node);
         if (template != null && !template.isDefault()) {
           if (!sel) {
             super.setForeground(MODIFIED_FOREGROUND);
@@ -145,7 +145,7 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
       name += "." + template.getExtension();
     }
 
-    final FileTemplateNode node = (FileTemplateNode)TreeUtil.findNodeWithObject(myRoot, name);
+    FileTemplateNode node = (FileTemplateNode)TreeUtil.findNodeWithObject(myRoot, name);
     if (node != null) {
       TreeUtil.selectNode(myTree, node);
       onTemplateSelected(); // this is important because we select different Template for the same node
@@ -155,17 +155,17 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
   @Override
   @Nullable
   public FileTemplate getSelectedTemplate() {
-    final TreePath selectionPath = myTree.getSelectionPath();
+    TreePath selectionPath = myTree.getSelectionPath();
     if (selectionPath == null) {
       return null;
     }
-    final FileTemplateNode node = (FileTemplateNode)selectionPath.getLastPathComponent();
+    FileTemplateNode node = (FileTemplateNode)selectionPath.getLastPathComponent();
     return getTemplate(node);
   }
 
   @Nullable
-  private FileTemplate getTemplate(final FileTemplateNode node) {
-    final String templateName = node.getTemplateName();
+  private FileTemplate getTemplate(FileTemplateNode node) {
+    String templateName = node.getTemplateName();
     if (templateName == null || myTemplates.isEmpty()) {
       return null;
     }

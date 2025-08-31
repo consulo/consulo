@@ -38,16 +38,16 @@ public class DaemonTooltipUtil {
     TooltipController.getInstance().cancelTooltip(DAEMON_INFO_GROUP, null, true);
   }
 
-  private static void showInfoTooltip(@Nonnull final HighlightInfoImpl info, @Nonnull Editor editor, final int defaultOffset, final int currentWidth) {
+  private static void showInfoTooltip(@Nonnull HighlightInfoImpl info, @Nonnull Editor editor, int defaultOffset, int currentWidth) {
     showInfoTooltip(info, editor, defaultOffset, currentWidth, false, false);
   }
 
-  static void showInfoTooltip(@Nonnull final HighlightInfoImpl info,
+  static void showInfoTooltip(@Nonnull HighlightInfoImpl info,
                               @Nonnull Editor editor,
-                              final int defaultOffset,
-                              final int currentWidth,
-                              final boolean requestFocus,
-                              final boolean showImmediately) {
+                              int defaultOffset,
+                              int currentWidth,
+                              boolean requestFocus,
+                              boolean showImmediately) {
     EditorMouseHoverPopupManager.getInstance().showInfoTooltip(editor, info, defaultOffset, requestFocus, showImmediately);
   }
 }

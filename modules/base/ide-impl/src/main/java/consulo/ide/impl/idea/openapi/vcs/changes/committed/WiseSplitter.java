@@ -38,7 +38,7 @@ public class WiseSplitter implements Disposable {
   private final ThreeComponentsSplitter myInnerSplitter;
   private final Map<CommittedChangesFilterKey, Integer> myInnerSplitterContents;
 
-  public WiseSplitter(final Runnable refresher, final Splitter parentSplitter) {
+  public WiseSplitter(Runnable refresher, Splitter parentSplitter) {
     myRefresher = refresher;
     myParentSplitter = parentSplitter;
 
@@ -53,8 +53,8 @@ public class WiseSplitter implements Disposable {
     return myInnerSplitterContents.size() <= 3;
   }
 
-  public void add(final CommittedChangesFilterKey key, final JComponent comp) {
-    final int idx = myInnerSplitterContents.size();
+  public void add(CommittedChangesFilterKey key, JComponent comp) {
+    int idx = myInnerSplitterContents.size();
     myInnerSplitterContents.put(key, idx);
     if (idx == 0) {
       myParentSplitter.setFirstComponent(myInnerSplitter);
@@ -64,13 +64,13 @@ public class WiseSplitter implements Disposable {
       myInnerSplitter.setFirstComponent(comp);
       myInnerSplitter.setFirstSize((int) (myParentSplitter.getSize().getWidth() * myParentSplitter.getProportion()));
     } else if (idx == 1) {
-      final Dimension dimension = myInnerSplitter.getSize();
-      final double width = dimension.getWidth() / 2;
+      Dimension dimension = myInnerSplitter.getSize();
+      double width = dimension.getWidth() / 2;
       myInnerSplitter.setInnerComponent(comp);
       myInnerSplitter.setFirstSize((int) width);
     } else {
-      final Dimension dimension = myInnerSplitter.getSize();
-      final double width = dimension.getWidth() / 3;
+      Dimension dimension = myInnerSplitter.getSize();
+      double width = dimension.getWidth() / 3;
       myInnerSplitter.setLastComponent(comp);
       myInnerSplitter.setFirstSize((int) width);
       myInnerSplitter.setLastSize((int) width);
@@ -94,12 +94,12 @@ public class WiseSplitter implements Disposable {
     if (c instanceof JScrollPane) c.setBorder(leftMost ? LEFT_BORDER : MIDDLE_BORDER);
   }
 
-  public void remove(final CommittedChangesFilterKey key) {
-    final Integer idx = myInnerSplitterContents.remove(key);
+  public void remove(CommittedChangesFilterKey key) {
+    Integer idx = myInnerSplitterContents.remove(key);
     if (idx == null) {
       return;
     }
-    final Map<CommittedChangesFilterKey, Integer> tmp = new HashMap<CommittedChangesFilterKey, Integer>();
+    Map<CommittedChangesFilterKey, Integer> tmp = new HashMap<CommittedChangesFilterKey, Integer>();
     for (Map.Entry<CommittedChangesFilterKey, Integer> entry : myInnerSplitterContents.entrySet()) {
       if (entry.getValue() < idx) {
         tmp.put(entry.getKey(), entry.getValue());
@@ -111,7 +111,7 @@ public class WiseSplitter implements Disposable {
     myInnerSplitterContents.putAll(tmp);
 
     if (idx == 0) {
-      final JComponent inner = myInnerSplitter.getInnerComponent();
+      JComponent inner = myInnerSplitter.getInnerComponent();
       myInnerSplitter.setInnerComponent(null);
       myInnerSplitter.setFirstComponent(inner);
       lastToInner();
@@ -127,7 +127,7 @@ public class WiseSplitter implements Disposable {
   }
 
   private void lastToInner() {
-    final JComponent last = myInnerSplitter.getLastComponent();
+    JComponent last = myInnerSplitter.getLastComponent();
     myInnerSplitter.setLastComponent(null);
     myInnerSplitter.setInnerComponent(last);
   }

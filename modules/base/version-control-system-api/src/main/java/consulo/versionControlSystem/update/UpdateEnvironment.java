@@ -60,7 +60,7 @@ public interface UpdateEnvironment extends VcsProviderMarker {
    */
   @Nonnull
   UpdateSession updateDirectories(@Nonnull FilePath[] contentRoots, UpdatedFiles updatedFiles,
-                                  ProgressIndicator progressIndicator, @Nonnull final Ref<SequentialUpdatesContext> context) throws ProcessCanceledException;
+                                  ProgressIndicator progressIndicator, @Nonnull Ref<SequentialUpdatesContext> context) throws ProcessCanceledException;
 
   /**
    * Allows to show a settings dialog for the operation.
@@ -71,5 +71,5 @@ public interface UpdateEnvironment extends VcsProviderMarker {
   @Nullable
   UnnamedConfigurable createConfigurable(Collection<FilePath> files);
 
-  boolean validateOptions(final Collection<FilePath> roots);
+  boolean validateOptions(Collection<FilePath> roots);
 }

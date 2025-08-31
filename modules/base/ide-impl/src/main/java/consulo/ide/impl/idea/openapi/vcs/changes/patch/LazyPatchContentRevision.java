@@ -35,7 +35,7 @@ public class LazyPatchContentRevision implements ContentRevision {
   private final TextFilePatch myPatch;
   private volatile boolean myPatchApplyFailed;
 
-  public LazyPatchContentRevision(final VirtualFile vf, final FilePath newFilePath, final String revision, final TextFilePatch patch) {
+  public LazyPatchContentRevision(VirtualFile vf, FilePath newFilePath, String revision, TextFilePatch patch) {
     myVf = vf;
     myNewFilePath = newFilePath;
     myRevision = revision;
@@ -46,7 +46,7 @@ public class LazyPatchContentRevision implements ContentRevision {
   public String getContent() {
     if (myContent == null) {
       String localContext = AccessRule.read(() -> {
-        final Document doc = FileDocumentManager.getInstance().getDocument(myVf);
+        Document doc = FileDocumentManager.getInstance().getDocument(myVf);
         if(doc == null) {
           return null;
         }
@@ -59,7 +59,7 @@ public class LazyPatchContentRevision implements ContentRevision {
         return null;
       }
 
-      final GenericPatchApplier applier = new GenericPatchApplier(localContext, myPatch.getHunks());
+      GenericPatchApplier applier = new GenericPatchApplier(localContext, myPatch.getHunks());
       if (applier.execute()) {
         myContent = applier.getAfter();
       } else {
@@ -85,7 +85,7 @@ public class LazyPatchContentRevision implements ContentRevision {
         return myRevision;
       }
 
-      public int compareTo(final VcsRevisionNumber o) {
+      public int compareTo(VcsRevisionNumber o) {
         return 0;
       }
     };

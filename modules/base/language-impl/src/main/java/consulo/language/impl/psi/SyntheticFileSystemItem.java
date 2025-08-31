@@ -61,12 +61,12 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
 
   @Override
   public boolean isValid() {
-    final VirtualFile virtualFile = getVirtualFile();
+    VirtualFile virtualFile = getVirtualFile();
     return virtualFile != null && virtualFile.isValid();
   }
 
   @Override
-  public PsiElement replace(@Nonnull final PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     throw new IncorrectOperationException("Frameworks cannot be changed");
   }
 
@@ -81,7 +81,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
   }
 
   @Override
-  public void accept(@Nonnull final PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
     // TODO
   }
 
@@ -89,7 +89,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
   @Override
   @Nonnull
   public PsiElement[] getChildren() {
-    final PsiElementProcessor.CollectElements<PsiFileSystemItem> collector = new PsiElementProcessor.CollectElements<PsiFileSystemItem>();
+    PsiElementProcessor.CollectElements<PsiFileSystemItem> collector = new PsiElementProcessor.CollectElements<PsiFileSystemItem>();
     processChildren(collector);
     return collector.toArray(new PsiFileSystemItem[0]);
   }
@@ -107,13 +107,13 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
   }
 
   @Override
-  public void checkSetName(final String name) throws IncorrectOperationException {
+  public void checkSetName(String name) throws IncorrectOperationException {
     throw new IncorrectOperationException("Frameworks cannot be renamed");
   }
 
   @RequiredWriteAction
   @Override
-  public PsiElement setName(@NonNls @Nonnull final String name) throws IncorrectOperationException {
+  public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
     throw new IncorrectOperationException("Frameworks cannot be renamed");
   }
 

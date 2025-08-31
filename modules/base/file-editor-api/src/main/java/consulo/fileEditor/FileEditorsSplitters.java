@@ -107,11 +107,11 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   boolean isShowing();
 
-  void setTabsPlacement(final int tabPlacement);
+  void setTabsPlacement(int tabPlacement);
 
   void setTabLayoutPolicy(int scrollTabLayout);
 
-  void trimToSize(final int editor_tab_limit);
+  void trimToSize(int editor_tab_limit);
 
   default void toFront() {
   }

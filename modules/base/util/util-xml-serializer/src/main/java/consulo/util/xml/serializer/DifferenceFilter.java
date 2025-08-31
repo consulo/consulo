@@ -28,7 +28,7 @@ public class DifferenceFilter<T> implements DefaultJDOMExternalizer.JDOMFilter, 
   private final T myThisSettings;
   private final T myParentSettings;
 
-  public DifferenceFilter(final T object, final T parentObject) {
+  public DifferenceFilter(T object, T parentObject) {
     myThisSettings = object;
     myParentSettings = parentObject;
   }

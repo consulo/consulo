@@ -191,19 +191,19 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     @SuppressWarnings("HardCodedStringLiteral")
     private Element writePanel(@Nonnull Component comp) {
         if (comp instanceof Splitter splitter) {
-            final Element res = new Element("splitter");
+            Element res = new Element("splitter");
             res.setAttribute("split-orientation", splitter.getOrientation() ? "vertical" : "horizontal");
             res.setAttribute("split-proportion", Float.toString(splitter.getProportion()));
-            final Element first = new Element("split-first");
+            Element first = new Element("split-first");
             first.addContent(writePanel(splitter.getFirstComponent().getComponent(0)));
-            final Element second = new Element("split-second");
+            Element second = new Element("split-second");
             second.addContent(writePanel(splitter.getSecondComponent().getComponent(0)));
             res.addContent(first);
             res.addContent(second);
             return res;
         }
         else if (comp instanceof JBTabs jbTabs) {
-            final Element res = new Element("leaf");
+            Element res = new Element("leaf");
             Integer limit = UIUtil.getClientProperty(jbTabs.getComponent(), JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY);
             if (limit != null) {
                 res.setAttribute(JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY.toString(), String.valueOf(limit));
@@ -283,7 +283,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
     private static int getSplitCount(JComponent component) {
         if (component.getComponentCount() > 0) {
-            final JComponent firstChild = (JComponent) component.getComponent(0);
+            JComponent firstChild = (JComponent) component.getComponent(0);
             if (firstChild instanceof Splitter splitter) {
                 return getSplitCount(splitter.getFirstComponent()) + getSplitCount(splitter.getSecondComponent());
             }
@@ -318,9 +318,9 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
     private final class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
         @Override
-        public final Component getDefaultComponent(final Container focusCycleRoot) {
+        public final Component getDefaultComponent(Container focusCycleRoot) {
             if (myCurrentWindow != null) {
-                final DesktopFileEditorWithProviderComposite selectedEditor = myCurrentWindow.getSelectedEditor();
+                DesktopFileEditorWithProviderComposite selectedEditor = myCurrentWindow.getSelectedEditor();
                 if (selectedEditor != null) {
                     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(selectedEditor.getComponent(), this);
                 }
@@ -353,14 +353,14 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
         // Collector for windows in tree ordering:
         class Inner {
-            private void collect(final JPanel panel) {
-                final Component comp = panel.getComponent(0);
+            private void collect(JPanel panel) {
+                Component comp = panel.getComponent(0);
                 if (comp instanceof Splitter splitter) {
                     collect((JPanel) splitter.getFirstComponent());
                     collect((JPanel) splitter.getSecondComponent());
                 }
                 else if (comp instanceof JPanel || comp instanceof JBTabs) {
-                    final DesktopFileEditorWindow window = findWindowWith(comp);
+                    DesktopFileEditorWindow window = findWindowWith(comp);
                     if (window != null) {
                         res.add(window);
                     }
@@ -370,9 +370,9 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
         // get root component and traverse splitters tree:
         if (myComponent.getComponentCount() != 0) {
-            final Component comp = myComponent.getComponent(0);
+            Component comp = myComponent.getComponent(0);
             LOG.assertTrue(comp instanceof JPanel);
-            final JPanel panel = (JPanel) comp;
+            JPanel panel = (JPanel) comp;
             if (panel.getComponentCount() != 0) {
                 new Inner().collect(panel);
             }
@@ -383,9 +383,9 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     }
 
     @Nullable
-    private DesktopFileEditorWindow findWindowWith(final Component component) {
+    private DesktopFileEditorWindow findWindowWith(Component component) {
         if (component != null) {
-            for (final DesktopFileEditorWindow window : myWindows) {
+            for (DesktopFileEditorWindow window : myWindows) {
                 if (SwingUtilities.isDescendingFrom(component, window.myPanel)) {
                     return window;
                 }
@@ -429,7 +429,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
     private final class MyFocusWatcher extends FocusWatcher {
         @Override
-        protected void focusedComponentChanged(final Component component, final AWTEvent cause) {
+        protected void focusedComponentChanged(Component component, AWTEvent cause) {
             DesktopFileEditorWindow newWindow = null;
 
             if (component != null) {
@@ -474,7 +474,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         @Nonnull
         @Override
         protected CompletableFuture<JPanel> processFiles(@Nonnull List<Element> fileElements,
-                                                         final JPanel context,
+                                                         JPanel context,
                                                          Element parent,
                                                          UIAccess uiAccess) {
             return uiAccess.giveAsync(() -> createEditorWindow(context, parent))
@@ -497,14 +497,14 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
             VirtualFile focusedFile = null;
 
             for (int i = 0; i < fileElements.size(); i++) {
-                final Element file = fileElements.get(i);
+                Element file = fileElements.get(i);
                 Element historyElement = file.getChild(HistoryEntry.TAG);
                 String fileName = historyElement.getAttributeValue(HistoryEntry.FILE_ATTR);
                 Activity activity = StartUpMeasurer.startActivity(PathUtil.getFileName(fileName), ActivityCategory.REOPENING_EDITOR);
                 VirtualFile virtualFile = null;
                 try {
-                    final FileEditorManagerImpl fileEditorManager = getManager();
-                    final HistoryEntry entry = HistoryEntry.createLight(fileEditorManager.getProject(), historyElement);
+                    FileEditorManagerImpl fileEditorManager = getManager();
+                    HistoryEntry entry = HistoryEntry.createLight(fileEditorManager.getProject(), historyElement);
                     virtualFile = entry.getFile();
                     if (virtualFile == null) {
                         throw new InvalidDataException("No file exists: " + entry.getFilePointer().getUrl());
@@ -570,7 +570,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         protected CompletableFuture<JPanel> processSplitter(@Nonnull Element splitterElement,
                                                             Element firstChild,
                                                             Element secondChild,
-                                                            final JPanel context,
+                                                            JPanel context,
                                                             @Nonnull UIAccess uiAccess) {
             return processSplitterImpl(splitterElement, firstChild, secondChild, context, uiAccess);
         }
@@ -579,13 +579,13 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         protected CompletableFuture<JPanel> processSplitterImpl(@Nonnull Element splitterElement,
                                                                 Element firstChild,
                                                                 Element secondChild,
-                                                                final JPanel context,
+                                                                JPanel context,
                                                                 UIAccess uiAccess) {
             if (context == null) {
-                final boolean orientation = "vertical".equals(splitterElement.getAttributeValue("split-orientation"));
-                final float proportion = Float.valueOf(splitterElement.getAttributeValue("split-proportion"));
-                final CompletableFuture<JPanel> firstComponent = process(firstChild, null, uiAccess);
-                final CompletableFuture<JPanel> secondComponent = process(secondChild, null, uiAccess);
+                boolean orientation = "vertical".equals(splitterElement.getAttributeValue("split-orientation"));
+                float proportion = Float.valueOf(splitterElement.getAttributeValue("split-proportion"));
+                CompletableFuture<JPanel> firstComponent = process(firstChild, null, uiAccess);
+                CompletableFuture<JPanel> secondComponent = process(secondChild, null, uiAccess);
 
                 return firstComponent.thenCombineAsync(secondComponent, (p1, p2) -> {
                     JPanel panel = new JPanel(new BorderLayout());

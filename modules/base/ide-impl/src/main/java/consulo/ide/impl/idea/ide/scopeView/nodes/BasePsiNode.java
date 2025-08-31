@@ -38,7 +38,7 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   private final SmartPsiElementPointer myPsiElementPointer;
   private Image myIcon;
 
-  public BasePsiNode(final T element) {
+  public BasePsiNode(T element) {
     super(element.getProject());
     if (element.isValid()) {
       myPsiElementPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(element);
@@ -52,13 +52,13 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   @Nullable
   public PsiElement getPsiElement() {
     if (myPsiElementPointer == null) return null;
-    final PsiElement element = myPsiElementPointer.getElement();
+    PsiElement element = myPsiElementPointer.getElement();
     return element != null && element.isValid() ? element : null;
   }
 
   @Override
   public Image getIcon() {
-    final PsiElement element = getPsiElement();
+    PsiElement element = getPsiElement();
     if (myIcon == null) {
       myIcon = element != null && element.isValid() ? IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS) : null;
     }
@@ -94,7 +94,7 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
     if (this == o) return true;
     if (!(o instanceof BasePsiNode)) return false;
 
-    final BasePsiNode methodNode = (BasePsiNode)o;
+    BasePsiNode methodNode = (BasePsiNode)o;
 
     if (!Comparing.equal(getPsiElement(), methodNode.getPsiElement())) return false;
 
@@ -112,7 +112,7 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
 
   @Override
   public boolean isValid() {
-    final PsiElement element = getPsiElement();
+    PsiElement element = getPsiElement();
     return element != null && element.isValid();
   }
 

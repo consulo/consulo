@@ -69,7 +69,7 @@ public class DeleteHandler {
             if (!dataContext.hasData(Project.KEY)) {
                 return false;
             }
-            final PsiElement[] elements = getPsiElements(dataContext);
+            PsiElement[] elements = getPsiElements(dataContext);
             return elements != null && shouldEnableDeleteAction(elements);
         }
 
@@ -77,12 +77,12 @@ public class DeleteHandler {
         private static PsiElement[] getPsiElements(DataContext dataContext) {
             PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
             if (elements == null) {
-                final Object data = dataContext.getData(PsiElement.KEY);
+                Object data = dataContext.getData(PsiElement.KEY);
                 if (data != null) {
                     elements = new PsiElement[]{(PsiElement)data};
                 }
                 else {
-                    final Object data1 = dataContext.getData(PsiFile.KEY);
+                    Object data1 = dataContext.getData(PsiFile.KEY);
                     if (data1 != null) {
                         elements = new PsiElement[]{(PsiFile)data1};
                     }
@@ -113,12 +113,12 @@ public class DeleteHandler {
     }
 
     @RequiredUIAccess
-    public static void deletePsiElement(final PsiElement[] elementsToDelete, final Project project) {
+    public static void deletePsiElement(PsiElement[] elementsToDelete, Project project) {
         deletePsiElement(elementsToDelete, project, true);
     }
 
     @RequiredUIAccess
-    public static void deletePsiElement(final PsiElement[] elementsToDelete, final Project project, boolean needConfirmation) {
+    public static void deletePsiElement(PsiElement[] elementsToDelete, final Project project, boolean needConfirmation) {
         if (elementsToDelete == null || elementsToDelete.length == 0) {
             return;
         }
@@ -131,10 +131,10 @@ public class DeleteHandler {
             safeDeleteApplicable = SafeDeleteProcessor.validElement(element);
         }
 
-        final boolean dumb = DumbService.getInstance(project).isDumb();
+        boolean dumb = DumbService.getInstance(project).isDumb();
         if (safeDeleteApplicable && !dumb) {
             final Ref<Boolean> exit = Ref.create(false);
-            final SafeDeleteDialog dialog = new SafeDeleteDialog(
+            SafeDeleteDialog dialog = new SafeDeleteDialog(
                 project,
                 elements,
                 (SafeDeleteDialog.Callback)dialog1 -> {
@@ -233,7 +233,7 @@ public class DeleteHandler {
                     CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
                 }
 
-                for (final PsiElement elementToDelete : elements) {
+                for (PsiElement elementToDelete : elements) {
                     if (!elementToDelete.isValid()) {
                         continue; //was already deleted
                     }
@@ -266,9 +266,9 @@ public class DeleteHandler {
                     }
                     else if (!elementToDelete.isWritable()
                         && !(elementToDelete instanceof PsiFileSystemItem psiFileSystemItem && PsiUtilBase.isSymLink(psiFileSystemItem))) {
-                        final PsiFile file = elementToDelete.getContainingFile();
+                        PsiFile file = elementToDelete.getContainingFile();
                         if (file != null) {
-                            final VirtualFile virtualFile = file.getVirtualFile();
+                            VirtualFile virtualFile = file.getVirtualFile();
                             if (virtualFile.isInLocalFileSystem()) {
                                 int _result = MessagesEx.fileIsReadOnly(project, virtualFile)
                                     .setTitle(IdeLocalize.titleDelete().get())
@@ -298,7 +298,7 @@ public class DeleteHandler {
                         try {
                             elementToDelete.delete();
                         }
-                        catch (final IncorrectOperationException ex) {
+                        catch (IncorrectOperationException ex) {
                             project.getApplication().invokeLater(() -> Messages.showMessageDialog(
                                 project,
                                 ex.getMessage(),
@@ -312,7 +312,7 @@ public class DeleteHandler {
     }
 
     @RequiredUIAccess
-    private static boolean clearReadOnlyFlag(final VirtualFile virtualFile, final Project project) {
+    private static boolean clearReadOnlyFlag(VirtualFile virtualFile, Project project) {
         return CommandProcessor.getInstance().<Boolean>newCommand()
             .project(project)
             .inWriteAction()

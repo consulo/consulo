@@ -40,16 +40,16 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
   private static final int READ_TIMEOUT = 60 * 1000;
 
   @Override
-  public boolean canProvideContent(@Nonnull final String url) {
+  public boolean canProvideContent(@Nonnull String url) {
     return true;
   }
 
   @Override
-  public void saveContent(final String url, @Nonnull final File file, @Nonnull final DownloadingCallback callback) {
+  public void saveContent(String url, @Nonnull File file, @Nonnull DownloadingCallback callback) {
     ApplicationManager.getApplication().executeOnPooledThread((Runnable) () -> downloadContent(url, file, callback));
   }
 
-  private static void downloadContent(final String url, final File file, final DownloadingCallback callback) {
+  private static void downloadContent(String url, File file, DownloadingCallback callback) {
     LOG.debug("Downloading started: " + url);
     InputStream input = null;
     OutputStream output = null;
@@ -61,12 +61,12 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
       connection.setReadTimeout(READ_TIMEOUT);
       input = UrlConnectionUtil.getConnectionInputStreamWithException(connection, new EmptyProgressIndicator());
 
-      final int responseCode = connection.getResponseCode();
+      int responseCode = connection.getResponseCode();
       if (responseCode != HttpURLConnection.HTTP_OK) {
         throw new IOException(IdeLocalize.errorConnectionFailedWithHttpCodeN(responseCode).get());
       }
 
-      final int size = connection.getContentLength();
+      int size = connection.getContentLength();
       output = new BufferedOutputStream(new FileOutputStream(file));
       callback.setProgressText(VirtualFileSystemLocalize.downloadProgressDownloading(presentableUrl).get(), size == -1);
       if (size != -1) {
@@ -76,7 +76,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
       FileType fileType = RemoteFileUtil.getFileType(contentType);
 
       int len;
-      final byte[] buf = new byte[1024];
+      byte[] buf = new byte[1024];
       int count = 0;
       while ((len = input.read(buf)) > 0) {
         if (callback.isCancelled()) {
@@ -118,7 +118,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
   }
 
   @Override
-  public boolean isUpToDate(@Nonnull final String url, @Nonnull final VirtualFile local) {
+  public boolean isUpToDate(@Nonnull String url, @Nonnull VirtualFile local) {
     return false;
   }
 }

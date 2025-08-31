@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * @since 2012-07-19
  */
 public abstract class VirtualFileFilter {
-  public abstract boolean shouldGoIntoDirectory(@Nonnull final VirtualFile file);
+  public abstract boolean shouldGoIntoDirectory(@Nonnull VirtualFile file);
 
   public void afterChildrenVisited(@Nonnull VirtualFile file) {
   }

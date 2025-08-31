@@ -87,8 +87,8 @@ public class IncrementalSearchHandler {
     String lastSearch;
   }
 
-  public static boolean isHintVisible(final Editor editor) {
-    final PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
+  public static boolean isHintVisible(Editor editor) {
+    PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
     return data != null && data.hint != null && data.hint.isVisible();
   }
 
@@ -188,7 +188,7 @@ public class IncrementalSearchHandler {
     CaretListener listener = caretListener[0];
     editor.getCaretModel().addCaretListener(listener);
 
-    final JComponent component = editor.getComponent();
+    JComponent component = editor.getComponent();
     int x =  SwingUtilities.convertPoint(component,0,0,component).x;
     int y = - hint.getComponent().getPreferredSize().height;
     Point p = SwingUtilities.convertPoint(component,x,y,component.getRootPane().getLayeredPane());
@@ -209,7 +209,7 @@ public class IncrementalSearchHandler {
   }
 
   private static boolean acceptableRegExp(String pattern) {
-    final int len = pattern.length();
+    int len = pattern.length();
 
     for(int i=0;i<len;++i) {
       switch(pattern.charAt(i)) {
@@ -221,7 +221,7 @@ public class IncrementalSearchHandler {
   }
 
   private static void updatePosition(Editor editor, PerHintSearchData data, boolean nothingIfFailed, boolean searchBack) {
-    final String prefix = data.label.getText();
+    String prefix = data.label.getText();
     int matchLength = prefix.length();
     int index;
 
@@ -229,17 +229,17 @@ public class IncrementalSearchHandler {
       index = data.searchStart;
     }
     else {
-      final Document document = editor.getDocument();
-      final CharSequence text = document.getCharsSequence();
-      final int length = document.getTextLength();
-      final boolean caseSensitive = detectSmartCaseSensitive(prefix);
+      Document document = editor.getDocument();
+      CharSequence text = document.getCharsSequence();
+      int length = document.getTextLength();
+      boolean caseSensitive = detectSmartCaseSensitive(prefix);
 
       if (acceptableRegExp(prefix)) {
-        @NonNls final StringBuffer buf = new StringBuffer(prefix.length());
-        final int len = prefix.length();
+        @NonNls StringBuffer buf = new StringBuffer(prefix.length());
+        int len = prefix.length();
 
         for (int i = 0; i < len; ++i) {
-          final char ch = prefix.charAt(i);
+          char ch = prefix.charAt(i);
 
           // bother only * withing text
           if (ch == '*' && i != 0 && i != len - 1) {

@@ -60,7 +60,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
   @Override
   protected boolean isSelectionHoldsFocus() {
     boolean focused = false;
-    final Content[] selection = getSelectedContents();
+    Content[] selection = getSelectedContents();
     for (Content each : selection) {
       if (UIUtil.isFocusAncestor(each.getComponent())) {
         focused = true;
@@ -98,8 +98,8 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
 
   @Nonnull
   @Override
-  public AsyncResult<Void> requestFocus(final Content content, final boolean forced) {
-    final Content toSelect = content == null ? getSelectedContent() : content;
+  public AsyncResult<Void> requestFocus(Content content, boolean forced) {
+    Content toSelect = content == null ? getSelectedContent() : content;
     if (toSelect == null) return AsyncResult.rejected();
     assert myContents.contains(toSelect);
     JComponent preferredFocusableComponent = toSelect.getPreferredFocusableComponent();

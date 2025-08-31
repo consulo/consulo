@@ -75,10 +75,10 @@ public class IntArrayList implements Cloneable, IntList {
     @Override
     public void forEachRemaining(IntConsumer action) {
       Objects.requireNonNull(action);
-      final int size = IntArrayList.this.size;
+      int size = IntArrayList.this.size;
       int i = cursor;
       if (i < size) {
-        final int[] es = elementData;
+        int[] es = elementData;
         if (i >= es.length) throw new ConcurrentModificationException();
         for (; i < size && modCount == expectedModCount; i++) {
           action.accept(es[i]);
@@ -364,7 +364,7 @@ public class IntArrayList implements Cloneable, IntList {
     int numNew = a.length;
     if (numNew == 0) return false;
     int[] elementData;
-    final int s;
+    int s;
     if (numNew > (elementData = this.elementData).length - (s = size)) elementData = grow(s + numNew);
 
     int numMoved = s - index;

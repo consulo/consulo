@@ -72,7 +72,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     TableCellRenderer getMarkRenderer();
   }
 
-  public MultiStateElementsChooser(final boolean elementsCanBeMarked, MarkStateDescriptor<T, S> markStateDescriptor) {
+  public MultiStateElementsChooser(boolean elementsCanBeMarked, MarkStateDescriptor<T, S> markStateDescriptor) {
     this(null, null, elementsCanBeMarked, markStateDescriptor);
   }
 
@@ -111,7 +111,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myTable.registerKeyboardAction(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final int[] selectedRows = myTable.getSelectedRows();
+        int[] selectedRows = myTable.getSelectedRows();
         Map<T, S> selectedElements = new LinkedHashMap<T, S>(selectedRows.length);
         for (int selectedRow : selectedRows) {
           selectedElements.put(myTableModel.getElementAt(selectedRow), myTableModel.getElementMarkState(selectedRow));
@@ -123,7 +123,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), JComponent.WHEN_FOCUSED);
 
-    final SpeedSearchBase<JBTable> speedSearch = new SpeedSearchBase<JBTable>(myTable) {
+    SpeedSearchBase<JBTable> speedSearch = new SpeedSearchBase<JBTable>(myTable) {
       @Override
       public int getSelectedIndex() {
         return myTable.getSelectedRow();
@@ -136,7 +136,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
 
       @Override
       public Object[] getAllElements() {
-        final int count = myTableModel.getRowCount();
+        int count = myTableModel.getRowCount();
         Object[] elements = new Object[count];
         for (int idx = 0; idx < count; idx++) {
           elements[idx] = myTableModel.getElementAt(idx);
@@ -151,10 +151,10 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
 
       @Override
       public void selectElement(Object element, String selectedText) {
-        final int count = myTableModel.getRowCount();
+        int count = myTableModel.getRowCount();
         for (int row = 0; row < count; row++) {
           if (element.equals(myTableModel.getElementAt(row))) {
-            final int viewRow = myTable.convertRowIndexToView(row);
+            int viewRow = myTable.convertRowIndexToView(row);
             myTable.getSelectionModel().setSelectionInterval(viewRow, viewRow);
             TableUtil.scrollSelectionToVisible(myTable);
             break;
@@ -201,7 +201,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
   }
 
   public void refresh(T element) {
-    final int row = myTableModel.getElementRow(element);
+    int row = myTableModel.getElementRow(element);
     if (row >= 0) {
       myTableModel.fireTableRowsUpdated(row, row);
     }
@@ -244,7 +244,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myTable.getSelectionModel().removeListSelectionListener(listener);
   }
 
-  public void addElement(T element, final S markState) {
+  public void addElement(T element, S markState) {
     addElement(element, markState, element instanceof ElementProperties ? (ElementProperties)element : null);
   }
 
@@ -255,7 +255,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
    * @return state of element
    */
   public S getElementMarkState(T element) {
-    final int elementRow = myTableModel.getElementRow(element);
+    int elementRow = myTableModel.getElementRow(element);
     return myTableModel.getElementMarkState(elementRow);
   }
 
@@ -266,23 +266,23 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
    * @param markState a new value of mark state
    */
   public void setElementMarkState(T element, S markState) {
-    final int elementRow = myTableModel.getElementRow(element);
+    int elementRow = myTableModel.getElementRow(element);
     myTableModel.setMarkState(elementRow, markState);
   }
 
 
   public void removeElement(T element) {
-    final int elementRow = myTableModel.getElementRow(element);
+    int elementRow = myTableModel.getElementRow(element);
     if (elementRow < 0) {
       return; // no such element
     }
-    final boolean wasSelected = myTable.getSelectionModel().isSelectedIndex(elementRow);
+    boolean wasSelected = myTable.getSelectionModel().isSelectedIndex(elementRow);
 
     myTableModel.removeElement(element);
     myElementToPropertiesMap.remove(element);
 
     if (wasSelected) {
-      final int rowCount = myTableModel.getRowCount();
+      int rowCount = myTableModel.getRowCount();
       if (rowCount > 0) {
         selectRow(elementRow % rowCount);
       }
@@ -298,17 +298,17 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myTable.getSelectionModel().clearSelection();
   }
 
-  private void selectRow(final int row) {
+  private void selectRow(int row) {
     myTable.getSelectionModel().setSelectionInterval(row, row);
     myTable.scrollRectToVisible(myTable.getCellRect(row, 0, true));
   }
 
   public void moveElement(T element, int newRow) {
-    final int elementRow = myTableModel.getElementRow(element);
+    int elementRow = myTableModel.getElementRow(element);
     if (elementRow < 0 || elementRow == newRow || newRow < 0 || newRow >= myTableModel.getRowCount()) {
       return;
     }
-    final boolean wasSelected = myTable.getSelectionModel().isSelectedIndex(elementRow);
+    boolean wasSelected = myTable.getSelectionModel().isSelectedIndex(elementRow);
     myTableModel.changeElementRow(element, newRow);
     if (wasSelected) {
       selectRow(newRow);
@@ -323,7 +323,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     Color getColor();
   }
 
-  public void addElement(T element, final S markState, ElementProperties elementProperties) {
+  public void addElement(T element, S markState, ElementProperties elementProperties) {
     myTableModel.addElement(element, markState);
     myElementToPropertiesMap.put(element, elementProperties);
     selectRow(myTableModel.getRowCount() - 1);
@@ -341,7 +341,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
 
   @Nullable
   public T getSelectedElement() {
-    final int selectedRow = getSelectedElementRow();
+    int selectedRow = getSelectedElementRow();
     return selectedRow < 0 ? null : myTableModel.getElementAt(selectedRow);
   }
 
@@ -351,8 +351,8 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
 
   @Nonnull
   public List<T> getSelectedElements() {
-    final List<T> elements = new ArrayList<T>();
-    final int[] selectedRows = myTable.getSelectedRows();
+    List<T> elements = new ArrayList<T>();
+    int[] selectedRows = myTable.getSelectedRows();
     for (int selectedRow : selectedRows) {
       if (selectedRow < 0) {
         continue;
@@ -367,16 +367,16 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
       myTable.clearSelection();
       return;
     }
-    final int[] rows = getElementsRows(elements);
+    int[] rows = getElementsRows(elements);
     TableUtil.selectRows(myTable, rows);
     TableUtil.scrollSelectionToVisible(myTable);
     IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTable);
   }
 
-  private int[] getElementsRows(final Collection<? extends T> elements) {
-    final int[] rows = new int[elements.size()];
+  private int[] getElementsRows(Collection<? extends T> elements) {
+    int[] rows = new int[elements.size()];
     int index = 0;
-    for (final T element : elements) {
+    for (T element : elements) {
       rows[index++] = myTable.convertRowIndexToView(myTableModel.getElementRow(element));
     }
     return rows;
@@ -388,10 +388,10 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
 
   @Nonnull
   public Map<T, S> getElementMarkStates() {
-    final int count = myTableModel.getRowCount();
+    int count = myTableModel.getRowCount();
     Map<T, S> elements = new LinkedHashMap<T, S>();
     for (int idx = 0; idx < count; idx++) {
-      final T element = myTableModel.getElementAt(idx);
+      T element = myTableModel.getElementAt(idx);
       elements.put(element, myTableModel.getElementMarkState(idx));
     }
     return elements;
@@ -420,7 +420,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
   }
 
   public void setAllElementsMarked(S markState) {
-    final int[] rows = new int[myTableModel.getRowCount()];
+    int[] rows = new int[myTableModel.getRowCount()];
     for (int idx = 0; idx < rows.length; idx++) {
       rows[idx] = idx;
     }
@@ -457,7 +457,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     public final int ELEMENT_COLUMN_INDEX;
     private final boolean myElementsCanBeMarked;
 
-    public MyTableModel(final boolean elementsCanBeMarked) {
+    public MyTableModel(boolean elementsCanBeMarked) {
       myElementsCanBeMarked = elementsCanBeMarked;
       if (elementsCanBeMarked) {
         CHECK_MARK_COLUM_INDEX = 0;
@@ -479,7 +479,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     }
 
     public S getElementMarkState(int index) {
-      final T element = myElements.get(index);
+      T element = myElements.get(index);
       return myMarkedMap.get(element);
     }
 
@@ -494,7 +494,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
       if (elements == null || elements.isEmpty()) {
         return;
       }
-      for (final T element : elements) {
+      for (T element : elements) {
         myElements.add(element);
         myMarkedMap.put(element, notNullMarkState(element, markState));
       }
@@ -502,7 +502,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     }
 
     public void removeElement(T element) {
-      final boolean reallyRemoved = myElements.remove(element);
+      boolean reallyRemoved = myElements.remove(element);
       if (reallyRemoved) {
         myMarkedMap.remove(element);
         fireTableDataChanged();
@@ -510,7 +510,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     }
 
     public void changeElementRow(T element, int row) {
-      final boolean reallyRemoved = myElements.remove(element);
+      boolean reallyRemoved = myElements.remove(element);
       if (reallyRemoved) {
         myElements.add(row, element);
         fireTableDataChanged();
@@ -527,9 +527,9 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     }
 
     public void removeRows(int[] rows) {
-      final List<T> toRemove = new ArrayList<T>();
+      List<T> toRemove = new ArrayList<T>();
       for (int row : rows) {
-        final T element = myElements.get(row);
+        T element = myElements.get(row);
         toRemove.add(element);
         myMarkedMap.remove(element);
       }
@@ -573,26 +573,26 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
       }
     }
 
-    private void setMarkState(int rowIndex, final S markState) {
-      final T element = myElements.get(rowIndex);
-      final S newValue = notNullMarkState(element, markState);
-      final S prevValue = myMarkedMap.put(element, newValue);
+    private void setMarkState(int rowIndex, S markState) {
+      T element = myElements.get(rowIndex);
+      S newValue = notNullMarkState(element, markState);
+      S prevValue = myMarkedMap.put(element, newValue);
       fireTableRowsUpdated(rowIndex, rowIndex);
       if (!newValue.equals(prevValue)) {
         notifyElementMarked(element, newValue);
       }
     }
 
-    private void setMarkState(int[] rows, final S markState) {
+    private void setMarkState(int[] rows, S markState) {
       if (rows == null || rows.length == 0) {
         return;
       }
       int firstRow = Integer.MAX_VALUE;
       int lastRow = Integer.MIN_VALUE;
-      for (final int row : rows) {
-        final T element = myElements.get(row);
-        final S newValue = notNullMarkState(element, markState);
-        final S prevValue = myMarkedMap.put(element, newValue);
+      for (int row : rows) {
+        T element = myElements.get(row);
+        S newValue = notNullMarkState(element, markState);
+        S prevValue = myMarkedMap.put(element, newValue);
         if (!newValue.equals(prevValue)) {
           notifyElementMarked(element, newValue);
         }
@@ -620,7 +620,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
       if (!isEnabled() || columnIndex != CHECK_MARK_COLUM_INDEX) {
         return false;
       }
-      final T o = (T)getValueAt(rowIndex, ELEMENT_COLUMN_INDEX);
+      T o = (T)getValueAt(rowIndex, ELEMENT_COLUMN_INDEX);
       return myDisabledMap.get(o) == null;
     }
 
@@ -643,7 +643,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
   private class MyElementColumnCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      final Color color = UIUtil.getTableFocusCellBackground();
+      Color color = UIUtil.getTableFocusCellBackground();
       Component component;
       T t = (T)value;
       try {
@@ -657,11 +657,11 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
       finally {
         UIManager.put(UIUtil.TABLE_FOCUS_CELL_BACKGROUND_PROPERTY, color);
       }
-      final MyTableModel model = (MyTableModel)table.getModel();
+      MyTableModel model = (MyTableModel)table.getModel();
       component.setEnabled(isSelected || (MultiStateElementsChooser.this.isEnabled() && (!myColorUnmarkedElements || myMarkStateDescriptor.isMarked(model.getElementMarkState(row)))));
-      final ElementProperties properties = myElementToPropertiesMap.get(t);
+      ElementProperties properties = myElementToPropertiesMap.get(t);
       if (component instanceof JLabel) {
-        final Image icon = properties != null ? properties.getIcon() : t != null ? getItemIcon(t) : null;
+        Image icon = properties != null ? properties.getIcon() : t != null ? getItemIcon(t) : null;
         JLabel label = (JLabel)component;
         label.setIcon(TargetAWT.to(icon));
         label.setDisabledIcon(TargetAWT.to(icon));

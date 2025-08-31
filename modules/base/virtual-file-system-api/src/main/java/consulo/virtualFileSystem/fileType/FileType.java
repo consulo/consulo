@@ -112,7 +112,7 @@ public interface FileType {
    * @return The character set name, in the format supported by {@link java.nio.charset.Charset} class.
    */
   @Nullable
-  default String getCharset(@Nonnull VirtualFile file, final byte[] content) {
+  default String getCharset(@Nonnull VirtualFile file, byte[] content) {
     return null;
   }
 

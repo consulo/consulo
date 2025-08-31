@@ -45,7 +45,7 @@ public class EditSourceForDialogAction extends EditSourceAction {
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
+        Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
         if (navigatableArray != null && navigatableArray.length > 0) {
             Application.get().invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));
             DialogWrapper dialog = DialogWrapper.findInstance(mySourceComponent);

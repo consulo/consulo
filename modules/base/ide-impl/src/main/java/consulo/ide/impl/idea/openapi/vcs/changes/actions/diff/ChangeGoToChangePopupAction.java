@@ -87,7 +87,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
         public MyChangesBrowser(
             @Nonnull Project project,
             @Nonnull List<Change> changes,
-            @Nullable final Change currentChange,
+            @Nullable Change currentChange,
             @Nonnull Ref<JBPopup> popup
         ) {
             super(project, null, changes, null, false, false, null, MyUseCase.LOCAL_CHANGES, null);

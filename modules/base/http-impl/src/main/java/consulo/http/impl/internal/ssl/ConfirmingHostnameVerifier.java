@@ -42,7 +42,7 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
             // In our experience this only happens under IBM 1.4.x when
             // spurious (unrelated) certificates show up in the server'
             // chain.  Hopefully this will unearth the real problem:
-            final InputStream in = ssl.getInputStream();
+            InputStream in = ssl.getInputStream();
             in.available();
             // If ssl.getInputStream().available() didn't cause an
             // exception, maybe at least now the session is available?
@@ -58,13 +58,13 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
             }
         }
 
-        final Certificate[] certs = session.getPeerCertificates();
-        final X509Certificate x509 = (X509Certificate)certs[0];
+        Certificate[] certs = session.getPeerCertificates();
+        X509Certificate x509 = (X509Certificate)certs[0];
         verify(host, x509);
     }
 
     @Override
-    public void verify(final String host, final X509Certificate cert) throws SSLException {
+    public void verify(String host, X509Certificate cert) throws SSLException {
         if (!CertificateManagerImpl.getInstance().getState().CHECK_HOSTNAME) {
             return;
         }
@@ -81,7 +81,7 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
         }
     }
 
-    private static boolean accepted(final String host, final X509Certificate cert) {
+    private static boolean accepted(String host, X509Certificate cert) {
         return CertificateManagerImpl.showAcceptDialog(() -> CertificateWarningDialog.createHostnameMismatchWarning(cert, host));
     }
 
@@ -89,12 +89,12 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
     @Override
     public boolean verify(String host, SSLSession session) {
         try {
-            final Certificate[] certs = session.getPeerCertificates();
-            final X509Certificate x509 = (X509Certificate)certs[0];
+            Certificate[] certs = session.getPeerCertificates();
+            X509Certificate x509 = (X509Certificate)certs[0];
             verify(host, x509);
             return true;
         }
-        catch (final SSLException e) {
+        catch (SSLException e) {
             return false;
         }
     }

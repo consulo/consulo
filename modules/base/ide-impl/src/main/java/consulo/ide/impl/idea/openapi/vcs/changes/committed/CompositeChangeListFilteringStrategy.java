@@ -44,11 +44,11 @@ public class CompositeChangeListFilteringStrategy implements ChangeListFiltering
     throw new UnsupportedOperationException();
   }
 
-  public void setFilterBase(final List<CommittedChangeList> changeLists) {
+  public void setFilterBase(List<CommittedChangeList> changeLists) {
     setFilterBaseImpl(changeLists, true);
   }
 
-  private List<CommittedChangeList> setFilterBaseImpl(final List<CommittedChangeList> changeLists, final boolean setFirst) {
+  private List<CommittedChangeList> setFilterBaseImpl(List<CommittedChangeList> changeLists, boolean setFirst) {
     if (myInSetBase) {
       return changeLists;
     }
@@ -56,7 +56,7 @@ public class CompositeChangeListFilteringStrategy implements ChangeListFiltering
 
     List<CommittedChangeList> list = new ArrayList<CommittedChangeList>(changeLists);
     boolean callSetFilterBase = setFirst;
-    for (final ChangeListFilteringStrategy delegate : myDelegates.values()) {
+    for (ChangeListFilteringStrategy delegate : myDelegates.values()) {
       if (callSetFilterBase) {
         delegate.setFilterBase(list);
       }
@@ -67,44 +67,44 @@ public class CompositeChangeListFilteringStrategy implements ChangeListFiltering
     return list;
   }
 
-  public void addChangeListener(final ChangeListener listener) {
+  public void addChangeListener(ChangeListener listener) {
     // not used
-    for (final ChangeListFilteringStrategy delegate : myDelegates.values()) {
+    for (ChangeListFilteringStrategy delegate : myDelegates.values()) {
       delegate.addChangeListener(listener);
     }
   }
 
-  public void removeChangeListener(final ChangeListener listener) {
+  public void removeChangeListener(ChangeListener listener) {
     // not used
-    for (final ChangeListFilteringStrategy delegate : myDelegates.values()) {
+    for (ChangeListFilteringStrategy delegate : myDelegates.values()) {
       delegate.removeChangeListener(listener);
     }
   }
 
   public void resetFilterBase() {
-    for (final ChangeListFilteringStrategy delegate : myDelegates.values()) {
+    for (ChangeListFilteringStrategy delegate : myDelegates.values()) {
       delegate.resetFilterBase();
     }
   }
 
-  public void appendFilterBase(final List<CommittedChangeList> changeLists) {
+  public void appendFilterBase(List<CommittedChangeList> changeLists) {
     List<CommittedChangeList> list = new ArrayList<CommittedChangeList>(changeLists);
-    for (final ChangeListFilteringStrategy delegate : myDelegates.values()) {
+    for (ChangeListFilteringStrategy delegate : myDelegates.values()) {
       delegate.appendFilterBase(list);
       list = delegate.filterChangeLists(list);
     }
   }
 
   @Nonnull
-  public List<CommittedChangeList> filterChangeLists(final List<CommittedChangeList> changeLists) {
+  public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
     return setFilterBaseImpl(changeLists, false);
   }
 
-  public void addStrategy(final CommittedChangesFilterKey key, final ChangeListFilteringStrategy strategy) {
+  public void addStrategy(CommittedChangesFilterKey key, ChangeListFilteringStrategy strategy) {
     myDelegates.put(key, strategy);
   }
 
-  public ChangeListFilteringStrategy removeStrategy(final CommittedChangesFilterKey key) {
+  public ChangeListFilteringStrategy removeStrategy(CommittedChangesFilterKey key) {
     return myDelegates.remove(key);
   }
 }

@@ -76,8 +76,8 @@ public class ProgressZipUtil {
     }
 
     private static void unzipEntryToDir(@Nullable ProgressIndicator progress,
-                                        @Nonnull final ZipEntry zipEntry,
-                                        @Nonnull final File extractToDir,
+                                        @Nonnull ZipEntry zipEntry,
+                                        @Nonnull File extractToDir,
                                         ZipInputStream stream,
                                         @Nullable Function<String, String> pathConvertor,
                                         @Nullable ContentProcessor contentProcessor) throws IOException {

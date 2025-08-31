@@ -97,7 +97,7 @@ public class CommandLineTokenizer extends StringTokenizer {
 
     int i;
     int quotationMarks = 0;
-    final StringBuilder buffer = new StringBuilder();
+    StringBuilder buffer = new StringBuilder();
 
     do {
       while ((i = nextToken.indexOf('"')) >= 0) {

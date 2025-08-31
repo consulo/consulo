@@ -31,10 +31,10 @@ public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx 
   protected abstract String getPrimaryText();
 
   @Override
-  public void customize(@Nonnull final ColoredTextContainer component) {
+  public void customize(@Nonnull ColoredTextContainer component) {
     component.setIcon(getIcon());
     component.append(getPrimaryText(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    final String secondaryText = getSecondaryText();
+    String secondaryText = getSecondaryText();
     if (!StringUtil.isEmptyOrSpaces(secondaryText)) {
       component.append(" (" + secondaryText + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
     }

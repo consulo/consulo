@@ -45,7 +45,7 @@ public class DisableInspectionToolAction implements IntentionAction, SyntheticIn
     myToolId = tool.getShortName();
   }
 
-  public DisableInspectionToolAction(final HighlightDisplayKey key) {
+  public DisableInspectionToolAction(HighlightDisplayKey key) {
     myToolId = key.toString();
   }
 
@@ -57,7 +57,7 @@ public class DisableInspectionToolAction implements IntentionAction, SyntheticIn
 
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-    final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(file.getProject());
+    InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = profileManager.getInspectionProfile();
     ModifiableModel model = inspectionProfile.getModifiableModel();
     model.disableTool(myToolId, file);

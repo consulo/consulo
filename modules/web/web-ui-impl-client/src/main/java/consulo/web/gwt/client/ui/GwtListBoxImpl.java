@@ -49,9 +49,9 @@ public class GwtListBoxImpl extends FlowPanel {
 
     int i = 0;
     for (Widget widget : list) {
-      final int index = i++;
+      int index = i++;
 
-      final ComboBoxSelectItem comboBoxSelectItem = new ComboBoxSelectItem();
+      ComboBoxSelectItem comboBoxSelectItem = new ComboBoxSelectItem();
       myList.add(comboBoxSelectItem);
 
       comboBoxSelectItem.setWidth("100%");

@@ -80,9 +80,9 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   @Override
   @Nonnull
   public String[] getUrls(OrderRootType type) {
-    final ArrayList<String> result = new ArrayList<String>();
+    ArrayList<String> result = new ArrayList<String>();
     if (type == SourcesOrderRootType.getInstance()) {
-      final ContentEntry[] content = myModuleRootLayer.getContentEntries();
+      ContentEntry[] content = myModuleRootLayer.getContentEntries();
       for (ContentEntry contentEntry : content) {
         Collections.addAll(result, contentEntry.getFolderUrls(LanguageContentFolderScopes.productionAndTest()));
       }

@@ -85,7 +85,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
             return null;
         }
 
-        final String extension = file.getExtension();
+        String extension = file.getExtension();
         if (extension == null) {
             return null;
         }
@@ -140,7 +140,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         }
         else {
             builder.withAction(ExternalServiceLocalize.pluginAdvestiserNotificationInstallLink(plugins.size()), (i) -> {
-                final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
+                PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
                 advertiserDialog.show();
             });
         }

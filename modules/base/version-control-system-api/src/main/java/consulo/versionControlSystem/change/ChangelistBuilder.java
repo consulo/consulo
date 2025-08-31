@@ -55,7 +55,7 @@ public interface ChangelistBuilder {
    */
   void processChangeInList(Change change, String changeListName, VcsKey vcsKey);
 
-  void removeRegisteredChangeFor(final FilePath path);
+  void removeRegisteredChangeFor(FilePath path);
 
   /**
    * Process a file that is not under version control.
@@ -72,7 +72,7 @@ public interface ChangelistBuilder {
    */
   void processLocallyDeletedFile(FilePath file);
   
-  void processLocallyDeletedFile(final LocallyDeletedChange locallyDeletedChange);
+  void processLocallyDeletedFile(LocallyDeletedChange locallyDeletedChange);
 
   /**
    * Process the file that was modified without explicit checkout
@@ -107,13 +107,13 @@ public interface ChangelistBuilder {
    * @param branch    the name of the branch to which the file is switched.
    * @param recursive if true, all subdirectories of file are also marked as switched to that branch
    */
-  void processSwitchedFile(VirtualFile file, String branch, final boolean recursive);
+  void processSwitchedFile(VirtualFile file, String branch, boolean recursive);
 
   void processRootSwitch(VirtualFile file, String branch);
 
   boolean reportChangesOutsideProject();
   
-  void reportAdditionalInfo(final String text);
+  void reportAdditionalInfo(String text);
 
-  void reportAdditionalInfo(final Supplier<JComponent> infoComponent);
+  void reportAdditionalInfo(Supplier<JComponent> infoComponent);
 }

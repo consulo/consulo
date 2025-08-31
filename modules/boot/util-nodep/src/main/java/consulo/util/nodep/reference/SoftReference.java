@@ -29,12 +29,12 @@ import java.lang.ref.ReferenceQueue;
 public class SoftReference<T> extends java.lang.ref.SoftReference<T> {
   //private final T myReferent;
 
-  public SoftReference(final T referent) {
+  public SoftReference(T referent) {
     super(referent);
     //myReferent = referent;
   }
 
-  public SoftReference(final T referent, final ReferenceQueue<? super T> q) {
+  public SoftReference(T referent, ReferenceQueue<? super T> q) {
     super(referent, q);
     //myReferent = referent;
   }

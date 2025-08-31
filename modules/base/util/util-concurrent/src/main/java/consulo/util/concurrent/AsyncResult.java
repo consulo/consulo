@@ -159,20 +159,20 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
-  public AsyncResult<T> doWhenDone(@Nonnull final Consumer<T> consumer) {
+  public AsyncResult<T> doWhenDone(@Nonnull Consumer<T> consumer) {
     doWhenDone(() -> consumer.accept(myResult));
     return this;
   }
 
   @Nonnull
-  public AsyncResult<T> doWhenRejected(@Nonnull final BiConsumer<T, String> consumer) {
+  public AsyncResult<T> doWhenRejected(@Nonnull BiConsumer<T, String> consumer) {
     doWhenRejected(() -> consumer.accept(myResult, myError));
     return this;
   }
 
   @Override
   @Nonnull
-  public AsyncResult<T> doWhenProcessed(@Nonnull final Runnable runnable) {
+  public AsyncResult<T> doWhenProcessed(@Nonnull Runnable runnable) {
     doWhenDone(runnable);
     doWhenRejected(runnable);
     return this;
@@ -181,7 +181,7 @@ public class AsyncResult<T> extends ActionCallback {
   @Override
   @Nonnull
   @SuppressWarnings("unchecked")
-  public final AsyncResult<T> notify(@Nonnull final ActionCallback child) {
+  public final AsyncResult<T> notify(@Nonnull ActionCallback child) {
     if (child instanceof AsyncResult) {
       return notify((AsyncResult<T>)child);
     }
@@ -190,7 +190,7 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
-  public final AsyncResult<T> notify(@Nonnull final AsyncResult<T> child) {
+  public final AsyncResult<T> notify(@Nonnull AsyncResult<T> child) {
     doWhenDone((Consumer<T>)child::setDone);
     doWhenRejected(child::reject);
     doWhenRejectedWithThrowable(child::rejectWithThrowable);
@@ -220,7 +220,7 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
-  public final AsyncResult<T> doWhenProcessed(@Nonnull final Consumer<T> consumer) {
+  public final AsyncResult<T> doWhenProcessed(@Nonnull Consumer<T> consumer) {
     doWhenDone(consumer);
     doWhenRejected((result, error) -> consumer.accept(result));
     return this;

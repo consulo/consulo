@@ -16,7 +16,7 @@ public class SelectionAwareListCellRenderer<T> implements ListCellRenderer<T> {
   @Nonnull
   @Override
   public Component getListCellRendererComponent(@Nonnull JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-    @SuppressWarnings({"unchecked"}) final JComponent comp = myFun.apply((T)value);
+    @SuppressWarnings({"unchecked"}) JComponent comp = myFun.apply((T)value);
     comp.setOpaque(true);
     if (isSelected) {
       comp.setBackground(list.getSelectionBackground());

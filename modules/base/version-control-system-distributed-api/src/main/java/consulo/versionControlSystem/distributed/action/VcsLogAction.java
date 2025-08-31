@@ -68,7 +68,7 @@ public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAct
 
   protected abstract boolean isEnabled(@Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped);
 
-  protected boolean isVisible(@Nonnull final Project project, @Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  protected boolean isVisible(@Nonnull Project project, @Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
     return ContainerUtil.and(grouped.keySet(), repo -> {
       RepositoryManager<Repo> manager = getRepositoryManager(project);
       return !manager.isExternal(repo);

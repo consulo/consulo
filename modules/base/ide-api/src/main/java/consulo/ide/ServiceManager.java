@@ -60,7 +60,7 @@ public class ServiceManager {
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use ComponentUtil.createLazyInject")
-  public static <T> NotNullLazyKey<T, Project> createLazyKey(@Nonnull final Class<T> serviceClass) {
+  public static <T> NotNullLazyKey<T, Project> createLazyKey(@Nonnull Class<T> serviceClass) {
     return NotNullLazyKey.create("Service: " + serviceClass.getName(), project -> getService(project, serviceClass));
   }
 }

@@ -27,17 +27,17 @@ import java.util.function.BiPredicate;
 
 public abstract class TreeExpansionMonitor<T> {
 
-  public static TreeExpansionMonitor<DefaultMutableTreeNode> install(final JTree tree) {
+  public static TreeExpansionMonitor<DefaultMutableTreeNode> install(JTree tree) {
     return install(tree, (o1, o2) -> Comparing.equal(o1.getUserObject(), o2.getUserObject()));
   }
 
   public static TreeExpansionMonitor<DefaultMutableTreeNode> install(final JTree tree, final BiPredicate<DefaultMutableTreeNode, DefaultMutableTreeNode> equality) {
     return new TreeExpansionMonitor<>(tree) {
       @Override
-      protected TreePath findPathByNode(final DefaultMutableTreeNode node) {
+      protected TreePath findPathByNode(DefaultMutableTreeNode node) {
         Enumeration enumeration = ((DefaultMutableTreeNode)tree.getModel().getRoot()).breadthFirstEnumeration();
         while (enumeration.hasMoreElements()) {
-          final Object nextElement = enumeration.nextElement();
+          Object nextElement = enumeration.nextElement();
           if (nextElement instanceof DefaultMutableTreeNode) {
             DefaultMutableTreeNode child = (DefaultMutableTreeNode)nextElement;
             if (equality.test(child, node)) {
@@ -104,13 +104,13 @@ public abstract class TreeExpansionMonitor<T> {
     for (T mySelectionNode : mySelectionNodes) {
       myTree.getSelectionModel().addSelectionPath(findPathByNode(mySelectionNode));
     }
-    for (final TreePath myExpandedPath : myExpandedPaths) {
+    for (TreePath myExpandedPath : myExpandedPaths) {
       myTree.expandPath(findPathByNode((T)myExpandedPath.getLastPathComponent()));
     }
     myFrozen = false;
   }
 
-  protected abstract TreePath findPathByNode(final T node);
+  protected abstract TreePath findPathByNode(T node);
 
   public boolean isFreeze() {
     return myFrozen;

@@ -103,8 +103,8 @@ public class CopyrightBulkFileListener implements BulkFileListener {
       editorFactory.getEventMulticaster().addDocumentListener(new DocumentListener() {
         @Override
         public void documentChanged(DocumentEvent e) {
-          final Document document = e.getDocument();
-          final VirtualFile virtualFile = myFileDocumentManagerProvider.get().getFile(document);
+          Document document = e.getDocument();
+          VirtualFile virtualFile = myFileDocumentManagerProvider.get().getFile(document);
           if (virtualFile == null) {
             return;
           }
@@ -132,11 +132,11 @@ public class CopyrightBulkFileListener implements BulkFileListener {
 
   @RequiredReadAction
   private void runEventOnEachProject(Project project, VirtualFile virtualFile) {
-    final Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
+    Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
     if (module == null) {
       return;
     }
-    final PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
+    PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
     if (file == null) {
       return;
     }
@@ -146,7 +146,7 @@ public class CopyrightBulkFileListener implements BulkFileListener {
       if (file.isValid() && file.isWritable()) {
         CopyrightManager copyrightManager = CopyrightManager.getInstance(project);
 
-        final CopyrightProfile opts = copyrightManager.getCopyrightOptions(file);
+        CopyrightProfile opts = copyrightManager.getCopyrightOptions(file);
         if (opts != null) {
           new UpdateCopyrightProcessor(project, module, file).run();
         }

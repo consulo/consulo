@@ -118,7 +118,7 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
     }
 
     @Override
-    public Runnable collectData(final Editor editor, final PsiFile file) {
+    public Runnable collectData(Editor editor, PsiFile file) {
         String providerId = providerDescription.getId();
         Map<String, Boolean> enabledOptions = options.stream()
             .collect(Collectors.toMap(opt -> opt.description.id(), opt -> true));

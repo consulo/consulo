@@ -72,11 +72,11 @@ public class OptionDescription implements Comparable<OptionDescription> {
   }
 
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final OptionDescription that = (OptionDescription)o;
+    OptionDescription that = (OptionDescription)o;
 
     if (!Objects.equals(myConfigurableId, that.myConfigurableId)) return false;
     if (!Objects.equals(myHit, that.myHit)) return false;
@@ -96,7 +96,7 @@ public class OptionDescription implements Comparable<OptionDescription> {
   }
 
   @Override
-  public int compareTo(final OptionDescription o) {
+  public int compareTo(OptionDescription o) {
     if (Comparing.strEqual(myHit, o.getHit())) {
       return myOption != null ? myOption.compareTo(o.getOption()) : 0;
     }

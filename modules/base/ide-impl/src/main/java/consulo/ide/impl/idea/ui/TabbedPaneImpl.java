@@ -46,7 +46,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
         setTabComponentInsets(JBUI.emptyInsets());
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(final MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 _requestDefaultFocus();
             }
         });
@@ -79,7 +79,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
     }
 
     @SuppressWarnings({"NonStaticInitializer"})
-    private void installKeyboardNavigation(final PrevNextActionsDescriptor installKeyboardNavigation) {
+    private void installKeyboardNavigation(PrevNextActionsDescriptor installKeyboardNavigation) {
         myNextTabAction = new AnAction() {
             {
                 setEnabledInModalContext(true);
@@ -87,7 +87,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
 
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull final AnActionEvent e) {
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 int index = getSelectedIndex() + 1;
                 if (index >= getTabCount()) {
                     index = 0;
@@ -95,7 +95,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
                 setSelectedIndex(index);
             }
         };
-        final AnAction nextAction = ActionManager.getInstance().getAction(installKeyboardNavigation.getNextActionId());
+        AnAction nextAction = ActionManager.getInstance().getAction(installKeyboardNavigation.getNextActionId());
         LOG.assertTrue(nextAction != null, "Cannot find action with specified id: " + installKeyboardNavigation.getNextActionId());
         myNextTabAction.registerCustomShortcutSet(nextAction.getShortcutSet(), this);
 
@@ -106,7 +106,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull final AnActionEvent e) {
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 int index = getSelectedIndex() - 1;
                 if (index < 0) {
                     index = getTabCount() - 1;
@@ -114,7 +114,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
                 setSelectedIndex(index);
             }
         };
-        final AnAction prevAction = ActionManager.getInstance().getAction(installKeyboardNavigation.getPrevActionId());
+        AnAction prevAction = ActionManager.getInstance().getAction(installKeyboardNavigation.getPrevActionId());
         LOG.assertTrue(prevAction != null, "Cannot find action with specified id: " + installKeyboardNavigation.getPrevActionId());
         myPreviousTabAction.registerCustomShortcutSet(prevAction.getShortcutSet(), this);
     }
@@ -131,12 +131,12 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
     }
 
     @Override
-    public final void scrollTabToVisible(final int index) {
+    public final void scrollTabToVisible(int index) {
         setSelectedIndex(index);
     }
 
     @Override
-    public final void removeTabAt(final int index) {
+    public final void removeTabAt(int index) {
         super.removeTabAt(index);
         //This event should be fired necessarily because when swing fires an event
         // page to be removed is still in the tabbed pane. There can be a situation when
@@ -145,7 +145,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
     }
 
     private void _requestDefaultFocus() {
-        final Component selectedComponent = getSelectedComponent();
+        Component selectedComponent = getSelectedComponent();
         if (selectedComponent instanceof TabbedPaneWrapper.TabWrapper) {
             ((TabbedPaneWrapper.TabWrapper) selectedComponent).requestDefaultFocus();
         }

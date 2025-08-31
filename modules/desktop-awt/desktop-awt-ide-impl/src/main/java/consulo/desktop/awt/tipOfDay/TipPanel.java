@@ -79,10 +79,10 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
             myBrowser.setText(IdeLocalize.errorTipsNotFound(Application.get().getName().toString()).get());
             return;
         }
-        final GeneralSettings settings = GeneralSettings.getInstance();
+        GeneralSettings settings = GeneralSettings.getInstance();
         int lastTip = settings.getLastTip();
 
-        final Pair<LocalizeValue, PluginDescriptor> tip;
+        Pair<LocalizeValue, PluginDescriptor> tip;
         lastTip--;
         if (lastTip <= 0) {
             tip = myTips.get(myTips.size() - 1);

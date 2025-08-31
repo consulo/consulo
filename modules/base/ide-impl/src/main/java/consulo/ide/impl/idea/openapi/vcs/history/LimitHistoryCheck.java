@@ -33,7 +33,7 @@ public class LimitHistoryCheck {
   private boolean myWarningShown;
   private boolean myOver;
 
-  public LimitHistoryCheck(final Project project, String filePath) {
+  public LimitHistoryCheck(Project project, String filePath) {
     myProject = project;
     myFilePath = filePath;
     myWarningShown = false;
@@ -41,7 +41,7 @@ public class LimitHistoryCheck {
   }
 
   private void init() {
-    final VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
+    VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
     myLimit = configuration.LIMIT_HISTORY ? configuration.MAXIMUM_HISTORY_ROWS : -1;
     myCnt = 0;
   }

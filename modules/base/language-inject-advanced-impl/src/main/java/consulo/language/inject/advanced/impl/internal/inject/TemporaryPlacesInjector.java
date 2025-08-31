@@ -54,7 +54,7 @@ public class TemporaryPlacesInjector implements MultiHostInjector {
   }
 
   @Override
-  public void injectLanguages(@Nonnull final MultiHostRegistrar registrar, @Nonnull final PsiElement context) {
+  public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context) {
     if (!(context instanceof PsiLanguageInjectionHost) || !((PsiLanguageInjectionHost)context).isValidHost()) {
       return;
     }
@@ -67,7 +67,7 @@ public class TemporaryPlacesInjector implements MultiHostInjector {
       return;
     }
 
-    final ElementManipulator<PsiLanguageInjectionHost> manipulator = ElementManipulators.getManipulator(host);
+    ElementManipulator<PsiLanguageInjectionHost> manipulator = ElementManipulators.getManipulator(host);
     if (manipulator == null) {
       LOG.error("Registered inject language for host: " +  host.getClass().getSimpleName() + ", but ElementManipulator not registered");
       return;

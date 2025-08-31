@@ -65,7 +65,7 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
 
     @Inject
     @SuppressWarnings("unchecked")
-    public TaskRepositoriesConfigurable(final Project project) {
+    public TaskRepositoriesConfigurable(Project project) {
 
         myProject = project;
         myManager = (TaskManagerImpl) TaskManager.getManager(project);

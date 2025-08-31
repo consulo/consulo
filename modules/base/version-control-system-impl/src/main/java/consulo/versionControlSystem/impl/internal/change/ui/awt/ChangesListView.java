@@ -98,7 +98,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     return myShowFlatten;
   }
 
-  public void setShowFlatten(final boolean showFlatten) {
+  public void setShowFlatten(boolean showFlatten) {
     myShowFlatten = showFlatten;
   }
 
@@ -197,7 +197,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
       sink.put(HelpManager.HELP_ID, HELP_ID);
     }
     else if (key == VcsDataKeys.CHANGES_IN_LIST_KEY) {
-      final TreePath selectionPath = getSelectionPath();
+      TreePath selectionPath = getSelectionPath();
       if (selectionPath != null && selectionPath.getPathCount() > 1) {
         ChangesBrowserNode<?> firstNode = (ChangesBrowserNode)selectionPath.getPathComponent(1);
         if (firstNode instanceof ChangesBrowserChangeListNode) {
@@ -349,7 +349,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
       .distinct();
   }
 
-  public void setMenuActions(final ActionGroup menuGroup) {
+  public void setMenuActions(ActionGroup menuGroup) {
     PopupHandler.installPopupHandler(this, menuGroup, ActionPlaces.CHANGES_VIEW_POPUP, ActionManager.getInstance());
     editSourceRegistration();
   }
@@ -366,12 +366,12 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Override
-  public void processMouseEvent(final MouseEvent e) {
+  public void processMouseEvent(MouseEvent e) {
     if (MouseEvent.MOUSE_RELEASED == e.getID() && !isSelectionEmpty() && !e.isShiftDown() && !e.isControlDown() &&
       !e.isMetaDown() && !e.isPopupTrigger()) {
       if (isOverSelection(e.getPoint())) {
         clearSelection();
-        final TreePath path = getPathForLocation(e.getPoint().x, e.getPoint().y);
+        TreePath path = getPathForLocation(e.getPoint().x, e.getPoint().y);
         if (path != null) {
           setSelectionPath(path);
         }
@@ -383,12 +383,12 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Override
-  public boolean isOverSelection(final Point point) {
+  public boolean isOverSelection(Point point) {
     return TreeUtil.isOverSelection(this, point);
   }
 
   @Override
-  public void dropSelectionButUnderPoint(final Point point) {
+  public void dropSelectionButUnderPoint(Point point) {
     TreeUtil.dropSelectionButUnderPoint(this, point);
   }
 }

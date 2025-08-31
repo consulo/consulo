@@ -96,8 +96,8 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
     if (myFile.is(VFileProperty.SYMLINK)) {
       return new VirtualFileDiffElement[0];
     }
-    final VirtualFile[] files = myFile.getChildren();
-    final ArrayList<VirtualFileDiffElement> elements = new ArrayList<>();
+    VirtualFile[] files = myFile.getChildren();
+    ArrayList<VirtualFileDiffElement> elements = new ArrayList<>();
     for (VirtualFile file : files) {
       if (!FileTypeRegistry.getInstance().isFileIgnored(file) && file.isValid()) {
         elements.add(new VirtualFileDiffElement(file));
@@ -128,10 +128,10 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   }
 
   @Override
-  public Callable<DiffElement<VirtualFile>> getElementChooser(final Project project) {
+  public Callable<DiffElement<VirtualFile>> getElementChooser(Project project) {
     return () -> {
-      final FileChooserDescriptor descriptor = getChooserDescriptor();
-      final VirtualFile[] result = IdeaFileChooser.chooseFiles(descriptor, project, getValue());
+      FileChooserDescriptor descriptor = getChooserDescriptor();
+      VirtualFile[] result = IdeaFileChooser.chooseFiles(descriptor, project, getValue());
       return result.length == 1 ? createElement(result[0]) : null;
     };
   }
@@ -153,10 +153,10 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   @Override
   public VirtualFileDiffElement copyTo(DiffElement<VirtualFile> container, String relativePath) {
     try {
-      final File src = new File(myFile.getPath());
-      final File trg = new File(container.getValue().getPath() + relativePath + src.getName());
+      File src = new File(myFile.getPath());
+      File trg = new File(container.getValue().getPath() + relativePath + src.getName());
       FileUtil.copy(src, trg, FilePermissionCopier.BY_NIO2);
-      final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(trg);
+      VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(trg);
       if (virtualFile != null) {
         return new VirtualFileDiffElement(virtualFile);
       }
@@ -184,8 +184,8 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
 
   public static void refreshFile(boolean userInitiated, VirtualFile virtualFile) {
     if (userInitiated) {
-      final List<Document> docsToSave = new ArrayList<>();
-      final FileDocumentManager manager = FileDocumentManager.getInstance();
+      List<Document> docsToSave = new ArrayList<>();
+      FileDocumentManager manager = FileDocumentManager.getInstance();
       for (Document document : manager.getUnsavedDocuments()) {
         VirtualFile file = manager.getFile(document);
         if (file != null && VirtualFileUtil.isAncestor(virtualFile, file, false)) {

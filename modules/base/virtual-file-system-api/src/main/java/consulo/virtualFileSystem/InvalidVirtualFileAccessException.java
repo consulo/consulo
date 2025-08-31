@@ -19,7 +19,7 @@ package consulo.virtualFileSystem;
  * @author max
  */
 public class InvalidVirtualFileAccessException extends RuntimeException {
-  public InvalidVirtualFileAccessException(final VirtualFile file) {
+  public InvalidVirtualFileAccessException(VirtualFile file) {
     super(composeMessage(file));
   }
 

@@ -23,7 +23,7 @@ import java.util.Iterator;
 public class UnmodifiableIterator<T> implements Iterator<T> {
   private final Iterator<T> myOriginalIterator;
 
-  public UnmodifiableIterator(final Iterator<T> originalIterator) {
+  public UnmodifiableIterator(Iterator<T> originalIterator) {
     myOriginalIterator = originalIterator;
   }
 

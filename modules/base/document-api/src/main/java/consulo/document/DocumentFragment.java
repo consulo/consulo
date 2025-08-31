@@ -38,7 +38,7 @@ public class DocumentFragment {
     if (this == o) return true;
     if (!(o instanceof DocumentFragment)) return false;
 
-    final DocumentFragment documentFragment = (DocumentFragment)o;
+    DocumentFragment documentFragment = (DocumentFragment)o;
 
     if (!myDocument.equals(documentFragment.myDocument)) return false;
     if (!myTextRange.equals(documentFragment.myTextRange)) return false;

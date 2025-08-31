@@ -34,7 +34,7 @@ public final class CodeSmellInfo {
   private final TextRange myTextRange;
   private final HighlightSeverity mySeverity;
 
-  public CodeSmellInfo(@Nonnull final Document document, final String description, final TextRange textRange, final HighlightSeverity severity) {
+  public CodeSmellInfo(@Nonnull Document document, String description, TextRange textRange, HighlightSeverity severity) {
     myDocument = document;
     myDescription = description;
     myTextRange = textRange;

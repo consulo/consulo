@@ -112,7 +112,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
   public void copyRootsFrom(@Nonnull RootProvider rootContainer) {
     removeAllRoots();
     for (OrderRootType rootType : OrderRootType.getAllTypes()) {
-      final String[] newRoots = rootContainer.getUrls(rootType);
+      String[] newRoots = rootContainer.getUrls(rootType);
       for (String newRoot : newRoots) {
         addRoot(newRoot, rootType);
       }

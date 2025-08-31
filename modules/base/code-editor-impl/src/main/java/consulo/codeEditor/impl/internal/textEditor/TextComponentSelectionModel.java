@@ -76,9 +76,9 @@ public class TextComponentSelectionModel implements SelectionModel {
 
   @Override
   public int getLeadSelectionOffset() {
-    final int caretPosition = myTextComponent.getCaretPosition();
-    final int start = myTextComponent.getSelectionStart();
-    final int end = myTextComponent.getSelectionEnd();
+    int caretPosition = myTextComponent.getCaretPosition();
+    int start = myTextComponent.getSelectionStart();
+    int end = myTextComponent.getSelectionEnd();
     return caretPosition == start ? end : start;
   }
 
@@ -99,7 +99,7 @@ public class TextComponentSelectionModel implements SelectionModel {
   }
 
   @Override
-  public void setSelection(final int startOffset, final int endOffset) {
+  public void setSelection(int startOffset, int endOffset) {
     if (myTextComponent.getCaretPosition() == startOffset) {   // avoid moving caret (required for correct Ctrl-W operation)
       myTextComponent.setCaretPosition(endOffset);
       myTextComponent.moveCaretPosition(startOffset);
@@ -122,7 +122,7 @@ public class TextComponentSelectionModel implements SelectionModel {
 
   @Override
   public void removeSelection() {
-    final int position = myTextComponent.getCaretPosition();
+    int position = myTextComponent.getCaretPosition();
     myTextComponent.select(position, position);
   }
 
@@ -132,12 +132,12 @@ public class TextComponentSelectionModel implements SelectionModel {
   }
 
   @Override
-  public void addSelectionListener(final SelectionListener listener) {
+  public void addSelectionListener(SelectionListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void removeSelectionListener(final SelectionListener listener) {
+  public void removeSelectionListener(SelectionListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -147,7 +147,7 @@ public class TextComponentSelectionModel implements SelectionModel {
   }
 
   @Override
-  public void selectWordAtCaret(final boolean honorCamelWordsSettings) {
+  public void selectWordAtCaret(boolean honorCamelWordsSettings) {
     removeSelection();
 
     EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(
@@ -161,7 +161,7 @@ public class TextComponentSelectionModel implements SelectionModel {
   }
 
   @Override
-  public void setBlockSelection(@Nonnull final LogicalPosition blockStart, @Nonnull final LogicalPosition blockEnd) {
+  public void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
     throw new UnsupportedOperationException("Not implemented");
   }
 

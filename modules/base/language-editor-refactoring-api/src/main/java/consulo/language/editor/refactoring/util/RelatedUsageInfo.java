@@ -31,7 +31,7 @@ public abstract class RelatedUsageInfo extends MoveRenameUsageInfo {
     myRelatedElement = relatedElement;
   }
 
-  protected RelatedUsageInfo(final PsiElement element, final PsiReference reference, final PsiElement referencedElement, final PsiElement relatedElement) {
+  protected RelatedUsageInfo(PsiElement element, PsiReference reference, PsiElement referencedElement, PsiElement relatedElement) {
     super(element, reference, referencedElement);
     myRelatedElement = relatedElement;
   }

@@ -58,7 +58,7 @@ public class CommittedChangesBrowser extends JPanel {
   private final JPanel myLeftPanel;
   private final JPanel myLoadingLabelPanel;
 
-  public CommittedChangesBrowser(final Project project, final CommittedChangesTableModel tableModel) {
+  public CommittedChangesBrowser(Project project, CommittedChangesTableModel tableModel) {
     super(new BorderLayout());
 
     myProject = project;
@@ -90,7 +90,7 @@ public class CommittedChangesBrowser extends JPanel {
 
     JPanel commitPanel = new JPanel(new BorderLayout());
     commitPanel.add(ScrollPaneFactory.createScrollPane(myCommitMessageArea), BorderLayout.CENTER);
-    final JComponent separator = SeparatorFactory.createSeparator(VcsBundle.message("label.commit.comment"), myCommitMessageArea);
+    JComponent separator = SeparatorFactory.createSeparator(VcsBundle.message("label.commit.comment"), myCommitMessageArea);
     commitPanel.add(separator, BorderLayout.NORTH);
 
     myLeftPanel = new JPanel(new GridBagLayout());
@@ -105,8 +105,8 @@ public class CommittedChangesBrowser extends JPanel {
     myLoadingLabelPanel.setBackground(UIUtil.getToolTipBackground());
     myLoadingLabelPanel.add(loadingLabel, BorderLayout.NORTH);
 
-    final JPanel listContainer = new JPanel(new GridBagLayout());
-    final GridBagConstraints innerGb =
+    JPanel listContainer = new JPanel(new GridBagLayout());
+    GridBagConstraints innerGb =
       new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
     ++ innerGb.gridy;
     innerGb.weighty = 0;
@@ -119,7 +119,7 @@ public class CommittedChangesBrowser extends JPanel {
     innerGb.fill = GridBagConstraints.BOTH;
     listContainer.add(ScrollPaneFactory.createScrollPane(myChangeListsView), innerGb);
 
-    final GridBagConstraints gb =
+    GridBagConstraints gb =
       new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(1, 1, 1, 1), 0, 0);
     gb.gridwidth = 2;
 
@@ -131,7 +131,7 @@ public class CommittedChangesBrowser extends JPanel {
       final JButton forwardButton = new JButton("Newer >");
 
       backButton.addActionListener(new ActionListener() {
-        public void actionPerformed(final ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
           try {
             navigation.goBack();
             backButton.setEnabled(navigation.canGoBack());
@@ -145,7 +145,7 @@ public class CommittedChangesBrowser extends JPanel {
         }
       });
       forwardButton.addActionListener(new ActionListener() {
-        public void actionPerformed(final ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
           navigation.goForward();
           backButton.setEnabled(navigation.canGoBack());
           forwardButton.setEnabled(navigation.canGoForward());
@@ -199,8 +199,8 @@ public class CommittedChangesBrowser extends JPanel {
   }
 
   private void updateBySelectionChange() {
-    final int idx = myChangeListsView.getSelectionModel().getLeadSelectionIndex();
-    final List<CommittedChangeList> items = myTableModel.getItems();
+    int idx = myChangeListsView.getSelectionModel().getLeadSelectionIndex();
+    List<CommittedChangeList> items = myTableModel.getItems();
     CommittedChangeList list = (idx >= 0 && idx < items.size()) ? items.get(idx) : null;
     if (list != mySelectedChangeList) {
       mySelectedChangeList = list;
@@ -210,7 +210,7 @@ public class CommittedChangesBrowser extends JPanel {
     }
   }
 
-  private String formatText(final CommittedChangeList list) {
+  private String formatText(CommittedChangeList list) {
     return IssueLinkHtmlRenderer.formatTextIntoHtml(myProject, list.getComment());
   }
 
@@ -218,7 +218,7 @@ public class CommittedChangesBrowser extends JPanel {
     return mySelectedChangeList;
   }
 
-  public void setTableContextMenu(final ActionGroup group) {
+  public void setTableContextMenu(ActionGroup group) {
     PopupHandler.installPopupHandler(myChangeListsView, group, ActionPlaces.UNKNOWN, ActionManager.getInstance());
   }
 

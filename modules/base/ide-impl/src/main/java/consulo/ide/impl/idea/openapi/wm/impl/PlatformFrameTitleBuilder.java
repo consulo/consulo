@@ -53,7 +53,7 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
   @Nonnull
   @RequiredReadAction
   @Override
-  public String getProjectTitle(@Nonnull final Project project) {
+  public String getProjectTitle(@Nonnull Project project) {
     String basePath = project.getBasePath();
     if (basePath == null) return project.getName();
 
@@ -75,7 +75,7 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
   @Nonnull
   @RequiredReadAction
   @Override
-  public String getFileTitle(@Nonnull final Project project, @Nonnull final VirtualFile file) {
+  public String getFileTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
     String fileTitle = VfsPresentationUtil.getPresentableNameForUI(project, file);
     if (!fileTitle.endsWith(file.getPresentableName()) || file.getParent() == null) {
       return fileTitle;

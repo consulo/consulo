@@ -31,11 +31,11 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplyPatchDifferentiatedDialogFactory {
-  DialogWrapper create(final Project project,
-                       final ApplyPatchExecutor callback,
-                       final List<ApplyPatchExecutor> executors,
-                       @Nonnull final ApplyPatchMode applyPatchMode,
-                       @Nonnull final VirtualFile patchFile);
+  DialogWrapper create(Project project,
+                       ApplyPatchExecutor callback,
+                       List<ApplyPatchExecutor> executors,
+                       @Nonnull ApplyPatchMode applyPatchMode,
+                       @Nonnull VirtualFile patchFile);
 
   FileChooserDescriptor createSelectPatchDescriptor();
 }

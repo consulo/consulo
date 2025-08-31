@@ -30,17 +30,17 @@ public class WeighingService {
   }
 
   @Nonnull
-  public static <T, Loc> WeighingComparable<T, Loc> weigh(final Key<? extends Weigher<T, Loc>> key,
-                                                          final T element,
-                                                          @Nullable final Loc location) {
+  public static <T, Loc> WeighingComparable<T, Loc> weigh(Key<? extends Weigher<T, Loc>> key,
+                                                          T element,
+                                                          @Nullable Loc location) {
     return weigh(key, (Supplier<T>)() -> element, location);
   }
 
   @Nonnull
-  public static <T, Loc> WeighingComparable<T, Loc> weigh(final Key<? extends Weigher<T, Loc>> key,
-                                                          final Supplier<T> element,
-                                                          @Nullable final Loc location) {
-    final List<Weigher> weighers = getWeighers(key);
+  public static <T, Loc> WeighingComparable<T, Loc> weigh(Key<? extends Weigher<T, Loc>> key,
+                                                          Supplier<T> element,
+                                                          @Nullable Loc location) {
+    List<Weigher> weighers = getWeighers(key);
     return new WeighingComparable<>(element, location, weighers.toArray(new Weigher[weighers.size()]));
   }
 

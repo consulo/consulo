@@ -90,7 +90,7 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
   }
 
   @Override
-  public String getCharset(@Nonnull VirtualFile file, @Nonnull final byte[] content) {
+  public String getCharset(@Nonnull VirtualFile file, @Nonnull byte[] content) {
     return null;
   }
 

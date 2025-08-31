@@ -975,7 +975,7 @@ public class JBUI {
          */
         @Nonnull
         public static ScaleContext create(@Nullable Component comp) {
-            final ScaleContext ctx = new ScaleContext(SYS_SCALE.of(sysScale(comp)));
+            ScaleContext ctx = new ScaleContext(SYS_SCALE.of(sysScale(comp)));
             if (comp != null) {
                 ctx.compRef = new WeakReference<Component>(comp);
             }

@@ -91,7 +91,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
       myUpdateExtension = ((SchemeExtensionProvider)processor).isUpgradeNeeded();
     }
 
-    final String baseDirPath = myIoDir.getAbsolutePath().replace(File.separatorChar, '/');
+    String baseDirPath = myIoDir.getAbsolutePath().replace(File.separatorChar, '/');
     virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + baseDirPath, new VirtualFileListener() {
       @Override
       public void contentsChanged(@Nonnull VirtualFileEvent event) {
@@ -468,11 +468,11 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
       return;
     }
 
-    for (final E scheme : schemesToSave) {
+    for (E scheme : schemesToSave) {
       try {
         saveScheme(scheme, nameGenerator);
       }
-      catch (final Exception e) {
+      catch (Exception e) {
         LOG.error("Cannot write scheme " + scheme.getName() + " in '" + myFileSpec + "': " + e.getLocalizedMessage(), e);
 
         Application app = Application.get();
@@ -510,7 +510,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     myFilesToDelete.remove(fileNameWithoutExtension);
 
     // stream provider always use LF separator
-    final byte[] byteOut = StorageUtil.writeToBytes(element);
+    byte[] byteOut = StorageUtil.writeToBytes(element);
 
     // if another new scheme uses old name of this scheme, so, we must not delete it (as part of rename operation)
     boolean renamed = currentFileNameWithoutExtension != null && fileNameWithoutExtension != currentFileNameWithoutExtension && nameGenerator.test(currentFileNameWithoutExtension);
@@ -519,7 +519,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
       if (renamed) {
         file = myDir.findChild(currentFileNameWithoutExtension + mySchemeExtension);
         if (file != null) {
-          final VirtualFile finalFile = file;
+          VirtualFile finalFile = file;
           WriteAction.run(() -> finalFile.rename(this, fileName));
         }
       }
@@ -531,7 +531,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
         file = VfsDirectoryBasedStorage.getFile(fileName, myDir, this);
       }
 
-      final VirtualFile finalFile1 = file;
+      VirtualFile finalFile1 = file;
       WriteAction.run(() -> {
         try (OutputStream out = finalFile1.getOutputStream(this)) {
           out.write(byteOut);

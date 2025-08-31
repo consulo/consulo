@@ -59,8 +59,8 @@ public class ArrowPainter {
     stop -= myWidthProvider.get() / 4;
     Color oldColor = g.getColor();
     g.setColor(TargetAWT.to(myColorHolder.getColor()));
-    final int height = myHeightProvider.get();
-    final int halfHeight = height / 2;
+    int height = myHeightProvider.get();
+    int halfHeight = height / 2;
     int mid = y - halfHeight;
     int top = y - height;
     LinePainter2D.paint((Graphics2D)g, start, mid, stop, mid);

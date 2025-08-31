@@ -38,7 +38,7 @@ public class ExternalOptionHelper {
       Document doc = JDOMUtil.loadDocument(file);
       Element root = doc.getRootElement();
       if (root.getName().equals("component")) {
-        final Element copyrightElement = root.getChild("copyright");
+        Element copyrightElement = root.getChild("copyright");
         if (copyrightElement != null) extractNewNoticeAndKeyword(copyrightElement, profiles);
       }
       else {
@@ -88,7 +88,7 @@ public class ExternalOptionHelper {
     if (extract) profiles.add(profile);
   }
 
-  private static boolean extract(final CopyrightProfile profile, final Element el) {
+  private static boolean extract(CopyrightProfile profile, Element el) {
     if (el.getAttributeValue("name").equals("notice")) {
       profile.setNotice(el.getAttributeValue("value"));
       return true;

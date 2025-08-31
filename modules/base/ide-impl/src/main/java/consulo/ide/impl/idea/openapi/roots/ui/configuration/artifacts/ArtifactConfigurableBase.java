@@ -34,7 +34,7 @@ public abstract class ArtifactConfigurableBase extends ProjectStructureElementCo
   protected ArtifactConfigurableBase(Artifact originalArtifact,
                                      ArtifactsStructureConfigurableContextImpl artifactsStructureContext,
                                      Runnable updateTree,
-                                     final boolean nameEditable) {
+                                     boolean nameEditable) {
     super(nameEditable, updateTree);
     myOriginalArtifact = originalArtifact;
     myArtifactsStructureContext = artifactsStructureContext;

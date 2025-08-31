@@ -76,9 +76,9 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
                                                      @Nonnull PackagingElementResolvingContext resolvingContext,
                                                      @Nonnull ArtifactIncrementalCompilerContext compilerContext,
                                                      @Nonnull ArtifactType artifactType) {
-    final Module module = findModule(resolvingContext);
+    Module module = findModule(resolvingContext);
     if (module != null) {
-      final VirtualFile output = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(myContentFolderType);
+      VirtualFile output = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(myContentFolderType);
       if (output != null) {
         creator.addDirectoryCopyInstructions(output, null);
       }
@@ -125,7 +125,7 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
 
   @Override
   public ModuleOutputPackagingElementState getState() {
-    final ModuleOutputPackagingElementState state = new ModuleOutputPackagingElementState();
+    ModuleOutputPackagingElementState state = new ModuleOutputPackagingElementState();
     if (myModulePointer != null) {
       state.setModuleName(myModulePointer.getName());
     }
@@ -134,7 +134,7 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
 
   @Override
   public void loadState(ArtifactManager artifactManager, ModuleOutputPackagingElementState state) {
-    final String moduleName = state.getModuleName();
+    String moduleName = state.getModuleName();
     myModulePointer = moduleName != null ? AccessRule.read(() -> ModuleUtilCore.createPointer(myProject, moduleName)) : null;
   }
 
@@ -158,8 +158,8 @@ public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOut
   @Override
   @Nullable
   public Module findModule(PackagingElementResolvingContext context) {
-    final Module module = NamedPointerUtil.get(myModulePointer);
-    final ModulesProvider modulesProvider = context.getModulesProvider();
+    Module module = NamedPointerUtil.get(myModulePointer);
+    ModulesProvider modulesProvider = context.getModulesProvider();
     if (module != null) {
       if (ArrayUtil.contains(module, modulesProvider.getModules())) {
         return module;

@@ -64,7 +64,7 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
     return myEnvVars.isPassParentEnvs();
   }
 
-  public void setPassParentEnvs(final boolean passParentEnvs) {
+  public void setPassParentEnvs(boolean passParentEnvs) {
     myEnvVars.setPassParentEnvs(passParentEnvs);
   }
 
@@ -81,11 +81,11 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
    * Consider using {@link EnvironmentVariablesData#readExternal(Element)} instead for simplicity and better performance.
    */
   public static void readExternal(Element element, Map<String, String> envs) {
-    final Element envsElement = element.getChild(ENVS);
+    Element envsElement = element.getChild(ENVS);
     if (envsElement != null) {
       for (Element envElement : envsElement.getChildren(ENV)) {
-        final String envName = envElement.getAttributeValue(NAME);
-        final String envValue = envElement.getAttributeValue(VALUE);
+        String envName = envElement.getAttributeValue(NAME);
+        String envValue = envElement.getAttributeValue(VALUE);
         if (envName != null && envValue != null) {
           envs.put(envName, envValue);
         }
@@ -101,11 +101,11 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
     }
   }
 
-  private static void splitVars(final Map<String, String> envs, final String val) {
+  private static void splitVars(Map<String, String> envs, String val) {
     if (val != null) {
-      final String[] envVars = val.split(";");
+      String[] envVars = val.split(";");
       for (String envVar : envVars) {
-        final int idx = envVar.indexOf('=');
+        int idx = envVar.indexOf('=');
         if (idx > -1) {
           envs.put(envVar.substring(0, idx), idx < envVar.length() - 1 ? envVar.substring(idx + 1) : "");
         }
@@ -117,9 +117,9 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
    * Consider using {@link EnvironmentVariablesData#writeExternal(Element)} instead for simplicity and better performance.
    */
   public static void writeExternal(@Nonnull Element element, @Nonnull Map<String, String> envs) {
-    final Element envsElement = new Element(ENVS);
+    Element envsElement = new Element(ENVS);
     for (String envName : envs.keySet()) {
-      final Element envElement = new Element(ENV);
+      Element envElement = new Element(ENV);
       envElement.setAttribute(NAME, envName);
       envElement.setAttribute(VALUE, envs.get(envName));
       envsElement.addContent(envElement);
@@ -128,12 +128,12 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
   }
 
   @Override
-  public void addChangeListener(final ChangeListener changeListener) {
+  public void addChangeListener(ChangeListener changeListener) {
     myEnvVars.addChangeListener(changeListener);
   }
 
   @Override
-  public void removeChangeListener(final ChangeListener changeListener) {
+  public void removeChangeListener(ChangeListener changeListener) {
     myEnvVars.removeChangeListener(changeListener);
   }
 }

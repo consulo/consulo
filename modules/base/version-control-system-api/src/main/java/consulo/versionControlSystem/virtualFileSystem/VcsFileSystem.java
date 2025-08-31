@@ -84,7 +84,7 @@ public class VcsFileSystem extends BaseVirtualFileSystem {
 
     @Nonnull
     @Override
-    public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull final String copyName) throws IOException {
+    public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException {
         throw new RuntimeException(VcsLocalize.exceptionTextInternalErrrorCouldNotImplementMethod().get());
     }
 

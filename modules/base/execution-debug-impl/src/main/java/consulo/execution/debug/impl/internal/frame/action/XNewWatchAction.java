@@ -33,7 +33,7 @@ public class XNewWatchAction extends XWatchesTreeActionBase {
     protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
         XDebuggerTreeNode root = tree.getRoot();
         if (root instanceof WatchesRootNode) {
-            final WatchesRootNode watchesRoot = (WatchesRootNode) root;
+            WatchesRootNode watchesRoot = (WatchesRootNode) root;
             watchesRoot.addNewWatch();
         }
     }

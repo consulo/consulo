@@ -58,13 +58,13 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
 
   @Override
   public void customizeCellRenderer(
-    @Nonnull final JTree tree,
-    final Object value,
-    final boolean selected,
-    final boolean expanded,
-    final boolean leaf,
-    final int row,
-    final boolean hasFocus
+    @Nonnull JTree tree,
+    Object value,
+    boolean selected,
+    boolean expanded,
+    boolean leaf,
+    int row,
+    boolean hasFocus
   ) {
     setBorder(JBCurrentTheme.listCellBorderSemi());
     myHaveLink = false;

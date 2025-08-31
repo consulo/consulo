@@ -49,7 +49,7 @@ public class TodoForExistingFile extends TodoForRanges {
     return ApplicationManager.getApplication().runReadAction(new Computable<TodoItemData[]>() {
       @Override
       public TodoItemData[] compute() {
-        final PsiTodoSearchHelper helper = PsiTodoSearchHelper.getInstance(myProject);
+        PsiTodoSearchHelper helper = PsiTodoSearchHelper.getInstance(myProject);
 
         PsiFile psiFile = myFile == null ? null : PsiManager.getInstance(myProject).findFile(myFile);
         if (psiFile != null) {

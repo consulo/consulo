@@ -44,7 +44,7 @@ public class GwtVerticalLayoutImpl extends Grid {
     resizeRows(1);
 
     for (Widget child : widgets) {
-      final int rowCount = getRowCount();
+      int rowCount = getRowCount();
       resizeRows(rowCount + 1);
 
       setWidget(rowCount - 1, 0, child);
@@ -60,17 +60,17 @@ public class GwtVerticalLayoutImpl extends Grid {
 
   private void updateLastRow(int prevRow) {
     if (prevRow != -1) {
-      final Style style = getCellFormatter().getElement(prevRow, 0).getStyle();
+      Style style = getCellFormatter().getElement(prevRow, 0).getStyle();
 
       style.clearHeight();
       style.clearWidth();
     }
 
-    final int rowCount = getRowCount();
-    final int lastRow = rowCount - 1;
+    int rowCount = getRowCount();
+    int lastRow = rowCount - 1;
     setWidget(lastRow, 0, myPanel);
 
-    final Style style = getCellFormatter().getElement(lastRow, 0).getStyle();
+    Style style = getCellFormatter().getElement(lastRow, 0).getStyle();
     style.setHeight(100, Style.Unit.PCT);
     style.setWidth(100, Style.Unit.PCT);
   }

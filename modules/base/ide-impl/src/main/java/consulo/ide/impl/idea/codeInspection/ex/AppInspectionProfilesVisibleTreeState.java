@@ -44,7 +44,7 @@ public class AppInspectionProfilesVisibleTreeState implements PersistentStateCom
   }
 
   @Override
-  public void loadState(final VisibleTreeStateComponent state) {
+  public void loadState(VisibleTreeStateComponent state) {
     myComponent.copyFrom(state);
   }
 

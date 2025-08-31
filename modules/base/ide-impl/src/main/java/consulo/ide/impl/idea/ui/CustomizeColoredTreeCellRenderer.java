@@ -22,8 +22,8 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class CustomizeColoredTreeCellRenderer {
-  public abstract void customizeCellRenderer(final SimpleColoredComponent renderer, final JTree tree, final Object value, final boolean selected,
-                                             final boolean expanded, final boolean leaf, final int row, final boolean hasFocus);
+  public abstract void customizeCellRenderer(SimpleColoredComponent renderer, JTree tree, Object value, boolean selected,
+                                             boolean expanded, boolean leaf, int row, boolean hasFocus);
 
   @Nullable
   public Object getTag() {

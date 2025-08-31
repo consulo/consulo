@@ -95,7 +95,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     @Override
     @RequiredUIAccess
     public void dispose() {
-        for (final ModuleEditor moduleEditor : myModuleEditors) {
+        for (ModuleEditor moduleEditor : myModuleEditors) {
             Disposer.dispose(moduleEditor);
         }
         myModuleEditors.clear();
@@ -116,7 +116,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     @Override
     @Nullable
     public Module getModule(String name) {
-        final Module moduleByName = myModuleModel.findModuleByName(name);
+        Module moduleByName = myModuleModel.findModuleByName(name);
         if (moduleByName != null) {
             return moduleByName;
         }
@@ -125,7 +125,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
     @Nullable
     public ModuleEditor getModuleEditor(Module module) {
-        for (final ModuleEditor moduleEditor : myModuleEditors) {
+        for (ModuleEditor moduleEditor : myModuleEditors) {
             if (module.equals(moduleEditor.getModule())) {
                 return moduleEditor;
             }
@@ -147,8 +147,8 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         return editor;
     }
 
-    private ModuleEditor doCreateModuleEditor(final Module module) {
-        final ModuleEditor moduleEditor = new TabbedModuleEditor(myProject, this, myLibrariesConfiguratorSupplier.get(), module);
+    private ModuleEditor doCreateModuleEditor(Module module) {
+        ModuleEditor moduleEditor = new TabbedModuleEditor(myProject, this, myLibrariesConfiguratorSupplier.get(), module);
 
         myModuleEditors.add(moduleEditor);
 
@@ -167,7 +167,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
             LOG.error("module editors was not disposed");
             myModuleEditors.clear();
         }
-        final Module[] modules = myModuleModel.getModules();
+        Module[] modules = myModuleModel.getModules();
         if (modules.length > 0) {
             for (Module module : modules) {
                 getOrCreateModuleEditor(module);
@@ -178,7 +178,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @Override
-    public void moduleStateChanged(final ModifiableRootModel moduleRootModel) {
+    public void moduleStateChanged(ModifiableRootModel moduleRootModel) {
         for (ModuleEditor.ChangeListener listener : myAllModulesChangeListeners) {
             listener.moduleStateChanged(moduleRootModel);
         }
@@ -191,7 +191,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     public GraphGenerator<ModuleRootModel> createGraphGenerator() {
-        final Map<Module, ModuleRootModel> models = new HashMap<>();
+        Map<Module, ModuleRootModel> models = new HashMap<>();
         for (ModuleEditor moduleEditor : myModuleEditors) {
             models.put(moduleEditor.getModule(), moduleEditor.getRootModel());
         }
@@ -203,18 +203,18 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         CompilerConfiguration.getInstance(myProject).setCompilerOutputUrl(myCompilerOutputUrl);
 
         // validate content and source roots
-        final Map<VirtualFile, String> contentRootToModuleNameMap = new HashMap<>();
-        final Map<VirtualFile, VirtualFile> srcRootsToContentRootMap = new HashMap<>();
-        for (final ModuleEditor moduleEditor : myModuleEditors) {
-            final ModifiableRootModel rootModel = moduleEditor.getModifiableRootModel();
-            final ContentEntry[] contents = rootModel.getContentEntries();
+        Map<VirtualFile, String> contentRootToModuleNameMap = new HashMap<>();
+        Map<VirtualFile, VirtualFile> srcRootsToContentRootMap = new HashMap<>();
+        for (ModuleEditor moduleEditor : myModuleEditors) {
+            ModifiableRootModel rootModel = moduleEditor.getModifiableRootModel();
+            ContentEntry[] contents = rootModel.getContentEntries();
             for (ContentEntry contentEntry : contents) {
-                final VirtualFile contentRoot = contentEntry.getFile();
+                VirtualFile contentRoot = contentEntry.getFile();
                 if (contentRoot == null) {
                     continue;
                 }
-                final String moduleName = moduleEditor.getName();
-                final String previousName = contentRootToModuleNameMap.put(contentRoot, moduleName);
+                String moduleName = moduleEditor.getName();
+                String previousName = contentRootToModuleNameMap.put(contentRoot, moduleName);
                 if (previousName != null && !previousName.equals(moduleName)) {
                     throw new ConfigurationException(ProjectLocalize.modulePathsValidationDuplicateContentError(
                         contentRoot.getPresentableUrl(),
@@ -223,12 +223,12 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
                     ));
                 }
 
-                final VirtualFile[] sourceAndTestFiles = contentEntry.getFolderFiles(LanguageContentFolderScopes.all(false));
+                VirtualFile[] sourceAndTestFiles = contentEntry.getFolderFiles(LanguageContentFolderScopes.all(false));
                 for (VirtualFile srcRoot : sourceAndTestFiles) {
-                    final VirtualFile anotherContentRoot = srcRootsToContentRootMap.put(srcRoot, contentRoot);
+                    VirtualFile anotherContentRoot = srcRootsToContentRootMap.put(srcRoot, contentRoot);
                     if (anotherContentRoot != null) {
-                        final String problematicModule;
-                        final String correctModule;
+                        String problematicModule;
+                        String correctModule;
                         if (VfsUtilCore.isAncestor(anotherContentRoot, contentRoot, true)) {
                             problematicModule = contentRootToModuleNameMap.get(anotherContentRoot);
                             correctModule = contentRootToModuleNameMap.get(contentRoot);
@@ -248,13 +248,13 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         }
         // additional validation: directories marked as src roots must belong to the same module as their corresponding content root
         for (Map.Entry<VirtualFile, VirtualFile> entry : srcRootsToContentRootMap.entrySet()) {
-            final VirtualFile srcRoot = entry.getKey();
-            final VirtualFile correspondingContent = entry.getValue();
-            final String expectedModuleName = contentRootToModuleNameMap.get(correspondingContent);
+            VirtualFile srcRoot = entry.getKey();
+            VirtualFile correspondingContent = entry.getValue();
+            String expectedModuleName = contentRootToModuleNameMap.get(correspondingContent);
 
             for (VirtualFile candidateContent = srcRoot; candidateContent != null && !candidateContent.equals(correspondingContent);
                  candidateContent = candidateContent.getParent()) {
-                final String moduleName = contentRootToModuleNameMap.get(candidateContent);
+                String moduleName = contentRootToModuleNameMap.get(candidateContent);
                 if (moduleName != null && !moduleName.equals(expectedModuleName)) {
                     throw new ConfigurationException(ProjectLocalize.modulePathsValidationSourceRootBelongsToAnotherModuleError(
                         srcRoot.getPresentableUrl(),
@@ -265,13 +265,13 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
             }
         }
 
-        final List<ModifiableRootModel> models = new ArrayList<>(myModuleEditors.size());
+        List<ModifiableRootModel> models = new ArrayList<>(myModuleEditors.size());
         for (ModuleEditor moduleEditor : myModuleEditors) {
             moduleEditor.canApply();
         }
 
-        for (final ModuleEditor moduleEditor : myModuleEditors) {
-            final ModifiableRootModel model = moduleEditor.apply();
+        for (ModuleEditor moduleEditor : myModuleEditors) {
+            ModifiableRootModel model = moduleEditor.apply();
             if (model != null) {
                 models.add(model);
             }
@@ -279,7 +279,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
         Application.get().runWriteAction(() -> {
             try {
-                final ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
+                ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
                 ModifiableModelCommitter.getInstance(myProject).multiCommit(rootModels, myModuleModel);
                 myModuleModelCommitted = true;
             }
@@ -293,7 +293,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         myModified = false;
     }
 
-    public void setModified(final boolean modified) {
+    public void setModified(boolean modified) {
         myModified = modified;
     }
 
@@ -304,8 +304,8 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
     @Nonnull
     @Override
-    public String getRealName(final Module module) {
-        final ModifiableModuleModel moduleModel = getModuleModel();
+    public String getRealName(Module module) {
+        ModifiableModuleModel moduleModel = getModuleModel();
         String newName = moduleModel.getNewName(module);
         return newName != null ? newName : module.getName();
     }
@@ -326,7 +326,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @RequiredUIAccess
-    public boolean deleteModule(final Module module) {
+    public boolean deleteModule(Module module) {
         ModuleEditor moduleEditor = getModuleEditor(module);
         return moduleEditor == null || doRemoveModule(moduleEditor);
     }
@@ -386,7 +386,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
             AsyncResult<VirtualFile> fileChooserAsync = FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
             fileChooserAsync.doWhenDone(moduleDir -> {
-                final NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
+                NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
 
                 AsyncResult<Void> dialogAsync = dialog.showAsync();
                 dialogAsync.doWhenDone(() -> {
@@ -434,11 +434,11 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         myModuleEditors.remove(selectedEditor);
 
         // destroyProcess removed module
-        final Module moduleToRemove = selectedEditor.getModule();
+        Module moduleToRemove = selectedEditor.getModule();
         // remove all dependencies on the module that is about to be removed
         List<ModifiableRootModel> modifiableRootModels = new ArrayList<>();
-        for (final ModuleEditor moduleEditor : myModuleEditors) {
-            final ModifiableRootModel modifiableRootModel = moduleEditor.getModifiableRootModelProxy();
+        for (ModuleEditor moduleEditor : myModuleEditors) {
+            ModifiableRootModel modifiableRootModel = moduleEditor.getModifiableRootModelProxy();
             modifiableRootModels.add(modifiableRootModel);
         }
 
@@ -495,11 +495,11 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
 
     @RequiredUIAccess
-    public static void showArtifactSettings(@Nonnull Project project, @Nullable final Artifact artifact) {
+    public static void showArtifactSettings(@Nonnull Project project, @Nullable Artifact artifact) {
         ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(artifact, true));
     }
 
-    public void moduleRenamed(Module module, final String oldName, final String name) {
+    public void moduleRenamed(Module module, String oldName, String name) {
 
         for (ModuleEditor moduleEditor : myModuleEditors) {
             if (module == moduleEditor.getModule() && Comparing.strEqual(moduleEditor.getName(), oldName)) {

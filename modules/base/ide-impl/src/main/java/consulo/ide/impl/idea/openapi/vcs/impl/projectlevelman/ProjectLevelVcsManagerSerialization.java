@@ -47,11 +47,11 @@ public class ProjectLevelVcsManagerSerialization {
     return options.get(actionName);
   }
 
-  public void readExternalUtil(final Element element, final OptionsAndConfirmations optionsAndConfirmations) throws InvalidDataException {
-    final Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
+  public void readExternalUtil(Element element, OptionsAndConfirmations optionsAndConfirmations) throws InvalidDataException {
+    Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
     for (Element subElement : element.getChildren(OPTIONS_SETTING)) {
-      final String id = subElement.getAttributeValue(ID_ATTRIBUTE);
-      final String value = subElement.getAttributeValue(VALUE_ATTTIBUTE);
+      String id = subElement.getAttributeValue(ID_ATTRIBUTE);
+      String value = subElement.getAttributeValue(VALUE_ATTTIBUTE);
       if (id != null && value != null) {
         try {
           getOrCreateOption(options, id).setValue(Boolean.parseBoolean(value));
@@ -62,8 +62,8 @@ public class ProjectLevelVcsManagerSerialization {
     }
     myReadValue.clear();
     for (Element subElement : element.getChildren(CONFIRMATIONS_SETTING)) {
-      final String id = subElement.getAttributeValue(ID_ATTRIBUTE);
-      final String value = subElement.getAttributeValue(VALUE_ATTTIBUTE);
+      String id = subElement.getAttributeValue(ID_ATTRIBUTE);
+      String value = subElement.getAttributeValue(VALUE_ATTTIBUTE);
       if (id != null && value != null) {
         try {
           myReadValue.put(id, VcsShowConfirmationOption.Value.fromString(value));
@@ -75,8 +75,8 @@ public class ProjectLevelVcsManagerSerialization {
   }
 
   public void writeExternalUtil(@Nonnull Element element, @Nonnull OptionsAndConfirmations optionsAndConfirmations) throws WriteExternalException {
-    final Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
-    final Map<String, VcsShowConfirmationOptionImpl> confirmations = optionsAndConfirmations.getConfirmations();
+    Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
+    Map<String, VcsShowConfirmationOptionImpl> confirmations = optionsAndConfirmations.getConfirmations();
 
     for (VcsShowOptionsSettingImpl setting : options.values()) {
       if (!setting.getValue()) {
@@ -89,7 +89,7 @@ public class ProjectLevelVcsManagerSerialization {
 
     for (VcsShowConfirmationOptionImpl setting : confirmations.values()) {
       if (setting.getValue() != VcsShowConfirmationOption.Value.SHOW_CONFIRMATION) {
-        final Element settingElement = new Element(CONFIRMATIONS_SETTING);
+        Element settingElement = new Element(CONFIRMATIONS_SETTING);
         element.addContent(settingElement);
         settingElement.setAttribute(VALUE_ATTTIBUTE, setting.getValue().toString());
         settingElement.setAttribute(ID_ATTRIBUTE, setting.getDisplayName());
@@ -97,7 +97,7 @@ public class ProjectLevelVcsManagerSerialization {
     }
   }
 
-  public VcsShowConfirmationOption.Value getInitOptionValue(final String id) {
+  public VcsShowConfirmationOption.Value getInitOptionValue(String id) {
     return myReadValue.get(id);
   }
 }

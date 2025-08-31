@@ -27,9 +27,9 @@ public class IndexAccessValidator {
   private final ThreadLocal<ID<?, ?>> ourAlreadyProcessingIndices = new ThreadLocal<>();
 
   private void checkAccessingIndexDuringOtherIndexProcessing(@Nonnull ID<?, ?> indexKey) {
-    final ID<?, ?> alreadyProcessingIndex = ourAlreadyProcessingIndices.get();
+    ID<?, ?> alreadyProcessingIndex = ourAlreadyProcessingIndices.get();
     if (alreadyProcessingIndex != null && alreadyProcessingIndex != indexKey) {
-      final String message = MessageFormat.format("Accessing ''{0}'' during processing ''{1}''. Nested different indices processing may cause deadlock", indexKey.getName(), alreadyProcessingIndex.getName());
+      String message = MessageFormat.format("Accessing ''{0}'' during processing ''{1}''. Nested different indices processing may cause deadlock", indexKey.getName(), alreadyProcessingIndex.getName());
       if (ApplicationManager.getApplication().isUnitTestMode()) throw new RuntimeException(message);
       Logger.getInstance(FileBasedIndexImpl.class).error(message); // RuntimeException to skip rebuild
     }

@@ -150,7 +150,7 @@ public abstract class BaseRepository extends TaskRepository {
     return myLoginAnonymously;
   }
 
-  public void setLoginAnonymously(final boolean loginAnonymously) {
+  public void setLoginAnonymously(boolean loginAnonymously) {
     myLoginAnonymously = loginAnonymously;
   }
 
@@ -191,7 +191,7 @@ public abstract class BaseRepository extends TaskRepository {
   private static String addSchemeIfNoneSpecified(@Nullable String url) {
     if (StringUtil.isNotEmpty(url)) {
       try {
-        final String scheme = new URI(url).getScheme();
+        String scheme = new URI(url).getScheme();
         // For URL like "foo.bar:8080" host name will be parsed as scheme
         if (scheme == null || !scheme.startsWith("http")) {
           url = "http://" + url;

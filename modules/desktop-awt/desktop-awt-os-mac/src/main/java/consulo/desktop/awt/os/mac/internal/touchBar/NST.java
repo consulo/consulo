@@ -45,7 +45,7 @@ public final class NST {
         if (nstLibrary != null) {
             // small check that loaded library works
             try {
-                final ID test = nstLibrary.createTouchBar("test", (uid) -> ID.NIL, null);
+                ID test = nstLibrary.createTouchBar("test", (uid) -> ID.NIL, null);
                 if (test == null || test.equals(ID.NIL)) {
                     LOG.error("Failed to create native touchbar object, result is null");
                     nstLibrary = null;
@@ -127,7 +127,7 @@ public final class NST {
         String uid, int itemWidth, NSTLibrary.ScrubberDelegate delegate, NSTLibrary.ScrubberCacheUpdater updater,
         @Nonnull List<TBItemScrubber.ItemData> items, int visibleItems, @Nullable TouchBarStats stats
     ) {
-        final Pair<Pointer, Integer> mem = _packItems(items, visibleItems, false, true);
+        Pair<Pointer, Integer> mem = _packItems(items, visibleItems, false, true);
         return nstLibrary.createScrubber(uid, itemWidth, delegate, updater, mem == null ? null : mem.getFirst(),
             mem == null ? 0 : mem.getSecond()); // called from AppKit, uses per-event autorelease-pool
     }
@@ -157,10 +157,10 @@ public final class NST {
     }
 
     static void setArrowImage(ID buttObj, @Nullable Image arrow) {
-        final BufferedImage img = _getImg4ByteRGBA(arrow);
-        final Pointer raster4ByteRGBA = _getRaster(img);
-        final int w = _getImgW(img);
-        final int h = _getImgH(img);
+        BufferedImage img = _getImg4ByteRGBA(arrow);
+        Pointer raster4ByteRGBA = _getRaster(img);
+        int w = _getImgW(img);
+        int h = _getImgH(img);
         nstLibrary.setArrowImage(buttObj, raster4ByteRGBA, w, h); // creates autorelease-pool internally
     }
 
@@ -168,8 +168,8 @@ public final class NST {
         if (indices == null || indices.isEmpty()) {
             return null;
         }
-        final int step = Native.getNativeSize(Integer.class);
-        final Pointer mem = new Pointer(Native.malloc((long) indices.size() * step));
+        int step = Native.getNativeSize(Integer.class);
+        Pointer mem = new Pointer(Native.malloc((long) indices.size() * step));
         int offset = 0;
         for (Integer i : indices) {
             mem.setInt(offset, i);
@@ -182,9 +182,9 @@ public final class NST {
         TBItemScrubber scrubber, int fromIndex, int itemsCount,
         boolean withImages, boolean withText
     ) {
-        final long startNs = withImages && scrubber.getStats() != null ? System.nanoTime() : 0;
+        long startNs = withImages && scrubber.getStats() != null ? System.nanoTime() : 0;
         @Nonnull List<TBItemScrubber.ItemData> items = scrubber.getItems();
-        final Pair<Pointer, Integer> mem = _packItems(items.subList(fromIndex, fromIndex + itemsCount), itemsCount, withImages, withText);
+        Pair<Pointer, Integer> mem = _packItems(items.subList(fromIndex, fromIndex + itemsCount), itemsCount, withImages, withText);
         synchronized (scrubber) {
             if (scrubber.myNativePeer.equals(ID.NIL)) {
                 return;
@@ -201,7 +201,7 @@ public final class NST {
         if (indices == null || indices.isEmpty() || scrubObj == ID.NIL || scrubObj == null) {
             return;
         }
-        final Pointer mem = _makeIndices(indices);
+        Pointer mem = _makeIndices(indices);
         nstLibrary.enableScrubberItems(scrubObj, mem, indices.size(), enabled);
     }
 
@@ -209,7 +209,7 @@ public final class NST {
         if (scrubObj == ID.NIL || scrubObj == null) {
             return;
         }
-        final Pointer mem = _makeIndices(indices);
+        Pointer mem = _makeIndices(indices);
         nstLibrary.showScrubberItems(scrubObj, mem, indices == null ? 0 : indices.size(), show, inverseOthers);
     }
 
@@ -231,7 +231,7 @@ public final class NST {
                     byteCount += 6;
                     continue;
                 }
-                final int textSize = 2 + (withText && id.getTextBytes() != null && id.getTextBytes().length > 0 ? id.getTextBytes().length + 1 : 0);
+                int textSize = 2 + (withText && id.getTextBytes() != null && id.getTextBytes().length > 0 ? id.getTextBytes().length + 1 : 0);
                 byteCount += textSize;
 
                 if (withImages
@@ -252,8 +252,8 @@ public final class NST {
                     id.fMulX = getIconScaleForTouchbar(id.darkIcon);
                     id.scaledWidth = Math.round(id.darkIcon.getWidth() * id.fMulX);
                     id.scaledHeight = Math.round(id.darkIcon.getHeight() * id.fMulX);
-                    final int sizeInBytes = id.scaledWidth * id.scaledHeight * 4;
-                    final int totalSize = sizeInBytes + 4;
+                    int sizeInBytes = id.scaledWidth * id.scaledHeight * 4;
+                    int totalSize = sizeInBytes + 4;
                     byteCount += totalSize;
                 }
                 else {
@@ -262,7 +262,7 @@ public final class NST {
             }
 
             // 2. write items
-            final Pointer result = new Pointer(ptr = Native.malloc(byteCount));
+            Pointer result = new Pointer(ptr = Native.malloc(byteCount));
             result.setShort(0, (short) items.size());
             int offset = 2;
             c = 0;
@@ -275,7 +275,7 @@ public final class NST {
                     continue;
                 }
 
-                final byte[] txtBytes = withText ? id.getTextBytes() : null;
+                byte[] txtBytes = withText ? id.getTextBytes() : null;
                 if (txtBytes != null && txtBytes.length > 0) {
                     result.setShort(offset, (short) txtBytes.length);
                     offset += 2;
@@ -293,7 +293,7 @@ public final class NST {
                     offset += _writeIconRaster(id.darkIcon, id.fMulX, result, offset, byteCount);
                 }
                 else {
-                    final boolean hasIcon = id.getIcon() != null &&
+                    boolean hasIcon = id.getIcon() != null &&
                         !(id.getIcon() instanceof EmptyIcon) &&
                         id.getIcon().getWidth() > 0 &&
                         id.getIcon().getHeight() > 0;
@@ -329,7 +329,7 @@ public final class NST {
             return null;
         }
 
-        final DataBuffer db = img.getRaster().getDataBuffer();
+        DataBuffer db = img.getRaster().getDataBuffer();
         DirectDataBufferInt dbb = (DirectDataBufferInt) db;
         return dbb.myMemory;
     }
@@ -347,10 +347,10 @@ public final class NST {
             return null;
         }
 
-        final int w = Math.round(icon.getWidth() * scale);
-        final int h = Math.round(icon.getHeight() * scale);
+        int w = Math.round(icon.getWidth() * scale);
+        int h = Math.round(icon.getHeight() * scale);
 
-        final int memLength = w * h * 4;
+        int memLength = w * h * 4;
         Pointer memory = new Memory(memLength);
         return _drawIconIntoMemory(icon, scale, memory, 0);
     }
@@ -374,22 +374,22 @@ public final class NST {
             return null;
         }
 
-        final float fMulX = getIconScaleForTouchbar(icon);
+        float fMulX = getIconScaleForTouchbar(icon);
         return _getImg4ByteRGBA(icon, fMulX);
     }
 
     // returns count of written bytes
     private static int _writeIconRaster(@Nonnull Image icon, float scale, @Nonnull Pointer memory, int offset, int totalMemoryBytes)
         throws Exception {
-        final int w = Math.round(icon.getWidth() * scale);
-        final int h = Math.round(icon.getHeight() * scale);
+        int w = Math.round(icon.getWidth() * scale);
+        int h = Math.round(icon.getHeight() * scale);
 
         if (w <= 0 || h <= 0) {
             throw new Exception("Incorrect icon sizes: " + icon.getWidth() + "x" + icon.getHeight() + ", scale=" + scale);
         }
 
-        final int rasterSizeInBytes = w * h * 4;
-        final int totalSize = rasterSizeInBytes + 4;
+        int rasterSizeInBytes = w * h * 4;
+        int totalSize = rasterSizeInBytes + 4;
 
         if (offset + totalSize > totalMemoryBytes) {
             throw new Exception(

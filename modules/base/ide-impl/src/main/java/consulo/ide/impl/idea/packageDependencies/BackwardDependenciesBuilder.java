@@ -43,11 +43,11 @@ import java.util.Set;
 public class BackwardDependenciesBuilder extends DependenciesBuilder {
   private final AnalysisScope myForwardScope;
 
-  public BackwardDependenciesBuilder(final Project project, final AnalysisScope scope) {
+  public BackwardDependenciesBuilder(Project project, AnalysisScope scope) {
     this(project, scope, null);
   }
 
-  public BackwardDependenciesBuilder(final Project project, final AnalysisScope scope, final @Nullable AnalysisScope scopeOfInterest) {
+  public BackwardDependenciesBuilder(Project project, AnalysisScope scope, @Nullable AnalysisScope scopeOfInterest) {
     super(project, scope, scopeOfInterest);
     myForwardScope = ApplicationManager.getApplication().runReadAction(new Computable<AnalysisScope>() {
       @Override
@@ -87,14 +87,14 @@ public class BackwardDependenciesBuilder extends DependenciesBuilder {
     try {
       final int fileCount = getScope().getFileCount();
       getScope().accept(new PsiRecursiveElementVisitor() {
-        @Override public void visitFile(final PsiFile file) {
+        @Override public void visitFile(PsiFile file) {
           ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
           if (indicator != null) {
             if (indicator.isCanceled()) {
               throw new ProcessCanceledException();
             }
             indicator.setText(AnalysisScopeBundle.message("package.dependencies.progress.text"));
-            final VirtualFile virtualFile = file.getVirtualFile();
+            VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile != null) {
               indicator.setText2(ProjectUtil.calcRelativeToProjectPath(virtualFile, getProject()));
             }
@@ -102,8 +102,8 @@ public class BackwardDependenciesBuilder extends DependenciesBuilder {
               indicator.setFraction(((double)++myFileCount) / myTotalFileCount);
             }
           }
-          final Map<PsiFile, Set<PsiFile>> dependencies = builder.getDependencies();
-          for (final PsiFile psiFile : dependencies.keySet()) {
+          Map<PsiFile, Set<PsiFile>> dependencies = builder.getDependencies();
+          for (PsiFile psiFile : dependencies.keySet()) {
             if (dependencies.get(psiFile).contains(file)) {
               Set<PsiFile> fileDeps = getDependencies().get(file);
               if (fileDeps == null) {
@@ -123,18 +123,18 @@ public class BackwardDependenciesBuilder extends DependenciesBuilder {
     }
   }
 
-  private static void subtractScope(final DependenciesBuilder builders, final AnalysisScope scope) {
-    final Map<PsiFile, Set<PsiFile>> dependencies = builders.getDependencies();
+  private static void subtractScope(DependenciesBuilder builders, AnalysisScope scope) {
+    Map<PsiFile, Set<PsiFile>> dependencies = builders.getDependencies();
 
     Set<PsiFile> excluded = new HashSet<PsiFile>();
 
-    for (final PsiFile psiFile : dependencies.keySet()) {
+    for (PsiFile psiFile : dependencies.keySet()) {
       if (scope.contains(psiFile)) {
         excluded.add(psiFile);
       }
     }
 
-    for ( final PsiFile psiFile : excluded ) {
+    for ( PsiFile psiFile : excluded ) {
       dependencies.remove(psiFile);
     }
   }

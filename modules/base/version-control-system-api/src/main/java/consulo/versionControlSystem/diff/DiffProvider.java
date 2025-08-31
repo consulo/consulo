@@ -33,7 +33,7 @@ public interface DiffProvider extends VcsProviderMarker {
   ItemLatestState getLastRevision(VirtualFile virtualFile);
 
   @Nullable
-  ItemLatestState getLastRevision(final FilePath filePath);
+  ItemLatestState getLastRevision(FilePath filePath);
 
   @Nullable
   ContentRevision createFileContent(VcsRevisionNumber revisionNumber, VirtualFile selectedFile);
@@ -42,7 +42,7 @@ public interface DiffProvider extends VcsProviderMarker {
   VcsRevisionNumber getLatestCommittedRevision(VirtualFile vcsRoot);
 
   @Nullable
-  default VcsRevisionDescription getCurrentRevisionDescription(final VirtualFile file) {
+  default VcsRevisionDescription getCurrentRevisionDescription(VirtualFile file) {
     return null;
   }
 }

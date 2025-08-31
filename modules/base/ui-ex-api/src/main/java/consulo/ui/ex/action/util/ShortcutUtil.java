@@ -54,7 +54,7 @@ public class ShortcutUtil {
             return MacKeymapUtil.getModifiersText(modifiers);
         }
 
-        final String keyModifiersText = KeyEvent.getKeyModifiersText(modifiers);
+        String keyModifiersText = KeyEvent.getKeyModifiersText(modifiers);
         if (keyModifiersText.isEmpty()) {
             return keyModifiersText;
         }
@@ -77,7 +77,7 @@ public class ShortcutUtil {
             acceleratorText = getModifiersText(modifiers);
         }
 
-        final int code = accelerator.getKeyCode();
+        int code = accelerator.getKeyCode();
         String keyText = Platform.current().os().isMac() ? MacKeymapUtil.getKeyText(code) : KeyEvent.getKeyText(code);
         // [vova] this is dirty fix for bug #35092
         if (CANCEL_KEY_TEXT.equals(keyText)) {
@@ -89,12 +89,12 @@ public class ShortcutUtil {
     }
 
     @Nullable
-    public static KeyStroke getKeyStroke(@Nonnull final ShortcutSet shortcutSet) {
-        final Shortcut[] shortcuts = shortcutSet.getShortcuts();
+    public static KeyStroke getKeyStroke(@Nonnull ShortcutSet shortcutSet) {
+        Shortcut[] shortcuts = shortcutSet.getShortcuts();
         if (shortcuts.length == 0 || !(shortcuts[0] instanceof KeyboardShortcut)) {
             return null;
         }
-        final KeyboardShortcut shortcut = (KeyboardShortcut) shortcuts[0];
+        KeyboardShortcut shortcut = (KeyboardShortcut) shortcuts[0];
         if (shortcut.getSecondKeyStroke() != null) {
             return null;
         }

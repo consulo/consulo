@@ -80,14 +80,14 @@ public class EditableRowTable {
         public void actionPerformed(ActionEvent e) {
           TableUtil.stopEditing(table);
           tableModel.addRow();
-          final int index = tableModel.getRowCount() - 1;
+          int index = tableModel.getRowCount() - 1;
           table.editCellAt(index, 0);
           table.setRowSelectionInterval(index, index);
           table.setColumnSelectionInterval(0, 0);
           table.getParent().repaint();
-          final Component editorComponent = table.getEditorComponent();
+          Component editorComponent = table.getEditorComponent();
           if (editorComponent != null) {
-            final Rectangle bounds = editorComponent.getBounds();
+            Rectangle bounds = editorComponent.getBounds();
             table.scrollRectToVisible(bounds);
             IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(editorComponent);
           }
@@ -163,11 +163,11 @@ public class EditableRowTable {
     return buttonsPanel;
   }
 
-  private static void updateButtons(JTable table, final RowEditableTableModel tableModel,
-                                    final JButton addButton,
-                                    final JButton removeButton,
-                                    final JButton upButton,
-                                    final JButton downButton) {
+  private static void updateButtons(JTable table, RowEditableTableModel tableModel,
+                                    JButton addButton,
+                                    JButton removeButton,
+                                    JButton upButton,
+                                    JButton downButton) {
     if (table.isEnabled()) {
       int index = table.getSelectedRow();
       if (0 <= index && index < tableModel.getRowCount()) {

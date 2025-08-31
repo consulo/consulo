@@ -39,23 +39,23 @@ public class FileHistoryRefresher implements FileHistoryRefresherI {
   private boolean myCanUseCache;
   private boolean myIsRefresh;
 
-  public FileHistoryRefresher(final VcsHistoryProvider vcsHistoryProvider,
-                              final FilePath path,
-                              final AbstractVcs vcs) {
+  public FileHistoryRefresher(VcsHistoryProvider vcsHistoryProvider,
+                              FilePath path,
+                              AbstractVcs vcs) {
     this(vcsHistoryProvider, path, null, vcs);
   }
 
-  public FileHistoryRefresher(final VcsHistoryProviderEx vcsHistoryProvider,
-                              final FilePath path,
+  public FileHistoryRefresher(VcsHistoryProviderEx vcsHistoryProvider,
+                              FilePath path,
                               @jakarta.annotation.Nullable VcsRevisionNumber startingRevisionNumber,
-                              final AbstractVcs vcs) {
+                              AbstractVcs vcs) {
     this((VcsHistoryProvider)vcsHistoryProvider, path, startingRevisionNumber, vcs);
   }
 
-  private FileHistoryRefresher(final VcsHistoryProvider vcsHistoryProvider,
-                               final FilePath path,
+  private FileHistoryRefresher(VcsHistoryProvider vcsHistoryProvider,
+                               FilePath path,
                                @Nullable VcsRevisionNumber startingRevisionNumber,
-                               final AbstractVcs vcs) {
+                               AbstractVcs vcs) {
     myVcsHistoryProvider = vcsHistoryProvider;
     myPath = path;
     myVcs = vcs;

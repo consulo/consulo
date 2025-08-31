@@ -34,43 +34,43 @@ import jakarta.annotation.Nullable;
  * @since 2008-01-17
  */
 public class ProjectRootsUtil {
-  public static boolean isSourceRoot(final PsiDirectory psiDirectory) {
+  public static boolean isSourceRoot(PsiDirectory psiDirectory) {
     return isSourceRoot(psiDirectory.getVirtualFile(), psiDirectory.getProject());
   }
 
-  public static boolean isSourceRoot(final VirtualFile directoryFile, final Project project) {
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+  public static boolean isSourceRoot(VirtualFile directoryFile, Project project) {
+    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return directoryFile.equals(fileIndex.getSourceRootForFile(directoryFile));
   }
 
-  public static boolean isInSource(final PsiDirectory directory) {
+  public static boolean isInSource(PsiDirectory directory) {
     return isInSource(directory.getVirtualFile(), directory.getProject());
   }
 
-  public static boolean isInSource(final VirtualFile directoryFile, final Project project) {
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+  public static boolean isInSource(VirtualFile directoryFile, Project project) {
+    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return projectFileIndex.isInSourceContent(directoryFile);
   }
 
-  public static boolean isInTestSource(final PsiDirectory psiDirectory) {
+  public static boolean isInTestSource(PsiDirectory psiDirectory) {
     return isInTestSource(psiDirectory.getVirtualFile(), psiDirectory.getProject());
   }
 
-  public static boolean isInTestSource(final VirtualFile directoryFile, final Project project) {
+  public static boolean isInTestSource(VirtualFile directoryFile, Project project) {
     return TestSourcesFilter.isTestSources(directoryFile, project);
   }
 
-  public static boolean isInTestResource(final PsiDirectory psiDirectory) {
+  public static boolean isInTestResource(PsiDirectory psiDirectory) {
     return isInTestResource(psiDirectory.getVirtualFile(), psiDirectory.getProject());
   }
 
-  public static boolean isInTestResource(final VirtualFile directoryFile, final Project project) {
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+  public static boolean isInTestResource(VirtualFile directoryFile, Project project) {
+    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return projectFileIndex.isInTestResource(directoryFile);
   }
 
-  public static boolean isSourceOrTestRoot(@Nonnull VirtualFile virtualFile, final Project project) {
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+  public static boolean isSourceOrTestRoot(@Nonnull VirtualFile virtualFile, Project project) {
+    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return projectFileIndex.isInSource(virtualFile);
   }
 
@@ -79,18 +79,18 @@ public class ProjectRootsUtil {
     return findContentFolderForDirectory(root, project);
   }
 
-  public static boolean isModuleSourceRoot(@Nonnull VirtualFile virtualFile, @Nonnull final Project project) {
+  public static boolean isModuleSourceRoot(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
     return getModuleSourceRoot(virtualFile, project) != null;
   }
 
   @Nullable
-  public static ContentFolder findContentFolderForDirectory(@Nonnull VirtualFile virtualFile, final Project project) {
+  public static ContentFolder findContentFolderForDirectory(@Nonnull VirtualFile virtualFile, Project project) {
     return findContentFolderForDirectory(ProjectRootManager.getInstance(project).getFileIndex(), virtualFile);
   }
 
   @Nullable
   public static ContentFolder findContentFolderForDirectory(@Nonnull ProjectFileIndex projectFileIndex, @Nonnull VirtualFile virtualFile) {
-    final Module module = projectFileIndex.getModuleForFile(virtualFile);
+    Module module = projectFileIndex.getModuleForFile(virtualFile);
     if (module == null) {
       return null;
     }
@@ -102,38 +102,38 @@ public class ProjectRootsUtil {
     return virtualFile.equals(contentFolder.getFile()) ? contentFolder : null;
   }
 
-  public static boolean isLibraryRoot(final VirtualFile directoryFile, final Project project) {
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+  public static boolean isLibraryRoot(VirtualFile directoryFile, Project project) {
+    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     if (projectFileIndex.isInLibraryClasses(directoryFile)) {
-      final VirtualFile parent = directoryFile.getParent();
+      VirtualFile parent = directoryFile.getParent();
       return parent == null || !projectFileIndex.isInLibraryClasses(parent);
     }
     return false;
   }
 
-  public static boolean isModuleContentRoot(final PsiDirectory directory) {
+  public static boolean isModuleContentRoot(PsiDirectory directory) {
     return isModuleContentRoot(directory.getVirtualFile(), directory.getProject());
   }
 
-  public static boolean isModuleContentRoot(@Nonnull final VirtualFile directoryFile, final Project project) {
+  public static boolean isModuleContentRoot(@Nonnull VirtualFile directoryFile, Project project) {
     return isModuleContentRoot(ProjectRootManager.getInstance(project).getFileIndex(), directoryFile);
   }
 
   public static boolean isModuleContentRoot(@Nonnull ProjectFileIndex projectFileIndex, @Nonnull VirtualFile directoryFile) {
-    final VirtualFile contentRootForFile = projectFileIndex.getContentRootForFile(directoryFile);
+    VirtualFile contentRootForFile = projectFileIndex.getContentRootForFile(directoryFile);
     return directoryFile.equals(contentRootForFile);
   }
 
-  public static boolean isProjectHome(final PsiDirectory psiDirectory) {
+  public static boolean isProjectHome(PsiDirectory psiDirectory) {
     return psiDirectory.getVirtualFile().equals(psiDirectory.getProject().getBaseDir());
   }
 
   public static boolean isOutsideSourceRoot(@Nullable PsiFile psiFile) {
     if (psiFile == null) return false;
     if (psiFile instanceof PsiCodeFragment) return false;
-    final VirtualFile file = psiFile.getVirtualFile();
+    VirtualFile file = psiFile.getVirtualFile();
     if (file == null) return false;
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(psiFile.getProject()).getFileIndex();
+    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(psiFile.getProject()).getFileIndex();
     return !projectFileIndex.isInSource(file) && !projectFileIndex.isInLibraryClasses(file);
   }
 }

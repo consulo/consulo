@@ -38,7 +38,7 @@ public abstract class XDebuggerSettings<T> implements PersistentStateComponent<T
 
   private final String myId;
 
-  protected XDebuggerSettings(final @Nonnull @NonNls String id) {
+  protected XDebuggerSettings(@Nonnull @NonNls String id) {
     myId = id;
   }
 

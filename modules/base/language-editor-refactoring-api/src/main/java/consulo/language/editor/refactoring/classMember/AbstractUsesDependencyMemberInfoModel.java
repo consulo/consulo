@@ -40,7 +40,7 @@ public abstract class AbstractUsesDependencyMemberInfoModel<T extends Navigatabl
 
   @Override
   public int checkForProblems(@Nonnull M memberInfo) {
-    final int problem = super.checkForProblems(memberInfo);
+    int problem = super.checkForProblems(memberInfo);
     return doCheck(memberInfo, problem);
   }
 

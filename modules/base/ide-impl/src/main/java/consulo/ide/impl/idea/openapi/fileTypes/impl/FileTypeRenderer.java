@@ -57,7 +57,7 @@ public class FileTypeRenderer extends ColoredListCellRenderer<FileType> {
     }
   }
 
-  private boolean isDuplicated(final String description) {
+  private boolean isDuplicated(String description) {
     boolean found = false;
 
     for (FileType type : myFileTypeListProvider.getCurrentFileTypeList()) {

@@ -57,7 +57,7 @@ public class JDOMExternalizableStringList extends ArrayList<String> implements J
         callerClass = ReflectionUtil.findCallerClass(2);
         assert callerClass != null;
       }
-      final ClassLoader classLoader = callerClass.getClassLoader();
+      ClassLoader classLoader = callerClass.getClassLoader();
       for (Element listItemElement : listElement.getChildren(ATTR_ITEM)) {
         if (!ATTR_ITEM.equals(listItemElement.getName())) {
           throw new InvalidDataException(

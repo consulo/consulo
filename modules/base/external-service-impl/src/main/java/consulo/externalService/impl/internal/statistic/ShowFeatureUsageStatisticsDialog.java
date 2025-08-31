@@ -140,7 +140,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
         for (String id : registry.getFeatureIds()) {
             features.add(registry.getFeatureDescriptor(id));
         }
-        final TableView<FeatureDescriptor> table = new TableView<>(new ListTableModel<>(COLUMNS, features, 0));
+        TableView<FeatureDescriptor> table = new TableView<>(new ListTableModel<>(COLUMNS, features, 0));
 
         TableViewSpeedSearch.register(table, FeatureDescriptor::getDisplayName);
 
@@ -150,9 +150,9 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
         long uptime = System.currentTimeMillis() - app.getStartTime();
         long idleTime = app.getIdleTime();
 
-        final String uptimeS = FeatureStatisticsBundle.message("feature.statistics.application.uptime", Application.get().getName(), DateFormatUtil.formatDuration(uptime));
+        String uptimeS = FeatureStatisticsBundle.message("feature.statistics.application.uptime", Application.get().getName(), DateFormatUtil.formatDuration(uptime));
 
-        final String idleTimeS = FeatureStatisticsBundle.message("feature.statistics.application.idle.time", DateFormatUtil.formatDuration(idleTime));
+        String idleTimeS = FeatureStatisticsBundle.message("feature.statistics.application.idle.time", DateFormatUtil.formatDuration(idleTime));
 
         String labelText = uptimeS + ", " + idleTimeS;
         CompletionStatistics stats = ((FeatureUsageTrackerImpl) FeatureUsageTracker.getInstance()).getCompletionStatistics();
@@ -179,7 +179,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
 
         splitter.setFirstComponent(topPanel);
 
-        final JEditorPane browser = new JEditorPane(UIUtil.HTML_MIME, "");
+        JEditorPane browser = new JEditorPane(UIUtil.HTML_MIME, "");
         browser.setEditable(false);
         splitter.setSecondComponent(ScrollPaneFactory.createScrollPane(browser));
 
@@ -230,8 +230,8 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     }
 
     private static String getGroupName(FeatureDescriptor featureDescriptor) {
-        final ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
-        final GroupDescriptor groupDescriptor = registry.getGroupDescriptor(featureDescriptor.getGroupId());
+        ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
+        GroupDescriptor groupDescriptor = registry.getGroupDescriptor(featureDescriptor.getGroupId());
         return groupDescriptor != null ? groupDescriptor.getDisplayName() : "";
     }
 }

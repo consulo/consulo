@@ -26,7 +26,7 @@ public abstract class ByteBufferWrapper {
   protected final long myLength;
   protected volatile boolean myDirty;
 
-  protected ByteBufferWrapper(final File file, final long offset, final long length) {
+  protected ByteBufferWrapper(File file, long offset, long length) {
     myFile = file;
     myPosition = offset;
     myLength = length;
@@ -53,15 +53,15 @@ public abstract class ByteBufferWrapper {
     unmap();
   }
 
-  public static ByteBufferWrapper readWrite(final File file, final int offset, final int length) {
+  public static ByteBufferWrapper readWrite(File file, int offset, int length) {
     return new ReadWriteDirectBufferWrapper(file, offset, length);
   }
 
-  public static ByteBufferWrapper readWriteDirect(final File file, final long offset, final int length) {
+  public static ByteBufferWrapper readWriteDirect(File file, long offset, int length) {
     return new ReadWriteDirectBufferWrapper(file, offset, length);
   }
 
-  public static ByteBufferWrapper readOnly(final File file, final int offset) {
+  public static ByteBufferWrapper readOnly(File file, int offset) {
     return new ReadOnlyMappedBufferWrapper(file, offset);
   }
 

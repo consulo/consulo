@@ -115,7 +115,7 @@ public class VfsData {
     if (o == myDeadMarker) {
       throw reportDeadFileAccess(new VirtualFileImpl(id, segment, parent));
     }
-    final int nameId = segment.getNameId(id);
+    int nameId = segment.getNameId(id);
     if (nameId <= 0) {
       FSRecords.invalidateCaches();
       throw new AssertionError("nameId=" + nameId + "; data=" + o + "; parent=" + parent + "; parent.id=" + parent.getId() + "; db.parent=" + FSRecords.getParent(id));

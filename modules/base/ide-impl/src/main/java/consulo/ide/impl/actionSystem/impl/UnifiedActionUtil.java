@@ -69,10 +69,10 @@ public class UnifiedActionUtil {
                                          ActionManager actionManager,
                                          PresentationFactory menuItemPresentationFactory) {
     if (group == null) return;
-    final AnAction[] children = group.getChildren(null);
-    for (final AnAction action : children) {
-      final Presentation presentation = menuItemPresentationFactory.getPresentation(action);
-      final AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
+    AnAction[] children = group.getChildren(null);
+    for (AnAction action : children) {
+      Presentation presentation = menuItemPresentationFactory.getPresentation(action);
+      AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
       e.setInjectedContext(action.isInInjectedContext());
       action.update(e);
 

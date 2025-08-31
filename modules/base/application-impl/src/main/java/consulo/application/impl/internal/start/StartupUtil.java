@@ -156,7 +156,7 @@ public class StartupUtil {
     return ActivationResult.FAILED;
   }
 
-  public static void loadSystemLibraries(final Logger log) {
+  public static void loadSystemLibraries(Logger log) {
     // load JNA in own temp directory - to avoid collisions and work around no-exec /tmp
     File ideTempDir = new File(ContainerPathManager.get().getTempPath());
     if (!(ideTempDir.mkdirs() || ideTempDir.exists())) {

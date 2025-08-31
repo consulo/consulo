@@ -40,10 +40,10 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
   private static final String JAR_PROTOCOL = "jar:";
 
   @Nonnull
-  public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros) {
-    final PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
+  public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {
+    PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
     collector.substitute(root, true, false, filter);
-    final HashSet<String> result = new HashSet<>(collector.myMacroMap.keySet());
+    HashSet<String> result = new HashSet<>(collector.myMacroMap.keySet());
     result.removeAll(pathMacros.getSystemMacroNames());
     result.removeAll(pathMacros.getLegacyMacroNames());
     for (Macro macro : MacroManager.getInstance().getMacros()) {
@@ -66,7 +66,7 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
 
     myMatcher.reset(text);
     while (myMatcher.find()) {
-      final String macroName = myMatcher.group(1);
+      String macroName = myMatcher.group(1);
       myMacroMap.put(macroName, null);
     }
 
@@ -90,7 +90,7 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
 
     myMatcher.reset(text);
     if (myMatcher.find()) {
-      final String macroName = myMatcher.group(1);
+      String macroName = myMatcher.group(1);
       myMacroMap.put(macroName, null);
     }
 

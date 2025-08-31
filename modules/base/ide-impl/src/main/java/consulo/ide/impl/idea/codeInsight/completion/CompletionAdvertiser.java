@@ -30,16 +30,16 @@ import jakarta.annotation.Nonnull;
 public abstract class CompletionAdvertiser {
 
   @jakarta.annotation.Nullable
-  public abstract String advertise(@Nonnull CompletionParameters parameters, final ProcessingContext context);
+  public abstract String advertise(@Nonnull CompletionParameters parameters, ProcessingContext context);
 
   @jakarta.annotation.Nullable
-  public abstract String handleEmptyLookup(@Nonnull CompletionParameters parameters, final ProcessingContext context);
+  public abstract String handleEmptyLookup(@Nonnull CompletionParameters parameters, ProcessingContext context);
 
-  protected static String getShortcut(final String id) {
+  protected static String getShortcut(String id) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(id));
   }
 
-  protected static boolean shouldShowFeature(final CompletionParameters parameters, final String id) {
+  protected static boolean shouldShowFeature(CompletionParameters parameters, String id) {
     return FeatureUsageTracker.getInstance().isToBeAdvertisedInLookup(id, parameters.getPosition().getProject());
   }
 

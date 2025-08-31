@@ -43,22 +43,22 @@ import java.util.List;
 public class FileListPasteProvider implements FilePasteProvider {
   @Override
   public void performPaste(@Nonnull DataContext dataContext) {
-    final Project project = dataContext.getData(Project.KEY);
-    final IdeView ideView = dataContext.getData(IdeView.KEY);
+    Project project = dataContext.getData(Project.KEY);
+    IdeView ideView = dataContext.getData(IdeView.KEY);
     if (project == null || ideView == null) return;
 
     if (!FileCopyPasteUtil.isFileListFlavorAvailable()) return;
 
-    final Transferable contents = CopyPasteManager.getInstance().getContents();
+    Transferable contents = CopyPasteManager.getInstance().getContents();
     if (contents == null) return;
-    final List<File> fileList = FileCopyPasteUtil.getFileList(contents);
+    List<File> fileList = FileCopyPasteUtil.getFileList(contents);
     if (fileList == null) return;
 
-    final List<PsiElement> elements = new ArrayList<>();
+    List<PsiElement> elements = new ArrayList<>();
     for (File file : fileList) {
-      final VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+      VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
       if (vFile != null) {
-        final PsiManager instance = PsiManager.getInstance(project);
+        PsiManager instance = PsiManager.getInstance(project);
         PsiFileSystemItem item = vFile.isDirectory() ? instance.findDirectory(vFile) : instance.findFile(vFile);
         if (item != null) {
           elements.add(item);
@@ -67,9 +67,9 @@ public class FileListPasteProvider implements FilePasteProvider {
     }
 
     if (elements.size() > 0) {
-      final PsiDirectory dir = ideView.getOrChooseDirectory();
+      PsiDirectory dir = ideView.getOrChooseDirectory();
       if (dir != null) {
-        final boolean move = LinuxDragAndDropSupport.isMoveOperation(contents);
+        boolean move = LinuxDragAndDropSupport.isMoveOperation(contents);
         if (move) {
           new MoveFilesOrDirectoriesHandler().doMove(PsiUtilCore.toPsiElementArray(elements), dir);
         }

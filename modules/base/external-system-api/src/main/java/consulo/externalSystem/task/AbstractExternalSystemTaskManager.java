@@ -35,7 +35,7 @@ public abstract class AbstractExternalSystemTaskManager<S extends ExternalSystem
                                     @Nonnull List<String> taskNames,
                                     @Nonnull String projectPath,
                                     @Nullable S settings,
-                                    @Nonnull final List<String> vmOptions,
+                                    @Nonnull List<String> vmOptions,
                                     @Nonnull List<String> scriptParameters,
                                     @Nullable String debuggerSetup,
                                     @Nonnull ExternalSystemTaskNotificationListener listener) throws ExternalSystemException;

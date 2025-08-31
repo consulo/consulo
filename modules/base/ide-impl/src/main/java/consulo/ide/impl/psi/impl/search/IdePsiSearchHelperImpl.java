@@ -62,9 +62,9 @@ public class IdePsiSearchHelperImpl extends PsiSearchHelperImpl {
   @Override
   public boolean processFilesConcurrentlyDespiteWriteActions(@Nonnull Project project,
                                                              @Nonnull List<? extends VirtualFile> files,
-                                                             @Nonnull final ProgressIndicator progress,
+                                                             @Nonnull ProgressIndicator progress,
                                                              @Nonnull AtomicBoolean stopped,
-                                                             @Nonnull final Predicate<? super VirtualFile> localProcessor) {
+                                                             @Nonnull Predicate<? super VirtualFile> localProcessor) {
     ApplicationEx app = (ApplicationEx)project.getApplication();
     if (!app.isDispatchThread()) {
       CoreProgressManager.assertUnderProgress(progress);

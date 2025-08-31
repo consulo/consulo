@@ -137,7 +137,7 @@ public class IdeaWideProxySelector extends ProxySelector {
             return;
         }
 
-        final InetSocketAddress isa = sa instanceof InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
+        InetSocketAddress isa = sa instanceof InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
         if (myHttpConfigurable.isHttpProxyEnabled() && isa != null
             && Comparing.equal(myHttpConfigurable.getProxyHost(), isa.getHostName())) {
             LOG.debug("connection failed message passed to http configurable");

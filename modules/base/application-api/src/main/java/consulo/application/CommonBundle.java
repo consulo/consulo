@@ -54,10 +54,10 @@ public class CommonBundle extends BundleBase {
     return bundle;
   }
 
-  public static String messageOrDefault(@Nullable final ResourceBundle bundle,
-                                        final String key,
-                                        @Nullable final String defaultValue,
-                                        final Object... params) {
+  public static String messageOrDefault(@Nullable ResourceBundle bundle,
+                                        String key,
+                                        @Nullable String defaultValue,
+                                        Object... params) {
     return BundleBase.messageOrDefault(bundle, key, defaultValue, params);
   }
 

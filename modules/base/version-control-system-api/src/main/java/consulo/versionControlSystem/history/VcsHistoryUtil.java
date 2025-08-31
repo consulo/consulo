@@ -85,7 +85,7 @@ public class VcsHistoryUtil {
    * @throws VcsException
    * @throws IOException
    */
-  public static void showDiff(@Nonnull final Project project, @Nonnull FilePath path,
+  public static void showDiff(@Nonnull Project project, @Nonnull FilePath path,
                               @Nonnull VcsFileRevision revision1, @Nonnull VcsFileRevision revision2,
                               @Nonnull String title1, @Nonnull String title2) throws VcsException, IOException {
     byte[] content1 = loadRevisionContent(revision1);
@@ -105,7 +105,7 @@ public class VcsHistoryUtil {
     DiffContent diffContent1 = createContent(project, content1, revision1, path);
     DiffContent diffContent2 = createContent(project, content2, revision2, path);
 
-    final DiffRequest request = new SimpleDiffRequest(title, diffContent1, diffContent2, title1, title2);
+    DiffRequest request = new SimpleDiffRequest(title, diffContent1, diffContent2, title1, title2);
 
     diffContent1.putUserData(VcsDiffDataKeys.REVISION_INFO, getRevisionInfo(revision1));
     diffContent2.putUserData(VcsDiffDataKeys.REVISION_INFO, getRevisionInfo(revision2));

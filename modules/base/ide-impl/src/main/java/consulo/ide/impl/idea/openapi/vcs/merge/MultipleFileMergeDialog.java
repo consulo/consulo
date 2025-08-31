@@ -83,8 +83,8 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     public MultipleFileMergeDialog(
         @Nullable Project project,
-        @Nonnull final List<VirtualFile> files,
-        @Nonnull final MergeProvider provider,
+        @Nonnull List<VirtualFile> files,
+        @Nonnull MergeProvider provider,
         @Nonnull MergeDialogCustomizer mergeDialogCustomizer
     ) {
         super(project);
@@ -96,7 +96,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         myProvider = provider;
         myMergeDialogCustomizer = mergeDialogCustomizer;
 
-        final String description = myMergeDialogCustomizer.getMultipleFileMergeDescription(files);
+        String description = myMergeDialogCustomizer.getMultipleFileMergeDescription(files);
         if (!StringUtil.isEmptyOrSpaces(description)) {
             myDescriptionLabel.setText(description);
         }
@@ -104,18 +104,18 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         List<ColumnInfo> columns = new ArrayList<>();
         columns.add(new ColumnInfo<VirtualFile, VirtualFile>(VcsLocalize.multipleFileMergeColumnName().get()) {
             @Override
-            public VirtualFile valueOf(final VirtualFile virtualFile) {
+            public VirtualFile valueOf(VirtualFile virtualFile) {
                 return virtualFile;
             }
 
             @Override
-            public TableCellRenderer getRenderer(final VirtualFile virtualFile) {
+            public TableCellRenderer getRenderer(VirtualFile virtualFile) {
                 return myVirtualFileRenderer;
             }
         });
         columns.add(new ColumnInfo<VirtualFile, String>(VcsLocalize.multipleFileMergeColumnType().get()) {
             @Override
-            public String valueOf(final VirtualFile virtualFile) {
+            public String valueOf(VirtualFile virtualFile) {
                 return myBinaryFiles.contains(virtualFile)
                     ? VcsLocalize.multipleFileMergeTypeBinary().get()
                     : VcsLocalize.multipleFileMergeTypeText().get();
@@ -209,14 +209,14 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     }
 
     @RequiredUIAccess
-    private void acceptRevision(final boolean isCurrent) {
+    private void acceptRevision(boolean isCurrent) {
         FileDocumentManager.getInstance().saveAllDocuments();
-        final Collection<VirtualFile> files = myTable.getSelection();
+        Collection<VirtualFile> files = myTable.getSelection();
         if (!beforeResolve(files)) {
             return;
         }
 
-        for (final VirtualFile file : files) {
+        for (VirtualFile file : files) {
             Exception ex = CommandProcessor.getInstance().<Exception>newCommand()
                 .project(myProject)
                 .name(
@@ -292,8 +292,8 @@ public class MultipleFileMergeDialog extends DialogWrapper {
             return;
         }
 
-        for (final VirtualFile file : files) {
-            final MergeData mergeData;
+        for (VirtualFile file : files) {
+            MergeData mergeData;
             try {
                 mergeData = myProvider.loadRevisions(file);
             }
@@ -312,7 +312,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
             String rightTitle = myMergeDialogCustomizer.getRightPanelTitle(file, mergeData.LAST_REVISION_NUMBER);
             String title = myMergeDialogCustomizer.getMergeWindowTitle(file);
 
-            final List<byte[]> byteContents = ContainerUtil.list(mergeData.CURRENT, mergeData.ORIGINAL, mergeData.LAST);
+            List<byte[]> byteContents = ContainerUtil.list(mergeData.CURRENT, mergeData.ORIGINAL, mergeData.LAST);
             List<String> contentTitles = ContainerUtil.list(leftTitle, baseTitle, rightTitle);
 
             Consumer<MergeResult> callback = result -> {
@@ -389,7 +389,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
             VirtualFile vf = (VirtualFile)value;
             setIcon(VirtualFilePresentation.getIcon(vf));
             append(vf.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-            final VirtualFile parent = vf.getParent();
+            VirtualFile parent = vf.getParent();
             if (parent != null) {
                 append(" (" + FileUtil.toSystemDependentName(parent.getPresentableUrl()) + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
             }

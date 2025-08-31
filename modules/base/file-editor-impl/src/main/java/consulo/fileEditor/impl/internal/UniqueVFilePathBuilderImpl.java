@@ -72,9 +72,9 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
   private static final UniqueNameBuilder<VirtualFile> ourEmptyBuilder = new UniqueNameBuilder<>(null, null, -1);
 
   private static String getUniqueVirtualFilePath(
-    final Project project,
+    Project project,
     VirtualFile file,
-    final boolean skipNonOpenedFiles,
+    boolean skipNonOpenedFiles,
     SearchScope scope
   ) {
     Key<CachedValue<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>> key =
@@ -101,11 +101,11 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
       valueMap = Maps.cacheOrGet(scope2ValueMap, scope, ContainerUtil.createConcurrentSoftValueMap());
     }
 
-    final String fileName = file.getName();
+    String fileName = file.getName();
     UniqueNameBuilder<VirtualFile> uniqueNameBuilderForShortName = valueMap.get(fileName);
 
     if (uniqueNameBuilderForShortName == null) {
-      final UniqueNameBuilder<VirtualFile> builder = filesWithTheSameName(fileName, project, skipNonOpenedFiles, scope);
+      UniqueNameBuilder<VirtualFile> builder = filesWithTheSameName(fileName, project, skipNonOpenedFiles, scope);
       valueMap.put(fileName, builder != null ? builder : ourEmptyBuilder);
       uniqueNameBuilderForShortName = builder;
     }

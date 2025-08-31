@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
  */
 public class XInspectAction extends XDebuggerTreeActionBase {
   @Override
-  protected void perform(XValueNodeImpl node, @Nonnull final String nodeName, AnActionEvent e) {
+  protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
     XDebuggerTree tree = node.getTree();
     XValue value = node.getValueContainer();
     XInspectDialog dialog = new XInspectDialog(tree.getProject(), tree.getEditorsProvider(), tree.getSourcePosition(), nodeName, value,

@@ -235,7 +235,7 @@ public class CellBrowser extends AbstractCellTree implements ProvidesResize, Req
      */
     private final Element tmpElem = Document.get().createDivElement();
 
-    public BrowserCellList(final Cell<T> cell, int level, ProvidesKey<T> keyProvider) {
+    public BrowserCellList(Cell<T> cell, int level, ProvidesKey<T> keyProvider) {
       super(cell, cellListResources, keyProvider);
       this.level = level;
     }
@@ -468,7 +468,7 @@ public class CellBrowser extends AbstractCellTree implements ProvidesResize, Req
      * @param display the display associated with the node
      * @param widget the widget that wraps the display
      */
-    public TreeNodeImpl(final NodeInfo<C> nodeInfo, Object value, final BrowserCellList<C> display,
+    public TreeNodeImpl(NodeInfo<C> nodeInfo, Object value, final BrowserCellList<C> display,
                         Widget widget) {
       this.display = display;
       this.nodeInfo = nodeInfo;
@@ -1158,17 +1158,17 @@ public class CellBrowser extends AbstractCellTree implements ProvidesResize, Req
    * @param nodeInfo the info about the node
    * @param value the value of the open node
    */
-  private <C> TreeNode appendTreeNode(final NodeInfo<C> nodeInfo, Object value) {
+  private <C> TreeNode appendTreeNode(NodeInfo<C> nodeInfo, Object value) {
     // Create the list view.
-    final int level = treeNodes.size();
-    final BrowserCellList<C> view = createDisplay(nodeInfo, level);
+    int level = treeNodes.size();
+    BrowserCellList<C> view = createDisplay(nodeInfo, level);
 
     // Create a pager and wrap the components in a scrollable container. Set the
     // tabIndex to -1 so the user can tab between lists without going through
     // the scrollable.
     ScrollPanel scrollable = new ScrollPanel();
     scrollable.getElement().setTabIndex(-1);
-    final Widget pager = createPager(view);
+    Widget pager = createPager(view);
     if (pager != null) {
       FlowPanel flowPanel = new FlowPanel();
       flowPanel.add(view);

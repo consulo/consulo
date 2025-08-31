@@ -140,7 +140,7 @@ public class LightTreeUtil {
     if (node == null) return null;
     node = tree.getParent(node);
     while (node != null) {
-      final IElementType type = node.getTokenType();
+      IElementType type = node.getTokenType();
       if (types.contains(type)) return node;
       if (stopAt.contains(type)) return null;
       node = tree.getParent(node);
@@ -149,7 +149,7 @@ public class LightTreeUtil {
   }
 
   @Nullable
-  public static LighterASTNode findLeafElementAt(@Nonnull LighterAST tree, final int offset) {
+  public static LighterASTNode findLeafElementAt(@Nonnull LighterAST tree, int offset) {
     LighterASTNode eachNode = tree.getRoot();
     if (!containsOffset(eachNode, offset)) return null;
 
@@ -162,7 +162,7 @@ public class LightTreeUtil {
     return null;
   }
 
-  private static LighterASTNode findChildAtOffset(final int offset, List<LighterASTNode> children) {
+  private static LighterASTNode findChildAtOffset(int offset, List<LighterASTNode> children) {
     return ContainerUtil.find(children, node -> containsOffset(node, offset));
   }
 

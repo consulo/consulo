@@ -58,7 +58,7 @@ public class FileTypeAssocTable<T> {
       myExtensionMappings.put(((ExtensionFileNameMatcherImpl)matcher).getExtension(), type);
     }
     else if (matcher instanceof ExactFileNameMatcherImpl) {
-      final ExactFileNameMatcherImpl exactFileNameMatcher = (ExactFileNameMatcherImpl)matcher;
+      ExactFileNameMatcherImpl exactFileNameMatcher = (ExactFileNameMatcherImpl)matcher;
 
       Map<CharSequence, T> mapToUse = exactFileNameMatcher.isIgnoreCase() ? myExactFileNameAnyCaseMappings : myExactFileNameMappings;
       mapToUse.put(exactFileNameMatcher.getFileName(), type);
@@ -79,10 +79,10 @@ public class FileTypeAssocTable<T> {
     }
 
     if (matcher instanceof ExactFileNameMatcherImpl) {
-      final ExactFileNameMatcherImpl exactFileNameMatcher = (ExactFileNameMatcherImpl)matcher;
+      ExactFileNameMatcherImpl exactFileNameMatcher = (ExactFileNameMatcherImpl)matcher;
       String fileName = exactFileNameMatcher.getFileName();
 
-      final Map<CharSequence, T> mapToUse = exactFileNameMatcher.isIgnoreCase() ? myExactFileNameAnyCaseMappings : myExactFileNameMappings;
+      Map<CharSequence, T> mapToUse = exactFileNameMatcher.isIgnoreCase() ? myExactFileNameAnyCaseMappings : myExactFileNameMappings;
       if (mapToUse.get(fileName) == type) {
         mapToUse.remove(fileName);
         return true;
@@ -120,7 +120,7 @@ public class FileTypeAssocTable<T> {
 
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < myMatchingMappings.size(); i++) {
-      final Pair<FileNameMatcher, T> mapping = myMatchingMappings.get(i);
+      Pair<FileNameMatcher, T> mapping = myMatchingMappings.get(i);
       if (mapping.getFirst().acceptsCharSequence(fileName)) return mapping.getSecond();
     }
 
@@ -134,7 +134,7 @@ public class FileTypeAssocTable<T> {
     }
 
     if (matcher instanceof ExactFileNameMatcherImpl) {
-      final ExactFileNameMatcherImpl exactFileNameMatcher = (ExactFileNameMatcherImpl)matcher;
+      ExactFileNameMatcherImpl exactFileNameMatcher = (ExactFileNameMatcherImpl)matcher;
 
       Map<CharSequence, T> mapToUse = exactFileNameMatcher.isIgnoreCase() ? myExactFileNameAnyCaseMappings : myExactFileNameMappings;
       return mapToUse.get(exactFileNameMatcher.getFileName());

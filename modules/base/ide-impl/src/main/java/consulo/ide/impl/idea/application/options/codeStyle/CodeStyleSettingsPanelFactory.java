@@ -19,5 +19,5 @@ package consulo.ide.impl.idea.application.options.codeStyle;
 import consulo.language.codeStyle.CodeStyleScheme;
 
 public abstract class CodeStyleSettingsPanelFactory {
-  public abstract NewCodeStyleSettingsPanel createPanel(final CodeStyleScheme scheme);
+  public abstract NewCodeStyleSettingsPanel createPanel(CodeStyleScheme scheme);
 }

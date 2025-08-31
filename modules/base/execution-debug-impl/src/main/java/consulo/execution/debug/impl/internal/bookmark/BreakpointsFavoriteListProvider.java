@@ -63,7 +63,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
     private Set<XBreakpointGroupingRule> myRulesEnabled = new TreeSet<XBreakpointGroupingRule>(new Comparator<XBreakpointGroupingRule>() {
         @Override
         public int compare(XBreakpointGroupingRule o1, XBreakpointGroupingRule o2) {
-            final int res = o2.getPriority() - o1.getPriority();
+            int res = o2.getPriority() - o1.getPriority();
             return res != 0 ? res : (o1.getId().compareTo(o2.getId()));
         }
     });
@@ -76,7 +76,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         myTree = new BreakpointsSimpleTree(myProject, myTreeController);
         myTreeController.setTreeView(myTree);
         updateChildren();
-        for (final BreakpointPanelProvider provider : myBreakpointPanelProviders) {
+        for (BreakpointPanelProvider provider : myBreakpointPanelProviders) {
             provider.addListener(this, myProject, myProject);
             provider.createBreakpointsGroupingRules(myRulesAvailable);
         }
@@ -104,7 +104,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         }
         myChildren.clear();
         List<BreakpointItem> items = new ArrayList<BreakpointItem>();
-        for (final BreakpointPanelProvider provider : myBreakpointPanelProviders) {
+        for (BreakpointPanelProvider provider : myBreakpointPanelProviders) {
             provider.provideBreakpointItems(myProject, items);
         }
         getEnabledGroupingRules(myRulesEnabled);
@@ -123,7 +123,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         FavoritesManager.getInstance(myProject).fireListeners(getListName(myProject));
     }
 
-    private void replicate(DefaultMutableTreeNode source, AbstractTreeNode destination, final List<AbstractTreeNode<Object>> destinationChildren) {
+    private void replicate(DefaultMutableTreeNode source, AbstractTreeNode destination, List<AbstractTreeNode<Object>> destinationChildren) {
         final ArrayList<AbstractTreeNode<Object>> copyChildren = new ArrayList<AbstractTreeNode<Object>>();
         AbstractTreeNode<Object> copy = new AbstractTreeNode<Object>(myProject, source.getUserObject()) {
             @RequiredReadAction
@@ -139,9 +139,9 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         };
 
         for (int i = 0; i < source.getChildCount(); i++) {
-            final TreeNode treeNode = source.getChildAt(i);
+            TreeNode treeNode = source.getChildAt(i);
             if (treeNode instanceof DefaultMutableTreeNode) {
-                final DefaultMutableTreeNode sourceChild = (DefaultMutableTreeNode) treeNode;
+                DefaultMutableTreeNode sourceChild = (DefaultMutableTreeNode) treeNode;
                 replicate(sourceChild, copy, copyChildren);
             }
         }

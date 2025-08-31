@@ -60,15 +60,15 @@ public abstract class InjectedLanguageBlockBuilder {
     final Ref<TextRange> injectedRangeInsideHost = new Ref<TextRange>();
     final Ref<Integer> prefixLength = new Ref<Integer>();
     final Ref<Integer> suffixLength = new Ref<Integer>();
-    final Ref<ASTNode> injectionHostToUse = new Ref<ASTNode>(injectionHost);
+    Ref<ASTNode> injectionHostToUse = new Ref<ASTNode>(injectionHost);
 
-    final PsiLanguageInjectionHost.InjectedPsiVisitor injectedPsiVisitor = new PsiLanguageInjectionHost.InjectedPsiVisitor() {
+    PsiLanguageInjectionHost.InjectedPsiVisitor injectedPsiVisitor = new PsiLanguageInjectionHost.InjectedPsiVisitor() {
       @Override
-      public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places) {
+      public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
         if (places.size() != 1) {
           return;
         }
-        final PsiLanguageInjectionHost.Shred shred = places.get(0);
+        PsiLanguageInjectionHost.Shred shred = places.get(0);
         TextRange textRange = shred.getRangeInsideHost();
         PsiLanguageInjectionHost shredHost = shred.getHost();
         if (shredHost == null) {
@@ -106,22 +106,22 @@ public abstract class InjectedLanguageBlockBuilder {
       }
     };
 
-    final PsiElement injectionHostPsi = injectionHost.getPsi();
+    PsiElement injectionHostPsi = injectionHost.getPsi();
     PsiFile containingFile = injectionHostPsi.getContainingFile();
     InjectedLanguageManager.getInstance(containingFile.getProject()).enumerateEx(injectionHostPsi, containingFile, true, injectedPsiVisitor);
 
     if  (injectedFile[0] != null) {
-      final Language childLanguage = injectedFile[0].getLanguage();
-      final FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, injectionHost.getPsi());
+      Language childLanguage = injectedFile[0].getLanguage();
+      FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, injectionHost.getPsi());
 
       if (builder != null) {
-        final int startOffset = injectedRangeInsideHost.get().getStartOffset();
-        final int endOffset = injectedRangeInsideHost.get().getEndOffset();
+        int startOffset = injectedRangeInsideHost.get().getStartOffset();
+        int endOffset = injectedRangeInsideHost.get().getEndOffset();
         TextRange range = injectionHostToUse.get().getTextRange();
 
         int childOffset = range.getStartOffset();
         if (startOffset != 0) {
-          final ASTNode leaf = injectionHostToUse.get().findLeafElementAt(startOffset - 1);
+          ASTNode leaf = injectionHostToUse.get().findLeafElementAt(startOffset - 1);
           result.add(createBlockBeforeInjection(leaf, wrap, alignment, indent, new TextRange(childOffset, childOffset + startOffset)));
         }
 
@@ -129,7 +129,7 @@ public abstract class InjectedLanguageBlockBuilder {
                                         new TextRange(prefixLength.get(), injectedFile[0].getTextLength() - suffixLength.get()));
 
         if (endOffset != injectionHostToUse.get().getTextLength()) {
-          final ASTNode leaf = injectionHostToUse.get().findLeafElementAt(endOffset);
+          ASTNode leaf = injectionHostToUse.get().findLeafElementAt(endOffset);
           result.add(createBlockAfterInjection(leaf, wrap, alignment, indent, new TextRange(childOffset + endOffset, range.getEndOffset())));
         }
         return true;
@@ -138,8 +138,8 @@ public abstract class InjectedLanguageBlockBuilder {
     return false;
   }
 
-  public void addInjectedLanguageBlockWrapper(final List<Block> result, final ASTNode injectedNode,
-                                              final Indent indent, int offset, @Nullable TextRange range) {
+  public void addInjectedLanguageBlockWrapper(List<Block> result, ASTNode injectedNode,
+                                              Indent indent, int offset, @Nullable TextRange range) {
 
     //
     // Do not create a block for an empty range
@@ -151,11 +151,11 @@ public abstract class InjectedLanguageBlockBuilder {
       }
     }
     
-    final PsiElement childPsi = injectedNode.getPsi();
-    final Language childLanguage = childPsi.getLanguage();
-    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, childPsi);
+    PsiElement childPsi = injectedNode.getPsi();
+    Language childLanguage = childPsi.getLanguage();
+    FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, childPsi);
     LOG.assertTrue(builder != null);
-    final FormattingModel childModel = builder.createModel(FormattingContext.create(childPsi, getSettings()));
+    FormattingModel childModel = builder.createModel(FormattingContext.create(childPsi, getSettings()));
     Block original = childModel.getRootBlock();
 
     if ((original.isLeaf() && injectedNode.getText().trim().length() > 0) || original.getSubBlocks().size() != 0) {

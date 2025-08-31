@@ -47,7 +47,7 @@ public interface RollbackEnvironment extends VcsProviderMarker {
    * @param listener
    * @return list of errors occurred, or an empty list if no errors occurred.
    */
-  void rollbackChanges(List<Change> changes, final List<VcsException> vcsExceptions, @Nonnull final RollbackProgressListener listener);
+  void rollbackChanges(List<Change> changes, List<VcsException> vcsExceptions, @Nonnull RollbackProgressListener listener);
 
   /**
    * Rolls back the deletion of files which have been deleted locally but not scheduled for deletion
@@ -59,8 +59,8 @@ public interface RollbackEnvironment extends VcsProviderMarker {
    * @param exceptions
    * @param listener @return list of errors occurred, or an empty list if no errors occurred.
    */
-  void rollbackMissingFileDeletion(List<FilePath> files, final List<VcsException> exceptions,
-                                                 final RollbackProgressListener listener);
+  void rollbackMissingFileDeletion(List<FilePath> files, List<VcsException> exceptions,
+                                                 RollbackProgressListener listener);
 
   /**
    * Rolls back the modifications of files which have been made writable but not properly checked out from VCS.
@@ -71,8 +71,8 @@ public interface RollbackEnvironment extends VcsProviderMarker {
    * @param exceptions
    * @param listener @return list of errors occurred, or an empty list if no errors occurred.
    */
-  void rollbackModifiedWithoutCheckout(List<VirtualFile> files, final List<VcsException> exceptions,
-                                                     final RollbackProgressListener listener);
+  void rollbackModifiedWithoutCheckout(List<VirtualFile> files, List<VcsException> exceptions,
+                                                     RollbackProgressListener listener);
 
   /**
    * This is called when the user performs an undo that returns a file to a state in which it was

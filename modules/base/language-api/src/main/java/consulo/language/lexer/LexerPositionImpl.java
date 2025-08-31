@@ -19,7 +19,7 @@ class LexerPositionImpl implements LexerPosition {
     private final int myOffset;
     private final int myState;
 
-    public LexerPositionImpl(final int offset, final int state) {
+    public LexerPositionImpl(int offset, int state) {
         myOffset = offset;
         myState = state;
     }

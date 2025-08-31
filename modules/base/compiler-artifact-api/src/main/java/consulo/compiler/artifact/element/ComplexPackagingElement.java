@@ -32,7 +32,7 @@ public abstract class ComplexPackagingElement<S> extends PackagingElement<S> {
   public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
                                                      @Nonnull PackagingElementResolvingContext resolvingContext,
                                                      @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
-    final List<? extends PackagingElement<?>> substitution = getSubstitution(resolvingContext, artifactType);
+    List<? extends PackagingElement<?>> substitution = getSubstitution(resolvingContext, artifactType);
     if (substitution == null) return;
 
     for (PackagingElement<?> element : substitution) {

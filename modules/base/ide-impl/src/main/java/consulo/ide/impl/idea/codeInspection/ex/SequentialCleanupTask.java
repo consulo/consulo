@@ -59,15 +59,15 @@ class SequentialCleanupTask implements SequentialTask {
 
   @Override
   public boolean iteration() {
-    final ProgressIndicator indicator = myProgressTask.getIndicator();
+    ProgressIndicator indicator = myProgressTask.getIndicator();
     if (indicator != null) {
       indicator.setFraction((double) myCount++/myResults.size());
     }
-    final PsiFile file = myFileIterator.next();
-    final List<HighlightInfo> infos = myResults.get(file);
+    PsiFile file = myFileIterator.next();
+    List<HighlightInfo> infos = myResults.get(file);
     Collections.reverse(infos); //sort bottom - top
     for (HighlightInfo info : infos) {
-      for (final Pair<IntentionActionDescriptor, TextRange> actionRange : ((HighlightInfoImpl)info).quickFixActionRanges) {
+      for (Pair<IntentionActionDescriptor, TextRange> actionRange : ((HighlightInfoImpl)info).quickFixActionRanges) {
         try {
           actionRange.getFirst().getAction().invoke(myProject, null, file);
         }

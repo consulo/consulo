@@ -98,14 +98,14 @@ public abstract class PullUpDialogBase<Storage extends AbstractMemberInfoStorage
     gbConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gbConstraints.fill = GridBagConstraints.BOTH;
     gbConstraints.anchor = GridBagConstraints.WEST;
-    final Label classComboLabel = Label.create();
+    Label classComboLabel = Label.create();
     panel.add(TargetAWT.to(classComboLabel), gbConstraints);
 
     myClassCombo = new JComboBox(mySuperClasses.toArray());
     initClassCombo(myClassCombo);
     classComboLabel.setText(RefactoringLocalize.pullUpMembersTo(UsageViewUtil.getLongName(myClass)));
     classComboLabel.setTarget(TargetAWT.wrap(myClassCombo));
-    final Class preselection = getPreselection();
+    Class preselection = getPreselection();
     int indexToSelect = 0;
     if (preselection != null) {
       indexToSelect = mySuperClasses.indexOf(preselection);
@@ -128,7 +128,7 @@ public abstract class PullUpDialogBase<Storage extends AbstractMemberInfoStorage
   protected abstract Class getPreselection();
 
   protected void updateMemberInfo() {
-    final Class targetClass = (Class) myClassCombo.getSelectedItem();
+    Class targetClass = (Class) myClassCombo.getSelectedItem();
     myMemberInfos = myMemberInfoStorage.getIntermediateMemberInfosList(targetClass);
   }
 

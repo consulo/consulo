@@ -66,7 +66,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
             Disposer.register(content, myShadow);
         }
 
-        public ForContent(@Nonnull Content content, final AnAction template) {
+        public ForContent(@Nonnull Content content, AnAction template) {
             super(content.getManager(), template);
             myContent = content;
             Disposer.register(content, myShadow);

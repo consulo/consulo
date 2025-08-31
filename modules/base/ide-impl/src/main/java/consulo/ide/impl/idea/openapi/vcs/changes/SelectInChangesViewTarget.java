@@ -40,7 +40,7 @@ public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
     private final Project myProject;
 
     @Inject
-    public SelectInChangesViewTarget(final Project project) {
+    public SelectInChangesViewTarget(Project project) {
         myProject = project;
     }
 
@@ -51,15 +51,15 @@ public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
     }
 
     @Override
-    public boolean canSelect(final SelectInContext context) {
-        final VirtualFile file = context.getVirtualFile();
+    public boolean canSelect(SelectInContext context) {
+        VirtualFile file = context.getVirtualFile();
         FileStatus fileStatus = FileStatusManager.getInstance(myProject).getStatus(file);
         return ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length != 0 &&
             !fileStatus.equals(FileStatus.NOT_CHANGED);
     }
 
     @Override
-    public void selectIn(final SelectInContext context, final boolean requestFocus) {
+    public void selectIn(SelectInContext context, boolean requestFocus) {
         final VirtualFile file = context.getVirtualFile();
         Runnable runnable = new Runnable() {
             @Override

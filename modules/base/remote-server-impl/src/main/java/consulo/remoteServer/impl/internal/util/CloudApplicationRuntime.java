@@ -57,7 +57,7 @@ public abstract class CloudApplicationRuntime extends DeploymentRuntime {
 
     protected abstract class LoggingTask {
 
-        public void perform(final Project project, final Runnable onDone) {
+        public void perform(final Project project, Runnable onDone) {
             getTaskExecutor().submit(() -> {
                 try {
                     getAgentTaskExecutor().execute(() -> {

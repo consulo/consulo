@@ -260,7 +260,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   public boolean processAllKeys(@Nonnull Predicate<? super Key> processor,
                                 @Nonnull SearchScope scope,
                                 @Nullable IdFilter idFilter) throws StorageException {
-    final Lock lock = getReadLock();
+    Lock lock = getReadLock();
     lock.lock();
     try {
       return ((VfsAwareIndexStorage<Key, Value>)myStorage).processKeys(processor, scope, idFilter);
@@ -296,7 +296,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
     // in future we will get rid of forward index for SingleEntryFileBasedIndexExtension
     if (myExtension instanceof SingleEntryFileBasedIndexExtension) {
       Key key = (Key)(Object)fileId;
-      final Map<Key, Value>[] result = new Map[]{Collections.emptyMap()};
+      Map<Key, Value>[] result = new Map[]{Collections.emptyMap()};
       ValueContainer<Value> container = getData(key);
       container.forEach((id, value) -> {
         result[0] = Collections.singletonMap(key, value);

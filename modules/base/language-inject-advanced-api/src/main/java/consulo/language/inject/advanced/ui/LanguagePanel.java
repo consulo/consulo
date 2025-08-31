@@ -58,12 +58,12 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
 
             @Override
             protected void customizeCellRenderer(@Nonnull JList<? extends String> jList, String s, int i, boolean b, boolean b1) {
-                final SimpleTextAttributes attributes = IDs.contains(s) ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.ERROR_ATTRIBUTES;
+                SimpleTextAttributes attributes = IDs.contains(s) ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.ERROR_ATTRIBUTES;
                 append(s, attributes);
 
-                final Language language = InjectedLanguage.findLanguageById(s);
+                Language language = InjectedLanguage.findLanguageById(s);
                 if (language != null) {
-                    final FileType fileType = language.getAssociatedFileType();
+                    FileType fileType = language.getAssociatedFileType();
                     if (fileType != null) {
                         setIcon(fileType.getIcon());
                         append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
@@ -98,22 +98,22 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
     }
 
     private void updateHighlighters() {
-        final EditorEx editor = ((EditorEx) myPrefix.getEditor());
+        EditorEx editor = ((EditorEx) myPrefix.getEditor());
         if (editor == null) {
             return;
         }
 
-        final EditorEx editor2 = ((EditorEx) mySuffix.getEditor());
+        EditorEx editor2 = ((EditorEx) mySuffix.getEditor());
         assert editor2 != null;
 
-        final Language language = InjectedLanguage.findLanguageById(getLanguage());
+        Language language = InjectedLanguage.findLanguageById(getLanguage());
         if (language == null) {
             editor.setHighlighter(new LexerEditorHighlighter(new DefaultSyntaxHighlighter(), editor.getColorsScheme()));
             editor2.setHighlighter(new LexerEditorHighlighter(new DefaultSyntaxHighlighter(), editor.getColorsScheme()));
         }
         else {
-            final SyntaxHighlighter s1 = SyntaxHighlighterFactory.getSyntaxHighlighter(language, getProject(), null);
-            final SyntaxHighlighter s2 = SyntaxHighlighterFactory.getSyntaxHighlighter(language, getProject(), null);
+            SyntaxHighlighter s1 = SyntaxHighlighterFactory.getSyntaxHighlighter(language, getProject(), null);
+            SyntaxHighlighter s2 = SyntaxHighlighterFactory.getSyntaxHighlighter(language, getProject(), null);
             editor.setHighlighter(new LexerEditorHighlighter(s1, editor.getColorsScheme()));
             editor2.setHighlighter(new LexerEditorHighlighter(s2, editor2.getColorsScheme()));
         }
@@ -125,7 +125,7 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection> {
     }
 
     public void setLanguage(String id) {
-        final DefaultComboBoxModel model = (DefaultComboBoxModel) myLanguage.getModel();
+        DefaultComboBoxModel model = (DefaultComboBoxModel) myLanguage.getModel();
         if (model.getIndexOf(id) == -1 && id.length() > 0) {
             model.insertElementAt(id, 0);
         }

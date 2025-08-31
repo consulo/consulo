@@ -49,7 +49,7 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
   }
 
   @Nonnull
-  public static JBColor getBackgroundColor(@Nonnull final Color baseRootColor) {
+  public static JBColor getBackgroundColor(@Nonnull Color baseRootColor) {
     return new JBColor(() -> ColorUtil.mix(baseRootColor, UIUtil.getTableBackground(), 0.75));
   }
 

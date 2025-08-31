@@ -35,7 +35,7 @@ public class SelectInEditorHandler {
     });
   }
 
-  public static void selectInEditor(final JComponent component) {
+  public static void selectInEditor(JComponent component) {
     OpenSourceUtil.openSourcesFrom(DataManager.getInstance().getDataContext(component), false);
   }
 

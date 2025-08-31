@@ -30,7 +30,7 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
     return new ComponentTreeEventDispatcher<>(root, listenerClass);
   }
 
-  private ComponentTreeEventDispatcher(@Nullable final Component root, @Nonnull Class<T> listenerClass) {
+  private ComponentTreeEventDispatcher(@Nullable Component root, @Nonnull Class<T> listenerClass) {
     myListenerClass = listenerClass;
     myMulticaster = EventDispatcher.createMulticaster(listenerClass, null, () -> {
       JBTreeTraverser<Component> traverser = uiTraverser(root);

@@ -30,7 +30,7 @@ public abstract class RecursiveTreeElementVisitor extends TreeElementVisitor {
     if(!visitNode(composite)) return;
     TreeElement child = composite.getFirstChildNode();
     while(child != null) {
-      final TreeElement treeNext = child.getTreeNext();
+      TreeElement treeNext = child.getTreeNext();
       child.acceptTree(this);
       child = treeNext;
     }

@@ -73,7 +73,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
     private boolean myFullScreen;
 
-    public IdeRootPane(ActionManager actionManager, DataManager dataManager, Application application, final DesktopIdeFrameImpl frame) {
+    public IdeRootPane(ActionManager actionManager, DataManager dataManager, Application application, DesktopIdeFrameImpl frame) {
         myActionManager = actionManager;
         myFrame = frame;
 
@@ -119,7 +119,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     }
 
     @Override
-    public void setGlassPane(final Component glass) {
+    public void setGlassPane(Component glass) {
         if (myGlassPaneInitialized) {
             throw new IllegalStateException("Setting of glass pane for IdeFrame is prohibited");
         }
@@ -156,8 +156,8 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
      * If {@code toolWindowsPane} is {@code null} then the method just removes
      * the current tool windows pane.
      */
-    public final void setToolWindowsPane(@Nullable final ToolWindowPanel toolWindowsPane) {
-        final JComponent contentPane = (JComponent) getContentPane();
+    public final void setToolWindowsPane(@Nullable ToolWindowPanel toolWindowsPane) {
+        JComponent contentPane = (JComponent) getContentPane();
         if (myToolWindowsPane != null) {
             contentPane.remove((Component) myToolWindowsPane);
         }
@@ -228,7 +228,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
     private JComponent createToolbar() {
         ActionGroup group = (ActionGroup) CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_TOOLBAR);
-        final ActionToolbar toolBar = myActionManager.createActionToolbar(
+        ActionToolbar toolBar = myActionManager.createActionToolbar(
             ActionPlaces.MAIN_TOOLBAR,
             group,
             true
@@ -268,7 +268,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
         myStatusBar.setVisible(UISettings.getInstance().getShowStatusBar() && !UISettings.getInstance().getPresentationMode());
     }
 
-    public void installNorthComponents(final Project project, TitlelessDecorator titlelessDecorator) {
+    public void installNorthComponents(Project project, TitlelessDecorator titlelessDecorator) {
         project.getExtensionPoint(IdeRootPaneNorthExtension.class).forEachExtensionSafe(northComponent -> {
             if (northComponent instanceof IdeRootPaneNorthExtensionWithDecorator decorator) {
                 decorator.setTitlelessDecorator(titlelessDecorator);

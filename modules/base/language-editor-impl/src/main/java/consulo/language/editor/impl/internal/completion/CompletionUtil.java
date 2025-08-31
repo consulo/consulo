@@ -31,7 +31,7 @@ public class CompletionUtil {
 
   private static final CompletionData ourGenericCompletionData = new CompletionData() {
     {
-      final CompletionVariant variant = new CompletionVariant(PsiElement.class, TrueFilter.INSTANCE);
+      CompletionVariant variant = new CompletionVariant(PsiElement.class, TrueFilter.INSTANCE);
       variant.addCompletionFilter(TrueFilter.INSTANCE, TailType.NONE);
       registerVariant(variant);
     }
@@ -40,20 +40,20 @@ public class CompletionUtil {
   public static final String DUMMY_IDENTIFIER_TRIMMED = DUMMY_IDENTIFIER.trim();
 
   @Nullable
-  public static CompletionData getCompletionDataByElement(@Nullable final PsiElement position, @Nonnull PsiFile originalFile) {
+  public static CompletionData getCompletionDataByElement(@Nullable PsiElement position, @Nonnull PsiFile originalFile) {
     if (position == null) return null;
 
     PsiElement parent = position.getParent();
     Language language = parent == null ? position.getLanguage() : parent.getLanguage();
-    final FileType fileType = language.getAssociatedFileType();
+    FileType fileType = language.getAssociatedFileType();
     if (fileType != null) {
-      final CompletionData mainData = getCompletionDataByFileType(fileType);
+      CompletionData mainData = getCompletionDataByFileType(fileType);
       if (mainData != null) {
         return mainData;
       }
     }
 
-    final CompletionData mainData = getCompletionDataByFileType(originalFile.getFileType());
+    CompletionData mainData = getCompletionDataByFileType(originalFile.getFileType());
     return mainData != null ? mainData : ourGenericCompletionData;
   }
 
@@ -63,7 +63,7 @@ public class CompletionUtil {
     return null;
   }
 
-  public static boolean shouldShowFeature(CompletionParameters parameters, @NonNls final String id) {
+  public static boolean shouldShowFeature(CompletionParameters parameters, @NonNls String id) {
     return CompletionUtilCore.shouldShowFeature(parameters, id);
   }
 
@@ -75,7 +75,7 @@ public class CompletionUtil {
     return CompletionUtilCore.findJavaIdentifierPrefix(parameters);
   }
 
-  public static String findJavaIdentifierPrefix(final PsiElement insertedElement, final int offset) {
+  public static String findJavaIdentifierPrefix(PsiElement insertedElement, int offset) {
     return CompletionUtilCore.findJavaIdentifierPrefix(insertedElement, offset);
   }
 
@@ -103,12 +103,12 @@ public class CompletionUtil {
   }
 
 
-  public static InsertionContext emulateInsertion(InsertionContext oldContext, int newStart, final LookupElement item) {
+  public static InsertionContext emulateInsertion(InsertionContext oldContext, int newStart, LookupElement item) {
     return CompletionUtilCore.emulateInsertion(oldContext, newStart, item);
   }
 
   private static InsertionContext newContext(InsertionContext oldContext, LookupElement forElement) {
-    final Editor editor = oldContext.getEditor();
+    Editor editor = oldContext.getEditor();
     return new InsertionContext(new OffsetMap(editor.getDocument()), Lookup.AUTO_INSERT_SELECT_CHAR, new LookupElement[]{forElement}, oldContext.getFile(), editor,
                                 oldContext.shouldAddCompletionChar());
   }
@@ -136,7 +136,7 @@ public class CompletionUtil {
     return CompletionUtilCore.getOriginalOrSelf(psi);
   }
 
-  public static Iterable<String> iterateLookupStrings(@Nonnull final LookupElement element) {
+  public static Iterable<String> iterateLookupStrings(@Nonnull LookupElement element) {
     return CompletionUtilCore.iterateLookupStrings(element);
   }
 
@@ -145,7 +145,7 @@ public class CompletionUtil {
    * @see #advertise(CompletionParameters)
    */
   @Nonnull
-  public static String getActionShortcut(@NonNls @Nonnull final String actionId) {
+  public static String getActionShortcut(@NonNls @Nonnull String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(actionId));
   }
 }

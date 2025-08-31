@@ -39,7 +39,7 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
     private final DocumentWindow myDocument;
     private final MarkupModelEx myHostModel;
 
-    public MarkupModelWindow(MarkupModelEx editorMarkupModel, final DocumentWindow document) {
+    public MarkupModelWindow(MarkupModelEx editorMarkupModel, DocumentWindow document) {
         myDocument = document;
         myHostModel = editorMarkupModel;
     }
@@ -52,7 +52,7 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
 
     @Override
     @Nonnull
-    public RangeHighlighter addRangeHighlighter(final int startOffset, final int endOffset, final int layer, final TextAttributes textAttributes, @Nonnull final HighlighterTargetArea targetArea) {
+    public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
         TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
         return myHostModel.addRangeHighlighter(hostRange.getStartOffset(), hostRange.getEndOffset(), layer, textAttributes, targetArea);
     }
@@ -70,7 +70,7 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
     }
 
     @Override
-    public void removeHighlighter(@Nonnull final RangeHighlighter rangeHighlighter) {
+    public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
         myHostModel.removeHighlighter(rangeHighlighter);
     }
 
@@ -112,13 +112,13 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
     }
 
     @Override
-    public RangeHighlighterEx addPersistentLineHighlighter(final int line, final int layer, final TextAttributes textAttributes) {
+    public RangeHighlighterEx addPersistentLineHighlighter(int line, int layer, TextAttributes textAttributes) {
         int hostLine = myDocument.injectedToHostLine(line);
         return myHostModel.addPersistentLineHighlighter(hostLine, layer, textAttributes);
     }
 
     @Override
-    public boolean containsHighlighter(@Nonnull final RangeHighlighter highlighter) {
+    public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
         return myHostModel.containsHighlighter(highlighter);
     }
 
@@ -128,7 +128,7 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
     }
 
     @Override
-    public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
+    public void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes) {
         myHostModel.setRangeHighlighterAttributes(highlighter, textAttributes);
     }
 
@@ -150,9 +150,9 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
 
     @Override
     @Nonnull
-    public RangeHighlighter addLineHighlighter(final @Nullable TextAttributesKey textAttributesKey,
-                                               final int line,
-                                               final int layer) {
+    public RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey,
+                                               int line,
+                                               int layer) {
         int hostLine = myDocument.injectedToHostLine(line);
         return myHostModel.addLineHighlighter(textAttributesKey, hostLine, layer);
     }

@@ -99,8 +99,8 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
     @Override
     @SuppressWarnings({"SuspiciousMethodCalls"})
     public V remove(Object key) {
-        final V value = myKeyToValueMap.remove(key);
-        final List<K> ks = myValueToKeysMap.get(value);
+        V value = myKeyToValueMap.remove(key);
+        List<K> ks = myValueToKeysMap.get(value);
         if (ks != null) {
             if (ks.size() > 1) {
                 ks.remove(key);
@@ -114,7 +114,7 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
 
     @Override
     public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
-        for (final K k1 : t.keySet()) {
+        for (K k1 : t.keySet()) {
             put(k1, t.get(k1));
         }
     }

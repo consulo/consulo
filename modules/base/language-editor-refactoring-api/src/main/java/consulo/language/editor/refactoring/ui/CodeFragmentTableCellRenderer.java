@@ -46,10 +46,10 @@ public class CodeFragmentTableCellRenderer implements TableCellRenderer {
   }
 
   @Override
-  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, final boolean hasFocus, int row, int column) {
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     PsiCodeFragment codeFragment = (PsiCodeFragment)value;
 
-    final EditorTextField editorTextField;
+    EditorTextField editorTextField;
     Document document = null;
     if (codeFragment != null) {
       document = PsiDocumentManager.getInstance(myProject).getDocument(codeFragment);
@@ -76,8 +76,8 @@ public class CodeFragmentTableCellRenderer implements TableCellRenderer {
     editorTextField.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
     editorTextField.setBorder((hasFocus || isSelected) ? BorderFactory.createLineBorder(table.getSelectionBackground()) : IdeBorderFactory.createEmptyBorder(1));
     if (isSelected && document != null) {
-      final Color bg = table.getSelectionBackground();
-      final Color fg = table.getSelectionForeground();
+      Color bg = table.getSelectionBackground();
+      Color fg = table.getSelectionForeground();
       editorTextField.setBackground(bg);
       editorTextField.setForeground(fg);
       editorTextField.setAsRendererWithSelection(bg, fg);

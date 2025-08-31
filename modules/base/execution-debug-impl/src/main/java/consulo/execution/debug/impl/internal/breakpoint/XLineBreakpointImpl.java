@@ -58,12 +58,12 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   private final XLineBreakpointType<P> myType;
   private XSourcePosition mySourcePosition;
 
-  public XLineBreakpointImpl(final XLineBreakpointType<P> type, XBreakpointManagerImpl breakpointManager, @Nullable final P properties, LineBreakpointState<P> state) {
+  public XLineBreakpointImpl(XLineBreakpointType<P> type, XBreakpointManagerImpl breakpointManager, @Nullable P properties, LineBreakpointState<P> state) {
     super(type, breakpointManager, properties, state);
     myType = type;
   }
 
-  XLineBreakpointImpl(final XLineBreakpointType<P> type, XBreakpointManagerImpl breakpointManager, final LineBreakpointState<P> breakpointState) {
+  XLineBreakpointImpl(XLineBreakpointType<P> type, XBreakpointManagerImpl breakpointManager, LineBreakpointState<P> breakpointState) {
     super(type, breakpointManager, breakpointState);
     myType = type;
   }
@@ -196,7 +196,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
   @Override
   public String getShortFilePath() {
-    final String path = getPresentableFilePath();
+    String path = getPresentableFilePath();
     if (path.isEmpty()) return "";
     return new File(path).getName();
   }
@@ -242,7 +242,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
       @Override
       public boolean copy(int line, VirtualFile file, int actionId) {
         if (canMoveTo(line, file)) {
-          final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(getProject()).getBreakpointManager();
+          XBreakpointManager breakpointManager = XDebuggerManager.getInstance(getProject()).getBreakpointManager();
           if (isCopyAction(actionId)) {
             WriteAction.run(
               () -> ((XBreakpointManagerImpl)breakpointManager).copyLineBreakpoint(XLineBreakpointImpl.this, file.getUrl(), line)
@@ -291,7 +291,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     }
   }
 
-  public void setFileUrl(final String newUrl) {
+  public void setFileUrl(String newUrl) {
     if (!Comparing.equal(getFileUrl(), newUrl)) {
       myState.setFileUrl(newUrl);
       mySourcePosition = null;
@@ -300,7 +300,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     }
   }
 
-  private void setLine(final int line, boolean removeHighlighter) {
+  private void setLine(int line, boolean removeHighlighter) {
     if (getLine() != line) {
       myState.setLine(line);
       mySourcePosition = null;
@@ -325,7 +325,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   }
 
   @Override
-  protected List<? extends AnAction> getAdditionalPopupMenuActions(final XDebugSession session) {
+  protected List<? extends AnAction> getAdditionalPopupMenuActions(XDebugSession session) {
     return getType().getAdditionalPopupMenuActions(this, session);
   }
 

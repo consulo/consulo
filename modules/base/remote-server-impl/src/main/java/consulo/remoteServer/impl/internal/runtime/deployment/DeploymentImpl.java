@@ -69,7 +69,7 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public void setStatus(final @Nonnull DeploymentStatus status, final @Nullable @Nls String statusText) {
+    public void setStatus(@Nonnull DeploymentStatus status, @Nullable @Nls String statusText) {
         myConnection.changeDeploymentState(this, getRuntime(), myState.getStatus(), status, statusText);
     }
 

@@ -107,7 +107,7 @@ public final class SimpleXmlElement {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("SimpleXmlElement{");
+    StringBuilder sb = new StringBuilder("SimpleXmlElement{");
     sb.append("myName='").append(myName).append('\'');
     sb.append(", myText='").append(myText).append('\'');
     sb.append(", myAttributes=").append(myAttributes);

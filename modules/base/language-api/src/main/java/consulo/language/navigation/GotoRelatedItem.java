@@ -35,7 +35,7 @@ public class GotoRelatedItem {
   private final PsiElement myElement;
   public static final String DEFAULT_GROUP_NAME = "";
 
-  protected GotoRelatedItem(@Nullable PsiElement element, String group, final int mnemonic) {
+  protected GotoRelatedItem(@Nullable PsiElement element, String group, int mnemonic) {
     myElement = element;
     myGroup = group;
     myMnemonic = mnemonic;

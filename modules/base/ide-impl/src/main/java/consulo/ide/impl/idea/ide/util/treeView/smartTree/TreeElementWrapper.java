@@ -32,7 +32,7 @@ public class TreeElementWrapper extends CachingChildrenTreeNode<TreeElement> {
   }
 
   @Override
-  public void copyFromNewInstance(final CachingChildrenTreeNode oldInstance) {
+  public void copyFromNewInstance(CachingChildrenTreeNode oldInstance) {
   }
 
   @Override
@@ -50,10 +50,10 @@ public class TreeElementWrapper extends CachingChildrenTreeNode<TreeElement> {
       addSubElement(createChildNode(child));
     }
     if (myTreeModel instanceof ProvidingTreeModel) {
-      final Collection<NodeProvider> providers = ((ProvidingTreeModel)myTreeModel).getNodeProviders();
+      Collection<NodeProvider> providers = ((ProvidingTreeModel)myTreeModel).getNodeProviders();
       for (NodeProvider provider : providers) {
         if (((ProvidingTreeModel)myTreeModel).isEnabled(provider)) {
-          final Collection<TreeElement> nodes = provider.provideNodes(getValue());
+          Collection<TreeElement> nodes = provider.provideNodes(getValue());
           for (TreeElement node : nodes) {
             addSubElement(createChildNode(node));
           }

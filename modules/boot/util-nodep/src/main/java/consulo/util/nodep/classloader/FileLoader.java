@@ -28,10 +28,10 @@ class FileLoader extends Loader {
     myConfiguration = configuration;
   }
 
-  private void buildPackageCache(final File dir, ClasspathCache.LoaderDataBuilder context) {
+  private void buildPackageCache(File dir, ClasspathCache.LoaderDataBuilder context) {
     context.addResourcePackageFromName(getRelativeResourcePath(dir));
 
-    final File[] files = dir.listFiles();
+    File[] files = dir.listFiles();
     if (files == null) {
       return;
     }
@@ -39,7 +39,7 @@ class FileLoader extends Loader {
     boolean containsClasses = false;
 
     for (File file : files) {
-      final boolean isClass = file.getPath().endsWith(UrlClassLoader.CLASS_EXTENSION);
+      boolean isClass = file.getPath().endsWith(UrlClassLoader.CLASS_EXTENSION);
       if (isClass) {
         if (!containsClasses) {
           context.addClassPackageFromName(getRelativeResourcePath(file));
@@ -54,11 +54,11 @@ class FileLoader extends Loader {
     }
   }
 
-  private String getRelativeResourcePath(final File file) {
+  private String getRelativeResourcePath(File file) {
     return getRelativeResourcePath(file.getAbsolutePath());
   }
 
-  private String getRelativeResourcePath(final String absFilePath) {
+  private String getRelativeResourcePath(String absFilePath) {
     String relativePath = absFilePath.substring(myRootDirAbsolutePath.length());
     relativePath = relativePath.replace(File.separatorChar, '/');
     relativePath = relativePath.startsWith("/") ? relativePath.substring(1) : relativePath;
@@ -82,7 +82,7 @@ class FileLoader extends Loader {
   private final DirEntry root = new DirEntry(0, null);
 
   @Override
-  Resource getResource(final String name) {
+  Resource getResource(String name) {
     try {
       if (myConfiguration.myLazyClassloadingCaches) {
         DirEntry lastEntry = root;
@@ -258,7 +258,7 @@ class FileLoader extends Loader {
   public ClasspathCache.LoaderData buildData() {
     ClasspathCache.LoaderData loaderData = tryReadFromIndex();
 
-    final int nsMsFactor = 1000000;
+    int nsMsFactor = 1000000;
     int currentLoaders = totalLoaders.incrementAndGet();
     long currentScanningTime;
     if (loaderData == null) {
@@ -312,7 +312,7 @@ class FileLoader extends Loader {
       buildPackageCache(myRootDir, loaderDataBuilder);
       loaderData = loaderDataBuilder.build();
       /* } */
-      final long doneNanos = System.nanoTime() - started;
+      long doneNanos = System.nanoTime() - started;
       currentScanningTime = totalScanning.addAndGet(doneNanos);
       if (doFsActivityLogging) {
         System.out.println("Scanned: " + myRootDirAbsolutePath + " for " + (doneNanos / nsMsFactor) + "ms");

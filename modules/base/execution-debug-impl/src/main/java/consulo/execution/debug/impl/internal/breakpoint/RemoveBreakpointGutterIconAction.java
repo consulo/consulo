@@ -29,7 +29,7 @@ class RemoveBreakpointGutterIconAction extends AnAction implements DumbAware {
     myBreakpoint = breakpoint;
   }
 
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     XDebuggerUtil.getInstance().removeBreakpoint(myBreakpoint.getProject(), myBreakpoint);
   }
 }

@@ -88,7 +88,7 @@ public class ErrorMergeTool implements MergeTool {
 
         @Nullable
         @Override
-        public ActionRecord getResolveAction(@Nonnull final MergeResult result) {
+        public ActionRecord getResolveAction(@Nonnull MergeResult result) {
             if (result == MergeResult.RESOLVED) {
                 return null;
             }

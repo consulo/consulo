@@ -35,8 +35,8 @@ public interface BatchQuickFix<D extends CommonProblemDescriptor> {
    * @param psiElementsToIgnore elements to be excluded from view during post-refresh
    * @param refreshViews post-refresh inspection results view; would remove collected elements from the view
    */
-  void applyFix(@Nonnull final Project project,
-                @Nonnull final D[] descriptors,
-                final List<PsiElement> psiElementsToIgnore,
-                final Runnable refreshViews);
+  void applyFix(@Nonnull Project project,
+                @Nonnull D[] descriptors,
+                List<PsiElement> psiElementsToIgnore,
+                Runnable refreshViews);
 }

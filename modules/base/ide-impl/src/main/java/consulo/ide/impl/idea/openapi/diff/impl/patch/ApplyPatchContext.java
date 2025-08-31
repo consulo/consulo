@@ -18,7 +18,7 @@ public class ApplyPatchContext {
   private final boolean myAllowRename;
   private final Map<VirtualFile, FilePath> myPathsBeforeRename = new HashMap<VirtualFile, FilePath>();
 
-  public ApplyPatchContext(final VirtualFile baseDir, final int skipTopDirs, final boolean createDirectories, final boolean allowRename) {
+  public ApplyPatchContext(VirtualFile baseDir, int skipTopDirs, boolean createDirectories, boolean allowRename) {
     myBaseDir = baseDir;
     mySkipTopDirs = skipTopDirs;
     myCreateDirectories = createDirectories;
@@ -45,13 +45,13 @@ public class ApplyPatchContext {
     return new ApplyPatchContext(myBaseDir, mySkipTopDirs, false, false);
   }
 
-  public void registerBeforeRename(final VirtualFile file) {
+  public void registerBeforeRename(VirtualFile file) {
     FilePath path = VcsUtil.getFilePath(file);
     myPathsBeforeRename.put(file, path);
   }
 
-  public FilePath getPathBeforeRename(final VirtualFile file) {
-    final FilePath path = myPathsBeforeRename.get(file);
+  public FilePath getPathBeforeRename(VirtualFile file) {
+    FilePath path = myPathsBeforeRename.get(file);
     if (path != null) return path;
     return VcsUtil.getFilePath(file);
   }

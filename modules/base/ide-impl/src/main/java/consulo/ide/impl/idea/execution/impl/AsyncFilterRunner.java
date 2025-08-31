@@ -47,7 +47,7 @@ class AsyncFilterRunner {
     myEditor = editor;
   }
 
-  void highlightHyperlinks(@Nonnull Project project, @Nonnull Filter customFilter, final int startLine, final int endLine) {
+  void highlightHyperlinks(@Nonnull Project project, @Nonnull Filter customFilter, int startLine, int endLine) {
     if (endLine < 0) return;
 
     myQueue.offer(new HighlighterJob(project, customFilter, startLine, endLine, myEditor.getDocument()));

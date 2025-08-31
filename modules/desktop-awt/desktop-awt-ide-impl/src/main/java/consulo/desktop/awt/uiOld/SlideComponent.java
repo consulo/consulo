@@ -106,7 +106,7 @@ class SlideComponent extends JComponent {
     addMouseWheelListener(new MouseWheelListener() {
       @Override
       public void mouseWheelMoved(MouseWheelEvent e) {
-        final int amount = e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL ? e.getUnitsToScroll() * e.getScrollAmount() :
+        int amount = e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL ? e.getUnitsToScroll() * e.getScrollAmount() :
                            e.getWheelRotation() < 0 ? -e.getScrollAmount() : e.getScrollAmount();
         int pointerValue = myPointerValue + amount;
         pointerValue = pointerValue < getPointerOffset() ? getPointerOffset() : pointerValue;
@@ -132,14 +132,14 @@ class SlideComponent extends JComponent {
   }
 
   private void updateBalloonText() {
-    final Point point = myVertical ? new Point(0, myPointerValue) : new Point(myPointerValue, 0);
+    Point point = myVertical ? new Point(0, myPointerValue) : new Point(myPointerValue, 0);
     myLabel.setText(myTitle + ": " + Unit.formatValue(myValue, myUnit));
     if (myTooltipHint == null) {
       myTooltipHint = new LightweightHintImpl(myLabel);
       myTooltipHint.setCancelOnClickOutside(false);
       myTooltipHint.setCancelOnOtherWindowOpen(false);
 
-      final HintHint hint = new HintHint(this, point)
+      HintHint hint = new HintHint(this, point)
         .setPreferredPosition(myVertical ? Balloon.Position.atLeft : Balloon.Position.above)
         .setBorderColor(Color.BLACK)
         .setAwtTooltip(true)
@@ -147,7 +147,7 @@ class SlideComponent extends JComponent {
         .setTextBg(HintUtil.INFORMATION_COLOR)
         .setShowImmediately(true);
 
-      final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+      Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
       myTooltipHint.show(this, point.x, point.y, owner instanceof JComponent ? (JComponent)owner : null, hint);
     }
     else {
@@ -197,13 +197,13 @@ class SlideComponent extends JComponent {
 
   private int pointerValueToValue(int pointerValue) {
     pointerValue -= getPointerOffset();
-    final int size = myVertical ? getHeight() : getWidth();
+    int size = myVertical ? getHeight() : getWidth();
     float proportion = (size - JBUI.scale(23)) / 255f;
     return (int)(pointerValue / proportion);
   }
 
   private int valueToPointerValue(int value) {
-    final int size = myVertical ? getHeight() : getWidth();
+    int size = myVertical ? getHeight() : getWidth();
     float proportion = (size - JBUI.scale(23)) / 255f;
     return getPointerOffset() + (int)(value * proportion);
   }
@@ -229,7 +229,7 @@ class SlideComponent extends JComponent {
 
   @Override
   protected void paintComponent(Graphics g) {
-    final Graphics2D g2d = (Graphics2D)g;
+    Graphics2D g2d = (Graphics2D)g;
 
     if (myVertical) {
       g2d.setPaint(UIUtil.getGradientPaint(0f, 0f, Color.WHITE, 0f, getHeight(), Color.BLACK));

@@ -51,5 +51,5 @@ public interface IdeTooltipManager {
 
   String getUlImg(boolean awtTooltip);
 
-  JEditorPane initEditorPane(@NonNls String text, final HintHint hintHint, @Nullable final JLayeredPane layeredPane);
+  JEditorPane initEditorPane(@NonNls String text, HintHint hintHint, @Nullable JLayeredPane layeredPane);
 }

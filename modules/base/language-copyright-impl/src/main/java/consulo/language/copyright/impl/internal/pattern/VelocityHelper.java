@@ -56,7 +56,7 @@ public class VelocityHelper {
       stripLineBreak = true;
     }
     engine.evaluate(vc, sw, CopyrightManager.class.getName(), template);
-    final String result = sw.getBuffer().toString();
+    String result = sw.getBuffer().toString();
     return stripLineBreak ? StringUtil.trimEnd(result, getVelocitySuffix()) : result;
   }
 

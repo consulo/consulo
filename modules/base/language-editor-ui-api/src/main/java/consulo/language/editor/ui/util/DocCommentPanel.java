@@ -69,7 +69,7 @@ public class DocCommentPanel {
     }
 
     @RequiredUIAccess
-    public void setPolicy(final int javaDocPolicy) {
+    public void setPolicy(int javaDocPolicy) {
         if (javaDocPolicy == DocCommentPolicy.COPY) {
             myRbJavaDocCopy.setValue(true);
         }

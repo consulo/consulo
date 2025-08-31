@@ -43,16 +43,16 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
   private final static Key<Class> TEMPLATE_VIEW_PROVIDER_CLASS_KEY = Key.create("TEMPLATE_VIEW_PROVIDER_CLASS");
 
   protected TemplateLanguageErrorFilter(
-    final @Nonnull TokenSet templateExpressionStartTokens,
-    final @Nonnull Class templateFileViewProviderClass)
+    @Nonnull TokenSet templateExpressionStartTokens,
+    @Nonnull Class templateFileViewProviderClass)
   {
     this(templateExpressionStartTokens, templateFileViewProviderClass, new String[0]);
   }
 
   protected TemplateLanguageErrorFilter(
-    final @Nonnull TokenSet templateExpressionStartTokens,
-    final @Nonnull Class templateFileViewProviderClass,
-    final @Nonnull String... knownSubLanguageNames)
+    @Nonnull TokenSet templateExpressionStartTokens,
+    @Nonnull Class templateFileViewProviderClass,
+    @Nonnull String... knownSubLanguageNames)
   {
     myTemplateExpressionStartTokens = TokenSet.create(templateExpressionStartTokens.getTypes());
     myTemplateFileViewProviderClass = templateFileViewProviderClass;
@@ -62,7 +62,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
     knownSubLanguageList.add("CSS");
     knownLanguageSet = new HashSet<Language>();
     for (String name : knownSubLanguageList) {
-      final Language language = Language.findLanguageByID(name);
+      Language language = Language.findLanguageByID(name);
       if (language != null) {
         knownLanguageSet.add(language);
       }
@@ -88,7 +88,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
           offset = injectedLanguageManager.injectedToHost(element, offset);
         }
       }
-      final FileViewProvider viewProvider = psiFile.getViewProvider();
+      FileViewProvider viewProvider = psiFile.getViewProvider();
       element.putUserData(TEMPLATE_VIEW_PROVIDER_CLASS_KEY, viewProvider.getClass());
       if (!(viewProvider.getClass() == myTemplateFileViewProviderClass)) {
         return true;
@@ -110,7 +110,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
     return false;
   }
   
-  protected boolean isKnownSubLanguage(final @Nonnull Language language) {
+  protected boolean isKnownSubLanguage(@Nonnull Language language) {
     for (Language knownLanguage : knownLanguageSet) {
       if (language.is(knownLanguage)) {
         return true;

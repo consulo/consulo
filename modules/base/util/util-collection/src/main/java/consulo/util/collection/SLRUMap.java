@@ -39,11 +39,11 @@ public class SLRUMap<K,V> {
   private int misses = 0;
   private static final int FACTOR = Integer.getInteger("idea.slru.factor", 1);
 
-  public SLRUMap(final int protectedQueueSize, final int probationalQueueSize) {
+  public SLRUMap(int protectedQueueSize, int probationalQueueSize) {
     this(protectedQueueSize, probationalQueueSize, HashingStrategy.canonical());
   }
 
-  public SLRUMap(final int protectedQueueSize, final int probationalQueueSize, HashingStrategy<K> hashingStrategy) {
+  public SLRUMap(int protectedQueueSize, int probationalQueueSize, HashingStrategy<K> hashingStrategy) {
     myProtectedQueueSize = protectedQueueSize * FACTOR;
     myProbationalQueueSize = probationalQueueSize * FACTOR;
 
@@ -60,7 +60,7 @@ public class SLRUMap<K,V> {
     };
 
     myProbationalQueue = new LinkedHashMap<K, V>(10, 0.6f, hashingStrategy) {
-      protected boolean removeEldestEntry(final Map.Entry<K, V> eldest, K key, V value) {
+      protected boolean removeEldestEntry(Map.Entry<K, V> eldest, K key, V value) {
         if (size() > myProbationalQueueSize) {
           onDropFromCache(key, value);
           return true;
@@ -123,7 +123,7 @@ public class SLRUMap<K,V> {
     return false;
   }
 
-  public void iterateKeys(final Consumer<K> keyConsumer) {
+  public void iterateKeys(Consumer<K> keyConsumer) {
     for (K key : myProtectedQueue.keySet()) {
       keyConsumer.accept(key);
     }

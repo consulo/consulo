@@ -125,11 +125,11 @@ public class FileTemplatesLoader {
     }
 
     private void loadDefaultTemplates(@Nullable Project project) {
-        final Set<URL> processedUrls = new HashSet<>();
+        Set<URL> processedUrls = new HashSet<>();
 
         long time = System.currentTimeMillis();
         PluginManager.forEachEnabledPlugin(plugin -> {
-            final ClassLoader loader = plugin.getPluginClassLoader();
+            ClassLoader loader = plugin.getPluginClassLoader();
             try {
                 PluginClassLoader pluginClassLoader = (PluginClassLoader) loader;
 
@@ -149,7 +149,7 @@ public class FileTemplatesLoader {
     }
 
     private void loadPluginByIndex(Map<URL, Set<String>> urlsIndex, PluginDescriptor plugin) throws IOException {
-        final Set<String> descriptionPaths = new HashSet<>();
+        Set<String> descriptionPaths = new HashSet<>();
 
         for (Set<String> value : urlsIndex.values()) {
             for (String childPath : value) {
@@ -176,21 +176,21 @@ public class FileTemplatesLoader {
                 }
 
                 for (Map.Entry<String, FTManager> entry : myDirToManagerMap.entrySet()) {
-                    final String prefix = entry.getKey();
+                    String prefix = entry.getKey();
                     String fullPrefix = DEFAULT_TEMPLATES_ROOT + "/" + prefix;
                     if (childPath.startsWith(fullPrefix) && childPath.endsWith(FTManager.TEMPLATE_EXTENSION_SUFFIX)) {
-                        final String filename = childPath.substring(fullPrefix.length(), childPath.length() - FTManager.TEMPLATE_EXTENSION_SUFFIX.length());
+                        String filename = childPath.substring(fullPrefix.length(), childPath.length() - FTManager.TEMPLATE_EXTENSION_SUFFIX.length());
 
                         if (filename.indexOf('/') != -1) {
                             // skip if prefix is empty
                             continue;
                         }
 
-                        final String extension = FileUtil.getExtension(filename);
-                        final String templateName = filename.substring(0, filename.length() - extension.length() - 1);
+                        String extension = FileUtil.getExtension(filename);
+                        String templateName = filename.substring(0, filename.length() - extension.length() - 1);
                         FileTemplateStreamProvider template = new FileTemplateStreamProvider.ByPluginPath(plugin, childPath);
 
-                        final String descriptionPath = getDescriptionPath(fullPrefix, templateName, extension, descriptionPaths::contains);
+                        String descriptionPath = getDescriptionPath(fullPrefix, templateName, extension, descriptionPaths::contains);
 
                         FileTemplateStreamProvider descriptionProvider = null;
                         if (descriptionPath != null && descriptionPaths.contains(descriptionPath)) {
@@ -210,11 +210,11 @@ public class FileTemplatesLoader {
     }
 
     private void loadPluginByLegacy(PluginDescriptor plugin, Set<URL> processedUrls) throws IOException {
-        final ClassLoader loader = plugin.getPluginClassLoader();
+        ClassLoader loader = plugin.getPluginClassLoader();
 
-        final Enumeration<URL> systemResources = loader.getResources(DEFAULT_TEMPLATES_ROOT);
+        Enumeration<URL> systemResources = loader.getResources(DEFAULT_TEMPLATES_ROOT);
         while (systemResources.hasMoreElements()) {
-            final URL url = systemResources.nextElement();
+            URL url = systemResources.nextElement();
             if (processedUrls.contains(url)) {
                 continue;
             }
@@ -223,12 +223,12 @@ public class FileTemplatesLoader {
         }
     }
 
-    private void loadDefaultsFromRootByLegacy(final URL root) throws IOException {
-        final List<String> children = UrlUtil.getChildrenRelativePaths(root);
+    private void loadDefaultsFromRootByLegacy(URL root) throws IOException {
+        List<String> children = UrlUtil.getChildrenRelativePaths(root);
         if (children.isEmpty()) {
             return;
         }
-        final Set<String> descriptionPaths = new HashSet<>();
+        Set<String> descriptionPaths = new HashSet<>();
         for (String path : children) {
             if (path.equals("default.html")) {
                 URL url = URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
@@ -242,17 +242,17 @@ public class FileTemplatesLoader {
                 descriptionPaths.add(path);
             }
         }
-        for (final String path : children) {
+        for (String path : children) {
             for (Map.Entry<String, FTManager> entry : myDirToManagerMap.entrySet()) {
-                final String prefix = entry.getKey();
+                String prefix = entry.getKey();
                 if (matchesPrefix(path, prefix)) {
                     if (path.endsWith(FTManager.TEMPLATE_EXTENSION_SUFFIX)) {
-                        final String filename = path.substring(prefix.length(), path.length() - FTManager.TEMPLATE_EXTENSION_SUFFIX.length());
-                        final String extension = FileUtil.getExtension(filename);
-                        final String templateName = filename.substring(0, filename.length() - extension.length() - 1);
-                        final URL templateUrl = URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
-                        final String descriptionPath = getDescriptionPath(prefix, templateName, extension, descriptionPaths::contains);
-                        final URL descriptionUrl = descriptionPath == null ? null : URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + descriptionPath));
+                        String filename = path.substring(prefix.length(), path.length() - FTManager.TEMPLATE_EXTENSION_SUFFIX.length());
+                        String extension = FileUtil.getExtension(filename);
+                        String templateName = filename.substring(0, filename.length() - extension.length() - 1);
+                        URL templateUrl = URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
+                        String descriptionPath = getDescriptionPath(prefix, templateName, extension, descriptionPaths::contains);
+                        URL descriptionUrl = descriptionPath == null ? null : URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + descriptionPath));
                         assert templateUrl != null;
                         entry.getValue().addDefaultTemplate(new DefaultTemplate(templateName,
                             extension,
@@ -276,7 +276,7 @@ public class FileTemplatesLoader {
     //Example: templateName="NewClass"   templateExtension="java"
     @Nullable
     private static String getDescriptionPath(String pathPrefix, String templateName, String templateExtension, Predicate<String> descriptionPaths) {
-        final Locale locale = Locale.getDefault();
+        Locale locale = Locale.getDefault();
 
         String descName = MessageFormat.format("{0}.{1}_{2}_{3}" + DESCRIPTION_EXTENSION_SUFFIX, templateName, templateExtension, locale.getLanguage(), locale.getCountry());
         String descPath = pathPrefix.length() > 0 ? pathPrefix + descName : descName;

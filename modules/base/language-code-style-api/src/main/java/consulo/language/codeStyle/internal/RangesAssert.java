@@ -14,13 +14,13 @@ import java.util.List;
 public class RangesAssert {
   private static final Logger LOG = Logger.getInstance(RangesAssert.class);
 
-  public void assertInvalidRanges(final int startOffset, final int newEndOffset, FormattingDocumentModel model, String message) {
-    final StringBuilder buffer = new StringBuilder();
+  public void assertInvalidRanges(int startOffset, int newEndOffset, FormattingDocumentModel model, String message) {
+    StringBuilder buffer = new StringBuilder();
 
     int minOffset = Math.max(Math.min(startOffset, newEndOffset), 0);
     int maxOffset = Math.min(Math.max(startOffset, newEndOffset), model.getTextLength());
 
-    final StringBuilder messageBuffer = new StringBuilder();
+    StringBuilder messageBuffer = new StringBuilder();
     messageBuffer.append(message);
     Language language = model.getFile().getLanguage();
     messageBuffer.append(" in #").append(language.getDisplayName());
@@ -35,8 +35,8 @@ public class RangesAssert {
     buffer.append("model (").append(model.getClass()).append("): ").append(model);
 
     buffer.append("Psi Tree:\n");
-    final PsiFile file = model.getFile();
-    final List<PsiFile> roots = file.getViewProvider().getAllFiles();
+    PsiFile file = model.getFile();
+    List<PsiFile> roots = file.getViewProvider().getAllFiles();
     for (PsiFile root : roots) {
       buffer.append("Root ");
       CodeStyleInternalHelper.getInstance().debugTreeToBuffer(buffer, root.getNode(), 0, false, true, true, true);

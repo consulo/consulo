@@ -173,7 +173,7 @@ public class ActionMacroManager implements Disposable {
     }
 
     private void playbackMacro(ActionMacro macro) {
-        final IdeFrame frame = WindowManager.getInstance().getIdeFrame(null);
+        IdeFrame frame = WindowManager.getInstance().getIdeFrame(null);
         assert frame != null;
 
         StringBuffer script = new StringBuffer();
@@ -242,7 +242,7 @@ public class ActionMacroManager implements Disposable {
         unregisterActions();
         HashSet<String> registeredIds = new HashSet<>(); // to prevent exception if 2 or more targets have the same name
 
-        for (final ActionMacro macro : macros) {
+        for (ActionMacro macro : macros) {
             String actionId = macro.getActionId();
 
             if (!registeredIds.contains(actionId)) {
@@ -256,14 +256,14 @@ public class ActionMacroManager implements Disposable {
 
         // unregister Tool actions
         String[] oldIds = myActionManager.getActionIds(ActionMacro.MACRO_ACTION_PREFIX);
-        for (final String oldId : oldIds) {
+        for (String oldId : oldIds) {
             myActionManager.unregisterAction(oldId);
         }
     }
 
     public boolean checkCanCreateMacro(String name) {
-        final ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
-        final String actionId = ActionMacro.MACRO_ACTION_PREFIX + name;
+        ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
+        String actionId = ActionMacro.MACRO_ACTION_PREFIX + name;
         if (actionManager.getAction(actionId) != null) {
             if (Messages.showYesNoDialog(
                 IdeLocalize.messageMacroExists(name).get(),
@@ -328,26 +328,26 @@ public class ActionMacroManager implements Disposable {
                 lastActionInputEvents.remove(e);
                 return;
             }
-            final boolean modifierKeyIsPressed =
+            boolean modifierKeyIsPressed =
                 e.getKeyCode() == KeyEvent.VK_CONTROL || e.getKeyCode() == KeyEvent.VK_ALT || e.getKeyCode() == KeyEvent.VK_META || e.getKeyCode() == KeyEvent.VK_SHIFT;
             if (modifierKeyIsPressed) {
                 return;
             }
 
-            final boolean ready = IdeEventQueueProxy.getInstance().isKeyEventDispatcherReady();
-            final boolean isChar = e.getKeyChar() != KeyEvent.CHAR_UNDEFINED && UIUtil.isReallyTypedEvent(e);
-            final boolean hasActionModifiers = e.isAltDown() | e.isControlDown() | e.isMetaDown();
-            final boolean plainType = isChar && !hasActionModifiers;
-            final boolean isEnter = e.getKeyCode() == KeyEvent.VK_ENTER;
+            boolean ready = IdeEventQueueProxy.getInstance().isKeyEventDispatcherReady();
+            boolean isChar = e.getKeyChar() != KeyEvent.CHAR_UNDEFINED && UIUtil.isReallyTypedEvent(e);
+            boolean hasActionModifiers = e.isAltDown() | e.isControlDown() | e.isMetaDown();
+            boolean plainType = isChar && !hasActionModifiers;
+            boolean isEnter = e.getKeyCode() == KeyEvent.VK_ENTER;
 
             if (plainType && ready && !isEnter) {
                 myRecordingMacro.appendKeytyped(e.getKeyChar(), e.getKeyCode(), e.getModifiers());
                 notifyUser(DataManager.getInstance().getDataContext(e.getComponent()), Character.valueOf(e.getKeyChar()).toString(), true);
             }
             else if ((!plainType && ready) || isEnter) {
-                final String stroke = KeyStroke.getKeyStrokeForEvent(e).toString();
+                String stroke = KeyStroke.getKeyStrokeForEvent(e).toString();
 
-                final int pressed = stroke.indexOf("pressed");
+                int pressed = stroke.indexOf("pressed");
                 String key = stroke.substring(pressed + "pressed".length());
                 String modifiers = stroke.substring(0, pressed);
 

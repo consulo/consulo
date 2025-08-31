@@ -45,11 +45,11 @@ public class DirDiffManagerImpl extends DirDiffManager {
   }
 
   @Override
-  public void showDiff(@Nonnull final DiffElement dir1,
-                       @Nonnull final DiffElement dir2,
-                       final DirDiffSettings settings,
-                       @Nullable final Runnable onWindowClose) {
-    final DirDiffTableModel model = new DirDiffTableModel(myProject, dir1, dir2, settings);
+  public void showDiff(@Nonnull DiffElement dir1,
+                       @Nonnull DiffElement dir2,
+                       DirDiffSettings settings,
+                       @Nullable Runnable onWindowClose) {
+    DirDiffTableModel model = new DirDiffTableModel(myProject, dir1, dir2, settings);
     if (settings.showInFrame) {
       DirDiffFrame frame = new DirDiffFrame(myProject, model);
       setWindowListener(onWindowClose, frame.getFrame());
@@ -66,9 +66,9 @@ public class DirDiffManagerImpl extends DirDiffManager {
   }
 
   public static boolean isFromModalDialog(Project project) {
-    final Component owner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
+    Component owner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
     if (owner != null) {
-      final DialogWrapper instance = DialogWrapper.findInstance(owner);
+      DialogWrapper instance = DialogWrapper.findInstance(owner);
       return instance != null && instance.isModal();
     }
     return false;

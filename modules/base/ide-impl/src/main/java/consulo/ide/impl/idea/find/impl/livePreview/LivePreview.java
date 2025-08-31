@@ -202,7 +202,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
             myCursorHighlighter = null;
         }
 
-        final FindResult cursor = mySearchResults.getCursor();
+        FindResult cursor = mySearchResults.getCursor();
         Editor editor = mySearchResults.getEditor();
         if (cursor != null && cursor.getEndOffset() <= editor.getDocument().getTextLength()) {
             ColorValue color = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
@@ -312,7 +312,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
     }
 
     private void updateInSelectionHighlighters() {
-        final SelectionModel selectionModel = mySearchResults.getEditor().getSelectionModel();
+        SelectionModel selectionModel = mySearchResults.getEditor().getSelectionModel();
         int[] starts = selectionModel.getBlockSelectionStarts();
         int[] ends = selectionModel.getBlockSelectionEnds();
 
@@ -353,9 +353,9 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         if (!mySearchResults.isUpToDate()) {
             return;
         }
-        final FindResult cursor = mySearchResults.getCursor();
-        final Editor editor = mySearchResults.getEditor();
-        final FindModel findModel = mySearchResults.getFindModel();
+        FindResult cursor = mySearchResults.getCursor();
+        Editor editor = mySearchResults.getEditor();
+        FindModel findModel = mySearchResults.getFindModel();
         if (myDelegate != null && cursor != null && findModel.isReplaceState() && findModel.isRegularExpressions()) {
             String replacementPreviewText;
             try {
@@ -448,12 +448,12 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         }
 
         @Override
-        public RelativePoint recalculateLocation(final Balloon object) {
+        public RelativePoint recalculateLocation(Balloon object) {
             FindResult cursor = mySearchResults.getCursor();
             if (cursor == null) {
                 return null;
             }
-            final TextRange cur = cursor;
+            TextRange cur = cursor;
             int startOffset = cur.getStartOffset();
             int endOffset = cur.getEndOffset();
 
@@ -484,7 +484,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         }
     }
 
-    private static void requestBalloonHiding(final Balloon object) {
+    private static void requestBalloonHiding(Balloon object) {
         ApplicationManager.getApplication().invokeLater(() -> object.hide());
     }
 }

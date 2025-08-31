@@ -45,7 +45,7 @@ public class ProjectWindowFocuserImpl implements ProjectWindowFocuser {
 
     @Override
     public void requestDefaultFocus(Project project) {
-        final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(project);
+        IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(project);
         focusManager.doWhenFocusSettlesDown(() -> focusManager.requestDefaultFocus(true), myApplication.getDefaultModalityState());
     }
 

@@ -90,7 +90,7 @@ public class XDebuggerSettingManagerImpl extends XDebuggerSettingsManager implem
   }
 
   @Override
-  public void loadState(final SettingsState state) {
+  public void loadState(SettingsState state) {
     myDataViewSettings = state.getDataViewSettings();
     myGeneralSettings = state.getGeneralSettings();
     for (SpecificSettingsState settingsState : state.specificStates) {
@@ -118,7 +118,7 @@ public class XDebuggerSettingManagerImpl extends XDebuggerSettingsManager implem
     }
   }
 
-  public <T extends XDebuggerSettings<?>> T getSettings(final Class<T> aClass) {
+  public <T extends XDebuggerSettings<?>> T getSettings(Class<T> aClass) {
     initSettings();
     //noinspection unchecked
     return (T)mySettingsByClass.get(aClass);

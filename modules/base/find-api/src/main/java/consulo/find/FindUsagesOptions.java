@@ -43,7 +43,7 @@ public class FindUsagesOptions implements Cloneable {
   }
 
   @RequiredReadAction
-  public FindUsagesOptions(@Nonnull Project project, @Nullable final DataContext dataContext) {
+  public FindUsagesOptions(@Nonnull Project project, @Nullable DataContext dataContext) {
     this(calcScope(project, dataContext));
   }
 
@@ -80,11 +80,11 @@ public class FindUsagesOptions implements Cloneable {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final FindUsagesOptions that = (FindUsagesOptions)o;
+    FindUsagesOptions that = (FindUsagesOptions)o;
 
     if (isSearchForTextOccurrences != that.isSearchForTextOccurrences) return false;
     if (isUsages != that.isUsages) return false;

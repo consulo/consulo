@@ -174,7 +174,7 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
     public void remove() {
       if (myCurrentIndex == -1) throw new IllegalStateException();
       myArray.remove(myCurrentIndex);
-      final int removedIndex = myCurrentIndex;
+      int removedIndex = myCurrentIndex;
       int newIndex = tryReduceCapacity(myNextIndex);
       myCurrentIndex = -1;
       myModCount = modCount;

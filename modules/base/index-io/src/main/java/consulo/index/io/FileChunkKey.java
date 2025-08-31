@@ -39,7 +39,7 @@ class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, Sh
     return offset;
   }
 
-  public boolean equals(final Object obj) {
+  public boolean equals(Object obj) {
     if (getClass() != obj.getClass()) return false;
     FileChunkKey<OwnerType> k = (FileChunkKey<OwnerType>)obj;
     return k.owner == owner && k.offset == offset;
@@ -51,7 +51,7 @@ class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, Sh
   }
 
   @Override
-  public int compareTo(@Nonnull final FileChunkKey<OwnerType> o) {
+  public int compareTo(@Nonnull FileChunkKey<OwnerType> o) {
     if (owner != o.owner) {
       return owner.hashCode() - o.owner.hashCode();
     }

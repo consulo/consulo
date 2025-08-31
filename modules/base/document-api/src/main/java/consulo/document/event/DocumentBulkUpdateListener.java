@@ -39,11 +39,11 @@ public interface DocumentBulkUpdateListener {
   @Deprecated
   abstract class Adapter implements DocumentBulkUpdateListener {
     @Override
-    public void updateFinished(@Nonnull final Document doc) {
+    public void updateFinished(@Nonnull Document doc) {
     }
 
     @Override
-    public void updateStarted(@Nonnull final Document doc) {
+    public void updateStarted(@Nonnull Document doc) {
     }
   }
 }

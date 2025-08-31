@@ -52,18 +52,18 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     this(-1);
   }
 
-  public ComboBox(final ComboBoxModel model) {
+  public ComboBox(ComboBoxModel model) {
     this(model, -1);
   }
 
   /**
    * @param width preferred width of the combobox. Value <code>-1</code> means undefined.
    */
-  public ComboBox(final int width) {
+  public ComboBox(int width) {
     this(new DefaultComboBoxModel(), width);
   }
 
-  public ComboBox(final ComboBoxModel model, final int width) {
+  public ComboBox(ComboBoxModel model, int width) {
     super(model);
     myMinimumAndPreferredWidth = width;
     registerCancelOnEscape();
@@ -75,16 +75,16 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     if (getModel().getSize() == 0 && visible) return;
     if (visible && JBPopupFactory.getInstance().getChildFocusedPopup(this) != null) return;
 
-    final boolean wasShown = isPopupVisible();
+    boolean wasShown = isPopupVisible();
     super.setPopupVisible(visible);
     if (!wasShown
         && visible
         && isEditable()
         && !UIManager.getBoolean("ComboBox.isEnterSelectablePopup")) {
 
-      final ComboBoxEditor editor = getEditor();
-      final Object item = editor.getItem();
-      final Object selectedItem = getSelectedItem();
+      ComboBoxEditor editor = getEditor();
+      Object item = editor.getItem();
+      Object selectedItem = getSelectedItem();
       if ((item == null || item != selectedItem)) {
         configureEditor(editor, selectedItem);
       }
@@ -94,8 +94,8 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
   @Override
   public void eventDispatched(AWTEvent event) {
     if (event.getID() == WindowEvent.WINDOW_OPENED) {
-      final WindowEvent we = (WindowEvent)event;
-      final List<JBPopup> popups = JBPopupFactory.getInstance().getChildPopups(this);
+      WindowEvent we = (WindowEvent)event;
+      List<JBPopup> popups = JBPopupFactory.getInstance().getChildPopups(this);
       if (popups != null) {
         for (JBPopup each : popups) {
           if (each.getContent() != null && SwingUtilities.isDescendingFrom(each.getContent(), we.getWindow())) {
@@ -133,7 +133,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     return null;
   }
 
-  public ComboBox(final E[] items, final int preferredWidth) {
+  public ComboBox(E[] items, int preferredWidth) {
     super(items);
     myMinimumAndPreferredWidth = preferredWidth;
     registerCancelOnEscape();
@@ -143,22 +143,22 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     this(items, -1);
   }
 
-  public void setMinimumAndPreferredWidth(final int minimumAndPreferredWidth) {
+  public void setMinimumAndPreferredWidth(int minimumAndPreferredWidth) {
     myMinimumAndPreferredWidth = minimumAndPreferredWidth;
   }
 
   private void registerCancelOnEscape() {
     registerKeyboardAction(new ActionListener() {
       @Override
-      public void actionPerformed(final ActionEvent e) {
-        final DialogWrapper dialogWrapper = DialogWrapper.findInstance(ComboBox.this);
+      public void actionPerformed(ActionEvent e) {
+        DialogWrapper dialogWrapper = DialogWrapper.findInstance(ComboBox.this);
 
         if (isPopupVisible()) {
           setPopupVisible(false);
         }
         else {
           //noinspection HardCodedStringLiteral
-          final Object clientProperty = getClientProperty("tableCellEditor");
+          Object clientProperty = getClientProperty("tableCellEditor");
           if (clientProperty instanceof CellEditor) {
             // If combo box is inside editable table then we need to cancel editing
             // and do not close heavy weight dialog container (if any)
@@ -173,7 +173,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
   }
 
   @Override
-  public final void setEditor(final ComboBoxEditor editor) {
+  public final void setEditor(ComboBoxEditor editor) {
     ComboBoxEditor _editor = editor;
     if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) {
       if ("AquaComboBoxEditor".equals(editor.getClass().getSimpleName())) {
@@ -192,7 +192,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
   @Override
   public Dimension getPreferredSize() {
     int width = myMinimumAndPreferredWidth;
-    final Dimension preferredSize = super.getPreferredSize();
+    Dimension preferredSize = super.getPreferredSize();
     if (width < 0) {
       width = preferredSize.width;
     }
@@ -204,19 +204,19 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     private final JComboBox myComboBox;
     private final ComboBoxEditor myDelegate;
 
-    public MyEditor(final JComboBox comboBox, final ComboBoxEditor delegate) {
+    public MyEditor(JComboBox comboBox, ComboBoxEditor delegate) {
       myComboBox = comboBox;
       myDelegate = delegate;
       if (myDelegate != null) {
         myDelegate.addActionListener(new ActionListener() {
           @Override
-          public void actionPerformed(final ActionEvent e) {
+          public void actionPerformed(ActionEvent e) {
             if (myComboBox.isPopupVisible()) {
               myComboBox.setPopupVisible(false);
             }
             else {
               //noinspection HardCodedStringLiteral
-              final Object clientProperty = myComboBox.getClientProperty("tableCellEditor");
+              Object clientProperty = myComboBox.getClientProperty("tableCellEditor");
               if (clientProperty instanceof CellEditor) {
                 // If combo box is inside editable table then we need to cancel editing
                 // and do not close heavy weight dialog container (if any)
@@ -224,9 +224,9 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
               }
               else {
                 myComboBox.setSelectedItem(getItem());
-                final JRootPane rootPane = myComboBox.getRootPane();
+                JRootPane rootPane = myComboBox.getRootPane();
                 if (rootPane != null) {
-                  final JButton button = rootPane.getDefaultButton();
+                  JButton button = rootPane.getDefaultButton();
                   if (button != null) {
                     button.doClick();
                   }
@@ -239,7 +239,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     }
 
     @Override
-    public void addActionListener(final ActionListener l) {
+    public void addActionListener(ActionListener l) {
     }
 
     @Override
@@ -263,7 +263,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     }
 
     @Override
-    public void removeActionListener(final ActionListener l) {
+    public void removeActionListener(ActionListener l) {
     }
 
     @Override
@@ -274,7 +274,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     }
 
     @Override
-    public void setItem(final Object obj) {
+    public void setItem(Object obj) {
       if (myDelegate != null) {
         myDelegate.setItem(obj);
       }

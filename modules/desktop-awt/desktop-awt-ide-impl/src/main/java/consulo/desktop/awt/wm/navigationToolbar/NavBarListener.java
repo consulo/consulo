@@ -69,14 +69,14 @@ public class NavBarListener
       unsubscribeFrom(panel);
     }
 
-    final NavBarListener listener = new NavBarListener(panel);
-    final Project project = panel.getProject();
+    NavBarListener listener = new NavBarListener(panel);
+    Project project = panel.getProject();
     panel.putClientProperty(LISTENER, listener);
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(listener);
     FileStatusManager.getInstance(project).addFileStatusListener(listener);
     PsiManager.getInstance(project).addPsiTreeChangeListener(listener);
 
-    final MessageBusConnection connection = project.getMessageBus().connect();
+    MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(AnActionListener.class, listener);
     connection.subscribe(ProblemListener.class, listener);
     connection.subscribe(ModuleRootListener.class, listener);
@@ -86,7 +86,7 @@ public class NavBarListener
     panel.addKeyListener(listener);
 
     if (panel.isInFloatingMode()) {
-      final Window window = SwingUtilities.windowForComponent(panel);
+      Window window = SwingUtilities.windowForComponent(panel);
       if (window != null) {
         window.addWindowFocusListener(listener);
       }
@@ -94,14 +94,14 @@ public class NavBarListener
   }
 
   static void unsubscribeFrom(NavBarPanel panel) {
-    final NavBarListener listener = (NavBarListener)panel.getClientProperty(LISTENER);
+    NavBarListener listener = (NavBarListener)panel.getClientProperty(LISTENER);
     panel.putClientProperty(LISTENER, null);
     if (listener != null) {
-      final Project project = panel.getProject();
+      Project project = panel.getProject();
       KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(listener);
       FileStatusManager.getInstance(project).removeFileStatusListener(listener);
       PsiManager.getInstance(project).removePsiTreeChangeListener(listener);
-      final MessageBusConnection connection = (MessageBusConnection)panel.getClientProperty(BUS);
+      MessageBusConnection connection = (MessageBusConnection)panel.getClientProperty(BUS);
       panel.putClientProperty(BUS, null);
       if (connection != null) {
         connection.disconnect();
@@ -123,7 +123,7 @@ public class NavBarListener
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    final NavBarKeyboardCommand cmd = NavBarKeyboardCommand.fromString(e.getActionCommand());
+    NavBarKeyboardCommand cmd = NavBarKeyboardCommand.fromString(e.getActionCommand());
     if (cmd != null) {
       switch (cmd) {
         case LEFT:     myPanel.moveLeft();  break;
@@ -140,14 +140,14 @@ public class NavBarListener
   }
 
   @Override
-  public void focusGained(final FocusEvent e) {
+  public void focusGained(FocusEvent e) {
     if (e.getOppositeComponent() == null && shouldFocusEditor) {
       shouldFocusEditor = false;
       ToolWindowManager.getInstance(myPanel.getProject()).activateEditorComponent();
       return;
     }
     myPanel.updateItems();
-    final List<NavBarItem> items = myPanel.getItems();
+    List<NavBarItem> items = myPanel.getItems();
     if (!myPanel.isInFloatingMode() && items.size() > 0) {
       myPanel.setContextComponent(items.get(items.size() - 1));
     } else {
@@ -187,14 +187,14 @@ public class NavBarListener
   }
 
   private void processFocusLost(FocusEvent e) {
-    final Component opposite = e.getOppositeComponent();
+    Component opposite = e.getOppositeComponent();
 
     if (myPanel.isInFloatingMode() && opposite != null && DialogWrapper.findInstance(opposite) != null) {
       myPanel.hideHint();
       return;
     }
 
-    final boolean nodePopupInactive = !myPanel.isNodePopupActive();
+    boolean nodePopupInactive = !myPanel.isNodePopupActive();
     boolean childPopupInactive = !JBPopupFactory.getInstance().isChildPopupFocused(myPanel);
     if (nodePopupInactive && childPopupInactive) {
       if (opposite != null && opposite != myPanel && !myPanel.isAncestorOf(opposite) && !e.isTemporary()) {
@@ -250,7 +250,7 @@ public class NavBarListener
   }
 
   @Override
-  public void propertyChanged(@Nonnull final PsiTreeChangeEvent event) {
+  public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
     updateModel();
   }
 
@@ -283,7 +283,7 @@ public class NavBarListener
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (myPanel.isShowing()) {
-      final String name = evt.getPropertyName();
+      String name = evt.getPropertyName();
       if ("focusOwner".equals(name) || "permanentFocusOwner".equals(name)) {
         myPanel.getUpdateQueue().restartRebuild();
       }
@@ -320,9 +320,9 @@ public class NavBarListener
         @Override
         public void run() {
           try {
-            final Robot robot = new Robot();
-            final boolean shiftOn = e.isShiftDown();
-            final int code = e.getKeyCode();
+            Robot robot = new Robot();
+            boolean shiftOn = e.isShiftDown();
+            int code = e.getKeyCode();
             if (shiftOn) {
               robot.keyPress(KeyEvent.VK_SHIFT);
             }
@@ -350,8 +350,8 @@ public class NavBarListener
 
   @Override
   public void windowLostFocus(WindowEvent e) {
-    final Window window = e.getWindow();
-    final Window oppositeWindow = e.getOppositeWindow();
+    Window window = e.getWindow();
+    Window oppositeWindow = e.getOppositeWindow();
   }
 
   //---- Ignored

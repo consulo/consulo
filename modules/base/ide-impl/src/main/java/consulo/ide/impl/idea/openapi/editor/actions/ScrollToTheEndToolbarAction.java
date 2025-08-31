@@ -34,10 +34,10 @@ import jakarta.annotation.Nonnull;
 public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAware {
   private final Editor myEditor;
 
-  public ScrollToTheEndToolbarAction(@Nonnull final Editor editor) {
+  public ScrollToTheEndToolbarAction(@Nonnull Editor editor) {
     super();
     myEditor = editor;
-    final LocalizeValue message = ActionLocalize.actionEditorconsolescrolltotheendText();
+    LocalizeValue message = ActionLocalize.actionEditorconsolescrolltotheendText();
     getTemplatePresentation().setDescriptionValue(message);
     getTemplatePresentation().setTextValue(message);
     getTemplatePresentation().setIcon(AllIcons.RunConfigurations.Scroll_down);

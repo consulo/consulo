@@ -77,31 +77,31 @@ public class MorphColor extends Color {
 
   @Override
   public int getRed() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getRed() : c.getRed();
   }
 
   @Override
   public int getGreen() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getGreen() : c.getGreen();
   }
 
   @Override
   public int getBlue() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getBlue() : c.getBlue();
   }
 
   @Override
   public int getAlpha() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getAlpha() : c.getAlpha();
   }
 
   @Override
   public int getRGB() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getRGB() : c.getRGB();
   }
 
@@ -123,73 +123,73 @@ public class MorphColor extends Color {
 
   @Override
   public int hashCode() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.hashCode() : c.hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.equals(obj) : c.equals(obj);
   }
 
   @Override
   public String toString() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.toString() : c.toString();
   }
 
   @Override
   public float[] getRGBComponents(float[] compArray) {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getRGBComponents(compArray) : c.getRGBComponents(compArray);
   }
 
   @Override
   public float[] getRGBColorComponents(float[] compArray) {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getRGBComponents(compArray) : c.getRGBColorComponents(compArray);
   }
 
   @Override
   public float[] getComponents(float[] compArray) {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getComponents(compArray) : c.getComponents(compArray);
   }
 
   @Override
   public float[] getColorComponents(float[] compArray) {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getColorComponents(compArray) : c.getColorComponents(compArray);
   }
 
   @Override
   public float[] getComponents(ColorSpace cspace, float[] compArray) {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getComponents(cspace, compArray) : c.getComponents(cspace, compArray);
   }
 
   @Override
   public float[] getColorComponents(ColorSpace cspace, float[] compArray) {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getColorComponents(cspace, compArray) : c.getColorComponents(cspace, compArray);
   }
 
   @Override
   public ColorSpace getColorSpace() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getColorSpace() : c.getColorSpace();
   }
 
   @Override
   public synchronized PaintContext createContext(ColorModel cm, Rectangle r, Rectangle2D r2d, AffineTransform xform, RenderingHints hints) {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.createContext(cm, r, r2d, xform, hints) : c.createContext(cm, r, r2d, xform, hints);
   }
 
   @Override
   public int getTransparency() {
-    final Color c = getColor();
+    Color c = getColor();
     return c == this ? super.getTransparency() : c.getTransparency();
   }
 }

@@ -93,7 +93,7 @@ public class ToolWindowActiveStack {
     return result;
   }
 
-  public void push(final String id) {
+  public void push(String id) {
     remove(id, true);
     myStack.push(id);
     myPersistentStack.push(id);
@@ -106,7 +106,7 @@ public class ToolWindowActiveStack {
   /**
    * Peeks element at the persistent stack. <code>0</code> means the top of the stack.
    */
-  public String peekPersistent(final int index) {
+  public String peekPersistent(int index) {
     return myPersistentStack.get(myPersistentStack.size() - index - 1);
   }
 
@@ -117,7 +117,7 @@ public class ToolWindowActiveStack {
    * @param removePersistentAlso if <code>true</code> then clears last active <code>ID</code>
    *                             if it's the last active <code>ID</code>.
    */
-  public void remove(final String id, final boolean removePersistentAlso) {
+  public void remove(String id, boolean removePersistentAlso) {
     for (Iterator i = myStack.iterator(); i.hasNext(); ) {
       if (id.equals(i.next())) {
         i.remove();

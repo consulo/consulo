@@ -51,11 +51,11 @@ public class ContentAnnotationCacheImpl implements ContentAnnotationCache {
 
   @Override
   @Nullable
-  public ThreeState isRecent(final VirtualFile vf,
-                             final VcsKey vcsKey,
-                             final VcsRevisionNumber number,
-                             final TextRange range,
-                             final long boundTime) {
+  public ThreeState isRecent(VirtualFile vf,
+                             VcsKey vcsKey,
+                             VcsRevisionNumber number,
+                             TextRange range,
+                             long boundTime) {
     TreeMap<Integer, Long> treeMap;
     synchronized (myLock) {
       treeMap = myCache.get(new HistoryCacheWithRevisionKey(VcsContextFactory.SERVICE.getInstance().createFilePathOn(vf), vcsKey, number));
@@ -65,7 +65,7 @@ public class ContentAnnotationCacheImpl implements ContentAnnotationCache {
       if (last == null || last.getKey() < range.getStartOffset()) return ThreeState.NO;
       Map.Entry<Integer, Long> first = treeMap.ceilingEntry(range.getStartOffset());
       assert first != null;
-      final SortedMap<Integer,Long> interval = treeMap.subMap(first.getKey(), last.getKey());
+      SortedMap<Integer,Long> interval = treeMap.subMap(first.getKey(), last.getKey());
       for (Map.Entry<Integer, Long> entry : interval.entrySet()) {
         if (entry.getValue() >= boundTime) return ThreeState.YES;
       }
@@ -75,14 +75,14 @@ public class ContentAnnotationCacheImpl implements ContentAnnotationCache {
   }
 
   @Override
-  public void register(final VirtualFile vf, final VcsKey vcsKey, final VcsRevisionNumber number, final FileAnnotation fa) {
-    final HistoryCacheWithRevisionKey key = new HistoryCacheWithRevisionKey(VcsContextFactory.SERVICE.getInstance().createFilePathOn(vf), vcsKey, number);
+  public void register(VirtualFile vf, VcsKey vcsKey, VcsRevisionNumber number, FileAnnotation fa) {
+    HistoryCacheWithRevisionKey key = new HistoryCacheWithRevisionKey(VcsContextFactory.SERVICE.getInstance().createFilePathOn(vf), vcsKey, number);
     synchronized (myLock) {
       if (myCache.get(key) != null) return;
     }
-    final long absoluteLimit = System.currentTimeMillis() - VcsContentAnnotationSettings.ourAbsoluteLimit;
-    final TreeMap<Integer, Long> map = new TreeMap<Integer, Long>();
-    final int lineCount = fa.getLineCount();
+    long absoluteLimit = System.currentTimeMillis() - VcsContentAnnotationSettings.ourAbsoluteLimit;
+    TreeMap<Integer, Long> map = new TreeMap<Integer, Long>();
+    int lineCount = fa.getLineCount();
     for (int i = 0; i < lineCount; i++) {
       Date lineDate = fa.getLineDate(i);
       if (lineDate == null) return;

@@ -27,7 +27,7 @@ public class WindowsCommandLineProcessor {
    * NOTE: This method is called through JNI by the Windows launcher. Please do not delete or rename it.
    */
   @SuppressWarnings("unused")
-  public static void processWindowsLauncherCommandLine(final String currentDirectory, final String commandLine) {
+  public static void processWindowsLauncherCommandLine(String currentDirectory, String commandLine) {
     if (LISTENER != null) {
       LISTENER.processWindowsLauncherCommandLine(currentDirectory, commandLine);
     }

@@ -29,15 +29,15 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
   private Object[] myItems;
   private boolean myRequestFocus;
 
-  public ShowParameterInfoContext(final Editor editor, final Project project, final PsiFile file, int offset, int parameterListStart) {
+  public ShowParameterInfoContext(Editor editor, Project project, PsiFile file, int offset, int parameterListStart) {
     this(editor, project, file, offset, parameterListStart, false);
   }
 
-  public ShowParameterInfoContext(final Editor editor, final Project project, final PsiFile file, int offset, int parameterListStart, boolean requestFocus) {
+  public ShowParameterInfoContext(Editor editor, Project project, PsiFile file, int offset, int parameterListStart, boolean requestFocus) {
     this(editor, project, file, offset, parameterListStart, requestFocus, false);
   }
 
-  public ShowParameterInfoContext(final Editor editor, final Project project, final PsiFile file, int offset, int parameterListStart, boolean requestFocus, boolean singleParameterInfo) {
+  public ShowParameterInfoContext(Editor editor, Project project, PsiFile file, int offset, int parameterListStart, boolean requestFocus, boolean singleParameterInfo) {
     myEditor = editor;
     myProject = project;
     myFile = file;
@@ -95,19 +95,19 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
 
   @Override
   public void showHint(PsiElement element, int offset, ParameterInfoHandler handler) {
-    final Object[] itemsToShow = getItemsToShow();
+    Object[] itemsToShow = getItemsToShow();
     if (itemsToShow == null || itemsToShow.length == 0) return;
     showParameterHint(element, getEditor(), itemsToShow, getProject(), itemsToShow.length > 1 ? getHighlightedElement() : null, offset, handler, myRequestFocus, mySingleParameterInfo);
   }
 
-  private static void showParameterHint(final PsiElement element,
-                                        final Editor editor,
-                                        final Object[] descriptors,
-                                        final Project project,
+  private static void showParameterHint(PsiElement element,
+                                        Editor editor,
+                                        Object[] descriptors,
+                                        Project project,
                                         @Nullable Object highlighted,
-                                        final int elementStart,
-                                        final ParameterInfoHandler handler,
-                                        final boolean requestFocus,
+                                        int elementStart,
+                                        ParameterInfoHandler handler,
+                                        boolean requestFocus,
                                         boolean singleParameterInfo) {
     if (editor.isDisposed() || !editor.getComponent().isVisible()) return;
 
@@ -115,7 +115,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
       if (editor.isDisposed() || DumbService.isDumb(project) || !element.isValid() || (!ApplicationManager.getApplication().isUnitTestMode() && !EditorActivityManager.getInstance().isVisible(editor)))
         return;
 
-      final Document document = editor.getDocument();
+      Document document = editor.getDocument();
       if (document.getTextLength() < elementStart) return;
 
       ParameterInfoController controller = ParameterInfoController.findControllerAtOffset(editor, elementStart);

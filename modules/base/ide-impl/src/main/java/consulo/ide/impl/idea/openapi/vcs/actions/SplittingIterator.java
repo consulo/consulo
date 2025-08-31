@@ -26,7 +26,7 @@ public class SplittingIterator implements Iterator<Integer> {
   // always at the beginning of the _next_ line
   private int myOffset;
 
-  public SplittingIterator(final String contents) {
+  public SplittingIterator(String contents) {
     myContents = contents;
     myOffset = 0;
   }
@@ -38,10 +38,10 @@ public class SplittingIterator implements Iterator<Integer> {
 
   @Override
   public Integer next() {
-    final int start = myOffset;
+    int start = myOffset;
     while (myOffset < myContents.length()) {
       // \r, \n, or \r\n
-      final char c = myContents.charAt(myOffset);
+      char c = myContents.charAt(myOffset);
       if ('\n' == c) {
         ++myOffset;
         break;

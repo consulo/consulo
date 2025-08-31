@@ -35,9 +35,9 @@ public class GotoTestRelatedProvider extends GotoRelatedProvider {
   @Nonnull
   @Override
   public List<? extends GotoRelatedItem> getItems(@Nonnull DataContext context) {
-    final PsiFile file = context.getData(PsiFile.KEY);
+    PsiFile file = context.getData(PsiFile.KEY);
     List<PsiElement> result;
-    final boolean isTest = TestFinderHelper.isTest(file);
+    boolean isTest = TestFinderHelper.isTest(file);
     if (isTest) {
       result = TestFinderHelper.findClassesForTest(file);
     } else {
@@ -45,7 +45,7 @@ public class GotoTestRelatedProvider extends GotoRelatedProvider {
     }
 
     if (!result.isEmpty()) {
-      final List<GotoRelatedItem> items = new ArrayList<>();
+      List<GotoRelatedItem> items = new ArrayList<>();
       for (PsiElement element : result) {
         items.add(new GotoRelatedItem(element, isTest ? "Tests" : "Testee classes"));
       }

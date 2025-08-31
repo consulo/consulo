@@ -41,7 +41,7 @@ public class SelectionManager {
     if (removeAllPreviousSelections) {
       editor.getCaretModel().removeSecondaryCarets();
     }
-    final FindResult cursor = mySearchResults.getCursor();
+    FindResult cursor = mySearchResults.getCursor();
     if (cursor == null) {
       if (removePreviousSelection && !myHadSelectionInitially) editor.getSelectionModel().removeSelection();
       return;
@@ -49,7 +49,7 @@ public class SelectionManager {
     if (mySearchResults.getFindModel().isGlobal()) {
       if (removePreviousSelection || removeAllPreviousSelections) {
         FoldingModel foldingModel = editor.getFoldingModel();
-        final FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
+        FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
 
         foldingModel.runBatchFoldingOperation(() -> {
           for (FoldRegion region : myRegionsToRestore) {

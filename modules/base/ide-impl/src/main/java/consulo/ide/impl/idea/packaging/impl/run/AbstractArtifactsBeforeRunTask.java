@@ -47,8 +47,8 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   @Override
   public void readExternal(Element element) {
     super.readExternal(element);
-    final List<Element> children = element.getChildren(ARTIFACT_ELEMENT);
-    final ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(myProject);
+    List<Element> children = element.getChildren(ARTIFACT_ELEMENT);
+    ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(myProject);
     for (Element child : children) {
       myArtifactPointers.add(pointerManager.create(child.getAttributeValue(NAME_ATTRIBUTE)));
     }
@@ -64,7 +64,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
 
   @Override
   public BeforeRunTask clone() {
-    final AbstractArtifactsBeforeRunTask task = (AbstractArtifactsBeforeRunTask)super.clone();
+    AbstractArtifactsBeforeRunTask task = (AbstractArtifactsBeforeRunTask)super.clone();
     task.myArtifactPointers = new ArrayList<ArtifactPointer>(myArtifactPointers);
     return task;
   }
@@ -83,7 +83,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   }
 
   public void addArtifact(Artifact artifact) {
-    final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(myProject).create(artifact);
+    ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(myProject).create(artifact);
     if (!myArtifactPointers.contains(pointer)) {
       myArtifactPointers.add(pointer);
     }
@@ -93,7 +93,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
     removeArtifact(ArtifactPointerUtil.getPointerManager(myProject).create(artifact));
   }
 
-  public void removeArtifact(final @Nonnull ArtifactPointer pointer) {
+  public void removeArtifact(@Nonnull ArtifactPointer pointer) {
     myArtifactPointers.remove(pointer);
   }
 

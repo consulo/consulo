@@ -173,7 +173,7 @@ public class mxCurveLabelShape implements mxITextShape {
             rotation += Math.PI;
           }
 
-          final AffineTransform old = g.getTransform();
+          AffineTransform old = g.getTransform();
           g.translate(parallel.getX(), parallel.getY());
           g.rotate(rotation);
           Shape letter = labelGlyphs[j].glyphShape;
@@ -228,7 +228,7 @@ public class mxCurveLabelShape implements mxITextShape {
         }
 
         for (int i = 0; i < bidi.getRunCount(); i++) {
-          final String labelSection = label.substring(bidi.getRunStart(i), bidi.getRunLimit(i));
+          String labelSection = label.substring(bidi.getRunStart(i), bidi.getRunLimit(i));
           rtlGlyphVectors[i] =
             font.layoutGlyphVector(mxCurveLabelShape.frc, labelSection.toCharArray(), 0, labelSection.length(), Font.LAYOUT_RIGHT_TO_LEFT);
         }
@@ -358,10 +358,10 @@ public class mxCurveLabelShape implements mxITextShape {
       // Get the four corners of the rotated rectangle bounding the glyph
       // The drawing bounds of the glyph is the unrotated rect that
       // just bounds those four corners
-      final double w = labelGlyphs[j].labelGlyphBounds.getWidth();
-      final double h = labelGlyphs[j].labelGlyphBounds.getHeight();
-      final double x = parallel.getEndPoint().getX();
-      final double y = parallel.getEndPoint().getY();
+      double w = labelGlyphs[j].labelGlyphBounds.getWidth();
+      double h = labelGlyphs[j].labelGlyphBounds.getHeight();
+      double x = parallel.getEndPoint().getX();
+      double y = parallel.getEndPoint().getY();
       // Bottom left
       double p1X = parallel.getX() - (descent * y);
       double minX = p1X, maxX = p1X;

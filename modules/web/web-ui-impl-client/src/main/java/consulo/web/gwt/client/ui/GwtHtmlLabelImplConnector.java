@@ -47,7 +47,7 @@ public class GwtHtmlLabelImplConnector extends AbstractComponentConnector {
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    final String text = getState().caption;
+    String text = getState().caption;
     getWidget().setHTML(text);
   }
 }

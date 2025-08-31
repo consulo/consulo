@@ -350,7 +350,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
 
   @Nonnull
   public VirtualFile findOrCreateChildData(Object requestor, @Nonnull String name) throws IOException {
-    final VirtualFile child = findChild(name);
+    VirtualFile child = findChild(name);
     if (child != null) return child;
     return createChildData(requestor, name);
   }
@@ -387,7 +387,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     }
     else if (name.equals("..")) {
       if (is(VFileProperty.SYMLINK)) {
-        final VirtualFile canonicalFile = getCanonicalFile();
+        VirtualFile canonicalFile = getCanonicalFile();
         child = canonicalFile != null ? canonicalFile.getParent() : null;
       }
       else {
@@ -493,7 +493,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @param newParent the directory to move this file to
    * @throws IOException if file failed to be moved
    */
-  public void move(final Object requestor, @Nonnull final VirtualFile newParent) throws IOException {
+  public void move(Object requestor, @Nonnull VirtualFile newParent) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VirtualFileSystemLocalize.fileMoveError(newParent.getPresentableUrl()).get());
     }
@@ -504,7 +504,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     });
   }
 
-  public VirtualFile copy(final Object requestor, @Nonnull final VirtualFile newParent, @Nonnull final String copyName) throws IOException {
+  public VirtualFile copy(Object requestor, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VirtualFileSystemLocalize.fileCopyError(newParent.getPresentableUrl()).get());
     }
@@ -541,16 +541,16 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     putUserData(CHARSET_KEY, charset);
   }
 
-  public void setCharset(final Charset charset) {
+  public void setCharset(Charset charset) {
     setCharset(charset, null);
   }
 
-  public void setCharset(final Charset charset, @Nullable Runnable whenChanged) {
+  public void setCharset(Charset charset, @Nullable Runnable whenChanged) {
     setCharset(charset, whenChanged, true);
   }
 
-  public void setCharset(final Charset charset, @Nullable Runnable whenChanged, boolean fireEventsWhenChanged) {
-    final Charset old = getStoredCharset();
+  public void setCharset(Charset charset, @Nullable Runnable whenChanged, boolean fireEventsWhenChanged) {
+    Charset old = getStoredCharset();
     storeCharset(charset);
     if (Comparing.equal(charset, old)) return;
     byte[] bom = charset == null ? null : CharsetToolkit.getMandatoryBom(charset);

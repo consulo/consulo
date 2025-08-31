@@ -62,9 +62,9 @@ public class MessagePool {
     }
 
     @Nullable
-    public LogMessage addIdeFatalMessage(final IdeaLoggingEvent aEvent) {
+    public LogMessage addIdeFatalMessage(IdeaLoggingEvent aEvent) {
         Object data = aEvent.getData();
-        final LogMessage message = data instanceof LogMessage ? (LogMessage) data : new LogMessage(aEvent);
+        LogMessage message = data instanceof LogMessage ? (LogMessage) data : new LogMessage(aEvent);
         if (myIdeFatals.size() < MAX_POOL_SIZE_FOR_FATALS) {
             if (myFatalsGrouper.addToGroup(message)) {
                 return message;

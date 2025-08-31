@@ -74,7 +74,7 @@ public class RefactoringBundle {
     return message("visibility.escalate");
   }
 
-  public static String getCannotRefactorMessage(@Nullable final String message) {
+  public static String getCannotRefactorMessage(@Nullable String message) {
     return message("cannot.perform.refactoring") + (message == null ? "" : "\n" + message);
   }
 

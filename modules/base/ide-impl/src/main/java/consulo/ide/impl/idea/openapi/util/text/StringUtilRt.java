@@ -89,31 +89,31 @@ public class StringUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static String notNullize(@Nullable final String s) {
+  public static String notNullize(@Nullable String s) {
     return notNullize(s, "");
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static String notNullize(@Nullable final String s, @Nonnull String defaultValue) {
+  public static String notNullize(@Nullable String s, @Nonnull String defaultValue) {
     return s == null ? defaultValue : s;
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static String notNullizeIfEmpty(@Nullable final String s, @Nonnull String defaultValue) {
+  public static String notNullizeIfEmpty(@Nullable String s, @Nonnull String defaultValue) {
     return isEmpty(s) ? defaultValue : s;
   }
 
   @Nullable
   @Contract(pure = true)
-  public static String nullize(@Nullable final String s) {
+  public static String nullize(@Nullable String s) {
     return nullize(s, false);
   }
 
   @Nullable
   @Contract(pure = true)
-  public static String nullize(@Nullable final String s, boolean nullizeSpaces) {
+  public static String nullize(@Nullable String s, boolean nullizeSpaces) {
     if (nullizeSpaces) {
       if (isEmptyOrSpaces(s)) return null;
     }
@@ -143,14 +143,14 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
-  public static String replace(@NonNls @Nonnull final String text, @NonNls @Nonnull final String oldS, @NonNls @Nonnull final String newS, final boolean ignoreCase) {
+  public static String replace(@NonNls @Nonnull String text, @NonNls @Nonnull String oldS, @NonNls @Nonnull String newS, boolean ignoreCase) {
     if (text.length() < oldS.length()) return text;
 
     StringBuilder newText = null;
     int i = 0;
 
     while (i < text.length()) {
-      final int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
+      int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
       if (index < 0) {
         if (i == 0) {
           return text;
@@ -312,7 +312,7 @@ public class StringUtilRt {
   public static CharSequence unifyLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
     StringBuilder buffer = null;
     int intactLength = 0;
-    final boolean newSeparatorIsSlashN = "\n".equals(newSeparator);
+    boolean newSeparatorIsSlashN = "\n".equals(newSeparator);
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
       if (c == '\n') {
@@ -381,7 +381,7 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
-  public static int parseInt(@Nullable String string, final int defaultValue) {
+  public static int parseInt(@Nullable String string, int defaultValue) {
     if (string == null) {
       return defaultValue;
     }
@@ -395,7 +395,7 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
-  public static double parseDouble(final String string, final double defaultValue) {
+  public static double parseDouble(String string, double defaultValue) {
     try {
       return Double.parseDouble(string);
     }
@@ -405,7 +405,7 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
-  public static boolean parseBoolean(final String string, final boolean defaultValue) {
+  public static boolean parseBoolean(String string, boolean defaultValue) {
     try {
       return Boolean.parseBoolean(string);
     }
@@ -471,8 +471,8 @@ public class StringUtilRt {
 
   @Contract(pure = true)
   public static boolean startsWithIgnoreCase(@NonNls @Nonnull String str, @NonNls @Nonnull String prefix) {
-    final int stringLength = str.length();
-    final int prefixLength = prefix.length();
+    int stringLength = str.length();
+    int prefixLength = prefix.length();
     return stringLength >= prefixLength && str.regionMatches(true, 0, prefix, 0, prefixLength);
   }
 

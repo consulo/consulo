@@ -67,7 +67,7 @@ public abstract class LookupElement extends UserDataHolderBase implements Compos
   }
 
   public boolean isValid() {
-    final Object object = getObject();
+    Object object = getObject();
     if (object instanceof PsiElement) {
       return ((PsiElement)object).isValid();
     }
@@ -140,7 +140,7 @@ public abstract class LookupElement extends UserDataHolderBase implements Compos
    * there's nothing else interesting besides the variable name which is already entered in the editor, so the autopopup may be closed.
    */
   public boolean isWorthShowingInAutoPopup() {
-    final LookupElementPresentation presentation = new LookupElementPresentation();
+    LookupElementPresentation presentation = new LookupElementPresentation();
     renderElement(presentation);
     return !presentation.getTailFragments().isEmpty();
   }

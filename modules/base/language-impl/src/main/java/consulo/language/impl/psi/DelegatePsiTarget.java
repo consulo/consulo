@@ -38,7 +38,7 @@ public class DelegatePsiTarget implements PsiTarget {
 
   public int getTextOffset() {
     if (this instanceof PsiDeclaredTarget) {
-      final TextRange range = ((PsiDeclaredTarget)this).getNameIdentifierRange();
+      TextRange range = ((PsiDeclaredTarget)this).getNameIdentifierRange();
       if (range != null) {
         return range.getStartOffset() + myElement.getTextRange().getStartOffset();
       }
@@ -49,8 +49,8 @@ public class DelegatePsiTarget implements PsiTarget {
 
   @Override
   public void navigate(boolean requestFocus) {
-    final int offset = getTextOffset();
-    final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(myElement);
+    int offset = getTextOffset();
+    VirtualFile virtualFile = PsiUtilCore.getVirtualFile(myElement);
     if (virtualFile != null && virtualFile.isValid()) {
       OpenFileDescriptorFactory.getInstance(myElement.getProject()).builder(virtualFile).offset(offset).build().navigate(requestFocus);
     }

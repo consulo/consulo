@@ -45,7 +45,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
 
     @Override
     public boolean canDeleteElement(@Nonnull DataContext dataContext) {
-        final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+        VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
         return files != null && files.length > 0;
     }
 
@@ -145,7 +145,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
         }
 
         @Override
-        public int compare(final VirtualFile o1, final VirtualFile o2) {
+        public int compare(VirtualFile o1, VirtualFile o2) {
             // files first
             return o2.getPath().compareTo(o1.getPath());
         }

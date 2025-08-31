@@ -29,7 +29,7 @@ public class CommittedChangesAdapter implements CommittedChangesListener {
   public void changesLoaded(RepositoryLocation location, List<CommittedChangeList> changes) {
   }
 
-  public void incomingChangesUpdated(@jakarta.annotation.Nullable final List<CommittedChangeList> receivedChanges) {
+  public void incomingChangesUpdated(@jakarta.annotation.Nullable List<CommittedChangeList> receivedChanges) {
   }
 
   @Override

@@ -102,10 +102,10 @@ public class LocalQuickFixWrapper extends QuickFixAction {
                           @Nonnull final GlobalInspectionContextImpl context,
                           @Nonnull final CommonProblemDescriptor[] descriptors,
                           @Nonnull final Set<PsiElement> ignoredElements) {
-    final PsiModificationTracker tracker = PsiManager.getInstance(project).getModificationTracker();
+    PsiModificationTracker tracker = PsiManager.getInstance(project).getModificationTracker();
     if (myFix instanceof BatchQuickFix) {
       final List<PsiElement> collectedElementsToIgnore = new ArrayList<PsiElement>();
-      final Runnable refreshViews = new Runnable() {
+      Runnable refreshViews = new Runnable() {
         @Override
         public void run() {
           DaemonCodeAnalyzer.getInstance(project).restart();
@@ -113,8 +113,8 @@ public class LocalQuickFixWrapper extends QuickFixAction {
             ignore(ignoredElements, descriptor, getWorkingQuickFix(descriptor.getFixes()), context);
           }
 
-          final RefManager refManager = context.getRefManager();
-          final RefElement[] refElements = new RefElement[collectedElementsToIgnore.size()];
+          RefManager refManager = context.getRefManager();
+          RefElement[] refElements = new RefElement[collectedElementsToIgnore.size()];
           for (int i = 0, collectedElementsToIgnoreSize = collectedElementsToIgnore.size(); i < collectedElementsToIgnoreSize; i++) {
             refElements[i] = refManager.getReference(collectedElementsToIgnore.get(i));
           }
@@ -130,11 +130,11 @@ public class LocalQuickFixWrapper extends QuickFixAction {
     boolean restart = false;
     for (CommonProblemDescriptor descriptor : descriptors) {
       if (descriptor == null) continue;
-      final QuickFix[] fixes = descriptor.getFixes();
+      QuickFix[] fixes = descriptor.getFixes();
       if (fixes != null) {
-        final QuickFix fix = getWorkingQuickFix(fixes);
+        QuickFix fix = getWorkingQuickFix(fixes);
         if (fix != null) {
-          final long startCount = tracker.getModificationCount();
+          long startCount = tracker.getModificationCount();
           //CCE here means QuickFix was incorrectly inherited, is there a way to signal (plugin) it is wrong?
           fix.applyFix(project, descriptor);
           if (startCount != tracker.getModificationCount()) {

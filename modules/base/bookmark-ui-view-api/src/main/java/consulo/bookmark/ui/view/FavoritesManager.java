@@ -40,7 +40,7 @@ public interface FavoritesManager {
   @Deprecated
   void addFavoritesListener(FavoritesListener listener);
 
-  void addFavoritesListener(final FavoritesListener listener, @Nonnull Disposable parent);
+  void addFavoritesListener(FavoritesListener listener, @Nonnull Disposable parent);
 
   @Deprecated
   void removeFavoritesListener(FavoritesListener listener);
@@ -50,5 +50,5 @@ public interface FavoritesManager {
   @Nonnull
   List<TreeItem<Pair<AbstractUrl, String>>> getFavoritesListRootUrls(@Nonnull String name);
 
-  void fireListeners(@Nonnull final String listName);
+  void fireListeners(@Nonnull String listName);
 }

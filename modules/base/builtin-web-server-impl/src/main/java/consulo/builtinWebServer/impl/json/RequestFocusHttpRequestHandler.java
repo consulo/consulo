@@ -36,7 +36,7 @@ public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
   @Nonnull
   @Override
   public JsonResponse handle(HttpRequest request) {
-    final FocusableFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
+    FocusableFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
     if (frame != null) {
       frame.activate();
       return JsonResponse.asSuccess(null);

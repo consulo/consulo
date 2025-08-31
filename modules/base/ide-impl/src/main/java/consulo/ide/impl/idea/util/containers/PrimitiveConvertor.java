@@ -20,9 +20,9 @@ package consulo.ide.impl.idea.util.containers;
  */
 public interface PrimitiveConvertor<T> {
   interface Int<T> extends PrimitiveConvertor<T> {
-    T convert(final int value);
+    T convert(int value);
   }
   interface Long<T> extends PrimitiveConvertor<T> {
-    T convert(final long value);
+    T convert(long value);
   }
 }

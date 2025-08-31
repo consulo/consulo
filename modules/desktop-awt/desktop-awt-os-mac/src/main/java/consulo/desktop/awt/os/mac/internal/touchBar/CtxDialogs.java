@@ -57,9 +57,9 @@ final class CtxDialogs {
         // Process customizations
         //
 
-        final ModalityState ms = LaterInvocator.getCurrentModalityState();
+        ModalityState ms = LaterInvocator.getCurrentModalityState();
         final TBPanel.CrossEscInfo crossEscInfo = isCrossEscGroup(actions) ? new TBPanel.CrossEscInfo(true, false) : null;
-        final Customizer customizer = new Customizer(crossEscInfo, null/*dialog actions mustn't be closed because of auto-close*/) {
+        Customizer customizer = new Customizer(crossEscInfo, null/*dialog actions mustn't be closed because of auto-close*/) {
             private final @Nonnull WeakReference<Component> myRoot = new WeakReference<>(contentPane);
 
             @Override
@@ -78,7 +78,7 @@ final class CtxDialogs {
 
             // process per-action data from TouchbarActionCustomizations
             boolean isDefault = false;
-            final TouchbarActionCustomizations actionCustomizations = TouchbarActionCustomizations.getCustomizations(button.getAnAction());
+            TouchbarActionCustomizations actionCustomizations = TouchbarActionCustomizations.getCustomizations(button.getAnAction());
             if (actionCustomizations != null) {
                 isDefault = actionCustomizations.isDefault();
                 if (!isDefault && actionCustomizations.getComponent() instanceof JButton jb) {
@@ -116,10 +116,10 @@ final class CtxDialogs {
     private static @Nullable List<AnAction> findAllTouchbarActions(@Nonnull Component root) {
         List<AnAction> result = null;
         // by default used TreeTraversal.PRE_ORDER_DFS: each node's subtrees are traversed after the node itself is returned.
-        final JBIterable<Component> iter = UIUtil.uiTraverser(root).expandAndFilter(c -> c.isVisible()).traverse();
+        JBIterable<Component> iter = UIUtil.uiTraverser(root).expandAndFilter(c -> c.isVisible()).traverse();
         for (Component component : iter) {
             if (component instanceof JComponent) {
-                final ActionGroup group = Touchbar.getActions((JComponent) component);
+                ActionGroup group = Touchbar.getActions((JComponent) component);
                 if (group != null) {
                     if (result == null) {
                         result = new ArrayList<>();

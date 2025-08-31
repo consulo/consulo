@@ -132,7 +132,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
         return;
       }
 
-      final XInlineDebuggerDataCallback callback = new XInlineDebuggerDataCallback() {
+      XInlineDebuggerDataCallback callback = new XInlineDebuggerDataCallback() {
         @Override
         public void computed(XSourcePosition position) {
           if (isObsolete() || position == null) return;
@@ -141,7 +141,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
           if (!Comparing.equal(debuggerPosition.getFile(), file)) {
             return;
           }
-          final Document document = ReadAction.compute(() -> FileDocumentManager.getInstance().getDocument(file));
+          Document document = ReadAction.compute(() -> FileDocumentManager.getInstance().getDocument(file));
           if (document == null) return;
 
           XVariablesView.InlineVariablesInfo data = myTree.getProject().getUserData(XVariablesView.DEBUG_VARIABLES);
@@ -177,7 +177,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
-  public void setFullValueEvaluator(@Nonnull final XFullValueEvaluator fullValueEvaluator) {
+  public void setFullValueEvaluator(@Nonnull XFullValueEvaluator fullValueEvaluator) {
     invokeNodeUpdate(() -> {
       myFullValueEvaluator = fullValueEvaluator;
       XValueNodeImpl.this.fireNodeChanged();

@@ -125,7 +125,7 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
     }
 
     @Nonnull
-    private DocumentReference createFromDocument(@Nonnull final Document document) {
+    private DocumentReference createFromDocument(@Nonnull Document document) {
         DocumentReference result = myDocToRef.get(document);
         if (result == null) {
             result = new DocumentReferenceByDocument(document);

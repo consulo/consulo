@@ -40,12 +40,12 @@ public class EverythingGlobalScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@Nonnull final VirtualFile file1, @Nonnull final VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean contains(@Nonnull final VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return true;
   }
 
@@ -55,7 +55,7 @@ public class EverythingGlobalScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull final Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return true;
   }
 

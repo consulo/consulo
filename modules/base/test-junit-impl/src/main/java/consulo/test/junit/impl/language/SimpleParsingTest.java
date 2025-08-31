@@ -128,7 +128,7 @@ public abstract class SimpleParsingTest<TestContext> {
         return file;
     }
 
-    protected void checkResult(@Nonnull Context context, @Nullable TestContext testContext, final PsiFile file) throws Exception {
+    protected void checkResult(@Nonnull Context context, @Nullable TestContext testContext, PsiFile file) throws Exception {
         doCheckResult(context, testContext, file, checkAllPsiRoots(), skipSpaces(), includeRanges());
     }
 
@@ -194,7 +194,7 @@ public abstract class SimpleParsingTest<TestContext> {
         throw new IllegalArgumentException(fileType.getId() + " is not extends 'LanguageFileType'");
     }
 
-    protected static String toParseTreeText(final PsiElement file, boolean skipSpaces, boolean printRanges) {
+    protected static String toParseTreeText(PsiElement file, boolean skipSpaces, boolean printRanges) {
         return DebugUtil.psiToString(file, skipSpaces, printRanges);
     }
 

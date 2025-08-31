@@ -43,8 +43,8 @@ public class FilePromptMacro extends PromptingMacro implements SecondQueueExpand
   @Override
   protected String promptUser(DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
-    final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
-    final VirtualFile[] result = IdeaFileChooser.chooseFiles(descriptor, project, null);
+    FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
+    VirtualFile[] result = IdeaFileChooser.chooseFiles(descriptor, project, null);
     return result.length == 1 ? FileUtil.toSystemDependentName(result[0].getPath()) : null;
   }
 

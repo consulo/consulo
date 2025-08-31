@@ -31,9 +31,9 @@ public class MarkFileDirtyAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final VirtualFile file = e.getData(VirtualFile.KEY);
+    VirtualFile file = e.getData(VirtualFile.KEY);
     if (file != null) {
-      final Project project = e.getRequiredData(Project.KEY);
+      Project project = e.getRequiredData(Project.KEY);
       VcsDirtyScopeManager.getInstance(project).fileDirty(file);
     }
   }

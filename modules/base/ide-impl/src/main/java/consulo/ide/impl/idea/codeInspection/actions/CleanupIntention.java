@@ -43,13 +43,13 @@ public abstract class CleanupIntention implements SyntheticIntentionAction, LowP
   }
 
   @Override
-  public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (!FileModificationService.getInstance().preparePsiElementForWrite(file)) return;
-    final InspectionManager managerEx = InspectionManager.getInstance(project);
-    final GlobalInspectionContextBase globalContext = (GlobalInspectionContextBase)managerEx.createNewGlobalContext(false);
-    final AnalysisScope scope = getScope(project, file);
+    InspectionManager managerEx = InspectionManager.getInstance(project);
+    GlobalInspectionContextBase globalContext = (GlobalInspectionContextBase)managerEx.createNewGlobalContext(false);
+    AnalysisScope scope = getScope(project, file);
     if (scope != null) {
-      final InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
+      InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
       globalContext.codeCleanup(project, scope, profile, getText(), null, false);
     }
   }
@@ -58,7 +58,7 @@ public abstract class CleanupIntention implements SyntheticIntentionAction, LowP
   protected abstract AnalysisScope getScope(Project project, PsiFile file);
 
   @Override
-  public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return true;
   }
 

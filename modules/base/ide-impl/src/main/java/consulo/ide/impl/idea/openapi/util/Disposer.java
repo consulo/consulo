@@ -47,7 +47,7 @@ public class Disposer {
     register(parent, child, null);
   }
 
-  public static void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable final String key) {
+  public static void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable String key) {
     consulo.disposer.Disposer.register(parent, child, key);
   }
 

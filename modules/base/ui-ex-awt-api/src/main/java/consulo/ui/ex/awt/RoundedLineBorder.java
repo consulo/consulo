@@ -34,17 +34,17 @@ public class RoundedLineBorder extends LineBorder {
     this(color, arcSize, 1);
   }
 
-  public RoundedLineBorder(Color color, int arcSize, final int thickness) {
+  public RoundedLineBorder(Color color, int arcSize, int thickness) {
     super(color, thickness);
     myArcSize = arcSize;
   }
 
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-    final Graphics2D g2 = (Graphics2D)g;
+    Graphics2D g2 = (Graphics2D)g;
 
-    final Object oldAntialiasing = g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+    Object oldAntialiasing = g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    final Color oldColor = g2.getColor();
+    Color oldColor = g2.getColor();
     g2.setColor(lineColor);
 
     for (int i = 0; i < thickness; i++) {

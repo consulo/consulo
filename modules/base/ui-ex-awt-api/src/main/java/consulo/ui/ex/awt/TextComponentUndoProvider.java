@@ -35,7 +35,7 @@ public class TextComponentUndoProvider implements Disposable {
     protected final UndoManager myUndoManager = new UndoManager();
     private UndoableEditListener myUndoableEditListener;
 
-    public TextComponentUndoProvider(final JTextComponent textComponent) {
+    public TextComponentUndoProvider(JTextComponent textComponent) {
         myTextComponent = textComponent;
 
         myUndoableEditListener = new UndoableEditListener() {

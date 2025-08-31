@@ -44,20 +44,20 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     private final SeverityRegistrarImpl mySeverityRegistrar;
     private HighlightSeverity myChosen = null;
 
-    public LevelChooserAction(final InspectionProfileImpl profile) {
+    public LevelChooserAction(InspectionProfileImpl profile) {
         this((SeverityRegistrarImpl) ((SeverityProvider) profile.getProfileManager()).getOwnSeverityRegistrar());
     }
 
-    public LevelChooserAction(final SeverityRegistrarImpl severityRegistrar) {
+    public LevelChooserAction(SeverityRegistrarImpl severityRegistrar) {
         mySeverityRegistrar = severityRegistrar;
     }
 
     @Nonnull
     @Override
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
-        final DefaultActionGroup group = new DefaultActionGroup();
-        for (final HighlightSeverity severity : getSeverities(mySeverityRegistrar)) {
-            final HighlightSeverityAction action = new HighlightSeverityAction(severity);
+        DefaultActionGroup group = new DefaultActionGroup();
+        for (HighlightSeverity severity : getSeverities(mySeverityRegistrar)) {
+            HighlightSeverityAction action = new HighlightSeverityAction(severity);
             if (myChosen == null) {
                 setChosen(action.getSeverity());
             }
@@ -68,11 +68,11 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
-                final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(Project.KEY), myChosen, mySeverityRegistrar);
+                SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(Project.KEY), myChosen, mySeverityRegistrar);
                 if (dlg.showAndGet()) {
-                    final HighlightInfoType type = dlg.getSelectedType();
+                    HighlightInfoType type = dlg.getSelectedType();
                     if (type != null) {
-                        final HighlightSeverity severity = type.getSeverity(null);
+                        HighlightSeverity severity = type.getSeverity(null);
                         setChosen(severity);
                         onChosen(severity);
                     }
@@ -82,9 +82,9 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
         return group;
     }
 
-    public static SortedSet<HighlightSeverity> getSeverities(final SeverityRegistrarImpl severityRegistrar) {
-        final SortedSet<HighlightSeverity> severities = new TreeSet<>(severityRegistrar);
-        for (final SeverityRegistrarImpl.SeverityBasedTextAttributes type : SeverityUtil.getRegisteredHighlightingInfoTypes(
+    public static SortedSet<HighlightSeverity> getSeverities(SeverityRegistrarImpl severityRegistrar) {
+        SortedSet<HighlightSeverity> severities = new TreeSet<>(severityRegistrar);
+        for (SeverityRegistrarImpl.SeverityBasedTextAttributes type : SeverityUtil.getRegisteredHighlightingInfoTypes(
             severityRegistrar)) {
             severities.add(type.getSeverity());
         }
@@ -95,11 +95,11 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
         return severities;
     }
 
-    protected abstract void onChosen(final HighlightSeverity severity);
+    protected abstract void onChosen(HighlightSeverity severity);
 
-    public void setChosen(final HighlightSeverity severity) {
+    public void setChosen(HighlightSeverity severity) {
         myChosen = severity;
-        final Presentation templatePresentation = getTemplatePresentation();
+        Presentation templatePresentation = getTemplatePresentation();
         templatePresentation.setText(SingleInspectionProfilePanel.renderSeverity(severity));
         templatePresentation.setIcon(HighlightDisplayLevel.find(severity).getIcon());
     }
@@ -111,9 +111,9 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
             return mySeverity;
         }
 
-        private HighlightSeverityAction(final HighlightSeverity severity) {
+        private HighlightSeverityAction(HighlightSeverity severity) {
             mySeverity = severity;
-            final Presentation presentation = getTemplatePresentation();
+            Presentation presentation = getTemplatePresentation();
             presentation.setText(SingleInspectionProfilePanel.renderSeverity(severity));
             presentation.setIcon(HighlightDisplayLevel.find(severity).getIcon());
         }
@@ -121,7 +121,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final HighlightSeverity severity = getSeverity();
+            HighlightSeverity severity = getSeverity();
             setChosen(severity);
             onChosen(severity);
         }

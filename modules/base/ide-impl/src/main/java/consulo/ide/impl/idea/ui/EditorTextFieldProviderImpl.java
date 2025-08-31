@@ -79,7 +79,7 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
   @Nonnull
   @Override
   public EditorTextField getEditorField(@Nonnull Language language, @Nonnull Project project,
-                                        @Nonnull final Iterable<Consumer<EditorEx>> features) {
+                                        @Nonnull Iterable<Consumer<EditorEx>> features) {
     return new MyEditorTextField(language, project, features);
   }
 
@@ -95,7 +95,7 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
 
     @Override
     protected EditorEx createEditor() {
-      final EditorEx ex = super.createEditor();
+      EditorEx ex = super.createEditor();
       ex.getScrollPane().setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
       ex.setHorizontalScrollbarVisible(true);
       applyDefaultSettings(ex);

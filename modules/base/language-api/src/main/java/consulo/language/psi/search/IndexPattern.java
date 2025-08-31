@@ -42,7 +42,7 @@ public class IndexPattern {
    * @param patternString the text of the Java regular expression to match.
    * @param caseSensitive whether the regular expression should be case-sensitive.
    */
-  public IndexPattern(@Nonnull String patternString, final boolean caseSensitive) {
+  public IndexPattern(@Nonnull String patternString, boolean caseSensitive) {
     myPatternString = patternString;
     myCaseSensitive = caseSensitive;
     compilePattern();
@@ -67,12 +67,12 @@ public class IndexPattern {
     return myCaseSensitive;
   }
 
-  public void setPatternString(@Nonnull final String patternString) {
+  public void setPatternString(@Nonnull String patternString) {
     myPatternString = patternString;
     compilePattern();
   }
 
-  public void setCaseSensitive(final boolean caseSensitive) {
+  public void setCaseSensitive(boolean caseSensitive) {
     myCaseSensitive = caseSensitive;
     compilePattern();
   }
@@ -95,11 +95,11 @@ public class IndexPattern {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final IndexPattern that = (IndexPattern)o;
+    IndexPattern that = (IndexPattern)o;
 
     if (myCaseSensitive != that.myCaseSensitive) return false;
     if (!myPatternString.equals(that.myPatternString)) return false;

@@ -41,9 +41,9 @@ public class PackageFileAction extends AnAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     boolean visible = false;
-    final Project project = e.getData(Project.KEY);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
-      final List<VirtualFile> files = getFilesToPackage(e, project);
+      List<VirtualFile> files = getFilesToPackage(e, project);
       if (!files.isEmpty()) {
         visible = true;
         e.getPresentation().setTextValue(
@@ -59,18 +59,18 @@ public class PackageFileAction extends AnAction {
 
   @Nonnull
   private static List<VirtualFile> getFilesToPackage(@Nonnull AnActionEvent e, @Nonnull Project project) {
-    final VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null) return Collections.emptyList();
 
     List<VirtualFile> result = new ArrayList<>();
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final CompilerManager compilerManager = CompilerManager.getInstance(project);
+    CompilerManager compilerManager = CompilerManager.getInstance(project);
     for (VirtualFile file : files) {
       if (file == null || file.isDirectory() ||
           fileIndex.isInSourceContent(file) && compilerManager.isCompilableFileType(file.getFileType())) {
         return Collections.emptyList();
       }
-      final Collection<? extends Artifact> artifacts = ArtifactBySourceFileFinder.getInstance(project).findArtifacts(file);
+      Collection<? extends Artifact> artifacts = ArtifactBySourceFileFinder.getInstance(project).findArtifacts(file);
       for (Artifact artifact : artifacts) {
         if (!StringUtil.isEmpty(artifact.getOutputPath())) {
           result.add(file);
@@ -86,7 +86,7 @@ public class PackageFileAction extends AnAction {
   public void actionPerformed(@Nonnull AnActionEvent event) {
     Project project = event.getRequiredData(Project.KEY);
     FileDocumentManager.getInstance().saveAllDocuments();
-    final List<VirtualFile> files = getFilesToPackage(event, project);
+    List<VirtualFile> files = getFilesToPackage(event, project);
     Artifact[] allArtifacts = ArtifactManager.getInstance(project).getArtifacts();
     PackageFileWorker.startPackagingFiles(project, files, allArtifacts, EmptyRunnable.getInstance());
   }

@@ -136,7 +136,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
 
   public void queueHighlightInfo(@Nonnull HighlightInfo info, @Nonnull TextRange restrictedRange, int groupId) {
     applyInEDT(() -> {
-      final EditorColorsScheme colorsScheme = getColorsScheme();
+      EditorColorsScheme colorsScheme = getColorsScheme();
       UpdateHighlightersUtilImpl
               .addHighlighterToEditorIncrementally(myProject, getDocument(), getPsiFile(), restrictedRange.getStartOffset(), restrictedRange.getEndOffset(), (HighlightInfoImpl)info, colorsScheme,
                                                    groupId, myRanges2markersCache);

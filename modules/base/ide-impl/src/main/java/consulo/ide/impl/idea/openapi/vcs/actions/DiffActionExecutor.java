@@ -61,9 +61,9 @@ public abstract class DiffActionExecutor {
   protected final Project myProject;
   private final BackgroundableActionEnabledHandler myHandler;
 
-  protected DiffActionExecutor(final DiffProvider diffProvider, final VirtualFile selectedFile, final Project project,
-                               final VcsBackgroundableActions actionKey) {
-    final ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
+  protected DiffActionExecutor(DiffProvider diffProvider, VirtualFile selectedFile, Project project,
+                               VcsBackgroundableActions actionKey) {
+    ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
     myHandler = vcsManager.getBackgroundableActionHandler(actionKey);
     myDiffProvider = diffProvider;
     mySelectedFile = selectedFile;
@@ -71,15 +71,15 @@ public abstract class DiffActionExecutor {
   }
 
   @Nullable
-  protected DiffContent createRemote(final VcsRevisionNumber revisionNumber) throws IOException, VcsException {
-    final ContentRevision fileRevision = myDiffProvider.createFileContent(revisionNumber, mySelectedFile);
+  protected DiffContent createRemote(VcsRevisionNumber revisionNumber) throws IOException, VcsException {
+    ContentRevision fileRevision = myDiffProvider.createFileContent(revisionNumber, mySelectedFile);
     if (fileRevision == null) return null;
     DiffContentFactoryEx contentFactory = DiffContentFactoryEx.getInstanceEx();
 
     DiffContent diffContent;
     if (fileRevision instanceof BinaryContentRevision) {
       FilePath filePath = fileRevision.getFile();
-      final byte[] content = ((BinaryContentRevision)fileRevision).getBinaryContent();
+      byte[] content = ((BinaryContentRevision)fileRevision).getBinaryContent();
       if (content == null) return null;
 
       diffContent = contentFactory.createBinary(myProject, content, filePath.getFileType(), filePath.getName());
@@ -103,13 +103,13 @@ public abstract class DiffActionExecutor {
     final Ref<VcsException> exceptionRef = new Ref<>();
     final Ref<DiffRequest> requestRef = new Ref<>();
 
-    final Task.Backgroundable task = new Task.Backgroundable(myProject,
+    Task.Backgroundable task = new Task.Backgroundable(myProject,
                                                              VcsBundle.message("show.diff.progress.title.detailed",
                                                                                mySelectedFile.getPresentableUrl()),
                                                              true) {
 
       public void run(@Nonnull ProgressIndicator indicator) {
-        final VcsRevisionNumber revisionNumber = getRevisionNumber();
+        VcsRevisionNumber revisionNumber = getRevisionNumber();
         try {
           if (revisionNumber == null) {
             return;
@@ -123,10 +123,10 @@ public abstract class DiffActionExecutor {
           boolean inverted = false;
           String title1;
           String title2;
-          final FileStatus status = FileStatusManager.getInstance((Project)myProject).getStatus(mySelectedFile);
+          FileStatus status = FileStatusManager.getInstance((Project)myProject).getStatus(mySelectedFile);
           if (status == null || FileStatus.NOT_CHANGED.equals(status) || FileStatus.UNKNOWN.equals(status) ||
               FileStatus.IGNORED.equals(status)) {
-            final VcsRevisionNumber currentRevision = myDiffProvider.getCurrentRevision(mySelectedFile);
+            VcsRevisionNumber currentRevision = myDiffProvider.getCurrentRevision(mySelectedFile);
 
             inverted = revisionNumber.compareTo(currentRevision) > 0;
             title1 = revisionNumber.asString();
@@ -192,9 +192,9 @@ public abstract class DiffActionExecutor {
     ProgressManager.getInstance().run(task);
   }
 
-  public static void showDiff(final DiffProvider diffProvider, final VcsRevisionNumber revisionNumber, final VirtualFile selectedFile,
-                              final Project project, final VcsBackgroundableActions actionKey) {
-    final DiffActionExecutor executor = new CompareToFixedExecutor(diffProvider, selectedFile, project, revisionNumber, actionKey);
+  public static void showDiff(DiffProvider diffProvider, VcsRevisionNumber revisionNumber, VirtualFile selectedFile,
+                              Project project, VcsBackgroundableActions actionKey) {
+    DiffActionExecutor executor = new CompareToFixedExecutor(diffProvider, selectedFile, project, revisionNumber, actionKey);
     executor.showDiff();
   }
 
@@ -204,9 +204,9 @@ public abstract class DiffActionExecutor {
   public static class CompareToFixedExecutor extends DiffActionExecutor {
     private final VcsRevisionNumber myNumber;
 
-    public CompareToFixedExecutor(final DiffProvider diffProvider,
-                                  final VirtualFile selectedFile, final Project project, final VcsRevisionNumber number,
-                                  final VcsBackgroundableActions actionKey) {
+    public CompareToFixedExecutor(DiffProvider diffProvider,
+                                  VirtualFile selectedFile, Project project, VcsRevisionNumber number,
+                                  VcsBackgroundableActions actionKey) {
       super(diffProvider, selectedFile, project, actionKey);
       myNumber = number;
     }
@@ -217,8 +217,8 @@ public abstract class DiffActionExecutor {
   }
 
   public static class CompareToCurrentExecutor extends DiffActionExecutor {
-    public CompareToCurrentExecutor(final DiffProvider diffProvider, final VirtualFile selectedFile, final Project project,
-                                    final VcsBackgroundableActions actionKey) {
+    public CompareToCurrentExecutor(DiffProvider diffProvider, VirtualFile selectedFile, Project project,
+                                    VcsBackgroundableActions actionKey) {
       super(diffProvider, selectedFile, project, actionKey);
     }
 
@@ -231,13 +231,13 @@ public abstract class DiffActionExecutor {
   public static class DeletionAwareExecutor extends DiffActionExecutor {
     private boolean myFileStillExists;
 
-    public DeletionAwareExecutor(final DiffProvider diffProvider,
-                                 final VirtualFile selectedFile, final Project project, final VcsBackgroundableActions actionKey) {
+    public DeletionAwareExecutor(DiffProvider diffProvider,
+                                 VirtualFile selectedFile, Project project, VcsBackgroundableActions actionKey) {
       super(diffProvider, selectedFile, project, actionKey);
     }
 
     protected VcsRevisionNumber getRevisionNumber() {
-      final ItemLatestState itemState = myDiffProvider.getLastRevision(mySelectedFile);
+      ItemLatestState itemState = myDiffProvider.getLastRevision(mySelectedFile);
       if (itemState == null) {
         return null;
       }
@@ -246,7 +246,7 @@ public abstract class DiffActionExecutor {
     }
 
     @Override
-    protected DiffContent createRemote(final VcsRevisionNumber revisionNumber) throws IOException, VcsException {
+    protected DiffContent createRemote(VcsRevisionNumber revisionNumber) throws IOException, VcsException {
       if (myFileStillExists) {
         return super.createRemote(revisionNumber);
       } else {

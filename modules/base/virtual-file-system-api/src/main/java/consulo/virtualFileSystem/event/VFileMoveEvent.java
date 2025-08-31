@@ -29,7 +29,7 @@ public class VFileMoveEvent extends VFileEvent {
   private final VirtualFile myOldParent;
   private final VirtualFile myNewParent;
 
-  public VFileMoveEvent(final Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) {
+  public VFileMoveEvent(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) {
     super(requestor, false);
     myFile = file;
     myNewParent = newParent;
@@ -80,11 +80,11 @@ public class VFileMoveEvent extends VFileEvent {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final VFileMoveEvent event = (VFileMoveEvent)o;
+    VFileMoveEvent event = (VFileMoveEvent)o;
 
     if (!myFile.equals(event.myFile)) return false;
     if (!myNewParent.equals(event.myNewParent)) return false;

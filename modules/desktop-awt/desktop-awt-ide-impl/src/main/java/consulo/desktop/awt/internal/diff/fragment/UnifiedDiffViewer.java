@@ -292,21 +292,21 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     @Override
     @Nonnull
-    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
         try {
             indicator.checkCanceled();
 
-            final Document document1 = getContent1().getDocument();
-            final Document document2 = getContent2().getDocument();
+            Document document1 = getContent1().getDocument();
+            Document document2 = getContent2().getDocument();
 
             ThrowableComputable<CharSequence[], RuntimeException> action1 =
                 () -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
-            final CharSequence[] texts = AccessRule.read(action1);
+            CharSequence[] texts = AccessRule.read(action1);
 
-            final List<LineFragment> fragments = DiffImplUtil.compare(myRequest, texts[0], texts[1], getDiffConfig(), indicator);
+            List<LineFragment> fragments = DiffImplUtil.compare(myRequest, texts[0], texts[1], getDiffConfig(), indicator);
 
-            final DocumentContent content1 = getContent1();
-            final DocumentContent content2 = getContent2();
+            DocumentContent content1 = getContent1();
+            DocumentContent content2 = getContent2();
 
             indicator.checkCanceled();
             ThrowableComputable<TwosideDocumentData, RuntimeException> action = () -> {
@@ -422,11 +422,11 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     @Nonnull
     private Runnable apply(
-        @Nonnull final CombinedEditorData data,
-        @Nonnull final List<ChangedBlock> blocks,
-        @Nonnull final LineNumberConvertor convertor,
-        @Nonnull final List<LineRange> changedLines,
-        final boolean isContentsEqual
+        @Nonnull CombinedEditorData data,
+        @Nonnull List<ChangedBlock> blocks,
+        @Nonnull LineNumberConvertor convertor,
+        @Nonnull List<LineRange> changedLines,
+        boolean isContentsEqual
     ) {
         return () -> {
             myFoldingModel.updateContext(myRequest, getFoldingModelSettings());
@@ -521,8 +521,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     @Contract("!null, _ -> !null")
     private static IntUnaryOperator mergeConverters(
-        @Nonnull final IntUnaryOperator convertor,
-        @Nonnull final IntUnaryOperator separatorLines
+        @Nonnull IntUnaryOperator convertor,
+        @Nonnull IntUnaryOperator separatorLines
     ) {
         return value -> convertor.applyAsInt(separatorLines.applyAsInt(value));
     }
@@ -770,8 +770,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull final AnActionEvent e) {
-            final List<UnifiedDiffChange> selectedChanges = getSelectedChanges();
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            List<UnifiedDiffChange> selectedChanges = getSelectedChanges();
             if (selectedChanges.isEmpty() || !isEditable(myModifiedSide, true) || isStateIsOutOfDate()) {
                 return;
             }
@@ -879,7 +879,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @RequiredWriteAction
-    public void appendChange(@Nonnull UnifiedDiffChange change, @Nonnull final Side sourceSide) {
+    public void appendChange(@Nonnull UnifiedDiffChange change, @Nonnull Side sourceSide) {
         Side outputSide = sourceSide.other();
 
         Document document1 = getDocument(Side.LEFT);
@@ -1051,7 +1051,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         if (myChangedBlockData == null) {
             return Collections.emptyList();
         }
-        final BitSet lines = DiffImplUtil.getSelectedLines(myEditor);
+        BitSet lines = DiffImplUtil.getSelectedLines(myEditor);
         List<UnifiedDiffChange> changes = myChangedBlockData.getDiffChanges();
 
         List<UnifiedDiffChange> affectedChanges = new ArrayList<>();

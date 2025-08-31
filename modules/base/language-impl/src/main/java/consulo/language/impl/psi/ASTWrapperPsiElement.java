@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 public class ASTWrapperPsiElement extends ASTDelegatePsiElement {
   private final ASTNode myNode;
 
-  public ASTWrapperPsiElement(@Nonnull final ASTNode node) {
+  public ASTWrapperPsiElement(@Nonnull ASTNode node) {
     myNode = node;
   }
 

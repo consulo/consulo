@@ -57,11 +57,11 @@ public class GraphAlgorithmsImpl extends GraphAlgorithms {
         return graph.getNodes();
       }
 
-      public Iterator<Node> getIn(final Node n) {
+      public Iterator<Node> getIn(Node n) {
         return graph.getOut(n);
       }
 
-      public Iterator<Node> getOut(final Node n) {
+      public Iterator<Node> getOut(Node n) {
         return graph.getIn(n);
       }
 
@@ -71,14 +71,14 @@ public class GraphAlgorithmsImpl extends GraphAlgorithms {
   @Nonnull
   @Override
   public <Node> Graph<Chunk<Node>> computeSCCGraph(@Nonnull final Graph<Node> graph) {
-    final DFSTBuilder<Node> builder = new DFSTBuilder<>(graph);
+    DFSTBuilder<Node> builder = new DFSTBuilder<>(graph);
 
-    final Collection<Collection<Node>> components = builder.getComponents();
+    Collection<Collection<Node>> components = builder.getComponents();
     final List<Chunk<Node>> chunks = new ArrayList<>(components.size());
     final Map<Node, Chunk<Node>> nodeToChunkMap = new LinkedHashMap<>();
     for (Collection<Node> component : components) {
-      final Set<Node> chunkNodes = new LinkedHashSet<>();
-      final Chunk<Node> chunk = new Chunk<>(chunkNodes);
+      Set<Node> chunkNodes = new LinkedHashSet<>();
+      Chunk<Node> chunk = new Chunk<>(chunkNodes);
       chunks.add(chunk);
       for (Node node : component) {
         chunkNodes.add(node);
@@ -94,11 +94,11 @@ public class GraphAlgorithmsImpl extends GraphAlgorithms {
 
       @Override
       public Iterator<Chunk<Node>> getIn(Chunk<Node> chunk) {
-        final Set<Node> chunkNodes = chunk.getNodes();
-        final Set<Chunk<Node>> ins = new LinkedHashSet<>();
-        for (final Node node : chunkNodes) {
+        Set<Node> chunkNodes = chunk.getNodes();
+        Set<Chunk<Node>> ins = new LinkedHashSet<>();
+        for (Node node : chunkNodes) {
           for (Iterator<Node> nodeIns = graph.getIn(node); nodeIns.hasNext(); ) {
-            final Node in = nodeIns.next();
+            Node in = nodeIns.next();
             if (!chunk.containsNode(in)) {
               ins.add(nodeToChunkMap.get(in));
             }
@@ -130,7 +130,7 @@ public class GraphAlgorithmsImpl extends GraphAlgorithms {
   @Nonnull
   @Override
   public <Node> List<List<Node>> removePathsWithCycles(@Nonnull List<List<Node>> paths) {
-    final List<List<Node>> result = new ArrayList<>();
+    List<List<Node>> result = new ArrayList<>();
     for (List<Node> path : paths) {
       if (!containsCycle(path)) {
         result.add(path);

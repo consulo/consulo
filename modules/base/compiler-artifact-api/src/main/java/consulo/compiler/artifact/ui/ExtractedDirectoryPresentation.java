@@ -45,10 +45,10 @@ public class ExtractedDirectoryPresentation extends PackagingElementPresentation
 
   public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.ExtractedFolder);
-    final String parentPath = PathUtil.getParentPath(myJarPath);
+    String parentPath = PathUtil.getParentPath(myJarPath);
     if (myFile == null || !myFile.isDirectory()) {
       mainAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;
-      final VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(parentPath);
+      VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(parentPath);
       if (parentFile == null) {
         commentAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;
       }

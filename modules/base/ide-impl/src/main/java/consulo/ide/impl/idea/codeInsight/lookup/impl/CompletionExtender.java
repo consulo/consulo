@@ -32,9 +32,9 @@ public class CompletionExtender extends ListExpandableItemsHandler {
       @Override
       public void componentShown(ComponentEvent e) {
         if (myComponent.getParent() != null && myComponent.getParent().getParent() instanceof JScrollPane) {
-          final JScrollBar verticalScrollBar = ((JScrollPane)myComponent.getParent().getParent()).getVerticalScrollBar();
-          final JScrollBar horizontalScrollBar = ((JScrollPane)myComponent.getParent().getParent()).getVerticalScrollBar();
-          final AdjustmentListener listener = new AdjustmentListener() {
+          JScrollBar verticalScrollBar = ((JScrollPane)myComponent.getParent().getParent()).getVerticalScrollBar();
+          JScrollBar horizontalScrollBar = ((JScrollPane)myComponent.getParent().getParent()).getVerticalScrollBar();
+          AdjustmentListener listener = new AdjustmentListener() {
             @Override
             public void adjustmentValueChanged(AdjustmentEvent e) {
               updateCurrentSelection();

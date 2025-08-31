@@ -41,7 +41,7 @@ public class PlatformPatterns extends StandardPatterns {
   public static PsiElementPattern.Capture<PomTargetPsiElement> pomElement(final ElementPattern<? extends PomTarget> targetPattern) {
     return new PsiElementPattern.Capture<>(PomTargetPsiElement.class).with(new PatternCondition<>("withPomTarget") {
       @Override
-      public boolean accepts(@Nonnull final PomTargetPsiElement element, final ProcessingContext context) {
+      public boolean accepts(@Nonnull PomTargetPsiElement element, ProcessingContext context) {
         return targetPattern.accepts(element.getTarget(), context);
       }
     });
@@ -59,7 +59,7 @@ public class PlatformPatterns extends StandardPatterns {
     return psiElement().withElementType(type);
   }
 
-  public static <T extends PsiElement> PsiElementPattern.Capture<T> psiElement(final Class<T> aClass) {
+  public static <T extends PsiElement> PsiElementPattern.Capture<T> psiElement(Class<T> aClass) {
     return new PsiElementPattern.Capture<>(aClass);
   }
 

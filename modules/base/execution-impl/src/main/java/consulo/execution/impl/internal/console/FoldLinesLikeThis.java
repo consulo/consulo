@@ -29,13 +29,13 @@ public class FoldLinesLikeThis extends DumbAwareAction {
 
     @Nullable
     private static String getSingleLineSelection(@Nonnull Editor editor) {
-        final SelectionModel model = editor.getSelectionModel();
-        final Document document = editor.getDocument();
+        SelectionModel model = editor.getSelectionModel();
+        Document document = editor.getDocument();
         if (!model.hasSelection()) {
-            final int offset = editor.getCaretModel().getOffset();
+            int offset = editor.getCaretModel().getOffset();
             if (offset <= document.getTextLength()) {
-                final int lineNumber = document.getLineNumber(offset);
-                final String line = document.getText().substring(document.getLineStartOffset(lineNumber), document.getLineEndOffset(lineNumber)).trim();
+                int lineNumber = document.getLineNumber(offset);
+                String line = document.getText().substring(document.getLineStartOffset(lineNumber), document.getLineEndOffset(lineNumber)).trim();
                 if (StringUtil.isNotEmpty(line)) {
                     return line;
                 }
@@ -43,10 +43,10 @@ public class FoldLinesLikeThis extends DumbAwareAction {
 
             return null;
         }
-        final int start = model.getSelectionStart();
-        final int end = model.getSelectionEnd();
+        int start = model.getSelectionStart();
+        int end = model.getSelectionEnd();
         if (document.getLineNumber(start) == document.getLineNumber(end)) {
-            final String selection = document.getText().substring(start, end).trim();
+            String selection = document.getText().substring(start, end).trim();
             if (StringUtil.isNotEmpty(selection)) {
                 return selection;
             }
@@ -63,11 +63,11 @@ public class FoldLinesLikeThis extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Editor editor = e.getRequiredData(Editor.KEY);
-        final String selection = getSingleLineSelection(editor);
+        Editor editor = e.getRequiredData(Editor.KEY);
+        String selection = getSingleLineSelection(editor);
         assert selection != null;
 
-        final ConsoleView consoleView = e.getData(ConsoleView.KEY);
+        ConsoleView consoleView = e.getData(ConsoleView.KEY);
 
         UIAccess uiAccess = UIAccess.current();
 

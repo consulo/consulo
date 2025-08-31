@@ -47,7 +47,7 @@ public class IntentionSettingsPanel {
       protected void selectionChanged(Object selected) {
         if (selected instanceof IntentionActionMetaData) {
           final IntentionActionMetaData actionMetaData = (IntentionActionMetaData)selected;
-          final Runnable runnable = new Runnable() {
+          Runnable runnable = new Runnable() {
             @Override
             public void run() {
               intentionSelected(actionMetaData);
@@ -62,10 +62,10 @@ public class IntentionSettingsPanel {
       }
 
       @Override
-      protected List<IntentionActionMetaData> filterModel(String filter, final boolean force) {
-        final List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
+      protected List<IntentionActionMetaData> filterModel(String filter, boolean force) {
+        List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
         if (filter == null || filter.length() == 0) return list;
-        final HashSet<String> quoted = new HashSet<String>();
+        HashSet<String> quoted = new HashSet<String>();
         List<Set<String>> keySetList = SearchUtil.findKeys(filter, quoted);
         List<IntentionActionMetaData> result = new ArrayList<IntentionActionMetaData>();
         for (IntentionActionMetaData metaData : list) {
@@ -73,7 +73,7 @@ public class IntentionSettingsPanel {
             result.add(metaData);
           }
         }
-        final Set<String> filters = SearchableOptionsRegistrar.getInstance().getProcessedWords(filter);
+        Set<String> filters = SearchableOptionsRegistrar.getInstance().getProcessedWords(filter);
         if (force && result.isEmpty()) {
           if (filters.size() > 1) {
             result = filterModel(filter, false);
@@ -131,7 +131,7 @@ public class IntentionSettingsPanel {
     myIntentionSettingsTree.selectIntention(familyName);
   }
 
-  private static boolean isIntentionAccepted(IntentionActionMetaData metaData, @NonNls String filter, boolean forceInclude, final List<Set<String>> keySetList, final HashSet<String> quoted) {
+  private static boolean isIntentionAccepted(IntentionActionMetaData metaData, @NonNls String filter, boolean forceInclude, List<Set<String>> keySetList, HashSet<String> quoted) {
     if (StringUtil.containsIgnoreCase(metaData.getActionText(), filter)) {
       return true;
     }
@@ -150,7 +150,7 @@ public class IntentionSettingsPanel {
         }
       }
       try {
-        final TextDescriptor description = metaData.getDescription();
+        TextDescriptor description = metaData.getDescription();
         if (description != null) {
           if (StringUtil.containsIgnoreCase(description.getText(), stripped)) {
             if (!forceInclude) return true;
@@ -177,7 +177,7 @@ public class IntentionSettingsPanel {
     return forceInclude;
   }
 
-  public Runnable showOption(final SearchableConfigurable configurable, final String option) {
+  public Runnable showOption(SearchableConfigurable configurable, final String option) {
     return new Runnable() {
       @Override
       public void run() {

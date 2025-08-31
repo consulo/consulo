@@ -31,7 +31,7 @@ import java.awt.event.KeyEvent;
 public class RadioUpDownListener extends KeyAdapter {
   private final JRadioButton[] myRadioButtons;
 
-  public RadioUpDownListener(final JRadioButton... radioButtons) {
+  public RadioUpDownListener(JRadioButton... radioButtons) {
     myRadioButtons = radioButtons;
     for (JRadioButton radioButton : radioButtons) {
       radioButton.addKeyListener(this);
@@ -39,8 +39,8 @@ public class RadioUpDownListener extends KeyAdapter {
   }
 
   @Override
-  public void keyPressed(final KeyEvent e) {
-    final int selected = getSelected();
+  public void keyPressed(KeyEvent e) {
+    int selected = getSelected();
     if (selected != -1) {
       if (e.getKeyCode() == KeyEvent.VK_UP) {
         up(selected, selected);
@@ -76,7 +76,7 @@ public class RadioUpDownListener extends KeyAdapter {
     return -1;
   }
 
-  private static boolean click(final JRadioButton button) {
+  private static boolean click(JRadioButton button) {
     if (button.isEnabled() && button.isVisible()) {
       IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(button);
       button.doClick();

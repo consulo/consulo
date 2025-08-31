@@ -29,7 +29,7 @@ public interface JavaLikeQuoteHandler extends QuoteHandler {
 
   TokenSet getStringTokenTypes();
 
-  boolean isAppropriateElementTypeForLiteral(final @Nonnull IElementType tokenType);
+  boolean isAppropriateElementTypeForLiteral(@Nonnull IElementType tokenType);
 
-  boolean needParenthesesAroundConcatenation(final PsiElement element);
+  boolean needParenthesesAroundConcatenation(PsiElement element);
 }

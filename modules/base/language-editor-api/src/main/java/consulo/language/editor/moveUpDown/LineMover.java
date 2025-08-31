@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 public class LineMover extends StatementUpDownMover {
 
   @Override
-  public boolean checkAvailable(@Nonnull final Editor editor, @Nonnull final PsiFile file, @Nonnull final MoveInfo info, final boolean down) {
+  public boolean checkAvailable(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull MoveInfo info, boolean down) {
     LineRange range = StatementUpDownMover.getLineRangeFromSelection(editor);
 
     LogicalPosition maxLinePos = editor.offsetToLogicalPosition(editor.getDocument().getTextLength());
@@ -43,7 +43,7 @@ public class LineMover extends StatementUpDownMover {
     return true;
   }
 
-  protected static Pair<PsiElement, PsiElement> getElementRange(final PsiElement parent, PsiElement element1, PsiElement element2) {
+  protected static Pair<PsiElement, PsiElement> getElementRange(PsiElement parent, PsiElement element1, PsiElement element2) {
     if (PsiTreeUtil.isAncestor(element1, element2, false) || PsiTreeUtil.isAncestor(element2, element1, false)) {
       return Pair.create(parent, parent);
     }

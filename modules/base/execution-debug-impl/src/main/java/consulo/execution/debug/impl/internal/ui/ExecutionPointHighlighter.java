@@ -63,7 +63,7 @@ public class ExecutionPointHighlighter {
         project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> update(false));
     }
 
-    public void show(final @Nonnull XSourcePosition position, final boolean notTopFrame, @Nullable final GutterIconRenderer gutterIconRenderer) {
+    public void show(@Nonnull XSourcePosition position, boolean notTopFrame, @Nullable GutterIconRenderer gutterIconRenderer) {
         updateRequested.set(false);
         myProject.getUIAccess().give(() -> {
             updateRequested.set(false);
@@ -126,7 +126,7 @@ public class ExecutionPointHighlighter {
         return myOpenFileDescriptor != null ? myOpenFileDescriptor.getFile() : null;
     }
 
-    public void update(final boolean navigate) {
+    public void update(boolean navigate) {
         if (updateRequested.compareAndSet(false, true)) {
             ApplicationManager.getApplication().invokeLater(() -> {
                 if (updateRequested.compareAndSet(true, false)) {
@@ -136,7 +136,7 @@ public class ExecutionPointHighlighter {
         }
     }
 
-    public void updateGutterIcon(@Nullable final GutterIconRenderer renderer) {
+    public void updateGutterIcon(@Nullable GutterIconRenderer renderer) {
         AppUIUtil.invokeOnEdt(() -> {
             if (myRangeHighlighter != null && myGutterIconRenderer != null) {
                 myRangeHighlighter.setGutterIconRenderer(renderer);
@@ -233,7 +233,7 @@ public class ExecutionPointHighlighter {
         return myRangeHighlighter != null && myRangeHighlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE;
     }
 
-    private static void disableMouseHoverPopups(@Nonnull final Editor editor, final boolean disable) {
+    private static void disableMouseHoverPopups(@Nonnull Editor editor, boolean disable) {
         Project project = editor.getProject();
         if (ApplicationManager.getApplication().isUnitTestMode() || project == null) {
             return;

@@ -27,11 +27,11 @@ public class IndentImpl extends Indent {
   private final int mySpaces;
   private final boolean myEnforceIndentToChildren;
 
-  public IndentImpl(final Type type, boolean absolute, boolean relativeToDirectParent) {
+  public IndentImpl(Type type, boolean absolute, boolean relativeToDirectParent) {
     this(type, absolute, 0, relativeToDirectParent, false);
   }
 
-  public IndentImpl(final Type type, boolean absolute, final int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
+  public IndentImpl(Type type, boolean absolute, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
     myType = type;
     myIsAbsolute = absolute;
     mySpaces = spaces;

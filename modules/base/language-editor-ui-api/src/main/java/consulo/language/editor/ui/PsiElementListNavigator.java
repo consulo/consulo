@@ -23,14 +23,14 @@ public class PsiElementListNavigator {
   private PsiElementListNavigator() {
   }
 
-  public static void openTargets(MouseEvent e, NavigatablePsiElement[] targets, String title, final String findUsagesTitle, ListCellRenderer listRenderer) {
+  public static void openTargets(MouseEvent e, NavigatablePsiElement[] targets, String title, String findUsagesTitle, ListCellRenderer listRenderer) {
     openTargets(e, targets, title, findUsagesTitle, listRenderer, (BackgroundUpdaterTask)null);
   }
 
   public static void openTargets(MouseEvent e,
                                  NavigatablePsiElement[] targets,
                                  String title,
-                                 final String findUsagesTitle,
+                                 String findUsagesTitle,
                                  ListCellRenderer listRenderer,
                                  @Nullable BackgroundUpdaterTask listUpdaterTask) {
     JBPopup popup = navigateOrCreatePopup(targets, title, findUsagesTitle, listRenderer, listUpdaterTask);
@@ -45,17 +45,17 @@ public class PsiElementListNavigator {
     }
   }
 
-  public static void openTargets(Editor e, NavigatablePsiElement[] targets, String title, final String findUsagesTitle, ListCellRenderer listRenderer) {
+  public static void openTargets(Editor e, NavigatablePsiElement[] targets, String title, String findUsagesTitle, ListCellRenderer listRenderer) {
     openTargets(e, targets, title, findUsagesTitle, listRenderer, null);
   }
 
   public static void openTargets(Editor e,
                                  NavigatablePsiElement[] targets,
                                  String title,
-                                 final String findUsagesTitle,
+                                 String findUsagesTitle,
                                  ListCellRenderer listRenderer,
                                  @Nullable BackgroundUpdaterTask listUpdaterTask) {
-    final JBPopup popup = navigateOrCreatePopup(targets, title, findUsagesTitle, listRenderer, listUpdaterTask);
+    JBPopup popup = navigateOrCreatePopup(targets, title, findUsagesTitle, listRenderer, listUpdaterTask);
     if (popup != null) {
       if (listUpdaterTask != null) {
         runActionAndListUpdaterTask(() -> e.showPopupInBestPositionFor(popup), listUpdaterTask);
@@ -75,11 +75,11 @@ public class PsiElementListNavigator {
   }
 
   @Nullable
-  public static JBPopup navigateOrCreatePopup(final NavigatablePsiElement[] targets,
-                                              final String title,
-                                              final String findUsagesTitle,
-                                              final ListCellRenderer listRenderer,
-                                              @Nullable final BackgroundUpdaterTask listUpdaterTask) {
+  public static JBPopup navigateOrCreatePopup(NavigatablePsiElement[] targets,
+                                              String title,
+                                              String findUsagesTitle,
+                                              ListCellRenderer listRenderer,
+                                              @Nullable BackgroundUpdaterTask listUpdaterTask) {
     return navigateOrCreatePopup(targets, title, findUsagesTitle, listRenderer, listUpdaterTask, selectedElements -> {
       for (Object element : selectedElements) {
         PsiElement selected = (PsiElement)element;
@@ -94,12 +94,12 @@ public class PsiElementListNavigator {
    * listUpdaterTask should be started after alarm is initialized so one-item popup won't blink
    */
   @Nullable
-  public static JBPopup navigateOrCreatePopup(@Nonnull final NavigatablePsiElement[] targets,
-                                              final String title,
-                                              final String findUsagesTitle,
-                                              final ListCellRenderer listRenderer,
-                                              @Nullable final BackgroundUpdaterTask listUpdaterTask,
-                                              @Nonnull final Consumer<Object[]> consumer) {
+  public static JBPopup navigateOrCreatePopup(@Nonnull NavigatablePsiElement[] targets,
+                                              String title,
+                                              String findUsagesTitle,
+                                              ListCellRenderer listRenderer,
+                                              @Nullable BackgroundUpdaterTask listUpdaterTask,
+                                              @Nonnull Consumer<Object[]> consumer) {
     return builder(targets, title).setFindUsagesTitle(findUsagesTitle).setListRenderer(listRenderer).setListUpdaterTask(listUpdaterTask).setTargetsConsumer(consumer).build();
   }
 

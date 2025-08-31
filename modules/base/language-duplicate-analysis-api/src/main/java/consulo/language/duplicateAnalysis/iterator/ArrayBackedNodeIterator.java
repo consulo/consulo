@@ -9,7 +9,7 @@ public final class ArrayBackedNodeIterator extends NodeIterator {
   private final PsiElement[] nodes;
   private int index;
 
-  public ArrayBackedNodeIterator(final PsiElement[] _nodes) {
+  public ArrayBackedNodeIterator(PsiElement[] _nodes) {
     nodes = _nodes;
     index = 0;
   }

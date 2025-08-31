@@ -22,7 +22,7 @@ public class VcsShowOptionsSettingImpl extends VcsAbstractSetting implements Vcs
   private boolean myValue = true;
 
 
-  public VcsShowOptionsSettingImpl(final String displayName) {
+  public VcsShowOptionsSettingImpl(String displayName) {
     super(displayName);
   }
 
@@ -34,7 +34,7 @@ public class VcsShowOptionsSettingImpl extends VcsAbstractSetting implements Vcs
     return myValue;
   }
 
-  public void setValue(final boolean value) {
+  public void setValue(boolean value) {
     myValue = value;
   }
 

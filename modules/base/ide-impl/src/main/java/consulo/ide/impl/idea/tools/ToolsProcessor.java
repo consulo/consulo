@@ -59,7 +59,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
   @NonNls private static final String APPLICATION_HOME_MACRO = "$APPLICATION_HOME_DIR$";
 
   @Override
-  public ToolsGroup<T> readScheme(@Nonnull final Document document) throws InvalidDataException, IOException, JDOMException {
+  public ToolsGroup<T> readScheme(@Nonnull Document document) throws InvalidDataException, IOException, JDOMException {
     Element root = document.getRootElement();
     if (root == null || !TOOL_SET.equals(root.getName())) {
       throw new InvalidDataException();
@@ -68,9 +68,9 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
     String groupName = root.getAttributeValue(ATTRIBUTE_NAME);
     ToolsGroup<T> result = createToolsGroup(groupName);
 
-    final PathMacroManager macroManager = ApplicationPathMacroManager.getInstance(ApplicationManager.getApplication());
+    PathMacroManager macroManager = ApplicationPathMacroManager.getInstance(ApplicationManager.getApplication());
 
-    for (final Object o : root.getChildren(TOOL)) {
+    for (Object o : root.getChildren(TOOL)) {
       Element element = (Element)o;
 
       T tool = createTool();
@@ -79,7 +79,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
 
       Element exec = element.getChild(EXEC);
       if (exec != null) {
-        for (final Object o1 : exec.getChildren(ELEMENT_OPTION)) {
+        for (Object o1 : exec.getChildren(ELEMENT_OPTION)) {
           Element optionElement = (Element)o1;
 
           String name = optionElement.getAttributeValue(ATTRIBUTE_NAME);
@@ -87,7 +87,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
 
           if (WORKING_DIRECTORY.equals(name)) {
             if (value != null) {
-              final String replace = macroManager.expandPath(value).replace('/', File.separatorChar);
+              String replace = macroManager.expandPath(value).replace('/', File.separatorChar);
               tool.setWorkingDirectory(replace);
             }
           }
@@ -100,7 +100,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
         }
       }
 
-      for (final Element childNode : element.getChildren(FILTER)) {
+      for (Element childNode : element.getChildren(FILTER)) {
         FilterInfo filterInfo = new FilterInfo();
         filterInfo.readExternal(childNode);
         tool.addOutputFilter(filterInfo);
@@ -138,7 +138,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
   }
 
   @Override
-  public Parent writeScheme(@Nonnull final ToolsGroup<T> scheme) throws WriteExternalException {
+  public Parent writeScheme(@Nonnull ToolsGroup<T> scheme) throws WriteExternalException {
     Element groupElement = new Element(TOOL_SET);
     if (scheme.getName() != null) {
       groupElement.setAttribute(ATTRIBUTE_NAME, scheme.getName());
@@ -152,7 +152,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
   }
 
   @Override
-  public boolean shouldBeSaved(@Nonnull final ToolsGroup scheme) {
+  public boolean shouldBeSaved(@Nonnull ToolsGroup scheme) {
     return true;
   }
 
@@ -169,7 +169,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
 
     Element taskElement = new Element(EXEC);
 
-    final PathMacroManager macroManager = ApplicationPathMacroManager.getInstance(ApplicationManager.getApplication());
+    PathMacroManager macroManager = ApplicationPathMacroManager.getInstance(ApplicationManager.getApplication());
 
     Element option = new Element(ELEMENT_OPTION);
     taskElement.addContent(option);

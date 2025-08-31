@@ -34,7 +34,7 @@ public class CompoundShelfFileProcessor {
 
   public void savePathFile(
     @Nonnull ContentProvider contentProvider,
-    @Nonnull final File patchPath,
+    @Nonnull File patchPath,
     @Nonnull CommitContext commitContext
   ) throws IOException {
     try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(patchPath), StandardCharsets.UTF_8)) {

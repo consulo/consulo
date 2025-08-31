@@ -64,7 +64,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
     // may be turned off
     boolean hasUnknownExtension = false;
     for (Element element : children) {
-      final T extension = extensions.remove(element.getAttributeValue(getIdAttrName()));
+      T extension = extensions.remove(element.getAttributeValue(getIdAttrName()));
       if (extension == null) {
         hasUnknownExtension = true;
       }
@@ -90,7 +90,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
 
   public void writeExternal(@Nonnull U configuration, @Nonnull Element parentNode) {
     Map<String, Element> map = new TreeMap<>();
-    final List<Element> elements = configuration.getCopyableUserData(RUN_EXTENSIONS);
+    List<Element> elements = configuration.getCopyableUserData(RUN_EXTENSIONS);
     if (elements != null) {
       for (Element element : elements) {
         map.put(element.getAttributeValue(getIdAttrName()), element.clone());
@@ -117,35 +117,35 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
     }
   }
 
-  public <V extends U> void appendEditors(@Nonnull final U configuration, @Nonnull final SettingsEditorGroup<V> group) {
+  public <V extends U> void appendEditors(@Nonnull U configuration, @Nonnull SettingsEditorGroup<V> group) {
     for (T extension : getApplicableExtensions(configuration)) {
-      @SuppressWarnings("unchecked") final SettingsEditor<V> editor = extension.createEditor((V)configuration);
+      @SuppressWarnings("unchecked") SettingsEditor<V> editor = extension.createEditor((V)configuration);
       if (editor != null) {
         group.addEditor(extension.getEditorTitle(), editor);
       }
     }
   }
 
-  public void validateConfiguration(@Nonnull final U configuration, final boolean isExecution) throws Exception {
+  public void validateConfiguration(@Nonnull U configuration, boolean isExecution) throws Exception {
     // only for enabled extensions
     for (T extension : getEnabledExtensions(configuration, null)) {
       extension.validateConfiguration(configuration, isExecution);
     }
   }
 
-  public void extendCreatedConfiguration(@Nonnull final U configuration, @Nonnull final Location location) {
+  public void extendCreatedConfiguration(@Nonnull U configuration, @Nonnull Location location) {
     for (T extension : getApplicableExtensions(configuration)) {
       extension.extendCreatedConfiguration(configuration, location);
     }
   }
 
-  public void extendTemplateConfiguration(@Nonnull final U configuration) {
+  public void extendTemplateConfiguration(@Nonnull U configuration) {
     for (T extension : getApplicableExtensions(configuration)) {
       extension.extendTemplateConfiguration(configuration);
     }
   }
 
-  public void patchCommandLine(@Nonnull final U configuration, final RunnerSettings runnerSettings, @Nonnull final GeneralCommandLine cmdLine, @Nonnull final String runnerId)
+  public void patchCommandLine(@Nonnull U configuration, RunnerSettings runnerSettings, @Nonnull GeneralCommandLine cmdLine, @Nonnull String runnerId)
           throws ExecutionException {
     // only for enabled extensions
     for (T extension : getEnabledExtensions(configuration, runnerSettings)) {
@@ -153,7 +153,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
     }
   }
 
-  public void attachExtensionsToProcess(@Nonnull final U configuration, @Nonnull final ProcessHandler handler, RunnerSettings runnerSettings) {
+  public void attachExtensionsToProcess(@Nonnull U configuration, @Nonnull ProcessHandler handler, RunnerSettings runnerSettings) {
     // only for enabled extensions
     for (T extension : getEnabledExtensions(configuration, runnerSettings)) {
       extension.attachToProcess(configuration, handler, runnerSettings);

@@ -33,11 +33,11 @@ import java.util.function.Function;
  * @since 03/06/2023
  */
 public interface ProgressManagerEx {
-    boolean runProcessWithProgressSynchronously(@Nonnull final Task task);
+    boolean runProcessWithProgressSynchronously(@Nonnull Task task);
 
-    void runProcessWithProgressInCurrentThread(@Nonnull final Task task,
-                                               @Nonnull final ProgressIndicator progressIndicator,
-                                               @Nonnull final ModalityState modalityState);
+    void runProcessWithProgressInCurrentThread(@Nonnull Task task,
+                                               @Nonnull ProgressIndicator progressIndicator,
+                                               @Nonnull ModalityState modalityState);
 
     Future<?> runProcessWithProgressAsynchronously(Task.Backgroundable task,
                                                    ProgressIndicator indicator,

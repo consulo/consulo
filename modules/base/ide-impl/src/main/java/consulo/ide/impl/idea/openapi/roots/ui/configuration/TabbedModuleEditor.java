@@ -53,16 +53,16 @@ public class TabbedModuleEditor extends ModuleEditor {
   public void selectEditor(@Nullable String name) {
     if (name != null) {
       //getPanel(parentUIDisposable);
-      final int editorTabIndex = getEditorTabIndex(name);
+      int editorTabIndex = getEditorTabIndex(name);
       if (editorTabIndex >= 0 && editorTabIndex < myTabbedPane.getTabCount()) {
         myTabbedPane.setSelectedIndex(editorTabIndex);
       }
     }
   }
 
-  private int getEditorTabIndex(final String editorName) {
+  private int getEditorTabIndex(String editorName) {
     if (myTabbedPane != null && editorName != null) {
-      final int tabCount = myTabbedPane.getTabCount();
+      int tabCount = myTabbedPane.getTabCount();
       for (int idx = 0; idx < tabCount; idx++) {
         if (editorName.equals(myTabbedPane.getTitleAt(idx))) {
           return idx;

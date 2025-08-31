@@ -130,7 +130,7 @@ public abstract class XFetchValueActionBase extends AnAction {
       }
     }
 
-    public void handleInCollector(final Project project, final String value, XDebuggerTree tree) {
+    public void handleInCollector(Project project, String value, XDebuggerTree tree) {
       handle(project, value, tree);
     }
 
@@ -140,7 +140,7 @@ public abstract class XFetchValueActionBase extends AnAction {
       return index;
     }
 
-    public void evaluationComplete(final int index, @Nonnull final String value) {
+    public void evaluationComplete(int index, @Nonnull String value) {
       AppUIUtil.invokeOnEdt(() -> {
         values.set(index, value);
         finish();
@@ -148,7 +148,7 @@ public abstract class XFetchValueActionBase extends AnAction {
     }
   }
 
-  protected abstract void handle(final Project project, final String value, XDebuggerTree tree);
+  protected abstract void handle(Project project, String value, XDebuggerTree tree);
 
   private static final class CopyValueEvaluationCallback extends HeadlessValueEvaluationCallback {
     private final int myValueIndex;

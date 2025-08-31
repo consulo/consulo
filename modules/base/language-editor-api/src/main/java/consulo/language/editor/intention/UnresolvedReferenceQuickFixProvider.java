@@ -32,7 +32,7 @@ public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference
   @DeprecationInfo("Use UnresolvedReferenceQuickFixUpdater")
   public static <T extends PsiReference> void registerReferenceFixes(T ref, QuickFixActionRegistrar registrar) {
     Project project = ref.getElement().getProject();
-    final boolean dumb = DumbService.getInstance(project).isDumb();
+    boolean dumb = DumbService.getInstance(project).isDumb();
     Class<? extends PsiReference> referenceClass = ref.getClass();
     for (UnresolvedReferenceQuickFixProvider each : project.getExtensionPoint(UnresolvedReferenceQuickFixProvider.class)) {
       if (dumb && !DumbService.isDumbAware(each)) {

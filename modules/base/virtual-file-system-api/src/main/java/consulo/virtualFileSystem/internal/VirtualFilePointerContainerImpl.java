@@ -72,8 +72,8 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public void readExternal(@Nonnull final Element rootChild, @Nonnull final String childName, boolean externalizeJarDirectories) throws InvalidDataException {
-    final List<Element> urls = rootChild.getChildren(childName);
+  public void readExternal(@Nonnull Element rootChild, @Nonnull String childName, boolean externalizeJarDirectories) throws InvalidDataException {
+    List<Element> urls = rootChild.getChildren(childName);
     addAll(ContainerUtil.map(urls, url -> url.getAttributeValue(URL_ATTR)));
     if (externalizeJarDirectories) {
       List<Element> jarDirs = rootChild.getChildren(JAR_DIRECTORY_ELEMENT);
@@ -87,10 +87,10 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   }
 
   @Override
-  public void writeExternal(@Nonnull final Element element, @Nonnull final String childElementName, boolean externalizeJarDirectories) {
+  public void writeExternal(@Nonnull Element element, @Nonnull String childElementName, boolean externalizeJarDirectories) {
     for (VirtualFilePointer pointer : myList) {
       String url = pointer.getUrl();
-      final Element rootPathElement = new Element(childElementName);
+      Element rootPathElement = new Element(childElementName);
       rootPathElement.setAttribute(URL_ATTR, url);
       element.addContent(rootPathElement);
     }
@@ -105,7 +105,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     Collections.sort(jarDirectories, Comparator.comparing(VirtualFilePointer::getUrl, String.CASE_INSENSITIVE_ORDER));
     for (VirtualFilePointer pointer : jarDirectories) {
       String url = pointer.getUrl();
-      final Element jarDirElement = new Element(JAR_DIRECTORY_ELEMENT);
+      Element jarDirElement = new Element(JAR_DIRECTORY_ELEMENT);
       jarDirElement.setAttribute(URL_ATTR, url);
       jarDirElement.setAttribute(RECURSIVE_ATTR, Boolean.toString(recursive));
       element.addContent(jarDirElement);
@@ -128,9 +128,9 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
     ContainerUtil.swapElements(myList, index, index + 1);
   }
 
-  private int indexOf(@Nonnull final String url) {
+  private int indexOf(@Nonnull String url) {
     for (int i = 0; i < myList.size(); i++) {
-      final VirtualFilePointer pointer = myList.get(i);
+      VirtualFilePointer pointer = myList.get(i);
       if (url.equals(pointer.getUrl())) {
         return i;
       }
@@ -164,7 +164,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   public void remove(@Nonnull VirtualFilePointer pointer) {
     checkDisposed();
     dropCaches();
-    final boolean result = myList.remove(pointer);
+    boolean result = myList.remove(pointer);
     LOG.assertTrue(result);
   }
 

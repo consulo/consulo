@@ -47,9 +47,9 @@ public class UnsafeUsagesDialog extends DialogWrapper {
   @Override
   @Nonnull
   protected Action[] createActions() {
-    final ViewUsagesAction viewUsagesAction = new ViewUsagesAction();
+    ViewUsagesAction viewUsagesAction = new ViewUsagesAction();
 
-    final Action ignoreAction = getOKAction();
+    Action ignoreAction = getOKAction();
     ignoreAction.putValue(DialogWrapper.DEFAULT_ACTION, null);
 
     return new Action[]{viewUsagesAction, ignoreAction, new CancelAction()};

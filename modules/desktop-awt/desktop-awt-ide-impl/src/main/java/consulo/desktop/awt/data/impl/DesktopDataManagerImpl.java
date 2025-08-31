@@ -131,10 +131,10 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   }
 
   @Nullable
-  private <T> T getData(@Nonnull Key<T> dataId, final Component focusedComponent) {
+  private <T> T getData(@Nonnull Key<T> dataId, Component focusedComponent) {
     try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
       for (Component c = focusedComponent; c != null; c = c.getParent()) {
-        final DataProvider dataProvider = getDataProviderEx(c);
+        DataProvider dataProvider = getDataProviderEx(c);
         if (dataProvider == null) continue;
         T data = getDataFromProvider(dataProvider, dataId, null);
         if (data != null) return data;
@@ -264,7 +264,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   @Override
   @Nullable
   // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
-  protected <T> T getData(@Nonnull Key<T> dataId, final consulo.ui.Component focusedComponent) {
+  protected <T> T getData(@Nonnull Key<T> dataId, consulo.ui.Component focusedComponent) {
     return getData(dataId, TargetAWT.to(focusedComponent));
   }
 
@@ -272,7 +272,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   public static Editor validateEditor(Editor editor) {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (focusOwner instanceof JComponent) {
-      final JComponent jComponent = (JComponent)focusOwner;
+      JComponent jComponent = (JComponent)focusOwner;
       if (jComponent.getClientProperty("AuxEditorComponent") != null) return null; // Hack for EditorSearchComponent
     }
 

@@ -34,7 +34,7 @@ public class NewFileAction extends FileChooserAction {
   @Override
   protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    final FileType fileType = e.getData(FileChooserKeys.NEW_FILE_TYPE);
+    FileType fileType = e.getData(FileChooserKeys.NEW_FILE_TYPE);
     if (fileType != null) {
       presentation.setVisible(true);
       VirtualFile selectedFile = fileSystemTree.getNewFileParent();
@@ -50,15 +50,15 @@ public class NewFileAction extends FileChooserAction {
   @RequiredUIAccess
   protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     FileType fileType = e.getRequiredData(FileChooserKeys.NEW_FILE_TYPE);
-    final String initialContent = e.getData(FileChooserKeys.NEW_FILE_TEMPLATE_TEXT);
+    String initialContent = e.getData(FileChooserKeys.NEW_FILE_TEMPLATE_TEXT);
     if (initialContent != null) {
       createNewFile(fileSystemTree, fileType, initialContent);
     }
   }
 
   @RequiredUIAccess
-  private static void createNewFile(FileSystemTree fileSystemTree, final FileType fileType, final String initialContent) {
-    final VirtualFile file = fileSystemTree.getNewFileParent();
+  private static void createNewFile(FileSystemTree fileSystemTree, FileType fileType, String initialContent) {
+    VirtualFile file = fileSystemTree.getNewFileParent();
     if (file == null || !file.isDirectory()) return;
 
     String newFileName;

@@ -31,15 +31,15 @@ public class VirtualFileHierarchicalComparator implements Comparator<VirtualFile
   }
 
   @Override
-  public int compare(final VirtualFile vf1, final VirtualFile vf2) {
-    final boolean isDir1 = vf1.isDirectory();
-    final boolean isDir2 = vf2.isDirectory();
+  public int compare(VirtualFile vf1, VirtualFile vf2) {
+    boolean isDir1 = vf1.isDirectory();
+    boolean isDir2 = vf2.isDirectory();
 
     if ((!isDir1) && (!isDir2)) return 0;
     if (isDir1 && (!isDir2)) return -1;
     if ((!isDir1) && isDir2) return 1;
 
-    final int diff = vf1.getPath().length() - vf2.getPath().length();
+    int diff = vf1.getPath().length() - vf2.getPath().length();
     return diff == 0 ? 0 : (diff < 0 ? -1 : 1);
   }
 }

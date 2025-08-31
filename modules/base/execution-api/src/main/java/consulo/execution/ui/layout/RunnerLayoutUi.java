@@ -58,19 +58,19 @@ public interface RunnerLayoutUi  {
   Content findContent(@Nonnull String contentId);
 
   @Nonnull
-  ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, final boolean forced);
+  ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced);
   @Nonnull
-  ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, final boolean forced, final boolean implicit);
+  ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced, boolean implicit);
 
   @Nonnull
   RunnerLayoutUi addListener(@Nonnull ContentManagerListener listener, @Nonnull Disposable parent);
 
-  void removeListener(@Nonnull final ContentManagerListener listener);
+  void removeListener(@Nonnull ContentManagerListener listener);
 
   void attractBy(@Nonnull String condition);
   void clearAttractionBy(@Nonnull String condition);
 
-  void setBouncing(@Nonnull Content content, final boolean activate);
+  void setBouncing(@Nonnull Content content, boolean activate);
 
   @Nonnull
   JComponent getComponent();

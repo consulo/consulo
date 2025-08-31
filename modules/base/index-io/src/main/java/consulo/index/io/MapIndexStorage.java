@@ -52,7 +52,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   protected MapIndexStorage(@Nonnull File storageFile,
                             @Nonnull KeyDescriptor<Key> keyDescriptor,
                             @Nonnull DataExternalizer<Value> valueExternalizer,
-                            final int cacheSize,
+                            int cacheSize,
                             boolean keyIsUniqueForIndexedFile) throws IOException {
     this(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile, true, false, null);
   }
@@ -60,7 +60,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   protected MapIndexStorage(@Nonnull File storageFile,
                             @Nonnull KeyDescriptor<Key> keyDescriptor,
                             @Nonnull DataExternalizer<Value> valueExternalizer,
-                            final int cacheSize,
+                            int cacheSize,
                             boolean keyIsUniqueForIndexedFile,
                             boolean initialize,
                             boolean readOnly,
@@ -133,7 +133,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
       }
 
       @Override
-      protected void onDropFromCache(final Key key, @Nonnull final ChangeTrackingValueContainer<Value> valueContainer) {
+      protected void onDropFromCache(Key key, @Nonnull ChangeTrackingValueContainer<Value> valueContainer) {
         if (!myReadOnly && valueContainer.isDirty()) {
           try {
             map.put(key, valueContainer);
@@ -205,7 +205,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
 
   @Override
   @Nonnull
-  public ChangeTrackingValueContainer<Value> read(final Key key) throws StorageException {
+  public ChangeTrackingValueContainer<Value> read(Key key) throws StorageException {
     l.lock();
     try {
       return myCache.get(key);
@@ -219,7 +219,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   }
 
   @Override
-  public void addValue(final Key key, final int inputId, final Value value) throws StorageException {
+  public void addValue(Key key, int inputId, Value value) throws StorageException {
     if (myReadOnly) {
       throw new UnsupportedOperationException("Index storage is read-only");
     }
@@ -279,7 +279,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   }
 
   protected static <T> T unwrapCauseAndRethrow(RuntimeException e) throws StorageException {
-    final Throwable cause = e.getCause();
+    Throwable cause = e.getCause();
     if (cause instanceof IOException) {
       throw new StorageException(cause);
     }

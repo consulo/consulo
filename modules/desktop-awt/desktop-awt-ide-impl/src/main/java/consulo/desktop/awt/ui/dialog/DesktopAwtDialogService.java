@@ -190,7 +190,7 @@ public class DesktopAwtDialogService implements DialogService {
 
 
             if (myHelpId != null) {
-                final Insets insets = Platform.current().os().isMac() ? JBUI.emptyInsets() : JBUI.insetsTop(8);
+                Insets insets = Platform.current().os().isMac() ? JBUI.emptyInsets() : JBUI.insetsTop(8);
 
                 JButton helpButton = new JButton(getHelpAction());
                 helpButton.putClientProperty("JButton.buttonType", "help");

@@ -100,7 +100,7 @@ public class mxSelectionCellsHandler implements MouseListener, MouseMotionListen
   /**
    * @param graphComponent
    */
-  public mxSelectionCellsHandler(final mxGraphComponent graphComponent) {
+  public mxSelectionCellsHandler(mxGraphComponent graphComponent) {
     this.graphComponent = graphComponent;
 
     // Listens to all mouse events on the rendering control

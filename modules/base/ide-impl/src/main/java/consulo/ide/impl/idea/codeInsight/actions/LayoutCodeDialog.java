@@ -60,7 +60,7 @@ public class LayoutCodeDialog extends DialogWrapper {
   public LayoutCodeDialog(@Nonnull Project project,
                           @Nonnull PsiFile file,
                           boolean textSelected,
-                          final String helpId) {
+                          String helpId) {
     super(project, true);
     myFile = file;
     myProject = project;
@@ -90,7 +90,7 @@ public class LayoutCodeDialog extends DialogWrapper {
       mySelectedTextRadioButton.setToolTipText("No text selected in editor");
     }
 
-    final boolean fileHasChanges = FormatChangedTextUtil.hasChanges(myFile);
+    boolean fileHasChanges = FormatChangedTextUtil.hasChanges(myFile);
     if (myFile.getVirtualFile() instanceof LightVirtualFile) {
       myOnlyVCSChangedTextRb.setVisible(false);
     }

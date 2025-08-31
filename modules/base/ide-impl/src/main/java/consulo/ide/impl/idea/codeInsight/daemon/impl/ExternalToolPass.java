@@ -87,19 +87,19 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     myDocumentChanged = false;
 
-    final FileViewProvider viewProvider = myFile.getViewProvider();
-    final Set<Language> relevantLanguages = viewProvider.getLanguages();
+    FileViewProvider viewProvider = myFile.getViewProvider();
+    Set<Language> relevantLanguages = viewProvider.getLanguages();
     for (Language language : relevantLanguages) {
       PsiFile psiRoot = viewProvider.getPsi(language);
       if (!HighlightingLevelManager.getInstance(myProject).shouldInspect(psiRoot)) continue;
-      final List<ExternalAnnotator> externalAnnotators = ExternalLanguageAnnotators.allForFile(language, psiRoot);
+      List<ExternalAnnotator> externalAnnotators = ExternalLanguageAnnotators.allForFile(language, psiRoot);
 
       if (!externalAnnotators.isEmpty()) {
         DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
         boolean errorFound = daemonCodeAnalyzer.getFileStatusMap().wasErrorFound(myDocument);
 
         for (ExternalAnnotator externalAnnotator : externalAnnotators) {
-          final Object collectedInfo = externalAnnotator.collectInformation(psiRoot, myEditor, errorFound);
+          Object collectedInfo = externalAnnotator.collectInformation(psiRoot, myEditor, errorFound);
           if (collectedInfo != null) {
             myAnnotator2DataMap.put(externalAnnotator, new MyData(psiRoot, collectedInfo));
           }
@@ -152,7 +152,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
                 }
 
                 myDocument.removeDocumentListener(myDocumentListener);
-                final List<HighlightInfo> infos = getHighlights();
+                List<HighlightInfo> infos = getHighlights();
                 UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
               }
             }, IdeaModalityState.stateForComponent(myEditor.getComponent()));
@@ -190,7 +190,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   private void collectHighlighters() {
     for (ExternalAnnotator annotator : myAnnotator2DataMap.keySet()) {
-      final MyData data = myAnnotator2DataMap.get(annotator);
+      MyData data = myAnnotator2DataMap.get(annotator);
       if (data != null) {
         annotator.apply(data.myPsiRoot, data.myAnnotationResult, myAnnotationHolder);
       }
@@ -199,7 +199,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   private void doFinish() {
     myDocument.removeDocumentListener(myDocumentListener);
-    final Runnable r = new Runnable() {
+    Runnable r = new Runnable() {
       @Override
       public void run() {
         if (!myProject.isDisposed()) {
@@ -217,7 +217,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   private void doAnnotate() {
     for (ExternalAnnotator annotator : myAnnotator2DataMap.keySet()) {
-      final MyData data = myAnnotator2DataMap.get(annotator);
+      MyData data = myAnnotator2DataMap.get(annotator);
       if (data != null) {
         data.myAnnotationResult = annotator.doAnnotate(data.myCollectedInfo);
       }

@@ -67,11 +67,11 @@ public class FramelessNotificationPopup {
   private final Timer myFadeInTimer;
   private ActionListener myActionListener;
 
-  public FramelessNotificationPopup(final JComponent owner, final JComponent content, Color backgroud) {
+  public FramelessNotificationPopup(JComponent owner, JComponent content, Color backgroud) {
     this(owner, content, backgroud, true, null);
   }
 
-  public FramelessNotificationPopup(final JComponent owner, final JComponent content, Color backgroud, boolean useDefaultPreferredSize, final ActionListener listener) {
+  public FramelessNotificationPopup(JComponent owner, JComponent content, Color backgroud, boolean useDefaultPreferredSize, ActionListener listener) {
     myBackgroud = backgroud;
     myUseDefaultPreferredSize = useDefaultPreferredSize;
     myContent = new ContentComponent(content);
@@ -93,10 +93,10 @@ public class FramelessNotificationPopup {
       }
     })
       .createPopup();
-    final Point p = RelativePoint.getSouthEastOf(owner).getScreenPoint();
+    Point p = RelativePoint.getSouthEastOf(owner).getScreenPoint();
     Rectangle screen = ScreenUtil.getScreenRectangle(p.x, p.y);
 
-    final Point initial = new Point(screen.x + screen.width - myContent.getPreferredSize().width - 50,
+    Point initial = new Point(screen.x + screen.width - myContent.getPreferredSize().width - 50,
                                     screen.y + screen.height - 5);
 
     myPopup.showInScreenCoordinates(owner, initial);
@@ -119,7 +119,7 @@ public class FramelessNotificationPopup {
 
       myMouseListener = new MouseAdapter() {
         @Override
-        public void mouseClicked(final MouseEvent e) {
+        public void mouseClicked(MouseEvent e) {
           if (e.getButton() == MouseEvent.BUTTON3) {
             myPopup.cancel();
           } else if (UIUtil.isActionClick(e)) {

@@ -324,7 +324,7 @@ public abstract class TaskRepository {
     return myShouldFormatCommitMessage;
   }
 
-  public void setShouldFormatCommitMessage(final boolean shouldFormatCommitMessage) {
+  public void setShouldFormatCommitMessage(boolean shouldFormatCommitMessage) {
     myShouldFormatCommitMessage = shouldFormatCommitMessage;
   }
 

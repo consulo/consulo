@@ -32,12 +32,12 @@ import jakarta.annotation.Nonnull;
 public class PriorityWeigher extends CompletionWeigher {
   @Override
   public Double weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
-    final PrioritizedLookupElement prioritized = element.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
+    PrioritizedLookupElement prioritized = element.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
     if (prioritized != null) {
       return prioritized.getPriority();
     }
 
-    final LookupItem item = element.as(LookupItem.CLASS_CONDITION_KEY);
+    LookupItem item = element.as(LookupItem.CLASS_CONDITION_KEY);
     if (item != null) {
       return item.getPriority();
     }
