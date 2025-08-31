@@ -125,8 +125,9 @@ public class ContainingBranchesGetter {
 
     @Nullable
     public List<String> getContainingBranchesFromCache(@Nonnull VirtualFile root, @Nonnull Hash hash) {
-        LOG.assertTrue(EventQueue.isDispatchThread());
-        return myCache.get(new CommitId(hash, root));
+        synchronized (myCache) {
+            return myCache.get(new CommitId(hash, root));
+        }
     }
 
     @Nonnull
