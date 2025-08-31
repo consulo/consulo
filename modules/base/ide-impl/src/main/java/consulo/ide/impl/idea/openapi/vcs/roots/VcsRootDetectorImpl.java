@@ -24,6 +24,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.versionControlSystem.root.VcsRootDetector;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -63,7 +64,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
   }
 
   @Nonnull
-  public Collection<VcsRoot> detect(@jakarta.annotation.Nullable VirtualFile startDir) {
+  public Collection<VcsRoot> detect(@Nullable VirtualFile startDir) {
     if (startDir == null || myCheckers.isEmpty()) {
       return Collections.emptyList();
     }

@@ -1,12 +1,9 @@
-package consulo.ide.impl.idea.openapi.ui;
+package consulo.ui.ex.awt;
 
 import consulo.project.Project;
-import consulo.ui.ex.awt.WindowWrapper;
 import consulo.ui.ex.awt.WindowWrapper.Mode;
 import consulo.disposer.Disposer;
 import consulo.util.lang.StringUtil;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.FrameWrapper;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -99,7 +96,7 @@ public class WindowWrapperBuilder {
     @Nonnull
     private final DialogWrapper myDialog;
 
-    public DialogWindowWrapper(@Nonnull final WindowWrapperBuilder builder) {
+    public DialogWindowWrapper(@Nonnull WindowWrapperBuilder builder) {
       myProject = builder.myProject;
       myComponent = builder.myComponent;
       myMode = builder.myMode;
@@ -132,7 +129,7 @@ public class WindowWrapperBuilder {
         default:
           throw new IllegalArgumentException(builder.myMode.toString());
       }
-      myDialog.initPublic();
+      myDialog.init();
       Disposer.register(myDialog.getDisposable(), this);
     }
 

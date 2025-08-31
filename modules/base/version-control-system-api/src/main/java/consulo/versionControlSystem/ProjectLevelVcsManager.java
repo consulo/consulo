@@ -37,7 +37,6 @@ import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Collection;
 import java.util.List;
@@ -98,10 +97,15 @@ public abstract class ProjectLevelVcsManager {
    * @return the VCS instance, or null if none is found.
    */
   @Nullable
-  public abstract AbstractVcs findVcsByName(@NonNls String name);
+  public abstract AbstractVcs findVcsByName(@Nonnull String name);
 
   @Nullable
-  public abstract VcsDescriptor getDescriptor(final String name);
+  public AbstractVcs findVcsByName(@Nonnull VcsKey vcsKey) {
+      return findVcsByName(vcsKey.getName());
+  }
+
+  @Nullable
+  public abstract VcsDescriptor getDescriptor(String name);
 
   /**
    * Checks if all files in the specified array are managed by the specified VCS.
@@ -151,7 +155,7 @@ public abstract class ProjectLevelVcsManager {
   public abstract VirtualFile getVcsRootFor(FilePath file);
 
   @Nullable
-  public abstract VcsRoot getVcsRootObjectFor(final VirtualFile file);
+  public abstract VcsRoot getVcsRootObjectFor(VirtualFile file);
 
   @Nullable
   public abstract VcsRoot getVcsRootObjectFor(FilePath file);
@@ -196,7 +200,7 @@ public abstract class ProjectLevelVcsManager {
   public abstract boolean hasAnyMappings();
 
   @Deprecated(forRemoval = true)
-  public void addMessageToConsoleWindow(final String message, final TextAttributes attributes) {
+  public void addMessageToConsoleWindow(String message, TextAttributes attributes) {
     addMessageToConsoleWindow(message, new ConsoleViewContentType("", attributes));
   }
 
@@ -216,7 +220,7 @@ public abstract class ProjectLevelVcsManager {
   public abstract VcsShowSettingOption getOrCreateCustomOption(@Nonnull String vcsActionName, @Nonnull AbstractVcs vcs);
 
 
-  public abstract void showProjectOperationInfo(final UpdatedFiles updatedFiles, String displayActionName);
+  public abstract void showProjectOperationInfo(UpdatedFiles updatedFiles, String displayActionName);
 
   /**
    * Adds a listener for receiving notifications about changes in VCS configuration for the project.
@@ -258,14 +262,14 @@ public abstract class ProjectLevelVcsManager {
    */
   public abstract boolean isBackgroundVcsOperationRunning();
 
-  public abstract List<VirtualFile> getRootsUnderVcsWithoutFiltering(final AbstractVcs vcs);
+  public abstract List<VirtualFile> getRootsUnderVcsWithoutFiltering(AbstractVcs vcs);
 
   public abstract VirtualFile[] getRootsUnderVcs(@Nonnull AbstractVcs vcs);
 
   /**
    * Also includes into list all modules under roots
    */
-  public abstract List<VirtualFile> getDetailedVcsMappings(final AbstractVcs vcs);
+  public abstract List<VirtualFile> getDetailedVcsMappings(AbstractVcs vcs);
 
   public abstract VirtualFile[] getAllVersionedRoots();
 
@@ -285,14 +289,14 @@ public abstract class ProjectLevelVcsManager {
   /**
    * This method can be used only when initially loading the project configuration!
    */
-  public abstract void setDirectoryMapping(final String path, final String activeVcsName);
+  public abstract void setDirectoryMapping(String path, String activeVcsName);
 
-  public abstract void setDirectoryMappings(final List<VcsDirectoryMapping> items);
+  public abstract void setDirectoryMappings(List<VcsDirectoryMapping> items);
 
-  public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator);
+  public abstract void iterateVcsRoot(VirtualFile root, Processor<FilePath> iterator);
 
-  public abstract void iterateVcsRoot(final VirtualFile root,
-                                      final Processor<FilePath> iterator,
+  public abstract void iterateVcsRoot(VirtualFile root,
+                                      Processor<FilePath> iterator,
                                       @Nullable VirtualFileFilter directoryFilter);
 
   @Nullable
@@ -304,7 +308,7 @@ public abstract class ProjectLevelVcsManager {
 
   public abstract ContentRevisionCache getContentRevisionCache();
 
-  public abstract boolean isFileInContent(final VirtualFile vf);
+  public abstract boolean isFileInContent(VirtualFile vf);
 
   public abstract boolean isIgnored(VirtualFile vf);
 

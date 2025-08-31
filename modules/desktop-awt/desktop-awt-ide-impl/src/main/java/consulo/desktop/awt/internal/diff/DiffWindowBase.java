@@ -20,7 +20,7 @@ import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffUserDataKeys;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.ui.WindowWrapperBuilder;
+import consulo.ui.ex.awt.WindowWrapperBuilder;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;

@@ -1282,12 +1282,6 @@ public abstract class DialogWrapper {
         return myPeer.getTitle();
     }
 
-    @Deprecated(forRemoval = true)
-    @DeprecationInfo("Hack. will be removed later")
-    public void initPublic() {
-        init();
-    }
-
     protected void init() {
         myErrorText = new ErrorText(getErrorTextAlignment());
         myErrorText.setVisible(false);
