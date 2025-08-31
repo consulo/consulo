@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.layout;
 
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

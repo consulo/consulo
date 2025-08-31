@@ -26,11 +26,11 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.ide.impl.idea.openapi.vcs.update.AbstractCommonUpdateAction;
+import consulo.versionControlSystem.impl.internal.update.AbstractCommonUpdateAction;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
-import consulo.ide.impl.idea.openapi.vcs.update.ScopeInfo;
+import consulo.versionControlSystem.impl.internal.update.ScopeInfo;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
 

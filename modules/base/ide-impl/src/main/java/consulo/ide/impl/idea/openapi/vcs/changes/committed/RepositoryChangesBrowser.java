@@ -34,6 +34,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.RepositoryChangesBrowserApi;
+import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -80,6 +81,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
     }
   }
 
+  @Override
   public void setUseCase(CommittedChangesBrowserUseCase useCase) {
     myUseCase = useCase;
   }

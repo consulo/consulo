@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;

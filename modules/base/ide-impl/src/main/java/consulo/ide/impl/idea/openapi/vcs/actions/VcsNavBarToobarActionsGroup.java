@@ -21,7 +21,7 @@ import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.dvcs.push.VcsPushAction;
-import consulo.ide.impl.idea.openapi.vcs.update.CommonUpdateProjectAction;
+import consulo.versionControlSystem.impl.internal.change.commited.CommonUpdateProjectAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;

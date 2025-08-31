@@ -27,12 +27,12 @@ import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.CodeSmellInfo;
+import consulo.versionControlSystem.CodeSmellInfo;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.vcs.CodeSmellDetector;
+import consulo.versionControlSystem.CodeSmellDetector;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -76,14 +76,9 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
 
   @Override
   public void showCodeSmellErrors(@Nonnull final List<CodeSmellInfo> smellList) {
-    Collections.sort(smellList, new Comparator<CodeSmellInfo>() {
-      @Override
-      public int compare(CodeSmellInfo o1, CodeSmellInfo o2) {
-        return o1.getTextRange().getStartOffset() - o2.getTextRange().getStartOffset();
-      }
-    });
+    Collections.sort(smellList, (o1, o2) -> o1.getTextRange().getStartOffset() - o2.getTextRange().getStartOffset());
 
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
+    myProject.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
         if (myProject.isDisposed()) return;

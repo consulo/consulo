@@ -22,7 +22,7 @@ import consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.project.ui.impl.internal.wm.action.ShowContentAction;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.designer;
 
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 
 /**
  * @author Alexander Lobas

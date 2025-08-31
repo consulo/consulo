@@ -36,6 +36,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsApplicationSettings;
+import consulo.versionControlSystem.VcsBaseContentProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

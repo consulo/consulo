@@ -29,7 +29,6 @@ import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.event.ModuleAdapter;
 import consulo.module.event.ModuleListener;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
@@ -39,6 +38,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsDirectoryMapping;
+import consulo.versionControlSystem.impl.internal.ProjectLevelVcsManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -72,7 +72,7 @@ public class ModuleVcsDetector implements Disposable {
     myConnection.subscribe(ModuleRootListener.class, listener);
   }
 
-  private class MyModulesListener extends ModuleAdapter implements ModuleRootListener {
+  private class MyModulesListener implements ModuleListener, ModuleRootListener {
     private final List<Pair<String, VcsDirectoryMapping>> myMappingsForRemovedModules = new ArrayList<>();
 
     @Override

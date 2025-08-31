@@ -23,7 +23,7 @@ import consulo.execution.impl.internal.ui.layout.TabImpl;
 import consulo.execution.impl.internal.ui.layout.ViewContextEx;
 import consulo.execution.internal.layout.*;
 import consulo.execution.ui.layout.PlaceInGrid;
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ui.ex.awt.NullableComponent;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.Wrapper;

@@ -28,10 +28,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.lang.ThreeState;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsConfiguration;
-import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
@@ -238,12 +235,7 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
 
     @Nullable
     private VcsBaseContentProvider findProviderFor(@Nonnull VirtualFile file) {
-        for (VcsBaseContentProvider support : VcsBaseContentProvider.EP_NAME.getExtensionList(myProject)) {
-            if (support.isSupported(file)) {
-                return support;
-            }
-        }
-        return null;
+        return myProject.getExtensionPoint(VcsBaseContentProvider.class).findFirstSafe(p -> p.isSupported(file));
     }
 
     public boolean isSupported(@Nonnull VirtualFile file) {

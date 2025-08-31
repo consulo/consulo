@@ -34,11 +34,15 @@ public interface ChangesBrowserApi<T> {
 
     Key<ChangesBrowserApi> DATA_KEY = Key.create(ChangesBrowserApi.class);
 
+    void addToolbarAction(AnAction action);
+
     void rebuildList();
 
     void setDataIsDirty(boolean dataIsDirty);
 
     List<Change> getCurrentDisplayedChanges();
+
+    List<Change> getSelectedChanges();
 
     void setChangesToDisplay(List<T> changes);
 
@@ -49,6 +53,10 @@ public interface ChangesBrowserApi<T> {
     JScrollPane getViewerScrollPane();
 
     AnAction getDiffAction();
+
+    void dispose();
+
+    JPanel getHeaderPanel();
 
     default JComponent getComponent() {
         return (JComponent) this;

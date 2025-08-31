@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.checkin;
 
 import consulo.application.Application;
 import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.codeInsight.CodeSmellInfo;
+import consulo.versionControlSystem.CodeSmellInfo;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
-import consulo.ide.impl.idea.openapi.vcs.CodeSmellDetector;
+import consulo.versionControlSystem.CodeSmellDetector;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.CommitExecutor;

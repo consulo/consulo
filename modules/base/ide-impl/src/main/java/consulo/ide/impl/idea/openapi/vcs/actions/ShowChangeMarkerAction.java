@@ -27,6 +27,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
+import consulo.versionControlSystem.action.AbstractVcsAction;
 import consulo.versionControlSystem.action.VcsContext;
 import jakarta.annotation.Nonnull;
 

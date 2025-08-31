@@ -17,6 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.versionControlSystem.impl.internal.update.AbstractCommonUpdateAction;
+import consulo.versionControlSystem.impl.internal.update.ScopeInfo;
 import consulo.versionControlSystem.update.ActionInfo;
 
 @ActionImpl(id = "UpdateFiles")

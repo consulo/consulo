@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;

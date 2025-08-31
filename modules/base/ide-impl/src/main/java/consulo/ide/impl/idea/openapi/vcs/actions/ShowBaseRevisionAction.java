@@ -32,6 +32,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.action.AbstractVcsAction;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.VcsRevisionDescription;

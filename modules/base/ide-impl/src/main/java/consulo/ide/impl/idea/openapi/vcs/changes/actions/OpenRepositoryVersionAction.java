@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
+import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 import consulo.versionControlSystem.virtualFileSystem.ContentRevisionVirtualFile;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.navigation.Navigatable;

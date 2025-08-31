@@ -22,7 +22,7 @@ import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;

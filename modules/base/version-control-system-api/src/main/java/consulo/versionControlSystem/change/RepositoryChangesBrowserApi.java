@@ -15,14 +15,16 @@
  */
 package consulo.versionControlSystem.change;
 
+import consulo.dataContext.DataProvider;
 import consulo.ui.ex.action.AnAction;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowserApi;
+import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 
 /**
  * @author VISTALL
  * @since 2025-08-30
  */
-public interface RepositoryChangesBrowserApi extends ChangesBrowserApi<Change> {
+public interface RepositoryChangesBrowserApi extends ChangesBrowserApi<Change>, DataProvider {
     AnAction getEditSourceAction();
+
+    void setUseCase(CommittedChangesBrowserUseCase useCase);
 }

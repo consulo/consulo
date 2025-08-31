@@ -20,7 +20,7 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RevertChangeListAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.ChangeListDetailsAction;
+import consulo.versionControlSystem.impl.internal.change.commited.ChangeListDetailsAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.ClearCommittedAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.FilterCommittedAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshCommittedAction;

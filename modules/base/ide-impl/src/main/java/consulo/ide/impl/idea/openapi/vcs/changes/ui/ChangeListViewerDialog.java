@@ -27,7 +27,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
+import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RepositoryChangesBrowser;
 import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;

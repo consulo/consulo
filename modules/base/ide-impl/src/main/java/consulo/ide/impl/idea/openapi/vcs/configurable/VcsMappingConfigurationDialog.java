@@ -22,7 +22,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
+import consulo.versionControlSystem.internal.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.util.continuation.ModalityIgnorantBackgroundableTask;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.project.Project;

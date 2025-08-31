@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.versionControlSystem.diff.DiffProvider;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(id = "Compare.LastVersion")

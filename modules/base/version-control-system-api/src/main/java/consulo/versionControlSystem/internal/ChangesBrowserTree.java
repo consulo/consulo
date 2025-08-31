@@ -17,10 +17,14 @@ package consulo.versionControlSystem.internal;
 
 import jakarta.annotation.Nonnull;
 
+import javax.swing.border.Border;
+
 /**
  * @author VISTALL
  * @since 2025-08-30
  */
 public interface ChangesBrowserTree {
     void setEmptyText(@Nonnull String emptyText);
+
+    void setScrollPaneBorder(Border border);
 }

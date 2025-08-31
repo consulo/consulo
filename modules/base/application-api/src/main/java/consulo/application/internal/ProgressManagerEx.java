@@ -44,6 +44,10 @@ public interface ProgressManagerEx {
                                                    Runnable continuation,
                                                    ModalityState modalityState);
 
+    Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task,
+                                                   @Nonnull ProgressIndicator progressIndicator,
+                                                   @Nullable Runnable continuation);
+
     ProgressIndicator newBackgroundableProcessIndicator(Task.Backgroundable backgroundable);
 
     @Nonnull

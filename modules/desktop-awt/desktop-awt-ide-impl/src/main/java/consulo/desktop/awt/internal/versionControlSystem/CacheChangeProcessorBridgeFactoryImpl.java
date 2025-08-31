@@ -16,9 +16,9 @@
 package consulo.desktop.awt.internal.versionControlSystem;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.vcs.CacheChangeProcessorBridge;
-import consulo.ide.impl.idea.openapi.vcs.CacheChangeProcessorBridgeFactory;
-import consulo.ide.impl.idea.openapi.vcs.CacheChangeProcessorImpl;
+import consulo.versionControlSystem.internal.CacheChangeProcessorBridge;
+import consulo.versionControlSystem.internal.CacheChangeProcessorBridgeFactory;
+import consulo.versionControlSystem.internal.CacheChangeProcessorImpl;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import jakarta.annotation.Nonnull;

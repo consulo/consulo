@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListRenderer;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangeListRenderer;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -22,10 +22,9 @@ import consulo.project.Project;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CacheSettingsPanel;
+import consulo.versionControlSystem.impl.internal.change.commited.CacheSettingsPanel;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
 
 import jakarta.annotation.Nonnull;
 import javax.swing.*;

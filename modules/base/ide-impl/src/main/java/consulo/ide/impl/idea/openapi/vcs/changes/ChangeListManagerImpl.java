@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.ChangeListRemoveConfirm
 import consulo.ide.impl.idea.openapi.vcs.changes.conflicts.ChangelistConflictTracker;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitHelper;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
-import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
+import consulo.versionControlSystem.impl.internal.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.FunctionUtil;

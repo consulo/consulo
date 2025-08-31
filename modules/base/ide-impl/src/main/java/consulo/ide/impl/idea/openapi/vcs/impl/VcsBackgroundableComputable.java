@@ -25,6 +25,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
 
+import consulo.versionControlSystem.impl.internal.ProjectLevelVcsManagerImpl;
+import consulo.versionControlSystem.internal.BackgroundableActionEnabledHandler;
+import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.function.Consumer;

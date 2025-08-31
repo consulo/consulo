@@ -28,6 +28,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.action.AbstractVcsAction;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.history.VcsHistoryProvider;

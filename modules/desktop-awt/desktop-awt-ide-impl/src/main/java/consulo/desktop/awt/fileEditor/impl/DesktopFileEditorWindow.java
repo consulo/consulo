@@ -33,7 +33,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.impl.internal.FileEditorWindowBase;
 import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;

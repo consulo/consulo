@@ -23,11 +23,12 @@ import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.action.AbstractVcsAction;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.RevisionSelector;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 

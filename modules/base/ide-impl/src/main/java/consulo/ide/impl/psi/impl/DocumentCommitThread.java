@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
+import consulo.application.internal.StandardProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
