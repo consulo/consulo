@@ -15,15 +15,12 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
+import consulo.component.extension.ExtensionPoint;
 import consulo.project.Project;
-import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.change.FileHolder;
-import consulo.versionControlSystem.change.IgnoredFilesHolder;
-import consulo.versionControlSystem.change.VcsIgnoredFilesHolder;
-import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
+import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -145,8 +142,11 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
             return;
         }
 
-        IgnoredFilesHolder ignoredFilesHolder =
-            ObjectUtil.chooseNotNull(getHolderFromEP(vcs, myProject), new RecursiveFilePathHolderImpl(myProject, HolderType.IGNORED));
+        IgnoredFilesHolder ignoredFilesHolder = getHolderFromExtensions(vcs, myProject);
+        if (ignoredFilesHolder == null) {
+            ignoredFilesHolder = new RecursiveFilePathHolderImpl(myProject, HolderType.IGNORED);
+        }
+
         ignoredFilesHolder.notifyVcsStarted(vcs);
         myVcsIgnoredHolderMap.put(vcs, ignoredFilesHolder);
     }
@@ -166,14 +166,15 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
 
 
     @Nullable
-    private static VcsIgnoredFilesHolder getHolderFromEP(AbstractVcs vcs, @Nonnull Project project) {
-        Optional<VcsIgnoredFilesHolder> ignoredFilesHolder = VcsIgnoredFilesHolder.VCS_IGNORED_FILES_HOLDER_EP.getExtensionList(project)
-            .stream()
-            .filter(holder -> holder.getVcs()
-                .equals(
-                    vcs))
-            .findFirst();
-        return ignoredFilesHolder.isPresent() ? ignoredFilesHolder.get() : null;
+    private static VcsIgnoredFilesHolder getHolderFromExtensions(AbstractVcs vcs, @Nonnull Project project) {
+        ExtensionPoint<VcsIgnoredFilesHolderProvider> point = project.getExtensionPoint(VcsIgnoredFilesHolderProvider.class);
+
+        VcsIgnoredFilesHolderProvider provider = point.findFirstSafe(p -> Objects.equals(p.getVcsKey(), vcs.getKeyInstanceMethod()));
+        if (provider != null) {
+            return provider.create();
+        }
+
+        return null;
     }
 
     @Override

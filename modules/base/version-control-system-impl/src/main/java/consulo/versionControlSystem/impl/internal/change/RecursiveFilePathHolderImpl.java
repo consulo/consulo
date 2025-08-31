@@ -19,7 +19,7 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
   private final HolderType myHolderType;
   private final Set<FilePath> myMap;
 
-  public RecursiveFilePathHolderImpl(final Project project, final FileHolder.HolderType holderType) {
+  public RecursiveFilePathHolderImpl(Project project, FileHolder.HolderType holderType) {
     myProject = project;
     myHolderType = holderType;
     myMap = new HashSet<>();
@@ -49,7 +49,7 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
 
   @Override
   public RecursiveFilePathHolderImpl copy() {
-    final RecursiveFilePathHolderImpl copyHolder = new RecursiveFilePathHolderImpl(myProject, myHolderType);
+    RecursiveFilePathHolderImpl copyHolder = new RecursiveFilePathHolderImpl(myProject, myHolderType);
     copyHolder.myMap.addAll(myMap);
     return copyHolder;
   }
@@ -75,11 +75,11 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
   }
 
   @Override
-  public void cleanAndAdjustScope(final VcsModifiableDirtyScope scope) {
+  public void cleanAndAdjustScope(VcsModifiableDirtyScope scope) {
     if (myProject.isDisposed()) return;
-    final Iterator<FilePath> iterator = myMap.iterator();
+    Iterator<FilePath> iterator = myMap.iterator();
     while (iterator.hasNext()) {
-      final FilePath file = iterator.next();
+      FilePath file = iterator.next();
       if (isFileDirty(scope, file)) {
         iterator.remove();
       }
@@ -90,11 +90,11 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
     return scope.belongsTo(filePath);
   }
 
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final RecursiveFilePathHolderImpl that = (RecursiveFilePathHolderImpl)o;
+    RecursiveFilePathHolderImpl that = (RecursiveFilePathHolderImpl)o;
     return myMap.equals(that.myMap);
   }
 

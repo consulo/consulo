@@ -22,7 +22,7 @@ public final class VcsKey {
   private final String myName;
 
   // to forbid creation outside AbstractVcs
-  VcsKey(@Nonnull final String name) {
+  VcsKey(@Nonnull String name) {
     myName = name;
   }
 

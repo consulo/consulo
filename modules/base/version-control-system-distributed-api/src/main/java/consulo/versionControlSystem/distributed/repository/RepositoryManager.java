@@ -15,77 +15,100 @@
  */
 package consulo.versionControlSystem.distributed.repository;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The RepositoryManager stores and maintains the mapping between VCS roots (represented by {@link VirtualFile}s)
  * and {@link Repository repositories} containing information and valuable methods specific for DVCS repositories.
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface RepositoryManager<T extends Repository> {
+    @Nonnull
+    static <R extends Repository> RepositoryManager<R> getInstance(@Nonnull Project project,
+                                                                   @Nonnull Class<RepositoryManager<R>> managerClass) {
+        return project.getExtensionPoint(RepositoryManager.class)
+            .findExtensionOrFail(managerClass);
+    }
 
-  @Nonnull
-  AbstractVcs getVcs();
+    @Nullable
+    @SuppressWarnings("unchecked")
+    static <R extends Repository> RepositoryManager<R> getInstance(@Nonnull Project project,
+                                                                   @Nonnull VcsKey vcsKey) {
+        return project.getExtensionPoint(RepositoryManager.class)
+            .findFirstSafe(m -> Objects.equals(m.getVcsKey(), vcsKey));
+    }
 
-  /**
-   * Returns the Repository instance which tracks the VCS repository located in the given root directory,
-   * or {@code null} if the given root is not a valid registered vcs root.
-   * <p/>
-   * The method checks both project roots and external roots previously registered
-   * via {@link #addExternalRepository(VirtualFile, Repository)}.
-   */
-  @Nullable
-  T getRepositoryForRoot(@Nullable VirtualFile root);
+    @Nonnull
+    VcsKey getVcsKey();
 
-  boolean isExternal(@Nonnull T repository);
+    @Nonnull
+    AbstractVcs getVcs();
 
-  /**
-   * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git or Hg repository.
-   */
-  @Nullable
-  T getRepositoryForFile(@Nonnull VirtualFile file);
+    /**
+     * Returns the Repository instance which tracks the VCS repository located in the given root directory,
+     * or {@code null} if the given root is not a valid registered vcs root.
+     * <p/>
+     * The method checks both project roots and external roots previously registered
+     * via {@link #addExternalRepository(VirtualFile, Repository)}.
+     */
+    @Nullable
+    T getRepositoryForRoot(@Nullable VirtualFile root);
 
-  /**
-   * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git ot Hg repository.
-   */
-  @Nullable
-  T getRepositoryForFile(@Nonnull FilePath file);
+    boolean isExternal(@Nonnull T repository);
 
-  /**
-   * @return all repositories tracked by the manager.
-   */
-  @Nonnull
-  List<T> getRepositories();
+    /**
+     * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git or Hg repository.
+     */
+    @Nullable
+    T getRepositoryForFile(@Nonnull VirtualFile file);
 
-  /**
-   * Registers a repository which doesn't belong to the project.
-   */
-  void addExternalRepository(@Nonnull VirtualFile root, @Nonnull T repository);
+    /**
+     * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git ot Hg repository.
+     */
+    @Nullable
+    T getRepositoryForFile(@Nonnull FilePath file);
 
-  /**
-   * Removes the repository not from the project, when it is not interesting anymore.
-   */
-  void removeExternalRepository(@Nonnull VirtualFile root);
+    /**
+     * @return all repositories tracked by the manager.
+     */
+    @Nonnull
+    List<T> getRepositories();
 
-  boolean moreThanOneRoot();
+    /**
+     * Registers a repository which doesn't belong to the project.
+     */
+    void addExternalRepository(@Nonnull VirtualFile root, @Nonnull T repository);
 
-  /**
-   * Synchronously updates the specified information about repository under the given root.
-   *
-   * @param root root directory of the vcs repository.
-   */
-  void updateRepository(VirtualFile root);
+    /**
+     * Removes the repository not from the project, when it is not interesting anymore.
+     */
+    void removeExternalRepository(@Nonnull VirtualFile root);
 
-  void updateAllRepositories();
+    boolean moreThanOneRoot();
 
-  /**
-   * Returns true if repositories under this repository manager are controlled synchronously.
-   */
-  boolean isSyncEnabled();
+    /**
+     * Synchronously updates the specified information about repository under the given root.
+     *
+     * @param root root directory of the vcs repository.
+     */
+    void updateRepository(VirtualFile root);
+
+    void updateAllRepositories();
+
+    /**
+     * Returns true if repositories under this repository manager are controlled synchronously.
+     */
+    boolean isSyncEnabled();
 
 }

@@ -73,7 +73,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     private UpdateEnvironment myUpdateEnvironment;
     private RollbackEnvironment myRollbackEnvironment;
 
-    public AbstractVcs(@Nonnull Project project, final String name) {
+    public AbstractVcs(@Nonnull Project project, String name) {
         super(project);
 
         myProject = project;
@@ -284,9 +284,9 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * @return true if the corresponding file exists in the repository, false otherwise.
      */
     public boolean fileExistsInVcs(FilePath path) {
-        final VirtualFile virtualFile = path.getVirtualFile();
+        VirtualFile virtualFile = path.getVirtualFile();
         if (virtualFile != null) {
-            final FileStatus fileStatus = FileStatusManager.getInstance(myProject).getStatus(virtualFile);
+            FileStatus fileStatus = FileStatusManager.getInstance(myProject).getStatus(virtualFile);
             return fileStatus != FileStatus.UNKNOWN && fileStatus != FileStatus.ADDED;
         }
         return true;
@@ -367,7 +367,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     }
 
     public void loadSettings() {
-        final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
+        ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
 
         if (getUpdateEnvironment() != null) {
             myUpdateOption = vcsManager.getStandardOption(VcsConfiguration.StandardOption.UPDATE, this);
@@ -526,10 +526,11 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return myProject;
     }
 
-    protected static VcsKey createKey(final String name) {
+    protected static VcsKey createKey(String name) {
         return new VcsKey(name);
     }
 
+    @Nonnull
     public final VcsKey getKeyInstanceMethod() {
         return myKey;
     }
@@ -563,7 +564,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
     @Nullable
     public TreeDiffProvider getTreeDiffProvider() {
-        final RemoteDifferenceStrategy strategy = getRemoteDifferenceStrategy();
+        RemoteDifferenceStrategy strategy = getRemoteDifferenceStrategy();
         return RemoteDifferenceStrategy.ASK_LATEST_REVISION.equals(strategy) ? null : getTreeDiffProviderImpl();
     }
 
@@ -575,11 +576,11 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * Can be temporarily forbidden, for instance, when authorization credentials are wrong - to
      * don't repeat wrong credentials passing (in some cases it can produce user's account blocking)
      */
-    public boolean isVcsBackgroundOperationsAllowed(final VirtualFile root) {
+    public boolean isVcsBackgroundOperationsAllowed(VirtualFile root) {
         return true;
     }
 
-    public boolean allowsRemoteCalls(@Nonnull final VirtualFile file) {
+    public boolean allowsRemoteCalls(@Nonnull VirtualFile file) {
         return true;
     }
 
@@ -611,10 +612,10 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     }
 
     @Nullable
-    public CommittedChangeList loadRevisions(final VirtualFile vf, final VcsRevisionNumber number) {
-        final CommittedChangeList[] list = new CommittedChangeList[1];
-        final ThrowableRunnable<VcsException> runnable = () -> {
-            final Pair<CommittedChangeList, FilePath> pair = getCommittedChangesProvider().getOneList(vf, number);
+    public CommittedChangeList loadRevisions(VirtualFile vf, VcsRevisionNumber number) {
+        CommittedChangeList[] list = new CommittedChangeList[1];
+        ThrowableRunnable<VcsException> runnable = () -> {
+            Pair<CommittedChangeList, FilePath> pair = getCommittedChangesProvider().getOneList(vf, number);
             if (pair != null) {
                 list[0] = pair.getFirst();
             }

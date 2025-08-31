@@ -118,6 +118,12 @@ public abstract class AbstractRepositoryManager<T extends Repository> implements
 
     @Override
     @Nonnull
+    public VcsKey getVcsKey() {
+        return myVcsKey;
+    }
+
+    @Override
+    @Nonnull
     public AbstractVcs getVcs() {
         AbstractVcs vcs = ProjectLevelVcsManager.getInstance(myProject).findVcsByName(myVcsKey.getName());
         return Objects.requireNonNull(vcs);

@@ -24,18 +24,18 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.VcsRootChecker;
 import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -71,51 +71,58 @@ public class ShowExternalLogAction extends DumbAwareAction {
 
         ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);
         if (project.isDefault() || !projectLevelVcsManager.hasActiveVcss()) {
-            //  ProgressManager.getInstance().run(new ShowLogInDialogTask(project, roots, vcs));
+//            ProgressManager.getInstance().run(new ShowLogInDialogTask(project, roots));
             return;
         }
 
-        ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
-        Runnable showContent = () -> {
-            ContentManager cm = window.getContentManager();
-            if (checkIfProjectLogMatches(project, cm, roots) || checkIfAlreadyOpened(cm, roots)) {
-                return;
-            }
-
-            for (Map.Entry<VcsKey, List<VirtualFile>> entry : roots.entrySet()) {
-                VcsKey vcsKey = entry.getKey();
-                List<VirtualFile> vcsRoots = entry.getValue();
-
-                AbstractVcs vcs = projectLevelVcsManager.findVcsByName(vcsKey);
-                if (vcs == null) {
-                    continue;
-                }
-
-                String tabName = calcTabName(cm, vcsRoots);
-                MyContentComponent component = createManagerAndContent(project, vcs, vcsRoots, tabName);
-                Content content = ContentFactory.getInstance().createContent(component, tabName, false);
-                content.setDisposer(component.myDisposable);
-                content.setDescription("Log for " + StringUtil.join(vcsRoots, VirtualFile::getPath, "\n"));
-                content.setCloseable(true);
-                cm.addContent(content);
-                cm.setSelectedContent(content);
-            }
-
-        };
-
-        if (!window.isVisible()) {
-            window.activate(showContent, true);
-        }
-        else {
-            showContent.run();
-        }
+//        ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
+//        Runnable showContent = () -> {
+//            ContentManager cm = window.getContentManager();
+//            if (checkIfProjectLogMatches(project, cm, roots) || checkIfAlreadyOpened(cm, roots)) {
+//                return;
+//            }
+//
+//            for (Map.Entry<VcsKey, List<VirtualFile>> entry : roots.entrySet()) {
+//                VcsKey vcsKey = entry.getKey();
+//                List<VirtualFile> vcsRoots = entry.getValue();
+//
+//                AbstractVcs vcs = projectLevelVcsManager.findVcsByName(vcsKey);
+//                if (vcs == null) {
+//                    continue;
+//                }
+//
+//                String tabName = calcTabName(cm, vcsRoots);
+//                MyContentComponent component = createManagerAndContent(project, vcs, vcsRoots, tabName);
+//                Content content = ContentFactory.getInstance().createContent(component, tabName, false);
+//                content.setDisposer(component.myDisposable);
+//                content.setDescription("Log for " + StringUtil.join(vcsRoots, VirtualFile::getPath, "\n"));
+//                content.setCloseable(true);
+//                cm.addContent(content);
+//                cm.setSelectedContent(content);
+//            }
+//
+//        };
+//
+//        if (!window.isVisible()) {
+//            window.activate(showContent, true);
+//        }
+//        else {
+//            showContent.run();
+//        }
     }
 
     @Nonnull
     private static MyContentComponent createManagerAndContent(@Nonnull Project project,
                                                               @Nonnull AbstractVcs vcs,
-                                                              @Nonnull List<VirtualFile> roots,
+                                                              @Nonnull LinkedHashMap<VcsKey, List<VirtualFile>> roots,
                                                               @Nullable String tabName) {
+        for (Map.Entry<VcsKey, List<VirtualFile>> entry : roots.entrySet()) {
+            VcsKey vcsKey = entry.getKey();
+            List<VirtualFile> files = entry.getValue();
+
+
+        }
+
 //        GitRepositoryManager repositoryManager = ServiceManager.getService(project, GitRepositoryManager.class);
 //        for (VirtualFile root : roots) {
 //            repositoryManager.addExternalRepository(root, GitRepositoryImpl.getInstance(root, project, true));
@@ -245,18 +252,18 @@ public class ShowExternalLogAction extends DumbAwareAction {
             add(actualComponent);
         }
     }
-//
+
 //    private static class ShowLogInDialogTask extends Task.Backgroundable {
 //        @Nonnull
 //        private final Project myProject;
 //        @Nonnull
-//        private final List<VirtualFile> myRoots;
+//        private final LinkedHashMap<VcsKey, List<VirtualFile>> myRoots;
 //        @Nonnull
 //        private final GitVcs myVcs;
 //        private GitVersion myVersion;
 //
-//        private ShowLogInDialogTask(@Nonnull Project project, @Nonnull List<VirtualFile> roots, @Nonnull GitVcs vcs) {
-//            super(project, "Loading Git Log...", true);
+//        private ShowLogInDialogTask(@Nonnull Project project, @Nonnull LinkedHashMap<VcsKey, List<VirtualFile>> roots) {
+//            super(project, LocalizeValue.localizeTODO("Loading External Log..."), true);
 //            myProject = project;
 //            myRoots = roots;
 //            myVcs = vcs;
@@ -271,6 +278,7 @@ public class ShowExternalLogAction extends DumbAwareAction {
 //            }
 //        }
 //
+//        @RequiredUIAccess
 //        @Override
 //        public void onSuccess() {
 //            if (!myVersion.isNull() && !myProject.isDisposed()) {
