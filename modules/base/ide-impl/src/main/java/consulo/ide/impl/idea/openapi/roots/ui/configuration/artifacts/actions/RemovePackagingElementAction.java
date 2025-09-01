@@ -15,39 +15,45 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.ProjectBundle;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ide.impl.idea.util.IconUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class RemovePackagingElementAction extends LayoutTreeActionBase {
-
-  public RemovePackagingElementAction(ArtifactEditorEx artifactEditor) {
-    super(ProjectBundle.message("action.name.remove.packaging.element"), ProjectBundle.message("action.description.remove.packaging.elements"),
-          IconUtil.getRemoveIcon(), artifactEditor);
-  }
-
-  @Override
-  protected boolean isEnabled() {
-    LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    if (selection.getElements().isEmpty() || myArtifactEditor.getLayoutTreeComponent().isEditing()) {
-      return false;
+    public RemovePackagingElementAction(ArtifactEditorEx artifactEditor) {
+        super(
+            ProjectLocalize.actionNameRemovePackagingElement().get(),
+            ProjectLocalize.actionDescriptionRemovePackagingElements().get(),
+            PlatformIconGroup.generalRemove(),
+            artifactEditor
+        );
     }
-    for (PackagingElementNode<?> node : selection.getNodes()) {
-      if (node.getParentNode() == null) {
-        return false;
-      }
-    }
-    return true;
-  }
 
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    myArtifactEditor.removeSelectedElements();
-  }
+    @Override
+    protected boolean isEnabled() {
+        LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
+        if (selection.getElements().isEmpty() || myArtifactEditor.getLayoutTreeComponent().isEditing()) {
+            return false;
+        }
+        for (PackagingElementNode<?> node : selection.getNodes()) {
+            if (node.getParentNode() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myArtifactEditor.removeSelectedElements();
+    }
 }

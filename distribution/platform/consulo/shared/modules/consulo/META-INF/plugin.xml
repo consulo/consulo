@@ -745,35 +745,6 @@
             <reference ref="SettingsEntryPoint"/>
         </group>
 
-        <group id="Bookmarks">
-            <reference ref="ToggleBookmark"/>
-            <reference ref="ShowBookmarks"/>
-            <reference ref="GotoNextBookmark"/>
-            <reference ref="GotoPreviousBookmark"/>
-
-            <reference ref="GotoBookmark0"/>
-            <reference ref="GotoBookmark1"/>
-            <reference ref="GotoBookmark2"/>
-            <reference ref="GotoBookmark3"/>
-            <reference ref="GotoBookmark4"/>
-            <reference ref="GotoBookmark5"/>
-            <reference ref="GotoBookmark6"/>
-            <reference ref="GotoBookmark7"/>
-            <reference ref="GotoBookmark8"/>
-            <reference ref="GotoBookmark9"/>
-
-            <reference ref="ToggleBookmark0"/>
-            <reference ref="ToggleBookmark1"/>
-            <reference ref="ToggleBookmark2"/>
-            <reference ref="ToggleBookmark3"/>
-            <reference ref="ToggleBookmark4"/>
-            <reference ref="ToggleBookmark5"/>
-            <reference ref="ToggleBookmark6"/>
-            <reference ref="ToggleBookmark7"/>
-            <reference ref="ToggleBookmark8"/>
-            <reference ref="ToggleBookmark9"/>
-        </group>
-
         <group id="ProjectViewPopupMenuRefactoringGroup">
             <reference ref="RefactoringMenu"/>
         </group>

@@ -30,7 +30,10 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointItem;
 import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointPanelProvider;
 import consulo.execution.debug.impl.internal.breakpoint.ui.tree.BreakpointItemsTreeController;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.CommonActionsPanel;
@@ -57,18 +60,16 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
 
     private final List<BreakpointPanelProvider> myBreakpointPanelProviders;
     private final BreakpointItemsTreeController myTreeController;
-    private final List<XBreakpointGroupingRule> myRulesAvailable = new ArrayList<XBreakpointGroupingRule>();
+    private final List<XBreakpointGroupingRule> myRulesAvailable = new ArrayList<>();
     private final BreakpointsSimpleTree myTree;
 
-    private Set<XBreakpointGroupingRule> myRulesEnabled = new TreeSet<XBreakpointGroupingRule>(new Comparator<XBreakpointGroupingRule>() {
-        @Override
-        public int compare(XBreakpointGroupingRule o1, XBreakpointGroupingRule o2) {
-            int res = o2.getPriority() - o1.getPriority();
-            return res != 0 ? res : (o1.getId().compareTo(o2.getId()));
-        }
+    private Set<XBreakpointGroupingRule> myRulesEnabled = new TreeSet<>((o1, o2) -> {
+        int res = o2.getPriority() - o1.getPriority();
+        return res != 0 ? res : (o1.getId().compareTo(o2.getId()));
     });
 
     @Inject
+    @RequiredReadAction
     public BreakpointsFavoriteListProvider(Project project) {
         super(project, "Breakpoints");
         myBreakpointPanelProviders = XBreakpointUtil.collectPanelProviders();
@@ -83,13 +84,15 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
     }
 
     @Override
+    @RequiredReadAction
     public void breakpointsChanged() {
         updateChildren();
     }
 
     private void getEnabledGroupingRules(Collection<XBreakpointGroupingRule> rules) {
         rules.clear();
-        XBreakpointsDialogState settings = ((XBreakpointManagerImpl) XDebuggerManager.getInstance(myProject).getBreakpointManager()).getBreakpointsDialogSettings();
+        XBreakpointsDialogState settings = ((XBreakpointManagerImpl) XDebuggerManager.getInstance(myProject).getBreakpointManager())
+            .getBreakpointsDialogSettings();
 
         for (XBreakpointGroupingRule rule : myRulesAvailable) {
             if (rule.isAlwaysEnabled() || (settings != null && settings.getSelectedGroupingRules().contains(rule.getId()))) {
@@ -98,12 +101,13 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         }
     }
 
+    @RequiredReadAction
     private void updateChildren() {
         if (myProject.isDisposed()) {
             return;
         }
         myChildren.clear();
-        List<BreakpointItem> items = new ArrayList<BreakpointItem>();
+        List<BreakpointItem> items = new ArrayList<>();
         for (BreakpointPanelProvider provider : myBreakpointPanelProviders) {
             provider.provideBreakpointItems(myProject, items);
         }
@@ -111,24 +115,28 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         myTreeController.setGroupingRules(myRulesEnabled);
         myTreeController.rebuildTree(items);
 
-
         CheckedTreeNode root = myTreeController.getRoot();
         for (int i = 0; i < root.getChildCount(); i++) {
             TreeNode child = root.getChildAt(i);
-            if (child instanceof DefaultMutableTreeNode) {
-                replicate((DefaultMutableTreeNode) child, myNode, myChildren);
+            if (child instanceof DefaultMutableTreeNode mutableTreeNode) {
+                replicate(mutableTreeNode, myNode, myChildren);
             }
         }
 
         FavoritesManager.getInstance(myProject).fireListeners(getListName(myProject));
     }
 
-    private void replicate(DefaultMutableTreeNode source, AbstractTreeNode destination, List<AbstractTreeNode<Object>> destinationChildren) {
-        final ArrayList<AbstractTreeNode<Object>> copyChildren = new ArrayList<AbstractTreeNode<Object>>();
-        AbstractTreeNode<Object> copy = new AbstractTreeNode<Object>(myProject, source.getUserObject()) {
-            @RequiredReadAction
+    @RequiredReadAction
+    private void replicate(
+        DefaultMutableTreeNode source,
+        AbstractTreeNode destination,
+        List<AbstractTreeNode<Object>> destinationChildren
+    ) {
+        final List<AbstractTreeNode<Object>> copyChildren = new ArrayList<>();
+        AbstractTreeNode<Object> copy = new AbstractTreeNode<>(myProject, source.getUserObject()) {
             @Nonnull
             @Override
+            @RequiredReadAction
             public Collection<? extends AbstractTreeNode> getChildren() {
                 return copyChildren;
             }
@@ -151,8 +159,9 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         }
     }
 
+    @RequiredReadAction
     private static boolean checkNavigatable(AbstractTreeNode<?> node) {
-        if (node.getValue() instanceof Navigatable && ((Navigatable) node.getValue()).canNavigate()) {
+        if (node.getValue() instanceof Navigatable navigatable && navigatable.canNavigate()) {
             return true;
         }
         Collection<? extends AbstractTreeNode> children = node.getChildren();
@@ -164,30 +173,31 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         return false;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
-        switch (type) {
-            case EDIT:
-                return "Edit breakpoint";
-            case REMOVE:
-                return "Remove breakpoint";
-            default:
-                return null;
-        }
+    public LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
+        return switch (type) {
+            case EDIT -> ActionLocalize.actionEditbreakpointText();
+            case REMOVE -> XDebuggerLocalize.xdebuggerRemoveLineBreakpointActionText();
+            default -> LocalizeValue.empty();
+        };
     }
 
     @Override
     public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
-        return (selectedObjects.size() == 1 && (type == CommonActionsPanel.Buttons.EDIT || type == CommonActionsPanel.Buttons.REMOVE)) &&
-            ((AbstractTreeNode) selectedObjects.iterator().next()).getValue() instanceof BreakpointItem;
+        return (selectedObjects.size() == 1 && (type == CommonActionsPanel.Buttons.EDIT || type == CommonActionsPanel.Buttons.REMOVE))
+            && ((AbstractTreeNode) selectedObjects.iterator().next()).getValue() instanceof BreakpointItem;
     }
 
     @Override
-    public void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component) {
+    public void handle(
+        @Nonnull CommonActionsPanel.Buttons type,
+        Project project,
+        @Nonnull Set<Object> selectedObjects,
+        JComponent component
+    ) {
         Rectangle bounds = component.getBounds();
-        if (component instanceof JTree) {
-            JTree tree = (JTree) component;
+        if (component instanceof JTree tree) {
             bounds = tree.getRowBounds(tree.getLeadSelectionRow());
             bounds.y += bounds.height / 2;
             bounds = tree.getVisibleRect().intersection(bounds);
@@ -195,14 +205,8 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         Point whereToShow = new Point((int) bounds.getCenterX(), (int) bounds.getCenterY());
         BreakpointItem breakpointItem = (BreakpointItem) ((AbstractTreeNode) selectedObjects.iterator().next()).getValue();
         switch (type) {
-            case EDIT:
-                XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(myProject, component, whereToShow, breakpointItem);
-                break;
-            case REMOVE:
-                breakpointItem.removed(myProject);
-                break;
-            default:
-                break;
+            case EDIT -> XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(myProject, component, whereToShow, breakpointItem);
+            case REMOVE -> breakpointItem.removed(myProject);
         }
     }
 
@@ -212,26 +216,27 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
     }
 
     @Override
-    public void customizeRenderer(ColoredTreeCellRenderer renderer,
-                                  JTree tree,
-                                  @Nonnull Object value,
-                                  boolean selected,
-                                  boolean expanded,
-                                  boolean leaf,
-                                  int row,
-                                  boolean hasFocus) {
+    public void customizeRenderer(
+        ColoredTreeCellRenderer renderer,
+        JTree tree,
+        @Nonnull Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+    ) {
         renderer.clear();
         renderer.setIcon(ExecutionDebugIconGroup.breakpointBreakpoint());
-        if (value instanceof BreakpointItem) {
-            BreakpointItem breakpointItem = (BreakpointItem) value;
+        if (value instanceof BreakpointItem breakpointItem) {
             breakpointItem.setupGenericRenderer(renderer, true);
         }
-        else if (value instanceof XBreakpointGroup) {
-            renderer.append(((XBreakpointGroup) value).getName());
-            renderer.setIcon(((XBreakpointGroup) value).getIcon(expanded));
+        else if (value instanceof XBreakpointGroup breakpointGroup) {
+            renderer.append(breakpointGroup.getName());
+            renderer.setIcon(breakpointGroup.getIcon(expanded));
         }
-        else if (value instanceof XBreakpointGroupingRule) {
-            renderer.append(((XBreakpointGroupingRule) value).getPresentableName());
+        else if (value instanceof XBreakpointGroupingRule breakpointGroupingRule) {
+            renderer.append(breakpointGroupingRule.getPresentableName());
         }
         else {
             renderer.append(String.valueOf(value));

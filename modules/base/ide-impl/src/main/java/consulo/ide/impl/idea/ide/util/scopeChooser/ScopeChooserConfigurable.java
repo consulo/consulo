@@ -22,13 +22,12 @@ import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.execution.localize.ExecutionLocalize;
-import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -102,8 +101,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         })));
         result.add(new MyCopyAction());
         result.add(new MySaveAsAction());
-        result.add(new MyMoveAction(ExecutionLocalize.moveUpActionName(), IconUtil.getMoveUpIcon(), -1));
-        result.add(new MyMoveAction(ExecutionLocalize.moveDownActionName(), IconUtil.getMoveDownIcon(), 1));
+        result.add(new MyMoveAction(ExecutionLocalize.moveUpActionName(), PlatformIconGroup.actionsMoveup(), -1));
+        result.add(new MyMoveAction(ExecutionLocalize.moveDownActionName(), PlatformIconGroup.actionsMovedown(), 1));
         return result;
     }
 
@@ -208,6 +207,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         mySharedScopesManager.setScopes(sharedScopes.toArray(new NamedScope[sharedScopes.size()]));
     }
 
+    @RequiredUIAccess
     private void reloadTree() {
         myRoot.removeAllChildren();
         loadScopes(mySharedScopesManager);
@@ -299,8 +299,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     @Override
     protected void updateSelection(@Nullable MasterDetailsConfigurable configurable) {
         super.updateSelection(configurable);
-        if (configurable instanceof ScopeConfigurable) {
-            ((ScopeConfigurable) configurable).restoreCanceledProgress();
+        if (configurable instanceof ScopeConfigurable scopeConfigurable) {
+            scopeConfigurable.restoreCanceledProgress();
         }
     }
 
@@ -401,12 +401,12 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
             super(IdeLocalize.addScopePopupTitle(), true);
             myFromPopup = fromPopup;
             Presentation presentation = getTemplatePresentation();
-            presentation.setIcon(IconUtil.getAddIcon());
+            presentation.setIcon(PlatformIconGroup.generalAdd());
             setShortcutSet(CommonShortcuts.INSERT);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             if (myFromPopup) {
@@ -444,7 +444,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
             }
             if (myFromPopup) {
                 AnAction action = myChildren[getDefaultIndex()];
-                action.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
+                action.getTemplatePresentation().setIcon(PlatformIconGroup.generalAdd());
                 return new AnAction[]{action};
             }
             return myChildren;

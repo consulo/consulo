@@ -26,6 +26,7 @@ import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.bookmark.ui.view.AbstractFavoritesListProvider;
 import consulo.bookmark.ui.view.FavoritesManager;
 import consulo.bookmark.ui.view.internal.BookmarkItem;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.CommonActionsPanel;
@@ -87,9 +88,9 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         List<Bookmark> bookmarks = myBookmarkManager.getValidBookmarks();
         for (final Bookmark bookmark : bookmarks) {
             AbstractTreeNode<Bookmark> child = new AbstractTreeNode<>(myProject, bookmark) {
-                @RequiredReadAction
                 @Nonnull
                 @Override
+                @RequiredReadAction
                 public Collection<? extends AbstractTreeNode> getChildren() {
                     return Collections.emptyList();
                 }
@@ -121,60 +122,54 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         myFavoritesManager.fireListeners(getListName(myProject));
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
-        switch (type) {
-            case EDIT:
-                return BookmarkLocalize.actionBookmarkEditDescription().get();
-            case REMOVE:
-                return BookmarkLocalize.actionBookmarkDelete().get();
-            default:
-                return null;
-        }
+    public LocalizeValue getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
+        return switch (type) {
+            case EDIT -> BookmarkLocalize.actionBookmarkEditDescription();
+            case REMOVE -> BookmarkLocalize.actionBookmarkDelete();
+            default -> LocalizeValue.empty();
+        };
     }
 
     @Override
     public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
-        switch (type) {
-            case EDIT:
-                if (selectedObjects.size() != 1) {
-                    return false;
-                }
-                Object toEdit = selectedObjects.iterator().next();
-                return toEdit instanceof AbstractTreeNode && ((AbstractTreeNode) toEdit).getValue() instanceof Bookmark;
-            case REMOVE:
+        return switch (type) {
+            case EDIT -> selectedObjects.size() == 1
+                && selectedObjects.iterator().next() instanceof AbstractTreeNode toEdit
+                && toEdit.getValue() instanceof Bookmark;
+            case REMOVE -> {
                 for (Object toRemove : selectedObjects) {
-                    if (!(toRemove instanceof AbstractTreeNode && ((AbstractTreeNode) toRemove).getValue() instanceof Bookmark)) {
-                        return false;
+                    if (!(toRemove instanceof AbstractTreeNode toRemove1 && toRemove1.getValue() instanceof Bookmark)) {
+                        yield false;
                     }
                 }
-                return true;
-            default:
-                return false;
-        }
+                yield true;
+            }
+            default -> false;
+        };
     }
 
     @Override
-    public void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component) {
+    public void handle(
+        @Nonnull CommonActionsPanel.Buttons type,
+        Project project,
+        @Nonnull Set<Object> selectedObjects,
+        JComponent component
+    ) {
         switch (type) {
-            case EDIT:
-
-                if (selectedObjects.size() != 1) {
-                    return;
-                }
-                Object toEdit = selectedObjects.iterator().next();
-                if (toEdit instanceof AbstractTreeNode && ((AbstractTreeNode) toEdit).getValue() instanceof Bookmark bookmark) {
+            case EDIT -> {
+                if (selectedObjects.size() == 1
+                    && selectedObjects.iterator().next() instanceof AbstractTreeNode toEdit
+                    && toEdit.getValue() instanceof Bookmark bookmark) {
                     BookmarkManager.getInstance(project).editDescription(bookmark);
                 }
-                return;
-            case REMOVE:
+            }
+            case REMOVE -> {
                 for (Object toRemove : selectedObjects) {
                     Bookmark bookmark = (Bookmark) ((AbstractTreeNode) toRemove).getValue();
                     BookmarkManager.getInstance(project).removeBookmark(bookmark);
                 }
-                return;
-            default: {
             }
         }
     }
@@ -185,18 +180,20 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
     }
 
     @Override
-    public void customizeRenderer(ColoredTreeCellRenderer renderer,
-                                  JTree tree,
-                                  @Nonnull Object value,
-                                  boolean selected,
-                                  boolean expanded,
-                                  boolean leaf,
-                                  int row,
-                                  boolean hasFocus) {
+    @RequiredReadAction
+    public void customizeRenderer(
+        ColoredTreeCellRenderer renderer,
+        JTree tree,
+        @Nonnull Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+    ) {
         renderer.clear();
-        if (value instanceof Bookmark) {
+        if (value instanceof Bookmark bookmark) {
             renderer.setIcon(BookmarkIcon.getDefaultIcon(false));
-            Bookmark bookmark = (Bookmark) value;
             BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
             if (renderer.getIcon() != null) {
                 renderer.setIcon(ImageEffects.appendRight(bookmark.getIcon(false), renderer.getIcon()));

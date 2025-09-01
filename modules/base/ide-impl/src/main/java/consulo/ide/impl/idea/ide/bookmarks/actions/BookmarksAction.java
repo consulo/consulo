@@ -71,7 +71,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         if (myLastPopup != null && myLastPopup.isVisible()) {
             myLastPopup.cancel();
             myLastPopup = null;
@@ -163,7 +163,6 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
 
     @Override
     public void removeSelectedItemsInTree() {
-
     }
 
     private static DefaultListModel<BookmarkItem> buildModel(Project project) {

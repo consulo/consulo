@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.application.AllIcons;
 import consulo.annotation.DeprecationInfo;
 import consulo.platform.base.icon.PlatformIconGroup;
 
@@ -27,80 +26,83 @@ import javax.swing.*;
 @Deprecated
 @DeprecationInfo(value = "Use PlatformIconGroup")
 public interface PlatformIcons {
-  Icon PUBLIC_ICON = (Icon)AllIcons.Nodes.C_public;
-  Icon LOCKED_ICON = (Icon)(Icon)AllIcons.Nodes.Locked;
-  Icon SYMLINK_ICON = (Icon)(Icon)AllIcons.Nodes.Symlink;
-  Icon PRIVATE_ICON = (Icon)AllIcons.Nodes.C_private;
-  Icon PROTECTED_ICON = (Icon)AllIcons.Nodes.C_protected;
-  Icon PACKAGE_LOCAL_ICON = (Icon)AllIcons.Nodes.C_plocal;
-  Icon PACKAGE_ICON = (Icon)AllIcons.Nodes.Package;
+    Icon PUBLIC_ICON = (Icon) PlatformIconGroup.nodesC_public();
+    Icon LOCKED_ICON = (Icon) PlatformIconGroup.nodesLocked();
+    Icon SYMLINK_ICON = (Icon) PlatformIconGroup.nodesSymlink();
+    Icon PRIVATE_ICON = (Icon) PlatformIconGroup.nodesC_private();
+    Icon PROTECTED_ICON = (Icon) PlatformIconGroup.nodesC_protected();
+    Icon PACKAGE_LOCAL_ICON = (Icon) PlatformIconGroup.nodesC_plocal();
+    Icon PACKAGE_ICON = (Icon) PlatformIconGroup.nodesPackage();
 
-  Icon DIRECTORY_CLOSED_ICON = (Icon)AllIcons.Nodes.TreeClosed;
-  @Deprecated Icon DIRECTORY_OPEN_ICON = (Icon)DIRECTORY_CLOSED_ICON;
+    Icon DIRECTORY_CLOSED_ICON = (Icon) PlatformIconGroup.nodesTreeclosed();
+    @Deprecated
+    Icon DIRECTORY_OPEN_ICON = (Icon) PlatformIconGroup.nodesTreeclosed();
 
-  Icon CLASS_ICON = (Icon)AllIcons.Nodes.Class;
-  Icon EXCEPTION_CLASS_ICON = (Icon)AllIcons.Nodes.ExceptionClass;
-  Icon ANONYMOUS_CLASS_ICON = (Icon)AllIcons.Nodes.AnonymousClass;
-  Icon ABSTRACT_CLASS_ICON = (Icon)AllIcons.Nodes.AbstractClass;
-  Icon ANNOTATION_TYPE_ICON = (Icon)AllIcons.Nodes.Annotationtype;
-  Icon ENUM_ICON = (Icon)AllIcons.Nodes.Enum;
-  Icon INTERFACE_ICON = (Icon)AllIcons.Nodes.Interface;
-  Icon METHOD_ICON = (Icon)AllIcons.Nodes.Method;
-  Icon FUNCTION_ICON = (Icon)AllIcons.Nodes.Function;
-  Icon ABSTRACT_METHOD_ICON = (Icon)AllIcons.Nodes.AbstractMethod;
-  Icon FIELD_ICON = (Icon)AllIcons.Nodes.Field;
-  Icon PARAMETER_ICON = (Icon)AllIcons.Nodes.Parameter;
-  Icon VARIABLE_ICON = (Icon)AllIcons.Nodes.Variable;
-  Icon XML_TAG_ICON = (Icon)AllIcons.Nodes.Tag;
-  Icon LIBRARY_ICON = (Icon)AllIcons.Nodes.PpLib;
-  Icon WEB_ICON = (Icon)AllIcons.Nodes.PpWeb;
-  Icon JAR_ICON = (Icon)AllIcons.Nodes.PpJar;
-  Icon FILE_ICON = (Icon)AllIcons.Nodes.PpFile;
+    Icon CLASS_ICON = (Icon) PlatformIconGroup.nodesClass();
+    Icon EXCEPTION_CLASS_ICON = (Icon) PlatformIconGroup.nodesExceptionclass();
+    Icon ANONYMOUS_CLASS_ICON = (Icon) PlatformIconGroup.nodesAnonymousclass();
+    Icon ABSTRACT_CLASS_ICON = (Icon) PlatformIconGroup.nodesAbstractclass();
+    Icon ANNOTATION_TYPE_ICON = (Icon) PlatformIconGroup.nodesAnnotationtype();
+    Icon ENUM_ICON = (Icon) PlatformIconGroup.nodesEnum();
+    Icon INTERFACE_ICON = (Icon) PlatformIconGroup.nodesInterface();
+    Icon METHOD_ICON = (Icon) PlatformIconGroup.nodesMethod();
+    Icon FUNCTION_ICON = (Icon) PlatformIconGroup.nodesFunction();
+    Icon ABSTRACT_METHOD_ICON = (Icon) PlatformIconGroup.nodesAbstractmethod();
+    Icon FIELD_ICON = (Icon) PlatformIconGroup.nodesField();
+    Icon PARAMETER_ICON = (Icon) PlatformIconGroup.nodesParameter();
+    Icon VARIABLE_ICON = (Icon) PlatformIconGroup.nodesVariable();
+    Icon XML_TAG_ICON = (Icon) PlatformIconGroup.nodesTag();
+    Icon LIBRARY_ICON = (Icon) PlatformIconGroup.nodesPplib();
+    Icon WEB_ICON = (Icon) PlatformIconGroup.nodesPpweb();
+    Icon JAR_ICON = (Icon) PlatformIconGroup.filetypesArchive();
+    Icon FILE_ICON = (Icon) PlatformIconGroup.nodesFolder();
 
-  Icon VARIABLE_READ_ACCESS = (Icon)AllIcons.Nodes.Read_access;
-  Icon VARIABLE_WRITE_ACCESS = (Icon)AllIcons.Nodes.Write_access;
-  Icon VARIABLE_RW_ACCESS = (Icon)AllIcons.Nodes.Rw_access;
-  Icon CUSTOM_FILE_ICON = (Icon)AllIcons.FileTypes.Custom;
-  Icon PROPERTY_ICON = (Icon)AllIcons.Nodes.Property;
-  Icon ERROR_INTRODUCTION_ICON = (Icon)PlatformIconGroup.generalError();
-  Icon WARNING_INTRODUCTION_ICON = (Icon)PlatformIconGroup.generalWarning();
-  Icon EXCLUDED_FROM_COMPILE_ICON = (Icon)AllIcons.Nodes.ExcludedFromCompile;
-  Icon PROJECT_ICON = (Icon)AllIcons.Icon16;
-  Icon UI_FORM_ICON = (Icon)AllIcons.FileTypes.UiForm;
+    Icon VARIABLE_READ_ACCESS = (Icon) PlatformIconGroup.nodesRead_access();
+    Icon VARIABLE_WRITE_ACCESS = (Icon) PlatformIconGroup.nodesWrite_access();
+    Icon VARIABLE_RW_ACCESS = (Icon) PlatformIconGroup.nodesRw_access();
+    Icon CUSTOM_FILE_ICON = (Icon) PlatformIconGroup.filetypesCustom();
+    Icon PROPERTY_ICON = (Icon) PlatformIconGroup.nodesProperty();
+    Icon ERROR_INTRODUCTION_ICON = (Icon) PlatformIconGroup.generalError();
+    Icon WARNING_INTRODUCTION_ICON = (Icon) PlatformIconGroup.generalWarning();
+    Icon EXCLUDED_FROM_COMPILE_ICON = (Icon) PlatformIconGroup.nodesExcludedfromcompile();
+    Icon PROJECT_ICON = (Icon) PlatformIconGroup.icon16();
+    Icon UI_FORM_ICON = (Icon) PlatformIconGroup.filetypesUiform();
 
-  Icon GROUP_BY_PACKAGES = (Icon)AllIcons.Actions.GroupByPackage;
-  Icon ADD_ICON = (Icon)IconUtil.getAddIcon();
-  Icon DELETE_ICON = (Icon)IconUtil.getRemoveIcon();
-  Icon COPY_ICON = (Icon)AllIcons.Actions.Copy;
-  Icon EDIT = (Icon)IconUtil.getEditIcon();
-  Icon SELECT_ALL_ICON = (Icon)AllIcons.Actions.Selectall;
-  Icon UNSELECT_ALL_ICON = (Icon)AllIcons.Actions.Unselectall;
-  Icon SYNCHRONIZE_ICON = (Icon)AllIcons.Actions.Refresh;
-  Icon SHOW_SETTINGS_ICON = (Icon)AllIcons.General.Settings;
+    Icon GROUP_BY_PACKAGES = (Icon) PlatformIconGroup.actionsGroupbypackage();
+    Icon ADD_ICON = (Icon) PlatformIconGroup.generalAdd();
+    Icon DELETE_ICON = (Icon) PlatformIconGroup.generalRemove();
+    Icon COPY_ICON = (Icon) PlatformIconGroup.actionsCopy();
+    Icon EDIT = (Icon) PlatformIconGroup.actionsEdit();
+    Icon SELECT_ALL_ICON = (Icon) PlatformIconGroup.actionsSelectall();
+    Icon UNSELECT_ALL_ICON = (Icon) PlatformIconGroup.actionsUnselectall();
+    Icon SYNCHRONIZE_ICON = (Icon) PlatformIconGroup.actionsRefresh();
+    Icon SHOW_SETTINGS_ICON = (Icon) PlatformIconGroup.generalSettings();
 
-  Icon CHECK_ICON = (Icon)AllIcons.Actions.Checked;
-  Icon CHECK_ICON_SELECTED = (Icon)AllIcons.Actions.Checked_selected;
-  Icon CHECK_ICON_SMALL = (Icon)AllIcons.Actions.Checked;
-  Icon CHECK_ICON_SMALL_SELECTED = (Icon)AllIcons.Actions.Checked_selected;
+    Icon CHECK_ICON = (Icon) PlatformIconGroup.actionsChecked();
+    Icon CHECK_ICON_SELECTED = (Icon) PlatformIconGroup.actionsChecked_selected();
+    Icon CHECK_ICON_SMALL = (Icon) PlatformIconGroup.actionsChecked();
+    Icon CHECK_ICON_SMALL_SELECTED = (Icon) PlatformIconGroup.actionsChecked_selected();
 
-  Icon OPEN_EDIT_DIALOG_ICON = (Icon)AllIcons.Actions.ShowViewer;
-  Icon FLATTEN_PACKAGES_ICON = (Icon)AllIcons.ObjectBrowser.FlattenPackages;
+    Icon OPEN_EDIT_DIALOG_ICON = (Icon) PlatformIconGroup.actionsShow();
+    Icon FLATTEN_PACKAGES_ICON = (Icon) PlatformIconGroup.objectbrowserFlattenpackages();
 
-  Icon CLASS_INITIALIZER = (Icon)AllIcons.Nodes.ClassInitializer;
+    Icon CLASS_INITIALIZER = (Icon) PlatformIconGroup.nodesClassinitializer();
 
-  @Deprecated
-  Icon CLOSED_MODULE_GROUP_ICON = (Icon)AllIcons.Nodes.ModuleGroup;
-  @Deprecated Icon OPENED_MODULE_GROUP_ICON = (Icon)CLOSED_MODULE_GROUP_ICON;
+    @Deprecated
+    Icon CLOSED_MODULE_GROUP_ICON = (Icon) PlatformIconGroup.nodesModulegroup();
+    @Deprecated
+    Icon OPENED_MODULE_GROUP_ICON = CLOSED_MODULE_GROUP_ICON;
 
-  Icon FOLDER_ICON = (Icon)AllIcons.Nodes.Folder;
+    Icon FOLDER_ICON = (Icon) PlatformIconGroup.nodesFolder();
 
-  Icon INVALID_ENTRY_ICON = (Icon)AllIcons.Nodes.PpInvalid;
+    Icon INVALID_ENTRY_ICON = (Icon) PlatformIconGroup.nodesPpinvalid();
 
-  Icon MODULES_SOURCE_FOLDERS_ICON = (Icon)AllIcons.Modules.SourceRoot;
-  Icon MODULES_TEST_SOURCE_FOLDER = (Icon)AllIcons.Modules.TestRoot;
+    Icon MODULES_SOURCE_FOLDERS_ICON = (Icon) PlatformIconGroup.modulesSourceroot();
+    Icon MODULES_TEST_SOURCE_FOLDER = (Icon) PlatformIconGroup.modulesTestroot();
 
-  Icon CONTENT_ROOT_ICON_CLOSED = (Icon)AllIcons.Nodes.Module;
-  @Deprecated Icon CONTENT_ROOT_ICON_OPEN = (Icon)CONTENT_ROOT_ICON_CLOSED;
+    Icon CONTENT_ROOT_ICON_CLOSED = (Icon) PlatformIconGroup.nodesModule();
+    @Deprecated
+    Icon CONTENT_ROOT_ICON_OPEN = CONTENT_ROOT_ICON_CLOSED;
 
-  Icon UP_DOWN_ARROWS = (Icon)AllIcons.Ide.UpDown;
+    Icon UP_DOWN_ARROWS = (Icon) PlatformIconGroup.ideUpdown();
 }

@@ -24,11 +24,14 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @author VISTALL
  * @since 2025-07-19
  */
-@ActionImpl(id = "popup@BookmarkContextMenu", children = {
-    @ActionRef(type = EditBookmarkDescriptionAction.class),
-    @ActionRef(type = DeleteBookmarkAction.class),
-    @ActionRef(type = ToggleBookmarkAction.class),
-    @ActionRef(type = ToggleBookmarkWithMnemonicAction.class),
-})
+@ActionImpl(
+    id = "popup@BookmarkContextMenu",
+    children = {
+        @ActionRef(type = EditBookmarkDescriptionAction.class),
+        @ActionRef(type = DeleteBookmarkAction.class),
+        @ActionRef(type = ToggleBookmarkAction.class),
+        @ActionRef(type = ToggleBookmarkWithMnemonicAction.class),
+    }
+)
 public class BookmarkContextMenu extends DefaultActionGroup implements DumbAware {
 }

@@ -30,7 +30,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetHandler;
-import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.roots.ui.configuration.classpath.AddModuleDependencyListPopupStep;
 import consulo.ide.setting.ProjectStructureSelector;
@@ -44,6 +43,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.*;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
@@ -180,7 +180,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         myEditButton = new DumbAwareAction(
             ProjectLocalize.moduleClasspathButtonEdit(),
             LocalizeValue.empty(),
-            IconUtil.getEditIcon()
+            PlatformIconGroup.actionsEdit()
         ) {
             @RequiredUIAccess
             @Override
@@ -244,7 +244,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             myEntryTable
         );
         actionGroup.add(myEditButton);
-        actionGroup.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), IconUtil.getRemoveIcon()) {
+        actionGroup.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {

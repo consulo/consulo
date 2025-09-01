@@ -34,7 +34,6 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.*;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.LibrarySourceItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import consulo.ide.impl.idea.util.IconUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.localize.LocalizeValue;
@@ -301,8 +300,8 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         toolbarActionGroup.add(new RemovePackagingElementAction(this));
         toolbarActionGroup.add(AnSeparator.getInstance());
         toolbarActionGroup.add(new SortElementsToggleAction(this.getLayoutTreeComponent()));
-        toolbarActionGroup.add(new MovePackagingElementAction(myLayoutTreeComponent, "Move Up", "", IconUtil.getMoveUpIcon(), -1));
-        toolbarActionGroup.add(new MovePackagingElementAction(myLayoutTreeComponent, "Move Down", "", IconUtil.getMoveDownIcon(), 1));
+        toolbarActionGroup.add(new MovePackagingElementAction(myLayoutTreeComponent, "Move Up", "", PlatformIconGroup.actionsMoveup(), -1));
+        toolbarActionGroup.add(new MovePackagingElementAction(myLayoutTreeComponent, "Move Down", "", PlatformIconGroup.actionsMovedown(), 1));
         return toolbarActionGroup;
     }
 
@@ -338,7 +337,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
 
     private ActionGroup createAddGroup() {
         DefaultActionGroup group = new DefaultActionGroup(ProjectLocalize.artifactsAddCopyAction().get(), true);
-        group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
+        group.getTemplatePresentation().setIcon(PlatformIconGroup.generalAdd());
         for (PackagingElementType<?> type : PackagingElementFactory.getInstance(myProject).getAllElementTypes()) {
             if (type.isAvailableForAdd(getContext(), getArtifact())) {
                 group.add(new AddNewPackagingElementAction(type, this));

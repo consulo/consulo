@@ -95,7 +95,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     @Nonnull
     MessageBus getMessageBus();
 
-
     @Nonnull
     default <T> List<T> getExtensionList(@Nonnull Class<T> extensionPointName) {
         return getExtensionPoint(extensionPointName).getExtensionList();

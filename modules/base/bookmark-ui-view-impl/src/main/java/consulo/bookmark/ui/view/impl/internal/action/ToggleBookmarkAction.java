@@ -36,7 +36,7 @@ public class ToggleBookmarkAction extends AnAction implements DumbAware {
         super(BookmarkLocalize.actionBookmarkToggleText(), BookmarkLocalize.actionBookmarkToggleDescription());
     }
 
-    public ToggleBookmarkAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected ToggleBookmarkAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
         super(text, description);
     }
 
@@ -60,6 +60,5 @@ public class ToggleBookmarkAction extends AnAction implements DumbAware {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && (e.hasData(Editor.KEY) || e.hasData(VirtualFile.KEY)));
-        e.getPresentation().setTextValue(BookmarkLocalize.actionBookmarkToggleText());
     }
 }

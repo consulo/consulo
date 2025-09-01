@@ -226,6 +226,12 @@ action.overwrite:
     text: Overwrite
 action.package:
     text: Package
+action.packages.install.text:
+    text: Install
+action.packages.uninstall.text:
+    text: Uninstall
+action.packages.upgrade.text:
+    text: Upgrade
 action.pin.active.tab:
     text: P_in Active Tab
 action.pin.tab:

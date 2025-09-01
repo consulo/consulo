@@ -17,6 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.ActionButtonComponent;
@@ -46,6 +47,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             myAction.actionPerformed(new AnActionEventWrapper(e, this));
         }
@@ -80,6 +82,8 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
             myDelegate = action;
         }
 
+        @Nonnull
+        @Override
         public AnAction getDelegate() {
             return myDelegate;
         }
@@ -134,10 +138,9 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
 
     public static AnActionButton fromAction(AnAction action) {
         Presentation presentation = action.getTemplatePresentation();
-        return action instanceof CheckedActionGroup ? new CheckedAnActionButton(presentation, action) : new AnActionButtonWrapper(
-            presentation,
-            action
-        );
+        return action instanceof CheckedActionGroup
+            ? new CheckedAnActionButton(presentation, action)
+            : new AnActionButtonWrapper(presentation, action);
     }
 
     public boolean isEnabled() {
@@ -184,7 +187,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
 
     public final void addCustomUpdater(@Nonnull AnActionButtonUpdater updater) {
         if (myUpdaters == null) {
-            myUpdaters = new HashSet<AnActionButtonUpdater>();
+            myUpdaters = new HashSet<>();
         }
         myUpdaters.add(updater);
     }
@@ -212,28 +215,19 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     }
 
     private boolean isContextComponentOk() {
-        return myContextComponent == null || (myContextComponent.isVisible() && UIUtil.getParentOfType(
-            JLayeredPane.class,
-            myContextComponent
-        ) != null);
+        return myContextComponent == null
+            || (myContextComponent.isVisible() && UIUtil.getParentOfType(JLayeredPane.class, myContextComponent) != null);
     }
 
     public final RelativePoint getPreferredPopupPoint() {
-        Container c = myContextComponent;
-        ActionToolbar toolbar = null;
-        while ((c = c.getParent()) != null) {
-            if (c instanceof JComponent && (toolbar =
-                (ActionToolbar) ((JComponent) c).getClientProperty(ActionToolbar.ACTION_TOOLBAR_PROPERTY_KEY)) != null) {
-                break;
-            }
-        }
-        if (toolbar instanceof JComponent) {
-            for (Component comp : ((JComponent) toolbar).getComponents()) {
-                if (comp instanceof ActionButtonComponent) {
-                    if (comp instanceof AnActionHolder) {
-                        if (((AnActionHolder) comp).getIdeAction() == this) {
-                            return new RelativePoint(comp.getParent(), new Point(comp.getX(), comp.getY() + comp.getHeight()));
-                        }
+        for (Container c = myContextComponent; (c = c.getParent()) != null;) {
+            if (c instanceof JComponent jComponent
+                && jComponent.getClientProperty(ActionToolbar.ACTION_TOOLBAR_PROPERTY_KEY) instanceof ActionToolbar toolbar) {
+                for (Component comp : jComponent.getComponents()) {
+                    if (comp instanceof ActionButtonComponent
+                        && comp instanceof AnActionHolder actionHolder
+                        && actionHolder.getIdeAction() == this) {
+                        return new RelativePoint(comp.getParent(), new Point(comp.getX(), comp.getY() + comp.getHeight()));
                     }
                 }
             }

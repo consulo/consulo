@@ -54,7 +54,6 @@ public class BookmarkInContextInfo {
         myFile = null;
         myLine = -1;
 
-
         BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
 
         Editor editor = myDataContext.getData(Editor.KEY);
@@ -62,12 +61,7 @@ public class BookmarkInContextInfo {
             Document document = editor.getDocument();
 
             Integer line = myDataContext.getData(EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR);
-            if (line != null) {
-                myLine = line;
-            }
-            else {
-                myLine = editor.getCaretModel().getLogicalPosition().line;
-            }
+            myLine = line != null ? line : editor.getCaretModel().getLogicalPosition().line;
 
             myFile = FileDocumentManager.getInstance().getFile(document);
             myBookmarkAtPlace = bookmarkManager.findEditorBookmark(document, myLine);
