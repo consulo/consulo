@@ -18,6 +18,7 @@ package consulo.ide.impl.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.util.DirectoryUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
@@ -33,14 +34,14 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19/12/2021
+ * @since 2021-12-19
  */
 public enum CreateDirectoryOrPackageType {
     Directory {
         @Nonnull
         @Override
-        public String getName() {
-            return IdeLocalize.actionDirectory().get();
+        public LocalizeValue getName() {
+            return IdeLocalize.actionDirectory();
         }
 
         @Nonnull
@@ -65,8 +66,8 @@ public enum CreateDirectoryOrPackageType {
     Package {
         @Nonnull
         @Override
-        public String getName() {
-            return IdeLocalize.actionPackage().get();
+        public LocalizeValue getName() {
+            return IdeLocalize.actionPackage();
         }
 
         @Nonnull
@@ -108,7 +109,7 @@ public enum CreateDirectoryOrPackageType {
     };
 
     @Nonnull
-    public abstract String getName();
+    public abstract LocalizeValue getName();
 
     @Nonnull
     public abstract String getSeparator();
