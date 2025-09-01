@@ -2376,13 +2376,13 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> createLockFreeCopyOnWriteList() {
-        return createConcurrentList();
+        return Lists.newLockFreeCopyOnWriteList();
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> createLockFreeCopyOnWriteList(@Nonnull Collection<? extends T> c) {
-        return new LockFreeCopyOnWriteArrayList<>(c);
+        return Lists.newLockFreeCopyOnWriteList(c);
     }
 
     @Nonnull

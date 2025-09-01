@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.function.Computable;
 import consulo.configurable.ConfigurationException;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
@@ -53,6 +52,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FilteringIterator;
+import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
@@ -82,7 +82,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     private LibraryTableTreeBuilder myTreeBuilder;
     private VirtualFile myLastChosen;
 
-    private final Collection<Runnable> myListeners = consulo.ide.impl.idea.util.containers.ContainerUtil.createLockFreeCopyOnWriteList();
+    private final Collection<Runnable> myListeners = Lists.newLockFreeCopyOnWriteList();
     @Nullable
     private final Project myProject;
 
@@ -92,7 +92,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     private LibraryRootsComponent.AddExcludedRootActionButton myAddExcludedRootActionButton;
 
     public LibraryRootsComponent(@Nullable Project project, @Nonnull LibraryEditor libraryEditor) {
-        this(project, new Computable.PredefinedValueComputable<>(libraryEditor));
+        this(project, () -> libraryEditor);
     }
 
     public LibraryRootsComponent(@Nullable Project project, @Nonnull Supplier<LibraryEditor> libraryEditorComputable) {
