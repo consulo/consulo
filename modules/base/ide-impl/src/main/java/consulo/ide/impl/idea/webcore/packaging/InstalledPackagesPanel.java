@@ -88,24 +88,24 @@ public class InstalledPackagesPanel extends JPanel {
         new TableSpeedSearch(myPackagesTable);
 
         myUpgradeButton = new DumbAwareActionButton(
-            IdeLocalize.actionAnactionbuttonTextUpgrade(),
+            IdeLocalize.actionPackagesUpgradeText(),
             LocalizeValue.empty(),
             PlatformIconGroup.actionsMoveup()
         ) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 //PackageManagementUsageCollector.triggerUpgradePerformed(myProject, myPackageManagementService);
                 upgradeAction();
             }
         };
         myInstallButton = new DumbAwareActionButton(
-            IdeLocalize.actionAnactionbuttonTextInstall(),
+            IdeLocalize.actionPackagesInstallText(),
             LocalizeValue.empty(),
             PlatformIconGroup.generalAdd()
         ) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 //PackageManagementUsageCollector.triggerBrowseAvailablePackagesPerformed(myProject, myPackageManagementService);
                 if (myPackageManagementService != null) {
@@ -116,7 +116,7 @@ public class InstalledPackagesPanel extends JPanel {
         };
         myInstallButton.setShortcut(CommonShortcuts.getNew());
         myUninstallButton = new DumbAwareActionButton(
-            IdeLocalize.actionAnactionbuttonTextUninstall(),
+            IdeLocalize.actionPackagesUninstallText(),
             LocalizeValue.empty(),
             PlatformIconGroup.generalRemove()
         ) {
@@ -128,14 +128,13 @@ public class InstalledPackagesPanel extends JPanel {
             }
         };
         myUninstallButton.setShortcut(CommonShortcuts.getDelete());
-        ToolbarDecorator decorator =
-            ToolbarDecorator.createDecorator(myPackagesTable)
-                .disableUpDownActions()
-                .disableAddAction()
-                .disableRemoveAction()
-                .addExtraAction(myInstallButton)
-                .addExtraAction(myUninstallButton)
-                .addExtraAction(myUpgradeButton);
+        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myPackagesTable)
+            .disableUpDownActions()
+            .disableAddAction()
+            .disableRemoveAction()
+            .addExtraAction(myInstallButton)
+            .addExtraAction(myUninstallButton)
+            .addExtraAction(myUpgradeButton);
 
         decorator.addExtraActions(getExtraActions());
         add(decorator.createPanel());
@@ -154,11 +153,8 @@ public class InstalledPackagesPanel extends JPanel {
                     Point p = e.getPoint();
                     int row = myPackagesTable.rowAtPoint(p);
                     int column = myPackagesTable.columnAtPoint(p);
-                    if (row >= 0 && column >= 0) {
-                        Object pkg = myPackagesTable.getValueAt(row, 0);
-                        if (pkg instanceof InstalledPackage) {
-                            dialog.selectPackage((InstalledPackage) pkg);
-                        }
+                    if (row >= 0 && column >= 0 && myPackagesTable.getValueAt(row, 0) instanceof InstalledPackage pkg) {
+                        dialog.selectPackage(pkg);
                     }
                     dialog.show();
                     return true;
@@ -231,7 +227,7 @@ public class InstalledPackagesPanel extends JPanel {
     }
 
     private void upgradePackage(@Nonnull InstalledPackage pkg, @Nullable String toVersion) {
-        final PackageManagementService selPackageManagementService = myPackageManagementService;
+        PackageManagementService selPackageManagementService = myPackageManagementService;
 
         AsyncResult<List<String>> result = myPackageManagementService.fetchPackageVersions(pkg.getName());
         Application application = Application.get();

@@ -18,12 +18,6 @@ aboutbox.maintenance.due:
     text: Entitled for free updates and upgrades until {0,date,MMMM dd, yyyy}
 aboutbox.vm:
     text: 'VM: {0} by {1}'
-action.AnActionButton.text.install:
-    text: Install
-action.AnActionButton.text.uninstall:
-    text: Uninstall
-action.AnActionButton.text.upgrade:
-    text: Upgrade
 action.Anonymous.text.add.abbreviation:
     text: Add Abbreviation
 action.Anonymous.text.add.keyboard.shortcut:
@@ -232,6 +226,12 @@ action.overwrite:
     text: Overwrite
 action.package:
     text: Package
+action.packages.install.text:
+    text: Install
+action.packages.uninstall.text:
+    text: Uninstall
+action.packages.upgrade.text:
+    text: Upgrade
 action.pin.active.tab:
     text: P_in Active Tab
 action.pin.tab:
