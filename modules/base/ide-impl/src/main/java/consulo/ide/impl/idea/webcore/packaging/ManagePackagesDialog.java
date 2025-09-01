@@ -61,7 +61,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     private final Project myProject;
     private final PackageManagementService myController;
 
-    private MyPackageFilter myFilter;
+    private JPanel myFilter;
     private JPanel myMainPanel;
     private JEditorPane myDescriptionTextArea;
     private final JBList<RepoPackage> myPackages;
@@ -333,7 +333,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                     () -> {
                         myPackages.setModel(myPackagesModel);
                         if (mySearchablePackageManagement == null) {
-                            myFilter.filter();
+                            ((MyPackageFilter) myFilter).filter();
                         }
                         doSelectPackage(mySelectedPackageName);
                         setDownloadStatus(false);
@@ -494,7 +494,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     @Override
     @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
-        return myFilter.getTextEditor();
+        return ((MyPackageFilter) myFilter).getTextEditor();
     }
 
     private class MyPackageSelectionListener implements ListSelectionListener {
