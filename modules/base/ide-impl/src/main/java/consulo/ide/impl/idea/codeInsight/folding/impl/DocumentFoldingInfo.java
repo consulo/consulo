@@ -2,35 +2,34 @@
 
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.internal.FoldingUtil;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.text.CodeFoldingState;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.editor.folding.LanguageFolding;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.FoldRegion;
-import consulo.document.RangeMarker;
-import consulo.document.FileDocumentManager;
-import consulo.fileEditor.text.CodeFoldingState;
-import consulo.project.Project;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.Comparing;
-import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.StringTokenizer;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

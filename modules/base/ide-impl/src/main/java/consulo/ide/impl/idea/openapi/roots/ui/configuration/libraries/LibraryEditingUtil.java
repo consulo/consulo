@@ -23,7 +23,6 @@ import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.*;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
-import consulo.ide.impl.idea.util.ParameterizedRunnable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -48,6 +47,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -170,7 +170,7 @@ public class LibraryEditingUtil {
 
     public static BaseListPopupStep<LibraryType> createChooseTypeStep(
         ClasspathPanel classpathPanel,
-        ParameterizedRunnable<LibraryType> action
+        Consumer<LibraryType> action
     ) {
         return new BaseListPopupStep<LibraryType>(IdeLocalize.popupTitleSelectLibraryType().get(), getSuitableTypes(classpathPanel)) {
             @Nonnull
@@ -187,7 +187,7 @@ public class LibraryEditingUtil {
 
             @Override
             public PopupStep onChosen(LibraryType selectedValue, boolean finalChoice) {
-                return doFinalStep(() -> action.run(selectedValue));
+                return doFinalStep(() -> action.accept(selectedValue));
             }
         };
     }

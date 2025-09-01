@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.application.options.pathMacros;
 import consulo.application.Application;
 import consulo.application.macro.PathMacros;
 import consulo.configurable.ConfigurationException;
-import consulo.ide.impl.idea.util.text.StringTokenizer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.util.lang.StringUtil;
@@ -28,6 +27,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * @author dsl
@@ -72,7 +72,7 @@ public class PathMacroListEditor {
     List<String> ignored = new ArrayList<>();
     StringTokenizer st = new StringTokenizer(s, ";");
     while (st.hasMoreElements()) {
-      ignored.add(st.nextElement().trim());
+      ignored.add(st.nextToken().trim());
     }
 
     return ignored;

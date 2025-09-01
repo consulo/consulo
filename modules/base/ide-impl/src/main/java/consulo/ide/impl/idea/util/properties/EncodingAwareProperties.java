@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.util.properties;
 
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.util.text.StringTokenizer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 /**
  * @author MYakovlev
@@ -32,7 +32,7 @@ public class EncodingAwareProperties extends java.util.Properties{
     propText = StringUtil.convertLineSeparators(propText);
     StringTokenizer stringTokenizer = new StringTokenizer(propText, "\n");
     while (stringTokenizer.hasMoreElements()){
-      String line = stringTokenizer.nextElement();
+      String line = stringTokenizer.nextToken();
       int i = line.indexOf('=');
       String propName = i == -1 ? line : line.substring(0,i);
       String propValue = i == -1 ? "" : line.substring(i+1);

@@ -8,15 +8,14 @@ import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
 import consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeEditor;
 import consulo.ide.impl.idea.openapi.fileTypes.UserFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
-import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.text.StringTokenizer;
 import consulo.language.Commenter;
 import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.file.FileTypeManager;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
@@ -28,13 +27,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AbstractFileType extends UserFileType<AbstractFileType> implements ExternalizableFileType, ExternalizableScheme, CustomSyntaxTableFileType, PlainTextLikeFileType {
     private static final String SEMICOLON = ";";

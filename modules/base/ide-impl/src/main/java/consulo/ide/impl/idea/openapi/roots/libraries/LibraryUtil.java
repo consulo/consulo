@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.libraries;
 
-import consulo.content.internal.LibraryEx;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.text.StringTokenizer;
 import consulo.content.base.BinariesOrderRootType;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.layer.OrderEnumerator;
@@ -31,12 +30,13 @@ import consulo.module.content.library.util.ModuleContentLibraryUtil;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * @author cdr
@@ -75,7 +75,7 @@ public class LibraryUtil {
 
   private static boolean findInFile(VirtualFile file, StringTokenizer tokenizer) {
     if (!tokenizer.hasMoreTokens()) return true;
-    @NonNls StringBuilder name = new StringBuilder(tokenizer.nextToken());
+    StringBuilder name = new StringBuilder(tokenizer.nextToken());
     if (!tokenizer.hasMoreTokens()) {
       name.append(".class");
     }
@@ -83,7 +83,7 @@ public class LibraryUtil {
     return child != null && findInFile(child, tokenizer);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static Library findInTable(LibraryTable table, String fqn) {
     for (Library library : table.getLibraries()) {
       if (isClassAvailableInLibrary(library, fqn)) {

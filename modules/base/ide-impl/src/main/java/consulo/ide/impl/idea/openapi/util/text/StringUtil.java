@@ -1317,7 +1317,7 @@ public class StringUtil extends StringUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static Iterable<String> tokenize(@Nonnull String s, @Nonnull String separators) {
-    final consulo.ide.impl.idea.util.text.StringTokenizer tokenizer = new consulo.ide.impl.idea.util.text.StringTokenizer(s, separators);
+    final consulo.util.lang.text.StringTokenizer tokenizer = new consulo.util.lang.text.StringTokenizer(s, separators);
     return new Iterable<String>() {
       @Nonnull
       @Override

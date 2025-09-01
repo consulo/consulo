@@ -23,8 +23,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.ide.impl.idea.util.ParameterizedRunnable;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.ex.action.ActionGroup;
@@ -32,13 +30,15 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author Alexander Lobas
@@ -189,7 +189,7 @@ public abstract class LightToolWindowManager implements Disposable {
 
   public final void bind(@Nonnull DesignerEditorPanelFacade designer) {
     if (isEditorMode()) {
-      myCreateAction.run(designer);
+      myCreateAction.accept(designer);
     }
   }
 
@@ -225,21 +225,21 @@ public abstract class LightToolWindowManager implements Disposable {
     toolWindow.dispose();
   }
 
-  private final ParameterizedRunnable<DesignerEditorPanelFacade> myCreateAction =
+  private final Consumer<DesignerEditorPanelFacade> myCreateAction =
     designer -> designer.putClientProperty(getClientPropertyName(), createContent(designer));
 
-  private final ParameterizedRunnable<DesignerEditorPanelFacade> myUpdateAnchorAction = designer -> {
+  private final Consumer<DesignerEditorPanelFacade> myUpdateAnchorAction = designer -> {
     LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getClientPropertyName());
     toolWindow.updateAnchor(getEditorMode());
   };
 
-  private final ParameterizedRunnable<DesignerEditorPanelFacade> myDisposeAction = designer -> disposeContent(designer);
+  private final Consumer<DesignerEditorPanelFacade> myDisposeAction = designer -> disposeContent(designer);
 
-  private void runUpdateContent(ParameterizedRunnable<DesignerEditorPanelFacade> action) {
+  private void runUpdateContent(Consumer<DesignerEditorPanelFacade> action) {
     for (FileEditor editor : myFileEditorManager.getAllEditors()) {
       DesignerEditorPanelFacade designer = getDesigner(editor);
       if (designer != null) {
-        action.run(designer);
+        action.accept(designer);
       }
     }
   }
