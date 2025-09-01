@@ -15,10 +15,8 @@
  */
 package consulo.ide.newModule;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.newModule.NewModuleWizardContextBase;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,30 +27,32 @@ import jakarta.annotation.Nullable;
  * Base implementation {@link NewModuleWizardContextBase}
  */
 public interface NewModuleWizardContext {
-  void setName(@Nonnull String name);
+    void setName(@Nonnull String name);
 
-  void setPath(@Nonnull String path);
+    void setPath(@Nonnull String path);
 
-  @Nonnull
-  String getName();
+    @Nonnull
+    String getName();
 
-  @Nonnull
-  String getPath();
+    @Nonnull
+    String getPath();
 
-  @Nonnull
-  default String getTargetId() {
-    return isNewProject() ? IdeBundle.message("project.new.wizard.project.identification") : IdeBundle.message("project.new.wizard.module.identification");
-  }
+    @Nonnull
+    default String getTargetId() {
+        return isNewProject()
+            ? IdeLocalize.projectNewWizardProjectIdentification().get()
+            : IdeLocalize.projectNewWizardModuleIdentification().get();
+    }
 
-  /**
-   * @return true if its called from NewProject action
-   */
-  default boolean isNewProject() {
-    return getProject() == null;
-  }
+    /**
+     * @return true if its called from NewProject action
+     */
+    default boolean isNewProject() {
+        return getProject() == null;
+    }
 
-  @Nullable
-  default Project getProject() {
-    return null;
-  }
+    @Nullable
+    default Project getProject() {
+        return null;
+    }
 }

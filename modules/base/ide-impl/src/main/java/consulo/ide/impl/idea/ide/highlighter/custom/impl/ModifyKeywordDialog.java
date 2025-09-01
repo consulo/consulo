@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.IdeBundle;
-import consulo.application.CommonBundle;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,67 +29,81 @@ import java.awt.*;
  * @author Yura Cangea
  */
 public class ModifyKeywordDialog extends DialogWrapper {
-  private final JTextField myKeywordName = new JTextField();
+    private final JTextField myKeywordName = new JTextField();
 
-  public ModifyKeywordDialog(Component parent, String initialValue) {
-    super(parent, false);
-    if (initialValue == null || "".equals(initialValue)) {
-      setTitle(IdeBundle.message("title.add.new.keyword"));
+    public ModifyKeywordDialog(Component parent, String initialValue) {
+        super(parent, false);
+        if (initialValue == null || "".equals(initialValue)) {
+            setTitle(IdeLocalize.titleAddNewKeyword());
+        }
+        else {
+            setTitle(IdeLocalize.titleEditKeyword());
+        }
+        init();
+        myKeywordName.setText(initialValue);
     }
-    else {
-      setTitle(IdeBundle.message("title.edit.keyword"));
+
+    @Override
+    protected JComponent createNorthPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.gridx = 0;
+        gc.gridy = 0;
+        gc.weightx = 0;
+        gc.insets = new Insets(5, 0, 5, 10);
+        gc.anchor = GridBagConstraints.BASELINE;
+        panel.add(new JLabel(IdeLocalize.editboxKeyword().get()), gc);
+
+        gc = new GridBagConstraints();
+        gc.gridx = 1;
+        gc.gridy = 0;
+        gc.weightx = 1;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.gridwidth = 2;
+        gc.insets = new Insets(0, 0, 5, 0);
+        panel.add(myKeywordName, gc);
+
+        panel.setPreferredSize(new Dimension(220, 40));
+        return panel;
     }
-    init();
-    myKeywordName.setText(initialValue);
-  }
 
-  protected JComponent createNorthPanel() {
-    JPanel panel = new JPanel(new GridBagLayout());
-    GridBagConstraints gc = new GridBagConstraints();
-    gc.gridx = 0;
-    gc.gridy = 0;
-    gc.weightx = 0;
-    gc.insets = new Insets(5, 0, 5, 10);
-    gc.anchor = GridBagConstraints.BASELINE;
-    panel.add(new JLabel(IdeBundle.message("editbox.keyword")), gc);
-
-    gc = new GridBagConstraints();
-    gc.gridx = 1;
-    gc.gridy = 0;
-    gc.weightx = 1;
-    gc.fill = GridBagConstraints.HORIZONTAL;
-    gc.gridwidth = 2;
-    gc.insets = new Insets(0, 0, 5, 0);
-    panel.add(myKeywordName, gc);
-
-    panel.setPreferredSize(new Dimension(220, 40));
-    return panel;
-  }
-
-  protected JComponent createCenterPanel() {
-    return null;
-  }
-
-  protected void doOKAction() {
-    String keywordName = myKeywordName.getText().trim();
-    if (keywordName.length() == 0) {
-      Messages.showMessageDialog(getContentPane(), IdeBundle.message("error.keyword.cannot.be.empty"),
-                                 CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-      return;
+    @Override
+    protected JComponent createCenterPanel() {
+        return null;
     }
-    if (keywordName.indexOf(' ') >= 0) {
-      Messages.showMessageDialog(getContentPane(), IdeBundle.message("error.keyword.may.not.contain.spaces"),
-                                 CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-      return;
+
+    @Override
+    @RequiredUIAccess
+    protected void doOKAction() {
+        String keywordName = myKeywordName.getText().trim();
+        if (keywordName.length() == 0) {
+            Messages.showMessageDialog(
+                getContentPane(),
+                IdeLocalize.errorKeywordCannotBeEmpty().get(),
+                CommonLocalize.titleError().get(),
+                UIUtil.getErrorIcon()
+            );
+            return;
+        }
+        if (keywordName.indexOf(' ') >= 0) {
+            Messages.showMessageDialog(
+                getContentPane(),
+                IdeLocalize.errorKeywordMayNotContainSpaces().get(),
+                CommonLocalize.titleError().get(),
+                UIUtil.getErrorIcon()
+            );
+            return;
+        }
+        super.doOKAction();
     }
-    super.doOKAction();
-  }
 
-  public JComponent getPreferredFocusedComponent() {
-    return myKeywordName;
-  }
+    @Override
+    @RequiredUIAccess
+    public JComponent getPreferredFocusedComponent() {
+        return myKeywordName;
+    }
 
-  public String getKeywordName() {
-    return myKeywordName.getText();
-  }
+    public String getKeywordName() {
+        return myKeywordName.getText();
+    }
 }

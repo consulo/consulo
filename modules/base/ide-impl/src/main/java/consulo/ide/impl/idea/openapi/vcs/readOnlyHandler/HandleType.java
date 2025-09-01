@@ -15,79 +15,84 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
-import consulo.ide.IdeBundle;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.ide.localize.IdeLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
-
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class HandleType {
-  private final String myName;
-  private final boolean myUseVcs;
+    private final String myName;
+    private final boolean myUseVcs;
 
-  public static final HandleType USE_FILE_SYSTEM = new HandleType(IdeBundle.message("handle.ro.file.status.type.using.file.system"), false) {
-    public void processFiles(final Collection<VirtualFile> virtualFiles, String changelist) {
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        public void run() {
-          try {
-            for (VirtualFile file : virtualFiles) {
-              ReadOnlyAttributeUtil.setReadOnlyAttribute(file, false);
-              file.refresh(false, false);
-            }
-          }
-          catch (IOException e) {
-            //ignore
-          }
+    public static final HandleType USE_FILE_SYSTEM = new HandleType(IdeLocalize.handleRoFileStatusTypeUsingFileSystem().get(), false) {
+        @Override
+        @RequiredUIAccess
+        public void processFiles(Collection<VirtualFile> virtualFiles, String changelist) {
+            Application.get().runWriteAction(() -> {
+                try {
+                    for (VirtualFile file : virtualFiles) {
+                        ReadOnlyAttributeUtil.setReadOnlyAttribute(file, false);
+                        file.refresh(false, false);
+                    }
+                }
+                catch (IOException e) {
+                    //ignore
+                }
+            });
         }
-      });
+    };
+
+    protected HandleType(String name, boolean useVcs) {
+        myName = name;
+        myUseVcs = useVcs;
     }
-  };
 
-  protected HandleType(String name, boolean useVcs) {
-    myName = name;
-    myUseVcs = useVcs;
-  }
+    @Override
+    public String toString() {
+        return myName;
+    }
 
-  public String toString() {
-    return myName;
-  }
+    public boolean getUseVcs() {
+        return myUseVcs;
+    }
 
-  public boolean getUseVcs() {
-    return myUseVcs;
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+        HandleType that = (HandleType) o;
 
-    HandleType that = (HandleType)o;
+        return myUseVcs == that.myUseVcs
+            && Objects.equals(myName, that.myName);
+    }
 
-    if (myUseVcs != that.myUseVcs) return false;
-    if (myName != null ? !myName.equals(that.myName) : that.myName != null) return false;
+    @Override
+    public int hashCode() {
+        int result = (myName != null ? myName.hashCode() : 0);
+        return 31 * result + (myUseVcs ? 1 : 0);
+    }
 
-    return true;
-  }
+    public abstract void processFiles(Collection<VirtualFile> virtualFiles, @Nullable String changelist);
 
-  public int hashCode() {
-    int result;
-    result = (myName != null ? myName.hashCode() : 0);
-    result = 31 * result + (myUseVcs ? 1 : 0);
-    return result;
-  }
+    public List<String> getChangelists() {
+        return Collections.emptyList();
+    }
 
-  public abstract void processFiles(Collection<VirtualFile> virtualFiles, @Nullable String changelist);
-
-  public List<String> getChangelists() {
-    return Collections.emptyList();
-  }
-
-  @Nullable
-  public String getDefaultChangelist() {
-    return null;
-  }
+    @Nullable
+    public String getDefaultChangelist() {
+        return null;
+    }
 }

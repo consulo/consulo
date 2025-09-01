@@ -20,9 +20,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.bookmark.ui.view.BookmarkNodeProvider;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectTreeStructure;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
@@ -30,6 +29,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -41,102 +41,109 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class FavoritesTreeStructure extends ProjectTreeStructure {
-  public FavoritesTreeStructure(Project project) {
-    super(project, FavoritesViewTreeBuilder.ID);
-  }
-
-  @Override
-  protected AbstractTreeNode createRoot(Project project, ViewSettings settings) {
-    return new FavoritesRootNode(project);
-  }
-
-  public void rootsChanged() {
-    ((FavoritesRootNode)getRootElement()).rootsChanged();
-  }
-
-
-  @Override
-  public Object[] getChildElements(Object element) {
-    if (!(element instanceof AbstractTreeNode)) {
-      return ArrayUtil.EMPTY_OBJECT_ARRAY;
+    public FavoritesTreeStructure(Project project) {
+        super(project, FavoritesViewTreeBuilder.ID);
     }
 
-    AbstractTreeNode favTreeElement = (AbstractTreeNode)element;
-    try {
-      if (!(element instanceof FavoritesListNode)) {
-        return super.getChildElements(favTreeElement);
-      }
+    @Override
+    protected AbstractTreeNode createRoot(Project project, ViewSettings settings) {
+        return new FavoritesRootNode(project);
+    }
 
-      List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
-      FavoritesListNode listNode = (FavoritesListNode)element;
-      if (listNode.getProvider() != null) {
-        return ArrayUtil.toObjectArray(listNode.getChildren());
-      }
-      Collection<AbstractTreeNode> roots = FavoritesListNode.getFavoritesRoots(myProject, listNode.getName(), listNode);
-      for (AbstractTreeNode<?> abstractTreeNode : roots) {
-        Object value = abstractTreeNode.getValue();
+    public void rootsChanged() {
+        ((FavoritesRootNode) getRootElement()).rootsChanged();
+    }
 
-        if (value == null) continue;
-        if (value instanceof PsiElement && !((PsiElement)value).isValid()) continue;
-        if (value instanceof SmartPsiElementPointer && ((SmartPsiElementPointer)value).getElement() == null) continue;
-
-        boolean invalid = false;
-        for (BookmarkNodeProvider nodeProvider : myProject.getExtensionList(BookmarkNodeProvider.class)) {
-          if (nodeProvider.isInvalidElement(value)) {
-            invalid = true;
-            break;
-          }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public Object[] getChildElements(@Nonnull Object element) {
+        if (!(element instanceof AbstractTreeNode favTreeElement)) {
+            return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
-        if (invalid) continue;
 
-        result.add(abstractTreeNode);
-      }
-      //myFavoritesRoots = result;
-      //if (result.isEmpty()) {
-      //  result.add(getEmptyScreen());
-      //}
-      return ArrayUtil.toObjectArray(result);
+        try {
+            if (!(element instanceof FavoritesListNode listNode)) {
+                return super.getChildElements(favTreeElement);
+            }
+
+            List<AbstractTreeNode> result = new ArrayList<>();
+            if (listNode.getProvider() != null) {
+                return ArrayUtil.toObjectArray(listNode.getChildren());
+            }
+            Collection<AbstractTreeNode> roots = FavoritesListNode.getFavoritesRoots(myProject, listNode.getName(), listNode);
+            for (AbstractTreeNode<?> abstractTreeNode : roots) {
+                Object value = abstractTreeNode.getValue();
+
+                if (value == null) {
+                    continue;
+                }
+                if (value instanceof PsiElement elem && !elem.isValid()) {
+                    continue;
+                }
+                if (value instanceof SmartPsiElementPointer smartPointer && smartPointer.getElement() == null) {
+                    continue;
+                }
+
+                boolean invalid = false;
+                for (BookmarkNodeProvider nodeProvider : myProject.getExtensionList(BookmarkNodeProvider.class)) {
+                    if (nodeProvider.isInvalidElement(value)) {
+                        invalid = true;
+                        break;
+                    }
+                }
+                if (invalid) {
+                    continue;
+                }
+
+                result.add(abstractTreeNode);
+            }
+            //myFavoritesRoots = result;
+            //if (result.isEmpty()) {
+            //  result.add(getEmptyScreen());
+            //}
+            return ArrayUtil.toObjectArray(result);
+        }
+        catch (Exception ignore) {
+        }
+
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
-    catch (Exception e) {
+
+    private AbstractTreeNode<String> getEmptyScreen() {
+        return new AbstractTreeNode<>(myProject, IdeLocalize.favoritesEmptyScreen().get()) {
+            @RequiredReadAction
+            @Override
+            @Nonnull
+            public Collection<AbstractTreeNode> getChildren() {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public void update(PresentationData presentation) {
+                presentation.setPresentableText(getValue());
+            }
+        };
     }
 
-    return ArrayUtil.EMPTY_OBJECT_ARRAY;
-  }
-
-  private AbstractTreeNode<String> getEmptyScreen() {
-    return new AbstractTreeNode<String>(myProject, IdeBundle.message("favorites.empty.screen")) {
-      @RequiredReadAction
-      @Override
-      @Nonnull
-      public Collection<AbstractTreeNode> getChildren() {
-        return Collections.emptyList();
-      }
-
-      @Override
-      public void update(PresentationData presentation) {
-        presentation.setPresentableText(getValue());
-      }
-    };
-  }
-
-  @Override
-  public Object getParentElement(Object element) {
-    AbstractTreeNode parent = null;
-    if (element == getRootElement()) {
-      return null;
+    @Override
+    public Object getParentElement(@Nonnull Object element) {
+        AbstractTreeNode parent = null;
+        if (element == getRootElement()) {
+            return null;
+        }
+        if (element instanceof AbstractTreeNode node) {
+            parent = (AbstractTreeNode) node.getParent();
+        }
+        if (parent == null) {
+            return getRootElement();
+        }
+        return parent;
     }
-    if (element instanceof AbstractTreeNode) {
-      parent = (AbstractTreeNode)((AbstractTreeNode)element).getParent();
-    }
-    if (parent == null) {
-      return getRootElement();
-    }
-    return parent;
-  }
 
-  @Override
-  @Nonnull
-  public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
-    return new FavoritesTreeNodeDescriptor(myProject, parentDescriptor, (AbstractTreeNode)element);
-  }
+    @Nonnull
+    @Override
+    public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+        return new FavoritesTreeNodeDescriptor(myProject, parentDescriptor, (AbstractTreeNode) element);
+    }
 }

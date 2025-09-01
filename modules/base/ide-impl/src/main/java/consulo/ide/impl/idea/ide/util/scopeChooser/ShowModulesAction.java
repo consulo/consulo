@@ -15,33 +15,39 @@
  */
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
+import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
  * @since 2008-01-16
  */
 public final class ShowModulesAction extends ToggleAction {
-  private final Runnable myUpdate;
+    private final Runnable myUpdate;
 
-  public ShowModulesAction(Runnable update) {
-    super(IdeBundle.message("action.show.modules"),
-          IdeBundle.message("action.description.show.modules"), PlatformIconGroup.actionsGroupbymodule());
-    myUpdate = update;
-  }
+    public ShowModulesAction(Runnable update) {
+        super(
+            IdeLocalize.actionShowModules(),
+            IdeLocalize.actionDescriptionShowModules(),
+            PlatformIconGroup.actionsGroupbymodule()
+        );
+        myUpdate = update;
+    }
 
-  @Override
-  public boolean isSelected(AnActionEvent event) {
-    return DependencyUISettings.getInstance().UI_SHOW_MODULES;
-  }
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return DependencyUISettings.getInstance().UI_SHOW_MODULES;
+    }
 
-  @Override
-  public void setSelected(AnActionEvent event, boolean flag) {
-    DependencyUISettings.getInstance().UI_SHOW_MODULES = flag;
-    myUpdate.run();
-  }
+    @Override
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean flag) {
+        DependencyUISettings.getInstance().UI_SHOW_MODULES = flag;
+        myUpdate.run();
+    }
 }

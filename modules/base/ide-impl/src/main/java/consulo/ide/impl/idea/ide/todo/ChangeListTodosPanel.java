@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.application.ui.util.TodoPanelSettings;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
@@ -25,7 +25,6 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
 import java.util.Collection;
@@ -34,38 +33,33 @@ import java.util.Collection;
  * @author anna
  * @since 2007-07-27
  */
-public abstract class ChangeListTodosPanel extends TodoPanel{
-  private final Alarm myAlarm;
+public abstract class ChangeListTodosPanel extends TodoPanel {
+    private final Alarm myAlarm;
 
-  public ChangeListTodosPanel(Project project, TodoPanelSettings settings, Content content){
-    super(project,settings,false,content);
-    ChangeListManager changeListManager = ChangeListManager.getInstance(project);
-    final MyChangeListManagerListener myChangeListManagerListener = new MyChangeListManagerListener();
-    changeListManager.addChangeListListener(myChangeListManagerListener);
-    Disposer.register(this, new Disposable() {
-      @Override
-      public void dispose() {
-        ChangeListManager.getInstance(myProject).removeChangeListListener(myChangeListManagerListener);
-      }
-    });
-    myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
-  }
-
-  private final class MyChangeListManagerListener extends ChangeListAdapter {
-    @Override
-    public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
-      rebuildWithAlarm(myAlarm);
-      AppUIUtil.invokeOnEdt(() -> setDisplayName(IdeBundle.message("changelist.todo.title", newDefaultList.getName())));
+    public ChangeListTodosPanel(Project project, TodoPanelSettings settings, Content content) {
+        super(project, settings, false, content);
+        ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+        MyChangeListManagerListener myChangeListManagerListener = new MyChangeListManagerListener();
+        changeListManager.addChangeListListener(myChangeListManagerListener);
+        Disposer.register(this, () -> ChangeListManager.getInstance(myProject).removeChangeListListener(myChangeListManagerListener));
+        myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
     }
 
-    @Override
-    public void changeListRenamed(ChangeList list, String oldName) {
-      AppUIUtil.invokeOnEdt(() -> setDisplayName(IdeBundle.message("changelist.todo.title", list.getName())));
-    }
+    private final class MyChangeListManagerListener extends ChangeListAdapter {
+        @Override
+        public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
+            rebuildWithAlarm(myAlarm);
+            AppUIUtil.invokeOnEdt(() -> setDisplayName(IdeLocalize.changelistTodoTitle(newDefaultList.getName()).get()));
+        }
 
-    @Override
-    public void changesMoved(Collection<Change> changes, ChangeList fromList, ChangeList toList) {
-      rebuildWithAlarm(myAlarm);
+        @Override
+        public void changeListRenamed(ChangeList list, String oldName) {
+            AppUIUtil.invokeOnEdt(() -> setDisplayName(IdeLocalize.changelistTodoTitle(list.getName()).get()));
+        }
+
+        @Override
+        public void changesMoved(Collection<Change> changes, ChangeList fromList, ChangeList toList) {
+            rebuildWithAlarm(myAlarm);
+        }
     }
-  }
 }

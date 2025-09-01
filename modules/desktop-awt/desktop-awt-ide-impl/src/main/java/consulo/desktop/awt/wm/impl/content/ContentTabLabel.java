@@ -4,12 +4,12 @@ package consulo.desktop.awt.wm.impl.content;
 import consulo.application.ui.UISettings;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
+import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -84,10 +84,12 @@ class ContentTabLabel extends BaseLabel {
         @Override
         public String getTooltip() {
             if (getContent().isPinned()) {
-                return IdeBundle.message("action.unpin.tab.tooltip");
+                return IdeLocalize.actionUnpinTabTooltip().get();
             }
 
-            String text = KeymapUtil.getShortcutsText(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_CLOSE_ACTIVE_TAB));
+            String text = KeymapUtil.getShortcutsText(
+                KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_CLOSE_ACTIVE_TAB)
+            );
 
             return text.isEmpty() || !isSelected() ? ACTION_NAME : ACTION_NAME + " (" + text + ")";
         }
@@ -113,8 +115,10 @@ class ContentTabLabel extends BaseLabel {
     BaseButtonBehavior behavior = new BaseButtonBehavior(this) {
         @Override
         protected void execute(MouseEvent e) {
-
-            Optional<Runnable> first = myAdditionalIcons.stream().filter(icon -> mouseOverIcon(icon)).map(icon -> icon.getAction()).findFirst();
+            Optional<Runnable> first = myAdditionalIcons.stream()
+                .filter(icon -> mouseOverIcon(icon))
+                .map(AdditionalIcon::getAction)
+                .findFirst();
 
             if (first.isPresent()) {
                 first.get().run();
@@ -162,7 +166,6 @@ class ContentTabLabel extends BaseLabel {
             IdeTooltip tooltip = new IdeTooltip(this, getMousePosition(), new JLabel(myText));
             currentIconTooltip = new CurrentTooltip(IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, false, false), null);
         }
-
     }
 
     private void hideCurrentTooltip() {
@@ -257,7 +260,7 @@ class ContentTabLabel extends BaseLabel {
                 repaint();
             }
 
-            Optional<AdditionalIcon> first = myAdditionalIcons.stream().filter(icon -> mouseOverIcon(icon)).findFirst();
+            Optional<AdditionalIcon> first = myAdditionalIcons.stream().filter(this::mouseOverIcon).findFirst();
 
             if (first.isPresent()) {
                 showTooltip(first.get());
@@ -269,7 +272,7 @@ class ContentTabLabel extends BaseLabel {
     }
 
     protected boolean invalid() {
-        return myAdditionalIcons.stream().anyMatch(icon -> icon.getAvailable());
+        return myAdditionalIcons.stream().anyMatch(AdditionalIcon::getAvailable);
     }
 
     public final boolean canBeClosed() {
@@ -341,8 +344,8 @@ class ContentTabLabel extends BaseLabel {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         paintIcons(g);

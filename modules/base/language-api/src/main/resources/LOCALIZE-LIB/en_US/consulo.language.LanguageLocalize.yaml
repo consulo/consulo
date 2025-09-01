@@ -132,6 +132,8 @@ java.terms.variable:
     text: variable
 java.terms.variable.of.method:
     text: '{0} of {1}'
+package.component.installing.suffix:
+    text: (installing)
 popup.title.copy:
     text: Copy
 quickfix.change.template.data.language.text:
