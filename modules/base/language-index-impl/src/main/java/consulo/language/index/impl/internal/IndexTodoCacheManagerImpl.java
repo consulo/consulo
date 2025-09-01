@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.cache.impl;
+package consulo.language.index.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ReadAction;
-import consulo.language.psi.stub.todo.TodoCacheManager;
-import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndex;
-import consulo.language.psi.stub.*;
-import consulo.language.psi.stub.todo.TodoIndexEntry;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
@@ -31,17 +27,20 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternProvider;
+import consulo.language.psi.stub.*;
+import consulo.language.psi.stub.todo.TodoCacheManager;
+import consulo.language.psi.stub.todo.TodoIndexEntry;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 

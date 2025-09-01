@@ -537,7 +537,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.containers;
   exports consulo.ide.impl.idea.util.continuation;
   exports consulo.ide.impl.idea.util.exception;
-  exports consulo.ide.impl.idea.util.gist;
   exports consulo.ide.impl.idea.util.graph.impl;
   exports consulo.ide.impl.idea.util.indexing;
   exports consulo.ide.impl.idea.util.io;
@@ -572,9 +571,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.codeStyle.statusbar;
   exports consulo.ide.impl.psi.impl;
   exports consulo.ide.impl.psi.impl.cache;
-  exports consulo.ide.impl.psi.impl.cache.impl;
   exports consulo.ide.impl.psi.impl.cache.impl.id;
-  exports consulo.ide.impl.psi.impl.cache.impl.todo;
   exports consulo.ide.impl.psi.impl.file.impl;
   exports consulo.ide.impl.psi.impl.search;
   exports consulo.ide.impl.psi.impl.source.codeStyle;

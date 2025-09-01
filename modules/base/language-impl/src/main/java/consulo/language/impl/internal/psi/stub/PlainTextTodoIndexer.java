@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.cache.impl.todo;
+package consulo.language.impl.internal.psi.stub;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.plain.PlainTextFileType;
-import consulo.language.plain.psi.stub.todo.PlainTextTodoIndexerBase;
+import consulo.language.psi.stub.todo.PlainTextTodoIndexerBase;
 import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;

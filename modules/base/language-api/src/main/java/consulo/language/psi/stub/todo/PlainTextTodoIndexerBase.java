@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.plain.psi.stub.todo;
+package consulo.language.psi.stub.todo;
 
 import consulo.language.pattern.StringPattern;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.IndexPatternUtil;
 import consulo.language.psi.stub.OccurrenceConsumer;
-import consulo.language.psi.stub.todo.TodoIndexEntry;
-import consulo.language.psi.stub.todo.TodoIndexer;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;

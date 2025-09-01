@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.gist;
+package consulo.language.index.impl.internal.gist;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.CachedValue;

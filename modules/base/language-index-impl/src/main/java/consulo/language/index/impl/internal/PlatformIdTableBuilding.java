@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.internal;
+package consulo.language.index.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.EditorHighlighter;
@@ -24,7 +24,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.language.editor.highlight.LexerEditorHighlighter;
+import consulo.language.editor.internal.EditorHighlighterCache;
 import consulo.language.file.LanguageFileType;
 import consulo.language.internal.SubstitutedFileType;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
@@ -40,7 +40,6 @@ import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.language.util.CommentUtilCore;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
-import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -99,16 +98,6 @@ public class PlatformIdTableBuilding {
     }
 
     return null;
-  }
-
-  public static boolean checkCanUseCachedEditorHighlighter(CharSequence chars, EditorHighlighter editorHighlighter) {
-    assert editorHighlighter instanceof LexerEditorHighlighter;
-    boolean b = ((LexerEditorHighlighter)editorHighlighter).checkContentIsEqualTo(chars);
-    if (!b) {
-      Logger logger = Logger.getInstance(PlatformIdTableBuilding.class);
-      logger.warn("Unexpected mismatch of editor highlighter content with indexing content");
-    }
-    return b;
   }
 
   public static boolean isTodoIndexerRegistered(@Nonnull FileType fileType) {
@@ -184,7 +173,7 @@ public class PlatformIdTableBuilding {
         EditorHighlighter highlighter;
 
         EditorHighlighter editorHighlighter = inputData.getUserData(EditorHighlighter.KEY);
-        if (editorHighlighter != null && checkCanUseCachedEditorHighlighter(chars, editorHighlighter)) {
+        if (editorHighlighter != null && EditorHighlighterCache.checkCanUseCachedEditorHighlighter(chars, editorHighlighter)) {
           highlighter = editorHighlighter;
         }
         else {

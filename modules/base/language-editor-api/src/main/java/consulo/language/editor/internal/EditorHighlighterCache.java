@@ -24,6 +24,7 @@ import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
@@ -73,7 +74,7 @@ public class EditorHighlighterCache {
 
         if (document != null &&
             (cachedEditorHighlighter = getEditorHighlighterForCachesBuilding(document)) != null &&
-            PlatformIdTableBuilding.checkCanUseCachedEditorHighlighter(text, cachedEditorHighlighter)) {
+            checkCanUseCachedEditorHighlighter(text, cachedEditorHighlighter)) {
             highlighter = cachedEditorHighlighter;
             alreadyInitializedHighlighter = true;
         }
@@ -85,5 +86,15 @@ public class EditorHighlighterCache {
             return new LexerEditorHighlighterLexer(highlighter, alreadyInitializedHighlighter);
         }
         return null;
+    }
+
+    public static boolean checkCanUseCachedEditorHighlighter(CharSequence chars, EditorHighlighter editorHighlighter) {
+        assert editorHighlighter instanceof LexerEditorHighlighter;
+        boolean b = ((LexerEditorHighlighter) editorHighlighter).checkContentIsEqualTo(chars);
+        if (!b) {
+            Logger logger = Logger.getInstance(EditorHighlighterCache.class);
+            logger.warn("Unexpected mismatch of editor highlighter content with indexing content");
+        }
+        return b;
     }
 }

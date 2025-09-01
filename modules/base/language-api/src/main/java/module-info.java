@@ -37,7 +37,6 @@ module consulo.language.api {
     exports consulo.language.plain;
     exports consulo.language.plain.ast;
     exports consulo.language.plain.psi;
-    exports consulo.language.plain.psi.stub.todo;
     exports consulo.language.pom;
     exports consulo.language.pom.event;
     exports consulo.language.pratt;
@@ -90,6 +89,7 @@ module consulo.language.api {
 
     exports consulo.language.internal.custom to
         consulo.ide.impl,
+        consulo.language.index.impl,
         consulo.language.editor.api,
         consulo.language.editor.impl;
 

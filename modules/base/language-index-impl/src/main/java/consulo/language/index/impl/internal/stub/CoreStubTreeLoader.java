@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.psi.stub;
+package consulo.language.index.impl.internal.stub;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.LanguageFileType;
+import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.stub.PsiFileWithStubSupport;

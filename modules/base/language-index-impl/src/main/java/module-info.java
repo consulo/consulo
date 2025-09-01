@@ -4,6 +4,7 @@
  */
 module consulo.language.index.impl {
     requires consulo.language.api;
+    requires consulo.language.editor.api;
     requires consulo.language.impl;
     requires consulo.application.impl;
     requires consulo.project.ui.api;
