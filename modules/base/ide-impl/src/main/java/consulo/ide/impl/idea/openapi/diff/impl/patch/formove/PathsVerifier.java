@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchFactory
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
+import consulo.versionControlSystem.impl.internal.util.RelativePathCalculator;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

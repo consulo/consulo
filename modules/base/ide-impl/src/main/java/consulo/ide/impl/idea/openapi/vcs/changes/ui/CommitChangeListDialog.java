@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionAction;
 import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinChangeListSpecificComponent;
 import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinMetaHandler;
-import consulo.ide.impl.idea.openapi.vcs.impl.CheckinHandlersManager;
+import consulo.versionControlSystem.internal.CheckinHandlersManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;
 import consulo.ide.impl.idea.ui.SplitterWithSecondHideable;
 import consulo.localize.LocalizeValue;

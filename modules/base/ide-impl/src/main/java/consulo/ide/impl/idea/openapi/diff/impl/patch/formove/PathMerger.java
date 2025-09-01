@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
-import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.base.FilePathImpl;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
+import consulo.versionControlSystem.impl.internal.util.RelativePathCalculator;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;

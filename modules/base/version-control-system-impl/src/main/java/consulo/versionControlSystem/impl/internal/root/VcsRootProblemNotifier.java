@@ -1,21 +1,22 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.vcs.roots;
+package consulo.versionControlSystem.impl.internal.root;
 
-import com.google.common.annotations.VisibleForTesting;
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
-import consulo.ide.setting.ShowSettingsUtil;
+import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.internal.ShowConfigurableService;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.ex.action.Presentation;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
@@ -31,8 +32,6 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
-import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemDependentName;
-import static consulo.ide.impl.idea.util.containers.ContainerUtil.*;
 import static consulo.ui.ex.awt.UIUtil.BR;
 import static consulo.util.lang.StringUtil.escapeXmlEntities;
 import static consulo.versionControlSystem.VcsRootError.Type.UNREGISTERED_ROOT;
@@ -109,7 +108,7 @@ public final class VcsRootProblemNotifier {
 
             // Register the single root equal to the project dir silently, without any notification
             if (invalidRoots.isEmpty() && importantUnregisteredRoots.size() == 1) {
-                VcsRootError rootError = Objects.requireNonNull(getFirstItem(importantUnregisteredRoots));
+                VcsRootError rootError = Objects.requireNonNull(ContainerUtil.getFirstItem(importantUnregisteredRoots));
                 if (FileUtil.pathsEqual(rootError.getMapping().getDirectory(), myProject.getBasePath())) {
                     return;
                 }
@@ -126,7 +125,7 @@ public final class VcsRootProblemNotifier {
         }
         else {
             // Don't report again, if these roots were already reported
-            List<String> unregRootPaths = map(importantUnregisteredRoots, rootError -> rootError.getMapping().getDirectory());
+            List<String> unregRootPaths = ContainerUtil.map(importantUnregisteredRoots, rootError -> rootError.getMapping().getDirectory());
             if (invalidRoots.isEmpty() && (importantUnregisteredRoots.isEmpty() || myReportedUnregisteredRoots.containsAll(unregRootPaths))) {
                 return;
             }
@@ -142,7 +141,7 @@ public final class VcsRootProblemNotifier {
             NotificationAction ignoreAction = NotificationAction.create(
                 VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextIgnore(),
                 (event, notification) -> {
-                    mySettings.addIgnoredUnregisteredRoots(map(
+                    mySettings.addIgnoredUnregisteredRoots(ContainerUtil.map(
                         importantUnregisteredRoots,
                         rootError -> rootError.getMapping().getDirectory()
                     ));
@@ -178,13 +177,16 @@ public final class VcsRootProblemNotifier {
             VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextConfigure(),
             (event, notification) -> {
                 if (!myProject.isDisposed()) {
-                    ShowSettingsUtil.getInstance().showSettingsDialog(myProject, ActionLocalize.groupVcsgroupText().get());
+                    ShowConfigurableService configurableService = Application.get().getInstance(ShowConfigurableService.class);
 
-                    BackgroundTaskUtil.executeOnPooledThread(myProject, () -> {
-                        Collection<VcsRootError> errorsAfterPossibleFix = new VcsRootProblemNotifier(myProject).scan();
-                        if (errorsAfterPossibleFix.isEmpty() && !notification.isExpired()) {
-                            notification.expire();
-                        }
+                    configurableService.showAndSelect(myProject, StandardConfigurableIds.VCS_GROUP).whenComplete((o, throwable) -> {
+
+                        BackgroundTaskUtil.executeOnPooledThread(myProject, () -> {
+                            Collection<VcsRootError> errorsAfterPossibleFix = new VcsRootProblemNotifier(myProject).scan();
+                            if (errorsAfterPossibleFix.isEmpty() && !notification.isExpired()) {
+                                notification.expire();
+                            }
+                        });
                     });
                 }
             }
@@ -271,7 +273,6 @@ public final class VcsRootProblemNotifier {
     }
 
     @Nonnull
-    @VisibleForTesting
     String getInvalidRootDescriptionItem(@Nonnull VcsRootError rootError, @Nonnull String vcsName) {
         return VcsLocalize.rootsNotificationContentDirectoryRegisteredAsRootButNoRepositoriesWereFoundThere(
             ROOT_TO_PRESENTABLE.apply(rootError),
@@ -281,7 +282,7 @@ public final class VcsRootProblemNotifier {
 
     @Nonnull
     private String joinRootsForPresentation(@Nonnull Collection<? extends VcsRootError> errors) {
-        List<? extends VcsRootError> sortedRoots = sorted(errors, (root1, root2) -> {
+        List<? extends VcsRootError> sortedRoots = ContainerUtil.sorted(errors, (root1, root2) -> {
             if (root1.getMapping().isDefaultMapping()) {
                 return -1;
             }
@@ -331,7 +332,7 @@ public final class VcsRootProblemNotifier {
 
     @Nonnull
     private List<VcsRootError> getImportantUnregisteredMappings(@Nonnull Collection<? extends VcsRootError> errors) {
-        return filter(
+        return ContainerUtil.filter(
             errors,
             error -> {
                 VcsDirectoryMapping mapping = error.getMapping();
@@ -344,16 +345,15 @@ public final class VcsRootProblemNotifier {
     }
 
     private boolean areThereExplicitlyIgnoredRoots(Collection<? extends VcsRootError> allErrors) {
-        return exists(allErrors, it -> it.getType() == UNREGISTERED_ROOT && isExplicitlyIgnoredPath(it.getMapping()));
+        return ContainerUtil.exists(allErrors, it -> it.getType() == UNREGISTERED_ROOT && isExplicitlyIgnoredPath(it.getMapping()));
     }
 
     @Nonnull
     private static Collection<VcsRootError> getInvalidRoots(@Nonnull Collection<? extends VcsRootError> errors) {
-        return filter(errors, error -> error.getType() == VcsRootError.Type.EXTRA_MAPPING);
+        return ContainerUtil.filter(errors, error -> error.getType() == VcsRootError.Type.EXTRA_MAPPING);
     }
 
 
-    @VisibleForTesting
     @Nonnull
     String getPresentableMapping(@Nonnull VcsDirectoryMapping directoryMapping) {
         if (directoryMapping.isDefaultMapping()) {
@@ -363,7 +363,6 @@ public final class VcsRootProblemNotifier {
         return getPresentableMapping(directoryMapping.getDirectory());
     }
 
-    @VisibleForTesting
     @Nonnull
     String getPresentableMapping(@Nonnull String mapping) {
         String presentablePath = null;
@@ -371,11 +370,11 @@ public final class VcsRootProblemNotifier {
         if (projectDir != null && FileUtil.isAncestor(projectDir, mapping, true)) {
             String relativePath = FileUtil.getRelativePath(projectDir, mapping, '/');
             if (relativePath != null) {
-                presentablePath = toSystemDependentName(VcsLocalize.labelRelativeProjectPathPresentation(relativePath).get());
+                presentablePath = FileUtil.toSystemDependentName(VcsLocalize.labelRelativeProjectPathPresentation(relativePath).get());
             }
         }
         if (presentablePath == null) {
-            presentablePath = UserHomeFileUtil.getLocationRelativeToUserHome(toSystemDependentName(mapping));
+            presentablePath = UserHomeFileUtil.getLocationRelativeToUserHome(FileUtil.toSystemDependentName(mapping));
         }
         return escapeXmlEntities(presentablePath);
     }

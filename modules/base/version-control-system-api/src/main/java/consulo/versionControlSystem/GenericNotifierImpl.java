@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.impl;
+package consulo.versionControlSystem;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -94,7 +94,7 @@ public abstract class GenericNotifierImpl<T, Key> {
             runnable.run();
         }
         else {
-            application.invokeLater(runnable, IdeaModalityState.nonModal(), myProject.getDisposed());
+            application.invokeLater(runnable, ModalityState.nonModal(), myProject.getDisposed());
         }
     }
 

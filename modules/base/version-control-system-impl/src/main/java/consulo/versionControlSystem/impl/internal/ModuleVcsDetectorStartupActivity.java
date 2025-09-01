@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.roots;
+package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.versionControlSystem.VcsInitObject;
-import consulo.versionControlSystem.VcsStartupActivity;
-import jakarta.inject.Inject;
+import consulo.project.startup.PostStartupActivity;
+import consulo.ui.UIAccess;
+import jakarta.annotation.Nonnull;
 
+/**
+ * @author VISTALL
+ * @since 21-Jun-22
+ */
 @ExtensionImpl
-final class VcsDetectRootsStartupActivity implements VcsStartupActivity {
-  private final Project myProject;
-
-  @Inject
-  VcsDetectRootsStartupActivity(Project project) {
-    myProject = project;
-  }
-
+public class ModuleVcsDetectorStartupActivity implements PostStartupActivity, DumbAware {
   @Override
-  public void runActivity() {
-    VcsRootScanner.getInstance(myProject).scheduleScan();
-  }
+  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    ModuleVcsDetector detector = project.getInstance(ModuleVcsDetector.class);
 
-  @Override
-  public int getOrder() {
-    return VcsInitObject.AFTER_COMMON.getOrder();
+    detector.startDetecting();
   }
 }

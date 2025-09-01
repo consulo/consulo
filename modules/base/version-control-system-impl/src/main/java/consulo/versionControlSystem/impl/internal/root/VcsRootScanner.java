@@ -1,5 +1,5 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.vcs.roots;
+package consulo.versionControlSystem.impl.internal.root;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -9,7 +9,6 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -19,6 +18,7 @@ import consulo.versionControlSystem.VcsRootChecker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -110,7 +110,7 @@ public final class VcsRootScanner implements Disposable {
             return;
         }
 
-        VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor<Void>(NO_FOLLOW_SYMLINKS, depthLimit) {
+        VirtualFileUtil.visitChildrenRecursively(root, new VirtualFileVisitor<Void>(NO_FOLLOW_SYMLINKS, depthLimit) {
             @Nonnull
             @Override
             public VirtualFileVisitor.Result visitFileEx(@Nonnull VirtualFile file) {

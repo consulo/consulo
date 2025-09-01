@@ -48,6 +48,14 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
 
     @RequiredUIAccess
     @Override
+    public CompletableFuture<?> showAndSelect(@Nullable Project project, @Nonnull String toSelectId) {
+        CompletableFuture<?> future = new CompletableFuture<>();
+        myShowSettingsUtil.showSettingsDialog(project, toSelectId, null).doWhenDone(() -> future.complete(null));
+        return future;
+    }
+
+    @RequiredUIAccess
+    @Override
     public <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project,
                                                                               @Nonnull Class<T> toSelect,
                                                                               @Nonnull Consumer<T> afterSelect) {

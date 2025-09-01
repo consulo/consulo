@@ -36,6 +36,9 @@ import java.util.function.Consumer;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ShowConfigurableService {
     @RequiredUIAccess
+    CompletableFuture<?> showAndSelect(@Nullable Project project, @Nonnull String toSelectId);
+    
+    @RequiredUIAccess
     default <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
         return showAndSelect(project, toSelect, o -> {
         });

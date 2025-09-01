@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.versionControlSystem.ui.awt.IssueLinkRenderer;
 import consulo.ui.ex.awt.tree.TreeLinkMouseListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileType;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
+import consulo.versionControlSystem.impl.internal.util.RelativePathCalculator;
 import consulo.versionControlSystem.internal.ChangesViewContentI;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;

@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.vcs.impl;
+package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
@@ -31,6 +30,7 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.event.ModuleListener;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
@@ -38,7 +38,6 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsDirectoryMapping;
-import consulo.versionControlSystem.impl.internal.ProjectLevelVcsManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -212,6 +211,6 @@ public class ModuleVcsDetector implements Disposable {
           vcsManager.removeDirectoryMapping(mapping);
         }
       }
-    }, IdeaModalityState.nonModal());
+    }, ModalityState.nonModal());
   }
 }

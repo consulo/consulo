@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.impl;
+package consulo.versionControlSystem.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.checkin.BaseCheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.VcsCheckinHandlerFactory;
@@ -32,7 +32,7 @@ import java.util.List;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CheckinHandlersManager {
   public static CheckinHandlersManager getInstance() {
-    return ServiceManager.getService(CheckinHandlersManager.class);
+    return Application.get().getService(CheckinHandlersManager.class);
   }
 
   /**
@@ -45,16 +45,4 @@ public abstract class CheckinHandlersManager {
   public abstract List<BaseCheckinHandlerFactory> getRegisteredCheckinHandlerFactories(AbstractVcs[] allActiveVcss);
 
   public abstract List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull List<AbstractVcs> keys);
-  /**
-   * Registers a factory which provides callbacks to run before and after VCS checkin operations.
-   *
-   * @param factory the factory to register.
-   */
-  public abstract void registerCheckinHandlerFactory(BaseCheckinHandlerFactory factory);
-  /**
-   * Unregisters a factory which provides callbacks to run before and after VCS checkin operations.
-   *
-   * @param factory the factory to unregister.
-   */
-  public abstract void unregisterCheckinHandlerFactory(BaseCheckinHandlerFactory handler);
 }

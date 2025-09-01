@@ -462,10 +462,8 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.history.impl;
   exports consulo.ide.impl.idea.openapi.vcs.impl;
   exports consulo.ide.impl.idea.openapi.vcs.merge;
-  exports consulo.ide.impl.idea.openapi.vcs.persistent;
   exports consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
   exports consulo.ide.impl.idea.openapi.vcs.rollback;
-  exports consulo.ide.impl.idea.openapi.vcs.roots;
   exports consulo.ide.impl.idea.openapi.vcs.ui;
   exports consulo.ide.impl.idea.openapi.vcs.update;
   exports consulo.ide.impl.idea.openapi.vfs;

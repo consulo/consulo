@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.vcs.impl;
+package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
@@ -26,7 +24,9 @@ import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsPathPresenter;
 import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.impl.internal.util.RelativePathCalculator;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -65,7 +65,7 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
       result.append(module.getName());
       result.append("] ");
       result.append(contentRoot.getName());
-      String relativePath = VfsUtilCore.getRelativePath(file, contentRoot, File.separatorChar);
+      String relativePath = VirtualFileUtil.getRelativePath(file, contentRoot, File.separatorChar);
       if (!relativePath.isEmpty()) {
         result.append(File.separatorChar);
         result.append(relativePath);

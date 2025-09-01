@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.impl;
+package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.versionControlSystem.AbstractVcs;
@@ -23,6 +23,7 @@ import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.VcsCheckinHandlerFactory;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
+import consulo.versionControlSystem.internal.CheckinHandlersManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -76,15 +77,5 @@ public class CheckinHandlersManagerImpl extends CheckinHandlersManager {
             }
         }
         return result;
-    }
-
-    @Override
-    public void registerCheckinHandlerFactory(BaseCheckinHandlerFactory factory) {
-        myRegisteredBeforeCheckinHandlers.add(factory);
-    }
-
-    @Override
-    public void unregisterCheckinHandlerFactory(BaseCheckinHandlerFactory handler) {
-        myRegisteredBeforeCheckinHandlers.remove(handler);
     }
 }

@@ -33,5 +33,6 @@ module consulo.configurable.api {
         consulo.external.service.impl,
         consulo.credential.storage.impl,
         consulo.language.copyright.impl,
-        consulo.version.control.system.api;
+        consulo.version.control.system.api,
+        consulo.version.control.system.impl;
 }
