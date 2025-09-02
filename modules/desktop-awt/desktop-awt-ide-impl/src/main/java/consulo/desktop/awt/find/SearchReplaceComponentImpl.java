@@ -640,7 +640,10 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     @Nonnull
     private ActionToolbar createToolbar(@Nonnull ActionGroup group) {
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, group, true);
+        ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR,
+            group,
+            ActionToolbar.Style.INPLACE
+        );
         toolbar.setTargetComponent(this);
         return toolbar;
     }
