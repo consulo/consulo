@@ -1,11 +1,11 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.desktop.awt.os.mac.internal.touchBar;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.ui.customization.CustomisedActionGroup;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomePopupAction;
+import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.Pair;
@@ -88,7 +88,7 @@ final class ActionsLoader {
                 }
 
                 if (isRunConfigPopover) {
-                    if (presentation.getIcon() != AllIcons.General.Add) {
+                    if (presentation.getIcon() != PlatformIconGroup.generalAdd()) {
                         butt.setHasArrowIcon(true);
                         butt.setLayout(RUN_CONFIG_POPOVER_WIDTH, 0, 5, 8);
                     }
@@ -190,7 +190,7 @@ final class ActionsLoader {
     }
 
     static @Nonnull Pair<Map<Long, ActionGroup>, Customizer> getFnActionGroup() {
-        DefaultActionGroup result = new DefaultActionGroup(IdeBundle.message("action.fn.keys.text"), false);
+        DefaultActionGroup result = new DefaultActionGroup(IdeLocalize.actionFnKeysText(), false);
         for (int c = 1; c <= 12; ++c) {
             result.add(new FNKeyAction(c));
         }
