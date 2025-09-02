@@ -196,7 +196,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     protected String getNullValueText(@Nullable Object target) {
         return target != null
             ? super.getNullValueText(target)
-            : IdeBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName());
+            : IdeLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName()).get();
     }
 
     @Nonnull

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.lang.customFolding;
 
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -35,102 +35,102 @@ import java.util.*;
  * @author Rustam Vishnyakov
  */
 public class CustomFoldingRegionsPopup {
-  private final @Nonnull
-  JBList myRegionsList;
-  private final @Nonnull
-  JBPopup myPopup;
-  private final @Nonnull
-  Editor myEditor;
+    private final @Nonnull
+    JBList myRegionsList;
+    private final @Nonnull
+    JBPopup myPopup;
+    private final @Nonnull
+    Editor myEditor;
 
-  CustomFoldingRegionsPopup(@Nonnull Collection<FoldingDescriptor> descriptors,
-                            @Nonnull final Editor editor,
-                            @Nonnull final Project project) {
-    myEditor = editor;
-    myRegionsList = new JBList();
-    //noinspection unchecked
-    myRegionsList.setModel(new MyListModel(orderByPosition(descriptors)));
-    myRegionsList.setSelectedIndex(0);
+    CustomFoldingRegionsPopup(
+        @Nonnull Collection<FoldingDescriptor> descriptors,
+        @Nonnull final Editor editor,
+        @Nonnull final Project project
+    ) {
+        myEditor = editor;
+        myRegionsList = new JBList();
+        //noinspection unchecked
+        myRegionsList.setModel(new MyListModel(orderByPosition(descriptors)));
+        myRegionsList.setSelectedIndex(0);
 
-    PopupChooserBuilder popupBuilder = new PopupChooserBuilder<>(myRegionsList);
-    myPopup = popupBuilder
-            .setTitle(IdeBundle.message("goto.custom.region.command"))
+        PopupChooserBuilder popupBuilder = new PopupChooserBuilder<>(myRegionsList);
+        myPopup = popupBuilder
+            .setTitle(IdeLocalize.gotoCustomRegionCommand().get())
             .setResizable(false)
             .setMovable(false)
-            .setItemChoosenCallback(new Runnable() {
-              @Override
-              public void run() {
+            .setItemChoosenCallback(() -> {
                 PsiElement navigationElement = getNavigationElement();
                 if (navigationElement != null) {
-                  navigateTo(editor, navigationElement);
-                  IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
+                    navigateTo(editor, navigationElement);
+                    IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
                 }
-              }
-            }).createPopup();
-  }
-
-  void show() {
-    myEditor.showPopupInBestPositionFor(myPopup);
-  }
-
-  private static class MyListModel extends DefaultListModel {
-    private MyListModel(Collection<FoldingDescriptor> descriptors) {
-      for (FoldingDescriptor descriptor : descriptors) {
-        //noinspection unchecked
-        super.addElement(new MyFoldingDescriptorWrapper(descriptor));
-      }
-    }
-  }
-
-  private static class MyFoldingDescriptorWrapper {
-    private final @Nonnull
-    FoldingDescriptor myDescriptor;
-
-    private MyFoldingDescriptorWrapper(@Nonnull FoldingDescriptor descriptor) {
-      myDescriptor = descriptor;
+            })
+            .createPopup();
     }
 
-    @Nonnull
-    public FoldingDescriptor getDescriptor() {
-      return myDescriptor;
+    void show() {
+        myEditor.showPopupInBestPositionFor(myPopup);
+    }
+
+    private static class MyListModel extends DefaultListModel {
+        private MyListModel(Collection<FoldingDescriptor> descriptors) {
+            for (FoldingDescriptor descriptor : descriptors) {
+                //noinspection unchecked
+                super.addElement(new MyFoldingDescriptorWrapper(descriptor));
+            }
+        }
+    }
+
+    private static class MyFoldingDescriptorWrapper {
+        private final @Nonnull
+        FoldingDescriptor myDescriptor;
+
+        private MyFoldingDescriptorWrapper(@Nonnull FoldingDescriptor descriptor) {
+            myDescriptor = descriptor;
+        }
+
+        @Nonnull
+        public FoldingDescriptor getDescriptor() {
+            return myDescriptor;
+        }
+
+        @Nullable
+        @Override
+        public String toString() {
+            return myDescriptor.getPlaceholderText();
+        }
     }
 
     @Nullable
-    @Override
-    public String toString() {
-      return myDescriptor.getPlaceholderText();
+    public PsiElement getNavigationElement() {
+        Object selection = myRegionsList.getSelectedValue();
+        if (selection instanceof MyFoldingDescriptorWrapper) {
+            return ((MyFoldingDescriptorWrapper) selection).getDescriptor().getElement().getPsi();
+        }
+        return null;
     }
-  }
 
-  @Nullable
-  public PsiElement getNavigationElement() {
-    Object selection = myRegionsList.getSelectedValue();
-    if (selection instanceof MyFoldingDescriptorWrapper) {
-      return  ((MyFoldingDescriptorWrapper)selection).getDescriptor().getElement().getPsi();
+    private static Collection<FoldingDescriptor> orderByPosition(Collection<FoldingDescriptor> descriptors) {
+        List<FoldingDescriptor> sorted = new ArrayList<FoldingDescriptor>(descriptors.size());
+        sorted.addAll(descriptors);
+        Collections.sort(sorted, new Comparator<FoldingDescriptor>() {
+            @Override
+            public int compare(FoldingDescriptor descriptor1, FoldingDescriptor descriptor2) {
+                int pos1 = descriptor1.getElement().getTextRange().getStartOffset();
+                int pos2 = descriptor2.getElement().getTextRange().getStartOffset();
+                return pos1 - pos2;
+            }
+        });
+        return sorted;
     }
-    return null;
-  }
 
-  private static Collection<FoldingDescriptor> orderByPosition(Collection<FoldingDescriptor> descriptors) {
-    List<FoldingDescriptor> sorted = new ArrayList<FoldingDescriptor>(descriptors.size());
-    sorted.addAll(descriptors);
-    Collections.sort(sorted, new Comparator<FoldingDescriptor>() {
-      @Override
-      public int compare(FoldingDescriptor descriptor1, FoldingDescriptor descriptor2) {
-        int pos1 = descriptor1.getElement().getTextRange().getStartOffset();
-        int pos2 = descriptor2.getElement().getTextRange().getStartOffset();
-        return pos1 - pos2;
-      }
-    });
-    return sorted;
-  }
-
-  private static void navigateTo(@Nonnull Editor editor, @Nonnull PsiElement element) {
-    int offset = element.getTextRange().getStartOffset();
-    if (offset >= 0 && offset < editor.getDocument().getTextLength()) {
-      editor.getCaretModel().removeSecondaryCarets();
-      editor.getCaretModel().moveToOffset(offset);
-      editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-      editor.getSelectionModel().removeSelection();
+    private static void navigateTo(@Nonnull Editor editor, @Nonnull PsiElement element) {
+        int offset = element.getTextRange().getStartOffset();
+        if (offset >= 0 && offset < editor.getDocument().getTextLength()) {
+            editor.getCaretModel().removeSecondaryCarets();
+            editor.getCaretModel().moveToOffset(offset);
+            editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
+            editor.getSelectionModel().removeSelection();
+        }
     }
-  }
 }

@@ -29,7 +29,6 @@ import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiPackageSupportProvider;
-import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -130,6 +129,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
 
@@ -150,13 +150,13 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
         // is more that one directories not show package support
         if (directories.length > 1) {
-            presentation.setText(CreateDirectoryOrPackageType.Directory.getName());
+            presentation.setTextValue(CreateDirectoryOrPackageType.Directory.getName());
             presentation.setIcon(PlatformIconGroup.nodesTreeclosed());
         }
         else {
             Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directories[0]);
 
-            presentation.setText(info.getThird().getName());
+            presentation.setTextValue(info.getThird().getName());
 
             ContentFolderTypeProvider first = info.getFirst();
             Image childIcon;
@@ -176,7 +176,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
         Project project = d.getProject();
         ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(project);
 
-        Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(d);
+        Module moduleForPsiElement = d.getModule();
         if (moduleForPsiElement != null) {
             ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForPsiElement);
             ExtensionPoint<PsiPackageSupportProvider> extensionPoint =

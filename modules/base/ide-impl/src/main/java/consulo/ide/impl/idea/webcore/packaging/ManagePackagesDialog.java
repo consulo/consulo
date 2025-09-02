@@ -1,22 +1,21 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.webcore.packaging;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.SwingHelper;
-import consulo.language.LangBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.localize.LanguageLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.repository.ui.InstalledPackage;
 import consulo.repository.ui.PackageManagementService;
 import consulo.repository.ui.RepoPackage;
 import consulo.repository.ui.SearchablePackageManagementService;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -25,8 +24,10 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -38,8 +39,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -65,7 +64,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     private JPanel myFilter;
     private JPanel myMainPanel;
     private JEditorPane myDescriptionTextArea;
-    private final JBList myPackages;
+    private final JBList<RepoPackage> myPackages;
     private JButton myInstallButton;
     private JCheckBox myOptionsCheckBox;
     private JTextField myOptionsField;
@@ -91,53 +90,67 @@ public class ManagePackagesDialog extends DialogWrapper {
 
     private final SearchablePackageManagementService mySearchablePackageManagement;
 
-    public ManagePackagesDialog(@Nonnull Project project, PackageManagementService packageManagementService, @Nullable PackageManagementService.Listener packageListener) {
+    @RequiredUIAccess
+    public ManagePackagesDialog(
+        @Nonnull Project project,
+        PackageManagementService packageManagementService,
+        @Nullable PackageManagementService.Listener packageListener
+    ) {
         super(project, true);
         myProject = project;
         myController = packageManagementService;
 
         myPackageListener = packageListener;
         init();
-        setTitle(IdeBundle.message("available.packages.dialog.title"));
-        myPackages = new JBList();
+        setTitle(IdeLocalize.availablePackagesDialogTitle());
+        myPackages = new JBList<>();
         myNotificationArea = new PackagesNotificationPanel();
         myNotificationsAreaPlaceholder.add(myNotificationArea.getComponent(), BorderLayout.CENTER);
 
         mySearchablePackageManagement = ObjectUtil.tryCast(packageManagementService, SearchablePackageManagementService.class);
 
-        AnActionButton reloadButton = new AnActionButton(IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"), AllIcons.Actions.Refresh) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
-                myPackages.setPaintBusy(true);
-                Application application = Application.get();
-                application.executeOnPooledThread(() -> {
-                    try {
-                        myController.reloadAllPackages();
-                        initModel("");
-                        myPackages.setPaintBusy(false);
-                    }
-                    catch (IOException e1) {
-                        application.invokeLater(() -> {
-                            Messages.showErrorDialog(myMainPanel, IdeBundle.message("error.updating.package.list", e1.getMessage()), IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"));
-                            LOG.info("Error updating list of repository packages", e1);
+        AnActionButton reloadButton =
+            new AnActionButton(IdeLocalize.actionPackagesReloadText(), LocalizeValue.empty(), PlatformIconGroup.actionsRefresh()) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                    myPackages.setPaintBusy(true);
+                    Application application = myProject.getApplication();
+                    application.executeOnPooledThread(() -> {
+                        try {
+                            myController.reloadAllPackages();
+                            initModel("");
                             myPackages.setPaintBusy(false);
-                        }, IdeaModalityState.any());
-                    }
-                });
-            }
-        };
+                        }
+                        catch (IOException e1) {
+                            application.invokeLater(
+                                () -> {
+                                    Messages.showErrorDialog(
+                                        myMainPanel,
+                                        IdeLocalize.errorUpdatingPackageList(e1.getMessage()).get(),
+                                        IdeLocalize.actionPackagesReloadText().get()
+                                    );
+                                    LOG.info("Error updating list of repository packages", e1);
+                                    myPackages.setPaintBusy(false);
+                                },
+                                IdeaModalityState.any()
+                            );
+                        }
+                    });
+                }
+            };
 
         if (mySearchablePackageManagement != null) {
-            myListSpeedSearch = new ListSpeedSearch(myPackages, o -> {
-                if (o instanceof RepoPackage) {
-                    return ((RepoPackage) o).getName();
-                }
-                return "";
-            });
+            myListSpeedSearch =
+                new ListSpeedSearch(myPackages, o -> o instanceof RepoPackage repoPackage ? repoPackage.getName() : "");
         }
 
-        JPanel packagesPanel = ToolbarDecorator.createDecorator(myPackages).disableAddAction().disableUpDownActions().disableRemoveAction().addExtraAction(reloadButton).createPanel();
+        JPanel packagesPanel = ToolbarDecorator.createDecorator(myPackages)
+            .disableAddAction()
+            .disableUpDownActions()
+            .disableRemoveAction()
+            .addExtraAction(reloadButton)
+            .createPanel();
         packagesPanel.setPreferredSize(new Dimension(JBUIScale.scale(400), -1));
         packagesPanel.setMinimumSize(new Dimension(JBUIScale.scale(100), -1));
         myPackages.setFixedCellWidth(0);
@@ -157,8 +170,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         myDescriptionTextArea.addHyperlinkListener(e -> {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 JEditorPane pane = (JEditorPane) e.getSource();
-                if (e instanceof HTMLFrameHyperlinkEvent) {
-                    HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e;
+                if (e instanceof HTMLFrameHyperlinkEvent evt) {
                     HTMLDocument doc = (HTMLDocument) pane.getDocument();
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 }
@@ -208,49 +220,51 @@ public class ManagePackagesDialog extends DialogWrapper {
     }
 
     private void addInstallAction() {
-        myInstallButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                Object pyPackage = myPackages.getSelectedValue();
-                if (pyPackage instanceof RepoPackage) {
-                    RepoPackage repoPackage = (RepoPackage) pyPackage;
-
-                    String extraOptions = null;
-                    if (myOptionsCheckBox.isEnabled() && myOptionsCheckBox.isSelected()) {
-                        extraOptions = myOptionsField.getText();
-                    }
-
-                    String version = null;
-                    if (myVersionCheckBox.isEnabled() && myVersionCheckBox.isSelected()) {
-                        version = (String) myVersionComboBox.getSelectedItem();
-                    }
-
-                    PackageManagementService.Listener listener = new PackageManagementService.Listener() {
-                        @Override
-                        public void operationStarted(String packageName) {
-                            if (!ApplicationManager.getApplication().isDispatchThread()) {
-                                ApplicationManager.getApplication().invokeLater(() -> handleInstallationStarted(packageName), IdeaModalityState.stateForComponent(myMainPanel));
-                            }
-                            else {
-                                handleInstallationStarted(packageName);
-                            }
-                        }
-
-                        @Override
-                        public void operationFinished(String packageName, @Nullable PackageManagementService.ErrorDescription errorDescription) {
-                            if (!ApplicationManager.getApplication().isDispatchThread()) {
-                                ApplicationManager.getApplication().invokeLater(() -> handleInstallationFinished(packageName, errorDescription), IdeaModalityState.stateForComponent(myMainPanel));
-                            }
-                            else {
-                                handleInstallationFinished(packageName, errorDescription);
-                            }
-                        }
-                    };
-                    myController.installPackage(repoPackage, version, false, extraOptions, listener, myInstallToUser.isSelected());
-                    myInstallButton.setEnabled(false);
-                }
-                //PackageManagementUsageCollector.triggerInstallPerformed(myProject, myController);
+        myInstallButton.addActionListener(event -> {
+            RepoPackage pyPackage = myPackages.getSelectedValue();
+            String extraOptions = null;
+            if (myOptionsCheckBox.isEnabled() && myOptionsCheckBox.isSelected()) {
+                extraOptions = myOptionsField.getText();
             }
+
+            String version = null;
+            if (myVersionCheckBox.isEnabled() && myVersionCheckBox.isSelected()) {
+                version = (String) myVersionComboBox.getSelectedItem();
+            }
+
+            PackageManagementService.Listener listener = new PackageManagementService.Listener() {
+                @Override
+                public void operationStarted(String packageName) {
+                    if (!UIAccess.isUIThread()) {
+                        myProject.getApplication().invokeLater(
+                            () -> handleInstallationStarted(packageName),
+                            IdeaModalityState.stateForComponent(myMainPanel)
+                        );
+                    }
+                    else {
+                        handleInstallationStarted(packageName);
+                    }
+                }
+
+                @Override
+                public void operationFinished(
+                    String packageName,
+                    @Nullable PackageManagementService.ErrorDescription errorDescription
+                ) {
+                    if (!UIAccess.isUIThread()) {
+                        myProject.getApplication().invokeLater(
+                            () -> handleInstallationFinished(packageName, errorDescription),
+                            IdeaModalityState.stateForComponent(myMainPanel)
+                        );
+                    }
+                    else {
+                        handleInstallationFinished(packageName, errorDescription);
+                    }
+                }
+            };
+            myController.installPackage(pyPackage, version, false, extraOptions, listener, myInstallToUser.isSelected());
+            myInstallButton.setEnabled(false);
+            //PackageManagementUsageCollector.triggerInstallPerformed(myProject, myController);
         });
     }
 
@@ -278,7 +292,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     }
 
     private void updateInstalledPackages() {
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+        myProject.getApplication().executeOnPooledThread(() -> {
             try {
                 List<String> installedPackages = ContainerUtil.map(myController.getInstalledPackagesList(), InstalledPackage::getName);
                 UIUtil.invokeLaterIfNeeded(() -> {
@@ -296,7 +310,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         myGetPackagesFuture.cancel(true);
 
         setDownloadStatus(true);
-        Application application = Application.get();
+        Application application = myProject.getApplication();
         myGetPackagesFuture = application.executeOnPooledThread(() -> {
             try {
 
@@ -315,23 +329,33 @@ public class ManagePackagesDialog extends DialogWrapper {
                 //  myPackagesModel.add(MORE);
                 //}
 
-                application.invokeLater(() -> {
-                    myPackages.setModel(myPackagesModel);
-                    if (mySearchablePackageManagement == null) {
-                        ((MyPackageFilter) myFilter).filter();
-                    }
-                    doSelectPackage(mySelectedPackageName);
-                    setDownloadStatus(false);
-                }, IdeaModalityState.any());
+                application.invokeLater(
+                    () -> {
+                        myPackages.setModel(myPackagesModel);
+                        if (mySearchablePackageManagement == null) {
+                            ((MyPackageFilter) myFilter).filter();
+                        }
+                        doSelectPackage(mySelectedPackageName);
+                        setDownloadStatus(false);
+                    },
+                    IdeaModalityState.any()
+                );
             }
             catch (IOException e) {
-                application.invokeLater(() -> {
-                    if (myMainPanel.isShowing()) {
-                        Messages.showErrorDialog(myMainPanel, IdeBundle.message("error.loading.package.list", e.getMessage()), IdeBundle.message("packages.title"));
-                    }
-                    LOG.info("Error initializing model", e);
-                    setDownloadStatus(false);
-                }, IdeaModalityState.any());
+                application.invokeLater(
+                    () -> {
+                        if (myMainPanel.isShowing()) {
+                            Messages.showErrorDialog(
+                                myMainPanel,
+                                IdeLocalize.errorLoadingPackageList(e.getMessage()).get(),
+                                IdeLocalize.packagesTitle().get()
+                            );
+                        }
+                        LOG.info("Error initializing model", e);
+                        setDownloadStatus(false);
+                    },
+                    IdeaModalityState.any()
+                );
             }
         });
     }
@@ -378,7 +402,8 @@ public class ManagePackagesDialog extends DialogWrapper {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         e.consume();
                         filter();
-                        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(myPackages, true));
+                        IdeFocusManager.getGlobalInstance()
+                            .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(myPackages, true));
                     }
                     else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                         onEscape(e);
@@ -465,10 +490,11 @@ public class ManagePackagesDialog extends DialogWrapper {
         }
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
-        return ((FilterComponent) myFilter).getTextEditor();
+        return ((MyPackageFilter) myFilter).getTextEditor();
     }
 
     private class MyPackageSelectionListener implements ListSelectionListener {
@@ -480,50 +506,42 @@ public class ManagePackagesDialog extends DialogWrapper {
             myVersionCheckBox.setSelected(false);
             myVersionComboBox.setEnabled(false);
             myOptionsField.setEnabled(false);
-            myDescriptionTextArea.setText(IdeBundle.message("loading.in.progress"));
-            Object pyPackage = myPackages.getSelectedValue();
-            if (pyPackage instanceof RepoPackage) {
-                String packageName = ((RepoPackage) pyPackage).getName();
-                mySelectedPackageName = packageName;
-                myVersionComboBox.removeAllItems();
-                if (myVersionCheckBox.isEnabled()) {
-                    AsyncResult<List<String>> versionResult = myController.fetchPackageVersions(packageName);
-                    versionResult.doWhenDone(releases -> {
-                        ApplicationManager.getApplication().invokeLater(() -> {
-                            if (myPackages.getSelectedValue() == pyPackage) {
-                                myVersionComboBox.removeAllItems();
-                                for (String release : releases) {
-                                    myVersionComboBox.addItem(release);
-                                }
-                            }
-                        }, IdeaModalityState.any());
-                    });
-                    versionResult.doWhenRejectedWithThrowable(e -> {
-                        LOG.info("Error retrieving releases", e);
-                    });
-                }
-                myInstallButton.setEnabled(!myCurrentlyInstalling.contains(packageName));
-
-                AsyncResult<String> detailsResult = myController.fetchPackageDetails(packageName);
-                detailsResult.doWhenDone(details -> {
-                    UIUtil.invokeLaterIfNeeded(() -> {
+            myDescriptionTextArea.setText(IdeLocalize.loadingInProgress().get());
+            RepoPackage pyPackage = myPackages.getSelectedValue();
+            String packageName = pyPackage.getName();
+            mySelectedPackageName = packageName;
+            myVersionComboBox.removeAllItems();
+            if (myVersionCheckBox.isEnabled()) {
+                AsyncResult<List<String>> versionResult = myController.fetchPackageVersions(packageName);
+                versionResult.doWhenDone(releases -> myProject.getApplication().invokeLater(
+                    () -> {
                         if (myPackages.getSelectedValue() == pyPackage) {
-                            myDescriptionTextArea.setText(details);
-                            myDescriptionTextArea.setCaretPosition(0);
-                        }/* else {
-                 do nothing, because other package gets selected
-              }*/
-                    });
-                });
-                detailsResult.doWhenRejectedWithThrowable(exception -> {
-                    UIUtil.invokeLaterIfNeeded(() -> myDescriptionTextArea.setText(IdeBundle.message("no.information.available")));
-                    LOG.info("Error retrieving package details", exception);
-                });
+                            myVersionComboBox.removeAllItems();
+                            for (String release : releases) {
+                                myVersionComboBox.addItem(release);
+                            }
+                        }
+                    },
+                    IdeaModalityState.any()
+                ));
+                versionResult.doWhenRejectedWithThrowable(e -> LOG.info("Error retrieving releases", e));
             }
-            else {
-                myInstallButton.setEnabled(false);
-                myDescriptionTextArea.setText("");
-            }
+            myInstallButton.setEnabled(!myCurrentlyInstalling.contains(packageName));
+
+            AsyncResult<String> detailsResult = myController.fetchPackageDetails(packageName);
+            detailsResult.doWhenDone(details -> UIUtil.invokeLaterIfNeeded(() -> {
+                if (myPackages.getSelectedValue() == pyPackage) {
+                    myDescriptionTextArea.setText(details);
+                    myDescriptionTextArea.setCaretPosition(0);
+                }
+                /* else {
+                    do nothing, because other package gets selected
+                }*/
+            }));
+            detailsResult.doWhenRejectedWithThrowable(exception -> {
+                UIUtil.invokeLaterIfNeeded(() -> myDescriptionTextArea.setText(IdeLocalize.noInformationAvailable().get()));
+                LOG.info("Error retrieving package details", exception);
+            });
         }
     }
 
@@ -544,7 +562,13 @@ public class ManagePackagesDialog extends DialogWrapper {
         }
 
         @Override
-        public Component getListCellRendererComponent(JList<? extends RepoPackage> list, RepoPackage repoPackage, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(
+            JList<? extends RepoPackage> list,
+            RepoPackage repoPackage,
+            int index,
+            boolean isSelected,
+            boolean cellHasFocus
+        ) {
             myNameComponent.clear();
             myRepositoryComponent.clear();
 
@@ -554,7 +578,7 @@ public class ManagePackagesDialog extends DialogWrapper {
             SimpleTextAttributes defaultText = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, defaultForeground);
             myNameComponent.append(packageName, myInstalledPackages.contains(packageName) ? blueText : defaultText, true);
             if (myCurrentlyInstalling.contains(packageName)) {
-                myNameComponent.append(LangBundle.message("package.component.installing.suffix"), blueText, false);
+                myNameComponent.append(LanguageLocalize.packageComponentInstallingSuffix(), blueText, false);
             }
             String repoUrl = repoPackage.getRepoUrl();
             if (StringUtil.isNotEmpty(repoUrl)) {

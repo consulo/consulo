@@ -228,6 +228,8 @@ action.package:
     text: Package
 action.packages.install.text:
     text: Install
+action.packages.reload.text:
+    text: Reload List of Packages
 action.packages.uninstall.text:
     text: Uninstall
 action.packages.upgrade.text:
@@ -1048,6 +1050,8 @@ error.unable.to.read.tip.of.the.day:
     text: <html><body>Unable to read Tip Of The Day ({0}). Make sure {1} is installed properly.</body></html>
 error.unable.to.save.file.template.using.encoding:
     text: Unable to save File Template "{0}" using {1}
+error.updating.package.list:
+    text: 'Error updating package list: {0}'
 error.writing.settings:
     text: |-
         Error writing settings.

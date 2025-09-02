@@ -31,7 +31,7 @@ import java.util.function.Supplier;
  * For thread-safe alternative please use {@link ConcurrentFactoryMap}
  */
 @Deprecated
-@DeprecationInfo("Use map#compureIfAbsent() method")
+@DeprecationInfo("Use map#computeIfAbsent() method")
 public abstract class FactoryMap<K, V> implements Map<K, V> {
   private Map<K, V> myMap;
 

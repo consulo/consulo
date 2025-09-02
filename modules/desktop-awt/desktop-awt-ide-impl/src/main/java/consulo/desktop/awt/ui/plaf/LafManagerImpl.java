@@ -16,7 +16,6 @@
 package consulo.desktop.awt.ui.plaf;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.CommonBundle;
 import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
@@ -32,14 +31,15 @@ import consulo.component.persist.Storage;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleImpl;
 import consulo.desktop.awt.ui.plaf2.*;
 import consulo.disposer.Disposable;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -51,6 +51,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -143,6 +144,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Override
+    @RequiredUIAccess
     public void afterLoadState() {
         myInitialLoadState = false;
 
@@ -169,6 +171,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Override
+    @RequiredUIAccess
     public void loadState(Element element) {
         String oldLafClassName = null;
 
@@ -264,6 +267,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Override
+    @RequiredUIAccess
     public void setCurrentStyle(@Nonnull Style currentStyle) {
         DesktopStyleImpl style = (DesktopStyleImpl) currentStyle;
         setCurrentStyle(style, true, true, null);
@@ -333,11 +337,11 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         }
         catch (Exception e) {
             LOG.error(e);
-            SwingUtilities.invokeLater(() -> {
-                Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()),
-                    CommonBundle.getErrorTitle(),
-                    Messages.getErrorIcon());
-            });
+            SwingUtilities.invokeLater(() -> Messages.showMessageDialog(
+                IdeLocalize.errorCannotSetLookAndFeel(lookAndFeelInfo.getName(), e.getMessage()).get(),
+                CommonLocalize.titleError().get(),
+                UIUtil.getErrorIcon()
+            ));
         }
     }
 

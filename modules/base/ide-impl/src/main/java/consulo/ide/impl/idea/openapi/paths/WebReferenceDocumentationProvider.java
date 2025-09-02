@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.paths;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.documentation.UnrestrictedDocumentationProvider;
 import consulo.language.impl.psi.path.WebReference;
 import consulo.language.psi.PsiElement;
@@ -26,11 +26,11 @@ import consulo.language.psi.PsiElement;
  */
 @ExtensionImpl
 public class WebReferenceDocumentationProvider implements UnrestrictedDocumentationProvider {
-  @Override
-  public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
-    if (element instanceof WebReference.MyFakePsiElement) {
-      return IdeBundle.message("open.url.in.browser.tooltip");
+    @Override
+    public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+        if (element instanceof WebReference.MyFakePsiElement) {
+            return IdeLocalize.openUrlInBrowserTooltip().get();
+        }
+        return null;
     }
-    return null;
-  }
 }

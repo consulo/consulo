@@ -43,9 +43,4 @@ public class IdeBundle extends AbstractBundle {
   public static String message(@PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
-
-  @Deprecated
-  public static LocalizeValue messagePointer(@PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key) {
-    return LocalizeValue.of(message(key));
-  }
 }

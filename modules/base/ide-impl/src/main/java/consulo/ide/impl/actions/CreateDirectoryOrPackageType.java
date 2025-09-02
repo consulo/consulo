@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.actions;
 
-import consulo.ide.IdeBundle;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.util.DirectoryUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
@@ -32,88 +34,91 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19/12/2021
+ * @since 2021-12-19
  */
 public enum CreateDirectoryOrPackageType {
-  Directory {
-    @Nonnull
-    @Override
-    public String getName() {
-      return IdeBundle.message("action.directory");
-    }
-
-    @Nonnull
-    @Override
-    public String getSeparator() {
-      return "\\/";
-    }
-
-    @Nonnull
-    @Override
-    public String getDefaultValue(PsiDirectory directory) {
-      return "";
-    }
-
-    @RequiredUIAccess
-    @Nonnull
-    @Override
-    public PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name) {
-      return DirectoryUtil.createSubdirectories(name, psiDirectory, "/");
-    }
-  },
-  Package {
-    @Nonnull
-    @Override
-    public String getName() {
-      return IdeBundle.message("action.package");
-    }
-
-    @Nonnull
-    @Override
-    public String getSeparator() {
-      return ".";
-    }
-
-    @Nonnull
-    @Override
-    public String getDefaultValue(PsiDirectory directory) {
-      PsiPackage psiPackage = PsiPackageManager.getInstance(directory.getProject()).findAnyPackage(directory);
-      if (psiPackage != null) {
-        String qualifiedName = psiPackage.getQualifiedName();
-        if (!StringUtil.isEmptyOrSpaces(qualifiedName)) {
-          return qualifiedName + ".";
+    Directory {
+        @Nonnull
+        @Override
+        public LocalizeValue getName() {
+            return IdeLocalize.actionDirectory();
         }
-      }
-      return "";
-    }
 
-    @RequiredUIAccess
+        @Nonnull
+        @Override
+        public String getSeparator() {
+            return "\\/";
+        }
+
+        @Nonnull
+        @Override
+        public String getDefaultValue(PsiDirectory directory) {
+            return "";
+        }
+
+        @Nonnull
+        @Override
+        @RequiredUIAccess
+        public PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name) {
+            return DirectoryUtil.createSubdirectories(name, psiDirectory, "/");
+        }
+    },
+    Package {
+        @Nonnull
+        @Override
+        public LocalizeValue getName() {
+            return IdeLocalize.actionPackage();
+        }
+
+        @Nonnull
+        @Override
+        public String getSeparator() {
+            return ".";
+        }
+
+        @Nonnull
+        @Override
+        @RequiredReadAction
+        public String getDefaultValue(PsiDirectory directory) {
+            PsiPackage psiPackage = PsiPackageManager.getInstance(directory.getProject()).findAnyPackage(directory);
+            if (psiPackage != null) {
+                String qualifiedName = psiPackage.getQualifiedName();
+                if (!StringUtil.isEmptyOrSpaces(qualifiedName)) {
+                    return qualifiedName + ".";
+                }
+            }
+            return "";
+        }
+
+        @Nonnull
+        @Override
+        @RequiredUIAccess
+        public PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name) {
+            ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(psiDirectory.getProject());
+            ContentFolder contentFolder = projectFileIndex.getContentFolder(psiDirectory.getVirtualFile());
+            if (contentFolder == null) {
+                throw new UnsupportedOperationException("PsiDirectory not under content folder " + psiDirectory.getVirtualFile().getPath());
+            }
+
+            VirtualFile file = contentFolder.getFile();
+
+            PsiDirectory contentPsiFolder = PsiManager.getInstance(psiDirectory.getProject()).findDirectory(file);
+
+            return DirectoryUtil.createSubdirectories(name, contentPsiFolder, getSeparator());
+        }
+    };
+
     @Nonnull
-    @Override
-    public PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name) {
-      ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(psiDirectory.getProject());
-      ContentFolder contentFolder = projectFileIndex.getContentFolder(psiDirectory.getVirtualFile());
-      if (contentFolder == null) {
-        throw new UnsupportedOperationException("PsiDirectory not under content folder " + psiDirectory.getVirtualFile().getPath());
-      }
+    public abstract LocalizeValue getName();
 
-      VirtualFile file = contentFolder.getFile();
+    @Nonnull
+    public abstract String getSeparator();
 
-      PsiDirectory contentPsiFolder = PsiManager.getInstance(psiDirectory.getProject()).findDirectory(file);
+    @Nonnull
+    public abstract String getDefaultValue(PsiDirectory directory);
 
-      return DirectoryUtil.createSubdirectories(name, contentPsiFolder, getSeparator());
-    }
-  };
-
-  @Nonnull
-  public abstract String getName();
-
-  @Nonnull
-  public abstract String getSeparator();
-
-  @Nonnull
-  public abstract String getDefaultValue(PsiDirectory directory);
-
-  @Nonnull
-  @RequiredUIAccess
-  public abstract PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name) throws IncorrectOperationException;}
+    @Nonnull
+    @RequiredUIAccess
+    public abstract PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name)
+        throws IncorrectOperationException;
+}
