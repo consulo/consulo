@@ -310,7 +310,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
         return ShowDiffAction.canShowDiff(myProject, getChangesSelection().getChanges());
     }
 
-    private void showDiff() {
+    protected void showDiff() {
         ChangesSelection selection = getChangesSelection();
         List<Change> changes = selection.getChanges();
 

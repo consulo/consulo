@@ -23,7 +23,6 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherLis
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackDialogAction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.localize.LocalizeValue;
-import consulo.util.collection.ContainerUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Label;
@@ -34,6 +33,7 @@ import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
@@ -42,7 +42,9 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -134,6 +136,30 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
     private boolean isShowUnversioned() {
         return myUnversionedFilesEnabled && myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT;
+    }
+
+    @Override
+    protected void showDiff() {
+        Object rawSelection = myViewer.getLeadSelection();
+
+        List<Change> changes;
+        int index;
+        if (rawSelection instanceof VirtualFile unversionFile) {
+            index = 0;
+
+            Change unversionNewChange = new Change(null, new CurrentContentRevision(VcsUtil.getFilePath(unversionFile)), FileStatus.ADDED);
+            changes = List.of(unversionNewChange);
+        } else {
+            ChangesSelection selection = getChangesSelection();
+
+            changes = selection.getChanges();
+
+            index = selection.getIndex();
+        }
+
+        showDiffForChanges(changes.toArray(Change[]::new), index);
+
+        afterDiffRefresh();
     }
 
     @Override
