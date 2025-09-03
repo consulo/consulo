@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.diagram.actions;
+package consulo.diagram.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
@@ -34,7 +34,7 @@ public class DiagramSupportEapDescriptor extends EarlyAccessProgramDescriptor {
 
   @Override
   public boolean isAvailable() {
-    return false;
+    return true;
   }
 
   @Nonnull

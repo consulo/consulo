@@ -19,15 +19,16 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
-import consulo.ide.impl.diagram.builder.GraphBuilder;
-import consulo.ide.impl.diagram.builder.GraphNode;
-import consulo.ide.impl.diagram.builder.GraphPositionStrategy;
-import consulo.ide.impl.diagram.builder.impl.GraphNodeImpl;
+import consulo.diagram.GraphBuilder;
+import consulo.diagram.GraphNode;
+import consulo.diagram.GraphPositionStrategy;
+import consulo.diagram.internal.GraphNodeImpl;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import javax.swing.*;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,9 +46,9 @@ public class DesktopGraphBuilderImpl implements GraphBuilder {
 
   }
 
-  @Nonnull
   @Override
-  public JComponent getComponent() {
+  @Nonnull
+  public Component getComponent() {
     mxGraph graph = new mxGraph();
     graph.setCellsResizable(false);
     graph.setEdgeLabelsMovable(false);
@@ -64,7 +65,7 @@ public class DesktopGraphBuilderImpl implements GraphBuilder {
     };
     mxGraphComponent.setGridVisible(true);
 
-    return mxGraphComponent;
+    return TargetAWT.wrap(mxGraphComponent);
   }
 
   private void build(mxGraphComponent mxGraphComponent) {

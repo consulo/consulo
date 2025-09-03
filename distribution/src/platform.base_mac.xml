@@ -166,6 +166,9 @@
                 <include>consulo:consulo-language-inject-advanced-api</include>
                 <include>consulo:consulo-language-inject-advanced-impl</include>
                 <include>consulo:consulo-search-everywhere-api</include>
+                <include>consulo:consulo-diagram-api</include>
+                <include>consulo:consulo-diagram-impl</include>
+                <include>consulo:consulo-language-editor-diagram-api</include>
 
                 <include>consulo:consulo-tips-of-day-impl</include>
 

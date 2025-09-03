@@ -16,8 +16,8 @@
 package consulo.desktop.awt.diagram.builder.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.diagram.builder.GraphBuilder;
-import consulo.ide.impl.diagram.builder.GraphBuilderFactory;
+import consulo.diagram.GraphBuilder;
+import consulo.diagram.GraphBuilderFactory;
 import jakarta.inject.Singleton;
 
 /**
@@ -26,9 +26,9 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @ServiceImpl
-public class DesktopGraphBuilderFactoryImpl extends GraphBuilderFactory {
-  @Override
-  public GraphBuilder createBuilder() {
-    return new DesktopGraphBuilderImpl();
-  }
+public class DesktopGraphBuilderFactoryImpl implements GraphBuilderFactory {
+    @Override
+    public GraphBuilder createBuilder() {
+        return new DesktopGraphBuilderImpl();
+    }
 }

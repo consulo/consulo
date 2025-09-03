@@ -79,6 +79,8 @@ module consulo.ide.api {
   requires transitive consulo.language.inject.advanced.api;
   requires transitive consulo.search.everywhere.api;
   requires transitive consulo.language.duplicate.analysis.api;
+  requires transitive consulo.diagram.api;
+  requires transitive consulo.language.diagram.api;
 
   exports consulo.ide;
   exports consulo.ide.action;

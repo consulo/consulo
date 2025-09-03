@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.diagram.builder.impl;
+package consulo.diagram.internal;
 
-import consulo.ide.impl.diagram.builder.GraphNode;
-import consulo.ide.impl.diagram.builder.GraphPositionStrategy;
+import consulo.diagram.GraphNode;
+import consulo.diagram.GraphPositionStrategy;
 import consulo.ui.image.Image;
 import consulo.component.util.pointer.Named;
 

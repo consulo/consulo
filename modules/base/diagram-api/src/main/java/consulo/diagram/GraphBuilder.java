@@ -13,36 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.diagram.builder;
+package consulo.diagram;
 
+import consulo.ui.Component;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.List;
 
 /**
  * @author VISTALL
- * @since 22:43/15.10.13
+ * @since 22:36/15.10.13
  */
-public interface GraphNode<T> {
-  /**
-   * Create arrow to target
-   *  [THIS NODE] -> [TARGET NODE]
-   * @param target
-   */
-  void makeArrow(@Nonnull GraphNode<?> target);
+public interface GraphBuilder {
+    @Nonnull
+    <E> GraphNode<E> createNode(@Nonnull String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy);
 
-  @Nonnull
-  List<GraphNode<?>> getArrowNodes();
-
-  @Nonnull
-  String getName();
-
-  @Nullable
-  Image getIcon();
-
-  T getValue();
-
-  GraphPositionStrategy getStrategy();
+    @Nonnull
+    Component getComponent();
 }

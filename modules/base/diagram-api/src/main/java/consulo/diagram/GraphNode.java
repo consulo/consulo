@@ -13,25 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.diagram.provider;
+package consulo.diagram;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.PsiElement;
-import consulo.ide.impl.diagram.builder.GraphBuilder;
+import consulo.ui.image.Image;
+
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 2013-10-15
+ * @since 22:43/15.10.13
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface GraphProvider {
-    ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create(GraphProvider.class);
+public interface GraphNode<T> {
+  /**
+   * Create arrow to target
+   *  [THIS NODE] -> [TARGET NODE]
+   * @param target
+   */
+  void makeArrow(@Nonnull GraphNode<?> target);
 
-    @Nonnull
-    GraphBuilder createBuilder(@Nonnull PsiElement element);
+  @Nonnull
+  List<GraphNode<?>> getArrowNodes();
 
-    boolean isSupported(@Nonnull PsiElement element);
+  @Nonnull
+  String getName();
+
+  @Nullable
+  Image getIcon();
+
+  T getValue();
+
+  GraphPositionStrategy getStrategy();
 }

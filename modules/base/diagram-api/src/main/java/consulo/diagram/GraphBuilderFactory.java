@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.diagram.builder;
+package consulo.diagram;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -25,11 +25,11 @@ import jakarta.annotation.Nonnull;
  * @since 22:36/15.10.13
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class GraphBuilderFactory {
-  @Nonnull
-  public static GraphBuilderFactory getInstance() {
-    return ServiceManager.getService(GraphBuilderFactory.class);
-  }
+public interface GraphBuilderFactory {
+    @Nonnull
+    public static GraphBuilderFactory getInstance() {
+        return Application.get().getInstance(GraphBuilderFactory.class);
+    }
 
-  public abstract GraphBuilder createBuilder();
+    GraphBuilder createBuilder();
 }

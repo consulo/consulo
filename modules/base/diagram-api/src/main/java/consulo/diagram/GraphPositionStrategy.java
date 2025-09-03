@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.diagram.builder;
-
-import consulo.ui.image.Image;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import javax.swing.*;
+package consulo.diagram;
 
 /**
  * @author VISTALL
- * @since 22:36/15.10.13
+ * @since 23:08/15.10.13
  */
-public interface GraphBuilder {
-  @Nonnull
-  JComponent getComponent();
-
-  @Nonnull
-  <E> GraphNode<E> createNode(@Nonnull String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy);
+public enum GraphPositionStrategy {
+  TOP,
+  CENTER,
+  BOTTOM,
+  LEFT,
+  RIGHT
 }
