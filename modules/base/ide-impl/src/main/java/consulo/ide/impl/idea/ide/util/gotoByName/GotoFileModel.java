@@ -1,12 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoFileItemProvider;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.localize.LocalizeValue;
@@ -14,7 +11,6 @@ import consulo.util.io.FileUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.util.lang.StringUtil;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;

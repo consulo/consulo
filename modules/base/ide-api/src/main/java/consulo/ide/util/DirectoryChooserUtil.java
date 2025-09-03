@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
 import consulo.ide.internal.DirectoryChooserDialog;
 import consulo.ide.internal.DirectoryChooserFactory;

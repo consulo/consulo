@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.usageView.impl;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -35,75 +34,82 @@ import consulo.usage.UsageViewPresentation;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
-  private HierarchyBrowser myBrowser;
+    private HierarchyBrowser myBrowser;
 
-  public UsageContextCallHierarchyPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
-    super(project, presentation);
-  }
-
-  @Override
-  public void dispose() {
-    super.dispose();
-    myBrowser = null;
-  }
-
-  @Override
-  public void updateLayoutLater(@Nullable List<? extends UsageInfo> infos) {
-    PsiElement element = infos == null ? null : getElementToSliceOn(infos);
-    if (myBrowser instanceof Disposable) {
-      Disposer.dispose((Disposable)myBrowser);
-      myBrowser = null;
-    }
-    if (element != null) {
-      myBrowser = createCallHierarchyPanel(element);
-      if (myBrowser == null) {
-        element = null;
-      }
+    public UsageContextCallHierarchyPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
+        super(project, presentation);
     }
 
-    removeAll();
-    if (element == null) {
-      JComponent titleComp = new JLabel(
-        UsageViewBundle.message("select.the.usage.to.preview", myPresentation.getUsagesWord()),
-        SwingConstants.CENTER
-      );
-      add(titleComp, BorderLayout.CENTER);
+    @Override
+    public void dispose() {
+        super.dispose();
+        myBrowser = null;
     }
-    else {
-      if (myBrowser instanceof Disposable) {
-        Disposer.register(this, (Disposable)myBrowser);
-      }
-      JComponent panel = myBrowser.getComponent();
-      add(panel, BorderLayout.CENTER);
+
+    @Override
+    @RequiredReadAction
+    public void updateLayoutLater(@Nullable List<? extends UsageInfo> infos) {
+        PsiElement element = infos == null ? null : getElementToSliceOn(infos);
+        if (myBrowser instanceof Disposable disposable) {
+            Disposer.dispose(disposable);
+            myBrowser = null;
+        }
+        if (element != null) {
+            myBrowser = createCallHierarchyPanel(element);
+            if (myBrowser == null) {
+                element = null;
+            }
+        }
+
+        removeAll();
+        if (element == null) {
+            JComponent titleComp = new JLabel(
+                UsageViewBundle.message("select.the.usage.to.preview", myPresentation.getUsagesWord()),
+                SwingConstants.CENTER
+            );
+            add(titleComp, BorderLayout.CENTER);
+        }
+        else {
+            if (myBrowser instanceof Disposable disposable) {
+                Disposer.register(this, disposable);
+            }
+            JComponent panel = myBrowser.getComponent();
+            add(panel, BorderLayout.CENTER);
+        }
+        revalidate();
     }
-    revalidate();
-  }
 
-  @Nullable
-  @RequiredReadAction
-  private static HierarchyBrowser createCallHierarchyPanel(@Nonnull PsiElement element) {
-    DataContext context =
-      SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(element.getProject()));
-    CallHierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
-    if (provider == null) return null;
-    PsiElement providerTarget = provider.getTarget(context);
-    if (providerTarget == null) return null;
+    @Nullable
+    @RequiredReadAction
+    private static HierarchyBrowser createCallHierarchyPanel(@Nonnull PsiElement element) {
+        DataContext context =
+            SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(element.getProject()));
+        CallHierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
+        if (provider == null) {
+            return null;
+        }
+        PsiElement providerTarget = provider.getTarget(context);
+        if (providerTarget == null) {
+            return null;
+        }
 
-    HierarchyBrowser browser = provider.createHierarchyBrowser(providerTarget);
-    if (browser instanceof HierarchyBrowserBaseEx browserEx) {
-      // do not steal focus when scrolling through nodes
-      browserEx.changeView(CallHierarchyBrowserBase.CALLER_TYPE, false);
+        HierarchyBrowser browser = provider.createHierarchyBrowser(providerTarget);
+        if (browser instanceof HierarchyBrowserBaseEx browserEx) {
+            // do not steal focus when scrolling through nodes
+            browserEx.changeView(CallHierarchyBrowserBase.CALLER_TYPE, false);
+        }
+        return browser;
     }
-    return browser;
-  }
 
-  private static PsiElement getElementToSliceOn(@Nonnull List<? extends UsageInfo> infos) {
-    UsageInfo info = infos.get(0);
-    return info.getElement();
-  }
+    @RequiredReadAction
+    private static PsiElement getElementToSliceOn(@Nonnull List<? extends UsageInfo> infos) {
+        UsageInfo info = infos.get(0);
+        return info.getElement();
+    }
 }

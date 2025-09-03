@@ -13,76 +13,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.todo.configurable;
 
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.todo.TodoFilter;
-import consulo.ide.IdeBundle;
 import consulo.language.psi.search.TodoPattern;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ItemRemovable;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 import java.util.List;
 
-final class FiltersTableModel extends AbstractTableModel implements ItemRemovable{
-  private final String[] ourColumnNames=new String[] {
-    IdeBundle.message("column.todo.filters.name"),
-    IdeBundle.message("column.todo.filter.patterns")
-  };
-  private final Class[] ourColumnClasses=new Class[]{String.class,String.class};
+final class FiltersTableModel extends AbstractTableModel implements ItemRemovable {
+    private static final LocalizeValue[] OUR_COLUMN_NAMES = new LocalizeValue[]{
+        IdeLocalize.columnTodoFiltersName(),
+        IdeLocalize.columnTodoFilterPatterns()
+    };
+    private static final Class[] OUR_COLUMN_CLASSES = new Class[]{String.class, String.class};
 
-  private final List<TodoFilter> myFilters;
+    private final List<TodoFilter> myFilters;
 
-  public FiltersTableModel(List<TodoFilter> filters){
-    myFilters=filters;
-  }
-
-  @Override
-  public String getColumnName(int column){
-    return ourColumnNames[column];
-  }
-
-  @Override
-  public Class getColumnClass(int column){
-    return ourColumnClasses[column];
-  }
-
-  @Override
-  public int getColumnCount(){
-    return 2;
-  }
-
-  @Override
-  public int getRowCount(){
-    return myFilters.size();
-  }
-
-  @Override
-  public Object getValueAt(int row,int column){
-    TodoFilter filter=myFilters.get(row);
-    switch(column){
-      case 0:{ // "Name" column
-        return filter.getName();
-      }case 1:{
-        StringBuffer sb=new StringBuffer();
-        for(Iterator i=filter.iterator();i.hasNext();){
-          TodoPattern pattern=(TodoPattern)i.next();
-          sb.append(pattern.getPatternString());
-          if(i.hasNext()){
-            sb.append(" | ");
-          }
-        }
-        return sb.toString();
-      }default:{
-        throw new IllegalArgumentException();
-      }
+    public FiltersTableModel(List<TodoFilter> filters) {
+        myFilters = filters;
     }
-  }
 
-  @Override
-  public void removeRow(int index){
-    myFilters.remove(index);
-    fireTableRowsDeleted(index,index);
-  }
+    @Override
+    public String getColumnName(int column) {
+        return column <= OUR_COLUMN_NAMES.length ? OUR_COLUMN_NAMES[column].get() : null;
+    }
+
+    @Override
+    public Class getColumnClass(int column) {
+        return OUR_COLUMN_CLASSES[column];
+    }
+
+    @Override
+    public int getColumnCount() {
+        return 2;
+    }
+
+    @Override
+    public int getRowCount() {
+        return myFilters.size();
+    }
+
+    @Override
+    public Object getValueAt(int row, int column) {
+        TodoFilter filter = myFilters.get(row);
+        switch (column) {
+            case 0: { // "Name" column
+                return filter.getName();
+            }
+            case 1: {
+                StringBuilder sb = new StringBuilder();
+                for (Iterator i = filter.iterator(); i.hasNext(); ) {
+                    TodoPattern pattern = (TodoPattern) i.next();
+                    sb.append(pattern.getPatternString());
+                    if (i.hasNext()) {
+                        sb.append(" | ");
+                    }
+                }
+                return sb.toString();
+            }
+            default: {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+    @Override
+    public void removeRow(int index) {
+        myFilters.remove(index);
+        fireTableRowsDeleted(index, index);
+    }
 }
