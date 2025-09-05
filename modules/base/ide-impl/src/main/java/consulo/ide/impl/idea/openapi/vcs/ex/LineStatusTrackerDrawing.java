@@ -25,6 +25,7 @@ import consulo.ide.impl.idea.openapi.vcs.actions.ShowPrevChangeMarkerAction;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.versionControlSystem.VcsApplicationSettings;
+import consulo.versionControlSystem.internal.VcsRange;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -37,11 +38,11 @@ public class LineStatusTrackerDrawing {
   private LineStatusTrackerDrawing() {
   }
 
-  public static void moveToRange(Range range, Editor editor, LineStatusTracker tracker) {
+  public static void moveToRange(VcsRange range, Editor editor, LineStatusTracker tracker) {
     new MyLineStatusMarkerPopup(tracker, editor, range).scrollAndShow();
   }
 
-  public static void showHint(Range range, Editor editor, LineStatusTracker tracker) {
+  public static void showHint(VcsRange range, Editor editor, LineStatusTracker tracker) {
     new MyLineStatusMarkerPopup(tracker, editor, range).showAfterScroll();
   }
 
@@ -51,7 +52,7 @@ public class LineStatusTrackerDrawing {
 
     public MyLineStatusMarkerPopup(@Nonnull LineStatusTracker tracker,
                                    @Nonnull Editor editor,
-                                   @Nonnull Range range) {
+                                   @Nonnull VcsRange range) {
       super(tracker, editor, range);
       myTracker = tracker;
     }
@@ -114,7 +115,7 @@ public class LineStatusTrackerDrawing {
 
   private static class ToggleByWordDiffAction extends ToggleAction implements DumbAware {
     @Nonnull
-    private final Range myRange;
+    private final VcsRange myRange;
     @Nonnull
     private final Editor myEditor;
     @Nonnull
@@ -122,7 +123,7 @@ public class LineStatusTrackerDrawing {
     @Nullable
     private final Point myMousePosition;
 
-    public ToggleByWordDiffAction(@Nonnull Range range,
+    public ToggleByWordDiffAction(@Nonnull VcsRange range,
                                   @Nonnull Editor editor,
                                   @Nonnull LineStatusTracker tracker,
                                   @Nullable Point mousePosition) {

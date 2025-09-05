@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.change;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
@@ -26,12 +25,13 @@ import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author max
  */
 public class VirtualFileHolder implements FileHolder {
-  private final Set<VirtualFile> myFiles = new HashSet<VirtualFile>();
+  private final Set<VirtualFile> myFiles = new HashSet<>();
   private final Project myProject;
   private final HolderType myType;
   private int myNumDirs;
@@ -41,6 +41,7 @@ public class VirtualFileHolder implements FileHolder {
     myType = type;
   }
 
+  @Override
   public HolderType getType() {
     return myType;
   }
@@ -49,63 +50,63 @@ public class VirtualFileHolder implements FileHolder {
   public void notifyVcsStarted(AbstractVcs vcs) {
   }
 
+  @Override
   public void cleanAll() {
     myFiles.clear();
     myNumDirs = 0;
   }
 
   // returns number of removed directories
-  static int cleanScope(final Project project, final Collection<VirtualFile> files, final VcsModifiableDirtyScope scope) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Integer>() {
-      public Integer compute() {
-        int result = 0;
-        // to avoid deadlocks caused by incorrect lock ordering, need to lock on this after taking read action
-        if (project.isDisposed() || files.isEmpty()) return 0;
+  static int cleanScope(Project project, Collection<VirtualFile> files, VcsModifiableDirtyScope scope) {
+    return ApplicationManager.getApplication().runReadAction((Supplier<Integer>) () -> {
+      int result = 0;
+      // to avoid deadlocks caused by incorrect lock ordering, need to lock on this after taking read action
+      if (project.isDisposed() || files.isEmpty()) return 0;
 
-        if (scope.getRecursivelyDirtyDirectories().size() == 0) {
-          Set<FilePath> dirtyFiles = scope.getDirtyFiles();
-          boolean cleanDroppedFiles = false;
+      if (scope.getRecursivelyDirtyDirectories().size() == 0) {
+        Set<FilePath> dirtyFiles = scope.getDirtyFiles();
+        boolean cleanDroppedFiles = false;
 
-          for (FilePath dirtyFile : dirtyFiles) {
-            VirtualFile f = dirtyFile.getVirtualFile();
-            if (f != null) {
-              if (files.remove(f)) {
-                if (f.isDirectory()) ++result;
-              }
-            }
-            else {
-              cleanDroppedFiles = true;
+        for (FilePath dirtyFile : dirtyFiles) {
+          VirtualFile f = dirtyFile.getVirtualFile();
+          if (f != null) {
+            if (files.remove(f)) {
+              if (f.isDirectory()) ++result;
             }
           }
-          if (cleanDroppedFiles) {
-            for (Iterator<VirtualFile> iterator = files.iterator(); iterator.hasNext(); ) {
-              VirtualFile file = iterator.next();
-              if (fileDropped(file)) {
-                iterator.remove();
-                scope.addDirtyFile(new FilePathImpl(file));
-                if (file.isDirectory()) ++result;
-              }
-            }
+          else {
+            cleanDroppedFiles = true;
           }
         }
-        else {
+        if (cleanDroppedFiles) {
           for (Iterator<VirtualFile> iterator = files.iterator(); iterator.hasNext(); ) {
             VirtualFile file = iterator.next();
-            boolean fileDropped = fileDropped(file);
-            if (fileDropped) {
-              scope.addDirtyFile(new FilePathImpl(file));
-            }
-            if (fileDropped || scope.belongsTo(new FilePathImpl(file))) {
+            if (fileDropped(file)) {
               iterator.remove();
+              scope.addDirtyFile(new FilePathImpl(file));
               if (file.isDirectory()) ++result;
             }
           }
         }
-        return result;
       }
+      else {
+        for (Iterator<VirtualFile> iterator = files.iterator(); iterator.hasNext(); ) {
+          VirtualFile file = iterator.next();
+          boolean fileDropped = fileDropped(file);
+          if (fileDropped) {
+            scope.addDirtyFile(new FilePathImpl(file));
+          }
+          if (fileDropped || scope.belongsTo(new FilePathImpl(file))) {
+            iterator.remove();
+            if (file.isDirectory()) ++result;
+          }
+        }
+      }
+      return result;
     });
   }
 
+  @Override
   public void cleanAndAdjustScope(VcsModifiableDirtyScope scope) {
     myNumDirs -= cleanScope(myProject, myFiles, scope);
   }
@@ -132,6 +133,7 @@ public class VirtualFileHolder implements FileHolder {
     return new ArrayList<VirtualFile>(myFiles);
   }
 
+  @Override
   public VirtualFileHolder copy() {
     VirtualFileHolder copyHolder = new VirtualFileHolder(myProject, myType);
     copyHolder.myFiles.addAll(myFiles);
@@ -143,6 +145,7 @@ public class VirtualFileHolder implements FileHolder {
     return myFiles.contains(file);
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -154,6 +157,7 @@ public class VirtualFileHolder implements FileHolder {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return myFiles.hashCode();
   }

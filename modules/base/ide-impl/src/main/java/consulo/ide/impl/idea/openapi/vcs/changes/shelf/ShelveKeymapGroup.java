@@ -20,10 +20,11 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
+import consulo.versionControlSystem.impl.internal.change.action.CreatePatchFromChangesAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.impl.internal.change.shelf.DiffShelvedChangesAction;
 
 /**
  * @author UNV

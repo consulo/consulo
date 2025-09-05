@@ -28,7 +28,7 @@ import consulo.diff.DiffUserDataKeys;
 import consulo.diff.PrevNextDifferenceIterable;
 import consulo.diff.impl.internal.action.NextDifferenceAction;
 import consulo.diff.impl.internal.action.PrevDifferenceAction;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.internal.DiffManagerEx;
 import consulo.diff.merge.MergeContext;
 import consulo.diff.merge.MergeRequest;

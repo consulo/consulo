@@ -25,6 +25,7 @@ import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.BaseNavigateToSourceAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

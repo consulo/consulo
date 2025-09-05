@@ -16,6 +16,7 @@
 package consulo.diff.impl.internal.fragment;
 
 import consulo.diff.fragment.LineFragment;
+import consulo.diff.internal.LineNumberConvertor;
 import consulo.diff.util.LineRange;
 import consulo.diff.util.Side;
 import consulo.document.Document;

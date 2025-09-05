@@ -23,9 +23,9 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackProgressModifier;
-import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.RollbackChangesDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.RollbackProgressModifier;
+import consulo.versionControlSystem.impl.internal.util.RollbackUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
@@ -42,7 +42,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.virtualFileSystem.VirtualFile;
@@ -120,7 +120,7 @@ public class RollbackAction extends AnAction implements DumbAware {
         }
         FileDocumentManager.getInstance().saveAllDocuments();
 
-        List<FilePath> missingFiles = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
+        List<FilePath> missingFiles = e.getData(ChangesListViewImpl.MISSING_FILES_DATA_KEY);
         boolean hasChanges = false;
         if (missingFiles != null && !missingFiles.isEmpty()) {
             hasChanges = true;

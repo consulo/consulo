@@ -362,9 +362,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.application.impl;
   exports consulo.ide.impl.idea.openapi.command.impl;
   exports consulo.ide.impl.idea.openapi.deployment;
-  exports consulo.ide.impl.idea.openapi.diff.impl.patch;
-  exports consulo.ide.impl.idea.openapi.diff.impl.patch.apply;
-  exports consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
   exports consulo.ide.impl.idea.openapi.diff.impl.settings;
   exports consulo.ide.impl.idea.openapi.editor;
   exports consulo.ide.impl.idea.openapi.editor.actionSystem;
@@ -394,7 +391,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.keymap.ex;
   exports consulo.ide.impl.idea.openapi.keymap.impl;
   exports consulo.ide.impl.idea.openapi.keymap.impl.ui;
-  exports consulo.ide.impl.idea.openapi.localVcs;
   exports consulo.ide.impl.idea.openapi.module;
   exports consulo.ide.impl.idea.openapi.module.impl;
   exports consulo.ide.impl.idea.openapi.module.impl.scopes;
@@ -438,28 +434,19 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.util.text;
   exports consulo.ide.impl.idea.openapi.vcs;
   exports consulo.ide.impl.idea.openapi.vcs.actions;
-  exports consulo.ide.impl.idea.openapi.vcs.annotate;
-  exports consulo.ide.impl.idea.openapi.vcs.changes;
   exports consulo.ide.impl.idea.openapi.vcs.changes.actions;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.actions.diff;
   exports consulo.ide.impl.idea.openapi.vcs.changes.committed;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
   exports consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
   exports consulo.ide.impl.idea.openapi.vcs.changes.patch;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
   exports consulo.ide.impl.idea.openapi.vcs.changes.shelf;
   exports consulo.ide.impl.idea.openapi.vcs.changes.ui;
   exports consulo.ide.impl.idea.openapi.vcs.checkin;
   exports consulo.ide.impl.idea.openapi.vcs.checkout;
   exports consulo.ide.impl.idea.openapi.vcs.configurable;
-  exports consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
   exports consulo.ide.impl.idea.openapi.vcs.ex;
   exports consulo.ide.impl.idea.openapi.vcs.history;
-  exports consulo.ide.impl.idea.openapi.vcs.history.impl;
   exports consulo.ide.impl.idea.openapi.vcs.impl;
-  exports consulo.ide.impl.idea.openapi.vcs.merge;
   exports consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
-  exports consulo.ide.impl.idea.openapi.vcs.rollback;
   exports consulo.ide.impl.idea.openapi.vcs.ui;
   exports consulo.ide.impl.idea.openapi.vcs.update;
   exports consulo.ide.impl.idea.openapi.vfs;
@@ -547,7 +534,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.ui.update;
   exports consulo.ide.impl.idea.vcs;
   exports consulo.ide.impl.idea.vcs.changes;
-  exports consulo.ide.impl.idea.vcsUtil;
   exports consulo.ide.impl.idea.webcore.packaging;
   exports consulo.ide.impl.idea.xml;
   exports consulo.ide.impl.idea.xml.util;
@@ -612,5 +598,4 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
-  exports consulo.ide.impl.idea.diff.requests to consulo.desktop.awt.ide.impl;
 }

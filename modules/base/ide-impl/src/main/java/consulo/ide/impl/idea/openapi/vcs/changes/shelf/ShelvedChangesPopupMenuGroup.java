@@ -18,11 +18,12 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
+import consulo.versionControlSystem.impl.internal.change.action.CreatePatchFromChangesAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
+import consulo.versionControlSystem.impl.internal.change.shelf.DiffShelvedChangesAction;
 
 /**
  * @author UNV

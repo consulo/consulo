@@ -23,6 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShelvedChanges.CleanMarkedToDelete")

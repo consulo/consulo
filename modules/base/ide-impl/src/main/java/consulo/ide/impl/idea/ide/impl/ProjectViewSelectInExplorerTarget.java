@@ -60,7 +60,7 @@ public class ProjectViewSelectInExplorerTarget implements SelectInTarget, DumbAw
     @Nonnull
     @Override
     public LocalizeValue getActionText() {
-        return LocalizeValue.of(RevealFileAction.getActionName());
+        return RevealFileAction.getActionName();
     }
 
     @Override

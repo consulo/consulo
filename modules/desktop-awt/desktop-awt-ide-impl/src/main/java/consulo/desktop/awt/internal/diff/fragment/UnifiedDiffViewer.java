@@ -36,16 +36,19 @@ import consulo.diff.PrevNextDifferenceIterable;
 import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.fragment.LineFragment;
+import consulo.diff.impl.internal.DiffLanguageUtil;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.action.AllLinesIterator;
 import consulo.diff.impl.internal.action.BufferedLineIterator;
 import consulo.diff.impl.internal.fragment.*;
-import consulo.diff.impl.internal.util.DiffImplUtil;
-import consulo.diff.impl.internal.util.HighlightPolicy;
-import consulo.diff.impl.internal.util.IgnorePolicy;
 import consulo.diff.impl.internal.util.PrevNextDifferenceIterableBase;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
+import consulo.diff.internal.HighlightPolicy;
+import consulo.diff.internal.IgnorePolicy;
+import consulo.diff.internal.LineNumberConvertor;
 import consulo.diff.localize.DiffLocalize;
+import consulo.diff.old.LineTokenizerOld;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.LineCol;
@@ -59,7 +62,6 @@ import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
-import consulo.diff.old.LineTokenizerOld;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -83,7 +85,7 @@ import javax.swing.*;
 import java.util.*;
 import java.util.function.IntUnaryOperator;
 
-import static consulo.diff.impl.internal.util.DiffImplUtil.getLinesContent;
+import static consulo.diff.internal.DiffImplUtil.getLinesContent;
 
 public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     public static final Logger LOG = Logger.getInstance(UnifiedDiffViewer.class);
@@ -404,17 +406,17 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         @Nonnull List<HighlightRange> ranges,
         int textLength
     ) {
-        EditorHighlighter highlighter1 = DiffImplUtil.initEditorHighlighter(project, content1, text1);
-        EditorHighlighter highlighter2 = DiffImplUtil.initEditorHighlighter(project, content2, text2);
+        EditorHighlighter highlighter1 = DiffLanguageUtil.initEditorHighlighter(project, content1, text1);
+        EditorHighlighter highlighter2 = DiffLanguageUtil.initEditorHighlighter(project, content2, text2);
 
         if (highlighter1 == null && highlighter2 == null) {
             return null;
         }
         if (highlighter1 == null) {
-            highlighter1 = DiffImplUtil.initEmptyEditorHighlighter(text1);
+            highlighter1 = DiffLanguageUtil.initEmptyEditorHighlighter(text1);
         }
         if (highlighter2 == null) {
-            highlighter2 = DiffImplUtil.initEmptyEditorHighlighter(text2);
+            highlighter2 = DiffLanguageUtil.initEmptyEditorHighlighter(text2);
         }
 
         return new UnifiedEditorHighlighter(myDocument, highlighter1, highlighter2, ranges, textLength);
@@ -464,7 +466,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             if (data.getHighlighter() != null) {
                 myEditor.setHighlighter(data.getHighlighter());
             }
-            DiffImplUtil.setEditorCodeStyle(myProject, myEditor, data.getFileType());
+            DiffLanguageUtil.setEditorCodeStyle(myProject, myEditor, data.getFileType());
 
             if (data.getRangeHighlighter() != null) {
                 data.getRangeHighlighter().apply(myProject, myDocument);

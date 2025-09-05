@@ -30,13 +30,14 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.internal.VcsRange;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
 
-import static consulo.diff.impl.internal.util.DiffImplUtil.getLineCount;
+import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 /**
  * @author irengrig
@@ -144,7 +145,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
 
   @Override
   @RequiredUIAccess
-  protected void createHighlighter(@Nonnull Range range) {
+  protected void createHighlighter(@Nonnull VcsRange range) {
     UIAccess.assertIsUIThread();
 
     if (range.getHighlighter() != null) {
@@ -174,7 +175,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   protected void fireFileUnchanged() {
     // later to avoid saving inside document change event processing.
     FileDocumentManager.getInstance().saveDocument(myDocument);
-    List<Range> ranges = getRanges();
+    List<VcsRange> ranges = getRanges();
     if (ranges == null || ranges.isEmpty()) {
       // file was modified, and now it's not -> dirty local change
       myVcsDirtyScopeManager.fileDirty(myVirtualFile);
@@ -182,7 +183,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   }
 
   @Override
-  protected void doRollbackRange(@Nonnull Range range) {
+  protected void doRollbackRange(@Nonnull VcsRange range) {
     super.doRollbackRange(range);
     markLinesUnchanged(range.getLine1(), range.getLine1() + range.getVcsLine2() - range.getVcsLine1());
   }

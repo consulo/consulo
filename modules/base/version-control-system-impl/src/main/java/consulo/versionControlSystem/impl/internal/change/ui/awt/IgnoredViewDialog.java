@@ -31,7 +31,7 @@ public class IgnoredViewDialog extends SpecificFilesViewDialog {
         super(
             project,
             "Ignored Files",
-            ChangesListView.IGNORED_FILES_DATA_KEY,
+            ChangesListViewImpl.IGNORED_FILES_DATA_KEY,
             ChangeListManagerEx.getInstanceEx(project).getIgnoredFiles()
         );
     }

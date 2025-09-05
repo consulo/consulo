@@ -16,7 +16,7 @@
 package consulo.diff.impl.internal.request;
 
 import consulo.diff.content.DocumentContent;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.merge.TextMergeRequest;
 import consulo.diff.util.ThreeSide;

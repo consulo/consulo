@@ -18,7 +18,7 @@ package consulo.desktop.awt.internal.diff.util;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.diff.DiffContext;
-import consulo.diff.impl.internal.DiffSettingsHolder;
+import consulo.diff.internal.DiffSettingsHolder;
 import consulo.diff.request.DiffRequest;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

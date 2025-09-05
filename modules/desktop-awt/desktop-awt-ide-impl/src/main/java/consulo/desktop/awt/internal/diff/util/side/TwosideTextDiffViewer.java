@@ -34,7 +34,7 @@ import consulo.diff.content.DocumentContent;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.action.FocusOppositePaneAction;
 import consulo.diff.impl.internal.action.ProxyUndoRedoAction;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.LineCol;

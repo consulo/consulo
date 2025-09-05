@@ -16,8 +16,9 @@
 package consulo.web.internal.platform;
 
 import consulo.platform.impl.PlatformBase;
-
+import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.net.URL;
 
@@ -36,12 +37,12 @@ public class WebPlatformImpl extends PlatformBase {
   }
 
   @Override
-  public void openFileInFileManager(@Nonnull File file) {
+  public void openFileInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void openDirectoryInFileManager(@Nonnull File file) {
+  public void openDirectoryInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
     throw new UnsupportedOperationException();
   }
 }

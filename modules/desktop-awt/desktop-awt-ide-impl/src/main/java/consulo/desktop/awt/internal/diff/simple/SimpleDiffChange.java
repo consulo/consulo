@@ -24,7 +24,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.impl.internal.util.DiffGutterRenderer;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.util.Side;
 import consulo.diff.util.TextDiffType;

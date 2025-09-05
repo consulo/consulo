@@ -17,15 +17,16 @@ package consulo.desktop.awt.progress;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.internal.ProgressDialog;
+import consulo.application.impl.internal.progress.ProgressDialogFactory;
 import consulo.application.impl.internal.progress.ProgressWindow;
+import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.application.impl.internal.progress.ProgressDialog;
-import consulo.application.impl.internal.progress.ProgressDialogFactory;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -48,7 +49,7 @@ public class DesktopProgressDialogFactory implements ProgressDialogFactory {
   public ProgressDialog create(ProgressWindow progressWindow,
                                boolean shouldShowBackground,
                                JComponent parentComponent,
-                               Project project,
+                               ComponentManager project,
                                @Nonnull LocalizeValue cancelText) {
     Component parent = parentComponent;
     if (parent == null && project == null && !myApplication.isHeadlessEnvironment()) {
@@ -56,7 +57,7 @@ public class DesktopProgressDialogFactory implements ProgressDialogFactory {
     }
 
     return parent == null
-           ? new DesktopAWTProgressDialogImpl(progressWindow, shouldShowBackground, project, cancelText)
+           ? new DesktopAWTProgressDialogImpl(progressWindow, shouldShowBackground, (Project) project, cancelText)
            : new DesktopAWTProgressDialogImpl(progressWindow, shouldShowBackground, parent, cancelText);
   }
 }

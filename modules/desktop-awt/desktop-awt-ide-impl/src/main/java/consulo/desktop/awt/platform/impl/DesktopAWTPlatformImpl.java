@@ -16,13 +16,14 @@
 package consulo.desktop.awt.platform.impl;
 
 import consulo.desktop.startup.DesktopPlatformUserImpl;
-import consulo.webBrowser.BrowserUtil;
-import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
+import consulo.platform.PlatformFeature;
 import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformUser;
 import consulo.platform.impl.PlatformBase;
-
+import consulo.ui.UIAccess;
+import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.net.URL;
 import java.util.Map;
@@ -32,34 +33,50 @@ import java.util.Map;
  * @since 15-Sep-17
  */
 class DesktopAWTPlatformImpl extends PlatformBase {
-  public DesktopAWTPlatformImpl() {
-    super(LOCAL, LOCAL, getSystemJvmProperties());
-  }
+    public DesktopAWTPlatformImpl() {
+        super(LOCAL, LOCAL, getSystemJvmProperties());
+    }
 
-  @Override
-  public void openInBrowser(@Nonnull URL url) {
-    BrowserUtil.browse(url);
-  }
+    @Override
+    public void openInBrowser(@Nonnull URL url) {
+        BrowserUtil.browse(url);
+    }
 
-  @Override
-  public void openFileInFileManager(@Nonnull File file) {
-    ShowFilePathAction.openFile(file);
-  }
+    @Nonnull
+    @Override
+    public String fileManagerName() {
+        return FileManagerProxy.getFileManagerName();
+    }
 
-  @Override
-  public void openDirectoryInFileManager(@Nonnull File file) {
-    ShowFilePathAction.openDirectory(file);
-  }
+    @Override
+    public boolean supportsFeature(@Nonnull PlatformFeature feature) {
+        switch (feature) {
+            case OPEN_DIRECTORY_IN_FILE_MANANGER:
+            case OPEN_FILE_IN_FILE_MANANGER:
+                return FileManagerProxy.isSupported();
+        }
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  protected PlatformUser createUser(Map<String, String> jvmProperties) {
-    return new DesktopPlatformUserImpl(this, jvmProperties);
-  }
+    @Override
+    public void openFileInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
+        FileManagerProxy.openFile(file, uiAccess);
+    }
 
-  @Nonnull
-  @Override
-  protected PlatformFileSystem createFS(Map<String, String> jvmProperties) {
-    return new DesktopAWTFileSystemImpl(this, jvmProperties);
-  }
+    @Override
+    public void openDirectoryInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
+        FileManagerProxy.openDirectory(file, uiAccess);
+    }
+
+    @Nonnull
+    @Override
+    protected PlatformUser createUser(Map<String, String> jvmProperties) {
+        return new DesktopPlatformUserImpl(this, jvmProperties);
+    }
+
+    @Nonnull
+    @Override
+    protected PlatformFileSystem createFS(Map<String, String> jvmProperties) {
+        return new DesktopAWTFileSystemImpl(this, jvmProperties);
+    }
 }

@@ -25,7 +25,7 @@ import consulo.diff.DiffUserDataKeys;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.content.EmptyContent;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;

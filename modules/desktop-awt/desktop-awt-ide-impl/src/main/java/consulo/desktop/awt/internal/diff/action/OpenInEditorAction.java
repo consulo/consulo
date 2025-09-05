@@ -20,7 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.DiffUserDataKeys;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.navigation.Navigatable;

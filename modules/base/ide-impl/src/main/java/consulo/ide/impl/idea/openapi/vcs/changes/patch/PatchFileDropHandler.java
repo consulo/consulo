@@ -21,6 +21,8 @@ import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler;
 import consulo.project.Project;
 
+import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchAction;
+import consulo.versionControlSystem.impl.internal.patch.PatchFileType;
 import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.Transferable;
 import java.io.File;

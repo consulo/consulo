@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
 import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.ui.VcsShowToolWindowTabAction;
 import jakarta.annotation.Nonnull;

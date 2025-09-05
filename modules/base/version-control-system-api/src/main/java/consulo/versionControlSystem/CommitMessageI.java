@@ -20,22 +20,22 @@ package consulo.versionControlSystem;
  * @since 2012-09-14
  */
 public interface CommitMessageI {
-  /**
-   * @return    <code>true</code> if commit message is checked for spelling errors; <code>false</code> otherwise
-   */
-  boolean isCheckSpelling();
+    /**
+     * @return <code>true</code> if commit message is checked for spelling errors; <code>false</code> otherwise
+     */
+    boolean isCheckSpelling();
 
-  /**
-   * Allows to define whether commit message should be checked for spelling errors.
-   *
-   * @param checkSpelling  <code>true</code> if commit message should be checked for spelling errors; <code>false</code> otherwise
-   */
-  void setCheckSpelling(boolean checkSpelling);
+    /**
+     * Allows to define whether commit message should be checked for spelling errors.
+     *
+     * @param checkSpelling <code>true</code> if commit message should be checked for spelling errors; <code>false</code> otherwise
+     */
+    void setCheckSpelling(boolean checkSpelling);
 
-  /**
-   * Sets the description for the check-in.
-   *
-   * @param currentDescription the description text.
-   */
-  void setCommitMessage(String currentDescription);
+    /**
+     * Sets the description for the check-in.
+     *
+     * @param currentDescription the description text.
+     */
+    void setCommitMessage(String currentDescription);
 }

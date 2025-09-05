@@ -17,11 +17,10 @@ package consulo.diff.impl.internal.request;
 
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.FileContent;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.merge.BinaryMergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.util.ThreeSide;
-import consulo.language.editor.WriteCommandAction;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;

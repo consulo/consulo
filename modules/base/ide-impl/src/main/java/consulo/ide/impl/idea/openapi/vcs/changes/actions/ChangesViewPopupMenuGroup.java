@@ -20,11 +20,15 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.ide.impl.idea.openapi.vcs.actions.VersionControlsGroup;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
+import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.impl.internal.change.action.AddUnversionedAction;
+import consulo.versionControlSystem.impl.internal.change.action.DeleteUnversionedFilesAction;
+import consulo.versionControlSystem.impl.internal.change.action.MoveChangesToAnotherListAction;
+import consulo.versionControlSystem.impl.internal.change.action.RemoveChangeListAction;
 
 /**
  * @author UNV

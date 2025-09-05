@@ -19,15 +19,12 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.internal.AbstractProgressIndicatorBase;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
-import consulo.application.internal.ProgressIndicatorBase;
-import consulo.application.internal.ProgressIndicatorEx;
+import consulo.application.internal.*;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.TaskInfo;
+import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -378,7 +375,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
         @Override
         public void addStateDelegate(@Nonnull ProgressIndicatorEx delegate) {
-            throw new IncorrectOperationException();
+            throw new UnsupportedOperationException();
         }
 
         @Override

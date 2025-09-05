@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -102,7 +101,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     myPromptsPanel.setSize(myPromptsPanel.getPreferredSize());                           // todo check text!
     myOnPatchCreation.setName(
       (Platform.current().os().isMac() ? "Reveal patch in" : "Show patch in ") +
-        ShowFilePathAction.getFileManagerName() + " after creation:"
+        Platform.current().fileManagerName() + " after creation:"
     );
   }
 

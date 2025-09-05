@@ -26,8 +26,8 @@ import consulo.diff.DiffDataKeys;
 import consulo.diff.DiffNavigationContext;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.impl.internal.action.AllLinesIterator;
-import consulo.diff.impl.internal.util.DiffImplUtil;
-import consulo.diff.impl.internal.util.HighlightPolicy;
+import consulo.diff.internal.DiffImplUtil;
+import consulo.diff.internal.HighlightPolicy;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.LineRange;
@@ -45,7 +45,7 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static consulo.diff.impl.internal.util.DiffImplUtil.getLineCount;
+import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     public static final Logger LOG = Logger.getInstance(SimpleOnesideDiffViewer.class);

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.roots;
 
-import consulo.ide.impl.idea.util.ui.FilePathSplittingPolicy;
+import consulo.ui.ex.awt.util.FilePathSplittingPolicy;
 
 import javax.swing.*;
 import java.awt.event.ComponentEvent;

@@ -17,15 +17,19 @@ package consulo.versionControlSystem.internal;
 
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public abstract class ChangeListManagerEx extends ChangeListManager {
   @Nonnull
@@ -68,4 +72,14 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
   public abstract List<VirtualFile> getUnversionedFiles();
 
   public abstract void scheduleUpdateImpl();
+
+    @Deprecated
+    @Nonnull
+    @RequiredUIAccess
+    public abstract List<VcsException> addUnversionedFiles(
+        LocalChangeList list,
+        @Nonnull List<VirtualFile> files,
+        @Nonnull Predicate<FileStatus> statusChecker,
+        @Nullable Consumer<List<Change>> changesConsumer
+    );
 }

@@ -49,7 +49,7 @@ import java.util.stream.Stream;
 
 abstract class SpecificFilesViewDialog extends DialogWrapper {
   protected JPanel myPanel;
-  protected final ChangesListView myView;
+  protected final ChangesListViewImpl myView;
   protected final ChangeListManager myChangeListManager;
   protected boolean myInRefresh;
   protected final Project myProject;
@@ -62,7 +62,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     setTitle(title);
     myProject = project;
     final Runnable closer = () -> this.close(0);
-    myView = new ChangesListView(project) {
+    myView = new ChangesListViewImpl(project) {
       @Override
       public void calcData(Key<?> key, DataSink sink) {
         super.calcData(key, sink);
@@ -184,7 +184,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
   @Nonnull
   protected abstract List<VirtualFile> getFiles();
 
-  protected static ChangesBrowserApi getBrowserBase(@Nonnull ChangesListView view) {
+  protected static ChangesBrowserApi getBrowserBase(@Nonnull ChangesListViewImpl view) {
     return DataManager.getInstance().getDataContext(view).getData(ChangesBrowserApi.DATA_KEY);
   }
 

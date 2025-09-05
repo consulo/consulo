@@ -16,6 +16,7 @@
 package consulo.platform;
 
 import consulo.platform.internal.PlatformInternal;
+import consulo.ui.UIAccess;
 import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
 
@@ -54,6 +55,10 @@ public interface Platform extends UserDataHolder {
     @Nonnull
     PlatformUser user();
 
+    default boolean supportsFeature(@Nonnull PlatformFeature feature) {
+        return false;
+    }
+
     @SuppressWarnings("deprecation")
     default void openInBrowser(String url) {
         try {
@@ -66,17 +71,22 @@ public interface Platform extends UserDataHolder {
 
     void openInBrowser(@Nonnull URL url);
 
-    default void openFileInFileManager(@Nonnull Path path) {
-        openFileInFileManager(path.toFile());
+    @Nonnull
+    default String fileManagerName() {
+        return "File Manager";
     }
 
-    void openFileInFileManager(@Nonnull File file);
-
-    default void openDirectoryInFileManager(@Nonnull Path path) {
-        openFileInFileManager(path.toFile());
+    default void openFileInFileManager(@Nonnull Path path, @Nonnull UIAccess uiAccess) {
+        openFileInFileManager(path.toFile(), uiAccess);
     }
 
-    void openDirectoryInFileManager(@Nonnull File file);
+    void openFileInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess);
+
+    default void openDirectoryInFileManager(@Nonnull Path path, @Nonnull UIAccess uiAccess) {
+        openFileInFileManager(path.toFile(), uiAccess);
+    }
+
+    void openDirectoryInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess);
 
     @Nonnull
     default String mapExecutableName(@Nonnull String baseName) {

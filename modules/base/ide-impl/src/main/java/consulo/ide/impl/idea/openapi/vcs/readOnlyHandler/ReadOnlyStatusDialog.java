@@ -22,6 +22,7 @@ import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.FileListRenderer;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;

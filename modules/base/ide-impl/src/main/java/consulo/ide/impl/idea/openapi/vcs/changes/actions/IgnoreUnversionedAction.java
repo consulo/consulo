@@ -33,7 +33,7 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView.UNVERSIONED_FILES_DATA_KEY;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl.UNVERSIONED_FILES_DATA_KEY;
 
 /**
  * @author yole

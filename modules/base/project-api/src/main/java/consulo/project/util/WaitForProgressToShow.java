@@ -21,6 +21,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,11 +29,11 @@ public class WaitForProgressToShow {
   private WaitForProgressToShow() {
   }
 
-  public static void runOrInvokeAndWaitAboveProgress(Runnable command) {
+  public static void runOrInvokeAndWaitAboveProgress(@RequiredUIAccess Runnable command) {
     runOrInvokeAndWaitAboveProgress(command, Application.get().getDefaultModalityState());
   }
 
-  public static void runOrInvokeAndWaitAboveProgress(Runnable command, @Nullable ModalityState modalityState) {
+  public static void runOrInvokeAndWaitAboveProgress(@RequiredUIAccess Runnable command, @Nullable ModalityState modalityState) {
     Application application = Application.get();
     if (application.isDispatchThread()) {
       command.run();
@@ -50,7 +51,7 @@ public class WaitForProgressToShow {
     }
   }
 
-  public static void runOrInvokeLaterAboveProgress(Runnable command, @Nullable ModalityState modalityState, @Nonnull Project project) {
+  public static void runOrInvokeLaterAboveProgress(@RequiredUIAccess Runnable command, @Nullable ModalityState modalityState, @Nonnull Project project) {
     Application application = Application.get();
     if (application.isDispatchThread()) {
       command.run();

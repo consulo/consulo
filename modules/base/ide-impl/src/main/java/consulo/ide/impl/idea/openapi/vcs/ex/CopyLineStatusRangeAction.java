@@ -19,6 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.versionControlSystem.internal.VcsRange;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -26,14 +27,14 @@ import java.awt.datatransfer.StringSelection;
  * @author irengrig
  */
 public class CopyLineStatusRangeAction extends BaseLineStatusRangeAction {
-    CopyLineStatusRangeAction(LineStatusTracker lineStatusTracker, Range range) {
+    CopyLineStatusRangeAction(LineStatusTracker lineStatusTracker, VcsRange range) {
         super(lineStatusTracker, range);
         ActionImplUtil.copyFrom(this, IdeActions.ACTION_COPY);
     }
 
     @Override
     public boolean isEnabled() {
-        return Range.DELETED == myRange.getType() || Range.MODIFIED == myRange.getType();
+        return VcsRange.DELETED == myRange.getType() || VcsRange.MODIFIED == myRange.getType();
     }
 
     @Override

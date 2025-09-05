@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitChangeListDialog;
+import consulo.versionControlSystem.impl.internal.commit.CommitChangeListDialog;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;

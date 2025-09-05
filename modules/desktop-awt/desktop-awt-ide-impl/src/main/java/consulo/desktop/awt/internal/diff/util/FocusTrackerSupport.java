@@ -19,7 +19,7 @@ import consulo.diff.DiffContext;
 import consulo.diff.request.DiffRequest;
 import consulo.desktop.awt.internal.diff.EditorHolder;
 import consulo.diff.DiffUserDataKeys;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import jakarta.annotation.Nonnull;

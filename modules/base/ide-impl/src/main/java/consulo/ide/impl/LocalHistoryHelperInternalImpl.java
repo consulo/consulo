@@ -17,8 +17,8 @@ package consulo.ide.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.diff.DiffDialogHints;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
+import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
+import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.localHistory.internal.LocalHistoryHelperInternal;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,18 +15,20 @@
  */
 package consulo.versionControlSystem.history;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsException;
 
 public interface VcsAppendableHistorySessionPartner {
-  void reportCreatedEmptySession(VcsAbstractHistorySession session);
+    @RequiredUIAccess
+    void reportCreatedEmptySession(VcsAbstractHistorySession session);
 
-  void acceptRevision(VcsFileRevision revision);
+    void acceptRevision(VcsFileRevision revision);
 
-  void reportException(VcsException exception);
+    void reportException(VcsException exception);
 
-  void finished();
+    void finished();
 
-  void forceRefresh();
+    void forceRefresh();
 
-  void beforeRefresh();
+    void beforeRefresh();
 }

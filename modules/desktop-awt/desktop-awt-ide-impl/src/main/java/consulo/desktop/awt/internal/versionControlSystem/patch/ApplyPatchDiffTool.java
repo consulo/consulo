@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
 import consulo.diff.request.DiffRequest;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffRequest;
+import consulo.versionControlSystem.impl.internal.patch.tool.ApplyPatchDiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;

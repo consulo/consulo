@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.action.VcsContextFactory;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesFilterDialog;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesFilterDialog;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.virtualFileSystem.VirtualFile;

@@ -29,7 +29,7 @@ import java.util.List;
 public class UnversionedViewDialog extends SpecificFilesViewDialog {
 
   public UnversionedViewDialog(@Nonnull Project project) {
-    super(project, "Unversioned Files", ChangesListView.UNVERSIONED_FILES_DATA_KEY,
+    super(project, "Unversioned Files", ChangesListViewImpl.UNVERSIONED_FILES_DATA_KEY,
           ChangeListManagerEx.getInstanceEx(project).getUnversionedFiles());
   }
 

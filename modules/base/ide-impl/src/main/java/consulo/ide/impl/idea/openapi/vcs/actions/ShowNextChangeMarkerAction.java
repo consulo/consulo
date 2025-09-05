@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
-import consulo.ide.impl.idea.openapi.vcs.ex.Range;
+import consulo.versionControlSystem.internal.VcsRange;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import jakarta.inject.Inject;
@@ -31,7 +31,7 @@ import jakarta.inject.Inject;
 public class ShowNextChangeMarkerAction extends ShowChangeMarkerAction {
     public static final String ID = "VcsShowNextChangeMarker";
 
-    public ShowNextChangeMarkerAction(Range range, LineStatusTracker lineStatusTracker, Editor editor) {
+    public ShowNextChangeMarkerAction(VcsRange range, LineStatusTracker lineStatusTracker, Editor editor) {
         super(range, lineStatusTracker, editor);
         ActionImplUtil.copyFrom(this, ID);
     }
@@ -46,7 +46,7 @@ public class ShowNextChangeMarkerAction extends ShowChangeMarkerAction {
     }
 
     @Override
-    protected Range extractRange(LineStatusTracker lineStatusTracker, int line, Editor editor) {
+    protected VcsRange extractRange(LineStatusTracker lineStatusTracker, int line, Editor editor) {
         return lineStatusTracker.getNextRange(line);
     }
 }

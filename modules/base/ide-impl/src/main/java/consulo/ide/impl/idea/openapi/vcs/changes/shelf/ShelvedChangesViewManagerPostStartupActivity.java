@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManager;
 import jakarta.annotation.Nonnull;
 
 /**

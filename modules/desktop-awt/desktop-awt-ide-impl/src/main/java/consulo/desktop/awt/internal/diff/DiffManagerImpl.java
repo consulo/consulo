@@ -27,7 +27,7 @@ import consulo.diff.DiffRequestPanel;
 import consulo.diff.DiffTool;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.SimpleDiffRequestChain;
-import consulo.diff.impl.internal.DiffSettingsHolder;
+import consulo.diff.internal.DiffSettingsHolder;
 import consulo.diff.impl.internal.external.ExternalMergeTool;
 import consulo.diff.internal.DiffManagerEx;
 import consulo.diff.localize.DiffLocalize;

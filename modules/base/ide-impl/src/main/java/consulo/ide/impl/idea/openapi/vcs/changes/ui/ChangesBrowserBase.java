@@ -15,16 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -32,18 +29,21 @@ import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
-import consulo.versionControlSystem.change.ChangesBrowserApi;
+import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -64,8 +64,10 @@ import java.util.stream.Stream;
 import static consulo.versionControlSystem.change.ChangesUtil.getAfterRevisionsFiles;
 import static consulo.versionControlSystem.change.ChangesUtil.getNavigatableArray;
 import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
-import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView.*;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl.*;
 
+@Deprecated
+@DeprecationInfo("Use InternalChangesBrowserBase due moved to impl")
 public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, ChangesBrowserApi<T>, Disposable {
     // for backgroundable rollback to mark
     private boolean myDataIsDirty;
@@ -403,7 +405,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
                 showDiff();
             }
         };
-        ActionImplUtil.copyFrom(myDiffAction, "ChangesView.Diff");
+        ActionUtil.copyFrom(myDiffAction, "ChangesView.Diff");
         myDiffAction.registerCustomShortcutSet(myViewer, null);
         toolBarGroup.add(myDiffAction);
     }

@@ -24,7 +24,7 @@ import consulo.diff.content.DocumentContent;
 import consulo.diff.content.FileContent;
 import consulo.diff.impl.internal.request.BinaryMergeRequestImpl;
 import consulo.diff.impl.internal.request.TextMergeRequestImpl;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.internal.DiffContentFactoryEx;
 import consulo.diff.internal.DiffFilePathFactory;
 import consulo.diff.internal.DiffRequestFactoryEx;

@@ -36,6 +36,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.NotificationType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
@@ -284,7 +285,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
                 FileEditorManager.getInstance(project).openFile(result, true);
             }
             else {
-                Platform.current().openFileInFileManager(VirtualFileUtil.virtualToIoFile(result));
+                Platform.current().openFileInFileManager(VirtualFileUtil.virtualToIoFile(result), UIAccess.current());
             }
         });
     }

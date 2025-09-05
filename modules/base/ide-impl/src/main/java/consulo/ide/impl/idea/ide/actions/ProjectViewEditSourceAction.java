@@ -21,6 +21,7 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.NavigatableWithText;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.BaseNavigateToSourceAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;

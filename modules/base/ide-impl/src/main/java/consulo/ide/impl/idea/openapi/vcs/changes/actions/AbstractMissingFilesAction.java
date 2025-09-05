@@ -28,9 +28,9 @@ import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.ChangesViewManager;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -55,7 +55,7 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
 
     @Override
     public void update(AnActionEvent e) {
-        List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
+        List<FilePath> files = e.getData(ChangesListViewImpl.MISSING_FILES_DATA_KEY);
         boolean enabled = files != null && !files.isEmpty();
         e.getPresentation().setEnabledAndVisible(enabled);
     }
@@ -64,7 +64,7 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        List<FilePath> files = e.getRequiredData(ChangesListView.MISSING_FILES_DATA_KEY);
+        List<FilePath> files = e.getRequiredData(ChangesListViewImpl.MISSING_FILES_DATA_KEY);
         ProgressManager progressManager = ProgressManager.getInstance();
         Runnable action = () -> {
             List<VcsException> allExceptions = new ArrayList<>();

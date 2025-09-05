@@ -34,5 +34,6 @@ module consulo.file.editor.api {
         consulo.desktop.swt.ide.impl,
         consulo.language.editor.impl,
         consulo.configuration.editor.api,
+        consulo.version.control.system.impl,
         consulo.execution.coverage.impl;
 }

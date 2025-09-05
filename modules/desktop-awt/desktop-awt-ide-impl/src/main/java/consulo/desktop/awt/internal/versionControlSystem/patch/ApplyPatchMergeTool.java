@@ -25,7 +25,7 @@ import consulo.diff.merge.MergeContext;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.merge.MergeTool;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeRequest;
+import consulo.versionControlSystem.impl.internal.patch.tool.ApplyPatchMergeRequest;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;

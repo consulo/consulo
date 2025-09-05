@@ -26,52 +26,52 @@ import jakarta.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ContentFactory {
-  @Nonnull
-  static ContentFactory getInstance() {
-    return Application.get().getInstance(ContentFactory.class);
-  }
+    @Nonnull
+    static ContentFactory getInstance() {
+        return Application.get().getInstance(ContentFactory.class);
+    }
 
-  @Nonnull
-  ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull ComponentManager project);
+    @Nonnull
+    ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull ComponentManager project);
 
-  @Nonnull
-  ContentManager createContentManager(boolean canCloseContents, @Nonnull ComponentManager project);
+    @Nonnull
+    ContentManager createContentManager(boolean canCloseContents, @Nonnull ComponentManager project);
 
-  /**
-   * do not rename due it will be conflicted with deprecated method
-   */
-  @Nonnull
-  default Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
-    throw new AbstractMethodError();
-  }
+    /**
+     * do not rename due it will be conflicted with deprecated method
+     */
+    @Nonnull
+    default Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
+        throw new AbstractMethodError();
+    }
 
-  // TODO [VISTALL] AWT & Swing dependency
-  // region AWT & Swing dependency
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use createUIContent")
-  default Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
-    throw new AbstractMethodError();
-  }
-
-  @Nonnull
-  @Deprecated
-  default TabbedContent createTabbedContent(javax.swing.JComponent component, String displayName, boolean isPinnable, String titlePrefix) {
-    throw new AbstractMethodError();
-  }
-  // endregion
-
-  // region Deprecated staff
-  @Deprecated
-  class SERVICE {
-    private SERVICE() {
+    // TODO [VISTALL] AWT & Swing dependency
+    // region AWT & Swing dependency
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use createUIContent")
+    default Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
+        throw new AbstractMethodError();
     }
 
     @Nonnull
     @Deprecated
-    public static ContentFactory getInstance() {
-      return Application.get().getInstance(ContentFactory.class);
+    default TabbedContent createTabbedContent(javax.swing.JComponent component, String displayName, boolean isPinnable, String titlePrefix) {
+        throw new AbstractMethodError();
     }
-  }
-  // endregion
+    // endregion
+
+    // region Deprecated staff
+    @Deprecated
+    class SERVICE {
+        private SERVICE() {
+        }
+
+        @Nonnull
+        @Deprecated
+        public static ContentFactory getInstance() {
+            return Application.get().getInstance(ContentFactory.class);
+        }
+    }
+    // endregion
 }

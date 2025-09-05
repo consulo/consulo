@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.Processor;
 import consulo.content.ContentIterator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -40,6 +41,8 @@ import java.util.*;
 
 import static consulo.virtualFileSystem.util.VirtualFileVisitor.VisitorException;
 
+@Deprecated
+@DeprecationInfo("use VirtualFileUtil")
 public class VfsUtilCore {
     private static final Logger LOG = Logger.getInstance(VfsUtilCore.class);
 

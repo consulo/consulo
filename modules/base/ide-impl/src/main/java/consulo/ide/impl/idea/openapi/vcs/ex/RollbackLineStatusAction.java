@@ -15,8 +15,7 @@ package consulo.ide.impl.idea.openapi.vcs.ex;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.diff.impl.internal.util.DiffImplUtil;
-import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -24,6 +23,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.undoRedo.CommandProcessor;
+import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
+import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -53,7 +54,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
             e.getPresentation().setEnabledAndVisible(false);
             return;
         }
-        LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
+        LineStatusTracker tracker = (LineStatusTracker) LineStatusTrackerManagerI.getInstance(project).getLineStatusTracker(editor.getDocument());
         if (tracker == null || !tracker.isValid() || tracker.isSilentMode()) {
             e.getPresentation().setEnabledAndVisible(false);
             return;
@@ -71,7 +72,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor editor = e.getRequiredData(Editor.KEY);
-        LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
+        LineStatusTracker tracker = (LineStatusTracker) LineStatusTrackerManagerI.getInstance(project).getLineStatusTracker(editor.getDocument());
         assert tracker != null;
 
         rollback(tracker, editor, null);
@@ -94,7 +95,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    protected static void rollback(@Nonnull LineStatusTracker tracker, @Nullable Editor editor, @Nullable Range range) {
+    protected static void rollback(@Nonnull LineStatusTracker tracker, @Nullable Editor editor, @Nullable VcsRange range) {
         assert editor != null || range != null;
 
         if (range != null) {
@@ -106,7 +107,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    private static void doRollback(@Nonnull LineStatusTracker tracker, @Nonnull Range range) {
+    private static void doRollback(@Nonnull LineStatusTracker tracker, @Nonnull VcsRange range) {
         execute(tracker, () -> tracker.rollbackChanges(range));
     }
 

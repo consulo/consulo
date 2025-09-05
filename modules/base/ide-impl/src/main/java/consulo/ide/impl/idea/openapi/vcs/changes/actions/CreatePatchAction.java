@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
+import consulo.versionControlSystem.impl.internal.change.patch.CreatePatchCommitExecutor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;

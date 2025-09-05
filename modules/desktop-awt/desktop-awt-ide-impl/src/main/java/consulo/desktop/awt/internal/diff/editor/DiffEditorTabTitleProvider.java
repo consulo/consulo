@@ -21,7 +21,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.diff.impl.internal.DiffSettingsHolder;
+import consulo.diff.internal.DiffSettingsHolder;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

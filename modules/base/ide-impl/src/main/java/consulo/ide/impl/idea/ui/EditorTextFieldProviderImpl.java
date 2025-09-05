@@ -24,6 +24,7 @@ import consulo.language.Language;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextFieldProvider;
 import consulo.language.editor.ui.awt.LanguageTextField;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;

@@ -48,7 +48,9 @@ public interface ChangesBrowserApi<T> {
 
     JComponent getPreferredFocusedComponent();
 
-    ChangesBrowserTree getViewer();
+    ChangesBrowserTree<T> getViewer();
+
+    ChangeList getSelectedChangeList();
 
     JScrollPane getViewerScrollPane();
 

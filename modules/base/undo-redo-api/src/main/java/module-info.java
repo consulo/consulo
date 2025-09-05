@@ -22,6 +22,7 @@ module consulo.undo.redo.api {
 
     exports consulo.undoRedo.internal.builder to
         consulo.desktop.awt.ide.impl,
+        consulo.diff.api,
         consulo.diff.impl,
         consulo.ide.impl;
 }

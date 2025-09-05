@@ -16,7 +16,7 @@
 package consulo.desktop.awt.internal.diff.merge;
 
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.LineRange;
 import consulo.disposer.Disposable;
 import consulo.document.Document;

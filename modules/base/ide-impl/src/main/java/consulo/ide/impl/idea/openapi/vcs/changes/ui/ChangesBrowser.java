@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
@@ -29,73 +30,75 @@ import javax.swing.tree.DefaultTreeModel;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo("Use ChangesBrowserBase due moved to impl")
 public class ChangesBrowser extends ChangesBrowserBase<Change> {
 
-  public ChangesBrowser(Project project,
-                        List<? extends ChangeList> changeLists,
-                        List<Change> changes,
-                        ChangeList initialListSelection,
-                        boolean capableOfExcludingChanges,
-                        boolean highlightProblems,
-                        @Nullable Runnable inclusionListener,
-                        MyUseCase useCase, @Nullable VirtualFile toSelect) {
-    super(project, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, useCase, toSelect, Change.class);
+    public ChangesBrowser(Project project,
+                          List<? extends ChangeList> changeLists,
+                          List<Change> changes,
+                          ChangeList initialListSelection,
+                          boolean capableOfExcludingChanges,
+                          boolean highlightProblems,
+                          @Nullable Runnable inclusionListener,
+                          MyUseCase useCase, @Nullable VirtualFile toSelect) {
+        super(project, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, useCase, toSelect, Change.class);
 
-    init();
-    setInitialSelection(changeLists, changes, initialListSelection);
-    rebuildList();
-  }
-
-  @Override
-  @Nonnull
-  protected DefaultTreeModel buildTreeModel(List<Change> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten) {
-    TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
-    return builder.buildModel(changes, changeNodeDecorator);
-  }
-
-  @Override
-  @Nonnull
-  protected List<Change> getSelectedObjects(@Nonnull ChangesBrowserNode<Change> node) {
-    return node.getAllChangesUnder();
-  }
-
-  @Override
-  @Nullable
-  protected Change getLeadSelectedObject(@Nonnull ChangesBrowserNode node) {
-    Object o = node.getUserObject();
-    if (o instanceof Change) {
-      return (Change)o;
+        init();
+        setInitialSelection(changeLists, changes, initialListSelection);
+        rebuildList();
     }
-    return null;
-  }
 
-  @Nonnull
-  @Override
-  public List<Change> getSelectedChanges() {
-    return myViewer.getSelectedChanges();
-  }
+    @Override
+    @Nonnull
+    protected DefaultTreeModel buildTreeModel(List<Change> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten) {
+        TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
+        return builder.buildModel(changes, changeNodeDecorator);
+    }
 
-  @Nonnull
-  @Override
-  public List<Change> getAllChanges() {
-    return myViewer.getChanges();
-  }
+    @Override
+    @Nonnull
+    protected List<Change> getSelectedObjects(@Nonnull ChangesBrowserNode<Change> node) {
+        return node.getAllChangesUnder();
+    }
 
-  @Nonnull
-  @Override
-  public List<Change> getCurrentDisplayedChanges() {
-    return myChangesToDisplay != null ? myChangesToDisplay : super.getCurrentDisplayedChanges();
-  }
+    @Override
+    @Nullable
+    protected Change getLeadSelectedObject(@Nonnull ChangesBrowserNode node) {
+        Object o = node.getUserObject();
+        if (o instanceof Change) {
+            return (Change) o;
+        }
+        return null;
+    }
 
-  @Nonnull
-  @Override
-  public List<Change> getCurrentIncludedChanges() {
-    return new ArrayList<>(myViewer.getIncludedChanges());
-  }
+    @Nonnull
+    @Override
+    public List<Change> getSelectedChanges() {
+        return myViewer.getSelectedChanges();
+    }
 
-  @Nonnull
-  @Override
-  public List<Change> getCurrentDisplayedObjects() {
-    return getCurrentDisplayedChanges();
-  }
+    @Nonnull
+    @Override
+    public List<Change> getAllChanges() {
+        return myViewer.getChanges();
+    }
+
+    @Nonnull
+    @Override
+    public List<Change> getCurrentDisplayedChanges() {
+        return myChangesToDisplay != null ? myChangesToDisplay : super.getCurrentDisplayedChanges();
+    }
+
+    @Nonnull
+    @Override
+    public List<Change> getCurrentIncludedChanges() {
+        return new ArrayList<>(myViewer.getIncludedChanges());
+    }
+
+    @Nonnull
+    @Override
+    public List<Change> getCurrentDisplayedObjects() {
+        return getCurrentDisplayedChanges();
+    }
 }

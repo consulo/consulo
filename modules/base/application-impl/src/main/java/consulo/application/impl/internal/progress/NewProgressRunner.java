@@ -2,6 +2,7 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
+import consulo.application.internal.BlockingProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;

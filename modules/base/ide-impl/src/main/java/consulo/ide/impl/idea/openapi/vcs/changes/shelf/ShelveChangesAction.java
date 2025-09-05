@@ -22,6 +22,7 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.AbstractCommitChangesAction;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesCommitExecutor;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

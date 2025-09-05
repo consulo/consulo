@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
@@ -26,14 +28,14 @@ import java.io.File;
 
 public class RevealFileAction extends DumbAwareAction {
     public RevealFileAction() {
-        getTemplatePresentation().setText(getActionName(null));
+        getTemplatePresentation().setTextValue(getActionName(null));
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
         VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
         Presentation presentation = e.getPresentation();
-        presentation.setText(getActionName(e.getPlace()));
+        presentation.setTextValue(getActionName(e.getPlace()));
         presentation.setEnabled(file != null);
     }
 
@@ -47,19 +49,20 @@ public class RevealFileAction extends DumbAwareAction {
     }
 
     @Nonnull
-    public static String getActionName() {
+    public static LocalizeValue getActionName() {
         return getActionName(null);
     }
 
     @Nonnull
-    public static String getActionName(@Nullable String place) {
+    public static LocalizeValue getActionName(@Nullable String place) {
+        String fileManagerName = Platform.current().fileManagerName();
         if (ActionPlaces.EDITOR_TAB_POPUP.equals(place)
             || ActionPlaces.EDITOR_POPUP.equals(place)
             || ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
-            return ShowFilePathAction.getFileManagerName();
+            return LocalizeValue.ofNullable(fileManagerName);
         }
         return Platform.current().os().isMac()
-            ? ActionsBundle.message("action.RevealIn.name.mac")
-            : ActionsBundle.message("action.RevealIn.name.other", ShowFilePathAction.getFileManagerName());
+            ? ActionLocalize.actionRevealinNameMac()
+            : ActionLocalize.actionRevealinNameOther(fileManagerName);
     }
 }

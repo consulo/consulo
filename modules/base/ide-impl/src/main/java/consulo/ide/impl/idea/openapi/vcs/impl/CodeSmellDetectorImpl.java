@@ -53,6 +53,7 @@ import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.impl.internal.AbstractVcsHelperImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

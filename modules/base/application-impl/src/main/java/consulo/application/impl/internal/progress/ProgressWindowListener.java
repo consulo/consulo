@@ -20,7 +20,6 @@ import consulo.annotation.component.TopicAPI;
 import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.APPLICATION)
-@FunctionalInterface
 public interface ProgressWindowListener {
-  void progressWindowCreated(@Nonnull ProgressWindow pw);
+    void progressWindowCreated(@Nonnull ProgressWindow pw);
 }

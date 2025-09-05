@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.versionControlSystem.change.commited.VcsBranchMappingChangedDetailedNotification;
+import consulo.versionControlSystem.impl.internal.change.commited.VcsBranchMappingChangedNotification;
+
 @Deprecated
 public interface VcsConfigurationChangeListener {
   Class<VcsBranchMappingChangedNotification> BRANCHES_CHANGED = VcsBranchMappingChangedNotification.class;

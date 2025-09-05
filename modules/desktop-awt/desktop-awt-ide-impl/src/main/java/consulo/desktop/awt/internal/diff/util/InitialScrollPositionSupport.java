@@ -21,7 +21,7 @@ import consulo.diff.DiffNavigationContext;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;

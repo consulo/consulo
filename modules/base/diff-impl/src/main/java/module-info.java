@@ -22,9 +22,6 @@ module consulo.diff.impl {
   exports consulo.diff.impl.internal.editor to
     consulo.desktop.awt.ide.impl;
 
-  exports consulo.diff.impl.internal.merge to
-    consulo.desktop.awt.ide.impl;
-
   exports consulo.diff.impl.internal.fragment to
     consulo.ide.impl,
     consulo.desktop.awt.ide.impl;

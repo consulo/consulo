@@ -31,7 +31,7 @@ import consulo.diff.DiffUserDataKeys;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;

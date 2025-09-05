@@ -21,6 +21,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.NewEditChangelistPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 

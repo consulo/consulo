@@ -22,6 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShelvedChanges.ShowHideDeleted")

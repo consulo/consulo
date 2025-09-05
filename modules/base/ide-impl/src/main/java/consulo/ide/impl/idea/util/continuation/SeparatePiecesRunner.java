@@ -22,7 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
+import consulo.versionControlSystem.internal.BackgroundFromStartOption;
 import jakarta.annotation.Nonnull;
 
 import consulo.ui.annotation.RequiredUIAccess;

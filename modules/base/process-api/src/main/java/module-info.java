@@ -25,5 +25,6 @@ module consulo.process.api {
       consulo.execution.test.sm.api,
       consulo.remote.server.impl,
       consulo.execution.impl,
-      consulo.virtual.file.system.impl;
+      consulo.virtual.file.system.impl,
+      consulo.desktop.awt.ide.impl;
 }

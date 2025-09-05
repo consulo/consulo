@@ -18,8 +18,9 @@ package consulo.application.impl.internal.progress;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.application.internal.ProgressDialog;
+import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -38,6 +39,6 @@ public interface ProgressDialogFactory {
     ProgressDialog create(ProgressWindow progressWindow,
                           boolean shouldShowBackground,
                           JComponent parent,
-                          Project project,
+                          ComponentManager project,
                           @Nonnull LocalizeValue cancelText);
 }

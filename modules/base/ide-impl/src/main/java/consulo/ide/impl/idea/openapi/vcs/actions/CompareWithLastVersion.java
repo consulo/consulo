@@ -19,6 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.impl.internal.action.AbstractShowDiffAction;
+import consulo.versionControlSystem.impl.internal.action.DiffActionExecutor;
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
 

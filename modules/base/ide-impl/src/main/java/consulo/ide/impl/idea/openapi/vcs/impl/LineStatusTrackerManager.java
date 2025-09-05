@@ -38,6 +38,7 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.versionControlSystem.VcsBaseContentProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -85,10 +86,6 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
     @Nonnull
     private final QueueProcessorRemovePartner<Document, BaseRevisionLoader> myPartner;
     private long myLoadCounter;
-
-    public static LineStatusTrackerManagerI getInstance(Project project) {
-        return project.getInstance(LineStatusTrackerManagerI.class);
-    }
 
     @Inject
     public LineStatusTrackerManager(@Nonnull Project project,

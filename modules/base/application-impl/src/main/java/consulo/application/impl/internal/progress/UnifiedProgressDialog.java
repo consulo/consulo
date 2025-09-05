@@ -16,6 +16,7 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
+import consulo.application.internal.ProgressDialog;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Label;

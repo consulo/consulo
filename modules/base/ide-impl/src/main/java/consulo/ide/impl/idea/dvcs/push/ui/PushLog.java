@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.dvcs.push.ui;
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditSourceForDialogAction;
+import consulo.versionControlSystem.impl.internal.change.ui.EditSourceForDialogAction;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

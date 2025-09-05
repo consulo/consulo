@@ -1284,6 +1284,21 @@ public final class StringUtil {
         return join((Iterable<? extends T>) items, f, separator);
     }
 
+    public static void join(@Nonnull Collection<String> strings, @Nonnull String separator, @Nonnull StringBuilder result) {
+        boolean isFirst = true;
+        for (String string : strings) {
+            if (string != null) {
+                if (isFirst) {
+                    isFirst = false;
+                }
+                else {
+                    result.append(separator);
+                }
+                result.append(string);
+            }
+        }
+    }
+
     @Contract(pure = true)
     public static String join(@Nonnull Iterable<?> items, @Nonnull String separator) {
         StringBuilder result = new StringBuilder();

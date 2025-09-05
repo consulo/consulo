@@ -3,7 +3,7 @@ package consulo.desktop.awt.progress;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.progress.ProgressDialog;
+import consulo.application.internal.ProgressDialog;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;

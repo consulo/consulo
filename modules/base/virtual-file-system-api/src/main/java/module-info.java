@@ -50,5 +50,6 @@ module consulo.virtual.file.system.api {
         consulo.desktop.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.local.history.impl,
-        consulo.execution.coverage.impl;
+        consulo.execution.coverage.impl,
+        consulo.version.control.system.impl;
 }

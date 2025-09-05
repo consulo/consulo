@@ -28,13 +28,14 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
-  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @Nullable Editor editor) {
+  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull VcsRange range, @Nullable Editor editor) {
     super(lineStatusTracker, range);
     ActionImplUtil.copyFrom(this, "ChangesView.Diff");
   }
@@ -51,7 +52,7 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
   }
 
   private DiffRequest createDiffData() {
-    Range range = expand(myRange, myLineStatusTracker.getDocument(), myLineStatusTracker.getVcsDocument());
+    VcsRange range = expand(myRange, myLineStatusTracker.getDocument(), myLineStatusTracker.getVcsDocument());
 
     DiffContent vcsContent =
       createDiffContent(myLineStatusTracker.getVcsDocument(), myLineStatusTracker.getVcsTextRange(range), null);
@@ -78,13 +79,13 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
   }
 
   @Nonnull
-  private static Range expand(@Nonnull Range range, @Nonnull Document document, @Nonnull Document uDocument) {
+  private static VcsRange expand(@Nonnull VcsRange range, @Nonnull Document document, @Nonnull Document uDocument) {
     boolean canExpandBefore = range.getLine1() != 0 && range.getVcsLine1() != 0;
     boolean canExpandAfter = range.getLine2() < document.getLineCount() && range.getVcsLine2() < uDocument.getLineCount();
     int offset1 = range.getLine1() - (canExpandBefore ? 1 : 0);
     int uOffset1 = range.getVcsLine1() - (canExpandBefore ? 1 : 0);
     int offset2 = range.getLine2() + (canExpandAfter ? 1 : 0);
     int uOffset2 = range.getVcsLine2() + (canExpandAfter ? 1 : 0);
-    return new Range(offset1, offset2, uOffset1, uOffset2);
+    return new VcsRange(offset1, offset2, uOffset1, uOffset2);
   }
 }

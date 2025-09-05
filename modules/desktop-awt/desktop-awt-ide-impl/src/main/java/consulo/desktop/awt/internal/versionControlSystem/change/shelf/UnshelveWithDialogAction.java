@@ -17,11 +17,11 @@ package consulo.desktop.awt.internal.versionControlSystem.change.shelf;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchExecutor;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchMode;
-import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchDefaultExecutor;
+import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchExecutor;
+import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchMode;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeList;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;

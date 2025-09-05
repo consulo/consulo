@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.Wrapper;

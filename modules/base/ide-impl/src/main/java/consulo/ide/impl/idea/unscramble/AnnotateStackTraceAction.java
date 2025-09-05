@@ -21,7 +21,7 @@ import consulo.execution.ui.console.FileHyperlinkInfo;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
-import consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction;
+import consulo.versionControlSystem.impl.internal.annotate.ShowAllAffectedGenericAction;
 import consulo.versionControlSystem.history.VcsHistoryProviderEx;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.localize.LocalizeValue;

@@ -18,9 +18,11 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
+import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.impl.internal.change.action.MoveChangesToAnotherListAction;
+import consulo.versionControlSystem.impl.internal.change.action.RemoveChangeListAction;
 
 /**
  * @author UNV

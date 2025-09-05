@@ -11,7 +11,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.impl.EditorScrollingPositionKeeper;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.highlight.HighlightingLevelManager;

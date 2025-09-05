@@ -17,6 +17,8 @@ package consulo.application.impl.internal.progress;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.internal.ProgressDialog;
+import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
@@ -31,9 +33,13 @@ import javax.swing.*;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @Singleton
 public class UnifiedProgressDialogFactory implements ProgressDialogFactory {
-  @Nonnull
-  @Override
-  public ProgressDialog create(ProgressWindow progressWindow, boolean shouldShowBackground, JComponent parent, Project project, LocalizeValue cancelText) {
-    return new UnifiedProgressDialog(project, progressWindow);
-  }
+    @Nonnull
+    @Override
+    public ProgressDialog create(ProgressWindow progressWindow,
+                                 boolean shouldShowBackground,
+                                 JComponent parent,
+                                 ComponentManager project,
+                                 LocalizeValue cancelText) {
+        return new UnifiedProgressDialog((Project) project, progressWindow);
+    }
 }

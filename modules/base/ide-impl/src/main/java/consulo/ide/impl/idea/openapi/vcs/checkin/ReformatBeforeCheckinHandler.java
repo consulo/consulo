@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.codeInsight.actions.ReformatCodeProcessor;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.impl.internal.checkin.CheckinMetaHandler;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.document.FileDocumentManager;
 import consulo.language.codeStyle.FormatterUtil;

@@ -29,7 +29,7 @@ import consulo.fileEditor.FileEditorProviderManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.diff.DiffContext;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.virtualFileSystem.fileType.UIBasedFileType;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

@@ -182,8 +182,6 @@ public abstract class ChangeListManager {
    */
   public abstract boolean commitChangesSynchronouslyWithResult(LocalChangeList changeList, List<Change> changes);
 
-  public abstract void reopenFiles(List<FilePath> paths);
-
   public abstract List<CommitExecutor> getRegisteredExecutors();
 
   public abstract void addFilesToIgnore(IgnoredFileBean... ignoredFiles);

@@ -16,6 +16,9 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.platform.Platform;
+import consulo.platform.PlatformFeature;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -41,13 +44,16 @@ public class ShowLogAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         File logFile = new File(ContainerPathManager.get().getLogPath(), "consulo.log");
-        ShowFilePathAction.openFile(logFile);
+        Platform platform = Platform.current();
+        platform.openFileInFileManager(logFile, UIAccess.current());
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
+        Platform platform = Platform.current();
+
         Presentation presentation = e.getPresentation();
-        presentation.setVisible(ShowFilePathAction.isSupported());
-        presentation.setTextValue(ActionLocalize.showLogInActionText(ShowFilePathAction.getFileManagerName()));
+        presentation.setVisible(platform.supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANANGER));
+        presentation.setTextValue(ActionLocalize.showLogInActionText(platform.fileManagerName()));
     }
 }

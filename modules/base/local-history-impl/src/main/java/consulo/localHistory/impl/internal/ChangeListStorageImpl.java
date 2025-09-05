@@ -21,6 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
+import consulo.ui.UIAccess;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.io.FileUtil;
@@ -142,7 +143,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                         Platform.current().openInBrowser("http://youtrack.jetbrains.net/issue/IDEA-71270");
                     }
                     else {
-                        Platform.current().openDirectoryInFileManager(ContainerPathManager.get().getLogPath());
+                        Platform.current().openDirectoryInFileManager(ContainerPathManager.get().getLogPath(), UIAccess.current());
                     }
                 }
             })

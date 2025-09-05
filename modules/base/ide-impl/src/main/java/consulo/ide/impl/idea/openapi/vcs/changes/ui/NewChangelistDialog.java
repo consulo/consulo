@@ -19,6 +19,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.NewEditChangelistPanel;
 
 import javax.swing.*;
 

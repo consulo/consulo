@@ -16,6 +16,7 @@
 package consulo.test.light.impl;
 
 import consulo.platform.impl.PlatformBase;
+import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;
@@ -41,12 +42,12 @@ public class LightPlatform extends PlatformBase {
   }
 
   @Override
-  public void openFileInFileManager(@Nonnull File file) {
+  public void openFileInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
 
   }
 
   @Override
-  public void openDirectoryInFileManager(@Nonnull File file) {
+  public void openDirectoryInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
 
   }
 }

@@ -17,7 +17,7 @@ package consulo.desktop.awt.internal.diff.merge;
 
 import consulo.diff.DiffContext;
 import consulo.diff.internal.DiffUserDataKeysEx;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.merge.MergeContext;
 import consulo.diff.merge.MergeRequest;

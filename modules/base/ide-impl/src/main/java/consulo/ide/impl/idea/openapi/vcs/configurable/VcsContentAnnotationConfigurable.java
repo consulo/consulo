@@ -17,7 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.vcs.contentAnnotation.VcsContentAnnotationSettings;
+import consulo.versionControlSystem.contentAnnotation.VcsContentAnnotationSettings;
+import consulo.versionControlSystem.impl.internal.contentAnnotation.VcsContentAnnotationSettingsState;
 
 import javax.swing.*;
 
@@ -32,7 +33,7 @@ public class VcsContentAnnotationConfigurable extends VcsCheckBoxWithSpinnerConf
 
   @Override
   protected SpinnerNumberModel createSpinnerModel() {
-    return new SpinnerNumberModel(1, 1, VcsContentAnnotationSettings.ourMaxDays, 1);
+    return new SpinnerNumberModel(1, 1, VcsContentAnnotationSettingsState.ourMaxDays, 1);
   }
 
   @Override

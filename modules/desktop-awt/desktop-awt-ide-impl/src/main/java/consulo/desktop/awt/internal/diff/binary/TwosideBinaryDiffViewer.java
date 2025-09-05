@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static consulo.diff.impl.internal.util.DiffImplUtil.getDiffSettings;
+import static consulo.diff.internal.DiffImplUtil.getDiffSettings;
 
 public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolder> {
     public static final Logger LOG = Logger.getInstance(TwosideBinaryDiffViewer.class);

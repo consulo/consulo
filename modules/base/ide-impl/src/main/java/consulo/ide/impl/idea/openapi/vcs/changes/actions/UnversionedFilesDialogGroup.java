@@ -20,6 +20,9 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.impl.internal.change.action.AddUnversionedAction;
+import consulo.versionControlSystem.impl.internal.change.action.DeleteUnversionedFilesAction;
+import consulo.versionControlSystem.impl.internal.change.action.MoveChangesToAnotherListAction;
 
 /**
  * @author UNV

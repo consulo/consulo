@@ -54,7 +54,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -72,7 +71,7 @@ import java.util.*;
 /**
  * @author max
  */
-public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataProvider, ChangesBrowserTree {
+public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataProvider, ChangesBrowserTree<T> {
     @Nonnull
     protected final Project myProject;
     private final boolean myShowCheckboxes;
@@ -90,10 +89,8 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     @Nonnull
     private final MyTreeCellRenderer myNodeRenderer;
 
-    @NonNls
     private static final String ROOT = "root";
 
-    @NonNls
     private final static String FLATTEN_OPTION_KEY = "ChangesBrowser.SHOW_FLATTEN";
 
     @Nullable

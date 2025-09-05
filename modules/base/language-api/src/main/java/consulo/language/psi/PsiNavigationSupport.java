@@ -7,6 +7,8 @@ import consulo.application.Application;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -32,7 +34,9 @@ public abstract class PsiNavigationSupport {
 
   public abstract void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus);
 
+  @Deprecated
+  @RequiredUIAccess
   public void openDirectoryInSystemFileManager(@Nonnull File file) {
-    Platform.current().openDirectoryInFileManager(file);
+    Platform.current().openDirectoryInFileManager(file, UIAccess.current());
   }
 }

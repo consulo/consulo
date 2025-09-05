@@ -23,6 +23,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.impl.internal.checkin.CheckinMetaHandler;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.versionControlSystem.checkin.CheckinHandler;

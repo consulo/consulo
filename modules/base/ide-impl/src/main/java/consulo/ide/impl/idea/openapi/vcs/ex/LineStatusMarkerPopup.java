@@ -22,7 +22,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.comparison.ByWord;
 import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.fragment.DiffFragment;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.impl.internal.DiffLanguageUtil;
 import consulo.diff.util.TextDiffType;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -42,6 +42,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.versionControlSystem.internal.VcsRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -56,8 +57,8 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-import static consulo.diff.impl.internal.util.DiffImplUtil.getDiffType;
-import static consulo.diff.impl.internal.util.DiffImplUtil.getLineCount;
+import static consulo.diff.internal.DiffImplUtil.getDiffType;
+import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 public abstract class LineStatusMarkerPopup {
   @Nonnull
@@ -65,9 +66,9 @@ public abstract class LineStatusMarkerPopup {
   @Nonnull
   public final Editor myEditor;
   @Nonnull
-  public final Range myRange;
+  public final VcsRange myRange;
 
-  public LineStatusMarkerPopup(@Nonnull LineStatusTracker tracker, @Nonnull Editor editor, @Nonnull Range range) {
+  public LineStatusMarkerPopup(@Nonnull LineStatusTracker tracker, @Nonnull Editor editor, @Nonnull VcsRange range) {
     myTracker = tracker;
     myEditor = editor;
     myRange = range;
@@ -89,7 +90,7 @@ public abstract class LineStatusMarkerPopup {
   public void scrollAndShow() {
     if (!myTracker.isValid()) return;
     Document document = myTracker.getDocument();
-    int line = Math.min(myRange.getType() == Range.DELETED ? myRange.getLine2() : myRange.getLine2() - 1, getLineCount(document) - 1);
+    int line = Math.min(myRange.getType() == VcsRange.DELETED ? myRange.getLine2() : myRange.getLine2() - 1, getLineCount(document) - 1);
     int lastOffset = document.getLineStartOffset(line);
     myEditor.getCaretModel().moveToOffset(lastOffset);
     myEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
@@ -160,7 +161,7 @@ public abstract class LineStatusMarkerPopup {
   @Nullable
   private List<DiffFragment> computeWordDiff() {
     if (!isShowInnerDifferences()) return null;
-    if (myRange.getType() != Range.MODIFIED) return null;
+    if (myRange.getType() != VcsRange.MODIFIED) return null;
 
     CharSequence vcsContent = myTracker.getVcsContent(myRange);
     CharSequence currentContent = myTracker.getCurrentContent(myRange);
@@ -190,12 +191,12 @@ public abstract class LineStatusMarkerPopup {
 
   @Nullable
   private EditorFragmentComponent createEditorComponent(@Nullable FileType fileType, @Nullable List<DiffFragment> wordDiff) {
-    if (myRange.getType() == Range.INSERTED) return null;
+    if (myRange.getType() == VcsRange.INSERTED) return null;
 
     EditorEx uEditor = (EditorEx)EditorFactory.getInstance().createViewer(myTracker.getVcsDocument(), myTracker.getProject());
     uEditor.setColorsScheme(myEditor.getColorsScheme());
 
-    DiffImplUtil.setEditorCodeStyle(myTracker.getProject(), uEditor, fileType);
+    DiffLanguageUtil.setEditorCodeStyle(myTracker.getProject(), uEditor, fileType);
 
     EditorHighlighterFactory highlighterFactory = EditorHighlighterFactory.getInstance();
     uEditor.setHighlighter(highlighterFactory.createEditorHighlighter(myTracker.getProject(), getFileName(myTracker.getDocument())));

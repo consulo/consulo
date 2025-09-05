@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.util.PathUtil;
@@ -42,6 +43,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
 
+@Deprecated
+@DeprecationInfo("use VirtualFileUtil")
 public class VfsUtil extends VfsUtilCore {
     private static final Logger LOG = Logger.getInstance(VfsUtil.class);
 

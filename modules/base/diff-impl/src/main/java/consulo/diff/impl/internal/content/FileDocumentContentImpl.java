@@ -17,7 +17,7 @@ package consulo.diff.impl.internal.content;
 
 import consulo.application.SaveAndSyncHandler;
 import consulo.diff.content.FileContent;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.LineCol;
 import consulo.document.Document;
 import consulo.navigation.Navigatable;

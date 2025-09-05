@@ -18,8 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTrackerDrawing;
-import consulo.ide.impl.idea.openapi.vcs.ex.Range;
-import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
+import consulo.versionControlSystem.internal.VcsRange;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,6 +28,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.action.AbstractVcsAction;
 import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -37,12 +37,12 @@ import jakarta.annotation.Nonnull;
 public abstract class ShowChangeMarkerAction extends AbstractVcsAction {
     protected final ChangeMarkerContext myChangeMarkerContext;
 
-    protected abstract Range extractRange(LineStatusTracker lineStatusTracker, int line, Editor editor);
+    protected abstract VcsRange extractRange(LineStatusTracker lineStatusTracker, int line, Editor editor);
 
-    public ShowChangeMarkerAction(final Range range, final LineStatusTracker lineStatusTracker, final Editor editor) {
+    public ShowChangeMarkerAction(final VcsRange range, final LineStatusTracker lineStatusTracker, final Editor editor) {
         myChangeMarkerContext = new ChangeMarkerContext() {
             @Override
-            public Range getRange(VcsContext dataContext) {
+            public VcsRange getRange(VcsContext dataContext) {
                 return range;
             }
 
@@ -67,7 +67,7 @@ public abstract class ShowChangeMarkerAction extends AbstractVcsAction {
         super(text, description, icon);
         myChangeMarkerContext = new ChangeMarkerContext() {
             @Override
-            public Range getRange(VcsContext context) {
+            public VcsRange getRange(VcsContext context) {
                 Editor editor = getEditor(context);
                 if (editor == null) {
                     return null;
@@ -91,7 +91,7 @@ public abstract class ShowChangeMarkerAction extends AbstractVcsAction {
                 if (project == null) {
                     return null;
                 }
-                return LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
+                return (LineStatusTracker) LineStatusTrackerManagerI.getInstance(project).getLineStatusTracker(editor.getDocument());
             }
 
             @Override
@@ -117,13 +117,13 @@ public abstract class ShowChangeMarkerAction extends AbstractVcsAction {
     protected void actionPerformed(@Nonnull VcsContext context) {
         Editor editor = myChangeMarkerContext.getEditor(context);
         LineStatusTracker lineStatusTracker = myChangeMarkerContext.getLineStatusTracker(context);
-        Range range = myChangeMarkerContext.getRange(context);
+        VcsRange range = myChangeMarkerContext.getRange(context);
 
         LineStatusTrackerDrawing.moveToRange(range, editor, lineStatusTracker);
     }
 
     protected interface ChangeMarkerContext {
-        Range getRange(VcsContext dataContext);
+        VcsRange getRange(VcsContext dataContext);
 
         LineStatusTracker getLineStatusTracker(VcsContext dataContext);
 

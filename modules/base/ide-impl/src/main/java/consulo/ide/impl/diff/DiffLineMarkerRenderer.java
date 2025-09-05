@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.TextDiffType;
 import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.ui.color.ColorValue;

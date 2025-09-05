@@ -17,8 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.util.DateFormatUtil;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryProviderBackgroundableProxy;
+import consulo.versionControlSystem.impl.internal.history.VcsHistoryProviderBackgroundableProxy;
 import consulo.versionControlSystem.action.AbstractVcsAction;
+import consulo.versionControlSystem.impl.internal.action.AbstractShowDiffAction;
+import consulo.versionControlSystem.impl.internal.action.DiffActionExecutor;
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.ui.ex.awt.dualView.TreeTableView;
 import consulo.ui.ex.awt.tree.table.ListTreeTableModelOnColumns;

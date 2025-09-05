@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.BaseNavigateToSourceAction;
 import consulo.ui.ex.action.IdeActions;
 
 @ActionImpl(id = IdeActions.ACTION_EDIT_SOURCE)

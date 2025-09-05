@@ -1740,6 +1740,10 @@ action.RestoreDefaultLayout.description:
     text: Restore default layout
 action.RestoreDefaultLayout.text:
     text: Restore De_fault Layout
+action.RevealIn.name.mac:
+    text: Reveal in Finder
+action.RevealIn.name.other:
+    text: Show in {0}
 action.RevealIn.text:
     text: Show/Reveal in Explorer/Finder/Konqueror/Nautilus
 action.ReverteOverrideFileTypeAction.description:

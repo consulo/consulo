@@ -24,7 +24,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.diff.fragment.DiffFragment;
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.LineRange;
 import consulo.diff.util.TextDiffType;
 import consulo.document.util.DocumentUtil;
@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static consulo.diff.impl.internal.util.DiffImplUtil.getLineCount;
+import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 public class DiffDrawUtil {
   public static final int STRIPE_LAYER = HighlighterLayer.ERROR - 1;

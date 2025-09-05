@@ -18,15 +18,16 @@ package consulo.ide.impl.idea.openapi.vcs.ex;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
+import consulo.versionControlSystem.internal.VcsRange;
 
 /**
  * @author irengrig
  */
 public abstract class BaseLineStatusRangeAction extends AnAction implements DumbAware {
     protected final LineStatusTracker myLineStatusTracker;
-    protected final Range myRange;
+    protected final VcsRange myRange;
 
-    BaseLineStatusRangeAction(LineStatusTracker lineStatusTracker, Range range) {
+    BaseLineStatusRangeAction(LineStatusTracker lineStatusTracker, VcsRange range) {
         myLineStatusTracker = lineStatusTracker;
         myRange = range;
     }

@@ -38,6 +38,7 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -482,7 +483,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
             showNotification(LocalHistoryBundle.message("message.patch.created"));
 
-            Platform.current().openFileInFileManager(new File(p.getFileName()));
+            Platform.current().openFileInFileManager(new File(p.getFileName()), UIAccess.current());
         }
         catch (VcsException | IOException e) {
             showError(LocalHistoryBundle.message("message.error.during.create.patch", e));

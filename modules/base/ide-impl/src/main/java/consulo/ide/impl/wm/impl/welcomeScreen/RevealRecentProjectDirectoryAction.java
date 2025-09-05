@@ -18,13 +18,15 @@ package consulo.ide.impl.wm.impl.welcomeScreen;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.idea.ide.actions.RevealFileAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
+import consulo.platform.Platform;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.util.List;
 
@@ -33,33 +35,33 @@ import java.util.List;
  * @since 2021-05-03
  */
 public class RevealRecentProjectDirectoryAction extends RecentProjectsWelcomeScreenActionBase {
-  public RevealRecentProjectDirectoryAction() {
-    getTemplatePresentation().setText(RevealFileAction.getActionName(null));
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    presentation.setText(RevealFileAction.getActionName(e.getPlace()));
-
-    List<AnAction> elements = getSelectedElements(e);
-    boolean enable = elements.size() == 1 && elements.get(0) instanceof ReopenProjectAction;
-    presentation.setEnabledAndVisible(enable);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    List<AnAction> elements = getSelectedElements(e);
-    if (elements.size() != 1) {
-      return;
+    public RevealRecentProjectDirectoryAction() {
+        getTemplatePresentation().setTextValue(RevealFileAction.getActionName(null));
     }
 
-    AnAction action = elements.get(0);
-    if (action instanceof ReopenProjectAction reopenProjectAction) {
-      String projectPath = reopenProjectAction.getProjectPath();
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        presentation.setTextValue(RevealFileAction.getActionName(e.getPlace()));
 
-      ShowFilePathAction.openFile(new File(projectPath));
+        List<AnAction> elements = getSelectedElements(e);
+        boolean enable = elements.size() == 1 && elements.get(0) instanceof ReopenProjectAction;
+        presentation.setEnabledAndVisible(enable);
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        List<AnAction> elements = getSelectedElements(e);
+        if (elements.size() != 1) {
+            return;
+        }
+
+        AnAction action = elements.get(0);
+        if (action instanceof ReopenProjectAction reopenProjectAction) {
+            String projectPath = reopenProjectAction.getProjectPath();
+
+            Platform.current().openDirectoryInFileManager(new File(projectPath), UIAccess.current());
+        }
+    }
 }

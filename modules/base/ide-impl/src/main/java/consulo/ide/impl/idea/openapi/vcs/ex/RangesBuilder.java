@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -23,6 +23,7 @@ import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 
+import consulo.versionControlSystem.internal.VcsRange;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -33,25 +34,25 @@ public class RangesBuilder {
   private static final Logger LOG = Logger.getInstance(RangesBuilder.class);
 
   @Nonnull
-  public static List<Range> createRanges(@Nonnull Document current, @Nonnull Document vcs) throws FilesTooBigForDiffException {
+  public static List<VcsRange> createRanges(@Nonnull Document current, @Nonnull Document vcs) throws FilesTooBigForDiffException {
     return createRanges(current, vcs, false);
   }
 
   @Nonnull
-  public static List<Range> createRanges(@Nonnull Document current, @Nonnull Document vcs, boolean innerWhitespaceChanges)
+  public static List<VcsRange> createRanges(@Nonnull Document current, @Nonnull Document vcs, boolean innerWhitespaceChanges)
           throws FilesTooBigForDiffException {
     return createRanges(DiffImplUtil.getLines(current), DiffImplUtil.getLines(vcs), 0, 0, innerWhitespaceChanges);
   }
 
   @Nonnull
-  public static List<Range> createRanges(@Nonnull List<String> current,
-                                         @Nonnull List<String> vcs,
-                                         int shift,
-                                         int vcsShift,
-                                         boolean innerWhitespaceChanges) throws FilesTooBigForDiffException {
+  public static List<VcsRange> createRanges(@Nonnull List<String> current,
+                                            @Nonnull List<String> vcs,
+                                            int shift,
+                                            int vcsShift,
+                                            boolean innerWhitespaceChanges) throws FilesTooBigForDiffException {
     Diff.Change ch = Diff.buildChanges(ArrayUtil.toStringArray(vcs), ArrayUtil.toStringArray(current));
 
-    List<Range> result = new ArrayList<Range>();
+    List<VcsRange> result = new ArrayList<VcsRange>();
     while (ch != null) {
       if (innerWhitespaceChanges) {
         result.add(createOnSmart(ch, shift, vcsShift, current, vcs));
@@ -64,21 +65,21 @@ public class RangesBuilder {
     return result;
   }
 
-  private static Range createOn(@Nonnull Diff.Change change, int shift, int vcsShift) {
+  private static VcsRange createOn(@Nonnull Diff.Change change, int shift, int vcsShift) {
     int offset1 = shift + change.line1;
     int offset2 = offset1 + change.inserted;
 
     int uOffset1 = vcsShift + change.line0;
     int uOffset2 = uOffset1 + change.deleted;
 
-    return new Range(offset1, offset2, uOffset1, uOffset2);
+    return new VcsRange(offset1, offset2, uOffset1, uOffset2);
   }
 
-  private static Range createOnSmart(@Nonnull Diff.Change change,
-                                     int shift,
-                                     int vcsShift,
-                                     @Nonnull List<String> current,
-                                     @Nonnull List<String> vcs) throws FilesTooBigForDiffException {
+  private static VcsRange createOnSmart(@Nonnull Diff.Change change,
+                                        int shift,
+                                        int vcsShift,
+                                        @Nonnull List<String> current,
+                                        @Nonnull List<String> vcs) throws FilesTooBigForDiffException {
     byte type = getChangeType(change);
 
     int offset1 = shift + change.line1;
@@ -87,8 +88,8 @@ public class RangesBuilder {
     int uOffset1 = vcsShift + change.line0;
     int uOffset2 = uOffset1 + change.deleted;
 
-    if (type != Range.MODIFIED) {
-      return new Range(offset1, offset2, uOffset1, uOffset2, Collections.singletonList(new Range.InnerRange(offset1, offset2, type)));
+    if (type != VcsRange.MODIFIED) {
+      return new VcsRange(offset1, offset2, uOffset1, uOffset2, Collections.singletonList(new VcsRange.InnerRange(offset1, offset2, type)));
     }
 
     LineWrapper[] lines1 = new LineWrapper[change.deleted];
@@ -102,22 +103,22 @@ public class RangesBuilder {
 
     Diff.Change ch = Diff.buildChanges(lines1, lines2);
 
-    List<Range.InnerRange> inner = new ArrayList<Range.InnerRange>();
+    List<VcsRange.InnerRange> inner = new ArrayList<VcsRange.InnerRange>();
 
     int last0 = 0;
     int last1 = 0;
     while (ch != null) {
       if (ch.line0 != last0 && ch.line1 != last1) {
-        byte innerType = Range.EQUAL;
+        byte innerType = VcsRange.EQUAL;
         int innerStart = shift + change.line1 + last1;
         int innerEnd = shift + change.line1 + ch.line1;
-        inner.add(new Range.InnerRange(innerStart, innerEnd, innerType));
+        inner.add(new VcsRange.InnerRange(innerStart, innerEnd, innerType));
       }
 
       byte innerType = getChangeType(ch);
       int innerStart = shift + change.line1 + ch.line1;
       int innerEnd = innerStart + ch.inserted;
-      inner.add(new Range.InnerRange(innerStart, innerEnd, innerType));
+      inner.add(new VcsRange.InnerRange(innerStart, innerEnd, innerType));
 
       last0 = ch.line0 + ch.deleted;
       last1 = ch.line1 + ch.inserted;
@@ -125,21 +126,21 @@ public class RangesBuilder {
       ch = ch.link;
     }
     if (change.deleted != last0 && change.inserted != last1) {
-      byte innerType = Range.EQUAL;
+      byte innerType = VcsRange.EQUAL;
       int innerStart = shift + change.line1 + last1;
       int innerEnd = shift + change.line1 + change.inserted;
-      inner.add(new Range.InnerRange(innerStart, innerEnd, innerType));
+      inner.add(new VcsRange.InnerRange(innerStart, innerEnd, innerType));
     }
 
-    return new Range(offset1, offset2, uOffset1, uOffset2, inner);
+    return new VcsRange(offset1, offset2, uOffset1, uOffset2, inner);
   }
 
   private static byte getChangeType(@Nonnull Diff.Change change) {
-    if ((change.deleted > 0) && (change.inserted > 0)) return Range.MODIFIED;
-    if ((change.deleted > 0)) return Range.DELETED;
-    if ((change.inserted > 0)) return Range.INSERTED;
+    if ((change.deleted > 0) && (change.inserted > 0)) return VcsRange.MODIFIED;
+    if ((change.deleted > 0)) return VcsRange.DELETED;
+    if ((change.inserted > 0)) return VcsRange.INSERTED;
     LOG.error("Unknown change type");
-    return Range.EQUAL;
+    return VcsRange.EQUAL;
   }
 
   private static class LineWrapper {

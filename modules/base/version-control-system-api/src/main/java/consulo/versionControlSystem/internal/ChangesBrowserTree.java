@@ -18,13 +18,18 @@ package consulo.versionControlSystem.internal;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.border.Border;
+import java.util.Collection;
 
 /**
  * @author VISTALL
  * @since 2025-08-30
  */
-public interface ChangesBrowserTree {
+public interface ChangesBrowserTree<T> {
     void setEmptyText(@Nonnull String emptyText);
 
     void setScrollPaneBorder(Border border);
+
+    void excludeChanges(Collection<T> changes);
+
+    void includeChanges(Collection<T> changes);
 }

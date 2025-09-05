@@ -26,6 +26,7 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.impl.internal.checkin.CheckinMetaHandler;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.virtualFileSystem.VirtualFile;

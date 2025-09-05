@@ -15,33 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.*;
-import com.sun.jna.win32.StdCallLibrary;
-import com.sun.jna.win32.W32APIOptions;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.util.*;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.dataContext.DataManager;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.PlatformFeature;
 import consulo.platform.PlatformFileSystem;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.internal.CapturingProcessHandler;
-import consulo.process.io.ProcessIOExecutorService;
-import consulo.process.local.ExecUtil;
-import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
@@ -54,9 +43,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
-import consulo.util.io.FileUtil;
-import consulo.util.jna.JnaLoader;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
@@ -64,28 +50,16 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
-import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 @ActionImpl(id = "ShowFilePath")
 public class ShowFilePathAction extends AnAction {
-    private interface Shell32Ex extends StdCallLibrary {
-        Shell32Ex INSTANCE = Native.load("shell32", Shell32Ex.class, W32APIOptions.DEFAULT_OPTIONS);
-
-        Pointer ILCreateFromPath(String path);
-
-        void ILFree(Pointer pIdl);
-
-        WinNT.HRESULT SHOpenFolderAndSelectItems(Pointer pIdlFolder, WinDef.UINT cIdl, Pointer[] apIdl, WinDef.DWORD dwFlags);
-    }
 
     private static final Logger LOG = Logger.getInstance(ShowFilePathAction.class);
 
@@ -97,7 +71,7 @@ public class ShowFilePathAction extends AnAction {
             URL url = e.getURL();
             if (url != null) {
                 try {
-                    openFile(new File(url.toURI()));
+                    Platform.current().openFileInFileManager(new File(url.toURI()), UIAccess.current());
                 }
                 catch (URISyntaxException ex) {
                     LOG.warn("invalid URL: " + url, ex);
@@ -107,70 +81,13 @@ public class ShowFilePathAction extends AnAction {
         }
     };
 
-    private static final NullableLazyValue<String> fileManagerApp = new AtomicNullableLazyValue<>() {
-        @Override
-        protected String compute() {
-            return readDesktopEntryKey("Exec").map(line -> line.split(" ")[0])
-                .filter(exec -> exec.endsWith("nautilus") || exec.endsWith("pantheon-files"))
-                .orElse(null);
-        }
-    };
-
-    private static final NotNullLazyValue<String> fileManagerName = new AtomicNotNullLazyValue<>() {
-        @Nonnull
-        @Override
-        protected String compute() {
-            if (Platform.current().os().isMac()) {
-                return "Finder";
-            }
-            if (Platform.current().os().isWindows()) {
-                return "Explorer";
-            }
-            return readDesktopEntryKey("Name").orElse("File Manager");
-        }
-    };
-
-    private static Optional<String> readDesktopEntryKey(String key) {
-        if (SystemInfo.hasXdgMime()) {
-            String appName = ExecUtil.execAndReadLine(new GeneralCommandLine("xdg-mime", "query", "default", "inode/directory"));
-            if (appName != null && appName.endsWith(".desktop")) {
-                return Stream.of(getXdgDataDirectories().split(":"))
-                    .map(dir -> new File(dir, "applications/" + appName))
-                    .filter(File::exists)
-                    .findFirst()
-                    .map(file -> readDesktopEntryKey(file, key));
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    private static String readDesktopEntryKey(File file, String key) {
-        LOG.debug("looking for '" + key + "' in " + file);
-        String prefix = key + '=';
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            return reader.lines().filter(l -> l.startsWith(prefix)).map(l -> l.substring(prefix.length())).findFirst().orElse(null);
-        }
-        catch (IOException | UncheckedIOException e) {
-            LOG.info("Cannot read: " + file, e);
-            return null;
-        }
-    }
-
-    private static String getXdgDataDirectories() {
-        String dataHome = System.getenv("XDG_DATA_HOME");
-        String dataDirs = System.getenv("XDG_DATA_DIRS");
-        return StringUtil.defaultIfEmpty(dataHome, Platform.current().user().homePath() + "/.local/share") +
-            ':' + StringUtil.defaultIfEmpty(dataDirs, "/usr/local/share:/usr/share");
-    }
-
     public ShowFilePathAction() {
         super(ActionLocalize.actionShowfilepathText(), ActionLocalize.actionShowfilepathDescription());
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        boolean visible = !Platform.current().os().isMac() && isSupported();
+        boolean visible = Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANANGER);
         e.getPresentation().setVisible(visible);
         if (visible) {
             VirtualFile file = e.getData(VirtualFile.KEY);
@@ -199,7 +116,7 @@ public class ShowFilePathAction extends AnAction {
     }
 
     public static void show(VirtualFile file, Consumer<ListPopup> action) {
-        if (!isSupported()) {
+        if (!Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANANGER)) {
             return;
         }
 
@@ -260,18 +177,6 @@ public class ShowFilePathAction extends AnAction {
         return JBPopupFactory.getInstance().createListPopup(step);
     }
 
-    public static boolean isSupported() {
-        return Platform.current().os().isWindows()
-            || Platform.current().os().isMac()
-            || SystemInfo.hasXdgOpen()
-            || Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
-    }
-
-    @Nonnull
-    public static String getFileManagerName() {
-        return fileManagerName.getValue();
-    }
-
     /**
      * Shows system file manager with given file's parent directory open and the file highlighted in it<br/>
      * (note that not all platforms support highlighting).
@@ -279,147 +184,9 @@ public class ShowFilePathAction extends AnAction {
      * @param file a file or directory to show and highlight in a file manager.
      */
     @RequiredUIAccess
+    @Deprecated
     public static void openFile(@Nonnull File file) {
-        if (!file.exists()) {
-            return;
-        }
-        file = file.getAbsoluteFile();
-        File parent = file.getParentFile();
-        if (parent == null) {
-            return;
-        }
-        try {
-            doOpen(parent, file);
-        }
-        catch (Exception e) {
-            LOG.warn(e);
-        }
-    }
-
-    /**
-     * Shows system file manager with given directory open in it.
-     *
-     * @param directory a directory to show in a file manager.
-     */
-    @RequiredUIAccess
-    @SuppressWarnings("UnusedDeclaration")
-    public static void openDirectory(@Nonnull File directory) {
-        if (!directory.isDirectory()) {
-            return;
-        }
-        try {
-            doOpen(directory, null);
-        }
-        catch (Exception e) {
-            LOG.warn(e);
-        }
-    }
-
-    @RequiredUIAccess
-    private static void doOpen(@Nonnull File _dir, @Nullable File _toSelect) throws IOException, ExecutionException {
-        String dir = FileUtil.toSystemDependentName(FileUtil.toCanonicalPath(_dir.getPath()));
-        String toSelect = _toSelect != null ? FileUtil.toSystemDependentName(FileUtil.toCanonicalPath(_toSelect.getPath())) : null;
-
-        if (Platform.current().os().isWindows()) {
-            if (JnaLoader.isLoaded()) {
-                openViaShellApi(dir, toSelect);
-            }
-            else {
-                openViaExplorerCall(dir, toSelect);
-            }
-        }
-        else if (Platform.current().os().isMac()) {
-            GeneralCommandLine cmd =
-                toSelect != null ? new GeneralCommandLine("open", "-R", toSelect) : new GeneralCommandLine("open", dir);
-            schedule(cmd);
-        }
-        else if (fileManagerApp.getValue() != null) {
-            schedule(new GeneralCommandLine(fileManagerApp.getValue(), toSelect != null ? toSelect : dir));
-        }
-        else if (SystemInfo.hasXdgOpen()) {
-            schedule(new GeneralCommandLine("xdg-open", dir));
-        }
-        else if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-            LOG.debug("opening " + dir + " via desktop API");
-            Desktop.getDesktop().open(new File(dir));
-        }
-        else {
-            Messages.showErrorDialog("This action isn't supported on the current platform", "Cannot Open File");
-        }
-    }
-
-    private static void openViaExplorerCall(String dir, @Nullable String toSelect) {
-        String cmd = toSelect != null ? "explorer /select,\"" + shortPath(toSelect) + '"' : "explorer /root,\"" + shortPath(dir) + '"';
-        LOG.debug(cmd);
-        PooledThreadExecutor.getInstance().execute(() -> {
-            try {
-                Process process = new ProcessBuilder(cmd).start();  // no advanced quoting/escaping is needed
-                new CapturingProcessHandler(process, null, cmd).runProcess().checkSuccess(LOG);
-            }
-            catch (IOException e) {
-                LOG.warn(e);
-            }
-        });
-    }
-
-    private static void openViaShellApi(String dir, @Nullable String toSelect) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("shell open: dir=" + dir + " toSelect=" + toSelect);
-        }
-
-        ProcessIOExecutorService.INSTANCE.execute(() -> {
-            Ole32.INSTANCE.CoInitializeEx(null, Ole32.COINIT_APARTMENTTHREADED);
-
-            if (toSelect == null) {
-                var res = Shell32.INSTANCE.ShellExecute(null, "explore", dir, null, null, WinUser.SW_NORMAL);
-                if (res.intValue() <= 32) {
-                    LOG.warn("ShellExecute(" + dir + "): " + res.intValue() + " GetLastError=" + Kernel32.INSTANCE.GetLastError());
-                    openViaExplorerCall(dir, null);
-                }
-            }
-            else {
-                var pIdl = Shell32Ex.INSTANCE.ILCreateFromPath(dir);
-                var apIdl = new Pointer[]{Shell32Ex.INSTANCE.ILCreateFromPath(toSelect)};
-                var cIdl = new WinDef.UINT(apIdl.length);
-                try {
-                    var res = Shell32Ex.INSTANCE.SHOpenFolderAndSelectItems(pIdl, cIdl, apIdl, new WinDef.DWORD(0));
-                    if (!WinError.S_OK.equals(res)) {
-                        LOG.warn("SHOpenFolderAndSelectItems(" + dir + ',' + toSelect + "): 0x" + Integer.toHexString(res.intValue()));
-                        openViaExplorerCall(dir, toSelect);
-                    }
-                }
-                finally {
-                    Shell32Ex.INSTANCE.ILFree(pIdl);
-                    Shell32Ex.INSTANCE.ILFree(apIdl[0]);
-                }
-            }
-        });
-    }
-
-    private static String shortPath(String path) {
-        if (path.contains("  ")) {
-            // On the way from Runtime.exec() to CreateProcess(), a command line goes through couple rounds of merging and splitting
-            // which breaks paths containing a sequence of two or more spaces.
-            // Conversion to a short format is an ugly hack allowing to open such paths in Explorer.
-            char[] result = new char[WinDef.MAX_PATH];
-            if (Kernel32.INSTANCE.GetShortPathName(path, result, result.length) <= result.length) {
-                return Native.toString(result);
-            }
-        }
-
-        return path;
-    }
-
-    private static void schedule(GeneralCommandLine cmd) {
-        PooledThreadExecutor.getInstance().submit(() -> {
-            try {
-                LOG.debug(cmd.toString());
-                CapturingProcessUtil.execAndGetOutput(cmd).checkSuccess(LOG);
-            }
-            catch (Exception e) {
-                LOG.warn(e);
-            }
-        });
+        Platform.current().openDirectoryInFileManager(file, UIAccess.current());
     }
 
     @RequiredUIAccess
@@ -464,7 +231,7 @@ public class ShowFilePathAction extends AnAction {
             project,
             message,
             title,
-            RevealFileAction.getActionName(),
+            RevealFileAction.getActionName().get(),
             IdeLocalize.actionClose().get(),
             UIUtil.getInformationIcon(),
             option

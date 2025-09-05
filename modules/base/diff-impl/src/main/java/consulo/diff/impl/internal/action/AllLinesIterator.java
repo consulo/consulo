@@ -15,7 +15,7 @@
  */
 package consulo.diff.impl.internal.action;
 
-import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.internal.DiffImplUtil;
 import consulo.document.Document;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
