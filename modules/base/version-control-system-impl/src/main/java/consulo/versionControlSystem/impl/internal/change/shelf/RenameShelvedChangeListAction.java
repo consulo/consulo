@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
+package consulo.versionControlSystem.impl.internal.change.shelf;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
-import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeList;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.change.shelf.ShelvedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
@@ -46,10 +44,10 @@ public class RenameShelvedChangeListAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
-        ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
-        ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+        ShelvedChangeListImpl[] changes = e.getData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
+        ShelvedChangeListImpl[] recycledChanges = e.getData(ShelvedChangesViewManagerImpl.SHELVED_RECYCLED_CHANGELIST_KEY);
         assert changes != null || recycledChanges != null;
-        final ShelvedChangeList changeList = (changes != null && changes.length == 1) ? changes[0] : recycledChanges[0];
+        final ShelvedChangeListImpl changeList = (changes != null && changes.length == 1) ? changes[0] : recycledChanges[0];
         String newName = Messages.showInputDialog(
             project,
             VcsLocalize.shelveChangesRenamePrompt().get(),
@@ -63,9 +61,9 @@ public class RenameShelvedChangeListAction extends AnAction {
                     if (inputString.length() == 0) {
                         return false;
                     }
-                    List<ShelvedChangeList> list = ShelveChangesManager.getInstance(project).getShelvedChangeLists();
+                    List<ShelvedChangeList> list = ShelveChangesManagerImpl.getInstance(project).getShelvedChangeLists();
                     for (ShelvedChangeList oldList : list) {
-                        if (oldList != changeList && oldList.DESCRIPTION.equals(inputString)) {
+                        if (oldList != changeList && oldList.getDescription().equals(inputString)) {
                             return false;
                         }
                     }
@@ -80,15 +78,15 @@ public class RenameShelvedChangeListAction extends AnAction {
             }
         );
         if (newName != null && !newName.equals(changeList.DESCRIPTION)) {
-            ShelveChangesManager.getInstance(project).renameChangeList(changeList, newName);
+            ShelveChangesManagerImpl.getInstance(project).renameChangeList(changeList, newName);
         }
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
-        ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+        ShelvedChangeListImpl[] changes = e.getData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
+        ShelvedChangeListImpl[] recycledChanges = e.getData(ShelvedChangesViewManagerImpl.SHELVED_RECYCLED_CHANGELIST_KEY);
         e.getPresentation().setEnabled(
             project != null && (changes != null && changes.length == 1 || recycledChanges != null && recycledChanges.length == 1)
         );

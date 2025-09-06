@@ -57,7 +57,7 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.action.IgnoredSettingsAction;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
 import consulo.versionControlSystem.internal.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -169,7 +169,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
                 if (attachedObject instanceof ShelvedChangeListDragBean) {
                     FileDocumentManager.getInstance().saveAllDocuments();
                     ShelvedChangeListDragBean shelvedBean = (ShelvedChangeListDragBean) attachedObject;
-                    ShelveChangesManager.getInstance(myProject)
+                    ShelveChangesManagerImpl.getInstance(myProject)
                         .unshelveSilentlyAsynchronously(myProject,
                             shelvedBean.getShelvedChangelists(),
                             shelvedBean.getChanges(),

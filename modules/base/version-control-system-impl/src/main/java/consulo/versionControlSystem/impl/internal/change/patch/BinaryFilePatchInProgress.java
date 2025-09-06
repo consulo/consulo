@@ -27,7 +27,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryContentRevision;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFile;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFileImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFilePatch;
 import consulo.versionControlSystem.impl.internal.patch.PatchDiffRequestFactory;
 import consulo.versionControlSystem.impl.internal.patch.PatchReader;
@@ -63,7 +63,7 @@ public class BinaryFilePatchInProgress extends AbstractFilePatchInProgress<Shelv
   @Nonnull
   @Override
   public DiffRequestProducer getDiffRequestProducers(final Project project, PatchReader baseContents) {
-    final ShelvedBinaryFile file = getPatch().getShelvedBinaryFile();
+    final ShelvedBinaryFileImpl file = getPatch().getShelvedBinaryFile();
     return new DiffRequestProducer() {
       @Nonnull
       @Override

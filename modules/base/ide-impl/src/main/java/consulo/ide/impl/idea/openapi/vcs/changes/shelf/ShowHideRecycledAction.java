@@ -22,7 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShelvedChanges.ShowHideDeleted")
@@ -40,7 +40,7 @@ public class ShowHideRecycledAction extends AnAction {
             return;
         }
         presentation.setEnabledAndVisible(true);
-        boolean show = ShelveChangesManager.getInstance(project).isShowRecycled();
+        boolean show = ShelveChangesManagerImpl.getInstance(project).isShowRecycled();
         presentation.setText(show ? "Hide Already Unshelved" : "Show Already Unshelved");
     }
 
@@ -48,7 +48,7 @@ public class ShowHideRecycledAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
+        ShelveChangesManagerImpl manager = ShelveChangesManagerImpl.getInstance(project);
         manager.setShowRecycled(!manager.isShowRecycled());
     }
 }

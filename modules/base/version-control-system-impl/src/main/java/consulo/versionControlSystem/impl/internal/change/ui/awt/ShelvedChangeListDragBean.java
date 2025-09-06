@@ -15,41 +15,41 @@
  */
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFile;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChange;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeList;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFileImpl;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeImpl;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class ShelvedChangeListDragBean {
   @Nonnull
-  private List<ShelvedChange> myShelvedChanges;
+  private List<ShelvedChangeImpl> myShelvedChanges;
   @Nonnull
-  private List<ShelvedBinaryFile> myBinaries;
+  private List<ShelvedBinaryFileImpl> myBinaries;
   @Nonnull
-  private List<ShelvedChangeList> myShelvedChangelists;
+  private List<ShelvedChangeListImpl> myShelvedChangelists;
 
-  public ShelvedChangeListDragBean(@Nonnull List<ShelvedChange> shelvedChanges,
-                                   @Nonnull List<ShelvedBinaryFile> binaries,
-                                   @Nonnull List<ShelvedChangeList> shelvedChangelists) {
+  public ShelvedChangeListDragBean(@Nonnull List<ShelvedChangeImpl> shelvedChanges,
+                                   @Nonnull List<ShelvedBinaryFileImpl> binaries,
+                                   @Nonnull List<ShelvedChangeListImpl> shelvedChangelists) {
     myShelvedChanges = shelvedChanges;
     myBinaries = binaries;
     myShelvedChangelists = shelvedChangelists;
   }
 
   @Nonnull
-  public List<ShelvedChange> getChanges() {
+  public List<ShelvedChangeImpl> getChanges() {
     return myShelvedChanges;
   }
 
   @Nonnull
-  public List<ShelvedBinaryFile> getBinaryFiles() {
+  public List<ShelvedBinaryFileImpl> getBinaryFiles() {
     return myBinaries;
   }
 
   @Nonnull
-  public List<ShelvedChangeList> getShelvedChangelists() {
+  public List<ShelvedChangeListImpl> getShelvedChangelists() {
     return myShelvedChangelists;
   }
 }

@@ -28,6 +28,7 @@ import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.change.CurrentContentRevision;
 import consulo.versionControlSystem.change.patch.TextFilePatch;
+import consulo.versionControlSystem.change.shelf.ShelvedChange;
 import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.impl.internal.patch.apply.ApplyPatchException;
@@ -49,8 +50,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author yole
  * @since 2006-11-23
  */
-public class ShelvedChange {
-  private static final Logger LOG = Logger.getInstance(ShelvedChange.class);
+public class ShelvedChangeImpl implements ShelvedChange {
+  private static final Logger LOG = Logger.getInstance(ShelvedChangeImpl.class);
 
   private final String myPatchPath;
   private final String myBeforePath;
@@ -59,7 +60,7 @@ public class ShelvedChange {
   private final AtomicReference<Boolean> myIsConflicting;
   private Change myChange;
 
-  public ShelvedChange(String patchPath, String beforePath, String afterPath, FileStatus fileStatus) {
+  public ShelvedChangeImpl(String patchPath, String beforePath, String afterPath, FileStatus fileStatus) {
     myPatchPath = patchPath;
     myBeforePath = beforePath;
     // optimisation: memory
@@ -87,6 +88,7 @@ public class ShelvedChange {
     return false;
   }
 
+  @Override
   public String getBeforePath() {
     return myBeforePath;
   }
@@ -99,11 +101,12 @@ public class ShelvedChange {
     return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
   }
 
+  @Override
   public String getAfterPath() {
     return myAfterPath;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public String getAfterFileName() {
     if (myAfterPath == null) return null;
     int pos = myAfterPath.lastIndexOf('/');
@@ -166,9 +169,9 @@ public class ShelvedChange {
     return file;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public TextFilePatch loadFilePatch(Project project, CommitContext commitContext) throws IOException, PatchSyntaxException {
-    List<TextFilePatch> filePatches = ShelveChangesManager.loadPatches(project, myPatchPath, commitContext);
+    List<TextFilePatch> filePatches = ShelveChangesManagerImpl.loadPatches(project, myPatchPath, commitContext);
     for(TextFilePatch patch: filePatches) {
       if (myBeforePath.equals(patch.getBeforeName())) {
         return patch;
@@ -180,9 +183,9 @@ public class ShelvedChange {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof ShelvedChange)) return false;
+    if (!(o instanceof ShelvedChangeImpl)) return false;
 
-    ShelvedChange that = (ShelvedChange)o;
+    ShelvedChangeImpl that = (ShelvedChangeImpl)o;
 
     if (myAfterPath != null ? !myAfterPath.equals(that.myAfterPath) : that.myAfterPath != null) return false;
     if (myBeforePath != null ? !myBeforePath.equals(that.myBeforePath) : that.myBeforePath != null) return false;
@@ -214,7 +217,7 @@ public class ShelvedChange {
     }
 
     @Override
-    @jakarta.annotation.Nullable
+    @Nullable
     public String getContent() throws VcsException {
       if (myContent == null) {
         try {
@@ -228,7 +231,7 @@ public class ShelvedChange {
       return myContent;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     private String loadContent() throws IOException, PatchSyntaxException, ApplyPatchException {
       TextFilePatch patch = loadFilePatch(myProject, null);
       if (patch != null) {

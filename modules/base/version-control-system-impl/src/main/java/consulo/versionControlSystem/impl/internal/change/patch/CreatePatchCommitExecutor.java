@@ -41,7 +41,7 @@ import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.IdeaTextPatchBuilder;
 import consulo.versionControlSystem.change.patch.PatchWriter;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.SessionDialog;
 import consulo.versionControlSystem.impl.internal.ui.awt.CreatePatchConfigurationPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -120,7 +120,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
                 }
             }
 
-            myPanel.setFileName(ShelveChangesManager.suggestPatchName(myProject, commitMessage, new File(patchPath), null));
+            myPanel.setFileName(ShelveChangesManagerImpl.suggestPatchName(myProject, commitMessage, new File(patchPath), null));
             File commonAncestor = ChangesUtil.findCommonAncestor(changes);
             myPanel.setCommonParentPath(commonAncestor);
             Set<AbstractVcs> affectedVcses = ChangesUtil.getAffectedVcses(changes, myProject);

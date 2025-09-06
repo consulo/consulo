@@ -29,8 +29,8 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.patch.CreatePatchCommitExecutor;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeList;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.SessionDialog;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
@@ -61,7 +61,7 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
             return;
         }
         String commitMessage = null;
-        ShelvedChangeList[] shelvedChangeLists = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+        ShelvedChangeListImpl[] shelvedChangeLists = e.getData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
         if (shelvedChangeLists != null && shelvedChangeLists.length > 0) {
             commitMessage = shelvedChangeLists[0].DESCRIPTION;
         }
@@ -135,8 +135,8 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
         Boolean haveSelectedChanges = e.getData(VcsDataKeys.HAVE_SELECTED_CHANGES);
         Change[] changes;
         ChangeList[] data1 = e.getData(VcsDataKeys.CHANGE_LISTS);
-        ShelvedChangeList[] data2 = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
-        ShelvedChangeList[] data3 = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+        ShelvedChangeListImpl[] data2 = e.getData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
+        ShelvedChangeListImpl[] data3 = e.getData(ShelvedChangesViewManagerImpl.SHELVED_RECYCLED_CHANGELIST_KEY);
 
         int sum = data1 == null ? 0 : data1.length;
         sum += data2 == null ? 0 : data2.length;

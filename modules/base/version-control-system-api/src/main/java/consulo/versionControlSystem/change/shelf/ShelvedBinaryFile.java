@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal.change.shelf;
+package consulo.versionControlSystem.change.shelf;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicAPI;
+import consulo.project.Project;
+import consulo.versionControlSystem.change.Change;
+import consulo.virtualFileSystem.status.FileStatus;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 25/01/2023
+ * @since 2025-09-06
  */
-@TopicAPI(ComponentScope.PROJECT)
-public interface ShelveChangesListener {
-    void changeChanged(ShelveChangesManager manager);
+public interface ShelvedBinaryFile {
+    @Nullable
+    String getBeforePath();
+
+    @Nullable
+    String getAfterPath();
+
+    @Nullable
+    String getShelvedPath();
+
+    @Nonnull
+    FileStatus getFileStatus();
+
+    @Nonnull
+    Change createChange(Project project);
 }

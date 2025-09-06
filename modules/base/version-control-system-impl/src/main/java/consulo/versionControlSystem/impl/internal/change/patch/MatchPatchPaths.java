@@ -24,7 +24,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.TextFilePatch;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedBinaryFilePatch;
 import consulo.versionControlSystem.impl.internal.patch.apply.GenericPatchApplier;
 import consulo.versionControlSystem.util.ObjectsConvertor;
@@ -204,7 +204,7 @@ public class MatchPatchPaths {
     ) {
         Collection<VirtualFile> files = myProject.getApplication()
             .runReadAction((Computable<Collection<VirtualFile>>) () -> directoryDetector.findFiles(fileName));
-        File shelfResourcesDirectory = ShelveChangesManager.getInstance(myProject).getShelfResourcesDirectory();
+        File shelfResourcesDirectory = ShelveChangesManagerImpl.getInstance(myProject).getShelfResourcesDirectory();
         return ContainerUtil.filter(files, file -> !FileUtil.isAncestor(shelfResourcesDirectory, VirtualFileUtil.virtualToIoFile(file), false));
     }
 

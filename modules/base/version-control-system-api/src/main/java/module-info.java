@@ -28,6 +28,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.change.action;
   exports consulo.versionControlSystem.change.diff;
   exports consulo.versionControlSystem.change.patch;
+  exports consulo.versionControlSystem.change.shelf;
   exports consulo.versionControlSystem.base;
   exports consulo.versionControlSystem.history;
   exports consulo.versionControlSystem.ui;

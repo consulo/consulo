@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
@@ -46,7 +46,7 @@ public class DeleteAlreadyUnshelvedAction extends AnAction {
             UIUtil.getWarningIcon()
         );
         if (result == Messages.YES) {
-            ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
+            ShelveChangesManagerImpl manager = ShelveChangesManagerImpl.getInstance(project);
             manager.clearRecycled();
         }
     }

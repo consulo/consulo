@@ -20,8 +20,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManagerImpl;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 public class ShelvedChangesViewManagerPostStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    ShelvedChangesViewManager shelvedChangesViewManager = ShelvedChangesViewManager.getInstance(project);
+    ShelvedChangesViewManagerImpl shelvedChangesViewManager = (ShelvedChangesViewManagerImpl) ShelvedChangesViewManager.getInstance(project);
 
     uiAccess.give(shelvedChangesViewManager::updateChangesContent);
   }

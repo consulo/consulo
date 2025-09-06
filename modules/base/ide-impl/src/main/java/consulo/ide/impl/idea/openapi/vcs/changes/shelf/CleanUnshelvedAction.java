@@ -23,7 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShelvedChanges.CleanMarkedToDelete")
@@ -46,7 +46,7 @@ public class CleanUnshelvedAction extends DumbAwareAction {
             return;
         }
         presentation.setVisible(true);
-        presentation.setEnabled(!ShelveChangesManager.getInstance(project).getRecycledShelvedChangeLists().isEmpty());
+        presentation.setEnabled(!ShelveChangesManagerImpl.getInstance(project).getRecycledShelvedChangeLists().isEmpty());
     }
 
     @Override
@@ -57,13 +57,13 @@ public class CleanUnshelvedAction extends DumbAwareAction {
         dialog.show();
         if (dialog.isOK()) {
             if (dialog.isUnshelvedWithFilterSelected()) {
-                ShelveChangesManager.getInstance(project).cleanUnshelved(false, dialog.getTimeLimitInMillis());
+                ShelveChangesManagerImpl.getInstance(project).cleanUnshelved(false, dialog.getTimeLimitInMillis());
             }
             else if (dialog.isAllUnshelvedSelected()) {
-                ShelveChangesManager.getInstance(project).clearRecycled();
+                ShelveChangesManagerImpl.getInstance(project).clearRecycled();
             }
             else {
-                ShelveChangesManager.getInstance(project).cleanUnshelved(true, System.currentTimeMillis());
+                ShelveChangesManagerImpl.getInstance(project).cleanUnshelved(true, System.currentTimeMillis());
             }
         }
     }

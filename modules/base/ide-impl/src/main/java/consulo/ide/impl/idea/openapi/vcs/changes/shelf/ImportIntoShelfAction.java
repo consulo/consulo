@@ -29,9 +29,9 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeList;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -63,7 +63,7 @@ public class ImportIntoShelfAction extends DumbAwareAction {
         FileChooser.chooseFiles(descriptor, project, null).doWhenDone(files -> {
             //gatherPatchFiles
             ProgressManager pm = ProgressManager.getInstance();
-            ShelveChangesManager shelveChangesManager = ShelveChangesManager.getInstance(project);
+            ShelveChangesManagerImpl shelveChangesManager = ShelveChangesManagerImpl.getInstance(project);
 
             List<VirtualFile> patchTypeFiles = new ArrayList<>();
             boolean filesFound = pm.runProcessWithProgressSynchronously(
@@ -89,7 +89,7 @@ public class ImportIntoShelfAction extends DumbAwareAction {
             pm.runProcessWithProgressSynchronously(
                 () -> {
                     List<VcsException> exceptions = new ArrayList<>();
-                    List<ShelvedChangeList> lists = shelveChangesManager.importChangeLists(patchTypeFiles, exceptions::add);
+                    List<ShelvedChangeListImpl> lists = shelveChangesManager.importChangeLists(patchTypeFiles, exceptions::add);
                     if (!lists.isEmpty()) {
                         ShelvedChangesViewManager.getInstance(project).activateView(lists.get(lists.size() - 1));
                     }

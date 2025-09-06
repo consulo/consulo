@@ -25,6 +25,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.impl.internal.change.shelf.DiffShelvedChangesAction;
+import consulo.versionControlSystem.impl.internal.change.shelf.RenameShelvedChangeListAction;
 
 /**
  * @author UNV

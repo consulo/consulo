@@ -21,9 +21,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ShelvedBinaryFilePatch extends FilePatch {
-  private final ShelvedBinaryFile myShelvedBinaryFile;
+  private final ShelvedBinaryFileImpl myShelvedBinaryFile;
 
-  public ShelvedBinaryFilePatch(@Nonnull ShelvedBinaryFile shelvedBinaryFile) {
+  public ShelvedBinaryFilePatch(@Nonnull ShelvedBinaryFileImpl shelvedBinaryFile) {
     myShelvedBinaryFile = shelvedBinaryFile;
     setBeforeName(myShelvedBinaryFile.BEFORE_PATH);
     setAfterName(myShelvedBinaryFile.AFTER_PATH);
@@ -61,7 +61,7 @@ public class ShelvedBinaryFilePatch extends FilePatch {
   }
 
   @Nonnull
-  public ShelvedBinaryFile getShelvedBinaryFile() {
+  public ShelvedBinaryFileImpl getShelvedBinaryFile() {
     return myShelvedBinaryFile;
   }
 }

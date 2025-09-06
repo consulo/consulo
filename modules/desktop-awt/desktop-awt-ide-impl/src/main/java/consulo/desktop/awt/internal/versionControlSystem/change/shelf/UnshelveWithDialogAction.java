@@ -20,8 +20,8 @@ import consulo.document.FileDocumentManager;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchDefaultExecutor;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchExecutor;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchMode;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeList;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManagerImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
@@ -50,7 +50,7 @@ public class UnshelveWithDialogAction extends AnAction {
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
-    ShelvedChangeList[] changeLists = e.getRequiredData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+    ShelvedChangeListImpl[] changeLists = e.getRequiredData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
     if (changeLists.length != 1) return;
 
     FileDocumentManager.getInstance().saveAllDocuments();
@@ -77,7 +77,7 @@ public class UnshelveWithDialogAction extends AnAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
-    ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+    ShelvedChangeListImpl[] changes = e.getData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
     e.getPresentation().setEnabled(project != null && changes != null && changes.length == 1);
   }
 }

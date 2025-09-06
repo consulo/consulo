@@ -23,6 +23,9 @@ import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.change.shelf.ShelveChangesManager;
+import consulo.versionControlSystem.change.shelf.ShelvedChangeList;
+import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
@@ -43,11 +46,13 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
     myProject = project;
   }
 
+  @Override
   @Nls
   public String getActionText() {
     return VcsBundle.message("shelve.changes.action");
   }
 
+  @Override
   @Nonnull
   public CommitSession createCommitSession() {
     return new ShelveChangesCommitSession();
@@ -60,6 +65,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
 
   private class ShelveChangesCommitSession implements CommitSession, CommitSessionContextAware {
 
+    @Override
     @Nullable
     public JComponent getAdditionalConfigurationUI() {
       return null;
@@ -69,18 +75,22 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
     public void setContext(CommitContext context) {
     }
 
+    @Override
     @Nullable
     public JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage) {
       return null;
     }
 
+    @Override
     public boolean canExecute(Collection<Change> changes, String commitMessage) {
       return changes.size() > 0;
     }
 
+    @Override
     public void execute(Collection<Change> changes, String commitMessage) {
       if (changes.size() > 0 && !ChangesUtil.hasFileChanges(changes)) {
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
+          @Override
           public void run() {
             Messages
                     .showErrorDialog(myProject, VcsBundle.message("shelve.changes.only.directories"), VcsBundle.message("shelve.changes.action"));
@@ -105,6 +115,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
       catch (final Exception ex) {
         LOG.info(ex);
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
+          @Override
           public void run() {
             Messages.showErrorDialog(myProject, VcsBundle.message("create.patch.error.title", ex.getMessage()), CommonBundle.getErrorTitle());
           }
@@ -112,6 +123,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
       }
     }
 
+    @Override
     public void executionCanceled() {
     }
 

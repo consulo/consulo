@@ -31,9 +31,9 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.PatchEP;
 import consulo.versionControlSystem.change.patch.TextFilePatch;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeList;
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
 import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
 import consulo.versionControlSystem.impl.internal.util.VcsCatchingRunnable;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
@@ -112,7 +112,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
             }
           }
           try {
-            ShelvedChangeList shelvedChangeList = ShelveChangesManager.getInstance(myProject).
+            ShelvedChangeListImpl shelvedChangeList = ShelveChangesManagerImpl.getInstance(myProject).
                     importFilePatches(fileName, allPatches, patchTransitExtensions);
             ShelvedChangesViewManager.getInstance(myProject).activateView(shelvedChangeList);
           }

@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
-import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManager;
+import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 public class ShelveChangesManagerPostStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    ShelveChangesManager shelveChangesManager = ShelveChangesManager.getInstance(project);
+    ShelveChangesManagerImpl shelveChangesManager = ShelveChangesManagerImpl.getInstance(project);
 
     shelveChangesManager.projectOpened();
   }
