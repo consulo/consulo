@@ -23,7 +23,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ToolbarLabelAction;
+import consulo.ui.ex.awt.action.ToolbarLabelAction;
 import consulo.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.NewFolderAction;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;

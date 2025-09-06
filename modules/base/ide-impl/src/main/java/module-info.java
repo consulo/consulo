@@ -434,11 +434,9 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.util.text;
   exports consulo.ide.impl.idea.openapi.vcs;
   exports consulo.ide.impl.idea.openapi.vcs.actions;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.actions;
   exports consulo.ide.impl.idea.openapi.vcs.changes.committed;
   exports consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
   exports consulo.ide.impl.idea.openapi.vcs.changes.patch;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.shelf;
   exports consulo.ide.impl.idea.openapi.vcs.changes.ui;
   exports consulo.ide.impl.idea.openapi.vcs.checkin;
   exports consulo.ide.impl.idea.openapi.vcs.checkout;
@@ -448,7 +446,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.impl;
   exports consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
   exports consulo.ide.impl.idea.openapi.vcs.ui;
-  exports consulo.ide.impl.idea.openapi.vcs.update;
   exports consulo.ide.impl.idea.openapi.vfs;
   exports consulo.ide.impl.idea.openapi.vfs.encoding;
   exports consulo.ide.impl.idea.openapi.vfs.ex.dummy;
@@ -501,7 +498,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ui.popup.tree;
   exports consulo.ide.impl.idea.ui.popup.util;
   exports consulo.ide.impl.idea.ui.roots;
-  exports consulo.ide.impl.idea.ui.speedSearch;
   exports consulo.ide.impl.idea.ui.stripe;
   exports consulo.ide.impl.idea.ui.tabs;
   exports consulo.ide.impl.idea.ui.tabs.impl;
@@ -532,8 +528,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.ui.classpath;
   exports consulo.ide.impl.idea.util.ui.tree;
   exports consulo.ide.impl.idea.util.ui.update;
-  exports consulo.ide.impl.idea.vcs;
-  exports consulo.ide.impl.idea.vcs.changes;
   exports consulo.ide.impl.idea.webcore.packaging;
   exports consulo.ide.impl.idea.xml;
   exports consulo.ide.impl.idea.xml.util;
@@ -588,7 +582,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.ui.laf;
   exports consulo.ide.impl.ui.popup;
   exports consulo.ide.impl.usage;
-  exports consulo.ide.impl.vcs;
   exports consulo.ide.impl.welcomeScreen;
   exports consulo.ide.impl.wm.impl;
   exports consulo.ide.impl.wm.impl.status;

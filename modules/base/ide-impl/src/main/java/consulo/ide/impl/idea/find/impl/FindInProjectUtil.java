@@ -25,6 +25,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.find.*;
+import consulo.find.internal.FindInProjectExtension;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
@@ -123,7 +124,7 @@ public class FindInProjectUtil {
         }
 
         if (directoryName == null) {
-            for (FindInProjectExtension extension : FindInProjectExtension.EP_NAME.getExtensionList(Application.get())) {
+            for (FindInProjectExtension extension : Application.get().getExtensionList(FindInProjectExtension.class)) {
                 boolean success = extension.initModelFromContext(model, dataContext);
                 if (success) {
                     break;

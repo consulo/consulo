@@ -29,7 +29,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
+import consulo.ui.ex.awt.ListWithFilter;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;

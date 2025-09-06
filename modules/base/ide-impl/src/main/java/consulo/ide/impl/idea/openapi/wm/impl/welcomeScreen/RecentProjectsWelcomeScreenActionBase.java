@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
-import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
+import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;

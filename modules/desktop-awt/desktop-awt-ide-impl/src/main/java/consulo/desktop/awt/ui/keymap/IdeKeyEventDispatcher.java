@@ -30,7 +30,7 @@ import consulo.desktop.awt.ui.keymap.keyGesture.KeyboardGestureProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.dataContext.BaseDataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
+import consulo.ui.ex.action.ActionPromoter;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;

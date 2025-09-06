@@ -32,7 +32,7 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
+import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

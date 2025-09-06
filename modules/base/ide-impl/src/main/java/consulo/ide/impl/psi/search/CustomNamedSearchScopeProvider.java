@@ -20,6 +20,7 @@ import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.SearchScope;
 import consulo.content.scope.SearchScopeProvider;
+import consulo.language.editor.internal.DefaultSearchScopeProviders;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;

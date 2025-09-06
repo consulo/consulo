@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.ui;
 
-import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
+import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.popup.ListComponentUpdater;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;

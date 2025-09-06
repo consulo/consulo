@@ -5,7 +5,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.openapi.ui.JBListUpdater;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
+import consulo.ui.ex.awt.ListWithFilter;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.ui.ex.popup.ListComponentUpdater;

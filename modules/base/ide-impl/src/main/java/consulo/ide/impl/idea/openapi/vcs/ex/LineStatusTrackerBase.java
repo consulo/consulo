@@ -55,7 +55,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     // read access allowed from EDT or while holding LOCK
     private final Object LOCK = new Object();
 
-    @jakarta.annotation.Nullable
+    @Nullable
     protected final Project myProject;
     @Nonnull
     protected final Document myDocument;
@@ -85,10 +85,10 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     @Nonnull
     private final Set<VcsRange> myToBeInstalledRanges = ContainerUtil.newIdentityTroveSet();
 
-    @jakarta.annotation.Nullable
+    @Nullable
     private DirtyRange myDirtyRange;
 
-    public LineStatusTrackerBase(@jakarta.annotation.Nullable Project project,
+    public LineStatusTrackerBase(@Nullable Project project,
                                  @Nonnull Document document) {
         myDocument = document;
         myProject = project;
@@ -237,6 +237,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
+    @Override
     public boolean isValid() {
         synchronized (LOCK) {
             return !isSuppressed() && myDirtyRange == null;
@@ -271,7 +272,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public Project getProject() {
         return myProject;
     }
@@ -290,7 +291,8 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     /**
      * Ranges can be modified without taking the write lock, so calling this method twice not from EDT can produce different results.
      */
-    @jakarta.annotation.Nullable
+    @Override
+    @Nullable
     public List<VcsRange> getRanges() {
         synchronized (LOCK) {
             if (!tryValidate()) {
@@ -574,7 +576,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
-    private static int getVcsLine1(@jakarta.annotation.Nullable VcsRange range, int line) {
+    private static int getVcsLine1(@Nullable VcsRange range, int line) {
         return range == null ? line : line + range.getVcsLine2() - range.getLine2();
     }
 
@@ -680,7 +682,8 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         return StringUtil.isEmptyOrSpaces(interval);
     }
 
-    @jakarta.annotation.Nullable
+    @Override
+    @Nullable
     public VcsRange getNextRange(VcsRange range) {
         synchronized (LOCK) {
             if (!tryValidate()) {
@@ -694,7 +697,8 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
-    @jakarta.annotation.Nullable
+    @Override
+    @Nullable
     public VcsRange getPrevRange(VcsRange range) {
         synchronized (LOCK) {
             if (!tryValidate()) {
@@ -708,7 +712,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public VcsRange getNextRange(int line) {
         synchronized (LOCK) {
             if (!tryValidate()) {
@@ -723,7 +727,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public VcsRange getPrevRange(int line) {
         synchronized (LOCK) {
             if (!tryValidate()) {
@@ -739,7 +743,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public VcsRange getRangeForLine(int line) {
         synchronized (LOCK) {
             if (!tryValidate()) {

@@ -9,6 +9,7 @@ module consulo.version.control.system.impl {
     requires consulo.project.ui.view.api;
     requires consulo.project.ui.impl;
     requires consulo.external.service.api;
+    requires consulo.find.api;
 
     requires consulo.execution.api;
 
@@ -40,9 +41,9 @@ module consulo.version.control.system.impl {
     exports consulo.versionControlSystem.impl.internal.patch.tool to consulo.desktop.awt.ide.impl;
 
     opens consulo.versionControlSystem.impl.internal.contentAnnotation to consulo.util.xml.serializer;
-    opens consulo.versionControlSystem.impl.internal.change.conflict to consulo.util.xml.serializer;
+    opens consulo.versionControlSystem.impl.internal.change.conflict to consulo.util.xml.serializer, consulo.ui.ex.awt.api;
     opens consulo.versionControlSystem.impl.internal.change to consulo.util.xml.serializer;
-
+    opens consulo.versionControlSystem.impl.internal.action to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.change.patch to consulo.component.impl;
 
     requires com.google.common;
@@ -50,4 +51,5 @@ module consulo.version.control.system.impl {
     // TODO remove in future
     requires java.desktop;
     requires forms.rt;
+    requires miglayout;
 }

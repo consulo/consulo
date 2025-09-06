@@ -22,7 +22,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
 import consulo.document.Document;
-import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
+import consulo.ui.ex.awt.ListWithFilter;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -75,7 +75,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     mySplitter.setSplitterProportionKey(getDimensionServiceKey() + ".splitter");
     myList = new JBList(new CollectionListModel<Item>());
 
-    setOKButtonText(CommonLocalize.buttonOk().get());
+    setOKButtonText(CommonLocalize.buttonOk());
     setTitle(title);
 
     init();

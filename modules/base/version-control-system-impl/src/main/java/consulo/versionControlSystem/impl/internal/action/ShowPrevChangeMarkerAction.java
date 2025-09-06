@@ -1,0 +1,52 @@
+/*
+ * Copyright 2000-2009 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.versionControlSystem.impl.internal.action;
+
+import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.Editor;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.util.ActionUtil;
+import consulo.versionControlSystem.internal.LineStatusTrackerI;
+import consulo.versionControlSystem.internal.VcsRange;
+import jakarta.inject.Inject;
+
+/**
+ * @author lesya
+ */
+@ActionImpl(id = ShowPrevChangeMarkerAction.ID)
+public class ShowPrevChangeMarkerAction extends ShowChangeMarkerAction {
+    public static final String ID = "VcsShowPrevChangeMarker";
+
+    public ShowPrevChangeMarkerAction(VcsRange range, LineStatusTrackerI lineStatusTracker, Editor editor) {
+        super(range, lineStatusTracker, editor);
+        ActionUtil.copyFrom(this, ID);
+    }
+
+    @Inject
+    public ShowPrevChangeMarkerAction() {
+        super(
+            ActionLocalize.actionVcsshowprevchangemarkerText(),
+            ActionLocalize.actionVcsshowprevchangemarkerDescription(),
+            PlatformIconGroup.actionsPreviousoccurence()
+        );
+    }
+
+    @Override
+    protected VcsRange extractRange(LineStatusTrackerI lineStatusTracker, int line, Editor editor) {
+        return lineStatusTracker.getPrevRange(line);
+    }
+}

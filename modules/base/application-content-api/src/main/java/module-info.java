@@ -25,7 +25,8 @@ module consulo.application.content.api {
     exports consulo.content.internal.scope to
         consulo.ide.impl,
         consulo.language.copyright.impl,
-        consulo.language.editor.impl;
+        consulo.language.editor.impl,
+        consulo.version.control.system.impl;
 
     exports consulo.content.internal to
         consulo.ide.impl,

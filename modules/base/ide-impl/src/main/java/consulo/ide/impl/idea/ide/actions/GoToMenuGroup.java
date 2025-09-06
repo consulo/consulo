@@ -20,7 +20,7 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.impl.internal.action.GoToErrorGroup;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GoToMenuExGroup;
-import consulo.ide.impl.idea.openapi.vcs.actions.GoToChangeMarkerGroup;
+import consulo.versionControlSystem.impl.internal.action.GoToChangeMarkerGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;

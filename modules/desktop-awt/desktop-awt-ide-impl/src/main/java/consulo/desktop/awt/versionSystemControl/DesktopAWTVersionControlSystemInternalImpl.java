@@ -16,7 +16,12 @@
 package consulo.desktop.awt.versionSystemControl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
+import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
+import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTrackerDrawing;
+import consulo.versionControlSystem.internal.LineStatusTrackerI;
+import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.internal.VersionControlSystemInternal;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
@@ -62,5 +67,10 @@ public class DesktopAWTVersionControlSystemInternalImpl implements VersionContro
         }
 
         return result.toString();
+    }
+
+    @Override
+    public void moveToRange(VcsRange range, Editor editor, LineStatusTrackerI tracker) {
+        LineStatusTrackerDrawing.moveToRange(range, editor, (LineStatusTracker) tracker);
     }
 }

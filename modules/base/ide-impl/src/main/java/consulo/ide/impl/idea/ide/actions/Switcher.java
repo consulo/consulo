@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
-import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
+import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;

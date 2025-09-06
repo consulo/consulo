@@ -49,5 +49,9 @@
             <groupId>consulo.internal</groupId>
             <artifactId>forms_rt</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout</artifactId>
+        </dependency>
     </dependencies>
 </project>

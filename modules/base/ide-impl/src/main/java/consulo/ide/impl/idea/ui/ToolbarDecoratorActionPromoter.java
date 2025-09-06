@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
+import consulo.ui.ex.action.ActionPromoter;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.util.collection.Lists;

@@ -92,7 +92,7 @@
             <separator/>
             <group id="Internal.VFS" text="VFS" popup="true">
                 <action id="VirtualFileInfo" internal="true" class="consulo.ide.impl.idea.openapi.vfs.impl.local.VirtualFileInfoAction"/>
-                <action id="MarkFileDirty" internal="true" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.MarkFileDirtyAction"
+                <action id="MarkFileDirty" internal="true" class="consulo.versionControlSystem.impl.internal.change.action.MarkFileDirtyAction"
                         text="Mark File Dirty"/>
                 <separator/>
                 <reference id="CheckVfsSanity"/>

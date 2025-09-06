@@ -18,6 +18,7 @@ package consulo.versionControlSystem.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.codeEditor.Editor;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -33,4 +34,7 @@ public interface VersionControlSystemInternal {
     }
 
     String getHtmlWithFonts(@Nonnull String input, int style, @Nonnull Font baseFont);
+
+    // TODO remove in future, exists until LineStatusTracker not moved to vcs impl
+    void moveToRange(VcsRange range, Editor editor, LineStatusTrackerI tracker);
 }

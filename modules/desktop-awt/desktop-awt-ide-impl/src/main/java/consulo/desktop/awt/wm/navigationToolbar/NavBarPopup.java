@@ -8,7 +8,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.ListActions;
-import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
+import consulo.ui.ex.awt.ListWithFilter;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.platform.Platform;
 import consulo.ui.ex.RelativePoint;

@@ -17,5 +17,5 @@ module consulo.find.api {
   exports consulo.find.ui;
   exports consulo.find.localize;
 
-  exports consulo.find.internal to consulo.ide.impl;
+  exports consulo.find.internal to consulo.ide.impl, consulo.version.control.system.impl;
 }

@@ -1453,8 +1453,8 @@
 
         <group id="Vcs.Show.Toolwindow.Tab">
             <add-to-group group-id="VcsGeneral.KeymapGroup"/>
-            <action id="Vcs.Show.Local.Changes" class="consulo.ide.impl.idea.vcs.VcsShowLocalChangesAction"/>
-            <action id="Vcs.Show.Shelf" class="consulo.ide.impl.idea.vcs.VcsShowShelfAction"/>
+            <action id="Vcs.Show.Local.Changes" class="consulo.versionControlSystem.impl.internal.action.VcsShowLocalChangesAction"/>
+            <action id="Vcs.Show.Shelf" class="consulo.versionControlSystem.impl.internal.action.VcsShowShelfAction"/>
         </group>
 
         <group id="TodoMainGroup" text="TODO">
@@ -1529,17 +1529,17 @@
         </action>
 
         <!-- Main menu | Version Control -->
-        <group id="VcsGroups" class="consulo.ide.impl.idea.openapi.vcs.actions.VcsGroupsActionGroup" popup="true">
-            <group id="Vcs.MainMenu" class="consulo.ide.impl.idea.openapi.vcs.actions.VcsMainMenuActionGroup">
+        <group id="VcsGroups" class="consulo.versionControlSystem.impl.internal.action.VcsGroupsActionGroup" popup="true">
+            <group id="Vcs.MainMenu" class="consulo.versionControlSystem.impl.internal.action.VcsMainMenuActionGroup">
                 <action id="Start.Use.Vcs" class="consulo.ide.impl.idea.ide.actions.StartUseVcsAction"/>
                 <separator/>
-                <group class="consulo.ide.impl.idea.openapi.vcs.actions.VcsActionGroup" id="VcsGlobalGroup">
+                <group class="consulo.versionControlSystem.impl.internal.action.VcsActionGroup" id="VcsGlobalGroup">
 
                     <action id="Vcs.QuickListPopupAction"
-                            class="consulo.ide.impl.idea.openapi.vcs.actions.VcsQuickListPopupAction"/>
+                            class="consulo.versionControlSystem.impl.internal.action.VcsQuickListPopupAction"/>
                     <reference ref="CheckinProject"/>
                     <reference ref="Vcs.UpdateProject"/>
-                    <action id="Vcs.IntegrateProject" class="consulo.ide.impl.idea.openapi.vcs.update.CommonIntegrateProjectAction"/>
+                    <action id="Vcs.IntegrateProject" class="consulo.versionControlSystem.impl.internal.action.CommonIntegrateProjectAction"/>
                     <reference ref="ChangesView.Refresh"/>
                     <separator/>
                     <group id="Vcs.Specific" class="consulo.ui.ex.action.NonEmptyActionGroup"/>

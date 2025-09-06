@@ -17,6 +17,7 @@ package consulo.versionControlSystem.internal;
 
 import consulo.document.Document;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -41,4 +42,16 @@ public interface LineStatusTrackerI {
     boolean isValid();
 
     List<VcsRange> getRanges();
+
+    @Nullable
+    VcsRange getNextRange(VcsRange range);
+
+    @Nullable
+    VcsRange getPrevRange(VcsRange range);
+
+    @Nullable
+    VcsRange getNextRange(int line);
+
+    @Nullable
+    VcsRange getPrevRange(int line);
 }
