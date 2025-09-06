@@ -16,6 +16,9 @@
 package consulo.versionControlSystem.internal;
 
 import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -54,4 +57,22 @@ public interface LineStatusTrackerI {
 
     @Nullable
     VcsRange getPrevRange(int line);
+
+    @Nonnull
+    CharSequence getVcsContent(@Nonnull VcsRange range);
+
+    @Nonnull
+    Document getDocument();
+
+    @Nonnull
+    TextRange getVcsTextRange(@Nonnull VcsRange range);
+
+    @Nonnull
+    TextRange getCurrentTextRange(@Nonnull VcsRange range);
+
+    @Nonnull
+    VirtualFile getVirtualFile();
+
+    @Nullable
+    Project getProject();
 }

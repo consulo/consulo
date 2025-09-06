@@ -66,7 +66,7 @@ import static consulo.versionControlSystem.change.ChangesUtil.getNavigatableArra
 import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
 import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl.*;
 
-public abstract class InternalChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, ChangesBrowserApi<T>, Disposable {
+public abstract class InternalChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, ChangesBrowser<T>, Disposable {
     // for backgroundable rollback to mark
     private boolean myDataIsDirty;
     protected final Class<T> myClass;
@@ -83,7 +83,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
 
     private JComponent myDiffBottomComponent;
 
-    public static Key<ChangesBrowserApi> DATA_KEY = ChangesBrowserApi.DATA_KEY;
+    public static Key<ChangesBrowser> DATA_KEY = ChangesBrowser.DATA_KEY;
     private AnAction myDiffAction;
     private final VirtualFile myToSelect;
     @Nonnull

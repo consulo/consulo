@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -32,6 +31,7 @@ import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.internal.ReadonlyStatusHandlerInternal;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -124,7 +124,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     getRemoveConfirmation().setValue(getSelected(myOnFileRemovingGroup));
     applyPatchOption(settings);
 
-    getReadOnlyStatusHandler().getState().SHOW_DIALOG = myShowReadOnlyStatusDialog.isSelected();
+    getReadOnlyStatusHandler().setShowDialog(myShowReadOnlyStatusDialog.isSelected());
   }
 
   private void applyPatchOption(VcsConfiguration settings) {
@@ -176,8 +176,8 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     return VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
   }
 
-  private ReadonlyStatusHandlerImpl getReadOnlyStatusHandler() {
-    return ((ReadonlyStatusHandlerImpl)ReadonlyStatusHandler.getInstance(myProject));
+  private ReadonlyStatusHandlerInternal getReadOnlyStatusHandler() {
+    return ((ReadonlyStatusHandlerInternal)ReadonlyStatusHandler.getInstance(myProject));
   }
 
   @Override
@@ -201,7 +201,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
       return true;
     }
 
-    if (getReadOnlyStatusHandler().getState().SHOW_DIALOG != myShowReadOnlyStatusDialog.isSelected()) {
+    if (getReadOnlyStatusHandler().isShowDialog() != myShowReadOnlyStatusDialog.isSelected()) {
       return true;
     }
 
@@ -224,7 +224,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     myCbOfferToMoveChanges.setSelected(settings.OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT);
     int id = settings.REMOVE_EMPTY_INACTIVE_CHANGELISTS.getId();
     UIUtil.setSelectedButton(myEmptyChangelistRemovingGroup, id == 0 ? 0 : id == 1 ? 2 : 1);
-    myShowReadOnlyStatusDialog.setSelected(getReadOnlyStatusHandler().getState().SHOW_DIALOG);
+    myShowReadOnlyStatusDialog.setSelected(getReadOnlyStatusHandler().isShowDialog());
     if (settings.MOVE_TO_FAILED_COMMIT_CHANGELIST == VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY) {
       myFailedCommitChangelistCombo.setSelectedIndex(0);
     }

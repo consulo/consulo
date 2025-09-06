@@ -18,11 +18,11 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesBrowserFactory;
+import consulo.versionControlSystem.change.ChangesBrowserUtil;
+import consulo.versionControlSystem.change.RepositoryChangesBrowser;
 import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.change.ChangesBrowserUtil;
-import consulo.versionControlSystem.change.RepositoryChangesBrowserApi;
-import consulo.versionControlSystem.internal.RepositoryChangesBrowserFactory;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
@@ -68,7 +68,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     @Nonnull
     private final JComponent myToolbar;
     @Nonnull
-    private final RepositoryChangesBrowserApi myChangesBrowser;
+    private final RepositoryChangesBrowser myChangesBrowser;
     @Nonnull
     private final Splitter myChangesBrowserSplitter;
     @Nonnull
@@ -99,8 +99,8 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
         myGraphTable = new VcsLogGraphTable(ui, logData, initialDataPack);
         myDetailsPanel = new DetailsPanel(logData, ui.getColorManager(), this);
 
-        RepositoryChangesBrowserFactory factory = Application.get().getInstance(RepositoryChangesBrowserFactory.class);
-        myChangesBrowser = factory.create(project, toolBarGroup -> {
+        ChangesBrowserFactory factory = Application.get().getInstance(ChangesBrowserFactory.class);
+        myChangesBrowser = factory.createRepositoryChangeBrowser(project, toolBarGroup -> {
             toolBarGroup.add(ActionManager.getInstance().getAction(VcsLogActionPlaces.VCS_LOG_SHOW_DETAILS_ACTION));
         }, null, List.of(), null);
         myChangesBrowser.getViewerScrollPane().setBorder(IdeBorderFactory.createBorder(SideBorder.TOP));

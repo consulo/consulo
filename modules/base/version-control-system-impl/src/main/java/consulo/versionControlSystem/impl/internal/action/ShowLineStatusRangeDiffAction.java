@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.ex;
+package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.codeEditor.Editor;
 import consulo.diff.DiffContentFactory;
@@ -24,10 +24,11 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.util.ActionUtil;
+import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
@@ -35,9 +36,11 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
-  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull VcsRange range, @Nullable Editor editor) {
+  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTrackerI lineStatusTracker,
+                                       @Nonnull VcsRange range,
+                                       @Nullable Editor editor) {
     super(lineStatusTracker, range);
-    ActionImplUtil.copyFrom(this, "ChangesView.Diff");
+    ActionUtil.copyFrom(this, "ChangesView.Diff");
   }
 
   @Override

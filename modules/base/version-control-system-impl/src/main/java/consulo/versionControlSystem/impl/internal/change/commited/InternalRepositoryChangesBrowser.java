@@ -29,7 +29,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.change.RepositoryChangesBrowserApi;
+import consulo.versionControlSystem.change.RepositoryChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.action.OpenRepositoryVersionAction;
 import consulo.versionControlSystem.impl.internal.change.action.RevertSelectedChangesAction;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
@@ -43,7 +43,7 @@ import java.util.*;
 /**
  * @author yole
  */
-public class InternalRepositoryChangesBrowser extends InternalChangesBrowser implements DataProvider, RepositoryChangesBrowserApi {
+public class InternalRepositoryChangesBrowser extends InternalChangesBrowser implements DataProvider, RepositoryChangesBrowser {
 
     private CommittedChangesBrowserUseCase myUseCase;
     private CommonEditSourceAction myEditSourceAction;

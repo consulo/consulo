@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
+package consulo.virtualFileSystem.status.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 2025-09-06
  */
-@ExtensionAPI(ComponentScope.PROJECT)
-public interface HandleTypeFactory {
-    ExtensionPointName<HandleTypeFactory> EP_NAME = ExtensionPointName.create(HandleTypeFactory.class);
+public non-sealed interface FileStatusManagerInternal extends FileStatusManager {
+    void setFileStatusProvider(FileStatusFacade fileStatusProvider);
 
     @Nullable
-    HandleType createHandleType(VirtualFile file);
+    FileStatus getCachedStatus(VirtualFile file);
+
+    @Nonnull
+    FileStatus getDefaultStatus(@Nonnull VirtualFile file);
 }

@@ -32,9 +32,9 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
-import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.status.FileStatusProvider;
 import consulo.virtualFileSystem.status.internal.FileStatusFacade;
+import consulo.virtualFileSystem.status.internal.FileStatusManagerInternal;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -49,7 +49,7 @@ import java.util.Map;
  */
 @Singleton
 @ServiceImpl
-public class FileStatusManagerImpl extends FileStatusManager implements Disposable {
+public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposable {
     private final Map<VirtualFile, FileStatus> myCachedStatuses = Collections.synchronizedMap(new HashMap<VirtualFile, FileStatus>());
     private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged =
         Collections.synchronizedMap(new HashMap<VirtualFile, Boolean>());
@@ -90,6 +90,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> fileStatusesChanged());
     }
 
+    @Override
     public void setFileStatusProvider(FileStatusFacade fileStatusProvider) {
         myFileStatusProvider = fileStatusProvider;
     }
@@ -107,8 +108,9 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         return getDefaultStatus(virtualFile);
     }
 
+    @Override
     @Nonnull
-    public static FileStatus getDefaultStatus(@Nonnull VirtualFile file) {
+    public FileStatus getDefaultStatus(@Nonnull VirtualFile file) {
         return file.isValid() && file.is(VFileProperty.SPECIAL) ? FileStatus.IGNORED : FileStatus.NOT_CHANGED;
     }
 
@@ -210,6 +212,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         return status;
     }
 
+    @Override
     public FileStatus getCachedStatus(VirtualFile file) {
         return myCachedStatuses.get(file);
     }
@@ -227,7 +230,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
     @Nonnull
     @Override
     public FileStatus getRecursiveStatus(@Nonnull VirtualFile file) {
-        FileStatus status = super.getRecursiveStatus(file);
+        FileStatus status = FileStatusManagerInternal.super.getRecursiveStatus(file);
         if (status != FileStatus.NOT_CHANGED || !file.isValid() || !file.isDirectory()) {
             return status;
         }

@@ -20,6 +20,8 @@ import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.versionControlSystem.impl.internal.action.CopyLineStatusRangeAction;
+import consulo.versionControlSystem.impl.internal.action.ShowLineStatusRangeDiffAction;
 import consulo.versionControlSystem.impl.internal.action.ShowNextChangeMarkerAction;
 import consulo.versionControlSystem.impl.internal.action.ShowPrevChangeMarkerAction;
 import consulo.platform.base.icon.PlatformIconGroup;

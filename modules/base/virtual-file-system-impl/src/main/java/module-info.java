@@ -17,6 +17,12 @@ module consulo.virtual.file.system.impl {
 
     requires gnu.trove;
 
+    // TODO maybe rework - used by readonly status service
+    requires consulo.ui.ex.awt.api;
+    requires forms.rt;
+
     // FIXME used by AtomicFieldUpdater - maybe replace it?
     opens consulo.virtualFileSystem.impl.internal.entry to consulo.util.concurrent;
+
+    opens consulo.virtualFileSystem.impl.internal.readOnlyStatus to consulo.util.xml.serializer;
 }

@@ -38,6 +38,7 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.versionControlSystem.VcsBaseContentProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.impl.internal.VcsFileStatusProvider;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

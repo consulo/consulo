@@ -35,7 +35,7 @@ import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
-import consulo.versionControlSystem.change.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -184,11 +184,11 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
   @Nonnull
   protected abstract List<VirtualFile> getFiles();
 
-  protected static ChangesBrowserApi getBrowserBase(@Nonnull ChangesListViewImpl view) {
-    return DataManager.getInstance().getDataContext(view).getData(ChangesBrowserApi.DATA_KEY);
+  protected static ChangesBrowser getBrowserBase(@Nonnull ChangesListViewImpl view) {
+    return DataManager.getInstance().getDataContext(view).getData(ChangesBrowser.DATA_KEY);
   }
 
-  public static void refreshChanges(@Nonnull Project project, @Nullable ChangesBrowserApi browser) {
+  public static void refreshChanges(@Nonnull Project project, @Nullable ChangesBrowser browser) {
     if (browser != null) {
       ChangeListManager.getInstance(project)
                        .invokeAfterUpdate(browser::rebuildList, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, "Delete files", null);

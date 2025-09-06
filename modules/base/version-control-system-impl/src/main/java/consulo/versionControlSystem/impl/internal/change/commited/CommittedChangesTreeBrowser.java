@@ -21,13 +21,9 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.VcsDataKeys;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowserUtil;
-import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.change.RepositoryChangesBrowserApi;
+import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.change.commited.*;
 import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
-import consulo.versionControlSystem.internal.RepositoryChangesBrowserFactory;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -53,7 +49,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
   private final Project myProject;
   private final Tree myChangesTree;
-  private final RepositoryChangesBrowserApi myDetailsView;
+  private final RepositoryChangesBrowser myDetailsView;
   private List<CommittedChangeList> myChangeLists;
   private List<CommittedChangeList> mySelectedChangeLists;
   private ChangeListGroupingStrategy myGroupingStrategy = new DateChangeListGroupingStrategy();
@@ -86,7 +82,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     TreeUtil.expandAll(myChangesTree);
     myChangesTree.getExpandableItemsHandler().setEnabled(false);
 
-    myDetailsView = project.getApplication().getInstance(RepositoryChangesBrowserFactory.class).create(project, g -> {}, List.of());
+    myDetailsView = project.getApplication().getInstance(ChangesBrowserFactory.class).createRepositoryChangeBrowser(project, g -> {}, List.of());
     myDetailsView.getViewer().setScrollPaneBorder(RIGHT_BORDER);
 
     myChangesTree.getSelectionModel().addTreeSelectionListener(e -> updateBySelectionChange());

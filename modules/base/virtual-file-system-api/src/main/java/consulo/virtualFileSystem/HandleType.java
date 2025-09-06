@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
+package consulo.virtualFileSystem;
 
 import consulo.application.Application;
-import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.IOException;
@@ -29,10 +30,10 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class HandleType {
-    private final String myName;
+    private final LocalizeValue myName;
     private final boolean myUseVcs;
 
-    public static final HandleType USE_FILE_SYSTEM = new HandleType(IdeLocalize.handleRoFileStatusTypeUsingFileSystem().get(), false) {
+    public static final HandleType USE_FILE_SYSTEM = new HandleType(VirtualFileSystemLocalize.handleRoFileStatusTypeUsingFileSystem(), false) {
         @Override
         @RequiredUIAccess
         public void processFiles(Collection<VirtualFile> virtualFiles, String changelist) {
@@ -50,17 +51,23 @@ public abstract class HandleType {
         }
     };
 
-    protected HandleType(String name, boolean useVcs) {
+    protected HandleType(LocalizeValue name, boolean useVcs) {
         myName = name;
         myUseVcs = useVcs;
     }
 
-    @Override
-    public String toString() {
+    @Nonnull
+    public LocalizeValue getName() {
         return myName;
     }
 
-    public boolean getUseVcs() {
+    @Override
+    @Deprecated
+    public String toString() {
+        return myName.get();
+    }
+
+    public boolean isUseVcs() {
         return myUseVcs;
     }
 

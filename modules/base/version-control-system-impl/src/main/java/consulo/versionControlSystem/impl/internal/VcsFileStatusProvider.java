@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.impl;
+package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -32,11 +31,13 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.internal.ReadonlyStatusHandlerInternal;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.status.impl.internal.FileStatusManagerImpl;
 import consulo.virtualFileSystem.status.internal.FileStatusFacade;
+import consulo.virtualFileSystem.status.internal.FileStatusManagerInternal;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -56,7 +57,7 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
     private static final Logger LOG = Logger.getInstance(VcsFileStatusProvider.class);
 
     private final Project myProject;
-    private final FileStatusManagerImpl myFileStatusManager;
+    private final FileStatusManagerInternal myFileStatusManager;
     private final Provider<ProjectLevelVcsManager> myVcsManager;
     private final Provider<ChangeListManager> myChangeListManager;
     private final Provider<VcsDirtyScopeManager> myDirtyScopeManager;
@@ -79,7 +80,7 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
     ) {
         myProject = project;
         myChangeListManager = changeListManager;
-        myFileStatusManager = (FileStatusManagerImpl)fileStatusManager;
+        myFileStatusManager = (FileStatusManagerInternal) fileStatusManager;
         myVcsManager = vcsManager;
         myDirtyScopeManager = dirtyScopeManager;
         myConfiguration = configuration;
@@ -136,7 +137,7 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
             if (ScratchUtil.isScratch(virtualFile)) {
                 return FileStatus.SUPPRESSED;
             }
-            return FileStatusManagerImpl.getDefaultStatus(virtualFile);
+            return myFileStatusManager.getDefaultStatus(virtualFile);
         }
 
         FileStatus status = myChangeListManager.get().getStatus(virtualFile);
@@ -144,7 +145,7 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
             return FileStatus.MODIFIED;
         }
         if (status == FileStatus.NOT_CHANGED) {
-            return FileStatusManagerImpl.getDefaultStatus(virtualFile);
+            return myFileStatusManager.getDefaultStatus(virtualFile);
         }
         return status;
     }
@@ -193,7 +194,9 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
         }
 
         if (modified && !isDocumentModified(virtualFile)) {
-            if (!((ReadonlyStatusHandlerImpl) ReadonlyStatusHandlerImpl.getInstance(myProject)).getState().SHOW_DIALOG) {
+            ReadonlyStatusHandlerInternal statusHandler = (ReadonlyStatusHandlerInternal) ReadonlyStatusHandler.getInstance(myProject);
+
+            if (!statusHandler.isShowDialog()) {
                 RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
                 if (rollbackEnvironment != null) {
                     rollbackEnvironment.rollbackIfUnchanged(virtualFile);

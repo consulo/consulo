@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
+package consulo.virtualFileSystem.impl.internal.readOnlyStatus;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.file.inject.VirtualFileWindow;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiValuesMap;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.HandleType;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileDelegate;
 import consulo.virtualFileSystem.WritingAccessProvider;
+import consulo.virtualFileSystem.internal.ReadonlyStatusHandlerInternal;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -41,7 +42,7 @@ import java.util.*;
 @Singleton
 @State(name = "ReadonlyStatusHandler", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
-public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
+public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal, PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
     @Nonnull
     private final Project myProject;
     private final List<WritingAccessProvider> myAccessProviders;
@@ -69,6 +70,16 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     }
 
     @Override
+    public boolean isShowDialog() {
+        return myState.SHOW_DIALOG;
+    }
+
+    @Override
+    public void setShowDialog(boolean isShowDialog) {
+        myState.SHOW_DIALOG = isShowDialog;
+    }
+
+    @Override
     @RequiredUIAccess
     public OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files) {
         if (files.length == 0) {
@@ -78,14 +89,14 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
 
         Set<VirtualFile> realFiles = new HashSet<>(files.length);
         for (VirtualFile file : files) {
-            if (file instanceof VirtualFileWindow virtualFileWindow) {
+            if (file instanceof VirtualFileDelegate virtualFileWindow) {
                 file = virtualFileWindow.getDelegate();
             }
             if (file != null) {
                 realFiles.add(file);
             }
         }
-        files = VfsUtilCore.toVirtualFileArray(realFiles);
+        files = VirtualFileUtil.toVirtualFileArray(realFiles);
 
         for (WritingAccessProvider accessProvider : myAccessProviders) {
             Collection<VirtualFile> denied = ContainerUtil.filter(files, virtualFile -> !accessProvider.isPotentiallyWritable(virtualFile));
@@ -94,7 +105,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
                 denied = accessProvider.requestWriting(files);
             }
             if (!denied.isEmpty()) {
-                return new OperationStatusImpl(VfsUtilCore.toVirtualFileArray(denied));
+                return new OperationStatusImpl(VirtualFileUtil.toVirtualFileArray(denied));
             }
         }
 
@@ -131,7 +142,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
             }
         }
 
-        return new OperationStatusImpl(VfsUtilCore.toVirtualFileArray(readOnlyFiles));
+        return new OperationStatusImpl(VirtualFileUtil.toVirtualFileArray(readOnlyFiles));
     }
 
     private FileInfo[] createFileInfos(VirtualFile[] files) {

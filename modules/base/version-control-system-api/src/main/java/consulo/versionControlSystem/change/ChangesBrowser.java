@@ -26,13 +26,13 @@ import java.util.List;
  * @author VISTALL
  * @since 21-Jul-24
  */
-public interface ChangesBrowserApi<T> {
+public interface ChangesBrowser<T> {
     public enum MyUseCase {
         LOCAL_CHANGES,
         COMMITTED_CHANGES
     }
 
-    Key<ChangesBrowserApi> DATA_KEY = Key.create(ChangesBrowserApi.class);
+    Key<ChangesBrowser> DATA_KEY = Key.create(ChangesBrowser.class);
 
     void addToolbarAction(AnAction action);
 

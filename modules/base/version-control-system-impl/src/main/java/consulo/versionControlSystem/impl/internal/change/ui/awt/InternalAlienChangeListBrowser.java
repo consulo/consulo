@@ -21,7 +21,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
-import consulo.versionControlSystem.change.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import jakarta.annotation.Nonnull;
 
@@ -37,7 +37,7 @@ public class InternalAlienChangeListBrowser extends InternalChangesBrowser {
   public InternalAlienChangeListBrowser(Project project, List<? extends ChangeList> changeLists, List<Change> changes,
                                         ChangeList initialListSelection, boolean capableOfExcludingChanges,
                                         boolean highlightProblems, AbstractVcs vcs) {
-    super(project, changeLists, changes, initialListSelection, capableOfExcludingChanges, highlightProblems, null, ChangesBrowserApi.MyUseCase.LOCAL_CHANGES, null);
+    super(project, changeLists, changes, initialListSelection, capableOfExcludingChanges, highlightProblems, null, ChangesBrowser.MyUseCase.LOCAL_CHANGES, null);
     myChanges = changes;
     myVcs = vcs;
     rebuildList();

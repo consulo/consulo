@@ -25,7 +25,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.RollbackChangesDialog;
 import consulo.versionControlSystem.impl.internal.util.RollbackUtil;
 import jakarta.annotation.Nonnull;
@@ -46,7 +46,7 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
     FileDocumentManager.getInstance().saveAllDocuments();
     Change[] changes = e.getRequiredData(VcsDataKeys.CHANGES);
     Project project = e.getRequiredData(Project.KEY);
-    ChangesBrowserApi browser = e.getData(ChangesBrowserApi.DATA_KEY);
+    ChangesBrowser browser = e.getData(ChangesBrowser.DATA_KEY);
     if (browser != null) {
       browser.setDataIsDirty(true);
     }

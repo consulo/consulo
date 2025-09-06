@@ -18,13 +18,14 @@ package consulo.virtualFileSystem;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
+import consulo.virtualFileSystem.internal.ReadonlyStatusHandlerInternal;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 @ServiceAPI(ComponentScope.PROJECT)
-public abstract class ReadonlyStatusHandler {
+public sealed interface ReadonlyStatusHandler permits ReadonlyStatusHandlerInternal {
   public static boolean ensureFilesWritable(@Nonnull ComponentManager project, @Nonnull VirtualFile... files) {
     return !getInstance(project).ensureFilesWritable(files).hasReadonlyFiles();
   }
@@ -47,7 +48,7 @@ public abstract class ReadonlyStatusHandler {
 
   public abstract OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files);
 
-  public OperationStatus ensureFilesWritable(@Nonnull Collection<VirtualFile> files) {
+  default OperationStatus ensureFilesWritable(@Nonnull Collection<VirtualFile> files) {
     return ensureFilesWritable(VirtualFileUtil.toVirtualFileArray(files));
   }
 }

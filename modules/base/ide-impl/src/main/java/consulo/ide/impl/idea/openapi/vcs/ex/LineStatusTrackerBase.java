@@ -272,11 +272,13 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
+    @Override
     @Nullable
     public Project getProject() {
         return myProject;
     }
 
+    @Override
     @Nonnull
     public Document getDocument() {
         return myDocument;
@@ -712,6 +714,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
+    @Override
     @Nullable
     public VcsRange getNextRange(int line) {
         synchronized (LOCK) {
@@ -727,6 +730,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
+    @Override
     @Nullable
     public VcsRange getPrevRange(int line) {
         synchronized (LOCK) {
@@ -852,6 +856,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         return myDocument.getImmutableCharSequence().subSequence(startOffset, endOffset);
     }
 
+    @Override
     @Nonnull
     public CharSequence getVcsContent(@Nonnull VcsRange range) {
         TextRange textRange = getVcsTextRange(range);
@@ -860,6 +865,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         return myVcsDocument.getImmutableCharSequence().subSequence(startOffset, endOffset);
     }
 
+    @Override
     @Nonnull
     public TextRange getCurrentTextRange(@Nonnull VcsRange range) {
         synchronized (LOCK) {
@@ -871,6 +877,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         }
     }
 
+    @Override
     @Nonnull
     public TextRange getVcsTextRange(@Nonnull VcsRange range) {
         synchronized (LOCK) {

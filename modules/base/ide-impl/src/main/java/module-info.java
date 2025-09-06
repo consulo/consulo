@@ -444,7 +444,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.ex;
   exports consulo.ide.impl.idea.openapi.vcs.history;
   exports consulo.ide.impl.idea.openapi.vcs.impl;
-  exports consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
   exports consulo.ide.impl.idea.openapi.vcs.ui;
   exports consulo.ide.impl.idea.openapi.vfs;
   exports consulo.ide.impl.idea.openapi.vfs.encoding;

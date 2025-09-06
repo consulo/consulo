@@ -32,7 +32,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.internal.ChangesListView;
@@ -81,7 +81,7 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
         Project project = e.getRequiredData(Project.KEY);
         List<VirtualFile> unversionedFiles = getUnversionedFiles(e, project).collect(Collectors.toList());
 
-        addUnversioned(project, unversionedFiles, this::isStatusForAddition, e.getData(ChangesBrowserApi.DATA_KEY));
+        addUnversioned(project, unversionedFiles, this::isStatusForAddition, e.getData(ChangesBrowser.DATA_KEY));
     }
 
     @RequiredUIAccess
@@ -89,7 +89,7 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
         @Nonnull Project project,
         @Nonnull List<VirtualFile> files,
         @Nonnull Predicate<FileStatus> unversionedFileCondition,
-        @Nullable ChangesBrowserApi browser
+        @Nullable ChangesBrowser browser
     ) {
         boolean result = true;
 

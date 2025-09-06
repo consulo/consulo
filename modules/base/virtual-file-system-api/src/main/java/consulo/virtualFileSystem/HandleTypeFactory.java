@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.ui;
+package consulo.virtualFileSystem;
 
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.change.Change;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import jakarta.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.List;
+/**
+ * @author yole
+ */
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface HandleTypeFactory {
+    ExtensionPointName<HandleTypeFactory> EP_NAME = ExtensionPointName.create(HandleTypeFactory.class);
 
-public interface ChangesBrowserExtender {
-  void addToolbarActions(DialogWrapper dialogWrapper);
-  // for changelists list
-  void addSelectedListChangeListener(SelectedListChangeListener listener);
-  
-  Collection<AbstractVcs> getAffectedVcses();
-  List<Change> getCurrentIncludedChanges();
+    @Nullable
+    HandleType createHandleType(VirtualFile file);
 }

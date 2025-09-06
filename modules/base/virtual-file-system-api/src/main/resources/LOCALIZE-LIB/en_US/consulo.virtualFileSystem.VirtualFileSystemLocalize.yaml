@@ -76,3 +76,9 @@ cannot.rename.root.directory:
   text: Cannot rename root directory ''{0}''
 cannot.delete.root.directory:
   text: Cannot delete root directory ''{0}''
+handle.ro.file.status.type.using.file.system:
+    text: using file system
+dialog.title.clear.read.only.file.status:
+    text: Clear Read-Only Status
+handle.ro.file.status.failed:
+    text: <html>Failed to change read-only status for the following files:<br>{0}</html>

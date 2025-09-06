@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.change;
+package consulo.virtualFileSystem.internal;
 
-import consulo.dataContext.DataProvider;
-import consulo.ui.ex.action.AnAction;
-import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 
 /**
  * @author VISTALL
- * @since 2025-08-30
+ * @since 2025-09-06
  */
-public interface RepositoryChangesBrowserApi extends ChangesBrowserApi<Change>, DataProvider {
-    AnAction getEditSourceAction();
+public non-sealed interface ReadonlyStatusHandlerInternal extends ReadonlyStatusHandler {
+    boolean isShowDialog();
 
-    void setUseCase(CommittedChangesBrowserUseCase useCase);
+    void setShowDialog(boolean isShowDialog);
 }

@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
+package consulo.versionControlSystem.impl.internal.readOnlyStatus;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.base.FilePathImpl;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.project.Project;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.virtualFileSystem.HandleType;
+import consulo.virtualFileSystem.HandleTypeFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 /**
  * @author yole

@@ -15,7 +15,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
@@ -91,7 +91,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
             @Nullable Change currentChange,
             @Nonnull SimpleReference<JBPopup> popup
         ) {
-            super(project, null, changes, null, false, false, null, ChangesBrowserApi.MyUseCase.LOCAL_CHANGES, null);
+            super(project, null, changes, null, false, false, null, ChangesBrowser.MyUseCase.LOCAL_CHANGES, null);
             setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             setChangesToDisplay(changes);
 

@@ -10,5 +10,7 @@ module consulo.virtual.file.status.api {
     exports consulo.virtualFileSystem.status;
     exports consulo.virtualFileSystem.status.localize;
 
-    exports consulo.virtualFileSystem.status.internal to consulo.virtual.file.status.impl, consulo.ide.impl;
+    exports consulo.virtualFileSystem.status.internal to
+        consulo.virtual.file.status.impl,
+        consulo.version.control.system.impl;
 }

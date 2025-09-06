@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
+package consulo.virtualFileSystem.impl.internal.readOnlyStatus;
 
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.ListWithSelection;
+import consulo.virtualFileSystem.HandleType;
+import consulo.virtualFileSystem.HandleTypeFactory;
+import consulo.virtualFileSystem.VirtualFile;
 
 class FileInfo {
     private final VirtualFile myFile;

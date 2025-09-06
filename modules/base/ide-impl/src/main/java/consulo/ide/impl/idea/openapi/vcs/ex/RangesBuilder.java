@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.diff.internal.DiffImplUtil;
-import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.diff.internal.DiffImplUtil;
+import consulo.document.Document;
 import consulo.logging.Logger;
-
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.internal.VcsRange;
 import jakarta.annotation.Nonnull;
 

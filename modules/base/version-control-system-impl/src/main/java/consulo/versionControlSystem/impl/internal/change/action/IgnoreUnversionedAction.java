@@ -24,7 +24,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.Streams;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.ChangesBrowserApi;
+import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.IgnoreUnversionedDialog;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -55,7 +55,7 @@ public class IgnoreUnversionedAction extends AnAction {
 
         if (!ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
             List<VirtualFile> files = e.getRequiredData(UNVERSIONED_FILES_DATA_KEY).collect(Collectors.toList());
-            ChangesBrowserApi<?> browser = e.getData(ChangesBrowserApi.DATA_KEY);
+            ChangesBrowser<?> browser = e.getData(ChangesBrowser.DATA_KEY);
             Runnable callback = browser == null ? null : () -> {
                 browser.rebuildList();
                 //noinspection unchecked

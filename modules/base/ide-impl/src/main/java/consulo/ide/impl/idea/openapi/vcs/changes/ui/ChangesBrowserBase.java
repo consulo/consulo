@@ -68,7 +68,7 @@ import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesLi
 
 @Deprecated
 @DeprecationInfo("Use InternalChangesBrowserBase due moved to impl")
-public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, ChangesBrowserApi<T>, Disposable {
+public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, consulo.versionControlSystem.change.ChangesBrowser<T>, Disposable {
     // for backgroundable rollback to mark
     private boolean myDataIsDirty;
     protected final Class<T> myClass;
@@ -85,7 +85,6 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
 
     private JComponent myDiffBottomComponent;
 
-    public static Key<ChangesBrowserApi> DATA_KEY = ChangesBrowserApi.DATA_KEY;
     private AnAction myDiffAction;
     private final VirtualFile myToSelect;
     @Nonnull

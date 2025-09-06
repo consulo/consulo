@@ -15,117 +15,138 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.awt.util.FileListRenderer;
-import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadOnlyStatusDialog;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.CollectionListModel;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.util.FileListRenderer;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 import java.util.List;
 
 @NonNls
 public class NonProjectFileWritingAccessDialog extends DialogWrapper {
-  private JPanel myPanel;
-  private JLabel myListTitle;
-  private JList myFileList;
-  private JRadioButton myUnlockOneButton;
-  private JRadioButton myUnlockDirButton;
-  private JRadioButton myUnlockAllButton;
+    private JPanel myPanel;
+    private JLabel myListTitle;
+    private JList myFileList;
+    private JRadioButton myUnlockOneButton;
+    private JRadioButton myUnlockDirButton;
+    private JRadioButton myUnlockAllButton;
 
-  public NonProjectFileWritingAccessDialog(@Nonnull Project project, @Nonnull List<VirtualFile> nonProjectFiles) {
-    this(project, nonProjectFiles, "Non-Project Files");
-  }
+    public NonProjectFileWritingAccessDialog(@Nonnull Project project, @Nonnull List<VirtualFile> nonProjectFiles) {
+        this(project, nonProjectFiles, "Non-Project Files");
+    }
 
-  public NonProjectFileWritingAccessDialog(
-    @Nonnull Project project,
-    @Nonnull List<VirtualFile> nonProjectFiles,
-    @Nonnull String filesType
-  ) {
-    super(project);
-    setTitle(filesType + " Protection");
+    @RequiredUIAccess
+    public NonProjectFileWritingAccessDialog(
+        @Nonnull Project project,
+        @Nonnull List<VirtualFile> nonProjectFiles,
+        @Nonnull String filesType
+    ) {
+        super(project);
+        setTitle(filesType + " Protection");
 
-    myFileList.setPreferredSize(ReadOnlyStatusDialog.getDialogPreferredSize());
+        myFileList.setPreferredSize(new Dimension(500, 400));
 
-    myFileList.setCellRenderer(new FileListRenderer());
-    myFileList.setModel(new CollectionListModel<>(nonProjectFiles));
+        myFileList.setCellRenderer(new FileListRenderer());
+        myFileList.setModel(new CollectionListModel<>(nonProjectFiles));
 
-    String theseFilesMessage = ReadOnlyStatusDialog.getTheseFilesMessage(nonProjectFiles);
-    myListTitle.setText(
-      StringUtil.capitalize(theseFilesMessage)
-      + " " + (nonProjectFiles.size() > 1 ? "do" : "does")
-      + " not belong to the project:"
-    );
+        String theseFilesMessage = getTheseFilesMessage(nonProjectFiles);
+        myListTitle.setText(
+            StringUtil.capitalize(theseFilesMessage)
+                + " " + (nonProjectFiles.size() > 1 ? "do" : "does")
+                + " not belong to the project:"
+        );
 
-    myUnlockOneButton.setSelected(true);
-    setTextAndMnemonicAndListeners(myUnlockOneButton, "I want to edit " + theseFilesMessage + " anyway", "edit");
+        myUnlockOneButton.setSelected(true);
+        setTextAndMnemonicAndListeners(myUnlockOneButton, "I want to edit " + theseFilesMessage + " anyway", "edit");
 
-    int dirs = ContainerUtil.map2Set(nonProjectFiles, VirtualFile::getParent).size();
-    setTextAndMnemonicAndListeners(
-      myUnlockDirButton,
-      "I want to edit all files in " + StringUtil.pluralize("this", dirs) + " " + StringUtil.pluralize("directory", dirs),
-      "dir"
-    );
+        int dirs = ContainerUtil.map2Set(nonProjectFiles, VirtualFile::getParent).size();
+        setTextAndMnemonicAndListeners(
+            myUnlockDirButton,
+            "I want to edit all files in " + StringUtil.pluralize("this", dirs) + " " + StringUtil.pluralize("directory", dirs),
+            "dir"
+        );
 
-    setTextAndMnemonicAndListeners(myUnlockAllButton, "I want to edit any non-project file in the current session", "any");
+        setTextAndMnemonicAndListeners(myUnlockAllButton, "I want to edit any non-project file in the current session", "any");
 
-    // disable default button to avoid accidental pressing, if user typed something, missed the dialog and pressed 'enter'.
-    getOKAction().putValue(DEFAULT_ACTION, null);
-    getCancelAction().putValue(DEFAULT_ACTION, null);
+        // disable default button to avoid accidental pressing, if user typed something, missed the dialog and pressed 'enter'.
+        getOKAction().putValue(DEFAULT_ACTION, null);
+        getCancelAction().putValue(DEFAULT_ACTION, null);
 
-    getRootPane().registerKeyboardAction(
-      e -> doOKAction(),
-      KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK),
-      JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
-    );
-    getRootPane().registerKeyboardAction(
-      e -> doOKAction(),
-      KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.META_DOWN_MASK),
-      JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
-    );
+        getRootPane().registerKeyboardAction(
+            e -> doOKAction(),
+            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK),
+            JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+        );
+        getRootPane().registerKeyboardAction(
+            e -> doOKAction(),
+            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.META_DOWN_MASK),
+            JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+        );
 
-    init();
-  }
+        init();
+    }
 
-  private void setTextAndMnemonicAndListeners(JRadioButton button, String text, String mnemonic) {
-    button.setText(text);
-    button.setMnemonic(mnemonic.charAt(0));
-    button.setDisplayedMnemonicIndex(button.getText().indexOf(mnemonic));
+    @Nonnull
+    public static String getTheseFilesMessage(Collection<VirtualFile> files) {
+        boolean dirsOnly = true;
+        for (VirtualFile each : files) {
+            if (!each.isDirectory()) {
+                dirsOnly = false;
+                break;
 
-    // enabled OK button when user selects an option
-    button.addActionListener(e -> button.getRootPane().setDefaultButton(getButton(getOKAction())));
-    button.addItemListener(e -> button.getRootPane().setDefaultButton(getButton(getOKAction())));
-  }
+            }
+        }
 
-  @Nullable
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myUnlockOneButton;
-  }
+        int size = files.size();
+        return StringUtil.pluralize("this", size) + " " + StringUtil.pluralize((dirsOnly ? "directory" : "file"), size);
+    }
 
-  @Nullable
-  @Override
-  protected JComponent createCenterPanel() {
-    return myPanel;
-  }
+    private void setTextAndMnemonicAndListeners(JRadioButton button, String text, String mnemonic) {
+        button.setText(text);
+        button.setMnemonic(mnemonic.charAt(0));
+        button.setDisplayedMnemonicIndex(button.getText().indexOf(mnemonic));
 
-  @Nonnull
-  public NonProjectFileWritingAccessProvider.UnlockOption getUnlockOption() {
-    if (myUnlockAllButton.isSelected()) return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK_ALL;
-    if (myUnlockDirButton.isSelected()) return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK_DIR;
-    return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK;
-  }
+        // enabled OK button when user selects an option
+        button.addActionListener(e -> button.getRootPane().setDefaultButton(getButton(getOKAction())));
+        button.addItemListener(e -> button.getRootPane().setDefaultButton(getButton(getOKAction())));
+    }
 
-  protected String getHelpId() {
-    return "Non-Project_Files_Access_Dialog";
-  }
+    @Nullable
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myUnlockOneButton;
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createCenterPanel() {
+        return myPanel;
+    }
+
+    @Nonnull
+    public NonProjectFileWritingAccessProvider.UnlockOption getUnlockOption() {
+        if (myUnlockAllButton.isSelected()) {
+            return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK_ALL;
+        }
+        if (myUnlockDirButton.isSelected()) {
+            return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK_DIR;
+        }
+        return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK;
+    }
+
+    protected String getHelpId() {
+        return "Non-Project_Files_Access_Dialog";
+    }
 }
