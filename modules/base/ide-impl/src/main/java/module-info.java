@@ -509,9 +509,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util;
   exports consulo.ide.impl.idea.util.concurrency;
   exports consulo.ide.impl.idea.util.containers;
-  exports consulo.ide.impl.idea.util.continuation;
   exports consulo.ide.impl.idea.util.exception;
-  exports consulo.ide.impl.idea.util.graph.impl;
   exports consulo.ide.impl.idea.util.indexing;
   exports consulo.ide.impl.idea.util.io;
   exports consulo.ide.impl.idea.util.net;

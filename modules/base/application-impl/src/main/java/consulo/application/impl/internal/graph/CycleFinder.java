@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.graph.impl;
+package consulo.application.impl.internal.graph;
 
 import consulo.component.util.graph.Graph;
 import jakarta.annotation.Nonnull;

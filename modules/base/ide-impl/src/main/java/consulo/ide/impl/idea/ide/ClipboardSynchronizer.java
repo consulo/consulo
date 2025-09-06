@@ -14,7 +14,6 @@ import consulo.awt.hacking.DataTransfererHacking;
 import consulo.awt.hacking.XClipboardHacking;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
-import consulo.ide.impl.idea.util.concurrency.FutureResult;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.os.UnixOperationSystem;
@@ -30,6 +29,7 @@ import java.awt.datatransfer.*;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -278,12 +278,12 @@ public class ClipboardSynchronizer implements Disposable {
 
     @Nullable
     private static Transferable getContentsSafe() {
-      FutureResult<Transferable> result = new FutureResult<>();
+      CompletableFuture<Transferable> result = new CompletableFuture<>();
 
       Foundation.executeOnMainThread(true, false, () -> {
         Transferable transferable = getClipboardContentNatively();
         if (transferable != null) {
-          result.set(transferable);
+          result.complete(transferable);
         }
       });
 

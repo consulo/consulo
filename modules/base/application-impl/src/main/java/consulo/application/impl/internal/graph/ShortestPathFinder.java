@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.graph.impl;
+package consulo.application.impl.internal.graph;
 
 import consulo.component.util.graph.Graph;
 
