@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.packaging.impl.run;
+package consulo.compiler.impl.internal.exection;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.packaging.impl.run.AbstractArtifactsBeforeRunTask;
 
 /**
  * @author VISTALL

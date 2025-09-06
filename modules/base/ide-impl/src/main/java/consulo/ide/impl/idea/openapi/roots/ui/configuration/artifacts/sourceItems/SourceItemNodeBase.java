@@ -18,13 +18,12 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceIte
 import consulo.application.Application;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.component.extension.Extensions;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.ArtifactsTreeNode;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
-import consulo.ide.impl.idea.packaging.ui.PackagingSourceItemsProvider;
+import consulo.compiler.artifact.ui.PackagingSourceItemsProvider;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.awt.tree.SimpleNode;
 

@@ -26,9 +26,9 @@ import consulo.disposer.Disposer;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
+import consulo.execution.internal.ConfigurationSettingsEditorWrapper;
 import consulo.ui.ex.awt.HideableDecorator;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -45,8 +45,7 @@ import java.util.List;
  * @author anna
  * @since 2006-03-27
  */
-public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAndConfigurationSettings> implements BeforeRunStepsPanel.StepsBeforeRunListener {
-    public static Key<ConfigurationSettingsEditorWrapper> CONFIGURATION_EDITOR_KEY = Key.create("ConfigurationSettingsEditor");
+public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSettingsEditorWrapper implements BeforeRunStepsPanel.StepsBeforeRunListener {
 
     private static final String EXPAND_PROPERTY_KEY = "ExpandBeforeRunStepsPanel";
 
@@ -56,7 +55,7 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
     private final ConfigurationSettingsEditor myEditor;
     private final HideableDecorator myDecorator;
 
-    public ConfigurationSettingsEditorWrapper(RunnerAndConfigurationSettings settings) {
+    public ConfigurationSettingsEditorWrapperImpl(RunnerAndConfigurationSettings settings) {
         myEditor = new ConfigurationSettingsEditor(settings);
         Disposer.register(this, myEditor);
         myBeforeRunStepsPanel = new BeforeRunStepsPanel(this);
@@ -138,10 +137,12 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
         }
     }
 
+    @Override
     public void addBeforeLaunchStep(BeforeRunTask<?> task) {
         myBeforeRunStepsPanel.addTask(task);
     }
 
+    @Override
     public List<BeforeRunTask> getStepsBeforeLaunch() {
         return Collections.unmodifiableList(myBeforeRunStepsPanel.getTasks(true));
     }
@@ -160,7 +161,7 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
         @Override
         public void calcData(Key key, DataSink sink) {
             if (CONFIGURATION_EDITOR_KEY == key) {
-                sink.put(CONFIGURATION_EDITOR_KEY, ConfigurationSettingsEditorWrapper.this);
+                sink.put(CONFIGURATION_EDITOR_KEY, ConfigurationSettingsEditorWrapperImpl.this);
             }
         }
     }

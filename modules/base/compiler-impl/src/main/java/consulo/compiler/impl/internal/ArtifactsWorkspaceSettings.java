@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.compiler;
+package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -24,15 +24,14 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,7 +52,7 @@ public class ArtifactsWorkspaceSettings implements PersistentStateComponent<Arti
   }
 
   public static ArtifactsWorkspaceSettings getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, ArtifactsWorkspaceSettings.class);
+    return project.getInstance(ArtifactsWorkspaceSettings.class);
   }
 
   private final ArtifactManager myArtifactManager;

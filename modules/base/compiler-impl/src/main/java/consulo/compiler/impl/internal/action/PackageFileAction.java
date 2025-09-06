@@ -1,7 +1,7 @@
 /**
  * @author cdr
  */
-package consulo.ide.impl.idea.packaging.impl.ui.actions;
+package consulo.compiler.impl.internal.action;
 
 import consulo.compiler.CompilerManager;
 import consulo.compiler.artifact.Artifact;

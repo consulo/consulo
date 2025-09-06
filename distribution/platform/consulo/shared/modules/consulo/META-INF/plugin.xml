@@ -1287,7 +1287,7 @@
             <add-to-group group-id="ProjectViewPopupMenuRunGroup" anchor="first"/>
         </group>
 
-        <action id="PackageFile" class="consulo.ide.impl.idea.packaging.impl.ui.actions.PackageFileAction" use-shortcut-of="Compile">
+        <action id="PackageFile" class="consulo.compiler.impl.internal.action.PackageFileAction" use-shortcut-of="Compile">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="Compile"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="before" relative-to-action="MakeModule"/>
             <add-to-group group-id="FavoritesViewPopupMenu" anchor="before" relative-to-action="MakeModule"/>

@@ -16,6 +16,7 @@
 package consulo.ide.impl.project.ui.view.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.compiler.artifact.Artifact;
 import consulo.configurable.Configurable;
 import consulo.content.library.Library;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -40,77 +41,83 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class ProjectSettingsServiceImpl extends ProjectSettingsService {
 
-  private final Project myProject;
-  private final ShowSettingsUtil myShowSettingsUtil;
+    private final Project myProject;
+    private final ShowSettingsUtil myShowSettingsUtil;
 
-  @Inject
-  public ProjectSettingsServiceImpl(Project project, ShowSettingsUtil showSettingsUtil) {
-    myProject = project;
-    myShowSettingsUtil = showSettingsUtil;
-  }
+    @Inject
+    public ProjectSettingsServiceImpl(Project project, ShowSettingsUtil showSettingsUtil) {
+        myProject = project;
+        myShowSettingsUtil = showSettingsUtil;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void openProjectSettings() {
-    myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.selectProjectGeneralSettings(true));
-  }
+    @Override
+    @RequiredUIAccess
+    public void openProjectSettings() {
+        myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.selectProjectGeneralSettings(true));
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void openLibrary(@Nonnull Library library) {
-    myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.selectProjectOrGlobalLibrary(library, true));
-  }
+    @Override
+    @RequiredUIAccess
+    public void openLibrary(@Nonnull Library library) {
+        myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.selectProjectOrGlobalLibrary(library, true));
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void openModuleSettings(Module module) {
-    Project project = module.getProject();
-    myShowSettingsUtil.showProjectStructureDialog(project, config -> config.select(module.getName(), null, true));
-  }
+    @Override
+    @RequiredUIAccess
+    public void openArtifact(@Nullable Object artifact) {
+        myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.select((Artifact)artifact, true));
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void openModuleLibrarySettings(Module module) {
-    myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
-                                                  config -> config.select(module.getName(),
-                                                                          ProjectBundle.message("modules.classpath.title"),
-                                                                          true));
-  }
+    @Override
+    @RequiredUIAccess
+    public void openModuleSettings(Module module) {
+        Project project = module.getProject();
+        myShowSettingsUtil.showProjectStructureDialog(project, config -> config.select(module.getName(), null, true));
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void openContentEntriesSettings(Module module) {
-    myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
-                                                  config -> config.select(module.getName(),
-                                                                          ProjectBundle.message("module.paths.title"),
-                                                                          true));
-  }
+    @Override
+    @RequiredUIAccess
+    public void openModuleLibrarySettings(Module module) {
+        myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
+            config -> config.select(module.getName(),
+                ProjectBundle.message("modules.classpath.title"),
+                true));
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
-    myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.selectOrderEntry(module, orderEntry));
-  }
+    @Override
+    @RequiredUIAccess
+    public void openContentEntriesSettings(Module module) {
+        myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
+            config -> config.select(module.getName(),
+                ProjectBundle.message("module.paths.title"),
+                true));
+    }
 
-  @Override
-  @RequiredUIAccess
-  @SuppressWarnings("unchecked")
-  public void openLibraryOrSdkSettings(@Nonnull OrderEntry orderEntry) {
-    OrderEntryType type = orderEntry.getType();
+    @Override
+    @RequiredUIAccess
+    public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
+        myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.selectOrderEntry(module, orderEntry));
+    }
 
-    OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
-    editor.navigate(orderEntry);
-  }
+    @Override
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public void openLibraryOrSdkSettings(@Nonnull OrderEntry orderEntry) {
+        OrderEntryType type = orderEntry.getType();
 
-  @Override
-  @RequiredUIAccess
-  public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
-    myShowSettingsUtil.showProjectStructureDialog(myProject, config -> config.select(moduleToSelect, editorNameToSelect, true));
-  }
+        OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
+        editor.navigate(orderEntry);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void showAndSelect(Class<? extends Configurable> configurableClass) {
-    myShowSettingsUtil.showAndSelect(myProject, configurableClass);
-  }
+    @Override
+    @RequiredUIAccess
+    public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
+        myShowSettingsUtil.showProjectStructureDialog(myProject, config -> config.select(moduleToSelect, editorNameToSelect, true));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showAndSelect(Class<? extends Configurable> configurableClass) {
+        myShowSettingsUtil.showAndSelect(myProject, configurableClass);
+    }
 }

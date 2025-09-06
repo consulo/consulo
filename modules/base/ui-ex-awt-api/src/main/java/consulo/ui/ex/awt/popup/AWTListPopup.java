@@ -41,4 +41,6 @@ public interface AWTListPopup extends ListPopup {
     JList getList();
 
     JComponent getComponent();
+
+    Object[] getSelectedValues();
 }

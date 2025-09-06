@@ -34,60 +34,63 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 public class ProjectSettingsService {
-  public static ProjectSettingsService getInstance(Project project) {
-    return project.getInstance(ProjectSettingsService.class);
-  }
+    public static ProjectSettingsService getInstance(Project project) {
+        return project.getInstance(ProjectSettingsService.class);
+    }
 
-  @RequiredUIAccess
-  public void openProjectSettings() {
-  }
+    @RequiredUIAccess
+    public void openProjectSettings() {
+    }
 
-  @RequiredUIAccess
-  public void openLibrary(@Nonnull Library library) {
-  }
+    @RequiredUIAccess
+    public void openLibrary(@Nonnull Library library) {
+    }
 
-  @RequiredUIAccess
-  public void openModuleSettings(Module module) {
-  }
+    public void openArtifact(@Nullable Object artifact) {
+    }
 
-  public final boolean canOpenModuleSettings() {
-    return true;
-  }
+    @RequiredUIAccess
+    public void openModuleSettings(Module module) {
+    }
 
-  @RequiredUIAccess
-  public void openModuleLibrarySettings(Module module) {
-  }
+    public final boolean canOpenModuleSettings() {
+        return true;
+    }
 
-  public final boolean canOpenModuleLibrarySettings() {
-    return true;
-  }
+    @RequiredUIAccess
+    public void openModuleLibrarySettings(Module module) {
+    }
 
-  @RequiredUIAccess
-  public void openContentEntriesSettings(Module module) {
-  }
+    public final boolean canOpenModuleLibrarySettings() {
+        return true;
+    }
 
-  public final boolean canOpenContentEntriesSettings() {
-    return true;
-  }
+    @RequiredUIAccess
+    public void openContentEntriesSettings(Module module) {
+    }
 
-  @RequiredUIAccess
-  public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
-  }
+    public final boolean canOpenContentEntriesSettings() {
+        return true;
+    }
 
-  public final boolean canOpenModuleDependenciesSettings() {
-    return true;
-  }
+    @RequiredUIAccess
+    public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
+    }
 
-  @RequiredUIAccess
-  @SuppressWarnings("unchecked")
-  public void openLibraryOrSdkSettings(@Nonnull OrderEntry orderEntry) {
-  }
+    public final boolean canOpenModuleDependenciesSettings() {
+        return true;
+    }
 
-  @RequiredUIAccess
-  public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
-  }
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public void openLibraryOrSdkSettings(@Nonnull OrderEntry orderEntry) {
+    }
 
-  @RequiredUIAccess
-  public void showAndSelect(Class<? extends Configurable> configurableClass) {
-  }
+    @RequiredUIAccess
+    public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
+    }
+
+    @RequiredUIAccess
+    public void showAndSelect(Class<? extends Configurable> configurableClass) {
+    }
 }

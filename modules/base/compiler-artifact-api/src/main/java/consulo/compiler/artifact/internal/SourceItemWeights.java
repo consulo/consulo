@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.ui;
+package consulo.compiler.artifact.internal;
 
 /**
  * @author nik

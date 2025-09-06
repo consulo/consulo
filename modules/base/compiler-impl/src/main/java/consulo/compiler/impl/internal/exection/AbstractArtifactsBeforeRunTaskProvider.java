@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.run;
+package consulo.compiler.impl.internal.exection;
 
+import consulo.application.AllIcons;
+import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.execution.BeforeRunTaskProvider;
-import consulo.compiler.CompilerBundle;
-import consulo.ui.ex.awt.DialogBuilder;
-import consulo.application.AllIcons;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;

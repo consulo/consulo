@@ -1776,7 +1776,7 @@ public class RunConfigurable extends BaseConfigurable {
         public RunConfigurationBean(SingleConfigurationConfigurable configurable) {
             myConfigurable = configurable;
             mySettings = (RunnerAndConfigurationSettings) myConfigurable.getSettings();
-            ConfigurationSettingsEditorWrapper editorWrapper = (ConfigurationSettingsEditorWrapper) myConfigurable.getEditor();
+            ConfigurationSettingsEditorWrapperImpl editorWrapper = (ConfigurationSettingsEditorWrapperImpl) myConfigurable.getEditor();
             myShared = configurable.isStoreProjectConfiguration();
             myStepsBeforeLaunch = editorWrapper.getStepsBeforeLaunch();
         }

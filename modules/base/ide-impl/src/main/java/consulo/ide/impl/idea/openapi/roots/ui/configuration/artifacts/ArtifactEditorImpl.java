@@ -32,7 +32,7 @@ import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.*;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.LibrarySourceItem;
+import consulo.compiler.artifact.impl.internal.ui.LibrarySourceItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;

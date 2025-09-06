@@ -459,11 +459,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.packageDependencies;
   exports consulo.ide.impl.idea.packageDependencies.actions;
   exports consulo.ide.impl.idea.packageDependencies.ui;
-  exports consulo.ide.impl.idea.packaging.impl.compiler;
-  exports consulo.ide.impl.idea.packaging.impl.run;
-  exports consulo.ide.impl.idea.packaging.impl.ui;
-  exports consulo.ide.impl.idea.packaging.impl.ui.actions;
-  exports consulo.ide.impl.idea.packaging.ui;
   exports consulo.ide.impl.idea.platform;
   exports consulo.ide.impl.idea.platform.templates.github;
   exports consulo.ide.impl.idea.profile.codeInspection;
@@ -541,7 +536,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.newProject.actions;
   exports consulo.ide.impl.newProject.ui;
   exports consulo.ide.impl.packageDependencies;
-  exports consulo.ide.impl.packaging.impl.run;
   exports consulo.ide.impl.project;
   exports consulo.ide.impl.projectView;
   exports consulo.ide.impl.psi.codeStyle.statusbar;

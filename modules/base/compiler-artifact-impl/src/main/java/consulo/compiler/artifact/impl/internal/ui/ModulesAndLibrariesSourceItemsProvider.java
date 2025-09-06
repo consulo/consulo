@@ -13,37 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
+package consulo.compiler.artifact.impl.internal.ui;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.function.Processor;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.element.*;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.compiler.artifact.ui.PackagingSourceItemsProvider;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.library.Library;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.content.library.Library;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.ref.Ref;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.element.PackagingElementFactory;
-import consulo.compiler.artifact.element.PackagingElementType;
-import consulo.compiler.artifact.ArtifactUtil;
-import consulo.compiler.artifact.element.FileCopyElementType;
-import consulo.compiler.artifact.element.FileCopyPackagingElement;
-import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
-import consulo.compiler.artifact.element.ModuleOutputElementTypeBase;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.compiler.artifact.ui.PackagingSourceItem;
-import consulo.ide.impl.idea.packaging.ui.PackagingSourceItemsProvider;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.application.util.function.Processor;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.content.base.BinariesOrderRootType;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 /**

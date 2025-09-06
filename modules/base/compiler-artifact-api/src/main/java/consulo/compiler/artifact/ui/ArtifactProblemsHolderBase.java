@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.ui;
+package consulo.compiler.artifact.ui;
 
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
-import consulo.compiler.artifact.ui.ArtifactProblemsHolder;
 import jakarta.annotation.Nonnull;
 
 /**

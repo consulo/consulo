@@ -59,6 +59,7 @@ module consulo.execution.api {
 
     exports consulo.execution.internal to consulo.ide.impl,
         consulo.execution.impl,
+        consulo.compiler.impl,
         consulo.execution.debug.impl,
         consulo.execution.test.sm.api,
         consulo.desktop.awt.ide.impl,

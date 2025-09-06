@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
+package consulo.compiler.artifact.impl.internal.ui;
 
-import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
@@ -24,11 +23,9 @@ import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.compiler.artifact.element.ZipArtifactType;
-import consulo.compiler.artifact.ui.ArtifactElementPresentation;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.compiler.artifact.ui.PackagingSourceItem;
-import consulo.compiler.artifact.ui.SourceItemPresentation;
-import consulo.ide.impl.idea.packaging.ui.SourceItemWeights;
+import consulo.compiler.artifact.internal.SourceItemWeights;
+import consulo.compiler.artifact.ui.*;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;

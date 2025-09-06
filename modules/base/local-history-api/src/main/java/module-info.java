@@ -8,5 +8,5 @@ module consulo.local.history.api {
     exports consulo.localHistory;
     exports consulo.localHistory.localize;
 
-    exports consulo.localHistory.internal to consulo.ide.impl, consulo.local.history.impl;
+    exports consulo.localHistory.internal to consulo.version.control.system.impl, consulo.local.history.impl;
 }

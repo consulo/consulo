@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
+package consulo.compiler.artifact.ui;
 
-import consulo.compiler.artifact.ui.SourceItemPresentation;
-import consulo.compiler.artifact.ui.TreeNodePresentation;
-import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PresentationData;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

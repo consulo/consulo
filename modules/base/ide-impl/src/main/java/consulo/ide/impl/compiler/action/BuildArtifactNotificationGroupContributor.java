@@ -16,6 +16,7 @@
 package consulo.ide.impl.compiler.action;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.impl.internal.action.BuildArtifactAction;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 import jakarta.annotation.Nonnull;

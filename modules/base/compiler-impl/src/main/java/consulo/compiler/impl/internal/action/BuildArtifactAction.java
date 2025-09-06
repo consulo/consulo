@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.compiler.action;
+package consulo.compiler.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.progress.ProgressIndicator;
@@ -21,24 +21,23 @@ import consulo.application.progress.Task;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.impl.internal.ArtifactsWorkspaceSettings;
 import consulo.compiler.impl.internal.artifact.ArtifactCompileScope;
 import consulo.compiler.scope.CompileScope;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
-import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectRootManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -111,8 +110,8 @@ public class BuildArtifactAction extends DumbAwareAction {
         ChooseArtifactStep step = new ChooseArtifactStep(items, artifacts.get(0), project, myNotificationService);
         step.setDefaultOptionIndices(selectedIndices.toArray());
 
-        final ListPopupImpl popup = (ListPopupImpl) JBPopupFactory.getInstance().createListPopup(step);
-        KeyStroke editKeyStroke = KeymapUtil.getKeyStroke(CommonShortcuts.getEditSource());
+        AWTListPopup popup = (AWTListPopup) JBPopupFactory.getInstance().createListPopup(project, step);
+        KeyStroke editKeyStroke = ShortcutUtil.getKeyStroke(CommonShortcuts.getEditSource());
         if (editKeyStroke != null) {
             popup.registerAction(
                 "editArtifact",
@@ -123,10 +122,10 @@ public class BuildArtifactAction extends DumbAwareAction {
                     public void actionPerformed(ActionEvent e) {
                         Object[] values = popup.getSelectedValues();
                         popup.cancel();
-                        ModulesConfiguratorImpl.showArtifactSettings(
-                            project,
-                            values.length > 0 ? ((ArtifactPopupItem) values[0]).getArtifact() : null
-                        );
+
+                        Artifact artifact = values.length > 0 ? ((ArtifactPopupItem) values[0]).getArtifact() : null;
+                        
+                        ProjectSettingsService.getInstance(project).openArtifact(artifact);
                     }
                 }
             );
@@ -274,7 +273,7 @@ public class BuildArtifactAction extends DumbAwareAction {
         @Override
         @RequiredUIAccess
         public void run() {
-            ModulesConfiguratorImpl.showArtifactSettings(myProject, myArtifactPopupItems.get(0).getArtifact());
+            ProjectSettingsService.getInstance(myProject).openArtifact(myArtifactPopupItems.get(0).getArtifact());
         }
     }
 

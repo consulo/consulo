@@ -68,7 +68,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
   private boolean myChangingNameFromCode;
 
   private SingleConfigurationConfigurable(RunnerAndConfigurationSettings settings, @Nullable Executor executor) {
-    super(new ConfigurationSettingsEditorWrapper(settings), settings);
+    super(new ConfigurationSettingsEditorWrapperImpl(settings), settings);
     myExecutor = executor;
 
     Config configuration = getConfiguration();

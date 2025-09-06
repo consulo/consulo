@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.packaging.impl.run;
+package consulo.compiler.impl.internal.exection;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.artifact.Artifact;
@@ -21,10 +21,9 @@ import consulo.compiler.artifact.execution.BuildArtifactsBeforeRunTaskHelper;
 import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

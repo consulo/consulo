@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.run;
+package consulo.compiler.impl.internal.exection;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.ElementsChooser;

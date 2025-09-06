@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.ui.actions;
+package consulo.compiler.impl.internal.action;
 
 import consulo.application.AccessRule;
 import consulo.application.progress.ProgressIndicator;
@@ -26,22 +26,22 @@ import consulo.compiler.artifact.element.ArchivePackagingElement;
 import consulo.compiler.artifact.element.ArtifactRootElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.localize.CompilerLocalize;
-import consulo.ide.impl.idea.openapi.deployment.DeploymentUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
+import consulo.util.io.PathUtil;
 import consulo.util.io.zip.JBZipEntry;
 import consulo.util.io.zip.JBZipFile;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;
@@ -113,7 +113,7 @@ public class PackageFileWorker {
         LOG.debug("Start packaging file: " + file.getPath());
         Collection<Trinity<Artifact, PackagingElementPath, String>> items =
             ArtifactUtil.findContainingArtifactsWithOutputPaths(file, project, artifacts);
-        File ioFile = VfsUtilCore.virtualToIoFile(file);
+        File ioFile = VirtualFileUtil.virtualToIoFile(file);
         for (Trinity<Artifact, PackagingElementPath, String> item : items) {
             Artifact artifact = item.getFirst();
             String outputPath = artifact.getOutputPath();
@@ -136,14 +136,14 @@ public class PackageFileWorker {
 
     private void copyFile(String outputPath, List<CompositePackagingElement<?>> parents) throws IOException {
         if (parents.isEmpty()) {
-            String fullOutputPath = DeploymentUtil.appendToPath(outputPath, myRelativeOutputPath);
+            String fullOutputPath = ArtifactUtil.appendToPath(outputPath, myRelativeOutputPath);
             File target = new File(fullOutputPath);
             if (FileUtil.filesEqual(myFile, target)) {
                 LOG.debug("  skipping copying file to itself");
             }
             else {
                 LOG.debug("  copying to " + fullOutputPath);
-                consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(myFile, target);
+                FileUtil.copy(myFile, target, FilePermissionCopier.BY_NIO2);
             }
             return;
         }
@@ -166,7 +166,7 @@ public class PackageFileWorker {
             JBZipFile file = getOrCreateZipFile(archiveFile);
             try {
                 String fullPathInArchive =
-                    DeploymentUtil.trimForwardSlashes(DeploymentUtil.appendToPath(pathInArchive, myRelativeOutputPath));
+                    ArtifactUtil.trimForwardSlashes(ArtifactUtil.appendToPath(pathInArchive, myRelativeOutputPath));
                 JBZipEntry entry = file.getOrCreateEntry(fullPathInArchive);
                 entry.setData(RawFileLoader.getInstance().loadFileBytes(myFile));
             }
@@ -177,7 +177,7 @@ public class PackageFileWorker {
         }
 
         CompositePackagingElement<?> element = parents.get(0);
-        String nextPathInArchive = DeploymentUtil.trimForwardSlashes(DeploymentUtil.appendToPath(pathInArchive, element.getName()));
+        String nextPathInArchive = ArtifactUtil.trimForwardSlashes(ArtifactUtil.appendToPath(pathInArchive, element.getName()));
         List<CompositePackagingElement<?>> parentsTrail = parents.subList(1, parents.size());
         if (element instanceof ArchivePackagingElement) {
             JBZipFile zipFile = getOrCreateZipFile(archiveFile);

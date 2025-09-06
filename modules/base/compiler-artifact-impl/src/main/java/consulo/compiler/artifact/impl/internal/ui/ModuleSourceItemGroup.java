@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
+package consulo.compiler.artifact.impl.internal.ui;
 
 import consulo.application.AllIcons;
 import consulo.application.Application;
+import consulo.compiler.artifact.internal.SourceItemWeights;
+import consulo.compiler.artifact.ui.PackagingSourceItemsProvider;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
@@ -29,7 +31,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
-import consulo.ide.impl.idea.packaging.ui.*;
 import consulo.ui.ex.SimpleTextAttributes;
 import jakarta.annotation.Nonnull;
 

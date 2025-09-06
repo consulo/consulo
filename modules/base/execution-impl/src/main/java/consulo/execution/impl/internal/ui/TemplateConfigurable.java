@@ -28,7 +28,7 @@ public class TemplateConfigurable extends SettingsEditorConfigurable<RunnerAndCo
     private final RunnerAndConfigurationSettings myTemplate;
 
     public TemplateConfigurable(RunnerAndConfigurationSettings template) {
-        super(new ConfigurationSettingsEditorWrapper(template), template);
+        super(new ConfigurationSettingsEditorWrapperImpl(template), template);
         myTemplate = template;
     }
 

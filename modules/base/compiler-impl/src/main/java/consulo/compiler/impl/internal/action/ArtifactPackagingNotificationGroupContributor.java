@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.ui.actions;
+package consulo.compiler.impl.internal.action;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.ui.notification.NotificationGroup;

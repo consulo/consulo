@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.PackagingElementPath;
-import consulo.ide.impl.idea.packaging.impl.ui.ArtifactProblemsHolderBase;
+import consulo.compiler.artifact.ui.ArtifactProblemsHolderBase;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactProblemQuickFix;
 import consulo.util.collection.SmartList;
