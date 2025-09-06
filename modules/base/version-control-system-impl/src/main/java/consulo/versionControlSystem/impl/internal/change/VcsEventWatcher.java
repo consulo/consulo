@@ -58,12 +58,12 @@ public class VcsEventWatcher implements PostStartupActivity {
 
     @Override
     public void problemsAppeared(@Nonnull VirtualFile file) {
-      ChangesViewManager.getInstance(myProject).refreshChangesViewNodeAsync(file);
+      ChangesViewManagerImpl.getInstance(myProject).refreshChangesViewNodeAsync(file);
     }
 
     @Override
     public void problemsDisappeared(@Nonnull VirtualFile file) {
-      ChangesViewManager.getInstance(myProject).refreshChangesViewNodeAsync(file);
+      ChangesViewManagerImpl.getInstance(myProject).refreshChangesViewNodeAsync(file);
     }
   }
 }

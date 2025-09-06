@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.internal;
+package consulo.versionControlSystem;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
- * @author irengrig
+ * @author VISTALL
+ * @since 2025-09-06
  */
 @ServiceAPI(ComponentScope.PROJECT)
-public interface ChangesViewI {
-  void scheduleRefresh();
+public interface CommitMessageFactory {
+    @Nonnull
+    default CommitMessage create() {
+        return create(true);
+    }
 
-  void selectFile(VirtualFile vFile);
-
-  void refreshChangesViewNodeAsync(VirtualFile file);
-
-  void updateProgressText(String text, boolean isError);
-
-  void setBusy(boolean b);
-
-  void setShowFlattenMode(boolean state);
+    @Nonnull
+    CommitMessage create(boolean withSeparator);
 }

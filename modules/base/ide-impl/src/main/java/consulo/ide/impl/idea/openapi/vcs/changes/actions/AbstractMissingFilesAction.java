@@ -28,7 +28,7 @@ import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.impl.internal.change.ChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.ChangesViewManagerImpl;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
 import jakarta.annotation.Nonnull;
@@ -78,7 +78,7 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
             for (FilePath file : files) {
                 VcsDirtyScopeManager.getInstance(project).fileDirty(file);
             }
-            ChangesViewManager.getInstance(project).scheduleRefresh();
+            ChangesViewManagerImpl.getInstance(project).scheduleRefresh();
             if (allExceptions.size() > 0) {
                 AbstractVcsHelper.getInstance(project).showErrors(allExceptions, "VCS Errors");
             }

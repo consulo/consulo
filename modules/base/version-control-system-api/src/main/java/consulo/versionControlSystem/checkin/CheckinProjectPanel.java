@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.checkin;
 
 import consulo.project.Project;
-import consulo.versionControlSystem.CommitMessageI;
+import consulo.versionControlSystem.CommitMessage;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
@@ -31,9 +31,9 @@ import java.util.Collection;
  * included in the checkin operation, getting/setting the commit message and so on).
  * The active check-in dialog can be retrieved from the using {@link Refreshable#PANEL_KEY}
  *
- * @see BaseCheckinHandlerFactory#createHandler(CommitMessageI, CommitContext)
+ * @see BaseCheckinHandlerFactory#createHandler(CommitMessage, CommitContext)
  */
-public interface CheckinProjectPanel extends Refreshable, CommitMessageI {
+public interface CheckinProjectPanel extends Refreshable, CommitMessage {
   JComponent getComponent();
 
   JComponent getPreferredFocusedComponent();

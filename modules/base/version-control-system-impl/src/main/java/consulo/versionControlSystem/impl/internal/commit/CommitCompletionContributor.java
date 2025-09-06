@@ -48,7 +48,7 @@ public class CommitCompletionContributor extends CompletionContributor {
     PsiFile file = parameters.getOriginalFile();
     Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
     if (document != null) {
-      DataContext dataContext = document.getUserData(CommitMessage.DATA_CONTEXT_KEY);
+      DataContext dataContext = document.getUserData(CommitMessageImpl.DATA_CONTEXT_KEY);
       if (dataContext != null) {
         result.stopHere();
         if (parameters.getInvocationCount() > 0) {

@@ -15,11 +15,17 @@
  */
 package consulo.versionControlSystem;
 
+import consulo.util.dataholder.Key;
+
+import javax.swing.*;
+
 /**
  * @author Irina.Chernushina
  * @since 2012-09-14
  */
-public interface CommitMessageI {
+public interface CommitMessage {
+    Key<CommitMessage> KEY = Key.create(CommitMessage.class);
+    
     /**
      * @return <code>true</code> if commit message is checked for spelling errors; <code>false</code> otherwise
      */
@@ -38,4 +44,8 @@ public interface CommitMessageI {
      * @param currentDescription the description text.
      */
     void setCommitMessage(String currentDescription);
+
+    String getCommitMessage();
+
+    JComponent getComponent();
 }

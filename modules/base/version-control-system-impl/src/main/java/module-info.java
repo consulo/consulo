@@ -43,6 +43,8 @@ module consulo.version.control.system.impl {
     opens consulo.versionControlSystem.impl.internal.change.conflict to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.change to consulo.util.xml.serializer;
 
+    opens consulo.versionControlSystem.impl.internal.change.patch to consulo.component.impl;
+
     requires com.google.common;
 
     // TODO remove in future

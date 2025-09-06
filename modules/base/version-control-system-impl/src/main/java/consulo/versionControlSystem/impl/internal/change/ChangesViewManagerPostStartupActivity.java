@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class ChangesViewManagerPostStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    ChangesViewManager changesViewManager = (ChangesViewManager)ChangesViewManager.getInstance(project);
+    ChangesViewManagerImpl changesViewManager = (ChangesViewManagerImpl) ChangesViewManagerImpl.getInstance(project);
 
     changesViewManager.projectOpened();
   }

@@ -64,7 +64,7 @@ import consulo.versionControlSystem.impl.internal.change.action.ChangeListRemove
 import consulo.versionControlSystem.impl.internal.change.conflict.ChangelistConflictTracker;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.CommitHelper;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
-import consulo.versionControlSystem.internal.ChangesViewI;
+import consulo.versionControlSystem.change.ChangesViewManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
@@ -101,7 +101,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     private final Project myProject;
     private final VcsConfiguration myConfig;
-    private final ChangesViewI myChangesViewManager;
+    private final ChangesViewManager myChangesViewManager;
     private final FileStatusManager myFileStatusManager;
     private final UpdateRequestsQueue myUpdater;
 
@@ -158,7 +158,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         EditorNotifications editorNotifications,
         FileStatusManager fileStatusManager,
         FileDocumentManager fileDocumentManager,
-        ChangesViewI changesViewI,
+        ChangesViewManager changesViewManager,
         StartupManager startupManager,
         ProjectLevelVcsManager projectLevelVcsManager
     ) {
@@ -166,7 +166,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         myConfig = config;
         myFreezeName = new AtomicReference<>(null);
         myAdditionalInfo = null;
-        myChangesViewManager = changesViewI;
+        myChangesViewManager = changesViewManager;
         myFileStatusManager = fileStatusManager;
         myComposite = new FileHolderComposite(project);
         myIgnoredFilesComponent = new IgnoredFilesComponent(myProject, true);

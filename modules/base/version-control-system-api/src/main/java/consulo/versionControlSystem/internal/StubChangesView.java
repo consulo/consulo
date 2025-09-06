@@ -15,13 +15,14 @@
  */
 package consulo.versionControlSystem.internal;
 
+import consulo.versionControlSystem.change.ChangesViewManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author VISTALL
  * @since 2025-08-04
  */
-public class StubChangesView implements ChangesViewI {
+public class StubChangesView implements ChangesViewManager {
     @Override
     public void scheduleRefresh() {
 

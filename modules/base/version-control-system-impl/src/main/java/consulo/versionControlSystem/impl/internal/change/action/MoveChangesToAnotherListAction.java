@@ -18,7 +18,7 @@ package consulo.versionControlSystem.impl.internal.change.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.ChangesViewManager;
+import consulo.versionControlSystem.impl.internal.change.ChangesViewManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeListChooser;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
@@ -172,7 +172,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
         ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
 
         if (!window.isVisible()) {
-            window.activate(() -> ChangesViewManager.getInstance(project).selectFile(file));
+            window.activate(() -> ChangesViewManagerImpl.getInstance(project).selectFile(file));
         }
     }
 

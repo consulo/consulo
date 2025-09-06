@@ -231,7 +231,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
 
   @Override
   public void reportAdditionalInfo(String text) {
-    reportAdditionalInfo(ChangesViewManager.createTextStatusFactory(text, true));
+    reportAdditionalInfo(ChangesViewManagerImpl.createTextStatusFactory(text, true));
   }
 
   @Override

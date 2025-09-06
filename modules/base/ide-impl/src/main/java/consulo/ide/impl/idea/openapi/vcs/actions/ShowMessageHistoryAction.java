@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.versionControlSystem.CommitMessageI;
+import consulo.versionControlSystem.CommitMessage;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
@@ -60,7 +60,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
 
         Project project = e.getData(Project.KEY);
         Object panel = e.getData(CheckinProjectPanel.PANEL_KEY);
-        if (!(panel instanceof CommitMessageI)) {
+        if (!(panel instanceof CommitMessage)) {
             panel = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
         }
 
@@ -79,9 +79,9 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
         Refreshable panel = e.getData(CheckinProjectPanel.PANEL_KEY);
-        CommitMessageI commitMessageI = panel instanceof CommitMessageI cmtMsgI ? cmtMsgI : e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
+        CommitMessage commitMessage = panel instanceof CommitMessage cmtMsgI ? cmtMsgI : e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
 
-        if (commitMessageI != null) {
+        if (commitMessage != null) {
             final VcsConfiguration configuration = VcsConfiguration.getInstance(project);
 
             if (!configuration.getRecentMessages().isEmpty()) {
@@ -111,7 +111,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
                     int selectedIndex = contentChooser.getSelectedIndex();
 
                     if (selectedIndex >= 0) {
-                        commitMessageI.setCommitMessage(contentChooser.getAllContents().get(selectedIndex));
+                        commitMessage.setCommitMessage(contentChooser.getAllContents().get(selectedIndex));
                     }
                 }
             }

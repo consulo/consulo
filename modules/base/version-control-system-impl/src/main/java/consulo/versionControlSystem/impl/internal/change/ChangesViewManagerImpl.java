@@ -52,10 +52,7 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangeList;
-import consulo.versionControlSystem.change.ChangeListListener;
-import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.action.IgnoredSettingsAction;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
@@ -86,9 +83,9 @@ import static java.util.stream.Collectors.toList;
 @State(name = "ChangesViewManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.AWT | ProjectEx.REGULAR_PROJECT)
-public class ChangesViewManager implements ChangesViewI, Disposable, PersistentStateComponent<ChangesViewManager.State> {
+public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, PersistentStateComponent<ChangesViewManagerImpl.State> {
 
-    private static final Logger LOG = Logger.getInstance(ChangesViewManager.class);
+    private static final Logger LOG = Logger.getInstance(ChangesViewManagerImpl.class);
 
     @Nonnull
     private final ChangesListViewImpl myView;
@@ -106,7 +103,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     private final ChangesViewContentI myContentManager;
 
     @Nonnull
-    private ChangesViewManager.State myState = new ChangesViewManager.State();
+    private ChangesViewManagerImpl.State myState = new ChangesViewManagerImpl.State();
 
     private JBSplitter mySplitter;
 
@@ -125,12 +122,12 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     private Content myContent;
 
     @Nonnull
-    public static ChangesViewI getInstance(@Nonnull Project project) {
-        return project.getComponent(ChangesViewI.class);
+    public static ChangesViewManager getInstance(@Nonnull Project project) {
+        return project.getInstance(ChangesViewManager.class);
     }
 
     @Inject
-    public ChangesViewManager(@Nonnull Project project, @Nonnull ChangesViewContentI contentManager) {
+    public ChangesViewManagerImpl(@Nonnull Project project, @Nonnull ChangesViewContentI contentManager) {
         myProject = project;
         myContentManager = contentManager;
         myView = new ChangesListViewImpl(project);
@@ -391,12 +388,12 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
 
     @Nonnull
     @Override
-    public ChangesViewManager.State getState() {
+    public ChangesViewManagerImpl.State getState() {
         return myState;
     }
 
     @Override
-    public void loadState(@Nonnull ChangesViewManager.State state) {
+    public void loadState(@Nonnull ChangesViewManagerImpl.State state) {
         myState = state;
     }
 

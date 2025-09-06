@@ -68,6 +68,7 @@ import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.history.VcsHistoryProviderEx;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.impl.internal.annotate.AnnotateToggleAction;
+import consulo.versionControlSystem.impl.internal.annotate.ShowAllAffectedGenericAction;
 import consulo.versionControlSystem.impl.internal.change.commited.*;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.RollbackChangesDialog;
@@ -748,6 +749,11 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         if (!window.isVisible()) {
             window.activate(null);
         }
+    }
+
+    @Override
+    public void showSubmittedFiles(VcsRevisionNumber revision, VirtualFile virtualFile, VcsKey vcsKey, RepositoryLocation location, boolean isNonLocal) {
+        ShowAllAffectedGenericAction.showSubmittedFiles(myProject, revision, virtualFile, vcsKey, location, isNonLocal);
     }
 
     @Override

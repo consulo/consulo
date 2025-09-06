@@ -416,4 +416,16 @@ public abstract class AbstractVcsHelper {
         @Nullable RepositoryLocation location,
         boolean local
     );
+
+    public void showSubmittedFiles(VcsRevisionNumber revision, VirtualFile virtualFile, VcsKey vcsKey) {
+        showSubmittedFiles(revision, virtualFile, vcsKey, null, false);
+    }
+
+    public abstract void showSubmittedFiles(
+        VcsRevisionNumber revision,
+        VirtualFile virtualFile,
+        VcsKey vcsKey,
+        RepositoryLocation location,
+        boolean isNonLocal
+    );
 }

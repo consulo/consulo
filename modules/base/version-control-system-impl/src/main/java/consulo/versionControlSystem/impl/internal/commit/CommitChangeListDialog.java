@@ -49,7 +49,7 @@ import consulo.versionControlSystem.impl.internal.change.PseudoMap;
 import consulo.versionControlSystem.impl.internal.change.RefreshablePanel;
 import consulo.versionControlSystem.impl.internal.change.ui.AlienLocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
-import consulo.versionControlSystem.impl.internal.checkin.CheckinChangeListSpecificComponent;
+import consulo.versionControlSystem.checkin.CheckinChangeListSpecificComponent;
 import consulo.versionControlSystem.impl.internal.checkin.CheckinMetaHandler;
 import consulo.versionControlSystem.impl.internal.ui.awt.InputException;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowserBase;
@@ -87,7 +87,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     @Nonnull
     private final CommitContext myCommitContext;
     @Nonnull
-    private final CommitMessage myCommitMessageArea;
+    private final CommitMessageImpl myCommitMessageArea;
     private Splitter mySplitter;
     @Nullable
     private final JPanel myAdditionalOptionsPanel;
@@ -426,7 +426,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         }
         myBrowser.getViewer().addSelectionListener(() -> SwingUtilities.invokeLater(this::changeDetails));
 
-        myCommitMessageArea = new CommitMessage(project);
+        myCommitMessageArea = new CommitMessageImpl(project);
 
         if (!myVcsConfiguration.CLEAR_INITIAL_COMMIT_MESSAGE) {
             setComment(initialSelection, comment);
@@ -1408,7 +1408,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         }
     }
 
-    private static class DiffCommitMessageEditor extends CommitMessage implements Disposable {
+    private static class DiffCommitMessageEditor extends CommitMessageImpl implements Disposable {
         public DiffCommitMessageEditor(CommitChangeListDialog dialog) {
             super(dialog.getProject());
             getEditorField().setDocument(dialog.myCommitMessageArea.getEditorField().getDocument());
