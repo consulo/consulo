@@ -17,7 +17,7 @@ package consulo.versionControlSystem.change;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-import consulo.versionControlSystem.internal.ChangesBrowserTree;
+import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
 
 import javax.swing.*;
 import java.util.List;

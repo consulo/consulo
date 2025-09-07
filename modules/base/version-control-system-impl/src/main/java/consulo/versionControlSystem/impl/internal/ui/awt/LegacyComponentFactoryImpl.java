@@ -20,8 +20,9 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
+import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.FilePathChangesTreeListImpl;
-import consulo.versionControlSystem.internal.ChangesBrowserTree;
+import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
 import consulo.versionControlSystem.ui.awt.LegacyComponentFactory;
 import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
@@ -31,6 +32,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -84,6 +86,17 @@ public class LegacyComponentFactoryImpl implements LegacyComponentFactory {
     @Override
     public LegacyDialog createChangeListViewerDialog(Project project, CommittedChangeList changeList, VirtualFile toSelect, String description) {
         return new ChangeListViewerDialog(project, changeList, toSelect) {
+            @Nullable
+            @Override
+            protected String getDescription() {
+                return description;
+            }
+        };
+    }
+
+    @Override
+    public LegacyDialog createChangeListViewerDialog(Project project, Collection<Change> changes, boolean inAir, String description) {
+        return new ChangeListViewerDialog(project, changes, inAir) {
             @Nullable
             @Override
             protected String getDescription() {

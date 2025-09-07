@@ -22,12 +22,13 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
-import consulo.versionControlSystem.internal.ChangesBrowserTree;
+import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -73,4 +74,6 @@ public interface LegacyComponentFactory {
                                                                @Nullable Runnable inclusionListener);
 
     LegacyDialog createChangeListViewerDialog(Project project, CommittedChangeList changeList, VirtualFile toSelect, String description);
+
+    LegacyDialog createChangeListViewerDialog(Project project, Collection<Change> changes, boolean inAir, String description);
 }

@@ -48,7 +48,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
-import consulo.versionControlSystem.internal.ChangesBrowserTree;
+import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.internal;
+package consulo.versionControlSystem.ui.awt;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
