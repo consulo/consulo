@@ -15,10 +15,15 @@
  */
 package consulo.versionControlSystem.internal;
 
+import consulo.ui.ex.action.AnAction;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+import javax.swing.*;
 import javax.swing.border.Border;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -32,4 +37,18 @@ public interface ChangesBrowserTree<T> {
     void excludeChanges(Collection<T> changes);
 
     void includeChanges(Collection<T> changes);
+
+    default void setChangesToDisplay(List<T> changes) {
+        setChangesToDisplay(changes, null);
+    }
+
+    void setChangesToDisplay(List<T> changes, @Nullable VirtualFile toSelect);
+
+    @Nonnull
+    AnAction[] getTreeActions();
+
+    @Nonnull
+    default JComponent getComponent() {
+        return (JComponent) this;
+    }
 }

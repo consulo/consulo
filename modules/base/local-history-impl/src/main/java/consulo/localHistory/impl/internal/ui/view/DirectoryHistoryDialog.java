@@ -36,7 +36,7 @@ import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.*;
 
 public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialogModel> {
-    private ChangesTreeList<Change> myChangesTree;
+    private ChangesTreeListImpl<Change> myChangesTree;
     private JScrollPane myChangesTreeScrollPane;
     private ActionToolbar myToolBar;
 
@@ -126,8 +126,8 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
         myChangesTree.installPopupHandler(createChangesTreeActions(root));
     }
 
-    private ChangesTreeList<Change> createChangesTree() {
-        return new ChangesTreeList<Change>(myProject, Collections.<Change>emptyList(), false, false, null, null) {
+    private ChangesTreeListImpl<Change> createChangesTree() {
+        return new ChangesTreeListImpl<Change>(myProject, Collections.<Change>emptyList(), false, false, null, null) {
             @Override
             protected DefaultTreeModel buildTreeModel(List<Change> cc, ChangeNodeDecorator changeNodeDecorator) {
                 return new TreeModelBuilder(myProject, isShowFlatten()).buildModel(cc, changeNodeDecorator);

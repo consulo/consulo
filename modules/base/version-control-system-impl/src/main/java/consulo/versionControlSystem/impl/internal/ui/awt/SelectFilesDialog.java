@@ -31,8 +31,9 @@ import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.impl.internal.change.action.DeleteUnversionedFilesAction;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
+import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -45,9 +46,9 @@ import java.util.List;
 /**
  * @author yole
  */
-public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
+public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> implements LegacyDialog {
     @Nonnull
-    private final VirtualFileList myFileList;
+    private final VirtualFileListImpl myFileList;
     private final boolean myDeletableFiles;
 
     protected SelectFilesDialog(
@@ -57,7 +58,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
     ) {
         super(project, false, confirmationOption, prompt, showDoNotAskOption);
         myDeletableFiles = deletableFiles;
-        myFileList = new VirtualFileList(project, originalFiles, selectableFiles, deletableFiles);
+        myFileList = new VirtualFileListImpl(project, originalFiles, selectableFiles, deletableFiles);
         myFileList.setChangesToDisplay(originalFiles);
     }
 
@@ -84,7 +85,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
 
     @Nonnull
     @Override
-    protected ChangesTreeList getFileList() {
+    protected ChangesTreeListImpl getFileList() {
         return myFileList;
     }
 
@@ -107,12 +108,12 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
         return defaultGroup;
     }
 
-    public static class VirtualFileList extends ChangesTreeList<VirtualFile> {
+    public static class VirtualFileListImpl extends ChangesTreeListImpl<VirtualFile> {
 
         @Nullable
         private final DeleteProvider myDeleteProvider;
 
-        public VirtualFileList(Project project, List<VirtualFile> originalFiles, boolean selectableFiles, boolean deletableFiles) {
+        public VirtualFileListImpl(Project project, List<VirtualFile> originalFiles, boolean selectableFiles, boolean deletableFiles) {
             super(project, originalFiles, selectableFiles, true, null, null);
             myDeleteProvider = (deletableFiles ? new VirtualFileDeleteProvider() : null);
         }

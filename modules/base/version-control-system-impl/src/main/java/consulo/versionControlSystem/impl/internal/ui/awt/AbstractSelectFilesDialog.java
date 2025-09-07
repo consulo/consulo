@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ui.ex.action.*;
 
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -50,7 +50,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
   }
 
   @Nonnull
-  protected abstract ChangesTreeList getFileList();
+  protected abstract ChangesTreeListImpl getFileList();
 
   @Nullable
   private JLabel createPromptLabel() {

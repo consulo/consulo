@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
@@ -41,6 +42,8 @@ public interface ChangesBrowserFactory {
                                                @Nullable Runnable inclusionListener,
                                                ChangesBrowser.MyUseCase useCase,
                                                @Nullable VirtualFile toSelect);
+
+    ChangesBrowser<Change> createChangeBrowserWithRollback(@Nonnull Project project, @Nonnull List<Change> changes);
 
     default RepositoryChangesBrowser createRepositoryChangeBrowser(Project project,
                                                                    Consumer<DefaultActionGroup> toolbarExtender,

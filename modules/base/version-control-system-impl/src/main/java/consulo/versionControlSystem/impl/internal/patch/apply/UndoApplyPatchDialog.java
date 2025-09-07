@@ -24,7 +24,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.FilePathChangesTreeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.FilePathChangesTreeListImpl;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -66,7 +66,7 @@ class UndoApplyPatchDialog extends DialogWrapper {
     }
     panel.add(labelsPanel, BorderLayout.NORTH);
     if (numFiles > 0) {
-      FilePathChangesTreeList browser = new FilePathChangesTreeList(myProject, myFailedFilePaths, false, false, null, null) {
+      FilePathChangesTreeListImpl browser = new FilePathChangesTreeListImpl(myProject, myFailedFilePaths, false, false, null, null) {
         @Override
         public Dimension getPreferredSize() {
           return new Dimension(infoLabel.getPreferredSize().width, 50);

@@ -42,7 +42,7 @@ import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
@@ -72,7 +72,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     // for backgroundable rollback to mark
     private boolean myDataIsDirty;
     protected final Class<T> myClass;
-    protected final ChangesTreeList<T> myViewer;
+    protected final ChangesTreeListImpl<T> myViewer;
     protected final JScrollPane myViewerScrollPane;
     protected ChangeList mySelectedChangeList;
     protected List<T> myChangesToDisplay;
@@ -120,7 +120,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
         ChangeNodeDecorator decorator =
             ChangesBrowser.MyUseCase.LOCAL_CHANGES.equals(useCase) ? RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator() : null;
 
-        myViewer = new ChangesTreeList<>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
+        myViewer = new ChangesTreeListImpl<>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
             @Override
             protected DefaultTreeModel buildTreeModel(List<T> changes, ChangeNodeDecorator changeNodeDecorator) {
                 return ChangesBrowserBase.this.buildTreeModel(changes, changeNodeDecorator, isShowFlatten());
@@ -202,7 +202,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     }
 
     @Override
-    public ChangesTreeList<T> getViewer() {
+    public ChangesTreeListImpl<T> getViewer() {
         return myViewer;
     }
 

@@ -31,6 +31,7 @@ import consulo.versionControlSystem.change.commited.CommittedChangeListImpl;
 import consulo.versionControlSystem.impl.internal.change.commited.InternalRepositoryChangesBrowser;
 import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
+import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
 import consulo.virtualFileSystem.VirtualFile;
@@ -51,7 +52,7 @@ import java.util.function.Function;
  * @author max
  * @since 2006-07-20
  */
-public class ChangeListViewerDialog extends DialogWrapper implements DataProvider {
+public class ChangeListViewerDialog extends DialogWrapper implements DataProvider, LegacyDialog {
   private Project myProject;
   private CommittedChangeList myChangeList;
   private InternalRepositoryChangesBrowser myChangesBrowser;

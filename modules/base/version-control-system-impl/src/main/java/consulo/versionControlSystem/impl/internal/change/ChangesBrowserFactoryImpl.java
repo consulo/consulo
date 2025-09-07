@@ -21,7 +21,9 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.commited.InternalRepositoryChangesBrowser;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
+import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowserWithRollback;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
@@ -38,6 +40,11 @@ public class ChangesBrowserFactoryImpl implements ChangesBrowserFactory {
     @Override
     public ChangesBrowser<Change> createChangeBrowser(Project project, List<? extends ChangeList> changeLists, List<Change> changes, ChangeList initialListSelection, boolean capableOfExcludingChanges, boolean highlightProblems, @Nullable Runnable inclusionListener, ChangesBrowser.MyUseCase useCase, @Nullable VirtualFile toSelect) {
         return new InternalChangesBrowser(project, changeLists, changes, initialListSelection, capableOfExcludingChanges, highlightProblems, inclusionListener, useCase, toSelect);
+    }
+
+    @Override
+    public ChangesBrowser<Change> createChangeBrowserWithRollback(@Nonnull Project project, @Nonnull List<Change> changes) {
+        return new InternalChangesBrowserWithRollback(project, changes);
     }
 
     @Override

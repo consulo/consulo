@@ -21,8 +21,9 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.FilePathChangesTreeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.FilePathChangesTreeListImpl;
+import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,8 +33,8 @@ import java.util.List;
 /**
  * @author yole
  */
-public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
-    private final ChangesTreeList<FilePath> myFileList;
+public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> implements LegacyDialog {
+    private final ChangesTreeListImpl<FilePath> myFileList;
 
     public SelectFilePathsDialog(
         Project project,
@@ -45,7 +46,7 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
         boolean showDoNotAskOption
     ) {
         super(project, false, confirmationOption, prompt, showDoNotAskOption);
-        myFileList = new FilePathChangesTreeList(project, originalFiles, true, true, null, null);
+        myFileList = new FilePathChangesTreeListImpl(project, originalFiles, true, true, null, null);
         if (okActionName != LocalizeValue.empty()) {
             getOKAction().setText(okActionName);
         }
@@ -68,7 +69,7 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
         boolean showDoNotAskOption
     ) {
         super(project, false, confirmationOption, prompt, showDoNotAskOption);
-        myFileList = new FilePathChangesTreeList(project, originalFiles, true, true, null, null);
+        myFileList = new FilePathChangesTreeListImpl(project, originalFiles, true, true, null, null);
         if (okActionName != null) {
             getOKAction().putValue(Action.NAME, okActionName);
         }
@@ -85,7 +86,7 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
 
     @Nonnull
     @Override
-    protected ChangesTreeList getFileList() {
+    protected ChangesTreeListImpl getFileList() {
         return myFileList;
     }
 }

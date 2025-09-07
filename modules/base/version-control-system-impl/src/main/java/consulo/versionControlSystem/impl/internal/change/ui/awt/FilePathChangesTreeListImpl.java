@@ -17,21 +17,17 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.util.List;
 
-public class FilePathChangesTreeList extends ChangesTreeList<FilePath> {
+public class FilePathChangesTreeListImpl extends ChangesTreeListImpl<FilePath> {
 
-  public FilePathChangesTreeList(@Nonnull Project project, @Nonnull List<FilePath> originalFiles,
-                                 boolean showCheckboxes, boolean highlightProblems,
-                                 @jakarta.annotation.Nullable Runnable inclusionListener, @jakarta.annotation.Nullable ChangeNodeDecorator nodeDecorator) {
+  public FilePathChangesTreeListImpl(@Nonnull Project project, @Nonnull List<FilePath> originalFiles,
+                                     boolean showCheckboxes, boolean highlightProblems,
+                                     @Nullable Runnable inclusionListener, @Nullable ChangeNodeDecorator nodeDecorator) {
     super(project, originalFiles, showCheckboxes, highlightProblems, inclusionListener, nodeDecorator);
   }
 

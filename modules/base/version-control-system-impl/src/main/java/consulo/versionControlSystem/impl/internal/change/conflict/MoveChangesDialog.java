@@ -28,7 +28,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
@@ -46,7 +46,7 @@ import java.util.Set;
  */
 public class MoveChangesDialog extends DialogWrapper {
   private static final String MOVE_CHANGES_CURRENT_ONLY = "move.changes.current.only";
-  private final ChangesTreeList<Change> myTreeList;
+  private final ChangesTreeListImpl<Change> myTreeList;
   private final List<Change> myChanges;
   private final Collection<Change> mySelected;
   private JBCheckBox myCheckBox;
@@ -55,7 +55,7 @@ public class MoveChangesDialog extends DialogWrapper {
     super(project, true);
     mySelected = selected;
     setTitle("Move Changes to Active Changelist");
-    myTreeList = new ChangesTreeList<Change>(project, selected, true, false, null, null) {
+    myTreeList = new ChangesTreeListImpl<Change>(project, selected, true, false, null, null) {
 
       @Override
       protected DefaultTreeModel buildTreeModel(List<Change> changes, ChangeNodeDecorator changeNodeDecorator) {

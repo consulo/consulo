@@ -581,7 +581,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         }
     }
 
-    private class MyChangeTreeList extends ChangesTreeList<AbstractFilePatchInProgress.PatchChange> {
+    private class MyChangeTreeList extends ChangesTreeListImpl<AbstractFilePatchInProgress.PatchChange> {
         private MyChangeTreeList(
             Project project,
             Collection<AbstractFilePatchInProgress.PatchChange> initiallyIncluded,

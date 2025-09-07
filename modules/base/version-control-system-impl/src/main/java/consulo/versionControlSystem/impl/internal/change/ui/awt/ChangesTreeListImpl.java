@@ -71,7 +71,7 @@ import java.util.*;
 /**
  * @author max
  */
-public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataProvider, ChangesBrowserTree<T> {
+public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDataProvider, ChangesBrowserTree<T> {
     @Nonnull
     protected final Project myProject;
     private final boolean myShowCheckboxes;
@@ -103,7 +103,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     private TreeState myNonFlatTreeState;
     private final ApplicationFileColorManager myApplicationFileColorManager;
 
-    public ChangesTreeList(
+    public ChangesTreeListImpl(
         @Nonnull Project project,
         @Nonnull Collection<T> initiallyIncluded,
         boolean showCheckboxes,
@@ -272,10 +272,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
         return isFlat;
     }
 
-    public void setChangesToDisplay(List<T> changes) {
-        setChangesToDisplay(changes, null);
-    }
-
+    @Override
     public void setChangesToDisplay(List<T> changes, @Nullable VirtualFile toSelect) {
         DefaultTreeModel model = buildTreeModel(changes, myChangeDecorator);
         TreeState state = null;
@@ -295,7 +292,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
             if (myProject.isDisposed()) {
                 return;
             }
-            TreeUtil.expandAll(ChangesTreeList.this);
+            TreeUtil.expandAll(ChangesTreeListImpl.this);
 
             int selectedTreeRow = -1;
 
@@ -333,7 +330,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
             if (selectedTreeRow >= 0) {
                 setSelectionRow(selectedTreeRow);
             }
-            TreeUtil.showRowCentered(ChangesTreeList.this, selectedTreeRow, false);
+            TreeUtil.showRowCentered(ChangesTreeListImpl.this, selectedTreeRow, false);
         };
         if (myProject.getApplication().isDispatchThread()) {
             runnable.run();
@@ -506,6 +503,8 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
         TreeUtil.expandAll(this);
     }
 
+    @Nonnull
+    @Override
     public AnAction[] getTreeActions() {
         ToggleShowDirectoriesAction directoriesAction = new ToggleShowDirectoriesAction();
         ExpandAllAction expandAllAction = new ExpandAllAction(this) {
