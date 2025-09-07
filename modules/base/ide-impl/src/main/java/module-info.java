@@ -437,7 +437,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.changes.committed;
   exports consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
   exports consulo.ide.impl.idea.openapi.vcs.changes.patch;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.ui;
   exports consulo.ide.impl.idea.openapi.vcs.checkin;
   exports consulo.ide.impl.idea.openapi.vcs.checkout;
   exports consulo.ide.impl.idea.openapi.vcs.configurable;

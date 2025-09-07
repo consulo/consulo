@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.vcs.changes.ui;
+package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangesFileNameDecorator;

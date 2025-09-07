@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.vcs.changes.ui;
+package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;

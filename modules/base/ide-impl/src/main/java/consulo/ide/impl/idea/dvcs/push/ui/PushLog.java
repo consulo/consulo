@@ -17,8 +17,6 @@ package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
-import consulo.versionControlSystem.impl.internal.change.ui.EditSourceForDialogAction;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,9 +32,11 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesBrowserUtil;
 import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.change.ChangesBrowserUtil;
+import consulo.versionControlSystem.impl.internal.change.ui.EditSourceForDialogAction;
+import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
 import jakarta.annotation.Nonnull;
@@ -57,7 +57,7 @@ import java.util.function.Function;
 
 public class PushLog extends JPanel implements DataProvider {
     private static final String START_EDITING = "startEditing";
-    private final ChangesBrowser myChangesBrowser;
+    private final InternalChangesBrowser myChangesBrowser;
     private final CheckboxTree myTree;
     private final MyTreeCellRenderer myTreeCellRenderer;
     private final JScrollPane myScrollPane;
@@ -223,7 +223,7 @@ public class PushLog extends JPanel implements DataProvider {
         ToolTipManager.sharedInstance().registerComponent(myTree);
         PopupHandler.installPopupHandler(myTree, VcsLogActionPlaces.POPUP_ACTION_GROUP, VcsLogActionPlaces.POPUP_ACTION_GROUP);
 
-        myChangesBrowser = new ChangesBrowser(
+        myChangesBrowser = new InternalChangesBrowser(
             project,
             null,
             Collections.<Change>emptyList(),
@@ -231,7 +231,7 @@ public class PushLog extends JPanel implements DataProvider {
             false,
             false,
             null,
-            ChangesBrowser.MyUseCase.LOCAL_CHANGES,
+            InternalChangesBrowser.MyUseCase.LOCAL_CHANGES,
             null
         );
         myChangesBrowser.getDiffAction().registerCustomShortcutSet(myChangesBrowser.getDiffAction().getShortcutSet(), myTree);

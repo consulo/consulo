@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs;
+package consulo.versionControlSystem;
 
-import consulo.versionControlSystem.FilePathComparator;
-import consulo.versionControlSystem.AbstractFilterChildren;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,12 +27,14 @@ public class FilterDescendantVirtualFiles extends AbstractFilterChildren<Virtual
   private FilterDescendantVirtualFiles() {
   }
 
+  @Override
   protected void sortAscending(List<VirtualFile> virtualFiles) {
     Collections.sort(virtualFiles, FilePathComparator.getInstance());
   }
 
+  @Override
   protected boolean isAncestor(VirtualFile parent, VirtualFile child) {
-    return VfsUtil.isAncestor(parent, child, false);
+    return VirtualFileUtil.isAncestor(parent, child, false);
   }
 
   public static void filter(List<VirtualFile> in) {
