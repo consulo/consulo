@@ -27,9 +27,9 @@ import consulo.diff.content.EmptyContent;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.TextDiffSettingsHolder.TextDiffSettings;
 import consulo.diff.internal.DiffImplUtil;
+import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.internal.HighlightPolicy;
 import consulo.diff.internal.IgnorePolicy;
-import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.disposer.Disposable;
@@ -65,7 +65,7 @@ public class TextDiffViewerUtil {
         result.add(AnSeparator.getInstance());
         ContainerUtil.addAll(
             result,
-            ((ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_DIFF_EDITOR_POPUP)).getChildren(null)
+            ((ActionGroup) ActionManager.getInstance().getAction(IdeActions.GROUP_DIFF_EDITOR_POPUP)).getChildren(null)
         );
 
         return result;
@@ -147,7 +147,7 @@ public class TextDiffViewerUtil {
     ) {
         List<T> properties = ContainerUtil.mapNotNull(
             contents,
-            content -> content instanceof EmptyContent ? null : propertyGetter.apply((DocumentContent)content)
+            content -> content instanceof EmptyContent ? null : propertyGetter.apply((DocumentContent) content)
         );
 
         return properties.size() < 2 || new HashSet<>(properties).size() == 1;
@@ -159,7 +159,7 @@ public class TextDiffViewerUtil {
 
     // TODO: pretty icons ?
     public static abstract class ComboBoxSettingAction<T> extends ComboBoxAction implements DumbAware {
-        private DefaultActionGroup myChildren;
+        private ActionGroup myChildren;
 
         public ComboBoxSettingAction() {
             setEnabledInModalContext(true);
@@ -168,28 +168,30 @@ public class TextDiffViewerUtil {
         @Override
         public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
-            presentation.setText(getText(getCurrentSetting()));
+            presentation.setTextValue(getText(getCurrentSetting()));
         }
 
         @Nonnull
-        public DefaultActionGroup getPopupGroup() {
+        public ActionGroup getPopupGroup() {
             initChildren();
             return myChildren;
         }
 
         @Nonnull
         @Override
-        public DefaultActionGroup createPopupActionGroup(JComponent c) {
+        public ActionGroup createPopupActionGroup(JComponent c) {
             initChildren();
             return myChildren;
         }
 
         private void initChildren() {
             if (myChildren == null) {
-                myChildren = new DefaultActionGroup();
+                ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
                 for (T setting : getAvailableSettings()) {
-                    myChildren.add(new MyAction(setting));
+                    builder.add(new MyAction(setting));
                 }
+
+                myChildren = builder.build();
             }
         }
 
@@ -197,7 +199,7 @@ public class TextDiffViewerUtil {
         protected abstract List<T> getAvailableSettings();
 
         @Nonnull
-        protected abstract String getText(@Nonnull T setting);
+        protected abstract LocalizeValue getText(@Nonnull T setting);
 
         @Nonnull
         protected abstract T getCurrentSetting();
@@ -250,8 +252,8 @@ public class TextDiffViewerUtil {
 
         @Nonnull
         @Override
-        protected String getText(@Nonnull HighlightPolicy setting) {
-            return setting.getText().get();
+        protected LocalizeValue getText(@Nonnull HighlightPolicy setting) {
+            return setting.getText();
         }
 
         @Nonnull
@@ -291,8 +293,8 @@ public class TextDiffViewerUtil {
 
         @Nonnull
         @Override
-        protected String getText(@Nonnull IgnorePolicy setting) {
-            return setting.getText().get();
+        protected LocalizeValue getText(@Nonnull IgnorePolicy setting) {
+            return setting.getText();
         }
 
         @Nonnull
@@ -373,7 +375,7 @@ public class TextDiffViewerUtil {
 
         protected void applyDefaults() {
             if (isVisible()) { // apply default state
-                setSelected(null, isSelected(null));
+                setSelectedNoEvent(mySettings.isReadOnlyLock());
             }
         }
 
@@ -392,8 +394,13 @@ public class TextDiffViewerUtil {
             return mySettings.isReadOnlyLock();
         }
 
+        @RequiredUIAccess
         @Override
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            setSelectedNoEvent(state);
+        }
+
+        private void setSelectedNoEvent(boolean state) {
             mySettings.setReadOnlyLock(state);
             doApply(state);
         }
@@ -465,7 +472,7 @@ public class TextDiffViewerUtil {
             if (evt.getOldValue().equals(evt.getNewValue())) {
                 return;
             }
-            int fontSize = (Integer)evt.getNewValue();
+            int fontSize = (Integer) evt.getNewValue();
 
             for (EditorEx editor : myEditors) {
                 if (evt.getSource() != editor) {
