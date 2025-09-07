@@ -142,6 +142,7 @@
                 <include>consulo:consulo-version-control-system-log-impl</include>
                 <include>consulo:consulo-external-service-api</include>
                 <include>consulo:consulo-external-service-impl</include>
+                <include>consulo:consulo-external-tool-impl</include>
                 <include>consulo:consulo-task-api</include>
                 <include>consulo:consulo-task-impl</include>
                 <include>consulo:consulo-http-api</include>

@@ -85,8 +85,6 @@
                 <action id="DumpIntentionsDescriptions" internal="true" class="consulo.ide.impl.idea.internal.DumpIntentionsAction"/>
                 <action id="DumpConfigurationTypes" internal="true" class="consulo.ide.impl.idea.internal.DumpConfigurationTypesAction"/>
                 <action id="DumpDirectoryIndex" internal="true" class="consulo.ide.impl.idea.internal.DumpDirectoryInfoAction"/>
-                <action id="ScanSourceCommentsAction" internal="true" class="consulo.ide.impl.idea.tools.ScanSourceCommentsAction"
-                        text="Dump all comments in the project"/>
             </group>
 
             <separator/>

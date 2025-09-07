@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.keymap;
+package consulo.externalTool.impl.internal;
+
+import consulo.annotation.component.ExtensionImpl;
+
+import java.util.List;
 
 /**
- * @author yole
+ * @author traff
  */
-public interface KeymapGroup {
-    void addActionId(String id);
-
-    void addGroup(KeymapGroup keymapGroup);
-
-    void addAll(KeymapGroup group);
-
-    default void normalizeSeparators() {
-    }
+@ExtensionImpl
+public class LocalToolsProvider extends ToolsProvider {
+  @Override
+  public List<Tool> getTools() {
+    return ToolManager.getInstance().getTools();
+  }
 }

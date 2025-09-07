@@ -20,18 +20,18 @@ import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.internal.psiView.PsiViewerAction;
 import consulo.ide.impl.idea.internal.psiView.PsiViewerForContextAction;
-import consulo.ide.impl.idea.tools.ExternalToolsGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.task.internal.TaskActions;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
  * @since 2025-08-01
  */
 @ActionImpl(
-    id = "ToolsMenu",
+    id = IdeActions.TOOLS_MENU,
     children = {
         @ActionRef(id = TaskActions.TASKS_AND_CONTEXTS),
         @ActionRef(type = AnSeparator.class),
@@ -41,8 +41,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = CreateLauncherScriptAction.class),
         @ActionRef(type = CreateDesktopEntryAction.class),
-        @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = ExternalToolsGroup.class)
+        @ActionRef(type = AnSeparator.class)
     }
 )
 public class ToolsMenuGroup extends DefaultActionGroup implements DumbAware {

@@ -471,7 +471,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ssh;
   exports consulo.ide.impl.idea.tasks.context;
   exports consulo.ide.impl.idea.testIntegration;
-  exports consulo.ide.impl.idea.tools;
   exports consulo.ide.impl.idea.ui;
   exports consulo.ide.impl.idea.ui.components;
   exports consulo.ide.impl.idea.ui.components.labels;

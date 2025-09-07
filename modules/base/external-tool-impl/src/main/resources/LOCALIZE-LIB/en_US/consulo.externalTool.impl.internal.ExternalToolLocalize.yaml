@@ -1,0 +1,126 @@
+tools.add.button:
+    text: '&Add...'
+tools.add.title:
+    text: Create Tool
+tools.after.commit.description:
+    text: 'Run tool:'
+tools.before.run.description:
+    text: External tool ''{0}''
+tools.before.run.provider.name:
+    text: Run External tool
+tools.caption:
+    text: 'Tools:'
+tools.completed.message:
+    text: External tool ''{0}'' completed with exit code {1}
+tools.copy.button:
+    text: '&Copy'
+tools.copy.title:
+    text: Copy Tool
+tools.delete.confirmation:
+    text: Do you want to delete the external tool(s)?
+tools.description.column:
+    text: Description
+tools.description.label:
+    text: 'Description:'
+tools.dialog.title:
+    text: External tools
+tools.edit.button:
+    text: '&Edit...'
+tools.edit.title:
+    text: Edit Tool
+tools.failed.to.save.changes.0:
+    text: 'Failed to save changes: {0}'
+tools.filters.add.button:
+    text: '&Add...'
+tools.filters.add.description.label:
+    text: 'Description:'
+tools.filters.add.macro.tooltip:
+    text: Press the right mouse button to see the list of available macros
+tools.filters.add.name.label:
+    text: 'Name:'
+tools.filters.add.name.required.error:
+    text: Filter name is not defined
+tools.filters.add.regex.invalid.title:
+    text: Invalid Regular Expression
+tools.filters.add.regex.label:
+    text: 'Regular expression to match output:'
+tools.filters.add.regex.required.error:
+    text: Regular expression must be defined
+tools.filters.add.title:
+    text: Add Filter
+tools.filters.button:
+    text: Output &Filters...
+tools.filters.edit.button:
+    text: E&dit...
+tools.filters.edit.title:
+    text: Edit filter
+tools.filters.move.down.button:
+    text: Move D&own
+tools.filters.move.up.button:
+    text: Move &Up
+tools.filters.name.default:
+    text: No name
+tools.filters.name.template:
+    text: Filter
+tools.filters.remove.button:
+    text: '&Remove'
+tools.filters.title:
+    text: Output Filters
+tools.group.column:
+    text: Group
+tools.group.label:
+    text: 'Group:'
+tools.insert.macro.button:
+    text: Insert &macro...
+tools.insert.macro.button.a:
+    text: Insert m&acro...
+tools.insert.macro.button.c:
+    text: Insert ma&cro...
+tools.list.item.none:
+    text: (none)
+tools.menu.editor.checkbox:
+    text: Editor menu
+tools.menu.group:
+    text: Show in
+tools.menu.main.checkbox:
+    text: Main menu
+tools.menu.project.checkbox:
+    text: Project views
+tools.menu.search.checkbox:
+    text: Search results
+tools.move.down.button:
+    text: Move &Down
+tools.move.up.button:
+    text: Move &Up
+tools.name.column:
+    text: Name
+tools.name.label:
+    text: 'Name:'
+tools.not.configured:
+    text: No external tools configured
+tools.open.console.checkbox:
+    text: Open console
+tools.options.group:
+    text: Options
+tools.parameters.label:
+    text: 'Parameters:'
+tools.process.start.error:
+    text: Could Not Start Process
+tools.program.label:
+    text: 'Program:'
+tools.remove.button:
+    text: '&Remove'
+tools.settings:
+    text: Tools
+tools.settings.title:
+    text: External Tools
+tools.synchronize.files.checkbox:
+    text: Synchronize files after execution
+tools.tool.group:
+    text: Tool settings
+tools.unknown.external.tool:
+    text: Unknown external tool
+tools.unnamed.group:
+    text: '[unnamed group]'
+tools.working.directory.label:
+    text: 'Working directory:'

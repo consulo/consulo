@@ -220,8 +220,9 @@ public class KeymapGroupImpl implements KeymapGroup {
         return path.toString();
     }
 
-    public void addAll(KeymapGroupImpl group) {
-        for (Object o : group.getChildren()) {
+    @Override
+    public void addAll(KeymapGroup group) {
+        for (Object o : ((KeymapGroupImpl) group).getChildren()) {
             if (o instanceof String actionId) {
                 addActionId(actionId);
             }
