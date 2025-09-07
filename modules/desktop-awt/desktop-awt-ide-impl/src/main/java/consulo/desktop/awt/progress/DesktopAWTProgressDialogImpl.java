@@ -11,7 +11,7 @@ import consulo.desktop.awt.ui.GlassPaneDialogWrapperPeer;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ui.PopupBorder;
-import consulo.ide.impl.idea.ui.TitlePanel;
+import consulo.ui.ex.awt.LabeledTitlePanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -97,7 +97,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
     private JProgressBar myProgressBar;
     private boolean myRepaintedFlag = true; // guarded by this
-    private TitlePanel myTitlePanel;
+    private LabeledTitlePanel myTitlePanel;
     private JPanel myInnerPanel;
     DialogWrapper myPopup;
     private final consulo.ui.Window myParentWindow;

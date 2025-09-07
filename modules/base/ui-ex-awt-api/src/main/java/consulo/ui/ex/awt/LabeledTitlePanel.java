@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -31,18 +27,18 @@ import java.awt.*;
 /**
  * @author max
  */
-public class TitlePanel extends CaptionPanel {
+public class LabeledTitlePanel extends CaptionPanel {
   private final JLabel myLabel;
   private final Image myRegular;
   private final Image myInactive;
 
   private boolean myHtml;
   
-  public TitlePanel() {
+  public LabeledTitlePanel() {
     this(null, null);
   }
 
-  public TitlePanel(Image regular, Image inactive) {
+  public LabeledTitlePanel(Image regular, Image inactive) {
     myRegular = regular;
     myInactive = inactive;
 

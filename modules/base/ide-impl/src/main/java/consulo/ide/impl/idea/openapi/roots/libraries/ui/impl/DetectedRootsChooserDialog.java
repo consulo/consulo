@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.ui.TitlePanel;
+import consulo.ui.ex.awt.BorderedTitlePanel;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.awt.tree.table.TreeColumnInfo;
 import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
@@ -224,7 +224,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
 
   @Override
   protected JComponent createTitlePane() {
-    return new TitlePanel("Choose Roots", myDescription);
+    return new BorderedTitlePanel("Choose Roots", myDescription);
   }
 
   @Nullable

@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ui.CaptionPanel;
+import consulo.ui.ex.awt.CaptionPanel;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;

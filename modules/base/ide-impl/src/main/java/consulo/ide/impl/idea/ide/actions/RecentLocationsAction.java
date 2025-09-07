@@ -12,7 +12,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.CaptionPanel;
+import consulo.ui.ex.awt.CaptionPanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ui.ex.awt.ListWithFilter;
 import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;

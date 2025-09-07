@@ -29,7 +29,7 @@ import consulo.project.ui.impl.internal.wm.action.ToolWindowsGroup;
 import consulo.ui.ex.internal.QuickSearchComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.CaptionPanel;
+import consulo.ui.ex.awt.CaptionPanel;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;

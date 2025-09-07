@@ -320,8 +320,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         else {
             if (caption != null) {
                 if (!caption.isEmpty()) {
-                    myCaption = new TitlePanel(actualIcon.getRegular(), actualIcon.getInactive());
-                    ((TitlePanel) myCaption).setText(caption);
+                    myCaption = new LabeledTitlePanel(actualIcon.getRegular(), actualIcon.getInactive());
+                    ((LabeledTitlePanel) myCaption).setText(caption);
                 }
                 else {
                     myCaption = new CaptionPanel();
@@ -1856,7 +1856,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Override
     public void setCaption(@Nonnull String title) {
-        if (myCaption instanceof TitlePanel titlePanel) {
+        if (myCaption instanceof LabeledTitlePanel titlePanel) {
             titlePanel.setText(title);
         }
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
