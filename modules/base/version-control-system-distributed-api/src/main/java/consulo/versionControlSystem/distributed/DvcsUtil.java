@@ -48,7 +48,6 @@ import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 import consulo.versionControlSystem.log.TimedVcsCommit;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
-import consulo.versionControlSystem.util.VcsImplUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
@@ -104,12 +103,12 @@ public class DvcsUtil {
     }
 
     /**
-     * @deprecated use {@link VcsImplUtil#getShortVcsRootName}
+     * @deprecated use {@link VcsUtil#getShortVcsRootName}
      */
     @Nonnull
     @Deprecated
     public static String getShortRepositoryName(@Nonnull Project project, @Nonnull VirtualFile root) {
-        return VcsImplUtil.getShortVcsRootName(project, root);
+        return VcsUtil.getShortVcsRootName(project, root);
     }
 
     @Nonnull

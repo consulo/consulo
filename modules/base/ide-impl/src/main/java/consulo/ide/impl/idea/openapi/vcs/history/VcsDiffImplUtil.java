@@ -36,7 +36,7 @@ import java.util.*;
 import static consulo.diff.internal.DiffUserDataKeysEx.VCS_DIFF_LEFT_CONTENT_TITLE;
 import static consulo.diff.internal.DiffUserDataKeysEx.VCS_DIFF_RIGHT_CONTENT_TITLE;
 
-public class VcsDiffUtil {
+public class VcsDiffImplUtil {
 
     @RequiredUIAccess
     public static void showDiffFor(@Nonnull Project project,
@@ -95,11 +95,5 @@ public class VcsDiffUtil {
         dialogBuilder.setCenterPanel(changesBrowser.getComponent());
         dialogBuilder.setPreferredFocusComponent(changesBrowser.getPreferredFocusedComponent());
         dialogBuilder.showNotModal();
-    }
-
-    @Nonnull
-    public static List<Change> createChangesWithCurrentContentForFile(@Nonnull FilePath filePath,
-                                                                      @Nullable ContentRevision beforeContentRevision) {
-        return Collections.singletonList(new Change(beforeContentRevision, CurrentContentRevision.create(filePath)));
     }
 }

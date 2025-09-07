@@ -20,8 +20,11 @@ import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.progress.ProgressManager;
 import consulo.document.FileDocumentManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -34,6 +37,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.change.CurrentContentRevision;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.root.VcsRootDetector;
@@ -747,5 +751,39 @@ public class VcsUtil {
             }
         }
         return -1;
+    }
+
+    /**
+     * Shows error message with specified message text and title.
+     * The parent component is the root frame.
+     *
+     * @param project Current project component
+     * @param message information message
+     * @param title   Dialog title
+     */
+    public static void showErrorMessage(Project project, String message, String title) {
+        @RequiredUIAccess Runnable task = () -> Alerts.okError(LocalizeValue.localizeTODO(message)).title(title).showAsync();
+        WaitForProgressToShow.runOrInvokeLaterAboveProgress(task, null, project);
+    }
+
+    @Nonnull
+    public static String getShortVcsRootName(@Nonnull Project project, @Nonnull VirtualFile root) {
+        VirtualFile projectDir = project.getBaseDir();
+
+        String repositoryPath = root.getPresentableUrl();
+        if (projectDir != null) {
+            String relativePath = VirtualFileUtil.getRelativePath(root, projectDir, File.separatorChar);
+            if (relativePath != null) {
+                repositoryPath = relativePath;
+            }
+        }
+
+        return repositoryPath.isEmpty() ? root.getName() : repositoryPath;
+    }
+
+    @Nonnull
+    public static List<Change> createChangesWithCurrentContentForFile(@Nonnull FilePath filePath,
+                                                                      @Nullable ContentRevision beforeContentRevision) {
+        return Collections.singletonList(new Change(beforeContentRevision, CurrentContentRevision.create(filePath)));
     }
 }

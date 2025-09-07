@@ -38,7 +38,7 @@ import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogGraphTable;
 import consulo.versionControlSystem.log.ui.VcsLogColorManager;
-import consulo.versionControlSystem.util.VcsImplUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -240,7 +240,7 @@ public class GoToHashOrRefPopup {
             myReferenceComparator = comparator;
 
             for (VirtualFile root : roots) {
-                String text = VcsImplUtil.getShortVcsRootName(myProject, root);
+                String text = VcsUtil.getShortVcsRootName(myProject, root);
                 myCachedRootNames.put(root, text);
             }
         }
@@ -286,7 +286,7 @@ public class GoToHashOrRefPopup {
             }
             String text = myCachedRootNames.get(item.getRoot());
             if (text == null) {
-                return VcsImplUtil.getShortVcsRootName(myProject, item.getRoot());
+                return VcsUtil.getShortVcsRootName(myProject, item.getRoot());
             }
             return text;
         }

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.dvcs.actions;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
+import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffImplUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -162,11 +162,11 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
             public void onSuccess() {
                 //if changes null -> then exception occurred before
                 if (changes != null) {
-                    VcsDiffUtil.showDiffFor(
+                    VcsDiffImplUtil.showDiffFor(
                         project,
                         changes,
-                        VcsDiffUtil.getRevisionTitle(compare, false),
-                        VcsDiffUtil.getRevisionTitle(head, true),
+                        VcsDiffImplUtil.getRevisionTitle(compare, false),
+                        VcsDiffImplUtil.getRevisionTitle(head, true),
                         VcsUtil.getFilePath(file)
                     );
                 }
