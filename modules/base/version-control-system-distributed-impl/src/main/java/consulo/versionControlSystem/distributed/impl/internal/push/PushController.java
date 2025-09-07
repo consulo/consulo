@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.dvcs.push.ui.*;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -33,11 +31,13 @@ import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.push.*;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
+import consulo.versionControlSystem.distributed.ui.awt.VcsLinkedTextComponent;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import jakarta.annotation.Nonnull;
@@ -100,7 +100,7 @@ public class PushController implements Disposable {
         createTreeModel(rootNode);
         myPushLog = new PushLog(myProject, rootNode, isSyncStrategiesAllowed());
         myPushLog.getTree().addPropertyChangeListener(
-            PushLogTreeUtil.EDIT_MODE_PROP,
+            PushLogTreeImplUtil.EDIT_MODE_PROP,
             evt -> {
                 // when user starts edit we need to force disable ok actions, because tree.isEditing() still false;
                 // after editing completed okActions will be enabled automatically by dialog validation

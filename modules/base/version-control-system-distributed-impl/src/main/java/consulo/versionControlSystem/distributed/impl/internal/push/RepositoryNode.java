@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.versionControlSystem.distributed.push.OutgoingResult;
 import consulo.versionControlSystem.distributed.push.PushTargetPanel;
@@ -23,6 +23,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.versionControlSystem.distributed.ui.awt.PushLogTreeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

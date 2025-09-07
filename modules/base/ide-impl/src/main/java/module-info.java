@@ -256,8 +256,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.diagnostic;
   exports consulo.ide.impl.idea.dvcs.actions;
   exports consulo.ide.impl.idea.dvcs.branch;
-  exports consulo.ide.impl.idea.dvcs.push;
-  exports consulo.ide.impl.idea.dvcs.push.ui;
   exports consulo.ide.impl.idea.dvcs.ui;
   exports consulo.ide.impl.idea.execution.actions;
   exports consulo.ide.impl.idea.execution.configurations;

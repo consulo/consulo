@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
-public class VcsEditableTextComponent extends VcsLinkedTextComponent implements VcsEditableComponent {
-    public VcsEditableTextComponent(@Nonnull String text, @Nullable VcsLinkListener listener) {
-        super(text, listener);
-    }
+public interface TooltipNode {
+    String getTooltip();
 }

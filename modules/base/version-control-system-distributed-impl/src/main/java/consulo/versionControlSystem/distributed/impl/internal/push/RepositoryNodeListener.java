@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
-public interface TooltipNode {
-    String getTooltip();
+import consulo.versionControlSystem.distributed.push.PushTarget;
+
+import jakarta.annotation.Nonnull;
+
+public interface RepositoryNodeListener<T extends PushTarget> {
+    void onTargetChanged(T newTarget);
+
+    void onSelectionChanged(boolean isSelected);
+
+    void onTargetInEditMode(@Nonnull String currentValue);
 }

@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.language.editor.ui.awt.HintUtil;
-import consulo.webBrowser.BrowserUtil;
+import consulo.platform.Platform;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.HyperlinkAdapter;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.awt.HyperlinkAdapter;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.Wrapper;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -63,7 +63,7 @@ public class VcsCommitInfoBalloon {
         myEditorPane.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
             protected void hyperlinkActivated(HyperlinkEvent e) {
-                BrowserUtil.browse(e.getURL());
+                Platform.current().openInBrowser(e.getURL());
             }
         });
         myWrapper = new Wrapper(myEditorPane);

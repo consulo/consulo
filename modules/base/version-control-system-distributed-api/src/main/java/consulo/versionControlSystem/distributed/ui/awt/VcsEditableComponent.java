@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.ui.awt;
 
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import jakarta.annotation.Nonnull;
 
-interface CustomRenderedTreeNode {
-    void render(@Nonnull ColoredTreeCellRenderer renderer);
+/**
+ * Event on this component should start edit mode for appropriate path in JTree
+ */
+public interface VcsEditableComponent {
 }

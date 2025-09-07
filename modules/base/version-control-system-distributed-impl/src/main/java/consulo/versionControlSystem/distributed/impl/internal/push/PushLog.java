@@ -13,30 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
+import consulo.application.Application;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesBrowser;
+import consulo.versionControlSystem.change.ChangesBrowserFactory;
 import consulo.versionControlSystem.change.ChangesBrowserUtil;
+import consulo.versionControlSystem.distributed.ui.awt.VcsEditableComponent;
 import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.impl.internal.change.ui.EditSourceForDialogAction;
-import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
+import consulo.versionControlSystem.internal.EditSourceForDialogAction;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
 import jakarta.annotation.Nonnull;
@@ -57,7 +60,7 @@ import java.util.function.Function;
 
 public class PushLog extends JPanel implements DataProvider {
     private static final String START_EDITING = "startEditing";
-    private final InternalChangesBrowser myChangesBrowser;
+    private final ChangesBrowser<Change> myChangesBrowser;
     private final CheckboxTree myTree;
     private final MyTreeCellRenderer myTreeCellRenderer;
     private final JScrollPane myScrollPane;
@@ -172,7 +175,7 @@ public class PushLog extends JPanel implements DataProvider {
                         treeNode.fireOnChange();
                     }
                 }
-                myTree.firePropertyChange(PushLogTreeUtil.EDIT_MODE_PROP, true, false);
+                myTree.firePropertyChange(PushLogTreeImplUtil.EDIT_MODE_PROP, true, false);
             }
 
             @Override
@@ -182,7 +185,7 @@ public class PushLog extends JPanel implements DataProvider {
                     editableTreeNode.fireOnCancel();
                 }
                 resetEditSync();
-                myTree.firePropertyChange(PushLogTreeUtil.EDIT_MODE_PROP, true, false);
+                myTree.firePropertyChange(PushLogTreeImplUtil.EDIT_MODE_PROP, true, false);
             }
         });
         // complete editing when interrupt
@@ -223,7 +226,7 @@ public class PushLog extends JPanel implements DataProvider {
         ToolTipManager.sharedInstance().registerComponent(myTree);
         PopupHandler.installPopupHandler(myTree, VcsLogActionPlaces.POPUP_ACTION_GROUP, VcsLogActionPlaces.POPUP_ACTION_GROUP);
 
-        myChangesBrowser = new InternalChangesBrowser(
+        myChangesBrowser = Application.get().getInstance(ChangesBrowserFactory.class).createChangeBrowser(
             project,
             null,
             Collections.<Change>emptyList(),
@@ -231,12 +234,12 @@ public class PushLog extends JPanel implements DataProvider {
             false,
             false,
             null,
-            InternalChangesBrowser.MyUseCase.LOCAL_CHANGES,
+            ChangesBrowser.MyUseCase.LOCAL_CHANGES,
             null
         );
         myChangesBrowser.getDiffAction().registerCustomShortcutSet(myChangesBrowser.getDiffAction().getShortcutSet(), myTree);
-        EditSourceForDialogAction editSourceAction = new EditSourceForDialogAction(myChangesBrowser);
-        editSourceAction.registerCustomShortcutSet(CommonShortcuts.getEditSource(), myChangesBrowser);
+        EditSourceForDialogAction editSourceAction = new EditSourceForDialogAction(myChangesBrowser.getComponent());
+        editSourceAction.registerCustomShortcutSet(CommonShortcuts.getEditSource(), myChangesBrowser.getComponent());
         myChangesBrowser.addToolbarAction(editSourceAction);
         setDefaultEmptyText();
 
@@ -265,7 +268,7 @@ public class PushLog extends JPanel implements DataProvider {
             myScrollPane.add(syncStrategyPanel);
         }
         splitter.setFirstComponent(myScrollPane);
-        splitter.setSecondComponent(myChangesBrowser);
+        splitter.setSecondComponent(myChangesBrowser.getComponent());
 
         setLayout(new BorderLayout());
         add(splitter);
@@ -306,7 +309,7 @@ public class PushLog extends JPanel implements DataProvider {
             null
         );
         myTree.addPropertyChangeListener(
-            PushLogTreeUtil.EDIT_MODE_PROP,
+            PushLogTreeImplUtil.EDIT_MODE_PROP,
             evt -> {
                 Boolean editMode = (Boolean)evt.getNewValue();
                 linkLabel.setEnabled(!editMode);
@@ -633,7 +636,7 @@ public class PushLog extends JPanel implements DataProvider {
         public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
             RepositoryWithBranchPanel panel = (RepositoryWithBranchPanel)((DefaultMutableTreeNode)value).getUserObject();
             myValue = panel;
-            myTree.firePropertyChange(PushLogTreeUtil.EDIT_MODE_PROP, false, true);
+            myTree.firePropertyChange(PushLogTreeImplUtil.EDIT_MODE_PROP, false, true);
             return panel.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row, true);
         }
 
@@ -644,7 +647,7 @@ public class PushLog extends JPanel implements DataProvider {
                 int row = myTree.getRowForLocation(me.getX(), me.getY());
                 myTree.getCellRenderer()
                     .getTreeCellRendererComponent(myTree, path.getLastPathComponent(), false, false, true, row, true);
-                Object tag = me.getClickCount() >= 1 ? PushLogTreeUtil.getTagAtForRenderer(myTreeCellRenderer, me) : null;
+                Object tag = me.getClickCount() >= 1 ? PushLogTreeImplUtil.getTagAtForRenderer(myTreeCellRenderer, me) : null;
                 return tag instanceof VcsEditableComponent;
             }
             //if keyboard event - then anEvent will be null =( See BasicTreeUi

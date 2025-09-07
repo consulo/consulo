@@ -22,6 +22,7 @@ import org.jetbrains.annotations.PropertyKey;
  * @author VISTALL
  * @since 29.04.14
  */
+@Deprecated
 public class DvcsBundle extends AbstractBundle {
   private static final DvcsBundle ourInstance = new DvcsBundle();
 

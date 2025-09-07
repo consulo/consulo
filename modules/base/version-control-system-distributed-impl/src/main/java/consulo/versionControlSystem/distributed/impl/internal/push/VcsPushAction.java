@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.dvcs.push.ui.VcsPushDialog;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

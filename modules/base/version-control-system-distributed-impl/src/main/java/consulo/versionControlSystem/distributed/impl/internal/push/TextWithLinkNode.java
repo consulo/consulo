@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
 
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.versionControlSystem.distributed.ui.awt.VcsLinkedTextComponent;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;

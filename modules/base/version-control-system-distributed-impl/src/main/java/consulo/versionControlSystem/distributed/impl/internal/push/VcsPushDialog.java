@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
-import consulo.ide.impl.idea.dvcs.push.PushController;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awt.OptionAction;
 import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ui.ex.awt.LocalizeAction;
 import consulo.versionControlSystem.distributed.push.PushSupport;
 import consulo.versionControlSystem.distributed.push.PushTarget;
 import consulo.versionControlSystem.distributed.push.VcsPushOptionValue;
 import consulo.versionControlSystem.distributed.push.VcsPushOptionsPanel;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import net.miginfocom.swing.MigLayout;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class VcsPushDialog extends DialogWrapper {
+public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
     private static final String ID = "Vcs.Push.Dialog";
 
     private final PushLog myListPanel;

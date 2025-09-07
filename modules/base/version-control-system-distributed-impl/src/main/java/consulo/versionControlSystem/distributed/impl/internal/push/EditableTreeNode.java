@@ -13,13 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
+import consulo.versionControlSystem.distributed.push.OutgoingResult;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
-public interface VcsLinkListener {
-    void hyperlinkActivated(@Nonnull DefaultMutableTreeNode sourceNode, @Nonnull MouseEvent event);
+public interface EditableTreeNode extends CustomRenderedTreeNode {
+    void fireOnChange();
+
+    void fireOnCancel();
+
+    void fireOnSelectionChange(boolean isSelected);
+
+    void cancelLoading();
+
+    void startLoading(@Nonnull JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial);
+
+    boolean isEditableNow();
 }

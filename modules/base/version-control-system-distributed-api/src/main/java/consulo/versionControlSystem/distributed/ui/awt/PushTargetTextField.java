@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.ui.awt;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.UsedInPlugin;
 import consulo.language.editor.ui.awt.DefaultTextCompletionValueDescriptor;
 import consulo.language.editor.ui.awt.TextCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldWithCompletion;
 import consulo.language.editor.ui.awt.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.List;
 
+@UsedInPlugin
 public class PushTargetTextField extends TextFieldWithCompletion {
     public PushTargetTextField(@Nonnull Project project, @Nonnull List<String> targetVariants, @Nonnull String defaultTargetName) {
         super(project, getCompletionProvider(targetVariants), defaultTargetName, true, true, true);

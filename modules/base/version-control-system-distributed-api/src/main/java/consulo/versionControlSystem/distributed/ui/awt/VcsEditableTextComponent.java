@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.ui.awt;
 
-import consulo.versionControlSystem.distributed.push.OutgoingResult;
+import consulo.annotation.UsedInPlugin;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.swing.*;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicReference;
-
-public interface EditableTreeNode extends CustomRenderedTreeNode {
-    void fireOnChange();
-
-    void fireOnCancel();
-
-    void fireOnSelectionChange(boolean isSelected);
-
-    void cancelLoading();
-
-    void startLoading(@Nonnull JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial);
-
-    boolean isEditableNow();
+@UsedInPlugin
+public class VcsEditableTextComponent extends VcsLinkedTextComponent implements VcsEditableComponent {
+    public VcsEditableTextComponent(@Nonnull String text, @Nullable VcsLinkListener listener) {
+        super(text, listener);
+    }
 }

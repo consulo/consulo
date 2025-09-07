@@ -34,7 +34,7 @@ import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
+import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;

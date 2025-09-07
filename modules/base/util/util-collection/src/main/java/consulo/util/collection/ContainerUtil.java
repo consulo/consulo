@@ -1375,6 +1375,11 @@ public class ContainerUtil {
     }
 
     @Contract(pure = true)
+    public static <T> int indexOf(@Nonnull List<? extends T> list, @Nonnull T object) {
+        return indexOf(list, t -> t.equals(object));
+    }
+
+    @Contract(pure = true)
     public static <T> int indexOf(@Nonnull List<? extends T> list, @Nonnull Predicate<? super T> condition) {
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
             T t = list.get(i);

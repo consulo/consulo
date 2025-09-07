@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal.change.ui;
+package consulo.versionControlSystem.internal;
 
 import consulo.application.Application;
 import consulo.navigation.Navigatable;

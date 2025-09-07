@@ -1578,7 +1578,7 @@
             <add-to-group group-id="EditorContextBarMenu" anchor="last"/>
         </group>
 
-        <action id="Vcs.Push" class="consulo.ide.impl.idea.dvcs.push.VcsPushAction"/>
+        <action id="Vcs.Push" class="consulo.versionControlSystem.distributed.impl.internal.push.VcsPushAction"/>
 
         <!--Tool window actions-->
         <group id="ExternalSystem.ToolWindow.Toolbar">

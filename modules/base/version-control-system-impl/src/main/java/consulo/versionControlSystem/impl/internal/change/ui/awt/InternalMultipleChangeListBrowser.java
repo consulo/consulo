@@ -40,7 +40,7 @@ import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.action.MoveChangesToAnotherListAction;
 import consulo.versionControlSystem.impl.internal.change.action.RollbackDialogAction;
-import consulo.versionControlSystem.impl.internal.change.ui.EditSourceForDialogAction;
+import consulo.versionControlSystem.internal.EditSourceForDialogAction;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowserBase;
 import consulo.versionControlSystem.localize.VcsLocalize;

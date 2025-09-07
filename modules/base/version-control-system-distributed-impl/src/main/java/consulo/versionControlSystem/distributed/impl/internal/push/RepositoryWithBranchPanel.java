@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
-import consulo.ide.impl.idea.dvcs.push.RepositoryNodeListener;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -24,6 +22,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.util.PopupUtil;
+import consulo.util.collection.Lists;
 import consulo.versionControlSystem.distributed.push.PushTarget;
 import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import jakarta.annotation.Nonnull;
@@ -40,7 +39,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     private final JLabel myRepositoryLabel;
     private final ColoredTreeCellRenderer myTextRenderer;
     @Nonnull
-    private final List<RepositoryNodeListener<T>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+    private final List<RepositoryNodeListener<T>> myListeners = Lists.newLockFreeCopyOnWriteList();
 
     public RepositoryWithBranchPanel(
         @Nonnull Project project,

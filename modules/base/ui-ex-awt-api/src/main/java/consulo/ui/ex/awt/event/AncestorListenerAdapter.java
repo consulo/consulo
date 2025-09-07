@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt.event;
 
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;

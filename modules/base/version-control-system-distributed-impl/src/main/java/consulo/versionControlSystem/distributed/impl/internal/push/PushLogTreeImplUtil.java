@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.ui.ex.awt.tree.CheckboxTree;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -27,19 +24,23 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class PushLogTreeUtil {
+/**
+ * @author VISTALL
+ * @since 2025-09-07
+ */
+public class PushLogTreeImplUtil {
     public static final String EDIT_MODE_PROP = "tree.edit.mode";
 
     @Nullable
     public static Object getTagAtForRenderer(CheckboxTree.CheckboxTreeCellRenderer renderer, MouseEvent e) {
-        JTree tree = (JTree)e.getSource();
+        JTree tree = (JTree) e.getSource();
         Object tag = null;
         TreePath path = tree.getPathForLocation(e.getX(), e.getY());
         if (path != null) {
             Rectangle rectangle = tree.getPathBounds(path);
             assert rectangle != null;
             int dx = e.getX() - rectangle.x;
-            TreeNode treeNode = (TreeNode)path.getLastPathComponent();
+            TreeNode treeNode = (TreeNode) path.getLastPathComponent();
             int row = tree.getRowForLocation(e.getX(), e.getY());
             tree.getCellRenderer().getTreeCellRendererComponent(tree, treeNode, false, false, true, row, true);
             if (treeNode instanceof RepositoryNode repositoryNode) {
@@ -51,20 +52,5 @@ public class PushLogTreeUtil {
             }
         }
         return tag;
-    }
-
-    public static SimpleTextAttributes addTransparencyIfNeeded(@Nonnull SimpleTextAttributes baseStyle, boolean isActive) {
-        if (isActive) {
-            return baseStyle;
-        }
-        Color color = baseStyle.getFgColor();
-        if (color == null) {
-            color = JBColor.black;
-        }
-        //noinspection UseJBColor
-        return new SimpleTextAttributes(
-            baseStyle.getStyle(),
-            new Color(color.getRed(), color.getGreen(), color.getBlue(), 85)
-        );
     }
 }

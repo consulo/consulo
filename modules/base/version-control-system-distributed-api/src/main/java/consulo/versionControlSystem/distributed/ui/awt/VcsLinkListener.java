@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push;
-
-import consulo.versionControlSystem.distributed.push.PushTarget;
+package consulo.versionControlSystem.distributed.ui.awt;
 
 import jakarta.annotation.Nonnull;
 
-public interface RepositoryNodeListener<T extends PushTarget> {
-    void onTargetChanged(T newTarget);
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.event.MouseEvent;
 
-    void onSelectionChanged(boolean isSelected);
-
-    void onTargetInEditMode(@Nonnull String currentValue);
+public interface VcsLinkListener {
+    void hyperlinkActivated(@Nonnull DefaultMutableTreeNode sourceNode, @Nonnull MouseEvent event);
 }

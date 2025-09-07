@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.push.ui;
+package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;

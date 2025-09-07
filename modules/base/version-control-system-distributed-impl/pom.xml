@@ -33,5 +33,11 @@
             <artifactId>consulo-version-control-system-distributed-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>
