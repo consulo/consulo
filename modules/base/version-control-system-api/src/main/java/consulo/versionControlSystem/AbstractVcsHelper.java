@@ -20,10 +20,12 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.errorTreeView.HotfixData;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.CommitResultHandler;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
@@ -33,10 +35,9 @@ import consulo.versionControlSystem.merge.MergeProvider;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
 
 import java.awt.*;
 import java.text.MessageFormat;
@@ -393,6 +394,43 @@ public abstract class AbstractVcsHelper {
     ) {
         return selectFilePathsToProcess(files, title, prompt, singleFileTitle, singleFilePromptTemplate, confirmationOption);
     }
+
+    @RequiredUIAccess
+    public boolean commitChanges(
+        Project project,
+        List<Change> changes,
+        LocalChangeList initialSelection,
+        List<CommitExecutor> executors,
+        boolean showVcsCommit,
+        String comment,
+        @Nullable CommitResultHandler customResultHandler,
+        boolean cancelIfNoChanges
+    ) {
+        return commitChanges(
+            project,
+            changes,
+            initialSelection,
+            executors,
+            showVcsCommit,
+            null,
+            comment,
+            customResultHandler,
+            cancelIfNoChanges
+        );
+    }
+
+    @RequiredUIAccess
+    public abstract boolean commitChanges(
+        Project project,
+        List<Change> changes,
+        LocalChangeList initialSelection,
+        List<CommitExecutor> executors,
+        boolean showVcsCommit,
+        @Nullable AbstractVcs singleVcs,
+        String comment,
+        @Nullable CommitResultHandler customResultHandler,
+        boolean cancelIfNoChanges
+    );
 
     /**
      * <p>Shows commit dialog, fills it with the given changes and given commit message, initially selects the given changelist.</p>

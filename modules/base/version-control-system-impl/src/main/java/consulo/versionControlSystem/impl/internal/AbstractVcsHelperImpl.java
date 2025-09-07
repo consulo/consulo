@@ -61,6 +61,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.CommitResultHandler;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
@@ -295,6 +296,30 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     @Override
     public void showErrors(List<VcsException> list, @Nonnull LocalizeValue tabDisplayName) {
         showErrorsImpl(list.isEmpty(), () -> list.get(0), tabDisplayName, vcsErrorViewPanel -> addDirectMessages(vcsErrorViewPanel, list));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean commitChanges(Project project,
+                                 List<Change> changes,
+                                 LocalChangeList initialSelection,
+                                 List<CommitExecutor> executors,
+                                 boolean showVcsCommit,
+                                 @Nullable AbstractVcs singleVcs,
+                                 String comment,
+                                 @Nullable CommitResultHandler customResultHandler,
+                                 boolean cancelIfNoChanges) {
+        return CommitChangeListDialog.commitChanges(
+            project,
+            changes,
+            initialSelection,
+            executors,
+            showVcsCommit,
+            singleVcs,
+            comment,
+            customResultHandler,
+            cancelIfNoChanges
+        );
     }
 
     @Override
