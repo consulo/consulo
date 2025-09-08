@@ -254,9 +254,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.designer.propertyTable.editors;
   exports consulo.ide.impl.idea.designer.propertyTable.renderers;
   exports consulo.ide.impl.idea.diagnostic;
-  exports consulo.ide.impl.idea.dvcs.actions;
-  exports consulo.ide.impl.idea.dvcs.branch;
-  exports consulo.ide.impl.idea.dvcs.ui;
   exports consulo.ide.impl.idea.execution.actions;
   exports consulo.ide.impl.idea.execution.configurations;
   exports consulo.ide.impl.idea.execution.console;
@@ -439,7 +436,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.checkout;
   exports consulo.ide.impl.idea.openapi.vcs.configurable;
   exports consulo.ide.impl.idea.openapi.vcs.ex;
-  exports consulo.ide.impl.idea.openapi.vcs.history;
   exports consulo.ide.impl.idea.openapi.vcs.impl;
   exports consulo.ide.impl.idea.openapi.vcs.ui;
   exports consulo.ide.impl.idea.openapi.vfs;

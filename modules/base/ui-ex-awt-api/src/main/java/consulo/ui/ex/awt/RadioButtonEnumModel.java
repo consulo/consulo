@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.ui;
+package consulo.ui.ex.awt;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.UsedInPlugin;
+import consulo.util.collection.ContainerUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -26,6 +27,7 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
+@UsedInPlugin
 public class RadioButtonEnumModel<E extends Enum<E>> {
 
   private final ButtonGroup myGroup;
@@ -39,7 +41,7 @@ public class RadioButtonEnumModel<E extends Enum<E>> {
   private RadioButtonEnumModel(Class<E> e, ButtonGroup group) {
 
     myGroup = group;
-    myModels = ContainerUtil.map(Collections.list(myGroup.getElements()), abstractButton -> abstractButton.getModel());
+    myModels = ContainerUtil.map(Collections.list(myGroup.getElements()), AbstractButton::getModel);
     myEnums = Arrays.asList(e.getEnumConstants());
   }
 

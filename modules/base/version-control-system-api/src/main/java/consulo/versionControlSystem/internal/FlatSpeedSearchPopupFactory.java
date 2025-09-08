@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.EmptyAction;
@@ -52,6 +53,12 @@ public interface FlatSpeedSearchPopupFactory {
                                          @Nullable Predicate<AnAction> preselectActionCondition,
                                          boolean showDisableActions,
                                          @Nonnull FlatSpeedSearchShouldBeShowingFilter filter);
+
+    ListPopup createBranchPopup(@Nonnull String title,
+                                @Nonnull Project project,
+                                @Nonnull Predicate<AnAction> preselectActionCondition,
+                                @Nonnull ActionGroup actions,
+                                @Nullable String dimensionKey);
 
     @Nonnull
     static AnAction createSpeedSearchWrapper(@Nonnull AnAction child) {

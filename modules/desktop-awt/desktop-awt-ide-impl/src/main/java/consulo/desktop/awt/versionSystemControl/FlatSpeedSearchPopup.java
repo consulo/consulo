@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.ui;
+package consulo.desktop.awt.versionSystemControl;
 
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;

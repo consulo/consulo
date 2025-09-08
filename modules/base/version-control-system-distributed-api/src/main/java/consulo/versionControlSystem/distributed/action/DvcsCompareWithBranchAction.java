@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.actions;
+package consulo.versionControlSystem.distributed.action;
 
+import consulo.annotation.UsedInPlugin;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffImplUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -36,6 +37,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.internal.VersionControlSystemInternal;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -49,6 +51,7 @@ import java.util.function.Consumer;
 /**
  * Compares selected file/folder with itself in another branch.
  */
+@UsedInPlugin
 public abstract class DvcsCompareWithBranchAction<T extends Repository> extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(DvcsCompareWithBranchAction.class);
 
@@ -162,13 +165,8 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
             public void onSuccess() {
                 //if changes null -> then exception occurred before
                 if (changes != null) {
-                    VcsDiffImplUtil.showDiffFor(
-                        project,
-                        changes,
-                        VcsDiffImplUtil.getRevisionTitle(compare, false),
-                        VcsDiffImplUtil.getRevisionTitle(head, true),
-                        VcsUtil.getFilePath(file)
-                    );
+                    VersionControlSystemInternal systemInternal = Application.get().getInstance(VersionControlSystemInternal.class);
+                    systemInternal.showDiffFor(project, changes, compare, head, file);
                 }
             }
         }.queue();

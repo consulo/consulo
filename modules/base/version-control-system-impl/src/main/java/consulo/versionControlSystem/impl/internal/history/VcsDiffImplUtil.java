@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.history;
+package consulo.versionControlSystem.impl.internal.history;
 
 import consulo.application.Application;
 import consulo.diff.DiffManager;
@@ -23,13 +23,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesBrowser;
+import consulo.versionControlSystem.change.ChangesBrowserFactory;
 import consulo.versionControlSystem.impl.internal.action.ShowDiffAction;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.versionControlSystem.internal.ShowDiffContext;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.util.*;
 
@@ -76,7 +77,7 @@ public class VcsDiffImplUtil {
     @Nonnull
     public static String getRevisionTitle(@Nonnull String revision, boolean localMark) {
         return revision +
-            (localMark ? " (" + VcsBundle.message("diff.title.local") + ")" : "");
+            (localMark ? " (" + VcsLocalize.diffTitleLocal().get() + ")" : "");
     }
 
     @RequiredUIAccess

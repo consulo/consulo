@@ -22,6 +22,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
+import consulo.util.lang.function.PairProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.RegExp;
@@ -36,6 +37,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -1726,5 +1728,48 @@ public class FileUtil {
         else {
             copy(from, to, copier);
         }
+    }
+
+    /**
+     * @param removeProcessor parent, child
+     */
+    public static <T> Collection<T> removeAncestors(
+        Collection<T> files,
+        Function<T, String> convertor,
+        BiPredicate<T, T> removeProcessor
+    ) {
+        if (files.isEmpty()) {
+            return files;
+        }
+        TreeMap<String, T> paths = new TreeMap<>();
+        for (T file : files) {
+            String path = convertor.apply(file);
+            assert path != null;
+            String canonicalPath = toCanonicalPath(path);
+            paths.put(canonicalPath, file);
+        }
+        List<Map.Entry<String, T>> ordered = new ArrayList<>(paths.entrySet());
+        List<T> result = new ArrayList<>(ordered.size());
+        result.add(ordered.get(0).getValue());
+        for (int i = 1; i < ordered.size(); i++) {
+            Map.Entry<String, T> entry = ordered.get(i);
+            String child = entry.getKey();
+            boolean parentNotFound = true;
+            for (int j = i - 1; j >= 0; j--) {
+                // possible parents
+                String parent = ordered.get(j).getKey();
+                if (parent == null) {
+                    continue;
+                }
+                if (startsWith(child, parent) && removeProcessor.test(ordered.get(j).getValue(), entry.getValue())) {
+                    parentNotFound = false;
+                    break;
+                }
+            }
+            if (parentNotFound) {
+                result.add(entry.getValue());
+            }
+        }
+        return result;
     }
 }

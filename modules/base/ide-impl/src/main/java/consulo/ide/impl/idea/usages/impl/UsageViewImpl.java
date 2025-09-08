@@ -23,7 +23,7 @@ import consulo.disposer.Disposer;
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
-import consulo.ide.impl.idea.ide.TextCopyProvider;
+import consulo.ui.ex.awt.TextCopyProvider;
 import consulo.ide.impl.idea.ide.actions.exclusion.ExclusionHandler;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.usage.internal.UsageDataUtil;

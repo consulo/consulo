@@ -19,9 +19,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.versionControlSystem.change.Change;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -37,4 +41,10 @@ public interface VersionControlSystemInternal {
 
     // TODO remove in future, exists until LineStatusTracker not moved to vcs impl
     void moveToRange(VcsRange range, Editor editor, LineStatusTrackerI tracker);
+
+    void showDiffFor(@Nonnull Project project,
+                     @Nonnull Collection<Change> changes,
+                     @Nonnull String head,
+                     @Nonnull String compare,
+                     @Nonnull VirtualFile file);
 }

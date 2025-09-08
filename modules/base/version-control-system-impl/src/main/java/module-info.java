@@ -24,10 +24,9 @@ module consulo.version.control.system.impl {
     exports consulo.versionControlSystem.impl.internal.change.ui to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.change.commited to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.update to consulo.ide.impl;
-    opens consulo.versionControlSystem.impl.internal.change.commited to consulo.util.xml.serializer;
     exports consulo.versionControlSystem.impl.internal.commit to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.change.action to consulo.ide.impl;
-    exports consulo.versionControlSystem.impl.internal.history to consulo.ide.impl;
+    exports consulo.versionControlSystem.impl.internal.history to consulo.ide.impl, consulo.desktop.awt.ide.impl;
     exports consulo.versionControlSystem.impl.internal.change.patch to consulo.ide.impl, consulo.desktop.awt.ide.impl;
     exports consulo.versionControlSystem.impl.internal.change.shelf to consulo.ide.impl, consulo.desktop.awt.ide.impl;
     exports consulo.versionControlSystem.impl.internal.patch to consulo.ide.impl, consulo.desktop.awt.ide.impl;
@@ -40,6 +39,7 @@ module consulo.version.control.system.impl {
     exports consulo.versionControlSystem.impl.internal.patch.apply to consulo.desktop.awt.ide.impl;
     exports consulo.versionControlSystem.impl.internal.patch.tool to consulo.desktop.awt.ide.impl;
 
+    opens consulo.versionControlSystem.impl.internal.change.commited to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.contentAnnotation to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.change.conflict to consulo.util.xml.serializer, consulo.ui.ex.awt.api;
     opens consulo.versionControlSystem.impl.internal.change to consulo.util.xml.serializer;

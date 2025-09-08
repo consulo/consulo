@@ -20,13 +20,19 @@ import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTrackerDrawing;
+import consulo.project.Project;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.impl.internal.history.VcsDiffImplUtil;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.internal.VersionControlSystemInternal;
+import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -72,5 +78,20 @@ public class DesktopAWTVersionControlSystemInternalImpl implements VersionContro
     @Override
     public void moveToRange(VcsRange range, Editor editor, LineStatusTrackerI tracker) {
         LineStatusTrackerDrawing.moveToRange(range, editor, (LineStatusTracker) tracker);
+    }
+
+    @Override
+    public void showDiffFor(@Nonnull Project project,
+                            @Nonnull Collection<Change> changes,
+                            @Nonnull String head,
+                            @Nonnull String compare,
+                            @Nonnull VirtualFile file) {
+        VcsDiffImplUtil.showDiffFor(
+            project,
+            changes,
+            VcsDiffImplUtil.getRevisionTitle(compare, false),
+            VcsDiffImplUtil.getRevisionTitle(head, true),
+            VcsUtil.getFilePath(file)
+        );
     }
 }

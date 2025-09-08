@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui;
+package consulo.desktop.awt.versionSystemControl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.ListPopup;
@@ -49,5 +49,10 @@ public class DesktopAWTFlatSpeedSearchPopupFactoryImpl implements FlatSpeedSearc
                 return super.shouldBeShowing(action) || filter.shouldBeShowing(action, getSpeedSearch().isHoldingFilter());
             }
         };
+    }
+
+    @Override
+    public ListPopup createBranchPopup(@Nonnull String title, @Nonnull Project project, @Nonnull Predicate<AnAction> preselectActionCondition, @Nonnull ActionGroup actions, @Nullable String dimensionKey) {
+        return new BranchActionGroupPopup(title, project, preselectActionCondition, actions, dimensionKey);
     }
 }

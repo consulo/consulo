@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.branch;
+package consulo.versionControlSystem.distributed.branch;
 
-import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.setting.ShowSettingsUtil;
+import consulo.application.Application;
+import consulo.configurable.internal.ShowConfigurableService;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
@@ -31,10 +30,10 @@ import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.distributed.DvcsUtil;
-import consulo.versionControlSystem.distributed.branch.DvcsMultiRootBranchConfig;
-import consulo.versionControlSystem.distributed.branch.DvcsSyncSettings;
+import consulo.versionControlSystem.distributed.internal.BranchListPopup;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -57,7 +56,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     @Nonnull
     protected final Repo myCurrentRepository;
     @Nonnull
-    protected final ListPopupImpl myPopup;
+    protected final BranchListPopup myPopup;
     @Nonnull
     protected final String myRepoTitleInfo;
 
@@ -79,7 +78,9 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
         myRepoTitleInfo = (myRepositoryManager.moreThanOneRoot() && myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC)
             ? " in " + DvcsUtil.getShortRepositoryName(currentRepository)
             : "";
-        myPopup = new BranchActionGroupPopup(title + myRepoTitleInfo, myProject, preselectActionCondition, createActions(), dimensionKey);
+
+        FlatSpeedSearchPopupFactory popupFactory = FlatSpeedSearchPopupFactory.getInstance();
+        myPopup = (BranchListPopup) popupFactory.createBranchPopup(title + myRepoTitleInfo, myProject, preselectActionCondition, createActions(), dimensionKey);
 
         initBranchSyncPolicyIfNotInitialized();
         warnThatBranchesDivergedIfNeeded();
@@ -119,7 +120,8 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
                 @RequiredUIAccess
                 public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
                     if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getDisplayName().get());
+                        Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, "vcs." + myVcs.getId());
+
                         if (myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
                             notification.expire();
                         }
