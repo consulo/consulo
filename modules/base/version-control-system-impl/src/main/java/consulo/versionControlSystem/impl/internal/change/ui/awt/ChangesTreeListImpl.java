@@ -201,6 +201,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         myTreeCopyProvider = new ChangesBrowserNodeCopyProvider(this);
     }
 
+    @Override
     public void setEmptyText(@Nonnull String emptyText) {
         getEmptyText().setText(emptyText);
     }
@@ -236,6 +237,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
      *
      * @deprecated to remove in 2017.
      */
+    @Override
     @SuppressWarnings("unused")
     @Deprecated
     public void setScrollPaneBorder(Border border) {
@@ -447,6 +449,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     }
 
     // no listener supposed to be called
+    @Override
     public void setIncludedChanges(Collection<T> changes) {
         myIncludedChanges.clear();
         myIncludedChanges.addAll(changes);
@@ -457,6 +460,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         includeChanges(Collections.singleton(change));
     }
 
+    @Override
     public void includeChanges(Collection<T> changes) {
         myIncludedChanges.addAll(changes);
         notifyInclusionListener();
@@ -467,6 +471,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         excludeChanges(Collections.singleton(change));
     }
 
+    @Override
     public void excludeChanges(Collection<T> changes) {
         myIncludedChanges.removeAll(changes);
         notifyInclusionListener();
@@ -494,6 +499,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
         return myIncludedChanges.contains(change);
     }
 
+    @Override
     @Nonnull
     public Collection<T> getIncludedChanges() {
         return myIncludedChanges;

@@ -38,6 +38,10 @@ public interface ChangesBrowserTree<T> {
 
     void includeChanges(Collection<T> changes);
 
+    Collection<T> getIncludedChanges();
+
+    void setIncludedChanges(Collection<T> changes);
+
     default void setChangesToDisplay(List<T> changes) {
         setChangesToDisplay(changes, null);
     }
