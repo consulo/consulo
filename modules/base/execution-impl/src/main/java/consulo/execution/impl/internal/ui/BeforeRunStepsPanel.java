@@ -69,26 +69,21 @@ class BeforeRunStepsPanel {
         myList.getEmptyText().setText(ExecutionLocalize.beforeLaunchPanelEmpty());
         myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         myList.setCellRenderer(new MyListCellRenderer());
+        myList.setVisibleRowCount(7); // do not collapse control buttons
 
         myModel.addListDataListener(new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
-                adjustVisibleRowCount();
                 updateText();
             }
 
             @Override
             public void intervalRemoved(ListDataEvent e) {
-                adjustVisibleRowCount();
                 updateText();
             }
 
             @Override
             public void contentsChanged(ListDataEvent e) {
-            }
-
-            private void adjustVisibleRowCount() {
-                myList.setVisibleRowCount(Math.max(4, Math.min(8, myModel.getSize())));
             }
         });
 
@@ -114,7 +109,7 @@ class BeforeRunStepsPanel {
             Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> selection = getSelection();
             return selection != null && selection.getSecond().isConfigurable();
         });
-        decorator.setAddAction((button, e) -> doAddAction(button, e));
+        decorator.setAddAction((button, e) -> doAddAction(e));
         decorator.setAddActionUpdater(e -> checkBeforeRunTasksAbility(true));
 
         myShowSettingsBeforeRunCheckBox = new JCheckBox(ExecutionLocalize.configurationEditBeforeRun().get());
@@ -177,14 +172,12 @@ class BeforeRunStepsPanel {
             }
             for (Map.Entry<BeforeRunTaskProvider, Integer> entry : counter.entrySet()) {
                 BeforeRunTaskProvider provider = entry.getKey();
-                String name = provider.getName();
-                if (name.startsWith("Run ")) {
-                    name = name.substring(4);
-                }
+                LocalizeValue name = provider.getName();
+
                 if (sb.length() > 0) {
                     sb.append(", ");
                 }
-                sb.append(name);
+                sb.append(name.get());
                 if (entry.getValue() > 1) {
                     sb.append(" (").append(entry.getValue().intValue()).append(")");
                 }
@@ -224,7 +217,7 @@ class BeforeRunStepsPanel {
         return myRunConfiguration instanceof UnknownRunConfiguration;
     }
 
-    void doAddAction(AnActionButton button, @Nonnull AnActionEvent e) {
+    void doAddAction(@Nonnull AnActionEvent e) {
         if (isUnknown()) {
             return;
         }
@@ -242,7 +235,7 @@ class BeforeRunStepsPanel {
             if (activeProviderKeys.contains(provider.getId()) && provider.isSingleton()) {
                 return;
             }
-            AnAction providerAction = new AnAction(LocalizeValue.of(provider.getName()), LocalizeValue.empty(), provider.getIcon()) {
+            AnAction providerAction = new AnAction(provider.getName(), provider.getName(), provider.getIcon()) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {

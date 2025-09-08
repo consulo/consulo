@@ -28,6 +28,7 @@ import consulo.execution.internal.RunManagerEx;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
@@ -91,18 +92,18 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
 
   @Nonnull
   @Override
-  public String getName() {
-    return ExecutionLocalize.beforeLaunchRunAnotherConfiguration().get();
+  public LocalizeValue getName() {
+    return ExecutionLocalize.beforeLaunchRunAnotherConfiguration();
   }
 
   @Nonnull
   @Override
-  public String getDescription(RunConfigurableBeforeRunTask task) {
+  public LocalizeValue getDescription(RunConfigurableBeforeRunTask task) {
     if (task.getSettings() == null) {
-      return ExecutionLocalize.beforeLaunchRunAnotherConfiguration().get();
+      return ExecutionLocalize.beforeLaunchRunAnotherConfiguration();
     }
     else {
-      return ExecutionLocalize.beforeLaunchRunCertainConfiguration(task.getSettings().getName()).get();
+      return ExecutionLocalize.beforeLaunchRunCertainConfiguration(task.getSettings().getName());
     }
   }
 

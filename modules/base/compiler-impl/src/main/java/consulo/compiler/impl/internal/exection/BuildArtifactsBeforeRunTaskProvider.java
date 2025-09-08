@@ -32,6 +32,7 @@ import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.internal.ConfigurationSettingsEditorWrapper;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
@@ -68,21 +69,21 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
 
     @Nonnull
     @Override
-    public String getName() {
-        return CompilerLocalize.buildArtifactsBeforeRunDescriptionEmpty().get();
+    public LocalizeValue getName() {
+        return CompilerLocalize.buildArtifactsBeforeRunDescriptionEmpty();
     }
 
     @Nonnull
     @Override
-    public String getDescription(BuildArtifactsBeforeRunTask task) {
+    public LocalizeValue getDescription(BuildArtifactsBeforeRunTask task) {
         List<ArtifactPointer> pointers = task.getArtifactPointers();
         if (pointers.isEmpty()) {
-            return CompilerLocalize.buildArtifactsBeforeRunDescriptionEmpty().get();
+            return CompilerLocalize.buildArtifactsBeforeRunDescriptionEmpty();
         }
         if (pointers.size() == 1) {
-            return CompilerLocalize.buildArtifactsBeforeRunDescriptionSingle(pointers.get(0).getName()).get();
+            return CompilerLocalize.buildArtifactsBeforeRunDescriptionSingle(pointers.get(0).getName());
         }
-        return CompilerLocalize.buildArtifactsBeforeRunDescriptionMultiple(pointers.size()).get();
+        return CompilerLocalize.buildArtifactsBeforeRunDescriptionMultiple(pointers.size());
     }
 
     @Nonnull

@@ -18,6 +18,7 @@ package consulo.externalTool.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
@@ -34,8 +35,8 @@ public class ToolBeforeRunTaskProvider extends AbstractToolBeforeRunTaskProvider
 
   @Nonnull
   @Override
-  public String getName() {
-    return ExternalToolLocalize.toolsBeforeRunProviderName().get();
+  public LocalizeValue getName() {
+    return ExternalToolLocalize.toolsBeforeRunProviderName();
   }
 
   @Override

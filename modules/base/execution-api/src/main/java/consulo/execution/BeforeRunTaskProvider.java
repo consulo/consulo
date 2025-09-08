@@ -21,6 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,13 +41,13 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     public abstract Key<T> getId();
 
     @Nonnull
-    public abstract String getName();
+    public abstract LocalizeValue getName();
 
     @Nullable
     public abstract Image getIcon();
 
     @Nonnull
-    public String getDescription(T task) {
+    public LocalizeValue getDescription(T task) {
         return getName();
     }
 

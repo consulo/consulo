@@ -20,6 +20,7 @@ import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.externalTool.impl.internal.localize.ExternalToolLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
@@ -80,18 +81,18 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
 
   @Nonnull
   @Override
-  public String getDescription(T task) {
+  public LocalizeValue getDescription(T task) {
     String actionId = task.getToolActionId();
     if (actionId == null) {
       LOG.error("Null id");
-      return ExternalToolLocalize.toolsUnknownExternalTool().get();
+      return ExternalToolLocalize.toolsUnknownExternalTool();
     }
     Tool tool = task.findCorrespondingTool();
     if (tool == null) {
-      return ExternalToolLocalize.toolsUnknownExternalTool().get();
+      return ExternalToolLocalize.toolsUnknownExternalTool();
     }
     String groupName = tool.getGroup();
-    return ExternalToolLocalize.toolsBeforeRunDescription(StringUtil.isEmpty(groupName) ? tool.getName() : groupName + "/" + tool.getName()).get();
+    return ExternalToolLocalize.toolsBeforeRunDescription(StringUtil.isEmpty(groupName) ? tool.getName() : groupName + "/" + tool.getName());
   }
 
   @Override

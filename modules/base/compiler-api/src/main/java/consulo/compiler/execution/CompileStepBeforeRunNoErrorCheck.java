@@ -25,6 +25,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfileWithCompileBeforeLaunchOption;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -63,8 +64,8 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
 
     @Nonnull
     @Override
-    public String getDescription(MakeBeforeRunTaskNoErrorCheck task) {
-        return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck().get();
+    public LocalizeValue getDescription(MakeBeforeRunTaskNoErrorCheck task) {
+        return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck();
     }
 
     @Override
@@ -101,8 +102,8 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
 
     @Nonnull
     @Override
-    public String getName() {
-        return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck().get();
+    public LocalizeValue getName() {
+        return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck();
     }
 
     @Nonnull

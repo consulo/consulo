@@ -32,6 +32,7 @@ import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -82,8 +83,8 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
 
     @Nonnull
     @Override
-    public String getName() {
-        return ExternalSystemLocalize.tasksBeforeRunEmpty(mySystemId.getDisplayName()).get();
+    public LocalizeValue getName() {
+        return ExternalSystemLocalize.tasksBeforeRunEmpty(mySystemId.getDisplayName());
     }
 
     @Override
@@ -214,11 +215,11 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
     @Override
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public String getDescription(ExternalSystemBeforeRunTask task) {
+    public LocalizeValue getDescription(ExternalSystemBeforeRunTask task) {
         String externalProjectPath = task.getTaskExecutionSettings().getExternalProjectPath();
 
         if (task.getTaskExecutionSettings().getTaskNames().isEmpty()) {
-            return ExternalSystemLocalize.tasksBeforeRunEmpty(mySystemId.getDisplayName()).get();
+            return ExternalSystemLocalize.tasksBeforeRunEmpty(mySystemId.getDisplayName());
         }
 
         String desc = StringUtil.join(task.getTaskExecutionSettings().getTaskNames(), " ");
@@ -238,6 +239,6 @@ public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskP
             }
         }
 
-        return ExternalSystemLocalize.tasksBeforeRun(mySystemId.getDisplayName(), desc).get();
+        return ExternalSystemLocalize.tasksBeforeRun(mySystemId.getDisplayName(), desc);
     }
 }
