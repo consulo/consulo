@@ -100,104 +100,90 @@ class TableToolbarDecorator extends ToolbarDecorator {
     final JTable table = myTable;
     final EditableModel tableModel = (EditableModel)table.getModel();
 
-    myAddAction = new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        TableUtil.stopEditing(table);
-        int rowCount = table.getRowCount();
-        if (tableModel instanceof ListTableModel && producer != null) {
-          //noinspection unchecked
-          ((ListTableModel)tableModel).addRow(producer.createElement());
-        } else {
-          tableModel.addRow();
-        }
-        if (rowCount == table.getRowCount()) return;
-        int index = table.getModel().getRowCount() - 1;
-
-        table.setRowSelectionInterval(index, index);
-        table.setColumnSelectionInterval(0, 0);
-        table.editCellAt(index, 0);
-
-        updateScroller(table, table.getCellEditor() instanceof Animated);
-        //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            Component editorComponent = table.getEditorComponent();
-            if (editorComponent != null) {
-              Rectangle bounds = editorComponent.getBounds();
-              table.scrollRectToVisible(bounds);
-              IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(editorComponent);
-            }
-          }
-        });
-
-
+    myAddAction = (button, e) -> {
+      TableUtil.stopEditing(table);
+      int rowCount = table.getRowCount();
+      if (tableModel instanceof ListTableModel && producer != null) {
+        //noinspection unchecked
+        ((ListTableModel)tableModel).addRow(producer.createElement());
+      } else {
+        tableModel.addRow();
       }
+      if (rowCount == table.getRowCount()) return;
+      int index = table.getModel().getRowCount() - 1;
+
+      table.setRowSelectionInterval(index, index);
+      table.setColumnSelectionInterval(0, 0);
+      table.editCellAt(index, 0);
+
+      updateScroller(table, table.getCellEditor() instanceof Animated);
+      //noinspection SSBasedInspection
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          Component editorComponent = table.getEditorComponent();
+          if (editorComponent != null) {
+            Rectangle bounds = editorComponent.getBounds();
+            table.scrollRectToVisible(bounds);
+            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(editorComponent);
+          }
+        }
+      });
     };
 
-    myRemoveAction = new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        TableUtil.stopEditing(table);
-        int index = table.getSelectedRow();
-        if (0 <= index && index < table.getModel().getRowCount()) {
-          tableModel.removeRow(index);
-          if (index < table.getModel().getRowCount()) {
-            table.setRowSelectionInterval(index, index);
-          }
-          else {
-            if (index > 0) {
-              table.setRowSelectionInterval(index - 1, index - 1);
-            }
-          }
-          updateButtons();
+    myRemoveAction = (button, e) -> {
+      TableUtil.stopEditing(table);
+      int index = table.getSelectedRow();
+      if (0 <= index && index < table.getModel().getRowCount()) {
+        tableModel.removeRow(index);
+        if (index < table.getModel().getRowCount()) {
+          table.setRowSelectionInterval(index, index);
         }
-
-        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
-
-        updateScroller(table, false);
-      }
-    };
-
-    myUpAction = new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        int row = table.getEditingRow();
-        int col = table.getEditingColumn();
-        TableUtil.stopEditing(table);
-        int[] indexes = table.getSelectedRows();
-        for (int index : indexes) {
-          if (0 < index && index < table.getModel().getRowCount()) {
-            tableModel.exchangeRows(index, index - 1);
+        else {
+          if (index > 0) {
             table.setRowSelectionInterval(index - 1, index - 1);
           }
         }
-        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
-        if (row > 0 && col != -1) {
-          table.editCellAt(row - 1, col);
+        updateButtons();
+      }
+
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
+
+      updateScroller(table, false);
+    };
+
+    myUpAction = (button, e) -> {
+      int row = table.getEditingRow();
+      int col = table.getEditingColumn();
+      TableUtil.stopEditing(table);
+      int[] indexes = table.getSelectedRows();
+      for (int index : indexes) {
+        if (0 < index && index < table.getModel().getRowCount()) {
+          tableModel.exchangeRows(index, index - 1);
+          table.setRowSelectionInterval(index - 1, index - 1);
         }
+      }
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
+      if (row > 0 && col != -1) {
+        table.editCellAt(row - 1, col);
       }
     };
 
-    myDownAction = new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        int row = table.getEditingRow();
-        int col = table.getEditingColumn();
+    myDownAction = (button, e) -> {
+      int row = table.getEditingRow();
+      int col = table.getEditingColumn();
 
-        TableUtil.stopEditing(table);
-        int[] indexes = table.getSelectedRows();
-        for (int index : indexes) {
-          if (0 <= index && index < table.getModel().getRowCount() - 1) {
-            tableModel.exchangeRows(index, index + 1);
-            table.setRowSelectionInterval(index + 1, index + 1);
-          }
+      TableUtil.stopEditing(table);
+      int[] indexes = table.getSelectedRows();
+      for (int index : indexes) {
+        if (0 <= index && index < table.getModel().getRowCount() - 1) {
+          tableModel.exchangeRows(index, index + 1);
+          table.setRowSelectionInterval(index + 1, index + 1);
         }
-        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
-        if (row < table.getRowCount() - 1 && col != -1) {
-          table.editCellAt(row + 1, col);
-        }
+      }
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
+      if (row < table.getRowCount() - 1 && col != -1) {
+        table.editCellAt(row + 1, col);
       }
     };
   }

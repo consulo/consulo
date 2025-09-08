@@ -17,11 +17,13 @@ package consulo.desktop.awt.action.toolbar;
 
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.action.DesktopActionPopupMenuImpl;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.action.CustomComponentAction;
@@ -40,7 +42,6 @@ import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.function.Supplier;
 
@@ -188,7 +189,14 @@ public class ActionToolbarButtonEngine {
     }
 
     private void performAction(MouseEvent e) {
-        AnActionEvent event = AnActionEvent.createFromInputEvent(e, myPlace, myPresentation, myGetDataContext.get(), false, true);
+        InputDetails inputDetails = DesktopAWTInputDetails.convert(myButton, e);
+        DataContext context = DataContext.builder()
+            .parent(myGetDataContext.get())
+            .add(UIExAWTDataKey.CONTEXT_COMPONENT, myButton)
+            .build();
+        
+        AnActionEvent event = AnActionEvent.createFromInputEvent(e, myPlace, myPresentation, context, false, true, inputDetails);
+
         if (!ActionImplUtil.lastUpdateAndCheckDumb(myIdeAction, event, false)) {
             return;
         }
@@ -197,15 +205,14 @@ public class ActionToolbarButtonEngine {
             ActionManagerEx manager = ActionManagerEx.getInstanceEx();
             DataContext dataContext = event.getDataContext();
             manager.fireBeforeActionPerformed(myIdeAction, dataContext, event);
-            Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-            if (component != null && !component.isShowing()) {
+
+            if (!myButton.isEnabled() || !myButton.isVisible()) {
                 return;
             }
+
             actionPerformed(event);
+
             manager.queueActionPerformedEvent(myIdeAction, dataContext, event);
-            if (event.getInputEvent() instanceof MouseEvent) {
-                //FIXME [VISTALL] we need that ?ToolbarClicksCollector.record(myAction, myPlace);
-            }
         }
     }
 
@@ -220,7 +227,7 @@ public class ActionToolbarButtonEngine {
         if (myPresentationListener == null) {
             myPresentation.addPropertyChangeListener(myPresentationListener = this::presentationPropertyChanded);
         }
-        AnActionEvent e = AnActionEvent.createFromInputEvent(null, myPlace, myPresentation, myGetDataContext.get(), false, true);
+        AnActionEvent e = AnActionEvent.createFromInputEvent(null, myPlace, myPresentation, myGetDataContext.get(), false, true, null);
         ActionImplUtil.performDumbAwareUpdate(myIdeAction, e, false);
         updateToolTipText();
         updateIcon();

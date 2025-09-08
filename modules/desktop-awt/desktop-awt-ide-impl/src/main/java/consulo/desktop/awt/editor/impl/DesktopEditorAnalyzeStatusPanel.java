@@ -31,6 +31,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
@@ -127,7 +128,15 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 @RequiredUIAccess
                 public void mouseClicked(MouseEvent me) {
                     DataContext context = getDataContext();
-                    AnActionEvent event = AnActionEvent.createFromInputEvent(me, place, presentation, context, false, true);
+                    AnActionEvent event = AnActionEvent.createFromInputEvent(
+                        me,
+                        place,
+                        presentation,
+                        context,
+                        false,
+                        true,
+                        DesktopAWTInputDetails.convert(StatusButton.this, me)
+                    );
                     if (!ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
                         return;
                     }

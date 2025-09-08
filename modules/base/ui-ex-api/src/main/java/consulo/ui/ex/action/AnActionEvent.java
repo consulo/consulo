@@ -247,7 +247,8 @@ public class AnActionEvent implements PlaceProvider<String> {
         @Nonnull Presentation presentation,
         @Nonnull DataContext dataContext,
         boolean isContextMenuAction,
-        boolean isToolbarAction
+        boolean isToolbarAction,
+        @Nullable InputDetails inputDetails
     ) {
         return new AnActionEvent(
             event,
@@ -257,7 +258,8 @@ public class AnActionEvent implements PlaceProvider<String> {
             ActionManager.getInstance(),
             event == null ? 0 : event.getModifiers(),
             isContextMenuAction,
-            isToolbarAction
+            isToolbarAction,
+            inputDetails
         );
     }
 

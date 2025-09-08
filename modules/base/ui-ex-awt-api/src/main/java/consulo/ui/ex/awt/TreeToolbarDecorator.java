@@ -48,7 +48,7 @@ class TreeToolbarDecorator extends ToolbarDecorator {
 
   private void createDefaultTreeActions() {
     EditableTreeModel model = (EditableTreeModel)myTree.getModel();
-    myAddAction = button -> {
+    myAddAction = (button, e) -> {
       TreePath path = myTree.getSelectionPath();
       DefaultMutableTreeNode selected = path == null ? (DefaultMutableTreeNode)myTree.getModel().getRoot() : (DefaultMutableTreeNode)path.getLastPathComponent();
       Object selectedNode = selected.getUserObject();
@@ -76,7 +76,7 @@ class TreeToolbarDecorator extends ToolbarDecorator {
       }
     };
 
-    myRemoveAction = button -> {
+    myRemoveAction = (button, e) -> {
       myTree.stopEditing();
       TreePath path = myTree.getSelectionPath();
       model.removeNode(path);

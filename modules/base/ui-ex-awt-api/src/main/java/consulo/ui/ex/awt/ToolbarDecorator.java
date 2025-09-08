@@ -18,12 +18,12 @@ package consulo.ui.ex.awt;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.image.Image;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,6 +32,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -52,11 +53,11 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     private Color myToolbarBackgroundColor;
     private final List<AnAction> myExtraActions = new SmartList<>();
     private ActionToolbarPosition myToolbarPosition;
-    protected AnActionButtonRunnable myAddAction;
-    protected AnActionButtonRunnable myEditAction;
-    protected AnActionButtonRunnable myRemoveAction;
-    protected AnActionButtonRunnable myUpAction;
-    protected AnActionButtonRunnable myDownAction;
+    protected BiConsumer<AnActionButton, AnActionEvent> myAddAction;
+    protected BiConsumer<AnActionButton, AnActionEvent> myEditAction;
+    protected BiConsumer<AnActionButton, AnActionEvent> myRemoveAction;
+    protected BiConsumer<AnActionButton, AnActionEvent> myUpAction;
+    protected BiConsumer<AnActionButton, AnActionEvent> myDownAction;
     private String myAddName;
     private String myEditName;
     private String myRemoveName;
@@ -255,11 +256,23 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
 
     public ToolbarDecorator setAddAction(AnActionButtonRunnable action) {
         myAddActionEnabled = action != null;
+        myAddAction = (b, inputDetails) -> action.run(b);
+        return this;
+    }
+
+    public ToolbarDecorator setAddAction(@RequiredUIAccess BiConsumer<AnActionButton, AnActionEvent> action) {
+        myAddActionEnabled = action != null;
         myAddAction = action;
         return this;
     }
 
     public ToolbarDecorator setEditAction(AnActionButtonRunnable action) {
+        myEditActionEnabled = action != null;
+        myEditAction = (b, inputDetails) -> action.run(b);
+        return this;
+    }
+
+    public ToolbarDecorator setEditAction(@RequiredUIAccess BiConsumer<AnActionButton, AnActionEvent> action) {
         myEditActionEnabled = action != null;
         myEditAction = action;
         return this;
@@ -267,17 +280,35 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
 
     public ToolbarDecorator setRemoveAction(AnActionButtonRunnable action) {
         myRemoveActionEnabled = action != null;
+        myRemoveAction = (b, inputDetails) -> action.run(b);
+        return this;
+    }
+
+    public ToolbarDecorator setRemoveAction(@RequiredUIAccess BiConsumer<AnActionButton, AnActionEvent> action) {
+        myRemoveActionEnabled = action != null;
         myRemoveAction = action;
         return this;
     }
 
     public ToolbarDecorator setMoveUpAction(AnActionButtonRunnable action) {
         myUpActionEnabled = action != null;
+        myUpAction = (b, inputDetails) -> action.run(b);
+        return this;
+    }
+
+    public ToolbarDecorator setMoveUpAction(@RequiredUIAccess BiConsumer<AnActionButton, AnActionEvent> action) {
+        myUpActionEnabled = action != null;
         myUpAction = action;
         return this;
     }
 
     public ToolbarDecorator setMoveDownAction(AnActionButtonRunnable action) {
+        myDownActionEnabled = action != null;
+        myDownAction = (b, inputDetails) -> action.run(b);
+        return this;
+    }
+
+    public ToolbarDecorator setMoveDownAction(@RequiredUIAccess BiConsumer<AnActionButton, AnActionEvent> action) {
         myDownActionEnabled = action != null;
         myDownAction = action;
         return this;
@@ -459,7 +490,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
 
     private CommonActionsPanel.Buttons[] getButtons() {
         ArrayList<CommonActionsPanel.Buttons> buttons = new ArrayList<>();
-        HashMap<CommonActionsPanel.Buttons, Pair<Boolean, AnActionButtonRunnable>> map = new HashMap<>();
+        HashMap<CommonActionsPanel.Buttons, Pair<Boolean, BiConsumer<AnActionButton, AnActionEvent>>> map = new HashMap<>();
         map.put(CommonActionsPanel.Buttons.ADD, Pair.create(myAddActionEnabled, myAddAction));
         map.put(CommonActionsPanel.Buttons.REMOVE, Pair.create(myRemoveActionEnabled, myRemoveAction));
         map.put(CommonActionsPanel.Buttons.EDIT, Pair.create(myEditActionEnabled, myEditAction));
@@ -467,7 +498,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
         map.put(CommonActionsPanel.Buttons.DOWN, Pair.create(myDownActionEnabled, myDownAction));
 
         for (CommonActionsPanel.Buttons button : CommonActionsPanel.Buttons.values()) {
-            Pair<Boolean, AnActionButtonRunnable> action = map.get(button);
+            Pair<Boolean, BiConsumer<AnActionButton, AnActionEvent>> action = map.get(button);
             if (action != null && action.first != null && action.first && action.second != null) {
                 buttons.add(button);
             }
@@ -479,38 +510,43 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     @Override
     public CommonActionsPanel.Listener createListener(final CommonActionsPanel panel) {
         return new CommonActionsPanel.Listener() {
+            @RequiredUIAccess
             @Override
-            public void doAdd() {
+            public void doAdd(@Nullable AnActionEvent e) {
                 if (myAddAction != null) {
-                    myAddAction.run(panel.getAnActionButton(CommonActionsPanel.Buttons.ADD));
+                    myAddAction.accept(panel.getAnActionButton(CommonActionsPanel.Buttons.ADD), e);
                 }
             }
 
+            @RequiredUIAccess
             @Override
-            public void doEdit() {
+            public void doEdit(@Nullable AnActionEvent e) {
                 if (myEditAction != null) {
-                    myEditAction.run(panel.getAnActionButton(CommonActionsPanel.Buttons.EDIT));
+                    myEditAction.accept(panel.getAnActionButton(CommonActionsPanel.Buttons.EDIT), e);
                 }
             }
 
+            @RequiredUIAccess
             @Override
-            public void doRemove() {
+            public void doRemove(@Nullable AnActionEvent e) {
                 if (myRemoveAction != null) {
-                    myRemoveAction.run(panel.getAnActionButton(CommonActionsPanel.Buttons.REMOVE));
+                    myRemoveAction.accept(panel.getAnActionButton(CommonActionsPanel.Buttons.REMOVE), e);
                 }
             }
 
+            @RequiredUIAccess
             @Override
-            public void doUp() {
+            public void doUp(@Nullable AnActionEvent e) {
                 if (myUpAction != null) {
-                    myUpAction.run(panel.getAnActionButton(CommonActionsPanel.Buttons.UP));
+                    myUpAction.accept(panel.getAnActionButton(CommonActionsPanel.Buttons.UP), e);
                 }
             }
 
+            @RequiredUIAccess
             @Override
-            public void doDown() {
+            public void doDown(@Nullable AnActionEvent e) {
                 if (myDownAction != null) {
-                    myDownAction.run(panel.getAnActionButton(CommonActionsPanel.Buttons.DOWN));
+                    myDownAction.accept(panel.getAnActionButton(CommonActionsPanel.Buttons.DOWN), e);
                 }
             }
         };

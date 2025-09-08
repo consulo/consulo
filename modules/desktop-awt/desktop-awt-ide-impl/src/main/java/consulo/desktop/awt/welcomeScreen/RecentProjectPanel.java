@@ -25,6 +25,7 @@ import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.*;
@@ -258,7 +259,8 @@ public class RecentProjectPanel {
             selection.getTemplatePresentation(),
             DataManager.getInstance().getDataContext(myList),
             false,
-            false
+            false,
+            DesktopAWTInputDetails.convert(myList, event)
         );
         ActionImplUtil.performActionDumbAwareWithCallbacks(selection, actionEvent, actionEvent.getDataContext());
         return selection;

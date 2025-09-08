@@ -38,15 +38,15 @@ class ListToolbarDecorator extends ToolbarDecorator {
   }
 
   private void createActions() {
-    myRemoveAction = button -> {
+    myRemoveAction = (button, e) -> {
       ListUtil.removeSelectedItems(myList);
       updateButtons();
     };
-    myUpAction = button -> {
+    myUpAction = (button, e) -> {
       ListUtil.moveSelectedItemsUp(myList);
       updateButtons();
     };
-    myDownAction = button -> {
+    myDownAction = (button, e) -> {
       ListUtil.moveSelectedItemsDown(myList);
       updateButtons();
     };

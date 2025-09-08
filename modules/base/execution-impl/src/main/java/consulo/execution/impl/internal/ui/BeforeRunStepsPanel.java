@@ -114,7 +114,7 @@ class BeforeRunStepsPanel {
             Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> selection = getSelection();
             return selection != null && selection.getSecond().isConfigurable();
         });
-        decorator.setAddAction(this::doAddAction);
+        decorator.setAddAction((button, e) -> doAddAction(button, e));
         decorator.setAddActionUpdater(e -> checkBeforeRunTasksAbility(true));
 
         myShowSettingsBeforeRunCheckBox = new JCheckBox(ExecutionLocalize.configurationEditBeforeRun().get());
@@ -224,7 +224,7 @@ class BeforeRunStepsPanel {
         return myRunConfiguration instanceof UnknownRunConfiguration;
     }
 
-    void doAddAction(AnActionButton button) {
+    void doAddAction(AnActionButton button, @Nonnull AnActionEvent e) {
         if (isUnknown()) {
             return;
         }
@@ -295,7 +295,8 @@ class BeforeRunStepsPanel {
             -1,
             Predicates.alwaysTrue()
         );
-        popup.show(button.getPreferredPopupPoint());
+
+        popup.showInBestPositionFor(e.getDataContext());
     }
 
     public JPanel getPanel() {

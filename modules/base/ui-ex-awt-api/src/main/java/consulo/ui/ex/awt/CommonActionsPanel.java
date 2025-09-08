@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -46,9 +46,9 @@ public class CommonActionsPanel extends JPanel {
         public static Buttons[] ALL = {ADD, REMOVE, EDIT, UP, DOWN};
 
         private final Image myIcon;
-        private final Consumer<Listener> myActionPerformer;
+        private final BiConsumer<Listener, AnActionEvent> myActionPerformer;
 
-        Buttons(Image icon, Consumer<Listener> actionPerformer) {
+        Buttons(Image icon, @RequiredUIAccess BiConsumer<Listener, AnActionEvent> actionPerformer) {
             myIcon = icon;
             myActionPerformer = actionPerformer;
         }
@@ -65,42 +65,30 @@ public class CommonActionsPanel extends JPanel {
             return StringUtil.capitalize(name().toLowerCase());
         }
 
-        public void performAction(Listener listener) {
-            myActionPerformer.accept(listener);
+        public void performAction(Listener listener, @Nonnull AnActionEvent event) {
+            myActionPerformer.accept(listener, event);
         }
     }
 
     public interface Listener {
-        void doAdd();
+        @RequiredUIAccess
+        default void doAdd(@Nullable AnActionEvent e) {
+        }
 
-        void doRemove();
+        @RequiredUIAccess
+        default void doRemove(@Nullable AnActionEvent e) {
+        }
 
-        void doUp();
+        @RequiredUIAccess
+        default void doUp(@Nullable AnActionEvent e) {
+        }
 
-        void doDown();
+        @RequiredUIAccess
+        default void doDown(@Nullable AnActionEvent e) {
+        }
 
-        void doEdit();
-
-        class Adapter implements Listener {
-            @Override
-            public void doAdd() {
-            }
-
-            @Override
-            public void doRemove() {
-            }
-
-            @Override
-            public void doUp() {
-            }
-
-            @Override
-            public void doDown() {
-            }
-
-            @Override
-            public void doEdit() {
-            }
+        @RequiredUIAccess
+        default void doEdit(@Nullable AnActionEvent e) {
         }
     }
 
@@ -243,7 +231,7 @@ public class CommonActionsPanel extends JPanel {
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            myButton.performAction(myListener);
+            myButton.performAction(myListener, e);
         }
 
         @Override
