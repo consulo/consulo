@@ -289,9 +289,11 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         String directory = mapping.getDirectory();
         AbstractVcs vcs = findVcsByName(mapping.getVcs());
         if (directory.isEmpty()) {
-            return new VcsRoot(vcs, myDefaultVcsRootPolicy.getVcsRootFor(file));
+            VirtualFile root = myDefaultVcsRootPolicy.getVcsRootFor(file);
+            return  root != null ? new VcsRoot(vcs, root) : null;
         }
-        return new VcsRoot(vcs, LocalFileSystem.getInstance().findFileByPath(directory));
+        VirtualFile path = LocalFileSystem.getInstance().findFileByPath(directory);
+        return path != null ? new VcsRoot(vcs, path) : null;
     }
 
     @Override

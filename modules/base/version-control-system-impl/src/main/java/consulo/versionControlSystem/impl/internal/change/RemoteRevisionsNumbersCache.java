@@ -37,7 +37,6 @@ import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * for vcses where it is reasonable to ask revision of each item separately
@@ -146,8 +145,8 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
           getQueue(storedVcsRoot).forceRemove(key);
         } else {
           VirtualFile newRoot = myVcsManager.getVcsRootFor(vf);
-          VcsRoot newVcsRoot = new VcsRoot(newVcs, newRoot);
-          if (! storedVcsRoot.equals(newVcsRoot)) {
+          VcsRoot newVcsRoot = newRoot == null ? null : new VcsRoot(newVcs, newRoot);
+          if (!storedVcsRoot.equals(newVcsRoot)) {
             switchVcs(storedVcsRoot, newVcsRoot, key);
           }
         }

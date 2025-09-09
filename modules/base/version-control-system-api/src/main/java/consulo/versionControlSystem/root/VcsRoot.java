@@ -19,6 +19,7 @@ package consulo.versionControlSystem.root;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.virtualFileSystem.VirtualFile;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -26,13 +27,15 @@ import jakarta.annotation.Nullable;
  */
 public class VcsRoot {
 
-  @Nullable private final AbstractVcs myVcs;
   @Nullable
+  private final AbstractVcs myVcs;
+
+  @Nonnull
   private final VirtualFile myPath;
 
   private int hashcode;
 
-  public VcsRoot(@Nullable AbstractVcs vcs, @Nullable VirtualFile path) {
+  public VcsRoot(@Nullable AbstractVcs vcs, @Nonnull VirtualFile path) {
     myVcs = vcs;
     myPath = path;
   }
@@ -42,7 +45,7 @@ public class VcsRoot {
     return myVcs;
   }
 
-  @Nullable
+  @Nonnull
   public VirtualFile getPath() {
     return myPath;
   }
@@ -54,7 +57,7 @@ public class VcsRoot {
 
     VcsRoot root = (VcsRoot)o;
 
-    if (myPath != null ? !myPath.equals(root.myPath) : root.myPath != null) return false;
+    if (!myPath.equals(root.myPath)) return false;
     if (myVcs != null ? !myVcs.equals(root.myVcs) : root.myVcs != null) return false;
 
     return true;
@@ -64,7 +67,7 @@ public class VcsRoot {
   public int hashCode() {
     if (hashcode == 0) {
       hashcode = myVcs != null ? myVcs.hashCode() : 0;
-      hashcode = 31 * hashcode + (myPath != null ? myPath.hashCode() : 0);
+      hashcode = 31 * hashcode + (myPath.hashCode());
     }
     return hashcode;
   }
