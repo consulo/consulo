@@ -38,8 +38,8 @@ import java.util.function.BiConsumer;
 public class CommonActionsPanel extends JPanel {
     public enum Buttons {
         ADD(PlatformIconGroup.generalAdd(), Listener::doAdd),
-        REMOVE(PlatformIconGroup.actionsEdit(), Listener::doEdit),
-        EDIT(PlatformIconGroup.generalRemove(), Listener::doRemove),
+        REMOVE(PlatformIconGroup.generalRemove(), Listener::doRemove),
+        EDIT(PlatformIconGroup.actionsEdit(), Listener::doEdit),
         UP(PlatformIconGroup.actionsMoveup(), Listener::doUp),
         DOWN(PlatformIconGroup.actionsMovedown(), Listener::doDown);
 
@@ -264,15 +264,6 @@ public class CommonActionsPanel extends JPanel {
                 }
             }
         }
-
-        //@Override
-        //public boolean isEnabled() {
-        //    if (myButton == Buttons.REMOVE) {
-        //        final JComponent c = getContextComponent();
-        //        if (c instanceof JTable && ((JTable)c).isEditing()) return false;
-        //    }
-        //    return super.isEnabled();
-        //}
 
         boolean isAddButton() {
             return myButton == Buttons.ADD;
