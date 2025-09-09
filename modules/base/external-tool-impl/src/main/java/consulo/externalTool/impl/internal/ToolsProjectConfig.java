@@ -38,7 +38,7 @@ public class ToolsProjectConfig implements PersistentStateComponent<ToolsProject
   private String myAfterCommitToolsId;
 
   public static ToolsProjectConfig getInstance(Project project) {
-    return project.getService(ToolsProjectConfig.class);
+    return project.getInstance(ToolsProjectConfig.class);
   }
 
   public String getAfterCommitToolsId() {

@@ -9,4 +9,6 @@ module consulo.external.tool.impl {
     // TODO remove in future
     requires miglayout;
     requires java.desktop;
+
+    opens consulo.externalTool.impl.internal to consulo.util.xml.serializer;
 }
