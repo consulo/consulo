@@ -16,6 +16,7 @@
 
 package consulo.language.psi.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -35,6 +36,7 @@ public class EditSourceUtil {
   }
 
   @Nullable
+  @RequiredReadAction
   public static Navigatable getDescriptor(PsiElement element) {
     if (!canNavigate(element)) {
       return null;
@@ -58,6 +60,7 @@ public class EditSourceUtil {
     return builder.build();
   }
 
+  @RequiredReadAction
   public static boolean canNavigate(PsiElement element) {
     if (element == null || !element.isValid()) {
       return false;

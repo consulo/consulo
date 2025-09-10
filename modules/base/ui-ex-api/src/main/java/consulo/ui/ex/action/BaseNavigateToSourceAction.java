@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
@@ -59,7 +61,7 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
     @Override
     public void update(@Nonnull AnActionEvent e) {
         boolean inPopup = ActionPlaces.isPopupPlace(e.getPlace());
-        Navigatable target = findTargetForUpdate(e.getDataContext());
+        Navigatable target = ReadAction.compute(() -> findTargetForUpdate(e.getDataContext()));
         boolean enabled = target != null;
 //        FIXME [VISTALL] we need this?
 //        if (inPopup && !(this instanceof OpenModuleSettingsAction) && OpenModuleSettingsAction.isModuleInProjectViewPopup(e)) {
@@ -81,6 +83,7 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
     }
 
     @Nullable
+    @RequiredReadAction
     private Navigatable findTargetForUpdate(@Nonnull DataContext dataContext) {
         Navigatable[] navigatables = getNavigatables(dataContext);
         if (navigatables == null) {

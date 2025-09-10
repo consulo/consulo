@@ -15,6 +15,7 @@
  */
 package consulo.navigation;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.util.dataholder.Key;
 
 public interface Navigatable {
@@ -35,6 +36,7 @@ public interface Navigatable {
   /**
    * @return <code>false</code> if navigation is not possible for any reason.
    */
+  @RequiredReadAction
   default boolean canNavigate() {
     return true;
   }
@@ -43,6 +45,7 @@ public interface Navigatable {
    * @return <code>false</code> if navigation to source is not possible for any reason.
    * Source means some kind of editor
    */
+  @RequiredReadAction
   default boolean canNavigateToSource() {
     return canNavigate();
   }
