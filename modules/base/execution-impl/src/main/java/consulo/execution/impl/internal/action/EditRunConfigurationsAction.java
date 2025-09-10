@@ -23,13 +23,10 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "editRunConfigurations")
+@ActionImpl(id = IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS)
 public class EditRunConfigurationsAction extends DumbAwareAction {
     public EditRunConfigurationsAction() {
         super(ActionLocalize.actionEditrunconfigurationsText(), ActionLocalize.actionEditrunconfigurationsDescription());

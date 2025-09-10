@@ -679,19 +679,6 @@
             <add-to-group group-id="EditorToggleActions"/>
         </action>
 
-        <!-- Run -->
-        <group id="RunMenu" popup="true">
-            <group id="RunnerActions"/>
-            <reference ref="ChooseRunConfiguration"/>
-            <reference ref="ChooseDebugConfiguration"/>
-            <reference ref="editRunConfigurations"/>
-            <reference ref="Stop"/>
-            <reference ref="StopBackgroundProcesses"/>
-            <reference ref="ShowLiveRunConfigurations"/>
-
-            <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RefactoringMenu"/>
-        </group>
-
         <action id="IdeScriptingConsole" class="consulo.ide.impl.idea.execution.console.RunIdeConsoleAction">
             <add-to-group group-id="Internal" anchor="last"/>
         </action>
@@ -967,37 +954,6 @@
         <reference ref="TypeHierarchy.Class"/>
         <reference ref="TypeHierarchy.Subtypes"/>
         <reference ref="TypeHierarchy.Supertypes"/>
-
-        <reference ref="EditBreakpoint"/>
-        <group id="DebugMainMenu">
-            <separator/>
-            <reference ref="StepOver"/>
-            <reference ref="ForceStepOver"/>
-            <reference ref="StepInto"/>
-            <reference ref="ForceStepInto"/>
-            <reference ref="SmartStepInto"/>
-            <reference ref="StepOut"/>
-            <reference ref="RunToCursor"/>
-            <reference ref="ForceRunToCursor"/>
-            <reference ref="Debugger.PopFrame"/>
-
-            <reference ref="Pause"/>
-            <reference ref="Resume"/>
-            <separator/>
-            <reference ref="EvaluateExpression"/>
-            <reference ref="QuickEvaluateExpression"/>
-            <reference ref="ShowExecutionPoint"/>
-            <separator/>
-            <reference ref="ToggleLineBreakpoint"/>
-            <reference ref="ToggleTemporaryLineBreakpoint"/>
-            <reference ref="ViewBreakpoints"/>
-            <separator/>
-
-            <add-to-group group-id="RunMenu" anchor="last"/>
-        </group>
-
-        <reference ref="Debugger.AddToWatch"/>
-        <reference ref="Debugger.EvaluateInConsole"/>
 
         <group id="EditorPopupMenuDebug">
             <separator/>
@@ -1625,11 +1581,6 @@
         </action>
 
         <action class="consulo.versionControlSystem.log.impl.internal.ui.action.ShowGraphHistoryAction" id="Vcs.Show.Graph.History" internal="true"/>
-
-        <group id="XDebugger.AttachGroup">
-            <reference ref="XDebugger.AttachToProcess"/>
-            <add-to-group group-id="RunMenu" anchor="before" relative-to-action="editRunConfigurations"/>
-        </group>
 
         <group id="EditorGutterPopupMenu">
             <reference ref="Annotate"/>

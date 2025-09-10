@@ -39,8 +39,8 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
         super(ActionLocalize.actionQuickevaluateexpressionText(), ActionLocalize.actionQuickevaluateexpressionDescription(), null, true);
     }
 
-    @Override
     @Nonnull
+    @Override
     protected DebuggerActionHandler getHandler() {
         return new QuickEvaluateHandlerWrapper(XQuickEvaluateHandler.getInstance());
     }

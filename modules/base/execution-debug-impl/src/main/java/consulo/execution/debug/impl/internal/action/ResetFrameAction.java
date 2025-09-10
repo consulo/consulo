@@ -32,14 +32,6 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "Debugger.PopFrame")
 public class ResetFrameAction extends XDebuggerActionBase {
-    public ResetFrameAction() {
-        super(
-            XDebuggerLocalize.actionPopFrameText(),
-            XDebuggerLocalize.actionPopFrameDescription(),
-            ExecutionDebugIconGroup.actionInlinedropframe()
-        );
-    }
-
     private final DebuggerActionHandler myHandler = new XDebuggerActionHandler() {
         @Override
         protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
@@ -58,6 +50,14 @@ public class ResetFrameAction extends XDebuggerActionBase {
             }
         }
     };
+
+    public ResetFrameAction() {
+        super(
+            XDebuggerLocalize.actionPopFrameText(),
+            XDebuggerLocalize.actionPopFrameDescription(),
+            ExecutionDebugIconGroup.actionInlinedropframe()
+        );
+    }
 
     @Nonnull
     @Override
