@@ -48,7 +48,7 @@ import java.util.function.Predicate;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
 
-public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
+public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements BranchListPopup {
     static final String BRANCH_POPUP = "BranchWidget";
     private Project myProject;
     private MyPopupListElementRenderer myListElementRenderer;
