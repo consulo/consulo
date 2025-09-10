@@ -18,61 +18,60 @@ package consulo.ui.ex.popup;
 import consulo.component.util.localize.BundleBase;
 
 public abstract class BaseStep<T> implements PopupStep<T>, SpeedSearchFilter<T>, MnemonicNavigationFilter<T> {
+    private Runnable myFinalRunnable;
 
-  private Runnable myFinalRunnable;
-
-  @Override
-  public boolean isSpeedSearchEnabled() {
-    return false;
-  }
-
-  @Override
-  public boolean isAutoSelectionEnabled() {
-    return true;
-  }
-
-  @Override
-  public SpeedSearchFilter<T> getSpeedSearchFilter() {
-    return this;
-  }
-
-  @Override
-  public boolean canBeHidden(T value) {
-    return true;
-  }
-
-  @Override
-  public String getIndexedString(T value) {
-    return getTextFor(value);
-  }
-
-  @Override
-  public boolean isMnemonicsNavigationEnabled() {
-    return false;
-  }
-
-  @Override
-  public int getMnemonicPos(T value) {
-    String text = getTextFor(value);
-    int i = text.indexOf("&");
-    if (i < 0) {
-      i = text.indexOf(BundleBase.MNEMONIC);
+    @Override
+    public boolean isSpeedSearchEnabled() {
+        return false;
     }
-    return i;
-  }
 
-  @Override
-  public MnemonicNavigationFilter<T> getMnemonicNavigationFilter() {
-    return this;
-  }
+    @Override
+    public boolean isAutoSelectionEnabled() {
+        return true;
+    }
 
-  @Override
-  public Runnable getFinalRunnable() {
-    return myFinalRunnable;
-  }
+    @Override
+    public SpeedSearchFilter<T> getSpeedSearchFilter() {
+        return this;
+    }
 
-  public PopupStep doFinalStep(Runnable runnable) {
-    myFinalRunnable = runnable;
-    return FINAL_CHOICE;
-  }
+    @Override
+    public boolean canBeHidden(T value) {
+        return true;
+    }
+
+    @Override
+    public String getIndexedString(T value) {
+        return getTextFor(value);
+    }
+
+    @Override
+    public boolean isMnemonicsNavigationEnabled() {
+        return false;
+    }
+
+    @Override
+    public int getMnemonicPos(T value) {
+        String text = getTextFor(value);
+        int i = text.indexOf("&");
+        if (i < 0) {
+            i = text.indexOf(BundleBase.MNEMONIC);
+        }
+        return i;
+    }
+
+    @Override
+    public MnemonicNavigationFilter<T> getMnemonicNavigationFilter() {
+        return this;
+    }
+
+    @Override
+    public Runnable getFinalRunnable() {
+        return myFinalRunnable;
+    }
+
+    public PopupStep doFinalStep(Runnable runnable) {
+        myFinalRunnable = runnable;
+        return FINAL_CHOICE;
+    }
 }

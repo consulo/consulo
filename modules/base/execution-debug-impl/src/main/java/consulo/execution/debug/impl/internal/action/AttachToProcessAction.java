@@ -19,7 +19,7 @@ public class AttachToProcessAction extends AttachToProcessActionBase {
             ExecutionDebugIconGroup.actionAttachtoprocess(),
             XAttachDebuggerProvider::getAttachDebuggerProviders,
             () -> application.getExtensionList(XAttachHostProvider.class),
-            XDebuggerLocalize.xdebuggerAttachPopupSelectdebuggerTitle().get()
+            XDebuggerLocalize.xdebuggerAttachPopupSelectdebuggerTitle()
         );
     }
 }

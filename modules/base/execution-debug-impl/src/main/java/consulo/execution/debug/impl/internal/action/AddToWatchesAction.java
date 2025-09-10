@@ -16,6 +16,7 @@
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XAddToWatchesFromEditorActionHandler;
@@ -26,7 +27,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
-@ActionImpl(id = "Debugger.AddToWatch")
+@ActionImpl(id = XDebuggerActions.ADD_TO_WATCH)
 public class AddToWatchesAction extends XDebuggerActionBase {
     private final XAddToWatchesFromEditorActionHandler myHandler = new XAddToWatchesFromEditorActionHandler();
 

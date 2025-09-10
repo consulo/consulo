@@ -2,11 +2,11 @@
 package consulo.execution.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.AllIcons;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.dataContext.DataContext;
 import consulo.execution.localize.ExecutionLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
@@ -36,96 +36,105 @@ import java.util.List;
 
 @ActionImpl(id = "StopBackgroundProcesses")
 public class StopBackgroundProcessesAction extends DumbAwareAction {
-  public StopBackgroundProcessesAction() {
-    super(ActionLocalize.actionStopbackgroundprocessesText(), ActionLocalize.actionStopbackgroundprocessesDescription());
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(!getCancellableProcesses(e.getData(Project.KEY)).isEmpty());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Project project = e.getData(Project.KEY);
-    List<StopAction.HandlerItem> handlerItems = getItemsList(getCancellableProcesses(project));
-
-    if (handlerItems.isEmpty()) {
-      return;
+    public StopBackgroundProcessesAction() {
+        super(ActionLocalize.actionStopbackgroundprocessesText(), ActionLocalize.actionStopbackgroundprocessesDescription());
     }
 
-    JBList<StopAction.HandlerItem> list = new JBList<>(handlerItems);
-    list.setCellRenderer(new GroupedItemsListRenderer<>(new ListItemDescriptorAdapter<>() {
-      @Nullable
-      @Override
-      public String getTextFor(StopAction.HandlerItem item) {
-        return item.displayName;
-      }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(!getCancellableProcesses(e.getData(Project.KEY)).isEmpty());
+    }
 
-      @Nullable
-      @Override
-      public Image getIconFor(StopAction.HandlerItem item) {
-        return item.icon;
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
+        List<StopAction.HandlerItem> handlerItems = getItemsList(getCancellableProcesses(project));
 
-      @Override
-      public boolean hasSeparatorAboveOf(StopAction.HandlerItem item) {
-        return item.hasSeparator;
-      }
-    }));
-
-    AWTPopupFactory popupFactory = (AWTPopupFactory)JBPopupFactory.getInstance();
-    JBPopup popup = popupFactory.createListPopupBuilder(list)
-      .setMovable(true)
-      .setTitle(
-        handlerItems.size() == 1
-          ? ExecutionLocalize.confirmBackgroundProcessStop().get()
-          : ExecutionLocalize.stopBackgroundProcess().get()
-      )
-      .setNamerForFiltering(o -> o.displayName)
-      .setItemsChosenCallback((c) -> {
-        for (Object o : c) {
-          if (o instanceof StopAction.HandlerItem) ((StopAction.HandlerItem)o).stop();
+        if (handlerItems.isEmpty()) {
+            return;
         }
-      }).
-      setRequestFocus(true)
-      .createPopup();
 
-    InputEvent inputEvent = e.getInputEvent();
-    Component component = inputEvent != null ? inputEvent.getComponent() : null;
-    if (component != null && (ActionPlaces.MAIN_TOOLBAR.equals(e.getPlace()) || ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(e.getPlace()))) {
-      popup.showUnderneathOf(component);
-    }
-    else if (project == null) {
-      popup.showInBestPositionFor(dataContext);
-    }
-    else {
-      popup.showCenteredInCurrentWindow(project);
-    }
-  }
+        JBList<StopAction.HandlerItem> list = new JBList<>(handlerItems);
+        list.setCellRenderer(new GroupedItemsListRenderer<>(new ListItemDescriptorAdapter<>() {
+            @Nullable
+            @Override
+            public String getTextFor(StopAction.HandlerItem item) {
+                return item.displayName;
+            }
 
-  @Nonnull
-  private static List<Pair<TaskInfo, ProgressIndicator>> getCancellableProcesses(@Nullable Project project) {
-    IdeFrame frame = WindowManagerEx.getInstanceEx().findFrameFor(project);
-    StatusBarEx statusBar = frame == null ? null : (StatusBarEx)frame.getStatusBar();
-    if (statusBar == null) return Collections.emptyList();
+            @Nullable
+            @Override
+            public Image getIconFor(StopAction.HandlerItem item) {
+                return item.icon;
+            }
 
-    return ContainerUtil.findAll(statusBar.getBackgroundProcesses(), pair -> pair.first.isCancellable() && !pair.second.isCanceled());
-  }
+            @Override
+            public boolean hasSeparatorAboveOf(StopAction.HandlerItem item) {
+                return item.hasSeparator;
+            }
+        }));
 
-  @Nonnull
-  private static List<StopAction.HandlerItem> getItemsList(@Nonnull List<? extends Pair<TaskInfo, ProgressIndicator>> tasks) {
-    List<StopAction.HandlerItem> items = new ArrayList<>(tasks.size());
-    for (final Pair<TaskInfo, ProgressIndicator> eachPair : tasks) {
-      items.add(new StopAction.HandlerItem(eachPair.first.getTitle(), AllIcons.Process.Step_passive, false) {
-        @Override
-        void stop() {
-          eachPair.second.cancel();
+        AWTPopupFactory popupFactory = (AWTPopupFactory) JBPopupFactory.getInstance();
+        JBPopup popup = popupFactory.createListPopupBuilder(list)
+            .setMovable(true)
+            .setTitle(
+                handlerItems.size() == 1
+                    ? ExecutionLocalize.confirmBackgroundProcessStop().get()
+                    : ExecutionLocalize.stopBackgroundProcess().get()
+            )
+            .setNamerForFiltering(o -> o.displayName)
+            .setItemsChosenCallback(c -> {
+                for (Object o : c) {
+                    if (o instanceof StopAction.HandlerItem handlerItem) {
+                        handlerItem.stop();
+                    }
+                }
+            })
+            .setRequestFocus(true)
+            .createPopup();
+
+        InputEvent inputEvent = e.getInputEvent();
+        Component component = inputEvent != null ? inputEvent.getComponent() : null;
+        if (component != null
+            && (ActionPlaces.MAIN_TOOLBAR.equals(e.getPlace()) || ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(e.getPlace()))) {
+            popup.showUnderneathOf(component);
         }
-      });
+        else if (project == null) {
+            popup.showInBestPositionFor(dataContext);
+        }
+        else {
+            popup.showCenteredInCurrentWindow(project);
+        }
     }
-    return items;
-  }
+
+    @Nonnull
+    @RequiredUIAccess
+    private static List<Pair<TaskInfo, ProgressIndicator>> getCancellableProcesses(@Nullable Project project) {
+        IdeFrame frame = WindowManagerEx.getInstanceEx().findFrameFor(project);
+        StatusBarEx statusBar = frame == null ? null : (StatusBarEx) frame.getStatusBar();
+        if (statusBar == null) {
+            return Collections.emptyList();
+        }
+
+        return ContainerUtil.findAll(
+            statusBar.getBackgroundProcesses(),
+            pair -> pair.first.isCancellable() && !pair.second.isCanceled()
+        );
+    }
+
+    @Nonnull
+    private static List<StopAction.HandlerItem> getItemsList(@Nonnull List<? extends Pair<TaskInfo, ProgressIndicator>> tasks) {
+        List<StopAction.HandlerItem> items = new ArrayList<>(tasks.size());
+        for (final Pair<TaskInfo, ProgressIndicator> eachPair : tasks) {
+            items.add(new StopAction.HandlerItem(eachPair.first.getTitle(), PlatformIconGroup.processStep_passive(), false) {
+                @Override
+                void stop() {
+                    eachPair.second.cancel();
+                }
+            });
+        }
+        return items;
+    }
 }

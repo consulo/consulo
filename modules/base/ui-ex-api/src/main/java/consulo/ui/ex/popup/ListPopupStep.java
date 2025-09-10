@@ -29,7 +29,6 @@ import java.util.List;
  * @since 6.0
  */
 public interface ListPopupStep<T> extends PopupStep<T> {
-
     /**
      * Returns the values to be displayed in the list popup.
      *

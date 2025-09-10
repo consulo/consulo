@@ -2824,6 +2824,8 @@ group.WeighingNewGroup.text:
     text: _New
 group.WindowMenu.text:
     text: _Window
+group.XDebugger.AttachGroup.description:
+    text: Attachment
 group.XDebugger.settings.description:
     text: Settings
 group.XDebugger.settings.text:
