@@ -19,18 +19,13 @@ import consulo.application.dumb.DumbAware;
 import jakarta.annotation.Nonnull;
 
 public class NonEmptyActionGroup extends DefaultActionGroup implements DumbAware {
-  public NonEmptyActionGroup() {
-    super();
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setVisible(getChildrenCount() > 0);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    presentation.setVisible(getChildrenCount() > 0);
-  }
-
-  @Override
-  public boolean hideIfNoVisibleChildren() {
-    return true;
-  }
+    @Override
+    public boolean hideIfNoVisibleChildren() {
+        return true;
+    }
 }

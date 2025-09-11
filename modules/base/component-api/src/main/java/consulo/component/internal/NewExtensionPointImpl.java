@@ -382,6 +382,32 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Nonnull
     @Override
+    public <K, V, M extends Map<? super K, ? super V>> M collectMapped(
+        @Nonnull M results,
+        @Nonnull @InheritCallerContext Function<? super T, ? extends K> keyMapper,
+        @Nonnull @InheritCallerContext Function<? super T, ? extends V> valueMapper
+    ) {
+        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0, n = extensionCache.size(); i < n; i++) {
+            T t = extensionCache.get(i).getKey();
+            try {
+                K key = keyMapper.apply(t);
+                V value = valueMapper.apply(t);
+                if (key != null && value != null) {
+                    results.put(key, value);
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, t);
+            }
+        }
+        return results;
+    }
+
+    @Nonnull
+    @Override
     public <CE extends Collection<T>> CE collectFiltered(
         @Nonnull CE results,
         @Nonnull @InheritCallerContext Predicate<? super T> predicate

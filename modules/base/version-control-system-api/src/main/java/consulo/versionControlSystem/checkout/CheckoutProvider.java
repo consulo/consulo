@@ -17,25 +17,20 @@ package consulo.versionControlSystem.checkout;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.versionControlSystem.VcsKey;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
-import java.util.Comparator;
 
 /**
  * Implement this interface and register it as extension to checkoutProvider extension point in order to provide checkout
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CheckoutProvider {
-    ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(CheckoutProvider.class);
-
     void doCheckout(@Nonnull Project project, @Nullable Listener listener);
 
     @Nonnull
@@ -53,12 +48,5 @@ public interface CheckoutProvider {
         void directoryCheckedOut(File directory, VcsKey vcs);
 
         void checkoutCompleted();
-    }
-
-    class CheckoutProviderComparator implements Comparator<CheckoutProvider> {
-        @Override
-        public int compare(CheckoutProvider o1, CheckoutProvider o2) {
-            return TextWithMnemonic.parse(o1.getVcsName()).getText().compareTo(TextWithMnemonic.parse(o2.getVcsName()).getText());
-        }
     }
 }

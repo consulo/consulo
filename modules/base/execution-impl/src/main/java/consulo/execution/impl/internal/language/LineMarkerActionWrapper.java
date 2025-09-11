@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.impl.internal.language;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.execution.action.Location;
@@ -41,22 +42,21 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         // This is quickfix for IDEA-208231
         // See consulo.execution.impl.internal.language.GutterIntentionMenuContributor.addActions(AnAction, List<? super IntentionActionDescriptor>, GutterIconRenderer, AtomicInteger, DataContext)`
-        //if (myOrigin instanceof ExecutorAction) {
-        //  if (((ExecutorAction)myOrigin).getOrigin() instanceof ExecutorRegistryImpl.ExecutorGroupActionGroup) {
-        //    final AnAction[] children = ((ExecutorRegistryImpl.ExecutorGroupActionGroup)((ExecutorAction)myOrigin).getOrigin()).getChildren(null);
+        //if (myOrigin instanceof ExecutorAction executorAction
+        //    && executorAction.getOrigin() instanceof ExecutorRegistryImpl.ExecutorGroupActionGroup actionGroup) {
+        //    AnAction[] children = actionGroup.getChildren(null);
         //    LOG.assertTrue(ContainerUtil.all(Arrays.asList(children), o -> o instanceof RunContextAction));
         //    return ContainerUtil.map(children, o -> new LineMarkerActionWrapper(myElement, o)).toArray(AnAction.EMPTY_ARRAY);
-        //  }
         //}
-        //if (myOrigin instanceof ActionGroup) {
-        //  return ((ActionGroup)myOrigin).getChildren(e == null ? null : wrapEvent(e));
+        //if (myOrigin instanceof ActionGroup actionGroup) {
+        //    return actionGroup.getChildren(e == null ? null : wrapEvent(e));
         //}
         return AnAction.EMPTY_ARRAY;
     }
 
     @Override
     public boolean canBePerformed(@Nonnull DataContext context) {
-        return !(myOrigin instanceof ActionGroup) || ((ActionGroup) myOrigin).canBePerformed(wrapContext(context));
+        return !(myOrigin instanceof ActionGroup actionGroup) || actionGroup.canBePerformed(wrapContext(context));
     }
 
     @Override
@@ -66,17 +66,17 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
 
     @Override
     public boolean isPopup() {
-        return !(myOrigin instanceof ActionGroup) || ((ActionGroup) myOrigin).isPopup();
+        return !(myOrigin instanceof ActionGroup actionGroup) || actionGroup.isPopup();
     }
 
     @Override
     public boolean hideIfNoVisibleChildren() {
-        return myOrigin instanceof ActionGroup && ((ActionGroup) myOrigin).hideIfNoVisibleChildren();
+        return myOrigin instanceof ActionGroup actionGroup && actionGroup.hideIfNoVisibleChildren();
     }
 
     @Override
     public boolean disableIfNoVisibleChildren() {
-        return !(myOrigin instanceof ActionGroup) || ((ActionGroup) myOrigin).disableIfNoVisibleChildren();
+        return !(myOrigin instanceof ActionGroup actionGroup) || actionGroup.disableIfNoVisibleChildren();
     }
 
     @Override
@@ -132,9 +132,11 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
 
         @Nullable
         @Override
-        public synchronized Object getData(@Nonnull Key dataId) {
+        @RequiredReadAction
+        @SuppressWarnings("unchecked")
+        public synchronized <T> T getData(@Nonnull Key<T> dataId) {
             if (Location.DATA_KEY == dataId) {
-                return myElement.isValid() ? new PsiLocation<>(myElement) : null;
+                return myElement.isValid() ? (T) new PsiLocation<>(myElement) : null;
             }
             return myDelegate.getData(dataId);
         }
