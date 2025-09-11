@@ -15,26 +15,38 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
+import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
-import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+@ActionImpl(id = "Vcs.Checkout")
 public class CheckoutActionGroup extends ActionGroup implements DumbAware {
-    private AnAction[] myChildren;
+    private final Application myApplication;
+
+    @Inject
+    public CheckoutActionGroup(Application application) {
+        myApplication = application;
+        setPopup(true);
+    }
 
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        if (!CheckoutProvider.EXTENSION_POINT_NAME.hasAnyExtensions()) {
+        if (!myApplication.getExtensionPoint(CheckoutProvider.class).hasAnyExtensions()) {
             e.getPresentation().setVisible(false);
         }
     }
@@ -42,13 +54,8 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
     @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        if (myChildren == null) {
-            List<CheckoutProvider> extensionList = CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList();
-            myChildren = extensionList.stream()
-                .sorted(new CheckoutProvider.CheckoutProviderComparator())
-                .map(CheckoutAction::new)
-                .toArray(AnAction[]::new);
-        }
-        return myChildren;
+        SortedMap<LocalizeValue, AnAction> actions = myApplication.getExtensionPoint(CheckoutProvider.class)
+            .collectMapped(new TreeMap<>(), p -> p.getName().map(Presentation.NO_MNEMONIC), CheckoutAction::new);
+        return actions.values().toArray(AnAction[]::new);
     }
 }

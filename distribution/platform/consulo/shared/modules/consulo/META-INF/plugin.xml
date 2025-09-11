@@ -1507,7 +1507,7 @@
                 </group>
 
                 <separator/>
-                <group id="Vcs.Checkout" class="consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutActionGroup" popup="true"/>
+                <reference id="Vcs.Checkout"/>
                 <group id="Vcs.Browse" class="consulo.ui.ex.action.NonEmptyActionGroup" popup="true"/>
                 <separator/>
                 <group id="Vcs.Import" class="consulo.ui.ex.action.NonEmptyActionGroup"/>

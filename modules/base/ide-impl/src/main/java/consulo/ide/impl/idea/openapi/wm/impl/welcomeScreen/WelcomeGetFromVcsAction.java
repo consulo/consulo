@@ -21,15 +21,16 @@ import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @ActionImpl(id = "WelcomeScreen.GetFromVcs")
 public class WelcomeGetFromVcsAction extends WelcomePopupAction {
@@ -48,11 +49,9 @@ public class WelcomeGetFromVcsAction extends WelcomePopupAction {
 
     @Override
     protected void fillActions(DefaultActionGroup group) {
-        List<CheckoutProvider> providers = new ArrayList<>(myApplication.getExtensionList(CheckoutProvider.class));
-        providers.sort(new CheckoutProvider.CheckoutProviderComparator());
-        for (CheckoutProvider provider : providers) {
-            group.add(new CheckoutAction(provider));
-        }
+        SortedMap<LocalizeValue, AnAction> actions = myApplication.getExtensionPoint(CheckoutProvider.class)
+            .collectMapped(new TreeMap<>(), p -> p.getName().map(Presentation.NO_MNEMONIC), CheckoutAction::new);
+        group.addAll(actions.values());
     }
 
     @Override

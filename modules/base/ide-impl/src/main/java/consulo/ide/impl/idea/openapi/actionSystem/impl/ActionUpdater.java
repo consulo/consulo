@@ -103,7 +103,8 @@ public class ActionUpdater {
                 () -> group.canBePerformed(getDataContext(group))
             )
         );
-        myCheapStrategy = new UpdateStrategy(myFactory::getPresentation, group -> group.getChildren(null), group -> true);
+        myCheapStrategy =
+            new UpdateStrategy(myFactory::getPresentation, group -> group.getChildren(null), group -> true);
     }
 
     private void applyPresentationChanges() {
@@ -131,19 +132,24 @@ public class ActionUpdater {
 
         ProgressIndicator progress = Objects.requireNonNull(ProgressManager.getInstance().getProgressIndicator());
 
-        return ActionUIActionRunner.compute(uiAccess, () -> {
-            long start = System.currentTimeMillis();
-            try {
-                return ProgressManager.getInstance().runProcess(call, ProgressWrapper.wrap(progress));
-            }
-            finally {
-                long elapsed = System.currentTimeMillis() - start;
-                if (elapsed > 100) {
-                    LOG.warn("Slow (" + elapsed + "ms) '" + operation + "' on action " + action + " of " + action.getClass() + ". Consider speeding it up and/or implementing UpdateInBackground.");
+        return ActionUIActionRunner.compute(
+            uiAccess,
+            () -> {
+                long start = System.currentTimeMillis();
+                try {
+                    return ProgressManager.getInstance().runProcess(call, ProgressWrapper.wrap(progress));
                 }
-
+                finally {
+                    long elapsed = System.currentTimeMillis() - start;
+                    if (elapsed > 100) {
+                        LOG.warn(
+                            "Slow (" + elapsed + "ms) '" + operation + "' on action " + action + " of " + action.getClass() + ". " +
+                                "Consider speeding it up and/or implementing UpdateInBackground."
+                        );
+                    }
+                }
             }
-        });
+        );
     }
 
     /**
@@ -200,15 +206,17 @@ public class ActionUpdater {
     }
 
     @Nonnull
-    public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group,
-                                                                              boolean hideDisabled) {
+    public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(
+        ActionGroup group,
+        boolean hideDisabled
+    ) {
         CompletableFuture<List<? extends AnAction>> future = new CompletableFuture<>();
         ProgressIndicator indicator = new EmptyProgressIndicator();
 
         future.whenComplete((anActions, throwable) -> {
             if (throwable != null) {
                 indicator.cancel();
-                
+
                 ActionUIActionRunner.compute(myUiAccess, () -> {
                     applyPresentationChanges();
                     return null;
@@ -219,15 +227,21 @@ public class ActionUpdater {
         ourExecutor.execute(() -> {
             while (future.state() == Future.State.RUNNING) {
                 try {
-                    ProgressManager.getInstance().runProcess(() -> {
-                        List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
+                    ProgressManager.getInstance().runProcess(
+                        () -> {
+                            List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
 
-                        ActionUIActionRunner.compute(myUiAccess, () -> {
-                            applyPresentationChanges();
-                            future.complete(result);
-                            return null;
-                        });
-                    }, new SensitiveProgressWrapper(indicator));
+                            ActionUIActionRunner.compute(
+                                myUiAccess,
+                                () -> {
+                                    applyPresentationChanges();
+                                    future.complete(result);
+                                    return null;
+                                }
+                            );
+                        },
+                        new SensitiveProgressWrapper(indicator)
+                    );
                 }
                 catch (ProcessCanceledException e) {
                     future.cancel(false);
@@ -259,16 +273,19 @@ public class ActionUpdater {
     }
 
     private List<AnAction> getGroupChildren(ActionGroup group, UpdateStrategy strategy) {
-        return myGroupChildren.computeIfAbsent(group, __ -> {
-            AnAction[] children = strategy.getChildren.apply(group);
-            int nullIndex = ArrayUtil.indexOf(children, null);
-            if (nullIndex < 0) {
-                return Arrays.asList(children);
-            }
+        return myGroupChildren.computeIfAbsent(
+            group,
+            __ -> {
+                AnAction[] children = strategy.getChildren.apply(group);
+                int nullIndex = ArrayUtil.indexOf(children, null);
+                if (nullIndex < 0) {
+                    return Arrays.asList(children);
+                }
 
-            LOG.error("action is null: i=" + nullIndex + " group=" + group + " group id=" + myActionManager.getId(group));
-            return ContainerUtil.filter(children, Predicates.notNull());
-        });
+                LOG.error("action is null: i=" + nullIndex + " group=" + group + " group id=" + myActionManager.getId(group));
+                return ContainerUtil.filter(children, Predicates.notNull());
+            }
+        );
     }
 
     private List<AnAction> expandGroupChild(AnAction child, boolean hideDisabled, UpdateStrategy strategy) {
@@ -327,12 +344,12 @@ public class ActionUpdater {
                 }
 
                 if (hideDisabled && !(child instanceof CompactActionGroup)) {
-                    return Collections.singletonList(new EmptyAction.DelegatingCompactActionGroup((ActionGroup)child));
+                    return Collections.singletonList(new EmptyAction.DelegatingCompactActionGroup((ActionGroup) child));
                 }
                 return Collections.singletonList(child);
             }
 
-            return doExpandActionGroup((ActionGroup)child, hideDisabled || actionGroup instanceof CompactActionGroup, strategy);
+            return doExpandActionGroup((ActionGroup) child, hideDisabled || actionGroup instanceof CompactActionGroup, strategy);
         }
 
         return Collections.singletonList(child);
@@ -352,25 +369,24 @@ public class ActionUpdater {
                 if (isDumb && !o.isDumbAware()) {
                     return null;
                 }
-                if (!(o instanceof ActionGroup)) {
+                if (!(o instanceof ActionGroup oo)) {
                     return null;
                 }
-                ActionGroup oo = (ActionGroup)o;
                 Presentation presentation = update(oo, strategy);
                 if (presentation == null || !presentation.isVisible()) {
                     return null;
                 }
-                if ((oo.isPopup(myPlace) || strategy.canBePerformed.test(oo))) {
+                if (oo.isPopup(myPlace) || strategy.canBePerformed.test(oo)) {
                     return null;
                 }
                 return getGroupChildren(oo, strategy);
-            }).withRoots(getGroupChildren(group, strategy))
+            })
+            .withRoots(getGroupChildren(group, strategy))
             .unique()
             .traverse(TreeTraversal.LEAVES_DFS)
             .filter(o -> !(o instanceof AnSeparator) && !(isDumb && !o.isDumbAware()))
             .take(1000);
     }
-
 
     boolean canBePerformedCached(ActionGroup group) {
         return !Boolean.FALSE.equals(myCanBePerformedCache.get(group));
@@ -388,8 +404,8 @@ public class ActionUpdater {
         List<AnAction> result = new ArrayList<>();
         for (AnAction child : visible) {
             if (child instanceof AnSeparator separator) {
-                if (separator.getTextValue() != LocalizeValue.empty() || (!result.isEmpty()
-                    && !(result.get(result.size() - 1) instanceof AnSeparator))) {
+                if (separator.getTextValue() != LocalizeValue.empty()
+                    || (!result.isEmpty() && !(result.get(result.size() - 1) instanceof AnSeparator))) {
                     result.add(child);
                 }
             }
@@ -427,8 +443,7 @@ public class ActionUpdater {
         return hasChildrenWithState(group, true, false, strategy);
     }
 
-    private boolean hasChildrenWithState(ActionGroup group,
-                                         boolean checkVisible, boolean checkEnabled, UpdateStrategy strategy) {
+    private boolean hasChildrenWithState(ActionGroup group, boolean checkVisible, boolean checkEnabled, UpdateStrategy strategy) {
         if (group instanceof AlwaysVisibleActionGroup) {
             return true;
         }

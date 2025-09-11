@@ -27,10 +27,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -172,6 +169,31 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     @Nonnull
     default <R> List<R> collectMapped(@Nonnull @InheritCallerContext Function<? super E, ? extends R> processor) {
         return collectMapped(new ArrayList<R>(), processor);
+    }
+
+    @Nonnull
+    default <K, V, M extends Map<? super K, ? super V>> M collectMapped(
+        @Nonnull M results,
+        @Nonnull @InheritCallerContext Function<? super E, ? extends K> keyMapper,
+        @Nonnull @InheritCallerContext Function<? super E, ? extends V> valueMapper
+    ) {
+        forEach(extension -> {
+            K key = keyMapper.apply(extension);
+            V value = valueMapper.apply(extension);
+            if (key != null && value != null) {
+                results.put(key, value);
+            }
+        });
+        return results;
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    default <K, V, M extends Map<? super K, ? super V>> M collectMapped(
+        @Nonnull @InheritCallerContext Function<? super E, ? extends K> keyMapper,
+        @Nonnull @InheritCallerContext Function<? super E, ? extends V> valueMapper
+    ) {
+        return collectMapped((M) new LinkedHashMap<K, V>(), keyMapper, valueMapper);
     }
 
     @Nonnull
