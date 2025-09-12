@@ -882,8 +882,12 @@ outdated.version.update.project.action:
     text: Update Project
 patch.apply.already.applied:
     text: All of the changes in the specified patch are already contained in the code
+patch.apply.analyze.from.clipboard.on.the.fly.checkbox:
+    text: Analyze and apply patch from clipboard on the fly
 patch.apply.base.directory.field:
     text: '&Base directory:'
+patch.apply.cannot.apply.now:
+    text: Cannot Apply Patch Now
 patch.apply.changes.in.patch.resolve:
     text: '{0} in patch resolve'
 patch.apply.command:

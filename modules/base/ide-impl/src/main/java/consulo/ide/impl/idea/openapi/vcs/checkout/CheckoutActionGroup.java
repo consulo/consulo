@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
@@ -38,8 +39,8 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
 
     @Inject
     public CheckoutActionGroup(Application application) {
+        super(ActionLocalize.groupVcsCheckoutText(), true);
         myApplication = application;
-        setPopup(true);
     }
 
     @Override

@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
@@ -37,7 +38,7 @@ import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-@ActionImpl(id = "CheckinProject")
+@ActionImpl(id = IdeActions.ACTION_CHECKIN_PROJECT)
 public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
     @Inject
     public CommonCheckinProjectAction() {

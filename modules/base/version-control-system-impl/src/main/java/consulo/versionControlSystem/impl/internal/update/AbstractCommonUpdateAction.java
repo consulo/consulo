@@ -177,22 +177,21 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         Project project,
         VcsContext dataContext
     ) {
-        LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap = createConfigurableToEnvMap(updateEnvToVirtualFiles);
+        SequencedMap<UnnamedConfigurable, AbstractVcs> envToConfMap = createConfigurableToEnvMap(updateEnvToVirtualFiles);
         LOG.debug("configurables map: " + envToConfMap);
         if (!envToConfMap.isEmpty()) {
-            UpdateOrStatusOptionsDialog dialogOrStatus = myActionInfo.createOptionsDialog(
-                project,
-                envToConfMap,
-                myScopeInfo.getScopeName(dataContext, myActionInfo)
-            );
+            UpdateOrStatusOptionsDialog dialogOrStatus =
+                myActionInfo.createOptionsDialog(project, envToConfMap, myScopeInfo.getScopeName(dataContext, myActionInfo));
             if (!dialogOrStatus.showAndGet()) {
                 throw new ProcessCanceledException();
             }
         }
     }
 
-    private LinkedHashMap<UnnamedConfigurable, AbstractVcs> createConfigurableToEnvMap(Map<AbstractVcs, Collection<FilePath>> updateEnvToVirtualFiles) {
-        LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap = new LinkedHashMap<>();
+    private SequencedMap<UnnamedConfigurable, AbstractVcs> createConfigurableToEnvMap(
+        Map<AbstractVcs, Collection<FilePath>> updateEnvToVirtualFiles
+    ) {
+        SequencedMap<UnnamedConfigurable, AbstractVcs> envToConfMap = new LinkedHashMap<>();
         for (AbstractVcs vcs : updateEnvToVirtualFiles.keySet()) {
             UnnamedConfigurable configurable = myActionInfo.getEnvironment(vcs).createConfigurable(updateEnvToVirtualFiles.get(vcs));
             if (configurable != null) {
@@ -290,8 +289,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                 }
             }
 
-            if (presentation.isVisible() && presentation.isEnabled() &&
-                vcsManager.isBackgroundVcsOperationRunning()) {
+            if (presentation.isVisible() && presentation.isEnabled() && vcsManager.isBackgroundVcsOperationRunning()) {
                 presentation.setEnabled(false);
             }
         }
@@ -313,6 +311,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
     private class Updater extends Task.Backgroundable {
         private final LocalizeValue LOCAL_HISTORY_ACTION = VcsLocalize.localHistoryUpdateFromVcs();
 
+        @Nonnull
         private final Project myProject;
         private final ProjectLevelVcsManagerImpl myProjectLevelVcsManager;
         private UpdatedFiles myUpdatedFiles;
@@ -330,7 +329,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         private Label myAfter;
         private LocalHistoryAction myLocalHistoryAction;
 
-        public Updater(Project project, FilePath[] roots, Map<AbstractVcs, Collection<FilePath>> vcsToVirtualFiles) {
+        public Updater(@Nonnull Project project, FilePath[] roots, Map<AbstractVcs, Collection<FilePath>> vcsToVirtualFiles) {
             super(project, getTemplatePresentation().getTextValue(), true, VcsConfiguration.getInstance(project).getUpdateOption());
             myProject = project;
             myProjectLevelVcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManagerEx.getInstanceEx(project);
@@ -381,8 +380,12 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                     Ref<SequentialUpdatesContext> refContext = new Ref<>(context);
 
                     // actual update
-                    UpdateSession updateSession =
-                        updateEnvironment.updateDirectories(files.toArray(new FilePath[files.size()]), myUpdatedFiles, progressIndicator, refContext);
+                    UpdateSession updateSession = updateEnvironment.updateDirectories(
+                        files.toArray(new FilePath[files.size()]),
+                        myUpdatedFiles,
+                        progressIndicator,
+                        refContext
+                    );
 
                     myContextInfo.put(vcs, refContext.get());
                     processed++;
@@ -403,8 +406,8 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                 finally {
                     myProjectLevelVcsManager.stopBackgroundVcsOperation();
                     if (!myProject.isDisposed()) {
-                        myProject.getMessageBus().syncPublisher(UpdatedFilesListener.class).
-                            consume(UpdatedFilesReverseSide.getPathsFromUpdatedFiles(myUpdatedFiles));
+                        myProject.getMessageBus().syncPublisher(UpdatedFilesListener.class)
+                            .consume(UpdatedFilesReverseSide.getPathsFromUpdatedFiles(myUpdatedFiles));
                     }
                 }
             }
@@ -448,7 +451,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         private Notification.Builder prepareNotification(@Nonnull UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
             int allFiles = getUpdatedFilesCount();
 
-            NotificationService notificationService = NotificationService.getInstance();
+            NotificationService notificationService = myProject.getApplication().getInstance(NotificationService.class);
             if (someSessionWasCancelled) {
                 return notificationService.newWarn(STANDARD_NOTIFICATION)
                     .title(LocalizeValue.localizeTODO("Project Partially Updated"))
@@ -475,7 +478,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             NamedScope scopeFilter = tree.getFilterScope();
             if (scopeFilter != null) {
                 int filteredFiles = tree.getFilteredFilesCount();
-                String filterName = scopeFilter.getName();
+                LocalizeValue filterName = scopeFilter.getPresentableName();
                 if (filteredFiles == 0) {
                     scopeText = filterName + " wasn't modified";
                 }
@@ -493,7 +496,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         }
 
         private void onSuccessImpl(boolean wasCanceled) {
-            StoreReloadManager storeReloadManager = StoreReloadManager.getInstance((Project) getProject());
+            StoreReloadManager storeReloadManager = StoreReloadManager.getInstance(myProject);
             if (!myProject.isOpen() || myProject.isDisposed()) {
                 storeReloadManager.unblockReloadingProjectOnExternalChanges();
                 LocalHistory.getInstance().putSystemLabel(myProject, LOCAL_HISTORY_ACTION); // TODO check why this label is needed
@@ -501,7 +504,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             }
             boolean continueChain = false;
             for (SequentialUpdatesContext context : myContextInfo.values()) {
-                continueChain |= (context != null) && (context.shouldFail());
+                continueChain |= context != null && context.shouldFail();
             }
             boolean continueChainFinal = continueChain;
 
@@ -520,13 +523,16 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                 List<VirtualFile> files = new ArrayList<>();
                 RemoteRevisionsCache revisionsCache = RemoteRevisionsCache.getInstance(myProject);
                 revisionsCache.invalidate(myUpdatedFiles);
-                UpdateFilesHelper.iterateFileGroupFiles(myUpdatedFiles, (filePath, groupId) -> {
-                    String path = VirtualFileUtil.pathToUrl(filePath.replace(File.separatorChar, '/'));
-                    VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(path);
-                    if (file != null) {
-                        files.add(file);
+                UpdateFilesHelper.iterateFileGroupFiles(
+                    myUpdatedFiles,
+                    (filePath, groupId) -> {
+                        String path = VirtualFileUtil.pathToUrl(filePath.replace(File.separatorChar, '/'));
+                        VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(path);
+                        if (file != null) {
+                            files.add(file);
+                        }
                     }
-                });
+                );
                 myDirtyScopeManager.filesDirty(files, null);
             }
 
@@ -545,7 +551,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                         }
                         AbstractVcsHelper.getInstance(myProject).showErrors(
                             myGroupedExceptions,
-                            VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText())
+                            VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getTextValue())
                         );
                     }
                     else if (someSessionWasCancelled) {
@@ -603,19 +609,18 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             );
         }
 
-
         private void showContextInterruptedError() {
             gatherContextInterruptedMessages();
             AbstractVcsHelper.getInstance(myProject).showErrors(
                 myGroupedExceptions,
-                VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText())
+                VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getTextValue())
             );
         }
 
         private void gatherContextInterruptedMessages() {
             for (Map.Entry<AbstractVcs, SequentialUpdatesContext> entry : myContextInfo.entrySet()) {
                 SequentialUpdatesContext context = entry.getValue();
-                if ((context == null) || (!context.shouldFail())) {
+                if (context == null || !context.shouldFail()) {
                     continue;
                 }
                 VcsException exception = new VcsException(context.getMessageWhenInterruptedBeforeStart());
@@ -628,7 +633,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         private UpdateInfoTreeImpl showUpdateTree(boolean willBeContinued, boolean wasCanceled) {
             RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(myProject);
             restoreUpdateTree.registerUpdateInformation(myUpdatedFiles, myActionInfo);
-            String text = getTemplatePresentation().getText() + ((willBeContinued || (myUpdateNumber > 1)) ? ("#" + myUpdateNumber) : "");
+            String text = getTemplatePresentation().getTextValue() + (willBeContinued || myUpdateNumber > 1 ? "#" + myUpdateNumber : "");
             UpdateInfoTreeImpl updateInfoTree =
                 notNull(myProjectLevelVcsManager.showUpdateProjectInfo(myUpdatedFiles, text, myActionInfo, wasCanceled));
             updateInfoTree.setBefore(myBefore);

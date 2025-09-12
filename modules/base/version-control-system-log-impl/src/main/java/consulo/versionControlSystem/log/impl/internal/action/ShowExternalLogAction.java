@@ -64,7 +64,7 @@ public class ShowExternalLogAction extends DumbAwareAction {
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        LinkedHashMap<VcsKey, List<VirtualFile>> roots = selectRoots(project);
+        SequencedMap<VcsKey, List<VirtualFile>> roots = selectRoots(project);
         if (roots.isEmpty()) {
             return;
         }
@@ -112,15 +112,15 @@ public class ShowExternalLogAction extends DumbAwareAction {
     }
 
     @Nonnull
-    private static MyContentComponent createManagerAndContent(@Nonnull Project project,
-                                                              @Nonnull AbstractVcs vcs,
-                                                              @Nonnull LinkedHashMap<VcsKey, List<VirtualFile>> roots,
-                                                              @Nullable String tabName) {
+    private static MyContentComponent createManagerAndContent(
+        @Nonnull Project project,
+        @Nonnull AbstractVcs vcs,
+        @Nonnull SequencedMap<VcsKey, List<VirtualFile>> roots,
+        @Nullable String tabName
+    ) {
         for (Map.Entry<VcsKey, List<VirtualFile>> entry : roots.entrySet()) {
             VcsKey vcsKey = entry.getKey();
             List<VirtualFile> files = entry.getValue();
-
-
         }
 
 //        GitRepositoryManager repositoryManager = ServiceManager.getService(project, GitRepositoryManager.class);
@@ -166,28 +166,28 @@ public class ShowExternalLogAction extends DumbAwareAction {
     }
 
     @Nonnull
-    private static LinkedHashMap<VcsKey, List<VirtualFile>> selectRoots(@Nonnull Project project) {
+    private static SequencedMap<VcsKey, List<VirtualFile>> selectRoots(@Nonnull Project project) {
         ExtensionPoint<VcsRootChecker> checkers = project.getApplication().getExtensionPoint(VcsRootChecker.class);
 
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, true, false, true);
         VirtualFile[] virtualFiles = IdeaFileChooser.chooseFiles(descriptor, project, null);
         descriptor.withFileFilter(file -> checkers.anyMatchSafe(r -> r.isRoot(file.getPath())));
 
-        LinkedHashMap<VcsKey, List<VirtualFile>> result = new LinkedHashMap<>();
+        SequencedMap<VcsKey, List<VirtualFile>> result = new LinkedHashMap<>();
         for (VirtualFile file : virtualFiles) {
             VcsRootChecker checker = checkers.findFirstSafe(r -> r.isRoot(file.getPath()));
             if (checker != null) {
                 result.computeIfAbsent(checker.getSupportedVcs(), vcsKey -> new ArrayList<>(2)).add(file);
             }
-
         }
         return result;
     }
 
-
-    private static boolean checkIfProjectLogMatches(@Nonnull Project project,
-                                                    @Nonnull ContentManager cm,
-                                                    @Nonnull LinkedHashMap<VcsKey, List<VirtualFile>> roots) {
+    private static boolean checkIfProjectLogMatches(
+        @Nonnull Project project,
+        @Nonnull ContentManager cm,
+        @Nonnull SequencedMap<VcsKey, List<VirtualFile>> roots
+    ) {
         ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
 
         if (roots.size() == 1) {
@@ -213,7 +213,7 @@ public class ShowExternalLogAction extends DumbAwareAction {
         return false;
     }
 
-    private static boolean checkIfAlreadyOpened(@Nonnull ContentManager cm, @Nonnull LinkedHashMap<VcsKey, List<VirtualFile>> roots) {
+    private static boolean checkIfAlreadyOpened(@Nonnull ContentManager cm, @Nonnull SequencedMap<VcsKey, List<VirtualFile>> roots) {
         Content toSelect = null;
 
         for (Content content : cm.getContents()) {
@@ -257,12 +257,12 @@ public class ShowExternalLogAction extends DumbAwareAction {
 //        @Nonnull
 //        private final Project myProject;
 //        @Nonnull
-//        private final LinkedHashMap<VcsKey, List<VirtualFile>> myRoots;
+//        private final SequencedMap<VcsKey, List<VirtualFile>> myRoots;
 //        @Nonnull
 //        private final GitVcs myVcs;
 //        private GitVersion myVersion;
 //
-//        private ShowLogInDialogTask(@Nonnull Project project, @Nonnull LinkedHashMap<VcsKey, List<VirtualFile>> roots) {
+//        private ShowLogInDialogTask(@Nonnull Project project, @Nonnull SequencedMap<VcsKey, List<VirtualFile>> roots) {
 //            super(project, LocalizeValue.localizeTODO("Loading External Log..."), true);
 //            myProject = project;
 //            myRoots = roots;

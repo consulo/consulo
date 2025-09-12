@@ -26,6 +26,7 @@ import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
+import consulo.versionControlSystem.impl.internal.action.VcsActionGroup;
 
 import java.util.function.Predicate;
 
@@ -38,7 +39,7 @@ public class VcsKeymapExtension implements KeymapExtension {
     public KeymapGroup createGroup(Predicate<AnAction> filtered, ComponentManager project) {
         KeymapGroup result = KeymapGroupFactory.getInstance().createGroup(KeyMapLocalize.versionControlGroupTitle());
 
-        AnAction[] versionControlsGroups = getActions("VcsGroup");
+        AnAction[] versionControlsGroups = getActions(VcsActionGroup.ID);
         AnAction[] keymapGroups = getActions("Vcs.KeymapGroup");
 
         for (AnAction action : ContainerUtil.concat(versionControlsGroups, keymapGroups)) {
