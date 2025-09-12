@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal.ui.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.ui.view.SelectionHistoryDialog;
+import consulo.localHistory.localize.LocalHistoryLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
@@ -31,42 +32,47 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "LocalHistory.ShowSelectionHistory")
 public class ShowSelectionHistoryAction extends ShowHistoryAction {
-  @Override
-  protected void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
-    VcsSelection sel = getSelection(e);
-
-    int from = sel.getSelectionStartLineNumber();
-    int to = sel.getSelectionEndLineNumber();
-
-    new SelectionHistoryDialog(p, gw, f, from, to).show();
-  }
-
-  @Nonnull
-  @Override
-  protected LocalizeValue getTextValue(@Nonnull AnActionEvent e) {
-    VcsSelection sel = getSelection(e);
-    return sel == null ? super.getTextValue(e) : LocalizeValue.ofNullable(sel.getActionName());
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    if (!e.hasData(Editor.KEY)) {
-      e.getPresentation().setVisible(false);
+    public ShowSelectionHistoryAction() {
+        super(LocalHistoryLocalize.actionShowSelectionHistoryText());
     }
-    else {
-      super.update(e);
+
+    @Override
+    protected void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
+        VcsSelection sel = getSelection(e);
+
+        int from = sel.getSelectionStartLineNumber();
+        int to = sel.getSelectionEndLineNumber();
+
+        new SelectionHistoryDialog(p, gw, f, from, to).show();
     }
-  }
 
-  @Override
-  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, VirtualFile f, @Nonnull AnActionEvent e) {
-    return super.isEnabled(vcs, gw, f, e) && !f.isDirectory() && getSelection(e) != null;
-  }
+    @Nonnull
+    @Override
+    protected LocalizeValue getTextValue(@Nonnull AnActionEvent e) {
+        VcsSelection sel = getSelection(e);
+        return sel == null ? super.getTextValue(e) : LocalizeValue.ofNullable(sel.getActionName());
+    }
 
-  @Nullable
-  private static VcsSelection getSelection(AnActionEvent e) {
-    VcsContext c = VcsContextWrapper.createCachedInstanceOn(e);
-    return VcsSelectionUtil.getSelection(c);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        if (!e.hasData(Editor.KEY)) {
+            e.getPresentation().setVisible(false);
+        }
+        else {
+            super.update(e);
+        }
+    }
+
+    @Override
+    protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, VirtualFile f, @Nonnull AnActionEvent e) {
+        return super.isEnabled(vcs, gw, f, e) && !f.isDirectory() && getSelection(e) != null;
+    }
+
+    @Nullable
+    private static VcsSelection getSelection(AnActionEvent e) {
+        VcsContext c = VcsContextWrapper.createCachedInstanceOn(e);
+        return VcsSelectionUtil.getSelection(c);
+    }
 }

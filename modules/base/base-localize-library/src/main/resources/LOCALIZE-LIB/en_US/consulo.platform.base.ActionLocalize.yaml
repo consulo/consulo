@@ -1310,12 +1310,6 @@ action.JumpToLastWindow.description:
     text: Activate last focused tool window
 action.JumpToLastWindow.text:
     text: _Jump to Last Tool Window
-action.LocalHistory.PutLabel.text:
-    text: Put _Label…
-action.LocalHistory.ShowHistory.text:
-    text: Show _History
-action.LocalHistory.ShowSelectionHistory.text:
-    text: Show History for Selection
 action.LocalVcs.ShowRepHistory.text:
     text: Repository History
 action.LocalVcs.ShowStatistics.description:
@@ -2542,8 +2536,6 @@ group.IncomingChangesToolbar.text:
     text: Incoming Changes
 group.IntroduceActionsGroup.text:
     text: E_xtract
-group.LocalHistory.text:
-    text: Local _History
 group.Macros.description:
     text: View, Change, Record, Play Macros
 group.Macros.text:
