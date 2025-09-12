@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.content;
 
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.TabFactoryBuilderImpl;
+import consulo.ide.impl.internal.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.ui.TabbedPaneImpl;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;

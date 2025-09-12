@@ -22,7 +22,7 @@ import consulo.compiler.artifact.element.ArtifactRootElementImpl;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -48,7 +48,7 @@ public class SandArtifactType extends ArtifactType {
 
     @Override
     public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
-        return ModuleUtil.hasModuleExtension(modulesProvider, SandModuleExtension.class);
+        return ModuleUtilCore.hasModuleExtension(modulesProvider, SandModuleExtension.class);
     }
 
     @Nonnull

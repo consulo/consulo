@@ -7,7 +7,9 @@ module consulo.sand.language.plugin {
 
   requires consulo.virtual.file.watcher.api;
 
-  requires consulo.ide.impl;
+  requires consulo.ide.api;
+
+  requires consulo.language.impl;
 
   opens consulo.sandboxPlugin.lang.inspection to consulo.util.xml.serializer;
 

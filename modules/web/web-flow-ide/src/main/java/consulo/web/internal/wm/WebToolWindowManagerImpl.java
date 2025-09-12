@@ -21,6 +21,7 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.dataContext.DataContext;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
@@ -36,6 +37,7 @@ import consulo.ui.Label;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
@@ -53,6 +55,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
@@ -259,5 +263,10 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
+    }
+
+    @Override
+    public void doContentRename(@Nonnull DataContext dataContext, @Nonnull ToolWindow toolWindow, @Nullable Content content, @Nonnull LocalizeValue labelText, @Nonnull BiConsumer<Content, String> consumer) {
+
     }
 }

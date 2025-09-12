@@ -102,5 +102,5 @@ module consulo.ide.api {
   exports consulo.ide.localize;
   exports consulo.ide.util;
 
-  exports consulo.ide.internal to consulo.ide.impl;
+  exports consulo.ide.internal to consulo.ide.impl, consulo.sand.language.plugin;
 }

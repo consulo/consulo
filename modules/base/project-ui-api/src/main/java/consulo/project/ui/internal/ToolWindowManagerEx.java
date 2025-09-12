@@ -16,12 +16,15 @@
 package consulo.project.ui.internal;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import jakarta.annotation.Nonnull;
@@ -29,6 +32,7 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
@@ -90,6 +94,12 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
     public abstract List<String> getIdsOn(@Nonnull ToolWindowAnchor anchor);
 
     public abstract List<ToolWindow> getToolWindows();
+
+    public abstract void doContentRename(@Nonnull DataContext dataContext,
+                                         @Nonnull ToolWindow toolWindow,
+                                         @Nullable Content content,
+                                         @Nonnull LocalizeValue labelText,
+                                         @Nonnull BiConsumer<Content, String>consumer);
 
     // TODO [VISTALL] AWT & Swing dependency
     // region AWT & Swing dependency

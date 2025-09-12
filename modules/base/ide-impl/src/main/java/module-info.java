@@ -155,7 +155,6 @@ open module consulo.ide.impl {
 
   //opens consulo.ide.impl.presentationAssistant to consulo.util.xml.serializer;
 
-  exports consulo.ide.impl;
   exports consulo.ide.impl.actionSystem.ex;
   exports consulo.ide.impl.actionSystem.impl;
   exports consulo.ide.impl.actions;
@@ -574,4 +573,5 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
+  exports consulo.ide.impl.internal to consulo.desktop.awt.ide.impl;
 }

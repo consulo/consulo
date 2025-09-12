@@ -32,7 +32,7 @@ import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.TabFactoryBuilderImpl;
+import consulo.ide.impl.internal.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;

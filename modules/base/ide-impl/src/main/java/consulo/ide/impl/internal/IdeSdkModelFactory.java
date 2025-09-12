@@ -13,25 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl;
+package consulo.ide.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.project.impl.ProjectMacrosUtil;
-import consulo.project.Project;
-import consulo.project.impl.internal.ProjectCheckMacroService;
+import consulo.content.bundle.SdkModel;
+import consulo.content.bundle.SdkModelFactory;
+import consulo.ide.setting.ShowSettingsUtil;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Set;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 18-Jul-22
+ * @since 14-Apr-22
  */
 @Singleton
 @ServiceImpl
-public class IdeProjectCheckMacroService implements ProjectCheckMacroService {
+public class IdeSdkModelFactory implements SdkModelFactory {
+  private final ShowSettingsUtil myShowSettingsUtil;
+
+  @Inject
+  public IdeSdkModelFactory(ShowSettingsUtil showSettingsUtil) {
+    myShowSettingsUtil = showSettingsUtil;
+  }
+
+  @Nonnull
   @Override
-  public boolean checkMacros(Project project, Set<String> usedMacros) {
-    return ProjectMacrosUtil.checkMacros(project, usedMacros);
+  public SdkModel getOrCreateModel() {
+    return myShowSettingsUtil.getSdksModel();
   }
 }

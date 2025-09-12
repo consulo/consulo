@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl;
+package consulo.ide.internal;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.util.DirectoryChooser;
-import consulo.ide.internal.DirectoryChooserDialog;
-import consulo.ide.internal.DirectoryChooserFactory;
-import consulo.project.Project;
-
-import jakarta.annotation.Nonnull;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.ide.setting.ShowSettingsUtil;
 
 /**
  * @author VISTALL
- * @since 10-Jul-22
+ * @since 2025-09-12
  */
-@ServiceImpl
-public class DirectoryChooserFactoryImpl implements DirectoryChooserFactory {
-  @Nonnull
-  @Override
-  public DirectoryChooserDialog create(@Nonnull Project project) {
-    return new DirectoryChooser(project);
-  }
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface IdeInternal {
+    ShowSettingsUtil createUnifiedSettingsUtil();
 }

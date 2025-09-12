@@ -13,34 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl;
+package consulo.ide.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.process.DefaultCharsetProvider;
-import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
-import jakarta.inject.Inject;
+import consulo.ide.impl.idea.openapi.project.impl.ProjectMacrosUtil;
+import consulo.project.Project;
+import consulo.project.impl.internal.ProjectCheckMacroService;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
-import java.nio.charset.Charset;
+import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 05-Feb-22
+ * @since 18-Jul-22
  */
 @Singleton
 @ServiceImpl
-public class DefaultCharsetProviderImpl implements DefaultCharsetProvider {
-  private ApplicationEncodingManager myEncodingManager;
-
-  @Inject
-  public DefaultCharsetProviderImpl(ApplicationEncodingManager encodingManager) {
-    myEncodingManager = encodingManager;
-  }
-
-  @Nullable
+public class IdeProjectCheckMacroService implements ProjectCheckMacroService {
   @Override
-  public Charset getDefaultCharset() {
-    return myEncodingManager.getDefaultConsoleEncoding();
+  public boolean checkMacros(Project project, Set<String> usedMacros) {
+    return ProjectMacrosUtil.checkMacros(project, usedMacros);
   }
 }

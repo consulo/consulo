@@ -17,11 +17,11 @@ package consulo.sandboxPlugin.ide.toolwindow;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.ide.impl.idea.ide.actions.ToolWindowTabRenameActionBase;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.action.ToolWindowTabRenameAction;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -66,7 +66,10 @@ public class SandToolWindowFactory implements ToolWindowFactory {
             }
         });
 
-        toolWindow.setTabDoubleClickActions(new ToolWindowTabRenameActionBase("Sand", "Enter new session name"));
+        toolWindow.setTabDoubleClickActions(new ToolWindowTabRenameAction(getId(),
+            LocalizeValue.localizeTODO("Enter new session name"),
+            (content1, s) -> {
+            }));
 
         toolWindow.setTabActions(new AnAction(LocalizeValue.localizeTODO("Add Tab"), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
             @RequiredUIAccess

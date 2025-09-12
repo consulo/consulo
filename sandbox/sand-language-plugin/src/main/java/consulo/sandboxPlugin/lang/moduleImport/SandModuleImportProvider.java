@@ -15,22 +15,22 @@
  */
 package consulo.sandboxPlugin.lang.moduleImport;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.WriteAction;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import consulo.project.Project;
-import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.ModuleRootManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProvider;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.project.Project;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.util.function.Consumer;
 
@@ -70,7 +70,7 @@ public class SandModuleImportProvider implements ModuleImportProvider<ModuleImpo
     Module module = model.newModule(context.getName(), path);
 
     ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-    modifiableModel.addContentEntry(VfsUtil.pathToUrl(path));
+    modifiableModel.addContentEntry(VirtualFileUtil.pathToUrl(path));
     WriteAction.runAndWait(modifiableModel::commit);
 
     newModuleConsumer.accept(module);

@@ -18,10 +18,11 @@ package consulo.sandboxPlugin.ide.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
-import consulo.ide.impl.configurable.UnifiedShowSettingsUtil;
+import consulo.application.Application;
+import consulo.ide.internal.IdeInternal;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -35,19 +36,18 @@ import jakarta.inject.Inject;
  */
 @ActionImpl(id = "ShowUnifiedSettingsDialogAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
-    private final DefaultProjectFactory myDefaultProjectFactory;
 
     @Inject
-    public ShowUnifiedSettingsDialogAction(DefaultProjectFactory defaultProjectFactory) {
+    public ShowUnifiedSettingsDialogAction() {
         super(LocalizeValue.localizeTODO("Show Unified Settings"));
-        
-        myDefaultProjectFactory = defaultProjectFactory;
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        UnifiedShowSettingsUtil unifiedShowSettingsUtil = new UnifiedShowSettingsUtil(myDefaultProjectFactory);
+        IdeInternal internal = Application.get().getInstance(IdeInternal.class);
+
+        ShowSettingsUtil unifiedShowSettingsUtil = internal.createUnifiedSettingsUtil();
 
         unifiedShowSettingsUtil.showSettingsDialog(e.getData(Project.KEY));
     }

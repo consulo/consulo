@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl;
+package consulo.ide.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.content.bundle.SdkModel;
-import consulo.content.bundle.SdkModelFactory;
-import consulo.ide.setting.ShowSettingsUtil;
+import consulo.process.DefaultCharsetProvider;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import java.nio.charset.Charset;
 
 /**
  * @author VISTALL
- * @since 14-Apr-22
+ * @since 05-Feb-22
  */
 @Singleton
 @ServiceImpl
-public class IdeSdkModelFactory implements SdkModelFactory {
-  private final ShowSettingsUtil myShowSettingsUtil;
+public class DefaultCharsetProviderImpl implements DefaultCharsetProvider {
+  private ApplicationEncodingManager myEncodingManager;
 
   @Inject
-  public IdeSdkModelFactory(ShowSettingsUtil showSettingsUtil) {
-    myShowSettingsUtil = showSettingsUtil;
+  public DefaultCharsetProviderImpl(ApplicationEncodingManager encodingManager) {
+    myEncodingManager = encodingManager;
   }
 
-  @Nonnull
+  @Nullable
   @Override
-  public SdkModel getOrCreateModel() {
-    return myShowSettingsUtil.getSdksModel();
+  public Charset getDefaultCharset() {
+    return myEncodingManager.getDefaultConsoleEncoding();
   }
 }

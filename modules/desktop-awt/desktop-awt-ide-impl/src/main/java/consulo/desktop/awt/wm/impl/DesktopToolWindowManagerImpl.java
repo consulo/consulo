@@ -30,6 +30,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.desktop.awt.wm.impl.commands.DesktopRequestFocusInToolWindowCmd;
 import consulo.disposer.Disposer;
@@ -41,13 +42,13 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.desktop.awt.ui.popup.BalloonImpl;
+import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
-import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.ui.internal.WindowInfoImpl;
@@ -66,15 +67,13 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.event.AnActionListener;
-import consulo.ui.ex.awt.FocusUtil;
-import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.content.Content;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -99,12 +98,11 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
@@ -873,6 +871,70 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         FileEditorManager fem = FileEditorManager.getInstance(myProject);
         FileEditorsSplitters splitters = activeWindow != null ? fem.getSplittersFor(activeWindow) : null;
         return splitters != null ? splitters : fem.getSplitters();
+    }
+
+    @Override
+    public void doContentRename(@Nonnull DataContext context,
+                                @Nonnull ToolWindow toolWindow,
+                                @Nullable Content content,
+                                @Nonnull LocalizeValue labelText,
+                                @Nonnull BiConsumer<Content, String> renameConsumer) {
+        Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (component == null || content == null || !context.hasData(Content.KEY)) {
+            return;
+        }
+
+        showContentRenamePopup(component, content, labelText, renameConsumer);
+    }
+
+    private void showContentRenamePopup(Component baseLabel,
+                                        Content content,
+                                        LocalizeValue labelText,
+                                        @Nonnull BiConsumer<Content, String> renameConsumer) {
+        JBTextField textField = new JBTextField(content.getDisplayName());
+        textField.getEmptyText().setText(content.getDisplayName());
+        textField.putClientProperty("StatusVisibleFunction", (BooleanFunction<JBTextField>) o -> o.getText().isEmpty());
+        textField.selectAll();
+
+        JBLabel label = new JBLabel(labelText.get());
+        label.setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD));
+
+        JPanel panel = new JPanel(new VerticalFlowLayout());
+        panel.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                IdeFocusManager.findInstance().requestFocus(textField, false);
+            }
+        });
+        panel.add(label);
+        panel.add(textField);
+
+        Balloon balloon = JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null)
+            .setShowCallout(true)
+            .setCloseButtonEnabled(false)
+            .setAnimationCycle(0)
+            .setDisposable(content)
+            .setHideOnKeyOutside(true)
+            .setHideOnClickOutside(true)
+            .setRequestFocus(true)
+            .setBlockClicksThroughBalloon(true)
+            .createBalloon();
+
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (!Disposer.isDisposed(content)) {
+                        String text = textField.getText();
+                        if (!text.isEmpty()) {
+                            renameConsumer.accept(content, text);
+                        }
+                        balloon.hide();
+                    }
+                }
+            }
+        });
+        balloon.show(new RelativePoint(baseLabel, new Point(baseLabel.getWidth() / 2, 0)), Balloon.Position.above);
     }
 
     @Nullable
