@@ -18,13 +18,15 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-
-import java.io.File;
 
 public class RevealFileAction extends DumbAwareAction {
     public RevealFileAction() {
@@ -43,8 +45,16 @@ public class RevealFileAction extends DumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         VirtualFile file = ShowFilePathAction.findLocalFile(e.getRequiredData(VirtualFile.KEY));
-        if (file != null) {
-            ShowFilePathAction.openFile(new File(file.getPresentableUrl()));
+        if (file == null) {
+            return;
+        }
+
+        Platform platform = Platform.current();
+
+        if (file.isDirectory()) {
+            platform.openFileInFileManager(file.toNioPath(), UIAccess.current());
+        } else {
+            platform.openDirectoryInFileManager(file.toNioPath(), UIAccess.current());
         }
     }
 
