@@ -18,7 +18,6 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.versionControlSystem.AbstractVcs;
@@ -40,7 +39,7 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
     private AnAction[] myChildren;
 
     public VcsGroupsWrapper() {
-        super(ActionLocalize.groupVcsfilegrouppopupText(), true);
+        super(VcsLocalize.groupFileGroupPopupText(), true);
     }
 
     @Override

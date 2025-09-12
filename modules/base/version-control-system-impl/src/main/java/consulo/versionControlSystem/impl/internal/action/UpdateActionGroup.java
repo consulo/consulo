@@ -18,9 +18,9 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author UNV
@@ -36,6 +36,6 @@ import consulo.ui.ex.action.IdeActions;
 )
 public class UpdateActionGroup extends DefaultActionGroup implements DumbAware {
     public UpdateActionGroup() {
-        super(ActionLocalize.groupUpdateactiongroupText(), false);
+        super(VcsLocalize.groupUpdateActionsText(), false);
     }
 }

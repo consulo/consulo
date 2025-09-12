@@ -18,8 +18,8 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author UNV
@@ -28,6 +28,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(id = "Vcs.MessageActionGroup", children = @ActionRef(type = ShowMessageHistoryAction.class))
 public class MessageActionGroup extends DefaultActionGroup implements DumbAware {
     public MessageActionGroup() {
-        super(ActionLocalize.groupVcsMessageactiongroupText(), false);
+        super(VcsLocalize.groupMessageActionsText(), false);
     }
 }

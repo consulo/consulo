@@ -19,9 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.versionControlSystem.impl.internal.action.VcsShowShelfAction;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author UNV
@@ -37,6 +36,6 @@ import consulo.versionControlSystem.impl.internal.action.VcsShowShelfAction;
 )
 public class VcsShowToolWindowTabGroup extends DefaultActionGroup implements DumbAware {
     public VcsShowToolWindowTabGroup() {
-        super(ActionLocalize.groupVcsShowToolwindowTabText(), false);
+        super(VcsLocalize.groupShowToolwindowTabText(), false);
     }
 }

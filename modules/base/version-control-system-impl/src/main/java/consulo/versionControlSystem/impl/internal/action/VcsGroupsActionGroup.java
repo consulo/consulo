@@ -20,12 +20,12 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 // from kotlin
@@ -40,7 +40,7 @@ import jakarta.annotation.Nonnull;
 )
 public class VcsGroupsActionGroup extends DefaultActionGroup implements DumbAware {
     public VcsGroupsActionGroup() {
-        super(ActionLocalize.groupVcsgroupsText(), true);
+        super(VcsLocalize.groupVcsGroupsText(), true);
     }
 
     @Override

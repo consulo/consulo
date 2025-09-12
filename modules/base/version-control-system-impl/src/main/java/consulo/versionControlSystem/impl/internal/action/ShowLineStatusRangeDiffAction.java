@@ -36,59 +36,61 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
-  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTrackerI lineStatusTracker,
-                                       @Nonnull VcsRange range,
-                                       @Nullable Editor editor) {
-    super(lineStatusTracker, range);
-    ActionUtil.copyFrom(this, "ChangesView.Diff");
-  }
+    public ShowLineStatusRangeDiffAction(
+        @Nonnull LineStatusTrackerI lineStatusTracker,
+        @Nonnull VcsRange range,
+        @Nullable Editor editor
+    ) {
+        super(lineStatusTracker, range);
+        ActionUtil.copyFrom(this, "ChangesView.Diff");
+    }
 
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    DiffManager.getInstance().showDiff(e.getData(Project.KEY), createDiffData());
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        DiffManager.getInstance().showDiff(e.getData(Project.KEY), createDiffData());
+    }
 
-  private DiffRequest createDiffData() {
-    VcsRange range = expand(myRange, myLineStatusTracker.getDocument(), myLineStatusTracker.getVcsDocument());
+    private DiffRequest createDiffData() {
+        VcsRange range = expand(myRange, myLineStatusTracker.getDocument(), myLineStatusTracker.getVcsDocument());
 
-    DiffContent vcsContent =
-      createDiffContent(myLineStatusTracker.getVcsDocument(), myLineStatusTracker.getVcsTextRange(range), null);
-    DiffContent currentContent = createDiffContent(
-      myLineStatusTracker.getDocument(),
-      myLineStatusTracker.getCurrentTextRange(range),
-      myLineStatusTracker.getVirtualFile()
-    );
+        DiffContent vcsContent =
+            createDiffContent(myLineStatusTracker.getVcsDocument(), myLineStatusTracker.getVcsTextRange(range), null);
+        DiffContent currentContent = createDiffContent(
+            myLineStatusTracker.getDocument(),
+            myLineStatusTracker.getCurrentTextRange(range),
+            myLineStatusTracker.getVirtualFile()
+        );
 
-    return new SimpleDiffRequest(
-      VcsLocalize.dialogTitleDiffForRange().get(),
-      vcsContent,
-      currentContent,
-      VcsLocalize.diffContentTitleUpToDate().get(),
-      VcsLocalize.diffContentTitleCurrentRange().get()
-    );
-  }
+        return new SimpleDiffRequest(
+            VcsLocalize.dialogTitleDiffForRange().get(),
+            vcsContent,
+            currentContent,
+            VcsLocalize.diffContentTitleUpToDate().get(),
+            VcsLocalize.diffContentTitleCurrentRange().get()
+        );
+    }
 
-  @Nonnull
-  private DiffContent createDiffContent(@Nonnull Document document, @Nonnull TextRange textRange, @Nullable VirtualFile file) {
-    Project project = myLineStatusTracker.getProject();
-    DocumentContent content = DiffContentFactory.getInstance().create(project, document, file);
-    return DiffContentFactory.getInstance().createFragment(project, content, textRange);
-  }
+    @Nonnull
+    private DiffContent createDiffContent(@Nonnull Document document, @Nonnull TextRange textRange, @Nullable VirtualFile file) {
+        Project project = myLineStatusTracker.getProject();
+        DocumentContent content = DiffContentFactory.getInstance().create(project, document, file);
+        return DiffContentFactory.getInstance().createFragment(project, content, textRange);
+    }
 
-  @Nonnull
-  private static VcsRange expand(@Nonnull VcsRange range, @Nonnull Document document, @Nonnull Document uDocument) {
-    boolean canExpandBefore = range.getLine1() != 0 && range.getVcsLine1() != 0;
-    boolean canExpandAfter = range.getLine2() < document.getLineCount() && range.getVcsLine2() < uDocument.getLineCount();
-    int offset1 = range.getLine1() - (canExpandBefore ? 1 : 0);
-    int uOffset1 = range.getVcsLine1() - (canExpandBefore ? 1 : 0);
-    int offset2 = range.getLine2() + (canExpandAfter ? 1 : 0);
-    int uOffset2 = range.getVcsLine2() + (canExpandAfter ? 1 : 0);
-    return new VcsRange(offset1, offset2, uOffset1, uOffset2);
-  }
+    @Nonnull
+    private static VcsRange expand(@Nonnull VcsRange range, @Nonnull Document document, @Nonnull Document uDocument) {
+        boolean canExpandBefore = range.getLine1() != 0 && range.getVcsLine1() != 0;
+        boolean canExpandAfter = range.getLine2() < document.getLineCount() && range.getVcsLine2() < uDocument.getLineCount();
+        int offset1 = range.getLine1() - (canExpandBefore ? 1 : 0);
+        int uOffset1 = range.getVcsLine1() - (canExpandBefore ? 1 : 0);
+        int offset2 = range.getLine2() + (canExpandAfter ? 1 : 0);
+        int uOffset2 = range.getVcsLine2() + (canExpandAfter ? 1 : 0);
+        return new VcsRange(offset1, offset2, uOffset1, uOffset2);
+    }
 }

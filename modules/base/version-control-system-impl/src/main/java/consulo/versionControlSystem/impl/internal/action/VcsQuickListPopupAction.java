@@ -4,9 +4,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.project.Project;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.AbstractVcs;
@@ -29,7 +28,7 @@ import java.util.List;
 @ActionImpl(id = "Vcs.QuickListPopupAction")
 public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements DumbAware {
     public VcsQuickListPopupAction() {
-        super(ActionLocalize.actionVcsQuicklistpopupactionText(), ActionLocalize.actionVcsQuicklistpopupactionDescription());
+        super(VcsLocalize.actionQuickListPopupText(), VcsLocalize.actionQuickListPopupDescription());
         myActionPlace = ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION;
     }
 

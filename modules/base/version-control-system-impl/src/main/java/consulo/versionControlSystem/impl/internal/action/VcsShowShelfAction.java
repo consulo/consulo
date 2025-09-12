@@ -17,14 +17,14 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
-import consulo.localize.LocalizeValue;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsShowToolWindowTabAction;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Show.Shelf")
 public class VcsShowShelfAction extends VcsShowToolWindowTabAction {
     public VcsShowShelfAction() {
-        super(LocalizeValue.localizeTODO("Show Shelf"));
+        super(VcsLocalize.actionShowShelfText());
     }
 
     @Nonnull

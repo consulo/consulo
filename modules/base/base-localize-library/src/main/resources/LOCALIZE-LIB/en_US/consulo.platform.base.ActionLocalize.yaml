@@ -176,10 +176,6 @@ action.ChangesView.DeleteUnversioned.description:
     text: Delete
 action.ChangesView.DeleteUnversioned.text:
     text: Delete
-action.ChangesView.Diff.description:
-    text: Show diff for selected change
-action.ChangesView.Diff.text:
-    text: Show Diff
 action.ChangesView.Edit.description:
     text: Check out selected files for editing
 action.ChangesView.Edit.text:
@@ -204,10 +200,6 @@ action.ChangesView.RemoveChangeList.description:
     text: Remove changelist and move all changes to default
 action.ChangesView.RemoveChangeList.text:
     text: Delete Changelist
-action.ChangesView.RemoveDeleted.description:
-    text: Schedule selected files to be removed from VCS
-action.ChangesView.RemoveDeleted.text:
-    text: Remove from VCS
 action.ChangesView.Rename.description:
     text: Edit name and description of selected changelist
 action.ChangesView.Rename.text:
@@ -228,12 +220,6 @@ action.CheckForUpdate.description:
     text: Check for available update
 action.CheckForUpdate.text:
     text: _Check for Update…
-action.CheckStatusForFiles.text:
-    text: Chec_k Status
-action.CheckinFiles.text:
-    text: Check _In
-action.CheckinProject.text:
-    text: Check _In Project
 action.ClassNameCompletion.description:
     text: Complete class name and add import for it
 action.ClassNameCompletion.text:
@@ -336,10 +322,6 @@ action.CommittedChanges.Revert.description:
     text: Apply the reverse of the selected changes to the working copy
 action.CommittedChanges.Revert.text:
     text: Revert Changes
-action.Compare.LastVersion.text:
-    text: Compare with Latest Repository _Version
-action.Compare.SameVersion.text:
-    text: Compare with the Same Repositor_y Version
 action.Compare.Selected.text:
     text: _Compare with…
 action.CompareClipboardWithSelection.description:
@@ -585,10 +567,6 @@ action.Diff.SelectedChange.text:
 action.Diff.ShowDiff.description:
     text: Compare files or revisions
 action.Diff.ShowDiff.text:
-    text: Show Diff
-action.Diff.UpdatedFiles.description:
-    text: Show diff with version before update
-action.Diff.UpdatedFiles.text:
     text: Show Diff
 action.DropAnError.text:
     text: Drop an error
@@ -1298,10 +1276,6 @@ action.InspectCode.description:
     text: Inspect code
 action.InspectCode.text:
     text: _Inspect Code…
-action.IntegrateFiles.description:
-    text: Integrate selected files or directories
-action.IntegrateFiles.text:
-    text: Integrate
 action.IntroduceConstant.description:
     text: Replace selected expression with a constant (static final field)
 action.IntroduceConstant.text:
@@ -2182,8 +2156,6 @@ action.Unwrap.description:
     text: Safely unwraps or removes the selected scope
 action.Unwrap.text:
     text: Un_wrap/Remove…
-action.UpdateFiles.text:
-    text: _Update
 action.UpdateRunningApplication.text:
     text: Update Running Application
 action.UsageView.Exclude.description:
@@ -2226,26 +2198,10 @@ action.Vcs.FileView.description:
     text: Show version control related information for all local files
 action.Vcs.FileView.text:
     text: Show Fi_le View
-action.Vcs.IncludeAction.description:
-    text: Include into commit
-action.Vcs.IncludeAction.text:
-    text: Include into Commit
-action.Vcs.IntegrateProject.description:
-    text: Integrate project
-action.Vcs.IntegrateProject.text:
-    text: Inte_grate Project
 action.Vcs.ProjectStatus.text:
     text: C_heck Project Status
 action.Vcs.Push.text:
     text: Push…
-action.Vcs.QuickListPopupAction.description:
-    text: Context aware popup with list of commonly used VCS actions
-action.Vcs.QuickListPopupAction.text:
-    text: VCS Operations Popup…
-action.Vcs.RefreshStatuses.description:
-    text: Refresh VCS status for all files in project
-action.Vcs.RefreshStatuses.text:
-    text: R_efresh File Status
 action.Vcs.RollbackChangedLines.description:
     text: Rollback changes in selected lines
 action.Vcs.RollbackChangedLines.text:
@@ -2262,28 +2218,12 @@ action.Vcs.ShowHistoryForBlock.description:
     text: Show history for editor selection
 action.Vcs.ShowHistoryForBlock.text:
     text: Show History _for Selection
-action.Vcs.ShowMessageHistory.description:
-    text: Show commit message history
-action.Vcs.ShowMessageHistory.text:
-    text: Message History
-action.Vcs.ShowTabbedFileHistory.description:
-    text: Show history of file
-action.Vcs.ShowTabbedFileHistory.text:
-    text: Show _History
 action.Vcs.UpdateProject.text:
     text: _Update Project
 action.VcsHistory.ShowAllAffected.description:
     text: Show all changes made in the chosen revision
 action.VcsHistory.ShowAllAffected.text:
     text: Show all affected files
-action.VcsShowNextChangeMarker.description:
-    text: Go to next change
-action.VcsShowNextChangeMarker.text:
-    text: Next C_hange
-action.VcsShowPrevChangeMarker.description:
-    text: Go to previous change
-action.VcsShowPrevChangeMarker.text:
-    text: Previous Ch_ange
 action.ViewImportPopups.description:
     text: Toggle display import popups in current file
 action.ViewImportPopups.text:
@@ -2584,8 +2524,6 @@ group.FoldingGroup.text:
     text: Folding
 group.GenerateGroup.text:
     text: _Generate
-group.GoToChangeMarkerGroup.text:
-    text: Change Navigation Actions
 group.GoToCodeGroup.text:
     text: Goto by Reference Actions
 group.GoToErrorGroup.text:
@@ -2782,34 +2720,6 @@ group.UIToggleActions.text:
     text: UI Toggle Actions
 group.Unversioned.Files.Dialog.text:
     text: Unversioned Files Dialog
-group.UpdateActionGroup.text:
-    text: Update Actions
-group.Vcs.Browse.text:
-    text: Browse VCS Repository
-group.Vcs.Checkout.text:
-    text: Check_out from Version Control
-group.Vcs.History.text:
-    text: VCS History
-group.Vcs.Import.text:
-    text: Import into Version Control
-group.Vcs.MessageActionGroup.text:
-    text: VCS Message Actions
-group.Vcs.Show.Toolwindow.Tab.text:
-    text: VCS Show Toolwindow Tab
-group.VcsFileGroupPopup.text:
-    text: Version Control Group
-group.VcsGlobalGroup.text:
-    text: VCS Group
-group.VcsGroup.text:
-    text: Version Control
-group.VcsGroups.text:
-    text: VC_S
-group.VcsNavBarToobarActions.text:
-    text: VCS Navigation
-group.VcsToobarActions.text:
-    text: VCS Actions
-group.VersionControlsGroup.text:
-    text: VCS/LVCS Actions
 group.ViewMenu.text:
     text: _View
 group.ViewRecentActions.text:

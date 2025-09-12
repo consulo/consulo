@@ -17,18 +17,19 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.versionControlSystem.impl.internal.change.action.CreatePatchAction;
-import consulo.versionControlSystem.impl.internal.change.action.RefreshAction;import consulo.versionControlSystem.impl.internal.change.action.ShelveChangesAction;
+import consulo.versionControlSystem.impl.internal.change.action.RefreshAction;
+import consulo.versionControlSystem.impl.internal.change.action.ShelveChangesAction;
 import consulo.versionControlSystem.impl.internal.change.commited.CommonUpdateProjectAction;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author UNV
  * @since 2025-09-11
  */
 @ActionImpl(
-    id = "VcsGlobalGroupё",
+    id = "VcsGlobalGroup",
     children = {
         @ActionRef(type = VcsQuickListPopupAction.class),
         @ActionRef(type = CommonCheckinProjectAction.class),
@@ -46,6 +47,6 @@ import consulo.versionControlSystem.impl.internal.change.commited.CommonUpdatePr
 )
 public class VcsGlobalGroup extends VcsActionGroup {
     public VcsGlobalGroup() {
-        super(ActionLocalize.groupVcsglobalgroupText(), false);
+        super(VcsLocalize.groupGlobalGroupText(), false);
     }
 }

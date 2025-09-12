@@ -30,15 +30,15 @@ import java.util.List;
  */
 @ExtensionImpl
 public class VcsActionPromoter implements ActionPromoter {
-  @Override
-  public List<AnAction> promote(List<AnAction> actions, DataContext context) {
-    if (context.hasData(Refreshable.PANEL_KEY)) {
-      for (AnAction action : actions) {
-        if (action instanceof ShowMessageHistoryAction) {
-          return Arrays.asList(action);
+    @Override
+    public List<AnAction> promote(List<AnAction> actions, DataContext context) {
+        if (context.hasData(Refreshable.PANEL_KEY)) {
+            for (AnAction action : actions) {
+                if (action instanceof ShowMessageHistoryAction) {
+                    return Arrays.asList(action);
+                }
+            }
         }
-      }
+        return Collections.emptyList();
     }
-    return Collections.emptyList();
-  }
 }

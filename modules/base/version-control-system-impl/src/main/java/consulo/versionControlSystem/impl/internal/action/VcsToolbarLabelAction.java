@@ -16,7 +16,7 @@ import jakarta.annotation.Nullable;
 @ActionImpl(id = "VcsToolbarLabelAction")
 public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomComponentAction {
     public VcsToolbarLabelAction() {
-        super(LocalizeValue.localizeTODO("VCS Label"));
+        super(VcsLocalize.actionToolbarLabelText());
     }
 
     @Override

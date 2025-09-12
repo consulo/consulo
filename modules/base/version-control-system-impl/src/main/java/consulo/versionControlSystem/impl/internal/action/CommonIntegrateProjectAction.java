@@ -16,17 +16,17 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.impl.internal.update.AbstractCommonUpdateAction;
 import consulo.versionControlSystem.impl.internal.update.ScopeInfo;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 
 @ActionImpl(id = "Vcs.IntegrateProject")
 public class CommonIntegrateProjectAction extends AbstractCommonUpdateAction {
     public CommonIntegrateProjectAction() {
         super(ActionInfo.INTEGRATE, ScopeInfo.PROJECT, true);
-        getTemplatePresentation().setTextValue(ActionLocalize.actionVcsIncludeactionText());
-        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionVcsIncludeactionDescription());
+        getTemplatePresentation().setTextValue(VcsLocalize.actionIncludeText());
+        getTemplatePresentation().setDescriptionValue(VcsLocalize.actionIncludeDescription());
     }
 
     @Override

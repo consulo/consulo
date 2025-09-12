@@ -19,13 +19,13 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -39,7 +39,7 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
 
     @Inject
     public CheckoutActionGroup(Application application) {
-        super(ActionLocalize.groupVcsCheckoutText(), true);
+        super(VcsLocalize.groupCheckoutText(), true);
         myApplication = application;
     }
 

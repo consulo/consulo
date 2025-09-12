@@ -16,17 +16,17 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.impl.internal.update.AbstractCommonUpdateAction;
 import consulo.versionControlSystem.impl.internal.update.ScopeInfo;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 
 @ActionImpl(id = "IntegrateFiles")
 public class CommonIntegrateFileOrDirectoryAction extends AbstractCommonUpdateAction {
     public CommonIntegrateFileOrDirectoryAction() {
         super(ActionInfo.INTEGRATE, ScopeInfo.FILES, true);
-        getTemplatePresentation().setTextValue(ActionLocalize.actionIntegratefilesText());
-        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionIntegratefilesDescription());
+        getTemplatePresentation().setTextValue(VcsLocalize.actionIntegrateFilesText());
+        getTemplatePresentation().setDescriptionValue(VcsLocalize.actionIntegrateFilesDescription());
     }
 
     @Override

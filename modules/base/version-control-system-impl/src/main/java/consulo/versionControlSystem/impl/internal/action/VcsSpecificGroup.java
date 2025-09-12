@@ -16,8 +16,8 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.NonEmptyActionGroup;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author UNV
@@ -26,6 +26,6 @@ import consulo.ui.ex.action.NonEmptyActionGroup;
 @ActionImpl(id = "Vcs.Specific")
 public class VcsSpecificGroup extends NonEmptyActionGroup {
     public VcsSpecificGroup() {
-        super(ActionLocalize.groupVcsglobalgroupText(), false);
+        super(VcsLocalize.groupGlobalGroupText(), false);
     }
 }

@@ -21,36 +21,36 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 08/12/2021
+ * @since 2021-12-08
  *
  * from kolin
  */
 public interface FilePathChange {
-  public static class Simple implements FilePathChange {
-    private final FilePath myBeforePath;
-    private final FilePath myAfterPath;
+    public static class Simple implements FilePathChange {
+        private final FilePath myBeforePath;
+        private final FilePath myAfterPath;
 
-    public Simple(FilePath beforePath, FilePath afterPath) {
-      myBeforePath = beforePath;
-      myAfterPath = afterPath;
+        public Simple(FilePath beforePath, FilePath afterPath) {
+            myBeforePath = beforePath;
+            myAfterPath = afterPath;
+        }
+
+        @Nullable
+        @Override
+        public FilePath getBeforePath() {
+            return myBeforePath;
+        }
+
+        @Nullable
+        @Override
+        public FilePath getAfterPath() {
+            return myAfterPath;
+        }
     }
 
     @Nullable
-    @Override
-    public FilePath getBeforePath() {
-      return myBeforePath;
-    }
+    FilePath getBeforePath();
 
     @Nullable
-    @Override
-    public FilePath getAfterPath() {
-      return myAfterPath;
-    }
-  }
-
-  @Nullable
-  FilePath getBeforePath();
-
-  @Nullable
-  FilePath getAfterPath();
+    FilePath getAfterPath();
 }
