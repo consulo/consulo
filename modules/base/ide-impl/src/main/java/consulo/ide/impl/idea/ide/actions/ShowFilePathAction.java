@@ -100,6 +100,8 @@ public class ShowFilePathAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         show(
+            UIAccess.current(),
+            e.getData(Project.KEY),
             e.getRequiredData(VirtualFile.KEY),
             popup -> DataManager.getInstance()
                 .getDataContextFromFocus()
@@ -107,15 +109,15 @@ public class ShowFilePathAction extends AnAction {
         );
     }
 
-    public static void show(VirtualFile file, MouseEvent e) {
-        show(file, popup -> {
+    public static void show(UIAccess uiAccess, Project project, VirtualFile file, MouseEvent e) {
+        show(uiAccess, project, file, popup -> {
             if (e.getComponent().isShowing()) {
                 popup.show(new RelativePoint(e));
             }
         });
     }
 
-    public static void show(VirtualFile file, Consumer<ListPopup> action) {
+    public static void show(@Nonnull UIAccess uiAccess, @Nullable Project project, VirtualFile file, Consumer<ListPopup> action) {
         if (!Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANANGER)) {
             return;
         }
@@ -144,7 +146,7 @@ public class ShowFilePathAction extends AnAction {
                 icons.add(ioFile.exists() ? fs.getImage(ioFile) : Image.empty(16));
             }
 
-            Application.get().invokeLater(() -> action.accept(createPopup(files, icons)));
+            uiAccess.give(() -> action.accept(createPopup(project, files, icons)));
         });
     }
 
@@ -156,7 +158,7 @@ public class ShowFilePathAction extends AnAction {
         return url;
     }
 
-    private static ListPopup createPopup(List<VirtualFile> files, List<Image> icons) {
+    private static ListPopup createPopup(@Nullable Project project, List<VirtualFile> files, List<Image> icons) {
         BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons) {
             @Nonnull
             @Override
@@ -165,16 +167,17 @@ public class ShowFilePathAction extends AnAction {
             }
 
             @Override
+            @RequiredUIAccess
             public PopupStep onChosen(VirtualFile selectedValue, boolean finalChoice) {
                 File selectedFile = new File(getPresentableUrl(selectedValue));
                 if (selectedFile.exists()) {
-                    Application.get().executeOnPooledThread((Runnable) () -> openFile(selectedFile));
+                    Platform.current().openFileInFileManager(selectedFile, UIAccess.current());
                 }
                 return FINAL_CHOICE;
             }
         };
 
-        return JBPopupFactory.getInstance().createListPopup(step);
+        return JBPopupFactory.getInstance().createListPopup(project, step);
     }
 
     /**

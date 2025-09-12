@@ -31,6 +31,7 @@ import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
@@ -544,15 +545,14 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         }
 
         @Override
+        @RequiredUIAccess
         public void mouseClicked(MouseEvent e) {
             if (UIUtil.isActionClick(e, MouseEvent.MOUSE_CLICKED)
                 && (e.isMetaDown() || !Platform.current().os().isMac() && e.isControlDown())) {
                 TabInfo info = myTabs.findInfo(e);
                 if (info != null && info.getObject() != null) {
                     VirtualFile vFile = (VirtualFile)info.getObject();
-                    if (vFile != null) {
-                        ShowFilePathAction.show(vFile, e);
-                    }
+                    ShowFilePathAction.show(UIAccess.current(), myProject, vFile, e);
                 }
             }
         }
