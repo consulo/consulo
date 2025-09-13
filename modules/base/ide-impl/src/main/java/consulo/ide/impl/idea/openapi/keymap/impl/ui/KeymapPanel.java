@@ -34,6 +34,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.*;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Button;
@@ -49,6 +50,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
+import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
@@ -61,6 +63,7 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -76,6 +79,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     private final PropertyChangeListener myAncestor;
 
     private final DefaultComboBoxModel myKeymapListModel = new DefaultComboBoxModel();
+    @Nonnull
+    private final Provider<KeyMapSetting> myKeyMapSettingProvider;
 
     private KeymapImpl mySelectedKeymap;
 
@@ -98,8 +103,11 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     private JPanel myRootPanel;
     private Disposable myUIDisposable;
 
+    private ThreeStateCheckBox myUseUnicodeCharactersInShortcutsBox;
+
     @Inject
-    public KeymapPanel() {
+    public KeymapPanel(@Nonnull Provider<KeyMapSetting> keyMapSettingProvider) {
+        myKeyMapSettingProvider = keyMapSettingProvider;
         myAncestor = evt -> {
             if (evt.getPropertyName().equals("ancestor")
                 && evt.getNewValue() != null && evt.getOldValue() == null
@@ -298,7 +306,16 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        myActionsTree = new ActionsTree(myUIDisposable);
+        myActionsTree = new ActionsTree(myUIDisposable, () -> {
+            switch (myUseUnicodeCharactersInShortcutsBox.getState()) {
+                case SELECTED:
+                    return true;
+                case NOT_SELECTED:
+                    return false;
+                default:
+                    return Platform.current().os().isMac();
+            }
+        });
 
         panel.add(createToolbarPanel(), BorderLayout.NORTH);
         panel.add(myActionsTree.getComponent(), BorderLayout.CENTER);
@@ -331,7 +348,24 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
                 }
             }
         });
+
+        panel.add(createKeymapBottomPanel(), BorderLayout.SOUTH);
+
         return panel;
+    }
+
+    private JPanel createKeymapBottomPanel() {
+        JPanel bottomPanel = new JPanel(new VerticalFlowLayout());
+
+        myUseUnicodeCharactersInShortcutsBox = new ThreeStateCheckBox("Use unicode characters instead text in shortcuts (⇧ instead SHIFT)");
+
+        myUseUnicodeCharactersInShortcutsBox.addActionListener(e -> {
+            myActionsTree.updateTree();
+        });
+
+        bottomPanel.add(myUseUnicodeCharactersInShortcutsBox);
+        
+        return bottomPanel;
     }
 
     private JPanel createToolbarPanel() {
@@ -908,12 +942,16 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     @Nullable
     @Override
     public String getParentId() {
-        return StandardConfigurableIds.EDITOR_GROUP;
+        return null;
     }
 
     @RequiredUIAccess
     @Override
     public void reset() {
+        KeyMapSetting setting = myKeyMapSettingProvider.get();
+
+        myUseUnicodeCharactersInShortcutsBox.setState(ThreeStateCheckBox.State.fromBoolean(setting.isUseUnicodeShortcuts()));
+
         if (myNonEnglishKeyboardSupportOption != null) {
             KeyboardSettingsExternalizable.getInstance().setNonEnglishKeyboardSupportEnabled(false);
             myNonEnglishKeyboardSupportOption.setValue(KeyboardSettingsExternalizable.getInstance()
@@ -947,6 +985,20 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     @RequiredUIAccess
     @Override
     public void apply() throws ConfigurationException {
+        KeyMapSetting setting = myKeyMapSettingProvider.get();
+
+        switch (myUseUnicodeCharactersInShortcutsBox.getState()) {
+            case SELECTED:
+                setting.setUseUnicodeShortcuts(true);
+                break;
+            case NOT_SELECTED:
+                setting.setUseUnicodeShortcuts(false);
+                break;
+            case DONT_CARE:
+                setting.setUseUnicodeShortcuts(null);
+                break;
+        }
+
         ensureNonEmptyKeymapNames();
         ensureUniqueKeymapNames();
         KeymapManagerImpl keymapManager = (KeymapManagerImpl)KeymapManager.getInstance();
@@ -986,10 +1038,19 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     @RequiredUIAccess
     @Override
     public boolean isModified() {
+
         KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
         if (!Comparing.equal(mySelectedKeymap, keymapManager.getActiveKeymap())) {
             return true;
         }
+
+        KeyMapSetting setting = myKeyMapSettingProvider.get();
+
+        ThreeStateCheckBox.State currentState = ThreeStateCheckBox.State.fromBoolean(setting.isUseUnicodeShortcuts());
+        if (!Objects.equals(myUseUnicodeCharactersInShortcutsBox.getState(), currentState)) {
+            return true;
+        }
+
         Keymap[] managerKeymaps = keymapManager.getAllKeymaps();
         Keymap[] panelKeymaps = new Keymap[myKeymapListModel.getSize()];
         for (int i = 0; i < myKeymapListModel.getSize(); i++) {

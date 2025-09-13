@@ -15,12 +15,11 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.ToolWindowId;
@@ -29,7 +28,7 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
-import consulo.ui.ex.action.util.MacKeymapUtil;
+import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
@@ -43,9 +42,12 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class EditorEmptyTextPainter {
     public static EditorEmptyTextPainter ourInstance = new EditorEmptyTextPainter();
+
+    private static KeyStroke SHIFT_DEFAULT = KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0);
 
     public void paintEmptyText(@Nonnull JComponent splitters, @Nonnull Graphics g) {
         UISettingsUtil.setupAntialiasing(g);
@@ -83,12 +85,19 @@ public class EditorEmptyTextPainter {
 
     protected void appendSearchEverywhere(@Nonnull UIUtil.TextPainter painter) {
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
+        String shortcut;
+        
+        if (shortcuts.length == 0) {
+            shortcut = IdeLocalize.doubleCtrlOrShiftShortcut(ShortcutUtil.getKeystrokeTextValue(SHIFT_DEFAULT)).get();
+        }
+        else {
+            shortcut = KeymapUtil.getShortcutsText(shortcuts);
+        }
+
         appendAction(
             painter,
             IdeLocalize.emptyTextSearchEverywhere(),
-            shortcuts.length == 0
-                ? IdeLocalize.doubleCtrlOrShiftShortcut(Platform.current().os().isMac() ? MacKeymapUtil.SHIFT : "Shift").get()
-                : KeymapUtil.getShortcutsText(shortcuts)
+            shortcut
         );
     }
 

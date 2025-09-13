@@ -19,15 +19,10 @@ import com.formdev.flatlaf.FlatDefaultsAddon;
 import consulo.desktop.awt.ui.plaf.BasicStatusBarUI;
 import consulo.desktop.awt.ui.plaf.BasicStripeButtonUI;
 import consulo.desktop.awt.uiOld.components.OnOffButton;
-import consulo.platform.Platform;
-import consulo.platform.PlatformOperatingSystem;
-import consulo.platform.os.WindowsOperatingSystem;
 
 import javax.swing.*;
-import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 import java.io.InputStream;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -67,5 +62,9 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         uiDefaults.put("Menu.selectedCheckboxIcon", new FlatSelectedCheckboxIcon());
 
         uiDefaults.put("RootPaneUI", ConsuloFlatRootPaneUI.class.getName());
+        
+        uiDefaults.put("MenuItemUI", FlatMenuItemUI2.class.getName());
+        
+        uiDefaults.put("MenuUI", FlatMenuUI2.class.getName());
     }
 }

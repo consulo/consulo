@@ -1,0 +1,202 @@
+keyboard.0:
+    text: '0'
+keyboard.1:
+    text: '1'
+keyboard.2:
+    text: '2'
+keyboard.3:
+    text: '3'
+keyboard.4:
+    text: '4'
+keyboard.5:
+    text: '5'
+keyboard.6:
+    text: '6'
+keyboard.7:
+    text: '7'
+keyboard.8:
+    text: '8'
+keyboard.9:
+    text: '9'
+keyboard.Less:
+    text: <
+keyboard.a:
+    text: A
+keyboard.add:
+    text: +
+keyboard.alt:
+    text: ⌥
+keyboard.altGraph:
+    text: ⇮
+keyboard.ampersand:
+    text: '&'
+keyboard.asterisk:
+    text: '*'
+keyboard.at:
+    text: '@'
+keyboard.b:
+    text: B
+keyboard.backQuote:
+    text: '`'
+keyboard.backSlash:
+    text: \
+keyboard.backSpace:
+    text: ⌫
+keyboard.braceLeft:
+    text: "'{'"
+keyboard.braceRight:
+    text: '}'
+keyboard.c:
+    text: C
+keyboard.capsLock:
+    text: ⇪
+keyboard.clear:
+    text: ⌧
+keyboard.closeBracket:
+    text: ']'
+keyboard.colon:
+    text: ':'
+keyboard.comma:
+    text: ','
+keyboard.control:
+    text: ⌃
+keyboard.d:
+    text: D
+keyboard.decimal:
+    text: .
+keyboard.divide:
+    text: /
+keyboard.dollar:
+    text: $
+keyboard.down:
+    text: ↓
+keyboard.e:
+    text: E
+keyboard.end:
+    text: ↘
+keyboard.enter:
+    text: ⏎
+keyboard.equals:
+    text: =
+keyboard.escape:
+    text: ⎋
+keyboard.euro:
+    text: €
+keyboard.exclamationMark:
+    text: '!'
+keyboard.f:
+    text: F
+keyboard.g:
+    text: G
+keyboard.greater:
+    text: '>'
+keyboard.h:
+    text: H
+keyboard.home:
+    text: ↖
+keyboard.i:
+    text: I
+keyboard.invertedExclamationMark:
+    text: ¡
+keyboard.j:
+    text: J
+keyboard.k:
+    text: K
+keyboard.l:
+    text: L
+keyboard.left:
+    text: ←
+keyboard.leftParenthesis:
+    text: (
+keyboard.m:
+    text: M
+keyboard.meta:
+    text: ⌘
+keyboard.minus:
+    text: '-'
+keyboard.multiply:
+    text: ⌨ *
+keyboard.n:
+    text: N
+keyboard.numLock:
+    text: ⌨
+keyboard.numberSign:
+    text: ⌨
+keyboard.numpad.0:
+    text: '0'
+keyboard.numpad.1:
+    text: '1'
+keyboard.numpad.2:
+    text: '2'
+keyboard.numpad.3:
+    text: '3'
+keyboard.numpad.4:
+    text: '4'
+keyboard.numpad.5:
+    text: '5'
+keyboard.numpad.6:
+    text: '6'
+keyboard.numpad.7:
+    text: '7'
+keyboard.numpad.8:
+    text: '8'
+keyboard.numpad.9:
+    text: '9'
+keyboard.o:
+    text: O
+keyboard.openBracket:
+    text: '['
+keyboard.p:
+    text: P
+keyboard.period:
+    text: .
+keyboard.pgdn:
+    text: ⇟
+keyboard.pgup:
+    text: ⇞
+keyboard.plus:
+    text: +
+keyboard.q:
+    text: Q
+keyboard.quoteDbl:
+    text: '"'
+keyboard.r:
+    text: R
+keyboard.right:
+    text: →
+keyboard.rightParenthesis:
+    text: )
+keyboard.s:
+    text: S
+keyboard.semicolon:
+    text: ;
+keyboard.separator:
+    text: ','
+keyboard.shift:
+    text: ⇧
+keyboard.slash:
+    text: /
+keyboard.space:
+    text: ␣
+keyboard.subtract:
+    text: '-'
+keyboard.t:
+    text: T
+keyboard.tab:
+    text: ⇥
+keyboard.u:
+    text: U
+keyboard.underscore:
+    text: _
+keyboard.up:
+    text: ↑
+keyboard.v:
+    text: V
+keyboard.w:
+    text: W
+keyboard.x:
+    text: X
+keyboard.y:
+    text: Y
+keyboard.z:
+    text: Z

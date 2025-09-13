@@ -17,6 +17,8 @@ module consulo.ui.ex.api {
     requires transitive consulo.base.localize.library;
     requires transitive kava.beans;
 
+    requires static it.unimi.dsi.fastutil;
+
     exports consulo.ui.ex;
     exports consulo.ui.ex.popup;
     exports consulo.ui.ex.popup.event;

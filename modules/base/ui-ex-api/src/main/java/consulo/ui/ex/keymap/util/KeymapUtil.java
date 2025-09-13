@@ -36,6 +36,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import static consulo.ui.ex.action.util.ShortcutUtil.getKeystrokeText;
+import static consulo.ui.ex.action.util.ShortcutUtil.isUseUnicodeShortcuts;
 
 /**
  * @author VISTALL
@@ -110,17 +111,21 @@ public class KeymapUtil {
     }
 
     public static String getShortcutText(@Nonnull Shortcut shortcut) {
+        return getShortcutText(shortcut, isUseUnicodeShortcuts());
+    }
+
+    public static String getShortcutText(@Nonnull Shortcut shortcut, boolean useUnicodeCharactersForShortcuts) {
         String s = "";
 
         if (shortcut instanceof KeyboardShortcut) {
             KeyboardShortcut keyboardShortcut = (KeyboardShortcut) shortcut;
 
-            String acceleratorText = getKeystrokeText(keyboardShortcut.getFirstKeyStroke());
+            String acceleratorText = getKeystrokeText(keyboardShortcut.getFirstKeyStroke(), useUnicodeCharactersForShortcuts);
             if (!acceleratorText.isEmpty()) {
                 s = acceleratorText;
             }
 
-            acceleratorText = getKeystrokeText(keyboardShortcut.getSecondKeyStroke());
+            acceleratorText = getKeystrokeText(keyboardShortcut.getSecondKeyStroke(), useUnicodeCharactersForShortcuts);
             if (!acceleratorText.isEmpty()) {
                 s += ", " + acceleratorText;
             }
@@ -132,7 +137,7 @@ public class KeymapUtil {
         else if (shortcut instanceof KeyboardModifierGestureShortcut) {
             KeyboardModifierGestureShortcut gestureShortcut = (KeyboardModifierGestureShortcut) shortcut;
             s = gestureShortcut.getType() == KeyboardGestureAction.ModifierType.dblClick ? "Press, release and hold " : "Hold ";
-            s += getKeystrokeText(gestureShortcut.getStroke());
+            s += getKeystrokeText(gestureShortcut.getStroke(), useUnicodeCharactersForShortcuts);
         }
         else {
             throw new IllegalArgumentException("unknown shortcut class: " + shortcut.getClass().getCanonicalName());

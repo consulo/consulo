@@ -1,0 +1,302 @@
+keyboard.Less:
+    text: Less
+keyboard.accept:
+    text: Accept
+keyboard.add:
+    text: NumPad +
+keyboard.again:
+    text: Again
+keyboard.allCandidates:
+    text: All Candidates
+keyboard.alphanumeric:
+    text: Alphanumeric
+keyboard.alt:
+    text: Alt
+keyboard.altGraph:
+    text: Alt Graph
+keyboard.ampersand:
+    text: Ampersand
+keyboard.asterisk:
+    text: Asterisk
+keyboard.at:
+    text: At
+keyboard.backQuote:
+    text: Back Quote
+keyboard.backSlash:
+    text: Back Slash
+keyboard.backSpace:
+    text: Backspace
+keyboard.begin:
+    text: Begin
+keyboard.braceLeft:
+    text: Left Brace
+keyboard.braceRight:
+    text: Right Brace
+keyboard.cancel:
+    text: Break
+keyboard.capsLock:
+    text: Caps Lock
+keyboard.circumflex:
+    text: Circumflex
+keyboard.clear:
+    text: Clear
+keyboard.closeBracket:
+    text: Close Bracket
+keyboard.codeInput:
+    text: Code Input
+keyboard.colon:
+    text: Colon
+keyboard.comma:
+    text: Comma
+keyboard.compose:
+    text: Compose
+keyboard.context:
+    text: Context Menu
+keyboard.control:
+    text: Ctrl
+keyboard.convert:
+    text: Convert
+keyboard.copy:
+    text: Copy
+keyboard.cut:
+    text: Cut
+keyboard.deadAboveDot:
+    text: Dead Above Dot
+keyboard.deadAboveRing:
+    text: Dead Above Ring
+keyboard.deadAcute:
+    text: Dead Acute
+keyboard.deadBreve:
+    text: Dead Breve
+keyboard.deadCaron:
+    text: Dead Caron
+keyboard.deadCedilla:
+    text: Dead Cedilla
+keyboard.deadCircumflex:
+    text: Dead Circumflex
+keyboard.deadDiaeresis:
+    text: Dead Diaeresis
+keyboard.deadDoubleAcute:
+    text: Dead Double Acute
+keyboard.deadGrave:
+    text: Dead Grave
+keyboard.deadIota:
+    text: Dead Iota
+keyboard.deadMacron:
+    text: Dead Macron
+keyboard.deadOgonek:
+    text: Dead Ogonek
+keyboard.deadSemivoicedSound:
+    text: Dead Semivoiced Sound
+keyboard.deadTilde:
+    text: Dead Tilde
+keyboard.deadVoicedSound:
+    text: Dead Voiced Sound
+keyboard.decimal:
+    text: NumPad .
+keyboard.delete:
+    text: Delete
+keyboard.divide:
+    text: NumPad /
+keyboard.dollar:
+    text: Dollar
+keyboard.down:
+    text: Down
+keyboard.end:
+    text: End
+keyboard.enter:
+    text: Enter
+keyboard.equals:
+    text: Equals
+keyboard.escape:
+    text: Escape
+keyboard.euro:
+    text: Euro
+keyboard.exclamationMark:
+    text: Exclamation Mark
+keyboard.f1:
+    text: F1
+keyboard.f10:
+    text: F10
+keyboard.f11:
+    text: F11
+keyboard.f12:
+    text: F12
+keyboard.f13:
+    text: F13
+keyboard.f14:
+    text: F14
+keyboard.f15:
+    text: F15
+keyboard.f16:
+    text: F16
+keyboard.f17:
+    text: F17
+keyboard.f18:
+    text: F18
+keyboard.f19:
+    text: F19
+keyboard.f2:
+    text: F2
+keyboard.f20:
+    text: F20
+keyboard.f21:
+    text: F21
+keyboard.f22:
+    text: F22
+keyboard.f23:
+    text: F23
+keyboard.f24:
+    text: F24
+keyboard.f3:
+    text: F3
+keyboard.f4:
+    text: F4
+keyboard.f5:
+    text: F5
+keyboard.f6:
+    text: F6
+keyboard.f7:
+    text: F7
+keyboard.f8:
+    text: F8
+keyboard.f9:
+    text: F9
+keyboard.final:
+    text: Final
+keyboard.find:
+    text: Find
+keyboard.fullWidth:
+    text: Full-Width
+keyboard.greater:
+    text: Greater
+keyboard.halfWidth:
+    text: Half-Width
+keyboard.help:
+    text: Help
+keyboard.hiragana:
+    text: Hiragana
+keyboard.home:
+    text: Home
+keyboard.inputMethodOnOff:
+    text: Input Method On/Off
+keyboard.insert:
+    text: Insert
+keyboard.invertedExclamationMark:
+    text: Inverted Exclamation Mark
+keyboard.japaneseHiragana:
+    text: Japanese Hiragana
+keyboard.japaneseKatakana:
+    text: Japanese Katakana
+keyboard.japaneseRoman:
+    text: Japanese Roman
+keyboard.kana:
+    text: Kana
+keyboard.kanaLock:
+    text: Kana Lock
+keyboard.kanji:
+    text: Kanji
+keyboard.katakana:
+    text: Katakana
+keyboard.left:
+    text: Left
+keyboard.leftParenthesis:
+    text: Left Parenthesis
+keyboard.meta:
+    text: Meta
+keyboard.minus:
+    text: Minus
+keyboard.modechange:
+    text: Mode Change
+keyboard.multiply:
+    text: NumPad *
+keyboard.noconvert:
+    text: No Convert
+keyboard.numLock:
+    text: Num Lock
+keyboard.numberSign:
+    text: Number Sign
+keyboard.numpad:
+    text: NumPad
+keyboard.numpad.0:
+    text: NumPad 0
+keyboard.numpad.1:
+    text: NumPad 1
+keyboard.numpad.2:
+    text: NumPad 2
+keyboard.numpad.3:
+    text: NumPad 3
+keyboard.numpad.4:
+    text: NumPad 4
+keyboard.numpad.5:
+    text: NumPad 5
+keyboard.numpad.6:
+    text: NumPad 6
+keyboard.numpad.7:
+    text: NumPad 7
+keyboard.numpad.8:
+    text: NumPad 8
+keyboard.numpad.9:
+    text: NumPad 9
+keyboard.openBracket:
+    text: Open Bracket
+keyboard.paste:
+    text: Paste
+keyboard.pause:
+    text: Pause
+keyboard.period:
+    text: Period
+keyboard.pgdn:
+    text: Page Down
+keyboard.pgup:
+    text: Page Up
+keyboard.plus:
+    text: Plus
+keyboard.previousCandidate:
+    text: Previous Candidate
+keyboard.printScreen:
+    text: Print Screen
+keyboard.props:
+    text: Props
+keyboard.quote:
+    text: Quote
+keyboard.quoteDbl:
+    text: Double Quote
+keyboard.right:
+    text: Right
+keyboard.rightParenthesis:
+    text: Right Parenthesis
+keyboard.romanCharacters:
+    text: Roman Characters
+keyboard.scrollLock:
+    text: Scroll Lock
+keyboard.semicolon:
+    text: Semicolon
+keyboard.separator:
+    text: NumPad ,
+keyboard.shift:
+    text: Shift
+keyboard.slash:
+    text: Slash
+keyboard.space:
+    text: Space
+keyboard.stop:
+    text: Stop
+keyboard.subtract:
+    text: NumPad -
+keyboard.tab:
+    text: Tab
+keyboard.undefined:
+    text: Undefined
+keyboard.underscore:
+    text: Underscore
+keyboard.undo:
+    text: Undo
+keyboard.unknown.0:
+    text: Unknown {0}
+keyboard.up:
+    text: Up
+keyboard.windows:
+    text: Windows
+mouse.button1:
+    text: Button 1

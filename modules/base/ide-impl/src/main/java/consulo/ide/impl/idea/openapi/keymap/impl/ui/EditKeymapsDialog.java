@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
+import consulo.ui.ex.internal.KeyMapSetting;
 
 import javax.swing.*;
 
@@ -24,7 +26,7 @@ public class EditKeymapsDialog extends SingleConfigurableEditor {
   private final String myActionToSelect;
 
   public EditKeymapsDialog(Project project, String actionToSelect) {
-    super(project, new KeymapPanel());
+    super(project, new KeymapPanel(() -> Application.get().getInstance(KeyMapSetting.class)));
     myActionToSelect = actionToSelect;
   }
 

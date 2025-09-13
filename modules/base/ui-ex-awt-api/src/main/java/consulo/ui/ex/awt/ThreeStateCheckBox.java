@@ -16,6 +16,8 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
@@ -34,7 +36,15 @@ public class ThreeStateCheckBox extends JCheckBox {
     public enum State {
         SELECTED,
         NOT_SELECTED,
-        DONT_CARE
+        DONT_CARE;
+
+        @Nonnull
+        public static State fromBoolean(@Nullable Boolean value) {
+            if (value == null) {
+                return DONT_CARE;
+            }
+            return value ? SELECTED : NOT_SELECTED;
+        }
     }
 
     public ThreeStateCheckBox() {

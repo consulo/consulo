@@ -16,10 +16,7 @@
 package consulo.localize;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.localize.internal.DefaultMapFunctions;
-import consulo.localize.internal.JoinLocalizeValue;
-import consulo.localize.internal.MapLocalizeValue;
-import consulo.localize.internal.SingleLocalizeValue;
+import consulo.localize.internal.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -80,6 +77,11 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     @Nonnull
     static LocalizeValue join(@Nonnull LocalizeValue... values) {
         return values.length == 0 ? of() : new JoinLocalizeValue(values);
+    }
+
+    @Nonnull
+    static LocalizeValue join(@Nonnull String separator, @Nonnull LocalizeValue... values) {
+        return values.length == 0 ? of() : new JoinSeparatorLocalizeValue(separator, values);
     }
 
     @Override

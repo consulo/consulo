@@ -15,77 +15,97 @@
  */
 package consulo.ui.ex.action.util;
 
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
+import consulo.ui.ex.internal.KeyMapSetting;
+import consulo.ui.ex.localize.ShortcutLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 30/01/2022
  */
 public class ShortcutUtil {
-    private static final String APPLE_LAF_AQUA_LOOK_AND_FEEL_CLASS_NAME = "apple.laf.AquaLookAndFeel";
-    private static final String GET_KEY_MODIFIERS_TEXT_METHOD = "getKeyModifiersText";
-
-    private static final String CANCEL_KEY_TEXT = "Cancel";
-    private static final String BREAK_KEY_TEXT = "Break";
-
-    private static String getModifiersText(@JdkConstants.InputEventMask int modifiers) {
-        if (Platform.current().os().isMac()) {
-            //try {
-            //  Class appleLaf = Class.forName(APPLE_LAF_AQUA_LOOK_AND_FEEL_CLASS_NAME);
-            //  Method getModifiers = appleLaf.getMethod(GET_KEY_MODIFIERS_TEXT_METHOD, int.class, boolean.class);
-            //  return (String)getModifiers.invoke(appleLaf, modifiers, Boolean.FALSE);
-            //}
-            //catch (Exception e) {
-            //  if (SystemInfo.isMacOSLeopard) {
-            //    return getKeyModifiersTextForMacOSLeopard(modifiers);
-            //  }
-            //
-            //  // OK do nothing here.
-            //}
-            return MacKeymapUtil.getModifiersText(modifiers);
+    private static void fillModifiersTexts(int modifiers, List<LocalizeValue> modifierTexts, boolean useUnicodeShortcuts) {
+        if ((modifiers & InputEvent.CTRL_MASK) != 0) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_CONTROL, useUnicodeShortcuts));
         }
 
-        String keyModifiersText = KeyEvent.getKeyModifiersText(modifiers);
-        if (keyModifiersText.isEmpty()) {
-            return keyModifiersText;
+        if ((modifiers & InputEvent.ALT_MASK) != 0) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_ALT, useUnicodeShortcuts));
         }
-        else {
-            return keyModifiersText + "+";
+
+        if ((modifiers & InputEvent.SHIFT_MASK) != 0) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_SHIFT, useUnicodeShortcuts));
+        }
+
+        if ((modifiers & InputEvent.ALT_GRAPH_MASK) != 0) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_ALT_GRAPH, useUnicodeShortcuts));
+        }
+
+        if ((modifiers & InputEvent.BUTTON1_MASK) != 0) {
+            modifierTexts.add(ShortcutLocalize.mouseButton1());
+        }
+
+        if ((modifiers & InputEvent.META_MASK) != 0) {
+            modifierTexts.add(ShortcutLocalizeHolder.getKeyText(KeyEvent.VK_META, useUnicodeShortcuts));
         }
     }
 
-
+    @Nonnull
     public static String getKeystrokeText(KeyStroke accelerator) {
+        return getKeystrokeTextValue(accelerator).get();
+    }
+
+    @Nonnull
+    public static String getKeystrokeText(KeyStroke accelerator, boolean useUnicodeCharactersForShortcuts) {
+        return getKeystrokeTextValue(accelerator, useUnicodeCharactersForShortcuts).get();
+    }
+
+    @Nonnull
+    public static LocalizeValue getKeystrokeTextValue(@Nullable KeyStroke accelerator) {
+        return getKeystrokeTextValue(accelerator, isUseUnicodeShortcuts());
+    }
+
+    @Nonnull
+    public static LocalizeValue getKeystrokeTextValue(@Nullable KeyStroke accelerator, boolean useUnicodeCharactersForShortcuts) {
         if (accelerator == null) {
-            return "";
-        }
-        if (Platform.current().os().isMac()) {
-            return MacKeymapUtil.getKeyStrokeText(accelerator);
-        }
-        String acceleratorText = "";
-        int modifiers = accelerator.getModifiers();
-        if (modifiers > 0) {
-            acceleratorText = getModifiersText(modifiers);
+            return LocalizeValue.of();
         }
 
-        int code = accelerator.getKeyCode();
-        String keyText = Platform.current().os().isMac() ? MacKeymapUtil.getKeyText(code) : KeyEvent.getKeyText(code);
-        // [vova] this is dirty fix for bug #35092
-        if (CANCEL_KEY_TEXT.equals(keyText)) {
-            keyText = BREAK_KEY_TEXT;
+        List<LocalizeValue> values = new ArrayList<>(3);
+
+        fillModifiersTexts(accelerator.getModifiers(), values, useUnicodeCharactersForShortcuts);
+
+        values.add(ShortcutLocalizeHolder.getKeyText(accelerator.getKeyCode(), useUnicodeCharactersForShortcuts));
+
+        if (useUnicodeCharactersForShortcuts) {
+            return LocalizeValue.join(values.toArray(LocalizeValue[]::new));
+        }
+        else {
+            return LocalizeValue.join("+", values.toArray(LocalizeValue[]::new));
+        }
+    }
+
+    public static boolean isUseUnicodeShortcuts() {
+        Application application = ApplicationManager.getApplication();
+        if (application == null) {
+            return Platform.current().os().isMac();
         }
 
-        acceleratorText += keyText;
-        return acceleratorText.trim();
+        return application.getInstance(KeyMapSetting.class).isUseUnicodeShortcutsWithDefault();
     }
 
     @Nullable

@@ -27,6 +27,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
@@ -47,13 +48,16 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.function.BooleanSupplier;
 
 public class ActionsTree {
     private class MyRenderer extends CellRendererPanel implements TreeCellRenderer {
         final KeymapsRenderer myNodeRender = new KeymapsRenderer();
         final JPanel myShortcutPanel = new NonOpaquePanel(new HorizontalLayout(6));
+        private final BooleanSupplier myUseUnicodeCharactersForShortcutsGetter;
 
-        MyRenderer() {
+        MyRenderer(BooleanSupplier useUnicodeCharactersForShortcutsGetter) {
+            myUseUnicodeCharactersForShortcutsGetter = useUnicodeCharactersForShortcutsGetter;
             setLayout(new BorderLayout());
             add(BorderLayout.CENTER, myNodeRender);
             add(BorderLayout.EAST, myShortcutPanel);
@@ -82,7 +86,7 @@ public class ActionsTree {
             myShortcutPanel.removeAll();
             if (shortcuts != null && shortcuts.length > 0) {
                 for (Shortcut shortcut : shortcuts) {
-                    String shortcutText = KeymapUtil.getShortcutText(shortcut);
+                    String shortcutText = KeymapUtil.getShortcutText(shortcut, myUseUnicodeCharactersForShortcutsGetter.getAsBoolean());
 
                     BorderLayoutPanel holder = new BorderLayoutPanel();
                     holder.withBorder(new RoundedLineBorder(JBColor.border(), 8));
@@ -115,6 +119,10 @@ public class ActionsTree {
     private final DefaultTreeModel myModel;
 
     public ActionsTree(@Nonnull Disposable disposable) {
+        this(disposable, ShortcutUtil::isUseUnicodeShortcuts);
+    }
+
+    public ActionsTree(@Nonnull Disposable disposable, @Nonnull BooleanSupplier useUnicodeCharactersForShortcutsGetter) {
         myRoot = new DefaultMutableTreeNode(ROOT);
 
         myModel = new DefaultTreeModel(myRoot);
@@ -122,13 +130,17 @@ public class ActionsTree {
         myTree.setRootVisible(false);
         myTree.setShowsRootHandles(true);
 
-        myTree.setCellRenderer(new MyRenderer());
+        myTree.setCellRenderer(new MyRenderer(useUnicodeCharactersForShortcutsGetter));
 
         myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         myComponent = ScrollPaneFactory.createScrollPane(myTree,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    }
+
+    public void updateTree() {
+        myTree.treeDidChange();
     }
 
     public JComponent getComponent() {
