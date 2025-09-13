@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class GroupByPackages {
   private final Map<File, Collection<File>> myParentToChildrenMap = new HashMap<File, Collection<File>>();

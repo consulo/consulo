@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.table;
 import java.util.List;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public interface ItemsProvider {
   List getItems();

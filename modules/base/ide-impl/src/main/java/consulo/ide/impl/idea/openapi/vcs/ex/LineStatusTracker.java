@@ -41,7 +41,7 @@ import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 /**
  * @author irengrig
- *         author: lesya
+ * @author lesya
  */
 @SuppressWarnings({"MethodMayBeStatic", "FieldAccessedSynchronizedAndUnsynchronized"})
 public class LineStatusTracker extends LineStatusTrackerBase {

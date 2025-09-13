@@ -24,7 +24,7 @@ import javax.swing.tree.TreePath;
 import java.util.Enumeration;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class SmartExpander {
   public static void installOn(final JTree tree){

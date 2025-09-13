@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
   protected static final ArrayList<File> EMPTY_FILE_ARRAY = new ArrayList<File>();

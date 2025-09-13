@@ -30,14 +30,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * author: lesya
+ * @author lesya
  */
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class VirtualFileInfoAction extends AnAction implements DumbAware {
-
   public static final DateFormat DATE_FORMAT =
           SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG);
-
 
   @Override
   public void actionPerformed(AnActionEvent e) {
@@ -76,6 +74,4 @@ public class VirtualFileInfoAction extends AnAction implements DumbAware {
       Messages.showMessageDialog(info.toString(), "Virtual File Info", Messages.getInformationIcon());
     }
   }
-
-
 }

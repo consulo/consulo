@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class Block {
   private static final Logger LOG = Logger.getInstance(Block.class);
