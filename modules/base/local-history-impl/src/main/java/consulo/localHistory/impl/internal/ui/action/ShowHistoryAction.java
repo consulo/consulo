@@ -13,28 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal.ui.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.ui.view.DirectoryHistoryDialog;
 import consulo.localHistory.impl.internal.ui.view.FileHistoryDialog;
 import consulo.localHistory.impl.internal.ui.view.HistoryDialog;
+import consulo.localHistory.localize.LocalHistoryLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
+@ActionImpl(id = "LocalHistory.ShowHistory")
 public class ShowHistoryAction extends LocalHistoryActionWithDialog {
-  @Override
-  protected void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
-    HistoryDialog frame = f.isDirectory() ? new DirectoryHistoryDialog(p, gw, f) : new FileHistoryDialog(p, gw, f);
-    frame.show();
-  }
+    @Inject
+    public ShowHistoryAction() {
+        this(LocalHistoryLocalize.actionShowHistoryText());
+    }
 
-  @Override
-  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, VirtualFile f, @Nonnull AnActionEvent e) {
-    return f != null && gw.isVersioned(f) && (f.isDirectory() || gw.areContentChangesVersioned(f));
-  }
+    protected ShowHistoryAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
+    @Override
+    protected void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
+        HistoryDialog frame = f.isDirectory() ? new DirectoryHistoryDialog(p, gw, f) : new FileHistoryDialog(p, gw, f);
+        frame.show();
+    }
+
+    @Override
+    protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, VirtualFile f, @Nonnull AnActionEvent e) {
+        return f != null && gw.isVersioned(f) && (f.isDirectory() || gw.areContentChangesVersioned(f));
+    }
 }

@@ -1,11 +1,17 @@
 action.create.patch:
     text: Create Patch...
+action.put.label.text:
+    text: Put _Label…
 action.revert:
     text: Revert
 action.revert.selection:
     text: Revert Selection
 action.show.difference:
     text: Show Difference
+action.show.history.text:
+    text: Show _History
+action.show.selection.history.text:
+    text: Show History for Selection
 config.dialog.title:
     text: Local History
 config.period:
@@ -34,6 +40,8 @@ current.revision:
     text: Current
 file.does.not.exist:
     text: File does not exist
+group.local.history.text:
+    text: Local _History
 message.cannot.create.patch.because.of.unavailable.content:
     text: |-
         Cannot create patch because content of some

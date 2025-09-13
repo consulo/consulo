@@ -397,30 +397,6 @@
             <add-to-group group-id="Vcs.KeymapGroup"/>
         </group>
 
-        <reference ref="MainMenu">
-            <!--<reference ref="FileMenu"/>-->
-
-            <!-- Edit -->
-            <!--<reference ref="EditMenu"/>-->
-
-            <!-- View -->
-            <!--<reference ref="ViewMenu"/>-->
-
-            <!-- Go to -->
-            <!--<reference ref="GoToMenu"/>-->
-
-            <!-- Go to -->
-            <!--<reference ref="CodeMenu"/>-->
-
-            <!-- Tools -->
-            <!--<reference ref="ToolsMenu"/>-->
-
-            <!--<reference ref="WindowMenu"/>-->
-
-            <!-- Help -->
-            <!--<reference ref="HelpMenu"/>-->
-        </reference>
-
         <group id="MainToolBar">
             <reference ref="OpenFile"/>
             <reference ref="SaveAll"/>
@@ -1102,23 +1078,6 @@
             <group id="Runner.View.Toolbar">
                 <reference ref="Runner.CloseView"/>
             </group>
-        </group>
-
-        <group id="LocalHistory" class="consulo.localHistory.impl.internal.ui.action.LocalHistoryGroup" popup="true">
-            <action id="LocalHistory.ShowHistory" class="consulo.localHistory.impl.internal.ui.action.ShowHistoryAction"/>
-            <action id="LocalHistory.ShowSelectionHistory"
-                    class="consulo.localHistory.impl.internal.ui.action.ShowSelectionHistoryAction"/>
-            <action id="LocalHistory.PutLabel" class="consulo.localHistory.impl.internal.ui.action.PutLabelAction"/>
-
-            <add-to-group group-id="VersionControlsGroup" anchor="first"/>
-        </group>
-
-
-        <group id="LocalHistory.MainMenuGroup">
-            <separator/>
-            <reference ref="LocalHistory"/>
-            <separator/>
-            <add-to-group group-id="FileMenu" relative-to-action="SaveAll" anchor="before"/>
         </group>
 
         <group id="TestTreePopupMenu">
