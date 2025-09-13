@@ -16,33 +16,37 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
-import consulo.annotation.component.ActionRefAnchor;
-import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.impl.internal.change.action.CreatePatchAction;
+import consulo.versionControlSystem.impl.internal.change.action.RefreshAction;
+import consulo.versionControlSystem.impl.internal.change.action.ShelveChangesAction;
 import consulo.versionControlSystem.impl.internal.change.commited.CommonUpdateProjectAction;
 import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author UNV
- * @since 2025-08-17
+ * @since 2025-09-11
  */
 @ActionImpl(
-    id = "VcsNavBarToobarActions",
+    id = "VcsGlobalGroup",
     children = {
-        @ActionRef(type = VcsToolbarLabelAction.class),
-        @ActionRef(type = CommonUpdateProjectAction.class),
-        @ActionRef(id = "Vcs.Push"),
+        @ActionRef(type = VcsQuickListPopupAction.class),
         @ActionRef(type = CommonCheckinProjectAction.class),
-        @ActionRef(type = TabbedShowHistoryAction.class),
-        @ActionRef(type = AnSeparator.class)
-    },
-    parents = @ActionParentRef(value = @ActionRef(id = "NavBarVcsGroup"), anchor = ActionRefAnchor.FIRST)
+        @ActionRef(type = CommonUpdateProjectAction.class),
+        @ActionRef(type = CommonIntegrateProjectAction.class),
+        @ActionRef(type = RefreshAction.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = VcsSpecificGroup.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = CreatePatchAction.class),
+        @ActionRef(id = "ChangesView.ApplyPatch"),
+        @ActionRef(id = "ChangesView.ApplyPatchFromClipboard"),
+        @ActionRef(type = ShelveChangesAction.class)
+    }
 )
-public class VcsNavBarToobarActionsGroup extends DefaultActionGroup implements DumbAware {
-    public VcsNavBarToobarActionsGroup() {
-        super(VcsLocalize.groupNavBarToolbarActionsText(), false);
+public class VcsGlobalGroup extends VcsActionGroup {
+    public VcsGlobalGroup() {
+        super(VcsLocalize.groupGlobalGroupText(), false);
     }
 }

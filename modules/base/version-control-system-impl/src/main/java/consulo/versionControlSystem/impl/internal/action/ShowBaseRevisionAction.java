@@ -50,7 +50,7 @@ import java.awt.*;
 @ActionImpl(id = "Show.Current.Revision")
 public class ShowBaseRevisionAction extends AbstractVcsAction {
     public ShowBaseRevisionAction() {
-        super(LocalizeValue.localizeTODO("Show Current Revision"));
+        super(VcsLocalize.actionShowCurrentRevisionText());
     }
 
     @Override

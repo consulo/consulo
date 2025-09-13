@@ -16,16 +16,16 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(id = "Compare.LastVersion")
 public class CompareWithLastVersion extends AbstractShowDiffAction {
     public CompareWithLastVersion() {
-        super(ActionLocalize.actionCompareLastversionText());
+        super(VcsLocalize.actionCompareLastVersionText());
     }
 
     @Override

@@ -18,13 +18,13 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 @ActionImpl(id = "Compare.SameVersion")
 public class CompareWithTheSameVersionAction extends AbstractShowDiffAction {
     public CompareWithTheSameVersionAction() {
-        super(ActionLocalize.actionCompareSameversionText(), LocalizeValue.empty(), PlatformIconGroup.actionsDiff());
+        super(VcsLocalize.actionCompareSameVersionText(), LocalizeValue.empty(), PlatformIconGroup.actionsDiff());
     }
 
     @Override

@@ -4,6 +4,26 @@ action.NotificationAction.VcsRootProblemNotifier.text.enable.integration:
     text: Enable Integration
 action.NotificationAction.VcsRootProblemNotifier.text.ignore:
     text: Ignore
+action.changes.view.diff.description:
+    text: Show diff for selected change
+action.changes.view.diff.text:
+    text: Show Diff
+action.changes.view.remove.deleted.description:
+    text: Schedule selected files to be removed from VCS
+action.changes.view.remove.deleted.text:
+    text: Remove from VCS
+action.check.in.files.text:
+    text: Check _In
+action.check.in.project.text:
+    text: Check _In Project
+action.check.status.for.files.text:
+    text: Chec_k Status
+action.compare.last.version.text:
+    text: Compare with Latest Repository _Version
+action.compare.same.version.text:
+    text: Compare with the Same Repositor_y Version
+action.compare.specified.text:
+    text: Com_pare with Specified Revision…
 action.description.compare:
     text: Compare versions
 action.description.compare.with.local:
@@ -14,6 +34,10 @@ action.description.get.file.content.from.repository:
     text: Get version from repository
 action.desctiption.refresh:
     text: Refresh file history
+action.diff.updated.files.description:
+    text: Show diff with version before update
+action.diff.updated.files.text:
+    text: Show Diff
 action.display.name.check.scope.status:
     text: Check {0} Status
 action.display.name.integrate.scope:
@@ -34,6 +58,18 @@ action.force.push.is.prohibited.description:
     text: Force push to <b>{0}</b> is prohibited
 action.force.push.to.confirmation.text:
     text: You''re going to force push to {0}. It may overwrite commits at the remote. Are you sure you want to proceed?
+action.include.description:
+    text: Include into commit
+action.include.text:
+    text: Include into Commit
+action.integrate.files.description:
+    text: Integrate selected files or directories
+action.integrate.files.text:
+    text: Integrate
+action.integrate.project.description:
+    text: Integrate project
+action.integrate.project.text:
+    text: Inte_grate Project
 action.name.check.scope.status:
     text: Chec_k {0} Status
 action.name.check.status:
@@ -102,8 +138,42 @@ action.name.update.scope:
     text: _Update {0}
 action.push:
     text: '&Push'
+action.quick.list.popup.description:
+    text: Context aware popup with list of commonly used VCS actions
+action.quick.list.popup.text:
+    text: VCS Operations Popup…
+action.refresh.statuses.description:
+    text: Refresh VCS status for all files in project
+action.refresh.statuses.text:
+    text: R_efresh File Status
 action.revert.selected.changes.text:
     text: Revert Selected Changes
+action.show.current.revision.text:
+    text: Show Current Revision
+action.show.local.changes.text:
+    text: Show Local Changes
+action.show.message.history.description:
+    text: Show commit message history
+action.show.message.history.text:
+    text: Message History
+action.show.next.change.marker.description:
+    text: Go to next change
+action.show.next.change.marker.text:
+    text: Next C_hange
+action.show.prev.change.marker.description:
+    text: Go to previous change
+action.show.prev.change.marker.text:
+    text: Previous Ch_ange
+action.show.shelf.text:
+    text: Show Shelf
+action.show.tabbed.file.history.description:
+    text: Show history of file
+action.show.tabbed.file.history.text:
+    text: Show _History
+action.toolbar.label.text:
+    text: VCS Label
+action.update.files.text:
+    text: _Update
 acton.name.get.revision:
     text: Get Revision
 add.confirmation.label.text:
@@ -644,8 +714,38 @@ get.committed.changes.intersecting.prompt:
         Changes to selected files in these changelists will also be downloaded.
 get.committed.changes.title:
     text: Get Changelist
+group.browse.text:
+    text: Browse VCS Repository
+group.checkout.text:
+    text: Check_out from Version Control
+group.file.group.popup.text:
+    text: Version Control Group
+group.global.group.text:
+    text: VCS Group
+group.go.to.change.marker.text:
+    text: Change Navigation Actions
+group.history.text:
+    text: VCS History
+group.import.text:
+    text: Import into Version Control
+group.message.actions.text:
+    text: VCS Message Actions
 group.name.version.control:
     text: '&VCS'
+group.nav.bar.toolbar.actions.text:
+    text: VCS Navigation
+group.show.toolwindow.tab.text:
+    text: VCS Show Toolwindow Tab
+group.toobar.actions.text:
+    text: VCS Actions
+group.update.actions.text:
+    text: Update Actions
+group.vcs.group.text:
+    text: Version Control
+group.vcs.groups.text:
+    text: VC_S
+group.version.controls.group.text:
+    text: VCS/LVCS Actions
 handle.ro.file.status.type.using.file.system:
     text: using file system
 handle.ro.file.status.type.using.vcs:
@@ -882,8 +982,12 @@ outdated.version.update.project.action:
     text: Update Project
 patch.apply.already.applied:
     text: All of the changes in the specified patch are already contained in the code
+patch.apply.analyze.from.clipboard.on.the.fly.checkbox:
+    text: Analyze and apply patch from clipboard on the fly
 patch.apply.base.directory.field:
     text: '&Base directory:'
+patch.apply.cannot.apply.now:
+    text: Cannot Apply Patch Now
 patch.apply.changes.in.patch.resolve:
     text: '{0} in patch resolve'
 patch.apply.command:
@@ -1040,6 +1144,8 @@ shelved.version.name:
     text: Shelved version
 shelvedChanges.delete.title:
     text: Delete Shelved Changelist
+show.diff.from.annotation.action.error.can.not.load.data.to.show.diff:
+    text: Cannot load data to show diff
 show.diff.progress.title:
     text: Loading content...
 show.diff.progress.title.detailed:

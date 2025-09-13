@@ -17,11 +17,13 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author mike
@@ -30,8 +32,13 @@ import jakarta.annotation.Nonnull;
 public class VcsActionGroup extends DefaultActionGroup implements DumbAware {
     public static final String ID = "VcsGroup";
 
+    @Inject
     public VcsActionGroup() {
-        super(ActionLocalize.groupVcsgroupText(), false);
+        super(VcsLocalize.groupVcsGroupText(), false);
+    }
+
+    protected VcsActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+        super(text, popup);
     }
 
     @Override

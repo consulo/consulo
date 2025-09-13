@@ -17,7 +17,6 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
@@ -33,6 +32,7 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -48,8 +48,8 @@ import static consulo.versionControlSystem.util.VcsUtil.getIfSingle;
 public class TabbedShowHistoryAction extends AbstractVcsAction {
     public TabbedShowHistoryAction() {
         super(
-            ActionLocalize.actionVcsShowtabbedfilehistoryText(),
-            ActionLocalize.actionVcsShowtabbedfilehistoryDescription(),
+            VcsLocalize.actionShowTabbedFileHistoryText(),
+            VcsLocalize.actionShowTabbedFileHistoryDescription(),
             VersionControlSystemIconGroup.history()
         );
     }

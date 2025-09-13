@@ -16,9 +16,17 @@
 package consulo.ui.ex.action;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 public class NonEmptyActionGroup extends DefaultActionGroup implements DumbAware {
+    public NonEmptyActionGroup() {
+    }
+
+    protected NonEmptyActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+        super(text, popup);
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setVisible(getChildrenCount() > 0);

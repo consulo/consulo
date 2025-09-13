@@ -16,16 +16,16 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.impl.internal.update.AbstractCommonUpdateAction;
 import consulo.versionControlSystem.impl.internal.update.ScopeInfo;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 
 @ActionImpl(id = "CheckStatusForFiles")
 public class CommonStatusFileOrDirectoryAction extends AbstractCommonUpdateAction {
     public CommonStatusFileOrDirectoryAction() {
         super(ActionInfo.STATUS, ScopeInfo.FILES, false);
-        getTemplatePresentation().setTextValue(ActionLocalize.actionCheckstatusforfilesText());
+        getTemplatePresentation().setTextValue(VcsLocalize.actionCheckStatusForFilesText());
     }
 
     @Override

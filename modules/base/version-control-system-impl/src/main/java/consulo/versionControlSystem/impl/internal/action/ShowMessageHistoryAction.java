@@ -17,7 +17,6 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -47,8 +46,8 @@ import java.util.List;
 public class ShowMessageHistoryAction extends AnAction implements DumbAware {
     public ShowMessageHistoryAction() {
         super(
-            ActionLocalize.actionVcsShowmessagehistoryText(),
-            ActionLocalize.actionVcsShowmessagehistoryDescription(),
+            VcsLocalize.actionShowMessageHistoryText(),
+            VcsLocalize.actionShowMessageHistoryDescription(),
             VersionControlSystemIconGroup.history()
         );
         setEnabledInModalContext(true);

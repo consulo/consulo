@@ -17,14 +17,14 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
-import consulo.localize.LocalizeValue;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsShowToolWindowTabAction;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Show.Local.Changes")
 public class VcsShowLocalChangesAction extends VcsShowToolWindowTabAction {
     public VcsShowLocalChangesAction() {
-        super(LocalizeValue.localizeTODO("Show Local Changes"));
+        super(VcsLocalize.actionShowLocalChangesText());
     }
 
     @Nonnull

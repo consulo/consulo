@@ -36,13 +36,14 @@ import consulo.ide.impl.idea.codeInspection.actions.CodeInspectionAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author UNV
  * @since 2025-08-06
  */
 @ActionImpl(
-    id = "CodeMenu",
+    id = IdeActions.ACTION_CODE_MENU,
     children = {
         @ActionRef(id = "OverrideMethods"),
         @ActionRef(id = "ImplementMethods"),

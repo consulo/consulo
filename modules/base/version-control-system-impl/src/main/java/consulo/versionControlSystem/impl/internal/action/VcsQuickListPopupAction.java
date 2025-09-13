@@ -1,10 +1,11 @@
 package consulo.versionControlSystem.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
-import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.project.Project;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.AbstractVcs;
@@ -24,9 +25,10 @@ import java.util.List;
  * Context aware VCS actions quick list.
  * May be customized using consulo.versionControlSystem.action.VcsQuickListContentProvider extension point.
  */
+@ActionImpl(id = "Vcs.QuickListPopupAction")
 public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements DumbAware {
-
     public VcsQuickListPopupAction() {
+        super(VcsLocalize.actionQuickListPopupText(), VcsLocalize.actionQuickListPopupDescription());
         myActionPlace = ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION;
     }
 
@@ -45,13 +47,8 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         SupportedVCS popupType = typeAndVcs.getFirst();
 
         switch (popupType) {
-            case VCS:
-                fillVcsPopup(project, group, dataContext, vcs);
-                break;
-
-            case NOT_IN_VCS:
-                fillNonInVcsActions(project, group, dataContext);
-                break;
+            case VCS -> fillVcsPopup(project, group, dataContext, vcs);
+            case NOT_IN_VCS -> fillNonInVcsActions(project, group, dataContext);
         }
     }
 
@@ -68,18 +65,18 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     ) {
         if (vcs != null) {
             // replace general vcs actions if necessary
-
-            for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
-                if (provider.replaceVcsActionsFor(vcs, dataContext)) {
-                    List<AnAction> actionsToReplace = provider.getVcsActions(project, vcs, dataContext);
-                    if (actionsToReplace != null) {
-                        // replace general actions with custom ones:
-                        addActions(actionsToReplace, group);
-                        // local history
-                        addLocalHistoryActions(group);
-                        return;
-                    }
-                }
+            List<AnAction> actionsToReplace = project.getApplication().getExtensionPoint(VcsQuickListContentProvider.class)
+                .computeSafeIfAny(
+                    provider -> provider.replaceVcsActionsFor(vcs, dataContext)
+                        ? provider.getVcsActions(project, vcs, dataContext)
+                        : null
+                );
+            if (actionsToReplace != null) {
+                // replace general actions with custom ones:
+                addActions(actionsToReplace, group);
+                // local history
+                addLocalHistoryActions(group);
+                return;
             }
         }
 
@@ -95,12 +92,12 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     ) {
         // include all custom actions in general popup
         List<AnAction> actions = new ArrayList<>();
-        for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
+        project.getApplication().getExtensionPoint(VcsQuickListContentProvider.class).forEach(provider -> {
             List<AnAction> providerActions = provider.getVcsActions(project, vcs, dataContext);
             if (providerActions != null) {
                 actions.addAll(providerActions);
             }
-        }
+        });
 
         // basic operations
         addSeparator(group, vcs != null ? vcs.getDisplayName(): LocalizeValue.empty());
@@ -133,12 +130,12 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         @Nullable DataContext dataContext
     ) {
         // add custom vcs actions
-        for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
+        project.getApplication().getExtensionPoint(VcsQuickListContentProvider.class).forEach(provider -> {
             List<AnAction> actions = provider.getNotInVcsActions(project, dataContext);
             if (actions != null) {
                 addActions(actions, group);
             }
-        }
+        });
         addSeparator(group);
         addAction("Start.Use.Vcs", group);
         addAction("Vcs.Checkout", group);
@@ -154,10 +151,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         addAction("LocalHistory.PutLabel", group);
     }
 
-    private void addActions(
-        @Nonnull List<AnAction> actions,
-        @Nonnull DefaultActionGroup toGroup
-    ) {
+    private void addActions(@Nonnull List<AnAction> actions, @Nonnull DefaultActionGroup toGroup) {
         for (AnAction action : actions) {
             toGroup.addAction(action);
         }

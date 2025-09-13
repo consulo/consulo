@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.versionControlSystem.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.impl.internal.ProjectLevelVcsManagerImpl;
 import consulo.project.Project;
@@ -27,6 +28,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "Start.Use.Vcs")
 public class StartUseVcsAction extends AnAction implements DumbAware {
     public StartUseVcsAction() {
         super(VcsLocalize.actionEnableVersionControlIntegrationText());

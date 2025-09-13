@@ -1478,44 +1478,6 @@
             <reference id="ChangeScheme"/>
         </group>
 
-        <action id="ChangesView.ApplyPatch" class="consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchAction">
-            <add-to-group group-id="ProjectViewPopupMenu" relative-to-action="ProjectViewEditSource" anchor="after"/>
-            <add-to-group group-id="NavbarPopupMenu" relative-to-action="EditSource" anchor="after"/>
-            <add-to-group group-id="FavoritesViewPopupMenu" relative-to-action="EditSource" anchor="after"/>
-        </action>
-
-        <!-- Main menu | Version Control -->
-        <group id="VcsGroups" class="consulo.versionControlSystem.impl.internal.action.VcsGroupsActionGroup" popup="true">
-            <group id="Vcs.MainMenu" class="consulo.versionControlSystem.impl.internal.action.VcsMainMenuActionGroup">
-                <action id="Start.Use.Vcs" class="consulo.ide.impl.idea.ide.actions.StartUseVcsAction"/>
-                <separator/>
-                <group class="consulo.versionControlSystem.impl.internal.action.VcsActionGroup" id="VcsGlobalGroup">
-
-                    <action id="Vcs.QuickListPopupAction"
-                            class="consulo.versionControlSystem.impl.internal.action.VcsQuickListPopupAction"/>
-                    <reference ref="CheckinProject"/>
-                    <reference ref="Vcs.UpdateProject"/>
-                    <action id="Vcs.IntegrateProject" class="consulo.versionControlSystem.impl.internal.action.CommonIntegrateProjectAction"/>
-                    <reference ref="ChangesView.Refresh"/>
-                    <separator/>
-                    <group id="Vcs.Specific" class="consulo.ui.ex.action.NonEmptyActionGroup"/>
-                    <separator/>
-                    <reference ref="ChangesView.CreatePatch"/>
-                    <reference ref="ChangesView.ApplyPatch"/>
-                    <reference id="ChangesView.ApplyPatchFromClipboard"/>
-                    <reference ref="ChangesView.Shelve"/>
-                </group>
-
-                <separator/>
-                <reference id="Vcs.Checkout"/>
-                <group id="Vcs.Browse" class="consulo.ui.ex.action.NonEmptyActionGroup" popup="true"/>
-                <separator/>
-                <group id="Vcs.Import" class="consulo.ui.ex.action.NonEmptyActionGroup"/>
-            </group>
-
-            <add-to-group group-id="MainMenu" anchor="after" relative-to-action="ToolsMenu"/>
-        </group>
-
         <reference id="OpenInRightSplit">
             <add-to-group group-id="RunContextPopupGroup" anchor="last"/>
         </reference>

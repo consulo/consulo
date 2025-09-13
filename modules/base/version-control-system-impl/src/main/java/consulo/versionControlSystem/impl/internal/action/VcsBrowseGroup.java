@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,16 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
+import consulo.ui.ex.action.NonEmptyActionGroup;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import consulo.versionControlSystem.ui.VcsShowToolWindowTabAction;
-import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = "Vcs.Show.Shelf")
-public class VcsShowShelfAction extends VcsShowToolWindowTabAction {
-    public VcsShowShelfAction() {
-        super(VcsLocalize.actionShowShelfText());
-    }
-
-    @Nonnull
-    @Override
-    protected String getTabName() {
-        return ChangesViewContentManager.SHELF;
+/**
+ * @author UNV
+ * @since 2025-09-11
+ */
+@ActionImpl(id = "Vcs.Browse")
+public class VcsBrowseGroup extends NonEmptyActionGroup {
+    public VcsBrowseGroup() {
+        super(VcsLocalize.groupBrowseText(), true);
     }
 }
-

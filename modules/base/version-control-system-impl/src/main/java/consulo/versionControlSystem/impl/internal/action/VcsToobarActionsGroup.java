@@ -20,13 +20,11 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
-import consulo.versionControlSystem.impl.internal.action.CommonCheckinProjectAction;
-import consulo.versionControlSystem.impl.internal.action.TabbedShowHistoryAction;
-import consulo.versionControlSystem.impl.internal.change.commited.CommonUpdateProjectAction;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
+import consulo.versionControlSystem.impl.internal.change.commited.CommonUpdateProjectAction;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author UNV
@@ -51,6 +49,6 @@ import consulo.ui.ex.action.IdeActions;
 )
 public class VcsToobarActionsGroup extends DefaultActionGroup implements DumbAware {
     public VcsToobarActionsGroup() {
-        super(ActionLocalize.groupVcstoobaractionsText(), false);
+        super(VcsLocalize.groupToobarActionsText(), false);
     }
 }

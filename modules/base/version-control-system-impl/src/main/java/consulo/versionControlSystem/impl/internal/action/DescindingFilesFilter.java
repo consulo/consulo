@@ -26,62 +26,66 @@ import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public class DescindingFilesFilter {
-  private DescindingFilesFilter() {
-  }
+    private DescindingFilesFilter() {
+    }
 
-  @Nonnull
-  public static FilePath[] filterDescindingFiles(@Nonnull FilePath[] roots, Project project) {
-    List<FilePath> result = new LinkedList<>();
-    ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
+    @Nonnull
+    public static FilePath[] filterDescindingFiles(@Nonnull FilePath[] roots, Project project) {
+        List<FilePath> result = new LinkedList<>();
+        ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
 
-    Arrays.sort(roots, FilePathComparator.getInstance());
-    Map<VcsKey, List<FilePath>> chains = new HashMap<>();
-    for (FilePath root : roots) {
-      AbstractVcs vcs = manager.getVcsFor(root);
-      if (vcs == null) continue;
-      if (vcs.allowsNestedRoots()) {
-        // just put into result: nested roots are allowed
-        result.add(root);
-        continue;
-      }
-      //if (pathsFilter != null && (! pathsFilter.convert(new Pair<DocumentFilePath, AbstractVcs>(root, vcs)))) continue;
-      
-      List<FilePath> chain = chains.get(vcs.getKeyInstanceMethod());
-      if (chain == null) {
-        LinkedList<FilePath> newList = new LinkedList<>();
-        newList.add(root);
-        chains.put(vcs.getKeyInstanceMethod(), newList);
-      } else {
-        boolean failed = false;
-        for (FilePath chainedPath : chain) {
-          if (FileUtil.isAncestor(chainedPath.getIOFile(), root.getIOFile(), false)) {
-            // do not take this root
-            failed = true;      
-            break;
-          }
+        Arrays.sort(roots, FilePathComparator.getInstance());
+        Map<VcsKey, List<FilePath>> chains = new HashMap<>();
+        for (FilePath root : roots) {
+            AbstractVcs vcs = manager.getVcsFor(root);
+            if (vcs == null) {
+                continue;
+            }
+            if (vcs.allowsNestedRoots()) {
+                // just put into result: nested roots are allowed
+                result.add(root);
+                continue;
+            }
+            //if (pathsFilter != null && (! pathsFilter.convert(new Pair<DocumentFilePath, AbstractVcs>(root, vcs)))) continue;
+
+            List<FilePath> chain = chains.get(vcs.getKeyInstanceMethod());
+            if (chain == null) {
+                LinkedList<FilePath> newList = new LinkedList<>();
+                newList.add(root);
+                chains.put(vcs.getKeyInstanceMethod(), newList);
+            }
+            else {
+                boolean failed = false;
+                for (FilePath chainedPath : chain) {
+                    if (FileUtil.isAncestor(chainedPath.getIOFile(), root.getIOFile(), false)) {
+                        // do not take this root
+                        failed = true;
+                        break;
+                    }
+                }
+                if (!failed) {
+                    chain.add(root);
+                }
+            }
         }
-        if (! failed) {
-          chain.add(root);
+
+        for (List<FilePath> filePaths : chains.values()) {
+            result.addAll(filePaths);
         }
-      }
+
+        return result.toArray(new FilePath[result.size()]);
     }
 
-    for (List<FilePath> filePaths : chains.values()) {
-      result.addAll(filePaths);
+    private static class FilePathComparator implements Comparator<FilePath> {
+        private final static FilePathComparator ourInstance = new FilePathComparator();
+
+        public static FilePathComparator getInstance() {
+            return ourInstance;
+        }
+
+        @Override
+        public int compare(FilePath fp1, FilePath fp2) {
+            return fp1.getIOFile().getAbsolutePath().length() - fp2.getIOFile().getAbsolutePath().length();
+        }
     }
-
-    return result.toArray(new FilePath[result.size()]);
-  }
-
-  private static class FilePathComparator implements Comparator<FilePath> {
-    private final static FilePathComparator ourInstance = new FilePathComparator();
-
-    public static FilePathComparator getInstance() {
-      return ourInstance;
-    }
-
-    public int compare(FilePath fp1, FilePath fp2) {
-      return fp1.getIOFile().getAbsolutePath().length() - fp2.getIOFile().getAbsolutePath().length();
-    }
-  }
 }

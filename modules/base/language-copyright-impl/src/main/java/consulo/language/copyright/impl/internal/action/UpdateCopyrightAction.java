@@ -32,15 +32,16 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(
     id = "UpdateCopyright",
     parents = {
-        @ActionParentRef(@ActionRef(id = "ProjectViewPopupMenu")),
-        @ActionParentRef(@ActionRef(id = "CodeMenu")),
-        @ActionParentRef(@ActionRef(id = "NavbarPopupMenu"))
+        @ActionParentRef(@ActionRef(id = IdeActions.GROUP_PROJECT_VIEW_POPUP)),
+        @ActionParentRef(@ActionRef(id = IdeActions.ACTION_CODE_MENU)),
+        @ActionParentRef(@ActionRef(id = IdeActions.GROUP_NAVBAR_POPUP))
     }
 )
 public class UpdateCopyrightAction extends BaseAnalysisAction {
