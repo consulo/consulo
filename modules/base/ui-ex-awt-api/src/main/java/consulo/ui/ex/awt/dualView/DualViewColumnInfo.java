@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.dualView;
 import consulo.ui.ex.awt.ColumnInfo;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public abstract class DualViewColumnInfo<Item, Aspect> extends ColumnInfo<Item, Aspect>{
   public DualViewColumnInfo(String name) {

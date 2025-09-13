@@ -27,10 +27,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class DirectoryTreeNode extends FileOrDirectoryTreeNode {
-
   public DirectoryTreeNode(String path, Project project, String parentPath) {
     super(path, SimpleTextAttributes.ERROR_ATTRIBUTES, project, parentPath);
   }
@@ -70,5 +69,4 @@ public class DirectoryTreeNode extends FileOrDirectoryTreeNode {
     }
     return result;
   }
-
 }

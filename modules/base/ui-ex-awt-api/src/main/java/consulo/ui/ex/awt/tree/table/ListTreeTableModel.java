@@ -22,10 +22,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class ListTreeTableModel extends DefaultTreeModel implements TreeTableModel {
-
   private final ColumnInfo[] myColumns;
 
   public ListTreeTableModel(TreeNode root, ColumnInfo[] columns) {

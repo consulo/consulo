@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.fileEditor.FileEditor;
 
 /**
- * author: lesya
+ * @author lesya
  */
 class Undo extends UndoRedo {
   public Undo(UndoManagerImpl manager, FileEditor editor) {

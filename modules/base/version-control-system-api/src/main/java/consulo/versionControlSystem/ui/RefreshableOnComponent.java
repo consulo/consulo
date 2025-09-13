@@ -18,7 +18,7 @@ package consulo.versionControlSystem.ui;
 import javax.swing.*;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public interface RefreshableOnComponent extends Refreshable {
   JComponent getComponent();

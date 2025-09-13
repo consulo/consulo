@@ -51,7 +51,7 @@ public class FileStatusFactory {
   }
 
   /**
-   * author: lesya
+   * @author lesya
    */
   private static class FileStatusImpl implements FileStatus {
     private final String myStatus;

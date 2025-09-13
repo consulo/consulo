@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class SplitBySeparatorPolicy extends FilePathSplittingPolicy {
   public String getPresentableName(File file, int length) {

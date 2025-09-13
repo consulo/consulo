@@ -33,11 +33,10 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class FileTreeNode extends FileOrDirectoryTreeNode {
   private static final Collection<VirtualFile> EMPTY_VIRTUAL_FILE_ARRAY = new ArrayList<VirtualFile>();
-
 
   public FileTreeNode(@Nonnull String path,
                       @Nonnull SimpleTextAttributes invalidAttributes,

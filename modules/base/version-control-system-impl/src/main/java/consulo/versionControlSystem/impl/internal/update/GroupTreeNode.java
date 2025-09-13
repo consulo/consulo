@@ -32,7 +32,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class GroupTreeNode extends AbstractTreeNode implements Disposable {
   private final String myName;

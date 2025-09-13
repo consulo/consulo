@@ -27,7 +27,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class TreeTableTree extends Tree {
     public static final String TREE_TABLE_TREE_KEY = "TreeTableTree";

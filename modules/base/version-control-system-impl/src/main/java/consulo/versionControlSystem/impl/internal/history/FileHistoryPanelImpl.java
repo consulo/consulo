@@ -101,7 +101,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton implements EditorColorsListener, CopyProvider {
     private static final Logger LOG = Logger.getInstance(FileHistoryPanelImpl.class);
