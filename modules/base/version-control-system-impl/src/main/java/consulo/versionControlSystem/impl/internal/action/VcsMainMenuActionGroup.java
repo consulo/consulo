@@ -15,17 +15,38 @@
  */
 package consulo.versionControlSystem.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 // from kotlin
+@ActionImpl(
+    id = "Vcs.MainMenu",
+    children = {
+        @ActionRef(type = StartUseVcsAction.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = VcsGlobalGroup.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(id = "Vcs.Checkout"),
+        @ActionRef(type = VcsBrowseGroup.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = VcsImportGroup.class)
+    }
+)
 public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAware {
+    public VcsMainMenuActionGroup() {
+        super(VcsLocalize.groupVcsGroupsText(), false);
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);

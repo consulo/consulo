@@ -17,12 +17,12 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.impl.internal.change.action.AbstractMissingFilesAction;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +35,8 @@ import java.util.List;
 public class ScheduleForRemovalAction extends AbstractMissingFilesAction {
     public ScheduleForRemovalAction() {
         super(
-            ActionLocalize.actionChangesviewRemovedeletedText(),
-            ActionLocalize.actionChangesviewRemovedeletedDescription(),
+            VcsLocalize.actionChangesViewRemoveDeletedText(),
+            VcsLocalize.actionChangesViewRemoveDeletedDescription(),
             PlatformIconGroup.actionsCancel()
         );
     }

@@ -29,15 +29,12 @@ import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.content.DiffContent;
 import consulo.diff.internal.DiffContentFactoryEx;
 import consulo.diff.internal.DiffRequestFactoryEx;
+import consulo.diff.internal.GoToChangePopupBuilder;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
-import consulo.diff.internal.GoToChangePopupBuilder;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.util.io.FileUtil;
-import consulo.versionControlSystem.impl.internal.diff.ChangeGoToChangePopupAction;
 import consulo.localHistory.ByteContent;
 import consulo.localHistory.Label;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -45,9 +42,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.impl.internal.diff.ChangeGoToChangePopupAction;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -61,8 +61,8 @@ import java.util.function.Consumer;
 public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     public ShowUpdatedDiffAction() {
         super(
-            ActionLocalize.actionDiffUpdatedfilesText(),
-            ActionLocalize.actionDiffUpdatedfilesDescription(),
+            VcsLocalize.actionDiffUpdatedFilesText(),
+            VcsLocalize.actionDiffUpdatedFilesDescription(),
             PlatformIconGroup.actionsDiff()
         );
     }

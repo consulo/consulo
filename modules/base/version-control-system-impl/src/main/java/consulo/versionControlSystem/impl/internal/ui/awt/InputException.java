@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.Messages;
 import javax.swing.*;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class InputException extends RuntimeException{
   private final String myMessage;

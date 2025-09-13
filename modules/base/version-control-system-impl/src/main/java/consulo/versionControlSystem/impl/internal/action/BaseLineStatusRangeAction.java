@@ -15,9 +15,9 @@
  */
 package consulo.versionControlSystem.impl.internal.action;
 
+import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.VcsRange;
 
@@ -33,6 +33,7 @@ public abstract class BaseLineStatusRangeAction extends AnAction implements Dumb
         myRange = range;
     }
 
+    @Override
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isEnabled());
     }

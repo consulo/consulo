@@ -19,7 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public interface CellWrapper {
     void wrap(Component component,

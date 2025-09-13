@@ -21,236 +21,245 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.UpdateOrStatusOptionsDialog;
 import jakarta.annotation.Nonnull;
 
-import java.util.LinkedHashMap;
+import java.util.SequencedMap;
 
-public interface ActionInfo {  
-  ActionInfo UPDATE = new ActionInfo() {
-    @Override
-    public boolean showOptions(Project project) {
-      return ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.UPDATE).getValue();
-    }
+public interface ActionInfo {
+    ActionInfo UPDATE = new ActionInfo() {
+        @Override
+        public boolean showOptions(Project project) {
+            return ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.UPDATE).getValue();
+        }
 
-    @Override
-    public UpdateEnvironment getEnvironment(AbstractVcs vcs) {
-      return vcs.getUpdateEnvironment();
-    }
+        @Override
+        public UpdateEnvironment getEnvironment(AbstractVcs vcs) {
+            return vcs.getUpdateEnvironment();
+        }
 
-    @Override
-    public String getActionName() {
-      return VcsBundle.message("action.name.update");
-    }
+        @Override
+        public String getActionName() {
+            return VcsLocalize.actionNameUpdate().get();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public UpdateOrStatusOptionsDialog createOptionsDialog(
+            Project project,
+            SequencedMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
+            String scopeName
+        ) {
+            return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
+                @Nonnull
+                @Override
+                protected LocalizeValue getRealTitle() {
+                    return VcsLocalize.actionDisplayNameUpdateScope(scopeName);
+                }
+
+                @Override
+                protected String getActionNameForDimensions() {
+                    return "update";
+                }
+
+                @Override
+                protected boolean isToBeShown() {
+                    return ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.UPDATE).getValue();
+                }
+
+                @Override
+                protected void setToBeShown(boolean value, boolean onOk) {
+                    if (onOk) {
+                        ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.UPDATE).setValue(value);
+                    }
+                }
+            };
+        }
+
+        @Override
+        public String getActionName(String scopeName) {
+            return VcsLocalize.actionNameUpdateScope(scopeName).get();
+        }
+
+        @Override
+        public String getGroupName(FileGroup fileGroup) {
+            return fileGroup.getUpdateName();
+        }
+
+        @Override
+        public boolean canGroupByChangelist() {
+            return true;
+        }
+
+        @Override
+        public boolean canChangeFileStatus() {
+            return false;
+        }
+    };
+
+    ActionInfo STATUS = new ActionInfo() {
+        @Override
+        public boolean showOptions(Project project) {
+            return ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.STATUS).getValue();
+        }
+
+        @Override
+        public UpdateEnvironment getEnvironment(AbstractVcs vcs) {
+            return vcs.getStatusEnvironment();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public UpdateOrStatusOptionsDialog createOptionsDialog(
+            Project project,
+            SequencedMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
+            String scopeName
+        ) {
+            return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
+                @Nonnull
+                @Override
+                protected LocalizeValue getRealTitle() {
+                    return VcsLocalize.actionDisplayNameCheckScopeStatus(scopeName);
+                }
+
+                @Override
+                protected String getActionNameForDimensions() {
+                    return "status";
+                }
+
+                @Override
+                protected boolean isToBeShown() {
+                    return ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.STATUS).getValue();
+                }
+
+                @Override
+                protected void setToBeShown(boolean value, boolean onOk) {
+                    if (onOk) {
+                        ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.STATUS).setValue(value);
+                    }
+                }
+            };
+        }
+
+        @Override
+        public String getActionName() {
+            return VcsLocalize.actionNameCheckStatus().get();
+        }
+
+        @Override
+        public String getActionName(String scopeName) {
+            return VcsLocalize.actionNameCheckScopeStatus(scopeName).get();
+        }
+
+        @Override
+        public String getGroupName(FileGroup fileGroup) {
+            return fileGroup.getStatusName();
+        }
+
+        @Override
+        public boolean canGroupByChangelist() {
+            return false;
+        }
+
+        @Override
+        public boolean canChangeFileStatus() {
+            return true;
+        }
+    };
+
+    ActionInfo INTEGRATE = new ActionInfo() {
+        @Override
+        public boolean showOptions(Project project) {
+            return true;
+        }
+
+        @Override
+        public UpdateEnvironment getEnvironment(AbstractVcs vcs) {
+            return vcs.getIntegrateEnvironment();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public UpdateOrStatusOptionsDialog createOptionsDialog(
+            Project project,
+            SequencedMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
+            String scopeName
+        ) {
+            return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
+                @Nonnull
+                @Override
+                protected LocalizeValue getRealTitle() {
+                    return VcsLocalize.actionDisplayNameIntegrateScope(scopeName);
+                }
+
+                @Override
+                protected String getActionNameForDimensions() {
+                    return "integrate";
+                }
+
+                @Override
+                protected boolean canBeHidden() {
+                    return false;
+                }
+
+                @Override
+                protected boolean isToBeShown() {
+                    return true;
+                }
+
+                @Override
+                protected void setToBeShown(boolean value, boolean onOk) {
+                }
+            };
+        }
+
+        @Override
+        public boolean canChangeFileStatus() {
+            return true;
+        }
+
+        @Override
+        public String getActionName(String scopeName) {
+            return VcsLocalize.actionNameIntegrateScope(scopeName).get();
+        }
+
+        @Override
+        public String getActionName() {
+            return VcsLocalize.actionNameIntegrate().get();
+        }
+
+        @Override
+        public String getGroupName(FileGroup fileGroup) {
+            return fileGroup.getUpdateName();
+        }
+
+        @Override
+        public boolean canGroupByChangelist() {
+            return false;
+        }
+    };
+
+
+    boolean showOptions(Project project);
+
+    UpdateEnvironment getEnvironment(AbstractVcs vcs);
 
     @RequiredUIAccess
-    @Override
-    public UpdateOrStatusOptionsDialog createOptionsDialog(final Project project,
-                                                           LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
-                                                           final String scopeName) {
-      return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
-        @Nonnull
-        @Override
-        protected LocalizeValue getRealTitle() {
-          return VcsLocalize.actionDisplayNameUpdateScope(scopeName);
-        }
+    UpdateOrStatusOptionsDialog createOptionsDialog(
+        Project project,
+        SequencedMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
+        String scopeName
+    );
 
-        @Override
-        protected String getActionNameForDimensions() {
-          return "update";
-        }
+    String getActionName(String scopeName);
 
-        @Override
-        protected boolean isToBeShown() {
-          return ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.UPDATE).getValue();
-        }
+    String getActionName();
 
-        @Override
-        protected void setToBeShown(boolean value, boolean onOk) {
-          if (onOk) {
-            ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.UPDATE).setValue(value);
-          }
-        }
-      };
-    }
+    String getGroupName(FileGroup fileGroup);
 
-    @Override
-    public String getActionName(String scopeName) {
-      return VcsBundle.message("action.name.update.scope", scopeName);
-    }
+    boolean canGroupByChangelist();
 
-    @Override
-    public String getGroupName(FileGroup fileGroup) {
-      return fileGroup.getUpdateName();
-    }
-
-    @Override
-    public boolean canGroupByChangelist() {
-      return true;
-    }
-
-    @Override
-    public boolean canChangeFileStatus() {
-      return false;
-    }
-  };
-
-  ActionInfo STATUS = new ActionInfo() {
-    @Override
-    public boolean showOptions(Project project) {
-      return ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.STATUS).getValue();
-    }
-
-    @Override
-    public UpdateEnvironment getEnvironment(AbstractVcs vcs) {
-      return vcs.getStatusEnvironment();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public UpdateOrStatusOptionsDialog createOptionsDialog(final Project project,
-                                                           LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap, final String scopeName) {
-      return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
-        @Override
-        protected LocalizeValue getRealTitle() {
-          return VcsLocalize.actionDisplayNameCheckScopeStatus(scopeName);
-        }
-
-        @Override
-        protected String getActionNameForDimensions() {
-          return "status";
-        }
-
-        @Override
-        protected boolean isToBeShown() {
-          return ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.STATUS).getValue();
-        }
-
-        @Override
-        protected void setToBeShown(boolean value, boolean onOk) {
-          if (onOk) {
-            ProjectLevelVcsManager.getInstance(project).getOptions(VcsConfiguration.StandardOption.STATUS).setValue(value);
-          }
-        }
-      };
-    }
-
-    @Override
-    public String getActionName() {
-      return VcsBundle.message("action.name.check.status");
-    }
-
-    @Override
-    public String getActionName(String scopeName) {
-      return VcsBundle.message("action.name.check.scope.status", scopeName);
-    }
-
-    @Override
-    public String getGroupName(FileGroup fileGroup) {
-      return fileGroup.getStatusName();
-    }
-
-    @Override
-    public boolean canGroupByChangelist() {
-      return false;
-    }
-
-    @Override
-    public boolean canChangeFileStatus() {
-      return true;
-    }
-  };
-
-  ActionInfo INTEGRATE = new ActionInfo() {
-    @Override
-    public boolean showOptions(Project project) {
-      return true;
-    }
-
-    @Override
-    public UpdateEnvironment getEnvironment(AbstractVcs vcs) {
-      return vcs.getIntegrateEnvironment();
-    }
-
-    @RequiredUIAccess
-    @Override
-    public UpdateOrStatusOptionsDialog createOptionsDialog(final Project project,
-                                                           LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
-                                                           final String scopeName) {
-      return new UpdateOrStatusOptionsDialog(project, envToConfMap) {
-        @Nonnull
-        @Override
-        protected LocalizeValue getRealTitle() {
-          return VcsLocalize.actionDisplayNameIntegrateScope(scopeName);
-        }
-
-        @Override
-        protected String getActionNameForDimensions() {
-          return "integrate";
-        }
-
-        @Override
-        protected boolean canBeHidden() {
-          return false;
-        }
-
-        @Override
-        protected boolean isToBeShown() {
-          return true;
-        }
-
-        @Override
-        protected void setToBeShown(boolean value, boolean onOk) {
-        }
-      };
-    }
-
-    @Override
-    public boolean canChangeFileStatus() {
-      return true;
-    }
-
-    @Override
-    public String getActionName(String scopeName) {
-      return VcsBundle.message("action.name.integrate.scope", scopeName);
-    }
-
-    @Override
-    public String getActionName() {
-      return VcsBundle.message("action.name.integrate");
-    }
-
-    @Override
-    public String getGroupName(FileGroup fileGroup) {
-      return fileGroup.getUpdateName();
-    }
-
-    @Override
-    public boolean canGroupByChangelist() {
-      return false;
-    }
-  };
-
-
-  boolean showOptions(Project project);
-
-  UpdateEnvironment getEnvironment(AbstractVcs vcs);
-
-  @RequiredUIAccess
-  UpdateOrStatusOptionsDialog createOptionsDialog(Project project,
-                                                  LinkedHashMap<UnnamedConfigurable, AbstractVcs> envToConfMap,
-                                                  String scopeName);
-
-  String getActionName(String scopeName);
-
-  String getActionName();
-
-  String getGroupName(FileGroup fileGroup);
-
-  boolean canGroupByChangelist();
-
-  boolean canChangeFileStatus();
+    boolean canChangeFileStatus();
 }

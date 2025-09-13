@@ -25,6 +25,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -38,8 +39,8 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
 
     @Inject
     public CheckoutActionGroup(Application application) {
+        super(VcsLocalize.groupCheckoutText(), true);
         myApplication = application;
-        setPopup(true);
     }
 
     @Override

@@ -5,16 +5,17 @@ import consulo.annotation.component.ActionImpl;
 import consulo.desktop.awt.internal.versionControlSystem.change.shelf.ApplyPatchDifferentiatedDialog;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
-import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchDefaultExecutor;
-import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchMode;
 import consulo.language.file.light.LightVirtualFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.versionControlSystem.VcsApplicationSettings;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchDefaultExecutor;
+import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchMode;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -24,6 +25,13 @@ import java.util.Collections;
 
 @ActionImpl(id = "ChangesView.ApplyPatchFromClipboard")
 public class ApplyPatchFromClipboardAction extends DumbAwareAction {
+    public ApplyPatchFromClipboardAction() {
+        super(
+            ActionLocalize.actionChangesviewApplypatchfromclipboardText(),
+            ActionLocalize.actionChangesviewApplypatchfromclipboardDescription()
+        );
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
@@ -36,7 +44,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsBundle.message("patch.apply.cannot.apply.now"))) {
+        if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsLocalize.patchApplyCannotApplyNow().get())) {
             return;
         }
         FileDocumentManager.getInstance().saveAllDocuments();
@@ -73,7 +81,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
         @Nonnull
         private static JCheckBox createAnalyzeOnTheFlyOptionPanel() {
             JCheckBox removeOptionCheckBox =
-                new JCheckBox(VcsBundle.message("patch.apply.analyze.from.clipboard.on.the.fly.checkbox"));
+                new JCheckBox(VcsLocalize.patchApplyAnalyzeFromClipboardOnTheFlyCheckbox().get());
             removeOptionCheckBox.setMnemonic(KeyEvent.VK_L);
             removeOptionCheckBox.setSelected(VcsApplicationSettings.getInstance().DETECT_PATCH_ON_THE_FLY);
             removeOptionCheckBox.addActionListener(

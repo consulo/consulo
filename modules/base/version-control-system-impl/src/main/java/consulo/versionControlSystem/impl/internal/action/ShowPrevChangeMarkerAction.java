@@ -18,10 +18,10 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.VcsRange;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.inject.Inject;
 
 /**
@@ -39,8 +39,8 @@ public class ShowPrevChangeMarkerAction extends ShowChangeMarkerAction {
     @Inject
     public ShowPrevChangeMarkerAction() {
         super(
-            ActionLocalize.actionVcsshowprevchangemarkerText(),
-            ActionLocalize.actionVcsshowprevchangemarkerDescription(),
+            VcsLocalize.actionShowPrevChangeMarkerText(),
+            VcsLocalize.actionShowPrevChangeMarkerDescription(),
             PlatformIconGroup.actionsPreviousoccurence()
         );
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.ui;
+package consulo.versionControlSystem.impl.internal.action;
 
-import javax.swing.*;
+import consulo.annotation.component.ActionImpl;
+import consulo.ui.ex.action.NonEmptyActionGroup;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
- * @author lesya
+ * @author UNV
+ * @since 2025-09-11
  */
-public interface RefreshableOnComponent extends Refreshable {
-  JComponent getComponent();
+@ActionImpl(id = "Vcs.Import")
+public class VcsImportGroup extends NonEmptyActionGroup {
+    public VcsImportGroup() {
+        super(VcsLocalize.groupImportText(), false);
+    }
 }

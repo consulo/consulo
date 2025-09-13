@@ -22,7 +22,6 @@ import consulo.diff.DiffManager;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -38,6 +37,7 @@ import consulo.versionControlSystem.impl.internal.change.FakeRevision;
 import consulo.versionControlSystem.impl.internal.diff.ChangeDiffRequestChain;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.internal.ShowDiffContext;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -51,8 +51,8 @@ import java.util.function.Predicate;
 public class ShowDiffAction extends AnAction implements DumbAware {
     public ShowDiffAction() {
         super(
-            ActionLocalize.actionChangesviewDiffText(),
-            ActionLocalize.actionChangesviewDiffDescription(),
+            VcsLocalize.actionChangesViewDiffText(),
+            VcsLocalize.actionChangesViewDiffDescription(),
             PlatformIconGroup.actionsDiff()
         );
     }
@@ -142,7 +142,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
             ChangeListManager.getInstance(project).invokeAfterUpdate(
                 performer,
                 InvokeAfterUpdateMode.BACKGROUND_CANCELLABLE,
-                ActionLocalize.actionChangesviewDiffText().get(),
+                VcsLocalize.actionChangesViewDiffText().get(),
                 Application.get().getCurrentModalityState()
             );
         }

@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public abstract class OptionsDialog extends DialogWrapper {
     protected final Project myProject;

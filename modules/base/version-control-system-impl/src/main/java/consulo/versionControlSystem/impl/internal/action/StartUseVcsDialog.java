@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

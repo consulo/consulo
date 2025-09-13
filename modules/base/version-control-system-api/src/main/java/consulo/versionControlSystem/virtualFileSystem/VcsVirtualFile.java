@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public class VcsVirtualFile extends AbstractVcsVirtualFile {
   private static final Logger LOG = Logger.getInstance(VcsVirtualFile.class);

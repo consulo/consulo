@@ -21,9 +21,11 @@ import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.checkout.PreCheckoutListener;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -31,31 +33,38 @@ import java.io.File;
 
 @ExtensionImpl(order = "last")
 public class ProjectImporterCheckoutListener implements PreCheckoutListener {
-  @Override
-  public boolean processCheckedOutDirectory(Project project, File directory) {
-    File[] files = directory.listFiles();
-    if (files != null) {
-      LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-      for (File file : files) {
-        if (file.isDirectory()) continue;
-        VirtualFile virtualFile = localFileSystem.findFileByIoFile(file);
-        if (virtualFile != null) {
-          ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(file);
-          if (openProcessor != null) {
-            int rc = Messages.showYesNoDialog(project, VcsBundle .message("checkout.open.project.prompt", files[0].getPath()),
-                                              VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
-            if (rc == Messages.YES) {
-              ProjectImplUtil.openAsync(virtualFile.getPath(), project, false, UIAccess.current());
+    @Override
+    @RequiredUIAccess
+    public boolean processCheckedOutDirectory(Project project, File directory) {
+        File[] files = directory.listFiles();
+        if (files != null) {
+            LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    continue;
+                }
+                VirtualFile virtualFile = localFileSystem.findFileByIoFile(file);
+                if (virtualFile != null) {
+                    ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(file);
+                    if (openProcessor != null) {
+                        int rc = Messages.showYesNoDialog(
+                            project,
+                            VcsLocalize.checkoutOpenProjectPrompt(files[0].getPath()).get(),
+                            VcsLocalize.checkoutTitle().get(),
+                            UIUtil.getQuestionIcon()
+                        );
+                        if (rc == Messages.YES) {
+                            ProjectImplUtil.openAsync(virtualFile.getPath(), project, false, UIAccess.current());
+                        }
+                        return true;
+                    }
+                }
             }
-            return true;
-          }
         }
-      }
+        return false;
     }
-    return false;
-  }
 
-  @Override
-  public void processOpenedProject(Project lastOpenedProject) {
-  }
+    @Override
+    public void processOpenedProject(Project lastOpenedProject) {
+    }
 }

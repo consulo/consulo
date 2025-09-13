@@ -17,19 +17,19 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.RefreshStatuses")
 public class RefreshStatuses extends AnAction implements DumbAware {
     public RefreshStatuses() {
-        super(ActionLocalize.actionVcsRefreshstatusesText(), ActionLocalize.actionVcsRefreshstatusesDescription());
+        super(VcsLocalize.actionRefreshStatusesText(), VcsLocalize.actionRefreshStatusesDescription());
     }
 
     @Override

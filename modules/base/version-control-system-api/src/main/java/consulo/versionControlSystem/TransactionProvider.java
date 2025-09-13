@@ -16,7 +16,7 @@
 package consulo.versionControlSystem;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public interface TransactionProvider extends VcsProviderMarker {
   void startTransaction(Object parameters) throws VcsException;

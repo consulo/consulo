@@ -29,6 +29,7 @@ import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.RevisionSelector;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -38,7 +39,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "Compare.Specified")
 public class SelectAndCompareWithSelectedRevisionAction extends AbstractVcsAction {
     public SelectAndCompareWithSelectedRevisionAction() {
-        super(LocalizeValue.localizeTODO("Com_pare with Specified Revision..."));
+        super(VcsLocalize.actionCompareSpecifiedText());
     }
 
     @Override

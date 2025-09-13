@@ -18,9 +18,9 @@ package consulo.versionControlSystem.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author UNV
@@ -36,6 +36,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class GoToChangeMarkerGroup extends DefaultActionGroup implements DumbAware {
     public GoToChangeMarkerGroup() {
-        super(ActionLocalize.groupGotochangemarkergroupText(), false);
+        super(VcsLocalize.groupGoToChangeMarkerText(), false);
     }
 }

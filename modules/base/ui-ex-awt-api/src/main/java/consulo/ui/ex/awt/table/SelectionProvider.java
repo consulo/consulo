@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.table;
 import java.util.Collection;
 
 /**
- * author: lesya
+ * @author lesya
  */
 public interface SelectionProvider {
   Collection getSelection();

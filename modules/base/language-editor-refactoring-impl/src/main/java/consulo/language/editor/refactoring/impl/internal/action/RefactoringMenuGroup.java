@@ -51,7 +51,7 @@ import consulo.ui.ex.action.IdeActions;
     parents = @ActionParentRef(
         value = @ActionRef(id = IdeActions.GROUP_MAIN_MENU),
         anchor = ActionRefAnchor.AFTER,
-        relatedToAction = @ActionRef(id = "CodeMenu")
+        relatedToAction = @ActionRef(id = IdeActions.ACTION_CODE_MENU)
     )
 )
 public class RefactoringMenuGroup extends DefaultActionGroup implements DumbAware {

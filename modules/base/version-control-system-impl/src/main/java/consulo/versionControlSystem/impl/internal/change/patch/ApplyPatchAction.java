@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.change.patch;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.Application;
 import consulo.diff.DiffManager;
 import consulo.diff.InvalidDiffRequestException;
@@ -26,6 +29,8 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.impl.internal.patch.apply.*;
 import consulo.versionControlSystem.impl.internal.patch.*;
 import consulo.localize.LocalizeValue;
@@ -69,8 +74,32 @@ import java.util.function.Supplier;
 
 import static consulo.versionControlSystem.impl.internal.patch.PatchFileType.isPatchFile;
 
+@ActionImpl(
+    id = "ChangesView.ApplyPatch",
+    parents = {
+        @ActionParentRef(
+            value = @ActionRef(id = IdeActions.GROUP_PROJECT_VIEW_POPUP),
+            anchor = ActionRefAnchor.AFTER,
+            relatedToAction = @ActionRef(id = "ProjectViewEditSource")
+        ),
+        @ActionParentRef(
+            value = @ActionRef(id = IdeActions.GROUP_NAVBAR_POPUP),
+            anchor = ActionRefAnchor.AFTER,
+            relatedToAction = @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE)
+        ),
+        @ActionParentRef(
+            value = @ActionRef(id = "FavoritesViewPopupMenu"),
+            anchor = ActionRefAnchor.AFTER,
+            relatedToAction = @ActionRef(id = IdeActions.ACTION_EDIT_SOURCE)
+        ),
+    }
+)
 public class ApplyPatchAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(ApplyPatchAction.class);
+
+    public ApplyPatchAction() {
+        super(ActionLocalize.actionChangesviewApplypatchText(), ActionLocalize.actionChangesviewApplypatchDescription());
+    }
 
     @Override
     public void update(AnActionEvent e) {
@@ -254,7 +283,7 @@ public class ApplyPatchAction extends DumbAwareAction {
                 }
             }
             else {
-                TextFilePatch textPatch = (TextFilePatch)patch.getPatch();
+                TextFilePatch textPatch = (TextFilePatch) patch.getPatch();
                 GenericPatchApplier applier = new GenericPatchApplier(localContent, textPatch.getHunks());
                 applier.execute();
 
@@ -313,7 +342,7 @@ public class ApplyPatchAction extends DumbAwareAction {
         @Nullable CommitContext commitContext
     ) {
         FilePatch patchBase = patch.getPatch();
-        return Application.get().runWriteAction((Supplier<ApplyFilePatch.Result>)() -> {
+        return Application.get().runWriteAction((Supplier<ApplyFilePatch.Result>) () -> {
             try {
                 return patch.apply(
                     file,
