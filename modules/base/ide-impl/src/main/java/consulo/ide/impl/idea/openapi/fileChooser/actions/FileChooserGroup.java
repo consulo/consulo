@@ -31,6 +31,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class FileChooserGroup extends DefaultActionGroup implements DumbAware {
     public FileChooserGroup() {
-        super(LocalizeValue.dot(), true);
+        super(LocalizeValue.empty(), true);
     }
 }
