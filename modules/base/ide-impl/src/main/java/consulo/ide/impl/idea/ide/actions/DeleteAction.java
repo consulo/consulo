@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.TitledHandler;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.localize.ActionLocalize;
@@ -47,7 +48,7 @@ public class DeleteAction extends AnAction implements DumbAware {
         super(ActionLocalize.action$deleteText(), ActionLocalize.action$deleteDescription());
     }
 
-    public DeleteAction(String text, String description, Image icon) {
+    public DeleteAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 

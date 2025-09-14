@@ -15,10 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.util.NullableLazyValue;
 import consulo.application.util.SystemInfo;
 import consulo.fileChooser.FileSystemTree;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,45 +32,49 @@ import jakarta.annotation.Nullable;
 
 import java.io.File;
 
+@ActionImpl(id = "FileChooser.GotoDesktop")
 public class GotoDesktopDirAction extends FileChooserAction {
-  private final NullableLazyValue<VirtualFile> myDesktopDirectory = new NullableLazyValue<VirtualFile>() {
-    @Nullable
-    @Override
-    protected VirtualFile compute() {
-      return getDesktopDirectory();
-    }
-  };
-
-  @Override
-  protected void actionPerformed(final FileSystemTree tree, @Nonnull AnActionEvent e) {
-    final VirtualFile dir = myDesktopDirectory.getValue();
-    if (dir != null) {
-      tree.select(dir, new Runnable() {
+    private final NullableLazyValue<VirtualFile> myDesktopDirectory = new NullableLazyValue<VirtualFile>() {
+        @Nullable
         @Override
-        public void run() {
-          tree.expand(dir, null);
+        protected VirtualFile compute() {
+            return getDesktopDirectory();
         }
-      });
-    }
-  }
+    };
 
-  @Override
-  protected void update(@Nonnull FileSystemTree tree, @Nonnull AnActionEvent e) {
-    VirtualFile dir = myDesktopDirectory.getValue();
-    e.getPresentation().setEnabled(dir != null && tree.isUnderRoots(dir));
-  }
-
-  @Nullable
-  private static VirtualFile getDesktopDirectory() {
-    File desktop = new File(Platform.current().user().homePath().toFile(), "Desktop");
-
-    if (!desktop.isDirectory() && SystemInfo.hasXdgOpen()) {
-      String path = ExecUtil.execAndReadLine(new GeneralCommandLine("xdg-user-dir", "DESKTOP"));
-      if (path != null) {
-        desktop = new File(path);
-      }
+    public GotoDesktopDirAction() {
+        super(
+            ActionLocalize.actionFilechooserGotodesktopText(),
+            ActionLocalize.actionFilechooserGotodesktopDescription(),
+            PlatformIconGroup.nodesDesktop()
+        );
     }
 
-    return desktop.isDirectory() ? LocalFileSystem.getInstance().refreshAndFindFileByIoFile(desktop) : null;
-  }
+    @Override
+    protected void actionPerformed(@Nonnull FileSystemTree tree, @Nonnull AnActionEvent e) {
+        VirtualFile dir = myDesktopDirectory.getValue();
+        if (dir != null) {
+            tree.select(dir, () -> tree.expand(dir, null));
+        }
+    }
+
+    @Override
+    protected void update(@Nonnull FileSystemTree tree, @Nonnull AnActionEvent e) {
+        VirtualFile dir = myDesktopDirectory.getValue();
+        e.getPresentation().setEnabled(dir != null && tree.isUnderRoots(dir));
+    }
+
+    @Nullable
+    private static VirtualFile getDesktopDirectory() {
+        File desktop = new File(Platform.current().user().homePath().toFile(), "Desktop");
+
+        if (!desktop.isDirectory() && SystemInfo.hasXdgOpen()) {
+            String path = ExecUtil.execAndReadLine(new GeneralCommandLine("xdg-user-dir", "DESKTOP"));
+            if (path != null) {
+                desktop = new File(path);
+            }
+        }
+
+        return desktop.isDirectory() ? LocalFileSystem.getInstance().refreshAndFindFileByIoFile(desktop) : null;
+    }
 }

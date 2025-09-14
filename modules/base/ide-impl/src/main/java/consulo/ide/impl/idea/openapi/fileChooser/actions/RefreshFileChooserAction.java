@@ -15,18 +15,34 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
-*/
+ */
+@ActionImpl(id = "FileChooser.Refresh")
 public class RefreshFileChooserAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    RefreshQueue.getInstance().refresh(true, true, null, IdeaModalityState.current(), ManagingFS.getInstance().getLocalRoots());
-  }
+    public RefreshFileChooserAction() {
+        super(
+            ActionLocalize.actionFilechooserRefreshText(),
+            ActionLocalize.actionFilechooserRefreshDescription(),
+            PlatformIconGroup.actionsRefresh()
+        );
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        RefreshQueue.getInstance().refresh(true, true, null, IdeaModalityState.current(), ManagingFS.getInstance().getLocalRoots());
+    }
 }

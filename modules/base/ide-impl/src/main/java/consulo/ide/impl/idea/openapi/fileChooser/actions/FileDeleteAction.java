@@ -15,16 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.DeleteAction;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "FileChooser.Delete")
 public class FileDeleteAction extends DeleteAction {
     public FileDeleteAction() {
+        super(
+            ActionLocalize.actionFilechooserDeleteText(),
+            ActionLocalize.actionFilechooserDeleteTextDescription(),
+            PlatformIconGroup.actionsCancel()
+        );
         setEnabledInModalContext(true);
     }
 

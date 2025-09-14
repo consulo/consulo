@@ -18,10 +18,6 @@
     <name>Consulo [desktop] [AWT]</name>
 
     <actions>
-        <group id="FileChooser">
-            <action id="FileChooser.TogglePathShowing" class="consulo.ide.impl.idea.openapi.fileChooser.actions.TogglePathShowingAction"/>
-        </group>
-
         <group id="Internal.UI.Desktop" text="UI">
             <action id="NotificationTestAction" internal="true"
                     class="consulo.ide.impl.idea.notification.impl.actions.NotificationTestAction"
