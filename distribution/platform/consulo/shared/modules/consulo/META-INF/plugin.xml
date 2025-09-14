@@ -444,28 +444,6 @@
             <reference ref="$SearchWeb"/>
         </group>
 
-        <group id="EditorTabPopupMenu">
-            <reference ref="CloseEditorsGroup"/>
-            <separator/>
-            <reference ref="CopyPaths"/>
-            <separator/>
-            <reference ref="SplitVertically"/>
-            <reference ref="SplitHorizontally"/>
-            <action id="MoveEditorToOppositeTabGroup"
-                    class="consulo.ide.impl.idea.openapi.fileEditor.impl.MoveEditorToOppositeTabGroupAction"/>
-            <reference ref="ChangeSplitOrientation"/>
-            <reference ref="PinActiveTab"/>
-            <reference ref="TabsPlacementGroup"/>
-            <reference ref="TabsAlphabeticalMode"/>
-            <separator/>
-            <reference ref="NextTab"/>
-            <reference ref="PreviousTab"/>
-            <reference ref="ReopenClosedTab"/>
-            <separator/>
-            <reference ref="Unsplit"/>
-            <reference ref="UnsplitAll"/>
-        </group>
-
         <group id="WelcomeScreen.Configure">
             <action id="WelcomeScreen.Settings" class="consulo.ide.impl.idea.ide.actions.ShowSettingsAction"/>
             <action id="WelcomeScreen.Plugins" class="consulo.ide.impl.idea.ide.actions.ShowPluginManagerAction"/>
@@ -539,16 +517,6 @@
                 icon="consulo.platform.base.PlatformIconGroup@actions.listfiles" use-shortcut-of="GotoChangedFile"/>
 
         <group id="DebuggerActions">
-        </group>
-
-        <group id="RunContextGroup" popup="false">
-            <!-- A dynamic group filled with executor actions -->
-            <group id="RunContextGroupInner"/>
-            <separator/>
-        </group>
-
-        <group id="RunContextPopupGroup" popup="false">
-            <reference ref="RunContextGroup"/>
         </group>
 
         <group id="LangCodeInsightActions">
@@ -868,19 +836,6 @@
             <reference ref="ExternalToolsGroup"/>
 
             <add-to-group group-id="EditorPopupMenu" relative-to-action="CompareClipboardWithSelection" anchor="before"/>
-        </group>
-
-        <group id="EditorTabPopupMenuEx">
-            <separator/>
-            <reference ref="AddToFavorites"/>
-            <reference ref="AddAllToFavorites"/>
-            <separator/>
-            <reference ref="RunContextPopupGroup"/>
-            <reference ref="VersionControlsGroup"/>
-            <separator/>
-            <reference ref="ExternalToolsGroup"/>
-
-            <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
         </group>
 
         <reference ref="ChangeTemplateDataLanguage">

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -170,8 +169,8 @@ public class AddToFavoritesAction extends AnAction {
         ProjectViewPane pane = ProjectView.getInstance(project).getProjectViewPaneById(currentViewId);
 
         //on psi elements
-        if (object instanceof PsiElement[]) {
-            for (PsiElement psiElement : (PsiElement[])object) {
+        if (object instanceof PsiElement[] elements) {
+            for (PsiElement psiElement : elements) {
                 addPsiElementNode(psiElement, project, result, favoritesConfig);
             }
             return result;
