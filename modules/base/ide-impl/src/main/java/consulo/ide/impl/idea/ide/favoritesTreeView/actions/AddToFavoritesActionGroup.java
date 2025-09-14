@@ -21,10 +21,7 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,7 +31,7 @@ import java.util.List;
  * @author anna
  * @since 2005-03-03
  */
-@ActionImpl(id = "AddToFavorites")
+@ActionImpl(id = IdeActions.ADD_TO_FAVORITES)
 public class AddToFavoritesActionGroup extends ActionGroup {
     public AddToFavoritesActionGroup() {
         super(ActionLocalize.groupAddtofavoritesText(), true);

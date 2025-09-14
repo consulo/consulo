@@ -34,6 +34,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -47,7 +48,7 @@ import java.util.List;
 
 import static consulo.ui.ex.action.Presentation.NO_MNEMONIC;
 
-@ActionImpl(id = "Compile")
+@ActionImpl(id = IdeActions.ACTION_COMPILE)
 public class CompileAction extends CompileActionBase {
     @Override
     @RequiredUIAccess

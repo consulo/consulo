@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
@@ -22,6 +23,7 @@ import consulo.fileEditor.impl.internal.FileEditorHistoryUtil;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.HistoryEntry;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,43 +38,51 @@ import jakarta.annotation.Nonnull;
  * @author anna
  * @since 2005-04-18
  */
+@ActionImpl(id = "MoveEditorToOppositeTabGroup")
 public class MoveEditorToOppositeTabGroupAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent event) {
-    VirtualFile vFile = event.getRequiredData(VirtualFile.KEY);
-    Project project = event.getRequiredData(Project.KEY);
-    FileEditorWindow window = event.getRequiredData(FileEditorWindow.DATA_KEY);
-    FileEditorWindow[] siblings = window.findSiblings();
-    if (siblings.length == 1) {
-      FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
-      HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
-      ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project))
-        .openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
-      window.closeFile(vFile);
+    public MoveEditorToOppositeTabGroupAction() {
+        super(
+            ActionLocalize.actionMoveeditortooppositetabgroupText(),
+            ActionLocalize.actionMoveeditortooppositetabgroupDescription()
+        );
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    VirtualFile vFile = e.getData(VirtualFile.KEY);
-    FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
-    if (ActionPlaces.isPopupPlace(e.getPlace())) {
-      presentation.setVisible(isEnabled(vFile, window));
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent event) {
+        VirtualFile vFile = event.getRequiredData(VirtualFile.KEY);
+        Project project = event.getRequiredData(Project.KEY);
+        FileEditorWindow window = event.getRequiredData(FileEditorWindow.DATA_KEY);
+        FileEditorWindow[] siblings = window.findSiblings();
+        if (siblings.length == 1) {
+            FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
+            HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
+            ((FileEditorManagerImpl) FileEditorManagerEx.getInstanceEx(project))
+                .openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
+            window.closeFile(vFile);
+        }
     }
-    else {
-      presentation.setEnabled(isEnabled(vFile, window));
-    }
-  }
 
-  private static boolean isEnabled(VirtualFile vFile, FileEditorWindow window) {
-    if (vFile != null && window != null) {
-      FileEditorWindow[] siblings = window.findSiblings();
-      if (siblings.length == 1) {
-        return true;
-      }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        VirtualFile vFile = e.getData(VirtualFile.KEY);
+        FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            presentation.setVisible(isEnabled(vFile, window));
+        }
+        else {
+            presentation.setEnabled(isEnabled(vFile, window));
+        }
     }
-    return false;
-  }
+
+    private static boolean isEnabled(VirtualFile vFile, FileEditorWindow window) {
+        if (vFile != null && window != null) {
+            FileEditorWindow[] siblings = window.findSiblings();
+            if (siblings.length == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

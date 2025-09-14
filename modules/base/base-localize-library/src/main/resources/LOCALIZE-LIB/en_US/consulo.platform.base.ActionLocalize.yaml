@@ -921,19 +921,19 @@ action.FileChooser.Delete.text:
 action.FileChooser.Delete.text.description:
     text: Delete
 action.FileChooser.GotoDesktop.description:
-    text: Go to Desktop directory directory
+    text: Go to the Desktop directory
 action.FileChooser.GotoDesktop.text:
     text: Desktop Directory
 action.FileChooser.GotoHome.description:
-    text: Go to home directory
+    text: Go to the home directory
 action.FileChooser.GotoHome.text:
     text: Home
 action.FileChooser.GotoModule.description:
-    text: Go to module directory
+    text: Go to the module directory
 action.FileChooser.GotoModule.text:
     text: Module
 action.FileChooser.GotoProject.description:
-    text: Go to project directory
+    text: Go to the project directory
 action.FileChooser.GotoProject.text:
     text: Project
 action.FileChooser.NewFile.description:
