@@ -16,24 +16,39 @@
 package consulo.ui.ex.errorTreeView;
 
 import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.localize.UILocalize;
 
 /**
  * @see NewErrorTreeViewPanelFactory
  */
 public interface NewErrorTreeViewPanel extends OccurenceNavigator, MutableErrorTreeView {
-  interface ProcessController {
+    interface ProcessController {
+        void stopProcess();
+
+        boolean isProcessStopped();
+    }
+
+    static String createExportPrefix(int line) {
+        return line < 0 ? "" : UILocalize.errortreePrefixLine(line).get();
+    }
+
+    static String createRendererPrefix(int line, int column) {
+        if (line < 0) {
+            return "";
+        }
+        if (column < 0) {
+            return "(" + line + ")";
+        }
+        return "(" + line + ", " + column + ")";
+    }
+
+    void setProcessController(ProcessController controller);
+
     void stopProcess();
 
+    boolean canControlProcess();
+
     boolean isProcessStopped();
-  }
 
-  void setProcessController(ProcessController controller);
-
-  void stopProcess();
-
-  boolean canControlProcess();
-
-  boolean isProcessStopped();
-
-  void setCanHideWarningsOrInfos(boolean canHideWarningsOrInfos);
+    void setCanHideWarningsOrInfos(boolean canHideWarningsOrInfos);
 }

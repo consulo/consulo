@@ -17,6 +17,7 @@ import consulo.build.ui.localize.BuildLocalize;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.compiler.internal.CompilerWorkspaceConfiguration;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -145,7 +146,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
             ? defaultBuildDescriptor : new DefaultBuildDescriptor(buildDescriptor);
         myNodeFilters = ConcurrentHashMap.newKeySet();
         myWorkingDir = FileUtil.toSystemIndependentName(buildDescriptor.getWorkingDir());
-        myNavigateToTheFirstErrorLocation = project.getInstance(BuildWorkspaceConfiguration.class).isShowFirstErrorInEditor();
+        myNavigateToTheFirstErrorLocation = project.getInstance(CompilerWorkspaceConfiguration.class).isAutoShowErrorsInEditor();
 
         myRootNode = new ExecutionNodeImpl(myProject, null, true, this::isCorrectThread);
         myBuildProgressRootNode = new ExecutionNodeImpl(myProject, myRootNode, true, this::isCorrectThread);

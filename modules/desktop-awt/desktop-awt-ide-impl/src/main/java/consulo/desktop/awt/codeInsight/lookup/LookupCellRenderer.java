@@ -25,7 +25,6 @@ import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.FontPreferences;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupIconUtil;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.language.editor.completion.lookup.*;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
@@ -36,6 +35,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -581,7 +581,7 @@ public class LookupCellRenderer implements ListCellRenderer {
 
     @Override
     protected void applyAdditionalHints(@Nonnull Graphics2D g) {
-      EditorUIUtil.setupAntialiasing(g);
+        DesktopAntialiasingTypeUtil.setupAntialiasing(g);
     }
   }
 

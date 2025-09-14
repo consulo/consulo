@@ -15,19 +15,16 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.FoldingModelEx;
+import consulo.codeEditor.*;
 import consulo.document.Document;
 import consulo.document.DocumentFragment;
 import consulo.document.util.TextRange;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
+import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.ui.ex.awt.hint.HintHint;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.VisualPosition;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -44,8 +41,8 @@ public class DocumentFragmentTooltipRenderer implements TooltipRenderer {
   }
 
   @Override
-  public LightweightHintImpl show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint intInfo) {
-    LightweightHintImpl hint;
+  public LightweightHint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint intInfo) {
+    LightweightHint hint;
 
     JComponent editorComponent = editor.getComponent();
 
@@ -80,7 +77,7 @@ public class DocumentFragmentTooltipRenderer implements TooltipRenderer {
     }
     if (endOffset < startOffset) return null;
 
-    FoldingModelEx foldingModel = (FoldingModelEx)editor.getFoldingModel();
+    FoldingModel foldingModel = editor.getFoldingModel();
     foldingModel.setFoldingEnabled(false);
     TextRange textRange = new TextRange(startOffset, endOffset);
     hint = EditorFragmentComponent.showEditorFragmentHintAt(editor, textRange, p.y, false, false, true, true, true);

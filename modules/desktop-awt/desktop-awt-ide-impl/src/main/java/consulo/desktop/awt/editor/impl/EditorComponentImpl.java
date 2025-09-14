@@ -36,7 +36,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -49,6 +48,7 @@ import consulo.ui.ex.awt.Magnificator;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -225,7 +225,7 @@ public class EditorComponentImpl extends JTextComponent
         Graphics2D gg = (Graphics2D)g;
         UIUtil.setupComposite(gg);
         if (myEditor.useEditorAntialiasing()) {
-            EditorUIUtil.setupAntialiasing(gg);
+            DesktopAntialiasingTypeUtil.setupAntialiasing(gg);
         }
         else {
             UISettingsUtil.setupAntialiasing(gg);

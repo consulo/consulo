@@ -32,7 +32,6 @@ import consulo.document.util.ProperTextRange;
 import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.desktop.awt.ui.popup.BalloonImpl;
@@ -50,6 +49,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
@@ -563,8 +563,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
               }
               Graphics2D cg = myCacheLevel2.createGraphics();
               AffineTransform t = cg.getTransform();
-              EditorUIUtil.setupAntialiasing(cg);
-              int lineShift = -myEditor.getLineHeight() * myCacheStartLine;
+                DesktopAntialiasingTypeUtil.setupAntialiasing(cg);
+                int lineShift = -myEditor.getLineHeight() * myCacheStartLine;
 
               AffineTransform translateInstance = AffineTransform.getTranslateInstance(-JBUI.scale(3), lineShift);
               translateInstance.preConcatenate(t);
@@ -587,8 +587,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
               myRelativeY = SwingUtilities.convertPoint(this, 0, 0, myEditor.getScrollPane()).y;
               Graphics2D g2d = myCacheLevel1.createGraphics();
               AffineTransform transform = g2d.getTransform();
-              EditorUIUtil.setupAntialiasing(g2d);
-              GraphicsUtil.setupAAPainting(g2d);
+                DesktopAntialiasingTypeUtil.setupAntialiasing(g2d);
+                GraphicsUtil.setupAAPainting(g2d);
               g2d.setColor(TargetAWT.to(myEditor.getBackgroundColor()));
               g2d.fillRect(0, 0, getWidth(), getHeight());
               AffineTransform translateInstance = AffineTransform.getTranslateInstance(gutterWidth, myEditor.getLineHeight() * (myCacheStartLine - myStartVisualLine));

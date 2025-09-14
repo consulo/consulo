@@ -33,8 +33,9 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapExtension;
+import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
-import consulo.ui.image.Image;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
 
@@ -46,7 +47,6 @@ public class ActionsTreeUtil {
     private static final Logger LOG = Logger.getInstance(ActionsTreeUtil.class);
 
     private static final String EDITOR_PREFIX = "Editor";
-    private static final String TOOL_ACTION_PREFIX = "Tool_";
 
     private ActionsTreeUtil() {
     }
@@ -153,106 +153,11 @@ public class ActionsTreeUtil {
             if (!(action instanceof ActionGroup topActionGroup)) {
                 continue;
             }
-            KeymapGroupImpl subGroup = createGroup(topActionGroup, false, filtered);
+            KeymapGroup subGroup = KeymapUtil.createGroup(topActionGroup, false, filtered);
             if (subGroup.getSize() > 0) {
                 group.addGroup(subGroup);
             }
         }
-    }
-
-    public static KeymapGroupImpl createGroup(ActionGroup actionGroup, boolean ignore, Predicate<AnAction> filtered) {
-        return createGroup(actionGroup, getName(actionGroup), null, null, ignore, filtered);
-    }
-
-    private static String getName(AnAction action) {
-        String name = action.getTemplatePresentation().getText();
-        if (name != null && !name.isEmpty()) {
-            return name;
-        }
-        else {
-            String id = action instanceof ActionStubBase actionStubBase
-                ? actionStubBase.getId() : ActionManager.getInstance().getId(action);
-            if (id != null) {
-                return id;
-            }
-            if (action instanceof DefaultActionGroup group) {
-                if (group.getChildrenCount() == 0) {
-                    return "Empty group";
-                }
-                AnAction[] children = group.getChildActionsOrStubs();
-                for (AnAction child : children) {
-                    if (!(child instanceof AnSeparator)) {
-                        return "group." + getName(child);
-                    }
-                }
-                return "Empty unnamed group";
-            }
-            return action.getClass().getName();
-        }
-    }
-
-    public static KeymapGroupImpl createGroup(
-        ActionGroup actionGroup,
-        String groupName,
-        Image icon,
-        Image openIcon,
-        boolean ignore,
-        Predicate<AnAction> filtered
-    ) {
-        return createGroup(actionGroup, groupName, icon, openIcon, ignore, filtered, true);
-    }
-
-    public static KeymapGroupImpl createGroup(
-        ActionGroup actionGroup,
-        String groupName,
-        Image icon,
-        Image openIcon,
-        boolean ignore,
-        Predicate<AnAction> filtered,
-        boolean normalizeSeparators
-    ) {
-        ActionManager actionManager = ActionManager.getInstance();
-        KeymapGroupImpl group = new KeymapGroupImpl(groupName, actionManager.getId(actionGroup), icon);
-        AnAction[] children = actionGroup instanceof DefaultActionGroup defaultActionGroup
-            ? defaultActionGroup.getChildActionsOrStubs() : actionGroup.getChildren(null);
-
-        for (AnAction action : children) {
-            LOG.assertTrue(action != null, groupName + " contains null actions");
-            if (action instanceof ActionGroup childActionGroup) {
-                KeymapGroupImpl subGroup =
-                    createGroup(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators);
-                if (subGroup.getSize() > 0) {
-                    if (!ignore && !childActionGroup.isPopup()) {
-                        group.addAll(subGroup);
-                    }
-                    else {
-                        group.addGroup(subGroup);
-                    }
-                }
-                else if (filtered == null || filtered.test(actionGroup)) {
-                    group.addGroup(subGroup);
-                }
-            }
-            else if (action instanceof AnSeparator) {
-                group.addSeparator();
-            }
-            else if (action != null) {
-                String id = action instanceof ActionStubBase actionStubBase
-                    ? actionStubBase.getId() : actionManager.getId(action);
-                if (id != null) {
-                    if (id.startsWith(TOOL_ACTION_PREFIX)) {
-                        continue;
-                    }
-                    if (filtered == null || filtered.test(action)) {
-                        group.addActionId(id);
-                    }
-                }
-            }
-        }
-        if (normalizeSeparators) {
-            group.normalizeSeparators();
-        }
-        return group;
     }
 
     private static KeymapGroupImpl createEditorActionsGroup(Predicate<AnAction> filtered) {
@@ -440,7 +345,7 @@ public class ActionsTreeUtil {
         }
     }
 
-    public static DefaultMutableTreeNode createNode(KeymapGroupImpl group) {
+    public static DefaultMutableTreeNode createNode(KeymapGroup group) {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(group);
         for (Object child : group.getChildren()) {
             if (child instanceof KeymapGroupImpl keymapGroup) {

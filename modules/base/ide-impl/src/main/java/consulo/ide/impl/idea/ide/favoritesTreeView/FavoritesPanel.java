@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.favoritesTreeView;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
+import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.language.psi.PsiFileSystemItem;

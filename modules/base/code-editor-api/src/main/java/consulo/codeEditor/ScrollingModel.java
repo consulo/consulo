@@ -18,6 +18,7 @@ package consulo.codeEditor;
 import consulo.codeEditor.event.VisibleAreaListener;
 
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import java.awt.*;
 
@@ -37,7 +38,7 @@ public interface ScrollingModel {
 
   void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType);
 
-  void runActionOnScrollingFinished(@Nonnull Runnable action);
+  void runActionOnScrollingFinished(@RequiredUIAccess  @Nonnull Runnable action);
 
   void disableAnimation();
 

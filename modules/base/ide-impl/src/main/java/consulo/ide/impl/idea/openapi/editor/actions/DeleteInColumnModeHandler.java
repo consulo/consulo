@@ -7,15 +7,14 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.document.util.DocumentUtil;
-import consulo.codeEditor.action.EditorWriteActionHandler;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,7 +26,7 @@ public class DeleteInColumnModeHandler extends EditorWriteActionHandler implemen
     @Override
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (editor.isColumnMode() && caret == null && editor.getCaretModel().getCaretCount() > 1) {
-            EditorUIUtil.hideCursorInEditor(editor);
+            CodeEditorInternalHelper.getInstance().hideCursorInEditor(editor);
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
             CopyPasteManager.getInstance().stopKillRings();
 

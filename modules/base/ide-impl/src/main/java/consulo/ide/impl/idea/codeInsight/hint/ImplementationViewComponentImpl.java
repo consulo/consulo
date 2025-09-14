@@ -30,6 +30,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.usage.internal.ImplementationViewComponent;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.icon.IconDescriptorUpdaters;

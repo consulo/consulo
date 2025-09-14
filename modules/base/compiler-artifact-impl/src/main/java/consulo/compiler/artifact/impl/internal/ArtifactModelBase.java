@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 public abstract class ArtifactModelBase implements ArtifactModel {
   private Map<String, Artifact> myArtifactsMap;
   private Artifact[] myArtifactsArray;
-  public static final Predicate<Artifact> VALID_ARTIFACT_CONDITION = artifact -> !(artifact instanceof InvalidArtifact);
+  public static final Predicate<Artifact> VALID_ARTIFACT_CONDITION = artifact -> !(artifact instanceof InvalidArtifactImpl);
 
   protected abstract List<? extends Artifact> getArtifactsList();
 

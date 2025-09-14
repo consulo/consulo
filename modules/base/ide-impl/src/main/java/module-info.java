@@ -82,11 +82,8 @@ open module consulo.ide.impl {
   requires consulo.http.impl;
   requires consulo.http.adapter.httpclient4;
   requires consulo.file.editor.impl;
-  requires consulo.compiler.impl;
   requires consulo.execution.impl;
   requires consulo.execution.test.impl;
-  requires consulo.builtin.web.server.impl;
-  requires consulo.version.control.system.impl;
   requires consulo.diff.impl;
   requires transitive consulo.configuration.editor.api;
 
@@ -103,14 +100,12 @@ open module consulo.ide.impl {
   requires transitive consulo.util.io;
   requires transitive consulo.util.jdom;
   requires transitive consulo.util.lang;
-  requires transitive consulo.util.netty;
   requires transitive consulo.util.rmi;
   requires transitive consulo.util.jna;
   requires transitive consulo.util.xml.serializer;
 
   requires consulo.build.ui.impl;
   requires consulo.remote.server.impl;
-  requires consulo.compiler.artifact.impl;
   requires consulo.language.code.style.impl;
 
   // TODO [VISTALL] remove this dependency
@@ -321,9 +316,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.script;
   exports consulo.ide.impl.idea.ide.structureView.impl;
   exports consulo.ide.impl.idea.ide.structureView.newStructureView;
-  exports consulo.ide.impl.idea.ide.todo;
-  exports consulo.ide.impl.idea.ide.todo.configurable;
-  exports consulo.ide.impl.idea.ide.todo.nodes;
   exports consulo.ide.impl.idea.ide.ui;
   exports consulo.ide.impl.idea.ide.ui.customization;
   exports consulo.ide.impl.idea.ide.ui.search;
@@ -427,22 +419,14 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.util.io;
   exports consulo.ide.impl.idea.openapi.util.text;
   exports consulo.ide.impl.idea.openapi.vcs;
-  exports consulo.ide.impl.idea.openapi.vcs.actions;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.committed;
   exports consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.patch;
-  exports consulo.ide.impl.idea.openapi.vcs.checkin;
   exports consulo.ide.impl.idea.openapi.vcs.checkout;
-  exports consulo.ide.impl.idea.openapi.vcs.configurable;
-  exports consulo.ide.impl.idea.openapi.vcs.ex;
-  exports consulo.ide.impl.idea.openapi.vcs.impl;
   exports consulo.ide.impl.idea.openapi.vcs.ui;
   exports consulo.ide.impl.idea.openapi.vfs;
   exports consulo.ide.impl.idea.openapi.vfs.encoding;
   exports consulo.ide.impl.idea.openapi.vfs.ex.dummy;
   exports consulo.ide.impl.idea.openapi.vfs.impl.http;
   exports consulo.ide.impl.idea.openapi.vfs.impl.local;
-  exports consulo.ide.impl.idea.openapi.wm;
   exports consulo.ide.impl.idea.openapi.wm.impl;
   exports consulo.ide.impl.idea.openapi.wm.impl.status;
   exports consulo.ide.impl.idea.openapi.wm.impl.status.widget;
@@ -528,7 +512,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.projectView;
   exports consulo.ide.impl.psi.codeStyle.statusbar;
   exports consulo.ide.impl.psi.impl;
-  exports consulo.ide.impl.psi.impl.cache;
   exports consulo.ide.impl.psi.impl.cache.impl.id;
   exports consulo.ide.impl.psi.impl.file.impl;
   exports consulo.ide.impl.psi.impl.search;

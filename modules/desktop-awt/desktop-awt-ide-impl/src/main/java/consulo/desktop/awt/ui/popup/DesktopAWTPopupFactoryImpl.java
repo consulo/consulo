@@ -54,6 +54,16 @@ public class DesktopAWTPopupFactoryImpl extends PopupFactoryImpl {
         return BalloonImpl.getPointerLength(position, dialogMode);
     }
 
+    @Override
+    public <T> AWTPopupChooserBuilder<T> createPopupBuilder(JTree tree) {
+        return new PopupChooserBuilder<T>(tree);
+    }
+
+    @Override
+    public <T> AWTPopupChooserBuilder<T> createPopupBuilder(JTable table) {
+        return new PopupChooserBuilder<T>(table);
+    }
+
     @Nonnull
     @Override
     public BalloonBuilder createBalloonBuilder(@Nonnull JComponent content) {

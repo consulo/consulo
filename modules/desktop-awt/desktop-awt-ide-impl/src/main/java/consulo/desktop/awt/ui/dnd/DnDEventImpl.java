@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.dnd;
 
-import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
-import consulo.ide.impl.idea.ide.dnd.FileFlavorProvider;
-import consulo.ide.impl.idea.ide.dnd.LinuxDragAndDropSupport;
+import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
+import consulo.ui.ex.awt.dnd.FileFlavorProvider;
+import consulo.ui.ex.awt.internal.LinuxDragAndDropSupport;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.dnd.*;
 import consulo.util.dataholder.UserDataHolderBase;

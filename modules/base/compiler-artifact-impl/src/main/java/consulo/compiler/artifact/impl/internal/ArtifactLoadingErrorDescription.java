@@ -31,9 +31,9 @@ public class ArtifactLoadingErrorDescription extends ConfigurationErrorDescripti
     private static final ConfigurationErrorType INVALID_ARTIFACT = new ConfigurationErrorType(LocalizeValue.localizeTODO("artifact"), false);
 
     private final ArtifactManager myArtifactManager;
-    private final InvalidArtifact myArtifact;
+    private final InvalidArtifactImpl myArtifact;
 
-    public ArtifactLoadingErrorDescription(ArtifactManager artifactManager, InvalidArtifact artifact) {
+    public ArtifactLoadingErrorDescription(ArtifactManager artifactManager, InvalidArtifactImpl artifact) {
         super(artifact.getName(), LocalizeValue.ofNullable(artifact.getErrorMessage()), INVALID_ARTIFACT);
         myArtifactManager = artifactManager;
         myArtifact = artifact;

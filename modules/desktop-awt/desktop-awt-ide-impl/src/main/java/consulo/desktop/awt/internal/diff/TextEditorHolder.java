@@ -20,7 +20,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.diff.DiffContext;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
-import consulo.diff.impl.internal.DiffLanguageUtil;
+import consulo.diff.internal.DiffLanguageUtil;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;

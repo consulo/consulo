@@ -58,14 +58,22 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
     private boolean myForceHideShadow = false;
 
+    private boolean myAsyncHide;
+
     private Predicate<TooltipEvent> myAutoHideTester = tooltipEvent -> true;
 
     public LightweightHintImpl(@Nonnull JComponent component) {
         myComponent = component;
     }
 
+    @Override
     public void setForceLightweightPopup(boolean forceLightweightPopup) {
         myForceLightweightPopup = forceLightweightPopup;
+    }
+
+    @Override
+    public void setAsyncHide(boolean asyncHide) {
+        myAsyncHide = asyncHide;
     }
 
     public void setForceShowAsPopup(boolean forceShowAsPopup) {
@@ -329,7 +337,12 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
     @Override
     public void hide() {
-        hide(false);
+        if (myAsyncHide) {
+            SwingUtilities.invokeLater(() -> hide(false));
+        }
+        else {
+            hide(false);
+        }
     }
 
     public void hide(boolean ok) {

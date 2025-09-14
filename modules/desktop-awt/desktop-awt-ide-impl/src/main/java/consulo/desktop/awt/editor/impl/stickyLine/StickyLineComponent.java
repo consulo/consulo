@@ -8,13 +8,13 @@ import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.desktop.awt.editor.impl.EditorGutterComponentImpl;
 import consulo.document.DocCommandGroupId;
 import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.language.Language;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
@@ -148,7 +148,7 @@ public class StickyLineComponent extends JComponent {
     private BufferedImage prepareDumbTextImage(int editorY, int lineHeight, int textWidth) {
         BufferedImage image = UIUtil.createImage(editor.getContentComponent(), textWidth, lineHeight, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
-        EditorUIUtil.setupAntialiasing(g);
+        DesktopAntialiasingTypeUtil.setupAntialiasing(g);
         g.translate(0, -editorY);
         g.setClip(0, editorY, textWidth, lineHeight);
         doPaintText(g);

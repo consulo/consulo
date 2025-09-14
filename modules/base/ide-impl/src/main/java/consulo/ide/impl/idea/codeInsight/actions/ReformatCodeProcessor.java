@@ -34,6 +34,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.versionControlSystem.FormatChangedTextUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

@@ -30,13 +30,11 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.DefaultJDOMExternalizer;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -237,7 +235,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
             ActionGroup actionGroup = (ActionGroup)actionManager.getAction(entry.getKey());
             if (actionGroup != null) {
                 LocalizeValue actionText = entry.getValue();
-                root.add(ActionsTreeUtil.createNode(ActionsTreeUtil.createGroup(actionGroup, actionText.get(), null, null, true, null, false)));
+                root.add(ActionsTreeUtil.createNode(KeymapUtil.createGroup(actionGroup, actionText.get(), null, null, true, null, false)));
             }
         }
     }

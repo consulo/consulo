@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.impl.internal.action.GoToErrorGroup;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GoToMenuExGroup;
-import consulo.versionControlSystem.impl.internal.action.GoToChangeMarkerGroup;
+import consulo.language.editor.impl.internal.action.GoToErrorGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -45,8 +44,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = PreviousOccurenceAction.class),
         @ActionRef(type = NextOccurenceAction.class),
-        @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = GoToChangeMarkerGroup.class)
+        @ActionRef(type = AnSeparator.class)
     }
 )
 public class GoToMenuGroup extends DefaultActionGroup implements DumbAware {

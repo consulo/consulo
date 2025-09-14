@@ -21,7 +21,6 @@ import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.AsyncResult;

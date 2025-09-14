@@ -6,20 +6,21 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
+import consulo.application.progress.SequentialTask;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.SelectionModel;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
-import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.application.progress.SequentialTask;
 import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.editor.internal.LayoutCodeProcessor;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiDirectory;
@@ -45,6 +46,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import jakarta.annotation.Nonnull;
@@ -57,7 +59,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-public abstract class AbstractLayoutCodeProcessor {
+public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor {
     public static final NotificationGroup ReformatChangedTextTooBigNotificationGroup = NotificationGroup.balloonGroup(
         "reformat.changed.text.file.too.big.notification.groupId",
         ApplicationLocalize.reformatChangedTextFileTooBigNotificationGroupid()

@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.keymap;
 
+import java.util.List;
+
 /**
  * @author yole
  */
@@ -25,6 +27,12 @@ public interface KeymapGroup {
 
     void addAll(KeymapGroup group);
 
+    void addSeparator();
+
     default void normalizeSeparators() {
     }
+
+    int getSize();
+
+    List<Object> getChildren();
 }

@@ -35,6 +35,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.FormatChangedTextUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

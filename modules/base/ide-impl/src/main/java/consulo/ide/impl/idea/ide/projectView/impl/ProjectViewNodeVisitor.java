@@ -1,20 +1,20 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ide.impl.idea.ui.tree.AbstractTreeNodeVisitor;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNodeVisitor;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.util.function.Predicate;
 
-import static consulo.language.psi.SmartPointerManager.createPointer;
 import static consulo.language.psi.PsiUtilCore.getVirtualFile;
+import static consulo.language.psi.SmartPointerManager.createPointer;
 
 class ProjectViewNodeVisitor extends AbstractTreeNodeVisitor<PsiElement> {
   private final VirtualFile file;

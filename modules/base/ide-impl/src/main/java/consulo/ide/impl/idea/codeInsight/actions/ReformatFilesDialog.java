@@ -26,6 +26,7 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
+import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

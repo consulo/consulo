@@ -17,7 +17,7 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
-import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
+import consulo.desktop.awt.wm.impl.WeakFocusStackManager;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;

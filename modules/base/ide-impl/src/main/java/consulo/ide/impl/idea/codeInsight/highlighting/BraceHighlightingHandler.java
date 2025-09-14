@@ -30,8 +30,6 @@ import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
@@ -44,6 +42,7 @@ import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -54,6 +53,7 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
@@ -77,7 +77,7 @@ public class BraceHighlightingHandler {
     private static final Key<List<RangeHighlighter>> BRACE_HIGHLIGHTERS_IN_EDITOR_VIEW_KEY =
         Key.create("BraceHighlighter.BRACE_HIGHLIGHTERS_IN_EDITOR_VIEW_KEY");
     private static final Key<RangeHighlighter> LINE_MARKER_IN_EDITOR_KEY = Key.create("BraceHighlighter.LINE_MARKER_IN_EDITOR_KEY");
-    private static final Key<LightweightHintImpl> HINT_IN_EDITOR_KEY = Key.create("BraceHighlighter.HINT_IN_EDITOR_KEY");
+    private static final Key<LightweightHint> HINT_IN_EDITOR_KEY = Key.create("BraceHighlighter.HINT_IN_EDITOR_KEY");
 
     /**
      * Holds weak references to the editors that are being processed at non-EDT.
@@ -614,7 +614,7 @@ public class BraceHighlightingHandler {
                         int line2 = myDocument.getLineNumber(range.getEndOffset());
                         line1 = Math.max(line1, line2 - 5);
                         range = new TextRange(myDocument.getLineStartOffset(line1), range.getEndOffset());
-                        LightweightHintImpl hint = EditorFragmentComponent.showEditorFragmentHint(myEditor, range, true, true);
+                        LightweightHint hint = EditorFragmentComponent.showEditorFragmentHint(myEditor, range, true, true);
                         myEditor.putUserData(HINT_IN_EDITOR_KEY, hint);
                     }
                 });
@@ -631,7 +631,7 @@ public class BraceHighlightingHandler {
         }
         highlighters.clear();
 
-        LightweightHintImpl hint = myEditor.getUserData(HINT_IN_EDITOR_KEY);
+        LightweightHint hint = myEditor.getUserData(HINT_IN_EDITOR_KEY);
         if (hint != null) {
             hint.hide();
             myEditor.putUserData(HINT_IN_EDITOR_KEY, null);

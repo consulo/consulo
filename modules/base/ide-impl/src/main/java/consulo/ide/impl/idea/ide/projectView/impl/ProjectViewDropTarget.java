@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
+import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.DropTargetNode;
 import consulo.ide.impl.idea.util.ArrayUtilRt;

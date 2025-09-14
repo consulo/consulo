@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.execution;
 
-import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
@@ -30,7 +29,7 @@ import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontPanelFactory;
 import consulo.ide.impl.idea.application.options.colors.NewColorAndFontPanel;
 import consulo.ide.impl.idea.application.options.colors.SimpleEditorPreview;
-import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
+import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInspection.export.ExportToHTMLDialog;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;

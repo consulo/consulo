@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.compiler;
 
-import consulo.compiler.impl.internal.CompilerWorkspaceConfiguration;
-import consulo.compiler.impl.internal.action.CompilerPropertiesAction;
-import consulo.compiler.impl.internal.action.ExcludeFromCompileAction;
+import consulo.compiler.action.ExcludeFromCompileAction;
+import consulo.compiler.internal.CompilerWorkspaceConfiguration;
 import consulo.ide.impl.idea.ide.errorTreeView.ErrorTreeElement;
 import consulo.ide.impl.idea.ide.errorTreeView.ErrorTreeNodeDescriptor;
 import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
@@ -39,7 +38,9 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
 
     @Override
     public void addActionsAfter(ActionGroup.Builder group) {
-        group.add(new CompilerPropertiesAction());
+        AnAction action = ActionManager.getInstance().getAction("CompilerPropertiesAction");
+
+        group.add(action);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
 
     @Override
     protected boolean shouldShowFirstErrorInEditor() {
-        return CompilerWorkspaceConfiguration.getInstance(myProject).AUTO_SHOW_ERRORS_IN_EDITOR;
+        return CompilerWorkspaceConfiguration.getInstance(myProject).isAutoShowErrorsInEditor();
     }
 
     @Override

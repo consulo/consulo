@@ -1,12 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.ui.tree.AbstractTreeNodeVisitor;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNodeVisitor;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
@@ -37,6 +37,6 @@ class ProjectViewFileVisitor extends AbstractTreeNodeVisitor<VirtualFile> {
 
   @Override
   protected boolean isAncestor(@Nonnull VirtualFile content, @Nonnull VirtualFile file) {
-    return VfsUtilCore.isAncestor(content, file, true);
+    return VirtualFileUtil.isAncestor(content, file, true);
   }
 }

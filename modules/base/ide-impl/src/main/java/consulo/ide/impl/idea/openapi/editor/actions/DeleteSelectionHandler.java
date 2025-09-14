@@ -22,15 +22,14 @@ import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.codeEditor.action.EditorWriteActionHandler;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -42,7 +41,7 @@ public class DeleteSelectionHandler extends EditorWriteActionHandler implements 
     @Override
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (caret == null ? editor.getSelectionModel().hasSelection(true) : caret.hasSelection()) {
-            EditorUIUtil.hideCursorInEditor(editor);
+            CodeEditorInternalHelper.getInstance().hideCursorInEditor(editor);
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
             CopyPasteManager.getInstance().stopKillRings();
             CaretAction action = c -> EditorModificationUtil.deleteSelectedText(editor);

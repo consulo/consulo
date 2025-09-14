@@ -35,7 +35,6 @@ import consulo.codeEditor.markup.NonHideableIconGutterMark;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
@@ -65,6 +64,7 @@ import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
@@ -343,7 +343,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         Graphics2D g = (Graphics2D) getComponentGraphics(g_);
         AffineTransform old = setMirrorTransformIfNeeded(g, 0, getWidth());
 
-        EditorUIUtil.setupAntialiasing(g);
+        DesktopAntialiasingTypeUtil.setupAntialiasing(g);
         Color backgroundColor = getBackground();
 
         if (myEditor.isDisposed()) {

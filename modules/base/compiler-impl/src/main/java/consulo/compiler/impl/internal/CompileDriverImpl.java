@@ -32,6 +32,7 @@ import consulo.compiler.artifact.impl.internal.ArtifactImpl;
 import consulo.compiler.impl.internal.artifact.ArtifactCompileScope;
 import consulo.compiler.impl.internal.scope.CompositeScope;
 import consulo.compiler.internal.AdditionalCompileScopeProvider;
+import consulo.compiler.internal.CompilerWorkspaceConfiguration;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.scope.FileIndexCompileScope;
@@ -126,7 +127,7 @@ public class CompileDriverImpl implements CompileDriver {
     public CompileDriverImpl(@Nonnull Project project) {
         myProject = project;
         myCachesDirectoryPath = CompilerPaths.getCacheStoreDirectory(myProject).getPath().replace('/', File.separatorChar);
-        myShouldClearOutputDirectory = CompilerWorkspaceConfiguration.getInstance(myProject).CLEAR_OUTPUT_DIRECTORY;
+        myShouldClearOutputDirectory = CompilerWorkspaceConfiguration.getInstance(myProject).isClearOutputDirectory();
 
         myGenerationCompilerModuleToOutputDirMap = new HashMap<>();
 

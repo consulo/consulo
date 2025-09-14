@@ -21,6 +21,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
@@ -142,7 +143,7 @@ public class ActionUrl implements JDOMExternalizable {
         else if (element.getAttributeValue(IS_GROUP) != null) {
             AnAction action = ActionManager.getInstance().getAction(attributeValue);
             myComponent = action instanceof ActionGroup actionGroup
-                ? ActionsTreeUtil.createGroup(actionGroup, true, null)
+                ? KeymapUtil.createGroup(actionGroup, true, null)
                 : new KeymapGroupImpl(attributeValue, attributeValue, null);
         }
         myActionType = Integer.parseInt(element.getAttributeValue(ACTION_TYPE));

@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.ide.impl.idea.ide.dnd.LinuxDragAndDropSupport;
+import consulo.ui.ex.awt.internal.LinuxDragAndDropSupport;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;

@@ -18,12 +18,16 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.EditorActionPlan;
 import consulo.codeEditor.internal.EditorInternalUtil;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
-import consulo.colorScheme.*;
+import consulo.colorScheme.DelegateColorScheme;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorFontType;
+import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.editor.impl.stickyLine.StickyLineShadowPainter;
@@ -53,21 +57,18 @@ import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
-import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyListener;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.EditorPopupHandler;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
 import consulo.language.codeStyle.event.CodeStyleSettingsListener;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
+import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -83,6 +84,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.internal.AbstractPainter;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
@@ -324,7 +326,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         myCaretModel.addCaretListener(new CaretListener() {
             @Nullable
-            private LightweightHintImpl myCurrentHint;
+            private LightweightHint myCurrentHint;
             @Nullable
             private IndentGuideDescriptor myCurrentCaretGuide;
 
@@ -1082,7 +1084,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         ActionManagerEx.getInstanceEx().fireBeforeEditorTyping(c, context);
-        EditorUIUtil.hideCursorInEditor(this);
+        CodeEditorInternalHelper.getInstance().hideCursorInEditor(this);
         processKeyTypedNormally(c, context);
 
         return true;

@@ -25,8 +25,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
-import static consulo.util.collection.ContainerUtil.addIfNotNull;
-import static consulo.util.collection.ContainerUtil.swapElements;
+import static consulo.util.collection.ContainerUtil.*;
 
 /**
  * @author VISTALL
@@ -252,5 +251,18 @@ public final class Lists {
     @Contract(pure = true)
     public static <T> List<T> getFirstItems(@Nonnull List<T> items, int maxItems) {
         return items.subList(0, Math.min(maxItems, items.size()));
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static <T> List<T> mergeSortedLists(
+        @Nonnull List<? extends T> list1,
+        @Nonnull List<? extends T> list2,
+        @Nonnull Comparator<? super T> comparator,
+        boolean mergeEqualItems
+    ) {
+        List<T> result = new ArrayList<>(list1.size() + list2.size());
+        processSortedListsInOrder(list1, list2, comparator, mergeEqualItems, result::add);
+        return result;
     }
 }

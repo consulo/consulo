@@ -16,7 +16,7 @@ module consulo.version.control.system.impl {
     // TODO we need it?
     requires consulo.language.editor.api;
 
-    exports consulo.versionControlSystem.impl.internal to consulo.ide.impl;
+    exports consulo.versionControlSystem.impl.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl;
     exports consulo.versionControlSystem.impl.internal.action to consulo.ide.impl;
     exports consulo.versionControlSystem.impl.internal.change to consulo.ide.impl, consulo.desktop.awt.ide.impl;
     exports consulo.versionControlSystem.impl.internal.ui.awt to consulo.ide.impl, consulo.local.history.impl;

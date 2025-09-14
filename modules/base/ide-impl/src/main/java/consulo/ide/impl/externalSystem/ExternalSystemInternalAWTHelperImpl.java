@@ -19,15 +19,11 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.externalSystem.internal.ExternalSystemInternalAWTHelper;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.ide.actions.ImportModuleAction;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -36,11 +32,6 @@ import javax.swing.*;
 @ServiceImpl
 @Singleton
 public class ExternalSystemInternalAWTHelperImpl implements ExternalSystemInternalAWTHelper {
-    @Override
-    public <T> AWTPopupChooserBuilder<T> createPopupBuilder(JTree tree) {
-        return new PopupChooserBuilder<T>(tree);
-    }
-
     @RequiredUIAccess
     @Override
     public void executeImportAction(@Nonnull Project project, @Nullable FileChooserDescriptor descriptor) {

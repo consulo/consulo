@@ -18,6 +18,8 @@ package consulo.ide.impl.idea.unscramble;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.unscramble.*;
@@ -25,7 +27,6 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.vcs.configurable.VcsContentAnnotationConfigurable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -41,7 +42,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -73,7 +73,7 @@ public class UnscrambleDialog extends DialogWrapper {
     private CheckBox myUseUnscrambler;
     private CheckBox myOnTheFly;
     protected AnalyzeStacktraceUtil.StacktraceEditorPanel myStacktraceEditorPanel;
-    private VcsContentAnnotationConfigurable myConfigurable;
+    private List<UnnamedConfigurable> myAdditionalOptions = new ArrayList<>();
 
     private Label myUnscramberLabel;
     private Label myLogFileLabel;
@@ -144,11 +144,17 @@ public class UnscrambleDialog extends DialogWrapper {
         myOnTheFly.setValue(UnscrambleManager.getInstance().isEnabled());
         myOnTheFly.addValueListener(e -> UnscrambleManager.getInstance().setEnabled(myOnTheFly.getValueOrError()));
 
-        if (ProjectLevelVcsManager.getInstance(myProject).hasActiveVcss()) {
-            myConfigurable = new VcsContentAnnotationConfigurable(myProject);
-            bottomPanel.add(myConfigurable.createComponent(getDisposable()), BorderLayout.CENTER);
-            myConfigurable.reset();
-        }
+        myProject.getExtensionPoint(UnscrambleDialogOptionProvider.class).forEach(unscrambleDialogOptionProvider -> {
+            UnnamedConfigurable configurable = unscrambleDialogOptionProvider.createConfigurable();
+
+            if (configurable != null) {
+                JComponent component = configurable.createComponent(getDisposable());
+                bottomPanel.add(component);
+                configurable.reset();
+
+                myAdditionalOptions.add(configurable);
+            }
+        });
 
         updateUnscrambles();
 
@@ -341,13 +347,15 @@ public class UnscrambleDialog extends DialogWrapper {
         return (StacktraceAnalyzer) myAnalyzerBox.getSelectedItem();
     }
 
-    private final class NormalizeTextAction extends AbstractAction {
+    private final class NormalizeTextAction extends LocalizeAction {
         public NormalizeTextAction() {
-            putValue(NAME, IdeLocalize.unscrambleNormalizeButton().get());
+            super(IdeLocalize.unscrambleNormalizeButton());
+
             putValue(DEFAULT_ACTION, Boolean.FALSE);
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             String text = myStacktraceEditorPanel.getText();
             myStacktraceEditorPanel.setText(normalizeText(text));
@@ -359,9 +367,16 @@ public class UnscrambleDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
-        if (myConfigurable != null && myConfigurable.isModified()) {
-            myConfigurable.apply();
+        for (UnnamedConfigurable option : myAdditionalOptions) {
+            if (option.isModified()) {
+                try {
+                    option.apply();
+                }
+                catch (ConfigurationException ignored) {
+                }
+            }
         }
 
         if (performUnscramble()) {
@@ -371,6 +386,7 @@ public class UnscrambleDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     public void doHelpAction() {
         HelpManager.getInstance().invokeHelp("find.analyzeStackTrace");
     }

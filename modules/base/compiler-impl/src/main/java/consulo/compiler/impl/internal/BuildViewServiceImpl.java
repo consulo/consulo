@@ -18,7 +18,7 @@ import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.ExitStatus;
 import consulo.compiler.impl.internal.action.CompilerPropertiesAction;
-import consulo.compiler.impl.internal.action.ExcludeFromCompileAction;
+import consulo.compiler.action.ExcludeFromCompileAction;
 import consulo.execution.ui.console.RegexpFilter;
 import consulo.execution.ui.console.UrlFilter;
 import consulo.localize.LocalizeValue;

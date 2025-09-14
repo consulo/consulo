@@ -36,6 +36,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

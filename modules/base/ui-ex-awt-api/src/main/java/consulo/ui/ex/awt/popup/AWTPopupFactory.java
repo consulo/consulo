@@ -48,4 +48,8 @@ public interface AWTPopupFactory {
                                  @Nonnull AWTPopupSubFactory factory);
 
     int getPointerLength(Balloon.Position position, boolean dialogMode);
+
+    <T> AWTPopupChooserBuilder<T> createPopupBuilder(JTree tree);
+
+    <T> AWTPopupChooserBuilder<T> createPopupBuilder(JTable table);
 }

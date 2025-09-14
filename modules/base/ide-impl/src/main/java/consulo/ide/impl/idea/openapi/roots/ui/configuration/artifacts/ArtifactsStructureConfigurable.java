@@ -22,7 +22,7 @@ import consulo.compiler.artifact.element.LibraryElementType;
 import consulo.compiler.artifact.element.LibraryPackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.event.ArtifactListener;
-import consulo.compiler.artifact.impl.internal.InvalidArtifact;
+import consulo.compiler.artifact.internal.InvalidArtifact;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.NonDefaultProjectConfigurable;
 import consulo.configurable.ProjectConfigurable;

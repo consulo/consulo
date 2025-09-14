@@ -796,6 +796,19 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         return callback;
     }
 
+    @Override
+    public AsyncResult<Configurable> select(@Nonnull String confurableId) {
+        Configurable configurableInfo = myTree.findConfigurableById(confurableId);
+        if (configurableInfo == null) {
+            return AsyncResult.rejected();
+        }
+
+        AsyncResult<Configurable> callback = AsyncResult.undefined();
+        Promises.toActionCallback(myFilter.refilterFor("", false, true))
+            .doWhenDone(() -> myTree.select(configurableInfo).doWhenDone(() -> callback.setDone(configurableInfo)));
+        return callback;
+    }
+
     @Nonnull
     @Override
     public <T extends UnnamedConfigurable> AsyncResult<T> select(@Nonnull Class<T> clazz) {

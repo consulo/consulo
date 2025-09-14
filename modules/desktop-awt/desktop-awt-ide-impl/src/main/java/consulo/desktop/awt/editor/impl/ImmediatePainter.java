@@ -20,7 +20,6 @@ import consulo.colorScheme.TextAttributesEffectsBuilder;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
@@ -33,6 +32,7 @@ import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.LightDarkColorValue;
 
@@ -194,7 +194,7 @@ class ImmediatePainter {
         Rectangle2D rectangle2 = new Rectangle2D.Float(rectangle2Start, p2y, rectangle2End - rectangle2Start, lineHeight);
 
         Consumer<Graphics2D> painter = graphics -> {
-            EditorUIUtil.setupAntialiasing(graphics);
+            DesktopAntialiasingTypeUtil.setupAntialiasing(graphics);
             graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, editor.myFractionalMetricsHintValue);
 
             fillRect(graphics, rectangle2, attributes2.getBackgroundColor());

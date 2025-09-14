@@ -35,9 +35,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.internal.EditorHighlighterCache;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -49,13 +47,16 @@ import consulo.language.editor.action.WordBoundaryFilter;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
+import consulo.language.editor.internal.EditorHighlighterCache;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -252,7 +253,12 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
 
     @Override
     public void hideCursorInEditor(Editor editor) {
-        EditorUIUtil.hideCursorInEditor(editor);
+        if (Platform.current().os().isMac()) {
+            MacUIUtil.hideCursor();
+        }
+        else if (editor instanceof RealEditor realEditor) {
+            realEditor.hideCursor();
+        }
     }
 
     @Override

@@ -35,8 +35,6 @@ import javax.swing.*;
 @Deprecated
 @DeprecationInfo("Remove it!")
 public interface ExternalSystemInternalAWTHelper {
-    <T> AWTPopupChooserBuilder<T> createPopupBuilder(JTree tree);
-
     @RequiredUIAccess
     void executeImportAction(@Nonnull Project project, @Nullable FileChooserDescriptor descriptor);
 }

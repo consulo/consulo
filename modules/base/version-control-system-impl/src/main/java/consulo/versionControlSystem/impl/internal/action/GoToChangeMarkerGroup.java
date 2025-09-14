@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.AnSeparator;
@@ -32,7 +33,8 @@ import consulo.versionControlSystem.localize.VcsLocalize;
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = ShowPrevChangeMarkerAction.class),
         @ActionRef(type = ShowNextChangeMarkerAction.class)
-    }
+    },
+    parents = @ActionParentRef(@ActionRef(id = "GoToMenu"))
 )
 public class GoToChangeMarkerGroup extends DefaultActionGroup implements DumbAware {
     public GoToChangeMarkerGroup() {

@@ -15,31 +15,32 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.fileEditor.structureView.StructureViewBuilder;
-import consulo.fileEditor.structureView.StructureViewModel;
-import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.DeclarationRangeUtil;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
+import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SoftReference;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
 
 public class ShowContainerInfoHandler implements CodeInsightActionHandler {
-  private static final Key<WeakReference<LightweightHintImpl>> MY_LAST_HINT_KEY = Key.create("MY_LAST_HINT_KEY");
+  private static final Key<WeakReference<LightweightHint>> MY_LAST_HINT_KEY = Key.create("MY_LAST_HINT_KEY");
   private static final Key<PsiElement> CONTAINER_KEY = Key.create("CONTAINER_KEY");
 
   @RequiredUIAccess
@@ -48,8 +49,8 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     PsiElement container = null;
-    WeakReference<LightweightHintImpl> ref = editor.getUserData(MY_LAST_HINT_KEY);
-    LightweightHintImpl hint = SoftReference.dereference(ref);
+    WeakReference<LightweightHint> ref = editor.getUserData(MY_LAST_HINT_KEY);
+    LightweightHint hint = SoftReference.dereference(ref);
     if (hint != null && hint.isVisible()){
       hint.hide();
       container = hint.getUserData(CONTAINER_KEY);
@@ -104,7 +105,7 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
     }
     PsiElement _container = container;
     ApplicationManager.getApplication().invokeLater(() -> {
-      LightweightHintImpl hint1 = EditorFragmentComponent.showEditorFragmentHint(editor, range, true, true);
+      LightweightHint hint1 = EditorFragmentComponent.showEditorFragmentHint(editor, range, true, true);
       if (hint1 != null) {
         hint1.putUserData(CONTAINER_KEY, _container);
         editor.putUserData(MY_LAST_HINT_KEY, new WeakReference<>(hint1));

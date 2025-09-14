@@ -72,6 +72,8 @@ downloading.file.try.again.button:
     text: Tr&y Again
 error.dialog.title:
     text: Error
+errortree.prefix.line:
+    text: line ({0})
 file.cache.conflict.action:
     text: Reload From Disk
 file.cache.conflict.dialog.title:

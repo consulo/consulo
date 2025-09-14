@@ -106,6 +106,7 @@ public class KeymapGroupImpl implements KeymapGroup {
         group.myParent = this;
     }
 
+    @Override
     public void addSeparator() {
         myChildren.add(AnSeparator.getInstance());
     }
@@ -129,10 +130,12 @@ public class KeymapGroupImpl implements KeymapGroup {
         return myIds;
     }
 
+    @Override
     public ArrayList<Object> getChildren() {
         return myChildren;
     }
 
+    @Override
     public int getSize() {
         return myChildren.size();
     }

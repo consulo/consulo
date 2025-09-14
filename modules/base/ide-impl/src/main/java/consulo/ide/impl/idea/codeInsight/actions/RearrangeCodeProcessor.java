@@ -31,6 +31,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
+import consulo.versionControlSystem.FormatChangedTextUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

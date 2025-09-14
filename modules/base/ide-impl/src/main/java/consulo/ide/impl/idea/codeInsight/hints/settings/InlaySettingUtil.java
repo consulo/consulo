@@ -22,7 +22,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
+import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.ui.awt.EditorTextField;

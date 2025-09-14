@@ -36,7 +36,7 @@ import consulo.diff.PrevNextDifferenceIterable;
 import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.fragment.LineFragment;
-import consulo.diff.impl.internal.DiffLanguageUtil;
+import consulo.diff.internal.DiffLanguageUtil;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.action.AllLinesIterator;
 import consulo.diff.impl.internal.action.BufferedLineIterator;

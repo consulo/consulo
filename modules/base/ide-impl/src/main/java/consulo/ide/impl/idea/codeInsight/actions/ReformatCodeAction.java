@@ -41,6 +41,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.function.Predicates;
+import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

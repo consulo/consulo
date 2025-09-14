@@ -11,6 +11,9 @@ module consulo.diff.api {
     requires transitive consulo.ui.ex.awt.api;
     requires transitive consulo.file.editor.api;
 
+    requires static consulo.language.api;
+    requires static consulo.language.editor.api;
+
     exports consulo.diff;
     exports consulo.diff.chain;
     exports consulo.diff.localize;

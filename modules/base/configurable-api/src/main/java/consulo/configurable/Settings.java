@@ -18,7 +18,6 @@ package consulo.configurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,25 +28,27 @@ import jakarta.annotation.Nullable;
  * Interface for accessing settings inside already created dialog
  */
 public interface Settings {
-  Key<Settings> KEY = Key.create("options.editor");
+    Key<Settings> KEY = Key.create("options.editor");
 
-  @Nullable
-  SearchableConfigurable findConfigurableById(@Nonnull String configurableId);
+    @Nullable
+    SearchableConfigurable findConfigurableById(@Nonnull String configurableId);
 
-  <T extends Configurable> T findConfigurable(Class<T> configurableClass);
+    <T extends Configurable> T findConfigurable(Class<T> configurableClass);
 
-  @Deprecated
-  @DeprecationInfo("Use #select(Class)")
-  AsyncResult<Void> select(Configurable configurable);
+    @Deprecated
+    @DeprecationInfo("Use #select(Class)")
+    AsyncResult<Void> select(Configurable configurable);
 
-  @Deprecated
-  @DeprecationInfo("Use #select(Class)")
-  AsyncResult<Void> select(Configurable configurable, String text);
+    @Deprecated
+    @DeprecationInfo("Use #select(Class)")
+    AsyncResult<Void> select(Configurable configurable, String text);
 
-  @Deprecated
-  @DeprecationInfo("Use #select(Class)")
-  AsyncResult<Void> clearSearchAndSelect(Configurable configurable);
+    @Deprecated
+    @DeprecationInfo("Use #select(Class)")
+    AsyncResult<Void> clearSearchAndSelect(Configurable configurable);
 
-  @Nonnull
-  <T extends UnnamedConfigurable> AsyncResult<T> select(@Nonnull Class<T> clazz);
+    @Nonnull
+    <T extends UnnamedConfigurable> AsyncResult<T> select(@Nonnull Class<T> clazz);
+
+    AsyncResult<Configurable> select(@Nonnull String confurableId);
 }

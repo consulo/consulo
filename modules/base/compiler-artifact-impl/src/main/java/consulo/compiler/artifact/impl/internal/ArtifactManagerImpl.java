@@ -126,8 +126,8 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     ArtifactManagerState state = new ArtifactManagerState();
     for (Artifact artifact : getAllArtifactsIncludingInvalid()) {
       ArtifactState artifactState;
-      if (artifact instanceof InvalidArtifact) {
-        artifactState = ((InvalidArtifact)artifact).getState();
+      if (artifact instanceof InvalidArtifactImpl) {
+        artifactState = ((InvalidArtifactImpl)artifact).getState();
       }
       else {
         artifactState = new ArtifactState();
@@ -249,8 +249,8 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     return artifact;
   }
 
-  private InvalidArtifact createInvalidArtifact(ArtifactState state, String errorMessage) {
-    InvalidArtifact artifact = new InvalidArtifact(myPackagingElementFactory, state, errorMessage);
+  private InvalidArtifactImpl createInvalidArtifact(ArtifactState state, String errorMessage) {
+    InvalidArtifactImpl artifact = new InvalidArtifactImpl(myPackagingElementFactory, state, errorMessage);
     ProjectLoadingErrorsNotifier.getInstance(myProject).registerError(new ArtifactLoadingErrorDescription(this, artifact));
     return artifact;
   }

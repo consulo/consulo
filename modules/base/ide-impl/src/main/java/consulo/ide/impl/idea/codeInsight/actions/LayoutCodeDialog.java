@@ -25,6 +25,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.file.light.LightVirtualFile;
+import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import jakarta.annotation.Nonnull;
 

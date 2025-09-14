@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.ide.dnd;
 
 import consulo.language.psi.PsiElement;
+import consulo.ui.ex.awt.dnd.FileFlavorProvider;
 import consulo.ui.ex.awt.tree.TreePathUtil;
 import jakarta.annotation.Nullable;
 

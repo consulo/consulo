@@ -15,14 +15,12 @@
  */
 package consulo.externalSystem.ui.awt;
 
-import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModel;
 import consulo.component.PropertiesComponent;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.internal.ExternalSystemInternalAWTHelper;
 import consulo.externalSystem.internal.ui.ExternalSystemTasksTree;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
@@ -42,8 +40,10 @@ import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
@@ -110,7 +110,8 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
                 }
             };
 
-            ExternalSystemInternalAWTHelper helper = Application.get().getInstance(ExternalSystemInternalAWTHelper.class);
+            AWTPopupFactory helper = (AWTPopupFactory) JBPopupFactory.getInstance();
+
             JBPopup popup = helper.createPopupBuilder(tree)
                 .setItemChoosenCallback(treeSelectionCallback)
                 .setTitle(ExternalSystemBundle.message("run.configuration.title.choose.registered.project", externalSystemId.getDisplayName()))

@@ -67,13 +67,26 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-ui-ex-awt-api</artifactId>
+            <artifactId>consulo-file-editor-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-file-editor-api</artifactId>
+            <artifactId>consulo-language-api</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-api</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-ui-ex-awt-api</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

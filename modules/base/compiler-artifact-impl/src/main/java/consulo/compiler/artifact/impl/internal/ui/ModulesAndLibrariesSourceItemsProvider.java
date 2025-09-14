@@ -21,6 +21,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.*;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.LibrarySourceItem;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.compiler.artifact.ui.PackagingSourceItemsProvider;
 import consulo.content.base.BinariesOrderRootType;

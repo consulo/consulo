@@ -30,4 +30,8 @@ public interface LightweightHint extends Hint, UserDataHolder {
     boolean isInsideHint(RelativePoint target);
 
     void setAutoHideTester(Predicate<TooltipEvent> autoHideTester);
+
+    void setForceLightweightPopup(boolean forceLightweightPopup);
+
+    void setAsyncHide(boolean asyncHide);
 }

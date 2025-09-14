@@ -16,6 +16,7 @@
 package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.internal.CompilerWorkspaceConfiguration;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
@@ -76,7 +77,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
     @RequiredUIAccess
     @Override
     protected boolean isModified(@Nonnull Root component) {
-        CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
+        CompilerWorkspaceConfigurationImpl compilerWorkspaceConfiguration = (CompilerWorkspaceConfigurationImpl) myCompilerWorkspaceConfiguration.get();
 
         boolean isModified = component.myCbClearOutputDirectory.getValue() != compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
         isModified |= component.myCbAutoShowFirstError.getValue() != compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
@@ -86,7 +87,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
     @RequiredUIAccess
     @Override
     protected void reset(@Nonnull Root component) {
-        CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
+        CompilerWorkspaceConfigurationImpl compilerWorkspaceConfiguration = (CompilerWorkspaceConfigurationImpl) myCompilerWorkspaceConfiguration.get();
 
         component.myCbAutoShowFirstError.setValue(compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
         component.myCbClearOutputDirectory.setValue(compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
@@ -95,7 +96,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
     @RequiredUIAccess
     @Override
     protected void apply(@Nonnull Root component) throws ConfigurationException {
-        CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
+        CompilerWorkspaceConfigurationImpl compilerWorkspaceConfiguration = (CompilerWorkspaceConfigurationImpl) myCompilerWorkspaceConfiguration.get();
 
         compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
         compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();

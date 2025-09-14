@@ -15,6 +15,7 @@
  */
 package consulo.compiler.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.compiler.impl.internal.CompilerConfigurable;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.localize.LocalizeValue;
@@ -29,6 +30,7 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author Eugene Zhuravlev
  * @since 2012-09-12
  */
+@ActionImpl(id = "CompilerPropertiesAction")
 public class CompilerPropertiesAction extends AnAction {
     public CompilerPropertiesAction() {
         super(CompilerLocalize.actionCompilerPropertiesText(), LocalizeValue.empty(), PlatformIconGroup.generalSettings());

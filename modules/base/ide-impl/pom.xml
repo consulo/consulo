@@ -355,11 +355,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-compiler-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-build-ui-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -416,11 +411,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-builtin-web-server-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-external-system-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -437,11 +427,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-spellchecker-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-version-control-system-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

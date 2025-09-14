@@ -85,6 +85,9 @@ public interface DocumentEx extends Document {
     default boolean setAcceptSlashR(boolean accept) {
         return false;
     }
+
+    default void clearLineModificationFlags(int startLine, int endLine) {
+    }
 }
 
 

@@ -17,12 +17,13 @@ package consulo.ui.ex.keymap.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
-import consulo.ui.ex.keymap.KeyMapBundle;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.internal.ActionStubBase;
+import consulo.ui.ex.keymap.*;
+import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -34,6 +35,7 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.function.Predicate;
 
 import static consulo.ui.ex.action.util.ShortcutUtil.getKeystrokeText;
 import static consulo.ui.ex.action.util.ShortcutUtil.isUseUnicodeShortcuts;
@@ -43,6 +45,9 @@ import static consulo.ui.ex.action.util.ShortcutUtil.isUseUnicodeShortcuts;
  * @since 08-Mar-22
  */
 public class KeymapUtil {
+    private static final Logger LOG = Logger.getInstance(KeymapUtil.class);
+    private static final String TOOL_ACTION_PREFIX = "Tool_";
+
     @Nonnull
     public static String createTooltipText(@Nonnull String tooltipText, @Nonnull String actionId) {
         String text = getFirstKeyboardShortcutText(actionId);
@@ -229,5 +234,100 @@ public class KeymapUtil {
             }
         }
         return false;
+    }
+
+    public static KeymapGroup createGroup(
+        ActionGroup actionGroup,
+        String groupName,
+        Image icon,
+        Image openIcon,
+        boolean ignore,
+        Predicate<AnAction> filtered
+    ) {
+        return createGroup(actionGroup, groupName, icon, openIcon, ignore, filtered, true);
+    }
+
+    public static KeymapGroup createGroup(
+        ActionGroup actionGroup,
+        String groupName,
+        Image icon,
+        Image openIcon,
+        boolean ignore,
+        Predicate<AnAction> filtered,
+        boolean normalizeSeparators
+    ) {
+        ActionManager actionManager = ActionManager.getInstance();
+        KeymapGroup group = KeymapGroupFactory.getInstance().createGroup(groupName, actionManager.getId(actionGroup), icon);
+        AnAction[] children = actionGroup instanceof DefaultActionGroup defaultActionGroup
+            ? defaultActionGroup.getChildActionsOrStubs() : actionGroup.getChildren(null);
+
+        for (AnAction action : children) {
+            LOG.assertTrue(action != null, groupName + " contains null actions");
+            if (action instanceof ActionGroup childActionGroup) {
+                KeymapGroup subGroup =
+                    createGroup(childActionGroup, getName(action), null, null, ignore, filtered, normalizeSeparators);
+                if (subGroup.getSize() > 0) {
+                    if (!ignore && !childActionGroup.isPopup()) {
+                        group.addAll(subGroup);
+                    }
+                    else {
+                        group.addGroup(subGroup);
+                    }
+                }
+                else if (filtered == null || filtered.test(actionGroup)) {
+                    group.addGroup(subGroup);
+                }
+            }
+            else if (action instanceof AnSeparator) {
+                group.addSeparator();
+            }
+            else if (action != null) {
+                String id = action instanceof ActionStubBase actionStubBase
+                    ? actionStubBase.getId() : actionManager.getId(action);
+                if (id != null) {
+                    if (id.startsWith(TOOL_ACTION_PREFIX)) {
+                        continue;
+                    }
+                    if (filtered == null || filtered.test(action)) {
+                        group.addActionId(id);
+                    }
+                }
+            }
+        }
+        if (normalizeSeparators) {
+            group.normalizeSeparators();
+        }
+        return group;
+    }
+
+    public static KeymapGroup createGroup(ActionGroup actionGroup, boolean ignore, Predicate<AnAction> filtered) {
+        return createGroup(actionGroup, getName(actionGroup), null, null, ignore, filtered);
+    }
+
+    private static String getName(AnAction action) {
+        String name = action.getTemplatePresentation().getText();
+        if (name != null && !name.isEmpty()) {
+            return name;
+        }
+        else {
+            String id = action instanceof ActionStubBase actionStubBase
+                ? actionStubBase.getId() : ActionManager.getInstance().getId(action);
+            if (id != null) {
+                return id;
+            }
+            if (action instanceof DefaultActionGroup group) {
+                if (group.getChildrenCount() == 0) {
+                    return "Empty group";
+                }
+                AnAction[] children = group.getChildActionsOrStubs();
+                for (AnAction child : children) {
+                    if (!(child instanceof AnSeparator)) {
+                        return "group." + getName(child);
+                    }
+                }
+                return "Empty unnamed group";
+            }
+            return action.getClass().getName();
+        }
     }
 }
