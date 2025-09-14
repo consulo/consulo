@@ -4,6 +4,7 @@ package consulo.language.editor.todo.impl.internal.node;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.language.editor.todo.impl.internal.TodoTreeBuilder;
 import consulo.language.editor.todo.impl.internal.TodoTreeStructure;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.module.content.ProjectRootManager;
@@ -41,7 +42,7 @@ public final class TodoDirNode extends PsiDirectoryNode {
     String newName = isProjectRoot || getStructure().getIsFlattenPackages() ? getValue().getVirtualFile().getPresentableUrl() : getValue().getName();
 
     int todoItemCount = getTodoItemCount(getValue());
-    data.setLocationString(IdeLocalize.nodeTodoGroup(todoItemCount));
+    data.setLocationString(LanguageTodoLocalize.nodeTodoGroup(todoItemCount));
     data.setPresentableText(newName);
   }
 

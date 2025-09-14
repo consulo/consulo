@@ -30,6 +30,9 @@ import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.setting.ColorDescriptor;
+import consulo.colorScheme.ui.ColorAndFontDescription;
+import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
+import consulo.colorScheme.ui.TextAttributesDescription;
 import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.configurable.*;
 import consulo.configurable.internal.ConfigurableWeight;
@@ -771,7 +774,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     @Nonnull
     private final TextAttributesKey key;
     private TextAttributes myFallbackAttributes;
-    private Pair<ColorSettingsPage, AttributesDescriptor> myBaseAttributeDescriptor;
+    private Pair<ColorAndFontDescriptors, AttributesDescriptor> myBaseAttributeDescriptor;
     private boolean myIsInheritedInitial = false;
 
     private SchemeTextAttributesDescription(LocalizeValue name, LocalizeValue group, @Nonnull TextAttributesKey key, @Nonnull MyColorScheme scheme, Image icon, String toolTip) {
@@ -833,7 +836,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     @Nullable
     @Override
-    public Pair<ColorSettingsPage, AttributesDescriptor> getBaseAttributeDescriptor() {
+    public Pair<ColorAndFontDescriptors, AttributesDescriptor> getBaseAttributeDescriptor() {
       return myBaseAttributeDescriptor;
     }
 

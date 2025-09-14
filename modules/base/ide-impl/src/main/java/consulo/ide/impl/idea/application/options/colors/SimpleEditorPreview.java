@@ -21,6 +21,7 @@ import consulo.codeEditor.event.CaretAdapter;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.application.options.colors.highlighting.HighlightData;

@@ -15,13 +15,13 @@
  */
 package consulo.language.editor.todo.impl.internal;
 
-import consulo.ide.impl.idea.ide.todo.nodes.ToDoRootNode;
-import consulo.find.ui.ScopeChooserCombo;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
 import consulo.content.scope.SearchScope;
+import consulo.find.ui.ScopeChooserCombo;
+import consulo.language.editor.todo.impl.internal.node.ToDoRootNode;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author anna

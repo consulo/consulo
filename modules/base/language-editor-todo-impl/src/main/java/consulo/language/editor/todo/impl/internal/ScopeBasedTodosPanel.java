@@ -16,13 +16,13 @@
 package consulo.language.editor.todo.impl.internal;
 
 import consulo.application.ui.util.TodoPanelSettings;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.disposer.Disposer;
 import consulo.find.ui.ScopeChooserCombo;
 import consulo.project.Project;
-import consulo.disposer.Disposer;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.content.Content;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +45,7 @@ public class ScopeBasedTodosPanel extends TodoPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         rebuildWithAlarm(ScopeBasedTodosPanel.this.myAlarm);
-        PropertiesComponent.getInstance(myProject).setValue(SELECTED_SCOPE, myScopes.getSelectedScopeName(), null);
+        ProjectPropertiesComponent.getInstance(myProject).setValue(SELECTED_SCOPE, myScopes.getSelectedScopeName(), null);
       }
     });
     rebuildWithAlarm(myAlarm);
@@ -56,7 +56,7 @@ public class ScopeBasedTodosPanel extends TodoPanel {
     JPanel panel = new JPanel(new BorderLayout());
     JComponent component = super.createCenterComponent();
     panel.add(component, BorderLayout.CENTER);
-    String preselect = PropertiesComponent.getInstance(myProject).getValue(SELECTED_SCOPE);
+    String preselect = ProjectPropertiesComponent.getInstance(myProject).getValue(SELECTED_SCOPE);
     myScopes = new ScopeChooserCombo(myProject, false, true, preselect);
     Disposer.register(this, myScopes);
     myScopes.setCurrentSelection(false);

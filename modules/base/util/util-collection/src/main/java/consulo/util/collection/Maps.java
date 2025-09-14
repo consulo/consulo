@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Contract;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -349,5 +350,15 @@ public final class Maps {
     @Contract(pure = true)
     public static <K, V> Map<K, V> notNullize(@Nullable Map<K, V> map) {
         return map == null ? Collections.emptyMap() : map;
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static <A, B> Map<B, A> reverseMap(@Nonnull Map<A, B> map) {
+        Map<B, A> result = new HashMap<B, A>();
+        for (Map.Entry<A, B> entry : map.entrySet()) {
+            result.put(entry.getValue(), entry.getKey());
+        }
+        return result;
     }
 }

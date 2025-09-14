@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.application.options.colors;
 import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;

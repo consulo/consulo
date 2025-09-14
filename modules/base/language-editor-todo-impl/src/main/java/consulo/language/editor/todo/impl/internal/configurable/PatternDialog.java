@@ -18,11 +18,11 @@ package consulo.language.editor.todo.impl.internal.configurable;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.impl.idea.application.options.colors.ColorAndFontDescription;
-import consulo.ide.impl.idea.application.options.colors.ColorAndFontDescriptionPanel;
-import consulo.ide.impl.idea.application.options.colors.TextAttributesDescription;
-import consulo.ide.localize.IdeLocalize;
+import consulo.colorScheme.ui.ColorAndFontDescription;
+import consulo.colorScheme.ui.ColorAndFontDescriptionPanel;
+import consulo.colorScheme.ui.TextAttributesDescription;
 import consulo.language.editor.todo.TodoAttributesUtil;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.language.psi.search.TodoAttributes;
 import consulo.language.psi.search.TodoPattern;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -59,11 +59,11 @@ class PatternDialog extends DialogWrapper {
         });
         myIconComboBox.setSelectedItem(attrs.getIcon());
         myIconComboBox.setRenderer(new TodoTypeListCellRenderer());
-        myCaseSensitiveCheckBox = new JCheckBox(IdeLocalize.checkboxCaseSensitive().get(), pattern.isCaseSensitive());
+        myCaseSensitiveCheckBox = new JCheckBox(LanguageTodoLocalize.checkboxCaseSensitive().get(), pattern.isCaseSensitive());
         myPatternStringField = new JTextField(pattern.getPatternString());
 
         // use default colors check box
-        myUsedDefaultColorsCeckBox = new JCheckBox(IdeLocalize.checkboxTodoUseDefaultColors().get());
+        myUsedDefaultColorsCeckBox = new JCheckBox(LanguageTodoLocalize.checkboxTodoUseDefaultColors().get());
         myUsedDefaultColorsCeckBox.setSelected(!attrs.shouldUseCustomTodoColor());
 
         myColorAndFontDescriptionPanel = new ColorAndFontDescriptionPanel();
@@ -149,7 +149,7 @@ class PatternDialog extends DialogWrapper {
             0
         );
 
-        JLabel patternLabel = new JLabel(IdeLocalize.labelTodoPattern().get());
+        JLabel patternLabel = new JLabel(LanguageTodoLocalize.labelTodoPattern().get());
         panel.add(patternLabel, gb);
         Dimension oldPreferredSize = myPatternStringField.getPreferredSize();
         myPatternStringField.setPreferredSize(new Dimension(300, oldPreferredSize.height));
@@ -158,7 +158,7 @@ class PatternDialog extends DialogWrapper {
         gb.weightx = 1;
         panel.add(myPatternStringField, gb);
 
-        JLabel iconLabel = new JLabel(IdeLocalize.labelTodoIcon().get());
+        JLabel iconLabel = new JLabel(LanguageTodoLocalize.labelTodoIcon().get());
         gb.gridy++;
         gb.gridx = 0;
         gb.gridwidth = 1;

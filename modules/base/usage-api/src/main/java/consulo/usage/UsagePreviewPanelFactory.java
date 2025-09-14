@@ -39,4 +39,7 @@ public interface UsagePreviewPanelFactory {
 
     @Nonnull
     UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation, boolean isEditor);
+
+    @Nonnull
+    UsageViewPresentation createEmpUsageViewPresentation();
 }

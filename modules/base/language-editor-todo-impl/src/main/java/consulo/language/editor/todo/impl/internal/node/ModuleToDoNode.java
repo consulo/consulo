@@ -17,22 +17,22 @@
 package consulo.language.editor.todo.impl.internal.node;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.localize.IdeLocalize;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.todo.TodoTreeBuilder;
-import consulo.ide.impl.idea.ide.todo.TodoTreeStructure;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.ReadAction;
-import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.todo.impl.internal.TodoTreeBuilder;
+import consulo.language.editor.todo.impl.internal.TodoTreeStructure;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.TodoItem;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class ModuleToDoNode extends BaseToDoNode<Module> {
     if (DumbService.getInstance(getProject()).isDumb()) return;
     String newName = getValue().getName();
     int todoItemCount = getTodoItemCount(getValue());
-    presentation.setLocationString(IdeLocalize.nodeTodoGroup(todoItemCount));
+    presentation.setLocationString(LanguageTodoLocalize.nodeTodoGroup(todoItemCount));
     presentation.setIcon(PlatformIconGroup.nodesModule());
     presentation.setPresentableText(newName);
   }

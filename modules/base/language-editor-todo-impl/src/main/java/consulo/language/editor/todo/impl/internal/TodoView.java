@@ -7,7 +7,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
@@ -17,16 +16,17 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.todo.TodoConfiguration;
 import consulo.language.editor.todo.TodoConfigurationListener;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
+import consulo.language.editor.todo.impl.internal.node.TodoTreeBuilderFactory;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -117,7 +117,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     public void initToolWindow(@Nonnull ToolWindow toolWindow) {
         // Create panels
         ContentFactory contentFactory = ContentFactory.getInstance();
-        Content allTodosContent = contentFactory.createContent(null, IdeLocalize.titleProject().get(), false);
+        Content allTodosContent = contentFactory.createContent(null, LanguageTodoLocalize.titleProject().get(), false);
         myAllTodos = new TodoPanel(myProject, state.all, false, allTodosContent) {
             @Override
             protected TodoTreeBuilder createTreeBuilder(JTree tree, Project project) {
@@ -128,20 +128,18 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
         };
         allTodosContent.setComponent(myAllTodos);
         Disposer.register(this, myAllTodos);
-        if (toolWindow instanceof ToolWindowEx) {
-            DefaultActionGroup group = new DefaultActionGroup() {
-                {
-                    getTemplatePresentation().setTextValue(IdeLocalize.groupViewOptions());
-                    setPopup(true);
-                    add(myAllTodos.createAutoScrollToSourceAction());
-                    addSeparator();
-                    addAll(myAllTodos.createGroupByActionGroup());
-                }
-            };
-            ((ToolWindowEx) toolWindow).setAdditionalGearActions(group);
-        }
+        DefaultActionGroup group = new DefaultActionGroup() {
+            {
+                getTemplatePresentation().setTextValue(LanguageTodoLocalize.groupViewOptions());
+                setPopup(true);
+                add(myAllTodos.createAutoScrollToSourceAction());
+                addSeparator();
+                addAll(myAllTodos.createGroupByActionGroup());
+            }
+        };
+        toolWindow.setAdditionalGearActions(group);
 
-        Content currentFileTodosContent = contentFactory.createContent(null, IdeLocalize.titleTodoCurrentFile().get(), false);
+        Content currentFileTodosContent = contentFactory.createContent(null, LanguageTodoLocalize.titleTodoCurrentFile().get(), false);
         CurrentFileTodosPanel currentFileTodos = new CurrentFileTodosPanel(myProject, state.current, currentFileTodosContent) {
             @Override
             protected TodoTreeBuilder createTreeBuilder(JTree tree, Project project) {
@@ -230,7 +228,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
                     myContentManager.addContent(myChangeListTodosContent);
                     myIsVisible = true;
                 }
-            }, IdeaModalityState.nonModal());
+            }, ModalityState.nonModal());
         }
     }
 

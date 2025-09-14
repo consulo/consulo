@@ -15,19 +15,19 @@
  */
 package consulo.language.editor.todo.impl.internal;
 
-import consulo.language.editor.todo.TodoFilter;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.checkin.TodoCheckinHandlerWorker;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.todo.TodoFilter;
+import consulo.language.editor.todo.impl.internal.versionSystemControl.TodoCheckinHandlerWorker;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoItem;
 import consulo.language.psi.search.TodoPattern;
+import consulo.project.Project;
 import consulo.util.collection.MultiMap;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;

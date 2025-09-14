@@ -16,7 +16,7 @@
 package consulo.language.editor.todo.impl.internal;
 
 import consulo.application.ui.util.TodoPanelSettings;
-import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
@@ -49,12 +49,12 @@ public abstract class ChangeListTodosPanel extends TodoPanel {
         @Override
         public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
             rebuildWithAlarm(myAlarm);
-            AppUIUtil.invokeOnEdt(() -> setDisplayName(IdeLocalize.changelistTodoTitle(newDefaultList.getName()).get()));
+            AppUIUtil.invokeOnEdt(() -> setDisplayName(LanguageTodoLocalize.changelistTodoTitle(newDefaultList.getName()).get()));
         }
 
         @Override
         public void changeListRenamed(ChangeList list, String oldName) {
-            AppUIUtil.invokeOnEdt(() -> setDisplayName(IdeLocalize.changelistTodoTitle(list.getName()).get()));
+            AppUIUtil.invokeOnEdt(() -> setDisplayName(LanguageTodoLocalize.changelistTodoTitle(list.getName()).get()));
         }
 
         @Override

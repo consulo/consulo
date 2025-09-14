@@ -5,10 +5,10 @@ package consulo.desktop.awt.internal.diff.setting;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.diff.localize.DiffLocalize;
-import consulo.ide.impl.idea.application.options.colors.ColorAndFontDescription;
+import consulo.colorScheme.ui.ColorAndFontDescription;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
-import consulo.ide.impl.idea.application.options.colors.EditorSchemeAttributeDescriptor;
-import consulo.ide.impl.idea.application.options.colors.OptionsPanelImpl;
+import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
+import consulo.colorScheme.ui.ColorDescriptionPanel;
 import consulo.diff.util.TextDiffTypeFactory;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.CheckBox;
@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
-class DiffColorDescriptionPanel implements OptionsPanelImpl.ColorDescriptionPanel {
+class DiffColorDescriptionPanel implements ColorDescriptionPanel {
   private final EventDispatcher<Listener> myDispatcher = EventDispatcher.create(Listener.class);
 
   private final VerticalLayout myPanel;

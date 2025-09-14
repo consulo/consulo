@@ -7,6 +7,7 @@ import consulo.document.DocumentWindow;
 import consulo.document.util.TextRange;
 import consulo.language.editor.todo.TodoFilter;
 import consulo.language.editor.todo.impl.internal.TodoTreeBuilder;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.language.editor.todo.impl.internal.search.TodoItemImpl;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
@@ -151,7 +152,7 @@ public final class TodoFileNode extends PsiFileNode {
       return;
     }
     if (todoItemCount > 0) {
-      data.setLocationString(IdeLocalize.nodeTodoItems(todoItemCount));
+      data.setLocationString(LanguageTodoLocalize.nodeTodoItems(todoItemCount));
     }
   }
 

@@ -23,6 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.editor.todo.TodoFilter;
+import consulo.language.editor.todo.impl.internal.node.SmartTodoItemPointer;
 import consulo.language.editor.todo.impl.internal.node.TodoFileNode;
 import consulo.language.editor.todo.impl.internal.node.TodoItemNode;
 import consulo.language.editor.todo.impl.internal.node.TodoTreeHelper;

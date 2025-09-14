@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.internal.ColorSettingsPages;
 import consulo.util.lang.Pair;
@@ -38,7 +39,7 @@ public class ColorSettingsPagesImpl implements ColorSettingsPages {
 
     @Override
     @Nullable
-    public Pair<ColorSettingsPage, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key) {
+    public Pair<ColorAndFontDescriptors, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key) {
         return myApplication.getExtensionPoint(ColorSettingsPage.class).computeSafeIfAny(page -> {
             for (AttributesDescriptor descriptor : page.getAttributeDescriptors()) {
                 if (descriptor.getKey() == key) {

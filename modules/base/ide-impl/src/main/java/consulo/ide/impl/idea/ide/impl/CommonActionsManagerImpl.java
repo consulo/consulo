@@ -16,17 +16,15 @@
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.action.AutoScrollToSourceOptionProvider;
+import consulo.project.ui.action.NextOccurenceToolbarAction;
+import consulo.project.ui.action.PreviousOccurenceToolbarAction;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.DefaultTreeExpander;
-import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ide.impl.idea.ide.actions.*;
 import consulo.application.AllIcons;
 import consulo.component.ComponentManager;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.TreeExpander;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.action.ContextHelpAction;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import jakarta.inject.Singleton;
 

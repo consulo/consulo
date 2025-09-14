@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.todo.impl.internal.node;
 
-import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.ui.ex.awt.HighlightableCellRenderer;
 import consulo.ui.ex.awt.HighlightedRegion;
 
@@ -31,7 +31,7 @@ public class MultiLineTodoRenderer extends JPanel implements TreeCellRenderer {
             add(myLineRenderers[i] = new HighlightableCellRenderer(), c);
         }
         c.gridy++;
-        add(myMoreLabel = new JLabel(IdeLocalize.nodeTodoMoreItems().get()), c);
+        add(myMoreLabel = new JLabel(LanguageTodoLocalize.nodeTodoMoreItems().get()), c);
     }
 
     @Override

@@ -15,8 +15,8 @@
  */
 package consulo.language.editor.todo.impl.internal.configurable;
 
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.todo.TodoFilter;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.language.psi.search.TodoPattern;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ItemRemovable;
@@ -27,8 +27,8 @@ import java.util.List;
 
 final class FiltersTableModel extends AbstractTableModel implements ItemRemovable {
     private static final LocalizeValue[] OUR_COLUMN_NAMES = new LocalizeValue[]{
-        IdeLocalize.columnTodoFiltersName(),
-        IdeLocalize.columnTodoFilterPatterns()
+        LanguageTodoLocalize.columnTodoFiltersName(),
+        LanguageTodoLocalize.columnTodoFilterPatterns()
     };
     private static final Class[] OUR_COLUMN_CLASSES = new Class[]{String.class, String.class};
 

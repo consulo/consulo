@@ -168,8 +168,6 @@ action.edit.repository.url:
     text: Edit repository URL
 action.expand.all:
     text: Expand All
-action.filter.todo.items:
-    text: Filter TODO Items
 action.flatten.packages:
     text: Flatten Packages
 action.flatten.view:
@@ -218,8 +216,6 @@ action.next.problem:
     text: Next Problem
 action.next.tip:
     text: '&Next Tip'
-action.next.todo:
-    text: Next TODO
 action.override.method:
     text: Override Method
 action.override.methods:
@@ -248,8 +244,6 @@ action.previous.problem:
     text: Previous Problem
 action.previous.tip:
     text: '&Previous Tip'
-action.previous.todo:
-    text: Previous TODO
 action.refresh:
     text: Refresh
 action.remove:
@@ -532,8 +526,6 @@ button.yes:
     text: _Yes
 change.encoding.command.name:
     text: Change Encoding for ''{0}''
-changelist.todo.title:
-    text: '{0} Changelist'
 checkboox.cyclic.scrolling.in.lists:
     text: Cyclic scrolling in list
 checkbox.allow.line.numbers:
@@ -546,8 +538,6 @@ checkbox.animate.windows:
     text: Animate windows
 checkbox.autodetect.utf:
     text: Autodetect UTF-encoded files
-checkbox.case.sensitive:
-    text: Case Sensitive
 checkbox.confirm.application.exit:
     text: Confirm application exit
 checkbox.copy.javadoc:
@@ -624,8 +614,6 @@ checkbox.support.screen.readers:
     text: Support screen readers (requires restart)
 checkbox.synchronize.files.on.frame.activation:
     text: Synchronize files on frame activation
-checkbox.todo.use.default.colors:
-    text: Use color scheme TODO default colors
 checkbox.transparent.native.to.ascii.conversion:
     text: Transparent native-to-ascii conversion
 checkbox.use.antialiased.font.in.editor:
@@ -656,18 +644,6 @@ column.plugins.rate:
     text: Rating
 column.plugins.tag:
     text: Tag
-column.todo.filter.pattern:
-    text: Pattern
-column.todo.filter.patterns:
-    text: Patterns
-column.todo.filters.name:
-    text: Name
-column.todo.patterns.case.sensitive:
-    text: Case Sensitive
-column.todo.patterns.icon:
-    text: Icon
-column.todo.patterns.pattern:
-    text: Pattern
 combobox.console.default.encoding.label:
     text: 'Default Encoding:'
 combobox.icon.theme:
@@ -924,12 +900,6 @@ error.file.not.found.message:
     text: File ''{0}'' not found
 error.files.of.this.type.cannot.be.opened:
     text: Files of this type cannot be opened in {0}
-error.filter.name.should.be.specified:
-    text: Filter name should be specified
-error.filter.should.contain.at.least.one.pattern:
-    text: Filter should contain at least one pattern
-error.filter.with.the.same.name.already.exists:
-    text: Filter with the same name already exists
 error.invalid.template.file.name.or.extension:
     text: Invalid template file name or extension
 error.keyword.cannot.be.empty:
@@ -1195,8 +1165,6 @@ group.presentation.mode:
     text: Presentation Mode
 group.settings.process.tab.close:
     text: On Closing Tool Window with Running Process
-group.todo.filter.patterns:
-    text: Patterns
 group.transparency:
     text: Transparency
 group.ui.options:
@@ -1421,16 +1389,6 @@ label.text.antialiasing.scope.editor:
     text: 'Editor:'
 label.text.antialiasing.scope.ide:
     text: 'IDE:'
-label.todo.filter.name:
-    text: 'Name:'
-label.todo.filters:
-    text: Filters
-label.todo.icon:
-    text: 'Icon:'
-label.todo.pattern:
-    text: 'Pattern:'
-label.todo.patterns:
-    text: Patterns
 label.transparency.delay.ms:
     text: 'Delay (ms):'
 label.transparency.ratio:
@@ -1725,18 +1683,6 @@ node.projectview.library:
     text: '{0} library'
 node.structureview.invalid:
     text: <invalid>
-node.todo.found.items:
-    text: '{0} (found {1} {1,choice,1#item|2#items})'
-node.todo.group:
-    text: '{0} {0,choice,0#items|1#item|2#items}'
-node.todo.items:
-    text: '{0} {0, choice, 0#items|1#item|2#items}'
-node.todo.more.items:
-    text: '...more...'
-node.todo.no.items.found:
-    text: '{0} (no items found)'
-node.todo.summary:
-    text: Found {0} TODO {0,choice,0#items|1#item|2#items} in {1} {1,choice,0#files|1#file|2#files}
 open.url.in.browser.tooltip:
     text: Open in browser
 option.hide.tool.window.bars:
@@ -2416,20 +2362,12 @@ template.unnamed:
     text: Unnamed
 text.not.applicable:
     text: <N/A>
-text.todo.no.filters:
-    text: No filters configured
-text.todo.no.patterns:
-    text: No patterns configured
 title.add.module:
     text: New Module
 title.add.new.favorites.list:
     text: Add New Favorites List
 title.add.new.keyword:
     text: Add New Keyword
-title.add.todo.filter:
-    text: Add Filter
-title.add.todo.pattern:
-    text: Add Pattern
 title.appearance:
     text: Appearance
 title.browse.icon:
@@ -2476,10 +2414,6 @@ title.edit.keyword:
     text: Edit Keyword
 title.edit.macros:
     text: Edit Macros
-title.edit.todo.filter:
-    text: Edit Filter
-title.edit.todo.pattern:
-    text: Edit Pattern
 title.enter.license.data:
     text: Enter {0} License
 title.enter.macro.name:
@@ -2654,10 +2588,6 @@ title.system.error:
     text: System Error
 title.tip.of.the.day:
     text: Tip of the Day
-title.todo:
-    text: TODO
-title.todo.current.file:
-    text: Current File
 title.unable.to.add.action.without.icon.to.toolbar:
     text: Unable to add action without icon to the toolbar
 title.unable.to.add.favorites.list:

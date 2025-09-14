@@ -6,6 +6,7 @@ import consulo.language.editor.todo.impl.internal.node.SummaryNode;
 import consulo.language.editor.todo.impl.internal.node.ToDoRootNode;
 import consulo.language.editor.todo.impl.internal.node.TodoTreeHelper;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNodeVisitor;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

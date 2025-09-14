@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.application.options.colors;
 
+import consulo.colorScheme.ui.ColorAndFontDescription;
+import consulo.colorScheme.ui.ColorSchemeUIConstants;
+import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
@@ -32,7 +35,8 @@ public class ColorOptionsTree extends Tree {
   private final LocalizeValue myCategoryName;
   private final DefaultTreeModel myTreeModel;
 
-  public final static String NAME_SEPARATOR = "//";
+  @Deprecated
+  public final static String NAME_SEPARATOR = ColorSchemeUIConstants.NAME_SEPARATOR;
 
   private static final Comparator<EditorSchemeAttributeDescriptor> ATTR_COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.toString(), o2.toString());
 

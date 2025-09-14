@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.project.ui.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
@@ -23,29 +22,29 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.IdeActions;
 
-@ActionImpl(id = IdeActions.ACTION_NEXT_OCCURENCE)
-public class NextOccurenceAction extends OccurenceNavigatorActionBase {
-    public NextOccurenceAction() {
+@ActionImpl(id = IdeActions.ACTION_PREVIOUS_OCCURENCE)
+public class PreviousOccurenceAction extends OccurenceNavigatorActionBase {
+    public PreviousOccurenceAction() {
         super(
-            ActionLocalize.actionNextoccurenceText(),
-            ActionLocalize.actionNextoccurenceDescription(),
-            PlatformIconGroup.actionsNextoccurence()
+            ActionLocalize.actionPreviousoccurenceText(),
+            ActionLocalize.actionPreviousoccurenceDescription(),
+            PlatformIconGroup.actionsPreviousoccurence()
         );
     }
 
     @Override
     protected String getDescription(OccurenceNavigator navigator) {
-        return navigator.getNextOccurenceActionName();
+        return navigator.getPreviousOccurenceActionName();
     }
 
     @Override
     protected OccurenceNavigator.OccurenceInfo go(OccurenceNavigator navigator) {
-        return navigator.goNextOccurence();
+        return navigator.goPreviousOccurence();
     }
 
     @Override
     @RequiredReadAction
     protected boolean hasOccurenceToGo(OccurenceNavigator navigator) {
-        return navigator.hasNextOccurence();
+        return navigator.hasPreviousOccurence();
     }
 }

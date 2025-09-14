@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.project.ui.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;

@@ -15,13 +15,13 @@
  */
 package consulo.language.editor.todo.impl.internal;
 
-import consulo.ide.impl.idea.ide.todo.nodes.ToDoRootNode;
-import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.language.editor.todo.impl.internal.node.ToDoRootNode;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.util.Collection;
 
@@ -40,7 +40,7 @@ public class ChangeListTodosTreeStructure extends TodoTreeStructure {
     boolean isAffected = false;
     Collection<Change> changes = ChangeListManager.getInstance(myProject).getDefaultChangeList().getChanges();
     for (Change change : changes) {
-      if (change.affectsFile(VfsUtil.virtualToIoFile(psiFile.getVirtualFile()))) {
+      if (change.affectsFile(VirtualFileUtil.virtualToIoFile(psiFile.getVirtualFile()))) {
         isAffected = true;
         break;
       }

@@ -15,13 +15,16 @@
  */
 package consulo.language.editor.todo.impl.internal.action;
 
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.util.TodoPanelSettings;
+import consulo.configurable.internal.ShowConfigurableService;
 import consulo.language.editor.todo.TodoConfiguration;
 import consulo.language.editor.todo.TodoFilter;
+import consulo.language.editor.todo.impl.internal.configurable.TodoConfigurable;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -49,7 +52,7 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
         TodoPanelSettings toDoSettings,
         Consumer<TodoFilter> todoFilterConsumer
     ) {
-        super(IdeLocalize.actionFilterTodoItems(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
+        super(LanguageTodoLocalize.actionFilterTodoItems(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
         setPopup(true);
         myProject = project;
         myToDoSettings = toDoSettings;
@@ -62,26 +65,26 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
         TodoFilter[] filters = TodoConfiguration.getInstance().getTodoFilters();
         List<AnAction> group = new ArrayList<>();
         group.add(new TodoFilterApplier(
-            IdeLocalize.actionTodoShowAll().get(),
-            IdeLocalize.actionDescriptionTodoShowAll().get(),
+            LanguageTodoLocalize.actionTodoShowAll(),
+            LanguageTodoLocalize.actionDescriptionTodoShowAll(),
             null,
             myToDoSettings,
             myTodoFilterConsumer
         ));
         for (TodoFilter filter : filters) {
-            group.add(new TodoFilterApplier(filter.getName(), null, filter, myToDoSettings, myTodoFilterConsumer));
+            group.add(new TodoFilterApplier(LocalizeValue.ofNullable(filter.getName()), LocalizeValue.empty(), filter, myToDoSettings, myTodoFilterConsumer));
         }
         group.add(AnSeparator.create());
         group.add(
             new DumbAwareAction(
-                IdeLocalize.actionTodoEditFilters(),
-                IdeLocalize.actionTodoEditFilters(),
+                LanguageTodoLocalize.actionTodoEditFilters(),
+                LanguageTodoLocalize.actionTodoEditFilters(),
                 PlatformIconGroup.generalSettings()
             ) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {
-                    ShowSettingsUtil.getInstance().showAndSelect(myProject, TodoConfigurable.class);
+                    Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, TodoConfigurable.class);
                 }
             }
         );
@@ -101,16 +104,15 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
          * @param todoFilterConsumer
          */
         TodoFilterApplier(
-            String text,
-            String description,
+            LocalizeValue text,
+            LocalizeValue description,
             TodoFilter filter,
             TodoPanelSettings settings,
             Consumer<TodoFilter> todoFilterConsumer
         ) {
-            super(null, description, null);
+            super(text, description, null);
             mySettings = settings;
             myTodoFilterConsumer = todoFilterConsumer;
-            getTemplatePresentation().setText(text, false);
             myFilter = filter;
         }
 

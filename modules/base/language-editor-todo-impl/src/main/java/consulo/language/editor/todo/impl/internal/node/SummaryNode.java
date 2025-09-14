@@ -17,10 +17,10 @@ package consulo.language.editor.todo.impl.internal.node;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ReadAction;
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.todo.impl.internal.CurrentFileTodosTreeBuilder;
 import consulo.language.editor.todo.impl.internal.ToDoSummary;
 import consulo.language.editor.todo.impl.internal.TodoTreeBuilder;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
@@ -104,7 +104,7 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
     if (DumbService.getInstance(getProject()).isDumb()) return;
     int todoItemCount = getTodoItemCount(getValue());
     int fileCount = getFileCount(getValue());
-    presentation.setPresentableText(IdeLocalize.nodeTodoSummary(todoItemCount, fileCount));
+    presentation.setPresentableText(LanguageTodoLocalize.nodeTodoSummary(todoItemCount, fileCount));
   }
 
   @Override

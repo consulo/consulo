@@ -1374,17 +1374,17 @@
 
         <group id="TodoMainGroup" text="TODO">
             <add-to-group group-id="Other.KeymapGroup"/>
-            <group id="TodoViewGroupByGroup" class="consulo.ide.impl.idea.ide.todo.TodoPanel$GroupByActionGroup">
+            <group id="TodoViewGroupByGroup" class="consulo.language.editor.todo.impl.internal.TodoPanel$GroupByActionGroup">
                 <separator text="Group By"/>
-                <action class="consulo.ide.impl.idea.ide.todo.TodoPanel$MyShowModulesAction" id="TodoViewGroupByShowModules">
+                <action class="consulo.language.editor.todo.impl.internal.TodoPanel$MyShowModulesAction" id="TodoViewGroupByShowModules">
                     <keyboard-shortcut first-keystroke="control M" keymap="$default"/>
                 </action>
 
-                <action class="consulo.ide.impl.idea.ide.todo.TodoPanel$MyShowPackagesAction" id="TodoViewGroupByShowPackages">
+                <action class="consulo.language.editor.todo.impl.internal.TodoPanel$MyShowPackagesAction" id="TodoViewGroupByShowPackages">
                     <keyboard-shortcut first-keystroke="control P" keymap="$default"/>
                 </action>
 
-                <action class="consulo.ide.impl.idea.ide.todo.TodoPanel$MyFlattenPackagesAction" id="TodoViewGroupByFlattenPackage">
+                <action class="consulo.language.editor.todo.impl.internal.TodoPanel$MyFlattenPackagesAction" id="TodoViewGroupByFlattenPackage">
                     <keyboard-shortcut first-keystroke="control F" keymap="$default"/>
                 </action>
             </group>

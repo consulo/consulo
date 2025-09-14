@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.application.options.colors;
+package consulo.colorScheme.ui;
 
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;

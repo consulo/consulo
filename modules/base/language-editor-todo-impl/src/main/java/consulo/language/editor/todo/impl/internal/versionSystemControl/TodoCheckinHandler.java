@@ -24,7 +24,10 @@ import consulo.application.ui.util.TodoPanelSettings;
 import consulo.application.util.DateFormatUtil;
 import consulo.language.editor.todo.TodoConfiguration;
 import consulo.language.editor.todo.TodoFilter;
+import consulo.language.editor.todo.impl.internal.CustomChangelistTodosTreeBuilder;
 import consulo.language.editor.todo.impl.internal.TodoView;
+import consulo.language.editor.todo.impl.internal.action.SetTodoFilterAction;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -117,7 +120,7 @@ public class TodoCheckinHandler extends CheckinHandler {
 
       private void setFilterText(String filterName) {
         if (filterName == null) {
-          checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck(IdeLocalize.actionTodoShowAll()).get());
+          checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck(LanguageTodoLocalize.actionTodoShowAll()).get());
         } else {
           checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck("Filter: " + filterName).get());
         }

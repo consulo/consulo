@@ -20,17 +20,8 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultTreeModel;
 
 public class AllTodosTreeBuilder extends TodoTreeBuilder {
-  /**
-   * To be deleted in 2020.1
-   */
-  @Deprecated
-  public AllTodosTreeBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {
-    this(tree, project);
-  }
-
   public AllTodosTreeBuilder(JTree tree, Project project) {
     super(tree, project);
   }

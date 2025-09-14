@@ -16,7 +16,8 @@
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ide.impl.idea.application.options.colors.OptionsPanelImpl.ColorDescriptionPanel;
+import consulo.colorScheme.ui.ColorDescriptionPanel;
+import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nullable;
 
@@ -39,5 +39,5 @@ public interface ColorSettingsPages {
   }
 
   @Nullable
-  Pair<ColorSettingsPage, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key);
+  Pair<ColorAndFontDescriptors, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key);
 }

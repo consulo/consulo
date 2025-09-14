@@ -125,6 +125,7 @@
     <module>modules/base/compiler-artifact-api</module>
     <module>modules/base/compiler-artifact-impl</module>
     <module>modules/base/color-scheme-api</module>
+    <module>modules/base/color-scheme-ui-api</module>
     <module>modules/base/color-scheme-impl</module>
     <module>modules/base/ide-api</module>
     <module>modules/base/component-impl</module>

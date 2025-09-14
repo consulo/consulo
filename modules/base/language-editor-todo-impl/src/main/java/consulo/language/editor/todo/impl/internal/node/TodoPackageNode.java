@@ -19,12 +19,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.impl.idea.ide.todo.HighlightedRegionProvider;
-import consulo.ide.impl.idea.ide.todo.TodoFileDirAndModuleComparator;
-import consulo.ide.impl.idea.ide.todo.TodoTreeBuilder;
-import consulo.ide.impl.idea.ide.todo.TodoTreeStructure;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.todo.impl.internal.TodoTreeBuilder;
+import consulo.language.editor.todo.impl.internal.TodoTreeStructure;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiPackage;
@@ -46,9 +43,10 @@ import consulo.ui.ex.awt.HighlightedRegion;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.usage.UsageTreeColors;
 import consulo.usage.UsageTreeColorsScheme;
-
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 public final class TodoPackageNode extends PackageElementNode implements HighlightedRegionProvider {
@@ -115,7 +113,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
 
       int nameEndOffset = newName.length();
       int todoItemCount = getTodoItemCount(packageElement);
-      newName = IdeLocalize.nodeTodoGroup(todoItemCount).get();
+      newName = LanguageTodoLocalize.nodeTodoGroup(todoItemCount).get();
 
       myHighlightedRegions.clear();
 

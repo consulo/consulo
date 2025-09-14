@@ -29,6 +29,8 @@ module consulo.ide.api {
   requires transitive consulo.virtual.file.system.api;
   requires transitive consulo.project.api;
   requires transitive consulo.file.chooser.api;
+  requires transitive consulo.color.scheme.api;
+  requires transitive consulo.color.scheme.ui.api;
   requires transitive consulo.project.content.api;
   requires transitive consulo.language.impl;
   requires transitive consulo.index.io;

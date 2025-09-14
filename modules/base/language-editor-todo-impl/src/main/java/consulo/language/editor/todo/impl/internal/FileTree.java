@@ -58,7 +58,7 @@ final class FileTree {
       children.add(file);
     }
     else {
-      children = ContainerUtil.createConcurrentList();
+      children = Lists.newLockFreeCopyOnWriteList();
       children.add(file);
       myStrictDirectory2Children.put(dir, children);
     }

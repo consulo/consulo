@@ -15,11 +15,11 @@
  */
 package consulo.language.editor.todo.impl.internal;
 
-import consulo.ide.impl.idea.ide.todo.nodes.ToDoRootNode;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.Project;
+import consulo.language.editor.todo.impl.internal.node.ToDoRootNode;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.PsiTodoSearchHelper;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 
 /**
  * @author irengrig

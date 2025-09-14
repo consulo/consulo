@@ -17,24 +17,24 @@ package consulo.language.editor.todo.impl.internal.configurable;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.language.editor.todo.TodoAttributesUtil;
 import consulo.language.editor.todo.TodoConfiguration;
 import consulo.language.editor.todo.TodoFilter;
-import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
+import consulo.language.psi.search.TodoPattern;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.*;
-import consulo.language.editor.todo.TodoAttributesUtil;
-import consulo.language.psi.search.TodoPattern;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.PanelWithButtons;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.ui.Table;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -66,8 +66,8 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
      * Invoked by reflection
      */
     public TodoConfigurable() {
-        myPatterns = new ArrayList<TodoPattern>();
-        myFilters = new ArrayList<TodoFilter>();
+        myPatterns = new ArrayList<>();
+        myFilters = new ArrayList<>();
         myFiltersModel = new FiltersTableModel(myFilters);
         myPatternsModel = new PatternsTableModel(myPatterns);
     }
@@ -141,14 +141,14 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
 
             @Override
             protected String getLabelText() {
-                return IdeLocalize.labelTodoPatterns().get();
+                return LanguageTodoLocalize.labelTodoPatterns().get();
             }
 
             @Override
             protected JComponent createMainComponent() {
                 // JTable with TodoPaterns
                 myPatternsTable = new JBTable(myPatternsModel);
-                myPatternsTable.getEmptyText().setText(IdeLocalize.textTodoNoPatterns());
+                myPatternsTable.getEmptyText().setText(LanguageTodoLocalize.textTodoNoPatterns());
                 myPatternsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
                 // Column "Icon"
@@ -189,7 +189,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
                         stopEditing();
                         TodoPattern pattern = new TodoPattern(TodoAttributesUtil.createDefault());
                         PatternDialog dialog = new PatternDialog(myPanel, pattern);
-                        dialog.setTitle(IdeLocalize.titleAddTodoPattern());
+                        dialog.setTitle(LanguageTodoLocalize.titleAddTodoPattern());
                         dialog.show();
                         if (!dialog.isOK()) {
                             return;
@@ -246,13 +246,13 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
 
             @Override
             protected String getLabelText() {
-                return IdeLocalize.labelTodoFilters().get();
+                return LanguageTodoLocalize.labelTodoFilters().get();
             }
 
             @Override
             protected JComponent createMainComponent() {
-                myFiltersTable = new Table(myFiltersModel);
-                myFiltersTable.getEmptyText().setText(IdeLocalize.textTodoNoFilters());
+                myFiltersTable = new JBTable(myFiltersModel);
+                myFiltersTable.getEmptyText().setText(LanguageTodoLocalize.textTodoNoFilters());
                 myFiltersTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
                 // Column "Name"
@@ -270,7 +270,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
                         stopEditing();
                         TodoFilter filter = new TodoFilter();
                         FilterDialog dialog = new FilterDialog(myPanel, filter, -1, myFilters, myPatterns);
-                        dialog.setTitle(IdeLocalize.titleAddTodoFilter());
+                        dialog.setTitle(LanguageTodoLocalize.titleAddTodoFilter());
                         dialog.show();
                         int exitCode = dialog.getExitCode();
                         if (DialogWrapper.OK_EXIT_CODE == exitCode) {
@@ -327,7 +327,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
         TodoPattern sourcePattern = myPatterns.get(selectedIndex);
         TodoPattern pattern = sourcePattern.clone();
         PatternDialog dialog = new PatternDialog(myPanel, pattern);
-        dialog.setTitle(IdeLocalize.titleEditTodoPattern());
+        dialog.setTitle(LanguageTodoLocalize.titleEditTodoPattern());
         dialog.show();
         if (!dialog.isOK()) {
             return;
@@ -356,7 +356,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
         TodoFilter sourceFilter = myFilters.get(selectedIndex);
         TodoFilter filter = sourceFilter.clone();
         FilterDialog dialog = new FilterDialog(myPanel, filter, selectedIndex, myFilters, myPatterns);
-        dialog.setTitle(IdeLocalize.titleEditTodoFilter());
+        dialog.setTitle(LanguageTodoLocalize.titleEditTodoFilter());
         dialog.show();
         int exitCode = dialog.getExitCode();
         if (DialogWrapper.OK_EXIT_CODE == exitCode) {
@@ -384,7 +384,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return IdeLocalize.titleTodo();
+        return LanguageTodoLocalize.titleTodo();
     }
 
     @Override

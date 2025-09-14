@@ -16,7 +16,10 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.ui.ColorAndFontDescription;
+import consulo.colorScheme.ui.ColorAndFontDescriptionPanel;
+import consulo.colorScheme.ui.ColorDescriptionPanel;
+import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.Settings;
 import consulo.dataContext.DataManager;
@@ -35,33 +38,13 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import java.awt.*;
-import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Set;
 
 public class OptionsPanelImpl implements OptionsPanel {
   public static final String SELECTED_COLOR_OPTION_PROPERTY = "selected.color.option.type";
 
-  public interface ColorDescriptionPanel {
-    @Nonnull
-    JComponent getPanel();
-
-    void resetDefault();
-
-    void reset(@Nonnull EditorSchemeAttributeDescriptor description);
-
-    void apply(@Nonnull EditorSchemeAttributeDescriptor descriptor, EditorColorsScheme scheme);
-
-    void addListener(@Nonnull Listener listener);
-
-    interface Listener extends EventListener {
-      void onSettingsChanged();
-
-      void onHyperLinkClicked(@Nonnull HyperlinkEvent e);
-    }
-  }
-
-  private final ColorOptionsTree myOptionsTree;
+    private final ColorOptionsTree myOptionsTree;
   private final ColorDescriptionPanel myOptionsPanel;
 
   private final ColorAndFontOptions myOptions;

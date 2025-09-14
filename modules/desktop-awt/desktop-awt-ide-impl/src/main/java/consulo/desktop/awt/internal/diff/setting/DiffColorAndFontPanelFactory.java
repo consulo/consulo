@@ -17,6 +17,9 @@ package consulo.desktop.awt.internal.diff.setting;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.localize.ApplicationLocalize;
+import consulo.colorScheme.ui.ColorAndFontDescription;
+import consulo.colorScheme.ui.ColorAndFontDescriptionPanel;
+import consulo.colorScheme.ui.TextAttributesDescription;
 import consulo.ide.impl.idea.application.options.colors.*;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;

@@ -21,8 +21,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GoToMenuExGroup;
 import consulo.language.editor.impl.internal.action.GoToErrorGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.ui.action.NextOccurenceAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.project.ui.action.PreviousOccurenceAction;
 
 /**
  * @author UNV

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package consulo.ide.impl.idea.application.options.colors;
+package consulo.colorScheme.ui;
 
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.localize.LocalizeValue;
-
 import jakarta.annotation.Nonnull;
 
-public interface EditorSchemeAttributeDescriptor {
-  @Nonnull
-  LocalizeValue getGroup();
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import java.util.EventListener;
 
-  String getType();
+public interface ColorDescriptionPanel {
+    @Nonnull
+    JComponent getPanel();
 
-  EditorColorsScheme getScheme();
+    void resetDefault();
 
-  default void apply(EditorColorsScheme scheme) {
-  }
+    void reset(@Nonnull EditorSchemeAttributeDescriptor description);
 
-  boolean isModified();
+    void apply(@Nonnull EditorSchemeAttributeDescriptor descriptor, EditorColorsScheme scheme);
+
+    void addListener(@Nonnull Listener listener);
+
+    interface Listener extends EventListener {
+        void onSettingsChanged();
+
+        void onHyperLinkClicked(@Nonnull HyperlinkEvent e);
+    }
 }
