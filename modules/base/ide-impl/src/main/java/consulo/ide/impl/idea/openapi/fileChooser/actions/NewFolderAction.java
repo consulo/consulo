@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ActionImpl;
 import consulo.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -28,68 +30,72 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
+@ActionImpl(id = "FileChooser.NewFolder")
 public class NewFolderAction extends FileChooserAction {
-  public NewFolderAction() {
-  }
-
-  public NewFolderAction(LocalizeValue text, LocalizeValue description, Image icon) {
-    super(text, description, icon);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use constructor with LocalizeValue")
-  public NewFolderAction(String text, String description, Image icon) {
-    super(text, description, icon);
-  }
-
-  @Override
-  protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    VirtualFile parent = fileSystemTree.getNewFileParent();
-    presentation.setEnabled(parent != null && parent.isDirectory());
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  protected void actionPerformed(FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    createNewFolder(fileSystemTree);
-  }
-
-  @RequiredUIAccess
-  private static void createNewFolder(FileSystemTree fileSystemTree) {
-    VirtualFile file = fileSystemTree.getNewFileParent();
-    if (file == null || !file.isDirectory()) return;
-
-    String newFolderName;
-    while (true) {
-      newFolderName = Messages.showInputDialog(
-        UILocalize.createNewFolderEnterNewFolderNamePromptText().get(),
-        UILocalize.newFolderDialogTitle().get(),
-        UIUtil.getQuestionIcon()
-      );
-      if (newFolderName == null) {
-        return;
-      }
-      if ("".equals(newFolderName.trim())) {
-        Messages.showMessageDialog(
-          UILocalize.createNewFolderFolderNameCannotBeEmptyErrorMessage().get(),
-          UILocalize.errorDialogTitle().get(),
-          UIUtil.getErrorIcon()
+    @Inject
+    public NewFolderAction() {
+        this(
+            ActionLocalize.actionFilechooserNewfolderText(),
+            ActionLocalize.actionFilechooserNewfolderDescription(),
+            PlatformIconGroup.actionsNewfolder()
         );
-        continue;
-      }
-      Exception failReason = ((FileSystemTreeImpl)fileSystemTree).createNewFolder(file, newFolderName);
-      if (failReason != null) {
-        Messages.showMessageDialog(
-          UILocalize.createNewFolderCouldNotCreateFolderErrorMessage(newFolderName).get(),
-          UILocalize.errorDialogTitle().get(),
-          UIUtil.getErrorIcon()
-        );
-        continue;
-      }
-      return;
     }
-  }
+
+    protected NewFolderAction(LocalizeValue text, LocalizeValue description, Image icon) {
+        super(text, description, icon);
+    }
+
+    @Override
+    protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        VirtualFile parent = fileSystemTree.getNewFileParent();
+        presentation.setEnabled(parent != null && parent.isDirectory());
+        setEnabledInModalContext(true);
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+        createNewFolder(fileSystemTree);
+    }
+
+    @RequiredUIAccess
+    private static void createNewFolder(FileSystemTree fileSystemTree) {
+        VirtualFile file = fileSystemTree.getNewFileParent();
+        if (file == null || !file.isDirectory()) {
+            return;
+        }
+
+        String newFolderName;
+        while (true) {
+            newFolderName = Messages.showInputDialog(
+                UILocalize.createNewFolderEnterNewFolderNamePromptText().get(),
+                UILocalize.newFolderDialogTitle().get(),
+                UIUtil.getQuestionIcon()
+            );
+            if (newFolderName == null) {
+                return;
+            }
+            if ("".equals(newFolderName.trim())) {
+                Messages.showMessageDialog(
+                    UILocalize.createNewFolderFolderNameCannotBeEmptyErrorMessage().get(),
+                    UILocalize.errorDialogTitle().get(),
+                    UIUtil.getErrorIcon()
+                );
+                continue;
+            }
+            Exception failReason = ((FileSystemTreeImpl) fileSystemTree).createNewFolder(file, newFolderName);
+            if (failReason != null) {
+                Messages.showMessageDialog(
+                    UILocalize.createNewFolderCouldNotCreateFolderErrorMessage(newFolderName).get(),
+                    UILocalize.errorDialogTitle().get(),
+                    UIUtil.getErrorIcon()
+                );
+                continue;
+            }
+            return;
+        }
+    }
 }

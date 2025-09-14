@@ -13,51 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.LangDataKeys;
-import consulo.ui.ex.action.Presentation;
+import consulo.annotation.component.ActionImpl;
 import consulo.fileChooser.FileSystemTree;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "FileChooser.GotoModule")
 public final class GotoModuleDirectory extends FileChooserAction {
-  @Override
-  protected void actionPerformed(final FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    final VirtualFile moduleDir = getModuleDir(e);
-    if (moduleDir != null) {
-      fileSystemTree.select(moduleDir, new Runnable() {
-        @Override
-        public void run() {
-          fileSystemTree.expand(moduleDir, null);
+    public GotoModuleDirectory() {
+        super(
+            ActionLocalize.actionFilechooserGotomoduleText(),
+            ActionLocalize.actionFilechooserGotomoduleDescription(),
+            PlatformIconGroup.nodesModule()
+        );
+    }
+
+    @Override
+    protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+        VirtualFile moduleDir = getModuleDir(e);
+        if (moduleDir != null) {
+            fileSystemTree.select(moduleDir, () -> fileSystemTree.expand(moduleDir, null));
         }
-      });
-    }
-  }
-
-  @Override
-  protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    VirtualFile moduleDir = getModuleDir(e);
-    presentation.setEnabled(moduleDir != null && fileSystemTree.isUnderRoots(moduleDir));
-  }
-
-  @Nullable
-  private static VirtualFile getModuleDir(AnActionEvent e) {
-    Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
-    if (module == null) {
-      module = e.getData(LangDataKeys.MODULE);
     }
 
-    if (module != null && !module.isDisposed()) {
-      return module.getModuleDir();
+    @Override
+    protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        VirtualFile moduleDir = getModuleDir(e);
+        presentation.setEnabled(moduleDir != null && fileSystemTree.isUnderRoots(moduleDir));
     }
 
-    return null;
-  }
+    @Nullable
+    private static VirtualFile getModuleDir(AnActionEvent e) {
+        Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
+        if (module == null) {
+            module = e.getData(Module.KEY);
+        }
+
+        if (module != null && !module.isDisposed()) {
+            return module.getModuleDir();
+        }
+
+        return null;
+    }
 }

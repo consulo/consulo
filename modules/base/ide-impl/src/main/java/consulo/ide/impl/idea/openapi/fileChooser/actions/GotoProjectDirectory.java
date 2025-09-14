@@ -15,35 +15,45 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.fileChooser.FileSystemTree;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
+@ActionImpl(id = "FileChooser.GotoProject")
 public final class GotoProjectDirectory extends FileChooserAction {
-  @Override
-  protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    VirtualFile projectPath = getProjectDir(e);
-    if (projectPath != null) {
-      fileSystemTree.select(projectPath, () -> fileSystemTree.expand(projectPath, null));
+    @Inject
+    public GotoProjectDirectory(Application application) {
+        super(
+            ActionLocalize.actionFilechooserGotoprojectText(),
+            ActionLocalize.actionFilechooserGotoprojectDescription(),
+            application.getIcon()
+        );
     }
-  }
 
-  @Override
-  protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    presentation.setIcon(Application.get().getIcon());
-    VirtualFile projectPath = getProjectDir(e);
-    presentation.setEnabled(projectPath != null && fileSystemTree.isUnderRoots(projectPath));
-  }
+    @Override
+    protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+        VirtualFile projectPath = getProjectDir(e);
+        if (projectPath != null) {
+            fileSystemTree.select(projectPath, () -> fileSystemTree.expand(projectPath, null));
+        }
+    }
 
-  @Nullable
-  private static VirtualFile getProjectDir(AnActionEvent e) {
-    VirtualFile projectFileDir = e.getData(Project.PROJECT_FILE_DIRECTORY);
-    return projectFileDir != null && projectFileDir.isValid() ? projectFileDir : null;
-  }
+    @Override
+    protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+        VirtualFile projectPath = getProjectDir(e);
+        e.getPresentation().setEnabled(projectPath != null && fileSystemTree.isUnderRoots(projectPath));
+    }
+
+    @Nullable
+    private static VirtualFile getProjectDir(@Nonnull AnActionEvent e) {
+        VirtualFile projectFileDir = e.getData(Project.PROJECT_FILE_DIRECTORY);
+        return projectFileDir != null && projectFileDir.isValid() ? projectFileDir : null;
+    }
 }

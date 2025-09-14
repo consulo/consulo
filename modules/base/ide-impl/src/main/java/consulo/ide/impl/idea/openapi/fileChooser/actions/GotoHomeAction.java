@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.fileChooser.FileSystemTree;
@@ -25,25 +28,32 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "FileChooser.GotoHome")
 public final class GotoHomeAction extends FileChooserAction {
-  @Override
-  protected void actionPerformed(final FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
-    if (userHomeDir != null) {
-      fileSystemTree.select(userHomeDir, new Runnable() {
-        public void run() {
-          fileSystemTree.expand(userHomeDir, null);
-        }
-      });
+    public GotoHomeAction() {
+        super(
+            ActionLocalize.actionFilechooserGotohomeText(),
+            ActionLocalize.actionFilechooserGotohomeDescription(),
+            PlatformIconGroup.nodesHomefolder()
+        );
     }
-  }
 
-  @Override
-  protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    if (!presentation.isEnabled()) return;
+    @Override
+    protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+        VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+        if (userHomeDir != null) {
+            fileSystemTree.select(userHomeDir, () -> fileSystemTree.expand(userHomeDir, null));
+        }
+    }
 
-    VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
-    presentation.setEnabled(userHomeDir != null && fileSystemTree.isUnderRoots(userHomeDir));
-  }
+    @Override
+    protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        if (!presentation.isEnabled()) {
+            return;
+        }
+
+        VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+        presentation.setEnabled(userHomeDir != null && fileSystemTree.isUnderRoots(userHomeDir));
+    }
 }

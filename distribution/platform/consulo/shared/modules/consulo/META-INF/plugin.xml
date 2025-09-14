@@ -479,27 +479,6 @@
             <reference id="About"/>
         </group>
 
-        <group id="FileChooserToolbar">
-            <action id="FileChooser.GotoHome" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoHomeAction"
-                    icon="consulo.platform.base.PlatformIconGroup@nodes.homefolder"/>
-            <action id="FileChooser.GotoDesktop" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoDesktopDirAction"
-                    icon="consulo.platform.base.PlatformIconGroup@nodes.desktop"/>
-            <action id="FileChooser.GotoProject" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoProjectDirectory"
-                    icon="consulo.platform.base.PlatformIconGroup@icon16"/>
-            <separator/>
-            <action id="FileChooser.NewFile" class="consulo.ide.impl.idea.openapi.fileChooser.actions.NewFileAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.new"/>
-            <action id="FileChooser.NewFolder" class="consulo.ide.impl.idea.openapi.fileChooser.actions.NewFolderAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.newfolder"/>
-            <action id="FileChooser.Delete" class="consulo.ide.impl.idea.openapi.fileChooser.actions.FileDeleteAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
-            <separator/>
-            <action id="FileChooser.Refresh" class="consulo.ide.impl.idea.openapi.fileChooser.actions.RefreshFileChooserAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-            <separator/>
-            <action id="FileChooser.ShowHiddens" class="consulo.ide.impl.idea.openapi.fileChooser.actions.ShowHiddensAction"/>
-        </group>
-
         <group id="DiffPanel.Toolbar">
             <reference ref="$Copy"/>
             <reference ref="PreviousDiff"/>
@@ -1137,12 +1116,6 @@
             <reference ref="Arrangement.Rule.Group.Condition.Move.Up"/>
             <reference ref="Arrangement.Rule.Group.Condition.Move.Down"/>
         </group>
-
-
-        <action id="FileChooser.GotoModule" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoModuleDirectory"
-                icon="consulo.platform.base.PlatformIconGroup@nodes.module">
-            <add-to-group group-id="FileChooserToolbar" anchor="after" relative-to-action="FileChooser.GotoProject"/>
-        </action>
 
         <group>
             <add-to-group group-id="ExportImportGroup" anchor="first"/>

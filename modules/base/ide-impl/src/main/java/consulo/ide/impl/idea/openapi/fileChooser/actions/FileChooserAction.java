@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.application.dumb.DumbAware;
+import consulo.fileChooser.FileSystemTree;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.fileChooser.FileSystemTree;
-import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
@@ -31,13 +30,6 @@ public abstract class FileChooserAction extends AnAction implements DumbAware {
     }
 
     protected FileChooserAction(LocalizeValue text, LocalizeValue description, Image icon) {
-        super(text, description, icon);
-        setEnabledInModalContext(true);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use constructor with LocalizeValue")
-    protected FileChooserAction(String text, String description, Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);
     }

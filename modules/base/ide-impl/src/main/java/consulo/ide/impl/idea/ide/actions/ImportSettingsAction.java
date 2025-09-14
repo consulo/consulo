@@ -146,9 +146,8 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
             UpdateSettingsEx updateSettings = (UpdateSettingsEx)UpdateSettings.getInstance();
             updateSettings.setLastTimeCheck(0);
 
-            Application application = Application.get();
-            LocalizeValue applicationName = application.getName();
-            LocalizeValue message = application.isRestartCapable()
+            LocalizeValue applicationName = myApplication.getName();
+            LocalizeValue message = myApplication.isRestartCapable()
                 ? IdeLocalize.messageSettingsImportedSuccessfullyRestart(applicationName, applicationName)
                 : IdeLocalize.messageSettingsImportedSuccessfully(applicationName, applicationName);
             int ret = Messages.showOkCancelDialog(
@@ -157,7 +156,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
                 UIUtil.getQuestionIcon()
             );
             if (ret == Messages.OK) {
-                application.restart(true);
+                myApplication.restart(true);
             }
         }
         catch (ZipException e1) {

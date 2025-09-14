@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.PathField;
@@ -23,21 +25,23 @@ import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "FileChooser.TogglePathShowing")
 public class TogglePathShowingAction extends AnAction implements DumbAware {
-  public TogglePathShowingAction() {
-    setEnabledInModalContext(true);
-  }
+    public TogglePathShowingAction() {
+        super(ActionLocalize.actionFilechooserTogglepathshowingText());
+        setEnabledInModalContext(true);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setTextValue(IdeLocalize.fileChooserHidePathTooltipText());
-    e.getPresentation().setEnabled(e.hasData(PathField.PATH_FIELD));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setTextValue(IdeLocalize.fileChooserHidePathTooltipText());
+        e.getPresentation().setEnabled(e.hasData(PathField.PATH_FIELD));
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    PathField f = e.getRequiredData(PathField.PATH_FIELD);
-    f.toggleVisible();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        PathField f = e.getRequiredData(PathField.PATH_FIELD);
+        f.toggleVisible();
+    }
 }

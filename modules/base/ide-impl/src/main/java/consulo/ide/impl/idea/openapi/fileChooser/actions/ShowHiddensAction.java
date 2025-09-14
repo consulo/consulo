@@ -15,19 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileSystemTree;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
 
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "FileChooser.ShowHiddens")
 public final class ShowHiddensAction extends ToggleAction implements DumbAware {
+    public ShowHiddensAction() {
+        super(
+            ActionLocalize.actionFilechooserShowhiddensText(),
+            ActionLocalize.actionFilechooserShowhiddensDescription(),
+            PlatformIconGroup.actionsTogglevisibility()
+        );
+    }
+
     @Override
     public boolean isSelected(AnActionEvent e) {
         FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
@@ -41,11 +50,5 @@ public final class ShowHiddensAction extends ToggleAction implements DumbAware {
         if (fileSystemTree != null) {
             fileSystemTree.showHiddens(state);
         }
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsTogglevisibility();
     }
 }
