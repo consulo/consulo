@@ -1014,39 +1014,10 @@
             </group>
         </group>
 
-        <group id="TestTreePopupMenu">
-            <reference ref="RunContextGroup"/>
-            <separator/>
-            <reference ref="EditSource"/>
-            <reference ref="ViewSource"/>
-        </group>
-
         <group id="ConsoleView.PopupMenu">
             <reference ref="ConsoleEditorPopupMenu"/>
             <separator/>
             <action id="ConsoleView.ClearAll" class="consulo.execution.impl.internal.action.ClearConsoleAction"/>
-        </group>
-
-        <group>
-            <action class="consulo.execution.test.action.ViewAssertEqualsDiffAction" text="View assertEquals Difference"
-                    id="openAssertEqualsDiff"/>
-            <separator/>
-            <add-to-group anchor="first" group-id="TestTreePopupMenu"/>
-        </group>
-        <!-- SM Test Runner Actions -->
-        <group id="SMTestRunnerTestsTree">
-            <separator/>
-            <action id="consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowStatisticsAction"
-                    class="consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowStatisticsAction"
-                    text="Show Statistics"/>
-            <add-to-group group-id="TestTreePopupMenu" anchor="last"/>
-        </group>
-        <group id="SMTestRunnerStatistics">
-            <separator/>
-            <action id="consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowTestProxy"
-                    class="consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowTestProxy"
-                    text="Navigate to Test"/>
-            <add-to-group group-id="TestTreePopupMenu" anchor="last"/>
         </group>
 
         <action id="DumpLookupElementWeights" class="consulo.ide.impl.idea.internal.DumpLookupElementWeights"

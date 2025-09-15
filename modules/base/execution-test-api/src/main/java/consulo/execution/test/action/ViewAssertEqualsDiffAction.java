@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.test.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.util.ListSelection;
 import consulo.dataContext.DataContext;
 import consulo.diff.DiffDialogHints;
@@ -23,6 +23,7 @@ import consulo.diff.DiffManager;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.TestFrameworkRunningModel;
+import consulo.execution.test.localize.ExecutionTestLocalize;
 import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.execution.test.ui.TestTreeView;
 import consulo.project.Project;
@@ -33,75 +34,85 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@ActionImpl(id = ViewAssertEqualsDiffAction.ACTION_ID)
 public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeViewAction {
-  @NonNls
-  public static final String ACTION_ID = "openAssertEqualsDiff";
+    public static final String ACTION_ID = "openAssertEqualsDiff";
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    if (!openDiff(e.getDataContext(), null)) {
-      Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-      Messages.showInfoMessage(component, "Comparison error was not found", "No Comparison Data Found");
+    public ViewAssertEqualsDiffAction() {
+        super(ExecutionTestLocalize.actionViewAssertEqualsDiffText());
     }
-  }
 
-  @RequiredUIAccess
-  public static boolean openDiff(DataContext context, @Nullable DiffHyperlink currentHyperlink) {
-    AbstractTestProxy testProxy = context.getData(AbstractTestProxy.KEY);
-    Project project = context.getData(Project.KEY);
-    if (testProxy != null) {
-      DiffHyperlink diffViewerProvider = testProxy.getDiffViewerProvider();
-      if (diffViewerProvider != null) {
-        List<DiffHyperlink> providers = collectAvailableProviders(context.getData(TestTreeView.MODEL_DATA_KEY));
-        int index = currentHyperlink != null ? providers.indexOf(currentHyperlink) : -1;
-        if (index == -1) index = providers.indexOf(diffViewerProvider);
-        DiffRequestChain chain = TestDiffRequestProcessor.createRequestChain(project, ListSelection.createAt(providers, index));
-        DiffManager.getInstance().showDiff(project, chain, DiffDialogHints.DEFAULT);
-        return true;
-      }
-    }
-    if (currentHyperlink != null) {
-      DiffRequestChain chain = TestDiffRequestProcessor.createRequestChain(project, ListSelection.createSingleton(currentHyperlink));
-      DiffManager.getInstance().showDiff(project, chain, DiffDialogHints.DEFAULT);
-      return true;
-    }
-    return false;
-  }
-
-  private static List<DiffHyperlink> collectAvailableProviders(TestFrameworkRunningModel model) {
-    List<DiffHyperlink> providers = new ArrayList<>();
-    if (model != null) {
-      AbstractTestProxy root = model.getRoot();
-      List<? extends AbstractTestProxy> allTests = root.getAllTests();
-      for (AbstractTestProxy test : allTests) {
-        if (test.isLeaf()) {
-          providers.addAll(test.getDiffViewerProviders());
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        if (!openDiff(e.getDataContext(), null)) {
+            Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+            Messages.showInfoMessage(
+                component,
+                ExecutionTestLocalize.dialogMessageComparisonErrorWasFound().get(),
+                ExecutionTestLocalize.dialogTitleNoComparisonDataFound().get()
+            );
         }
-      }
     }
-    return providers;
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    boolean enabled;
-    DataContext dataContext = e.getDataContext();
-    if (!dataContext.hasData(Project.KEY)) {
-      enabled = false;
+    @RequiredUIAccess
+    public static boolean openDiff(DataContext context, @Nullable DiffHyperlink currentHyperlink) {
+        AbstractTestProxy testProxy = context.getData(AbstractTestProxy.KEY);
+        Project project = context.getData(Project.KEY);
+        if (testProxy != null) {
+            DiffHyperlink diffViewerProvider = testProxy.getDiffViewerProvider();
+            if (diffViewerProvider != null) {
+                List<DiffHyperlink> providers = collectAvailableProviders(context.getData(TestTreeView.MODEL_DATA_KEY));
+                int index = currentHyperlink != null ? providers.indexOf(currentHyperlink) : -1;
+                if (index == -1) {
+                    index = providers.indexOf(diffViewerProvider);
+                }
+                DiffRequestChain chain = TestDiffRequestProcessor.createRequestChain(project, ListSelection.createAt(providers, index));
+                DiffManager.getInstance().showDiff(project, chain, DiffDialogHints.DEFAULT);
+                return true;
+            }
+        }
+        if (currentHyperlink != null) {
+            DiffRequestChain chain = TestDiffRequestProcessor.createRequestChain(project, ListSelection.createSingleton(currentHyperlink));
+            DiffManager.getInstance().showDiff(project, chain, DiffDialogHints.DEFAULT);
+            return true;
+        }
+        return false;
     }
-    else {
-      AbstractTestProxy test = dataContext.getData(AbstractTestProxy.KEY);
-      enabled = test != null && (test.isLeaf() ? test.getDiffViewerProvider() != null : test.isDefect());
+
+    private static List<DiffHyperlink> collectAvailableProviders(TestFrameworkRunningModel model) {
+        List<DiffHyperlink> providers = new ArrayList<>();
+        if (model != null) {
+            AbstractTestProxy root = model.getRoot();
+            List<? extends AbstractTestProxy> allTests = root.getAllTests();
+            for (AbstractTestProxy test : allTests) {
+                if (test.isLeaf()) {
+                    providers.addAll(test.getDiffViewerProviders());
+                }
+            }
+        }
+        return providers;
     }
-    presentation.setEnabledAndVisible(enabled);
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        boolean enabled;
+        DataContext dataContext = e.getDataContext();
+        if (!dataContext.hasData(Project.KEY)) {
+            enabled = false;
+        }
+        else {
+            AbstractTestProxy test = dataContext.getData(AbstractTestProxy.KEY);
+            enabled = test != null && (test.isLeaf() ? test.getDiffViewerProvider() != null : test.isDefect());
+        }
+        presentation.setEnabledAndVisible(enabled);
+    }
 }

@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.execution.test.localize.ExecutionTestLocalize;
 import consulo.execution.test.sm.ui.SMTRunnerTestTreeView;
 import consulo.execution.test.sm.ui.TestResultsViewer;
 import consulo.execution.test.AbstractTestProxy;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,24 +31,29 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Roman Chernyatchik
  */
+@ActionImpl(id = "consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowStatisticsAction")
 public class ShowStatisticsAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    SMTRunnerTestTreeView sender = e.getRequiredData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW);
-    TestResultsViewer resultsViewer = sender.getResultsViewer();
-    assert resultsViewer != null;
+    public ShowStatisticsAction() {
+        super(ExecutionTestLocalize.actionShowStatisticsText());
+    }
 
-    resultsViewer.showStatisticsForSelectedProxy();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        SMTRunnerTestTreeView sender = e.getRequiredData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW);
+        TestResultsViewer resultsViewer = sender.getResultsViewer();
+        assert resultsViewer != null;
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
+        resultsViewer.showStatisticsForSelectedProxy();
+    }
 
-    // visible only in SMTRunnerTestTreeView 
-    presentation.setVisible(e.hasData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW));
-    // enabled if some proxy is selected
-    presentation.setEnabled(e.hasData(AbstractTestProxy.KEY));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+
+        // visible only in SMTRunnerTestTreeView
+        presentation.setVisible(e.hasData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW));
+        // enabled if some proxy is selected
+        presentation.setEnabled(e.hasData(AbstractTestProxy.KEY));
+    }
 }
