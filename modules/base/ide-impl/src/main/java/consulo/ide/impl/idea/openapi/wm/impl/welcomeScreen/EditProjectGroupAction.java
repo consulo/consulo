@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.project.ProjectGroup;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -33,7 +35,12 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "WelcomeScreen.EditGroup")
 public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBase {
+    public EditProjectGroupAction() {
+        super(ProjectUILocalize.actionRecentProjectsEditGroupText());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -43,8 +50,8 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
         DefaultListModel model = getDataModel(e);
         String name = Messages.showInputDialog(
             list,
-            "Enter group name: ",
-            "Change Group Name",
+            ProjectUILocalize.labelRecentProjectsEnterGroupName().get(),
+            ProjectUILocalize.dialogTitleRecentProjectsChangeGroupName().get(),
             null,
             group.getName(),
             new InputValidatorEx() {
@@ -54,10 +61,10 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
                 public String getErrorText(String inputString) {
                     inputString = inputString.trim();
                     if (inputString.length() == 0) {
-                        return "Name cannot be empty.";
+                        return ProjectUILocalize.errorRecentProjectsNameCannotBeEmpty().get();
                     }
                     if (!checkInput(inputString)) {
-                        return "Group '" + inputString + "' already exists.";
+                        return ProjectUILocalize.errorRecentProjectsGroupAlreadyExists(inputString).get();
                     }
                     return null;
                 }
@@ -88,12 +95,9 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
             group.setName(name);
             rebuildRecentProjectDataModel(model);
             for (int i = 0; i < model.getSize(); i++) {
-                Object element = model.get(i);
-                if (element instanceof PopupProjectGroupActionGroup) {
-                    if (((PopupProjectGroupActionGroup) element).getGroup().equals(group)) {
-                        ScrollingUtil.selectItem(list, i);
-                        break;
-                    }
+                if (model.get(i) instanceof PopupProjectGroupActionGroup popupGroup && popupGroup.getGroup().equals(group)) {
+                    ScrollingUtil.selectItem(list, i);
+                    break;
                 }
             }
         }
@@ -102,9 +106,9 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
     @Override
     public void update(@Nonnull AnActionEvent e) {
         List<AnAction> selected = getSelectedElements(e);
-        boolean enabled =
-            !selected.isEmpty() && selected.get(0) instanceof PopupProjectGroupActionGroup && !((PopupProjectGroupActionGroup) selected.get(
-                0)).getGroup().isTutorials();
+        boolean enabled = !selected.isEmpty()
+            && selected.get(0) instanceof PopupProjectGroupActionGroup popupGroup
+            && !popupGroup.getGroup().isTutorials();
         e.getPresentation().setEnabledAndVisible(enabled);
     }
 }

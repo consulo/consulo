@@ -18,8 +18,32 @@ action.notification.show.balloons.description:
     text: Enable or suppress notification balloons
 action.notification.show.balloons.text:
     text: Show balloons
+action.recent.projects.edit.group.text:
+    text: Edit…
+action.recent.projects.move.to.group.text:
+    text: Move To Group
+action.recent.projects.new.group.text:
+    text: New Group
+action.recent.projects.open.selected.project.text:
+    text: Open
+action.recent.projects.open.selected.projects.text:
+    text: Open All
+action.recent.projects.remove.selected.text:
+    text: Remove
 action.restore.windows:
     text: Restore _Windows
+dialog.message.recent.projects.project.group.name:
+    text: Project group name
+dialog.title.recent.projects.change.group.name:
+    text: Change Group Name
+dialog.title.recent.projects.create.new.project.group:
+    text: Create New Project Group
+error.recent.projects.group.already.exists:
+    text: Group ''{0}'' already exists.
+error.recent.projects.name.cannot.be.empty:
+    text: Name cannot be empty.
+label.recent.projects.enter.group.name:
+    text: 'Enter group name:'
 toolwindow.messages.display.name:
     text: Messages
 toolwindow.notifications.display.name:

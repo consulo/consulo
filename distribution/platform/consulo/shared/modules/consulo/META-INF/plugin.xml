@@ -1263,8 +1263,6 @@
             <add-to-group group-id="MainToolBarSettings" anchor="after" relative-to-action="ShowSettings"/>
         </reference>
 
-        <action id="ShowReformatFileDialog" class="consulo.ide.impl.idea.codeInsight.actions.ShowReformatFileDialog"/>
-
         <group id="Vcs.Show.Toolwindow.Tab">
             <add-to-group group-id="VcsGeneral.KeymapGroup"/>
             <action id="Vcs.Show.Local.Changes" class="consulo.versionControlSystem.impl.internal.action.VcsShowLocalChangesAction"/>
@@ -1287,23 +1285,6 @@
                     <keyboard-shortcut first-keystroke="control F" keymap="$default"/>
                 </action>
             </group>
-        </group>
-
-        <group id="WelcomeScreenRecentProjectActionGroup">
-            <action id="WelcomeScreen.OpenSelected" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenSelectedProjectsAction"
-                    text="Open"/>
-            <action id="WelcomeScreen.RemoveSelected"
-                    class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RemoveSelectedProjectsAction"
-                    text="Remove" icon="consulo.platform.base.PlatformIconGroup@general.remove"/>
-            <action id="WelcomeScreen.RevealRecentProjectDirectory"
-                    class="consulo.ide.impl.wm.impl.welcomeScreen.RevealRecentProjectDirectoryAction"/>
-            <separator/>
-            <action id="WelcomeScreen.NewGroup" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.CreateNewProjectGroupAction"
-                    text="New Group" icon="consulo.platform.base.PlatformIconGroup@nodes.folder"/>
-            <action id="WelcomeScreen.EditGroup" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.EditProjectGroupAction"
-                    text="Edit..."/>
-            <group id="WelcomeScreen.MoveToGroup" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.MoveProjectToGroupActionGroup"
-                   text="Move To Group" popup="true"/>
         </group>
 
         <group id="SearchEverywhereActions" text="Search Everywhere">
