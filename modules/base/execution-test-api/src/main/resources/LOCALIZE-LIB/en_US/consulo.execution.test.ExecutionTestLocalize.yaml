@@ -6,6 +6,8 @@ action.hide.passed.description:
     text: Hide passed tests
 action.hide.passed.text:
     text: Hide Passed
+action.navigate.to.test.text:
+    text: Navigate to Test
 action.open.source.at.exception.description:
     text: Go to line which caused exception when opening test source
 action.open.source.at.exception.text:
@@ -24,6 +26,8 @@ action.show.inline.statistics.description:
     text: Show/hide the test duration in the tree
 action.show.inline.statistics.text:
     text: Show Inline Statistics
+action.show.statistics.text:
+    text: Show Statistics
 action.sort.alphabetically.description:
     text: Sort tests or suites alphabetically
 action.sort.alphabetically.text:
@@ -40,3 +44,9 @@ action.track.test.description:
     text: Select currently running test in tree
 action.track.test.text:
     text: Track Running Test
+action.view.assert.equals.diff.text:
+    text: View assertEquals Difference
+dialog.message.comparison.error.was.found:
+    text: Comparison error was not found
+dialog.title.no.comparison.data.found:
+    text: No Comparison Data Found

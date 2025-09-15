@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.test.AbstractTestProxy;
+import consulo.execution.test.localize.ExecutionTestLocalize;
 import consulo.execution.test.sm.ui.statistic.StatisticsPanel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -26,21 +28,26 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Roman Chernyatchik
  */
+@ActionImpl(id = "ShowTestProxy")
 public class ShowTestProxy extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    StatisticsPanel sender = e.getRequiredData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS);
-    sender.showSelectedProxyInTestsTree();
-  }
+    public ShowTestProxy() {
+      super(ExecutionTestLocalize.actionNavigateToTestText());
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        StatisticsPanel sender = e.getRequiredData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS);
+        sender.showSelectedProxyInTestsTree();
+    }
 
-    // visible only in StatisticsTableView
-    presentation.setVisible(e.hasData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS));
-    // enabled if some proxy is selected
-    presentation.setEnabled(e.hasData(AbstractTestProxy.KEY));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+
+        // visible only in StatisticsTableView
+        presentation.setVisible(e.hasData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS));
+        // enabled if some proxy is selected
+        presentation.setEnabled(e.hasData(AbstractTestProxy.KEY));
+    }
 }
