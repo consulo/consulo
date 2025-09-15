@@ -1960,6 +1960,8 @@ action.ShowQuickDocAtPinnedWindowFromTooltip.description:
     text: Show full documentation in a pinned window
 action.ShowQuickDocAtPinnedWindowFromTooltip.text:
     text: Full documentation in a pinned window
+action.ShowReformatFileDialog.text:
+    text: Reformat File…
 action.ShowRegistry.text:
     text: Registry
 action.ShowSettingsAndFindUsages.description:
