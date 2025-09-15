@@ -44,6 +44,16 @@ public class KeyMapSettingImpl implements KeyMapSetting, PersistentStateComponen
         myState.useUnicodeCharactersForShortcuts = value;
     }
 
+    @Override
+    public boolean isEnabledDoublePressShortcuts() {
+        return myState.enabledDoublePressShortcuts;
+    }
+
+    @Override
+    public void setEnabledDoublePressShortcuts(boolean enabledDoublePressShortcuts) {
+        myState.enabledDoublePressShortcuts = enabledDoublePressShortcuts;
+    }
+
     @Nullable
     @Override
     public KeyMapSettingState getState() {

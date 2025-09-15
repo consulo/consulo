@@ -21,4 +21,6 @@ package consulo.ide.impl.internal.ui;
  */
 public class KeyMapSettingState {
     public Boolean useUnicodeCharactersForShortcuts;
+
+    public boolean enabledDoublePressShortcuts = true;
 }

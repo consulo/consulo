@@ -35,6 +35,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.internal.CustomTooltipBuilder;
+import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -44,11 +45,15 @@ import java.awt.event.KeyEvent;
 /**
  * @author Konstantin Bulenkov
  */
-@ActionImpl(id = "SearchEverywhere")
+@ActionImpl(id = IdeActions.ACTION_SEARCH_EVERYWHERE)
 public class SearchEverywhereAction extends AnAction implements DumbAware {
+    private final KeyMapSetting myKeyMapSetting;
+
     @Inject
-    public SearchEverywhereAction(ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
+    public SearchEverywhereAction(KeyMapSetting keyMapSetting,
+                                  ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
         super(ActionLocalize.actionSearcheverywhereText(), LocalizeValue.empty(), PlatformIconGroup.actionsFind());
+        myKeyMapSetting = keyMapSetting;
         setEnabledInModalContext(false);
 
         modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
@@ -83,6 +88,12 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
+        if (!myKeyMapSetting.isEnabledDoublePressShortcuts()
+            && e.getInputEvent() instanceof KeyEvent keyEvent
+            && keyEvent.getKeyCode() == KeyEvent.VK_SHIFT) {
+            return;
+        }
+
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;

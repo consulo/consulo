@@ -4,18 +4,16 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.registry.Registry;
 import consulo.execution.executor.Executor;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
-import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
+import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -23,7 +21,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.awt.FontUtil;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.internal.CustomShortcutBuilder;
+import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -42,15 +42,20 @@ public class RunAnythingAction extends AnAction implements DumbAware {
 
     private boolean myIsDoubleCtrlRegistered;
     private final Application myApplication;
+    @Nonnull
+    private final KeyMapSetting myKeyMapSetting;
 
     @Inject
-    public RunAnythingAction(@Nonnull Application application, @Nonnull IdeEventQueueProxy ideEventQueueProxy) {
+    public RunAnythingAction(@Nonnull Application application,
+                             @Nonnull IdeEventQueueProxy ideEventQueueProxy,
+                             @Nonnull KeyMapSetting keyMapSetting) {
         super(
             ActionLocalize.actionRunanythingText(),
             ActionLocalize.actionRunanythingDescription(),
             PlatformIconGroup.actionsRun_anything()
         );
-        this.myApplication = application;
+        myApplication = application;
+        myKeyMapSetting = keyMapSetting;
         ideEventQueueProxy.addPostprocessor(
             event -> {
                 if (event instanceof KeyEvent keyEvent) {
@@ -71,7 +76,7 @@ public class RunAnythingAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        if (Registry.is("ide.suppress.double.click.handler")
+        if (!myKeyMapSetting.isEnabledDoublePressShortcuts()
             && e.getInputEvent() instanceof KeyEvent keyEvent
             && keyEvent.getKeyCode() == KeyEvent.VK_CONTROL) {
             return;

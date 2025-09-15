@@ -104,6 +104,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     private Disposable myUIDisposable;
 
     private ThreeStateCheckBox myUseUnicodeCharactersInShortcutsBox;
+    private JCheckBox myDoublePressShortcutsBox;
 
     @Inject
     public KeymapPanel(@Nonnull Provider<KeyMapSetting> keyMapSettingProvider) {
@@ -364,7 +365,11 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         });
 
         bottomPanel.add(myUseUnicodeCharactersInShortcutsBox);
-        
+
+        myDoublePressShortcutsBox = new JCheckBox("Enable double modifier key shortcuts (Shift-Shift for Search Everywhere, Ctrl-Ctrl for Run Anything)");
+
+        bottomPanel.add(myDoublePressShortcutsBox);
+
         return bottomPanel;
     }
 
@@ -952,6 +957,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
         myUseUnicodeCharactersInShortcutsBox.setState(ThreeStateCheckBox.State.fromBoolean(setting.isUseUnicodeShortcuts()));
 
+        myDoublePressShortcutsBox.setSelected(setting.isEnabledDoublePressShortcuts());
+
         if (myNonEnglishKeyboardSupportOption != null) {
             KeyboardSettingsExternalizable.getInstance().setNonEnglishKeyboardSupportEnabled(false);
             myNonEnglishKeyboardSupportOption.setValue(KeyboardSettingsExternalizable.getInstance()
@@ -999,6 +1006,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
                 break;
         }
 
+        setting.setEnabledDoublePressShortcuts(myDoublePressShortcutsBox.isSelected());
+
         ensureNonEmptyKeymapNames();
         ensureUniqueKeymapNames();
         KeymapManagerImpl keymapManager = (KeymapManagerImpl)KeymapManager.getInstance();
@@ -1038,7 +1047,6 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     @RequiredUIAccess
     @Override
     public boolean isModified() {
-
         KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
         if (!Comparing.equal(mySelectedKeymap, keymapManager.getActiveKeymap())) {
             return true;
@@ -1048,6 +1056,10 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
         ThreeStateCheckBox.State currentState = ThreeStateCheckBox.State.fromBoolean(setting.isUseUnicodeShortcuts());
         if (!Objects.equals(myUseUnicodeCharactersInShortcutsBox.getState(), currentState)) {
+            return true;
+        }
+
+        if (myDoublePressShortcutsBox.isSelected() != setting.isEnabledDoublePressShortcuts()) {
             return true;
         }
 

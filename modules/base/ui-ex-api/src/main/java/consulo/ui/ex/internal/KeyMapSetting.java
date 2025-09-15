@@ -38,4 +38,8 @@ public interface KeyMapSetting {
     Boolean isUseUnicodeShortcuts();
 
     void setUseUnicodeShortcuts(@Nullable Boolean value);
+
+    boolean isEnabledDoublePressShortcuts();
+
+    void setEnabledDoublePressShortcuts(boolean enabledDoublePressShortcuts);
 }
