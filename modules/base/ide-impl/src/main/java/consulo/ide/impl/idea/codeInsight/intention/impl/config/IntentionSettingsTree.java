@@ -18,17 +18,17 @@ package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
-import consulo.ui.ex.awt.tree.CheckboxTree;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
+import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.FilterComponent;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,316 +42,338 @@ import java.util.*;
  * @author cdr
  */
 public abstract class IntentionSettingsTree {
-  private JComponent myComponent;
-  private CheckboxTree myTree;
-  private FilterComponent myFilter;
+    private JComponent myComponent;
+    private CheckboxTree myTree;
+    private FilterComponent myFilter;
 
-  private final Map<IntentionActionMetaData, Boolean> myIntentionToCheckStatus = new HashMap<>();
+    private final Map<IntentionActionMetaData, Boolean> myIntentionToCheckStatus = new HashMap<>();
 
-  protected IntentionSettingsTree() {
-    initTree();
-  }
-
-  public JTree getTree() {
-    return myTree;
-  }
-
-  public JComponent getComponent() {
-    return myComponent;
-  }
-
-  private void initTree() {
-    myTree = new CheckboxTree(new CheckboxTree.CheckboxTreeCellRenderer(true) {
-      @Override
-      public void customizeRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-        if (!(value instanceof CheckedTreeNode)) return;
-        CheckedTreeNode node = (CheckedTreeNode)value;
-        SimpleTextAttributes attributes = node.getUserObject() instanceof IntentionActionMetaData ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
-        String text = getNodeText(node);
-        Color background = selected ? UIUtil.getTreeSelectionBackground(selected) : UIUtil.getTreeTextBackground();
-        UIUtil.changeBackGround(this, background);
-        SearchUtil.appendFragments(myFilter != null ? myFilter.getFilter() : null, text, attributes.getStyle(), attributes.getFgColor(), background, getTextRenderer());
-      }
-    }, new CheckedTreeNode(null));
-
-    myTree.getSelectionModel().addTreeSelectionListener(e -> {
-      TreePath path = e.getPath();
-      Object userObject = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
-      selectionChanged(userObject);
-    });
-
-    myFilter = new MyFilterComponent();
-    myComponent = new JPanel(new BorderLayout());
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
-    myComponent.add(myFilter, BorderLayout.NORTH);
-    myComponent.add(scrollPane, BorderLayout.CENTER);
-
-    myFilter.reset();
-  }
-
-  protected abstract void selectionChanged(Object selected);
-
-  protected abstract List<IntentionActionMetaData> filterModel(String filter, boolean force);
-
-  public void filter(List<IntentionActionMetaData> intentionsToShow) {
-    refreshCheckStatus((CheckedTreeNode)myTree.getModel().getRoot());
-    reset(intentionsToShow);
-  }
-
-  public void reset() {
-    resetCheckStatus();
-    reset(IntentionManagerSettings.getInstance().getMetaData());
-  }
-
-  private void resetCheckStatus() {
-    myIntentionToCheckStatus.clear();
-    IntentionManagerSettings manager = IntentionManagerSettings.getInstance();
-    for (IntentionActionMetaData metaData : manager.getMetaData()) {
-      myIntentionToCheckStatus.put(metaData, manager.isEnabled(metaData));
+    protected IntentionSettingsTree() {
+        initTree();
     }
-  }
 
-  private void reset(List<IntentionActionMetaData> intentionsToShow) {
-    CheckedTreeNode root = new CheckedTreeNode(null);
-    DefaultTreeModel treeModel = (DefaultTreeModel)myTree.getModel();
-    intentionsToShow = sort(intentionsToShow);
+    public JTree getTree() {
+        return myTree;
+    }
 
-    for (IntentionActionMetaData metaData : intentionsToShow) {
-      String[] category = metaData.myCategory;
-      CheckedTreeNode node = root;
-      for (String name : category) {
-        CheckedTreeNode child = findChild(node, name);
-        if (child == null) {
-          CheckedTreeNode newChild = new CheckedTreeNode(name);
-          treeModel.insertNodeInto(newChild, node, node.getChildCount());
-          child = newChild;
+    public JComponent getComponent() {
+        return myComponent;
+    }
+
+    private void initTree() {
+        myTree = new CheckboxTree(new CheckboxTree.CheckboxTreeCellRenderer(true) {
+            @Override
+            public void customizeRenderer(
+                JTree tree,
+                Object value,
+                boolean selected,
+                boolean expanded,
+                boolean leaf,
+                int row,
+                boolean hasFocus
+            ) {
+                if (!(value instanceof CheckedTreeNode)) {
+                    return;
+                }
+                CheckedTreeNode node = (CheckedTreeNode) value;
+                SimpleTextAttributes attributes =
+                    node.getUserObject() instanceof IntentionActionMetaData ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
+                String text = getNodeText(node);
+                Color background = selected ? UIUtil.getTreeSelectionBackground(selected) : UIUtil.getTreeTextBackground();
+                UIUtil.changeBackGround(this, background);
+                SearchUtil.appendFragments(
+                    myFilter != null ? myFilter.getFilter() : null,
+                    text,
+                    attributes.getStyle(),
+                    attributes.getFgColor(),
+                    background,
+                    getTextRenderer()
+                );
+            }
+        }, new CheckedTreeNode(null));
+
+        myTree.getSelectionModel().addTreeSelectionListener(e -> {
+            TreePath path = e.getPath();
+            Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+            selectionChanged(userObject);
+        });
+
+        myFilter = new MyFilterComponent();
+        myComponent = new JPanel(new BorderLayout());
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
+        myComponent.add(myFilter, BorderLayout.NORTH);
+        myComponent.add(scrollPane, BorderLayout.CENTER);
+
+        myFilter.reset();
+    }
+
+    protected abstract void selectionChanged(Object selected);
+
+    protected abstract List<IntentionActionMetaData> filterModel(String filter, boolean force);
+
+    public void filter(List<IntentionActionMetaData> intentionsToShow) {
+        refreshCheckStatus((CheckedTreeNode) myTree.getModel().getRoot());
+        reset(intentionsToShow);
+    }
+
+    public void reset() {
+        resetCheckStatus();
+        reset(IntentionManagerSettings.getInstance().getMetaData());
+    }
+
+    private void resetCheckStatus() {
+        myIntentionToCheckStatus.clear();
+        IntentionManagerSettings manager = IntentionManagerSettings.getInstance();
+        for (IntentionActionMetaData metaData : manager.getMetaData()) {
+            myIntentionToCheckStatus.put(metaData, manager.isEnabled(metaData));
         }
-        node = child;
-      }
-      CheckedTreeNode newChild = new CheckedTreeNode(metaData);
-      treeModel.insertNodeInto(newChild, node, node.getChildCount());
     }
-    resetCheckMark(root);
-    treeModel.setRoot(root);
-    treeModel.nodeChanged(root);
-    TreeUtil.expandAll(myTree);
-    myTree.setSelectionRow(0);
-  }
 
-  public void selectIntention(String familyName) {
-    CheckedTreeNode child = findChildRecursively(getRoot(), familyName);
-    if (child != null) {
-      TreePath path = new TreePath(child.getPath());
-      // focus after select, due some components can grab focus
-      TreeUtil.selectPath(myTree, path).doWhenDone(() -> myTree.requestFocus());
-    }
-  }
+    private void reset(List<IntentionActionMetaData> intentionsToShow) {
+        CheckedTreeNode root = new CheckedTreeNode(null);
+        DefaultTreeModel treeModel = (DefaultTreeModel) myTree.getModel();
+        intentionsToShow = sort(intentionsToShow);
 
-  private static List<IntentionActionMetaData> sort(List<IntentionActionMetaData> intentionsToShow) {
-    List<IntentionActionMetaData> copy = new ArrayList<>(intentionsToShow);
-    Collections.sort(copy, (data1, data2) -> {
-      String[] category1 = data1.myCategory;
-      String[] category2 = data2.myCategory;
-      int result = ArrayUtil.lexicographicCompare(category1, category2);
-      if (result != 0) {
-        return result;
-      }
-      return data1.getActionText().compareTo(data2.getActionText());
-    });
-    return copy;
-  }
-
-  private CheckedTreeNode getRoot() {
-    return (CheckedTreeNode)myTree.getModel().getRoot();
-  }
-
-  private boolean resetCheckMark(CheckedTreeNode root) {
-    Object userObject = root.getUserObject();
-    if (userObject instanceof IntentionActionMetaData) {
-      IntentionActionMetaData metaData = (IntentionActionMetaData)userObject;
-      Boolean b = myIntentionToCheckStatus.get(metaData);
-      boolean enabled = b != null && b.booleanValue();
-      root.setChecked(enabled);
-      return enabled;
-    }
-    else {
-      root.setChecked(false);
-      visitChildren(root, node -> {
-        if (resetCheckMark(node)) {
-          root.setChecked(true);
+        for (IntentionActionMetaData metaData : intentionsToShow) {
+            String[] category = metaData.myCategory;
+            CheckedTreeNode node = root;
+            for (String name : category) {
+                CheckedTreeNode child = findChild(node, name);
+                if (child == null) {
+                    CheckedTreeNode newChild = new CheckedTreeNode(name);
+                    treeModel.insertNodeInto(newChild, node, node.getChildCount());
+                    child = newChild;
+                }
+                node = child;
+            }
+            CheckedTreeNode newChild = new CheckedTreeNode(metaData);
+            treeModel.insertNodeInto(newChild, node, node.getChildCount());
         }
-      });
-      return root.isChecked();
-    }
-  }
-
-  private static CheckedTreeNode findChild(CheckedTreeNode node, String name) {
-    Ref<CheckedTreeNode> found = new Ref<>();
-    visitChildren(node, node1 -> {
-      String text = getNodeText(node1);
-      if (name.equals(text)) {
-        found.set(node1);
-      }
-    });
-    return found.get();
-  }
-
-  private static CheckedTreeNode findChildRecursively(CheckedTreeNode node, String name) {
-    Ref<CheckedTreeNode> found = new Ref<>();
-    visitChildren(node, node1 -> {
-      if (found.get() != null) return;
-      Object userObject = node1.getUserObject();
-      if (userObject instanceof IntentionActionMetaData) {
-        String text = getNodeText(node1);
-        if (name.equals(text)) {
-          found.set(node1);
-        }
-      }
-      else {
-        CheckedTreeNode child = findChildRecursively(node1, name);
-        if (child != null) {
-          found.set(child);
-        }
-      }
-    });
-    return found.get();
-  }
-
-  private static String getNodeText(CheckedTreeNode node) {
-    Object userObject = node.getUserObject();
-    String text;
-    if (userObject instanceof String) {
-      text = (String)userObject;
-    }
-    else if (userObject instanceof IntentionActionMetaData) {
-      text = ((IntentionActionMetaData)userObject).getActionText();
-    }
-    else {
-      text = "???";
-    }
-    return text;
-  }
-
-  public void apply() {
-    CheckedTreeNode root = getRoot();
-    apply(root);
-  }
-
-  private void refreshCheckStatus(CheckedTreeNode root) {
-    Object userObject = root.getUserObject();
-    if (userObject instanceof IntentionActionMetaData) {
-      IntentionActionMetaData actionMetaData = (IntentionActionMetaData)userObject;
-      myIntentionToCheckStatus.put(actionMetaData, root.isChecked());
-    }
-    else {
-      visitChildren(root, node -> refreshCheckStatus(node));
-    }
-
-  }
-
-  private static void apply(CheckedTreeNode root) {
-    Object userObject = root.getUserObject();
-    if (userObject instanceof IntentionActionMetaData) {
-      IntentionActionMetaData actionMetaData = (IntentionActionMetaData)userObject;
-      IntentionManagerSettings.getInstance().setEnabled(actionMetaData, root.isChecked());
-    }
-    else {
-      visitChildren(root, node -> apply(node));
-    }
-  }
-
-  public boolean isModified() {
-    return isModified(getRoot());
-  }
-
-  private static boolean isModified(CheckedTreeNode root) {
-    Object userObject = root.getUserObject();
-    if (userObject instanceof IntentionActionMetaData) {
-      IntentionActionMetaData actionMetaData = (IntentionActionMetaData)userObject;
-      boolean enabled = IntentionManagerSettings.getInstance().isEnabled(actionMetaData);
-      return enabled != root.isChecked();
-    }
-    else {
-      boolean[] modified = new boolean[]{false};
-      visitChildren(root, node -> modified[0] |= isModified(node));
-      return modified[0];
-    }
-  }
-
-  public void dispose() {
-    myFilter.dispose();
-  }
-
-  public void setFilter(String filter) {
-    myFilter.setFilter(filter);
-  }
-
-  public String getFilter() {
-    return myFilter.getFilter();
-  }
-
-  interface CheckedNodeVisitor {
-    void visit(CheckedTreeNode node);
-  }
-
-  private static void visitChildren(CheckedTreeNode node, CheckedNodeVisitor visitor) {
-    Enumeration children = node.children();
-    while (children.hasMoreElements()) {
-      CheckedTreeNode child = (CheckedTreeNode)children.nextElement();
-      visitor.visit(child);
-    }
-  }
-
-  private class MyFilterComponent extends FilterComponent {
-    private final TreeExpansionMonitor<DefaultMutableTreeNode> myExpansionMonitor = TreeExpansionMonitor.install(myTree);
-
-    public MyFilterComponent() {
-      super("INTENTION_FILTER_HISTORY", 10);
-    }
-
-    @Override
-    public void filter() {
-      String filter = getFilter();
-      if (filter != null && filter.length() > 0) {
-        if (!myExpansionMonitor.isFreeze()) {
-          myExpansionMonitor.freeze();
-        }
-      }
-      IntentionSettingsTree.this.filter(filterModel(filter, true));
-      if (myTree != null) {
-        List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myTree);
-        ((DefaultTreeModel)myTree.getModel()).reload();
-        TreeUtil.restoreExpandedPaths(myTree, expandedPaths);
-      }
-      SwingUtilities.invokeLater(() -> {
+        resetCheckMark(root);
+        treeModel.setRoot(root);
+        treeModel.nodeChanged(root);
+        TreeUtil.expandAll(myTree);
         myTree.setSelectionRow(0);
-        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
-      });
-      TreeUtil.expandAll(myTree);
-      if (filter == null || filter.length() == 0) {
-        TreeUtil.collapseAll(myTree, 0);
-        myExpansionMonitor.restore();
-      }
     }
 
-    @Override
-    protected void onlineFilter() {
-      String filter = getFilter();
-      if (filter != null && filter.length() > 0) {
-        if (!myExpansionMonitor.isFreeze()) {
-          myExpansionMonitor.freeze();
+    public void selectIntention(String familyName) {
+        CheckedTreeNode child = findChildRecursively(getRoot(), familyName);
+        if (child != null) {
+            TreePath path = new TreePath(child.getPath());
+            // focus after select, due some components can grab focus
+            TreeUtil.selectPath(myTree, path).doWhenDone(() -> myTree.requestFocus());
         }
-      }
-      IntentionSettingsTree.this.filter(filterModel(filter, true));
-      TreeUtil.expandAll(myTree);
-      if (filter == null || filter.length() == 0) {
-        TreeUtil.collapseAll(myTree, 0);
-        myExpansionMonitor.restore();
-      }
     }
-  }
 
-  public JPanel getToolbarPanel() {
-    return myFilter;
-  }
+    private static List<IntentionActionMetaData> sort(List<IntentionActionMetaData> intentionsToShow) {
+        List<IntentionActionMetaData> copy = new ArrayList<>(intentionsToShow);
+        Collections.sort(copy, (data1, data2) -> {
+            String[] category1 = data1.myCategory;
+            String[] category2 = data2.myCategory;
+            int result = ArrayUtil.lexicographicCompare(category1, category2);
+            if (result != 0) {
+                return result;
+            }
+            return data1.getActionText().compareTo(data2.getActionText());
+        });
+        return copy;
+    }
+
+    private CheckedTreeNode getRoot() {
+        return (CheckedTreeNode) myTree.getModel().getRoot();
+    }
+
+    private boolean resetCheckMark(CheckedTreeNode root) {
+        Object userObject = root.getUserObject();
+        if (userObject instanceof IntentionActionMetaData) {
+            IntentionActionMetaData metaData = (IntentionActionMetaData) userObject;
+            Boolean b = myIntentionToCheckStatus.get(metaData);
+            boolean enabled = b != null && b;
+            root.setChecked(enabled);
+            return enabled;
+        }
+        else {
+            root.setChecked(false);
+            visitChildren(root, node -> {
+                if (resetCheckMark(node)) {
+                    root.setChecked(true);
+                }
+            });
+            return root.isChecked();
+        }
+    }
+
+    private static CheckedTreeNode findChild(CheckedTreeNode node, String name) {
+        SimpleReference<CheckedTreeNode> found = new SimpleReference<>();
+        visitChildren(
+            node,
+            node1 -> {
+                String text = getNodeText(node1);
+                if (name.equals(text)) {
+                    found.set(node1);
+                }
+            }
+        );
+        return found.get();
+    }
+
+    private static CheckedTreeNode findChildRecursively(CheckedTreeNode node, String name) {
+        SimpleReference<CheckedTreeNode> found = new SimpleReference<>();
+        visitChildren(node, node1 -> {
+            if (found.get() != null) {
+                return;
+            }
+            Object userObject = node1.getUserObject();
+            if (userObject instanceof IntentionActionMetaData) {
+                String text = getNodeText(node1);
+                if (name.equals(text)) {
+                    found.set(node1);
+                }
+            }
+            else {
+                CheckedTreeNode child = findChildRecursively(node1, name);
+                if (child != null) {
+                    found.set(child);
+                }
+            }
+        });
+        return found.get();
+    }
+
+    private static String getNodeText(CheckedTreeNode node) {
+        Object userObject = node.getUserObject();
+        String text;
+        if (userObject instanceof String) {
+            text = (String) userObject;
+        }
+        else if (userObject instanceof IntentionActionMetaData) {
+            text = ((IntentionActionMetaData) userObject).getActionText();
+        }
+        else {
+            text = "???";
+        }
+        return text;
+    }
+
+    public void apply() {
+        CheckedTreeNode root = getRoot();
+        apply(root);
+    }
+
+    private void refreshCheckStatus(CheckedTreeNode root) {
+        Object userObject = root.getUserObject();
+        if (userObject instanceof IntentionActionMetaData) {
+            IntentionActionMetaData actionMetaData = (IntentionActionMetaData) userObject;
+            myIntentionToCheckStatus.put(actionMetaData, root.isChecked());
+        }
+        else {
+            visitChildren(root, this::refreshCheckStatus);
+        }
+    }
+
+    private static void apply(CheckedTreeNode root) {
+        Object userObject = root.getUserObject();
+        if (userObject instanceof IntentionActionMetaData) {
+            IntentionActionMetaData actionMetaData = (IntentionActionMetaData) userObject;
+            IntentionManagerSettings.getInstance().setEnabled(actionMetaData, root.isChecked());
+        }
+        else {
+            visitChildren(root, IntentionSettingsTree::apply);
+        }
+    }
+
+    public boolean isModified() {
+        return isModified(getRoot());
+    }
+
+    private static boolean isModified(CheckedTreeNode root) {
+        Object userObject = root.getUserObject();
+        if (userObject instanceof IntentionActionMetaData) {
+            IntentionActionMetaData actionMetaData = (IntentionActionMetaData) userObject;
+            boolean enabled = IntentionManagerSettings.getInstance().isEnabled(actionMetaData);
+            return enabled != root.isChecked();
+        }
+        else {
+            boolean[] modified = new boolean[]{false};
+            visitChildren(root, node -> modified[0] |= isModified(node));
+            return modified[0];
+        }
+    }
+
+    public void dispose() {
+        myFilter.dispose();
+    }
+
+    public void setFilter(String filter) {
+        myFilter.setFilter(filter);
+    }
+
+    public String getFilter() {
+        return myFilter.getFilter();
+    }
+
+    interface CheckedNodeVisitor {
+        void visit(CheckedTreeNode node);
+    }
+
+    private static void visitChildren(CheckedTreeNode node, CheckedNodeVisitor visitor) {
+        Enumeration children = node.children();
+        while (children.hasMoreElements()) {
+            CheckedTreeNode child = (CheckedTreeNode) children.nextElement();
+            visitor.visit(child);
+        }
+    }
+
+    private class MyFilterComponent extends FilterComponent {
+        private final TreeExpansionMonitor<DefaultMutableTreeNode> myExpansionMonitor = TreeExpansionMonitor.install(myTree);
+
+        public MyFilterComponent() {
+            super("INTENTION_FILTER_HISTORY", 10);
+        }
+
+        @Override
+        public void filter() {
+            String filter = getFilter();
+            if (filter != null && filter.length() > 0) {
+                if (!myExpansionMonitor.isFreeze()) {
+                    myExpansionMonitor.freeze();
+                }
+            }
+            IntentionSettingsTree.this.filter(filterModel(filter, true));
+            if (myTree != null) {
+                List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myTree);
+                ((DefaultTreeModel) myTree.getModel()).reload();
+                TreeUtil.restoreExpandedPaths(myTree, expandedPaths);
+            }
+            SwingUtilities.invokeLater(() -> {
+                myTree.setSelectionRow(0);
+                IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
+            });
+            TreeUtil.expandAll(myTree);
+            if (filter == null || filter.length() == 0) {
+                TreeUtil.collapseAll(myTree, 0);
+                myExpansionMonitor.restore();
+            }
+        }
+
+        @Override
+        protected void onlineFilter() {
+            String filter = getFilter();
+            if (filter != null && filter.length() > 0) {
+                if (!myExpansionMonitor.isFreeze()) {
+                    myExpansionMonitor.freeze();
+                }
+            }
+            IntentionSettingsTree.this.filter(filterModel(filter, true));
+            TreeUtil.expandAll(myTree);
+            if (filter == null || filter.length() == 0) {
+                TreeUtil.collapseAll(myTree, 0);
+                myExpansionMonitor.restore();
+            }
+        }
+    }
+
+    public JPanel getToolbarPanel() {
+        return myFilter;
+    }
 }

@@ -2,7 +2,9 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.*;
+import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.matcher.MinusculeMatcher;
@@ -31,16 +33,8 @@ import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Button;
-import consulo.ui.ButtonStyle;
-import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Functions;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.ui.popup.HintUpdateSupply;
@@ -53,12 +47,16 @@ import consulo.language.editor.structureView.StructureViewCompositeModel;
 import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.LocationPresentation;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.PlaceProvider;
@@ -66,9 +64,11 @@ import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchObjectWithWeight;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -78,6 +78,8 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
@@ -88,7 +90,6 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -314,7 +315,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         myTree.getEmptyText().setText("Loading...");
         myPopup.showCenteredInCurrentWindow(myProject);
 
-        ((AbstractPopup)myPopup).setShowHints(true);
+        ((AbstractPopup) myPopup).setShowHints(true);
 
         ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTree, true);
 
@@ -423,6 +424,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         };
         Function<TreePath, Promise<TreePath>> fallback = new Function<>() {
             @Override
+            @RequiredReadAction
             public Promise<TreePath> apply(TreePath path) {
                 if (path == null && stage[0] == 2) {
                     // Some structure views merge unrelated psi elements into a structure node (MarkdownStructureViewModel).
@@ -447,8 +449,10 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     }
 
     @TestOnly
+    @RequiredUIAccess
     public AsyncPromise<Void> rebuildAndUpdate() {
         AsyncPromise<Void> result = new AsyncPromise<>();
+        @RequiredUIAccess
         TreeVisitor visitor = path -> {
             AbstractTreeNode node = TreeUtil.getLastUserObject(AbstractTreeNode.class, path);
             if (node != null) {
@@ -470,10 +474,9 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     }
 
     private static boolean isShouldNarrowDown() {
-        return PropertiesComponent.getInstance().getBoolean(NARROW_DOWN_PROPERTY_KEY, true);
+        return ApplicationPropertiesComponent.getInstance().getBoolean(NARROW_DOWN_PROPERTY_KEY, true);
     }
 
-    @NonNls
     protected static String getDimensionServiceKey() {
         return "StructurePopup";
     }
@@ -633,6 +636,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     }
 
     @Nonnull
+    @RequiredUIAccess
     private Button createSettingsButton() {
         Button settingsButton = Button.create(LocalizeValue.of());
         settingsButton.setIcon(PlatformIconGroup.generalGearplain());
@@ -652,8 +656,9 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 }
 
                 @Override
+                @RequiredUIAccess
                 public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-                    PropertiesComponent.getInstance().setValue(NARROW_DOWN_PROPERTY_KEY, Boolean.toString(state));
+                    ApplicationPropertiesComponent.getInstance().setValue(NARROW_DOWN_PROPERTY_KEY, Boolean.toString(state));
                     if (mySpeedSearch.isPopupActive() && !StringUtil.isEmpty(mySpeedSearch.getEnteredPrefix())) {
                         rebuild(true);
                     }
@@ -675,7 +680,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 }
             });
             myCanClose = false;
-            
+
             popup.showUnderneathOf(TargetAWT.to(settingsButton));
         });
         return settingsButton;
@@ -872,7 +877,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         }
         return action instanceof FileStructureFilter fileStructureFilter
             ? fileStructureFilter.getShortcut()
-            : ((FileStructureNodeProvider)action).getShortcut();
+            : ((FileStructureNodeProvider) action).getShortcut();
     }
 
     private static boolean getDefaultValue(TreeAction action) {
