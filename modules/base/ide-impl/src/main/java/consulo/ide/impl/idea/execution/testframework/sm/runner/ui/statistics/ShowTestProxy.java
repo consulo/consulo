@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Roman Chernyatchik
  */
-@ActionImpl(id = "consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowTestProxy")
+@ActionImpl(id = "ShowTestProxy")
 public class ShowTestProxy extends AnAction {
     public ShowTestProxy() {
       super(ExecutionTestLocalize.actionNavigateToTestText());

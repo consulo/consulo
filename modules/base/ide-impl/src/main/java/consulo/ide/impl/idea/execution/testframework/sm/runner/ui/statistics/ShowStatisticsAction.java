@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Roman Chernyatchik
  */
-@ActionImpl(id = "consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowStatisticsAction")
+@ActionImpl(id = "ShowTestStatistics")
 public class ShowStatisticsAction extends AnAction {
     public ShowStatisticsAction() {
         super(ExecutionTestLocalize.actionShowStatisticsText());
