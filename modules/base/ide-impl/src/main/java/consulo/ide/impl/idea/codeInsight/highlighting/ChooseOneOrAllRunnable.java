@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.collection.ArrayUtil;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -30,54 +30,55 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class ChooseOneOrAllRunnable<T extends PsiElement> implements Runnable {
-  private final T[] myClasses;
-  private final Editor myEditor;
-  private final String myTitle;
+    private final T[] myClasses;
+    private final Editor myEditor;
+    private final String myTitle;
 
-  public ChooseOneOrAllRunnable(List<T> classes, Editor editor, String title, Class<T> type) {
-    myClasses = ArrayUtil.toObjectArray(classes, type);
-    myEditor = editor;
-    myTitle = title;
-  }
-
-  protected abstract void selected(T... classes);
-
-  @Override
-  public void run() {
-    if (myClasses.length == 1) {
-      selected((T[])ArrayUtil.toObjectArray(myClasses[0].getClass(), myClasses[0]));
+    public ChooseOneOrAllRunnable(List<T> classes, Editor editor, String title, Class<T> type) {
+        myClasses = ArrayUtil.toObjectArray(classes, type);
+        myEditor = editor;
+        myTitle = title;
     }
-    else if (myClasses.length > 0) {
-      PsiElementListCellRenderer<T> renderer = createRenderer();
 
-      Arrays.sort(myClasses, renderer.getComparator());
+    protected abstract void selected(T... classes);
 
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        selected(myClasses);
-        return;
-      }
+    @Override
+    public void run() {
+        if (myClasses.length == 1) {
+            selected((T[]) ArrayUtil.toObjectArray(myClasses[0].getClass(), myClasses[0]));
+        }
+        else if (myClasses.length > 0) {
+            PsiElementListCellRenderer<T> renderer = createRenderer();
 
-      List<Object> model = new ArrayList<>(Arrays.asList(myClasses));
-      String selectAll = CodeInsightBundle.message("highlight.thrown.exceptions.chooser.all.entry");
-      model.add(0, selectAll);
+            Arrays.sort(myClasses, renderer.getComparator());
 
+            if (Application.get().isUnitTestMode()) {
+                selected(myClasses);
+                return;
+            }
 
-      IPopupChooserBuilder<Object> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(model).setRenderer(renderer) // exploit PsiElementListCellRenderer ability to render strings too
-              .setSelectionMode(ListSelectionModel.SINGLE_SELECTION).setItemChosenCallback(selectedValue -> {
-                if (selectedValue.equals(selectAll)) {
-                  selected(myClasses);
-                }
-                else {
-                  selected((T[])ArrayUtil.toObjectArray(selectedValue.getClass(), selectedValue));
-                }
-              }).setTitle(myTitle);
-      renderer.installSpeedSearch(builder);
+            List<Object> model = new ArrayList<>(Arrays.asList(myClasses));
+            String selectAll = CodeInsightBundle.message("highlight.thrown.exceptions.chooser.all.entry");
+            model.add(0, selectAll);
 
-      ApplicationManager.getApplication().invokeLater(() -> {
-        myEditor.showPopupInBestPositionFor(builder.createPopup());
-      });
+            IPopupChooserBuilder<Object> builder = JBPopupFactory.getInstance()
+                .createPopupChooserBuilder(model)
+                .setRenderer(renderer) // exploit PsiElementListCellRenderer ability to render strings too
+                .setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+                .setItemChosenCallback(selectedValue -> {
+                    if (selectedValue.equals(selectAll)) {
+                        selected(myClasses);
+                    }
+                    else {
+                        selected((T[]) ArrayUtil.toObjectArray(selectedValue.getClass(), selectedValue));
+                    }
+                })
+                .setTitle(myTitle);
+            renderer.installSpeedSearch(builder);
+
+            Application.get().invokeLater(() -> myEditor.showPopupInBestPositionFor(builder.createPopup()));
+        }
     }
-  }
 
-  protected abstract PsiElementListCellRenderer<T> createRenderer();
+    protected abstract PsiElementListCellRenderer<T> createRenderer();
 }

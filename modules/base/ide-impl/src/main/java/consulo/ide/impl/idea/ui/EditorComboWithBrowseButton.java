@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.ui;
 import consulo.language.editor.ui.awt.EditorComboBox;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RecentsManager;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.TextAccessor;
-
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 
 import java.awt.event.ActionListener;
@@ -32,39 +32,42 @@ import java.util.List;
  * @author ven
  */
 public class EditorComboWithBrowseButton extends ComponentWithBrowseButton<EditorComboBox> implements TextAccessor {
-  public EditorComboWithBrowseButton(ActionListener browseActionListener,
-                                     String text,
-                                     @Nonnull Project project,
-                                     String recentsKey) {
-    super(new EditorComboBox(text, project, PlainTextFileType.INSTANCE), browseActionListener);
-    List<String> recentEntries = RecentsManager.getInstance(project).getRecentEntries(recentsKey);
-    if (recentEntries != null) {
-      setHistory(ArrayUtil.toStringArray(recentEntries));
+    public EditorComboWithBrowseButton(
+        ActionListener browseActionListener,
+        String text,
+        @Nonnull Project project,
+        String recentsKey
+    ) {
+        super(new EditorComboBox(text, project, PlainTextFileType.INSTANCE), browseActionListener);
+        List<String> recentEntries = RecentsManager.getInstance(project).getRecentEntries(recentsKey);
+        if (recentEntries != null) {
+          setHistory(ArrayUtil.toStringArray(recentEntries));
+        }
+        if (text != null && text.length() > 0) {
+            prependItem(text);
+        }
     }
-    if (text != null && text.length() > 0) {
-      prependItem(text);
+
+    @Override
+    public String getText() {
+        return getChildComponent().getText().trim();
     }
-  }
 
-  @Override
-  public String getText() {
-    return getChildComponent().getText().trim();
-  }
+    @Override
+    @RequiredUIAccess
+    public void setText(String text) {
+        getChildComponent().setText(text);
+    }
 
-  @Override
-  public void setText(String text) {
-    getChildComponent().setText(text);
-  }
+    public boolean isEditable() {
+        return !getChildComponent().getEditorEx().isViewer();
+    }
 
-  public boolean isEditable() {
-    return !getChildComponent().getEditorEx().isViewer();
-  }
+    public void setHistory(String[] history) {
+        getChildComponent().setHistory(history);
+    }
 
-  public void setHistory(String[] history) {
-    getChildComponent().setHistory(history);
-  }
-
-  public void prependItem(String item) {
-    getChildComponent().prependItem(item);
-  }
+    public void prependItem(String item) {
+        getChildComponent().prependItem(item);
+    }
 }

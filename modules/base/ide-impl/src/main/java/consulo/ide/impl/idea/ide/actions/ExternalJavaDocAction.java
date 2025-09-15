@@ -24,8 +24,6 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.documentation.DocumentationProvider;
@@ -43,9 +41,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
@@ -75,7 +76,7 @@ public class ExternalJavaDocAction extends AnAction {
                 project,
                 IdeLocalize.messagePleaseSelectElementForJavadoc().get(),
                 IdeLocalize.titleNoElementSelected().get(),
-                Messages.getErrorIcon()
+                UIUtil.getErrorIcon()
             );
             return;
         }

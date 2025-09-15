@@ -15,30 +15,30 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.function.FilteringProcessor;
+import consulo.component.util.Iconable;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.editor.impl.internal.FileInfoManager;
-import consulo.util.lang.Comparing;
-import consulo.component.util.Iconable;
-import consulo.language.psi.path.FileReference;
-import consulo.language.psi.path.FileReferenceCompletion;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiNamedElement;
-import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.FilteringProcessor;
-import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.path.FileReference;
+import consulo.language.psi.path.FileReferenceCompletion;
+import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -47,84 +47,84 @@ import java.util.Set;
 @Singleton
 @ServiceImpl
 public class FileReferenceCompletionImpl extends FileReferenceCompletion {
-  private static final HashingStrategy<PsiElement> VARIANTS_HASHING_STRATEGY = new HashingStrategy<PsiElement>() {
-    @Override
-
-    public int hashCode(PsiElement object) {
-      if (object instanceof PsiNamedElement) {
-        String name = ((PsiNamedElement)object).getName();
-        if (name != null) {
-          return name.hashCode();
+    private static final HashingStrategy<PsiElement> VARIANTS_HASHING_STRATEGY = new HashingStrategy<>() {
+        @Override
+        @RequiredReadAction
+        public int hashCode(PsiElement object) {
+            if (object instanceof PsiNamedElement namedElem) {
+                String name = namedElem.getName();
+                if (name != null) {
+                    return name.hashCode();
+                }
+            }
+            return object.hashCode();
         }
-      }
-      return object.hashCode();
-    }
 
-    @Override
-    public boolean equals(PsiElement o1, PsiElement o2) {
-      if (o1 instanceof PsiNamedElement && o2 instanceof PsiNamedElement) {
-        return Comparing.equal(((PsiNamedElement)o1).getName(), ((PsiNamedElement)o2).getName());
-      }
-      return o1.equals(o2);
-    }
-  };
-
-  @Override
-  public Object[] getFileReferenceCompletionVariants(final FileReference reference) {
-    String s = reference.getText();
-    if (s != null && s.equals("/")) {
-      return ArrayUtil.EMPTY_OBJECT_ARRAY;
-    }
-
-    final CommonProcessors.CollectUniquesProcessor<PsiFileSystemItem> collector =
-            new CommonProcessors.CollectUniquesProcessor<PsiFileSystemItem>();
-    PsiElementProcessor<PsiFileSystemItem> processor = new PsiElementProcessor<PsiFileSystemItem>() {
-      @Override
-      public boolean execute(@Nonnull PsiFileSystemItem fileSystemItem) {
-        return new FilteringProcessor<PsiFileSystemItem>(reference.getFileReferenceSet().getReferenceCompletionFilter(), collector).process(
-                FileReference.getOriginalFile(fileSystemItem));
-      }
+        @Override
+        @RequiredReadAction
+        public boolean equals(PsiElement o1, PsiElement o2) {
+            if (o1 instanceof PsiNamedElement ne1 && o2 instanceof PsiNamedElement ne2) {
+                return Objects.equals(ne1.getName(), ne2.getName());
+            }
+            return o1.equals(o2);
+        }
     };
-    for (PsiFileSystemItem context : reference.getContexts()) {
-      for (PsiElement child : context.getChildren()) {
-        if (child instanceof PsiFileSystemItem) {
-          processor.execute((PsiFileSystemItem)child);
-        }
-      }
-    }
-    Set<PsiElement> set = Sets.newHashSet(collector.getResults(), VARIANTS_HASHING_STRATEGY);
-    PsiElement[] candidates = PsiUtilCore.toPsiElementArray(set);
 
-    Object[] variants = new Object[candidates.length];
-    for (int i = 0; i < candidates.length; i++) {
-      PsiElement candidate = candidates[i];
-      Object item = reference.createLookupItem(candidate);
-      if (item == null) {
-        item = FileInfoManager.getFileLookupItem(candidate);
-      }
-      variants[i] = item;
-    }
-    if (!reference.getFileReferenceSet().isUrlEncoded()) {
-      return variants;
-    }
-    List<Object> encodedVariants = new ArrayList<Object>(variants.length);
-    for (int i = 0; i < candidates.length; i++) {
-      PsiElement element = candidates[i];
-      if (element instanceof PsiNamedElement) {
-        PsiNamedElement psiElement = (PsiNamedElement)element;
-        String name = psiElement.getName();
-        String encoded = reference.encode(name, psiElement);
-        if (encoded == null) continue;
-        if (!encoded.equals(name)) {
-          Image icon = IconDescriptorUpdaters.getIcon(psiElement, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY);
-          LookupElementBuilder item = FileInfoManager.getFileLookupItem(candidates[i], encoded, icon);
-          encodedVariants.add(item.withTailText(" (" + name + ")"));
+    @Override
+    @RequiredReadAction
+    public Object[] getFileReferenceCompletionVariants(FileReference reference) {
+        String s = reference.getText();
+        if (s != null && s.equals("/")) {
+            return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
-        else {
-          encodedVariants.add(variants[i]);
+
+        CommonProcessors.CollectUniquesProcessor<PsiFileSystemItem> collector = new CommonProcessors.CollectUniquesProcessor<>();
+        PsiElementProcessor<PsiFileSystemItem> processor = fileSystemItem -> new FilteringProcessor<>(
+            reference.getFileReferenceSet().getReferenceCompletionFilter(),
+            collector
+        ).process(FileReference.getOriginalFile(fileSystemItem));
+        for (PsiFileSystemItem context : reference.getContexts()) {
+            for (PsiElement child : context.getChildren()) {
+                if (child instanceof PsiFileSystemItem fileSystemItem) {
+                    processor.execute(fileSystemItem);
+                }
+            }
         }
-      }
+        Set<PsiElement> set = Sets.newHashSet(collector.getResults(), VARIANTS_HASHING_STRATEGY);
+        PsiElement[] candidates = PsiUtilCore.toPsiElementArray(set);
+
+        Object[] variants = new Object[candidates.length];
+        for (int i = 0; i < candidates.length; i++) {
+            PsiElement candidate = candidates[i];
+            Object item = reference.createLookupItem(candidate);
+            if (item == null) {
+                item = FileInfoManager.getFileLookupItem(candidate);
+            }
+            variants[i] = item;
+        }
+        if (!reference.getFileReferenceSet().isUrlEncoded()) {
+            return variants;
+        }
+        List<Object> encodedVariants = new ArrayList<>(variants.length);
+        for (int i = 0; i < candidates.length; i++) {
+            PsiElement element = candidates[i];
+            if (element instanceof PsiNamedElement) {
+                PsiNamedElement psiElement = (PsiNamedElement) element;
+                String name = psiElement.getName();
+                String encoded = reference.encode(name, psiElement);
+                if (encoded == null) {
+                    continue;
+                }
+                if (!encoded.equals(name)) {
+                    Image icon = IconDescriptorUpdaters.getIcon(psiElement, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY);
+                    LookupElementBuilder item = FileInfoManager.getFileLookupItem(candidates[i], encoded, icon);
+                    encodedVariants.add(item.withTailText(" (" + name + ")"));
+                }
+                else {
+                    encodedVariants.add(variants[i]);
+                }
+            }
+        }
+        return ArrayUtil.toObjectArray(encodedVariants);
     }
-    return ArrayUtil.toObjectArray(encodedVariants);
-  }
 }
