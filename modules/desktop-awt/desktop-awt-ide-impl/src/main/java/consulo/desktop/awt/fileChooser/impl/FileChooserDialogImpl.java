@@ -16,6 +16,7 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.SaveAndSyncHandler;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -25,20 +26,14 @@ import consulo.component.util.Iconable;
 import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.application.DesktopSaveAndSyncHandlerImpl;
 import consulo.disposer.Disposer;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.impl.fileChooser.FileChooserFactoryImpl;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.fileChooser.FileSystemTree;
+import consulo.fileChooser.*;
 import consulo.fileChooser.node.FileNodeDescriptor;
+import consulo.ide.impl.fileChooser.FileChooserFactoryImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.PathField;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
@@ -54,6 +49,7 @@ import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
@@ -242,12 +238,12 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         while (files.size() > 30) {
             files.remove(files.size() - 1);
         }
-        PropertiesComponent.getInstance().setValues(RECENT_FILES_KEY, ArrayUtil.toStringArray(files));
+        ApplicationPropertiesComponent.getInstance().setValues(RECENT_FILES_KEY, ArrayUtil.toStringArray(files));
     }
 
     @Nonnull
     private String[] getRecentFiles() {
-        String[] array = PropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
+        String[] array = ApplicationPropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
         if (array == null) {
             return ArrayUtil.EMPTY_STRING_ARRAY;
         }
@@ -525,11 +521,11 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     private final Map<String, LocalFileSystem.WatchRequest> myRequests = new HashMap<>();
 
     private static boolean isToShowTextField() {
-        return PropertiesComponent.getInstance().getBoolean(FILE_CHOOSER_SHOW_PATH_PROPERTY, true);
+        return ApplicationPropertiesComponent.getInstance().getBoolean(FILE_CHOOSER_SHOW_PATH_PROPERTY, true);
     }
 
     private static void setToShowTextField(boolean toShowTextField) {
-        PropertiesComponent.getInstance().setValue(FILE_CHOOSER_SHOW_PATH_PROPERTY, Boolean.toString(toShowTextField));
+        ApplicationPropertiesComponent.getInstance().setValue(FILE_CHOOSER_SHOW_PATH_PROPERTY, Boolean.toString(toShowTextField));
     }
 
     private final class FileTreeExpansionListener implements TreeExpansionListener {

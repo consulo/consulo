@@ -15,26 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ui.ex.awt.FormBuilder;
-import consulo.application.AllIcons;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.FilterComponent;
+import consulo.ui.ex.awt.FormBuilder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.collection.ArrayUtil;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -43,10 +44,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author max
@@ -104,17 +104,17 @@ public class ChooseActionsDialog extends DialogWrapper {
             return ArrayUtil.EMPTY_STRING_ARRAY;
         }
 
-        ArrayList<String> actions = new ArrayList<String>();
+        List<String> actions = new ArrayList<>();
         for (TreePath path : paths) {
             Object node = path.getLastPathComponent();
             if (node instanceof DefaultMutableTreeNode) {
                 DefaultMutableTreeNode defNode = (DefaultMutableTreeNode) node;
                 Object userObject = defNode.getUserObject();
-                if (userObject instanceof String) {
-                    actions.add((String) userObject);
+                if (userObject instanceof String actionId) {
+                    actions.add(actionId);
                 }
-                else if (userObject instanceof QuickList) {
-                    actions.add(((QuickList) userObject).getActionId());
+                else if (userObject instanceof QuickList quickList) {
+                    actions.add(quickList.getActionId());
                 }
             }
         }
@@ -127,18 +127,22 @@ public class ChooseActionsDialog extends DialogWrapper {
         JComponent toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
         CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
         TreeExpander treeExpander = new TreeExpander() {
+            @Override
             public void expandAll() {
                 TreeUtil.expandAll(myActionsTree.getTree());
             }
 
+            @Override
             public boolean canExpand() {
                 return true;
             }
 
+            @Override
             public void collapseAll() {
                 TreeUtil.collapseAll(myActionsTree.getTree(), 0);
             }
 
+            @Override
             public boolean canCollapse() {
                 return true;
             }
@@ -151,10 +155,11 @@ public class ChooseActionsDialog extends DialogWrapper {
         final JComponent searchToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
         final Alarm alarm = new Alarm();
         myFilterComponent = new FilterComponent("KEYMAP_IN_QUICK_LISTS", 5) {
+            @Override
             public void filter() {
                 alarm.cancelAllRequests();
-                alarm.addRequest(new Runnable() {
-                    public void run() {
+                alarm.addRequest(
+                    () -> {
                         if (!myFilterComponent.isShowing()) {
                             return;
                         }
@@ -169,8 +174,9 @@ public class ChooseActionsDialog extends DialogWrapper {
                             TreeUtil.collapseAll(tree, 0);
                             myTreeExpansionMonitor.restore();
                         }
-                    }
-                }, 300);
+                    },
+                    300
+                );
             }
         };
         myFilterComponent.reset();
@@ -178,13 +184,15 @@ public class ChooseActionsDialog extends DialogWrapper {
         panel.add(myFilterComponent, BorderLayout.CENTER);
 
         group.add(new AnAction(
-            KeyMapBundle.message("filter.shortcut.action.text"),
-            KeyMapBundle.message("filter.shortcut.action.text"),
-            AllIcons.Actions.ShortcutFilter
+            KeyMapLocalize.filterShortcutActionText(),
+            KeyMapLocalize.filterShortcutActionText(),
+            PlatformIconGroup.actionsShortcutfilter()
         ) {
-            public void actionPerformed(AnActionEvent e) {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 myFilterComponent.reset();
-                if (myPopup == null || myPopup.getContent() == null) {
+                if (myPopup == null) {
                     myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(createFilteringPanel(), null)
                         .setRequestFocus(true)
                         .setTitle(KeyMapLocalize.filterSettingsPopupTitle())
@@ -195,11 +203,13 @@ public class ChooseActionsDialog extends DialogWrapper {
             }
         });
         group.add(new AnAction(
-            KeyMapBundle.message("filter.clear.action.text"),
-            KeyMapBundle.message("filter.clear.action.text"),
-            AllIcons.Actions.GC
+            KeyMapLocalize.filterClearActionText(),
+            KeyMapLocalize.filterClearActionText(),
+            PlatformIconGroup.actionsGc()
         ) {
-            public void actionPerformed(AnActionEvent e) {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 myActionsTree.filter(null, myQuicklists); //clear filtering
                 TreeUtil.collapseAll(myActionsTree.getTree(), 0);
                 myTreeExpansionMonitor.restore();
@@ -232,29 +242,29 @@ public class ChooseActionsDialog extends DialogWrapper {
     private JPanel createFilteringPanel() {
         myActionsTree.reset(myKeymap, myQuicklists);
 
-        JLabel firstLabel = new JLabel(KeyMapBundle.message("filter.first.stroke.input"));
-        final JCheckBox enable2Shortcut = new JCheckBox(KeyMapBundle.message("filter.second.stroke.input"));
+        JLabel firstLabel = new JLabel(KeyMapLocalize.filterFirstStrokeInput().get());
+        final JCheckBox enable2Shortcut = new JCheckBox(KeyMapLocalize.filterSecondStrokeInput().get());
         final ShortcutTextField firstShortcut = new ShortcutTextField();
         firstShortcut.setColumns(10);
         final ShortcutTextField secondShortcut = new ShortcutTextField();
         secondShortcut.setColumns(10);
 
-        enable2Shortcut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                secondShortcut.setEnabled(enable2Shortcut.isSelected());
-                if (enable2Shortcut.isSelected()) {
-                    secondShortcut.requestFocusInWindow();
-                }
+        enable2Shortcut.addActionListener(e -> {
+            secondShortcut.setEnabled(enable2Shortcut.isSelected());
+            if (enable2Shortcut.isSelected()) {
+                secondShortcut.requestFocusInWindow();
             }
         });
 
         firstShortcut.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
             protected void textChanged(DocumentEvent e) {
                 filterTreeByShortcut(firstShortcut, enable2Shortcut, secondShortcut);
             }
         });
 
         secondShortcut.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
             protected void textChanged(DocumentEvent e) {
                 filterTreeByShortcut(firstShortcut, enable2Shortcut, secondShortcut);
             }
@@ -276,6 +286,7 @@ public class ChooseActionsDialog extends DialogWrapper {
         return filterComponent;
     }
 
+    @Override
     public void dispose() {
         super.dispose();
         if (myPopup != null && myPopup.isVisible()) {
