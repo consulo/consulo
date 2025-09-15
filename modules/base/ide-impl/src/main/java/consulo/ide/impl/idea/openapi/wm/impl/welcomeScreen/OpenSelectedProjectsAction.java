@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
+import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -30,54 +32,66 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "WelcomeScreen.OpenSelected")
 public class OpenSelectedProjectsAction extends RecentProjectsWelcomeScreenActionBase {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    List<AnAction> elements = getSelectedElements(e);
-    e = new AnActionEvent(e.getInputEvent(), e.getDataContext(), e.getPlace(), e.getPresentation(), e.getActionManager(), InputEvent.SHIFT_MASK);
-    for (AnAction element : elements) {
-      if (element instanceof PopupProjectGroupActionGroup) {
-        for (AnAction action : ((PopupProjectGroupActionGroup)element).getChildren(e)) {
-          action.actionPerformed(e);
+    public OpenSelectedProjectsAction() {
+        super(ProjectUILocalize.actionRecentProjectsOpenSelectedProjectText());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        List<AnAction> elements = getSelectedElements(e);
+        e = new AnActionEvent(
+            e.getInputEvent(),
+            e.getDataContext(),
+            e.getPlace(),
+            e.getPresentation(),
+            e.getActionManager(),
+            InputEvent.SHIFT_MASK
+        );
+        for (AnAction element : elements) {
+            if (element instanceof PopupProjectGroupActionGroup popupGroup) {
+                for (AnAction action : popupGroup.getChildren(e)) {
+                    action.actionPerformed(e);
+                }
+            }
+            else {
+                element.actionPerformed(e);
+            }
         }
-      }
-      else {
-        element.actionPerformed(e);
-      }
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    List<AnAction> selectedElements = getSelectedElements(e);
-    boolean hasProject = false;
-    boolean hasGroup = false;
-    for (AnAction element : selectedElements) {
-      if (element instanceof ReopenProjectAction) {
-        hasProject = true;
-      }
-      if (element instanceof PopupProjectGroupActionGroup) {
-        hasGroup = true;
-      }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        List<AnAction> selectedElements = getSelectedElements(e);
+        boolean hasProject = false;
+        boolean hasGroup = false;
+        for (AnAction element : selectedElements) {
+            if (element instanceof ReopenProjectAction) {
+                hasProject = true;
+            }
+            if (element instanceof PopupProjectGroupActionGroup) {
+                hasGroup = true;
+            }
 
-      if (hasGroup && hasProject) {
-        e.getPresentation().setEnabled(false);
-        return;
-      }
+            if (hasGroup && hasProject) {
+                e.getPresentation().setEnabled(false);
+                return;
+            }
+        }
+        if (ActionPlaces.WELCOME_SCREEN.equals(e.getPlace())) {
+            presentation.setEnabledAndVisible(true);
+            if (selectedElements.size() == 1 && selectedElements.get(0) instanceof PopupProjectGroupActionGroup) {
+                presentation.setTextValue(ProjectUILocalize.actionRecentProjectsOpenSelectedProjectsText());
+            }
+            else {
+                presentation.setTextValue(ProjectUILocalize.actionRecentProjectsOpenSelectedProjectText());
+            }
+        }
+        else {
+            presentation.setEnabledAndVisible(false);
+        }
     }
-    if (ActionPlaces.WELCOME_SCREEN.equals(e.getPlace())) {
-      presentation.setEnabledAndVisible(true);
-      if (selectedElements.size() == 1 && selectedElements.get(0) instanceof PopupProjectGroupActionGroup) {
-        presentation.setText("Open All");
-      }
-      else {
-        presentation.setText("Open");
-      }
-    }
-    else {
-      presentation.setEnabledAndVisible(false);
-    }
-  }
 }

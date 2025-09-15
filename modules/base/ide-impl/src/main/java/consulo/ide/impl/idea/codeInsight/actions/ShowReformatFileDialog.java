@@ -15,60 +15,64 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
+@ActionImpl(id = "ShowReformatFileDialog")
 public class ShowReformatFileDialog extends AnAction implements DumbAware {
-  private static final @NonNls String HELP_ID = "editing.codeReformatting";
+    private static final String HELP_ID = "editing.codeReformatting";
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    Editor editor = e.getData(Editor.KEY);
-    if (project == null || editor == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+    public ShowReformatFileDialog() {
+        super(ActionLocalize.actionShowreformatfiledialogText());
     }
 
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    if (file == null || file.getVirtualFile() == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        Editor editor = e.getData(Editor.KEY);
+        if (project == null || editor == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (file == null || file.getVirtualFile() == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
+        if (FormattingModelBuilder.forContext(file) != null) {
+            e.getPresentation().setEnabled(true);
+        }
     }
 
-    if (FormattingModelBuilder.forContext(file) != null) {
-      e.getPresentation().setEnabled(true);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        Editor editor = e.getRequiredData(Editor.KEY);
+
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (file == null || file.getVirtualFile() == null) {
+            return;
+        }
+
+        boolean hasSelection = editor.getSelectionModel().hasSelection();
+        LayoutCodeDialog dialog = new LayoutCodeDialog(project, file, hasSelection, HELP_ID);
+        dialog.show();
+
+        if (dialog.isOK()) {
+            new FileInEditorProcessor(file, editor, dialog.getRunOptions()).processCode();
+        }
     }
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    Editor editor = e.getRequiredData(Editor.KEY);
-
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    if (file == null || file.getVirtualFile() == null) {
-      return;
-    }
-
-    boolean hasSelection = editor.getSelectionModel().hasSelection();
-    LayoutCodeDialog dialog = new LayoutCodeDialog(project, file, hasSelection, HELP_ID);
-    dialog.show();
-
-    if (dialog.isOK()) {
-      new FileInEditorProcessor(file, editor, dialog.getRunOptions()).processCode();
-    }
-  }
 }

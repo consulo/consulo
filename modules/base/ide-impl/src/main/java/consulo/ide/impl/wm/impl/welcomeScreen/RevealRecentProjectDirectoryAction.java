@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.wm.impl.welcomeScreen;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.idea.ide.actions.RevealFileAction;
-import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
 import consulo.platform.Platform;
 import consulo.ui.UIAccess;
@@ -34,9 +34,10 @@ import java.util.List;
  * @author VISTALL
  * @since 2021-05-03
  */
+@ActionImpl(id = "WelcomeScreen.RevealRecentProjectDirectory")
 public class RevealRecentProjectDirectoryAction extends RecentProjectsWelcomeScreenActionBase {
     public RevealRecentProjectDirectoryAction() {
-        getTemplatePresentation().setTextValue(RevealFileAction.getActionName(null));
+        super(RevealFileAction.getActionName(null));
     }
 
     @Override

@@ -15,9 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
+import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,36 +33,40 @@ import javax.swing.*;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "WelcomeScreen.RemoveSelected")
 public class RemoveSelectedProjectsAction extends RecentProjectsWelcomeScreenActionBase {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    RecentProjectsManager mgr = RecentProjectsManager.getInstance();
-    for (AnAction action : getSelectedElements(e)) {
-      if (action instanceof ReopenProjectAction) {
-        String path = ((ReopenProjectAction)action).getProjectPath();
-        mgr.removePath(path);
-      }
-      else if (action instanceof PopupProjectGroupActionGroup) {
-        PopupProjectGroupActionGroup group = (PopupProjectGroupActionGroup)action;
-        for (String path : group.getGroup().getProjects()) {
-          mgr.removePath(path);
-        }
-        mgr.removeGroup(group.getGroup());
-      }
-
-      rebuildRecentProjectsList(e);
-
-      JList list = getList(e);
-      if (list != null) {
-        ScrollingUtil.ensureSelectionExists(list);
-      }
+    public RemoveSelectedProjectsAction() {
+      super(ProjectUILocalize.actionRecentProjectsRemoveSelectedText(), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
     }
 
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        RecentProjectsManager mgr = RecentProjectsManager.getInstance();
+        for (AnAction action : getSelectedElements(e)) {
+            if (action instanceof ReopenProjectAction reopenProjectAction) {
+                String path = reopenProjectAction.getProjectPath();
+                mgr.removePath(path);
+            }
+            else if (action instanceof PopupProjectGroupActionGroup group) {
+                for (String path : group.getGroup().getProjects()) {
+                    mgr.removePath(path);
+                }
+                mgr.removeGroup(group.getGroup());
+            }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(!getSelectedElements(e).isEmpty());
-  }
+            rebuildRecentProjectsList(e);
+
+            JList list = getList(e);
+            if (list != null) {
+                ScrollingUtil.ensureSelectionExists(list);
+            }
+        }
+
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(!getSelectedElements(e).isEmpty());
+    }
 }

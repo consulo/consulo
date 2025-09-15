@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.project.ProjectGroup;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -31,18 +33,25 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "WelcomeScreen.MoveToGroup")
 public class MoveProjectToGroupActionGroup extends DefaultActionGroup implements DumbAware {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    removeAll();
-    List<ProjectGroup> groups = new ArrayList<>(RecentProjectsManager.getInstance().getGroups());
-    Collections.sort(groups, (o1, o2) -> StringUtil.naturalCompare(o1.getName(), o2.getName()));
-    for (ProjectGroup group : groups) {
-      if (!group.isTutorials()) add(new MoveProjectToGroupAction(group));
+    public MoveProjectToGroupActionGroup() {
+      super(ProjectUILocalize.actionRecentProjectsMoveToGroupText(), true);
     }
-    if (groups.size() > 0) {
-      add(AnSeparator.getInstance());
-      add(new RemoveSelectedProjectsFromGroupsAction());
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        removeAll();
+        List<ProjectGroup> groups = new ArrayList<>(RecentProjectsManager.getInstance().getGroups());
+        Collections.sort(groups, (o1, o2) -> StringUtil.naturalCompare(o1.getName(), o2.getName()));
+        for (ProjectGroup group : groups) {
+            if (!group.isTutorials()) {
+                add(new MoveProjectToGroupAction(group));
+            }
+        }
+        if (groups.size() > 0) {
+            add(AnSeparator.getInstance());
+            add(new RemoveSelectedProjectsFromGroupsAction());
+        }
     }
-  }
 }

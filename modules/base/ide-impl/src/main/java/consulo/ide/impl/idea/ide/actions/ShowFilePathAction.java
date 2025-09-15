@@ -60,7 +60,6 @@ import java.util.function.Consumer;
 
 @ActionImpl(id = "ShowFilePath")
 public class ShowFilePathAction extends AnAction {
-
     private static final Logger LOG = Logger.getInstance(ShowFilePathAction.class);
 
     @UsedInPlugin
