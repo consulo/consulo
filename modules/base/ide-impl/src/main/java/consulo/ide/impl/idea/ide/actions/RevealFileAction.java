@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
@@ -28,6 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "RevealIn")
 public class RevealFileAction extends DumbAwareAction {
     public RevealFileAction() {
         getTemplatePresentation().setTextValue(getActionName(null));
