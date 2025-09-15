@@ -1411,18 +1411,18 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nullable
     @Contract(pure = true)
     public static <T> T getFirstItem(@Nullable Collection<T> items) {
-        return getFirstItem(items, null);
+        return consulo.util.collection.ContainerUtil.getFirstItem(items);
     }
 
     @Nullable
     @Contract(pure = true)
     public static <T> T getFirstItem(@Nullable List<T> items) {
-        return items == null || items.isEmpty() ? null : items.get(0);
+        return consulo.util.collection.ContainerUtil.getFirstItem(items);
     }
 
     @Contract(pure = true)
     public static <T> T getFirstItem(@Nullable Collection<T> items, @Nullable T defaultResult) {
-        return items == null || items.isEmpty() ? defaultResult : items.iterator().next();
+        return consulo.util.collection.ContainerUtil.getFirstItem(items, defaultResult);
     }
 
     /**
@@ -2557,14 +2557,14 @@ public class ContainerUtil extends ContainerUtilRt {
      */
     @Nonnull
     @Contract(pure = true)
-    public static <T> ConcurrentList<T> createConcurrentList() {
-        return new LockFreeCopyOnWriteArrayList<>();
+    public static <T> consulo.util.collection.ConcurrentList<T> createConcurrentList() {
+        return Lists.newLockFreeCopyOnWriteList();
     }
 
     @Nonnull
     @Contract(pure = true)
-    public static <T> ConcurrentList<T> createConcurrentList(@Nonnull Collection<? extends T> collection) {
-        return new LockFreeCopyOnWriteArrayList<>(collection);
+    public static <T> consulo.util.collection.ConcurrentList<T> createConcurrentList(@Nonnull Collection<? extends T> collection) {
+        return Lists.newLockFreeCopyOnWriteList(collection);
     }
 
     /**
@@ -2572,11 +2572,11 @@ public class ContainerUtil extends ContainerUtilRt {
      */
     @Deprecated
     public static <T> void addIfNotNull(@Nullable T element, @Nonnull Collection<T> result) {
-        ContainerUtilRt.addIfNotNull(element, result);
+        consulo.util.collection.ContainerUtil.addIfNotNull(result, element);
     }
 
     public static <T> void addIfNotNull(@Nonnull Collection<T> result, @Nullable T element) {
-        ContainerUtilRt.addIfNotNull(result, element);
+        consulo.util.collection.ContainerUtil.addIfNotNull(result, element);
     }
 
     @Nonnull

@@ -32,6 +32,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -56,7 +57,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   @Nonnull
   ViewManager myViewManager;
   private final AtomicBoolean isBuildStartEventProcessed = new AtomicBoolean();
-  private final List<BuildEvent> myAfterStartEvents = consulo.ide.impl.idea.util.containers.ContainerUtil.createConcurrentList();
+  private final List<BuildEvent> myAfterStartEvents = Lists.newLockFreeCopyOnWriteList();
   private final
   @Nonnull
   DefaultBuildDescriptor myBuildDescriptor;
