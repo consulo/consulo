@@ -202,6 +202,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
                 case ERROR -> PlatformIconGroup.generalError();
                 case WARNING, NOTE -> PlatformIconGroup.generalWarning();
                 case INFO -> PlatformIconGroup.generalInformation();
+                default -> null;
             };
         }
 
