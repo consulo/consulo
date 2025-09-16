@@ -50,152 +50,159 @@ import java.util.function.Supplier;
  */
 public final class DesktopActionPopupMenuImpl implements ApplicationActivationListener, ActionPopupMenu {
 
-  private final MyMenu myMenu;
-  private final ActionManagerEx myManager;
-  private MessageBusConnection myConnection;
+    private final MyMenu myMenu;
+    private final ActionManagerEx myManager;
+    private MessageBusConnection myConnection;
 
-  private final Application myApp;
-  private IdeFrame myFrame;
-  @Nullable
-  private Supplier<DataContext> myDataContextProvider;
-  private boolean myIsToolWindowContextMenu;
+    private final Application myApp;
+    private IdeFrame myFrame;
+    @Nullable
+    private Supplier<DataContext> myDataContextProvider;
+    private boolean myIsToolWindowContextMenu;
 
-  public DesktopActionPopupMenuImpl(String place,
-                                    @Nonnull ActionGroup group,
-                                    ActionManagerEx actionManager,
-                                    @Nullable PresentationFactory factory) {
-    myManager = actionManager;
-    myMenu = new MyMenu(place, group, factory);
-    myApp = ApplicationManager.getApplication();
-  }
-
-  @Override
-  public void show(consulo.ui.Component component, int x, int y) {
-    myMenu.show(TargetAWT.to(component), x, y);
-  }
-
-  @Nonnull
-  @Override
-  public JPopupMenu getComponent() {
-    return myMenu;
-  }
-
-  @Override
-  @Nonnull
-  public String getPlace() {
-    return myMenu.myPlace;
-  }
-
-  @Nonnull
-  @Override
-  public ActionGroup getActionGroup() {
-    return myMenu.myGroup;
-  }
-
-  @Override
-  public void setTargetComponent(@Nonnull consulo.ui.Component component) {
-    setTargetComponent((JComponent)TargetAWT.to(component));
-  }
-
-  @Override
-  public void setTargetComponent(@Nonnull JComponent component) {
-    myDataContextProvider = () -> DataManager.getInstance().getDataContext(component);
-    myIsToolWindowContextMenu = ComponentUtil.getParentOfType(ToolWindowInternalDecorator.class, (Component)component) != null;
-  }
-
-  boolean isToolWindowContextMenu() {
-    return myIsToolWindowContextMenu;
-  }
-
-  public void setDataContextProvider(@Nullable Getter<DataContext> dataContextProvider) {
-    myDataContextProvider = dataContextProvider;
-  }
-
-  private class MyMenu extends JBPopupMenu {
-    private final String myPlace;
-    private final ActionGroup myGroup;
-    private DataContext myContext;
-    private final PresentationFactory myPresentationFactory;
-
-    public MyMenu(String place, @Nonnull ActionGroup group, @Nullable PresentationFactory factory) {
-      myPlace = place;
-      myGroup = group;
-      myPresentationFactory = factory != null ? factory : new MenuItemPresentationFactory();
-      addPopupMenuListener(new MyPopupMenuListener());
+    public DesktopActionPopupMenuImpl(String place,
+                                      @Nonnull ActionGroup group,
+                                      ActionManagerEx actionManager,
+                                      @Nullable PresentationFactory factory) {
+        myManager = actionManager;
+        myMenu = new MyMenu(place, group, factory);
+        myApp = ApplicationManager.getApplication();
     }
 
     @Override
-    public void show(Component component, int x, int y) {
-      if (!component.isShowing()) {
-        //noinspection HardCodedStringLiteral
-        throw new IllegalArgumentException("component must be shown on the screen");
-      }
-
-      removeAll();
-
-      // Fill menu. Only after filling menu has non zero size.
-
-      int x2 = Math.max(0, Math.min(x, component.getWidth() - 1)); // fit x into [0, width-1]
-      int y2 = Math.max(0, Math.min(y, component.getHeight() - 1)); // fit y into [0, height-1]
-
-      myContext = myDataContextProvider != null ? myDataContextProvider.get() : DataManager.getInstance().getDataContext(component, x2, y2);
-      Utils.fillMenu(myGroup, this, true, myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true);
-      if (getComponentCount() == 0) {
-        return;
-      }
-      if (myApp != null) {
-        if (myApp.isActive()) {
-          Component frame = UIUtil.findUltimateParent(component);
-          if (frame instanceof Window) {
-            consulo.ui.Window uiWindow = TargetAWT.from((Window)frame);
-            myFrame = uiWindow.getUserData(IdeFrame.KEY);
-          }
-          myConnection = myApp.getMessageBus().connect();
-          myConnection.subscribe(ApplicationActivationListener.class, DesktopActionPopupMenuImpl.this);
-        }
-      }
-
-      super.show(component, x, y);
+    public void show(consulo.ui.Component component, int x, int y) {
+        myMenu.show(TargetAWT.to(component), x, y);
     }
 
     @Override
-    public void setVisible(boolean b) {
-      super.setVisible(b);
-      if (!b) setInvoker(null);
+    public void hide() {
+        myMenu.setVisible(false);
     }
 
-    private class MyPopupMenuListener implements PopupMenuListener {
-      @Override
-      public void popupMenuCanceled(PopupMenuEvent e) {
-        disposeMenu();
-      }
+    @Nonnull
+    @Override
+    public JPopupMenu getComponent() {
+        return myMenu;
+    }
 
-      @Override
-      public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-        disposeMenu();
-      }
+    @Override
+    @Nonnull
+    public String getPlace() {
+        return myMenu.myPlace;
+    }
 
-      private void disposeMenu() {
-        myManager.removeActionPopup(DesktopActionPopupMenuImpl.this);
-        removeAll();
-        if (myConnection != null) {
-          myConnection.disconnect();
+    @Nonnull
+    @Override
+    public ActionGroup getActionGroup() {
+        return myMenu.myGroup;
+    }
+
+    @Override
+    public void setTargetComponent(@Nonnull consulo.ui.Component component) {
+        setTargetComponent((JComponent) TargetAWT.to(component));
+    }
+
+    @Override
+    public void setTargetComponent(@Nonnull JComponent component) {
+        myDataContextProvider = () -> DataManager.getInstance().getDataContext(component);
+        myIsToolWindowContextMenu = ComponentUtil.getParentOfType(ToolWindowInternalDecorator.class, (Component) component) != null;
+    }
+
+    boolean isToolWindowContextMenu() {
+        return myIsToolWindowContextMenu;
+    }
+
+    public void setDataContextProvider(@Nullable Getter<DataContext> dataContextProvider) {
+        myDataContextProvider = dataContextProvider;
+    }
+
+    private class MyMenu extends JBPopupMenu {
+        private final String myPlace;
+        private final ActionGroup myGroup;
+        private DataContext myContext;
+        private final PresentationFactory myPresentationFactory;
+
+        public MyMenu(String place, @Nonnull ActionGroup group, @Nullable PresentationFactory factory) {
+            myPlace = place;
+            myGroup = group;
+            myPresentationFactory = factory != null ? factory : new MenuItemPresentationFactory();
+            addPopupMenuListener(new MyPopupMenuListener());
         }
-      }
 
-      @Override
-      public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-        removeAll();
-        Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true);
-        myManager.addActionPopup(DesktopActionPopupMenuImpl.this);
-      }
-    }
-  }
+        @Override
+        public void show(Component component, int x, int y) {
+            if (!component.isShowing()) {
+                //noinspection HardCodedStringLiteral
+                throw new IllegalArgumentException("component must be shown on the screen");
+            }
 
-  @Override
-  public void applicationDeactivated(IdeFrame ideFrame) {
-    if (myFrame == ideFrame) {
-      myMenu.setVisible(false);
+            removeAll();
+
+            // Fill menu. Only after filling menu has non zero size.
+
+            int x2 = Math.max(0, Math.min(x, component.getWidth() - 1)); // fit x into [0, width-1]
+            int y2 = Math.max(0, Math.min(y, component.getHeight() - 1)); // fit y into [0, height-1]
+
+            myContext = myDataContextProvider != null ? myDataContextProvider.get() : DataManager.getInstance().getDataContext(component, x2, y2);
+            Utils.fillMenu(myGroup, this, true, myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true);
+            if (getComponentCount() == 0) {
+                return;
+            }
+            if (myApp != null) {
+                if (myApp.isActive()) {
+                    Component frame = UIUtil.findUltimateParent(component);
+                    if (frame instanceof Window) {
+                        consulo.ui.Window uiWindow = TargetAWT.from((Window) frame);
+                        myFrame = uiWindow.getUserData(IdeFrame.KEY);
+                    }
+                    myConnection = myApp.getMessageBus().connect();
+                    myConnection.subscribe(ApplicationActivationListener.class, DesktopActionPopupMenuImpl.this);
+                }
+            }
+
+            super.show(component, x, y);
+        }
+
+        @Override
+        public void setVisible(boolean b) {
+            super.setVisible(b);
+            if (!b) {
+                setInvoker(null);
+            }
+        }
+
+        private class MyPopupMenuListener implements PopupMenuListener {
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                disposeMenu();
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                disposeMenu();
+            }
+
+            private void disposeMenu() {
+                myManager.removeActionPopup(DesktopActionPopupMenuImpl.this);
+                removeAll();
+                if (myConnection != null) {
+                    myConnection.disconnect();
+                }
+            }
+
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                removeAll();
+                Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), true);
+                myManager.addActionPopup(DesktopActionPopupMenuImpl.this);
+            }
+        }
     }
-  }
+
+    @Override
+    public void applicationDeactivated(IdeFrame ideFrame) {
+        if (myFrame == ideFrame) {
+            myMenu.setVisible(false);
+        }
+    }
 }

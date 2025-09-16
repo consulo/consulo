@@ -61,6 +61,10 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
     }
 
     public WizardPopup(@Nullable Project project, @Nullable JBPopup aParent, @Nonnull PopupStep<Object> aStep) {
+        this(project, aParent, aStep, true);
+    }
+
+    public WizardPopup(@Nullable Project project, @Nullable JBPopup aParent, @Nonnull PopupStep<Object> aStep, boolean forceHeavyPopup) {
         myParent = (WizardPopup) aParent;
         myStep = aStep;
 
@@ -81,6 +85,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         init(project, scrollPane, getPreferredFocusableComponent(), true, true, true, null, isResizable(), aStep.getTitle(), null, true, null, false, null, null, false, null, true, false, true, null, 0f,
             null, true, false, new Component[0], null, SwingConstants.LEFT, true, Collections.emptyList(), null, false, true, true, null, true, null, List.of(), List.of());
 
+        setForcedHeavyweight(forceHeavyPopup);
+        
         registerAction("disposeAll", KeyEvent.VK_ESCAPE, InputEvent.SHIFT_MASK, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -74,8 +74,19 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         this(project, null, aStep, null);
     }
 
-    public ListPopupImpl(@Nullable Project project, @Nullable WizardPopup aParent, @Nonnull ListPopupStep aStep, Object parentValue) {
-        super(project, aParent, aStep);
+    public ListPopupImpl(@Nullable Project project,
+                         @Nullable WizardPopup aParent,
+                         @Nonnull ListPopupStep aStep,
+                         Object parentValue) {
+        this(project, aParent, aStep, parentValue, true);
+    }
+
+    public ListPopupImpl(@Nullable Project project,
+                         @Nullable WizardPopup aParent,
+                         @Nonnull ListPopupStep aStep,
+                         Object parentValue,
+                         boolean forceHeavyPopup) {
+        super(project, aParent, aStep, forceHeavyPopup);
         setParentValue(parentValue);
         replacePasteAction();
     }

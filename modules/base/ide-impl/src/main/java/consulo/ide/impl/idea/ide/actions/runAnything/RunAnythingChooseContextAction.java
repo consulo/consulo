@@ -142,7 +142,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
     class ChooseContextPopup extends PopupFactoryImpl.ActionGroupPopup {
         ChooseContextPopup(ActionPopupStep step, DataContext dataContext) {
-            super(null, step, null, dataContext, ActionPlaces.POPUP, -1);
+            super(null, step, null, dataContext, ActionPlaces.POPUP, -1, true);
         }
 
         @Override

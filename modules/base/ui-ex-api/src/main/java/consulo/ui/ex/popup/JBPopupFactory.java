@@ -381,7 +381,7 @@ public abstract class JBPopupFactory {
     }
 
     @Nonnull
-    public abstract ListPopup createActionGroupPopup(
+    public ListPopup createActionGroupPopup(
         @Nls(capitalization = Nls.Capitalization.Title) String title,
         @Nonnull ActionGroup actionGroup,
         @Nonnull DataContext dataContext,
@@ -391,6 +391,22 @@ public abstract class JBPopupFactory {
         @Nullable Runnable disposeCallback,
         int maxRowCount,
         @Nullable Predicate<? super AnAction> preselectActionCondition
+    ) {
+        return createActionGroupPopup(title, actionGroup, dataContext, showNumbers, showDisabledActions, honorActionMnemonics, disposeCallback, maxRowCount, preselectActionCondition, true);
+    }
+
+    @Nonnull
+    public abstract ListPopup createActionGroupPopup(
+        @Nls(capitalization = Nls.Capitalization.Title) String title,
+        @Nonnull ActionGroup actionGroup,
+        @Nonnull DataContext dataContext,
+        boolean showNumbers,
+        boolean showDisabledActions,
+        boolean honorActionMnemonics,
+        @Nullable Runnable disposeCallback,
+        int maxRowCount,
+        @Nullable Predicate<? super AnAction> preselectActionCondition,
+        boolean forceHeavyPopup
     );
 
     @Nonnull

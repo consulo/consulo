@@ -36,7 +36,7 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
         @Nullable Predicate<AnAction> preselectActionCondition,
         boolean showDisableActions
     ) {
-        super(title, actionGroup, dataContext, false, false, showDisableActions, false, null, -1, preselectActionCondition, null);
+        super(title, actionGroup, dataContext, false, false, showDisableActions, false, null, -1, preselectActionCondition, null, true);
     }
 
     protected FlatSpeedSearchPopup(
@@ -45,7 +45,7 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
         @Nonnull DataContext dataContext,
         @Nullable Object value
     ) {
-        super(parent, step, null, dataContext, null, -1);
+        super(parent, step, null, dataContext, null, -1, true);
         setParentValue(value);
     }
 

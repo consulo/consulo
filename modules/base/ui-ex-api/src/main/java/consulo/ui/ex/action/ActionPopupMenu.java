@@ -64,4 +64,6 @@ public interface ActionPopupMenu {
     void setTargetComponent(@Nonnull Component component);
 
     void show(Component component, int x, int y);
+
+    void hide();
 }

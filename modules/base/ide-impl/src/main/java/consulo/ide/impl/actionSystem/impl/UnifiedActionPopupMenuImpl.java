@@ -87,4 +87,9 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
 
         popupMenu.show(x, y);
     }
+
+    @Override
+    public void hide() {
+
+    }
 }

@@ -62,7 +62,8 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
             null,
             ActionPlaces.COPY_REFERENCE_POPUP,
             factory,
-            false
+            false,
+            true
         ) {
             @Override
             protected ListCellRenderer<PopupFactoryImpl.ActionItem> getListElementRenderer() {

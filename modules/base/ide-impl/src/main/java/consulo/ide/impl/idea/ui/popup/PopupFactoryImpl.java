@@ -138,7 +138,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             Runnable disposeCallback,
             int maxRowCount,
             Predicate<? super AnAction> preselectActionCondition,
-            @Nullable String actionPlace
+            @Nullable String actionPlace,
+            boolean forceHeavyPopup
         ) {
             this(
                 title,
@@ -153,7 +154,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
                 preselectActionCondition,
                 actionPlace,
                 null,
-                false
+                false,
+                forceHeavyPopup
             );
         }
 
@@ -169,7 +171,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             int maxRowCount,
             Predicate<? super AnAction> preselectActionCondition,
             @Nullable String actionPlace,
-            boolean autoSelection
+            boolean autoSelection,
+            boolean forceHeavyPopup
         ) {
             this(
                 title,
@@ -184,7 +187,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
                 preselectActionCondition,
                 actionPlace,
                 null,
-                autoSelection
+                autoSelection,
+                forceHeavyPopup
             );
         }
 
@@ -201,7 +205,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             Predicate<? super AnAction> preselectActionCondition,
             @Nullable String actionPlace,
             @Nullable BasePresentationFactory presentationFactory,
-            boolean autoSelection
+            boolean autoSelection,
+            boolean forceHeavyPopup
         ) {
             this(
                 null,
@@ -221,7 +226,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
                 disposeCallback,
                 dataContext,
                 actionPlace,
-                maxRowCount
+                maxRowCount,
+                forceHeavyPopup
             );
         }
 
@@ -231,9 +237,10 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             @Nullable Runnable disposeCallback,
             @Nonnull DataContext dataContext,
             @Nullable String actionPlace,
-            int maxRowCount
+            int maxRowCount,
+            boolean forceHeavyPopup
         ) {
-            super(dataContext.getData(Project.KEY), aParent, step, null);
+            super(dataContext.getData(Project.KEY), aParent, step, null, forceHeavyPopup);
             setMaxRowCount(maxRowCount);
             myDisposeCallback = disposeCallback;
             myComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -260,7 +267,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
         private Presentation updateActionItem(@Nonnull ActionItem actionItem) {
             AnAction action = actionItem.getAction();
             Presentation presentation = new Presentation();
-            presentation.setDescription(action.getTemplatePresentation().getDescription());
+            presentation.setDescriptionValue(action.getTemplatePresentation().getDescriptionValue());
 
             AnActionEvent actionEvent = new AnActionEvent(
                 null,
@@ -444,7 +451,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             disposeCallback,
             maxRowCount,
             preselectActionCondition,
-            actionPlace
+            actionPlace,
+            true
         );
     }
 
@@ -459,7 +467,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
         boolean honorActionMnemonics,
         Runnable disposeCallback,
         int maxRowCount,
-        Predicate<? super AnAction> preselectActionCondition
+        Predicate<? super AnAction> preselectActionCondition,
+        boolean forceHeavyPopup
     ) {
         return new ActionGroupPopup(
             title,
@@ -472,7 +481,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             disposeCallback,
             maxRowCount,
             preselectActionCondition,
-            null
+            null,
+            forceHeavyPopup
         );
     }
 

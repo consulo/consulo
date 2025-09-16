@@ -2213,6 +2213,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         return TargetAWT.to(location);
     }
 
+    public void setForcedHeavyweight(boolean forcedHeavyweight) {
+        myForcedHeavyweight = forcedHeavyweight;
+    }
+
     @Nullable
     private Dimension getStoredSize() {
         if (myDimensionServiceKey == null) {

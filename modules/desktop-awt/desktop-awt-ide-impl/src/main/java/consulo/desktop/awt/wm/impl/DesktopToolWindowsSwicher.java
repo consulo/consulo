@@ -2,14 +2,13 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ApplicationManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
-import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.impl.wm.statusBar.BaseToolWindowsSwitcher;
-import consulo.platform.Platform;
+import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -17,16 +16,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -41,6 +36,34 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
+    private class ToolWindowAction extends DumbAwareAction {
+        @Nonnull
+        private final ToolWindow myToolWindow;
+
+        public ToolWindowAction(ToolWindow toolWindow) {
+            super(toolWindow.getDisplayName(), toolWindow.getDisplayName(), toolWindow.getIcon());
+            myToolWindow = toolWindow;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            if (popup != null) {
+                popup.closeOk(null);
+            }
+
+            if (myToolWindow.isActive()) {
+                myToolWindow.hide();
+            } else {
+                activate();
+            }
+        }
+
+        public void activate() {
+            myToolWindow.activate(null, true, true);
+        }
+    }
+
     private final Alarm myAlarm;
 
     @RequiredUIAccess
@@ -130,48 +153,44 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
                 }
                 toolWindows.sort((o1, o2) -> StringUtil.naturalCompare(o1.getDisplayName().getValue(), o2.getDisplayName().getValue()));
 
-                JBList<ToolWindow> list = new JBList<>(toolWindows);
-                list.setCellRenderer(new ColoredListCellRenderer<>() {
-                    @Override
-                    @RequiredUIAccess
-                    protected void customizeCellRenderer(@Nonnull JList<? extends ToolWindow> list,
-                                                         ToolWindow value,
-                                                         int index,
-                                                         boolean selected,
-                                                         boolean hasFocus) {
-                        append(value.getDisplayName().getValue());
-                        String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(value.getId());
-                        KeyboardShortcut shortcut = ActionManager.getInstance().getKeyboardShortcut(activateActionId);
-                        if (shortcut != null) {
-                            append(" " + KeymapUtil.getShortcutText(shortcut), SimpleTextAttributes.GRAY_ATTRIBUTES);
-                        }
-                        setIcon(value.getIcon());
-                        setBorder(JBUI.Borders.empty(2, 10));
+                ActionManager actionManager = ActionManager.getInstance();
+
+                ActionGroup.Builder actionBuilder = ActionGroup.newImmutableBuilder();
+                for (ToolWindow window : toolWindows) {
+                    ToolWindowAction action = new ToolWindowAction(window);
+
+                    String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(window.getId());
+                    KeyboardShortcut shortcut = actionManager.getKeyboardShortcut(activateActionId);
+                    if (shortcut != null) {
+                        action.setShortcutSet(new CustomShortcutSet(shortcut));
                     }
-                });
 
-                Dimension size = list.getPreferredSize();
-                JComponent c = (JComponent) TargetAWT.to(myLabel);
-                Insets padding = UIUtil.getListViewportPadding();
-                RelativePoint point =
-                    new RelativePoint(c, new Point(-4, -padding.top - padding.bottom - 4 - size.height + (Platform.current().os().isMac() ? 2 : 0)));
+                    actionBuilder.add(action);
+                }
 
-                if (popup != null && popup.isVisible()) {
+                DataContext context = DataManager.getInstance().getDataContext(myLabel);
+                ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+                    null,
+                    actionBuilder.build(),
+                    context,
+                    false,
+                    false,
+                    false,
+                    null,
+                    Integer.MAX_VALUE,
+                    null,
+                    false
+                );
+
+                if (this.popup != null && this.popup.isVisible()) {
                     return;
                 }
 
-                list.setSelectedIndex(list.getItemsCount() - 1);
-                PopupChooserBuilder<ToolWindow> builder = new PopupChooserBuilder<>(list);
-                popup = builder.setAutoselectOnMouseMove(true).setRequestFocus(false).setItemChosenCallback((selectedValue) -> {
-                    if (popup != null) {
-                        popup.closeOk(null);
-                    }
-                    selectedValue.activate(null, true, true);
-                }).createPopup();
+                popup.pack(true, true);
 
-                list.setVisibleRowCount(30); // override default of 15 set when createPopup() is called
+                this.popup = popup;
 
-                popup.show(point);
+                this.popup.show(new RelativePoint(TargetAWT.to(myLabel), new Point(0, 0)));
             }, 300);
         }
     }
