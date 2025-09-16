@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 
 import java.util.Comparator;
 
@@ -24,39 +24,37 @@ import java.util.Comparator;
  * @author Dmitry Batkovich
  */
 public class ScopeOrderComparator implements Comparator<String> {
-  private final String[] myScopesOrder;
+    private final String[] myScopesOrder;
 
-  public ScopeOrderComparator(InspectionProfileImpl inspectionProfile) {
-    this(inspectionProfile.getScopesOrder());
-  }
-
-  public ScopeOrderComparator(String[] scopesOrder) {
-    myScopesOrder = scopesOrder;
-  }
-
-  private int getKey(String scope) {
-    return myScopesOrder == null ? -1 : ArrayUtil.indexOf(myScopesOrder, scope);
-  }
-
-  @Override
-  public int compare(String scope1, String scope2) {
-    int key = getKey(scope1);
-    int key1 = getKey(scope2);
-    if (key >= 0) {
-      if (key1 >= 0) {
-        return key - key1;
-      }
-      else {
-        return -1;
-      }
+    public ScopeOrderComparator(InspectionProfileImpl inspectionProfile) {
+        this(inspectionProfile.getScopesOrder());
     }
-    else {
-      if (key1 >= 0) {
-        return 1;
-      }
-      else {
-        return scope1.compareTo(scope2);
-      }
+
+    public ScopeOrderComparator(String[] scopesOrder) {
+        myScopesOrder = scopesOrder;
     }
-  }
+
+    private int getKey(String scope) {
+        return myScopesOrder == null ? -1 : ArrayUtil.indexOf(myScopesOrder, scope);
+    }
+
+    @Override
+    public int compare(String scope1, String scope2) {
+        int key = getKey(scope1);
+        int key1 = getKey(scope2);
+        if (key >= 0) {
+            if (key1 >= 0) {
+                return key - key1;
+            }
+            else {
+                return -1;
+            }
+        }
+        else if (key1 >= 0) {
+            return 1;
+        }
+        else {
+            return scope1.compareTo(scope2);
+        }
+    }
 }

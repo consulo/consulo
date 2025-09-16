@@ -26,7 +26,7 @@ import java.util.function.IntFunction;
 
 /**
  * @author VISTALL
- * @since 13-Mar-22
+ * @since 2022-03-13
  */
 public final class Iterators {
     @Nonnull

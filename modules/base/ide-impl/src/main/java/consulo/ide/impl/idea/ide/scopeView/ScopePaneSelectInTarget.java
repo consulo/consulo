@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.scopeView;
 
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiFile;
@@ -30,6 +28,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.StandardTargetWeights;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 

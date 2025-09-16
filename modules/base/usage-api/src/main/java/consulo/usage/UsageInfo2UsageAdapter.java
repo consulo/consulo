@@ -17,9 +17,7 @@ package consulo.usage;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Processor;
+import consulo.application.ReadAction;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.TextAttributes;
@@ -50,18 +48,17 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
 import consulo.usage.localize.UsageLocalize;
-import consulo.usage.util.ChunkExtractor;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageInFile;
 import consulo.usage.rule.UsageInLibrary;
 import consulo.usage.rule.UsageInModule;
+import consulo.usage.util.ChunkExtractor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -71,6 +68,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -89,10 +87,12 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     private volatile Reference<TextChunk[]> myTextChunks; // allow to be gced and recreated on-demand because it requires a lot of memory
     private volatile UsageType myUsageType;
 
+    @RequiredReadAction
     public UsageInfo2UsageAdapter(@Nonnull UsageInfo usageInfo) {
         myUsageInfo = usageInfo;
         myMergedUsageInfos = usageInfo;
 
+        @RequiredReadAction
         ThrowableComputable<Point, RuntimeException> action = () -> {
             PsiElement element = getElement();
             PsiFile psiFile = usageInfo.getFile();
@@ -118,7 +118,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
             }
             return new Point(offset, lineNumber);
         };
-        Point data = AccessRule.read(action);
+        Point data = ReadAction.compute(action);
         myOffset = data.x;
         myLineNumber = data.y;
         myModificationStamp = getCurrentModificationStamp();
@@ -183,6 +183,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
+    @RequiredReadAction
     public boolean isReadOnly() {
         PsiFile psiFile = getPsiFile();
         return psiFile == null || psiFile.isValid() && !psiFile.isWritable();
@@ -242,10 +243,10 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
 
     // must iterate in start offset order
     @RequiredReadAction
-    public boolean processRangeMarkers(@Nonnull Processor<Segment> processor) {
+    public boolean processRangeMarkers(@Nonnull Predicate<Segment> processor) {
         for (UsageInfo usageInfo : getMergedInfos()) {
             Segment segment = usageInfo.getSegment();
-            if (segment != null && !processor.process(segment)) {
+            if (segment != null && !processor.test(segment)) {
                 return false;
             }
         }
@@ -259,23 +260,27 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Override
+    @RequiredReadAction
     public void navigate(boolean focus) {
         if (canNavigate()) {
             openTextEditor(focus);
         }
     }
 
+    @RequiredReadAction
     public Editor openTextEditor(boolean focus) {
         return FileEditorManager.getInstance(getProject()).openTextEditor(getDescriptor(), focus);
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         VirtualFile file = getFile();
         return file != null && file.isValid();
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigateToSource() {
         return canNavigate();
     }
@@ -482,6 +487,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
     }
 
     @Nonnull
+    @RequiredReadAction
     public static UsageInfo2UsageAdapter[] convert(@Nonnull UsageInfo[] usageInfos) {
         UsageInfo2UsageAdapter[] result = new UsageInfo2UsageAdapter[usageInfos.length];
         for (int i = 0; i < result.length; i++) {

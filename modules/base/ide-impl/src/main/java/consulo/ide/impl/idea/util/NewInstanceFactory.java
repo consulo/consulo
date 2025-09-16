@@ -16,47 +16,48 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 
 import java.lang.reflect.Constructor;
 import java.util.function.Supplier;
 
 @Deprecated
 public class NewInstanceFactory<T> implements Supplier<T> {
-  private static final Logger LOG = Logger.getInstance(NewInstanceFactory.class);
-  private final Constructor myConstructor;
-  private final Object[] myArgs;
+    private static final Logger LOG = Logger.getInstance(NewInstanceFactory.class);
+    private final Constructor myConstructor;
+    private final Object[] myArgs;
 
-  private NewInstanceFactory(Constructor constructor, Object[] args) {
-    myConstructor = constructor;
-    myArgs = args;
-  }
+    private NewInstanceFactory(Constructor constructor, Object[] args) {
+        myConstructor = constructor;
+        myArgs = args;
+    }
 
-  @Override
-  public T get() {
-    try {
-      return (T)myConstructor.newInstance(myArgs);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-      return null;
-    }
-  }
-
-  public static <T> Supplier<T> fromClass(final Class<T> clazz) {
-    try {
-      return new NewInstanceFactory<T>(clazz.getConstructor(ArrayUtil.EMPTY_CLASS_ARRAY), ArrayUtil.EMPTY_OBJECT_ARRAY);
-    }
-    catch (NoSuchMethodException e) {
-      return new Supplier<T>() {
-        public T get() {
-          try {
-            return clazz.newInstance();
-          } catch (Exception e) {
+    @Override
+    @SuppressWarnings("unchecked")
+    public T get() {
+        try {
+            return (T) myConstructor.newInstance(myArgs);
+        }
+        catch (Exception e) {
             LOG.error(e);
             return null;
-          }
         }
-      };
     }
-  }
+
+    public static <T> Supplier<T> fromClass(Class<T> clazz) {
+        try {
+            return new NewInstanceFactory<>(clazz.getConstructor(ArrayUtil.EMPTY_CLASS_ARRAY), ArrayUtil.EMPTY_OBJECT_ARRAY);
+        }
+        catch (NoSuchMethodException e) {
+            return () -> {
+                try {
+                    return clazz.newInstance();
+                }
+                catch (Exception e1) {
+                    LOG.error(e1);
+                    return null;
+                }
+            };
+        }
+    }
 }

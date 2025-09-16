@@ -15,22 +15,19 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
-import javax.swing.plaf.TreeUI;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 public abstract class MultilineTreeCellRenderer extends JComponent implements TreeCellRenderer {
@@ -54,7 +51,6 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     private String myPrefix;
     private int myTextLength;
     private int myPrefixWidth;
-    @NonNls
     protected static final String FONT_PROPERTY_NAME = "font";
     private JTree myTree;
 
@@ -63,19 +59,17 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
         myTextInsets = new Insets(0, 0, 0, 0);
 
         addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentResized(ComponentEvent e) {
                 onSizeChanged();
             }
         });
 
-        addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (FONT_PROPERTY_NAME.equalsIgnoreCase(evt.getPropertyName())) {
-                    onFontChanged();
-                }
+        addPropertyChangeListener(evt -> {
+            if (FONT_PROPERTY_NAME.equalsIgnoreCase(evt.getPropertyName())) {
+                onFontChanged();
             }
         });
-
     }
 
     protected void setMinHeight(int height) {
@@ -105,6 +99,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
         return getFontMetrics(getFont());
     }
 
+    @Override
     public void paint(Graphics g) {
         int height = getHeight();
         int width = getWidth();
@@ -123,8 +118,8 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
         Color bgColor;
         Color fgColor;
         if (mySelected && myHasFocus) {
-            bgColor = UIUtil.getTreeSelectionBackground();
-            fgColor = UIUtil.getTreeSelectionForeground();
+            bgColor = UIUtil.getTreeSelectionBackground(true);
+            fgColor = UIUtil.getTreeSelectionForeground(true);
         }
         else {
             bgColor = UIUtil.getTreeTextBackground();
@@ -149,8 +144,8 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
             g.drawString(myPrefix, myTextInsets.left - myPrefixWidth + 1, currBaseLine);
         }
 
-        for (int i = 0; i < myWraps.size(); i++) {
-            String currLine = (String) myWraps.get(i);
+        for (Object myWrap : myWraps) {
+            String currLine = (String) myWrap;
             g.drawString(currLine, myTextInsets.left, currBaseLine);
             currBaseLine += fontHeight;  // first is getCurrFontMetrics().getAscent()
         }
@@ -159,8 +154,8 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     public void setText(String[] lines, String prefix) {
         myLines = lines;
         myTextLength = 0;
-        for (int i = 0; i < lines.length; i++) {
-            myTextLength += lines[i].length();
+        for (String line : lines) {
+            myTextLength += line.length();
         }
         myPrefix = prefix;
 
@@ -177,6 +172,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
         myWrapsCalculatedForWidth = -1;
     }
 
+    @Override
     public Dimension getMinimumSize() {
         if (getFont() != null) {
             int minHeight = getCurrFontMetrics().getHeight();
@@ -191,6 +187,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     private static final int MIN_WIDTH = 10;
 
     // Calculates height for current width.
+    @Override
     public Dimension getPreferredSize() {
         recalculateWraps();
         return new Dimension(myWrapsCalculatedForWidth, myHeightCalculated);
@@ -217,8 +214,8 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
         myHeightCalculated = Math.max(myMinHeight, myHeightCalculated);
 
         int maxWidth = 0;
-        for (int i = 0; i < myWraps.size(); i++) {
-            String s = (String) myWraps.get(i);
+        for (Object myWrap : myWraps) {
+            String s = (String) myWrap;
             int width = getCurrFontMetrics().stringWidth(s);
             maxWidth = Math.max(maxWidth, width);
         }
@@ -236,8 +233,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
         int result = 0;
         myWraps = new ArrayList();
 
-        for (int i = 0; i < myLines.length; i++) {
-            String aLine = myLines[i];
+        for (String aLine : myLines) {
             int lineFirstChar = 0;
             int lineLastChar = aLine.length() - 1;
             int currFirst = lineFirstChar;
@@ -316,13 +312,11 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     }
 
     private int getChildIndent(JTree tree) {
-        TreeUI newUI = tree.getUI();
-        if (newUI instanceof javax.swing.plaf.basic.BasicTreeUI) {
-            javax.swing.plaf.basic.BasicTreeUI btreeui = (javax.swing.plaf.basic.BasicTreeUI) newUI;
+        if (tree.getUI() instanceof BasicTreeUI btreeui) {
             return btreeui.getLeftChildIndent() + btreeui.getRightChildIndent();
         }
         else {
-            return ((Integer) UIUtil.getTreeLeftChildIndent()).intValue() + ((Integer) UIUtil.getTreeRightChildIndent()).intValue();
+            return UIUtil.getTreeLeftChildIndent() + UIUtil.getTreeRightChildIndent();
         }
     }
 
@@ -334,6 +328,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
 
     protected abstract void initComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus);
 
+    @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         setFont(UIUtil.getTreeFont());
 
@@ -381,6 +376,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
             private int myAddRemoveCounter = 0;
             private boolean myShouldResetCaches = false;
 
+            @Override
             public void setSize(Dimension d) {
                 boolean isChanged = getWidth() != d.width || myShouldResetCaches;
                 super.setSize(d);
@@ -389,6 +385,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
                 }
             }
 
+            @Override
             public void reshape(int x, int y, int w, int h) {
                 boolean isChanged = w != getWidth() || myShouldResetCaches;
                 super.reshape(x, y, w, h);
@@ -402,6 +399,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
                 myShouldResetCaches = false;
             }
 
+            @Override
             public void addNotify() {
                 super.addNotify();    //To change body of overriden methods use Options | File Templates.
                 if (myAddRemoveCounter == 0) {
@@ -410,6 +408,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
                 myAddRemoveCounter++;
             }
 
+            @Override
             public void removeNotify() {
                 super.removeNotify();    //To change body of overriden methods use Options | File Templates.
                 myAddRemoveCounter--;
@@ -421,10 +420,12 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
         tree.setCellRenderer(renderer);
 
         scrollpane.addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentResized(ComponentEvent e) {
                 resetHeightCache(tree, defaultRenderer, renderer);
             }
 
+            @Override
             public void componentShown(ComponentEvent e) {
                 // componentResized not called when adding to opened tool window.
                 // Seems to be BUG#4765299, however I failed to create same code to reproduce it.

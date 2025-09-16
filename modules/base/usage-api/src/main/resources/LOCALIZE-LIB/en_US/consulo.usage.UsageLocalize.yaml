@@ -50,6 +50,8 @@ dialog.rerun.search:
     text: Would you like to rerun the search now?
 dialog.title.information:
     text: Information
+files.are.too.large.large.and.cannot.be.scanned:
+    text: '{0,choice, 1#File|2#Files} {1} {0,choice, 1#is|2#are} too large and cannot be scanned'
 find.excessive.usage.count.prompt:
     text: '{0} usages found so far. Are you sure you wish to continue?'
 find.excessive.usages.title:
@@ -58,6 +60,16 @@ find.file.size.megabytes:
     text: '{0} megabytes'
 large.files.were.ignored:
     text: '{0,choice, 0#No|1#1 too large file was ignored|2#{0,number} too large files were ignored}'
+link.display.name.find.options:
+    text: Find Options…
+link.display.name.search.in.project:
+    text: Search in Project
+message.include.them:
+    text: Include them
+message.occurrences.in.project.configuration.files.are.skipped:
+    text: Occurrences in project configuration files are skipped.
+message.only.one.usage.found:
+    text: Only one usage found.
 message.part.large.number.of.unloaded.modules:
     text: '{0} unloaded modules: {1} and {2} other unloaded modules'
 message.part.number.of.unloaded.modules:
@@ -68,6 +80,8 @@ message.part.unloaded.module.0:
     text: unloaded module ''{0}''
 message.there.may.be.usages.in.0.load.all.modules.and.repeat:
     text: There may be usages in {0}. Load all modules and repeat refactoring to ensure that all the usages will be updated.
+message.usage.search.was.canceled:
+    text: Usage search was canceled
 no.usages.found.in:
     text: No usages found in {0}
 node.found.usages:
