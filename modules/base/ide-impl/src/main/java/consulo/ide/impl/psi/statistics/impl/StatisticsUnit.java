@@ -16,98 +16,105 @@
 package consulo.ide.impl.psi.statistics.impl;
 
 import consulo.language.statistician.StatisticsManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 
 import java.io.*;
 import java.util.*;
 
 class StatisticsUnit {
-  private static final int FORMAT_VERSION_NUMBER = 5;
+    private static final int FORMAT_VERSION_NUMBER = 5;
 
-  private final int myNumber;
+    private final int myNumber;
 
-  private final Map<String, LinkedList<String>> myDataMap = new HashMap<>();
+    private final Map<String, List<String>> myDataMap = new HashMap<>();
 
-  public StatisticsUnit(int number) {
-    myNumber = number;
-  }
-
-  public int getRecency(String key1, String key2) {
-    List<String> list = myDataMap.get(key1);
-    if (list == null) return Integer.MAX_VALUE;
-
-    int i = list.indexOf(key2);
-    return i >= 0 ? i : Integer.MAX_VALUE;
-  }
-
-  public int getData(String key1, String key2) {
-    List<String> list = myDataMap.get(key1);
-    if (list == null) return 0;
-
-    int result = 0;
-    for (String s : list) {
-      if (s.equals(key2)) result++;
+    public StatisticsUnit(int number) {
+        myNumber = number;
     }
-    return result;
-  }
 
-  public void incData(String key1, String key2) {
-    LinkedList<String> list = myDataMap.get(key1);
-    if (list == null) {
-      myDataMap.put(key1, list = new LinkedList<String>());
-    }
-    list.addFirst(key2);
-    if (list.size() > StatisticsManager.OBLIVION_THRESHOLD) {
-      list.removeLast();
-    }
-  }
-
-  public String[] getKeys2(String key1){
-    List<String> list = myDataMap.get(key1);
-    if (list == null) return ArrayUtil.EMPTY_STRING_ARRAY;
-
-    return ArrayUtil.toStringArray(new LinkedHashSet<String>(list));
-  }
-
-  public int getNumber() {
-    return myNumber;
-  }
-
-  public void write(OutputStream out) throws IOException{
-    DataOutputStream dataOut = new DataOutputStream(out);
-    dataOut.writeInt(FORMAT_VERSION_NUMBER);
-
-    dataOut.writeInt(myDataMap.size());
-    for (String context : myDataMap.keySet()) {
-      List<String> list = myDataMap.get(context);
-      if (list != null && !list.isEmpty()) {
-        dataOut.writeUTF(context);
-        dataOut.writeInt(list.size());
-        for (String data : list) {
-          dataOut.writeUTF(data);
+    public int getRecency(String key1, String key2) {
+        List<String> list = myDataMap.get(key1);
+        if (list == null) {
+            return Integer.MAX_VALUE;
         }
-      }
-    }
-  }
 
-  public void read(InputStream in) throws IOException, WrongFormatException {
-    DataInputStream dataIn = new DataInputStream(in);
-    int formatVersion = dataIn.readInt();
-    if (formatVersion != FORMAT_VERSION_NUMBER){
-      throw new WrongFormatException();
+        int i = list.indexOf(key2);
+        return i >= 0 ? i : Integer.MAX_VALUE;
     }
 
-    myDataMap.clear();
-    int size = dataIn.readInt();
-    for(int i = 0; i < size; i++){
-      String context = dataIn.readUTF();
-      int len = dataIn.readInt();
-      LinkedList<String> list = new LinkedList<String>();
-      for (int j = 0; j < len; j++) {
-        list.add(dataIn.readUTF());
-      }
-      myDataMap.put(context, list);
-    }
-  }
+    public int getData(String key1, String key2) {
+        List<String> list = myDataMap.get(key1);
+        if (list == null) {
+            return 0;
+        }
 
+        int result = 0;
+        for (String s : list) {
+            if (s.equals(key2)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public void incData(String key1, String key2) {
+        List<String> list = myDataMap.get(key1);
+        if (list == null) {
+            myDataMap.put(key1, list = new LinkedList<>());
+        }
+        list.addFirst(key2);
+        if (list.size() > StatisticsManager.OBLIVION_THRESHOLD) {
+            list.removeLast();
+        }
+    }
+
+    public String[] getKeys2(String key1) {
+        List<String> list = myDataMap.get(key1);
+        if (list == null) {
+            return ArrayUtil.EMPTY_STRING_ARRAY;
+        }
+
+        return ArrayUtil.toStringArray(new LinkedHashSet<>(list));
+    }
+
+    public int getNumber() {
+        return myNumber;
+    }
+
+    public void write(OutputStream out) throws IOException {
+        DataOutputStream dataOut = new DataOutputStream(out);
+        dataOut.writeInt(FORMAT_VERSION_NUMBER);
+
+        dataOut.writeInt(myDataMap.size());
+        for (String context : myDataMap.keySet()) {
+            List<String> list = myDataMap.get(context);
+            if (list != null && !list.isEmpty()) {
+                dataOut.writeUTF(context);
+                dataOut.writeInt(list.size());
+                for (String data : list) {
+                    dataOut.writeUTF(data);
+                }
+            }
+        }
+    }
+
+    public void read(InputStream in) throws IOException, WrongFormatException {
+        DataInputStream dataIn = new DataInputStream(in);
+        int formatVersion = dataIn.readInt();
+        if (formatVersion != FORMAT_VERSION_NUMBER) {
+            throw new WrongFormatException();
+        }
+
+        myDataMap.clear();
+        int size = dataIn.readInt();
+        for (int i = 0; i < size; i++) {
+            String context = dataIn.readUTF();
+            int len = dataIn.readInt();
+            List<String> list = new LinkedList<>();
+            for (int j = 0; j < len; j++) {
+                list.add(dataIn.readUTF());
+            }
+            myDataMap.put(context, list);
+        }
+    }
 }

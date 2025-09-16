@@ -16,69 +16,75 @@
 package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 class VirtualFileDataImpl extends VirtualFileImpl {
-  private byte[] myContents = ArrayUtil.EMPTY_BYTE_ARRAY;
-  private long myModificationStamp = LocalTimeCounter.currentTime();
+    private byte[] myContents = ArrayUtil.EMPTY_BYTE_ARRAY;
+    private long myModificationStamp = LocalTimeCounter.currentTime();
 
-  public VirtualFileDataImpl(DummyFileSystem fileSystem, VirtualFileDirectoryImpl parent, String name) {
-    super(fileSystem, parent, name);
-  }
+    public VirtualFileDataImpl(DummyFileSystem fileSystem, VirtualFileDirectoryImpl parent, String name) {
+        super(fileSystem, parent, name);
+    }
 
-  @Override
-  public boolean isDirectory() {
-    return false;
-  }
+    @Override
+    public boolean isDirectory() {
+        return false;
+    }
 
-  @Override
-  public long getLength() {
-    return myContents.length;
-  }
+    @Override
+    public long getLength() {
+        return myContents.length;
+    }
 
-  @Override
-  public VirtualFile[] getChildren() {
-    return null;
-  }
+    @Override
+    public VirtualFile[] getChildren() {
+        return null;
+    }
 
-  @Override
-  public InputStream getInputStream() throws IOException {
-    return VfsUtilCore.byteStreamSkippingBOM(myContents, this);
-  }
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return VfsUtilCore.byteStreamSkippingBOM(myContents, this);
+    }
 
-  @Override
-  @Nonnull
-  public OutputStream getOutputStream(final Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
-    return VfsUtilCore.outputStreamAddingBOM(new ByteArrayOutputStream() {
-      @Override
-      public void close() {
-        DummyFileSystem fs = (DummyFileSystem)getFileSystem();
-        fs.fireBeforeContentsChange(requestor, VirtualFileDataImpl.this);
-        long oldModStamp = myModificationStamp;
-        myContents = toByteArray();
-        myModificationStamp = newModificationStamp >= 0 ? newModificationStamp : LocalTimeCounter.currentTime();
-        fs.fireContentsChanged(requestor, VirtualFileDataImpl.this, oldModStamp);
-      }
-    },this);
-  }
+    @Override
+    @Nonnull
+    public OutputStream getOutputStream(final Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
+        return VfsUtilCore.outputStreamAddingBOM(
+            new ByteArrayOutputStream() {
+                @Override
+                public void close() {
+                    DummyFileSystem fs = (DummyFileSystem) getFileSystem();
+                    fs.fireBeforeContentsChange(requestor, VirtualFileDataImpl.this);
+                    long oldModStamp = myModificationStamp;
+                    myContents = toByteArray();
+                    myModificationStamp = newModificationStamp >= 0 ? newModificationStamp : LocalTimeCounter.currentTime();
+                    fs.fireContentsChanged(requestor, VirtualFileDataImpl.this, oldModStamp);
+                }
+            },
+            this
+        );
+    }
 
-  @Override
-  @Nonnull
-  public byte[] contentsToByteArray() throws IOException {
-    return myContents;
-  }
+    @Override
+    @Nonnull
+    public byte[] contentsToByteArray() throws IOException {
+        return myContents;
+    }
 
-  @Override
-  public long getModificationStamp() {
-    return myModificationStamp;
-  }
+    @Override
+    public long getModificationStamp() {
+        return myModificationStamp;
+    }
 
-  public void setModificationStamp(long modificationStamp, Object requestor) {
-    myModificationStamp = modificationStamp;
-  }
+    public void setModificationStamp(long modificationStamp, Object requestor) {
+        myModificationStamp = modificationStamp;
+    }
 }
