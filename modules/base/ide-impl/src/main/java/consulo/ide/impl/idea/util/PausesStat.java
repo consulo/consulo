@@ -16,90 +16,94 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.concurrent.TimeUnit;
 
 public class PausesStat {
-  private static final Logger LOG = Logger.getInstance(PausesStat.class);
-  private static final int N_MAX = 100000;
-  @Nonnull
-  private final String myName;
-  private boolean started;
-  private long startTimeStamp;
-  private Thread currentThread;
+    private static final Logger LOG = Logger.getInstance(PausesStat.class);
+    private static final int N_MAX = 100000;
+    @Nonnull
+    private final String myName;
+    private boolean started;
+    private long startTimeStamp;
+    private Thread currentThread;
 
-  // fields below are guarded by `this`
+    // fields below are guarded by `this`
 
-  // stores durations of the event: (timestamp of the event end) - (timestamp of the event start) in milliseconds.
-  private final IntList durations =  IntLists.newArrayList();
-  private int maxDuration;
-  private Object maxDurationDescription;
-  private int totalNumberRecorded;
-  private int indexToOverwrite; // used when pauses.size() == N_MAX and we have to overflow cyclically
+    // stores durations of the event: (timestamp of the event end) - (timestamp of the event start) in milliseconds.
+    private final IntList durations = IntLists.newArrayList();
+    private int maxDuration;
+    private Object maxDurationDescription;
+    private int totalNumberRecorded;
+    private int indexToOverwrite; // used when pauses.size() == N_MAX and we have to overflow cyclically
 
-  public PausesStat(@Nonnull String name) {
-    myName = name;
-  }
-
-  private synchronized void register(int duration, @Nonnull String description) {
-    if (duration > maxDuration) {
-      maxDuration = duration;
-      maxDurationDescription = description;
+    public PausesStat(@Nonnull String name) {
+        myName = name;
     }
 
-    totalNumberRecorded++;
-    if (durations.size() == N_MAX) {
-      durations.set(indexToOverwrite, duration);
-      indexToOverwrite = (indexToOverwrite + 1) % N_MAX;
-    }
-    else {
-      durations.add(duration);
-    }
-  }
+    private synchronized void register(int duration, @Nonnull String description) {
+        if (duration > maxDuration) {
+            maxDuration = duration;
+            maxDurationDescription = description;
+        }
 
-  public void started() {
-    LOG.assertTrue(!started);
-    LOG.assertTrue(startTimeStamp == 0, startTimeStamp);
-    currentThread = Thread.currentThread();
-    startTimeStamp = System.nanoTime();
-    started = true;
-  }
-
-  public void finished(@Nonnull String description) {
-    LOG.assertTrue(currentThread == Thread.currentThread());
-    LOG.assertTrue(started);
-    currentThread = null;
-    started = false;
-    long finishStamp = System.nanoTime();
-    long startTimeStamp = this.startTimeStamp;
-    int durationMs = (int)TimeUnit.NANOSECONDS.toMillis(finishStamp - startTimeStamp);
-    this.startTimeStamp = 0;
-    if (finishStamp - startTimeStamp < 0 || durationMs < 0) {
-      // sometimes despite all efforts the System.nanoTime() can be non-monotonic
-      // ignore
-      return;
+        totalNumberRecorded++;
+        if (durations.size() == N_MAX) {
+            durations.set(indexToOverwrite, duration);
+            indexToOverwrite = (indexToOverwrite + 1) % N_MAX;
+        }
+        else {
+            durations.add(duration);
+        }
     }
 
-    durationMs = Math.min(durationMs, Short.MAX_VALUE);
-    register(durationMs, description);
-  }
-
-  public synchronized String statistics() {
-    int number = durations.size();
-    int[] duration = durations.toArray();
-    int total = 0;
-    for (int d : duration) {
-      total += d;
+    public void started() {
+        LOG.assertTrue(!started);
+        LOG.assertTrue(startTimeStamp == 0, startTimeStamp);
+        currentThread = Thread.currentThread();
+        startTimeStamp = System.nanoTime();
+        started = true;
     }
 
-    return myName + " Statistics" + (totalNumberRecorded == number ? "" : " (" + totalNumberRecorded + " events was recorded in total, but only last " + number + " are reported here)") + ":" +
-           "\nEvent number:     " + number +
-           "\nTotal time spent: " + total + "ms" +
-           "\nAverage duration: " + (number == 0 ? 0 : total / number) + "ms" +
-           "\nMedian  duration: " + ArrayUtil.averageAmongMedians(duration, 3) + "ms" +
-           "\nMax     duration: " + (maxDuration == 65535 ? ">" : "") + maxDuration + "ms (it was '" + maxDurationDescription + "')";
-  }
+    public void finished(@Nonnull String description) {
+        LOG.assertTrue(currentThread == Thread.currentThread());
+        LOG.assertTrue(started);
+        currentThread = null;
+        started = false;
+        long finishStamp = System.nanoTime();
+        long startTimeStamp = this.startTimeStamp;
+        int durationMs = (int) TimeUnit.NANOSECONDS.toMillis(finishStamp - startTimeStamp);
+        this.startTimeStamp = 0;
+        if (finishStamp - startTimeStamp < 0 || durationMs < 0) {
+            // sometimes despite all efforts the System.nanoTime() can be non-monotonic
+            // ignore
+            return;
+        }
+
+        durationMs = Math.min(durationMs, Short.MAX_VALUE);
+        register(durationMs, description);
+    }
+
+    public synchronized String statistics() {
+        int number = durations.size();
+        int[] duration = durations.toArray();
+        int total = 0;
+        for (int d : duration) {
+            total += d;
+        }
+
+        return myName + " Statistics" + (
+            totalNumberRecorded == number ? ""
+                : " (" + totalNumberRecorded + " events was recorded in total, but only last " + number + " are reported here)"
+        ) + ":" +
+            "\nEvent number:     " + number +
+            "\nTotal time spent: " + total + "ms" +
+            "\nAverage duration: " + (number == 0 ? 0 : total / number) + "ms" +
+            "\nMedian  duration: " + ArrayUtil.averageAmongMedians(duration, 3) + "ms" +
+            "\nMax     duration: " + (maxDuration == 65535 ? ">" : "") + maxDuration + "ms (it was '" + maxDurationDescription + "')";
+    }
 }

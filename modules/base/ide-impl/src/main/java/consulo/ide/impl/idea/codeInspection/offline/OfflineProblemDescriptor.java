@@ -15,163 +15,169 @@
  */
 package consulo.ide.impl.idea.codeInspection.offline;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author anna
  * @since 2007-01-05
  */
 public class OfflineProblemDescriptor {
-  public String myType;
-  public String myFQName;
-  public String myDescription;
-  public List<String> myHints;
-  public int myProblemIndex;
-  public int myLine;
-  public String[] myParentType;
-  public String[] myParentFQName;
-  public String myModuleName;
+    public String myType;
+    public String myFQName;
+    public String myDescription;
+    public List<String> myHints;
+    public int myProblemIndex;
+    public int myLine;
+    public String[] myParentType;
+    public String[] myParentFQName;
+    public String myModuleName;
 
-  public String getType() {
-    return myType;
-  }
-
-  public void setType(String type) {
-    myType = type;
-  }
-
-  public String getFQName() {
-    return myFQName;
-  }
-
-  public void setFQName(String FQName) {
-    myFQName = FQName;                              
-  }
-
-  public String getDescription() {
-    return myDescription;
-  }
-
-  public void setDescription(String description) {
-    myDescription = description;
-  }
-
-  public List<String> getHints() {
-    return myHints;
-  }
-
-  public void setHints(List<String> hints) {
-    myHints = hints;
-  }
-
-  public int getProblemIndex() {
-    return myProblemIndex;
-  }
-
-  public void setProblemIndex(int problemIndex) {
-    myProblemIndex = problemIndex;
-  }
-
-  public int getLine() {
-    return myLine;
-  }
-
-  public void setLine(int line) {
-    myLine = line;
-  }
-
-  public String[] getParentType() {
-    return myParentType;
-  }
-
-  public void setParentType(String[] parentType) {
-    myParentType = parentType;
-  }
-
-  public String[] getParentFQName() {
-    return myParentFQName;
-  }
-
-  public void setParentFQName(String[] parentFQName) {
-    myParentFQName = parentFQName;
-  }
-
-  @Nullable
-  public RefEntity getRefElement(RefManager refManager) {
-    RefEntity refElement = refManager.getReference(myType, myFQName);
-    if (refElement instanceof RefElement) {
-      PsiElement element = ((RefElement)refElement).getPsiElement();
-      if (element != null && element.isValid()) {
-        PsiDocumentManager.getInstance(element.getProject()).commitAllDocuments();
-      }
+    public String getType() {
+        return myType;
     }
-    return refElement;
-  }
 
-  @Nullable
-  public OfflineProblemDescriptor getOwner() {
-    if (myParentType != null && myParentFQName != null) {
-      OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
-      descriptor.setLine(myLine);
-      descriptor.setFQName(myParentFQName[0]);
-      descriptor.setType(myParentType[0]);
-      if (myParentType.length > 1 && myParentFQName.length > 1) {
-        descriptor.setParentType(ArrayUtil.remove(myParentType, 0));
-        descriptor.setParentFQName(ArrayUtil.remove(myParentFQName, 0));
-      }
-      return descriptor;
+    public void setType(String type) {
+        myType = type;
     }
-    return null;
-  }
 
+    public String getFQName() {
+        return myFQName;
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public void setFQName(String FQName) {
+        myFQName = FQName;
+    }
 
-    OfflineProblemDescriptor that = (OfflineProblemDescriptor)o;
+    public String getDescription() {
+        return myDescription;
+    }
 
-    if (myLine != that.myLine) return false;
-    if (myProblemIndex != that.myProblemIndex) return false;
-    if (myDescription != null ? !myDescription.equals(that.myDescription) : that.myDescription != null) return false;
-    if (myFQName != null ? !myFQName.equals(that.myFQName) : that.myFQName != null) return false;
-    if (myHints != null ? !myHints.equals(that.myHints) : that.myHints != null) return false;
-    if (myModuleName != null ? !myModuleName.equals(that.myModuleName) : that.myModuleName != null) return false;
-    if (!Arrays.equals(myParentFQName, that.myParentFQName)) return false;
-    if (!Arrays.equals(myParentType, that.myParentType)) return false;
-    if (myType != null ? !myType.equals(that.myType) : that.myType != null) return false;
+    public void setDescription(String description) {
+        myDescription = description;
+    }
 
-    return true;
-  }
+    public List<String> getHints() {
+        return myHints;
+    }
 
-  public int hashCode() {
-    int result;
-    result = (myType != null ? myType.hashCode() : 0);
-    result = 31 * result + (myFQName != null ? myFQName.hashCode() : 0);
-    result = 31 * result + (myDescription != null ? myDescription.hashCode() : 0);
-    result = 31 * result + (myHints != null ? myHints.hashCode() : 0);
-    result = 31 * result + myProblemIndex;
-    result = 31 * result + myLine;
-    result = 31 * result + (myParentType != null ? Arrays.hashCode(myParentType) : 0);
-    result = 31 * result + (myParentFQName != null ? Arrays.hashCode(myParentFQName) : 0);
-    result = 31 * result + (myModuleName != null ? myModuleName.hashCode() : 0);
-    return result;
-  }
+    public void setHints(List<String> hints) {
+        myHints = hints;
+    }
 
-  public void setModule(String moduleName) {
-    myModuleName = moduleName;
-  }
+    public int getProblemIndex() {
+        return myProblemIndex;
+    }
 
-  public String getModuleName() {
-    return myModuleName;
-  }
+    public void setProblemIndex(int problemIndex) {
+        myProblemIndex = problemIndex;
+    }
+
+    public int getLine() {
+        return myLine;
+    }
+
+    public void setLine(int line) {
+        myLine = line;
+    }
+
+    public String[] getParentType() {
+        return myParentType;
+    }
+
+    public void setParentType(String[] parentType) {
+        myParentType = parentType;
+    }
+
+    public String[] getParentFQName() {
+        return myParentFQName;
+    }
+
+    public void setParentFQName(String[] parentFQName) {
+        myParentFQName = parentFQName;
+    }
+
+    @Nullable
+    @RequiredReadAction
+    public RefEntity getRefElement(RefManager refManager) {
+        RefEntity refEntity = refManager.getReference(myType, myFQName);
+        if (refEntity instanceof RefElement refElement) {
+            PsiElement element = refElement.getPsiElement();
+            if (element != null && element.isValid()) {
+                PsiDocumentManager.getInstance(element.getProject()).commitAllDocuments();
+            }
+        }
+        return refEntity;
+    }
+
+    @Nullable
+    public OfflineProblemDescriptor getOwner() {
+        if (myParentType != null && myParentFQName != null) {
+            OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
+            descriptor.setLine(myLine);
+            descriptor.setFQName(myParentFQName[0]);
+            descriptor.setType(myParentType[0]);
+            if (myParentType.length > 1 && myParentFQName.length > 1) {
+                descriptor.setParentType(ArrayUtil.remove(myParentType, 0));
+                descriptor.setParentFQName(ArrayUtil.remove(myParentFQName, 0));
+            }
+            return descriptor;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        OfflineProblemDescriptor that = (OfflineProblemDescriptor) o;
+
+      return myLine == that.myLine
+          && myProblemIndex == that.myProblemIndex
+          && Objects.equals(myDescription, that.myDescription)
+          && Objects.equals(myFQName, that.myFQName)
+          && Objects.equals(myHints, that.myHints)
+          && Objects.equals(myModuleName, that.myModuleName)
+          && Arrays.equals(myParentFQName, that.myParentFQName)
+          && Arrays.equals(myParentType, that.myParentType)
+          && Objects.equals(myType, that.myType);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        result = (myType != null ? myType.hashCode() : 0);
+        result = 31 * result + (myFQName != null ? myFQName.hashCode() : 0);
+        result = 31 * result + (myDescription != null ? myDescription.hashCode() : 0);
+        result = 31 * result + (myHints != null ? myHints.hashCode() : 0);
+        result = 31 * result + myProblemIndex;
+        result = 31 * result + myLine;
+        result = 31 * result + (myParentType != null ? Arrays.hashCode(myParentType) : 0);
+        result = 31 * result + (myParentFQName != null ? Arrays.hashCode(myParentFQName) : 0);
+        result = 31 * result + (myModuleName != null ? myModuleName.hashCode() : 0);
+        return result;
+    }
+
+    public void setModule(String moduleName) {
+        myModuleName = moduleName;
+    }
+
+    public String getModuleName() {
+        return myModuleName;
+    }
 }

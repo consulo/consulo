@@ -13,167 +13,173 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.desktop.awt.uiOld;
 
-import consulo.ui.ex.awt.ScalableIcon;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ScalableIcon;
+import consulo.util.collection.ArrayUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
 public class RowIcon extends JBUI.CachingScalableJBIcon<RowIcon> {
-  private final Alignment myAlignment;
+    private final Alignment myAlignment;
 
-  private int myWidth;
-  private int myHeight;
+    private int myWidth;
+    private int myHeight;
 
-  public enum Alignment {
-    TOP,
-    CENTER,
-    BOTTOM
-  }
-
-  private final Icon[] myIcons;
-  private Icon[] myScaledIcons;
-
-  public RowIcon(int iconCount/*, int orientation*/) {
-    this(iconCount, Alignment.TOP);
-  }
-
-  public RowIcon(int iconCount, Alignment alignment) {
-    myAlignment = alignment;
-    myIcons = new Icon[iconCount];
-    //myOrientation = orientation;
-  }
-
-  public RowIcon(Icon... icons) {
-    this(icons.length);
-    System.arraycopy(icons, 0, myIcons, 0, icons.length);
-    updateSize();
-  }
-
-  protected RowIcon(RowIcon icon) {
-    super(icon);
-    myAlignment = icon.myAlignment;
-    myWidth = icon.myWidth;
-    myHeight = icon.myHeight;
-    myIcons = ArrayUtil.copyOf(icon.myIcons);
-    myScaledIcons = null;
-  }
-
-  @Override
-  protected RowIcon copy() {
-    return new RowIcon(this);
-  }
-
-  private Icon[] myScaledIcons() {
-    if (myScaledIcons != null) {
-      return myScaledIcons;
+    public enum Alignment {
+        TOP,
+        CENTER,
+        BOTTOM
     }
-    if (getScale() == 1f) {
-      return myScaledIcons = myIcons;
+
+    private final Icon[] myIcons;
+    private Icon[] myScaledIcons;
+
+    public RowIcon(int iconCount/*, int orientation*/) {
+        this(iconCount, Alignment.TOP);
     }
-    for (Icon icon : myIcons) {
-      if (icon != null && !(icon instanceof ScalableIcon)) {
-        return myScaledIcons = myIcons;
-      }
+
+    public RowIcon(int iconCount, Alignment alignment) {
+        myAlignment = alignment;
+        myIcons = new Icon[iconCount];
+        //myOrientation = orientation;
     }
-    myScaledIcons = new Icon[myIcons.length];
-    for (int i = 0; i < myIcons.length; i++) {
-      if (myIcons[i] != null) {
-        myScaledIcons[i] = ((ScalableIcon)myIcons[i]).scale(getScale());
-      }
+
+    public RowIcon(Icon... icons) {
+        this(icons.length);
+        System.arraycopy(icons, 0, myIcons, 0, icons.length);
+        updateSize();
     }
-    return myScaledIcons;
-  }
 
-  @TestOnly
-  @Nonnull
-  Icon[] getAllIcons() {
-    List<Icon> icons = ContainerUtil.packNullables(myIcons);
-    return icons.toArray(new Icon[icons.size()]);
-  }
-
-  public int hashCode() {
-    return myIcons.length > 0 ? myIcons[0].hashCode() : 0;
-  }
-
-  public boolean equals(Object obj) {
-    return obj instanceof RowIcon && Arrays.equals(((RowIcon)obj).myIcons, myIcons);
-  }
-
-  public int getIconCount() {
-    return myIcons.length;
-  }
-
-  public void setIcon(Icon icon, int layer) {
-    myIcons[layer] = icon;
-    myScaledIcons = null;
-    updateSize();
-  }
-
-  public Icon getIcon(int index) {
-    return myIcons[index];
-  }
-
-  @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) {
-    getScaleContext().update();
-    int _x = x;
-    int _y = y;
-    for (Icon icon : myScaledIcons()) {
-      if (icon == null) continue;
-      switch (myAlignment) {
-        case TOP:
-          _y = y;
-          break;
-        case CENTER:
-          _y = y + (myHeight - icon.getIconHeight()) / 2;
-          break;
-        case BOTTOM:
-          _y = y + (myHeight - icon.getIconHeight());
-          break;
-      }
-      icon.paintIcon(c, g, _x, _y);
-      _x += icon.getIconWidth();
-      //_y += icon.getIconHeight();
+    protected RowIcon(RowIcon icon) {
+        super(icon);
+        myAlignment = icon.myAlignment;
+        myWidth = icon.myWidth;
+        myHeight = icon.myHeight;
+        myIcons = ArrayUtil.copyOf(icon.myIcons);
+        myScaledIcons = null;
     }
-  }
 
-  @Override
-  public int getIconWidth() {
-    getScaleContext().update();
-    return (int)Math.ceil(scaleVal(myWidth, JBUI.ScaleType.OBJ_SCALE));
-  }
-
-  @Override
-  public int getIconHeight() {
-    getScaleContext().update();
-    return (int)Math.ceil(scaleVal(myHeight, JBUI.ScaleType.OBJ_SCALE));
-  }
-
-  private void updateSize() {
-    int width = 0;
-    int height = 0;
-    for (Icon icon : myIcons) {
-      if (icon == null) continue;
-      width += icon.getIconWidth();
-      //height += icon.getIconHeight();
-      height = Math.max(height, icon.getIconHeight());
+    @Nonnull
+    @Override
+    protected RowIcon copy() {
+        return new RowIcon(this);
     }
-    myWidth = width;
-    myHeight = height;
-  }
 
-  @Override
-  public String toString() {
-    return "Row icon. myIcons=" + Arrays.asList(myIcons);
-  }
+    private Icon[] myScaledIcons() {
+        if (myScaledIcons != null) {
+            return myScaledIcons;
+        }
+        if (getScale() == 1f) {
+            return myScaledIcons = myIcons;
+        }
+        for (Icon icon : myIcons) {
+            if (icon != null && !(icon instanceof ScalableIcon)) {
+                return myScaledIcons = myIcons;
+            }
+        }
+        myScaledIcons = new Icon[myIcons.length];
+        for (int i = 0; i < myIcons.length; i++) {
+            if (myIcons[i] != null) {
+                myScaledIcons[i] = ((ScalableIcon) myIcons[i]).scale(getScale());
+            }
+        }
+        return myScaledIcons;
+    }
+
+    @Nonnull
+    @TestOnly
+    Icon[] getAllIcons() {
+        List<Icon> icons = ContainerUtil.packNullables(myIcons);
+        return icons.toArray(new Icon[icons.size()]);
+    }
+
+    @Override
+    public int hashCode() {
+        return myIcons.length > 0 ? myIcons[0].hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof RowIcon && Arrays.equals(((RowIcon) obj).myIcons, myIcons);
+    }
+
+    public int getIconCount() {
+        return myIcons.length;
+    }
+
+    public void setIcon(Icon icon, int layer) {
+        myIcons[layer] = icon;
+        myScaledIcons = null;
+        updateSize();
+    }
+
+    public Icon getIcon(int index) {
+        return myIcons[index];
+    }
+
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+        getScaleContext().update();
+        int _x = x;
+        int _y = y;
+        for (Icon icon : myScaledIcons()) {
+            if (icon == null) {
+                continue;
+            }
+            switch (myAlignment) {
+                case TOP:
+                    _y = y;
+                    break;
+                case CENTER:
+                    _y = y + (myHeight - icon.getIconHeight()) / 2;
+                    break;
+                case BOTTOM:
+                    _y = y + (myHeight - icon.getIconHeight());
+                    break;
+            }
+            icon.paintIcon(c, g, _x, _y);
+            _x += icon.getIconWidth();
+            //_y += icon.getIconHeight();
+        }
+    }
+
+    @Override
+    public int getIconWidth() {
+        getScaleContext().update();
+        return (int) Math.ceil(scaleVal(myWidth, JBUI.ScaleType.OBJ_SCALE));
+    }
+
+    @Override
+    public int getIconHeight() {
+        getScaleContext().update();
+        return (int) Math.ceil(scaleVal(myHeight, JBUI.ScaleType.OBJ_SCALE));
+    }
+
+    private void updateSize() {
+        int width = 0;
+        int height = 0;
+        for (Icon icon : myIcons) {
+            if (icon == null) {
+                continue;
+            }
+            width += icon.getIconWidth();
+            //height += icon.getIconHeight();
+            height = Math.max(height, icon.getIconHeight());
+        }
+        myWidth = width;
+        myHeight = height;
+    }
+
+    @Override
+    public String toString() {
+        return "Row icon. myIcons=" + Arrays.asList(myIcons);
+    }
 }

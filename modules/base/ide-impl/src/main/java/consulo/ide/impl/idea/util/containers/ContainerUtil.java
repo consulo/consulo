@@ -462,19 +462,13 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <K, V> Map<K, V> union(@Nonnull Map<? extends K, ? extends V> map, @Nonnull Map<? extends K, ? extends V> map2) {
-        Map<K, V> result = new HashMap<>(map.size() + map2.size());
-        result.putAll(map);
-        result.putAll(map2);
-        return result;
+        return consulo.util.collection.ContainerUtil.union(map, map2);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> Set<T> union(@Nonnull Set<T> set, @Nonnull Set<T> set2) {
-        Set<T> result = new HashSet<>(set.size() + set2.size());
-        result.addAll(set);
-        result.addAll(set2);
-        return result;
+        return consulo.util.collection.ContainerUtil.union(set, set2);
     }
 
     @Nonnull
@@ -597,42 +591,7 @@ public class ContainerUtil extends ContainerUtilRt {
         boolean mergeEqualItems,
         @Nonnull Consumer<? super T> processor
     ) {
-        int index1 = 0;
-        int index2 = 0;
-        while (index1 < list1.size() || index2 < list2.size()) {
-            T e;
-            if (index1 >= list1.size()) {
-                e = list2.get(index2++);
-            }
-            else if (index2 >= list2.size()) {
-                e = list1.get(index1++);
-            }
-            else {
-                T element1 = list1.get(index1);
-                T element2 = list2.get(index2);
-                int c = comparator.compare(element1, element2);
-                if (c == 0) {
-                    index1++;
-                    index2++;
-                    if (mergeEqualItems) {
-                        e = element1;
-                    }
-                    else {
-                        processor.accept(element1);
-                        e = element2;
-                    }
-                }
-                else if (c < 0) {
-                    e = element1;
-                    index1++;
-                }
-                else {
-                    e = element2;
-                    index2++;
-                }
-            }
-            processor.accept(e);
-        }
+        consulo.util.collection.ContainerUtil.processSortedListsInOrder(list1, list2, comparator, mergeEqualItems, processor);
     }
 
     @Nonnull
@@ -918,13 +877,13 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> V[] map2Array(@Nonnull Collection<? extends T> collection, @Nonnull V[] to, @Nonnull Function<T, V> mapper) {
-        return map2List(collection, mapper).toArray(to);
+        return consulo.util.collection.ContainerUtil.map2Array(collection, to, mapper);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> filter(@Nonnull T[] collection, @Nonnull Predicate<? super T> condition) {
-        return findAll(collection, condition);
+        return consulo.util.collection.ContainerUtil.filter(collection, condition);
     }
 
     /**
@@ -978,13 +937,13 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> skipNulls(@Nonnull Collection<? extends T> collection) {
-        return findAll(collection, Predicates.notNull());
+        return consulo.util.collection.ContainerUtil.skipNulls(collection);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<V> findAll(@Nonnull T[] collection, @Nonnull Class<V> instanceOf) {
-        return findAll(Arrays.asList(collection), instanceOf);
+        return consulo.util.collection.ContainerUtil.findAll(collection, instanceOf);
     }
 
     @Nonnull
@@ -1017,27 +976,11 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<V> findAll(@Nonnull Collection<? extends T> collection, @Nonnull Class<V> instanceOf) {
-        List<V> result = new SmartList<>();
-        for (T t : collection) {
-            if (instanceOf.isInstance(t)) {
-                @SuppressWarnings("unchecked") V v = (V)t;
-                result.add(v);
-            }
-        }
-        return result;
+        return consulo.util.collection.ContainerUtil.findAll(collection, instanceOf);
     }
 
     public static <T> void removeDuplicates(@Nonnull Collection<T> collection) {
-        Set<T> collected = newHashSet();
-        for (Iterator<T> iterator = collection.iterator(); iterator.hasNext(); ) {
-            T t = iterator.next();
-            if (!collected.contains(t)) {
-                collected.add(t);
-            }
-            else {
-                iterator.remove();
-            }
-        }
+        consulo.util.collection.ContainerUtil.removeDuplicates(collection);
     }
 
     @Nonnull
@@ -1238,7 +1181,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Contract(pure = true)
     @SafeVarargs
     public static <T> List<T> concat(boolean appendTail, @Nonnull List<? extends T> list, @Nonnull T... values) {
-        return appendTail ? concat(list, list(values)) : concat(list(values), list);
+        return consulo.util.collection.ContainerUtil.concat(appendTail, list, values);
     }
 
     @Nonnull
@@ -1315,37 +1258,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Contract(pure = true)
     @SafeVarargs
     public static <T> List<T> concat(@Nonnull List<? extends T>... lists) {
-        int size = 0;
-        for (List<? extends T> each : lists) {
-            size += each.size();
-        }
-        if (size == 0) {
-            return emptyList();
-        }
-        int finalSize = size;
-        return new AbstractList<>() {
-            @Override
-            public T get(int index) {
-                if (index >= 0 && index < finalSize) {
-                    int from = 0;
-                    for (List<? extends T> each : lists) {
-                        if (from <= index && index < from + each.size()) {
-                            return each.get(index - from);
-                        }
-                        from += each.size();
-                    }
-                    if (from != finalSize) {
-                        throw new ConcurrentModificationException("The list has changed. Its size was " + finalSize + "; now it's " + from);
-                    }
-                }
-                throw new IndexOutOfBoundsException("index: " + index + "size: " + size());
-            }
-
-            @Override
-            public int size() {
-                return finalSize;
-            }
-        };
+        return consulo.util.collection.ContainerUtil.concat(lists);
     }
 
     /**
@@ -1354,8 +1267,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> concat(@Nonnull List<List<? extends T>> lists) {
-        @SuppressWarnings("unchecked") List<? extends T>[] array = lists.toArray(new List[lists.size()]);
-        return concat(array);
+        return consulo.util.collection.ContainerUtil.concat(lists);
     }
 
     /**
@@ -1364,30 +1276,12 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<T> concat(@Nonnull Iterable<? extends V> list, @Nonnull Function<V, Collection<? extends T>> listGenerator) {
-        List<T> result = new ArrayList<>();
-        for (V v : list) {
-            result.addAll(listGenerator.apply(v));
-        }
-        return result.isEmpty() ? ContainerUtil.<T>emptyList() : result;
+        return consulo.util.collection.ContainerUtil.concat(list, listGenerator);
     }
 
     @Contract(pure = true)
     public static <T> boolean intersects(@Nonnull Collection<? extends T> collection1, @Nonnull Collection<? extends T> collection2) {
-        if (collection1.size() <= collection2.size()) {
-            for (T t : collection1) {
-                if (collection2.contains(t)) {
-                    return true;
-                }
-            }
-        }
-        else {
-            for (T t : collection2) {
-                if (collection1.contains(t)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return consulo.util.collection.ContainerUtil.intersects(collection1, collection2);
     }
 
     /**
@@ -1399,13 +1293,7 @@ public class ContainerUtil extends ContainerUtilRt {
         @Nonnull Collection<? extends T> collection1,
         @Nonnull Collection<? extends T> collection2
     ) {
-        List<T> result = new ArrayList<>();
-        for (T t : collection1) {
-            if (collection2.contains(t)) {
-                result.add(t);
-            }
-        }
-        return result.isEmpty() ? ContainerUtil.<T>emptyList() : result;
+        return consulo.util.collection.ContainerUtil.intersection(collection1, collection2);
     }
 
     @Nullable
@@ -1443,67 +1331,31 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nullable
     @Contract(pure = true)
     public static <T> T iterateAndGetLastItem(@Nonnull Iterable<T> items) {
-        Iterator<T> itr = items.iterator();
-        T res = null;
-        while (itr.hasNext()) {
-            res = itr.next();
-        }
-
-        return res;
+        return consulo.util.collection.ContainerUtil.iterateAndGetLastItem(items);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T, U> Iterator<U> mapIterator(@Nonnull Iterator<T> iterator, @Nonnull Function<T, U> mapper) {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public U next() {
-                return mapper.apply(iterator.next());
-            }
-
-            @Override
-            public void remove() {
-                iterator.remove();
-            }
-        };
+        return Iterators.mapIterator(iterator, mapper);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <U> Iterator<U> mapIterator(@Nonnull PrimitiveIterator.OfInt iterator, @Nonnull IntFunction<? extends U> mapper) {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public U next() {
-                return mapper.apply(iterator.next());
-            }
-
-            @Override
-            public void remove() {
-                iterator.remove();
-            }
-        };
+        return Iterators.mapIterator(iterator, mapper);
     }
 
     @Nullable
     @Contract(pure = true)
     public static <T, L extends List<T>> T getLastItem(@Nullable L list, @Nullable T def) {
-        return isEmpty(list) ? def : list.get(list.size() - 1);
+        return consulo.util.collection.ContainerUtil.getLastItem(list, def);
     }
 
     @Nullable
     @Contract(pure = true)
     public static <T, L extends List<T>> T getLastItem(@Nullable L list) {
-        return getLastItem(list, null);
+        return consulo.util.collection.ContainerUtil.getLastItem(list);
     }
 
     /**
@@ -1512,15 +1364,13 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> Collection<T> subtract(@Nonnull Collection<T> from, @Nonnull Collection<T> what) {
-        Set<T> set = newHashSet(from);
-        set.removeAll(what);
-        return set.isEmpty() ? ContainerUtil.<T>emptyList() : set;
+        return consulo.util.collection.ContainerUtil.subtract(from, what);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] toArray(@Nullable Collection<T> c, @Nonnull IntFunction<? extends T[]> factory) {
-        return c != null ? c.toArray(factory.apply(c.size())) : factory.apply(0);
+        return consulo.util.collection.ContainerUtil.toArray(c, factory);
     }
 
     @Nonnull
@@ -1530,7 +1380,7 @@ public class ContainerUtil extends ContainerUtilRt {
         @Nonnull Collection<? extends T> c2,
         @Nonnull ArrayFactory<T> factory
     ) {
-        return ArrayUtil.mergeCollections(c1, c2, factory);
+        return consulo.util.collection.ArrayUtil.mergeCollections(c1, c2, factory);
     }
 
     @Nonnull
@@ -1540,73 +1390,15 @@ public class ContainerUtil extends ContainerUtilRt {
         @Nonnull Collection<? extends T> c2,
         @Nonnull ArrayFactory<T> factory
     ) {
-        return ArrayUtil.mergeCollections(c1, c2, factory);
+        return consulo.util.collection.ArrayUtil.mergeCollections(c1, c2, factory);
     }
 
     public static <T extends Comparable<T>> void sort(@Nonnull List<T> list) {
-        int size = list.size();
-
-        if (size < 2) {
-            return;
-        }
-        if (size == 2) {
-            T t0 = list.get(0);
-            T t1 = list.get(1);
-
-            if (t0.compareTo(t1) > 0) {
-                list.set(0, t1);
-                list.set(1, t0);
-            }
-        }
-        else if (size < INSERTION_SORT_THRESHOLD) {
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < i; j++) {
-                    T ti = list.get(i);
-                    T tj = list.get(j);
-
-                    if (ti.compareTo(tj) < 0) {
-                        list.set(i, tj);
-                        list.set(j, ti);
-                    }
-                }
-            }
-        }
-        else {
-            Collections.sort(list);
-        }
+        consulo.util.collection.ContainerUtil.sort(list);
     }
 
     public static <T> void sort(@Nonnull List<T> list, @Nonnull Comparator<? super T> comparator) {
-        int size = list.size();
-
-        if (size < 2) {
-            return;
-        }
-        if (size == 2) {
-            T t0 = list.get(0);
-            T t1 = list.get(1);
-
-            if (comparator.compare(t0, t1) > 0) {
-                list.set(0, t1);
-                list.set(1, t0);
-            }
-        }
-        else if (size < INSERTION_SORT_THRESHOLD) {
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < i; j++) {
-                    T ti = list.get(i);
-                    T tj = list.get(j);
-
-                    if (comparator.compare(ti, tj) < 0) {
-                        list.set(i, tj);
-                        list.set(j, ti);
-                    }
-                }
-            }
-        }
-        else {
-            Collections.sort(list, comparator);
-        }
+        consulo.util.collection.ContainerUtil.sort(list, comparator);
     }
 
     public static <T extends Comparable<T>> void sort(@Nonnull T[] a) {
@@ -1645,15 +1437,13 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> sorted(@Nonnull Collection<? extends T> list, @Nonnull Comparator<? super T> comparator) {
-        return sorted((Iterable<? extends T>)list, comparator);
+        return consulo.util.collection.ContainerUtil.sorted(list, comparator);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T> List<T> sorted(@Nonnull Iterable<? extends T> list, @Nonnull Comparator<? super T> comparator) {
-        List<T> sorted = newArrayList(list);
-        sort(sorted, comparator);
-        return sorted;
+        return consulo.util.collection.ContainerUtil.sorted(list, comparator);
     }
 
     @Nonnull
@@ -1701,11 +1491,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<V> map(@Nonnull Iterable<? extends T> iterable, @Nonnull Function<T, V> mapping) {
-        List<V> result = new ArrayList<>();
-        for (T t : iterable) {
-            result.add(mapping.apply(t));
-        }
-        return result.isEmpty() ? ContainerUtil.<V>emptyList() : result;
+        return consulo.util.collection.ContainerUtil.map(iterable, mapping);
     }
 
     /**
@@ -1714,14 +1500,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<V> map(@Nonnull Collection<? extends T> iterable, @Nonnull Function<T, V> mapping) {
-        if (iterable.isEmpty()) {
-            return emptyList();
-        }
-        List<V> result = new ArrayList<>(iterable.size());
-        for (T t : iterable) {
-            result.add(mapping.apply(t));
-        }
-        return result;
+        return consulo.util.collection.ContainerUtil.map(iterable, mapping);
     }
 
     /**
@@ -1730,7 +1509,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<V> mapNotNull(@Nonnull T[] array, @Nonnull Function<T, V> mapping) {
-        return mapNotNull(Arrays.asList(array), mapping);
+        return consulo.util.collection.ContainerUtil.mapNotNull(array, mapping);
     }
 
     /**
@@ -1739,18 +1518,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> V[] mapNotNull(@Nonnull T[] array, @Nonnull Function<T, V> mapping, @Nonnull V[] emptyArray) {
-        List<V> result = new ArrayList<>(array.length);
-        for (T t : array) {
-            V v = mapping.apply(t);
-            if (v != null) {
-                result.add(v);
-            }
-        }
-        if (result.isEmpty()) {
-            assert emptyArray.length == 0 : "You must pass an empty array";
-            return emptyArray;
-        }
-        return result.toArray(emptyArray);
+        return consulo.util.collection.ContainerUtil.mapNotNull(array, mapping, emptyArray);
     }
 
     /**
@@ -1759,14 +1527,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<V> mapNotNull(@Nonnull Iterable<? extends T> iterable, @Nonnull Function<T, V> mapping) {
-        List<V> result = new ArrayList<>();
-        for (T t : iterable) {
-            V o = mapping.apply(t);
-            if (o != null) {
-                result.add(o);
-            }
-        }
-        return result.isEmpty() ? ContainerUtil.<V>emptyList() : result;
+        return consulo.util.collection.ContainerUtil.mapNotNull(iterable, mapping);
     }
 
     /**
@@ -1775,18 +1536,7 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<V> mapNotNull(@Nonnull Collection<? extends T> iterable, @Nonnull Function<T, V> mapping) {
-        if (iterable.isEmpty()) {
-            return emptyList();
-        }
-
-        List<V> result = new ArrayList<>(iterable.size());
-        for (T t : iterable) {
-            V o = mapping.apply(t);
-            if (o != null) {
-                result.add(o);
-            }
-        }
-        return result.isEmpty() ? ContainerUtil.<V>emptyList() : result;
+        return consulo.util.collection.ContainerUtil.mapNotNull(iterable, mapping);
     }
 
     /**
@@ -1809,26 +1559,13 @@ public class ContainerUtil extends ContainerUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T, V> List<V> map(@Nonnull T[] array, @Nonnull Function<T, V> mapping) {
-        List<V> result = new ArrayList<>(array.length);
-        for (T t : array) {
-            result.add(mapping.apply(t));
-        }
-        return result.isEmpty() ? ContainerUtil.<V>emptyList() : result;
+        return consulo.util.collection.ContainerUtil.map(array, mapping);
     }
 
     @Nonnull
     @Contract(pure = true)
     public static <T, V> V[] map(@Nonnull T[] arr, @Nonnull Function<T, V> mapping, @Nonnull V[] emptyArray) {
-        if (arr.length == 0) {
-            assert emptyArray.length == 0 : "You must pass an empty array";
-            return emptyArray;
-        }
-
-        List<V> result = new ArrayList<>(arr.length);
-        for (T t : arr) {
-            result.add(mapping.apply(t));
-        }
-        return result.toArray(emptyArray);
+        return consulo.util.collection.ContainerUtil.map(arr, mapping, emptyArray);
     }
 
     @Nonnull
@@ -1839,9 +1576,7 @@ public class ContainerUtil extends ContainerUtilRt {
     }
 
     public static <K, V> void putIfNotNull(K key, @Nullable V value, @Nonnull Map<K, V> result) {
-        if (value != null) {
-            result.put(key, value);
-        }
+        Maps.putIfNotNull(key, value, result);
     }
 
     public static <K, V> void putIfNotNull(K key, @Nullable Collection<? extends V> value, @Nonnull MultiMap<K, V> result) {
@@ -1919,17 +1654,12 @@ public class ContainerUtil extends ContainerUtilRt {
 
     @Contract(pure = true)
     public static <T> boolean or(@Nonnull T[] iterable, @Nonnull Predicate<? super T> condition) {
-        return or(Arrays.asList(iterable), condition);
+        return consulo.util.collection.ContainerUtil.or(iterable, condition);
     }
 
     @Contract(pure = true)
     public static <T> boolean or(@Nonnull Iterable<? extends T> iterable, @Nonnull Predicate<? super T> condition) {
-        for (T t : iterable) {
-            if (condition.test(t)) {
-                return true;
-            }
-        }
-        return false;
+        return consulo.util.collection.ContainerUtil.or(iterable, condition);
     }
 
     @Contract(pure = true)

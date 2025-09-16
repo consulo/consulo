@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;
 import consulo.localize.LocalizeValue;
@@ -25,6 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 
 /**
