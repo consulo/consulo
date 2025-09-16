@@ -22,12 +22,11 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.find.FindInProjectSettings;
 import consulo.find.FindSettings;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,27 +34,27 @@ import java.util.List;
 @State(name = "FindInProjectRecents", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED)})
 @ServiceImpl
 public final class FindInProjectRecents extends FindInProjectSettingsBase implements FindInProjectSettings {
-  public static FindInProjectSettings getInstance(Project project) {
-    return ServiceManager.getService(project, FindInProjectSettings.class);
-  }
+    public static FindInProjectSettings getInstance(Project project) {
+        return project.getInstance(FindInProjectSettings.class);
+    }
 
-  @Override
-  @Nonnull
-  public List<String> getRecentDirectories() {
-    ArrayList<String> strings = new ArrayList<>(FindSettings.getInstance().getRecentDirectories());
-    strings.addAll(super.getRecentDirectories());
-    return strings;
-  }
+    @Override
+    @Nonnull
+    public List<String> getRecentDirectories() {
+        List<String> strings = new ArrayList<>(FindSettings.getInstance().getRecentDirectories());
+        strings.addAll(super.getRecentDirectories());
+        return strings;
+    }
 
-  @Override
-  @Nonnull
-  public String[] getRecentFindStrings() {
-    return ArrayUtil.mergeArrays(FindSettings.getInstance().getRecentFindStrings(), super.getRecentFindStrings());
-  }
+    @Nonnull
+    @Override
+    public String[] getRecentFindStrings() {
+        return ArrayUtil.mergeArrays(FindSettings.getInstance().getRecentFindStrings(), super.getRecentFindStrings());
+    }
 
-  @Override
-  @Nonnull
-  public String[] getRecentReplaceStrings() {
-    return ArrayUtil.mergeArrays(FindSettings.getInstance().getRecentReplaceStrings(), super.getRecentReplaceStrings());
-  }
+    @Nonnull
+    @Override
+    public String[] getRecentReplaceStrings() {
+        return ArrayUtil.mergeArrays(FindSettings.getInstance().getRecentReplaceStrings(), super.getRecentReplaceStrings());
+    }
 }

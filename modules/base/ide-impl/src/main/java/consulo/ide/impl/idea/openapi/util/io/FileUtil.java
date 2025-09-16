@@ -16,15 +16,11 @@
 package consulo.ide.impl.idea.openapi.util.io;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ide.impl.idea.util.text.StringFactory;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileTooBigException;
@@ -33,7 +29,6 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
-import consulo.util.lang.function.PairProcessor;
 import consulo.virtualFileSystem.util.FilePathHashingStrategy;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -48,6 +43,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @Deprecated
@@ -58,13 +56,13 @@ public class FileUtil extends FileUtilRt {
 
     public static final int MEGABYTE = KILOBYTE * KILOBYTE;
 
-    public static final int REGEX_PATTERN_FLAGS = SystemInfo.isFileSystemCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE;
+    public static final int REGEX_PATTERN_FLAGS = Platform.current().fs().isCaseSensitive() ? 0 : Pattern.CASE_INSENSITIVE;
 
     public static final HashingStrategy<String> PATH_HASHING_STRATEGY = FilePathHashingStrategy.create();
     public static final HashingStrategy<CharSequence> PATH_CHAR_SEQUENCE_HASHING_STRATEGY = FilePathHashingStrategy.createForCharSequence();
 
     public static final HashingStrategy<File> FILE_HASHING_STRATEGY =
-        Platform.current().fs().isCaseSensitive() ? ContainerUtil.<File>canonicalStrategy() : new HashingStrategy<>() {
+        Platform.current().fs().isCaseSensitive() ? HashingStrategy.canonical() : new HashingStrategy<>() {
             @Override
             public int hashCode(File object) {
                 return fileHashCode(object);
@@ -197,15 +195,15 @@ public class FileUtil extends FileUtilRt {
      */
     public static <T> Collection<T> removeAncestors(
         Collection<T> files,
-        Convertor<T, String> convertor,
-        PairProcessor<T, T> removeProcessor
+        Function<T, String> convertor,
+        BiPredicate<T, T> removeProcessor
     ) {
         if (files.isEmpty()) {
             return files;
         }
         TreeMap<String, T> paths = new TreeMap<>();
         for (T file : files) {
-            String path = convertor.convert(file);
+            String path = convertor.apply(file);
             assert path != null;
             String canonicalPath = toCanonicalPath(path);
             paths.put(canonicalPath, file);
@@ -223,7 +221,7 @@ public class FileUtil extends FileUtilRt {
                 if (parent == null) {
                     continue;
                 }
-                if (startsWith(child, parent) && removeProcessor.process(ordered.get(j).getValue(), entry.getValue())) {
+                if (startsWith(child, parent) && removeProcessor.test(ordered.get(j).getValue(), entry.getValue())) {
                     parentNotFound = false;
                     break;
                 }
@@ -284,7 +282,7 @@ public class FileUtil extends FileUtilRt {
     @Nonnull
     public static String loadTextAndClose(@Nonnull Reader reader) throws IOException {
         try {
-            return StringFactory.createShared(adaptiveLoadText(reader));
+            return new String(adaptiveLoadText(reader));
         }
         finally {
             reader.close();
@@ -1065,23 +1063,23 @@ public class FileUtil extends FileUtilRt {
         }
     }
 
-    public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Processor<File> processor) {
+    public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Predicate<File> processor) {
         return processFilesRecursively(root, processor, null);
     }
 
     public static boolean processFilesRecursively(
         @Nonnull File root,
-        @Nonnull Processor<File> processor,
-        @Nullable Processor<File> directoryFilter
+        @Nonnull Predicate<File> processor,
+        @Nullable Predicate<File> directoryFilter
     ) {
         LinkedList<File> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
             File file = queue.removeFirst();
-            if (!processor.process(file)) {
+            if (!processor.test(file)) {
                 return false;
             }
-            if (directoryFilter != null && (!file.isDirectory() || !directoryFilter.process(file))) {
+            if (directoryFilter != null && (!file.isDirectory() || !directoryFilter.test(file))) {
                 continue;
             }
 
@@ -1366,8 +1364,8 @@ public class FileUtil extends FileUtilRt {
         return list;
     }
 
-    public static boolean visitFiles(@Nonnull File root, @Nonnull Processor<File> processor) {
-        if (!processor.process(root)) {
+    public static boolean visitFiles(@Nonnull File root, @Nonnull Predicate<File> processor) {
+        if (!processor.test(root)) {
             return false;
         }
 

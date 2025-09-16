@@ -278,8 +278,7 @@ public class ArrayUtil extends ArrayUtilRt {
     @Nonnull
     @Contract(pure = true)
     public static <T> T[] prepend(T element, @Nonnull T[] array) {
-        //noinspection unchecked
-        return prepend(element, array, (Class<T>)array.getClass().getComponentType());
+        return consulo.util.collection.ArrayUtil.prepend(element, array);
     }
 
     @Nonnull
