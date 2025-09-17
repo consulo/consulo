@@ -1270,21 +1270,8 @@
         </group>
 
         <group id="TodoMainGroup" text="TODO">
+            <reference id="TodoViewGroupByGroup"/>
             <add-to-group group-id="Other.KeymapGroup"/>
-            <group id="TodoViewGroupByGroup" class="consulo.language.editor.todo.impl.internal.TodoPanel$GroupByActionGroup">
-                <separator text="Group By"/>
-                <action class="consulo.language.editor.todo.impl.internal.TodoPanel$MyShowModulesAction" id="TodoViewGroupByShowModules">
-                    <keyboard-shortcut first-keystroke="control M" keymap="$default"/>
-                </action>
-
-                <action class="consulo.language.editor.todo.impl.internal.TodoPanel$MyShowPackagesAction" id="TodoViewGroupByShowPackages">
-                    <keyboard-shortcut first-keystroke="control P" keymap="$default"/>
-                </action>
-
-                <action class="consulo.language.editor.todo.impl.internal.TodoPanel$MyFlattenPackagesAction" id="TodoViewGroupByFlattenPackage">
-                    <keyboard-shortcut first-keystroke="control F" keymap="$default"/>
-                </action>
-            </group>
         </group>
 
         <group id="SearchEverywhereActions" text="Search Everywhere">

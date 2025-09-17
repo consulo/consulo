@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.awt.hacking;
+package consulo.language.editor.todo.impl.internal.action;
 
-import sun.awt.datatransfer.DataTransferer;
-
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.FlavorTable;
-import java.util.Set;
+import consulo.annotation.component.ActionImpl;
+import consulo.language.editor.todo.impl.internal.TodoPanel;
 
 /**
- * @author VISTALL
- * @since 2023-08-14
+ * @author UNV
+ * @since 2025-09-17
  */
-public class DataTransfererHacking {
-    public static Set<DataFlavor> getFlavorsForFormats(long[] formats, FlavorTable map) {
-        return DataTransferer.getInstance().getFlavorsForFormats(formats, map).keySet();
+@ActionImpl(id = "TodoViewGroupByShowPackages")
+public class TodoGroupByPackagesAction extends TodoPanel.GroupByOptionAction {
+    public TodoGroupByPackagesAction() {
+        super(TodoPanel.GroupBy.PACKAGES);
     }
 }
