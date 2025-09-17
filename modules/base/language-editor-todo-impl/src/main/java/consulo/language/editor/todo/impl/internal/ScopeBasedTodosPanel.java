@@ -20,69 +20,69 @@ import consulo.disposer.Disposer;
 import consulo.find.ui.ScopeChooserCombo;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author anna
  * @since 2007-07-27
  */
 public class ScopeBasedTodosPanel extends TodoPanel {
-  private static final String SELECTED_SCOPE = "TODO_SCOPE";
-  private final Alarm myAlarm;
-  private ScopeChooserCombo myScopes;
+    private static final String SELECTED_SCOPE = "TODO_SCOPE";
+    private final Alarm myAlarm;
+    private ScopeChooserCombo myScopes;
 
-  public ScopeBasedTodosPanel(Project project, TodoPanelSettings settings, Content content){
-    super(project,settings,false,content);
-    myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
-    myScopes.getChildComponent().addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        rebuildWithAlarm(ScopeBasedTodosPanel.this.myAlarm);
-        ProjectPropertiesComponent.getInstance(myProject).setValue(SELECTED_SCOPE, myScopes.getSelectedScopeName(), null);
-      }
-    });
-    rebuildWithAlarm(myAlarm);
-  }
+    @RequiredUIAccess
+    public ScopeBasedTodosPanel(@Nonnull Project project, TodoPanelSettings settings, Content content) {
+        super(project, settings, false, content);
+        myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
+        myScopes.getChildComponent().addActionListener(e -> {
+            rebuildWithAlarm(ScopeBasedTodosPanel.this.myAlarm);
+            ProjectPropertiesComponent.getInstance(myProject).setValue(SELECTED_SCOPE, myScopes.getSelectedScopeName(), null);
+        });
+        rebuildWithAlarm(myAlarm);
+    }
 
-  @Override
-  protected JComponent createCenterComponent() {
-    JPanel panel = new JPanel(new BorderLayout());
-    JComponent component = super.createCenterComponent();
-    panel.add(component, BorderLayout.CENTER);
-    String preselect = ProjectPropertiesComponent.getInstance(myProject).getValue(SELECTED_SCOPE);
-    myScopes = new ScopeChooserCombo(myProject, false, true, preselect);
-    Disposer.register(this, myScopes);
-    myScopes.setCurrentSelection(false);
-    myScopes.setUsageView(false);
+    @Override
+    protected JComponent createCenterComponent() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JComponent component = super.createCenterComponent();
+        panel.add(component, BorderLayout.CENTER);
+        String preselect = ProjectPropertiesComponent.getInstance(myProject).getValue(SELECTED_SCOPE);
+        myScopes = new ScopeChooserCombo(myProject, false, true, preselect);
+        Disposer.register(this, myScopes);
+        myScopes.setCurrentSelection(false);
+        myScopes.setUsageView(false);
 
-    JPanel chooserPanel = new JPanel(new GridBagLayout());
-    JLabel scopesLabel = new JLabel("Scope:");
-    scopesLabel.setDisplayedMnemonic('S');
-    scopesLabel.setLabelFor(myScopes);
-    GridBagConstraints gc =
+        JPanel chooserPanel = new JPanel(new GridBagLayout());
+        JLabel scopesLabel = new JLabel("Scope:");
+        scopesLabel.setDisplayedMnemonic('S');
+        scopesLabel.setLabelFor(myScopes);
+        GridBagConstraints gc =
             new GridBagConstraints(GridBagConstraints.RELATIVE, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-                                   JBUI.insets(2), 0, 0);
-    chooserPanel.add(scopesLabel, gc);
-    chooserPanel.add(myScopes, gc);
+                JBUI.insets(2), 0, 0
+            );
+        chooserPanel.add(scopesLabel, gc);
+        chooserPanel.add(myScopes, gc);
 
-    gc.fill = GridBagConstraints.HORIZONTAL;
-    gc.weightx = 1;
-    chooserPanel.add(Box.createHorizontalBox(), gc);
-    panel.add(chooserPanel, BorderLayout.NORTH);
-    return panel;
-  }
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.weightx = 1;
+        chooserPanel.add(Box.createHorizontalBox(), gc);
+        panel.add(chooserPanel, BorderLayout.NORTH);
+        return panel;
+    }
 
-  @Override
-  protected TodoTreeBuilder createTreeBuilder(JTree tree, Project project) {
-    ScopeBasedTodosTreeBuilder builder = new ScopeBasedTodosTreeBuilder(tree, project, myScopes);
-    builder.init();
-    return builder;
-  }
+    @Override
+    @RequiredUIAccess
+    protected TodoTreeBuilder createTreeBuilder(JTree tree, Project project) {
+        ScopeBasedTodosTreeBuilder builder = new ScopeBasedTodosTreeBuilder(tree, project, myScopes);
+        builder.init();
+        return builder;
+    }
 }

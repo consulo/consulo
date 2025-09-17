@@ -23,11 +23,10 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 14/08/2023
+ * @since 2023-08-14
  */
 public class DataTransfererHacking {
-  @SuppressWarnings({"unchecked"})
-  public static Set<DataFlavor> getFlavorsForFormats(long[] formats, FlavorTable map) {
-    return DataTransferer.getInstance().getFlavorsForFormats(formats, map).keySet();
-  }
+    public static Set<DataFlavor> getFlavorsForFormats(long[] formats, FlavorTable map) {
+        return DataTransferer.getInstance().getFlavorsForFormats(formats, map).keySet();
+    }
 }
