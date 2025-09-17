@@ -17,7 +17,8 @@ package consulo.language.editor.todo.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.todo.impl.internal.TodoPanel;
-import consulo.localize.LocalizeValue;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
@@ -29,18 +30,19 @@ import static consulo.language.editor.todo.impl.internal.TodoPanel.TODO_PANEL_DA
  */
 @ActionImpl(id = "TodoViewGroupByFlattenPackage")
 public class TodoGroupByFlattenPackages extends TodoPanel.GroupByOptionAction {
-    private final LocalizeValue myShiftedText;
     public TodoGroupByFlattenPackages() {
-        super(TodoPanel.GroupBy.FLATTEN_PACKAGE);
-        myShiftedText = getTemplatePresentation().getTextValue()
-            .map((localizeManager, text) -> "   " + text);
+        super(
+            LanguageTodoLocalize.actionFlattenView().map((localizeManager, text) -> "   " + text),
+            PlatformIconGroup.objectbrowserFlattenpackages(),
+            TodoPanel::isFlattenPackages,
+            TodoPanel::setFlattenPackages
+        );
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        e.getPresentation().setTextValue(myShiftedText);
         TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-        e.getPresentation().setEnabled(todoPanel != null && TodoPanel.GroupBy.PACKAGES.get(todoPanel));
+        e.getPresentation().setEnabled(todoPanel != null && todoPanel.isPackagesShown());
     }
 }

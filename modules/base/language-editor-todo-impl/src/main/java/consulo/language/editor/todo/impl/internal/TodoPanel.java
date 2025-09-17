@@ -64,76 +64,20 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavigator, DataProvider, Disposable {
-    public enum GroupBy {
-        MODULES(
-            LanguageTodoLocalize.actionGroupByModules(),
-            PlatformIconGroup.actionsGroupbymodule(),
-            todoPanel -> todoPanel.mySettings.areModulesShown,
-            (todoPanel, state) -> {
-                todoPanel.mySettings.areModulesShown = state;
-                todoPanel.myTodoTreeBuilder.setShowModules(state);
-            }
-        ),
-        PACKAGES(
-            LanguageTodoLocalize.actionGroupByPackages(),
-            PlatformIconGroup.actionsGroupbypackage(),
-            todoPanel -> todoPanel.mySettings.arePackagesShown,
-            (todoPanel, state) -> {
-                todoPanel.mySettings.arePackagesShown = state;
-                todoPanel.myTodoTreeBuilder.setShowPackages(state);
-            }
-        ),
-        FLATTEN_PACKAGE(
-            LanguageTodoLocalize.actionFlattenView(),
-            PlatformIconGroup.objectbrowserFlattenpackages(),
-            todoPanel -> todoPanel.mySettings.areFlattenPackages,
-            (todoPanel, state) -> {
-                todoPanel.mySettings.areFlattenPackages = state;
-                todoPanel.myTodoTreeBuilder.setFlattenPackages(state);
-            }
-        );
-
-        private final LocalizeValue myDisplayName;
-        private final Image myIcon;
+    public abstract static class GroupByOptionAction extends ToggleAction {
         private final Function<TodoPanel, Boolean> myGetter;
         @RequiredUIAccess
         private final BiConsumer<TodoPanel, Boolean> mySetter;
 
-        GroupBy(
-            LocalizeValue displayName,
+        public GroupByOptionAction(
+            LocalizeValue text,
             Image icon,
             Function<TodoPanel, Boolean> getter,
             @RequiredUIAccess BiConsumer<TodoPanel, Boolean> setter
         ) {
-            myDisplayName = displayName;
-            myIcon = icon;
+            super(text, LocalizeValue.empty(), icon);
             myGetter = getter;
             mySetter = setter;
-        }
-
-        public LocalizeValue getDisplayName() {
-            return myDisplayName;
-        }
-
-        public Image getIcon() {
-            return myIcon;
-        }
-
-        public boolean get(TodoPanel todoPanel) {
-            return myGetter.apply(todoPanel);
-        }
-
-        public void set(TodoPanel todoPanel, boolean state) {
-            mySetter.accept(todoPanel, state);
-        }
-    }
-
-    public abstract static class GroupByOptionAction extends ToggleAction {
-        private final GroupBy myGroupBy;
-
-        public GroupByOptionAction(GroupBy groupBy) {
-            super(groupBy.getDisplayName(), LocalizeValue.empty(), groupBy.getIcon());
-            myGroupBy = groupBy;
         }
 
         @Override
@@ -147,7 +91,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         @Override
         public boolean isSelected(@Nonnull AnActionEvent e) {
             TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            return todoPanel != null && myGroupBy.get(todoPanel);
+            return todoPanel != null && myGetter.apply(todoPanel);
         }
 
         @Override
@@ -155,7 +99,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
             if (todoPanel != null) {
-                myGroupBy.set(todoPanel, state);
+                mySetter.accept(todoPanel, state);
             }
         }
     }
@@ -204,6 +148,36 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
 
         myVisibilityWatcher = new MyVisibilityWatcher();
         myVisibilityWatcher.install(this);
+    }
+
+    public boolean isModulesShown() {
+        return mySettings.areModulesShown;
+    }
+
+    @RequiredUIAccess
+    public void setModulesShown(boolean state) {
+        mySettings.areModulesShown = state;
+        myTodoTreeBuilder.setShowModules(state);
+    }
+
+    public boolean isPackagesShown() {
+        return mySettings.arePackagesShown;
+    }
+
+    @RequiredUIAccess
+    public void setPackagesShown(boolean state) {
+        mySettings.arePackagesShown = state;
+        myTodoTreeBuilder.setShowPackages(state);
+    }
+
+    public boolean isFlattenPackages() {
+        return mySettings.areFlattenPackages;
+    }
+
+    @RequiredUIAccess
+    public void setFlattenPackages(boolean state) {
+        mySettings.areFlattenPackages = state;
+        myTodoTreeBuilder.setFlattenPackages(state);
     }
 
     private TodoTreeBuilder setupTreeStructure() {

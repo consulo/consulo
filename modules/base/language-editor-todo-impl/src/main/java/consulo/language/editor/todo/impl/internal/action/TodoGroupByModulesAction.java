@@ -17,6 +17,8 @@ package consulo.language.editor.todo.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.todo.impl.internal.TodoPanel;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author UNV
@@ -25,6 +27,11 @@ import consulo.language.editor.todo.impl.internal.TodoPanel;
 @ActionImpl(id = "TodoViewGroupByShowModules")
 public class TodoGroupByModulesAction extends TodoPanel.GroupByOptionAction {
     public TodoGroupByModulesAction() {
-        super(TodoPanel.GroupBy.MODULES);
+        super(
+            LanguageTodoLocalize.actionGroupByModules(),
+            PlatformIconGroup.actionsGroupbymodule(),
+            TodoPanel::isModulesShown,
+            TodoPanel::setModulesShown
+        );
     }
 }

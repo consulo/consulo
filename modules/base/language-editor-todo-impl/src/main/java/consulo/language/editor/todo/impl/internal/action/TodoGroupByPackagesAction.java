@@ -17,6 +17,8 @@ package consulo.language.editor.todo.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.todo.impl.internal.TodoPanel;
+import consulo.language.editor.todo.impl.internal.localize.LanguageTodoLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author UNV
@@ -25,6 +27,11 @@ import consulo.language.editor.todo.impl.internal.TodoPanel;
 @ActionImpl(id = "TodoViewGroupByShowPackages")
 public class TodoGroupByPackagesAction extends TodoPanel.GroupByOptionAction {
     public TodoGroupByPackagesAction() {
-        super(TodoPanel.GroupBy.PACKAGES);
+        super(
+            LanguageTodoLocalize.actionGroupByPackages(),
+            PlatformIconGroup.actionsGroupbypackage(),
+            TodoPanel::isPackagesShown,
+            TodoPanel::setPackagesShown
+        );
     }
 }
