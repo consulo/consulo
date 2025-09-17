@@ -25,7 +25,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
  * @since 2025-09-17
  */
 @ActionImpl(id = "TodoViewGroupByShowPackages")
-public class TodoGroupByPackagesAction extends TodoPanel.GroupByOptionAction {
+public class TodoGroupByPackagesAction extends TodoGroupByOptionAction {
     public TodoGroupByPackagesAction() {
         super(
             LanguageTodoLocalize.actionGroupByPackages(),

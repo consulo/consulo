@@ -19,7 +19,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNavigationSupport;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -39,7 +38,6 @@ import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.image.Image;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsagePreviewPanel;
 import consulo.usage.UsagePreviewPanelFactory;
@@ -60,50 +58,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavigator, DataProvider, Disposable {
-    public abstract static class GroupByOptionAction extends ToggleAction {
-        private final Function<TodoPanel, Boolean> myGetter;
-        @RequiredUIAccess
-        private final BiConsumer<TodoPanel, Boolean> mySetter;
-
-        public GroupByOptionAction(
-            LocalizeValue text,
-            Image icon,
-            Function<TodoPanel, Boolean> getter,
-            @RequiredUIAccess BiConsumer<TodoPanel, Boolean> setter
-        ) {
-            super(text, LocalizeValue.empty(), icon);
-            myGetter = getter;
-            mySetter = setter;
-        }
-
-        @Override
-        public void update(@Nonnull AnActionEvent e) {
-            if (!e.hasData(TODO_PANEL_DATA_KEY)) {
-                e.getPresentation().setEnabled(false);
-            }
-            super.update(e);
-        }
-
-        @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            return todoPanel != null && myGetter.apply(todoPanel);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            if (todoPanel != null) {
-                mySetter.accept(todoPanel, state);
-            }
-        }
-    }
-
     protected static final Logger LOG = Logger.getInstance(TodoPanel.class);
 
     @Nonnull

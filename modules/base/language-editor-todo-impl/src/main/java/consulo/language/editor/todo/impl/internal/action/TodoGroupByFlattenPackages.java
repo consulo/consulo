@@ -29,7 +29,7 @@ import static consulo.language.editor.todo.impl.internal.TodoPanel.TODO_PANEL_DA
  * @since 2025-09-17
  */
 @ActionImpl(id = "TodoViewGroupByFlattenPackage")
-public class TodoGroupByFlattenPackages extends TodoPanel.GroupByOptionAction {
+public class TodoGroupByFlattenPackages extends TodoGroupByOptionAction {
     public TodoGroupByFlattenPackages() {
         super(
             LanguageTodoLocalize.actionFlattenView().map((localizeManager, text) -> "   " + text),
