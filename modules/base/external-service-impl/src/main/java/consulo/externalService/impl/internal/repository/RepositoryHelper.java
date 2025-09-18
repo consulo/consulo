@@ -34,6 +34,7 @@ import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -135,14 +136,20 @@ public class RepositoryHelper {
             indicator.setText2Value(ExternalServiceLocalize.progressConnectingToPluginManager(WebServiceApi.REPOSITORY_API.buildUrl()));
         }
 
-        byte[] bytes = HttpRequests.request(url)
-            .connect(request -> {
-                if (indicator != null) {
-                    indicator.setText2Value(ExternalServiceLocalize.progressDownloadingListOfPlugins());
-                }
+        byte[] bytes;
+        try {
+            bytes = HttpRequests.request(url)
+                .connect(request -> {
+                    if (indicator != null) {
+                        indicator.setText2Value(ExternalServiceLocalize.progressDownloadingListOfPlugins());
+                    }
 
-                return request.readBytes(indicator);
-            });
+                    return request.readBytes(indicator);
+                });
+        }
+        catch (IOException e) {
+            throw new IOException("Failed to read data from url: " + url + " view logs for details.", e);
+        }
 
         return readPluginsStream(new UnsyncByteArrayInputStream(bytes));
     }

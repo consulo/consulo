@@ -294,24 +294,29 @@ public class PluginDownloader {
         LOG.info("Downloading plugin: " + myPluginId + ", try: " + tryIndex + ", checksum: " + expectedChecksum);
 
         String downloadUrl = buildUrl(tryIndex);
-        return HttpRequests.request(downloadUrl).gzip(false).connect(request -> {
-            MessageDigest digest;
-            try {
-                digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);
-            }
-            catch (NoSuchAlgorithmException e) {
-                throw new IOException(e);
-            }
+        try {
+            return HttpRequests.request(downloadUrl).gzip(false).connect(request -> {
+                MessageDigest digest;
+                try {
+                    digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);
+                }
+                catch (NoSuchAlgorithmException e) {
+                    throw new IOException(e);
+                }
 
-            request.saveToFile(file, digest, indicator);
+                request.saveToFile(file, digest, indicator);
 
-            String checksum = Hex.encodeHexString(digest.digest()).toUpperCase(Locale.ROOT);
+                String checksum = Hex.encodeHexString(digest.digest()).toUpperCase(Locale.ROOT);
 
-            String fileName = getFileName();
-            File newFile = new File(file.getParentFile(), fileName);
-            FileUtil.rename(file, newFile, FilePermissionCopier.BY_NIO2);
-            return Pair.create(newFile, checksum);
-        });
+                String fileName = getFileName();
+                File newFile = new File(file.getParentFile(), fileName);
+                FileUtil.rename(file, newFile, FilePermissionCopier.BY_NIO2);
+                return Pair.create(newFile, checksum);
+            });
+        }
+        catch (IOException e) {
+            throw new IOException("Failed to read data from url: " + downloadUrl + " view logs for details.", e);
+        }
     }
 
     @Nonnull
