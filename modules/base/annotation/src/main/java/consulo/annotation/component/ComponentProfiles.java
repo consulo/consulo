@@ -20,25 +20,30 @@ package consulo.annotation.component;
  * @since 2022-06-13
  */
 public final class ComponentProfiles {
-  public static final int DEFAULT = 0;
+    public static final int DEFAULT = 0;
 
-  public static final int PRODUCTION = 1 << 1;
+    public static final int PRODUCTION = 1 << 1;
 
-  /**
-   * Marker for AWT profile implementation, if service inside base impl code, do not conflict with unified impl
-   */
-  public static final int AWT = 1 << 2;
+    /**
+     * Marker for AWT profile implementation, if service inside base impl code, do not conflict with unified impl
+     */
+    public static final int AWT = 1 << 2;
 
-  /**
-   * Marker for Unified profile implementation, used of SWT & Web
-   */
-  public static final int UNIFIED = 1 << 3;
+    /**
+     * Marker for Unified profile implementation, used of SWT & Web
+     */
+    public static final int UNIFIED = 1 << 3;
 
-  /**
-   * Marker for light test implementation
-   */
-  public static final int LIGHT_TEST = 1 << 4;
+    /**
+     * Marker for light test implementation
+     */
+    public static final int LIGHT_TEST = 1 << 4;
 
-  private ComponentProfiles() {
-  }
+    /**
+     * Marker for sandbox instance
+     */
+    public static final int SANDBOX = 1 << 5;
+
+    private ComponentProfiles() {
+    }
 }

@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.TopicAPI;
+import consulo.application.ApplicationProperties;
 import consulo.component.ComponentManager;
 import consulo.component.ComponentManagerDisposedException;
 import consulo.component.bind.InjectingBinding;
@@ -40,6 +41,7 @@ import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.BitUtil;
 import consulo.util.lang.ThreeState;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -140,7 +142,11 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     @Override
     public int getProfiles() {
-        return ComponentProfiles.PRODUCTION;
+        int profiles = ComponentProfiles.PRODUCTION;
+        if (ApplicationProperties.isInSandbox() || ApplicationProperties.isInternal()) {
+            profiles = BitUtil.set(profiles, ComponentProfiles.SANDBOX, true);
+        }
+        return profiles;
     }
 
     @Nonnull
