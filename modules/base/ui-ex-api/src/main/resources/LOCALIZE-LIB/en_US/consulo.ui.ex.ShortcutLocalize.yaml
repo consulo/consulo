@@ -300,3 +300,5 @@ keyboard.windows:
     text: Windows
 mouse.button1:
     text: Button 1
+shortcut.separator:
+    text: +

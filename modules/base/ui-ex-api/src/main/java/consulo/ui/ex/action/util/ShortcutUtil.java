@@ -95,7 +95,7 @@ public class ShortcutUtil {
             return LocalizeValue.join(values.toArray(LocalizeValue[]::new));
         }
         else {
-            return LocalizeValue.join("+", values.toArray(LocalizeValue[]::new));
+            return LocalizeValue.joinWithSeparator(ShortcutLocalize.shortcutSeparator(), values.toArray(LocalizeValue[]::new));
         }
     }
 

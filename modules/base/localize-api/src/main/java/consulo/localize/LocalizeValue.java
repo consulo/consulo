@@ -84,6 +84,11 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
         return values.length == 0 ? of() : new JoinSeparatorLocalizeValue(separator, values);
     }
 
+    @Nonnull
+    static LocalizeValue joinWithSeparator(@Nonnull LocalizeValue separator, @Nonnull LocalizeValue... values) {
+        return values.length == 0 ? of() : new JoinSeparatorLocalizeValue2(separator, values);
+    }
+
     @Override
     @Nonnull
     default String get() {
