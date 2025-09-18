@@ -13,4 +13,5 @@ module consulo.language.index.impl {
     requires gnu.trove;
 
     opens consulo.language.index.impl.internal.stub to consulo.util.xml.serializer;
+    opens consulo.language.index.impl.internal.gist to consulo.application.impl;
 }
