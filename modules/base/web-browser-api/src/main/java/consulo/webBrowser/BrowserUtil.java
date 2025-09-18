@@ -24,7 +24,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -87,15 +86,15 @@ public class BrowserUtil {
         getBrowserLauncher().browse(uri);
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     @Nonnull
     @Deprecated
-    public static List<String> getOpenBrowserCommand(@NonNls @Nonnull String browserPathOrName) {
+    @SuppressWarnings("UnusedDeclaration")
+    public static List<String> getOpenBrowserCommand(@Nonnull String browserPathOrName) {
         return getOpenBrowserCommand(browserPathOrName, false);
     }
 
     @Nonnull
-    public static List<String> getOpenBrowserCommand(@NonNls @Nonnull String browserPathOrName, boolean newWindowIfPossible) {
+    public static List<String> getOpenBrowserCommand(@Nonnull String browserPathOrName, boolean newWindowIfPossible) {
         if (new File(browserPathOrName).isFile()) {
             return Collections.singletonList(browserPathOrName);
         }

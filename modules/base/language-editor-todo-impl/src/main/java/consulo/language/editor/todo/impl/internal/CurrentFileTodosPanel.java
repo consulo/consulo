@@ -21,6 +21,7 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -28,40 +29,43 @@ import consulo.ui.ex.content.Content;
 import jakarta.annotation.Nonnull;
 
 abstract class CurrentFileTodosPanel extends TodoPanel {
-  CurrentFileTodosPanel(Project project, TodoPanelSettings settings, Content content) {
-    super(project, settings, true, content);
+    @RequiredUIAccess
+    CurrentFileTodosPanel(@Nonnull Project project, TodoPanelSettings settings, Content content) {
+        super(project, settings, true, content);
 
-    VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
-    setFile(files.length == 0 ? null : PsiManager.getInstance(myProject).findFile(files[0]), true);
-    // It's important to remove this listener. It prevents invocation of setFile method after the tree builder is disposed
-    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
-      @Override
-      public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
-        VirtualFile file = e.getNewFile();
-        PsiFile psiFile = file != null && file.isValid() ? PsiManager.getInstance(myProject).findFile(file) : null;
-        // This invokeLater is required. The problem is setFile does a commit to PSI, but setFile is
-        // invoked inside PSI change event. It causes an Exception like "Changes to PSI are not allowed inside event processing"
-        DumbService.getInstance(myProject).smartInvokeLater(() -> setFile(psiFile, false));
-      }
-    });
-  }
-
-  private void setFile(PsiFile file, boolean initialUpdate) {
-    // setFile method is invoked in LaterInvocator so PsiManager
-    // can be already disposed, so we need to check this before using it.
-    if (myProject == null || PsiManager.getInstance(myProject).isDisposed()) {
-      return;
+        VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
+        setFile(files.length == 0 ? null : PsiManager.getInstance(myProject).findFile(files[0]), true);
+        // It's important to remove this listener. It prevents invocation of setFile method after the tree builder is disposed
+        project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
+            @Override
+            public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
+                VirtualFile file = e.getNewFile();
+                PsiFile psiFile = file != null && file.isValid() ? PsiManager.getInstance(myProject).findFile(file) : null;
+                // This invokeLater is required. The problem is setFile does a commit to PSI, but setFile is
+                // invoked inside PSI change event. It causes an Exception like "Changes to PSI are not allowed inside event processing"
+                DumbService.getInstance(myProject).smartInvokeLater(() -> setFile(psiFile, false));
+            }
+        });
     }
 
-    if (file != null && getSelectedFile() == file) return;
+    private void setFile(PsiFile file, boolean initialUpdate) {
+        // setFile method is invoked in LaterInvocator so PsiManager
+        // can be already disposed, so we need to check this before using it.
+        if (myProject == null || PsiManager.getInstance(myProject).isDisposed()) {
+            return;
+        }
 
-    CurrentFileTodosTreeBuilder builder = (CurrentFileTodosTreeBuilder)myTodoTreeBuilder;
-    builder.setFile(file);
-    if (myTodoTreeBuilder.isUpdatable() || initialUpdate) {
-      Object selectableElement = builder.getTodoTreeStructure().getFirstSelectableElement();
-      if (selectableElement != null) {
-        builder.select(selectableElement);
-      }
+        if (file != null && getSelectedFile() == file) {
+            return;
+        }
+
+        CurrentFileTodosTreeBuilder builder = (CurrentFileTodosTreeBuilder) myTodoTreeBuilder;
+        builder.setFile(file);
+        if (myTodoTreeBuilder.isUpdatable() || initialUpdate) {
+            Object selectableElement = builder.getTodoTreeStructure().getFirstSelectableElement();
+            if (selectableElement != null) {
+                builder.select(selectableElement);
+            }
+        }
     }
-  }
 }

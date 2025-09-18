@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.todo.impl.internal;
 
-import consulo.application.AllIcons;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.dataContext.DataManager;
@@ -19,7 +19,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNavigationSupport;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -38,7 +37,6 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsagePreviewPanel;
@@ -61,9 +59,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavigator, DataProvider, Disposable {
+public abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavigator, DataProvider, Disposable {
     protected static final Logger LOG = Logger.getInstance(TodoPanel.class);
 
+    @Nonnull
     protected Project myProject;
     private final TodoPanelSettings mySettings;
     private final boolean myCurrentFileMode;
@@ -81,10 +80,10 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     public static final Key<TodoPanel> TODO_PANEL_DATA_KEY = Key.create("TodoPanel");
 
     /**
-     * @param currentFileMode if {@code true} then view doesn't have "KeymapGroupImpl By Packages" and "Flatten Packages"
-     *                        actions.
+     * @param currentFileMode if {@code true} then view doesn't have "KeymapGroupImpl By Packages" and "Flatten Packages" actions.
      */
-    TodoPanel(Project project, TodoPanelSettings settings, boolean currentFileMode, Content content) {
+    @RequiredUIAccess
+    TodoPanel(@Nonnull Project project, TodoPanelSettings settings, boolean currentFileMode, Content content) {
         super(false, true);
 
         myProject = project;
@@ -107,6 +106,36 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         myVisibilityWatcher.install(this);
     }
 
+    public boolean isModulesShown() {
+        return mySettings.areModulesShown;
+    }
+
+    @RequiredUIAccess
+    public void setModulesShown(boolean state) {
+        mySettings.areModulesShown = state;
+        myTodoTreeBuilder.setShowModules(state);
+    }
+
+    public boolean isPackagesShown() {
+        return mySettings.arePackagesShown;
+    }
+
+    @RequiredUIAccess
+    public void setPackagesShown(boolean state) {
+        mySettings.arePackagesShown = state;
+        myTodoTreeBuilder.setShowPackages(state);
+    }
+
+    public boolean isFlattenPackages() {
+        return mySettings.areFlattenPackages;
+    }
+
+    @RequiredUIAccess
+    public void setFlattenPackages(boolean state) {
+        mySettings.areFlattenPackages = state;
+        myTodoTreeBuilder.setFlattenPackages(state);
+    }
+
     private TodoTreeBuilder setupTreeStructure() {
         TodoTreeBuilder todoTreeBuilder = createTreeBuilder(myTree, myProject);
         TodoTreeStructure structure = todoTreeBuilder.getTodoTreeStructure();
@@ -122,28 +151,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         return todoTreeBuilder;
     }
 
-    public static class GroupByActionGroup extends DefaultActionGroup {
-        {
-            getTemplatePresentation().setIcon(PlatformIconGroup.actionsGroupby());
-            getTemplatePresentation().setTextValue(LanguageTodoLocalize.groupGroupBy());
-            setPopup(true);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-            JBPopupFactory.getInstance().createActionGroupPopup(
-                null,
-                this,
-                e.getDataContext(),
-                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                true
-            ).showUnderneathOf(e.getInputEvent().getComponent());
-        }
-    }
-
     private class MyExpandListener extends TreeModelAdapter {
-
         private final TodoTreeBuilder myBuilder;
 
         MyExpandListener(TodoTreeBuilder builder) {
@@ -201,7 +209,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
                         return;
                     }
                     Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-                    if (!((userObject instanceof NodeDescriptor ? (NodeDescriptor) userObject : null) instanceof TodoItemNode)) {
+                    if (!((userObject instanceof NodeDescriptor nodeDescriptor ? nodeDescriptor : null) instanceof TodoItemNode)) {
                         return;
                     }
                     OpenSourceUtil.openSourcesFrom(DataManager.getInstance().getDataContext(TodoPanel.this), false);
@@ -272,17 +280,17 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         return splitter;
     }
 
+    @RequiredReadAction
     private void updatePreviewPanel() {
-        if (myProject == null || myProject.isDisposed()) {
+        if (myProject.isDisposed()) {
             return;
         }
         List<UsageInfo> infos = new ArrayList<>();
         TreePath path = myTree.getSelectionPath();
         if (path != null) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-            Object userObject = node.getUserObject();
-            if (userObject instanceof NodeDescriptor) {
-                Object element = ((NodeDescriptor) userObject).getElement();
+            if (node.getUserObject() instanceof NodeDescriptor nodeDescriptor) {
+                Object element = nodeDescriptor.getElement();
                 TodoItemNode pointer = myTodoTreeBuilder.getFirstPointerForElement(element);
                 if (pointer != null) {
                     SmartTodoItemPointer value = pointer.getValue();
@@ -309,13 +317,14 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
             myVisibilityWatcher.deinstall(this);
             myVisibilityWatcher = null;
         }
-        myProject = null;
     }
 
+    @RequiredUIAccess
     void rebuildCache() {
         myTodoTreeBuilder.rebuildCache();
     }
 
+    @RequiredUIAccess
     void rebuildCache(@Nonnull Set<VirtualFile> files) {
         myTodoTreeBuilder.rebuildCache(files);
     }
@@ -323,6 +332,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     /**
      * Immediately updates tree.
      */
+    @RequiredUIAccess
     void updateTree() {
         myTodoTreeBuilder.updateTree();
     }
@@ -332,6 +342,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
      *
      * @see TodoTreeBuilder#setTodoFilter
      */
+    @RequiredUIAccess
     void updateTodoFilter() {
         TodoFilter filter = TodoConfiguration.getInstance().getTodoFilter(mySettings.todoFilterName);
         setTodoFilter(filter);
@@ -342,6 +353,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
      *
      * @see TodoTreeBuilder#setTodoFilter
      */
+    @RequiredUIAccess
     private void setTodoFilter(TodoFilter filter) {
         // Clear name of current filter if it was removed from configuration.
         String filterName = filter != null ? filter.getName() : null;
@@ -399,11 +411,10 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
                 return null;
             }
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-            Object userObject = node.getUserObject();
-            if (!(userObject instanceof NodeDescriptor)) {
+            if (!(node.getUserObject() instanceof NodeDescriptor nodeDescriptor)) {
                 return null;
             }
-            Object element = ((NodeDescriptor) userObject).getElement();
+            Object element = nodeDescriptor.getElement();
             if (!(element instanceof TodoFileNode || element instanceof TodoItemNode)) { // allow user to use F4 only on files an TODOs
                 return null;
             }
@@ -445,8 +456,8 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         return super.getData(dataId);
     }
 
-    @Override
     @Nullable
+    @Override
     public OccurenceInfo goPreviousOccurence() {
         return myOccurenceNavigator.goPreviousOccurence();
     }
@@ -457,8 +468,8 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         return myOccurenceNavigator.getNextOccurenceActionName();
     }
 
-    @Override
     @Nullable
+    @Override
     public OccurenceInfo goNextOccurence() {
         return myOccurenceNavigator.goNextOccurence();
     }
@@ -562,7 +573,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
             if (userObject == null) {
                 return false;
             }
-            if (userObject instanceof NodeDescriptor && ((NodeDescriptor) userObject).getElement() instanceof TodoItemNode) {
+            if (userObject instanceof NodeDescriptor nodeDescriptor && nodeDescriptor.getElement() instanceof TodoItemNode) {
                 return myTree.getRowCount() != myTree.getRowForPath(path) + 1;
             }
             else {
@@ -577,8 +588,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
                 return false;
             }
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-            Object userObject = node.getUserObject();
-            return userObject instanceof NodeDescriptor && !isFirst(node);
+            return node.getUserObject() instanceof NodeDescriptor && !isFirst(node);
         }
 
         private boolean isFirst(TreeNode node) {
@@ -634,11 +644,10 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
                 return null;
             }
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-            Object userObject = node.getUserObject();
-            if (!(userObject instanceof NodeDescriptor)) {
+            if (!(node.getUserObject() instanceof NodeDescriptor nodeDescriptor)) {
                 return null;
             }
-            Object element = ((NodeDescriptor) userObject).getElement();
+            Object element = nodeDescriptor.getElement();
             return element instanceof TodoItemNode todoItemNode
                 ? myTodoTreeBuilder.getNextPointer(todoItemNode)
                 : myTodoTreeBuilder.getFirstPointerForElement(element);
@@ -651,109 +660,19 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
                 return null;
             }
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-            Object userObject = node.getUserObject();
-            if (!(userObject instanceof NodeDescriptor)) {
+            if (!(node.getUserObject() instanceof NodeDescriptor nodeDescriptor)) {
                 return null;
             }
-            Object element = ((NodeDescriptor) userObject).getElement();
-            TodoItemNode pointer;
-            if (element instanceof TodoItemNode) {
-                pointer = myTodoTreeBuilder.getPreviousPointer((TodoItemNode) element);
+            Object element = nodeDescriptor.getElement();
+            if (element instanceof TodoItemNode todoItemNode) {
+                return myTodoTreeBuilder.getPreviousPointer(todoItemNode);
             }
             else {
                 Object sibling = myTodoTreeBuilder.getPreviousSibling(element);
                 if (sibling == null) {
                     return null;
                 }
-                pointer = myTodoTreeBuilder.getLastPointerForElement(sibling);
-            }
-            return pointer;
-        }
-    }
-
-    public static final class MyShowPackagesAction extends ToggleAction {
-        public MyShowPackagesAction() {
-            super(LanguageTodoLocalize.actionGroupByPackages(), LocalizeValue.empty(), PlatformIconGroup.actionsGroupbypackage());
-        }
-
-        @Override
-        public void update(@Nonnull AnActionEvent e) {
-            e.getPresentation().setEnabled(e.hasData(TODO_PANEL_DATA_KEY));
-            super.update(e);
-        }
-
-        @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            return todoPanel != null && todoPanel.mySettings.arePackagesShown;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            if (todoPanel != null) {
-                todoPanel.mySettings.arePackagesShown = state;
-                todoPanel.myTodoTreeBuilder.setShowPackages(state);
-            }
-        }
-    }
-
-    public static final class MyShowModulesAction extends ToggleAction {
-        public MyShowModulesAction() {
-            super(LanguageTodoLocalize.actionGroupByModules(), LocalizeValue.empty(), PlatformIconGroup.actionsGroupbymodule());
-        }
-
-        @Override
-        public void update(@Nonnull AnActionEvent e) {
-            e.getPresentation().setEnabled(e.hasData(TODO_PANEL_DATA_KEY));
-            super.update(e);
-        }
-
-        @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            return todoPanel != null && todoPanel.mySettings.areModulesShown;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-
-            if (todoPanel != null) {
-                todoPanel.mySettings.areModulesShown = state;
-                todoPanel.myTodoTreeBuilder.setShowModules(state);
-            }
-        }
-    }
-
-    public static final class MyFlattenPackagesAction extends ToggleAction {
-        public MyFlattenPackagesAction() {
-            super(LanguageTodoLocalize.actionFlattenView(), LocalizeValue.empty(), AllIcons.ObjectBrowser.FlattenPackages);
-        }
-
-        @Override
-        public void update(@Nonnull AnActionEvent e) {
-            super.update(e);
-            e.getPresentation().setText("   " + getTemplateText());
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            e.getPresentation().setEnabled(todoPanel != null && todoPanel.mySettings.arePackagesShown);
-        }
-
-        @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            return todoPanel != null && todoPanel.mySettings.areFlattenPackages;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-            TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
-            if (todoPanel != null) {
-                todoPanel.mySettings.areFlattenPackages = state;
-                todoPanel.myTodoTreeBuilder.setFlattenPackages(state);
+                return myTodoTreeBuilder.getLastPointerForElement(sibling);
             }
         }
     }
@@ -768,9 +687,8 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     private final class MyPreviewAction extends ToggleAction {
-
         MyPreviewAction() {
-            super("Preview Source", null, AllIcons.Actions.PreviewDetails);
+            super("Preview Source", null, PlatformIconGroup.actionsPreviewdetails());
         }
 
         @Override
@@ -779,6 +697,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             mySettings.showPreview = state;
             myUsagePreviewPanelComponent.setVisible(state);
